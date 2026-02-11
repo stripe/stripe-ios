@@ -62,8 +62,10 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
             {
                 STPPaymentHandler.sharedHandler.confirmPaymentIntent(params: params, authenticationContext: self) {
                     (status, pi, error) in
-                    self.parent.presented = false
-                    completion(status, pi, error)
+                    Task { @MainActor in
+                        self.parent.presented = false
+                        completion(status, pi, error)
+                    }
                 }
             } else if let params = self.parent.intentParams as? STPSetupIntentConfirmParams,
                 let completion = self.parent.onCompletion
@@ -71,8 +73,10 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
             {
                 STPPaymentHandler.sharedHandler.confirmSetupIntent(params: params, authenticationContext: self) {
                     (status, si, error) in
-                    self.parent.presented = false
-                    completion(status, si, error)
+                    Task { @MainActor in
+                        self.parent.presented = false
+                        completion(status, si, error)
+                    }
                 }
             } else {
                 assert(false, "ConfirmPaymentPresenter was passed an invalid type.")

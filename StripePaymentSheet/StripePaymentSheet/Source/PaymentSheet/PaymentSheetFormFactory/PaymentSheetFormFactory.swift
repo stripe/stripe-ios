@@ -253,6 +253,8 @@ class PaymentSheetFormFactory {
                 return makeBoleto()
             } else if paymentMethod == .swish {
                 return makeSwish()
+            } else if paymentMethod == .afterpayClearpay {
+                return makeAfterpayClearpay()
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
@@ -758,6 +760,17 @@ extension PaymentSheetFormFactory {
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
+    }
+
+    func makeAfterpayClearpay() -> PaymentMethodElement {
+        let header = makeAfterpayClearpayHeader()
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: true,
+            emailRequiredByPaymentMethod: true,
+            phoneRequiredByPaymentMethod: false
+        )
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        return FormElement(autoSectioningElements: [header, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
     }
 
     // Only show checkbox for PI+SFU & Setup Intent

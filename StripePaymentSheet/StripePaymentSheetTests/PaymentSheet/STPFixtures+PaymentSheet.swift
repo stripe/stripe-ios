@@ -23,7 +23,7 @@ public extension PaymentSheet.Configuration {
         if isApplePayEnabled {
             configuration.applePay = .init(merchantId: "merchant id", merchantCountryCode: "US")
         }
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, visionOS 26.0, *) {
             configuration.appearance.applyLiquidGlassIfPossible()
         }
         return configuration
@@ -47,7 +47,7 @@ public extension EmbeddedPaymentElement.Configuration {
 public extension PaymentSheet.Appearance {
     mutating func applyLiquidGlassIfPossible() {
         #if !os(visionOS)
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, visionOS 26.0, *) {
             self.applyLiquidGlass()
         }
         #endif
@@ -55,7 +55,7 @@ public extension PaymentSheet.Appearance {
     func applyingLiquidGlassIfPossible() -> PaymentSheet.Appearance {
         var copy = self
         #if !os(visionOS)
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, visionOS 26.0, *) {
             copy.applyLiquidGlass()
         }
         #endif
@@ -292,6 +292,36 @@ extension Intent {
         paymentMethodOptionsSetupFutureUsage: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage]? = nil
     ) -> Intent {
         return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in return "" }))
+    }
+
+    static func _testCheckoutSession(
+        mode: STPCheckoutSessionMode = .payment,
+        amount: Int = 2345,
+        currency: String = "USD"
+    ) -> Intent {
+        let json: [String: Any] = [
+            "session_id": "cs_test_xxx",
+            "object": "checkout.session",
+            "mode": mode == .payment ? "payment" : "setup",
+            "status": "open",
+            "payment_status": "unpaid",
+            "currency": currency.lowercased(),
+            "livemode": false,
+            "total_summary": [
+                "due": amount,
+                "subtotal": amount,
+                "total": amount,
+            ],
+            "payment_method_types": ["card"],
+        ]
+        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        return .checkoutSession(checkoutSession)
+    }
+}
+
+extension PaymentSheet.IntentConfiguration {
+    static func _testValue() -> Self {
+        return .init(mode: .payment(amount: 100, currency: "USD")) { _, _ in return "" }
     }
 }
 

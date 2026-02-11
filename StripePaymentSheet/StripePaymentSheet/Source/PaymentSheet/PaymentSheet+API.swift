@@ -276,8 +276,24 @@ extension PaymentSheet {
                         completion(result.result, result.deferredIntentConfirmationType)
                     }
                     // MARK: ↪ CheckoutSession
-                case .checkoutSession:
-                    completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Confirmation is not yet supported by CheckoutSession.")), nil)
+                case .checkoutSession(let checkoutSession):
+                    Task { @MainActor in
+                        let result = await handleCheckoutSessionConfirmation(
+                            checkoutSession: checkoutSession,
+                            confirmType: .new(
+                                params: confirmParams.paymentMethodParams,
+                                paymentOptions: confirmParams.confirmPaymentMethodOptions,
+                                shouldSave: confirmParams.saveForFutureUseCheckboxState == .selected,
+                                shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
+                            ),
+                            configuration: configuration,
+                            authenticationContext: authenticationContext,
+                            paymentHandler: paymentHandler,
+                            elementsSession: elementsSession
+                        )
+                        await confirmationChallenge?.complete()
+                        completion(result, nil)
+                    }
                 }
             }
 
@@ -335,8 +351,26 @@ extension PaymentSheet {
                     completion(result.result, result.deferredIntentConfirmationType)
                 }
                 // MARK: ↪ CheckoutSession
-            case .checkoutSession:
-                completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Confirmation is not yet supported by CheckoutSession.")), nil)
+            case .checkoutSession(let checkoutSession):
+                Task { @MainActor in
+                    let paymentOptions = intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions != nil
+                    // Flow controller and embedded collects CVC using interstitial:
+                    ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
+                    // PaymentSheet collects CVC in sheet:
+                    : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
+                    let result = await handleCheckoutSessionConfirmation(
+                        checkoutSession: checkoutSession,
+                        confirmType: .saved(paymentMethod,
+                                            paymentOptions: paymentOptions,
+                                            clientAttributionMetadata: clientAttributionMetadata,
+                                            radarOptions: nil),
+                        configuration: configuration,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: paymentHandler,
+                        elementsSession: elementsSession
+                    )
+                    completion(result, nil)
+                }
             }
         // MARK: - Link
         case .link(let confirmOption):
@@ -409,8 +443,24 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkoutSession:
-                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Confirmation is not yet supported by CheckoutSession.")), nil)
+                    case .checkoutSession(let checkoutSession):
+                        let result = await handleCheckoutSessionConfirmation(
+                            checkoutSession: checkoutSession,
+                            confirmType: .new(
+                                params: paymentMethodParams,
+                                paymentOptions: STPConfirmPaymentMethodOptions(),
+                                shouldSave: shouldSave
+                            ),
+                            configuration: configuration,
+                            authenticationContext: authenticationContext,
+                            paymentHandler: paymentHandler,
+                            elementsSession: elementsSession
+                        )
+                        if shouldLogOutOfLink(result: result, elementsSession: elementsSession) {
+                            linkAccount?.logout()
+                        }
+                        await confirmationChallenge?.complete()
+                        completion(result, nil)
                     }
                 }
             }
@@ -484,8 +534,20 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkoutSession:
-                        completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Confirmation is not yet supported by CheckoutSession.")), nil)
+                    case .checkoutSession(let checkoutSession):
+                        let result = await handleCheckoutSessionConfirmation(
+                            checkoutSession: checkoutSession,
+                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
+                            configuration: configuration,
+                            authenticationContext: authenticationContext,
+                            paymentHandler: paymentHandler,
+                            elementsSession: elementsSession
+                        )
+                        if shouldLogOutOfLink(result: result, elementsSession: elementsSession) {
+                            linkAccount?.logout()
+                        }
+                        await confirmationChallenge?.complete()
+                        completion(result, nil)
                     }
                 }
             }

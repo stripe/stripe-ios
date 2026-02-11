@@ -22,7 +22,7 @@ import Foundation
     /// Parse the string and return the correct `STPCheckoutSessionStatus`,
     /// or `STPCheckoutSessionStatus.unknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the string with the status value
-    internal static func status(from string: String) -> STPCheckoutSessionStatus {
+    @_spi(STP) public static func status(from string: String) -> STPCheckoutSessionStatus {
         let map: [String: STPCheckoutSessionStatus] = [
             "open": .open,
             "complete": .complete,
@@ -49,7 +49,7 @@ import Foundation
 }
 
 /// Mode types for an STPCheckoutSession
-@_spi(STP) @objc public enum STPCheckoutSessionMode: Int {
+@_spi(STP) @frozen public enum STPCheckoutSessionMode {
     /// Unknown mode
     case unknown
     /// Accept one-time payments for cards, iDEAL, and more
@@ -103,7 +103,7 @@ import Foundation
     /// Parse the string and return the correct `STPCheckoutSessionPaymentStatus`,
     /// or `STPCheckoutSessionPaymentStatus.unknown` if it's unrecognized by this version of the SDK.
     /// - Parameter string: the string with the payment status value
-    internal static func paymentStatus(from string: String) -> STPCheckoutSessionPaymentStatus {
+    @_spi(STP) public static func paymentStatus(from string: String) -> STPCheckoutSessionPaymentStatus {
         let map: [String: STPCheckoutSessionPaymentStatus] = [
             "paid": .paid,
             "unpaid": .unpaid,

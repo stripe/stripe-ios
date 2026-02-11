@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=cXhh5r2x2IIVBsR0VHzHx4TYz89D48S6Uc01CcJg8zQgSwKW_uydOrdm08TjXqfUFMfm3DAVY865geqv
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=JkUhoWod8sgm7bcP_Kr9f6MLk7cbScbZZHoMXen0yd-LLwcAvFaYSHEVUuWsPzKGHNLp8L6b8TETh-5W
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_45iALQpkiEXoiR
+request-id: req_BWrAAsCBCthKI0
 Content-Length: 504
 Vary: Origin
-Date: Wed, 14 Jan 2026 20:22:23 GMT
-original-request: req_45iALQpkiEXoiR
+Date: Wed, 28 Jan 2026 20:58:40 GMT
+original-request: req_BWrAAsCBCthKI0
 stripe-version: 2020-08-27
-idempotency-key: 6ca38752-9a38-4ccb-b750-dc76fc741fd2
+idempotency-key: fc884c8e-9974-4165-b5bb-21d4d3af0495
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "amazon_pay" : {
 
   },
-  "id" : "pm_1SpaaBFY0qyl6XeWGYGmU5Ta",
+  "id" : "pm_1SufoxFY0qyl6XeWXV6bLZzJ",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1768422143,
+  "created" : 1769633919,
   "allow_redisplay" : "unspecified",
   "type" : "amazon_pay",
   "customer" : null,

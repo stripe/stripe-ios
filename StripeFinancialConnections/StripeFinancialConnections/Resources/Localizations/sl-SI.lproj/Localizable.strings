@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Vnesite kodo, ki je bila poslana na številko %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Vnesite kodo, poslano na e-poštni naslov %@. Za varnost vašega računa občasno zahtevamo ta dodatni korak.";
-
 "Exit without connecting?" = "Ali želite zapreti brez vzpostavitve povezave?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Ta koda žal ni delovala. Še enkrat jo preverite in poskusite znova.";
@@ -117,8 +115,6 @@
 "Use test account" = "Uporabi preskusni račun";
 
 "Use test code" = "Uporabi preskusno kodo";
-
-"Verify your email" = "Potrdite svoj e-poštni naslov";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Našli smo račune %1$li %2$@, vendar lahko z %3$@ povežete samo ameriške tekoče račune.";
 

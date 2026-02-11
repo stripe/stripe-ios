@@ -36,8 +36,6 @@
 
 "Enter the code sent to %@" = "Angi koden som er sendt til %@";
 
-"Enter the code sent to %@. We periodically request this extra step to keep your account safe." = "Skriv inn koden som er sendt til %@. Vi ber med jevne mellomrom om dette ekstra trinnet for å holde kontoen din trygg.";
-
 "Exit without connecting?" = "Vil du avslutte uten å koble til?";
 
 "Hmm, that code didn’t work. Double check it and try again." = "Hmm, den koden fungerte ikke. Dobbeltsjekk den og prøv igjen.";
@@ -117,8 +115,6 @@
 "Use test account" = "Bruk testkonto";
 
 "Use test code" = "Bruk testkode";
-
-"Verify your email" = "Verifiser e-postadressen din";
 
 "We found %d %@ accounts but you can only link US checking accounts to %@." = "Vi fant %1$li %2$@-kontoer, men du kan bare koble amerikanske brukskontoer til %3$@.";
 

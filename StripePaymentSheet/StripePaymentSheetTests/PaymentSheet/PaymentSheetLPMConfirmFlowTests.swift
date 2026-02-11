@@ -212,6 +212,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     func testAlmaConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",
+                               amount: 5000, // Alma requires minimum €50.00
                                paymentMethodType: .alma,
                                merchantCountry: .FR) { form in
             // Alma has no input fields
@@ -372,16 +373,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
-        configuration.allowsPaymentMethodsRequiringShippingAddress = true
-        configuration.defaultBillingDetails = PaymentSheet.BillingDetails(
-            address: PaymentSheet.Address(
-                city: "South San Francisco",
-                country: "US",
-                line1: "354 Oyster Point Blvd",
-                postalCode: "94080",
-                state: "CA"
-            )
-        )
 
         try await _testConfirm(
             intentKinds: [.paymentIntent],
@@ -390,15 +381,10 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             merchantCountry: .US,
             configuration: configuration
         ) { form in
-            // Afterpay shows name, email, and full billing
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 15)
+            // Afterpay shows name and email (no billing address by default)
+            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("foo@bar.com")
-
-            // With default billing details, individual address fields should be shown and pre-populated
-            XCTAssertEqual(form.getTextFieldElement("Address line 1")?.text, "354 Oyster Point Blvd")
-            XCTAssertEqual(form.getTextFieldElement("City")?.text, "South San Francisco")
-            XCTAssertEqual(form.getTextFieldElement("ZIP")?.text, "94080")
         }
     }
 
@@ -472,8 +458,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                         configuration: configuration
                     )
                 case .checkoutSession:
-                    // TODO(porter) Support these tests when we implement confirmation
-                    continue
+                    elementsSession = ._testValue(intent: intent)
                 }
 
                 let e = expectation(description: "")
@@ -641,7 +626,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testAffirmConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "USD", paymentMethodType: .affirm, merchantCountry: .US) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "USD", amount: 3500, paymentMethodType: .affirm, merchantCountry: .US) { form in // Affirm requires minimum $35.00
             // Affirm has no input fields and one non-interactive Affirm UI element
             XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
         }
@@ -876,6 +861,11 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
             }
             XCTAssertEqual(regeneratedIntentConfirmParams, intentConfirmParams)
 
+            // Checkout sessions require a billing email on the payment method
+            if case .checkoutSession = intent {
+                intentConfirmParams.paymentMethodParams.nonnil_billingDetails.email = "test@example.com"
+            }
+
             let e = expectation(description: "Confirm")
             let paymentHandler = STPPaymentHandler(apiClient: apiClient)
             var redirectShimCalled = false
@@ -973,9 +963,23 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 )
             }
 
+            // CheckoutSession
+            let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+                types: paymentMethodTypes,
+                currency: currency,
+                amount: amount,
+                merchantCountry: merchantCountry.rawValue,
+                customerID: customer
+            )
+            let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+            let initResponse = try await csApiClient.initCheckoutSession(
+                checkoutSessionId: checkoutSessionResponse.id
+            )
+
             intents = [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
+                ("CheckoutSession", .checkoutSession(initResponse.checkoutSession)),
             ]
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation

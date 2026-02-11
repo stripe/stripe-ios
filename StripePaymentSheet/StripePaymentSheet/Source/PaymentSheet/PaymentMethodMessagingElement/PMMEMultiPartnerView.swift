@@ -36,6 +36,10 @@ class PMMEMultiPartnerView: UIView {
         return xToFontHeightRatio * appearance.scaledFont.capHeight
     }
 
+    var customAccessibilityLabel: String {
+        logoSets.reduce("") { $0 + $1.altText + ", " } + promotion
+    }
+
     init(
         logoSets: [PaymentMethodMessagingElement.LogoSet],
         promotion: String,
@@ -55,13 +59,11 @@ class PMMEMultiPartnerView: UIView {
 
         logoStack.axis = .horizontal
         logoStack.spacing = logoHorizontalPadding
-        for logoSet in logoSets {
-            // Empty placeholder for initialization, we'll populate with the correct light/dark asset in willMove()
+        for _ in logoSets {
+            // Empty placeholder for initialization, we'll populate with the correct light/dark asset in didMoveToSuperView()
             let imageView = ScalingImageView(appearance: appearance)
             imageView.contentMode = .left
             imageView.contentMode = .scaleAspectFill
-            imageView.accessibilityLabel = logoSet.altText
-            imageView.isAccessibilityElement = true
             logoStack.addArrangedSubview(imageView)
             logoViews.append(imageView)
         }
@@ -87,6 +89,7 @@ class PMMEMultiPartnerView: UIView {
         promotionLabel.attributedText = getPromotionAttributedString()
     }
 
+    #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateLogoStyles()
@@ -98,6 +101,7 @@ class PMMEMultiPartnerView: UIView {
         logoStack.spacing = logoHorizontalPadding
         mainStack.spacing = verticalPadding
     }
+    #endif
 
     private func updateLogoStyles() {
         for (logoSet, logoViews) in zip(logoSets, logoViews) {

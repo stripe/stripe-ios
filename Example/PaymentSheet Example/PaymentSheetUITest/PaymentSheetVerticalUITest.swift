@@ -31,6 +31,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.customerMode = .new
         settings.currency = .eur
         settings.customerKeyType = .customerSession
+        settings.integrationType = .normal
         settings.uiStyle = .flowController
         settings.layout = .vertical
         loadPlayground(app, settings)
@@ -221,6 +222,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         settings.layout = .vertical
         settings.merchantCountryCode = .FR
         settings.mode = .setup
+        settings.integrationType = .normal
         loadPlayground(app, settings)
 
         // Add one more test card
@@ -245,7 +247,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Sleep to allow animation to finish
         sleep(1)
         // The next card should be selected now
-        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 1001, card, FR")
+        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 1001, card, Jenny Rosen, jenny.rosen@example.com, +1 (555) 555-5555, 1 Rue de Rivoli, Paris, 75001, FR")
 
         // Switch to PaymentSheet
         app.buttons["paymentSheet"].waitForExistenceAndTap()
@@ -295,8 +297,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Card"].waitForExistence(timeout: 5.0))
         // Verify there's no more Saved section
         XCTAssertFalse(app.staticTexts["Saved"].waitForExistence(timeout: 0.1))
-        // Verify primary button isn't enabled b/c there is no selected PM
-        XCTAssertFalse(app.buttons["Set up"].isEnabled)
+        // Verify primary button is enabled b/c Apple Pay should be selected
+        XCTAssertTrue(app.buttons["Continue"].isEnabled)
     }
 
     private func setupCards(cards: [String], settings: PaymentSheetTestPlaygroundSettings) {

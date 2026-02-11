@@ -1247,6 +1247,22 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         payWithApplePay()
     }
 
+    func testCheckoutSession_ApplePay() {
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        settings.layout = .horizontal
+        settings.integrationType = .checkoutSession
+        settings.apmsEnabled = .off
+        settings.collectEmail = .always // CheckoutSession requires email
+        loadPlayground(app, settings)
+
+        app.buttons["Present PaymentSheet"].tap()
+        let applePayButton = app.buttons["apple_pay_button"]
+        XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
+        applePayButton.tap()
+
+        payWithApplePay()
+    }
+
     func testPaymentSheetFlowControllerSaveAndRemoveCard_DeferredIntent_ServerSideConfirmation() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
@@ -1840,16 +1856,19 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         let line1Field = app.textFields["Address line 1"]
         XCTAssertTrue(line1Field.waitForExistence(timeout: 3.0))
         line1Field.tap()
+        line1Field.clearText()
         line1Field.typeText("123 main")
 
         let cityField = app.textFields["City"]
         XCTAssertTrue(cityField.waitForExistence(timeout: 3.0))
         cityField.tap()
+        cityField.clearText()
         cityField.typeText("San Francisco")
 
         let zipField = app.textFields["ZIP"]
         XCTAssertTrue(zipField.waitForExistence(timeout: 3.0))
         zipField.tap()
+        zipField.clearText()
         zipField.typeText("12345" + XCUIKeyboardKey.return.rawValue)
 
         XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
@@ -2870,7 +2889,13 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // Assert that card is the returned payment method type
         app.buttons["Continue"].tap()
-        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 4242, card, 12345, US")
+        let paymentMethodButton = app.buttons["Payment method"]
+        // Sometimes this button takes a short bit to update so we give a second of allowance
+        let labelExpectation = expectation(
+            for: NSPredicate(format: "label == %@", "•••• 4242, card, 12345, US"),
+            evaluatedWith: paymentMethodButton
+        )
+        wait(for: [labelExpectation], timeout: 5)
     }
 
     func testLinkInlineSignup_gb() throws {
@@ -3552,6 +3577,8 @@ extension PaymentSheetUITestCase {
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
+        addApplePayContactIfNeeded(applePay)
+
         let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
 
         let cardButton = applePay.buttons.containing(predicate).firstMatch
@@ -3603,6 +3630,19 @@ extension PaymentSheetUITestCase {
             zipCell.tap()
             zipCell.typeText("95014")
 
+            applePay.buttons["Done"].tap()
+        }
+    }
+
+    func addApplePayContactIfNeeded(_ applePay: XCUIApplication) {
+        // Fill out contact info (email) if required
+        let addEmailButton = applePay.buttons["Add Email Address"]
+        if addEmailButton.waitForExistence(timeout: 4.0) {
+            addEmailButton.tap()
+            XCTAssertTrue(applePay.staticTexts["Select An Email Address"].waitForExistence(timeout: 4.0))
+            applePay.buttons.matching(identifier: "Add Email Address").element(boundBy: 1).tap()
+            applePay.typeText("test@example.com")
+            // Hit the checkmark done button in the top right
             applePay.buttons["Done"].tap()
         }
     }

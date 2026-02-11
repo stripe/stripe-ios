@@ -17,6 +17,11 @@ class PMMESinglePartnerView: UIView {
 
     private let promotionLabel = UILabel()
 
+    // Needs to be set on the appropriate view to take effect
+    var customAccessibilityLabel: String {
+        promotion.replacingOccurrences(of: "{partner}", with: logoSet.altText)
+    }
+
     init(
         logoSet: PaymentMethodMessagingElement.LogoSet,
         promotion: String,
@@ -43,10 +48,12 @@ class PMMESinglePartnerView: UIView {
         promotionLabel.attributedText = getPromotionAttributedString()
     }
 
+    #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         promotionLabel.attributedText = getPromotionAttributedString()
     }
+    #endif
 
     func getPromotionAttributedString() -> NSMutableAttributedString {
         NSMutableAttributedString.bnplPromoString(

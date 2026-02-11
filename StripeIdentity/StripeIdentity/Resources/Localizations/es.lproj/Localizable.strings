@@ -12,6 +12,8 @@
 
 "Back of %@" = "Reverso de %@";
 
+"Back of ID not detected" = "No se detecta el reverso del documento de identidad";
+
 "Back of driver's license or government-issued photo ID" = "Reverso del permiso de conducir u otro documento de identidad con foto expedido por el gobierno";
 
 "Back of identity document" = "Reverso del documento de identidad";
@@ -21,6 +23,8 @@
 "Camera unavailable" = "Cámara no disponible";
 
 "Capturing…" = "Realizando la selfie...";
+
+"Center ID in view" = "Centra el documento de identidad en la zona de visualización";
 
 "Choose File" = "Elegir archivo";
 
@@ -44,6 +48,8 @@
 
 "Front of %@" = "Anverso de %@";
 
+"Front of ID not detected" = "No se detecta el anverso del documento de identidad";
+
 "Front of driver's license or government-issued photo ID" = "Anverso del permiso de conducir u otro documento de identidad con foto expedido por el gobierno";
 
 "Front of driver's license or passport" = "Anverso del permiso de conducir o pasaporte";
@@ -66,15 +72,17 @@
 
 "ID Number" = "Número de ID";
 
+"Image is blurry. Hold your phone steady and try again." = "La imagen está borrosa. Sujeta el móvil con firmeza e inténtalo de nuevo.";
+
 "Individual CPF" = "CPF individual";
+
+"Invalid document" = "Documento no válido";
 
 "Keep ID level" = "Mantén el documento de identidad nivelado";
 
 "Last 4 of Social Security number" = "Últimos 4 dígitos del número de seguridad social";
 
 "Loading" = "Cargando";
-
-"Make sure all details are visible and focus" = "Asegúrate de que todos tus datos se vean y estén enfocados.";
 
 "Make sure you're in a well lit space." = "Asegúrate de que estás en un lugar bien iluminado.";
 
