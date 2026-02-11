@@ -11,7 +11,7 @@ import XCTest
 // swift-format-ignore
 @_spi(STP) @testable import StripeCore
 
-class UIImage_StripeTests: XCTestCase {
+class UIImageStripeCoreTests: XCTestCase {
     static let testJpegImageResizingKBiggerSize = 50000
     static let testJpegImageResizingKSmallerSize = 6000
     // Don't make this too low or test becomes somewhat meaningless, as jpegs can only get so small
@@ -25,7 +25,7 @@ class UIImage_StripeTests: XCTestCase {
         guard
             let testImage = UIImage(
                 named: "test_image",
-                in: Bundle(for: UIImage_StripeTests.self),
+                in: Bundle(for: UIImageStripeCoreTests.self),
                 compatibleWith: nil
             )
         else {
@@ -36,9 +36,9 @@ class UIImage_StripeTests: XCTestCase {
         // correct size range for our tests to be meaningful
         var data = testImage.jpegData(compressionQuality: 0.5)!
 
-        XCTAssertLessThan(data.count, UIImage_StripeTests.testJpegImageResizingKBiggerSize)
-        XCTAssertGreaterThan(data.count, UIImage_StripeTests.testJpegImageResizingKSmallerSize)
-        XCTAssertGreaterThan(data.count, UIImage_StripeTests.testJpegImageResizingKMuchSmallerSize)
+        XCTAssertLessThan(data.count, UIImageStripeCoreTests.testJpegImageResizingKBiggerSize)
+        XCTAssertGreaterThan(data.count, UIImageStripeCoreTests.testJpegImageResizingKSmallerSize)
+        XCTAssertGreaterThan(data.count, UIImageStripeCoreTests.testJpegImageResizingKMuchSmallerSize)
 
         // This is the size the data would be without scaling it less than maxBytes
         let baselineSize = data.count
@@ -46,32 +46,32 @@ class UIImage_StripeTests: XCTestCase {
         // Test passing in a maxBytes larger than original image
         data =
             testImage.jpegDataAndDimensions(
-                maxBytes: UIImage_StripeTests.testJpegImageResizingKBiggerSize
+                maxBytes: UIImageStripeCoreTests.testJpegImageResizingKBiggerSize
             ).imageData
         var resultingImage = UIImage(data: data, scale: testImage.scale)!
-        XCTAssertLessThan(data.count, UIImage_StripeTests.testJpegImageResizingKBiggerSize)
+        XCTAssertLessThan(data.count, UIImageStripeCoreTests.testJpegImageResizingKBiggerSize)
         // Image shouldn't have been shrunk at all
         XCTAssertEqual(resultingImage.size, testImage.size)
 
         // Test passing in a maxBytes a bit smaller than the original image
         data =
             testImage.jpegDataAndDimensions(
-                maxBytes: UIImage_StripeTests.testJpegImageResizingKSmallerSize
+                maxBytes: UIImageStripeCoreTests.testJpegImageResizingKSmallerSize
             ).imageData
         resultingImage = UIImage(data: data, scale: testImage.scale)!
         XCTAssertNotNil(data)
-        XCTAssertLessThan(data.count, UIImage_StripeTests.testJpegImageResizingKSmallerSize)
+        XCTAssertLessThan(data.count, UIImageStripeCoreTests.testJpegImageResizingKSmallerSize)
         XCTAssertLessThan(resultingImage.size.width, testImage.size.width)
         XCTAssertLessThan(resultingImage.size.height, testImage.size.height)
 
         // Test passing in a maxBytes a lot smaller than the original image
         data =
             testImage.jpegDataAndDimensions(
-                maxBytes: UIImage_StripeTests.testJpegImageResizingKMuchSmallerSize
+                maxBytes: UIImageStripeCoreTests.testJpegImageResizingKMuchSmallerSize
             ).imageData
         resultingImage = UIImage(data: data, scale: testImage.scale)!
         XCTAssertNotNil(data)
-        XCTAssertLessThan(data.count, UIImage_StripeTests.testJpegImageResizingKMuchSmallerSize)
+        XCTAssertLessThan(data.count, UIImageStripeCoreTests.testJpegImageResizingKMuchSmallerSize)
         XCTAssertLessThan(resultingImage.size.width, testImage.size.width)
         XCTAssertLessThan(resultingImage.size.height, testImage.size.height)
 
@@ -87,7 +87,7 @@ class UIImage_StripeTests: XCTestCase {
         guard
             let testImage = UIImage(
                 named: "test_image",
-                in: Bundle(for: UIImage_StripeTests.self),
+                in: Bundle(for: UIImageStripeCoreTests.self),
                 compatibleWith: nil
             )
         else {

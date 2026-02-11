@@ -14,7 +14,7 @@ import SafariServices
 @testable@_spi(STP) import StripeUICore
 
 @MainActor
-final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
+final class PaymentSheetGDPRConfirmFlowTests: STPNetworkStubbingTestCase {
     enum IntentKind: CaseIterable {
         case paymentIntent_intentFirst_csc
         case paymentIntent_deferredIntent_csc

@@ -1,5 +1,5 @@
 //
-//  Dictionary+StripeTest.swift
+//  Dictionary+StripeTests.swift
 //  StripeiOS Tests
 //
 //  Created by Joey Dong on 7/24/17.
@@ -13,7 +13,7 @@
 @testable@_spi(STP) import StripePaymentsUI
 import XCTest
 
-class Dictionary_StripeTest: XCTestCase {
+class Dictionary_StripeTests: XCTestCase {
     // MARK: - dictionaryByRemovingNullsValidatingRequiredFields
     func test_dictionaryByRemovingNulls_removesNullsDeeply() {
         let dictionary =

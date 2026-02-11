@@ -1,5 +1,5 @@
 //
-//  NSArray+Stripe.swift
+//  Array+Stripe.swift
 //  StripeCore
 //
 //  Created by Jack Flintermann on 1/19/16.

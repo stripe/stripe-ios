@@ -1,6 +1,6 @@
 //  Converted to Swift 5.8.1 by Swiftify v5.8.28463 - https://swiftify.com/
 //
-//  STPAPIClientNetworkBridgeTest.m
+//  StripeAPIBridgeNetworkTests.swift
 //  StripeiOS
 //
 //  Created by David Estes on 9/23/21.
@@ -15,7 +15,7 @@ import StripeCoreTestUtils
 import StripePaymentsTestUtils
 import XCTest
 
-class StripeAPIBridgeNetworkTest: STPNetworkStubbingTestCase {
+class StripeAPIBridgeNetworkTests: STPNetworkStubbingTestCase {
     var client: STPAPIClient!
 
     override func setUp() {

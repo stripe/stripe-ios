@@ -1,5 +1,5 @@
 //
-//  SavedPaymentMethodManagerTest.swift
+//  SavedPaymentMethodManagerTests.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 5/3/24.

@@ -1,5 +1,5 @@
 //
-//  StripeCodableTest.swift
+//  StripeCodableTests.swift
 //  StripeCoreTests
 //
 //  Created by David Estes on 8/10/21.
@@ -65,7 +65,7 @@ struct TestNonOptionalEnumCodable: UnknownFieldsCodable {
     var _allResponseFieldsStorage: NonEncodableParameters?
 }
 
-class StripeAPIRequestTest: APIStubbedTestCase {
+class StripeCodableTests: APIStubbedTestCase {
     func codableTest<T: UnknownFieldsCodable>(
         codable: T,
         completion: @escaping ([String: Any], Result<T, Error>) -> Void
