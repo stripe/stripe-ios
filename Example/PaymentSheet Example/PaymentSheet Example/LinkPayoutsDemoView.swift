@@ -76,6 +76,7 @@ struct LinkPayoutsDemoView: View {
         }
         .navigationTitle("Link Payouts")
         .navigationBarTitleDisplayMode(.inline)
+        #if compiler(>=6.1)
         .sheet(item: $webViewURL) { url in
             LinkPayoutsWebViewSheet(
                 url: url,
@@ -93,6 +94,7 @@ struct LinkPayoutsDemoView: View {
                 }
             )
         }
+        #endif
     }
 
     @ViewBuilder
@@ -202,6 +204,7 @@ extension URL: @retroactive Identifiable {
     public var id: String { absoluteString }
 }
 
+#if compiler(>=6.1)
 @available(iOS 26.0, *)
 struct LinkPayoutsWebViewSheet: View {
     let url: URL
@@ -283,6 +286,7 @@ final class LinkPayoutsNavigationDecider: WebPage.NavigationDeciding {
         return .allow
     }
 }
+#endif
 
 // MARK: - Test Result Option
 
