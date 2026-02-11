@@ -152,6 +152,7 @@ extension NSMutableAttributedString {
         }
 
         // Add learn more text with link attribute
+        // Tapping anywhere on the PMME will open the link. However, we want the link to feel like a link/button when tapped and help, which this attribute accomplishes
         let linkAttributes: [NSAttributedString.Key: Any] = [
             .font: font,
             .link: learnMoreUrl,
