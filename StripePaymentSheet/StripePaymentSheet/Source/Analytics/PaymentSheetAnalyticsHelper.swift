@@ -180,16 +180,16 @@ final class PaymentSheetAnalyticsHelper {
             stpAssertionFailure("logShow() is not supported for embedded integration")
             return
         }
-        let isCustom = integrationShape == .flowController
-        if !isCustom {
+        let isFlowController = integrationShape == .flowController
+        if !isFlowController {
             startTimeMeasurement(.checkout)
         }
         let event: STPAnalyticEvent = {
             switch showingSavedPMList {
             case true:
-                return isCustom ? .mcShowCustomSavedPM : .mcShowCompleteSavedPM
+                return isFlowController ? .mcShowCustomSavedPM : .mcShowCompleteSavedPM
             case false:
-                return isCustom ? .mcShowCustomNewPM : .mcShowCompleteNewPM
+                return isFlowController ? .mcShowCustomNewPM : .mcShowCompleteNewPM
             }
         }()
         log(event: event)
