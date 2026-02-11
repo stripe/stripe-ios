@@ -172,7 +172,8 @@ public final class EmbeddedPaymentElement {
                     mode: .deferredIntent(intentConfiguration),
                     configuration: configuration,
                     analyticsHelper: analyticsHelper,
-                    integrationShape: .embedded
+                    integrationShape: .embedded,
+                    isUpdate: true
                 )
             } catch {
                 return UpdateResult.failed(error: error)
@@ -401,6 +402,7 @@ public final class EmbeddedPaymentElement {
         self.analyticsHelper = analyticsHelper
 
         analyticsHelper.logInitialized()
+        analyticsHelper.startTimeMeasurement(.checkout)
         self.containerView.needsUpdateSuperviewHeight = { [weak self] in
             guard let self else { return }
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)

@@ -351,8 +351,26 @@ extension PaymentSheet {
                     completion(result.result, result.deferredIntentConfirmationType)
                 }
                 // MARK: ↪ CheckoutSession
-            case .checkoutSession:
-                completion(.failed(error: PaymentSheetError.unknown(debugDescription: "Saved payment method confirmation is not yet supported by CheckoutSession.")), nil)
+            case .checkoutSession(let checkoutSession):
+                Task { @MainActor in
+                    let paymentOptions = intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions != nil
+                    // Flow controller and embedded collects CVC using interstitial:
+                    ? intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions
+                    // PaymentSheet collects CVC in sheet:
+                    : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
+                    let result = await handleCheckoutSessionConfirmation(
+                        checkoutSession: checkoutSession,
+                        confirmType: .saved(paymentMethod,
+                                            paymentOptions: paymentOptions,
+                                            clientAttributionMetadata: clientAttributionMetadata,
+                                            radarOptions: nil),
+                        configuration: configuration,
+                        authenticationContext: authenticationContext,
+                        paymentHandler: paymentHandler,
+                        elementsSession: elementsSession
+                    )
+                    completion(result, nil)
+                }
             }
         // MARK: - Link
         case .link(let confirmOption):

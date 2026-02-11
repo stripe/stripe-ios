@@ -3,6 +3,9 @@
 ### PaymentSheet
 * [Changed] Afterpay/Clearpay no longer requires billing address by default. Set `billingDetailsCollectionConfiguration.address = .full` if you need to collect billing address for Afterpay.
 
+### CustomerSheet
+* [Fixed] Fixed a view controller lifecycle issue that could cause keyboard avoidance and layout problems on the Add Card screen.
+
 ### Identity
 
 * [Added] Added a best frame detector to document capture.
@@ -30,6 +33,9 @@
 
 ### Payments
 * [Added] Added API bindings support for TWINT payment methods.
+
+### PaymentSheet
+* [Fixed] Fixed an issue with EmbeddedPaymentElement where calling `update` would cause customers to not stay logged in to their Link account.
 
 ## 25.5.0 2026-01-15
 ### StripeIssuing
