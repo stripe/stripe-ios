@@ -93,7 +93,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             )
         )
 
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .SEPADebit, configuration: configuration) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .SEPADebit, configuration: configuration,
+                               expectedHierarchy: ExpectedFormHierarchy.SEPADebit.all) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
             form.getTextFieldElement("IBAN").setText("DE89370400440532013000")
@@ -102,36 +103,29 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             XCTAssertEqual(form.getTextFieldElement("Address line 1")?.text, "354 Oyster Point Blvd")
             XCTAssertEqual(form.getTextFieldElement("City")?.text, "South San Francisco")
             XCTAssertEqual(form.getTextFieldElement("ZIP")?.text, "94080")
-
-            XCTAssertNotNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 16)
         }
     }
 
     func testAUBecsDebitConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "AUD", paymentMethodType: .AUBECSDebit, merchantCountry: .AU) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "AUD", paymentMethodType: .AUBECSDebit, merchantCountry: .AU,
+                               expectedHierarchy: ExpectedFormHierarchy.AUBECSDebit.all) { form in
             form.getTextFieldElement("Name on account").setText("Tester McTesterface")
             form.getTextFieldElement("Email").setText("example@link.com")
             form.getTextFieldElement("BSB number").setText("000000")
             form.getTextFieldElement("Account number").setText("000123456")
-            XCTAssertNotNil(form.getAUBECSMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 10)
         }
     }
 
     func testBancontactConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .bancontact) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .bancontact,
+                               expectedHierarchy: ExpectedFormHierarchy.Bancontact.paymentIntent) { form in
             form.getTextFieldElement("Full name").setText("Foo")
-            XCTAssertNil(form.getMandateElement())
-            XCTAssertNil(form.getTextFieldElement("Email"))
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
         }
 
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .bancontact) { form in
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .bancontact,
+                               expectedHierarchy: ExpectedFormHierarchy.Bancontact.settingUp) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
-            XCTAssertNotNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
         }
     }
 
@@ -139,26 +133,22 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "SGD",
                                paymentMethodType: .grabPay,
-                               merchantCountry: .SG) { form in
-            // GrabPay has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+                               merchantCountry: .SG,
+                               expectedHierarchy: ExpectedFormHierarchy.GrabPay.paymentIntent) { _ in }
     }
 
     func testFPXConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "MYR",
                                paymentMethodType: .FPX,
-                               merchantCountry: .MY) { form in
-            XCTAssertNotNil(form.getDropdownFieldElement("FPX Bank"))
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
-        }
+                               merchantCountry: .MY,
+                               expectedHierarchy: ExpectedFormHierarchy.FPX.paymentIntent) { _ in }
     }
 
     func testBLIKConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "PLN", paymentMethodType: .blik, merchantCountry: .BE) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "PLN", paymentMethodType: .blik, merchantCountry: .BE,
+                               expectedHierarchy: ExpectedFormHierarchy.BLIK.paymentIntent) { form in
             form.getTextFieldElement("BLIK code").setText("123456")
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
         }
     }
 
@@ -177,7 +167,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             )
         )
 
-        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage], currency: "GBP", paymentMethodType: .bacsDebit, merchantCountry: .GB, configuration: configuration) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage], currency: "GBP", paymentMethodType: .bacsDebit, merchantCountry: .GB, configuration: configuration,
+                               expectedHierarchy: ExpectedFormHierarchy.BacsDebit.all) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
             form.getTextFieldElement("Sort code").setText("108800")
@@ -196,17 +187,13 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
                                paymentMethodType: .amazonPay,
-                               merchantCountry: .US) { form in
-            // AmazonPay has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.AmazonPay.paymentIntent) { _ in }
         try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
                                currency: "USD",
                                paymentMethodType: .amazonPay,
-                               merchantCountry: .US) { form in
-            XCTAssertNotNil(form.getMandateElement(), "AmazonPay should show mandate with PMO setup_future_usage")
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
-        }
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.AmazonPay.settingUp) { _ in }
     }
 
     func testAlmaConfirmFlows() async throws {
@@ -214,10 +201,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                currency: "EUR",
                                amount: 5000, // Alma requires minimum €50.00
                                paymentMethodType: .alma,
-                               merchantCountry: .FR) { form in
-            // Alma has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+                               merchantCountry: .FR,
+                               expectedHierarchy: ExpectedFormHierarchy.Alma.paymentIntent) { _ in }
     }
 
     func testSunbitConfirmFlows() async throws {
@@ -225,67 +210,55 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
                                currency: "USD",
                                amount: 100000,
                                paymentMethodType: .sunbit,
-                               merchantCountry: .US) { form in
-            // Sunbit has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Sunbit.paymentIntent) { _ in }
     }
 
     func testBillieConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",
                                paymentMethodType: .billie,
-                               merchantCountry: .DE) { form in
-            // Billie has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+                               merchantCountry: .DE,
+                               expectedHierarchy: ExpectedFormHierarchy.Billie.paymentIntent) { _ in }
     }
 
     func testSatispayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",
                                paymentMethodType: .satispay,
-                               merchantCountry: .IT) { form in
-            // Satispay has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+                               merchantCountry: .IT,
+                               expectedHierarchy: ExpectedFormHierarchy.Satispay.paymentIntent) { _ in }
         try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
                                currency: "EUR",
                                paymentMethodType: .satispay,
-                               merchantCountry: .IT) { form in
-            XCTAssertNotNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
-        }
+                               merchantCountry: .IT,
+                               expectedHierarchy: ExpectedFormHierarchy.Satispay.settingUp) { _ in }
     }
 
     func testCryptoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
                                paymentMethodType: .crypto,
-                               merchantCountry: .US) { form in
-            // Crypto has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Crypto.paymentIntent) { _ in }
     }
 
     func testAlipayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
                                paymentMethodType: .alipay,
-                               merchantCountry: .US) { form in
-            // Alipay has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Alipay.paymentIntent) { _ in }
     }
 
     func testOXXOConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "MXN",
                                paymentMethodType: .OXXO,
-                               merchantCountry: .MX) { form in
+                               merchantCountry: .MX,
+                               expectedHierarchy: ExpectedFormHierarchy.OXXO.paymentIntent) { form in
             form.getTextFieldElement("Full name").setText("Jane Doe")
             form.getTextFieldElement("Email").setText("foo@bar.com")
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 4)
         }
     }
 
@@ -293,10 +266,10 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "JPY",
                                paymentMethodType: .konbini,
-                               merchantCountry: .JP) { form in
+                               merchantCountry: .JP,
+                               expectedHierarchy: ExpectedFormHierarchy.Konbini.paymentIntent) { form in
             form.getTextFieldElement("Full name").setText("Jane Doe")
             form.getTextFieldElement("Email").setText("foo@bar.com")
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 6)
         }
     }
 
@@ -304,10 +277,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "SGD",
                                paymentMethodType: .paynow,
-                               merchantCountry: .SG) { form in
-            // PayNow has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+                               merchantCountry: .SG,
+                               expectedHierarchy: ExpectedFormHierarchy.PayNow.paymentIntent) { _ in }
     }
 
     func testBoletoConfirmFlows() async throws {
@@ -331,7 +302,8 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             paymentMethodType: .boleto,
             merchantCountry: .BR,
             configuration: configuration,
-            defaultCountry: "BR"
+            defaultCountry: "BR",
+            expectedHierarchy: ExpectedFormHierarchy.Boleto.all
         ) { form in
             form.getTextFieldElement("Full name").setText("Jane Doe")
             form.getTextFieldElement("Email").setText("foo@bar.com")
@@ -342,8 +314,6 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             XCTAssertEqual(form.getTextFieldElement("City")?.text, "São Paulo")
             XCTAssertEqual(form.getTextFieldElement("State")?.text, "SP")
             XCTAssertEqual(form.getTextFieldElement("Postal code")?.text, "01234567")
-
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 15)
         }
     }
 
@@ -351,9 +321,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "THB",
                                paymentMethodType: .promptPay,
-                               merchantCountry: .TH) { form in
+                               merchantCountry: .TH,
+                               expectedHierarchy: ExpectedFormHierarchy.PromptPay.paymentIntent) { form in
             form.getTextFieldElement("Email").setText("foo@bar.com")
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
         }
     }
 
@@ -362,11 +332,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             intentKinds: [.paymentIntent],
             currency: "SEK",
             paymentMethodType: .swish,
-            merchantCountry: .FR
-        ) { form in
-            // Swish has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+            merchantCountry: .FR,
+            expectedHierarchy: ExpectedFormHierarchy.Swish.paymentIntent
+        ) { _ in }
     }
 
     func testAfterpayConfirmFlows() async throws {
@@ -379,10 +347,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             currency: "USD",
             paymentMethodType: .afterpayClearpay,
             merchantCountry: .US,
-            configuration: configuration
+            configuration: configuration,
+            expectedHierarchy: ExpectedFormHierarchy.Afterpay.paymentIntent
         ) { form in
-            // Afterpay shows name and email (no billing address by default)
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("foo@bar.com")
         }
@@ -393,21 +360,17 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             intentKinds: [.paymentIntent],
             currency: "DKK",
             paymentMethodType: .mobilePay,
-            merchantCountry: .FR
-        ) { form in
-            // MobilePay has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+            merchantCountry: .FR,
+            expectedHierarchy: ExpectedFormHierarchy.MobilePay.paymentIntent
+        ) { _ in }
     }
 
     func testTwintConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "CHF",
                                paymentMethodType: .twint,
-                               merchantCountry: .GB) { form in
-            // Twint has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+                               merchantCountry: .GB,
+                               expectedHierarchy: ExpectedFormHierarchy.Twint.paymentIntent) { _ in }
     }
 
     func testSavedSEPA() async throws {
@@ -489,21 +452,19 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testKlarnaConfirmFlows() async throws {
-        for intentKind in IntentKind.allCases {
-            try await _testConfirm(intentKinds: [intentKind],
-                                   currency: "USD",
-                                   paymentMethodType: .klarna,
-                                   merchantCountry: .US) { form in
-                form.getTextFieldElement("Email").setText("foo@bar.com")
-                switch intentKind {
-                case .paymentIntent:
-                    XCTAssertNil(form.getMandateElement())
-                    XCTAssertEqual(form.getAllUnwrappedSubElements().count, 6)
-                case .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent:
-                    XCTAssertNotNil(form.getMandateElement())
-                    XCTAssertEqual(form.getAllUnwrappedSubElements().count, 7)
-                }
-            }
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "USD",
+                               paymentMethodType: .klarna,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Klarna.paymentIntent) { form in
+            form.getTextFieldElement("Email").setText("foo@bar.com")
+        }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "USD",
+                               paymentMethodType: .klarna,
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Klarna.settingUp) { form in
+            form.getTextFieldElement("Email").setText("foo@bar.com")
         }
     }
 
@@ -511,9 +472,9 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",
                                paymentMethodType: .multibanco,
-                               merchantCountry: .US) { form in
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Multibanco.paymentIntent) { form in
             form.getTextFieldElement("Email").setText("foo@bar.com")
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 3)
         }
     }
 
@@ -521,48 +482,44 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "GBP",
                                paymentMethodType: .revolutPay,
-                               merchantCountry: .GB) { form in
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+                               merchantCountry: .GB,
+                               expectedHierarchy: ExpectedFormHierarchy.RevolutPay.paymentIntent) { _ in }
         try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
                                currency: "GBP",
                                paymentMethodType: .revolutPay,
-                               merchantCountry: .GB) { form in
-            XCTAssertNotNil(form.getMandateElement(), "RevolutPay should show mandate when set up")
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
-        }
+                               merchantCountry: .GB,
+                               expectedHierarchy: ExpectedFormHierarchy.RevolutPay.settingUp) { _ in }
     }
 
     func testPayPalConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "EUR",
                                paymentMethodType: .payPal,
-                               merchantCountry: .FR) { form in
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .setupIntent],
+                               merchantCountry: .FR,
+                               expectedHierarchy: ExpectedFormHierarchy.PayPal.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage],
                                currency: "EUR",
                                paymentMethodType: .payPal,
-                               merchantCountry: .FR) { form in
-            XCTAssertNotNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
-        }
+                               merchantCountry: .FR,
+                               expectedHierarchy: ExpectedFormHierarchy.PayPal.paymentIntentWithSetupFutureUsage) { _ in }
+        try await _testConfirm(intentKinds: [.setupIntent],
+                               currency: "EUR",
+                               paymentMethodType: .payPal,
+                               merchantCountry: .FR,
+                               expectedHierarchy: ExpectedFormHierarchy.PayPal.setupIntent) { _ in }
     }
 
     func testCashAppConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
                                paymentMethodType: .cashApp,
-                               merchantCountry: .US) { form in
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.CashApp.paymentIntent) { _ in }
         try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
                                currency: "USD",
                                paymentMethodType: .cashApp,
-                               merchantCountry: .US) { form in
-            XCTAssertNotNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
-        }
+                               merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.CashApp.settingUp) { _ in }
     }
 
     func testCardConfirmFlowsSetAsDefault() async throws {
@@ -607,36 +564,28 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testEPSConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .EPS) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .EPS,
+                               expectedHierarchy: ExpectedFormHierarchy.EPS.paymentIntent) { form in
             form.getTextFieldElement("Full name").setText("John Doe")
-            XCTAssertNil(form.getMandateElement())
-            XCTAssertNil(form.getTextFieldElement("Email"))
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
         }
     }
 
     func testPrzelewy24ConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .przelewy24) { form in
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .przelewy24,
+                               expectedHierarchy: ExpectedFormHierarchy.Przelewy24.paymentIntent) { form in
             form.getTextFieldElement("Full name").setText("John Doe")
             form.getTextFieldElement("Email").setText("test@test.com")
-            XCTAssertNotNil(form.getDropdownFieldElement("Przelewy24 Bank"))
-            XCTAssertNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 7)
         }
     }
 
     func testAffirmConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "USD", amount: 3500, paymentMethodType: .affirm, merchantCountry: .US) { form in // Affirm requires minimum $35.00
-            // Affirm has no input fields and one non-interactive Affirm UI element
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 2)
-        }
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "USD", amount: 3500, paymentMethodType: .affirm, merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Affirm.paymentIntent) { _ in }  // Affirm requires minimum $35.00
     }
 
     func testZipConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "AUD", paymentMethodType: .zip, merchantCountry: .AU) { form in
-            // Zip has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "AUD", paymentMethodType: .zip, merchantCountry: .AU,
+                               expectedHierarchy: ExpectedFormHierarchy.Zip.paymentIntent) { _ in }
     }
 
     func testPayPayConfirmFlows() async throws {
@@ -647,38 +596,29 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
             currency: "JPY",
             paymentMethodType: .payPay,
             merchantCountry: .JP,
-            configuration: configuration
-        ) { form in
-            // PayPay has no input fields
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 1)
-        }
+            configuration: configuration,
+            expectedHierarchy: ExpectedFormHierarchy.PayPay.paymentIntent
+        ) { _ in }
     }
 
     // MARK: Add tests above this line
     // MARK: - 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file
     func testiDEALConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .iDEAL) { form in
-            // Fill out your payment method form in here.
-            // Note: Each required field you fill out implicitly tests that the field exists; if the field doesn't exist, the test will fail because the form is incomplete.
+        // Fill out your payment method form in here.
+        // Note: Each required field you fill out implicitly tests that the field exists; if the field doesn't exist, the test will fail because the form is incomplete.
+        // The expectedHierarchy parameter verifies the form structure, replacing manual element count and mandate assertions.
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "EUR", paymentMethodType: .iDEAL,
+                               expectedHierarchy: ExpectedFormHierarchy.iDEAL.paymentIntent) { form in
             form.getTextFieldElement("Full name").setText("Foo")
-            XCTAssertNotNil(form.getDropdownFieldElement("iDEAL Bank"))
-            // You can also explicitly assert for the existence/absence of certain elements.
-            // e.g. iDEAL shouldn't show a mandate or email field for a vanilla payment
-            XCTAssertNil(form.getMandateElement())
-            XCTAssertNil(form.getTextFieldElement("Email"))
-            // Asserting the total number of elements prevents accidentally adding more elements to this form
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 5)
             // Tip: To help you debug, run `po form` in the debug console or `call debugPrint(form)`
         }
 
         // If your payment method shows different fields depending on the kind of intent, you can call `_testConfirm` multiple times with different intents.
         // e.g. iDEAL should show an email field and mandate for PI+SFU and SIs, so we test those separately here:
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .iDEAL) { form in
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent], currency: "EUR", paymentMethodType: .iDEAL,
+                               expectedHierarchy: ExpectedFormHierarchy.iDEAL.settingUp) { form in
             form.getTextFieldElement("Full name").setText("Foo")
             form.getTextFieldElement("Email").setText("f@z.c")
-            XCTAssertNotNil(form.getDropdownFieldElement("iDEAL Bank"))
-            XCTAssertNotNil(form.getMandateElement())
-            XCTAssertEqual(form.getAllUnwrappedSubElements().count, 7)
         }
     }
 }
@@ -766,6 +706,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         configuration: PaymentSheet.Configuration? = nil,
         defaultCountry: String = "US",
         allowsSetAsDefaultPM: Bool = false,
+        expectedHierarchy: FormHierarchyNode? = nil,
         formCompleter: (PaymentMethodElement) -> Void
     ) async throws {
         for intentKind in intentKinds {
@@ -778,6 +719,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
                 configuration: configuration,
                 defaultCountry: defaultCountry,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
+                expectedHierarchy: expectedHierarchy,
                 formCompleter: formCompleter
             )
         }
@@ -791,6 +733,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     /// - Parameter currency: A valid currency for the payment method you're testing
     /// - Parameter merchantCountry: An enum representing the merchant's country
     /// - Parameter paymentMethodType: The payment method type you're testing
+    /// - Parameter expectedHierarchy: Optional expected form hierarchy to verify
     /// - Parameter formCompleter: A closure that takes the form for your payment method. Your implementaiton should fill in the form's textfields etc. You can also perform additional checks e.g. to ensure certain fields are shown/hidden.
     @MainActor
     func _testConfirm(
@@ -802,6 +745,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
         configuration: PaymentSheet.Configuration? = nil,
         defaultCountry: String,
         allowsSetAsDefaultPM: Bool = false,
+        expectedHierarchy: FormHierarchyNode? = nil,
         formCompleter: (PaymentMethodElement) -> Void
     ) async throws {
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
@@ -846,6 +790,17 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 
             // Fill out the form
             formCompleter(paymentMethodForm)
+
+            // Assert form hierarchy if expected value provided
+            if let expectedHierarchy {
+                let actualHierarchy = paymentMethodForm.toHierarchyNode()
+                if actualHierarchy != expectedHierarchy {
+                    print("❌ Form hierarchy mismatch for \(description)")
+                    print("📋 Copy this Swift code for the expected hierarchy:")
+                    print(actualHierarchy.asSwiftCode())
+                }
+                XCTAssertEqual(actualHierarchy, expectedHierarchy, "Form hierarchy mismatch for \(description)")
+            }
 
             // Generate params from the form
             guard let intentConfirmParams = paymentMethodForm.updateParams(params: IntentConfirmParams(type: .stripe(paymentMethodType))) else {
