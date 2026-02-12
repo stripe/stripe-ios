@@ -53,13 +53,19 @@ struct PaymentView: View {
             switch self {
             case let .existingPaymentToken(token):
                 token.usBankAccount != nil
-            case let .newPaymentMethod(_, type, _):
+            case let .newPaymentMethod(_, type, displayData):
                 switch type {
                 case .bankAccount:
                     true
                 case .cardAndBankAccount:
-                    // ehhh
-                    false
+                    switch displayData.paymentMethodType {
+                    case .bankAccount:
+                        true
+                    case .card, .applePay:
+                        false
+                    @unknown default:
+                        false
+                    }
                 case .card, .applePay:
                     false
                 @unknown default:

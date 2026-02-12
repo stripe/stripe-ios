@@ -473,6 +473,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
 
             let preview = PaymentMethodDisplayData(
+                paymentMethodType: .init(paymentMethodType: result.paymentMethodType),
                 icon: result.icon,
                 label: result.label,
                 sublabel: result.sublabel
@@ -503,6 +504,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     }()
 
                     let paymentMethodPreview = PaymentMethodDisplayData(
+                        paymentMethodType: .applePay,
                         icon: icon,
                         label: label,
                         sublabel: sublabel
