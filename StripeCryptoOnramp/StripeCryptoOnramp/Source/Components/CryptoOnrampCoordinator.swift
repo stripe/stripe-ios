@@ -112,7 +112,7 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Presents UI to collect/select a payment method of the given type.
     ///
     /// - Parameters:
-    ///   - type: The payment method type to collect. For `.card` and `.bankAccount`, this presents Link. For `.applePay(paymentRequest:)`, this presents Apple Pay using the provided `PKPaymentRequest`.
+    ///   - type: The payment method type to collect. For `.card`, `.bankAccount`, and `.cardAndBankAccount`, this presents Link. For `.applePay(paymentRequest:)`, this presents Apple Pay using the provided `PKPaymentRequest`.
     ///   - viewController: The view controller from which to present the UI.
     /// - Returns: A `PaymentMethodDisplayData` describing the user’s selection, or `nil` if the user cancels.
     /// Throws an error if presentation or payment method collection fails.

@@ -12,16 +12,17 @@ import PassKit
 @_spi(STP)
 public enum PaymentMethodType: Equatable {
 
-    /// Card-based payment, such as a credit or debit card.
+    /// Limits payment options in Stripe's wallet UI to cards, such as a credit or debit card.
     case card
 
-    /// Bank account-based payment.
+    /// Limits payment options in Stripe's wallet UI to bank accounts.
     case bankAccount
     
-    /// Card-based and bank account-based payment.
+    /// Does not limit to cards or bank accounts, either can be selected in Stripe's wallet UI.
     case cardAndBankAccount
     
-    /// Apple Pay payment. Requires a `PKPaymentRequest` containing details about the payment.
+    /// Proceeds to collect payment via Apple Pay, skipping Stripe's wallet UI.
+    /// Requires a `PKPaymentRequest` containing details about the payment.
     case applePay(paymentRequest: PKPaymentRequest)
 }
 
