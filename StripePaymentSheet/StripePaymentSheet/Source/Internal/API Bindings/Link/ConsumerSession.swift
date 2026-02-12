@@ -22,6 +22,8 @@ final class ConsumerSession: Decodable {
     let verificationSessions: [VerificationSession]
     let supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
     let mobileFallbackWebviewParams: MobileFallbackWebviewParams?
+    let currentAuthenticationLevel: AuthenticationLevel?
+    let minimumAuthenticationLevel: AuthenticationLevel?
 
     init(
         clientSecret: String,
@@ -31,7 +33,9 @@ final class ConsumerSession: Decodable {
         phoneNumberCountry: String?,
         verificationSessions: [VerificationSession],
         supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>,
-        mobileFallbackWebviewParams: MobileFallbackWebviewParams?
+        mobileFallbackWebviewParams: MobileFallbackWebviewParams?,
+        currentAuthenticationLevel: AuthenticationLevel? = nil,
+        minimumAuthenticationLevel: AuthenticationLevel? = nil
     ) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
@@ -41,6 +45,8 @@ final class ConsumerSession: Decodable {
         self.verificationSessions = verificationSessions
         self.supportedPaymentDetailsTypes = supportedPaymentDetailsTypes
         self.mobileFallbackWebviewParams = mobileFallbackWebviewParams
+        self.currentAuthenticationLevel = currentAuthenticationLevel
+        self.minimumAuthenticationLevel = minimumAuthenticationLevel
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -52,6 +58,8 @@ final class ConsumerSession: Decodable {
         case verificationSessions
         case supportedPaymentDetailsTypes = "supportPaymentDetailsTypes"
         case mobileFallbackWebviewParams = "mobile_fallback_webview_params"
+        case currentAuthenticationLevel
+        case minimumAuthenticationLevel
     }
 
     init(from decoder: Decoder) throws {
@@ -64,6 +72,8 @@ final class ConsumerSession: Decodable {
         self.verificationSessions = try container.decodeIfPresent([ConsumerSession.VerificationSession].self, forKey: .verificationSessions) ?? []
         self.supportedPaymentDetailsTypes = try container.decodeIfPresent(Set<ConsumerPaymentDetails.DetailsType>.self, forKey: .supportedPaymentDetailsTypes) ?? []
         self.mobileFallbackWebviewParams = try container.decodeIfPresent(MobileFallbackWebviewParams.self, forKey: .mobileFallbackWebviewParams)
+        self.currentAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .currentAuthenticationLevel)
+        self.minimumAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .minimumAuthenticationLevel)
     }
 
 }
@@ -105,8 +115,40 @@ extension ConsumerSession: Equatable {
     }
 }
 
+// MARK: - AuthenticationLevel
+extension ConsumerSession {
+    enum AuthenticationLevel: String, SafeEnumCodable, Comparable {
+        case notAuthenticated = "NOT_AUTHENTICATED"
+        case oneFactorAuth = "1FA"
+        case twoFactorAuth = "2FA"
+        case unparsable = ""
+
+        /// Unparsable is treated as less than all known levels
+        /// to avoid accidentally granting access for unknown values.
+        static func < (lhs: AuthenticationLevel, rhs: AuthenticationLevel) -> Bool {
+            return lhs.sortOrder < rhs.sortOrder
+        }
+
+        private var sortOrder: Int {
+            switch self {
+            case .unparsable: return -1
+            case .notAuthenticated: return 0
+            case .oneFactorAuth: return 1
+            case .twoFactorAuth: return 2
+            }
+        }
+    }
+}
+
 // MARK: - Helpers
 extension ConsumerSession {
+    var meetsMinimumAuthenticationLevel: Bool {
+        guard let currentAuthenticationLevel, let minimumAuthenticationLevel else {
+            return false
+        }
+        return currentAuthenticationLevel >= minimumAuthenticationLevel
+    }
+
     var hasVerifiedSMSSession: Bool {
         verificationSessions.containsVerifiedSMSSession
     }

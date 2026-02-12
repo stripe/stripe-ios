@@ -87,6 +87,7 @@ struct PaymentSheetExampleAppRootView: View {
         case linkPaymentController
         case linkController
         case linkStandaloneDemo
+        case linkPayoutsDemo
         case embeddedPaymentElement
         case embeddedPaymentElement_swiftUI
         case walletButtonsView_swiftUI
@@ -115,6 +116,7 @@ struct PaymentSheetExampleAppRootView: View {
                      .linkPaymentController,
                      .linkController,
                      .linkStandaloneDemo,
+                     .linkPayoutsDemo,
                      .embeddedPaymentElement,
                      .embeddedPaymentElement_swiftUI,
                      .walletButtonsView_swiftUI,
@@ -153,6 +155,8 @@ struct PaymentSheetExampleAppRootView: View {
                 return "LinkController (SwiftUI)"
             case .linkStandaloneDemo:
                 return "Link Standalone Demo"
+            case .linkPayoutsDemo:
+                return "Link Payouts Demo"
             case .embeddedPaymentElement:
                 return "EmbeddedPaymentElement"
             case .embeddedPaymentElement_swiftUI:
@@ -231,6 +235,13 @@ struct PaymentSheetExampleAppRootView: View {
                 ExampleLinkStandaloneComponent()
             } else {
                 Text("Sorry, only available on >= iOS 16.0")
+                    .font(.title2)
+            }
+        case .linkPayoutsDemo:
+            if #available(iOS 26.0, *) {
+                LinkPayoutsDemoView()
+            } else {
+                Text("Sorry, only available on >= iOS 26.0")
                     .font(.title2)
             }
         case .embeddedPaymentElement:

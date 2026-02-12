@@ -100,6 +100,38 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         waitForExpectations(timeout: 5)
     }
 
+    func testMeetsMinimumAuthenticationLevel_meets() {
+        let session = ConsumerSession(
+            clientSecret: "secret",
+            emailAddress: "user@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [.card],
+            mobileFallbackWebviewParams: nil,
+            currentAuthenticationLevel: .oneFactorAuth,
+            minimumAuthenticationLevel: .oneFactorAuth
+        )
+        XCTAssertTrue(session.meetsMinimumAuthenticationLevel)
+    }
+
+    func testMeetsMinimumAuthenticationLevel_doesNotMeet() {
+        let session = ConsumerSession(
+            clientSecret: "secret",
+            emailAddress: "user@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [.card],
+            mobileFallbackWebviewParams: nil,
+            currentAuthenticationLevel: .notAuthenticated,
+            minimumAuthenticationLevel: .oneFactorAuth
+        )
+        XCTAssertFalse(session.meetsMinimumAuthenticationLevel)
+    }
+
     func testNoRefreshWhenNotRequested() {
         let sut = makeSUT()
         let listedPaymentDetailsExp = expectation(description: "Lists payment details")

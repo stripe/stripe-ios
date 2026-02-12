@@ -140,7 +140,7 @@ banner = <<~USAGE
   Usage: ci_scripts/run_tests.rb [OPTIONS]
 
   Examples:
-    ci_scripts/run_tests.rb --test StripeCoreTests/STPLocalizationUtilsTest/testAllStringsAreTranslated
+    ci_scripts/run_tests.rb --test StripeCoreTests/URLEncoderTest/testQueryStringFromParameters
     ci_scripts/run_tests.rb --scheme StripePaymentSheet
     ci_scripts/run_tests.rb --all
     ci_scripts/run_tests.rb --record-snapshots --test StripePaymentSheetTests/SomeSnapshotTest
@@ -325,4 +325,23 @@ unless success
   puts "\nTests failed! Inspect failures with:"
   puts "  ci_scripts/run_tests.rb --failures"
   exit exit_code
+end
+
+# --- Verify tests actually ran ---
+unless options[:build_only]
+  result_path = options[:result_bundle_path]
+  if File.exist?(result_path)
+    summary_json = `xcrun xcresulttool get test-results summary --path #{result_path.shellescape} 2>/dev/null`
+    if $?.success? && !summary_json.strip.empty?
+      summary = JSON.parse(summary_json) rescue nil
+      if summary
+        total = summary["totalTestCount"].to_i
+        if total == 0
+          abort "Error: 0 tests were executed. The test specifier may not match any tests.\n" \
+                "Check your --test argument and ensure the target/class/method names are correct."
+        end
+        puts "#{total} test(s) executed."
+      end
+    end
+  end
 end
