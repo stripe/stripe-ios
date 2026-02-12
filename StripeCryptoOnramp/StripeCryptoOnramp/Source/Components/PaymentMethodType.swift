@@ -40,6 +40,16 @@ extension PaymentMethodType {
         }
     }
 
+    var requiresNameCollection: Bool {
+        switch self {
+        case .bankAccount, .cardAndBankAccount:
+            // If a bank account *can* be collected, a name will be required in the native wallet UI.
+            return true
+        case .card, .applePay:
+            return false
+        }
+    }
+
     var analyticsValue: String {
         switch self {
         case .card:
