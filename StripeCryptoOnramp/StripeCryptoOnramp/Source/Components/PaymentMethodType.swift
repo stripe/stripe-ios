@@ -17,10 +17,10 @@ public enum PaymentMethodType: Equatable {
 
     /// Limits payment options in Stripe's wallet UI to bank accounts.
     case bankAccount
-    
+
     /// Does not limit to cards or bank accounts, either can be selected in Stripe's wallet UI.
     case cardAndBankAccount
-    
+
     /// Proceeds to collect payment via Apple Pay, skipping Stripe's wallet UI.
     /// Requires a `PKPaymentRequest` containing details about the payment.
     case applePay(paymentRequest: PKPaymentRequest)

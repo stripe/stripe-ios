@@ -337,7 +337,7 @@ struct PaymentView: View {
                         ) {
                             presentPaymentMethodSelector(for: .bankAccount)
                         }
-                        
+
                         makePaymentMethodButton(
                             title: "Add Card or Bank Account",
                             icon: .systemName("square.split.2x1.fill")
