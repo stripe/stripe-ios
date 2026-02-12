@@ -91,7 +91,7 @@ class StripeAPIBridgeNetworkTests: STPNetworkStubbingTestCase {
         let exp = expectation(description: "Upload file")
         let image = UIImage(
             named: "stp_test_upload_image.jpeg",
-            in: Bundle(for: StripeAPIBridgeNetworkTest.self),
+            in: Bundle(for: StripeAPIBridgeNetworkTests.self),
             compatibleWith: nil)!
 
         client?.uploadImage(image, purpose: .disputeEvidence) { file, error in

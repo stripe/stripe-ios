@@ -621,7 +621,7 @@ final class PaymentSheetGDPRConfirmFlowTests: STPNetworkStubbingTestCase {
 }
 
 // MARK: - Creation Helpers
-extension PaymentSheet_GDPR_ConfirmFlowTests {
+extension PaymentSheetGDPRConfirmFlowTests {
     func elementsSession(paymentMethodSave: Bool,
                          allowRedisplayOverride: STPPaymentMethodAllowRedisplay? = nil) -> STPElementsSession {
         let paymentMethodSaveValue = paymentMethodSave ? "enabled" : "disabled"
@@ -876,7 +876,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
     }
 }
 
-extension PaymentSheet_GDPR_ConfirmFlowTests: PaymentSheetAuthenticationContext {
+extension PaymentSheetGDPRConfirmFlowTests: PaymentSheetAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
     }

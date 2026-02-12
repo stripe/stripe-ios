@@ -106,7 +106,7 @@ class STPSetupIntentFunctionalTests: STPNetworkStubbingTestCase {
 }
 
 //  Converted to Swift 5.8.1 by Swiftify v5.8.28463 - https://swiftify.com/
-extension STPSetupIntentFunctionalTestSwift {
+extension STPSetupIntentFunctionalTests {
     func testCreateSetupIntentWithTestingServer() {
         let expectation = self.expectation(description: "SetupIntent create.")
         STPTestingAPIClient.shared.createSetupIntent(

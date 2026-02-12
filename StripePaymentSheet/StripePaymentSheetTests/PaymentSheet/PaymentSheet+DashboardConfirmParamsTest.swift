@@ -263,7 +263,7 @@ final class PaymentSheetConfirmParamsTest: APIStubbedTestCase {
     }
 }
 
-extension PaymentSheet_ConfirmParamsTest: STPAuthenticationContext {
+extension PaymentSheetConfirmParamsTest: STPAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
     }
@@ -271,7 +271,7 @@ extension PaymentSheet_ConfirmParamsTest: STPAuthenticationContext {
 
 // MARK: - Helpers
 
-private extension PaymentSheet_ConfirmParamsTest {
+private extension PaymentSheetConfirmParamsTest {
     func stubConfirmPaymentExpecting(
         isPaymentIntent: Bool,
         paymentMethodId: String,
