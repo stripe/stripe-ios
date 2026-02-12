@@ -11,7 +11,94 @@
   "status": "open",
   "payment_status": "unpaid",
   "client_secret": "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456",
-  "customer": "cus_test123456",
+  "customer": {
+    "id": "cus_test123456",
+    "object": "customer",
+    "email": "customer@example.com",
+    "name": "Test Customer",
+    "phone": "+15555555555",
+    "payment_methods": [
+      {
+        "id": "pm_1Sxae3Lu5o3P18Zpt5YuRRoG",
+        "object": "payment_method",
+        "allow_redisplay": "always",
+        "billing_details": {
+          "address": {
+            "city": "South San Francisco",
+            "country": "US",
+            "line1": "354 Oyster Point Blvd",
+            "line2": null,
+            "postal_code": "94080",
+            "state": "CA"
+          },
+          "email": "jenny.rosen@example.com",
+          "name": "Jenny Rosen",
+          "phone": "+15555555555"
+        },
+        "card": {
+          "brand": "visa",
+          "checks": {
+            "address_line1_check": null,
+            "address_postal_code_check": null,
+            "cvc_check": null
+          },
+          "country": "US",
+          "display_brand": "visa",
+          "exp_month": 2,
+          "exp_year": 2027,
+          "funding": "credit",
+          "generated_from": null,
+          "last4": "4242",
+          "networks": {
+            "available": ["visa"],
+            "preferred": null
+          },
+          "three_d_secure_usage": {
+            "supported": true
+          },
+          "wallet": null
+        },
+        "created": 1770329007,
+        "customer": "cus_test123456",
+        "livemode": false,
+        "type": "card"
+      },
+      {
+        "id": "pm_1Sxae4Lu5o3P18ZplFiKexnM",
+        "object": "payment_method",
+        "allow_redisplay": "always",
+        "billing_details": {
+          "address": {
+            "city": "South San Francisco",
+            "country": "US",
+            "line1": "354 Oyster Point Blvd",
+            "line2": null,
+            "postal_code": "94080",
+            "state": "CA"
+          },
+          "email": "jenny.rosen@example.com",
+          "name": "Jenny Rosen",
+          "phone": "+15555555555"
+        },
+        "created": 1770329008,
+        "customer": "cus_test123456",
+        "livemode": false,
+        "type": "us_bank_account",
+        "us_bank_account": {
+          "account_holder_type": "individual",
+          "account_type": "checking",
+          "bank_name": "STRIPE TEST BANK",
+          "fingerprint": "FFDMA0xfhBjWSZLu",
+          "last4": "6789",
+          "networks": {
+            "preferred": "ach",
+            "supported": ["ach"]
+          },
+          "routing_number": "110000000"
+        }
+      }
+    ]
+  },
   "customer_email": "test@example.com",
   "payment_intent": "pi_test123456789",
   "setup_intent": null,

@@ -199,13 +199,15 @@ extension STPTestingAPIClient {
         types: [String] = ["card"],
         currency: String = "usd",
         amount: Int? = nil,
-        merchantCountry: String? = "us"
+        merchantCountry: String? = "us",
+        customerID: String? = nil
     ) async throws -> CreateCheckoutSessionResponse {
         let params: [String: Any?] = [
             "account": merchantCountry,
             "payment_method_types": types,
             "currency": currency,
             "amount": amount,
+            "customer": customerID,
         ]
         return try await makeRequest(endpoint: "create_checkout_session", params: params)
     }
@@ -225,6 +227,12 @@ extension STPTestingAPIClient {
         let (data, _) = try await session.data(for: request)
         let jsonDecoder = JSONDecoder()
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try jsonDecoder.decode(ResponseType.self, from: data)
+        do {
+            return try jsonDecoder.decode(ResponseType.self, from: data)
+        } catch {
+            let rawDataString = String(data: data, encoding: .utf8)
+            print("Error decoding to \(ResponseType.self). Raw data: \(rawDataString ?? "nil")")
+            throw error
+        }
     }
 }

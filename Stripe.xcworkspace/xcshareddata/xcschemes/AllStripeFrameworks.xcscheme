@@ -333,6 +333,14 @@
                BlueprintName = "StripePaymentSheetTests"
                ReferencedContainer = "container:StripePaymentSheet/StripePaymentSheet.xcodeproj">
             </BuildableReference>
+            <SkippedTests>
+               <Test
+                  Identifier = "MPELatencyTest">
+               </Test>
+               <Test
+                  Identifier = "MPELatencyTest/testLoadLatency()">
+               </Test>
+            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "NO">

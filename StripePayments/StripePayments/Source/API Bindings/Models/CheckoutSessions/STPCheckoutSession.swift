@@ -48,8 +48,13 @@ import Foundation
     /// Whether or not this CheckoutSession was created in livemode.
     public let livemode: Bool
 
+    /// Customer data including saved payment methods.
+    public let customer: STPCheckoutSessionCustomer?
+
     /// The ID of the customer for this Session.
-    public let customerId: String?
+    public var customerId: String? {
+        return customer?.id
+    }
 
     /// The customer's email address.
     public let customerEmail: String?
@@ -103,7 +108,7 @@ import Foundation
         paymentMethodTypes: [STPPaymentMethodType],
         paymentMethodOptions: STPPaymentMethodOptions?,
         livemode: Bool,
-        customerId: String?,
+        customer: STPCheckoutSessionCustomer?,
         customerEmail: String?,
         url: URL?,
         returnUrl: String?,
@@ -122,7 +127,7 @@ import Foundation
         self.paymentMethodTypes = paymentMethodTypes
         self.paymentMethodOptions = paymentMethodOptions
         self.livemode = livemode
-        self.customerId = customerId
+        self.customer = customer
         self.customerEmail = customerEmail
         self.url = url
         self.returnUrl = returnUrl
@@ -160,6 +165,14 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             STPCheckoutSessionStatus.status(from: $0)
         }
 
+        // Parse customer object (can be object or string ID for backwards compatibility)
+        let customer: STPCheckoutSessionCustomer?
+        if let customerDict = dict["customer"] as? [AnyHashable: Any] {
+            customer = STPCheckoutSessionCustomer.decodedObject(from: customerDict)
+        } else {
+            customer = nil
+        }
+
         return STPCheckoutSession(
             stripeId: stripeId,
             clientSecret: clientSecret,
@@ -175,7 +188,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
                 fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]
             ),
             livemode: livemode,
-            customerId: dict["customer"] as? String,
+            customer: customer,
             customerEmail: dict["customer_email"] as? String,
             url: urlString.flatMap { URL(string: $0) },
             returnUrl: dict["return_url"] as? String ?? dict["success_url"] as? String,
