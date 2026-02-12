@@ -98,9 +98,9 @@ struct LinkPMDisplayDetails {
     }
 
     @_spi(STP) public var sessionState: SessionState {
-        if let currentSession = currentSession {
-            // sms verification is not required if we are in the signup flow or are using seamless sign-in
-            return currentSession.hasVerifiedSMSSession || currentSession.isVerifiedForSignup || currentSession.isVerifiedWithLinkAuthToken
+        if let currentSession {
+            // OTP verification is not required if we are in the signup flow or are using seamless sign-in
+            return currentSession.meetsMinimumAuthenticationLevel || currentSession.isVerifiedForSignup || currentSession.isVerifiedWithLinkAuthToken
                 ? .verified : .requiresVerification
         } else {
             return .requiresSignUp
@@ -117,6 +117,10 @@ struct LinkPMDisplayDetails {
 
     var hasCompletedSMSVerification: Bool {
         return currentSession?.hasVerifiedSMSSession ?? false
+    }
+
+    var meetsMinimumAuthenticationLevel: Bool {
+        return currentSession?.meetsMinimumAuthenticationLevel ?? false
     }
 
     var isInSignupFlow: Bool {

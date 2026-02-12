@@ -19,7 +19,7 @@ The test runner (`ci_scripts/run_tests.rb`) handles simulator setup automaticall
 
 ```bash
 # Run a single test (scheme is inferred from the target name)
-ci_scripts/run_tests.rb --test StripeCoreTests/STPLocalizationUtilsTest/testAllStringsAreTranslated
+ci_scripts/run_tests.rb --test StripeCoreTests/URLEncoderTest/testQueryStringFromParameters
 
 # Run all tests for a specific scheme
 ci_scripts/run_tests.rb --scheme StripePaymentSheet
