@@ -638,6 +638,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
     func testChangeButtonStateRespectsCardBrandChoice() async throws {
         // Given an EmbeddedPaymentElement w/ CBC enabled...
+        await AddressSpecProvider.shared.loadAddressSpecs()
+        await FormSpecProvider.shared.load()
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(cardBrandChoice: ._testValue())
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -655,8 +657,6 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         sut.view.autosizeHeight(width: 320)
-        await AddressSpecProvider.shared.loadAddressSpecs()
-        await FormSpecProvider.shared.load()
         // ...with card selected...
         let cardRowButton = sut.embeddedPaymentMethodsView.getRowButton(accessibilityIdentifier: "Card")
         sut.embeddedPaymentMethodsView.didTap(rowButton: cardRowButton)
@@ -670,11 +670,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // ...the change button state label (the label that appears on the selected row) should read ****1001 w/o a network (b/c no network was selected)...
         sut.updateChangeButtonAndSublabelState(for: .new(paymentMethodType: .stripe(.card)))
         XCTAssertEqual(sut.embeddedPaymentMethodsView.selectedRowChangeButtonState?.sublabel, "•••• 1001")
-        // ...and setting a preferred network (ie what happens if you select a brand from the dropdown)...
-        // Hack: Since the dropdown field isn't properly hooked up to the Element hierarchy, we can't access it via `cardForm.getDropdownFieldElement`
-        // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-3088): Make the CBC dropdown field participate in the Element hierarchy correctly!
-        let cbcDropdown = (cardForm.getTextFieldElement("Card number").configuration as! TextFieldElement.PANConfiguration).cardBrandDropDown
-        cbcDropdown?.selectedIndex = 1
+        // ...and setting a preferred network (ie what happens if you select a brand from the selector)...
+        let cbcSelector = (cardForm.getTextFieldElement("Card number").configuration as! TextFieldElement.PANConfiguration).cardBrandSelector
+        cbcSelector?.update(brands: [.visa, .cartesBancaires], disallowedBrands: [])
+        cbcSelector?.select(brand: .cartesBancaires)
         // ...the label should read "Cartes Bancaire ****1001"
         sut.updateChangeButtonAndSublabelState(for: .new(paymentMethodType: .stripe(.card)))
         XCTAssertEqual(sut.embeddedPaymentMethodsView.selectedRowChangeButtonState?.sublabel, "Cartes Bancaires •••• 1001")

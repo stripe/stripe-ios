@@ -137,6 +137,12 @@
 /* Label for a button that lets you change the details of a payment method */
 "Change" = "Change";
 
+/* Accessibility label for the card brand selector showing available brands */
+"Card brands: %@" = "Card brands: %@";
+
+/* Message displayed below the card number field when a co-branded card is detected and the user needs to select a brand */
+"Choose a card brand" = "Choose a card brand";
+
 /* TODO */
 "Choose a payment method" = "Choose a payment method";
 

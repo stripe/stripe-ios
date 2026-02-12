@@ -135,6 +135,10 @@ extension SectionElement {
         }()
         public let elements: [Element]
 
+        public var subLabelText: String? {
+            elements.compactMap({ $0.subLabelText }).first
+        }
+
         public init?(_ element: Element?) {
             guard let element = element else {
                 return nil

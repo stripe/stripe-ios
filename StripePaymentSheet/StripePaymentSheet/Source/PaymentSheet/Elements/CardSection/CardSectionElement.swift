@@ -69,7 +69,7 @@ final class CardSectionElement: ContainerElement {
     // References to the underlying TextFieldElements
     let nameElement: TextFieldElement?
     let panElement: TextFieldElement
-    let cardBrandDropDown: DropdownFieldElement?
+    let cardBrandSelector: CardBrandSelectorElement?
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
     let theme: ElementsAppearance
@@ -107,21 +107,20 @@ final class CardSectionElement: ContainerElement {
                 return params
             }
             : nil
-        var cardBrandDropDown: PaymentMethodElementWrapper<DropdownFieldElement>?
+        var cardBrandSelectorWrapper: PaymentMethodElementWrapper<CardBrandSelectorElement>?
         if cardBrandChoiceEligible {
-            cardBrandDropDown = PaymentMethodElementWrapper(DropdownFieldElement.makeCardBrandDropdown(theme: theme)) { field, params in
-                let cardBrand = STPCard.brand(from: field.selectedItem.rawData)
-                // Only set preferred networks for the confirm params if we have more than 1 brand fetched
-                if (cardBrandDropDown?.element.nonPlacerholderItems.count ?? 1) > 1 {
-                    cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: cardBrand != .unknown ? STPCardBrandUtilities.apiValue(from: cardBrand) : nil)
+            let selectorElement = CardBrandSelectorElement()
+            cardBrandSelectorWrapper = PaymentMethodElementWrapper(selectorElement) { element, params in
+                if let selectedBrand = element.selectedBrand, element.brands.count > 1 {
+                    cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: STPCardBrandUtilities.apiValue(from: selectedBrand))
                 }
-                analyticsHelper?.logCardBrandSelected(hostedSurface: hostedSurface, cardBrand: cardBrand)
+                analyticsHelper?.logCardBrandSelected(hostedSurface: hostedSurface, cardBrand: element.selectedBrand ?? .unknown)
                 return params
             }
         }
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(
             defaultValue: defaultValues.pan,
-            cardBrandDropDown: cardBrandDropDown?.element,
+            cardBrandSelector: cardBrandSelectorWrapper?.element,
             cardBrandFilter: cardBrandFilter,
             cardFundingFilter: cardFundingFilter,
             fundingBinController: fundingBinController
@@ -156,7 +155,7 @@ final class CardSectionElement: ContainerElement {
 
         let allSubElements: [Element?] = [
             nameElement,
-            panElement, SectionElement.HiddenElement(cardBrandDropDown),
+            panElement, SectionElement.HiddenElement(cardBrandSelectorWrapper),
             SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme),
         ]
         let subElements = allSubElements.compactMap { $0 }
@@ -168,7 +167,7 @@ final class CardSectionElement: ContainerElement {
 
         self.nameElement = nameElement?.element
         self.panElement = panElement.element
-        self.cardBrandDropDown = cardBrandDropDown?.element
+        self.cardBrandSelector = cardBrandSelectorWrapper?.element
         self.cvcElement = cvcElement.element
         self.expiryElement = expiryElement.element
         self.preferredNetworks = preferredNetworks
@@ -180,12 +179,7 @@ final class CardSectionElement: ContainerElement {
     // MARK: - ElementDelegate
     private var cardBrand: STPCardBrand = .unknown
     private var selectedBrand: STPCardBrand? {
-        guard let cardBrandDropDown = cardBrandDropDown,
-              let cardBrandCaseIndex = Int(cardBrandDropDown.selectedItem.rawData) else {
-            return nil
-        }
-
-        return .init(rawValue: cardBrandCaseIndex) ?? .unknown
+        return cardBrandSelector?.selectedBrand
     }
 
     /// Tracks the last known validation state of the PAN element, so that we can know when it changes from invalid to valid
@@ -199,6 +193,9 @@ final class CardSectionElement: ContainerElement {
             self.cardBrand = cardBrand
             cvcElement.setText(cvcElement.text) // A hack to get the CVC to update
         }
+
+        // Update isPanFieldEditing so sublabel visibility is correct
+        cardBrandSelector?.isPanFieldEditing = panElement.isEditing
 
         fetchAndUpdateCardBrands()
         fetchAndCacheCardFunding()
@@ -268,11 +265,11 @@ final class CardSectionElement: ContainerElement {
     private var cardBrands = Set<STPCardBrand>()
     func fetchAndUpdateCardBrands() {
         // Only fetch card brands if we have at least 8 digits in the pan
-        guard let cardBrandDropDown = cardBrandDropDown, panElement.text.count >= 8 else {
-            // Clear any previously fetched card brands from the dropdown
+        guard let cardBrandSelector = cardBrandSelector, panElement.text.count >= 8 else {
+            // Clear any previously fetched card brands from the selector
             if !self.cardBrands.isEmpty {
                 self.cardBrands = Set<STPCardBrand>()
-                cardBrandDropDown?.update(items: DropdownFieldElement.items(from: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>(), theme: self.theme))
+                cardBrandSelector?.reset()
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
             return
@@ -299,17 +296,16 @@ final class CardSectionElement: ContainerElement {
                 self.cardBrands = fetchedCardBrands
                 let disallowedCardBrands = fetchedCardBrands.filter { !self.cardBrandFilter.isAccepted(cardBrand: $0) }
 
-                cardBrandDropDown.update(items: DropdownFieldElement.items(
-                    from: fetchedCardBrands,
-                    disallowedCardBrands: disallowedCardBrands,
-                    theme: self.theme
-                ))
+                let sortedBrands = Array(fetchedCardBrands).sorted { a, b in
+                    (RotatingCardBrandsView.OrderIndexForCardBrand[a] ?? Int.max) < (RotatingCardBrandsView.OrderIndexForCardBrand[b] ?? Int.max)
+                }
+                cardBrandSelector.update(brands: sortedBrands, disallowedBrands: disallowedCardBrands)
 
                 // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
-                if !hadBrands, let indexToSelect = hasPreferredBrandIndex(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands, cardBrandDropDown: cardBrandDropDown) {
-                    cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
-                } else if let indexToSelect = useDefaultSelectionLogic(disallowedCardBrands: disallowedCardBrands, cardBrandDropDown: cardBrandDropDown) {
-                    cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
+                if !hadBrands, let brandToSelect = preferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
+                    cardBrandSelector.select(brand: brandToSelect)
+                } else if let brandToSelect = defaultSelectionBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
+                    cardBrandSelector.select(brand: brandToSelect)
                 }
 
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
@@ -317,30 +313,22 @@ final class CardSectionElement: ContainerElement {
         }
     }
 
-    // Select the first brand in the fetched brands that appears earliest in the merchants preferred networks
-    func hasPreferredBrandIndex(fetchedCardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand>, cardBrandDropDown: DropdownFieldElement) -> Int? {
-        guard let preferredNetworks = self.preferredNetworks,
-              let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) && !disallowedCardBrands.contains($0) }),
-              let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brandToSelect) }) else {
-            return nil
-        }
-
-        return indexToSelect
-
+    /// Select the first brand in the fetched brands that appears earliest in the merchant's preferred networks
+    func preferredBrand(fetchedCardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand>) -> STPCardBrand? {
+        guard let preferredNetworks = self.preferredNetworks else { return nil }
+        return preferredNetworks.first(where: { fetchedCardBrands.contains($0) && !disallowedCardBrands.contains($0) })
     }
 
-    // If we only fetched one card brand that is not disallowed, auto select it.
-    // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
-    func useDefaultSelectionLogic(disallowedCardBrands: Set<STPCardBrand>, cardBrandDropDown: DropdownFieldElement) -> Int? {
-        let validBrandSelections = cardBrandDropDown.items.filter { !$0.isPlaceholder && !$0.isDisabled }
-        guard validBrandSelections.count == 1,
+    /// If we only fetched one card brand that is not disallowed, auto select it.
+    /// This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
+    func defaultSelectionBrand(fetchedCardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand>) -> STPCardBrand? {
+        let validBrands = fetchedCardBrands.filter { !disallowedCardBrands.contains($0) }
+        guard validBrands.count == 1,
               !disallowedCardBrands.isEmpty,
-              let firstItem = validBrandSelections.first,
-              let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == firstItem.rawData }) else {
+              let singleBrand = validBrands.first else {
             return nil
         }
-
-        return indexToSelect
+        return singleBrand
     }
 }
 

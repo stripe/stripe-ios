@@ -561,4 +561,18 @@ extension String.Localized {
     static var last_4_digits_of_ssn: String {
         STPLocalizedString("Last 4 digits of SSN", "Label for displaying the last 4 digits of the user's social security number")
     }
+
+    static var choose_a_card_brand: String {
+        STPLocalizedString(
+            "Choose a card brand",
+            "Message displayed below the card number field when a co-branded card is detected and the user needs to select a brand"
+        )
+    }
+
+    static var card_brand_selector_accessibility_label: String {
+        STPLocalizedString(
+            "Card brands: %@",
+            "Accessibility label for the card brand selector showing available brands"
+        )
+    }
 }

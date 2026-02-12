@@ -476,8 +476,14 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
                 guard case .new(confirmParams: let params) = _paymentOption else {
                     return nil
                 }
-                let brand = STPCardValidator.brand(for: params.paymentMethodParams.card)
-                let brandString = brand == .unknown ? nil : STPCardBrandUtilities.stringFrom(brand)
+                // Only show the brand name if the user explicitly selected a preferred network (CBC flow).
+                // When no preferred network is set, just show the last four digits.
+                let brandString: String?
+                if let preferred = params.paymentMethodParams.card?.networks?.preferred {
+                    brandString = STPCardBrandUtilities.stringFrom(STPCard.brand(from: preferred))
+                } else {
+                    brandString = nil
+                }
                 return [brandString, displayData.label].compactMap({ $0 }).joined(separator: " ")
             case .stripe(.USBankAccount):
                 return displayData.label
