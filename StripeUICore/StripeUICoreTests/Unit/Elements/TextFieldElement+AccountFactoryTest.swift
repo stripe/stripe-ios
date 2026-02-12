@@ -1,5 +1,5 @@
 //
-//  TestFieldElement+AccountFactoryTest.swift
+//  TextFieldElement+AccountFactoryTest.swift
 //  StripeUICoreTests
 //
 //  Copyright © 2022 Stripe, Inc. All rights reserved.

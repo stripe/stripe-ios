@@ -8,7 +8,7 @@
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
-final class PaymentMethodAvailabilityTest: XCTestCase {
+final class PaymentMethodAvailabilityTests: XCTestCase {
 
     func testIsLinkEnabled_supportsLinkFalse_linkNotPresent() {
         let elementsSession = STPElementsSession._testValue(

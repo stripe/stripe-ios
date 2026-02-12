@@ -17,7 +17,7 @@ import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
 
-final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
+final class PaymentSheetConfirmParamsTest: APIStubbedTestCase {
     enum MockJson {
         static let cardPaymentMethod = STPTestUtils.jsonNamed("CardPaymentMethod")!
         static let paymentIntent = STPTestUtils.jsonNamed("PaymentIntent")!
@@ -263,7 +263,7 @@ final class PaymentSheet_ConfirmParamsTest: APIStubbedTestCase {
     }
 }
 
-extension PaymentSheet_ConfirmParamsTest: STPAuthenticationContext {
+extension PaymentSheetConfirmParamsTest: STPAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
     }
@@ -271,7 +271,7 @@ extension PaymentSheet_ConfirmParamsTest: STPAuthenticationContext {
 
 // MARK: - Helpers
 
-private extension PaymentSheet_ConfirmParamsTest {
+private extension PaymentSheetConfirmParamsTest {
     func stubConfirmPaymentExpecting(
         isPaymentIntent: Bool,
         paymentMethodId: String,

@@ -1,5 +1,5 @@
 //
-//  STPImageLibraryTest.swift
+//  STPImageLibraryTests.swift
 //  StripeiOS Tests
 //
 //  Created by Cameron Sabol on 4/7/22.
@@ -15,7 +15,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
-class STPImageLibraryTestSwift: XCTestCase {
+class STPImageLibraryTests: XCTestCase {
 
     static let cardBrands: [STPCardBrand] = [
         .amex,

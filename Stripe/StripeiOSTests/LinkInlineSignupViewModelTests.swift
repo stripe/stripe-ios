@@ -1,5 +1,5 @@
 //
-//  LinkSignupViewModelTests.swift
+//  LinkInlineSignupViewModelTests.swift
 //  StripeiOS Tests
 //
 //  Created by Ramon Torres on 1/21/22.

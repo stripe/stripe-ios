@@ -1,5 +1,5 @@
 //
-//  STPPaymentHandlerFunctionalTest.swift
+//  STPPaymentHandlerFunctionalTests.swift
 //  StripeiOSTests
 //
 //  Created by Yuki Tokuhiro on 4/24/23.
@@ -13,7 +13,7 @@ import XCTest
 
 // You can add tests in here for payment methods that don't require customer actions (i.e. don't open webviews for customer authentication).
 // If they require customer action, use STPPaymentHandlerFunctionalTest.m instead
-final class STPPaymentHandlerFunctionalSwiftTest: STPNetworkStubbingTestCase, STPAuthenticationContext {
+final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAuthenticationContext {
     // MARK: - STPAuthenticationContext
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()

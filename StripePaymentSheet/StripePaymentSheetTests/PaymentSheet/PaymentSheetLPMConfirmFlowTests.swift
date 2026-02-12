@@ -21,7 +21,7 @@ import XCTest
 /// They can also test the presence/absence of particular fields for a payment method form e.g. the SEPA test asserts that there's a mandate element.
 /// 👀  See `testIdealConfirmFlows` for an example with comments.
 @MainActor
-final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
+final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     let window: UIWindow = UIWindow(frame: .init(x: 0, y: 0, width: 428, height: 926))
 
     enum MerchantCountry: String {
@@ -624,7 +624,7 @@ final class PaymentSheet_LPM_ConfirmFlowTests: STPNetworkStubbingTestCase {
 }
 
 // MARK: - Billing detail configuration tests
-extension PaymentSheet_LPM_ConfirmFlowTests {
+extension PaymentSheetLPMConfirmFlowTests {
     func testCard_OnlyCardInfo_WithDefaults() async throws {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.address = .never
@@ -689,7 +689,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
 }
 
 // MARK: - Helper methods
-extension PaymentSheet_LPM_ConfirmFlowTests {
+extension PaymentSheetLPMConfirmFlowTests {
     enum IntentKind: CaseIterable {
         case paymentIntent
         case paymentIntentWithSetupFutureUsage
@@ -1246,7 +1246,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests {
     }
 }
 
-extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
+extension PaymentSheetLPMConfirmFlowTests: PaymentSheetAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return window.rootViewController!
     }
@@ -1267,7 +1267,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentSheetAuthenticationContext {
     }
 }
 
-extension PaymentSheet_LPM_ConfirmFlowTests: PaymentMethodFormViewControllerDelegate {
+extension PaymentSheetLPMConfirmFlowTests: PaymentMethodFormViewControllerDelegate {
     nonisolated func didUpdate(_ viewController: StripePaymentSheet.PaymentMethodFormViewController) {
     }
 
@@ -1277,7 +1277,7 @@ extension PaymentSheet_LPM_ConfirmFlowTests: PaymentMethodFormViewControllerDele
 
 // MARK: - IntentConfirmParams
 
-extension PaymentSheet_LPM_ConfirmFlowTests {
+extension PaymentSheetLPMConfirmFlowTests {
     func testIntentConfirmParamsEquatable() {
         let lhs = IntentConfirmParams(type: .stripe(.card))
         let rhs = IntentConfirmParams(type: .stripe(.card))

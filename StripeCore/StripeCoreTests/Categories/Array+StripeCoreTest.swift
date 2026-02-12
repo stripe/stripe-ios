@@ -9,7 +9,7 @@
 @_spi(STP) import StripeCore
 import XCTest
 
-class Array_StripeCoreTest: XCTestCase {
+class ArrayStripeCoreTest: XCTestCase {
     func test_boundSafeObjectAtIndex_emptyArray() {
         let test: [Any] = []
         XCTAssertNil(test.stp_boundSafeObject(at: 5))
