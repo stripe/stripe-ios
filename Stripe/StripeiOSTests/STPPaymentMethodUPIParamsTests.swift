@@ -1,6 +1,6 @@
 //  Converted to Swift 5.8.1 by Swiftify v5.8.28463 - https://swiftify.com/
 //
-//  STPPaymentMethodUPIParamsTest.m
+//  STPPaymentMethodUPIParamsTests.m
 //  StripeiOS Tests
 //
 //  Created by Anirudh Bhargava on 11/6/20.

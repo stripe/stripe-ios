@@ -1,5 +1,5 @@
 //
-//  STPApplePayTest.swift
+//  STPApplePayTests.swift
 //  StripeiOS Tests
 //
 //  Created by David Estes on 9/21/21.
@@ -15,7 +15,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPApplePaySwiftTest: XCTestCase {
+class STPApplePayTests: XCTestCase {
     func testAdditionalPaymentNetwork() {
         XCTAssertFalse(StripeAPI.supportedPKPaymentNetworks().contains(.JCB))
         StripeAPI.additionalEnabledApplePayNetworks = [.JCB]

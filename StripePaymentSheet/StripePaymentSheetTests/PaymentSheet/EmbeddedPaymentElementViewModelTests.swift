@@ -12,7 +12,7 @@ import StripeCoreTestUtils
 import XCTest
 
 @MainActor
-class EmbeddedPaymentElementViewModelTest: XCTestCase {
+class EmbeddedPaymentElementViewModelTests: XCTestCase {
     // MARK: - Test Configurations
 
     lazy var configuration: EmbeddedPaymentElement.Configuration = {

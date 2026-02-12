@@ -1,5 +1,5 @@
 //
-//  STPSetupIntentFunctionalTest.swift
+//  STPSetupIntentFunctionalTests.swift
 //  StripeiOS Tests
 //
 //  Created by Cameron Sabol on 3/2/22.
@@ -16,7 +16,7 @@ import XCTest
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-class STPSetupIntentFunctionalTestSwift: STPNetworkStubbingTestCase {
+class STPSetupIntentFunctionalTests: STPNetworkStubbingTestCase {
 
     // MARK: - US Bank Account
     func createAndConfirmSetupIntentWithUSBankAccount() async throws -> String {
@@ -106,7 +106,7 @@ class STPSetupIntentFunctionalTestSwift: STPNetworkStubbingTestCase {
 }
 
 //  Converted to Swift 5.8.1 by Swiftify v5.8.28463 - https://swiftify.com/
-extension STPSetupIntentFunctionalTestSwift {
+extension STPSetupIntentFunctionalTests {
     func testCreateSetupIntentWithTestingServer() {
         let expectation = self.expectation(description: "SetupIntent create.")
         STPTestingAPIClient.shared.createSetupIntent(

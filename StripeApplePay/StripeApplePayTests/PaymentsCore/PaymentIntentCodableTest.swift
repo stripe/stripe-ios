@@ -5,7 +5,7 @@
 @_spi(STP) import StripeApplePay
 import XCTest
 
-class PayemntIntentCodableTest: XCTestCase {
+class PaymentIntentCodableTest: XCTestCase {
     func testDeserialization_WithoutLine1() throws {
         let json = """
             {

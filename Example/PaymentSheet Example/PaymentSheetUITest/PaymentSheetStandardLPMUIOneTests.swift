@@ -8,7 +8,7 @@
 import XCTest
 
 class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
-    // UPI is a little custom and isn't well-tested by PaymentSheet_LPM_ConfirmFlowTests
+    // UPI is a little custom and isn't well-tested by PaymentSheetLPMConfirmFlowTests
     func testUPIPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
