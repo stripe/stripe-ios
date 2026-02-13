@@ -8,12 +8,153 @@
 import StripePaymentSheet
 import SwiftUI
 
+// MARK: - Search Bar View
+@available(iOS 15.0, *)
+struct SettingsSearchBar: View {
+    @Binding var text: String
+    @FocusState private var isFocused: Bool
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.secondary)
+            TextField("Search settings...", text: $text)
+                .focused($isFocused)
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
+            if !text.isEmpty {
+                Button { text = "" } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(Color(.systemGray3))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 10)
+        .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray6)))
+    }
+}
+
+// MARK: - Search Helpers
+
+/// Normalizes a camelCase or PascalCase string by inserting spaces before capital letters.
+/// e.g., "cardBrandAcceptance" -> "card Brand Acceptance"
+private func normalizeForSearch(_ text: String) -> String {
+    var result = ""
+    for char in text {
+        if char.isUppercase && !result.isEmpty {
+            result.append(" ")
+        }
+        result.append(char)
+    }
+    return result
+}
+
+/// Checks if a setting name matches the search text.
+/// Supports both exact substring matching and camelCase-aware matching.
+/// e.g., "card brand" matches "cardBrandAcceptance"
+private func settingMatchesSearch(_ settingName: String, searchText: String) -> Bool {
+    if searchText.isEmpty { return true }
+    // Direct case-insensitive contains
+    if settingName.localizedCaseInsensitiveContains(searchText) { return true }
+    // Normalize camelCase and check again
+    let normalized = normalizeForSearch(settingName)
+    return normalized.localizedCaseInsensitiveContains(searchText)
+}
+
+// MARK: - Searchable Wrapper Views
+@available(iOS 15.0, *)
+struct SearchableSettingView<S: PickerEnum>: View {
+    var setting: Binding<S>
+    @Binding var searchText: String
+
+    var body: some View {
+        if settingMatchesSearch(S.enumName, searchText: searchText) {
+            SettingView(setting: setting)
+        }
+    }
+}
+
+@available(iOS 15.0, *)
+struct SearchableSettingPickerView<S: PickerEnum>: View {
+    var setting: Binding<S>
+    var disabledSettings: [S] = []
+    var customDisplayLabel: String?
+    var customDisplayName: ((S) -> String)?
+    @Binding var searchText: String
+
+    var body: some View {
+        if settingMatchesSearch(customDisplayLabel ?? S.enumName, searchText: searchText) {
+            SettingPickerView(setting: setting, disabledSettings: disabledSettings,
+                             customDisplayLabel: customDisplayLabel, customDisplayName: customDisplayName)
+        }
+    }
+}
+
+@available(iOS 15.0, *)
+struct SearchableView<Content: View>: View {
+    let searchableName: String
+    @Binding var searchText: String
+    @ViewBuilder var content: () -> Content
+
+    var body: some View {
+        if settingMatchesSearch(searchableName, searchText: searchText) {
+            content()
+        }
+    }
+}
+
+// MARK: - Searchable Section View
+@available(iOS 15.0, *)
+struct SearchableSection<Content: View, Buttons: View>: View {
+    let title: String
+    @Binding var searchText: String
+    let settingNames: [String]
+    @ViewBuilder var content: () -> Content
+    @ViewBuilder var buttons: () -> Buttons
+
+    var body: some View {
+        if searchText.isEmpty || settingNames.contains(where: { settingMatchesSearch($0, searchText: searchText) }) {
+            HStack {
+                Text(title).font(.headline)
+                Spacer()
+                buttons()
+            }
+            content()
+        }
+    }
+}
+
+// MARK: - Empty Search Results View
+@available(iOS 15.0, *)
+struct EmptySearchResultsView: View {
+    let searchText: String
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 44, weight: .thin))
+                .foregroundColor(Color(.systemGray3))
+            Text("No Settings Found")
+                .font(.headline)
+            Text("No settings match \"\(searchText)\"")
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 60)
+    }
+}
+
+// MARK: - PaymentSheetTestPlayground
 @available(iOS 15.0, *)
 struct PaymentSheetTestPlayground: View {
     @StateObject var playgroundController: PlaygroundController
     @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
     @State var showingQRSheet = false
     @State private var isViewReady = false
+    @State private var searchText: String = ""
 
     init() {
         _playgroundController = StateObject(wrappedValue: PlaygroundController())
@@ -24,50 +165,79 @@ struct PaymentSheetTestPlayground: View {
     }
 
     @ViewBuilder
-    var clientSettings: some View {
-        SettingView(setting: uiStyleBinding)
+    func clientSettings(searchText: Binding<String>) -> some View {
+        SearchableSettingView(setting: uiStyleBinding, searchText: searchText)
         if playgroundController.settings.uiStyle != .embedded {
-            SettingView(setting: $playgroundController.settings.layout)
+            SearchableSettingView(setting: $playgroundController.settings.layout, searchText: searchText)
         }
-        SettingView(setting: $playgroundController.settings.style)
-        SettingView(setting: $playgroundController.settings.shippingInfo)
-        SettingView(setting: $playgroundController.settings.applePayEnabled)
-        SettingView(setting: $playgroundController.settings.applePayButtonType)
-        SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
-        SettingPickerView(setting: $playgroundController.settings.defaultBillingAddress)
+        SearchableSettingView(setting: $playgroundController.settings.style, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.shippingInfo, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.applePayEnabled, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.applePayButtonType, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.allowsDelayedPMs, searchText: searchText)
+        SearchableSettingPickerView(setting: $playgroundController.settings.defaultBillingAddress, searchText: searchText)
         if playgroundController.settings.defaultBillingAddress == .customEmail {
-            TextField("Default email", text: customEmailBinding)
-                .keyboardType(.emailAddress)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
+            SearchableView(searchableName: "Default billing address", searchText: searchText) {
+                TextField("Default email", text: customEmailBinding)
+                    .keyboardType(.emailAddress)
+                    .autocorrectionDisabled()
+                    .textInputAutocapitalization(.never)
+            }
         }
-        SettingView(setting: $playgroundController.settings.enablePassiveCaptcha)
-        SettingView(setting: $playgroundController.settings.enableAttestationOnConfirmation)
+        SearchableSettingView(setting: $playgroundController.settings.enablePassiveCaptcha, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.enableAttestationOnConfirmation, searchText: searchText)
         Group {
             if playgroundController.settings.merchantCountryCode == .US {
-                SettingView(setting: linkEnabledModeBinding)
+                SearchableSettingView(setting: linkEnabledModeBinding, searchText: searchText)
             }
-            SettingView(setting: $playgroundController.settings.linkPassthroughMode)
-            SettingView(setting: $playgroundController.settings.linkDisplay)
+            SearchableSettingView(setting: $playgroundController.settings.linkPassthroughMode, searchText: searchText)
+            SearchableSettingView(setting: $playgroundController.settings.linkDisplay, searchText: searchText)
         }
-        SettingView(setting: $playgroundController.settings.userOverrideCountry)
-        SettingView(setting: $playgroundController.settings.externalPaymentMethods)
+        SearchableSettingView(setting: $playgroundController.settings.userOverrideCountry, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.externalPaymentMethods, searchText: searchText)
         // The hardcoded CPM id is only available on our US merchant
         if playgroundController.settings.merchantCountryCode == .US {
-            SettingView(setting: $playgroundController.settings.customPaymentMethods)
+            SearchableSettingView(setting: $playgroundController.settings.customPaymentMethods, searchText: searchText)
         }
-        SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
-        SettingView(setting: $playgroundController.settings.cardBrandAcceptance)
-        SettingView(setting: $playgroundController.settings.cardFundingAcceptance)
-        SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
-        SettingView(setting: $playgroundController.settings.requireCVCRecollection)
-        SettingView(setting: $playgroundController.settings.autoreload)
-        AttestationResetButtonView()
-        SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
-        SettingView(setting: $playgroundController.settings.instantDebitsIncentives)
-        SettingView(setting: $playgroundController.settings.fcLiteEnabled)
-        SettingView(setting: $playgroundController.settings.opensCardScannerAutomatically)
-        SettingView(setting: $playgroundController.settings.termsDisplay)
+        SearchableSettingView(setting: $playgroundController.settings.preferredNetworksEnabled, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.cardBrandAcceptance, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.cardFundingAcceptance, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.requireCVCRecollection, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.autoreload, searchText: searchText)
+        SearchableView(searchableName: "Reset attestation", searchText: searchText) {
+            AttestationResetButtonView()
+        }
+        SearchableSettingView(setting: $playgroundController.settings.shakeAmbiguousViews, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.instantDebitsIncentives, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.fcLiteEnabled, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.opensCardScannerAutomatically, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.termsDisplay, searchText: searchText)
+    }
+
+    // All setting names for computing empty state
+    var allSettingNames: [String] {
+        [
+            // Backend
+            "Mode", "Type", "Confirmation mode", "CustomerKeyType", "Customer", "Amount", "Currency",
+            "Merchant", "Automatic PMs", "Payment Method Options", "Customer Session",
+            // Client
+            "UI", "Layout", "Style", "Shipping info", "Apple Pay", "Pay button", "allowsDelayedPMs",
+            "Default billing address", "Enable passive captcha", "Enable attestation on confirmation",
+            "Enable Link", "Link passthrough mode", "Link display", "UserOverrideCountry",
+            "External PMs", "CPMs", "Preferred Networks", "cardBrandAcceptance", "fundingAcceptance",
+            "allowsRemovalOfLastSavedPaymentMethod", "Require CVC Recollection", "Autoreload",
+            "Reset attestation", "Shake Ambiguous Views", "Instant Debits Incentives", "FCLite enabled",
+            "opensCardScannerAutomatically", "Card TermsDisplay", "Custom CTA", "Payment Method Settings ID",
+            // Billing Details
+            "Attach defaults", "Name", "Email", "Phone", "Address", "Allowed Countries",
+            // Embedded
+            "formSheetAction", "displaysMandateText", "rowSelectionBehavior",
+        ]
+    }
+
+    var hasAnyVisibleSettings: Bool {
+        searchText.isEmpty || allSettingNames.contains { settingMatchesSearch($0, searchText: searchText) }
     }
 
     var body: some View {
@@ -91,145 +261,198 @@ struct PaymentSheetTestPlayground: View {
         return AnyView(VStack {
             ScrollView {
                 LazyVStack {
-                    Group {
-                        HStack {
-                            if ProcessInfo.processInfo.environment["UITesting"] != nil {
-                                AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
-                            }
-                            Text("Backend")
-                                .font(.headline)
-                            Spacer()
-                            Button {
-                                playgroundController.didTapResetConfig()
-                            } label: {
-                                Text("Reset")
-                                    .font(.callout.smallCaps())
-                            }.buttonStyle(.bordered)
-                            Button {
-                                playgroundController.didTapEndpointConfiguration()
-                            } label: {
-                                Text("Endpoints")
-                                    .font(.callout.smallCaps())
-                            }.buttonStyle(.bordered)
-                            Button {
-                                showingQRSheet.toggle()
-                            } label: {
-                                Text("QR")
-                                    .font(.callout.smallCaps())
-                            }.buttonStyle(.bordered)
-                                .sheet(isPresented: $showingQRSheet, content: {
-                                    QRView(url: playgroundController.settings.base64URL)
-                                })
-                        }
-                        SettingView(setting: $playgroundController.settings.mode)
-                        SettingPickerView(
-                            setting: integrationTypeBinding,
-                            disabledSettings: playgroundController.settings.uiStyle == .embedded ? [.normal] : []
-                        )
-                        // Only show confirmation mode for deferred integration types
-                        if playgroundController.settings.integrationType != .normal {
-                            SettingView(setting: confirmationModeBinding)
-                        }
-                        SettingView(setting: customerKeyTypeBinding)
-                        SettingView(setting: customerModeBinding)
-                        HStack {
-                            SettingPickerView(setting: $playgroundController.settings.amount, customDisplayName: { amount in
-                                return amount.customDisplayName(currency: playgroundController.settings.currency)
-                            })
-                            SettingPickerView(setting: $playgroundController.settings.currency)
-                        }
-                        SettingPickerView(setting: merchantCountryBinding)
-                        if playgroundController.settings.merchantCountryCode == .custom {
-                            TextField("sk_(test/live)_...", text: customSecretKeyBinding)
-                                .autocapitalization(.none)
-                                .autocorrectionDisabled()
-                            TextField("pk_(test/live)_...", text: customPublishableKeyBinding)
-                                .autocapitalization(.none)
-                                .autocorrectionDisabled()
-                        }
-                        SettingView(setting: $playgroundController.settings.apmsEnabled)
-                        if playgroundController.settings.apmsEnabled == .off {
-                            TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
-                                .autocapitalization(.none)
-                                .autocorrectionDisabled()
-                        }
-                    }
-                    Group {
-                        VStack {
-                            HStack {
-                                Text("Payment Method Options")
-                                    .font(.subheadline)
-                                Spacer()
+                    // Search bar at top
+                    SettingsSearchBar(text: $searchText)
+                        .padding(.bottom, 8)
+
+                    if !hasAnyVisibleSettings {
+                        EmptySearchResultsView(searchText: searchText)
+                    } else {
+                        // Backend section
+                        Group {
+                            SearchableSection(
+                                title: "Backend",
+                                searchText: $searchText,
+                                settingNames: ["Mode", "Type", "Confirmation mode", "CustomerKeyType", "Customer",
+                                             "Amount", "Currency", "Merchant", "Automatic PMs", ]
+                            ) {
+                                SearchableSettingView(setting: $playgroundController.settings.mode, searchText: $searchText)
+                                SearchableSettingPickerView(
+                                    setting: integrationTypeBinding,
+                                    disabledSettings: playgroundController.settings.uiStyle == .embedded ? [.normal] : [],
+                                    searchText: $searchText
+                                )
+                                // Only show confirmation mode for deferred integration types
+                                if playgroundController.settings.integrationType != .normal {
+                                    SearchableSettingView(setting: confirmationModeBinding, searchText: $searchText)
+                                }
+                                SearchableSettingView(setting: customerKeyTypeBinding, searchText: $searchText)
+                                SearchableSettingView(setting: customerModeBinding, searchText: $searchText)
+                                SearchableView(searchableName: "Amount Currency", searchText: $searchText) {
+                                    HStack {
+                                        SettingPickerView(setting: $playgroundController.settings.amount, customDisplayName: { amount in
+                                            return amount.customDisplayName(currency: playgroundController.settings.currency)
+                                        })
+                                        SettingPickerView(setting: $playgroundController.settings.currency)
+                                    }
+                                }
+                                SearchableSettingPickerView(setting: merchantCountryBinding, searchText: $searchText)
+                                if playgroundController.settings.merchantCountryCode == .custom {
+                                    SearchableView(searchableName: "Merchant", searchText: $searchText) {
+                                        TextField("sk_(test/live)_...", text: customSecretKeyBinding)
+                                            .autocapitalization(.none)
+                                            .autocorrectionDisabled()
+                                        TextField("pk_(test/live)_...", text: customPublishableKeyBinding)
+                                            .autocapitalization(.none)
+                                            .autocorrectionDisabled()
+                                    }
+                                }
+                                SearchableSettingView(setting: $playgroundController.settings.apmsEnabled, searchText: $searchText)
+                                if playgroundController.settings.apmsEnabled == .off {
+                                    SearchableView(searchableName: "Automatic PMs", searchText: $searchText) {
+                                        TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
+                                            .autocapitalization(.none)
+                                            .autocorrectionDisabled()
+                                    }
+                                }
+                            } buttons: {
+                                if ProcessInfo.processInfo.environment["UITesting"] != nil {
+                                    AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
+                                }
                                 Button {
-                                    playgroundController.paymentMethodOptionsSetupFutureUsageSettingsTapped()
+                                    playgroundController.didTapResetConfig()
+                                    searchText = ""
                                 } label: {
-                                    Text("SetupFutureUsage")
+                                    Text("Reset")
                                         .font(.callout.smallCaps())
                                 }.buttonStyle(.bordered)
+                                Button {
+                                    playgroundController.didTapEndpointConfiguration()
+                                } label: {
+                                    Text("Endpoints")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                                Button {
+                                    showingQRSheet.toggle()
+                                } label: {
+                                    Text("QR")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                                    .sheet(isPresented: $showingQRSheet, content: {
+                                        QRView(url: playgroundController.settings.base64URL)
+                                    })
                             }
                         }
-                    }
-                    Group {
-                        if playgroundController.settings.customerKeyType == .customerSession {
+                        // Payment Method Options subsection
+                        SearchableView(searchableName: "Payment Method Options", searchText: $searchText) {
                             VStack {
                                 HStack {
-                                    Text("Customer Session")
+                                    Text("Payment Method Options")
                                         .font(.subheadline)
                                     Spacer()
                                     Button {
-                                        playgroundController.customerSessionSettingsTapped()
+                                        playgroundController.paymentMethodOptionsSetupFutureUsageSettingsTapped()
                                     } label: {
-                                        Text("CSSettings")
+                                        Text("SetupFutureUsage")
                                             .font(.callout.smallCaps())
                                     }.buttonStyle(.bordered)
                                 }
                             }
                         }
-                    }
-                    Divider()
-                    Group {
-                        HStack {
-                            Text("Client")
-                                .font(.headline)
-                            Spacer()
-                            Button {
-                                playgroundController.appearanceButtonTapped()
-                            } label: {
-                                Text("Appearance")
-                                    .font(.callout.smallCaps())
-                            }.buttonStyle(.bordered)
-                        }
-                        clientSettings
-                        TextField("Custom CTA", text: customCTABinding)
-                        TextField("Payment Method Settings ID", text: paymentMethodSettingsBinding)
-                            .autocorrectionDisabled()
-                    }
-                    Divider()
-                    Group {
-                        HStack {
-                            Text("Billing Details Collection")
-                                .font(.headline)
-                            Spacer()
-                        }
-                        SettingView(setting: $playgroundController.settings.attachDefaults)
-                        SettingView(setting: $playgroundController.settings.collectName)
-                        SettingView(setting: $playgroundController.settings.collectEmail)
-                        SettingView(setting: $playgroundController.settings.collectPhone)
-                        SettingView(setting: $playgroundController.settings.collectAddress)
-                        SettingPickerView(setting: $playgroundController.settings.allowedCountries)
-                    }
-
-                    if playgroundController.settings.uiStyle == .embedded {
-                        Divider()
-                        Group {
-                            HStack {
-                                Text("Embedded only configuration")
-                                    .font(.headline)
-                                Spacer()
+                        // Customer Session subsection
+                        if playgroundController.settings.customerKeyType == .customerSession {
+                            SearchableView(searchableName: "Customer Session", searchText: $searchText) {
+                                VStack {
+                                    HStack {
+                                        Text("Customer Session")
+                                            .font(.subheadline)
+                                        Spacer()
+                                        Button {
+                                            playgroundController.customerSessionSettingsTapped()
+                                        } label: {
+                                            Text("CSSettings")
+                                                .font(.callout.smallCaps())
+                                        }.buttonStyle(.bordered)
+                                    }
+                                }
                             }
-                            SettingView(setting: $playgroundController.settings.formSheetAction)
-                            SettingView(setting: $playgroundController.settings.embeddedViewDisplaysMandateText)
-                            SettingView(setting: $playgroundController.settings.rowSelectionBehavior)
+                        }
+
+                        // Client section
+                        if searchText.isEmpty {
+                            Divider()
+                        }
+                        Group {
+                            SearchableSection(
+                                title: "Client",
+                                searchText: $searchText,
+                                settingNames: ["UI", "Layout", "Style", "Shipping info", "Apple Pay", "Pay button",
+                                             "allowsDelayedPMs", "Default billing address", "Enable passive captcha",
+                                             "Enable attestation on confirmation", "Enable Link", "Link passthrough mode",
+                                             "Link display", "UserOverrideCountry", "External PMs", "CPMs",
+                                             "Preferred Networks", "cardBrandAcceptance", "fundingAcceptance",
+                                             "allowsRemovalOfLastSavedPaymentMethod", "Require CVC Recollection",
+                                             "Autoreload", "Reset attestation", "Shake Ambiguous Views",
+                                             "Instant Debits Incentives", "FCLite enabled", "opensCardScannerAutomatically",
+                                             "Card TermsDisplay", "Custom CTA", "Payment Method Settings ID", ]
+                            ) {
+                                clientSettings(searchText: $searchText)
+                                SearchableView(searchableName: "Custom CTA", searchText: $searchText) {
+                                    TextField("Custom CTA", text: customCTABinding)
+                                }
+                                SearchableView(searchableName: "Payment Method Settings ID", searchText: $searchText) {
+                                    TextField("Payment Method Settings ID", text: paymentMethodSettingsBinding)
+                                        .autocorrectionDisabled()
+                                }
+                            } buttons: {
+                                Button {
+                                    playgroundController.appearanceButtonTapped()
+                                } label: {
+                                    Text("Appearance")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                            }
+                        }
+
+                        // Billing Details Collection section
+                        if searchText.isEmpty {
+                            Divider()
+                        }
+                        Group {
+                            SearchableSection(
+                                title: "Billing Details Collection",
+                                searchText: $searchText,
+                                settingNames: ["Attach defaults", "Name", "Email", "Phone", "Address", "Allowed Countries"]
+                            ) {
+                                SearchableSettingView(setting: $playgroundController.settings.attachDefaults, searchText: $searchText)
+                                SearchableSettingView(setting: $playgroundController.settings.collectName, searchText: $searchText)
+                                SearchableSettingView(setting: $playgroundController.settings.collectEmail, searchText: $searchText)
+                                SearchableSettingView(setting: $playgroundController.settings.collectPhone, searchText: $searchText)
+                                SearchableSettingView(setting: $playgroundController.settings.collectAddress, searchText: $searchText)
+                                SearchableSettingPickerView(setting: $playgroundController.settings.allowedCountries, searchText: $searchText)
+                            } buttons: {
+                                EmptyView()
+                            }
+                        }
+
+                        // Embedded only configuration section
+                        if playgroundController.settings.uiStyle == .embedded {
+                            if searchText.isEmpty {
+                                Divider()
+                            }
+                            Group {
+                                SearchableSection(
+                                    title: "Embedded only configuration",
+                                    searchText: $searchText,
+                                    settingNames: ["formSheetAction", "displaysMandateText", "rowSelectionBehavior"]
+                                ) {
+                                    SearchableSettingView(setting: $playgroundController.settings.formSheetAction, searchText: $searchText)
+                                    SearchableSettingView(setting: $playgroundController.settings.embeddedViewDisplaysMandateText, searchText: $searchText)
+                                    SearchableSettingView(setting: $playgroundController.settings.rowSelectionBehavior, searchText: $searchText)
+                                } buttons: {
+                                    EmptyView()
+                                }
+                            }
                         }
                     }
 
