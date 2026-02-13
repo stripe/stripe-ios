@@ -4,15 +4,20 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 
 extension PaymentSheetFormFactory {
     func makeAffirm() -> PaymentMethodElement {
-        let headerElement = SubtitleElement(
+        let header = SubtitleElement(
             view: AffirmCopyLabel(theme: theme),
             isHorizontalMode: configuration.isHorizontalMode
         )
-        return FormElement(elements: [headerElement], theme: theme)
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        return FormElement(elements: [header, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
     }
 }
