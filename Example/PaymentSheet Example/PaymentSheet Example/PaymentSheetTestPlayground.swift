@@ -71,6 +71,21 @@ private func settingMatchesSearch(_ settingName: String, searchText: String) -> 
     return normalized.localizedCaseInsensitiveContains(searchText)
 }
 
+/// Checks if a PickerEnum setting matches the search text by name or any of its values.
+/// e.g., searching "CheckoutSession" matches the "Type" setting, "usd" matches "Currency"
+private func pickerEnumMatchesSearch<S: PickerEnum>(_ enumType: S.Type, searchText: String) -> Bool {
+    if searchText.isEmpty { return true }
+    // Check the setting name first
+    if settingMatchesSearch(S.enumName, searchText: searchText) { return true }
+    // Check if any enum value matches
+    for enumCase in S.allCases {
+        if settingMatchesSearch(enumCase.displayName, searchText: searchText) {
+            return true
+        }
+    }
+    return false
+}
+
 // MARK: - Searchable Wrapper Views
 @available(iOS 15.0, *)
 struct SearchableSettingView<S: PickerEnum>: View {
@@ -78,7 +93,7 @@ struct SearchableSettingView<S: PickerEnum>: View {
     @Binding var searchText: String
 
     private var isVisible: Bool {
-        settingMatchesSearch(S.enumName, searchText: searchText)
+        pickerEnumMatchesSearch(S.self, searchText: searchText)
     }
 
     var body: some View {
@@ -100,7 +115,12 @@ struct SearchableSettingPickerView<S: PickerEnum>: View {
     @Binding var searchText: String
 
     private var isVisible: Bool {
-        settingMatchesSearch(customDisplayLabel ?? S.enumName, searchText: searchText)
+        // If there's a custom label, check it; otherwise use the standard enum matching
+        if let customLabel = customDisplayLabel {
+            if settingMatchesSearch(customLabel, searchText: searchText) { return true }
+        }
+        // Always check enum name and values
+        return pickerEnumMatchesSearch(S.self, searchText: searchText)
     }
 
     var body: some View {
@@ -141,15 +161,11 @@ struct SearchableSection<Content: View, Buttons: View>: View {
     @Binding var searchText: String
     @ViewBuilder var content: () -> Content
     @ViewBuilder var buttons: () -> Buttons
-    @State private var sectionVisibleCount: Int = 0
-
-    private var isSectionVisible: Bool {
-        searchText.isEmpty || sectionVisibleCount > 0
-    }
 
     var body: some View {
         Group {
-            if isSectionVisible {
+            // Only show section headers when not searching
+            if searchText.isEmpty {
                 HStack {
                     Text(title).font(.headline)
                     Spacer()
@@ -157,9 +173,6 @@ struct SearchableSection<Content: View, Buttons: View>: View {
                 }
             }
             content()
-        }
-        .onPreferenceChange(VisibleSettingsCountKey.self) { count in
-            sectionVisibleCount = count
         }
     }
 }
