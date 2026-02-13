@@ -12,14 +12,12 @@ import SwiftUI
 @available(iOS 15.0, *)
 struct SettingsSearchBar: View {
     @Binding var text: String
-    @FocusState private var isFocused: Bool
 
     var body: some View {
         HStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.secondary)
             TextField("Search settings...", text: $text)
-                .focused($isFocused)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
             if !text.isEmpty {
@@ -36,7 +34,6 @@ struct SettingsSearchBar: View {
     }
 }
 
-// MARK: - Preference Key for Visibility Tracking
 struct VisibleSettingsCountKey: PreferenceKey {
     static var defaultValue: Int = 0
     static func reduce(value: inout Int, nextValue: () -> Int) {
@@ -64,9 +61,7 @@ private func normalizeForSearch(_ text: String) -> String {
 /// e.g., "card brand" matches "cardBrandAcceptance"
 private func settingMatchesSearch(_ settingName: String, searchText: String) -> Bool {
     if searchText.isEmpty { return true }
-    // Direct case-insensitive contains
     if settingName.localizedCaseInsensitiveContains(searchText) { return true }
-    // Normalize camelCase and check again
     let normalized = normalizeForSearch(settingName)
     return normalized.localizedCaseInsensitiveContains(searchText)
 }
@@ -75,9 +70,7 @@ private func settingMatchesSearch(_ settingName: String, searchText: String) -> 
 /// e.g., searching "CheckoutSession" matches the "Type" setting, "usd" matches "Currency"
 private func pickerEnumMatchesSearch<S: PickerEnum>(_ enumType: S.Type, searchText: String) -> Bool {
     if searchText.isEmpty { return true }
-    // Check the setting name first
     if settingMatchesSearch(S.enumName, searchText: searchText) { return true }
-    // Check if any enum value matches
     for enumCase in S.allCases {
         if settingMatchesSearch(enumCase.displayName, searchText: searchText) {
             return true
@@ -115,11 +108,10 @@ struct SearchableSettingPickerView<S: PickerEnum>: View {
     @Binding var searchText: String
 
     private var isVisible: Bool {
-        // If there's a custom label, check it; otherwise use the standard enum matching
-        if let customLabel = customDisplayLabel {
-            if settingMatchesSearch(customLabel, searchText: searchText) { return true }
+        if let customLabel = customDisplayLabel,
+           settingMatchesSearch(customLabel, searchText: searchText) {
+            return true
         }
-        // Always check enum name and values
         return pickerEnumMatchesSearch(S.self, searchText: searchText)
     }
 
@@ -164,7 +156,6 @@ struct SearchableSection<Content: View, Buttons: View>: View {
 
     var body: some View {
         Group {
-            // Only show section headers when not searching
             if searchText.isEmpty {
                 HStack {
                     Text(title).font(.headline)
@@ -288,11 +279,9 @@ struct PaymentSheetTestPlayground: View {
         return AnyView(VStack {
             ScrollView {
                 LazyVStack {
-                    // Search bar at top
                     SettingsSearchBar(text: $searchText)
                         .padding(.bottom, 8)
 
-                    // Backend section
                     Group {
                         SearchableSection(
                             title: "Backend",
@@ -365,7 +354,6 @@ struct PaymentSheetTestPlayground: View {
                                     })
                             }
                         }
-                        // Payment Method Options subsection
                         SearchableView(searchableName: "Payment Method Options", searchText: $searchText) {
                             VStack {
                                 HStack {
@@ -381,7 +369,6 @@ struct PaymentSheetTestPlayground: View {
                                 }
                             }
                         }
-                        // Customer Session subsection
                         if playgroundController.settings.customerKeyType == .customerSession {
                             SearchableView(searchableName: "Customer Session", searchText: $searchText) {
                                 VStack {
@@ -400,7 +387,6 @@ struct PaymentSheetTestPlayground: View {
                             }
                         }
 
-                        // Client section
                         if searchText.isEmpty {
                             Divider()
                         }
@@ -427,7 +413,6 @@ struct PaymentSheetTestPlayground: View {
                             }
                         }
 
-                        // Billing Details Collection section
                         if searchText.isEmpty {
                             Divider()
                         }
@@ -447,7 +432,6 @@ struct PaymentSheetTestPlayground: View {
                             }
                         }
 
-                        // Embedded only configuration section
                         if playgroundController.settings.uiStyle == .embedded {
                             if searchText.isEmpty {
                                 Divider()
@@ -466,7 +450,6 @@ struct PaymentSheetTestPlayground: View {
                             }
                         }
 
-                    // Empty state shown conditionally at the end
                     if !searchText.isEmpty && visibleSettingsCount == 0 {
                         EmptySearchResultsView(searchText: searchText)
                     }
