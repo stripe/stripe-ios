@@ -279,8 +279,11 @@ struct PaymentSheetTestPlayground: View {
         return AnyView(VStack {
             ScrollView {
                 LazyVStack {
-                    SettingsSearchBar(text: $searchText)
-                        .padding(.bottom, 8)
+                    // Hide search bar during UI tests to avoid TextField focus interference
+                    if ProcessInfo.processInfo.environment["UITesting"] == nil {
+                        SettingsSearchBar(text: $searchText)
+                            .padding(.bottom, 8)
+                    }
 
                     Group {
                         SearchableSection(
