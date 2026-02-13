@@ -36,6 +36,14 @@ struct SettingsSearchBar: View {
     }
 }
 
+// MARK: - Preference Key for Visibility Tracking
+struct VisibleSettingsCountKey: PreferenceKey {
+    static var defaultValue: Int = 0
+    static func reduce(value: inout Int, nextValue: () -> Int) {
+        value += nextValue()
+    }
+}
+
 // MARK: - Search Helpers
 
 /// Normalizes a camelCase or PascalCase string by inserting spaces before capital letters.
@@ -69,10 +77,17 @@ struct SearchableSettingView<S: PickerEnum>: View {
     var setting: Binding<S>
     @Binding var searchText: String
 
+    private var isVisible: Bool {
+        settingMatchesSearch(S.enumName, searchText: searchText)
+    }
+
     var body: some View {
-        if settingMatchesSearch(S.enumName, searchText: searchText) {
-            SettingView(setting: setting)
+        Group {
+            if isVisible {
+                SettingView(setting: setting)
+            }
         }
+        .preference(key: VisibleSettingsCountKey.self, value: isVisible ? 1 : 0)
     }
 }
 
@@ -84,11 +99,18 @@ struct SearchableSettingPickerView<S: PickerEnum>: View {
     var customDisplayName: ((S) -> String)?
     @Binding var searchText: String
 
+    private var isVisible: Bool {
+        settingMatchesSearch(customDisplayLabel ?? S.enumName, searchText: searchText)
+    }
+
     var body: some View {
-        if settingMatchesSearch(customDisplayLabel ?? S.enumName, searchText: searchText) {
-            SettingPickerView(setting: setting, disabledSettings: disabledSettings,
-                             customDisplayLabel: customDisplayLabel, customDisplayName: customDisplayName)
+        Group {
+            if isVisible {
+                SettingPickerView(setting: setting, disabledSettings: disabledSettings,
+                                 customDisplayLabel: customDisplayLabel, customDisplayName: customDisplayName)
+            }
         }
+        .preference(key: VisibleSettingsCountKey.self, value: isVisible ? 1 : 0)
     }
 }
 
@@ -98,10 +120,17 @@ struct SearchableView<Content: View>: View {
     @Binding var searchText: String
     @ViewBuilder var content: () -> Content
 
+    private var isVisible: Bool {
+        settingMatchesSearch(searchableName, searchText: searchText)
+    }
+
     var body: some View {
-        if settingMatchesSearch(searchableName, searchText: searchText) {
-            content()
+        Group {
+            if isVisible {
+                content()
+            }
         }
+        .preference(key: VisibleSettingsCountKey.self, value: isVisible ? 1 : 0)
     }
 }
 
@@ -110,18 +139,27 @@ struct SearchableView<Content: View>: View {
 struct SearchableSection<Content: View, Buttons: View>: View {
     let title: String
     @Binding var searchText: String
-    let settingNames: [String]
     @ViewBuilder var content: () -> Content
     @ViewBuilder var buttons: () -> Buttons
+    @State private var sectionVisibleCount: Int = 0
+
+    private var isSectionVisible: Bool {
+        searchText.isEmpty || sectionVisibleCount > 0
+    }
 
     var body: some View {
-        if searchText.isEmpty || settingNames.contains(where: { settingMatchesSearch($0, searchText: searchText) }) {
-            HStack {
-                Text(title).font(.headline)
-                Spacer()
-                buttons()
+        Group {
+            if isSectionVisible {
+                HStack {
+                    Text(title).font(.headline)
+                    Spacer()
+                    buttons()
+                }
             }
             content()
+        }
+        .onPreferenceChange(VisibleSettingsCountKey.self) { count in
+            sectionVisibleCount = count
         }
     }
 }
@@ -155,6 +193,7 @@ struct PaymentSheetTestPlayground: View {
     @State var showingQRSheet = false
     @State private var isViewReady = false
     @State private var searchText: String = ""
+    @State private var visibleSettingsCount: Int = 0
 
     init() {
         _playgroundController = StateObject(wrappedValue: PlaygroundController())
@@ -215,31 +254,6 @@ struct PaymentSheetTestPlayground: View {
         SearchableSettingView(setting: $playgroundController.settings.termsDisplay, searchText: searchText)
     }
 
-    // All setting names for computing empty state
-    var allSettingNames: [String] {
-        [
-            // Backend
-            "Mode", "Type", "Confirmation mode", "CustomerKeyType", "Customer", "Amount", "Currency",
-            "Merchant", "Automatic PMs", "Payment Method Options", "Customer Session",
-            // Client
-            "UI", "Layout", "Style", "Shipping info", "Apple Pay", "Pay button", "allowsDelayedPMs",
-            "Default billing address", "Enable passive captcha", "Enable attestation on confirmation",
-            "Enable Link", "Link passthrough mode", "Link display", "UserOverrideCountry",
-            "External PMs", "CPMs", "Preferred Networks", "cardBrandAcceptance", "fundingAcceptance",
-            "allowsRemovalOfLastSavedPaymentMethod", "Require CVC Recollection", "Autoreload",
-            "Reset attestation", "Shake Ambiguous Views", "Instant Debits Incentives", "FCLite enabled",
-            "opensCardScannerAutomatically", "Card TermsDisplay", "Custom CTA", "Payment Method Settings ID",
-            // Billing Details
-            "Attach defaults", "Name", "Email", "Phone", "Address", "Allowed Countries",
-            // Embedded
-            "formSheetAction", "displaysMandateText", "rowSelectionBehavior",
-        ]
-    }
-
-    var hasAnyVisibleSettings: Bool {
-        searchText.isEmpty || allSettingNames.contains { settingMatchesSearch($0, searchText: searchText) }
-    }
-
     var body: some View {
         if !isViewReady {
             return AnyView(
@@ -265,17 +279,12 @@ struct PaymentSheetTestPlayground: View {
                     SettingsSearchBar(text: $searchText)
                         .padding(.bottom, 8)
 
-                    if !hasAnyVisibleSettings {
-                        EmptySearchResultsView(searchText: searchText)
-                    } else {
-                        // Backend section
-                        Group {
-                            SearchableSection(
-                                title: "Backend",
-                                searchText: $searchText,
-                                settingNames: ["Mode", "Type", "Confirmation mode", "CustomerKeyType", "Customer",
-                                             "Amount", "Currency", "Merchant", "Automatic PMs", ]
-                            ) {
+                    // Backend section
+                    Group {
+                        SearchableSection(
+                            title: "Backend",
+                            searchText: $searchText
+                        ) {
                                 SearchableSettingView(setting: $playgroundController.settings.mode, searchText: $searchText)
                                 SearchableSettingPickerView(
                                     setting: integrationTypeBinding,
@@ -382,20 +391,11 @@ struct PaymentSheetTestPlayground: View {
                         if searchText.isEmpty {
                             Divider()
                         }
-                        Group {
-                            SearchableSection(
-                                title: "Client",
-                                searchText: $searchText,
-                                settingNames: ["UI", "Layout", "Style", "Shipping info", "Apple Pay", "Pay button",
-                                             "allowsDelayedPMs", "Default billing address", "Enable passive captcha",
-                                             "Enable attestation on confirmation", "Enable Link", "Link passthrough mode",
-                                             "Link display", "UserOverrideCountry", "External PMs", "CPMs",
-                                             "Preferred Networks", "cardBrandAcceptance", "fundingAcceptance",
-                                             "allowsRemovalOfLastSavedPaymentMethod", "Require CVC Recollection",
-                                             "Autoreload", "Reset attestation", "Shake Ambiguous Views",
-                                             "Instant Debits Incentives", "FCLite enabled", "opensCardScannerAutomatically",
-                                             "Card TermsDisplay", "Custom CTA", "Payment Method Settings ID", ]
-                            ) {
+                    Group {
+                        SearchableSection(
+                            title: "Client",
+                            searchText: $searchText
+                        ) {
                                 clientSettings(searchText: $searchText)
                                 SearchableView(searchableName: "Custom CTA", searchText: $searchText) {
                                     TextField("Custom CTA", text: customCTABinding)
@@ -418,12 +418,11 @@ struct PaymentSheetTestPlayground: View {
                         if searchText.isEmpty {
                             Divider()
                         }
-                        Group {
-                            SearchableSection(
-                                title: "Billing Details Collection",
-                                searchText: $searchText,
-                                settingNames: ["Attach defaults", "Name", "Email", "Phone", "Address", "Allowed Countries"]
-                            ) {
+                    Group {
+                        SearchableSection(
+                            title: "Billing Details Collection",
+                            searchText: $searchText
+                        ) {
                                 SearchableSettingView(setting: $playgroundController.settings.attachDefaults, searchText: $searchText)
                                 SearchableSettingView(setting: $playgroundController.settings.collectName, searchText: $searchText)
                                 SearchableSettingView(setting: $playgroundController.settings.collectEmail, searchText: $searchText)
@@ -440,12 +439,11 @@ struct PaymentSheetTestPlayground: View {
                             if searchText.isEmpty {
                                 Divider()
                             }
-                            Group {
-                                SearchableSection(
-                                    title: "Embedded only configuration",
-                                    searchText: $searchText,
-                                    settingNames: ["formSheetAction", "displaysMandateText", "rowSelectionBehavior"]
-                                ) {
+                        Group {
+                            SearchableSection(
+                                title: "Embedded only configuration",
+                                searchText: $searchText
+                            ) {
                                     SearchableSettingView(setting: $playgroundController.settings.formSheetAction, searchText: $searchText)
                                     SearchableSettingView(setting: $playgroundController.settings.embeddedViewDisplaysMandateText, searchText: $searchText)
                                     SearchableSettingView(setting: $playgroundController.settings.rowSelectionBehavior, searchText: $searchText)
@@ -454,9 +452,16 @@ struct PaymentSheetTestPlayground: View {
                                 }
                             }
                         }
-                    }
 
-                }.padding()
+                    // Empty state shown conditionally at the end
+                    if !searchText.isEmpty && visibleSettingsCount == 0 {
+                        EmptySearchResultsView(searchText: searchText)
+                    }
+                }
+                .onPreferenceChange(VisibleSettingsCountKey.self) { count in
+                    visibleSettingsCount = count
+                }
+                .padding()
             }
             Spacer()
             Divider()
