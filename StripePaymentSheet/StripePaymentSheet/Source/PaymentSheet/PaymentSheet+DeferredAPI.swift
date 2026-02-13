@@ -20,7 +20,8 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
-        elementsSession: STPElementsSession?
+        elementsSession: STPElementsSession?,
+        isFromLink: Bool = false
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         // Route based on which handler is available in the intent configuration
         if let confirmationTokenConfirmHandler = intentConfig.confirmationTokenConfirmHandler {
@@ -38,7 +39,8 @@ extension PaymentSheet {
                 isFlowController: isFlowController,
                 allowsSetAsDefaultPM: allowsSetAsDefaultPM,
                 elementsSession: elementsSession,
-                confirmHandler: confirmationTokenConfirmHandler
+                confirmHandler: confirmationTokenConfirmHandler,
+                isFromLink: isFromLink
             )
         } else if let confirmHandler = intentConfig.confirmHandler {
             // Use regular confirmation flow

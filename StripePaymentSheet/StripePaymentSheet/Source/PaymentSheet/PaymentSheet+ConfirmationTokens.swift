@@ -19,7 +19,8 @@ extension PaymentSheet {
         isFlowController: Bool,
         allowsSetAsDefaultPM: Bool = false,
         elementsSession: STPElementsSession,
-        confirmHandler: @escaping PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler
+        confirmHandler: @escaping PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler,
+        isFromLink: Bool = false
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
             // 1. Create the confirmation token params
@@ -33,7 +34,7 @@ extension PaymentSheet {
                 // Only needed when using existing saved payment methods, API will error if provided for new payment methods
                 guard confirmationTokenParams.paymentMethod != nil else { return nil }
                 // Link saved payment methods don't require ephemeral keys, API will error if provided
-                guard !isSavedFromLink(from: confirmType) else { return nil }
+                guard !isFromLink && !isSavedFromLink(from: confirmType) else { return nil }
 
                 return configuration.customer?.ephemeralKeySecret(basedOn: elementsSession)
             }()
