@@ -616,8 +616,11 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
 
     func testLinkBankConfirmFlows() async throws {
         try await _testLinkConfirm(
-            // SetupIntent + US bank account can require out-of-band verification flows
-            // that don't fit this test's polling flow.
+            // We intentionally exclude SetupIntent for Link bank accounts in this suite.
+            // In this network-recorded test harness, Link bank SetupIntents can transition
+            // into out-of-band verification (for example verify_with_microdeposits) and other
+            // asynchronous next-action states that are not reliably representable in this
+            // single-pass confirm + redirect-shim flow.
             intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage],
             currency: "USD",
             intentPaymentMethodType: .USBankAccount,
@@ -1249,7 +1252,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             )
 
             for (description, intent) in intents {
-                // TODO(gbirch): Uncomment thse when adding CheckoutSessions Link support.
+                // TODO(gbirch): Uncomment these when adding CheckoutSessions Link support.
                 // CheckoutSession doesn't support a Link-only payment method type list.
                 if case .checkoutSession = intent {
                     continue
