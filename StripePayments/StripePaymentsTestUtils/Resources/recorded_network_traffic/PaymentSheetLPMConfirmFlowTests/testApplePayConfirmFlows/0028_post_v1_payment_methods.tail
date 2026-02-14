@@ -1,0 +1,82 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_methods$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=X13leJUglf0hJfBnvKuCOqsnhPUCNGXTD1XPfw8ASMgvD7Q6hIn7gGz5eIJakf1Ez3TyrwAJvCLAezds
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_SM1vxfAlaZEJso
+Content-Length: 1157
+Vary: Origin
+Date: Sat, 14 Feb 2026 05:22:31 GMT
+original-request: req_SM1vxfAlaZEJso
+stripe-version: 2020-08-27
+idempotency-key: 4ca69e1d-0a30-4402-a5f5-7f20f6727fa6
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "object" : "payment_method",
+  "id" : "pm_1T0bJLFY0qyl6XeW9k7zpx03",
+  "billing_details" : {
+    "email" : "jane@example.com",
+    "phone" : null,
+    "tax_id" : null,
+    "name" : "Jane Doe",
+    "address" : {
+      "state" : null,
+      "country" : null,
+      "line2" : null,
+      "city" : null,
+      "line1" : null,
+      "postal_code" : null
+    }
+  },
+  "card" : {
+    "regulated_status" : "unregulated",
+    "last4" : "4242",
+    "funding" : "credit",
+    "generated_from" : null,
+    "networks" : {
+      "available" : [
+        "visa"
+      ],
+      "preferred" : null
+    },
+    "brand" : "visa",
+    "checks" : {
+      "address_postal_code_check" : null,
+      "cvc_check" : null,
+      "address_line1_check" : null
+    },
+    "three_d_secure_usage" : {
+      "supported" : true
+    },
+    "wallet" : {
+      "type" : "apple_pay",
+      "apple_pay" : {
+        "type" : "apple_pay"
+      },
+      "dynamic_last4" : "4242"
+    },
+    "display_brand" : "visa",
+    "exp_month" : 12,
+    "exp_year" : 2027,
+    "country" : "US"
+  },
+  "livemode" : false,
+  "created" : 1771046551,
+  "allow_redisplay" : "unspecified",
+  "type" : "card",
+  "customer" : null,
+  "customer_account" : null
+}
