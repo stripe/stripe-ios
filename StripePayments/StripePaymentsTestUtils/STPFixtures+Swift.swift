@@ -108,13 +108,19 @@ public extension STPPaymentMethodParams {
         return _testCardValue()
     }
 
-    static func _testCardValue(number: String = "4242424242424242") -> STPPaymentMethodParams {
+    static func _testCardValue(number: String = "4242424242424242", email: String? = nil) -> STPPaymentMethodParams {
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = number
         cardParams.cvc = "123"
         cardParams.expYear = 2040
         cardParams.expMonth = 01
-        return STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)
+        let billingDetails: STPPaymentMethodBillingDetails? = {
+            guard let email else { return nil }
+            let details = STPPaymentMethodBillingDetails()
+            details.email = email
+            return details
+        }()
+        return STPPaymentMethodParams(card: cardParams, billingDetails: billingDetails, metadata: nil)
     }
 
     static func _testSEPA() -> STPPaymentMethodParams {
@@ -134,6 +140,20 @@ public extension STPPaymentMethodParams {
         billingDetails.phone = "555-555-5555"
 
         return STPPaymentMethodParams(sepaDebit: sepaDebitParams, billingDetails: billingDetails, metadata: nil)
+    }
+
+    static func _testUSBankAccountValue(name: String? = nil, email: String? = nil) -> STPPaymentMethodParams {
+        let usBankAccount = STPPaymentMethodUSBankAccountParams()
+        usBankAccount.accountNumber = "000123456789"
+        usBankAccount.routingNumber = "110000000"
+        usBankAccount.accountType = .checking
+        usBankAccount.accountHolderType = .individual
+
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.name = name
+        billingDetails.email = email
+
+        return STPPaymentMethodParams(usBankAccount: usBankAccount, billingDetails: billingDetails, metadata: nil)
     }
 }
 

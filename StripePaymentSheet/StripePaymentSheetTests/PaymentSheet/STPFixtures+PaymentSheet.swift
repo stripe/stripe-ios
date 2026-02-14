@@ -5,8 +5,8 @@
 //  Created by David Estes on 8/11/23.
 //
 
-import Foundation
 import Contacts
+import Foundation
 import PassKit
 @_spi(STP) @testable import StripeCore
 @_spi(STP) import StripeCoreTestUtils
@@ -472,59 +472,3 @@ extension STPFixtures {
         return payment
     }
 }
-
-extension STPAPIClient {
-    func _createTestCardPaymentMethod() async throws -> STPPaymentMethod {
-        let card = STPPaymentMethodCardParams()
-        card.number = "4242424242424242"
-        card.expMonth = 12
-        card.expYear = 2030
-        card.cvc = "123"
-
-        let billing = STPPaymentMethodBillingDetails()
-        billing.email = "link-card@example.com"
-
-        let params = STPPaymentMethodParams(card: card, billingDetails: billing, metadata: nil)
-        return try await withCheckedThrowingContinuation { continuation in
-            createPaymentMethod(with: params) { paymentMethod, error in
-                if let paymentMethod {
-                    continuation.resume(returning: paymentMethod)
-                } else {
-                    continuation.resume(throwing: error ?? NSError(
-                        domain: "STPFixtures+PaymentSheet",
-                        code: 1,
-                        userInfo: [NSLocalizedDescriptionKey: "Failed to create test card payment method."]
-                    ))
-                }
-            }
-        }
-    }
-
-    func _createTestUSBankAccountPaymentMethod() async throws -> STPPaymentMethod {
-        let usBankAccount = STPPaymentMethodUSBankAccountParams()
-        usBankAccount.accountNumber = "000123456789"
-        usBankAccount.routingNumber = "110000000"
-        usBankAccount.accountType = .checking
-        usBankAccount.accountHolderType = .individual
-
-        let billing = STPPaymentMethodBillingDetails()
-        billing.name = "Link Bank Test"
-        billing.email = "link-bank@example.com"
-
-        let params = STPPaymentMethodParams(usBankAccount: usBankAccount, billingDetails: billing, metadata: nil)
-        return try await withCheckedThrowingContinuation { continuation in
-            createPaymentMethod(with: params) { paymentMethod, error in
-                if let paymentMethod {
-                    continuation.resume(returning: paymentMethod)
-                } else {
-                    continuation.resume(throwing: error ?? NSError(
-                        domain: "STPFixtures+PaymentSheet",
-                        code: 2,
-                        userInfo: [NSLocalizedDescriptionKey: "Failed to create test US bank account payment method."]
-                    ))
-                }
-            }
-        }
-    }
-}
-

@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=zZhsMiAFaKjAT0WdSElTEcEAXug0S6ZL2jwJJcRjo_7CAXV_9_lXzDyMSeJmrd5X9kkzqmcSDwkFv6XI
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=3R43qysDnJ2I3Ub9POw3brZVMKI_xD77_M3M-4vKqh430cLKjSufmUtP5T_deB2fpJXyvGcIEMUzU6wZ
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,25 +12,25 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_Jwd2MeqhuJEj92
+request-id: req_eAkU9wjCC0tP3o
 Content-Length: 1391
 Vary: Origin
-Date: Sat, 14 Feb 2026 00:13:12 GMT
-original-request: req_Jwd2MeqhuJEj92
+Date: Sat, 14 Feb 2026 05:53:12 GMT
+original-request: req_eAkU9wjCC0tP3o
 stripe-version: 2020-08-27
-idempotency-key: 7c5ec3d0-e33f-407f-b2b3-c55f324791e8
+idempotency-key: 25a7ad4b-7f28-43db-b870-304379a957e3
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=card&payment_method=pm_1T0WTzFY0qyl6XeWqHaFKq9a&return_url=https%3A\/\/foo\.com
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=card&payment_method=pm_1T0bn1FY0qyl6XeWAvSaEUw8&return_url=https%3A\/\/foo\.com
 
 {
-  "id" : "ctoken_1T0WU0FY0qyl6XeW6A5V453f",
+  "id" : "ctoken_1T0bn2FY0qyl6XeW9ZkB0815",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1771071192,
+  "expires_at" : 1771091592,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : null,
   "object" : "confirmation_token",
@@ -80,7 +80,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "type" : "card",
     "customer_account" : null
   },
-  "created" : 1771027992,
+  "created" : 1771048392,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

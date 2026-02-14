@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=un9VKqQmD1hvl4WFhfUlFLcCmFnMquvjRUE5PFXlh9gWeTSNX72Zx4wZ8iGVVRUTU9auPIsmDV2K_FnX
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=9ZNZemSyuj_c9shP-vWDE2xoXfZGXcYoQH4qpIl9n0AFpGY6lPFlSFrB3SnS06G9IDhWhH7QHW2EjlZw
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_miNsjl3ZD02yln
+request-id: req_SkQiouLKpTDTKy
 Content-Length: 1038
 Vary: Origin
-Date: Sat, 14 Feb 2026 00:13:43 GMT
-original-request: req_miNsjl3ZD02yln
+Date: Sat, 14 Feb 2026 05:53:40 GMT
+original-request: req_SkQiouLKpTDTKy
 stripe-version: 2020-08-27
-idempotency-key: 91297b60-1fed-4aa1-9d44-9ff67d0747dc
+idempotency-key: 218ee27d-137e-46b0-8b75-8cd98e1fb744
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=link-
 
 {
   "object" : "payment_method",
-  "id" : "pm_1T0WUUFY0qyl6XeWsv7h2uaW",
+  "id" : "pm_1T0bnUFY0qyl6XeW2CJ5AX0v",
   "billing_details" : {
     "email" : "link-card@example.com",
     "phone" : null,
@@ -69,7 +69,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=link-
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1771028022,
+  "created" : 1771048420,
   "allow_redisplay" : "unspecified",
   "type" : "card",
   "customer" : null,

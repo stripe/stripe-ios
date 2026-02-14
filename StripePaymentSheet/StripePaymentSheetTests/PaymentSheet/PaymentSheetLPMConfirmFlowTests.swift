@@ -6,9 +6,9 @@
 //
 
 import SafariServices
+@testable@_spi(STP) import StripeApplePay
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@testable@_spi(STP) import StripeApplePay
 @testable@_spi(STP) import StripePayments
 @testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
@@ -609,7 +609,12 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentPaymentMethodType: .card,
             linkFundingSources: [.card],
             makeLinkPaymentMethod: { apiClient in
-                try await apiClient._createTestCardPaymentMethod()
+                let params = STPPaymentMethodParams._testCardValue(email: "link-card@example.com")
+                params.card?.expMonth = 12
+                params.card?.expYear = 2030
+                return try await apiClient.createPaymentMethod(
+                    with: params
+                )
             }
         )
     }
@@ -626,7 +631,12 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentPaymentMethodType: .USBankAccount,
             linkFundingSources: [.bankAccount],
             makeLinkPaymentMethod: { apiClient in
-                try await apiClient._createTestUSBankAccountPaymentMethod()
+                try await apiClient.createPaymentMethod(
+                    with: ._testUSBankAccountValue(
+                        name: "Link Bank Test",
+                        email: "link-bank@example.com"
+                    )
+                )
             }
         )
     }
@@ -1299,7 +1309,6 @@ extension PaymentSheetLPMConfirmFlowTests {
             }
         }
     }
-
 
     @MainActor
     func _testApplePayConfirm(
