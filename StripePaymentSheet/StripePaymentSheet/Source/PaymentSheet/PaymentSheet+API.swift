@@ -526,7 +526,8 @@ extension PaymentSheet {
                                 authenticationContext: authenticationContext,
                                 paymentHandler: paymentHandler,
                                 isFlowController: isFlowController,
-                                elementsSession: elementsSession
+                                elementsSession: elementsSession,
+                                isFromLink: true
                             )
                             if shouldLogOutOfLink(result: result.result, elementsSession: elementsSession) {
                                 linkAccount?.logout()
