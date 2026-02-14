@@ -601,6 +601,32 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         ) { _ in }
     }
 
+    func testLinkCardConfirmFlows() async throws {
+        try await _testLinkConfirm(
+            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+            currency: "USD",
+            intentPaymentMethodType: .card,
+            linkFundingSources: [.card],
+            makeLinkPaymentMethod: { apiClient in
+                try await self.createCardPaymentMethod(apiClient: apiClient)
+            }
+        )
+    }
+
+    func testLinkBankConfirmFlows() async throws {
+        try await _testLinkConfirm(
+            // SetupIntent + US bank account can require out-of-band verification flows
+            // that don't fit this test's polling shim.
+            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage],
+            currency: "USD",
+            intentPaymentMethodType: .USBankAccount,
+            linkFundingSources: [.bankAccount],
+            makeLinkPaymentMethod: { apiClient in
+                try await self.createUSBankAccountPaymentMethod(apiClient: apiClient)
+            }
+        )
+    }
+
     // MARK: Add tests above this line
     // MARK: - 👋 👨‍🏫  Look at this test to understand how to write your own tests in this file
     func testiDEALConfirmFlows() async throws {
@@ -918,24 +944,26 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
             }
 
-            // CheckoutSession
-            let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
-                types: paymentMethodTypes,
-                currency: currency,
-                amount: amount,
-                merchantCountry: merchantCountry.rawValue,
-                customerID: customer
-            )
-            let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            let initResponse = try await csApiClient.initCheckoutSession(
-                checkoutSessionId: checkoutSessionResponse.id
-            )
-
             intents = [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("CheckoutSession", .checkoutSession(initResponse.checkoutSession)),
             ]
+
+            // TODO(gbirch): Uncomment thse when adding CheckoutSessions Link support.
+            if paymentMethod != .link {
+                let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+                    types: paymentMethodTypes,
+                    currency: currency,
+                    amount: amount,
+                    merchantCountry: merchantCountry.rawValue,
+                    customerID: customer
+                )
+                let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+                let initResponse = try await csApiClient.initCheckoutSession(
+                    checkoutSessionId: checkoutSessionResponse.id
+                )
+                intents.append(("CheckoutSession", .checkoutSession(initResponse.checkoutSession)))
+            }
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation
                 return intents
@@ -1171,6 +1199,140 @@ extension PaymentSheetLPMConfirmFlowTests {
                 ("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                 ("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
             ]
+        }
+    }
+
+    @MainActor
+    func _testLinkConfirm(
+        intentKinds: [IntentKind],
+        currency: String,
+        amount: Int? = nil,
+        intentPaymentMethodType: STPPaymentMethodType,
+        merchantCountry: MerchantCountry = .US,
+        linkFundingSources: Set<LinkSettings.FundingSource>,
+        makeLinkPaymentMethod: (STPAPIClient) async throws -> STPPaymentMethod
+    ) async throws {
+        // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
+        let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _ in return "" })
+        _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
+
+        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = apiClient
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.returnURL = "https://foo.com"
+        configuration.allowsPaymentMethodsRequiringShippingAddress = true
+
+        for intentKind in intentKinds {
+            let intents = try await makeTestIntents(
+                intentKind: intentKind,
+                currency: currency,
+                amount: amount,
+                paymentMethod: intentPaymentMethodType,
+                merchantCountry: merchantCountry,
+                apiClient: apiClient
+            )
+
+            for (description, intent) in intents {
+                // TODO(gbirch): Uncomment thse when adding CheckoutSessions Link support.
+                // CheckoutSession doesn't support a Link-only payment method type list.
+                if case .checkoutSession = intent {
+                    continue
+                }
+                let linkPaymentMethod = try await makeLinkPaymentMethod(apiClient)
+
+                let e = expectation(description: "Confirm Link (\(description))")
+                let paymentHandler = STPPaymentHandler(apiClient: apiClient)
+                var redirectShimCalled = false
+                paymentHandler._redirectShim = { _, _, _ in
+                    print("✅ \(description): Successfully confirmed the intent and saw a redirect attempt.")
+                    DispatchQueue.main.async {
+                        if paymentHandler.isInProgress {
+                            paymentHandler._handleWillForegroundNotification()
+                        }
+                    }
+                    redirectShimCalled = true
+                }
+
+                PaymentSheet.confirm(
+                    configuration: configuration,
+                    authenticationContext: self,
+                    intent: intent,
+                    elementsSession: ._testValue(intent: intent, linkFundingSources: linkFundingSources),
+                    paymentOption: .link(
+                        option: .withPaymentMethod(
+                            paymentMethod: linkPaymentMethod
+                        )
+                    ),
+                    paymentHandler: paymentHandler,
+                    analyticsHelper: ._testValue()
+                ) { result, _ in
+                    switch result {
+                    case .failed(error: let error):
+                        XCTFail("❌ \(description): Link confirm failed - \(error.nonGenericDescription)")
+                    case .canceled:
+                        XCTAssertTrue(redirectShimCalled, "❌ \(description): Link confirm canceled")
+                    case .completed:
+                        print("✅ \(description): Link confirm completed")
+                    }
+                    e.fulfill()
+                }
+                await fulfillment(of: [e], timeout: 25)
+            }
+        }
+    }
+
+    func createCardPaymentMethod(apiClient: STPAPIClient) async throws -> STPPaymentMethod {
+        let card = STPPaymentMethodCardParams()
+        card.number = "4242424242424242"
+        card.expMonth = 12
+        card.expYear = 2030
+        card.cvc = "123"
+
+        let billing = STPPaymentMethodBillingDetails()
+        billing.email = "link-card@example.com"
+
+        let params = STPPaymentMethodParams(card: card, billingDetails: billing, metadata: nil)
+        return try await withCheckedThrowingContinuation { continuation in
+            apiClient.createPaymentMethod(with: params) { paymentMethod, error in
+                if let paymentMethod {
+                    continuation.resume(returning: paymentMethod)
+                } else {
+                    continuation.resume(throwing: error ?? NSError(
+                        domain: "PaymentSheetLPMConfirmFlowTests",
+                        code: 1,
+                        userInfo: [NSLocalizedDescriptionKey: "Failed to create card payment method for Link tests."]
+                    ))
+                }
+            }
+        }
+    }
+
+    func createUSBankAccountPaymentMethod(apiClient: STPAPIClient) async throws -> STPPaymentMethod {
+        let usBankAccount = STPPaymentMethodUSBankAccountParams()
+        usBankAccount.accountNumber = "000123456789"
+        usBankAccount.routingNumber = "110000000"
+        usBankAccount.accountType = .checking
+        usBankAccount.accountHolderType = .individual
+
+        let billing = STPPaymentMethodBillingDetails()
+        billing.name = "Link Bank Test"
+        billing.email = "link-bank@example.com"
+
+        let params = STPPaymentMethodParams(usBankAccount: usBankAccount, billingDetails: billing, metadata: nil)
+        return try await withCheckedThrowingContinuation { continuation in
+            apiClient.createPaymentMethod(with: params) { paymentMethod, error in
+                if let paymentMethod {
+                    continuation.resume(returning: paymentMethod)
+                } else {
+                    continuation.resume(throwing: error ?? NSError(
+                        domain: "PaymentSheetLPMConfirmFlowTests",
+                        code: 2,
+                        userInfo: [NSLocalizedDescriptionKey: "Failed to create US bank account payment method for Link tests."]
+                    ))
+                }
+            }
         }
     }
 
