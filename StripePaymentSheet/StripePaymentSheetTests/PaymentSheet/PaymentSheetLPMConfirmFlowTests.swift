@@ -6,7 +6,6 @@
 //
 
 import SafariServices
-import Contacts
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripeApplePay
@@ -610,7 +609,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentPaymentMethodType: .card,
             linkFundingSources: [.card],
             makeLinkPaymentMethod: { apiClient in
-                try await self.createCardPaymentMethod(apiClient: apiClient)
+                try await apiClient._createTestCardPaymentMethod()
             }
         )
     }
@@ -624,7 +623,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentPaymentMethodType: .USBankAccount,
             linkFundingSources: [.bankAccount],
             makeLinkPaymentMethod: { apiClient in
-                try await self.createUSBankAccountPaymentMethod(apiClient: apiClient)
+                try await apiClient._createTestUSBankAccountPaymentMethod()
             }
         )
     }
@@ -1298,58 +1297,6 @@ extension PaymentSheetLPMConfirmFlowTests {
         }
     }
 
-    func createCardPaymentMethod(apiClient: STPAPIClient) async throws -> STPPaymentMethod {
-        let card = STPPaymentMethodCardParams()
-        card.number = "4242424242424242"
-        card.expMonth = 12
-        card.expYear = 2030
-        card.cvc = "123"
-
-        let billing = STPPaymentMethodBillingDetails()
-        billing.email = "link-card@example.com"
-
-        let params = STPPaymentMethodParams(card: card, billingDetails: billing, metadata: nil)
-        return try await withCheckedThrowingContinuation { continuation in
-            apiClient.createPaymentMethod(with: params) { paymentMethod, error in
-                if let paymentMethod {
-                    continuation.resume(returning: paymentMethod)
-                } else {
-                    continuation.resume(throwing: error ?? NSError(
-                        domain: "PaymentSheetLPMConfirmFlowTests",
-                        code: 1,
-                        userInfo: [NSLocalizedDescriptionKey: "Failed to create card payment method for Link tests."]
-                    ))
-                }
-            }
-        }
-    }
-
-    func createUSBankAccountPaymentMethod(apiClient: STPAPIClient) async throws -> STPPaymentMethod {
-        let usBankAccount = STPPaymentMethodUSBankAccountParams()
-        usBankAccount.accountNumber = "000123456789"
-        usBankAccount.routingNumber = "110000000"
-        usBankAccount.accountType = .checking
-        usBankAccount.accountHolderType = .individual
-
-        let billing = STPPaymentMethodBillingDetails()
-        billing.name = "Link Bank Test"
-        billing.email = "link-bank@example.com"
-
-        let params = STPPaymentMethodParams(usBankAccount: usBankAccount, billingDetails: billing, metadata: nil)
-        return try await withCheckedThrowingContinuation { continuation in
-            apiClient.createPaymentMethod(with: params) { paymentMethod, error in
-                if let paymentMethod {
-                    continuation.resume(returning: paymentMethod)
-                } else {
-                    continuation.resume(throwing: error ?? NSError(
-                        domain: "PaymentSheetLPMConfirmFlowTests",
-                        code: 2,
-                        userInfo: [NSLocalizedDescriptionKey: "Failed to create US bank account payment method for Link tests."]
-                    ))
-                }
-            }
-        }
-    }
 
     @MainActor
     func _testApplePayConfirm(
@@ -1405,7 +1352,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 }
 
                 applePayContext.authorizationController = STPTestPKPaymentAuthorizationController()
-                let payment = makeSimulatorApplePayPaymentWithCountry()
+                let payment = STPFixtures.simulatorApplePayPaymentWithCountryAndEmail()
                 applePayContext.paymentAuthorizationController(
                     applePayContext.authorizationController,
                     didAuthorizePayment: payment
@@ -1418,29 +1365,6 @@ extension PaymentSheetLPMConfirmFlowTests {
                 await fulfillment(of: [e], timeout: 25)
             }
         }
-    }
-
-    func makeSimulatorApplePayPaymentWithCountry() -> PKPayment {
-        let payment = STPFixtures.simulatorApplePayPayment()
-
-        let shipping = PKContact()
-        shipping.name = PersonNameComponentsFormatter().personNameComponents(from: "Jane Doe")
-        shipping.emailAddress = "jane@example.com"
-        let address = CNMutablePostalAddress()
-        address.street = "510 Townsend St"
-        address.isoCountryCode = "US"
-        address.city = "San Francisco"
-        address.state = "CA"
-        address.postalCode = "94103"
-        shipping.postalAddress = address
-
-        let billing = PKContact()
-        billing.name = PersonNameComponentsFormatter().personNameComponents(from: "Jane Doe")
-        billing.emailAddress = "jane@example.com"
-
-        _ = payment.perform(NSSelectorFromString("setShippingContact:"), with: shipping)
-        _ = payment.perform(NSSelectorFromString("setBillingContact:"), with: billing)
-        return payment
     }
 
     func verifyFormRespectsBillingDetailsCollectionConfiguration(paymentMethodType: STPPaymentMethodType, defaultCountry: String) {
