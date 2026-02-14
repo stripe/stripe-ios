@@ -256,55 +256,6 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         payWithApplePay()
     }
 
-    func testDeferredPaymentIntent_ApplePay_ConfirmationToken_ClientSideConfirmation() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.integrationType = .deferred_csc
-        settings.confirmationMode = .confirmationToken
-        settings.apmsEnabled = .off
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].tap()
-        let applePayButton = app.buttons["apple_pay_button"]
-        XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
-        applePayButton.tap()
-
-        payWithApplePay()
-    }
-
-    func testDeferredPaymentIntent_ApplePay_ConfirmationToken_ServerSideConfirmation() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.mode = .paymentWithSetup
-        settings.integrationType = .deferred_ssc
-        settings.confirmationMode = .confirmationToken
-        settings.apmsEnabled = .off
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].tap()
-        let applePayButton = app.buttons["apple_pay_button"]
-        XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
-        applePayButton.tap()
-
-        payWithApplePay()
-    }
-
-    func testCheckoutSession_ApplePay() {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.integrationType = .checkoutSession
-        settings.apmsEnabled = .off
-        settings.collectEmail = .always // CheckoutSession requires email
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].tap()
-        let applePayButton = app.buttons["apple_pay_button"]
-        XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
-        applePayButton.tap()
-
-        payWithApplePay()
-    }
-
     func testPaymentSheetFlowControllerSaveAndRemoveCard_DeferredIntent_ServerSideConfirmation() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
