@@ -527,3 +527,20 @@ extension STPAPIClient {
         }
     }
 }
+
+extension STPFixtures {
+    static func makeTestUSBankAccountIntentConfirmParams() -> IntentConfirmParams {
+        let usBankAccount = STPPaymentMethodUSBankAccountParams()
+        usBankAccount.accountNumber = "000123456789"
+        usBankAccount.routingNumber = "110000000"
+        usBankAccount.accountType = .checking
+        usBankAccount.accountHolderType = .individual
+
+        let billing = STPPaymentMethodBillingDetails()
+        billing.name = "Link Bank Test"
+        billing.email = "link-bank@example.com"
+
+        let params = STPPaymentMethodParams(usBankAccount: usBankAccount, billingDetails: billing, metadata: nil)
+        return IntentConfirmParams(params: params, type: .stripe(.USBankAccount))
+    }
+}
