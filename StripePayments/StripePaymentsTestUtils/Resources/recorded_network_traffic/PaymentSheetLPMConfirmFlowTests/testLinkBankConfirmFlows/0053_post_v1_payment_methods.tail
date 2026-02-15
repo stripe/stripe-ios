@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=DHjQwMwQ-iC0WobqpWTykA2WZkgVdR63qg5vqP0FkCXNkH_x8m5aWZpZL_LPyv7MLCEpAb4vNpIGDsrg
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=efYmPFToQY_BCzhKzGsBtNASsRqkNFcVO4f9POZBjtckOeTUci4OT5mziOg8IORfruzNth6wyZu-iPUi
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,24 +12,24 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_mAmpnVFSDzh0Kb
-Content-Length: 917
+request-id: req_9klvDMi93HgEto
+Content-Length: 944
 Vary: Origin
-Date: Sat, 14 Feb 2026 00:19:29 GMT
-original-request: req_mAmpnVFSDzh0Kb
+Date: Sun, 15 Feb 2026 20:06:08 GMT
+original-request: req_9klvDMi93HgEto
 stripe-version: 2020-08-27
-idempotency-key: 17630777-8136-48cd-8015-d1bf7b730ad6
+idempotency-key: ff613bc0-b5b6-41e7-80e2-d5f767282a9d
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=link-bank%40example\.com&billing_details\[name]=Link%20Bank%20Test&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=us_bank_account&us_bank_account\[account_holder_type]=individual&us_bank_account\[account_number]=000123456789&us_bank_account\[account_type]=checking&us_bank_account\[routing_number]=110000000
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=paymentsheet-link-bank-confirm-flows%40example\.com&billing_details\[name]=Link%20Bank%20Test&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=us_bank_account&us_bank_account\[account_holder_type]=individual&us_bank_account\[account_number]=000123456789&us_bank_account\[account_type]=checking&us_bank_account\[routing_number]=110000000
 
 {
   "object" : "payment_method",
-  "id" : "pm_1T0Wa5FY0qyl6XeWR1svINem",
+  "id" : "pm_1T1Ba0FY0qyl6XeWEsC91X9g",
   "billing_details" : {
-    "email" : "link-bank@example.com",
+    "email" : "paymentsheet-link-bank-confirm-flows@example.com",
     "phone" : null,
     "tax_id" : null,
     "name" : "Link Bank Test",
@@ -59,7 +59,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=link-
     "status_details" : null,
     "account_type" : "checking"
   },
-  "created" : 1771028369,
+  "created" : 1771185968,
   "allow_redisplay" : "unspecified",
   "type" : "us_bank_account",
   "customer" : null,

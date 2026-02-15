@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=qckbTi5ADlXAnfwNDoVzULWNuqCA7e-CKJ0jya_vw3BZyJk5qPOmWrScIwW3ZiczS-bpfxn2MJkx1j3L
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QQLXtNk_BgO0ntna3-tM6wxffyGXsHWpIxurrkl_KtooWtS3qlODF-onVp6UJZWFkkeL23v223WdZzhe
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,32 +12,32 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_f7kLTDzcpuKbrA
-Content-Length: 1259
+request-id: req_n7lA5XLT2BbuXa
+Content-Length: 1286
 Vary: Origin
-Date: Sat, 14 Feb 2026 00:19:18 GMT
-original-request: req_f7kLTDzcpuKbrA
+Date: Sun, 15 Feb 2026 20:05:59 GMT
+original-request: req_n7lA5XLT2BbuXa
 stripe-version: 2020-08-27
-idempotency-key: b4a0d09c-a566-44f5-ade1-94f441f15535
+idempotency-key: 2040a499-d85b-4678-bbf0-3a79b9ec97c7
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=us_bank_account&client_context\[setup_future_usage]=off_session&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1T0WZuFY0qyl6XeWdWwVYjpS&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=us_bank_account&client_context\[setup_future_usage]=off_session&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1T1BZrFY0qyl6XeWj39JWk5o&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
 
 {
-  "id" : "ctoken_1T0WZuFY0qyl6XeWjvF5iBNY",
+  "id" : "ctoken_1T1BZrFY0qyl6XeW2IZrJqka",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1771071558,
+  "expires_at" : 1771229159,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : "off_session",
   "object" : "confirmation_token",
   "payment_method_preview" : {
     "allow_redisplay" : "unspecified",
     "billing_details" : {
-      "email" : "link-bank@example.com",
+      "email" : "paymentsheet-link-bank-confirm-flows@example.com",
       "phone" : null,
       "tax_id" : null,
       "name" : "Link Bank Test",
@@ -70,7 +70,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     },
     "customer_account" : null
   },
-  "created" : 1771028358,
+  "created" : 1771185959,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

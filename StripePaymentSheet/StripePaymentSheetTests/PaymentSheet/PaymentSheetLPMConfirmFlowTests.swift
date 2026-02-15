@@ -609,7 +609,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentPaymentMethodType: .card,
             linkFundingSources: [.card],
             makeLinkPaymentMethod: { apiClient in
-                let params = STPPaymentMethodParams._testCardValue(email: "link-card@example.com")
+                let params = STPPaymentMethodParams._testCardValue(email: "paymentsheet-link-card-confirm-flows@example.com")
                 params.card?.expMonth = 12
                 params.card?.expYear = 2030
                 return try await apiClient.createPaymentMethod(
@@ -634,7 +634,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 try await apiClient.createPaymentMethod(
                     with: ._testUSBankAccountValue(
                         name: "Link Bank Test",
-                        email: "link-bank@example.com"
+                        email: "paymentsheet-link-bank-confirm-flows@example.com"
                     )
                 )
             }

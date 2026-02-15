@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=FPNUxduztxFVUWbufoHgP7qRXTj4StPMjex1P0ztw378ShW8-sOjk0Pl2LG7FX7VbPGS6ok8peyZ8UHw
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=4FWz_OM_wLLCwH9h2R5F3Maiww5xi0gGx8PIiZPBMWI96Hdo-_AZ8OWk7u_B_Y7gNhtbJNvDFiMBFXCa
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,24 +12,24 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_dPqeMxdPFscUNo
-Content-Length: 1038
+request-id: req_Nno8OYT2w6O2kc
+Content-Length: 1065
 Vary: Origin
-Date: Sat, 14 Feb 2026 05:53:46 GMT
-original-request: req_dPqeMxdPFscUNo
+Date: Sun, 15 Feb 2026 20:04:52 GMT
+original-request: req_Nno8OYT2w6O2kc
 stripe-version: 2020-08-27
-idempotency-key: 973635d7-c7a3-43b0-8554-081997c346a2
+idempotency-key: b8d567f3-5a78-496b-8d89-0ef8efb1551e
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=link-card%40example\.com&card\[cvc]=123&card\[exp_month]=12&card\[exp_year]=2030&card\[number]=4242424242424242&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=card
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=paymentsheet-link-card-confirm-flows%40example\.com&card\[cvc]=123&card\[exp_month]=12&card\[exp_year]=2030&card\[number]=4242424242424242&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=card
 
 {
   "object" : "payment_method",
-  "id" : "pm_1T0bnaFY0qyl6XeWc7OhQSqi",
+  "id" : "pm_1T1BYmFY0qyl6XeWk82GeYfk",
   "billing_details" : {
-    "email" : "link-card@example.com",
+    "email" : "paymentsheet-link-card-confirm-flows@example.com",
     "phone" : null,
     "tax_id" : null,
     "name" : null,
@@ -69,7 +69,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=link-
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1771048426,
+  "created" : 1771185892,
   "allow_redisplay" : "unspecified",
   "type" : "card",
   "customer" : null,
