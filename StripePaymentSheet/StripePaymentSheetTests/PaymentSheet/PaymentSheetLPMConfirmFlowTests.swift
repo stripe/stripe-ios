@@ -642,16 +642,69 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testApplePayConfirmFlows() async throws {
+        // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
+        let intentConfiguration = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _ in return "" })
+        _ = PaymentSheet(mode: .deferredIntent(intentConfiguration), configuration: PaymentSheet.Configuration())
+
+        let merchantCountry: MerchantCountry = .US
+        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
         var configuration = PaymentSheet.Configuration()
         configuration.applePay = .init(merchantId: "foo", merchantCountryCode: "US")
         configuration.returnURL = "https://foo.com"
         configuration.allowsDelayedPaymentMethods = true
+        configuration.apiClient = apiClient
 
-        try await _testApplePayConfirm(
-            intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
-            currency: "USD",
-            configuration: configuration
-        )
+        let intentKinds: [IntentKind] = [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent]
+        for intentKind in intentKinds {
+            let intents = try await makeTestIntents(
+                intentKind: intentKind,
+                currency: "USD",
+                paymentMethod: .card,
+                merchantCountry: merchantCountry,
+                apiClient: apiClient
+            )
+            for (description, intent) in intents {
+                let e = expectation(description: "Confirm Apple Pay (\(description))")
+                let elementsSession = STPElementsSession._testValue(intent: intent)
+                let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
+                    intent: intent,
+                    elementsSession: elementsSession
+                )
+
+                guard let applePayContext = STPApplePayContext.create(
+                    intent: intent,
+                    elementsSession: elementsSession,
+                    configuration: configuration,
+                    clientAttributionMetadata: clientAttributionMetadata,
+                    completion: { result, _ in
+                    switch result {
+                    case .failed(error: let error):
+                        XCTFail("❌ \(description): Apple Pay confirm failed - \(error.nonGenericDescription)")
+                    case .canceled:
+                        XCTFail("❌ \(description): Apple Pay confirm canceled")
+                    case .completed:
+                        print("✅ \(description): Apple Pay confirm completed")
+                    }
+                    e.fulfill()
+                }) else {
+                    XCTFail("❌ \(description): Failed to create Apple Pay context")
+                    continue
+                }
+
+                applePayContext.authorizationController = STPTestPKPaymentAuthorizationController()
+                let payment = STPFixtures.simulatorApplePayPaymentWithCountryAndEmail()
+                applePayContext.paymentAuthorizationController(
+                    applePayContext.authorizationController,
+                    didAuthorizePayment: payment
+                ) { _ in
+                    DispatchQueue.main.async {
+                        applePayContext.paymentAuthorizationControllerDidFinish(applePayContext.authorizationController)
+                    }
+                }
+
+                await fulfillment(of: [e], timeout: 25)
+            }
+        }
     }
 
     // MARK: Add tests above this line
@@ -802,8 +855,8 @@ extension PaymentSheetLPMConfirmFlowTests {
         formCompleter: (PaymentMethodElement) -> Void
     ) async throws {
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
-        let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _ in return "" })
-        _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
+        let intentConfiguration = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _ in return "" })
+        _ = PaymentSheet(mode: .deferredIntent(intentConfiguration), configuration: PaymentSheet.Configuration())
 
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
@@ -970,7 +1023,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     customerID: customer
                 )
             }
-            
+
             // CheckoutSession
             let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
                 types: paymentMethodTypes,
@@ -1238,8 +1291,8 @@ extension PaymentSheetLPMConfirmFlowTests {
         makeLinkPaymentMethod: (STPAPIClient) async throws -> STPPaymentMethod
     ) async throws {
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
-        let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _ in return "" })
-        _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
+        let intentConfiguration = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _ in return "" })
+        _ = PaymentSheet(mode: .deferredIntent(intentConfiguration), configuration: PaymentSheet.Configuration())
 
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
         let customer = "cus_TUoUvtvPJvpHPA"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
@@ -1313,75 +1366,6 @@ extension PaymentSheetLPMConfirmFlowTests {
                     }
                     e.fulfill()
                 }
-                await fulfillment(of: [e], timeout: 25)
-            }
-        }
-    }
-
-    @MainActor
-    func _testApplePayConfirm(
-        intentKinds: [IntentKind],
-        currency: String,
-        amount: Int? = nil,
-        merchantCountry: MerchantCountry = .US,
-        configuration: PaymentSheet.Configuration
-    ) async throws {
-        // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:
-        let ic = PaymentSheet.IntentConfiguration(mode: .setup(), confirmHandler: { _, _ in return "" })
-        _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
-
-        let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        var configuration = configuration
-        configuration.apiClient = apiClient
-
-        for intentKind in intentKinds {
-            let intents = try await makeTestIntents(
-                intentKind: intentKind,
-                currency: currency,
-                amount: amount,
-                paymentMethod: .card,
-                merchantCountry: merchantCountry,
-                apiClient: apiClient
-            )
-            for (description, intent) in intents {
-                let e = expectation(description: "Confirm Apple Pay (\(description))")
-                let elementsSession = STPElementsSession._testValue(intent: intent)
-                let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-                    intent: intent,
-                    elementsSession: elementsSession
-                )
-
-                guard let applePayContext = STPApplePayContext.create(
-                    intent: intent,
-                    elementsSession: elementsSession,
-                    configuration: configuration,
-                    clientAttributionMetadata: clientAttributionMetadata,
-                    completion: { result, _ in
-                    switch result {
-                    case .failed(error: let error):
-                        XCTFail("❌ \(description): Apple Pay confirm failed - \(error.nonGenericDescription)")
-                    case .canceled:
-                        XCTFail("❌ \(description): Apple Pay confirm canceled")
-                    case .completed:
-                        print("✅ \(description): Apple Pay confirm completed")
-                    }
-                    e.fulfill()
-                }) else {
-                    XCTFail("❌ \(description): Failed to create Apple Pay context")
-                    continue
-                }
-
-                applePayContext.authorizationController = STPTestPKPaymentAuthorizationController()
-                let payment = STPFixtures.simulatorApplePayPaymentWithCountryAndEmail()
-                applePayContext.paymentAuthorizationController(
-                    applePayContext.authorizationController,
-                    didAuthorizePayment: payment
-                ) { _ in
-                    DispatchQueue.main.async {
-                        applePayContext.paymentAuthorizationControllerDidFinish(applePayContext.authorizationController)
-                    }
-                }
-
                 await fulfillment(of: [e], timeout: 25)
             }
         }
