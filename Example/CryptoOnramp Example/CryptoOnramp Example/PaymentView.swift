@@ -47,14 +47,14 @@ struct PaymentView: View {
     private enum SelectedPaymentMethod {
         case applePay
         case existingPaymentToken(PaymentTokensResponse.PaymentToken)
-        case newPaymentMethod(tokenId: String, type: PaymentMethodType, displayData: PaymentMethodDisplayData)
+        case newPaymentMethod(tokenId: String, displayData: PaymentMethodDisplayData)
 
         var isBankAccount: Bool {
             switch self {
             case let .existingPaymentToken(token):
                 token.usBankAccount != nil
-            case let .newPaymentMethod(_, type, _):
-                switch type {
+            case let .newPaymentMethod(_, displayData):
+                switch displayData.paymentMethodType {
                 case .bankAccount:
                     true
                 case .card, .applePay:
@@ -161,7 +161,7 @@ struct PaymentView: View {
             "Apple Pay"
         case let .existingPaymentToken(paymentToken):
             paymentToken.formattedNameAndLastFourDigits(dotCount: 1)
-        case let .newPaymentMethod(_, _, displayData):
+        case let .newPaymentMethod(_, displayData):
             displayData.sublabel ?? displayData.label
         case nil:
             "Select a payment method"
@@ -179,15 +179,15 @@ struct PaymentView: View {
             } else {
                 makePaymentMethodIcon(systemImageName: "building.columns")
             }
-        case let .newPaymentMethod(_, type, _):
-            switch type {
+        case let .newPaymentMethod(_, displayData):
+            switch displayData.paymentMethodType {
             case .applePay:
                 makePaymentMethodIcon(systemImageName: "applelogo")
             case .card:
                 makePaymentMethodIcon(systemImageName: "creditcard")
             case .bankAccount:
                 makePaymentMethodIcon(systemImageName: "building.columns")
-            default:
+            @unknown default:
                 makePaymentMethodIcon(systemImageName: "creditcard")
             }
         case nil:
@@ -269,7 +269,7 @@ struct PaymentView: View {
                         switch selectedPaymentMethod {
                         case let .existingPaymentToken(token):
                             createOnrampSession(withCryptoPaymentTokenId: token.id)
-                        case let .newPaymentMethod(tokenId, _, _):
+                        case let .newPaymentMethod(tokenId, _):
                             createOnrampSession(withCryptoPaymentTokenId: tokenId)
                         case .applePay: break
                         case nil: break
@@ -336,6 +336,13 @@ struct PaymentView: View {
                             highlightSubtitle: true
                         ) {
                             presentPaymentMethodSelector(for: .bankAccount)
+                        }
+
+                        makePaymentMethodButton(
+                            title: "Add Card or Bank Account",
+                            icon: .systemName("square.split.2x1.fill")
+                        ) {
+                            presentPaymentMethodSelector(for: .cardAndBankAccount)
                         }
                     }
                 }
@@ -424,7 +431,7 @@ struct PaymentView: View {
     @ViewBuilder
     private func makePaymentMethodButton(
         title: String,
-        subtitle: String,
+        subtitle: String? = nil,
         icon: PaymentMethodIcon,
         highlightSubtitle: Bool = false,
         action: @escaping () -> Void
@@ -446,9 +453,11 @@ struct PaymentView: View {
                         .font(.body)
                         .foregroundStyle(.primary)
 
-                    Text(subtitle)
-                        .font(.subheadline)
-                        .foregroundColor(highlightSubtitle ? .green : .secondary)
+                    if let subtitle {
+                        Text(subtitle)
+                            .font(.subheadline)
+                            .foregroundColor(highlightSubtitle ? .green : .secondary)
+                    }
                 }
 
                 Spacer()
@@ -661,7 +670,7 @@ struct PaymentView: View {
 
                     await MainActor.run {
                         isLoading.wrappedValue = false
-                        selectedPaymentMethod = .newPaymentMethod(tokenId: token, type: type, displayData: displayData)
+                        selectedPaymentMethod = .newPaymentMethod(tokenId: token, displayData: displayData)
                     }
                 } else { // cancelled
                     await MainActor.run {

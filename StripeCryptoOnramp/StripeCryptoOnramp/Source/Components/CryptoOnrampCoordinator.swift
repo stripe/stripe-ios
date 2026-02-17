@@ -112,7 +112,7 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Presents UI to collect/select a payment method of the given type.
     ///
     /// - Parameters:
-    ///   - type: The payment method type to collect. For `.card` and `.bankAccount`, this presents Link. For `.applePay(paymentRequest:)`, this presents Apple Pay using the provided `PKPaymentRequest`.
+    ///   - type: The payment method type to collect. For `.card`, `.bankAccount`, and `.cardAndBankAccount`, this presents Link. For `.applePay(paymentRequest:)`, this presents Apple Pay using the provided `PKPaymentRequest`.
     ///   - viewController: The view controller from which to present the UI.
     /// - Returns: A `PaymentMethodDisplayData` describing the user’s selection, or `nil` if the user cancels.
     /// Throws an error if presentation or payment method collection fails.
@@ -452,29 +452,28 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         from viewController: UIViewController
     ) async throws -> PaymentMethodDisplayData? {
         switch type {
-        case .card, .bankAccount:
+        case .card, .bankAccount, .cardAndBankAccount:
             let linkAccountInfo = try await linkAccountInfo
             guard linkAccountInfo.sessionState == .verified else {
                 throw Error.linkAccountNotVerified
             }
 
-            guard let supportedPaymentMethodType = type.linkPaymentMethodType else {
+            guard let supportedPaymentMethodTypes = type.linkPaymentMethodType else {
                 return nil
             }
 
-            // Collect the user's name for bank payments.
-            let collectName = type == .bankAccount
             guard let result = await linkController.collectPaymentMethod(
                 from: viewController,
                 with: linkAccountInfo.email,
-                supportedPaymentMethodTypes: [supportedPaymentMethodType],
-                collectName: collectName
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                collectName: type.requiresNameCollection
             ) else {
                 selectedPaymentSource = nil
                 return nil
             }
 
             let preview = PaymentMethodDisplayData(
+                paymentMethodType: .init(paymentMethodType: result.paymentMethodType),
                 icon: result.icon,
                 label: result.label,
                 sublabel: result.sublabel
@@ -505,6 +504,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     }()
 
                     let paymentMethodPreview = PaymentMethodDisplayData(
+                        paymentMethodType: .applePay,
                         icon: icon,
                         label: label,
                         sublabel: sublabel
