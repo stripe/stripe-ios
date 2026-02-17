@@ -1,7 +1,7 @@
 ## X.Y.Z - changes pending release
 
 ### CryptoOnramp (Beta)
-* [Added] Added `PaymentMethodType.cardAndBankAccount` for use in `CryptoOnrampCoordinator.collectPaymentMethod`, which displays both card-based and bank account payment options in the wallet interface, rather than filtering to only one type.
+* [Added] Added `PaymentMethodType.cardAndBankAccount` for use in `CryptoOnrampCoordinator.collectPaymentMethod`, which displays both card-based and bank account payment options in the Link wallet interface, rather than filtering to only one type.
 * [Added] Added `paymentMethodType` property to `PaymentMethodDisplayData` in order to better differentiate between different selected payment types in client UI.
 
 ### PaymentSheet
