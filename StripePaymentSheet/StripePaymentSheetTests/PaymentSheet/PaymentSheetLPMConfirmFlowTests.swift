@@ -970,27 +970,25 @@ extension PaymentSheetLPMConfirmFlowTests {
                     customerID: customer
                 )
             }
+            
+            // CheckoutSession
+            let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+                types: paymentMethodTypes,
+                currency: currency,
+                amount: amount,
+                merchantCountry: merchantCountry.rawValue,
+                customerID: customer
+            )
+            let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+            let initResponse = try await csApiClient.initCheckoutSession(
+                checkoutSessionId: checkoutSessionResponse.id
+            )
 
             intents = [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
+                ("CheckoutSession", .checkoutSession(initResponse.checkoutSession)),
             ]
-
-            // TODO(gbirch): Uncomment thse when adding CheckoutSessions Link support.
-            if paymentMethod != .link {
-                let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
-                    types: paymentMethodTypes,
-                    currency: currency,
-                    amount: amount,
-                    merchantCountry: merchantCountry.rawValue,
-                    customerID: customer
-                )
-                let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-                let initResponse = try await csApiClient.initCheckoutSession(
-                    checkoutSessionId: checkoutSessionResponse.id
-                )
-                intents.append(("CheckoutSession", .checkoutSession(initResponse.checkoutSession)))
-            }
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation
                 return intents
