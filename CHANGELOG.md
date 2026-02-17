@@ -1,4 +1,6 @@
-## X.Y.Z - changes pending release
+## X.Y.Z - changes pending release 
+
+## 25.6.3 2026-02-17
 
 ### CryptoOnramp (Beta)
 * [Added] Added `PaymentMethodType.cardAndBankAccount` for use in `CryptoOnrampCoordinator.collectPaymentMethod`, which displays both card-based and bank account payment options in the Link wallet interface, rather than filtering to only one type.
