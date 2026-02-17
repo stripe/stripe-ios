@@ -8,187 +8,6 @@
 import StripePaymentSheet
 import SwiftUI
 
-// MARK: - Search Bar View
-@available(iOS 15.0, *)
-struct SettingsSearchBar: View {
-    @Binding var text: String
-
-    var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.secondary)
-            TextField("Search settings...", text: $text)
-                .autocorrectionDisabled()
-                .textInputAutocapitalization(.never)
-            if !text.isEmpty {
-                Button { text = "" } label: {
-                    Image(systemName: "xmark.circle.fill")
-                        .foregroundColor(Color(.systemGray3))
-                }
-                .buttonStyle(.plain)
-            }
-        }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
-        .background(RoundedRectangle(cornerRadius: 10).fill(Color(.systemGray6)))
-    }
-}
-
-struct VisibleSettingsCountKey: PreferenceKey {
-    static var defaultValue: Int = 0
-    static func reduce(value: inout Int, nextValue: () -> Int) {
-        value += nextValue()
-    }
-}
-
-// MARK: - Search Helpers
-
-/// Normalizes a camelCase or PascalCase string by inserting spaces before capital letters.
-/// e.g., "cardBrandAcceptance" -> "card Brand Acceptance"
-private func normalizeForSearch(_ text: String) -> String {
-    var result = ""
-    for char in text {
-        if char.isUppercase && !result.isEmpty {
-            result.append(" ")
-        }
-        result.append(char)
-    }
-    return result
-}
-
-/// Checks if a setting name matches the search text.
-/// Supports both exact substring matching and camelCase-aware matching.
-/// e.g., "card brand" matches "cardBrandAcceptance"
-private func settingMatchesSearch(_ settingName: String, searchText: String) -> Bool {
-    if searchText.isEmpty { return true }
-    if settingName.localizedCaseInsensitiveContains(searchText) { return true }
-    let normalized = normalizeForSearch(settingName)
-    return normalized.localizedCaseInsensitiveContains(searchText)
-}
-
-/// Checks if a PickerEnum setting matches the search text by name or any of its values.
-/// e.g., searching "CheckoutSession" matches the "Type" setting, "usd" matches "Currency"
-private func pickerEnumMatchesSearch<S: PickerEnum>(_ enumType: S.Type, searchText: String) -> Bool {
-    if searchText.isEmpty { return true }
-    if settingMatchesSearch(S.enumName, searchText: searchText) { return true }
-    for enumCase in S.allCases {
-        if settingMatchesSearch(enumCase.displayName, searchText: searchText) {
-            return true
-        }
-    }
-    return false
-}
-
-// MARK: - Searchable Wrapper Views
-@available(iOS 15.0, *)
-struct SearchableSettingView<S: PickerEnum>: View {
-    var setting: Binding<S>
-    @Binding var searchText: String
-
-    private var isVisible: Bool {
-        pickerEnumMatchesSearch(S.self, searchText: searchText)
-    }
-
-    var body: some View {
-        Group {
-            if isVisible {
-                SettingView(setting: setting)
-            }
-        }
-        .preference(key: VisibleSettingsCountKey.self, value: isVisible ? 1 : 0)
-    }
-}
-
-@available(iOS 15.0, *)
-struct SearchableSettingPickerView<S: PickerEnum>: View {
-    var setting: Binding<S>
-    var disabledSettings: [S] = []
-    var customDisplayLabel: String?
-    var customDisplayName: ((S) -> String)?
-    @Binding var searchText: String
-
-    private var isVisible: Bool {
-        if let customLabel = customDisplayLabel,
-           settingMatchesSearch(customLabel, searchText: searchText) {
-            return true
-        }
-        return pickerEnumMatchesSearch(S.self, searchText: searchText)
-    }
-
-    var body: some View {
-        Group {
-            if isVisible {
-                SettingPickerView(setting: setting, disabledSettings: disabledSettings,
-                                 customDisplayLabel: customDisplayLabel, customDisplayName: customDisplayName)
-            }
-        }
-        .preference(key: VisibleSettingsCountKey.self, value: isVisible ? 1 : 0)
-    }
-}
-
-@available(iOS 15.0, *)
-struct SearchableView<Content: View>: View {
-    let searchableName: String
-    @Binding var searchText: String
-    @ViewBuilder var content: () -> Content
-
-    private var isVisible: Bool {
-        settingMatchesSearch(searchableName, searchText: searchText)
-    }
-
-    var body: some View {
-        Group {
-            if isVisible {
-                content()
-            }
-        }
-        .preference(key: VisibleSettingsCountKey.self, value: isVisible ? 1 : 0)
-    }
-}
-
-// MARK: - Searchable Section View
-@available(iOS 15.0, *)
-struct SearchableSection<Content: View, Buttons: View>: View {
-    let title: String
-    @Binding var searchText: String
-    @ViewBuilder var content: () -> Content
-    @ViewBuilder var buttons: () -> Buttons
-
-    var body: some View {
-        Group {
-            if searchText.isEmpty {
-                HStack {
-                    Text(title).font(.headline)
-                    Spacer()
-                    buttons()
-                }
-            }
-            content()
-        }
-    }
-}
-
-// MARK: - Empty Search Results View
-@available(iOS 15.0, *)
-struct EmptySearchResultsView: View {
-    let searchText: String
-
-    var body: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "magnifyingglass")
-                .font(.system(size: 44, weight: .thin))
-                .foregroundColor(Color(.systemGray3))
-            Text("No Settings Found")
-                .font(.headline)
-            Text("No settings match \"\(searchText)\"")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.vertical, 60)
-    }
-}
-
 // MARK: - PaymentSheetTestPlayground
 @available(iOS 15.0, *)
 struct PaymentSheetTestPlayground: View {
@@ -288,7 +107,34 @@ struct PaymentSheetTestPlayground: View {
                     Group {
                         SearchableSection(
                             title: "Backend",
-                            searchText: $searchText
+                            searchText: $searchText,
+                            headerButtons: {
+                                if ProcessInfo.processInfo.environment["UITesting"] != nil {
+                                    AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
+                                }
+                                Button {
+                                    playgroundController.didTapResetConfig()
+                                    searchText = ""
+                                } label: {
+                                    Text("Reset")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                                Button {
+                                    playgroundController.didTapEndpointConfiguration()
+                                } label: {
+                                    Text("Endpoints")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                                Button {
+                                    showingQRSheet.toggle()
+                                } label: {
+                                    Text("QR")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                                    .sheet(isPresented: $showingQRSheet, content: {
+                                        QRView(url: playgroundController.settings.base64URL)
+                                    })
+                            }
                         ) {
                                 SearchableSettingView(setting: $playgroundController.settings.mode, searchText: $searchText)
                                 SearchableSettingPickerView(
@@ -329,32 +175,6 @@ struct PaymentSheetTestPlayground: View {
                                             .autocorrectionDisabled()
                                     }
                                 }
-                            } buttons: {
-                                if ProcessInfo.processInfo.environment["UITesting"] != nil {
-                                    AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
-                                }
-                                Button {
-                                    playgroundController.didTapResetConfig()
-                                    searchText = ""
-                                } label: {
-                                    Text("Reset")
-                                        .font(.callout.smallCaps())
-                                }.buttonStyle(.bordered)
-                                Button {
-                                    playgroundController.didTapEndpointConfiguration()
-                                } label: {
-                                    Text("Endpoints")
-                                        .font(.callout.smallCaps())
-                                }.buttonStyle(.bordered)
-                                Button {
-                                    showingQRSheet.toggle()
-                                } label: {
-                                    Text("QR")
-                                        .font(.callout.smallCaps())
-                                }.buttonStyle(.bordered)
-                                    .sheet(isPresented: $showingQRSheet, content: {
-                                        QRView(url: playgroundController.settings.base64URL)
-                                    })
                             }
                         }
                         SearchableView(searchableName: "Payment Method Options", searchText: $searchText) {
@@ -396,7 +216,15 @@ struct PaymentSheetTestPlayground: View {
                     Group {
                         SearchableSection(
                             title: "Client",
-                            searchText: $searchText
+                            searchText: $searchText,
+                            headerButtons: {
+                                Button {
+                                    playgroundController.appearanceButtonTapped()
+                                } label: {
+                                    Text("Appearance")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                            }
                         ) {
                                 clientSettings(searchText: $searchText)
                                 SearchableView(searchableName: "Custom CTA", searchText: $searchText) {
@@ -406,13 +234,6 @@ struct PaymentSheetTestPlayground: View {
                                     TextField("Payment Method Settings ID", text: paymentMethodSettingsBinding)
                                         .autocorrectionDisabled()
                                 }
-                            } buttons: {
-                                Button {
-                                    playgroundController.appearanceButtonTapped()
-                                } label: {
-                                    Text("Appearance")
-                                        .font(.callout.smallCaps())
-                                }.buttonStyle(.bordered)
                             }
                         }
 
@@ -430,8 +251,6 @@ struct PaymentSheetTestPlayground: View {
                                 SearchableSettingView(setting: $playgroundController.settings.collectPhone, searchText: $searchText)
                                 SearchableSettingView(setting: $playgroundController.settings.collectAddress, searchText: $searchText)
                                 SearchableSettingPickerView(setting: $playgroundController.settings.allowedCountries, searchText: $searchText)
-                            } buttons: {
-                                EmptyView()
                             }
                         }
 
@@ -447,8 +266,6 @@ struct PaymentSheetTestPlayground: View {
                                     SearchableSettingView(setting: $playgroundController.settings.formSheetAction, searchText: $searchText)
                                     SearchableSettingView(setting: $playgroundController.settings.embeddedViewDisplaysMandateText, searchText: $searchText)
                                     SearchableSettingView(setting: $playgroundController.settings.rowSelectionBehavior, searchText: $searchText)
-                                } buttons: {
-                                    EmptyView()
                                 }
                             }
                         }
