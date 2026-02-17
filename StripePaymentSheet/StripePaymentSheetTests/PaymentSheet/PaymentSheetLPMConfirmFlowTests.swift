@@ -692,7 +692,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 }
 
                 applePayContext.authorizationController = STPTestPKPaymentAuthorizationController()
-                let payment = STPFixtures.simulatorApplePayPaymentWithCountryAndEmail()
+                let payment = STPFixtures.testPKPaymentWithContactDetails()
                 applePayContext.paymentAuthorizationController(
                     applePayContext.authorizationController,
                     didAuthorizePayment: payment

@@ -449,7 +449,7 @@ extension STPCardBrandChoice {
 }
 
 extension STPFixtures {
-    static func simulatorApplePayPaymentWithCountryAndEmail() -> PKPayment {
+    static func testPKPaymentWithContactDetails() -> PKPayment {
         let payment = simulatorApplePayPayment()
 
         let shipping = PKContact()
