@@ -1244,12 +1244,21 @@ extension PaymentSheetLPMConfirmFlowTests {
         _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
 
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
+        let customer = "cus_TUoUvtvPJvpHPA"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(
+            customerID: customer,
+            merchantCountry: merchantCountry.rawValue.lowercased()
+        )
 
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = apiClient
         configuration.allowsDelayedPaymentMethods = true
         configuration.returnURL = "https://foo.com"
         configuration.allowsPaymentMethodsRequiringShippingAddress = true
+        configuration.customer = PaymentSheet.CustomerConfiguration(
+            id: customerAndEphemeralKey.customer,
+            ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret
+        )
 
         for intentKind in intentKinds {
             let intents = try await makeTestIntents(
@@ -1258,6 +1267,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 amount: amount,
                 paymentMethod: intentPaymentMethodType,
                 merchantCountry: merchantCountry,
+                customer: customerAndEphemeralKey.customer,
                 apiClient: apiClient
             )
 

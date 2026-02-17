@@ -1,0 +1,118 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3T1xTVFY0qyl6XeW1EpZG5x0\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=yRO5YLmPzaGKyHJwymo5DtIL8yWrCzbAFKPWPUv5gj6A_z-WFYvCWgAZVSGAxK-qAaWZy9X-OLVeYYw7
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_6J7GLcWJ9NLMfN
+Content-Length: 2427
+Vary: Origin
+Date: Tue, 17 Feb 2026 23:14:38 GMT
+original-request: req_6J7GLcWJ9NLMfN
+stripe-version: 2020-08-27
+idempotency-key: 0340912c-dff5-4fa6-9ec1-d06a23d5bc5d
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=pi_3T1xTVFY0qyl6XeW1EpZG5x0_secret_LGJ1zarW2uYpVPBJ2boncTbm5&confirmation_token=ctoken_1T1xTUFY0qyl6XeWtK7bNwL4&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "payment_method_options" : {
+    "us_bank_account" : {
+      "verification_method" : "automatic"
+    }
+  },
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "verify_with_microdeposits",
+    "verify_with_microdeposits" : {
+      "microdeposit_type" : "descriptor_code",
+      "arrival_date" : 1771401600,
+      "hosted_verification_url" : "https:\/\/payments.stripe.com\/microdeposit\/pacs_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLHBhX25vbmNlX1R6eE9hNENrdWRNR040RlNxYTAzNTlicUFSd1A5dnE0000P6dmZmMo"
+    }
+  },
+  "status" : "requires_action",
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1T1xTUFY0qyl6XeWHdoJZdVP",
+    "billing_details" : {
+      "email" : "paymentsheet-link-bank-confirm-flows@example.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Link Bank Test",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "us_bank_account" : {
+      "bank_name" : "STRIPE TEST BANK",
+      "fingerprint" : "ickfX9sbxIyAlbuh",
+      "financial_connections_account" : null,
+      "routing_number" : "110000000",
+      "last4" : "6789",
+      "account_holder_type" : "individual",
+      "networks" : {
+        "supported" : [
+          "ach"
+        ],
+        "preferred" : "ach"
+      },
+      "status_details" : null,
+      "account_type" : "checking"
+    },
+    "created" : 1771370076,
+    "allow_redisplay" : "unspecified",
+    "type" : "us_bank_account",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3T1xTVFY0qyl6XeW1EpZG5x0_secret_LGJ1zarW2uYpVPBJ2boncTbm5",
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "id" : "pi_3T1xTVFY0qyl6XeW1EpZG5x0",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "us_bank_account"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1771370077,
+  "description" : null
+}
