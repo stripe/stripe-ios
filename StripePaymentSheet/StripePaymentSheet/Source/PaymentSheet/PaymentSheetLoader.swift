@@ -263,12 +263,11 @@ final class PaymentSheetLoader {
         let doNotLogConsumerFunnelEvent = !isLinkEnabled
 
         // This lookup call will only happen if we have access to a user's email:
-        let result = try await _lookupLinkAccount(
+        return try await _lookupLinkAccount(
             elementsSession: elementsSession,
             configuration: configuration,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
         )
-        return result
     }
 
     private static func _lookupLinkAccount(
