@@ -96,12 +96,12 @@ final class MPELatencyTest: XCTestCase {
         PaymentSheetLoader._enableGranularTimingLogs = true
         try await super.setUp()
     }
-    
+
     override func tearDown() async throws {
         PaymentSheetLoader._enableGranularTimingLogs = false
         try await super.tearDown()
     }
-    
+
     // MARK: - Tests w/ Link disabled
 
     /// Link: disabled
