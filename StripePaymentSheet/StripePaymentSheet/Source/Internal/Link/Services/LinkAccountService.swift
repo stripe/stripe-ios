@@ -171,6 +171,19 @@ final class LinkAccountService: LinkAccountServiceProtocol {
         }
     }
 
+    func lookupAccount(
+        withEmail email: String?,
+        emailSource: EmailSource,
+        doNotLogConsumerFunnelEvent: Bool,
+        requestSurface: LinkRequestSurface = .default
+    ) async throws -> PaymentSheetLinkAccount? {
+        return try await withCheckedThrowingContinuation { continuation in
+            lookupAccount(withEmail: email, emailSource: emailSource, doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent, requestSurface: requestSurface) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
     func lookupLinkAuthToken(
         _ linkAuthTokenClientSecret: String,
         requestSurface: LinkRequestSurface,
