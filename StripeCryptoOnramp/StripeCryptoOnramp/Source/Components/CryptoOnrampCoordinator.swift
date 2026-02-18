@@ -451,6 +451,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         type: PaymentMethodType,
         from viewController: UIViewController
     ) async throws -> PaymentMethodDisplayData? {
+        analyticsClient.log(.collectPaymentMethodStarted(paymentMethodType: type.analyticsValue))
+
         switch type {
         case .card, .bankAccount, .cardAndBankAccount:
             let linkAccountInfo = try await linkAccountInfo
