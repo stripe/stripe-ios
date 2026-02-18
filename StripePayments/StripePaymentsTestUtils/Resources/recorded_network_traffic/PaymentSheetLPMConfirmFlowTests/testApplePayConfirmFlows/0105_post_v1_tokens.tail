@@ -1,0 +1,70 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/tokens$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ceDIP3ZvGfC2rBZa-aVTMc7snK2xMOWffIbI6TsTafiN4ih020WUGuHstK3XJUdPG878K-QC1g5Fab76
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_BeoVbZIqmePQou
+Content-Length: 963
+Vary: Origin
+Date: Sat, 14 Feb 2026 05:23:13 GMT
+original-request: req_BeoVbZIqmePQou
+stripe-version: 2020-08-27
+idempotency-key: dd3ad36c-cdd2-4c1c-9579-2a64e381e6e3
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: card\[name]=Jane%20Doe&guid=.*&muid=.*&payment_user_agent=.*&pk_token=&pk_token_instrument_name=Simulated%20Instrument&pk_token_payment_network=PKPaymentNetwork%28_rawValue%3A%20AmEx%29&pk_token_transaction_id=.*&sid=.*
+
+{
+  "object" : "token",
+  "id" : "tok_1T0bK1FY0qyl6XeWyRcdht5x",
+  "card" : {
+    "address_line1_check" : null,
+    "dynamic_last4" : "4242",
+    "last4" : "4242",
+    "address_line2" : null,
+    "address_city" : null,
+    "address_zip_check" : null,
+    "address_zip" : null,
+    "country" : "US",
+    "object" : "card",
+    "address_line1" : null,
+    "address_state" : null,
+    "brand" : "Visa",
+    "cvc_check" : null,
+    "exp_month" : 12,
+    "networks" : {
+      "preferred" : null
+    },
+    "name" : "Jane Doe",
+    "funding" : "credit",
+    "id" : "card_1T0bK1FY0qyl6XeW3Tdc8ovN",
+    "email" : null,
+    "tokenization_method" : "apple_pay",
+    "phone" : null,
+    "address_country" : null,
+    "regulated_status" : "unregulated",
+    "wallet" : {
+      "type" : "apple_pay",
+      "apple_pay" : {
+        "type" : "apple_pay"
+      }
+    },
+    "exp_year" : 2027
+  },
+  "client_ip" : "67.166.122.100",
+  "livemode" : false,
+  "created" : 1771046593,
+  "used" : false,
+  "type" : "card"
+}
