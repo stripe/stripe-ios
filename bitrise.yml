@@ -187,8 +187,6 @@ workflows:
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: FinancialConnections Example
     - slack@3:
         is_always_run: true
@@ -224,8 +222,6 @@ workflows:
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: FinancialConnections Example
     - deploy-to-bitrise-io@2: {}
     envs:
@@ -245,99 +241,71 @@ workflows:
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripeiOS
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripePayments
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripePaymentsUI
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripePaymentSheet
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripeCameraCore
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripeCore
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripeConnect
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripeIdentity
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripeIssuing
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripeFinancialConnections
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripeCardScan
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripeApplePay
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripeUICore
         is_always_run: true
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripeCryptoOnramp
         is_always_run: true
     - deploy-to-bitrise-io@2: {}
@@ -359,8 +327,6 @@ workflows:
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE_26_1
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: AllStripeFrameworks-iOS26
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
@@ -407,8 +373,6 @@ workflows:
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: AllStripeFrameworks-NoMocks
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
@@ -505,8 +469,6 @@ workflows:
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: IntegrationTester
         - log_formatter: xcbeautify
     - deploy-to-bitrise-io@2: {}
@@ -706,8 +668,6 @@ workflows:
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: PaymentSheet Example
         - test_plan: $TEST_PLAN_SHARD
         - log_formatter: xcbeautify
@@ -728,8 +688,6 @@ workflows:
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: StripeConnect Example
         - test_plan: StripeConnectExample
         - log_formatter: xcbeautify
@@ -750,8 +708,6 @@ workflows:
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
-        - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
         - scheme: CryptoOnramp Example
         - test_plan: CryptoOnrampExampleUITests
         - log_formatter: xcbeautify
