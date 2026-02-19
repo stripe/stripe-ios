@@ -99,6 +99,10 @@
       }
     ]
   },
+  "customer_managed_saved_payment_methods_offer_save": {
+    "enabled": true,
+    "status": "not_accepted"
+  },
   "customer_email": "test@example.com",
   "payment_intent": "pi_test123456789",
   "setup_intent": null,

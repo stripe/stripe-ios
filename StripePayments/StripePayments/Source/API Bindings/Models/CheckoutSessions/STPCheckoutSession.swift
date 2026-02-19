@@ -68,6 +68,10 @@ import Foundation
     /// The URL the customer will be directed to if they decide to cancel payment.
     public let cancelUrl: String?
 
+    /// Server-side flag controlling the "Save for future use" checkbox.
+    /// Parsed from `customer_managed_saved_payment_methods_offer_save` in the init response.
+    public let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
+
     /// The raw API response used to create this object.
     public let allResponseFields: [AnyHashable: Any]
 
@@ -90,6 +94,7 @@ import Foundation
             "customerEmail = \(String(describing: customerEmail))",
             "url = \(String(describing: url))",
             "returnUrl = \(String(describing: returnUrl))",
+            "savedPaymentMethodsOfferSave = \(String(describing: savedPaymentMethodsOfferSave))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -113,6 +118,7 @@ import Foundation
         url: URL?,
         returnUrl: String?,
         cancelUrl: String?,
+        savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.stripeId = stripeId
@@ -132,6 +138,7 @@ import Foundation
         self.url = url
         self.returnUrl = returnUrl
         self.cancelUrl = cancelUrl
+        self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -173,6 +180,11 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             customer = nil
         }
 
+        // Parse saved payment methods offer save configuration
+        let savedPaymentMethodsOfferSave = STPCheckoutSessionSavedPaymentMethodsOfferSave.decodedObject(
+            from: dict["customer_managed_saved_payment_methods_offer_save"] as? [AnyHashable: Any]
+        )
+
         return STPCheckoutSession(
             stripeId: stripeId,
             clientSecret: clientSecret,
@@ -193,6 +205,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             url: urlString.flatMap { URL(string: $0) },
             returnUrl: dict["return_url"] as? String ?? dict["success_url"] as? String,
             cancelUrl: dict["cancel_url"] as? String,
+            savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
             allResponseFields: dict
         ) as? Self
     }

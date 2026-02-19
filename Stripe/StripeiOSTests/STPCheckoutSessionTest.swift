@@ -75,6 +75,11 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.returnUrl, "https://example.com/return")
         XCTAssertEqual(session.cancelUrl, "https://example.com/cancel")
 
+        // Verify saved payment methods offer save
+        XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
+        XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
+        XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
+
         XCTAssertEqual(
             session.paymentMethodTypes,
             [STPPaymentMethodType.card, STPPaymentMethodType.USBankAccount]
@@ -121,6 +126,7 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertNil(session?.customerEmail)
         XCTAssertNil(session?.url)
         XCTAssertNil(session?.returnUrl)
+        XCTAssertNil(session?.savedPaymentMethodsOfferSave)
     }
 
     func testDecodedObjectWithSetupMode() {
@@ -169,5 +175,61 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(STPCheckoutSessionPaymentStatus.paymentStatus(from: "no_payment_required"), .noPaymentRequired)
         XCTAssertEqual(STPCheckoutSessionPaymentStatus.paymentStatus(from: "PAID"), .paid)
         XCTAssertEqual(STPCheckoutSessionPaymentStatus.paymentStatus(from: "unknown_value"), .unknown)
+    }
+
+    // MARK: - SavedPaymentMethodsOfferSave Tests
+
+    func testDecodedObjectWithSaveOfferAccepted() {
+        let json: [String: Any] = [
+            "session_id": "cs_test_save_offer",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer_managed_saved_payment_methods_offer_save": [
+                "enabled": true,
+                "status": "accepted",
+            ],
+        ]
+
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+        XCTAssertNotNil(session)
+        XCTAssertNotNil(session?.savedPaymentMethodsOfferSave)
+        XCTAssertTrue(session!.savedPaymentMethodsOfferSave!.enabled)
+        XCTAssertEqual(session!.savedPaymentMethodsOfferSave!.status, .accepted)
+    }
+
+    func testDecodedObjectWithSaveOfferDisabled() {
+        let json: [String: Any] = [
+            "session_id": "cs_test_save_offer",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer_managed_saved_payment_methods_offer_save": [
+                "enabled": false,
+                "status": "not_accepted",
+            ],
+        ]
+
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+        XCTAssertNotNil(session)
+        XCTAssertNotNil(session?.savedPaymentMethodsOfferSave)
+        XCTAssertFalse(session!.savedPaymentMethodsOfferSave!.enabled)
+        XCTAssertEqual(session!.savedPaymentMethodsOfferSave!.status, .notAccepted)
+    }
+
+    func testDecodedObjectWithoutSaveOffer() {
+        let json: [String: Any] = [
+            "session_id": "cs_test_no_save_offer",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+        ]
+
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+        XCTAssertNotNil(session)
+        XCTAssertNil(session?.savedPaymentMethodsOfferSave)
     }
 }
