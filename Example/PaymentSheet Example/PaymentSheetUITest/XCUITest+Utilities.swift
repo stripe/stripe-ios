@@ -325,7 +325,7 @@ extension XCTestCase {
         if let checkboxText {
             let saveThisAccountToggle = app.switches[checkboxText]
             XCTAssertFalse(saveThisAccountToggle.isSelected)
-            saveThisAccountToggle.tap()
+            saveThisAccountToggle.waitForExistenceAndTap()
             XCTAssertTrue(saveThisAccountToggle.isSelected)
         }
     }
