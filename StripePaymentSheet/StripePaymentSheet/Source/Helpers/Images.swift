@@ -9,8 +9,6 @@
 import Foundation
 @_spi(STP) import StripeUICore
 
-// TODO(yuki|https://jira.corp.stripe.com/browse/MOBILESDK-309): Refactor STPImageLibrary's images to live here as well
-
 /// The canonical set of all image files in the SDK.
 /// This helps us avoid duplicates and automatically test that all images load properly
 /// Raw value is the image file name. We use snake case to make long names easier to read.
@@ -88,6 +86,7 @@ enum Image: String, CaseIterable, ImageMaker {
     case link_logo_knockout = "link_logo_knockout"
     case link_icon = "link_icon"
     case link_logo_tintable = "link_logo_tintable"
+    case link_bank_icon = "link_bank_icon"
 
     // ShopPay
     case shoppay_logo_bw = "shoppay_logo_bw"
