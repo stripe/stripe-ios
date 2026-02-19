@@ -218,3 +218,19 @@ import UIKit
 #endif
 
 }
+
+// MARK: - SeparatorDisplayStyle support
+
+extension StackViewWithSeparator {
+    /// Applies the specified separator display style to the stack view
+    public func applySeparatorDisplayStyle(_ style: SeparatorDisplayStyle, defaultColor: UIColor) {
+        switch style {
+        case .divider:
+            separatorColor = defaultColor
+            spacing = ElementsUI.fieldBorderWidth
+        case .spacing(let amount):
+            separatorColor = .clear
+            spacing = amount
+        }
+    }
+}

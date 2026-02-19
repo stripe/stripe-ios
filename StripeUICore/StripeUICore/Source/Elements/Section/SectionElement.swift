@@ -20,6 +20,7 @@ import UIKit
         return SectionView(viewModel: viewModel)
     }()
     private let selectionBehavior: SelectionBehavior
+    private let separatorStyle: SeparatorDisplayStyle
     var isViewInitialized: Bool = false
     var errorText: String? {
         // Find the first element that's 1. invalid and 2. has a displayable error
@@ -38,6 +39,7 @@ import UIKit
             subLabel: subLabel,
             warningLabel: warningLabel,
             selectionBehavior: selectionBehavior,
+            separatorStyle: separatorStyle,
             theme: theme
         )
     }
@@ -73,6 +75,7 @@ import UIKit
         var subLabel: String?
         var warningLabel: String?
         let selectionBehavior: SelectionBehavior
+        let separatorStyle: SeparatorDisplayStyle
         let theme: ElementsAppearance
     }
 
@@ -82,11 +85,13 @@ import UIKit
         title: String? = nil,
         elements: [Element],
         selectionBehavior: SelectionBehavior = .default,
+        separatorStyle: SeparatorDisplayStyle = .divider,
         theme: ElementsAppearance = .default
     ) {
         self.title = title
         self.elements = elements
         self.selectionBehavior = selectionBehavior
+        self.separatorStyle = separatorStyle
         self.theme = theme
         elements.forEach {
             $0.delegate = self

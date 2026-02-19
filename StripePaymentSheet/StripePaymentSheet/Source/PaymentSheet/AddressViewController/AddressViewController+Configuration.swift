@@ -12,6 +12,10 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 public extension AddressViewController {
+    /// The style used for separators between address fields.
+    /// - See also: `StripeUICore.SeparatorDisplayStyle`
+    typealias SeparatorDisplayStyle = StripeUICore.SeparatorDisplayStyle
+
     /// The customer data collected by `AddressViewController`
     struct AddressDetails {
         /// The customer's address
@@ -75,6 +79,7 @@ public extension AddressViewController {
             additionalFields: AddressViewController.Configuration.AdditionalFields = .init(),
             allowedCountries: [String] = [],
             appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
+            separatorStyle: AddressViewController.SeparatorDisplayStyle = .divider,
             buttonTitle: String? = nil,
             title: String? = nil
         ) {
@@ -84,6 +89,7 @@ public extension AddressViewController {
             self.appearance = appearance
             self.buttonTitle = buttonTitle ?? .Localized.save_address
             self.title = title ?? .Localized.shipping_address
+            self.separatorStyle = separatorStyle
         }
 
         /// Configuration related to the collection of additional fields beyond the physical address.
@@ -167,5 +173,8 @@ public extension AddressViewController {
         /// When provided, shows a checkbox that allows customers to populate shipping fields with billing address data.
         @_spi(STP) public var billingAddress: DefaultAddressDetails?
 
+        /// The style to use for separators between address fields.
+        /// Defaults to `.divider` which shows visible divider lines between fields.
+        @_spi(AddressViewControllerSeparatorStylePreview) public var separatorStyle: AddressViewController.SeparatorDisplayStyle = .divider
     }
 }
