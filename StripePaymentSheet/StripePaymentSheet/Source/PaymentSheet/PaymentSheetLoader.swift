@@ -63,6 +63,7 @@ final class PaymentSheetLoader {
         integrationShape: IntegrationShape,
         isUpdate: Bool = false
     ) async throws -> LoadResult {
+        printTimingLog("START load")
         analyticsHelper.logLoadStarted()
         do {
             // Validate inputs
@@ -85,6 +86,7 @@ final class PaymentSheetLoader {
             let intent = elementsSessionAndIntent.intent
             let elementsSession = elementsSessionAndIntent.elementsSession
             // Overwrite the form specs that were already loaded from disk
+            printTimingLog("START loadFormSpecs")
             switch intent {
             case .paymentIntent, .deferredIntent, .checkoutSession:
                 if !elementsSession.isBackupInstance {
@@ -93,6 +95,7 @@ final class PaymentSheetLoader {
             case .setupIntent:
                 break // Not supported
             }
+            printTimingLog("END loadFormSpecs")
 
             // List the Customer's saved PaymentMethods
             async let savedPaymentMethods = fetchSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration)
@@ -106,6 +109,7 @@ final class PaymentSheetLoader {
             LinkAccountContext.shared.account = linkAccount
 
             // Log experiment exposures
+            printTimingLog("START logExperiments")
             if let arbId = elementsSession.experimentsData?.arbId {
                 let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
                     arbId: arbId,
@@ -134,8 +138,10 @@ final class PaymentSheetLoader {
                 )
                 analyticsHelper.logExposure(experiment: linkAbTestExperiment)
             }
+            printTimingLog("END logExperiments")
 
             // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
+            printTimingLog("START filterPaymentMethods")
             let filteredSavedPaymentMethods = try await savedPaymentMethods
                 .filter { elementsSession.orderedPaymentMethodTypes.contains($0.type) }
                 .filter {
@@ -146,7 +152,9 @@ final class PaymentSheetLoader {
                     )
                 }
                 .filter { Self.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries) }
+            printTimingLog("END filterPaymentMethods")
 
+            printTimingLog("START computePaymentMethodTypes")
             let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
             let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
 
@@ -171,6 +179,7 @@ final class PaymentSheetLoader {
             guard !paymentMethodTypes.isEmpty else {
                 throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: elementsSession.orderedPaymentMethodTypes)
             }
+            printTimingLog("END computePaymentMethodTypes")
 
             // Initialize telemetry. Don't wait for this to finish to return.
             STPTelemetryClient.shared.sendTelemetryData()
@@ -185,6 +194,7 @@ final class PaymentSheetLoader {
             // Send load finished analytic
             // ⚠️ Important: Log load succeeded at the very end, to ensure it measures the entire amount of time this method took.
             // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
+            printTimingLog("START makeViewModels")
             let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 customerID: configuration.customer?.id,
@@ -193,12 +203,14 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
+            printTimingLog("END makeViewModels")
             analyticsHelper.logLoadSucceeded(
                 intent: intent,
                 elementsSession: elementsSession,
                 defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                 orderedPaymentMethodTypes: paymentMethodTypes
             )
+            printTimingLog("END load")
             return loadResult
         } catch {
             analyticsHelper.logLoadFailed(error: error)
@@ -210,6 +222,7 @@ final class PaymentSheetLoader {
 
     /// Loads miscellaneous singletons
     static func loadMiscellaneousSingletons() async {
+        printTimingLog("START loadMiscellaneousSingletons")
         await withCheckedContinuation { continuation in
             AddressSpecProvider.shared.loadAddressSpecs {
                 // Load form specs
@@ -221,6 +234,7 @@ final class PaymentSheetLoader {
                 }
             }
         }
+        printTimingLog("END loadMiscellaneousSingletons")
     }
 
     static func lookupLinkAccount(
@@ -228,7 +242,7 @@ final class PaymentSheetLoader {
         configuration: PaymentElementConfiguration,
         isUpdate: Bool
     ) async throws -> PaymentSheetLinkAccount? {
-        // If we already have a verified Link account and the merchant is just calling `update` on FlowController,
+        // If we already have a verified Link account and the merchant is just calling `update` on FlowController or Embedded,
         // keep the account logged-in. Otherwise, the user has to verify via OTP again.
         if isUpdate, let currentLinkAccount = LinkAccountContext.shared.account, currentLinkAccount.sessionState == .verified {
             return currentLinkAccount
@@ -264,11 +278,13 @@ final class PaymentSheetLoader {
         let linkAccountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession)
         func lookUpConsumerSession(email: String?, emailSource: EmailSource) async throws -> PaymentSheetLinkAccount? {
             return try await withCheckedThrowingContinuation { continuation in
+                printTimingLog("START lookUpLinkAccount")
                 linkAccountService.lookupAccount(
                     withEmail: email,
                     emailSource: emailSource,
                     doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
                 ) { result in
+                    printTimingLog("END lookUpLinkAccount")
                     switch result {
                     case .success(let linkAccount):
                         continuation.resume(with: .success(linkAccount))
@@ -284,7 +300,9 @@ final class PaymentSheetLoader {
         } else if let customerID = configuration.customer?.id,
                   let ephemeralKey = configuration.customer?.ephemeralKeySecret(basedOn: elementsSession)
         {
+            printTimingLog("START retrieveCustomer")
             let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
+            printTimingLog("END retrieveCustomer")
             // If there's an error in this call we can just ignore it
             return try await lookUpConsumerSession(email: customer.email, emailSource: .customerObject)
         } else {
@@ -294,6 +312,7 @@ final class PaymentSheetLoader {
 
     typealias ElementSessionAndIntent = (elementsSession: STPElementsSession, intent: Intent)
     static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper) async throws -> ElementSessionAndIntent {
+        printTimingLog("START fetchElementsSession")
         let intent: Intent
         let elementsSession: STPElementsSession
         let clientDefaultPaymentMethod: String? = {
@@ -379,6 +398,7 @@ final class PaymentSheetLoader {
             """
             print(message)
         }
+        printTimingLog("END fetchElementsSession")
         return (elementsSession, intent)
     }
 
@@ -405,7 +425,12 @@ final class PaymentSheetLoader {
         return paymentMethodId
     }
 
-    static func fetchSavedPaymentMethods(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
+    static func fetchSavedPaymentMethods(
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        configuration: PaymentElementConfiguration
+    ) async throws -> [STPPaymentMethod] {
+        printTimingLog("START fetchSavedPaymentMethods")
         // Retrieve the payment methods from ElementsSession or by making direct API calls
         var savedPaymentMethods: [STPPaymentMethod]
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
@@ -430,7 +455,7 @@ final class PaymentSheetLoader {
 
         // Hide any saved cards whose brands or funding types are not allowed
         let cardFundingFilter = configuration.cardFundingFilter(for: elementsSession)
-        return savedPaymentMethods.filter {
+        let result = savedPaymentMethods.filter {
             guard let card = $0.card else { return true }
             // Filter by card brand
             if !configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand) {
@@ -444,6 +469,8 @@ final class PaymentSheetLoader {
             }
             return true
         }
+        printTimingLog("END fetchSavedPaymentMethods")
+        return result
     }
 
     static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) async throws -> [STPPaymentMethod] {
@@ -513,4 +540,16 @@ final class PaymentSheetLoader {
 
         return allowedCountries.contains(billingCountry)
     }
+
+    static var _enableGranularTimingLogs: Bool = false
+}
+
+/// Debug prints to help measure timing of things.
+/// Typical usage:
+/// 1. Run MPELatencyTest.swift
+/// 2. Copy the output
+/// 3. Run `pbpaste | ./ci_scripts/generate_loader_flamegraph.rb`
+func printTimingLog(_ event: String) {
+    guard PaymentSheetLoader._enableGranularTimingLogs else { return }
+    print("[LOADER_TIMING] \(event) \(Date().timeIntervalSince1970)")
 }

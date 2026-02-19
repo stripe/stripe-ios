@@ -92,6 +92,16 @@ final class MPELatencyTest: XCTestCase {
     /// - 2 PMs attached, card and US Bank Account.
     let customerIDWithoutEmail = "cus_TZCcZWKC57HHmr"
 
+    override func setUp() async throws {
+        PaymentSheetLoader._enableGranularTimingLogs = true
+        try await super.setUp()
+    }
+
+    override func tearDown() async throws {
+        PaymentSheetLoader._enableGranularTimingLogs = false
+        try await super.tearDown()
+    }
+
     // MARK: - Tests w/ Link disabled
 
     /// Link: disabled
