@@ -230,9 +230,6 @@ class PaymentSheetFormFactory {
             } else if paymentMethod == .revolutPay && isSettingUp {
                 // special case, display mandate for revolutPay when setting up or pi+sfu
                 additionalElements = [makeRevolutPayMandate()]
-            } else if paymentMethod == .klarna && isSettingUp {
-                // special case, display mandate for Klarna when setting up or pi+sfu
-                additionalElements = [makeKlarnaMandate()]
             } else if paymentMethod == .amazonPay && isSettingUp {
                 // special case, display mandate for Amazon Pay when setting up or pi+sfu
                 additionalElements = [makeAmazonPayMandate()]
@@ -255,6 +252,10 @@ class PaymentSheetFormFactory {
                 return makeSwish()
             } else if paymentMethod == .afterpayClearpay {
                 return makeAfterpayClearpay()
+            } else if paymentMethod == .affirm {
+                return makeAffirm()
+            } else if paymentMethod == .klarna {
+                return makeKlarna()
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
@@ -762,17 +763,6 @@ extension PaymentSheetFormFactory {
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
     }
 
-    func makeAfterpayClearpay() -> PaymentMethodElement {
-        let header = makeAfterpayClearpayHeader()
-        let contactInfoSection = makeContactInformationSection(
-            nameRequiredByPaymentMethod: true,
-            emailRequiredByPaymentMethod: true,
-            phoneRequiredByPaymentMethod: false
-        )
-        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        return FormElement(autoSectioningElements: [header, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
-    }
-
     // Only show checkbox for PI+SFU & Setup Intent
     func makeSepaBasedPMCheckbox() -> Element? {
         let isSaving = BoolReference()
@@ -828,17 +818,8 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeAfterpayClearpayHeader() -> SubtitleElement {
-        return SubtitleElement(
-            view: AfterpayPriceBreakdownView(
-                currency: currency,
-                appearance: configuration.appearance
-            ),
-            isHorizontalMode: configuration.isHorizontalMode
-        )
-    }
-
-    func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
+    /// Creates a country dropdown for Klarna form specs with API path support
+    func makeKlarnaCountry(apiPath: String?) -> PaymentMethodElement? {
         let countryCodes = Locale.current.sortedByTheirLocalizedNames(addressSpecProvider.countries)
         let defaultValue = getPreviousCustomerInput(for: apiPath) ?? defaultBillingDetails(countryAPIPath: apiPath).address.country
         let country = PaymentMethodElementWrapper(
