@@ -230,6 +230,9 @@ public class AddressViewController: UIViewController {
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
+        if configuration.useNavigationBarTitle {
+            title = configuration.title
+        }
     }
 
     required init?(coder: NSCoder) {
@@ -442,7 +445,11 @@ extension AddressViewController {
     private func loadUI() {
         self.addressSection = makeDefaultAddressSection()
 
-        let stackView = UIStackView(arrangedSubviews: [headerLabel, formElement.view, errorLabel])
+        var stackedViews: [UIView] = [formElement.view, errorLabel]
+        if !configuration.useNavigationBarTitle {
+            stackedViews.insert(headerLabel, at: 0)
+        }
+        let stackView = UIStackView(arrangedSubviews: stackedViews)
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
