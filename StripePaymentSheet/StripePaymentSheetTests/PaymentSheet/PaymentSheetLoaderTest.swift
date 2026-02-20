@@ -614,7 +614,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         // A hardcoded test Customer w/ email and attached card, us bank account
         let testCustomerID = "cus_TqanA973bOrpoP"
 
-        // Create a new CS for the Customer
+        // Create a new EK for the Customer
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
         // This should disable us bank account, a delayed payment method
