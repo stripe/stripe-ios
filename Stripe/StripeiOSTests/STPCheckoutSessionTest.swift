@@ -75,6 +75,11 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.returnUrl, "https://example.com/return")
         XCTAssertEqual(session.cancelUrl, "https://example.com/cancel")
 
+        // Verify saved payment methods offer save
+        XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
+        XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
+        XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
+
         XCTAssertEqual(
             session.paymentMethodTypes,
             [STPPaymentMethodType.card, STPPaymentMethodType.USBankAccount]
@@ -121,6 +126,7 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertNil(session?.customerEmail)
         XCTAssertNil(session?.url)
         XCTAssertNil(session?.returnUrl)
+        XCTAssertNil(session?.savedPaymentMethodsOfferSave)
     }
 
     func testDecodedObjectWithSetupMode() {
@@ -170,4 +176,5 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(STPCheckoutSessionPaymentStatus.paymentStatus(from: "PAID"), .paid)
         XCTAssertEqual(STPCheckoutSessionPaymentStatus.paymentStatus(from: "unknown_value"), .unknown)
     }
+
 }
