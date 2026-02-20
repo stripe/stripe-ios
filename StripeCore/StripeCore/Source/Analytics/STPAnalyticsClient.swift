@@ -130,7 +130,8 @@ import UIKit
         let payload = payload(from: analytic, apiClient: apiClient)
 
         #if DEBUG
-        NSLog("LOG ANALYTICS: \(analytic.event.rawValue) - \(analytic.params.sorted { $0.0 > $1.0 })")
+        NSLog("V1 LOG ANALYTICS: \(analytic.event.rawValue)")
+        STPAnalyticsClient.debugPrintPayload(payload)
         delegate?.analyticsClientDidLog(analyticsClient: self, payload: payload)
         #endif
 
@@ -168,6 +169,16 @@ import UIKit
 // MARK: - Helpers
 
 extension STPAnalyticsClient {
+    static func debugPrintPayload(_ payload: [String: Any]) {
+        let jsonString = String(
+            data: (try? JSONSerialization.data(
+                withJSONObject: payload,
+                options: [.sortedKeys, .prettyPrinted]
+            )) ?? Data(),
+            encoding: .utf8
+        )
+        print(jsonString ?? "Error converting to string")
+    }
     public func commonPayload(_ apiClient: STPAPIClient) -> [String: Any] {
         var payload: [String: Any] = [:]
         payload["bindings_version"] = StripeAPIConfiguration.STPSDKVersion
