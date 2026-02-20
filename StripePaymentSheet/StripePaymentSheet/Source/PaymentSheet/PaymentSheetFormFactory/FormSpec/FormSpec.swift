@@ -25,8 +25,6 @@ struct FormSpec: Decodable {
         case billing_address(BillingAddressSpec)
         case country(CountrySpec)
 
-        case affirm_header
-
         case klarna_header
         case klarna_country(BaseFieldSpec)
 
@@ -61,8 +59,6 @@ struct FormSpec: Decodable {
                 self = .billing_address(try BillingAddressSpec(from: decoder))
             case "country":
                 self = .country(try CountrySpec(from: decoder))
-            case "affirm_header":
-                self = .affirm_header
             case "klarna_header":
                 self = .klarna_header
             case "klarna_country":

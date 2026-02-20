@@ -255,6 +255,8 @@ class PaymentSheetFormFactory {
                 return makeSwish()
             } else if paymentMethod == .afterpayClearpay {
                 return makeAfterpayClearpay()
+            } else if paymentMethod == .affirm {
+                return makeAffirm()
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
