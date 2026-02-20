@@ -1,5 +1,9 @@
 ## X.Y.Z - changes pending release 
 
+### PaymentSheet
+
+* [Added] Added optional parameter to use view controller `title` in `AddressViewController` instead of inline header label.
+
 ## 25.6.3 2026-02-17
 
 ### CryptoOnramp (Beta)

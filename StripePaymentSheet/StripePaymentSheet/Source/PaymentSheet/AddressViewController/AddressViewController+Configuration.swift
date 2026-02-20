@@ -76,7 +76,8 @@ public extension AddressViewController {
             allowedCountries: [String] = [],
             appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
             buttonTitle: String? = nil,
-            title: String? = nil
+            title: String? = nil,
+            useNavigationBarTitle: Bool = false
         ) {
             self.defaultValues = defaultValues
             self.additionalFields = additionalFields
@@ -84,6 +85,7 @@ public extension AddressViewController {
             self.appearance = appearance
             self.buttonTitle = buttonTitle ?? .Localized.save_address
             self.title = title ?? .Localized.shipping_address
+            self.useNavigationBarTitle = useNavigationBarTitle
         }
 
         /// Configuration related to the collection of additional fields beyond the physical address.
@@ -155,6 +157,9 @@ public extension AddressViewController {
 
         /// The title of the view controller. Defaults to "Shipping address".
         public var title: String = .Localized.shipping_address
+
+        /// Optionally hide the title label and set a title on the view controller instead.
+        public var useNavigationBarTitle: Bool = false
 
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = .shared
