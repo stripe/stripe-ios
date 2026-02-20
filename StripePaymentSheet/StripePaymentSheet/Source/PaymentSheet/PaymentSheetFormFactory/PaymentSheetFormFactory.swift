@@ -313,10 +313,11 @@ extension PaymentSheetFormFactory {
             theme: theme
         )
         return PaymentMethodElementWrapper(element) { textField, params in
-            if let apiPath = apiPath {
-                params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
-            } else {
+            switch apiPath {
+            case "billing_details[name]", nil:
                 params.paymentMethodParams.nonnil_billingDetails.name = textField.text
+            case let apiPath?:
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
             }
             return params
         }
@@ -326,10 +327,11 @@ extension PaymentSheetFormFactory {
         let defaultValue = defaultBillingDetails(emailAPIPath: apiPath).email
         let element = TextFieldElement.makeEmail(defaultValue: defaultValue, theme: theme)
         return PaymentMethodElementWrapper(element) { textField, params in
-            if let apiPath = apiPath {
-                params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
-            } else {
+            switch apiPath {
+            case "billing_details[email]", nil:
                 params.paymentMethodParams.nonnil_billingDetails.email = textField.text
+            case let apiPath?:
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = textField.text
             }
             return params
         }
@@ -802,12 +804,12 @@ extension PaymentSheetFormFactory {
                 locale: locale
             )
         ) { dropdown, params in
-            if let apiPath = apiPath {
-                params.paymentMethodParams.additionalAPIParameters[apiPath] =
-                    resolvedCountryCodes[dropdown.selectedIndex]
-            } else {
-                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country =
-                    resolvedCountryCodes[dropdown.selectedIndex]
+            let countryCode = resolvedCountryCodes[dropdown.selectedIndex]
+            switch apiPath {
+            case "billing_details[address][country]", nil:
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country = countryCode
+            case let apiPath?:
+                params.paymentMethodParams.additionalAPIParameters[apiPath] = countryCode
             }
             return params
         }
@@ -851,12 +853,11 @@ extension PaymentSheetFormFactory {
             )
         ) { dropdown, params in
             let countryCode = countryCodes[dropdown.selectedIndex]
-            if let apiPath = apiPath {
+            switch apiPath {
+            case "billing_details[address][country]", nil:
+                params.paymentMethodParams.nonnil_billingDetails.nonnil_address.country = countryCode
+            case let apiPath?:
                 params.paymentMethodParams.additionalAPIParameters[apiPath] = countryCode
-            } else {
-                let address = STPPaymentMethodAddress()
-                address.country = countryCode
-                params.paymentMethodParams.nonnil_billingDetails.address = address
             }
             return params
         }

@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=79wbk7RB9oEZt5-JmGUWFtWXpwlFFtvaMjVWeiCVTv-Ze9v6kX2R3KhLoeMQ7lw8aW6PXcilsf1Vh9sn
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=mY9rY36U5ehx8VwIYPyDQZfn7KCMycOoO3XMx24ePVl599U00gs7wEPLPJgZcgxztR1quEGNuE7yKsBk
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,22 +12,22 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_cNVy4j0SpOeerp
+request-id: req_20vcEAMwNnCVOF
 Content-Length: 552
 Vary: Origin
-Date: Wed, 28 Jan 2026 21:04:57 GMT
-original-request: req_cNVy4j0SpOeerp
+Date: Fri, 20 Feb 2026 21:59:28 GMT
+original-request: req_20vcEAMwNnCVOF
 stripe-version: 2020-08-27
-idempotency-key: cf415112-8b21-4b81-94b6-daeaddc13260
+idempotency-key: 4683d402-9302-474e-9bf4-b7987707f666
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%40example\.com&billing_details%5Bname%5D=John%20Doe&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=standard&client_attribution_metadata\[payment_method_selection_flow]=automatic&eps%5Bbank%5D=arzte_und_apotheker_bank&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=eps
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%40example\.com&billing_details\[name]=John%20Doe&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=standard&client_attribution_metadata\[payment_method_selection_flow]=automatic&eps%5Bbank%5D=arzte_und_apotheker_bank&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=eps
 
 {
   "object" : "payment_method",
-  "id" : "pm_1Sufv3FY0qyl6XeWJ5LJIfkk",
+  "id" : "pm_1T31jQFY0qyl6XeWZi75EK76",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     "bank" : "arzte_und_apotheker_bank"
   },
   "livemode" : false,
-  "created" : 1769634297,
+  "created" : 1771624768,
   "allow_redisplay" : "unspecified",
   "type" : "eps",
   "customer" : null,
