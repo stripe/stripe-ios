@@ -432,12 +432,12 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         let updatedParams = formElement.updateParams(params: params)
 
-        XCTAssertNil(updatedParams?.paymentMethodParams.billingDetails?.address?.country)
-        XCTAssertEqual(
+        // Known billing_details apiPath values are mapped to the structured billingDetails object
+        XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.country, "US")
+        XCTAssertNil(
             updatedParams?.paymentMethodParams.additionalAPIParameters[
                 "billing_details[address][country]"
-            ] as! String,
-            "US"
+            ]
         )
         XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "klarna")
         XCTAssertEqual(updatedParams?.paymentMethodParams.type, .klarna)
