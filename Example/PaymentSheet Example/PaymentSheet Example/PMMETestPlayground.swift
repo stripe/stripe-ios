@@ -24,7 +24,7 @@ struct PMMETestPlayground: View {
                 style: style,
                 font: fontSetting == .default ? PaymentMethodMessagingElement.Appearance().font.withSize(fontSize) : UIFont(name: fontSetting.stringValue, size: fontSize),
                 textColor: textColor == .default ? PaymentMethodMessagingElement.Appearance().textColor : UIColor(hex: textColor.rawValue),
-                linkTextColor: linkTextColor == .default ? nil : UIColor(hex: linkTextColor.rawValue)
+                infoIconColor: infoIconColor == .default ? PaymentMethodMessagingElement.Appearance().infoIconColor : UIColor(hex: infoIconColor.rawValue)
             ))
     }
     private var paymentMethodTypes: [STPPaymentMethodType] {
@@ -45,7 +45,7 @@ struct PMMETestPlayground: View {
     @State private var fontSetting = PMMEPlaygroundFontSetting.default
     @State private var fontSize: CGFloat = PaymentMethodMessagingElement.Appearance().font.pointSize
     @State private var textColor = PMMEPlaygroundColorSetting.default
-    @State private var linkTextColor = PMMEPlaygroundColorSetting.default
+    @State private var infoIconColor = PMMEPlaygroundColorSetting.default
 
     // Config
     @State private var amount = 5000
@@ -71,7 +71,7 @@ struct PMMETestPlayground: View {
             Text("Appearance")
             PMMEPlaygroundSettingView(title: "style", selectedOption: $style, onChange: configure)
             PMMEPlaygroundSettingView(title: "textColor", selectedOption: $textColor, onChange: configure)
-            PMMEPlaygroundSettingView(title: "linkTextColor", selectedOption: $linkTextColor, onChange: configure)
+            PMMEPlaygroundSettingView(title: "infoIconColor", selectedOption: $infoIconColor, onChange: configure)
             PMMEPlaygroundSettingView(title: "font", selectedOption: $fontSetting, onChange: configure)
             HStack {
                 Text("font size: \(Int(fontSize))")

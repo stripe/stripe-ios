@@ -76,7 +76,7 @@ class PMMESnapshotTests: STPSnapshotTestCase {
     func testSinglePartnerMode_CustomColors() {
         var appearance = PaymentMethodMessagingElement.Appearance()
         appearance.textColor = UIColor(red: 0.2, green: 0.4, blue: 0.8, alpha: 1.0)
-        appearance.linkTextColor = .purple
+        appearance.infoIconColor = .purple
 
         let viewData = makeViewData(
             mode: .singlePartner(logo: makeLogoSet()),
@@ -265,7 +265,6 @@ class PMMESnapshotTests: STPSnapshotTestCase {
         return PaymentMethodMessagingElement.ViewData(
             mode: mode,
             infoUrl: URL(string: "https://stripe.com")!,
-            learnMoreText: "Learn more",
             legalDisclosure: legalDisclosure,
             promotion: promotion,
             appearance: finalAppearance,
