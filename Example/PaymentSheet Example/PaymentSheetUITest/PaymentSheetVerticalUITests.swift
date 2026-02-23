@@ -75,6 +75,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Finish the card payment
         try! fillCardData(app, cardNumber: "4242424242424242", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
         continueButton.tap()
+        sleep(1) // wait for 1 second to for the sheet to dismiss
         XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
@@ -92,6 +93,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["SEPA Debit"].tap()
         try! fillSepaData(app, tapCheckboxWithText: "Save this account for future Example, Inc. payments")
         continueButton.tap()
+        sleep(1) // wait for 1 second to for the sheet to dismiss
         XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, John Doe, test@example.com, 354 Oyster Point Blvd, South San Francisco, CA, 94080, US")
         app.buttons["Confirm"].waitForExistenceAndTap(timeout: 3.0)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
