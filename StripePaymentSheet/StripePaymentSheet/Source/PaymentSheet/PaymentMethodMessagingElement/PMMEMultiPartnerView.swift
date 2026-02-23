@@ -14,26 +14,12 @@ class PMMEMultiPartnerView: UIView {
 
     private let logoSets: [PaymentMethodMessagingElement.LogoSet]
     private let promotion: String
-    private let learnMoreText: String
-    private let infoUrl: URL
     private let appearance: PaymentMethodMessagingElement.Appearance
 
     private var logoViews = [UIImageView]()
+    private let promotionLabel = UILabel()
     private let logoStack = UIStackView()
     private let mainStack = UIStackView()
-
-    private lazy var promotionTextView: UITextView = {
-        let textView = UITextView()
-        textView.isScrollEnabled = false
-        textView.isEditable = false
-        textView.backgroundColor = .clear
-        textView.textContainerInset = .zero
-        textView.textContainer.lineFragmentPadding = 0
-        textView.clipsToBounds = false
-        textView.adjustsFontForContentSizeCategory = true
-        textView.linkTextAttributes = [.foregroundColor: appearance.linkTextColor]
-        return textView
-    }()
 
     // With the default font, padding between logos is 8
     private var logoHorizontalPadding: CGFloat {
@@ -51,25 +37,19 @@ class PMMEMultiPartnerView: UIView {
     }
 
     var customAccessibilityLabel: String {
-        logoSets.reduce("") { $0 + $1.altText + ", " } + promotion + " " + learnMoreText
+        logoSets.reduce("") { $0 + $1.altText + ", " } + promotion
     }
 
     init(
         logoSets: [PaymentMethodMessagingElement.LogoSet],
         promotion: String,
-        learnMoreText: String,
-        infoUrl: URL,
-        appearance: PaymentMethodMessagingElement.Appearance,
-        textViewDelegate: UITextViewDelegate
+        appearance: PaymentMethodMessagingElement.Appearance
     ) {
         self.logoSets = logoSets
         self.promotion = promotion
-        self.learnMoreText = learnMoreText
-        self.infoUrl = infoUrl
         self.appearance = appearance
         super.init(frame: .zero)
 
-        promotionTextView.delegate = textViewDelegate
         setupView()
     }
 
@@ -90,8 +70,10 @@ class PMMEMultiPartnerView: UIView {
         logoStack.addArrangedSubview(UIView()) // spacer view to push icons to leading edge
         mainStack.addArrangedSubview(logoStack)
 
-        promotionTextView.attributedText = getPromotionAttributedString()
-        mainStack.addArrangedSubview(promotionTextView)
+        promotionLabel.attributedText = getPromotionAttributedString()
+        promotionLabel.adjustsFontForContentSizeCategory = true
+        promotionLabel.numberOfLines = 0
+        mainStack.addArrangedSubview(promotionLabel)
 
         addAndPinSubview(mainStack)
     }
@@ -104,14 +86,14 @@ class PMMEMultiPartnerView: UIView {
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         updateLogoStyles()
-        promotionTextView.attributedText = getPromotionAttributedString()
+        promotionLabel.attributedText = getPromotionAttributedString()
     }
 
     #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateLogoStyles()
-        promotionTextView.attributedText = getPromotionAttributedString()
+        promotionLabel.attributedText = getPromotionAttributedString()
         // icon view scales may have changed
         logoViews.forEach { $0.invalidateIntrinsicContentSize() }
 
@@ -128,14 +110,13 @@ class PMMEMultiPartnerView: UIView {
         }
     }
 
-    private func getPromotionAttributedString() -> NSMutableAttributedString {
-        .pmmePromoString(
+    private func getPromotionAttributedString() -> NSMutableAttributedString? {
+        return NSMutableAttributedString.bnplPromoString(
             font: appearance.scaledFont,
             textColor: appearance.textColor,
+            infoIconColor: appearance.infoIconColor ?? appearance.textColor,
             template: promotion,
-            substitution: nil,
-            learnMoreText: learnMoreText,
-            learnMoreUrl: infoUrl
+            substitution: nil
         )
     }
 }
