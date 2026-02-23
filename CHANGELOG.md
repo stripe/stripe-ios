@@ -1,6 +1,10 @@
 ## X.Y.Z - changes pending release 
 
-## xx.x.x xxxx-xx-xx
+## 25.7.0 2026-02-23
+
+## X.Y.Z - changes pending release 
+
+## 25.7.0 2026-02-23
 
 ### Payment Method Messaging Element
 * [Changed] Breaking change for `PaymentMethodMessagingElement.Appearance`. The info icon has been removed and replaced with a CTA to see available plans. The `infoIconColor` configuration has been removed, and the new link text color is customizable through `linkTextColor`.
