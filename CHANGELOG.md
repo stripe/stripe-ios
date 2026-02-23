@@ -1,5 +1,9 @@
 ## X.Y.Z - changes pending release 
 
+### PaymentSheet
+* [Changed] Rebranded iDEAL to iDEAL | Wero
+* [Changed] Removed bank selector from iDEAL | Wero form
+
 ## 25.6.4 2026-02-23
 
 ### PaymentSheet
