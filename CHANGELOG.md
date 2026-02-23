@@ -1,5 +1,10 @@
 ## X.Y.Z - changes pending release 
 
+## xx.x.x xxxx-xx-xx
+
+### Payment Method Messaging Element
+* [Changed] `infoIconColor` config replaced with `linkTextColor` config
+
 ## 25.6.4 2026-02-23
 
 ### PaymentSheet
