@@ -65,7 +65,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
             configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.iDEAL) // We use iDEAL because it has a LUXE form spec
+            paymentMethod: .stripe(.iDEAL)
         )
         let name = factory.makeName(apiPath: "custom_location[name]")
         let params = IntentConfirmParams(type: .stripe(.iDEAL))
@@ -2022,9 +2022,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testiDEALFormContainsMandateText() {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
 
