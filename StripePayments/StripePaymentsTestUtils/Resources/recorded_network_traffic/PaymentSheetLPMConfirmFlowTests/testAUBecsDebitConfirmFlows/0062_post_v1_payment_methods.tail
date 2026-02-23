@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=mC9Jd057jUYT3iVWsAfeBqL_AXROa2suzpDlUK8xEeWXlWEt8Tt33tDE5oLLSwCfiIs9l_2TZkDs79c1
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=qWRevG7WmzCDv7PRwQwP3gIJBc5xCvo2DrHri13pRZkUKXfW8JpsZDbdzYDaAdkkRcVBf_LlsnPVMkXv
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,22 +12,22 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_KAbpuKqU5NO8gL
+request-id: req_tuwQJ0tKIRoVyU
 Content-Length: 631
 Vary: Origin
-Date: Wed, 28 Jan 2026 21:00:18 GMT
-original-request: req_KAbpuKqU5NO8gL
+Date: Fri, 20 Feb 2026 19:42:51 GMT
+original-request: req_tuwQJ0tKIRoVyU
 stripe-version: 2020-08-27
-idempotency-key: 032086fa-2e61-460b-923b-01cb7933aab6
+idempotency-key: b3a9bb21-f38a-45e3-b843-777478a15261
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&au_becs_debit%5Baccount_number%5D=000123456&au_becs_debit%5Bbsb_number%5D=000000&billing_details%5Bemail%5D=example%40link\.com&billing_details%5Bname%5D=Tester%20McTesterface&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=au_becs_debit
+X-Stripe-Mock-Request: allow_redisplay=unspecified&au_becs_debit%5Baccount_number%5D=000123456&au_becs_debit%5Bbsb_number%5D=000000&billing_details\[email]=example%40link\.com&billing_details\[name]=Tester%20McTesterface&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=au_becs_debit
 
 {
   "object" : "payment_method",
-  "id" : "pm_1SufqYF7QokQdxByT8pv0BCB",
+  "id" : "pm_1T2zbCF7QokQdxByKqIzVAqm",
   "billing_details" : {
     "email" : "example@link.com",
     "phone" : null,
@@ -48,7 +48,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&au_becs_debit%5Baccount_numbe
     "last4" : "3456"
   },
   "livemode" : false,
-  "created" : 1769634018,
+  "created" : 1771616570,
   "allow_redisplay" : "unspecified",
   "type" : "au_becs_debit",
   "customer" : null,
