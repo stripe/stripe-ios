@@ -1,5 +1,10 @@
 ## X.Y.Z - changes pending release 
 
+## 25.6.4 2026-02-23
+
+### PaymentSheet
+* [Changed] Reverted an undocumented public API change for PaymentMethodMessagingElement
+
 ## 25.6.3 2026-02-17
 
 ### CryptoOnramp (Beta)
