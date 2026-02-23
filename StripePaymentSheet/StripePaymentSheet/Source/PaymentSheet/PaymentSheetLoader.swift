@@ -438,8 +438,11 @@ final class PaymentSheetLoader {
         } else if case let .checkoutSession(checkoutSession) = intent,
                   let customerPaymentMethods = checkoutSession.customer?.paymentMethods {
             savedPaymentMethods = customerPaymentMethods
+        } else if let customerID = configuration.customer?.id,
+            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider {
+            savedPaymentMethods = try await fetchSavedPaymentMethods(ephemeralKey: ephemeralKey, customerID: customerID, configuration: configuration, elementsSession: elementsSession)
         } else {
-            savedPaymentMethods = try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration, elementsSession: elementsSession)
+            return []
         }
 
         // Move default PM to front
@@ -473,12 +476,12 @@ final class PaymentSheetLoader {
         return result
     }
 
-    static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) async throws -> [STPPaymentMethod] {
-        guard let customerID = configuration.customer?.id,
-              case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider else {
-            return []
-        }
-
+    static func fetchSavedPaymentMethods(
+        ephemeralKey: String,
+        customerID: String,
+        configuration: PaymentElementConfiguration,
+        elementsSession: STPElementsSession
+    ) async throws -> [STPPaymentMethod] {
         let orderdPaymentMethodTypes = elementsSession.orderedPaymentMethodTypes
 
         // We don't support Link payment methods with customer ephemeral keys
