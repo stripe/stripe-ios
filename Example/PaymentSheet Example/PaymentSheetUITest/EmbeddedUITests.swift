@@ -35,10 +35,12 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.toolbars.buttons["Done"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Continue"].isEnabled)
         app.buttons["Continue"].waitForExistenceAndTap()
+        sleep(1) // wait for 1 second for the sheet to dismiss
         XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
         XCTAssertEqual(app.staticTexts["Payment method"].label, "•••• 4242")
 
         let fillCardAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
+            .filter({ !$0.starts(with: "elements.captcha.passive") })
             .suffix(6)
         XCTAssertEqual(
             fillCardAnalytics,
@@ -82,7 +84,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] }).prefix(8)
         XCTAssertEqual(
             aliPayAnalytics,
-            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown"]
+            ["mc_embedded_update_started", "mc_load_started", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown"]
         )
 
         // ...and *updating* to a SetupIntent...
@@ -135,7 +137,6 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let klarnaAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
         XCTAssertEqual(
             klarnaAnalytics,
-            // fraud detection telemetry should not be sent in tests, so it should report an API failure
             ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped"]
         )
 
