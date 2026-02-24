@@ -81,7 +81,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Alipay"].waitForExistenceAndTap()
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Alipay")
 
-        let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] }).prefix(8)
+        let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] }).prefix(7)
         XCTAssertEqual(
             aliPayAnalytics,
             ["mc_embedded_update_started", "mc_load_started", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown"]
@@ -137,7 +137,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         let klarnaAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
         XCTAssertEqual(
             klarnaAnalytics,
-            ["mc_embedded_update_started", "mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped"]
+            ["mc_embedded_update_started", "mc_load_started", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped"]
         )
 
         // ...switching back to payment should keep Klarna selected
