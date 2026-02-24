@@ -76,13 +76,13 @@ final class PaymentSheetLoader {
                 throw error
             }
 
-            // Fetch ElementsSession
-            async let _elementsSessionAndIntent: ElementSessionAndIntent = fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper)
-
-            // Load misc singletons
+            // Fetch ElementsSession concurrently with loading misc singletons
+            let elementsSessionTask = Task {
+                try await fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper)
+            }
             await loadMiscellaneousSingletons()
 
-            let elementsSessionAndIntent = try await _elementsSessionAndIntent
+            let elementsSessionAndIntent = try await elementsSessionTask.value
             let intent = elementsSessionAndIntent.intent
             let elementsSession = elementsSessionAndIntent.elementsSession
             // Overwrite the form specs that were already loaded from disk
@@ -97,8 +97,10 @@ final class PaymentSheetLoader {
             }
             printTimingLog("END loadFormSpecs")
 
-            // List the Customer's saved PaymentMethods
-            async let savedPaymentMethods = fetchSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration)
+            // List the Customer's saved PaymentMethods concurrently with link lookup
+            let savedPaymentMethodsTask = Task {
+                try await fetchSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration)
+            }
 
             // Load link account session. Continue without Link if it errors.
             let linkAccount = try? await lookupLinkAccount(
@@ -142,7 +144,7 @@ final class PaymentSheetLoader {
 
             // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
             printTimingLog("START filterPaymentMethods")
-            let filteredSavedPaymentMethods = try await savedPaymentMethods
+            let filteredSavedPaymentMethods = try await savedPaymentMethodsTask.value
                 .filter { elementsSession.orderedPaymentMethodTypes.contains($0.type) }
                 .filter {
                     $0.supportsSavedPaymentMethod(
