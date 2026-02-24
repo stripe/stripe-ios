@@ -11,6 +11,7 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var mode: CheckoutPlayground.SessionMode
     @Binding var currency: CheckoutPlayground.Currency
     @Binding var customerType: CheckoutPlayground.CustomerType
+    @Binding var checkoutEndpoint: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -36,6 +37,20 @@ struct CheckoutPlaygroundConfigurationSection: View {
                     tooltip: "Simulates different customer states.\n\n• Guest: No customer object attached.\n• New: Creates a new Customer object.\n• Returning: Attaches a pre-existing Customer ID.",
                     displayText: { $0.rawValue.capitalized }
                 )
+                HStack(spacing: 8) {
+                    Image(systemName: "network")
+                        .font(.system(size: 16))
+                        .frame(width: 24)
+                        .foregroundColor(.blue)
+
+                    TextField("Checkout Endpoint", text: $checkoutEndpoint)
+                        .font(.subheadline)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                }
+                .padding(.vertical, 12)
+                .padding(.horizontal, 16)
+                .background(Color(uiColor: .secondarySystemGroupedBackground))
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))
             .clipShape(RoundedRectangle(cornerRadius: 12))
@@ -190,6 +205,7 @@ struct CheckoutPlaygroundLineItemCard: View {
 @available(iOS 15.0, *)
 struct CheckoutPlaygroundFeaturesSection: View {
     let mode: CheckoutPlayground.SessionMode
+    let customerType: CheckoutPlayground.CustomerType
     @Binding var enableShipping: Bool
     @Binding var shippingAddressCollection: Bool
     @Binding var billingAddressCollection: Bool
@@ -199,6 +215,10 @@ struct CheckoutPlaygroundFeaturesSection: View {
 
     private var supportsSetupRestrictedFeatures: Bool {
         return mode != .setup
+    }
+
+    private var shouldShowAutomaticTax: Bool {
+        return supportsSetupRestrictedFeatures && customerType != .new
     }
 
     var body: some View {
@@ -231,11 +251,13 @@ struct CheckoutPlaygroundFeaturesSection: View {
                         isOn: $allowPromotionCodes,
                         tooltip: "Sets `allow_promotion_codes: true`. Adds a coupon code input field to the checkout page."
                     )
-                    CheckoutPlayground.ToggleRow(
-                        title: "Automatic Tax",
-                        isOn: $automaticTax,
-                        tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
-                    )
+                    if shouldShowAutomaticTax {
+                        CheckoutPlayground.ToggleRow(
+                            title: "Automatic Tax",
+                            isOn: $automaticTax,
+                            tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
+                        )
+                    }
                 }
             }
             .background(Color(uiColor: .secondarySystemGroupedBackground))

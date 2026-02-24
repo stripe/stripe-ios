@@ -11,8 +11,6 @@ import SwiftUI
 extension CheckoutPlayground {
     @MainActor
     final class ViewModel: ObservableObject {
-        private static let backendUrl = URL(string: "http://127.0.0.1:8081/checkout_session")!
-
         static let availablePaymentMethods = [
             "card", "us_bank_account", "cashapp", "affirm", "klarna",
         ]
@@ -28,6 +26,7 @@ extension CheckoutPlayground {
         @Published var billingAddressCollection = false
         @Published var automaticTax = true
         @Published var paymentMethodTypes: Set<String> = ["card"]
+        @Published var checkoutEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout_session"
 
         @Published var isCreating = false
         @Published var errorMessage: String?
@@ -46,8 +45,13 @@ extension CheckoutPlayground {
             }
 
             do {
+                guard let backendURL = URL(string: checkoutEndpoint) else {
+                    throw NSError(domain: "CheckoutPlayground", code: 0, userInfo: [
+                        NSLocalizedDescriptionKey: "Invalid endpoint URL: \(checkoutEndpoint)",
+                    ])
+                }
                 let body = buildRequestBody()
-                var request = URLRequest(url: Self.backendUrl)
+                var request = URLRequest(url: backendURL)
                 request.httpMethod = "POST"
                 request.setValue("application/json", forHTTPHeaderField: "Content-Type")
                 request.httpBody = try JSONSerialization.data(withJSONObject: body)
@@ -94,6 +98,7 @@ extension CheckoutPlayground {
                 "include_shipping_options": enableShipping,
                 "automatic_tax": automaticTaxForRequest,
                 "payment_method_types": Array(paymentMethodTypes),
+            "use_checkout_session": true,
             ]
 
             if mode != .setup {

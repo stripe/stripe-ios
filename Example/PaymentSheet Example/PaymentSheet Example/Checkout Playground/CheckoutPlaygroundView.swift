@@ -28,7 +28,8 @@ struct CheckoutPlaygroundView: View {
                         CheckoutPlaygroundConfigurationSection(
                             mode: $viewModel.mode,
                             currency: $viewModel.currency,
-                            customerType: $viewModel.customerType
+                            customerType: $viewModel.customerType,
+                            checkoutEndpoint: $viewModel.checkoutEndpoint
                         )
 
                         if viewModel.mode != .setup {
@@ -40,6 +41,7 @@ struct CheckoutPlaygroundView: View {
 
                         CheckoutPlaygroundFeaturesSection(
                             mode: viewModel.mode,
+                            customerType: viewModel.customerType,
                             enableShipping: $viewModel.enableShipping,
                             shippingAddressCollection: $viewModel.shippingAddressCollection,
                             billingAddressCollection: $viewModel.billingAddressCollection,
