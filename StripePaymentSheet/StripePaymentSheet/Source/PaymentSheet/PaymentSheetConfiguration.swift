@@ -168,6 +168,9 @@ extension PaymentSheet {
             }
         }
 
+        /// If true, displays the redesigned CBC selector
+        @_spi(STP) public var enableCBCRedesign: Bool = true
+
         /// Controls whether to filter out wallet payment methods from the saved payment method list.
         @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
 

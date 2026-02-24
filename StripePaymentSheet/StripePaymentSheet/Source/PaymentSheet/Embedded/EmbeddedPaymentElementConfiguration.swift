@@ -100,6 +100,9 @@ extension EmbeddedPaymentElement {
             }
         }
 
+        /// If true, displays the redesigned CBC selector
+        @_spi(STP) public var enableCBCRedesign: Bool = true
+
         /// Override country for test purposes
         @_spi(STP) public var userOverrideCountry: String?
 
