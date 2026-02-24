@@ -22,56 +22,124 @@ extension TextFieldElement {
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
         let cardBrand: STPCardBrand?
-        let cardBrandDropDown: DropdownFieldElement?
+        private let cardBrandSelector: CardBrandSelectorElement?
+        private let legacyDropDown: DropdownFieldElement?
         let cardBrandFilter: CardBrandFilter
         let cardFundingFilter: CardFundingFilter
         /// Separate BIN controller for funding filtering to avoid polluting
         /// See: https://jira.corp.stripe.com/browse/RUN_MOBILESDK-5052
         let fundingBinController: STPBINController?
 
+        // Unified accessor that works with both new and legacy code
+        private var effectiveSelector: CardBrandSelectorElement? {
+            return cardBrandSelector
+        }
+
+        // Backward compatibility accessor
+        var cardBrandDropDown: DropdownFieldElement? {
+            return legacyDropDown ?? cardBrandSelector?.dropdownElement
+        }
+
         init(
             defaultValue: String? = nil,
             cardBrand: STPCardBrand? = nil,
             cardBrandDropDown: DropdownFieldElement? = nil,
+            cardBrandSelector: CardBrandSelectorElement? = nil,
             cardBrandFilter: CardBrandFilter = .default,
             cardFundingFilter: CardFundingFilter = .default,
             fundingBinController: STPBINController? = nil
         ) {
             self.defaultValue = defaultValue
             self.cardBrand = cardBrand
-            self.cardBrandDropDown = cardBrandDropDown
             self.cardBrandFilter = cardBrandFilter
             self.cardFundingFilter = cardFundingFilter
             self.fundingBinController = fundingBinController
+
+            // Handle both old and new API
+            if let cardBrandSelector = cardBrandSelector {
+                // New API: use CardBrandSelectorElement directly
+                self.cardBrandSelector = cardBrandSelector
+                self.legacyDropDown = nil
+            } else if let cardBrandDropDown = cardBrandDropDown {
+                // Legacy API: store dropdown directly for backward compatibility
+                self.legacyDropDown = cardBrandDropDown
+                self.cardBrandSelector = nil
+            } else {
+                self.legacyDropDown = nil
+                self.cardBrandSelector = nil
+            }
         }
 
         private func cardBrand(for text: String) -> STPCardBrand {
-            // Try to read the brands from the CBC dropdown
-            guard let cardBrandDropDown = cardBrandDropDown,
-                  let firstBrandString = cardBrandDropDown.nonPlacerholderItems.first?.rawData else {
-                return STPCardValidator.brand(forNumber: text)
+            // Try to read the selected brand from the CBC selector (new API)
+            if let cardBrandSelector = effectiveSelector {
+                // If using inline selector and a brand is selected, use it
+                if let selectedBrand = cardBrandSelector.selectedBrand {
+                    return selectedBrand
+                }
+
+                // If using dropdown, try to get the first brand
+                if let dropdown = cardBrandSelector.dropdownElement,
+                   let firstBrandString = dropdown.nonPlacerholderItems.first?.rawData {
+                    let cardBrandFromDropDown = STPCard.brand(from: firstBrandString)
+                    let cardBrandFromBin = STPCardValidator.brand(forNumber: text)
+                    return cardBrandFromDropDown == .unknown ? cardBrandFromBin : cardBrandFromDropDown
+                }
             }
 
-            let cardBrandFromDropDown = STPCard.brand(from: firstBrandString)
-            let cardBrandFromBin = STPCardValidator.brand(forNumber: text)
-            return cardBrandFromDropDown == .unknown ? cardBrandFromBin : cardBrandFromDropDown
+            // Legacy API: try to read from dropdown directly
+            if let legacyDropDown = legacyDropDown,
+               let firstBrandString = legacyDropDown.nonPlacerholderItems.first?.rawData {
+                let cardBrandFromDropDown = STPCard.brand(from: firstBrandString)
+                let cardBrandFromBin = STPCardValidator.brand(forNumber: text)
+                return cardBrandFromDropDown == .unknown ? cardBrandFromBin : cardBrandFromDropDown
+            }
+
+            return STPCardValidator.brand(forNumber: text)
         }
 
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
-            // If CBC is enabled and the PAN is not empty...
-            if let cardBrandDropDown = cardBrandDropDown, !text.isEmpty {
+            // Handle new API: CardBrandSelectorElement
+            if let cardBrandSelector = effectiveSelector, !text.isEmpty {
+                let enableCBCRedesign = cardBrandSelector.enableCBCRedesign
+
+                // For inline selector (CBC redesign), check if we have multiple brands
+                if enableCBCRedesign, let selectorElement = cardBrandSelector.selectorElement {
+                    if text.count >= 8 {
+                        // Show the inline selector if we have 8 or more digits
+                        return selectorElement.view
+                    } else {
+                        // Show unknown card brand if we have under 8 digits
+                        return DynamicImageView.makeUnknownCardImageView(theme: theme)
+                    }
+                }
+
+                // For dropdown via selector, use existing logic
+                if let cardBrandDropDown = cardBrandSelector.dropdownElement {
+                    // Show unknown card brand if we have under 9 pan digits and no card brands
+                    if 9 > text.count && cardBrandDropDown.nonPlacerholderItems.isEmpty {
+                        return DynamicImageView.makeUnknownCardImageView(theme: theme)
+                    } else if text.count >= 8 && cardBrandDropDown.nonPlacerholderItems.count > 1 {
+                        // Show the dropdown if we have 8 or more digits and at least 2 brands
+                        return cardBrandDropDown.view
+                    }
+                }
+            }
+
+            // Handle legacy API: Direct DropdownFieldElement
+            if let legacyDropDown = legacyDropDown, !text.isEmpty {
                 // Show unknown card brand if we have under 9 pan digits and no card brands
-                if 9 > text.count && cardBrandDropDown.nonPlacerholderItems.isEmpty {
+                if 9 > text.count && legacyDropDown.nonPlacerholderItems.isEmpty {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
-                } else if text.count >= 8 && cardBrandDropDown.nonPlacerholderItems.count > 1 {
-                    // Show the dropdown if we have 8 or more digits and at least 2 brands, otherwise fall through and show brand as normal
-                    return cardBrandDropDown.view
+                } else if text.count >= 8 && legacyDropDown.nonPlacerholderItems.count > 1 {
+                    // Show the dropdown if we have 8 or more digits and at least 2 brands
+                    return legacyDropDown.view
                 }
             }
 
             // If this is coming from the LastFourConfiguration, cardBrand(for: text) will retrieve a card brand from •••• •••• •••• last4, which may be incorrect, so we pass in the card brand for that case
             if let cardBrand = cardBrand,
-               cardBrandDropDown == nil {
+               effectiveSelector == nil && legacyDropDown == nil {
                 rotatingCardBrandsView.cardBrands = [cardBrand]
                 return rotatingCardBrandsView
             }
@@ -155,7 +223,8 @@ extension TextFieldElement {
 
             let cardBrand = cardBrand(for: text)
             // If the merchant is CBC eligible, don't show the disallowed error until we have time to hit the card metadata service to determine brands (at 8 digits)
-            let shouldShowDisallowedError = cardBrandDropDown == nil || text.count > 8
+            let isCBCEnabled = effectiveSelector != nil || legacyDropDown != nil
+            let shouldShowDisallowedError = !isCBCEnabled || text.count > 8
             if !cardBrandFilter.isAccepted(cardBrand: cardBrand) && shouldShowDisallowedError {
                 return .invalid(Error.disallowedBrand(brand: cardBrand))
             }
