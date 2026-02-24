@@ -25,8 +25,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
             .filter({ !$0.starts(with: "luxe") }).filter({ !$0.starts(with: "elements.captcha.passive") && !($0.contains("attest")) })
         XCTAssertEqual(
             startupLog,
-            // fraud detection telemetry should not be sent in tests, so it should report an API failure
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_embedded_init", "mc_initial_displayed_payment_methods"]
+            ["mc_load_started", "mc_load_succeeded", "mc_embedded_init", "mc_initial_displayed_payment_methods"]
         )
 
         // Entering a card w/ deferred PaymentIntent...
