@@ -1,20 +1,57 @@
 ## X.Y.Z - changes pending release 
 
+## 25.7.0 2026-02-23
+
+### Payment Method Messaging Element
+* [Changed] Breaking change for `PaymentMethodMessagingElement.Appearance`. The info icon has been removed and replaced with a CTA to see available plans. The `infoIconColor` configuration has been removed, and the new link text color is customizable through `linkTextColor`.
+
+## 25.6.4 2026-02-23
+
+### PaymentSheet
+* [Changed] Reverted an undocumented public API change for PaymentMethodMessagingElement
+
+## 25.6.3 2026-02-17
+
+### CryptoOnramp (Beta)
+* [Added] Added `PaymentMethodType.cardAndBankAccount` for use in `CryptoOnrampCoordinator.collectPaymentMethod`, which displays both card-based and bank account payment options in the Link wallet interface, rather than filtering to only one type.
+* [Added] Added `paymentMethodType` property to `PaymentMethodDisplayData` in order to better differentiate between different selected payment types in client UI.
+
+### PaymentSheet
+* [Changed] Afterpay/Clearpay no longer requires billing address by default. Set `billingDetailsCollectionConfiguration.address = .full` if you need to collect billing address for Afterpay.
+
+### CustomerSheet
+* [Fixed] Fixed a view controller lifecycle issue that could cause keyboard avoidance and layout problems on the Add Card screen.
+
+### Identity
+
+* [Added] Added a best frame detector to document capture.
+
+## 25.6.2 2026-02-09
+
 ### CryptoOnramp (Beta)
 * [Removed] Removed `CryptoOnrampCoordinator.authenticateUser()` in favor of `CryptoOnrampCoordinator.authorize()`.
 
 ### PaymentSheet
 * [Fixed] Fixed build for visionOS 26.2 SDK.
+* [Fixed] Fixed an issue where the SwiftUI `isPresented` binding for CustomerSheet would not reset to `false` when dismissing during loading, preventing the sheet from being presented again.
+* [Fixed] Fixed a Swift 6 actor isolation issue in the SwiftUI integration that could cause a crash when presenting PaymentSheet or CustomerSheet.
+
+### Payments
+* [Fixed] Fixed a Swift 6 actor isolation issue in the SwiftUI integration for `paymentConfirmationSheet` and `setupIntentConfirmationSheet`.
+
 
 ## 25.6.1 2026-02-03
-
 ### Identity
+
 * [Added] More live feedback during document capture.
 
 ## 25.6.0 2026-01-26
 
 ### Payments
 * [Added] Added API bindings support for TWINT payment methods.
+
+### PaymentSheet
+* [Fixed] Fixed an issue with EmbeddedPaymentElement where calling `update` would cause customers to not stay logged in to their Link account.
 
 ## 25.5.0 2026-01-15
 ### StripeIssuing

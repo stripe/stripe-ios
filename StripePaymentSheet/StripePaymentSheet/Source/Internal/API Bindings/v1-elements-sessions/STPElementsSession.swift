@@ -64,6 +64,7 @@ import Foundation
     /// An object that contains information for the passive captcha
     let passiveCaptchaData: PassiveCaptchaData?
 
+    /// Customer details, returned when v1/elements/sessions is called with CustomerSession info
     let customer: ElementsCustomer?
 
     /// A flag that indicates that this instance was created as a best-effort

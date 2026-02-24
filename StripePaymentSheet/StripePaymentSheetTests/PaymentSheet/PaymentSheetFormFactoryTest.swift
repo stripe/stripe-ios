@@ -2631,16 +2631,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             previousCustomerInput: previousCardCustomerInput
         ).make()
         XCTAssert(afterpayFormWithPreviousCardInput.validationState != .valid)
-        // ...and the address section shouldn't be populated with any defaults
-        guard
-            let afterpayForm = afterpayFormWithPreviousCardInput as? PaymentMethodElementWrapper<FormElement>,
-            let addressSectionElement = afterpayForm.element.getAllUnwrappedSubElements().compactMap({ $0 as? AddressSectionElement }).first
-        else {
-            XCTFail("expected address section")
-            return
-        }
-        let emptyAddressSectionElement = AddressSectionElement(collectionMode: .autoCompletable)
-        XCTAssertEqual(addressSectionElement.addressDetails, emptyAddressSectionElement.addressDetails)
     }
 
     func testAppliesPreviousCustomerInput_klarna_country() {

@@ -90,14 +90,8 @@ import UIKit
         let payload = payload(withEventName: eventName, parameters: parameters)
 
         #if DEBUG
-        let jsonString = String(
-            data: try! JSONSerialization.data(
-                withJSONObject: payload,
-                options: [.sortedKeys, .prettyPrinted]
-            ),
-            encoding: .utf8
-        )!
-        NSLog("LOG ANALYTICS: \(jsonString)")
+        NSLog("V2 LOG ANALYTICS: \(eventName)")
+        STPAnalyticsClient.debugPrintPayload(payload)
         #endif
 
         guard AnalyticsClientV2.shouldCollectAnalytics else {

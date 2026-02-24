@@ -163,9 +163,6 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
         let afterpayForm = sut.formCache[.stripe(.afterpayClearpay)]!
         afterpayForm.getTextFieldElement("Full name")?.setText("Tester")
         afterpayForm.getTextFieldElement("Email")?.setText("f@z.c")
-        afterpayForm.getTextFieldElement("Address line 1").setText("asdf")
-        afterpayForm.getTextFieldElement("City").setText("asdf")
-        afterpayForm.getTextFieldElement("ZIP").setText("12345")
         sut.selectedFormViewController?.didTapPrimaryButton()
 
         // ...should show the row w/ 'Change >'

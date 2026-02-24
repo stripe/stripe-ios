@@ -5,7 +5,9 @@
 //  Created by David Estes on 8/11/23.
 //
 
+import Contacts
 import Foundation
+import PassKit
 @_spi(STP) @testable import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
@@ -319,6 +321,12 @@ extension Intent {
     }
 }
 
+extension PaymentSheet.IntentConfiguration {
+    static func _testValue() -> Self {
+        return .init(mode: .payment(amount: 100, currency: "USD")) { _, _ in return "" }
+    }
+}
+
 extension PaymentSheet.Appearance {
     static var _testMSPaintTheme: PaymentSheet.Appearance {
         var appearance = PaymentSheet.Appearance()
@@ -437,5 +445,30 @@ extension STPCardBrandChoice {
             supportedCobrandedNetworks: [:],
             allResponseFields: [:]
         )
+    }
+}
+
+extension STPFixtures {
+    static func testPKPaymentWithContactDetails() -> PKPayment {
+        let payment = simulatorApplePayPayment()
+
+        let shipping = PKContact()
+        shipping.name = PersonNameComponentsFormatter().personNameComponents(from: "Jane Doe")
+        shipping.emailAddress = "jane@example.com"
+        let address = CNMutablePostalAddress()
+        address.street = "510 Townsend St"
+        address.isoCountryCode = "US"
+        address.city = "San Francisco"
+        address.state = "CA"
+        address.postalCode = "94103"
+        shipping.postalAddress = address
+
+        let billing = PKContact()
+        billing.name = PersonNameComponentsFormatter().personNameComponents(from: "Jane Doe")
+        billing.emailAddress = "jane@example.com"
+
+        _ = payment.perform(NSSelectorFromString("setShippingContact:"), with: shipping)
+        _ = payment.perform(NSSelectorFromString("setBillingContact:"), with: billing)
+        return payment
     }
 }

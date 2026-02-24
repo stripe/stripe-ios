@@ -101,7 +101,9 @@ final class PaymentSheetAnalyticsHelper {
 
     func logLoadStarted() {
         loadingStartDate = Date()
+        printTimingLog("START logLoadStarted")
         log(event: .paymentSheetLoadStarted, params: ["integration_shape": integrationShape.analyticsValue])
+        printTimingLog("END logLoadStarted")
     }
 
     func logLoadFailed(error: Error) {
@@ -124,6 +126,7 @@ final class PaymentSheetAnalyticsHelper {
         defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
         orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType]
     ) {
+        printTimingLog("START logLoadSucceeded")
         stpAssert(loadingStartDate != nil)
         self.intent = intent
         self.elementsSession = elementsSession
@@ -173,6 +176,7 @@ final class PaymentSheetAnalyticsHelper {
             duration: duration,
             params: params
         )
+        printTimingLog("END logLoadSucceeded")
     }
 
     func logShow(showingSavedPMList: Bool) {
@@ -180,16 +184,16 @@ final class PaymentSheetAnalyticsHelper {
             stpAssertionFailure("logShow() is not supported for embedded integration")
             return
         }
-        let isCustom = integrationShape == .flowController
-        if !isCustom {
+        let isFlowController = integrationShape == .flowController
+        if !isFlowController {
             startTimeMeasurement(.checkout)
         }
         let event: STPAnalyticEvent = {
             switch showingSavedPMList {
             case true:
-                return isCustom ? .mcShowCustomSavedPM : .mcShowCompleteSavedPM
+                return isFlowController ? .mcShowCustomSavedPM : .mcShowCompleteSavedPM
             case false:
-                return isCustom ? .mcShowCustomNewPM : .mcShowCompleteNewPM
+                return isFlowController ? .mcShowCustomNewPM : .mcShowCompleteNewPM
             }
         }()
         log(event: event)

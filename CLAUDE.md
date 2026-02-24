@@ -4,83 +4,94 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Simulator Setup
 
-Before running tests or builds, ensure you have the correct simulator configured. The project requires an iPhone 12 mini with iOS 16.4 for consistent screenshot tests.
+The test runner (`ci_scripts/run_tests.rb`) handles simulator setup automatically. The project requires an iPhone 12 mini with iOS 16.4 for consistent screenshot tests.
 
-### Automatic Simulator Detection
-
-**IMPORTANT**: Always source the setup script before running xcodebuild commands:
-
-```bash
-source ci_scripts/setup_simulator.sh
-```
-
-The script will:
-1. Check for cached simulator ID in `.stripe-ios-config`
-2. Validate the cached simulator still exists and has valid UUID format
-3. Find existing iPhone 12 mini with iOS 16.4 or create a new one
-4. Export `DEVICE_ID_FROM_USER_SETTINGS` to your environment
-5. Cache the result for future use
-
-**If simulator issues occur**: Clear the cache and retry:
+**If simulator issues occur**, clear the cache and retry:
 ```bash
 ./ci_scripts/setup_simulator.sh --clear-cache
-source ci_scripts/setup_simulator.sh
-```
-
-### Using the Device ID
-
-You must ALWAYS source the setup script before xcodebuild commands:
-```bash
-source ci_scripts/setup_simulator.sh
-xcodebuild -workspace Stripe.xcworkspace -scheme "StripePaymentSheet" -destination "id=$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -quiet
-```
-
-Or in a single line:
-```bash
-source ci_scripts/setup_simulator.sh && xcodebuild -workspace Stripe.xcworkspace -scheme "StripePaymentSheet" -destination "id=$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -quiet
-```
-
-### Quick Setup Check
-
-To verify the simulator is properly configured, run:
-```bash
-source ci_scripts/setup_simulator.sh && echo "✅ Simulator configured: $DEVICE_ID_FROM_USER_SETTINGS"
 ```
 
 ## Build Commands
 
-### Core Testing Commands
+### Test Runner
+
+`ci_scripts/run_tests.rb` is the primary way to run tests locally. It handles simulator setup, scheme resolution, and xcodebuild invocation.
+
+```bash
+# Run a single test (scheme is inferred from the target name)
+ci_scripts/run_tests.rb --test StripeCoreTests/URLEncoderTest/testQueryStringFromParameters
+
+# Run all tests for a specific scheme
+ci_scripts/run_tests.rb --scheme StripePaymentSheet
+
+# Run all framework tests
+ci_scripts/run_tests.rb --all
+
+# Record snapshot reference images (tests will fail during recording)
+ci_scripts/run_tests.rb --record-snapshots --test StripePaymentSheetTests/SomeSnapshotTest
+
+# Record network responses (tests will fail during recording)
+ci_scripts/run_tests.rb --record-network --test StripePaymentsTests/STPCardFunctionalTest
+
+# Run UI tests
+ci_scripts/run_tests.rb --ui
+
+# Retry flaky tests (up to 5 times)
+ci_scripts/run_tests.rb --scheme StripeCore --retry
+
+# Preview the xcodebuild command without executing
+ci_scripts/run_tests.rb --scheme StripeCore --dry-run
+
+# Build without running tests
+ci_scripts/run_tests.rb --scheme StripePaymentSheet --build-only
+
+# Inspect failures from the last test run
+ci_scripts/run_tests.rb --failures
+
+# Inspect failures from a specific xcresult bundle
+ci_scripts/run_tests.rb --failures /path/to/result.xcresult
+
+# Use a custom result bundle path
+ci_scripts/run_tests.rb --scheme StripeCore --result-bundle-path /tmp/my-results.xcresult
+
+# Full usage
+ci_scripts/run_tests.rb --help
+```
+
+### Inspecting Test Failures
+
+When tests fail, the runner saves an xcresult bundle and prints an inspection hint. Use `--failures` to get a structured summary:
+
+```bash
+ci_scripts/run_tests.rb --failures
+```
+
+This prints:
+- Test summary with pass/fail/skip counts
+- Failure messages for each failed test
+- Re-run commands for each failed test
+- Paths to exported failure screenshot attachments
+
+**For Claude Code**: after a test failure, run `--failures` and use the Read tool to view any exported screenshot paths. Analyzing the screenshots alongside the failure messages helps determine root cause (e.g. snapshot mismatches, unexpected UI state).
+
+### CI Commands (Fastlane)
+
+These are used by CI and can also be run locally:
 - **Run main tests**: `bundle exec fastlane stripeios_tests`
-- **Run StripeConnect tests**: `bundle exec fastlane stripeconnect_tests` 
+- **Run StripeConnect tests**: `bundle exec fastlane stripeconnect_tests`
 - **Run all integration tests**: `bundle exec fastlane integration_all`
 - **Run 3DS2 tests**: `bundle exec fastlane threeds2_tests`
 
-### Standard Build Using Xcode
-For testing, use this standard command:
+### Manual xcodebuild
+
+When you need raw xcodebuild commands, always source the simulator setup first and suppress warnings for test targets:
 ```bash
-source ci_scripts/setup_simulator.sh && xcodebuild -workspace Stripe.xcworkspace -scheme "StripePaymentSheet" -destination "id=$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
+source ci_scripts/setup_simulator.sh && xcodebuild test \
+  -workspace Stripe.xcworkspace \
+  -scheme StripePaymentSheet \
+  -destination "id=$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" \
+  -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
 ```
-(Replacing "StripePaymentSheet" with your desired test framework, or "AllStripeFrameworks" to test all frameworks.)
-
-### **IMPORTANT: Suppress Warnings for Test Targets**
-When building test targets, always suppress warnings to avoid distracting output. Use `SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO` in xcodebuild commands for test schemes:
-```bash
-source ci_scripts/setup_simulator.sh
-xcodebuild test -scheme StripePaymentSheet -workspace Stripe.xcworkspace -destination "id=$DEVICE_ID_FROM_USER_SETTINGS,arch=arm64" -quiet SWIFT_SUPPRESS_WARNINGS=YES SWIFT_TREAT_WARNINGS_AS_ERRORS=NO
-```
-(Replace "StripePaymentSheet" with the name of your scheme as needed.)
-
-### Snapshot Tests
-- **Record snapshots**: Use `AllStripeFrameworks-RecordMode` scheme (will fail while recording) and a specific test case
-- **Run snapshots**: Use `AllStripeFrameworks` scheme to verify recorded snapshots
-
-### Recorded network tests
-- **Record network tests**: Use `AllStripeFrameworks-NetworkRecordMode` scheme (will fail while recording) and a specific test case
-- **Run network tests**: Use `AllStripeFrameworks` scheme to verify recorded network tests
-
-### UI Tests
-- **Run UI tests**: Use `PaymentSheet Example` scheme with target `PaymentSheetUITest`
-- **Run specific UI test class**: `-only-testing:PaymentSheetUITest/YourTestClassName`
 
 ## Code Quality
 
@@ -90,6 +101,8 @@ The project has an automated hook (`.claude/settings.json`) that runs format and
 If you need to run these checks manually:
 - **Format modified files**: `ci_scripts/format_modified_files.sh`
 - **Lint modified files**: `ci_scripts/lint_modified_files.sh`
+
+Do not write in code comments (such as file headers) that code was generated by Claude.
 
 **Branch Requirements**: If you are on the `master` branch, you MUST check out a new branch before making commits.
 

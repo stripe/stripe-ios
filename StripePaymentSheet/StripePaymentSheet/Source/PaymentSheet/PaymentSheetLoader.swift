@@ -21,30 +21,20 @@ final class PaymentSheetLoader {
     }
 
     enum IntegrationShape {
-        case complete
+        case paymentSheet
         case flowController
         case embedded
 
         var canDefaultToLinkOrApplePay: Bool {
             switch self {
-            case .complete:
+            case .paymentSheet:
                 return false
             case .flowController, .embedded:
                 return true
             }
         }
-
-        var shouldStartCheckoutMeasurementOnLoad: Bool {
-            switch self {
-            case .complete, .embedded: // TODO(porter) Figure out when we want to start checkout measurement for embedded
-                return false
-            case .flowController:
-                return true
-            }
-        }
     }
 
-    /// Fetches the PaymentIntent or SetupIntent and Customer's saved PaymentMethods
     static func load(
         mode: PaymentSheet.InitializationMode,
         configuration: PaymentElementConfiguration,
@@ -53,174 +43,178 @@ final class PaymentSheetLoader {
         isUpdate: Bool = false,
         completion: @escaping (Result<LoadResult, Error>) -> Void
     ) {
-        analyticsHelper.logLoadStarted()
-
         Task { @MainActor in
             do {
-                // Validate inputs
-                if !mode.isDeferred && configuration.apiClient.publishableKeyIsUserKey {
-                    // User keys can't pass payment_method_data directly to /confirm, which is what the non-deferred intent flows do
-                    assertionFailure("Dashboard isn't supported in non-deferred intent flows")
-                }
-                if case .deferredIntent(let intentConfiguration) = mode,
-                   let error = intentConfiguration.validate() {
-                    throw error
-                }
-
-                // Fetch ElementsSession
-                async let _elementsSessionAndIntent: ElementSessionAndIntent = fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper)
-
-                // Load misc singletons
-                await loadMiscellaneousSingletons()
-
-                let elementsSessionAndIntent = try await _elementsSessionAndIntent
-                let intent = elementsSessionAndIntent.intent
-                let elementsSession = elementsSessionAndIntent.elementsSession
-                // Overwrite the form specs that were already loaded from disk
-                switch intent {
-                case .paymentIntent, .deferredIntent, .checkoutSession:
-                    if !elementsSession.isBackupInstance {
-                        _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
-                    }
-                case .setupIntent:
-                    break // Not supported
-                }
-
-                // List the Customer's saved PaymentMethods
-                async let savedPaymentMethods = fetchSavedPaymentMethods(elementsSession: elementsSession, configuration: configuration)
-
-                // Load link account session. Continue without Link if it errors.
-                let linkAccount = try? await lookupLinkAccount(
-                    elementsSession: elementsSession,
-                    configuration: configuration,
-                    isUpdate: isUpdate
-                )
-                LinkAccountContext.shared.account = linkAccount
-
-                // Log experiment exposures
-                if let arbId = elementsSession.experimentsData?.arbId {
-                    let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
-                        arbId: arbId,
-                        session: elementsSession,
-                        configuration: configuration,
-                        linkAccount: linkAccount,
-                        integrationShape: analyticsHelper.integrationShape
-                    )
-                    analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
-
-                    let linkGlobalHoldbackAAExperiment = LinkGlobalHoldbackAA(
-                        arbId: arbId,
-                        session: elementsSession,
-                        configuration: configuration,
-                        linkAccount: linkAccount,
-                        integrationShape: analyticsHelper.integrationShape
-                    )
-                    analyticsHelper.logExposure(experiment: linkGlobalHoldbackAAExperiment)
-
-                    let linkAbTestExperiment = LinkABTest(
-                        arbId: arbId,
-                        session: elementsSession,
-                        configuration: configuration,
-                        linkAccount: linkAccount,
-                        integrationShape: analyticsHelper.integrationShape
-                    )
-                    analyticsHelper.logExposure(experiment: linkAbTestExperiment)
-                }
-
-                // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
-                let filteredSavedPaymentMethods = try await savedPaymentMethods
-                    .filter { elementsSession.orderedPaymentMethodTypes.contains($0.type) }
-                    .filter {
-                        $0.supportsSavedPaymentMethod(
-                            configuration: configuration,
-                            intent: intent,
-                            elementsSession: elementsSession
-                        )
-                    }
-                    .filter { Self.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries) }
-
-                let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-                let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
-
-                // Disable FC Lite if killswitch is enabled
-                let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
-                FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
-
-                let remoteFcLiteOverrideEnabled = elementsSession.flags["elements_prefer_fc_lite"] == true
-                FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
-
-                // Send load finished analytic
-                // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
-                let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
-                    savedPaymentMethods: filteredSavedPaymentMethods,
-                    customerID: configuration.customer?.id,
-                    showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
-                    showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false,
-                    elementsSession: elementsSession,
-                    defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
-                )
-                let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
-
-                // Assert if using konbini or blik with confirmation tokens
-                if case .deferredIntent(let intentConfiguration) = mode,
-                   intentConfiguration.confirmationTokenConfirmHandler != nil {
-                    if paymentMethodTypes.contains(.stripe(.konbini)) || paymentMethodTypes.contains(.stripe(.blik)) {
-                        stpAssertionFailure("Konbini and BLIK payment methods are not supported with ConfirmationTokens. Use init(mode:paymentMethodTypes:onBehalfOf:paymentMethodConfigurationId:confirmHandler:requireCVCRecollection:) instead.")
-                    }
-                }
-
-                // Ensure that there's at least 1 payment method type available for the intent and configuration.
-                guard !paymentMethodTypes.isEmpty else {
-                    throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: elementsSession.orderedPaymentMethodTypes)
-                }
-                analyticsHelper.logLoadSucceeded(
-                    intent: intent,
-                    elementsSession: elementsSession,
-                    defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
-                    orderedPaymentMethodTypes: paymentMethodTypes
-                )
-                if integrationShape.shouldStartCheckoutMeasurementOnLoad {
-                    analyticsHelper.startTimeMeasurement(.checkout)
-                }
-
-                // Initialize telemetry. Don't wait for this to finish to call completion.
-                STPTelemetryClient.shared.sendTelemetryData()
-
-                // Call completion
-                let loadResult = LoadResult(
-                    intent: intent,
-                    elementsSession: elementsSession,
-                    savedPaymentMethods: filteredSavedPaymentMethods,
-                    paymentMethodTypes: paymentMethodTypes
-                )
+                let loadResult = try await load(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, integrationShape: integrationShape, isUpdate: isUpdate)
                 completion(.success(loadResult))
             } catch {
-                analyticsHelper.logLoadFailed(error: error)
                 completion(.failure(error))
             }
         }
     }
 
-    public static func load(
+    /// Loads everything needed to render and use all MPE variants (PaymentSheet, FlowController, EmbeddedPaymentElement).
+    /// ⚠️ Everything that takes time to load (eg fetched from network or disk) should be in this method so that `logLoadSucceeded` accurately captures the amount of time it took to load.
+    @MainActor
+    static func load(
         mode: PaymentSheet.InitializationMode,
         configuration: PaymentElementConfiguration,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        integrationShape: IntegrationShape
+        integrationShape: IntegrationShape,
+        isUpdate: Bool = false
     ) async throws -> LoadResult {
-        return try await withCheckedThrowingContinuation { continuation in
-            load(
-                mode: mode,
+        printTimingLog("START load")
+        analyticsHelper.logLoadStarted()
+        do {
+            // Validate inputs
+            if !mode.isDeferred && configuration.apiClient.publishableKeyIsUserKey {
+                // User keys can't pass payment_method_data directly to /confirm, which is what the non-deferred intent flows do
+                assertionFailure("Dashboard isn't supported in non-deferred intent flows")
+            }
+            if case .deferredIntent(let intentConfiguration) = mode,
+               let error = intentConfiguration.validate() {
+                throw error
+            }
+
+            // Fetch ElementsSession
+            async let _elementsSessionAndIntent: ElementSessionAndIntent = fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper)
+
+            // Load misc singletons
+            await loadMiscellaneousSingletons()
+
+            let elementsSessionAndIntent = try await _elementsSessionAndIntent
+            let intent = elementsSessionAndIntent.intent
+            let elementsSession = elementsSessionAndIntent.elementsSession
+            // Overwrite the form specs that were already loaded from disk
+            printTimingLog("START loadFormSpecs")
+            switch intent {
+            case .paymentIntent, .deferredIntent, .checkoutSession:
+                if !elementsSession.isBackupInstance {
+                    _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                }
+            case .setupIntent:
+                break // Not supported
+            }
+            printTimingLog("END loadFormSpecs")
+
+            // List the Customer's saved PaymentMethods
+            async let savedPaymentMethods = fetchSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration)
+
+            // Load link account session. Continue without Link if it errors.
+            let linkAccount = try? await lookupLinkAccount(
+                elementsSession: elementsSession,
                 configuration: configuration,
-                analyticsHelper: analyticsHelper,
-                integrationShape: integrationShape
-            ) { result in
-                switch result {
-                case .success(let loadResult):
-                    continuation.resume(returning: loadResult)
-                case .failure(let error):
-                    continuation.resume(throwing: error)
+                isUpdate: isUpdate
+            )
+            LinkAccountContext.shared.account = linkAccount
+
+            // Log experiment exposures
+            printTimingLog("START logExperiments")
+            if let arbId = elementsSession.experimentsData?.arbId {
+                let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
+                    arbId: arbId,
+                    session: elementsSession,
+                    configuration: configuration,
+                    linkAccount: linkAccount,
+                    integrationShape: analyticsHelper.integrationShape
+                )
+                analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
+
+                let linkGlobalHoldbackAAExperiment = LinkGlobalHoldbackAA(
+                    arbId: arbId,
+                    session: elementsSession,
+                    configuration: configuration,
+                    linkAccount: linkAccount,
+                    integrationShape: analyticsHelper.integrationShape
+                )
+                analyticsHelper.logExposure(experiment: linkGlobalHoldbackAAExperiment)
+
+                let linkAbTestExperiment = LinkABTest(
+                    arbId: arbId,
+                    session: elementsSession,
+                    configuration: configuration,
+                    linkAccount: linkAccount,
+                    integrationShape: analyticsHelper.integrationShape
+                )
+                analyticsHelper.logExposure(experiment: linkAbTestExperiment)
+            }
+            printTimingLog("END logExperiments")
+
+            // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
+            printTimingLog("START filterPaymentMethods")
+            let filteredSavedPaymentMethods = try await savedPaymentMethods
+                .filter { elementsSession.orderedPaymentMethodTypes.contains($0.type) }
+                .filter {
+                    $0.supportsSavedPaymentMethod(
+                        configuration: configuration,
+                        intent: intent,
+                        elementsSession: elementsSession
+                    )
+                }
+                .filter { Self.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries) }
+            printTimingLog("END filterPaymentMethods")
+
+            printTimingLog("START computePaymentMethodTypes")
+            let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+            let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
+
+            // Disable FC Lite if killswitch is enabled
+            let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
+            FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
+
+            let remoteFcLiteOverrideEnabled = elementsSession.flags["elements_prefer_fc_lite"] == true
+            FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
+
+            let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
+
+            // Assert if using konbini or blik with confirmation tokens
+            if case .deferredIntent(let intentConfiguration) = mode,
+               intentConfiguration.confirmationTokenConfirmHandler != nil {
+                if paymentMethodTypes.contains(.stripe(.konbini)) || paymentMethodTypes.contains(.stripe(.blik)) {
+                    stpAssertionFailure("Konbini and BLIK payment methods are not supported with ConfirmationTokens. Use init(mode:paymentMethodTypes:onBehalfOf:paymentMethodConfigurationId:confirmHandler:requireCVCRecollection:) instead.")
                 }
             }
+
+            // Ensure that there's at least 1 payment method type available for the intent and configuration.
+            guard !paymentMethodTypes.isEmpty else {
+                throw PaymentSheetError.noPaymentMethodTypesAvailable(intentPaymentMethods: elementsSession.orderedPaymentMethodTypes)
+            }
+            printTimingLog("END computePaymentMethodTypes")
+
+            // Initialize telemetry. Don't wait for this to finish to return.
+            STPTelemetryClient.shared.sendTelemetryData()
+
+            let loadResult = LoadResult(
+                intent: intent,
+                elementsSession: elementsSession,
+                savedPaymentMethods: filteredSavedPaymentMethods,
+                paymentMethodTypes: paymentMethodTypes
+            )
+
+            // Send load finished analytic
+            // ⚠️ Important: Log load succeeded at the very end, to ensure it measures the entire amount of time this method took.
+            // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
+            printTimingLog("START makeViewModels")
+            let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
+                savedPaymentMethods: filteredSavedPaymentMethods,
+                customerID: configuration.customer?.id,
+                showApplePay: integrationShape.canDefaultToLinkOrApplePay ? isApplePayEnabled : false,
+                showLink: integrationShape.canDefaultToLinkOrApplePay ? isLinkEnabled : false,
+                elementsSession: elementsSession,
+                defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
+            )
+            printTimingLog("END makeViewModels")
+            analyticsHelper.logLoadSucceeded(
+                intent: intent,
+                elementsSession: elementsSession,
+                defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
+                orderedPaymentMethodTypes: paymentMethodTypes
+            )
+            printTimingLog("END load")
+            return loadResult
+        } catch {
+            analyticsHelper.logLoadFailed(error: error)
+            throw error
         }
     }
 
@@ -228,6 +222,7 @@ final class PaymentSheetLoader {
 
     /// Loads miscellaneous singletons
     static func loadMiscellaneousSingletons() async {
+        printTimingLog("START loadMiscellaneousSingletons")
         await withCheckedContinuation { continuation in
             AddressSpecProvider.shared.loadAddressSpecs {
                 // Load form specs
@@ -239,6 +234,7 @@ final class PaymentSheetLoader {
                 }
             }
         }
+        printTimingLog("END loadMiscellaneousSingletons")
     }
 
     static func lookupLinkAccount(
@@ -246,7 +242,7 @@ final class PaymentSheetLoader {
         configuration: PaymentElementConfiguration,
         isUpdate: Bool
     ) async throws -> PaymentSheetLinkAccount? {
-        // If we already have a verified Link account and the merchant is just calling `update` on FlowController,
+        // If we already have a verified Link account and the merchant is just calling `update` on FlowController or Embedded,
         // keep the account logged-in. Otherwise, the user has to verify via OTP again.
         if isUpdate, let currentLinkAccount = LinkAccountContext.shared.account, currentLinkAccount.sessionState == .verified {
             return currentLinkAccount
@@ -282,11 +278,13 @@ final class PaymentSheetLoader {
         let linkAccountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession)
         func lookUpConsumerSession(email: String?, emailSource: EmailSource) async throws -> PaymentSheetLinkAccount? {
             return try await withCheckedThrowingContinuation { continuation in
+                printTimingLog("START lookUpLinkAccount")
                 linkAccountService.lookupAccount(
                     withEmail: email,
                     emailSource: emailSource,
                     doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
                 ) { result in
+                    printTimingLog("END lookUpLinkAccount")
                     switch result {
                     case .success(let linkAccount):
                         continuation.resume(with: .success(linkAccount))
@@ -302,7 +300,9 @@ final class PaymentSheetLoader {
         } else if let customerID = configuration.customer?.id,
                   let ephemeralKey = configuration.customer?.ephemeralKeySecret(basedOn: elementsSession)
         {
+            printTimingLog("START retrieveCustomer")
             let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
+            printTimingLog("END retrieveCustomer")
             // If there's an error in this call we can just ignore it
             return try await lookUpConsumerSession(email: customer.email, emailSource: .customerObject)
         } else {
@@ -312,6 +312,7 @@ final class PaymentSheetLoader {
 
     typealias ElementSessionAndIntent = (elementsSession: STPElementsSession, intent: Intent)
     static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper) async throws -> ElementSessionAndIntent {
+        printTimingLog("START fetchElementsSession")
         let intent: Intent
         let elementsSession: STPElementsSession
         let clientDefaultPaymentMethod: String? = {
@@ -397,6 +398,7 @@ final class PaymentSheetLoader {
             """
             print(message)
         }
+        printTimingLog("END fetchElementsSession")
         return (elementsSession, intent)
     }
 
@@ -423,11 +425,19 @@ final class PaymentSheetLoader {
         return paymentMethodId
     }
 
-    static func fetchSavedPaymentMethods(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) async throws -> [STPPaymentMethod] {
+    static func fetchSavedPaymentMethods(
+        intent: Intent,
+        elementsSession: STPElementsSession,
+        configuration: PaymentElementConfiguration
+    ) async throws -> [STPPaymentMethod] {
+        printTimingLog("START fetchSavedPaymentMethods")
         // Retrieve the payment methods from ElementsSession or by making direct API calls
         var savedPaymentMethods: [STPPaymentMethod]
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
             savedPaymentMethods = elementsSessionPaymentMethods
+        } else if case let .checkoutSession(checkoutSession) = intent,
+                  let customerPaymentMethods = checkoutSession.customer?.paymentMethods {
+            savedPaymentMethods = customerPaymentMethods
         } else {
             savedPaymentMethods = try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration, elementsSession: elementsSession)
         }
@@ -445,7 +455,7 @@ final class PaymentSheetLoader {
 
         // Hide any saved cards whose brands or funding types are not allowed
         let cardFundingFilter = configuration.cardFundingFilter(for: elementsSession)
-        return savedPaymentMethods.filter {
+        let result = savedPaymentMethods.filter {
             guard let card = $0.card else { return true }
             // Filter by card brand
             if !configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand) {
@@ -459,6 +469,8 @@ final class PaymentSheetLoader {
             }
             return true
         }
+        printTimingLog("END fetchSavedPaymentMethods")
+        return result
     }
 
     static func fetchSavedPaymentMethodsUsingApiClient(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) async throws -> [STPPaymentMethod] {
@@ -528,4 +540,16 @@ final class PaymentSheetLoader {
 
         return allowedCountries.contains(billingCountry)
     }
+
+    static var _enableGranularTimingLogs: Bool = false
+}
+
+/// Debug prints to help measure timing of things.
+/// Typical usage:
+/// 1. Run MPELatencyTest.swift
+/// 2. Copy the output
+/// 3. Run `pbpaste | ./ci_scripts/generate_loader_flamegraph.rb`
+func printTimingLog(_ event: String) {
+    guard PaymentSheetLoader._enableGranularTimingLogs else { return }
+    print("[LOADER_TIMING] \(event) \(Date().timeIntervalSince1970)")
 }

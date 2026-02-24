@@ -59,25 +59,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         waitForExpectations(timeout: 0.1)
     }
 
-    func testMakeImage_without_client_asset() {
-        DownloadManager.sharedManager.resetCache()
-        let e = expectation(description: "Load specs")
-        FormSpecProvider.shared.load { _ in
-            e.fulfill()
-        }
-        waitForExpectations(timeout: 10)
-        // A Payment methods without a client-side asset...
-        let loadExpectation = expectation(description: "Load form spec image")
-        let image = PaymentSheet.PaymentMethodType.stripe(.amazonPay).makeImage(forDarkBackground: false) { image in
-            // ...should update to the form spec image
-            XCTAssertTrue(image.size.width > 1) // Sanity check
-            loadExpectation.fulfill()
-        }
-        // ...should default to a blank placeholder image
-        XCTAssertEqual(image.size, .init(width: 1, height: 1))
-        waitForExpectations(timeout: 10)
-    }
-
     // MARK: - Cards
 
     /// Returns false, card not in `supportedPaymentMethods`

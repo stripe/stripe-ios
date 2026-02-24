@@ -1,0 +1,84 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3T0bJcFY0qyl6XeW190cpAww\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=-bAZeZYvPYWpLzFq711yTdB_crTooTAOwSCJISh-RwJoYl2Lu2HAASgDKQ9JnFMoVDk-NcGcCy9fLLLT
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_tUS8uBRuS2QnxO
+Content-Length: 1338
+Vary: Origin
+Date: Sat, 14 Feb 2026 05:22:51 GMT
+original-request: req_tUS8uBRuS2QnxO
+stripe-version: 2020-08-27
+idempotency-key: 5a76a170-acb1-490a-b39e-a69eb397bcf6
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : {
+    "tracking_number" : null,
+    "phone" : null,
+    "carrier" : null,
+    "name" : "Jane Doe",
+    "address" : {
+      "state" : "CA",
+      "country" : "US",
+      "line2" : null,
+      "city" : "San Francisco",
+      "line1" : "510 Townsend St",
+      "postal_code" : "94103"
+    }
+  },
+  "payment_method_options" : {
+    "card" : {
+      "setup_future_usage" : "off_session"
+    }
+  },
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "status" : "succeeded",
+  "payment_method" : "pm_1T0bJdFY0qyl6XeW8rXJ9D6u",
+  "client_secret" : "pi_3T0bJcFY0qyl6XeW190cpAww_secret_MzlnFvxUr1SiIvPZUN5hceHyD",
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "id" : "pi_3T0bJcFY0qyl6XeW190cpAww",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "card"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1771046568,
+  "description" : null
+}

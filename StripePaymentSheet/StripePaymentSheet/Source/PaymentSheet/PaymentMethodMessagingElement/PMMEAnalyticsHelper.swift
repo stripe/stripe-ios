@@ -100,7 +100,7 @@ final class PMMEAnalyticsHelper {
         var appearanceParams = [:] as [String: Any]
         appearanceParams["font"] = configuration.appearance.font != PaymentMethodMessagingElement.Appearance().font
         appearanceParams["text_color"] = configuration.appearance.textColor != PaymentMethodMessagingElement.Appearance().textColor
-        appearanceParams["info_icon_color"] = configuration.appearance.infoIconColor != PaymentMethodMessagingElement.Appearance().infoIconColor
+        appearanceParams["link_text_color"] = configuration.appearance.linkTextColor != PaymentMethodMessagingElement.Appearance().linkTextColor
         appearanceParams["style"] = configuration.appearance.style != PaymentMethodMessagingElement.Appearance().style
         params["appearance"] = appearanceParams
 

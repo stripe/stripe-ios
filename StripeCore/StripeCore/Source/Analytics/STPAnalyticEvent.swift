@@ -344,4 +344,8 @@ import Foundation
     // MARK: - STPApplePayContext
     case applePayContextStarted = "stripeios.applepaycontext.confirm.started"
     case applePayContextFinished = "stripeios.applepaycontext.confirm.finished"
+
+    // MARK: - Synthetic latency tests
+    case mpeSyntheticLatency = "mpe.synthetic_latency"
+
 }

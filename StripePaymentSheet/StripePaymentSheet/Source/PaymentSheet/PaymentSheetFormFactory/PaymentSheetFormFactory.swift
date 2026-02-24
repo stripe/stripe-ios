@@ -230,9 +230,6 @@ class PaymentSheetFormFactory {
             } else if paymentMethod == .revolutPay && isSettingUp {
                 // special case, display mandate for revolutPay when setting up or pi+sfu
                 additionalElements = [makeRevolutPayMandate()]
-            } else if paymentMethod == .klarna && isSettingUp {
-                // special case, display mandate for Klarna when setting up or pi+sfu
-                additionalElements = [makeKlarnaMandate()]
             } else if paymentMethod == .amazonPay && isSettingUp {
                 // special case, display mandate for Amazon Pay when setting up or pi+sfu
                 additionalElements = [makeAmazonPayMandate()]
@@ -253,6 +250,12 @@ class PaymentSheetFormFactory {
                 return makeBoleto()
             } else if paymentMethod == .swish {
                 return makeSwish()
+            } else if paymentMethod == .afterpayClearpay {
+                return makeAfterpayClearpay()
+            } else if paymentMethod == .affirm {
+                return makeAffirm()
+            } else if paymentMethod == .klarna {
+                return makeKlarna()
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
@@ -815,17 +818,8 @@ extension PaymentSheetFormFactory {
         }
     }
 
-    func makeAfterpayClearpayHeader() -> SubtitleElement {
-        return SubtitleElement(
-            view: AfterpayPriceBreakdownView(
-                currency: currency,
-                appearance: configuration.appearance
-            ),
-            isHorizontalMode: configuration.isHorizontalMode
-        )
-    }
-
-    func makeKlarnaCountry(apiPath: String? = nil) -> PaymentMethodElement? {
+    /// Creates a country dropdown for Klarna form specs with API path support
+    func makeKlarnaCountry(apiPath: String?) -> PaymentMethodElement? {
         let countryCodes = Locale.current.sortedByTheirLocalizedNames(addressSpecProvider.countries)
         let defaultValue = getPreviousCustomerInput(for: apiPath) ?? defaultBillingDetails(countryAPIPath: apiPath).address.country
         let country = PaymentMethodElementWrapper(

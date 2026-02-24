@@ -19,6 +19,19 @@ import UIKit
     /// Represents the payment method currently selected by the user.
     @_spi(STP) public struct PaymentMethodPreview {
 
+        /// Represents the type of selected payment method.
+        @_spi(STP) public enum PaymentMethodType {
+
+            /// The user chose a card-based payment method, such as a debit or credit card.
+            case card
+
+            /// The user chose a bank account for payment.
+            case bankAccount
+        }
+
+        /// The type of the selected payment method.
+        @_spi(STP) public let paymentMethodType: PaymentMethodType
+
         /// The Link icon to render in your screen.
         @_spi(STP) public let icon: UIImage
 
@@ -99,7 +112,16 @@ import UIKit
                 paymentMethodPreview = nil
                 return
             }
+
+            let type: PaymentMethodPreview.PaymentMethodType = switch selectedPaymentDetails.details {
+            case .card, .unparsable:
+                .card
+            case .bankAccount:
+                .bankAccount
+            }
+
             paymentMethodPreview = .init(
+                paymentMethodType: type,
                 icon: iconForPaymentDetails(selectedPaymentDetails),
                 label: STPPaymentMethodType.link.displayName,
                 sublabel: selectedPaymentDetails.linkPaymentDetailsFormattedString
@@ -442,7 +464,7 @@ import UIKit
                     self?.linkAccount = response.linkAccount
 
                     // If verification is required, present verification flow
-                    if !response.linkAccount.hasCompletedSMSVerification {
+                    if !response.linkAccount.meetsMinimumAuthenticationLevel {
                         if case .inline = response.consentViewModel {
                             self?.presentVerificationWithConsent(
                                 from: viewController,
@@ -739,7 +761,7 @@ import UIKit
             configuration: configuration,
             analyticsHelper: analyticsHelper,
             // TODO: Add a non-logging integration shape or something
-            integrationShape: .complete
+            integrationShape: .paymentSheet
         )
 
         return result

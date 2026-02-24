@@ -207,7 +207,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .paymentIntentClientSecret("pi_1234_secret_1234"),
             configuration: configuration,
             analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
-            integrationShape: .complete
+            integrationShape: .paymentSheet
         ) { result in
             loaded.fulfill()
             switch result {
@@ -270,7 +270,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .paymentIntentClientSecret("pi_1234_secret_1234"),
             configuration: configuration,
             analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
-            integrationShape: .complete
+            integrationShape: .paymentSheet
         ) { result in
             loaded.fulfill()
             switch result {
@@ -323,7 +323,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .paymentIntentClientSecret("pi_1234_secret_1234"),
             configuration: configuration,
             analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
-            integrationShape: .complete
+            integrationShape: .paymentSheet
         ) { result in
             loaded.fulfill()
             switch result {
@@ -374,7 +374,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .setupIntentClientSecret("seti_1234_secret_1234"),
             configuration: configuration,
             analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
-            integrationShape: .complete
+            integrationShape: .paymentSheet
         ) { result in
             loaded.fulfill()
             switch result {
@@ -436,7 +436,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .deferredIntent(intentConfig),
             configuration: configuration,
             analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
-            integrationShape: .complete
+            integrationShape: .paymentSheet
         ) { result in
             loaded.fulfill()
             switch result {
@@ -479,7 +479,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .deferredIntent(intentConfig),
             configuration: configuration,
             analyticsHelper: ._testValue(configuration: configuration, analyticsClient: analyticsClient),
-            integrationShape: .complete
+            integrationShape: .paymentSheet
         ) { result in
             loaded2.fulfill()
             switch result {
@@ -536,7 +536,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             mode: .deferredIntent(intentConfig),
             configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
             analyticsHelper: ._testValue(configuration: PaymentSheet.Configuration._testValue_MostPermissive(), analyticsClient: analyticsClient),
-            integrationShape: .complete
+            integrationShape: .paymentSheet
         ) { result in
             loadExpectation.fulfill()
             switch result {

@@ -48,8 +48,13 @@ import Foundation
     /// Whether or not this CheckoutSession was created in livemode.
     public let livemode: Bool
 
+    /// Customer data including saved payment methods.
+    public let customer: STPCheckoutSessionCustomer?
+
     /// The ID of the customer for this Session.
-    public let customerId: String?
+    public var customerId: String? {
+        return customer?.id
+    }
 
     /// The customer's email address.
     public let customerEmail: String?
@@ -62,6 +67,10 @@ import Foundation
 
     /// The URL the customer will be directed to if they decide to cancel payment.
     public let cancelUrl: String?
+
+    /// Server-side flag controlling the "Save for future use" checkbox.
+    /// Parsed from `customer_managed_saved_payment_methods_offer_save` in the init response.
+    public let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
 
     /// The raw API response used to create this object.
     public let allResponseFields: [AnyHashable: Any]
@@ -85,6 +94,7 @@ import Foundation
             "customerEmail = \(String(describing: customerEmail))",
             "url = \(String(describing: url))",
             "returnUrl = \(String(describing: returnUrl))",
+            "savedPaymentMethodsOfferSave = \(String(describing: savedPaymentMethodsOfferSave))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -103,11 +113,12 @@ import Foundation
         paymentMethodTypes: [STPPaymentMethodType],
         paymentMethodOptions: STPPaymentMethodOptions?,
         livemode: Bool,
-        customerId: String?,
+        customer: STPCheckoutSessionCustomer?,
         customerEmail: String?,
         url: URL?,
         returnUrl: String?,
         cancelUrl: String?,
+        savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.stripeId = stripeId
@@ -122,11 +133,12 @@ import Foundation
         self.paymentMethodTypes = paymentMethodTypes
         self.paymentMethodOptions = paymentMethodOptions
         self.livemode = livemode
-        self.customerId = customerId
+        self.customer = customer
         self.customerEmail = customerEmail
         self.url = url
         self.returnUrl = returnUrl
         self.cancelUrl = cancelUrl
+        self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -160,6 +172,19 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             STPCheckoutSessionStatus.status(from: $0)
         }
 
+        // Parse customer object (can be object or string ID for backwards compatibility)
+        let customer: STPCheckoutSessionCustomer?
+        if let customerDict = dict["customer"] as? [AnyHashable: Any] {
+            customer = STPCheckoutSessionCustomer.decodedObject(from: customerDict)
+        } else {
+            customer = nil
+        }
+
+        // Parse saved payment methods offer save configuration
+        let savedPaymentMethodsOfferSave = STPCheckoutSessionSavedPaymentMethodsOfferSave.decodedObject(
+            from: dict["customer_managed_saved_payment_methods_offer_save"] as? [AnyHashable: Any]
+        )
+
         return STPCheckoutSession(
             stripeId: stripeId,
             clientSecret: clientSecret,
@@ -175,11 +200,12 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
                 fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]
             ),
             livemode: livemode,
-            customerId: dict["customer"] as? String,
+            customer: customer,
             customerEmail: dict["customer_email"] as? String,
             url: urlString.flatMap { URL(string: $0) },
             returnUrl: dict["return_url"] as? String ?? dict["success_url"] as? String,
             cancelUrl: dict["cancel_url"] as? String,
+            savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
             allResponseFields: dict
         ) as? Self
     }

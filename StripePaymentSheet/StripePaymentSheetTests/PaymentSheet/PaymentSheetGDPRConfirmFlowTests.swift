@@ -14,7 +14,7 @@ import SafariServices
 @testable@_spi(STP) import StripeUICore
 
 @MainActor
-final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
+final class PaymentSheetGDPRConfirmFlowTests: STPNetworkStubbingTestCase {
     enum IntentKind: CaseIterable {
         case paymentIntent_intentFirst_csc
         case paymentIntent_deferredIntent_csc
@@ -621,7 +621,7 @@ final class PaymentSheet_GDPR_ConfirmFlowTests: STPNetworkStubbingTestCase {
 }
 
 // MARK: - Creation Helpers
-extension PaymentSheet_GDPR_ConfirmFlowTests {
+extension PaymentSheetGDPRConfirmFlowTests {
     func elementsSession(paymentMethodSave: Bool,
                          allowRedisplayOverride: STPPaymentMethodAllowRedisplay? = nil) -> STPElementsSession {
         let paymentMethodSaveValue = paymentMethodSave ? "enabled" : "disabled"
@@ -876,7 +876,7 @@ extension PaymentSheet_GDPR_ConfirmFlowTests {
     }
 }
 
-extension PaymentSheet_GDPR_ConfirmFlowTests: PaymentSheetAuthenticationContext {
+extension PaymentSheetGDPRConfirmFlowTests: PaymentSheetAuthenticationContext {
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
     }

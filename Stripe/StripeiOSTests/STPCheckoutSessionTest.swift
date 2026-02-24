@@ -59,10 +59,26 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertNil(session.setupIntentId)
         XCTAssertFalse(session.livemode)
         XCTAssertEqual(session.customerId, "cus_test123456")
+        XCTAssertNotNil(session.customer)
+        XCTAssertEqual(session.customer?.id, "cus_test123456")
+        XCTAssertEqual(session.customer?.email, "customer@example.com")
+        XCTAssertEqual(session.customer?.name, "Test Customer")
+        XCTAssertEqual(session.customer?.phone, "+15555555555")
+        XCTAssertEqual(session.customer?.paymentMethods.count, 2)
+        XCTAssertEqual(session.customer?.paymentMethods[0].stripeId, "pm_1Sxae3Lu5o3P18Zpt5YuRRoG")
+        XCTAssertEqual(session.customer?.paymentMethods[0].type, .card)
+        XCTAssertEqual(session.customer?.paymentMethods[0].card?.last4, "4242")
+        XCTAssertEqual(session.customer?.paymentMethods[1].stripeId, "pm_1Sxae4Lu5o3P18ZplFiKexnM")
+        XCTAssertEqual(session.customer?.paymentMethods[1].type, .USBankAccount)
         XCTAssertEqual(session.customerEmail, "test@example.com")
         XCTAssertEqual(session.url?.absoluteString, "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.returnUrl, "https://example.com/return")
         XCTAssertEqual(session.cancelUrl, "https://example.com/cancel")
+
+        // Verify saved payment methods offer save
+        XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
+        XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
+        XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
 
         XCTAssertEqual(
             session.paymentMethodTypes,
@@ -105,10 +121,12 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertNil(session?.clientSecret)
         XCTAssertNil(session?.paymentIntentId)
         XCTAssertNil(session?.setupIntentId)
+        XCTAssertNil(session?.customer)
         XCTAssertNil(session?.customerId)
         XCTAssertNil(session?.customerEmail)
         XCTAssertNil(session?.url)
         XCTAssertNil(session?.returnUrl)
+        XCTAssertNil(session?.savedPaymentMethodsOfferSave)
     }
 
     func testDecodedObjectWithSetupMode() {
@@ -158,4 +176,5 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(STPCheckoutSessionPaymentStatus.paymentStatus(from: "PAID"), .paid)
         XCTAssertEqual(STPCheckoutSessionPaymentStatus.paymentStatus(from: "unknown_value"), .unknown)
     }
+
 }
