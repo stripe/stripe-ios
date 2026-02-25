@@ -53,7 +53,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - sessionId: The ID of the checkout session (e.g., "cs_test_xxx")
     ///   - paymentMethod: The ID of the payment method to use for confirmation (payment method must have billing email)
-    ///   - expectedAmount: The expected amount for validation
+    ///   - expectedAmount: The expected amount for validation. `nil` in setup mode.
     ///   - expectedPaymentMethodType: The expected payment method type (e.g., "card")
     ///   - returnURL: Optional return URL for redirect-based payment methods
     ///   - shipping: Optional shipping details
@@ -64,7 +64,7 @@ extension STPAPIClient {
     func confirmCheckoutSession(
         sessionId: String,
         paymentMethod: String,
-        expectedAmount: Int,
+        expectedAmount: Int?,
         expectedPaymentMethodType: String,
         returnURL: String? = nil,
         shipping: STPPaymentIntentShippingDetailsParams? = nil,
@@ -74,7 +74,6 @@ extension STPAPIClient {
     ) async throws -> CheckoutSessionConfirmResponse {
         var parameters: [String: Any] = [
             "payment_method": paymentMethod,
-            "expected_amount": expectedAmount,
             "expected_payment_method_type": expectedPaymentMethodType,
             "expand": [
                 "payment_intent",
@@ -83,6 +82,10 @@ extension STPAPIClient {
                 "setup_intent.payment_method",
             ],
         ]
+
+        if let expectedAmount {
+            parameters["expected_amount"] = expectedAmount
+        }
 
         if let returnURL {
             parameters["return_url"] = returnURL
