@@ -65,8 +65,6 @@ public final class Checkout: ObservableObject {
             let sessionId = Self.extractSessionId(from: clientSecret)
             let response = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
             updateSession(response.checkoutSession)
-        } catch let error as CheckoutError {
-            throw error
         } catch {
             throw mapError(error)
         }
