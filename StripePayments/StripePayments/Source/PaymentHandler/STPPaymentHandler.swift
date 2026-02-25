@@ -807,12 +807,12 @@ public class STPPaymentHandler: NSObject {
         case .SEPADebit,
             .bacsDebit,  // Bacs Debit takes 2-3 business days
             .AUBECSDebit,
-            .USBankAccount:
+            .USBankAccount,
+            .card: // When orchestration is enabled, cards move to a `processing` state after successful authorization.
             return true
 
         // Synchronous
         case .alipay,
-            .card,
             .UPI,
             .iDEAL,
             .FPX,

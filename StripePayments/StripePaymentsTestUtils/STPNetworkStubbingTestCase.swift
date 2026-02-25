@@ -180,8 +180,18 @@ import XCTest
                 passingTest: { _ in
                     return true
                 },
-                withStubResponse: { request in
-                    XCTFail("❌ Attempted to hit the live network at \(request.url?.path ?? "")")
+                withStubResponse: { [weak self] request in
+                    let requestNumber = (self?.requestCount ?? 0) + 1
+                    self?.requestCount = requestNumber
+                    let url = request.url?.absoluteString ?? "unknown URL"
+                    XCTFail("""
+                        ❌ Network request #\(requestNumber) has no recorded stub: \(url)
+
+                        To fix this, record network traffic by running:
+                        ci_scripts/run_tests.rb --record-network --test \(self?.name ?? "YourTest")
+
+                        This will create stub files in recorded_network_traffic/\(testClass)/\(testMethod)/
+                        """)
                     return HTTPStubsResponse()
                 }
             )
