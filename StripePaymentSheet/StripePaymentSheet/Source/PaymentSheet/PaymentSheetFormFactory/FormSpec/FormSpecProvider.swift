@@ -65,6 +65,10 @@ class FormSpecProvider {
         }
     }
 
+    /// Payment method types that should prefer the local (disk) spec over the remote spec.
+    /// When a type is in this set and has already been loaded from disk, `loadFrom(_:)` will not overwrite it.
+    private let localSpecPreferredTypes: Set<String> = ["ideal"]
+
     /// Allows overwriting of formSpecs given a NSDictionary.  Typically, the specs comes
     /// from the sessions endpoint.
     func loadFrom(_ formSpecsAny: Any) -> Bool {
@@ -80,6 +84,10 @@ class FormSpecProvider {
             do {
                 let data = try JSONSerialization.data(withJSONObject: formSpec)
                 let decodedFormSpec = try decoder.decode(FormSpec.self, from: data)
+                // Skip overwriting specs that prefer the local (disk) version
+                if localSpecPreferredTypes.contains(decodedFormSpec.type) && self.formSpecs[decodedFormSpec.type] != nil {
+                    continue
+                }
                 self.formSpecs[decodedFormSpec.type] = decodedFormSpec
             } catch {
                 STPAnalyticsClient.sharedClient.logLUXESpecSerilizeFailure(error: error)
