@@ -234,7 +234,7 @@ extension UIButton {
         setTitle(title, for: .normal)
         titleLabel?.adjustsFontForContentSizeCategory = true
         titleLabel?.textAlignment = .right
-        titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, size: 14, maximumPointSize: 22)
+        titleLabel?.font = appearance.scaledFont(for: appearance.font.base.regular, size: 17, maximumPointSize: 22)
         accessibilityIdentifier = "edit_saved_button"
         if appearance.navigationBarStyle.isGlass {
             ios26_applyGlassConfiguration()
