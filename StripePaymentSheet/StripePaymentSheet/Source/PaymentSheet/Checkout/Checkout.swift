@@ -58,7 +58,7 @@ public final class Checkout: ObservableObject {
     /// - Throws: ``CheckoutError`` if the request fails.
     public func load() async throws {
         guard !clientSecret.isEmpty else {
-            fatalError("Checkout initialized with empty client secret.")
+            throw CheckoutError.invalidClientSecret
         }
 
         do {
@@ -66,7 +66,7 @@ public final class Checkout: ObservableObject {
             let response = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
             updateSession(response.checkoutSession)
         } catch {
-            throw mapError(error)
+            throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
 
@@ -93,10 +93,4 @@ public final class Checkout: ObservableObject {
         return String(clientSecret[..<range.lowerBound])
     }
 
-    /// Wraps a Stripe API error as a ``CheckoutError``.
-    private func mapError(_ error: Error) -> CheckoutError {
-        let nsError = error as NSError
-        let message = nsError.userInfo[STPError.errorMessageKey] as? String
-        return .apiError(message: message ?? error.localizedDescription)
-    }
 }
