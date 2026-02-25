@@ -225,7 +225,7 @@ private final class CardBrandSelectorView: UIView {
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            stackView.heightAnchor.constraint(equalToConstant: 32)
+            stackView.heightAnchor.constraint(equalToConstant: 32),
         ])
 
         // Set content hugging and compression resistance to keep it compact
@@ -273,7 +273,7 @@ private final class CardBrandSelectorView: UIView {
                     separator.widthAnchor.constraint(equalToConstant: 1),
                     separator.topAnchor.constraint(equalTo: topAnchor),
                     separator.bottomAnchor.constraint(equalTo: bottomAnchor),
-                    separator.leadingAnchor.constraint(equalTo: itemView.trailingAnchor)
+                    separator.leadingAnchor.constraint(equalTo: itemView.trailingAnchor),
                 ]
                 NSLayoutConstraint.activate(constraints)
             }
@@ -400,7 +400,7 @@ private final class CardBrandItemView: UIView {
             iconImageView.heightAnchor.constraint(equalToConstant: 20),
 
             checkmarkImageView.widthAnchor.constraint(equalToConstant: 12),
-            checkmarkImageView.heightAnchor.constraint(equalToConstant: 12)
+            checkmarkImageView.heightAnchor.constraint(equalToConstant: 12),
         ])
 
         // Add accessibility
