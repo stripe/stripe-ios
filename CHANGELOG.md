@@ -258,6 +258,9 @@ This major version introduces many small breaking changes. Please see [MIGRATING
 
 ## 24.20.0 2025-08-11
 
+### CustomerSheet
+* [Fixed] Crash when opening CustomerSheet in SwiftUI with Dynamic Actor Isolation feature flag enabled
+
 ### StripeApplePay
 * [Fixed] Issue when deserializing intent when line1 is null
 
