@@ -52,7 +52,6 @@ public class STPCardFormView: STPFormView {
     let expiryField: STPCardExpiryInputTextField
 
     let billingAddressSubForm: BillingAddressSubForm
-    let postalCodeRequirement: STPPostalCodeRequirement
     let inputMode: STPCardNumberInputTextField.InputMode
 
     @_spi(STP) public var countryField: STPCountryPickerInputField {
@@ -78,8 +77,7 @@ public class STPCardFormView: STPFormView {
         set(
             textField: postalCodeField,
             isHidden: !STPPostalCodeValidator.postalCodeIsRequired(
-                forCountryCode: countryCode,
-                with: postalCodeRequirement
+                forCountryCode: countryCode
             ),
             animated: window != nil
         )
@@ -313,7 +311,6 @@ public class STPCardFormView: STPFormView {
     @_spi(STP) public convenience init(
         billingAddressCollection: BillingAddressCollectionLevel,
         style: STPCardFormViewStyle = .standard,
-        postalCodeRequirement: STPPostalCodeRequirement = .standard,
         prefillDetails: PrefillDetails? = nil,
         inputMode: STPCardNumberInputTextField.InputMode = .standard,
         cbcEnabledOverride: Bool? = nil
@@ -327,11 +324,9 @@ public class STPCardFormView: STPFormView {
             cvcField: STPCardCVCInputTextField(prefillDetails: prefillDetails),
             expiryField: STPCardExpiryInputTextField(prefillDetails: prefillDetails),
             billingAddressSubForm: BillingAddressSubForm(
-                billingAddressCollection: billingAddressCollection,
-                postalCodeRequirement: postalCodeRequirement
+                billingAddressCollection: billingAddressCollection
             ),
             style: style,
-            postalCodeRequirement: postalCodeRequirement,
             prefillDetails: prefillDetails,
             inputMode: inputMode
         )
@@ -343,7 +338,6 @@ public class STPCardFormView: STPFormView {
         expiryField: STPCardExpiryInputTextField,
         billingAddressSubForm: BillingAddressSubForm,
         style: STPCardFormViewStyle = .standard,
-        postalCodeRequirement: STPPostalCodeRequirement = .standard,
         prefillDetails: PrefillDetails? = nil,
         inputMode: STPCardNumberInputTextField.InputMode = .standard
     ) {
@@ -352,7 +346,6 @@ public class STPCardFormView: STPFormView {
         self.expiryField = expiryField
         self.billingAddressSubForm = billingAddressSubForm
         self.style = style
-        self.postalCodeRequirement = postalCodeRequirement
         self.inputMode = inputMode
 
         if inputMode == .panLocked {
@@ -473,8 +466,7 @@ public class STPCardFormView: STPFormView {
             let shouldFocusOnPostalCode =
                 countryChanged
                 && STPPostalCodeValidator.postalCodeIsRequired(
-                    forCountryCode: countryCode,
-                    with: postalCodeRequirement
+                    forCountryCode: countryCode
                 )
 
             if shouldFocusOnPostalCode {
@@ -714,12 +706,9 @@ extension STPCardFormView {
         }
 
         required init(
-            billingAddressCollection: BillingAddressCollectionLevel,
-            postalCodeRequirement: STPPostalCodeRequirement
+            billingAddressCollection: BillingAddressCollectionLevel
         ) {
-            postalCodeField = STPPostalCodeInputTextField(
-                postalCodeRequirement: postalCodeRequirement
-            )
+            postalCodeField = STPPostalCodeInputTextField()
 
             let rows: [[STPInputTextField]]
             let title: String
