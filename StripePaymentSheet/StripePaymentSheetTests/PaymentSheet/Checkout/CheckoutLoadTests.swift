@@ -22,10 +22,7 @@ final class CheckoutLoadTests: STPNetworkStubbingTestCase {
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         )
 
-        // Session should be nil before load
-        await MainActor.run {
-            XCTAssertNil(checkout.session)
-        }
+        await MainActor.run { XCTAssertNil(checkout.session) }
 
         try await checkout.load()
 
@@ -71,7 +68,6 @@ final class CheckoutLoadTests: STPNetworkStubbingTestCase {
         }
     }
 
-    @MainActor
     func testExtractSessionId() {
         XCTAssertEqual(
             Checkout.extractSessionId(from: "cs_test_abc123_secret_xyz789"),

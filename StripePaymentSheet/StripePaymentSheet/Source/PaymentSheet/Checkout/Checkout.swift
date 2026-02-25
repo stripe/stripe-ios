@@ -88,7 +88,7 @@ public final class Checkout: ObservableObject {
     /// Returns the session ID portion of a client secret.
     ///
     /// Client secrets use the format `cs_xxx_secret_yyy`; this method returns `cs_xxx`.
-    static func extractSessionId(from clientSecret: String) -> String {
+    nonisolated static func extractSessionId(from clientSecret: String) -> String {
         guard let range = clientSecret.range(of: "_secret_") else {
             return clientSecret
         }
