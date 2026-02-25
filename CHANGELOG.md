@@ -1,4 +1,6 @@
 ## X.Y.Z - changes pending release 
+
+## 25.7.1 2026-02-25
 ### All
 * [Fixed] [#6098](https://github.com/stripe/stripe-ios/pull/6098) Fixed an issue with App Store submissions in which StripeIssuing.xcframework contained copies of other StripePayments frameworks.
  
