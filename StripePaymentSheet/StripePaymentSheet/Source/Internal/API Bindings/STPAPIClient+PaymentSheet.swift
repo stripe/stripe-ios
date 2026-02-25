@@ -98,7 +98,7 @@ extension STPAPIClient {
             parameters["type"] = "setup_intent"
             parameters["client_secret"] = clientSecret
             parameters["expand"] = ["payment_method_preference.setup_intent.payment_method"]
-        case .checkoutSession:
+        case .checkoutSession, .checkoutSessionDirect:
             assertionFailure("CheckoutSession mode should not use makeElementsSessionsParams")
         }
         return parameters
