@@ -79,7 +79,9 @@ final class PayWithNativeLinkController {
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
         self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
-        self.paymentHandler = .init(apiClient: configuration.apiClient)
+        let handler = STPPaymentHandler(apiClient: configuration.apiClient)
+        handler.useGlassStyleForChallenges = configuration.appearance.navigationBarStyle.isGlass
+        self.paymentHandler = handler
         self.linkAppearance = linkAppearance
         self.linkConfiguration = linkConfiguration
         self.confirmationChallenge = confirmationChallenge

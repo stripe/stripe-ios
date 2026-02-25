@@ -221,7 +221,11 @@ extension PaymentSheet {
         // MARK: - Private properties
         var intent: Intent { viewController.loadResult.intent }
         var elementsSession: STPElementsSession { viewController.loadResult.elementsSession }
-        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
+        lazy var paymentHandler: STPPaymentHandler = {
+            let handler = STPPaymentHandler(apiClient: configuration.apiClient)
+            handler.useGlassStyleForChallenges = configuration.appearance.navigationBarStyle.isGlass
+            return handler
+        }()
         var viewController: FlowControllerViewControllerProtocol
 
         private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
