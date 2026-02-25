@@ -46,7 +46,7 @@ public final class Checkout: ObservableObject {
     /// Creates a new instance.
     /// - Parameters:
     ///   - clientSecret: The client secret for your Checkout Session (e.g. `cs_xxx_secret_yyy`).
-    ///   - apiClient: The API client to use. Defaults to ``STPAPIClient/shared``.
+    ///   - apiClient: The API client to use. Defaults to ``STPAPIClient.shared``.
     public init(clientSecret: String, apiClient: STPAPIClient = .shared) {
         self.clientSecret = clientSecret
         self.apiClient = apiClient
