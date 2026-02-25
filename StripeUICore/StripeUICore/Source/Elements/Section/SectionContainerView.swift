@@ -32,22 +32,26 @@ class SectionContainerView: UIView {
     }()
 
     lazy var stackView: StackViewWithSeparator = {
-        let view = buildStackView(views: views, theme: theme)
+        let view = buildStackView(views: views, theme: theme, separatorStyle: separatorStyle)
         return view
     }()
 
     /// The list of views to display in a vertical stack
     private(set) var views: [UIView]
     private let theme: ElementsAppearance
+    private let separatorStyle: SeparatorDisplayStyle
 
     // MARK: - Initializers
 
     /**
      - Parameter views: A list of views to display in a row. To display multiple elements in a single row, put them inside a `MultiElementRowView`.
+     - Parameter theme: The appearance theme to apply
+     - Parameter separatorStyle: The style to use for separators between views (default is `.divider`)
      */
-    init(views: [UIView], theme: ElementsAppearance = .default) {
+    init(views: [UIView], theme: ElementsAppearance = .default, separatorStyle: SeparatorDisplayStyle = .divider) {
         self.views = views
         self.theme = theme
+        self.separatorStyle = separatorStyle
         super.init(frame: .zero)
         addAndPinSubview(bottomPinningContainerView)
         updateUI()
@@ -140,7 +144,7 @@ class SectionContainerView: UIView {
             return nil
         }()
 
-        let newStack = buildStackView(views: newStackViews, theme: theme)
+        let newStack = buildStackView(views: newStackViews, theme: theme, separatorStyle: separatorStyle)
         newStack.arrangedSubviews.forEach { $0.alpha = 0 }
         bottomPinningContainerView.addPinnedSubview(newStack)
         bottomPinningContainerView.layoutIfNeeded()
@@ -221,16 +225,25 @@ extension SectionContainerView {
             return stackView
         }()
 
-        init(views: [UIView], theme: ElementsAppearance = .default) {
+        init(views: [UIView], theme: ElementsAppearance = .default, separatorStyle: SeparatorDisplayStyle = .divider) {
             super.init(frame: .zero)
 
-            // Add dividers between the views
-            func createDivider() -> DividerView {
-                return DividerView(width: theme.separatorWidth, color: theme.colors.divider)
+            // Add dividers or spacing between the views based on separator style
+            let viewsWithSeparators: [UIView]
+            switch separatorStyle {
+            case .divider:
+                func createDivider() -> DividerView {
+                    return DividerView(width: theme.separatorWidth, color: theme.colors.divider)
+                }
+                viewsWithSeparators = views.enumerated().flatMap { index, view in
+                    index == views.count - 1 ? [view] : [view, createDivider()]
+                }
+            case .spacing(let spacingAmount):
+                // For spacing mode, just use the views directly and set stack spacing
+                viewsWithSeparators = views
+                stackView.spacing = spacingAmount
             }
-            let viewsWithDividersBetweenEach = views.enumerated().flatMap { index, view in
-                index == views.count - 1 ? [view] : [view, createDivider()]
-            }
+            let viewsWithDividersBetweenEach = viewsWithSeparators
 
             // Configure the stack view
             viewsWithDividersBetweenEach.forEach { stackView.addArrangedSubview($0) }
@@ -266,11 +279,10 @@ extension SectionContainerView {
 
 /// Builds the primary stack view that contains all others.
 /// ⚠️ Don't modify stackView properties outside of this or it won't carry over when we call `buildStackView` again in `updateUI`
-private func buildStackView(views: [UIView], theme: ElementsAppearance = .default) -> StackViewWithSeparator {
+private func buildStackView(views: [UIView], theme: ElementsAppearance = .default, separatorStyle: SeparatorDisplayStyle = .divider) -> StackViewWithSeparator {
     let stackView = StackViewWithSeparator(arrangedSubviews: views)
     stackView.axis = .vertical
-    stackView.spacing = theme.separatorWidth
-    stackView.separatorColor = theme.colors.divider
+    stackView.applySeparatorDisplayStyle(separatorStyle, defaultColor: theme.colors.divider)
     stackView.borderWidth = theme.borderWidth
     stackView.borderColor = theme.colors.border
     stackView.customBackgroundColor = theme.colors.componentBackground
