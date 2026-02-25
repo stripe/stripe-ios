@@ -143,8 +143,8 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
             account: "us_payments_orchestration"
         )
         let sut = STPPaymentHandler(apiClient: apiClient)
-        let (status, intent, _) = await sut.handleNextAction(paymentIntentClientSecret: clientSecret, authenticationContext: self, returnURL: nil)
-        // In testmode PI status switches from `processing` to `succeeded` fast enough that it flakes, so don't check.
+        let (status, _, _) = await sut.handleNextAction(paymentIntentClientSecret: clientSecret, authenticationContext: self, returnURL: nil)
+        // Don't check intent status == processing, in testmode PI status switches from `processing` to `succeeded` fast enough that it flakes.
         XCTAssertEqual(status, .succeeded)
     }
 
