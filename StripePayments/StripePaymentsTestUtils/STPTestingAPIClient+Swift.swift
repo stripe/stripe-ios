@@ -200,7 +200,8 @@ extension STPTestingAPIClient {
         currency: String = "usd",
         amount: Int? = nil,
         merchantCountry: String? = "us",
-        customerID: String? = nil
+        customerID: String? = nil,
+        allowPromotionCodes: Bool = false
     ) async throws -> CreateCheckoutSessionResponse {
         let params: [String: Any?] = [
             "account": merchantCountry,
@@ -208,6 +209,7 @@ extension STPTestingAPIClient {
             "currency": currency,
             "amount": amount,
             "customer": customerID,
+            "allow_promotion_codes": allowPromotionCodes,
         ]
         return try await makeRequest(endpoint: "create_checkout_session", params: params)
     }
