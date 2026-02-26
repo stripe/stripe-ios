@@ -245,8 +245,8 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["experiment_retrieved"] as? String, "ocs_mobile_horizontal_mode")
         XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
 
-        XCTAssertEqual(payload["dimensions-displayed_payment_method_types"] as? [String], ["card"])
-        XCTAssertEqual(payload["dimensions-displayed_payment_method_types_including_wallets"] as? [String], ["card", "apple_pay", "link"])
+        XCTAssertEqual(payload["dimensions-displayed_payment_method_types"] as? String, "card")
+        XCTAssertEqual(payload["dimensions-displayed_payment_method_types_including_wallets"] as? String, "card,apple_pay,link")
         XCTAssertEqual(payload["dimensions-has_saved_payment_method"] as? Bool, true)
         XCTAssertEqual(payload["dimensions-in_app_elements_integration_type"] as? String, "paymentsheet")
     }
@@ -282,8 +282,8 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["experiment_retrieved"] as? String, "ocs_mobile_horizontal_mode_aa")
         XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.controlTest.rawValue)
 
-        XCTAssertEqual(payload["dimensions-displayed_payment_method_types"] as? [String], ["card"])
-        XCTAssertEqual(payload["dimensions-displayed_payment_method_types_including_wallets"] as? [String], ["card", "apple_pay", "link"])
+        XCTAssertEqual(payload["dimensions-displayed_payment_method_types"] as? String, "card")
+        XCTAssertEqual(payload["dimensions-displayed_payment_method_types_including_wallets"] as? String, "card,apple_pay,link")
         XCTAssertEqual(payload["dimensions-has_saved_payment_method"] as? Bool, true)
         XCTAssertEqual(payload["dimensions-in_app_elements_integration_type"] as? String, "flowcontroller")
     }

@@ -20,9 +20,9 @@ struct PaymentSheetLayoutExperiment {
         var displayedPaymentMethodTypesIncludingWallets: [String] = displayedPaymentMethodTypes
         displayedPaymentMethodTypesIncludingWallets.append(contentsOf: walletPaymentMethodTypes)
         return [
-            "displayed_payment_method_types": displayedPaymentMethodTypes,
+            "displayed_payment_method_types": displayedPaymentMethodTypes.joined(separator: ","),
             "has_saved_payment_method": hasSPM,
-            "displayed_payment_method_types_including_wallets": displayedPaymentMethodTypesIncludingWallets,
+            "displayed_payment_method_types_including_wallets": displayedPaymentMethodTypesIncludingWallets.joined(separator: ","),
             "in_app_elements_integration_type": integrationShape,
         ]
     }
