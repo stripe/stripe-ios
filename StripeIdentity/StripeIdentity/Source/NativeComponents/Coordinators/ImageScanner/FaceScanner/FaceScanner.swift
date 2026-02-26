@@ -102,11 +102,6 @@ extension FaceScanner {
             documentBounds: faceRect
         )
 
-        #if DEBUG
-        print(
-            "[StripeIdentity][SelfieMotionBlur] hasMotionBlur=\(motionBlurOutput.hasMotionBlur) iou=\(String(describing: motionBlurOutput.iou)) frameCount=\(motionBlurOutput.frameCount) duration=\(motionBlurOutput.duration)"
-        )
-        #endif
 
         return motionBlurOutput
     }
