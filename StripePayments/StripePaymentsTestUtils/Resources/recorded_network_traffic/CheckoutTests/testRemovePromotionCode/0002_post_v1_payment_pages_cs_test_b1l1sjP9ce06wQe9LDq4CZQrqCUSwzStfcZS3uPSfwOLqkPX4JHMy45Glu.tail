@@ -1,9 +1,9 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_b1Tzl1dbKaus0SbtQokMnLCTel4jIw3g0geZcQIndUOp5QDJg9FO5uzIEi\/init$
+https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_b1l1sjP9ce06wQe9LDq4CZQrqCUSwzStfcZS3uPSfwOLqkPX4JHMy45Glu$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=LFYuiLJnwvCiuQFsxTcM38KhBp1Szfbre0tzu1ZRz3PiiOmIdNnRt1ZpyNspYrznlsxCUpRn20LOYI5O
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=_zqeZy98XJfixtkGee1J0UqKCjXCffgTjr-QSEl6ctQsPinpq8CntBsDSYLAB_u618R6QS_v2fjsilJA
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,18 +12,18 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_qqA1IgYyLGa6oU
-Content-Length: 12478
+request-id: req_dma0bxLeFQzw67
+Content-Length: 13540
 Vary: Origin
-Date: Thu, 26 Feb 2026 16:40:46 GMT
-original-request: req_qqA1IgYyLGa6oU
+Date: Thu, 26 Feb 2026 17:01:16 GMT
+original-request: req_dma0bxLeFQzw67
 stripe-version: 2020-08-27
-idempotency-key: c10fcbcb-72e3-48ae-a61b-c981cbed0259
+idempotency-key: 6f8e8c1e-325e-437c-b6d8-c60cf184a9a7
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_session_client\[is_aggregation_expected]=true&redirect_type=embedded
+X-Stripe-Mock-Request: promotion_code=SAVE25
 
 {
   "sepa_debit_info" : null,
@@ -56,7 +56,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   "blocked_billing_address_countries" : [
 
   ],
-  "id" : "ppage_1T57cIFY0qyl6XeWHHao3Dfv",
+  "id" : "ppage_1T57w7FY0qyl6XeWdGIm2eE6",
   "subscription_settings" : null,
   "consent" : null,
   "application" : null,
@@ -71,7 +71,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   "capture_method" : "automatic_async",
   "statement_descriptor" : "mobile",
   "allow_promotion_codes" : true,
-  "session_id" : "cs_test_b1Tzl1dbKaus0SbtQokMnLCTel4jIw3g0geZcQIndUOp5QDJg9FO5uzIEi",
+  "session_id" : "cs_test_b1l1sjP9ce06wQe9LDq4CZQrqCUSwzStfcZS3uPSfwOLqkPX4JHMy45Glu",
   "shipping_address_collection" : null,
   "konbini_confirmation_number" : null,
   "setup_future_usage" : null,
@@ -163,7 +163,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
     "payment_method_configuration_details" : null
   },
   "token_notification_url" : "https:\/\/pm-hooks.stripe.com\/apple_pay\/merchant_token\/pDq7tf9uieoQWMVJixFwuOve\/acct_1G6m1pFY0qyl6XeW\/",
-  "init_checksum" : "jOFtrC1JJx6ZKDrPX0Mtzoh303rVwhnM",
+  "init_checksum" : "uP5K2aiPPWBxOmMqdbkyQT2wDKI7LtY0",
   "bnpl_link_experiment_payment_method_type" : null,
   "tax_meta" : {
     "status" : "complete",
@@ -299,7 +299,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   ],
   "billing_address_collection" : null,
   "experiments_data" : {
-    "event_id" : "190fe9b2-0392-4e92-a372-ac8865b5ca43",
+    "event_id" : "a7438a2b-c5f2-4848-88e5-e4e1f53c44c1",
     "experiment_metadata" : {
       "ocs_buyer_xp_cpl_lpm_holdback" : {
         "heldback_special_wallets" : [
@@ -325,7 +325,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       "ocs_buyer_xp_cpl_link_signup_in_form" : "control",
       "ocs_buyer_xp_cpl_iap_apple_pay_exclusivity" : "control",
       "enable_link_checkout_ece_with_automatic_taxes_aa" : "control",
-      "checkout_es_la_locale_fallback" : "treatment",
+      "checkout_es_la_locale_fallback" : "control",
       "link_ibp_card_retries_checkout_aa" : "control_test",
       "cpl_guacamole" : "control",
       "link_ibp_card_retries_checkout" : "control",
@@ -337,7 +337,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   "return_url" : "https:\/\/example.com\/return",
   "mode" : "payment",
   "cancel_url" : null,
-  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_b1Tzl1dbKaus0SbtQokMnLCTel4jIw3g0geZcQIndUOp5QDJg9FO5uzIEi#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ2hwaXFsWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl",
+  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_b1l1sjP9ce06wQe9LDq4CZQrqCUSwzStfcZS3uPSfwOLqkPX4JHMy45Glu#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ2hwaXFsWmxxYGgnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl",
   "prefilled" : null,
   "redirect_on_completion" : null,
   "blob" : null,
@@ -373,32 +373,50 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   },
   "shipping" : null,
   "crypto_in_link_ui_enabled" : false,
-  "rqdata" : "bLxi4j86b96XsKw61EU03dSSwrjiFrLNIaahfdI63ZlR6EaHAeOn7W3h0MAoftY7UUDbc0EogKP6lbKiPpxE5SE5RcG1nQnma2SntvNp7Ztsus3oc\/cWg00xEwvuvq4U5leT3unTp\/VqXfrne6KsJZLljsdTOatP41Dn14OWZd85PFe+B\/m3jrzu8fBmSYH+klCVcNNxPQ+mTYrvQD\/7Q\/KQ6heQ65MdQm\/uNbS\/YALQj3KnYSodgJwVKROrdFkykM2t2bH69BMOff+s9P6NCeMZXMTK1jftzk0q3yXCkQoxPzYiGWoDUyX9aA==iy\/YEjLnhpTloC5l",
+  "rqdata" : "aYTiZRfjt3vD8kCP2iEVuP81Ng8fRNPw9u5wNeRlQxUyKDX\/vXFW+7jPsTEENFQa8UOzdNOUvhCS+6IbmT550vE9aa7UjskbgBC9m424x4Yk2rPwO0Gftw2HLEuiz5z+WLhAiVCwZC7eggHVcbR51AFLKXt2V4iLTPah7TpgVPyoRUmaJC8+mIuFRS4sUtUJ7cG0Qi7IjxZXpANKpeI9dgMuGjQ62I0gYS6VJ2j92bhV5IaruTJ6O6llLDkfFMF6Gffo+zxkkVktLHH3+Fjta1f5SgYqDusy2yTzcRVG+L970bIShaFPlzMaVw==Ca0S79GAami2Audh",
   "total_summary" : {
-    "due" : 2000,
+    "due" : 1500,
     "subtotal" : 2000,
-    "total" : 2000
+    "total" : 1500
   },
   "on_behalf_of" : null,
   "cross_sell_group" : null,
   "site_key" : "20000000-ffff-ffff-ffff-000000000002",
-  "eid" : "54191972-5FB2-476F-8248-2B3A6AC2847A",
+  "eid" : "d4a38399-ee21-4508-ae6c-71d90bedd977",
   "line_item_group" : {
     "tax_amounts" : [
 
     ],
     "localized_prices_metas" : null,
-    "total" : 2000,
+    "total" : 1500,
     "line_items" : [
       {
-        "id" : "li_1T57cIFY0qyl6XeWt9cW1imy",
+        "id" : "li_1T57w7FY0qyl6XeWrGGHWvjv",
         "description" : null,
         "discount_amounts" : [
-
+          {
+            "amount" : 500,
+            "coupon" : {
+              "object" : "coupon",
+              "amount_off" : null,
+              "percent_off" : 25,
+              "has_applies_to_products" : false,
+              "duration" : "once",
+              "currency" : null,
+              "duration_in_months" : null,
+              "name" : "Save 25%"
+            },
+            "currency" : "usd",
+            "intervals" : null,
+            "promotion_code" : {
+              "object" : "promotion_code",
+              "code" : "SAVE25"
+            }
+          }
         ],
         "quantity" : 1,
         "is_removable" : false,
-        "total" : 2000,
+        "total" : 1500,
         "tax_amounts" : [
 
         ],
@@ -406,7 +424,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
         "cross_sell_from" : null,
         "object" : "item",
         "price" : {
-          "id" : "price_1T57cIFY0qyl6XeWIlGa5luh",
+          "id" : "price_1T57w7FY0qyl6XeWBCLdzVZ6",
           "livemode" : false,
           "active" : false,
           "product" : {
@@ -450,17 +468,35 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
     ],
     "subtotal" : 2000,
     "discount_amounts" : [
-
+      {
+        "amount" : 500,
+        "coupon" : {
+          "object" : "coupon",
+          "amount_off" : null,
+          "percent_off" : 25,
+          "has_applies_to_products" : false,
+          "duration" : "once",
+          "currency" : null,
+          "duration_in_months" : null,
+          "name" : "Save 25%"
+        },
+        "currency" : "usd",
+        "intervals" : null,
+        "promotion_code" : {
+          "object" : "promotion_code",
+          "code" : "SAVE25"
+        }
+      }
     ],
     "currency" : "usd",
     "presentment_exchange_rate_meta" : null,
-    "due" : 2000
+    "due" : 1500
   },
   "managed_payments" : {
     "enabled" : false
   },
   "name_collection" : null,
   "payment_intent" : null,
-  "config_id" : "e3852a8a-df3d-417b-9ddd-a2d8d1e789a5",
+  "config_id" : "e04c98f1-cd34-48b0-8503-fa6a5268d007",
   "is_sandbox_merchant" : false
 }
