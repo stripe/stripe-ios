@@ -69,10 +69,12 @@ import Foundation
     public let cancelUrl: String?
 
     /// Applied discounts for this session.
-    public let discounts: [CheckoutDiscount]
+    public let discounts: [STPCheckoutSessionDiscount]
 
     /// The currently applied promotion code, if one is present.
-    public let appliedPromotionCode: String?
+    public var appliedPromotionCode: String? {
+        discounts.first(where: { $0.promotionCode != nil })?.promotionCode
+    }
 
     /// Server-side flag controlling the "Save for future use" checkbox.
     /// Parsed from `customer_managed_saved_payment_methods_offer_save` in the init response.
@@ -100,6 +102,7 @@ import Foundation
             "customerEmail = \(String(describing: customerEmail))",
             "url = \(String(describing: url))",
             "returnUrl = \(String(describing: returnUrl))",
+            "discounts = \(discounts)",
             "savedPaymentMethodsOfferSave = \(String(describing: savedPaymentMethodsOfferSave))",
         ]
 
@@ -124,8 +127,7 @@ import Foundation
         url: URL?,
         returnUrl: String?,
         cancelUrl: String?,
-        discounts: [CheckoutDiscount],
-        appliedPromotionCode: String?,
+        discounts: [STPCheckoutSessionDiscount],
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
         allResponseFields: [AnyHashable: Any]
     ) {
@@ -147,7 +149,6 @@ import Foundation
         self.returnUrl = returnUrl
         self.cancelUrl = cancelUrl
         self.discounts = discounts
-        self.appliedPromotionCode = appliedPromotionCode
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
         self.allResponseFields = allResponseFields
         super.init()
@@ -191,8 +192,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
         }
 
         // Parse discounts
-        let discounts = mapDiscounts(from: dict)
-        let appliedPromotionCode = discounts.first(where: { $0.promotionCode != nil })?.promotionCode
+        let discounts = STPCheckoutSessionDiscount.discounts(from: dict)
 
         // Parse saved payment methods offer save configuration
         let savedPaymentMethodsOfferSave = STPCheckoutSessionSavedPaymentMethodsOfferSave.decodedObject(
@@ -220,67 +220,9 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             returnUrl: dict["return_url"] as? String ?? dict["success_url"] as? String,
             cancelUrl: dict["cancel_url"] as? String,
             discounts: discounts,
-            appliedPromotionCode: appliedPromotionCode,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
             allResponseFields: dict
         ) as? Self
-    }
-}
-
-// MARK: - Discount Parsing
-
-private extension STPCheckoutSession {
-
-    /// Parses discounts from the session response.
-    /// Tries top-level `discounts` array first, falls back to `line_item_group.discount_amounts`.
-    static func mapDiscounts(from dict: [AnyHashable: Any]) -> [CheckoutDiscount] {
-        let discountsFromSession = (dict["discounts"] as? [[AnyHashable: Any]] ?? []).compactMap { mapDiscount(from: $0) }
-        if !discountsFromSession.isEmpty {
-            return discountsFromSession
-        }
-        let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any]
-        let discountAmounts = lineItemGroup?["discount_amounts"] as? [[AnyHashable: Any]] ?? []
-        return discountAmounts.enumerated().compactMap { index, discount in
-            mapDiscountAmount(from: discount, fallbackId: "line_item_group_discount_\(index)")
-        }
-    }
-
-    /// Parses a single discount from a `discounts` array entry.
-    static func mapDiscount(from dict: [AnyHashable: Any]) -> CheckoutDiscount? {
-        let discountDict = dict["discount"] as? [AnyHashable: Any] ?? dict
-        guard let id = discountDict["id"] as? String else { return nil }
-        let couponDict = discountDict["coupon"] as? [AnyHashable: Any]
-        let name = couponDict?["name"] as? String
-        let percentOff = couponDict?["percent_off"] as? Double
-        let amountOff = couponDict?["amount_off"] as? Int
-        let amount = dict["amount"] as? Int ?? amountOff ?? 0
-        let promotionCode = (discountDict["promotion_code"] as? [AnyHashable: Any])?["code"] as? String
-            ?? discountDict["promotion_code"] as? String
-
-        return CheckoutDiscount(
-            id: id,
-            name: name,
-            promotionCode: promotionCode,
-            amount: amount,
-            percentOff: percentOff,
-            amountOff: amountOff
-        )
-    }
-
-    /// Parses a discount from the `discount_amounts` format in `line_item_group`.
-    static func mapDiscountAmount(from dict: [AnyHashable: Any], fallbackId: String) -> CheckoutDiscount? {
-        let couponDict = dict["coupon"] as? [AnyHashable: Any]
-        let promotionCodeDict = dict["promotion_code"] as? [AnyHashable: Any]
-        let amount = dict["amount"] as? Int ?? 0
-        guard amount > 0 else { return nil }
-        return CheckoutDiscount(
-            id: fallbackId,
-            name: couponDict?["name"] as? String,
-            promotionCode: promotionCodeDict?["code"] as? String,
-            amount: amount,
-            percentOff: couponDict?["percent_off"] as? Double,
-            amountOff: couponDict?["amount_off"] as? Int
-        )
     }
 }
 

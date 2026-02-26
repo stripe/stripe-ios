@@ -74,14 +74,14 @@ public final class Checkout: ObservableObject {
 
     /// Applies a promotion code to the session.
     /// - Parameter code: The promotion code to apply.
-    /// - Throws: ``CheckoutError`` if the request fails.
+    /// - Throws: ``CheckoutError`` if applying the promotion code fails.
     public func applyPromotionCode(_ code: String) async throws {
         try requireOpenSession()
         try await performAPIUpdate(["promotion_code": code])
     }
 
     /// Removes the currently applied promotion code.
-    /// - Throws: ``CheckoutError`` if the update fails.
+    /// - Throws: `CheckoutError` if removing the promotion code fails.
     public func removePromotionCode() async throws {
         try requireOpenSession()
         try await performAPIUpdate(["promotion_code": ""])
