@@ -509,7 +509,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentSheetWithLinkSignupDisabled() {
         stubSessions(fileMock: .elementsSessions_link_signup_disabled_200)
-        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
 
         preparePaymentSheet(
@@ -523,7 +523,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentSheetWithLinkDarkMode() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
-        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
 
         preparePaymentSheet(
@@ -537,7 +537,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentSheetWithLinkAppearance() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
-        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
 
         preparePaymentSheet(
@@ -552,7 +552,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentSheetWithLink() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
-        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
 
         preparePaymentSheet(
@@ -566,7 +566,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentSheetWithLinkExistingCustomer() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
-        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
         stubConsumerSession()
 
@@ -581,7 +581,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentSheetWithLinkHiddenBorders() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
-        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
 
         var appearance = PaymentSheet.Appearance.default
@@ -654,7 +654,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                 )
             }
         )
-        stubPaymentMethods(stubRequestCallback: nil, fileMock: .saved_payment_methods_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
         stubConsumerSession()
 
@@ -687,7 +687,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                 )
             }
         )
-        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
         stubConsumerSession()
 
@@ -713,7 +713,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                 )
             }
         )
-        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
         stubConsumerSession()
 
@@ -753,7 +753,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentSheetWithLink_deferredIntent() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_link_200)
-        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
         stubConsumerSession()
 
@@ -978,24 +978,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             template = translated
         }
         return template.data(using: .utf8)!
-    }
-
-    func stubPaymentMethods(
-        stubRequestCallback: ((URLRequest) -> Bool?)? = nil,
-        fileMock: FileMock
-    ) {
-        guard !runAgainstLiveService else {
-            return
-        }
-        stub { urlRequest in
-            if let shouldStub = stubRequestCallback?(urlRequest) {
-                return shouldStub
-            }
-            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
-        } response: { _ in
-            let mockResponseData = try! fileMock.data()
-            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
-        }
     }
 
     func stubCustomers() {
@@ -1234,7 +1216,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private func stubNewCustomerResponse() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
-        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
         stubConsumerSession()
     }
@@ -1248,34 +1230,14 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                 return template.data(using: .utf8)!
             }
         )
-        stubPaymentMethods(fileMock: .saved_payment_methods_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
         stubConsumerSession()
     }
 
     private func stubReturningCustomerResponse() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
-        stubPaymentMethods(
-            stubRequestCallback: { urlRequest in
-                return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
-                    && urlRequest.url?.absoluteString.contains("type=card") ?? false
-            },
-            fileMock: .saved_payment_methods_withCard_200
-        )
-        stubPaymentMethods(
-            stubRequestCallback: { urlRequest in
-                return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
-                    && urlRequest.url?.absoluteString.contains("type=us_bank_account") ?? false
-            },
-            fileMock: .saved_payment_methods_200
-        )
-        stubPaymentMethods(
-            stubRequestCallback: { urlRequest in
-                return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
-                    && urlRequest.url?.absoluteString.contains("type=sepa_debit") ?? false
-            },
-            fileMock: .saved_payment_methods_200
-        )
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
         stubCustomers()
         stubConsumerSession()
     }
