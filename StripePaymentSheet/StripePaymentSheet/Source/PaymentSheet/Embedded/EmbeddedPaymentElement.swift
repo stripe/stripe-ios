@@ -386,10 +386,7 @@ public final class EmbeddedPaymentElement {
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
     }()
 
-    internal private(set) lazy var paymentHandler: STPPaymentHandler = {
-        let handler = STPPaymentHandler(apiClient: configuration.apiClient, applyLiquidGlass: configuration.appearance.navigationBarStyle.isGlass)
-        return handler
-    }()
+    internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient, applyLiquidGlass: configuration.appearance.navigationBarStyle.isGlass)
 
     internal var confirmationChallenge: ConfirmationChallenge?
 
