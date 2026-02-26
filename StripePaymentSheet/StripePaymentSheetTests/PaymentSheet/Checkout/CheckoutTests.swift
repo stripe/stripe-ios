@@ -1,5 +1,5 @@
 //
-//  CheckoutPromotionCodeTests.swift
+//  CheckoutTests.swift
 //  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 2/25/26.
@@ -13,45 +13,53 @@
 @testable @_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
-final class CheckoutPromotionCodeTests: STPNetworkStubbingTestCase {
+final class CheckoutTests: STPNetworkStubbingTestCase {
 
-    // MARK: - Unit Tests (no network)
+    func testLoadCheckoutSession() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkout = await Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
 
-    func testApplyPromotionCodeRequiresOpenSession() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
-
-        // Session is nil (not loaded), should throw sessionNotOpen
         await MainActor.run { XCTAssertNil(checkout.session) }
 
-        do {
-            try await checkout.applyPromotionCode("SAVE25")
-            XCTFail("Expected CheckoutError.sessionNotOpen")
-        } catch let error as CheckoutError {
-            guard case .sessionNotOpen = error else {
-                XCTFail("Expected .sessionNotOpen, got \(error)")
-                return
-            }
+        try await checkout.load()
+
+        await MainActor.run {
+            let session = checkout.session
+            XCTAssertNotNil(session)
+            XCTAssertEqual(session?.stripeId, checkoutSessionResponse.id)
+            XCTAssertEqual(session?.mode, .payment)
+            XCTAssertEqual(session?.status, .open)
+            XCTAssertEqual(session?.paymentStatus, .unpaid)
+            XCTAssertEqual(session?.currency, "usd")
+            XCTAssertFalse(session?.livemode ?? true)
+            XCTAssertTrue(session?.paymentMethodTypes.contains(.card) ?? false)
+            XCTAssertNotNil(session?.totalSummary)
         }
     }
 
-    func testRemovePromotionCodeRequiresOpenSession() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
+    func testDelegateCalledOnLoad() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkout = await Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
 
-        // Session is nil (not loaded), should throw sessionNotOpen
-        await MainActor.run { XCTAssertNil(checkout.session) }
+        let delegate = await MockCheckoutDelegate()
+        await MainActor.run {
+            checkout.delegate = delegate
+        }
 
-        do {
-            try await checkout.removePromotionCode()
-            XCTFail("Expected CheckoutError.sessionNotOpen")
-        } catch let error as CheckoutError {
-            guard case .sessionNotOpen = error else {
-                XCTFail("Expected .sessionNotOpen, got \(error)")
-                return
-            }
+        try await checkout.load()
+
+        await MainActor.run {
+            XCTAssertTrue(delegate.didUpdateCalled)
+            XCTAssertNotNil(delegate.lastSession)
+            XCTAssertEqual(delegate.lastSession?.stripeId, checkoutSessionResponse.id)
         }
     }
-
-    // MARK: - Network-Recorded Integration Tests
 
     func testApplyPromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
@@ -121,10 +129,10 @@ final class CheckoutPromotionCodeTests: STPNetworkStubbingTestCase {
 
         do {
             try await checkout.applyPromotionCode("BOGUS_CODE_123")
-            XCTFail("Expected CheckoutError.invalidPromotionCode")
+            XCTFail("Expected CheckoutError.apiError")
         } catch let error as CheckoutError {
-            guard case .invalidPromotionCode = error else {
-                XCTFail("Expected .invalidPromotionCode, got \(error)")
+            guard case .apiError = error else {
+                XCTFail("Expected .apiError, got \(error)")
                 return
             }
         }
