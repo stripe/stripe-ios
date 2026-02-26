@@ -11,7 +11,6 @@ import Foundation
 import PassKit
 import SafariServices
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 
 #if canImport(Stripe3DS2)
 import Stripe3DS2
@@ -126,10 +125,12 @@ public class STPPaymentHandler: NSObject {
     @_spi(STP) public init(
         apiClient: STPAPIClient = .shared,
         threeDSCustomizationSettings: STPThreeDSCustomizationSettings =
-            STPThreeDSCustomizationSettings()
+            STPThreeDSCustomizationSettings(),
+        applyLiquidGlass: Bool = false
     ) {
         self.apiClient = apiClient
         self.threeDSCustomizationSettings = threeDSCustomizationSettings
+        self.applyLiquidGlass = applyLiquidGlass
         super.init()
     }
 
@@ -141,8 +142,8 @@ public class STPPaymentHandler: NSObject {
     /// Defaults to `STPThreeDSCustomizationSettings()`.
     @objc public var threeDSCustomizationSettings: STPThreeDSCustomizationSettings
 
-    /// Whether to use glass-style UI for challenge views. Defaults to automatic detection based on device capabilities.
-    @_spi(STP) @objc public var useGlassStyleForChallenges: Bool = LiquidGlassDetector.isEnabledInMerchantApp
+    /// Whether to use glass-style UI for challenge views.
+    private let applyLiquidGlass: Bool
 
     internal var _simulateAppToAppRedirect: Bool = false
 
@@ -1967,7 +1968,7 @@ public class STPPaymentHandler: NSObject {
                 let challengeVC = IntentConfirmationChallengeViewController(
                     publishableKey: publishableKey,
                     clientSecret: clientSecret,
-                    useGlassStyle: self.useGlassStyleForChallenges
+                    applyLiquidGlass: self.applyLiquidGlass
                 ) { [weak self] result in
                     guard let self = self else { return }
 

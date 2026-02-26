@@ -32,8 +32,7 @@ final class PayWithLinkController {
         self.intent = intent
         self.elementsSession = elementsSession
         self.configuration = configuration
-        let handler = STPPaymentHandler(apiClient: configuration.apiClient)
-        handler.useGlassStyleForChallenges = configuration.appearance.navigationBarStyle.isGlass
+        let handler = STPPaymentHandler(apiClient: configuration.apiClient, applyLiquidGlass: configuration.appearance.navigationBarStyle.isGlass)
         self.paymentHandler = handler
         self.analyticsHelper = analyticsHelper
         self.confirmationChallenge = confirmationChallenge

@@ -6,7 +6,6 @@
 //
 
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeUICore
 import UIKit
 @preconcurrency import WebKit
 
@@ -19,7 +18,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
     // MARK: - Properties
     private let publishableKey: String
     private let clientSecret: String
-    private let useGlassStyle: Bool
+    private let applyLiquidGlass: Bool
     private let completion: (Result<Void, Error>) -> Void
 
     private var webView: WKWebView!
@@ -37,12 +36,12 @@ class IntentConfirmationChallengeViewController: UIViewController {
     init(
         publishableKey: String,
         clientSecret: String,
-        useGlassStyle: Bool = LiquidGlassDetector.isEnabledInMerchantApp,
+        applyLiquidGlass: Bool,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         self.publishableKey = publishableKey
         self.clientSecret = clientSecret
-        self.useGlassStyle = useGlassStyle
+        self.applyLiquidGlass = applyLiquidGlass
         self.completion = { result in
             completion(result)
         }
@@ -125,28 +124,29 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
     private func setupCloseButton() {
         // Use glass style if configured, plain style otherwise (matching PaymentSheet pattern)
-        if useGlassStyle {
-            // Glass style (matches PaymentSheet's createGlassCloseButton)
+        if applyLiquidGlass {
+            let glassButtonSize = 44.0
             closeButton = UIButton(type: .system)
             closeButton.translatesAutoresizingMaskIntoConstraints = false
-
+            closeButton.frame = CGRect(x: 0, y: 0, width: glassButtonSize, height: glassButtonSize)
+            closeButton.widthAnchor.constraint(equalToConstant: glassButtonSize).isActive = true
+            closeButton.heightAnchor.constraint(equalToConstant: glassButtonSize).isActive = true
             let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
             let image = UIImage(systemName: "xmark", withConfiguration: config)
             closeButton.setImage(image, for: .normal)
-            closeButton.tintColor = .label
-
-            closeButton.ios26_applyGlassConfiguration()
-
-            NSLayoutConstraint.activate([
-                closeButton.widthAnchor.constraint(equalToConstant: 44),
-                closeButton.heightAnchor.constraint(equalToConstant: 44),
-            ])
+            // These checks are a convenience because .glass is only available on iOS (not visionOS)
+            // when compiling with XCode 26
+#if compiler(>=6.2)
+            #if !os(visionOS)
+            if #available(iOS 26.0, visionOS 26.0, *) {
+                closeButton.configuration = .glass()
+            }
+            #endif
+#endif
         } else {
-            // Plain style (approximates PaymentSheet's createPlainCloseButton)
-            closeButton = UIButton(type: .custom)
+            closeButton = UIButton(type: .system)
             closeButton.translatesAutoresizingMaskIntoConstraints = false
-
-            let config = UIImage.SymbolConfiguration(weight: .medium)
+            let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .medium)
             let image = UIImage(systemName: "xmark", withConfiguration: config)
             closeButton.setImage(image, for: .normal)
             closeButton.tintColor = .white

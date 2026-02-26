@@ -387,8 +387,7 @@ public final class EmbeddedPaymentElement {
     }()
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = {
-        let handler = STPPaymentHandler(apiClient: configuration.apiClient)
-        handler.useGlassStyleForChallenges = configuration.appearance.navigationBarStyle.isGlass
+        let handler = STPPaymentHandler(apiClient: configuration.apiClient, applyLiquidGlass: configuration.appearance.navigationBarStyle.isGlass)
         return handler
     }()
 
