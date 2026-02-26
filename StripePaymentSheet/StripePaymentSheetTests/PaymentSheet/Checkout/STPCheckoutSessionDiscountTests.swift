@@ -34,7 +34,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
         let discount = discounts[0]
         XCTAssertEqual(discount.id, "discount_0")
         XCTAssertEqual(discount.name, "25% Off")
-        XCTAssertEqual(discount.promotionCode, "SAVE25")
+        XCTAssertEqual(discount.promotionCode?.code, "SAVE25")
         XCTAssertEqual(discount.amount, 500)
         XCTAssertEqual(discount.percentOff, 25.0)
         XCTAssertNil(discount.amountOff)
@@ -145,7 +145,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
 
         XCTAssertEqual(discounts[0].id, "discount_0")
         XCTAssertEqual(discounts[0].name, "First")
-        XCTAssertEqual(discounts[0].promotionCode, "FIRST10")
+        XCTAssertEqual(discounts[0].promotionCode?.code, "FIRST10")
         XCTAssertEqual(discounts[0].amount, 500)
         XCTAssertEqual(discounts[0].percentOff, 10.0)
 

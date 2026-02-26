@@ -9,7 +9,7 @@
 import Foundation
 
 /// Represents a discount applied to a Checkout session.
-@_spi(STP) public struct STPCheckoutSessionDiscount: Equatable, Hashable, Sendable {
+@_spi(STP) public struct STPCheckoutSessionDiscount {
     /// A synthetic identifier for this discount (e.g., "discount_0").
     public let id: String
 
@@ -17,7 +17,7 @@ import Foundation
     public let name: String?
 
     /// The promotion code, if this discount was applied via promotion code.
-    public let promotionCode: String?
+    public let promotionCode: STPCheckoutSessionPromotionCode?
 
     /// The discount amount in the smallest currency unit (e.g., cents).
     public let amount: Int
@@ -32,7 +32,7 @@ import Foundation
     public init(
         id: String,
         name: String? = nil,
-        promotionCode: String? = nil,
+        promotionCode: STPCheckoutSessionPromotionCode? = nil,
         amount: Int,
         percentOff: Double? = nil,
         amountOff: Int? = nil
@@ -69,7 +69,7 @@ extension STPCheckoutSessionDiscount {
         return STPCheckoutSessionDiscount(
             id: id,
             name: couponDict?["name"] as? String,
-            promotionCode: promotionCodeDict?["code"] as? String,
+            promotionCode: STPCheckoutSessionPromotionCode.decodedObject(from: promotionCodeDict),
             amount: amount,
             percentOff: couponDict?["percent_off"] as? Double,
             amountOff: couponDict?["amount_off"] as? Int

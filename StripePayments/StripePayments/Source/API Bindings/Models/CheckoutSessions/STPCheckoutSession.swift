@@ -73,7 +73,7 @@ import Foundation
 
     /// The currently applied promotion code, if one is present.
     public var appliedPromotionCode: String? {
-        discounts.first(where: { $0.promotionCode != nil })?.promotionCode
+        discounts.first(where: { $0.promotionCode != nil })?.promotionCode?.code
     }
 
     /// Server-side flag controlling the "Save for future use" checkbox.

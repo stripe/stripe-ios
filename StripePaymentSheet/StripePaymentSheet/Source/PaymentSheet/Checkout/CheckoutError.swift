@@ -13,7 +13,7 @@ import Foundation
     /// The client secret provided to ``Checkout`` is empty.
     case invalidClientSecret
 
-    /// The session has not been loaded yet. Call ``Checkout/load()`` first.
+    /// The session has not been loaded yet. Call ``Checkout.load()`` first.
     case sessionNotLoaded
 
     /// The session is no longer open (e.g. it has been completed or expired).
