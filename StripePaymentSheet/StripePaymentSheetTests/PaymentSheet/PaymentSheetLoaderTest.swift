@@ -638,7 +638,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
     func test_loader_doesnt_fetch_Customer_when_default_billing_email() async throws {
         var configuration = self.configuration
-        // A hardcoded test Customer w/ email and attached card, us bank account
+        // A hardcoded test Customer w/ yuki@stripe.com email and attached card, us bank account
         let testCustomerID = "cus_TqanA973bOrpoP"
 
         // Create a new EK for the Customer
