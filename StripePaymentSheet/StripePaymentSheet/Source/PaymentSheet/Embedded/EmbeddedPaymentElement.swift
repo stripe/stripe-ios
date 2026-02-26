@@ -119,6 +119,37 @@ public final class EmbeddedPaymentElement {
         return embeddedPaymentElement
     }
 
+    /// An asynchronous failable initializer for CheckoutSession direct mode
+    /// Loads payment methods and configuration from a fully loaded CheckoutSession object.
+    /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
+    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
+    /// - Returns: A valid EmbeddedPaymentElement instance
+    /// - Throws: An error if loading failed.
+    @_spi(CheckoutSessionPreview) public static func create(
+        checkoutSession: STPCheckoutSession,
+        configuration: Configuration
+    ) async throws -> EmbeddedPaymentElement {
+        try validateRowSelectionConfiguration(configuration: configuration)
+
+        AnalyticsHelper.shared.generateSessionID()
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
+
+        let loadResult = try await PaymentSheetLoader.load(
+            mode: .checkoutSessionDirect(checkoutSession),
+            configuration: configuration,
+            analyticsHelper: analyticsHelper,
+            integrationShape: .embedded
+        )
+        let embeddedPaymentElement: EmbeddedPaymentElement = .init(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
+        )
+        embeddedPaymentElement.clearPaymentOptionIfNeeded()
+        return embeddedPaymentElement
+    }
+
     /// The result of an `update` call
     @frozen public enum UpdateResult {
         /// The update succeeded

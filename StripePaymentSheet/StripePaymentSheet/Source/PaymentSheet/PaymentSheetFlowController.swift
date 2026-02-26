@@ -382,6 +382,22 @@ extension PaymentSheet {
         }
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
+        /// This asynchronously loads the CheckoutSession's payment methods and configuration.
+        /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
+        /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+        /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
+        @_spi(CheckoutSessionPreview) public static func create(
+            checkoutSession: STPCheckoutSession,
+            configuration: PaymentSheet.Configuration,
+            completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
+        ) {
+            create(mode: .checkoutSessionDirect(checkoutSession),
+                   configuration: configuration,
+                   completion: completion
+            )
+        }
+
+        /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the Customer's payment methods, their default payment method, and the Intent.
         /// You can use the returned PaymentSheet.FlowController instance to e.g. update your UI with the Customer's default payment method
         /// - Parameter mode: The mode used to initialize PaymentSheet
