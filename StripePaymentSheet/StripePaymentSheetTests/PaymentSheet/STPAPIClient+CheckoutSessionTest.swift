@@ -34,7 +34,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         // Verify elements session fields
         let elementsSessionDict = checkoutSession.allResponseFields["elements_session"] as! [String: Any]
         XCTAssertTrue((elementsSessionDict["session_id"] as! String).hasPrefix("elements_session_"))
-        XCTAssertEqual(elementsSessionDict["country_code"] as? String, "US")
+        XCTAssertEqual(elementsSessionDict["merchant_country"] as? String, "US")
     }
 
     func testConfirmCheckoutSession() async throws {
