@@ -41,7 +41,9 @@ public class CustomerSheet {
     }
 
     /// The STPPaymentHandler instance
-    lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient, applyLiquidGlass: configuration.appearance.navigationBarStyle.isGlass)
+    lazy var paymentHandler: STPPaymentHandler = {
+        STPPaymentHandler(apiClient: configuration.apiClient, applyLiquidGlass: configuration.appearance.navigationBarStyle.isGlass)
+    }()
 
     /// The parent view controller to present
     lazy var bottomSheetViewController: BottomSheetViewController = {
