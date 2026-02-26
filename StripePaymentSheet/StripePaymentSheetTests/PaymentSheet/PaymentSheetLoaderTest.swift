@@ -659,9 +659,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
             integrationShape: .flowController
         )
-        // ...and looks up link
+        // ...and looks up link, preferring the default email provided
         XCTAssertNotNil(LinkAccountContext.shared.account)
-        XCTAssertEqual(LinkAccountContext.shared.account?.email, "yuki@stripe.com")
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, configuration.defaultBillingDetails.email)
     }
 
     func testLoaderLooksUpLink_CustomerSession() async throws {
