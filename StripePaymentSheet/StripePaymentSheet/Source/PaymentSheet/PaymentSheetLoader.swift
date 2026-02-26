@@ -79,7 +79,7 @@ final class PaymentSheetLoader {
             // Fetch ElementsSession
             async let _elementsSessionAndIntent: ElementSessionAndIntent = fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper)
 
-            // Fetch Customer email if using EK for Link. If using CS, Customer will be in v1/e/s response.
+            // Fetch Customer email if using EK for Link and it wasn't provided in `configuration`. If using CS, Customer will be in v1/e/s response.
             async let prefetchedLinkEmailAndSource: (email: String, source: EmailSource)? = getCustomerEmailForLinkWithEphemeralKey(configuration: configuration)
 
             // Load misc singletons
@@ -270,12 +270,12 @@ final class PaymentSheetLoader {
         // This lookup call will only happen if we have access to a user's email:
         // There are a couple different sources.
         let lookupEmail: (email: String, source: EmailSource)
-        if let prefetchedEmailAndSource {
-            // 1. We fetched the Customer object before calling this method to get its email when using EKs
-            lookupEmail = prefetchedEmailAndSource
-        } else if let email = configuration.defaultBillingDetails.email {
-            // 2. Merchant provided in `defaultBillingDetails`
+        if let email = configuration.defaultBillingDetails.email {
+            // 1. Merchant provided in `defaultBillingDetails`
             lookupEmail = (email, EmailSource.customerEmail)
+        } else if let prefetchedEmailAndSource {
+            // 2. We fetched the Customer object before calling this method to get its email when using EKs
+            lookupEmail = prefetchedEmailAndSource
         } else if let email = elementsSession.customer?.email {
             // 3. The v1/e/s response returns the email when using CustomerSession
             lookupEmail = (email, EmailSource.customerObject)
@@ -296,8 +296,11 @@ final class PaymentSheetLoader {
 
     /// If configuration uses Ephemeral Key, retrieve Customer object and return email
     static func getCustomerEmailForLinkWithEphemeralKey(configuration: PaymentElementConfiguration) async throws -> (email: String, source: EmailSource)? {
-        guard let customerID = configuration.customer?.id,
-              case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider else {
+        guard
+            configuration.defaultBillingDetails.email == nil, // If email was already provided, don't make a network request to retrieve it.
+            let customerID = configuration.customer?.id,
+            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider
+        else {
             return nil
         }
         printTimingLog("START retrieveCustomer")
