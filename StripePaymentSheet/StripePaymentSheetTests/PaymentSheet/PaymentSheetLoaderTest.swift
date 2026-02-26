@@ -648,8 +648,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = apiClient
 
         // Fetch the full STPCheckoutSession object (with allResponseFields containing elements_session)
-        let initResponse = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
-        let checkoutSession = initResponse.checkoutSession
+        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
 
         PaymentSheetLoader.load(
             mode: .checkoutSession(checkoutSession),
