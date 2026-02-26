@@ -49,6 +49,22 @@ extension STPAPIClient {
         )
     }
 
+    /// Updates a CheckoutSession with the provided parameters.
+    /// - Parameters:
+    ///   - checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx")
+    ///   - parameters: The update parameters (e.g., promotion_code)
+    /// - Returns: The updated STPCheckoutSession
+    func updateCheckoutSession(
+        checkoutSessionId: String,
+        parameters: [String: Any]
+    ) async throws -> STPCheckoutSession {
+        return try await APIRequest<STPCheckoutSession>.post(
+            with: self,
+            endpoint: "payment_pages/\(checkoutSessionId)",
+            parameters: parameters
+        )
+    }
+
     /// Confirms a CheckoutSession with the provided payment method and parameters.
     /// - Parameters:
     ///   - sessionId: The ID of the checkout session (e.g., "cs_test_xxx")
