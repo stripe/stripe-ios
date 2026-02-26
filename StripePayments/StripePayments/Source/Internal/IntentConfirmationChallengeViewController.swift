@@ -9,6 +9,12 @@
 import UIKit
 @preconcurrency import WebKit
 
+/// Represents the type of intent being confirmed
+enum IntentType {
+    case paymentIntent(id: String)
+    case setupIntent(id: String)
+}
+
 /// View controller for handling intent confirmation challenges via WebView
 /// This handles the `intent_confirmation_challenge` next action type by loading
 /// a Stripe-hosted web page that performs authentication via Stripe.js
@@ -18,6 +24,8 @@ class IntentConfirmationChallengeViewController: UIViewController {
     // MARK: - Properties
     private let publishableKey: String
     private let clientSecret: String
+    private let intentType: IntentType
+    private let apiClient: STPAPIClient
     private let applyLiquidGlass: Bool
     private let completion: (Result<Void, Error>) -> Void
 
@@ -36,11 +44,15 @@ class IntentConfirmationChallengeViewController: UIViewController {
     init(
         publishableKey: String,
         clientSecret: String,
+        intentType: IntentType,
+        apiClient: STPAPIClient,
         applyLiquidGlass: Bool,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         self.publishableKey = publishableKey
         self.clientSecret = clientSecret
+        self.intentType = intentType
+        self.apiClient = apiClient
         self.applyLiquidGlass = applyLiquidGlass
         self.completion = { result in
             completion(result)
@@ -186,7 +198,32 @@ class IntentConfirmationChallengeViewController: UIViewController {
     @objc private func closeButtonTapped() {
         STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeCanceled(duration: Date().timeIntervalSince(startTime))
         cleanup()
-        completion(.failure(ChallengeError.userCanceled))
+
+        // Call the cancel API based on intent type
+        switch intentType {
+        case .paymentIntent(let id):
+            apiClient.cancelPaymentIntentCaptchaChallenge(paymentIntentId: id, clientSecret: clientSecret) { [weak self] _, error in
+                guard let self = self else { return }
+                if error != nil {
+                    // If the cancel API fails, still treat it as user canceled
+                    // to match the expected behavior
+                    self.completion(.failure(ChallengeError.userCanceled))
+                } else {
+                    self.completion(.failure(ChallengeError.userCanceled))
+                }
+            }
+        case .setupIntent(let id):
+            apiClient.cancelSetupIntentCaptchaChallenge(setupIntentId: id, clientSecret: clientSecret) { [weak self] _, error in
+                guard let self = self else { return }
+                if error != nil {
+                    // If the cancel API fails, still treat it as user canceled
+                    // to match the expected behavior
+                    self.completion(.failure(ChallengeError.userCanceled))
+                } else {
+                    self.completion(.failure(ChallengeError.userCanceled))
+                }
+            }
+        }
     }
 
     // MARK: - Handlers

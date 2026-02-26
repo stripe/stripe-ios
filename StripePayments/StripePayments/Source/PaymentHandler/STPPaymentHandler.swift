@@ -1927,12 +1927,15 @@ public class STPPaymentHandler: NSObject {
         }
 
         if #available(iOS 14.0, *) {
-            // Extract client secret
+            // Extract client secret and intent type
             let clientSecret: String
+            let intentType: IntentType
             if let piAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
                 clientSecret = piAction.paymentIntent.clientSecret
+                intentType = .paymentIntent(id: piAction.paymentIntent.stripeId)
             } else if let siAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
                 clientSecret = siAction.setupIntent.clientSecret
+                intentType = .setupIntent(id: siAction.setupIntent.stripeID)
             } else {
                 currentAction.complete(
                     with: .failed,
@@ -1968,6 +1971,8 @@ public class STPPaymentHandler: NSObject {
                 let challengeVC = IntentConfirmationChallengeViewController(
                     publishableKey: publishableKey,
                     clientSecret: clientSecret,
+                    intentType: intentType,
+                    apiClient: self.apiClient,
                     applyLiquidGlass: self.applyLiquidGlass
                 ) { [weak self] result in
                     guard let self = self else { return }
