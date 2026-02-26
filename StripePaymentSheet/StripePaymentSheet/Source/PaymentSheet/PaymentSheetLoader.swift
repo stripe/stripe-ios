@@ -81,6 +81,8 @@ final class PaymentSheetLoader {
 
             // Fetch Customer email if using EK for Link and it wasn't provided in `configuration`. If using CS, Customer will be in v1/e/s response.
             async let prefetchedLinkEmailAndSource: (email: String, source: EmailSource)? = try? getCustomerEmailForLinkWithEphemeralKey(configuration: configuration)
+            // Fetch Customer SPMs if using EK b/c they're not in the v1/e/s response.
+            async let _prefetchedSavedPaymentMethods: [STPPaymentMethod]? = fetchSavedPaymentMethodsWithEphemeralKey(configuration: configuration)
 
             // Load misc singletons
             await loadMiscellaneousSingletons()
@@ -99,9 +101,6 @@ final class PaymentSheetLoader {
                 break // Not supported
             }
             printTimingLog("END loadFormSpecs")
-
-            // List the Customer's saved PaymentMethods
-            async let savedPaymentMethods = fetchSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration)
 
             // Load link account session. Continue without Link if it errors.
             let linkAccount = try? await lookupLinkAccount(
@@ -144,20 +143,6 @@ final class PaymentSheetLoader {
             }
             printTimingLog("END logExperiments")
 
-            // Filter out payment methods that the PI/SI or PaymentSheet doesn't support
-            printTimingLog("START filterPaymentMethods")
-            let filteredSavedPaymentMethods = try await savedPaymentMethods
-                .filter { elementsSession.orderedPaymentMethodTypes.contains($0.type) }
-                .filter {
-                    $0.supportsSavedPaymentMethod(
-                        configuration: configuration,
-                        intent: intent,
-                        elementsSession: elementsSession
-                    )
-                }
-                .filter { Self.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries) }
-            printTimingLog("END filterPaymentMethods")
-
             printTimingLog("START computePaymentMethodTypes")
             let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
             let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
@@ -188,6 +173,10 @@ final class PaymentSheetLoader {
             // Initialize telemetry. Don't wait for this to finish to return.
             STPTelemetryClient.shared.sendTelemetryData()
 
+            // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
+            let prefetchedSavedPaymentMethods = try await _prefetchedSavedPaymentMethods
+            let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, analyticsHelper: analyticsHelper)
+
             let loadResult = LoadResult(
                 intent: intent,
                 elementsSession: elementsSession,
@@ -195,8 +184,6 @@ final class PaymentSheetLoader {
                 paymentMethodTypes: paymentMethodTypes
             )
 
-            // Send load finished analytic
-            // ⚠️ Important: Log load succeeded at the very end, to ensure it measures the entire amount of time this method took.
             // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
             printTimingLog("START makeViewModels")
             let (defaultSelectedIndex, paymentOptionsViewModels) = SavedPaymentOptionsViewController.makeViewModels(
@@ -208,6 +195,9 @@ final class PaymentSheetLoader {
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
             printTimingLog("END makeViewModels")
+
+            // Send load finished analytic
+            // ⚠️ Important: Log load succeeded at the very end, to ensure it measures the entire amount of time this method took.
             analyticsHelper.logLoadSucceeded(
                 intent: intent,
                 elementsSession: elementsSession,
@@ -425,12 +415,15 @@ final class PaymentSheetLoader {
         return paymentMethodId
     }
 
-    static func fetchSavedPaymentMethods(
+    static func filterSavedPaymentMethods(
         intent: Intent,
         elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration
-    ) async throws -> [STPPaymentMethod] {
-        printTimingLog("START fetchSavedPaymentMethods")
+        configuration: PaymentElementConfiguration,
+        prefetchedSPMs: [STPPaymentMethod]?,
+        analyticsHelper: PaymentSheetAnalyticsHelper
+    ) -> [STPPaymentMethod] {
+        printTimingLog("START filterPaymentMethods")
+        defer { printTimingLog("END filterPaymentMethods") }
         // Retrieve the payment methods from ElementsSession or by making direct API calls
         var savedPaymentMethods: [STPPaymentMethod]
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
@@ -440,11 +433,15 @@ final class PaymentSheetLoader {
                   let customerPaymentMethods = checkoutSession.customer?.paymentMethods {
             // B. SPMs are on CheckoutSession object
             savedPaymentMethods = customerPaymentMethods
-        } else if let customerID = configuration.customer?.id,
-            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider {
-            // C. Retrieve SPMs manually for Ephemeral Key.
-            savedPaymentMethods = try await fetchSavedPaymentMethods(ephemeralKey: ephemeralKey, customerID: customerID, configuration: configuration, paymentMethodTypes: elementsSession.orderedPaymentMethodTypes)
+        } else if let prefetchedSPMs {
+            // C. SPMs are pre-fetched prior to this point when using Ephemeral Keys.
+            // Filter them manually now that we have the v1/e/s response. This step should ~mimick the filtering in v1/elements/sessions.
+            savedPaymentMethods = prefetchedSPMs
         } else {
+            if case .legacyCustomerEphemeralKey = configuration.customer?.customerAccessProvider, prefetchedSPMs == nil {
+                stpAssertionFailure("Expected prefetchedSPMs to not be nil when using legacyCustomerEphemeralKey")
+                analyticsHelper.log(event: .unexpectedPaymentSheetError, error: PaymentSheetLoaderError.didNotFetchSPMsForEK)
+            }
             return []
         }
 
@@ -475,24 +472,38 @@ final class PaymentSheetLoader {
             }
             return true
         }
-        printTimingLog("END fetchSavedPaymentMethods")
+
+        // Perform other filtering
+            .filter { elementsSession.orderedPaymentMethodTypes.contains($0.type) }
+            .filter {
+                $0.supportsSavedPaymentMethod(
+                    configuration: configuration,
+                    intent: intent,
+                    elementsSession: elementsSession
+                )
+            }
+            .filter { Self.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries) }
         return result
     }
 
-    static func fetchSavedPaymentMethods(
-        ephemeralKey: String,
-        customerID: String,
-        configuration: PaymentElementConfiguration,
-        paymentMethodTypes: [STPPaymentMethodType]
-    ) async throws -> [STPPaymentMethod] {
+    /// - Returns: nil if not using EK.
+    static func fetchSavedPaymentMethodsWithEphemeralKey(
+        configuration: PaymentElementConfiguration
+    ) async throws -> [STPPaymentMethod]? {
+        guard
+            let customerID = configuration.customer?.id,
+            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider
+        else {
+            return nil
+        }
+        printTimingLog("START fetchSavedPaymentMethods")
         var paymentMethods = try await configuration.apiClient.listPaymentMethods(
             customerID: customerID,
             ephemeralKeySecret: ephemeralKey
         )
-
         // Remove unsupported types
         // We don't support Link payment methods with customer ephemeral keys
-        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link && paymentMethodTypes.contains($0) }
+        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link }
         paymentMethods = paymentMethods.filter { types.contains($0.type) }
 
         // Dedupe Link PMs
@@ -519,6 +530,7 @@ final class PaymentSheetLoader {
         }
         // Add in our deduped Link PMs, if any
         paymentMethods += dedupedLinkPaymentMethods
+        printTimingLog("END fetchSavedPaymentMethods")
         return paymentMethods
     }
 
@@ -550,4 +562,8 @@ final class PaymentSheetLoader {
 func printTimingLog(_ event: String) {
     guard PaymentSheetLoader._enableGranularTimingLogs else { return }
     print("[LOADER_TIMING] \(event) \(Date().timeIntervalSince1970)")
+}
+
+enum PaymentSheetLoaderError: Error {
+    case didNotFetchSPMsForEK
 }

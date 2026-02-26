@@ -5,6 +5,7 @@
 ### PaymentSheet
 * [Added] Added support for Wero payments (private preview).
 * [Fixed] Fixed a visual bug in PaymentSheet when the Link sign-in modal appears first where the Apple Pay button was not full width on > iOS 26.2
+* [Fixed] Improved loading times for integrations that set `configuration.customer`.
 
 ## 25.7.1 2026-02-25
 ### All
