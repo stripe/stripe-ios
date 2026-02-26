@@ -1,0 +1,285 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_U3Eya7ugs9lRjp&limit=100$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=r_HAJtCTOgm1OKTcXFLY337Ub-ZyJZvDVuer_gJ4LluVqEl2lp2vAO2H1lktuJe03BMEW4vN7rhoN_1X
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Thu, 26 Feb 2026 17:37:02 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 6536
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_X3TsjhPrQ4cLi3
+
+{
+  "has_more" : false,
+  "object" : "list",
+  "data" : [
+    {
+      "object" : "payment_method",
+      "id" : "pm_1T58UiFY0qyl6XeWK8sCTjFk",
+      "billing_details" : {
+        "email" : null,
+        "phone" : null,
+        "tax_id" : null,
+        "name" : "Test Card 5",
+        "address" : {
+          "state" : null,
+          "country" : null,
+          "line2" : null,
+          "city" : null,
+          "line1" : null,
+          "postal_code" : null
+        }
+      },
+      "card" : {
+        "regulated_status" : "unregulated",
+        "fingerprint" : "96sroMqLCHmUdUpL",
+        "last4" : "4242",
+        "funding" : "credit",
+        "generated_from" : null,
+        "networks" : {
+          "available" : [
+            "visa"
+          ],
+          "preferred" : null
+        },
+        "brand" : "visa",
+        "checks" : {
+          "address_postal_code_check" : null,
+          "cvc_check" : null,
+          "address_line1_check" : null
+        },
+        "three_d_secure_usage" : {
+          "supported" : true
+        },
+        "wallet" : null,
+        "display_brand" : "visa",
+        "exp_month" : 12,
+        "exp_year" : 2030,
+        "country" : "US"
+      },
+      "livemode" : false,
+      "created" : 1772127421,
+      "allow_redisplay" : "unspecified",
+      "type" : "card",
+      "customer" : "cus_U3Eya7ugs9lRjp",
+      "customer_account" : null
+    },
+    {
+      "object" : "payment_method",
+      "id" : "pm_1T58UhFY0qyl6XeW1wDhAHce",
+      "billing_details" : {
+        "email" : null,
+        "phone" : null,
+        "tax_id" : null,
+        "name" : "Test Card 4",
+        "address" : {
+          "state" : null,
+          "country" : null,
+          "line2" : null,
+          "city" : null,
+          "line1" : null,
+          "postal_code" : null
+        }
+      },
+      "card" : {
+        "regulated_status" : "unregulated",
+        "fingerprint" : "96sroMqLCHmUdUpL",
+        "last4" : "4242",
+        "funding" : "credit",
+        "generated_from" : null,
+        "networks" : {
+          "available" : [
+            "visa"
+          ],
+          "preferred" : null
+        },
+        "brand" : "visa",
+        "checks" : {
+          "address_postal_code_check" : null,
+          "cvc_check" : null,
+          "address_line1_check" : null
+        },
+        "three_d_secure_usage" : {
+          "supported" : true
+        },
+        "wallet" : null,
+        "display_brand" : "visa",
+        "exp_month" : 12,
+        "exp_year" : 2030,
+        "country" : "US"
+      },
+      "livemode" : false,
+      "created" : 1772127419,
+      "allow_redisplay" : "unspecified",
+      "type" : "card",
+      "customer" : "cus_U3Eya7ugs9lRjp",
+      "customer_account" : null
+    },
+    {
+      "object" : "payment_method",
+      "id" : "pm_1T58UfFY0qyl6XeWBd4fiCxn",
+      "billing_details" : {
+        "email" : null,
+        "phone" : null,
+        "tax_id" : null,
+        "name" : "Test Card 3",
+        "address" : {
+          "state" : null,
+          "country" : null,
+          "line2" : null,
+          "city" : null,
+          "line1" : null,
+          "postal_code" : null
+        }
+      },
+      "card" : {
+        "regulated_status" : "unregulated",
+        "fingerprint" : "96sroMqLCHmUdUpL",
+        "last4" : "4242",
+        "funding" : "credit",
+        "generated_from" : null,
+        "networks" : {
+          "available" : [
+            "visa"
+          ],
+          "preferred" : null
+        },
+        "brand" : "visa",
+        "checks" : {
+          "address_postal_code_check" : null,
+          "cvc_check" : null,
+          "address_line1_check" : null
+        },
+        "three_d_secure_usage" : {
+          "supported" : true
+        },
+        "wallet" : null,
+        "display_brand" : "visa",
+        "exp_month" : 12,
+        "exp_year" : 2030,
+        "country" : "US"
+      },
+      "livemode" : false,
+      "created" : 1772127418,
+      "allow_redisplay" : "unspecified",
+      "type" : "card",
+      "customer" : "cus_U3Eya7ugs9lRjp",
+      "customer_account" : null
+    },
+    {
+      "object" : "payment_method",
+      "id" : "pm_1T58UeFY0qyl6XeWG2pHDWn7",
+      "billing_details" : {
+        "email" : null,
+        "phone" : null,
+        "tax_id" : null,
+        "name" : "Test Card 2",
+        "address" : {
+          "state" : null,
+          "country" : null,
+          "line2" : null,
+          "city" : null,
+          "line1" : null,
+          "postal_code" : null
+        }
+      },
+      "card" : {
+        "regulated_status" : "unregulated",
+        "fingerprint" : "96sroMqLCHmUdUpL",
+        "last4" : "4242",
+        "funding" : "credit",
+        "generated_from" : null,
+        "networks" : {
+          "available" : [
+            "visa"
+          ],
+          "preferred" : null
+        },
+        "brand" : "visa",
+        "checks" : {
+          "address_postal_code_check" : null,
+          "cvc_check" : null,
+          "address_line1_check" : null
+        },
+        "three_d_secure_usage" : {
+          "supported" : true
+        },
+        "wallet" : null,
+        "display_brand" : "visa",
+        "exp_month" : 12,
+        "exp_year" : 2030,
+        "country" : "US"
+      },
+      "livemode" : false,
+      "created" : 1772127416,
+      "allow_redisplay" : "unspecified",
+      "type" : "card",
+      "customer" : "cus_U3Eya7ugs9lRjp",
+      "customer_account" : null
+    },
+    {
+      "object" : "payment_method",
+      "id" : "pm_1T58UcFY0qyl6XeWkvXTaLje",
+      "billing_details" : {
+        "email" : null,
+        "phone" : null,
+        "tax_id" : null,
+        "name" : "Test Card 1",
+        "address" : {
+          "state" : null,
+          "country" : null,
+          "line2" : null,
+          "city" : null,
+          "line1" : null,
+          "postal_code" : null
+        }
+      },
+      "card" : {
+        "regulated_status" : "unregulated",
+        "fingerprint" : "96sroMqLCHmUdUpL",
+        "last4" : "4242",
+        "funding" : "credit",
+        "generated_from" : null,
+        "networks" : {
+          "available" : [
+            "visa"
+          ],
+          "preferred" : null
+        },
+        "brand" : "visa",
+        "checks" : {
+          "address_postal_code_check" : null,
+          "cvc_check" : null,
+          "address_line1_check" : null
+        },
+        "three_d_secure_usage" : {
+          "supported" : true
+        },
+        "wallet" : null,
+        "display_brand" : "visa",
+        "exp_month" : 12,
+        "exp_year" : 2030,
+        "country" : "US"
+      },
+      "livemode" : false,
+      "created" : 1772127414,
+      "allow_redisplay" : "unspecified",
+      "type" : "card",
+      "customer" : "cus_U3Eya7ugs9lRjp",
+      "customer_account" : null
+    }
+  ],
+  "url" : "\/v1\/payment_methods"
+}

@@ -434,12 +434,15 @@ final class PaymentSheetLoader {
         // Retrieve the payment methods from ElementsSession or by making direct API calls
         var savedPaymentMethods: [STPPaymentMethod]
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
+            // A. SPMs are on ElementSessions object when using CustomerSession.
             savedPaymentMethods = elementsSessionPaymentMethods
         } else if case let .checkoutSession(checkoutSession) = intent,
                   let customerPaymentMethods = checkoutSession.customer?.paymentMethods {
+            // B. SPMs are on CheckoutSession object
             savedPaymentMethods = customerPaymentMethods
         } else if let customerID = configuration.customer?.id,
             case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider {
+            // C. Retrieve SPMs manually for Ephemeral Key.
             savedPaymentMethods = try await fetchSavedPaymentMethods(ephemeralKey: ephemeralKey, customerID: customerID, configuration: configuration, elementsSession: elementsSession)
         } else {
             return []
@@ -486,45 +489,39 @@ final class PaymentSheetLoader {
 
         // We don't support Link payment methods with customer ephemeral keys
         let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link && orderdPaymentMethodTypes.contains($0) }
-        return try await withCheckedThrowingContinuation { continuation in
-            configuration.apiClient.listPaymentMethods(
-                forCustomer: customerID,
-                using: ephemeralKey,
-                types: types,
-                limit: 100
-            ) { paymentMethods, error in
-                guard var paymentMethods, error == nil else {
-                    let error = error ?? PaymentSheetError.fetchPaymentMethodsFailure
-                    continuation.resume(throwing: error)
-                    return
-                }
-                // Get Link payment methods
-                var dedupedLinkPaymentMethods: [STPPaymentMethod] = []
-                let linkPaymentMethods = paymentMethods.filter { paymentMethod in
-                    let isLinkCard = paymentMethod.type == .card && paymentMethod.card?.wallet?.type == .link
-                    return isLinkCard
-                }
-                for linkPM in linkPaymentMethods {
-                    // Only add the card if it doesn't already exist
-                    if !dedupedLinkPaymentMethods.contains(where: { existingPM in
-                        existingPM.card?.last4 == linkPM.card?.last4 &&
-                        existingPM.card?.expYear == linkPM.card?.expYear &&
-                        existingPM.card?.expMonth == linkPM.card?.expMonth &&
-                        existingPM.card?.brand == linkPM.card?.brand
-                    }) {
-                        dedupedLinkPaymentMethods.append(linkPM)
-                    }
-                }
-                // Remove cards that originated from Apple Pay, Google Pay, Link
-                paymentMethods = paymentMethods.filter { paymentMethod in
-                    let isWalletCard = paymentMethod.type == .card && [.applePay, .googlePay, .link].contains(paymentMethod.card?.wallet?.type)
-                    return !isWalletCard || configuration.disableWalletPaymentMethodFiltering
-                }
-                // Add in our deduped Link PMs, if any
-                paymentMethods += dedupedLinkPaymentMethods
-                continuation.resume(returning: paymentMethods)
+        var paymentMethods = try await configuration.apiClient.listPaymentMethods(
+            customerID: customerID,
+            ephemeralKeySecret: ephemeralKey
+        )
+
+        // Remove unsupported types
+        paymentMethods = paymentMethods.filter { types.contains($0.type) }
+
+        // Dedupe Link PMs
+        let linkPaymentMethods = paymentMethods.filter { paymentMethod in
+            let isLinkCard = paymentMethod.type == .card && paymentMethod.card?.wallet?.type == .link
+            return isLinkCard
+        }
+        var dedupedLinkPaymentMethods: [STPPaymentMethod] = []
+        for linkPM in linkPaymentMethods {
+            // Only add the card if it doesn't already exist
+            if !dedupedLinkPaymentMethods.contains(where: { existingPM in
+                existingPM.card?.last4 == linkPM.card?.last4 &&
+                existingPM.card?.expYear == linkPM.card?.expYear &&
+                existingPM.card?.expMonth == linkPM.card?.expMonth &&
+                existingPM.card?.brand == linkPM.card?.brand
+            }) {
+                dedupedLinkPaymentMethods.append(linkPM)
             }
         }
+        // Remove cards that originated from Apple Pay, Google Pay, Link
+        paymentMethods = paymentMethods.filter { paymentMethod in
+            let isWalletCard = paymentMethod.type == .card && [.applePay, .googlePay, .link].contains(paymentMethod.card?.wallet?.type)
+            return !isWalletCard || configuration.disableWalletPaymentMethodFiltering
+        }
+        // Add in our deduped Link PMs, if any
+        paymentMethods += dedupedLinkPaymentMethods
+        return paymentMethods
     }
 
     /// Determines if a saved payment method should be included based on allowed countries filtering

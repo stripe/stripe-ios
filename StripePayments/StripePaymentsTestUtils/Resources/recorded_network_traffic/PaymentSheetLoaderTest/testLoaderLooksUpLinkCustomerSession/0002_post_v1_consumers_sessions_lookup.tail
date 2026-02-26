@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/consumers\/sessions\/lookup$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=22bZagpiMTtHrUg8WfQfd5ohzevhbjxAJ_XLQ50NN5Z_Gy3uDlnReUxXrria_B3PJ-uVo4mtmaXpIaRF
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=dYMNfWRlVee6jStimhNw6MGw5j3-kkSm7NFIYqZIfRe8YQ2fidZk9g5ccFNub4bbilmkbCqmdo8b6rXp
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,18 +12,18 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_DL1y1XlZnJRn26
+request-id: req_ClgpWtQPnTcVJz
 Content-Length: 317
 Vary: Origin
-Date: Wed, 18 Feb 2026 21:51:55 GMT
-original-request: req_DL1y1XlZnJRn26
+Date: Thu, 26 Feb 2026 00:23:19 GMT
+original-request: req_ClgpWtQPnTcVJz
 stripe-version: 2020-08-27
-idempotency-key: 2b3de646-7242-46bb-a328-a30ef918ac9d
+idempotency-key: ee52a083-f280-48f5-802d-40a671187651
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: do_not_log_consumer_funnel_event=true&email_address=yuki%40stripe\.com&email_source=customer_object&request_surface=ios_payment_element&session_id=elements_session_14mSDimPUBb
+X-Stripe-Mock-Request: do_not_log_consumer_funnel_event=true&email_address=yuki%40stripe\.com&email_source=customer_object&request_surface=ios_payment_element&session_id=elements_session_1sPH3sayz6L
 
 {
   "exists" : false,

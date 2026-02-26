@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_TZCcZWKC57HHmr&type=us_bank_account$
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_TZCcZWKC57HHmr&type=card$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=vavkcXnk6nP3KBX2xcJ3TmrmCDCXiFNveCJK-A_JHK-7fW6ZwpHfmWwfkqsppmuoj2HTZX1dqL8Av8Iw
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KZnyuUqEu89jrX5gBf5r8MBkw9ilMh5POk9DoBgLgsT-KpYwuOlacdNI0jDHoiV3rKziEt7zRgtZ9pgr
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Tue, 09 Dec 2025 23:47:30 GMT
+Date: Thu, 26 Feb 2026 00:23:29 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 1252
+Content-Length: 1366
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_R3Wm79wxYvXERA
+request-id: req_LV0pTpzwsLf95T
 
 {
   "has_more" : false,
@@ -27,12 +27,12 @@ request-id: req_R3Wm79wxYvXERA
   "data" : [
     {
       "object" : "payment_method",
-      "id" : "pm_1ScZifFY0qyl6XeWYG9pWAE3",
+      "id" : "pm_1Sc4CpFY0qyl6XeWThu3QpWE",
       "billing_details" : {
-        "email" : "test@test.com",
+        "email" : null,
         "phone" : null,
         "tax_id" : null,
-        "name" : "test user",
+        "name" : null,
         "address" : {
           "state" : null,
           "country" : null,
@@ -42,27 +42,37 @@ request-id: req_R3Wm79wxYvXERA
           "postal_code" : null
         }
       },
-      "livemode" : false,
-      "us_bank_account" : {
-        "linked_account" : "fca_1ScZiSFY0qyl6XeWeknM6AMz",
-        "bank_name" : "STRIPE TEST BANK",
-        "fingerprint" : "ickfX9sbxIyAlbuh",
-        "financial_connections_account" : "fca_1ScZiSFY0qyl6XeWeknM6AMz",
-        "routing_number" : "110000000",
-        "last4" : "6789",
-        "account_holder_type" : "individual",
+      "card" : {
+        "regulated_status" : "unregulated",
+        "fingerprint" : "96sroMqLCHmUdUpL",
+        "last4" : "4242",
+        "funding" : "credit",
+        "generated_from" : null,
         "networks" : {
-          "supported" : [
-            "ach"
+          "available" : [
+            "visa"
           ],
-          "preferred" : "ach"
+          "preferred" : null
         },
-        "status_details" : null,
-        "account_type" : "checking"
+        "brand" : "visa",
+        "checks" : {
+          "address_postal_code_check" : null,
+          "cvc_check" : null,
+          "address_line1_check" : null
+        },
+        "three_d_secure_usage" : {
+          "supported" : true
+        },
+        "wallet" : null,
+        "display_brand" : "visa",
+        "exp_month" : 12,
+        "exp_year" : 2032,
+        "country" : "US"
       },
-      "created" : 1765320561,
+      "livemode" : false,
+      "created" : 1765199423,
       "allow_redisplay" : "always",
-      "type" : "us_bank_account",
+      "type" : "card",
       "customer" : "cus_TZCcZWKC57HHmr",
       "customer_account" : null
     }
