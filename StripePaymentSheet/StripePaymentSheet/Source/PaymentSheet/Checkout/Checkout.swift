@@ -66,7 +66,7 @@ public final class Checkout: ObservableObject {
             let response = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
             updateSession(response.checkoutSession)
         } catch {
-            throw mapError(error)
+            throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
 
@@ -74,7 +74,7 @@ public final class Checkout: ObservableObject {
 
     /// Applies a promotion code to the session.
     /// - Parameter code: The promotion code to apply.
-    /// - Throws: ``CheckoutError`` if the promotion code is invalid or expired.
+    /// - Throws: ``CheckoutError`` if the request fails.
     public func applyPromotionCode(_ code: String) async throws {
         try requireOpenSession()
         try await performAPIUpdate(["promotion_code": code])
@@ -123,31 +123,7 @@ public final class Checkout: ObservableObject {
             let refreshedResponse = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
             updateSession(refreshedResponse.checkoutSession)
         } catch {
-            throw mapError(error)
-        }
-    }
-
-    /// Maps errors from the API layer to ``CheckoutError``.
-    private func mapError(_ error: Error) -> CheckoutError {
-        let nsError = error as NSError
-        guard nsError.domain == STPError.stripeDomain else {
-            return .apiError(message: error.nonGenericDescription)
-        }
-
-        let stripeCode = nsError.userInfo[STPError.stripeErrorCodeKey] as? String
-        let message = nsError.userInfo[STPError.errorMessageKey] as? String
-
-        switch stripeCode {
-        case "resource_missing":
-            return .sessionExpired
-        case "checkout_session_completed":
-            return .sessionNotOpen
-        case "promotion_code_invalid":
-            return .invalidPromotionCode(code: message ?? "")
-        case "promotion_code_expired":
-            return .promotionCodeExpired(code: message ?? "")
-        default:
-            return .apiError(message: message ?? error.nonGenericDescription)
+            throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
 
