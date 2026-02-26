@@ -22,7 +22,8 @@ extension FaceScanner.Configuration {
             ),
             minEdgeThreshold: selfiePageConfig.minEdgeThreshold,
             minCoverageThreshold: selfiePageConfig.minCoverageThreshold,
-            maxCoverageThreshold: selfiePageConfig.maxCoverageThreshold
+            maxCoverageThreshold: selfiePageConfig.maxCoverageThreshold,
+            blurThreshold: selfiePageConfig.blurThreshold?.floatValue
         )
     }
 }

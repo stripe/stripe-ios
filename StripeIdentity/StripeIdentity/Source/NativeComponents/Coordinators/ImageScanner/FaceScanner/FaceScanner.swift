@@ -17,6 +17,7 @@ final class FaceScanner {
 
     private let faceDetector: FaceDetector
     private let configuration: Configuration
+    private let blurDetector: LaplacianBlurDetector?
 
     init(
         faceDetector: FaceDetector,
@@ -24,6 +25,8 @@ final class FaceScanner {
     ) {
         self.faceDetector = faceDetector
         self.configuration = configuration
+        self.blurDetector = configuration.blurThreshold
+            .flatMap { $0 > 0 ? LaplacianBlurDetector(blurThreshold: $0) : nil }
     }
 
     convenience init(
@@ -56,13 +59,16 @@ extension FaceScanner: ImageScanner {
         cameraProperties: CameraSession.DeviceProperties?
     ) -> StripeCore.Future<FaceScannerOutput> {
         do {
+            let faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
             return Promise(
                 value: .init(
-                    faceDetectorOutput: try faceDetector.scanImage(
-                        pixelBuffer: pixelBuffer
-                    ),
+                    faceDetectorOutput: faceDetectorOutput,
                     cameraProperties: cameraProperties,
-                    configuration: configuration
+                    configuration: configuration,
+                    blurResult: blurResult(
+                        for: pixelBuffer,
+                        faceDetectorOutput: faceDetectorOutput
+                    )
                 )
             )
         } catch {
@@ -73,5 +79,28 @@ extension FaceScanner: ImageScanner {
 
     func reset() {
         faceDetector.metricsTracker?.reset()
+    }
+}
+
+extension FaceScanner {
+    fileprivate func blurResult(
+        for pixelBuffer: CVPixelBuffer,
+        faceDetectorOutput: FaceDetectorOutput
+    ) -> LaplacianBlurDetector.Output? {
+        guard
+            let blurDetector = blurDetector,
+            faceDetectorOutput.predictions.count == 1,
+            let faceRect = faceDetectorOutput.predictions.first?.rect,
+            let originalImage = pixelBuffer.cgImage(),
+            let croppedImage = try? originalImage.cropping(
+                toNormalizedRegion: faceRect,
+                withPadding: 0,
+                computationMethod: .regionWidth
+            )
+        else {
+            return nil
+        }
+
+        return blurDetector.calculateBlurOutput(inputImage: croppedImage)
     }
 }

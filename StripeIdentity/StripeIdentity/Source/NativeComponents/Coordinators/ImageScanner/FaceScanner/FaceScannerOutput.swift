@@ -13,6 +13,7 @@ import Foundation
 struct FaceScannerOutput: Equatable {
     let faceDetectorOutput: FaceDetectorOutput
     let cameraProperties: CameraSession.DeviceProperties?
+    let blurResult: LaplacianBlurDetector.Output?
     let isValid: Bool
 
     var faceScore: Float {
@@ -34,13 +35,15 @@ extension FaceScannerOutput {
     init(
         faceDetectorOutput: FaceDetectorOutput,
         cameraProperties: CameraSession.DeviceProperties?,
-        configuration: FaceScanner.Configuration
+        configuration: FaceScanner.Configuration,
+        blurResult: LaplacianBlurDetector.Output? = nil
     ) {
         var isValid = false
         if let rect = faceDetectorOutput.predictions.first?.rect {
             isValid =
                 cameraProperties?.isAdjustingFocus != true
                 && faceDetectorOutput.predictions.count == 1
+                && blurResult?.isBlurry != true
                 && FaceScannerOutput.isFaceCentered(
                     rect: rect,
                     maxCenteredThreshold: configuration.maxCenteredThreshold
@@ -59,6 +62,7 @@ extension FaceScannerOutput {
         self.init(
             faceDetectorOutput: faceDetectorOutput,
             cameraProperties: cameraProperties,
+            blurResult: blurResult,
             isValid: isValid
         )
     }
