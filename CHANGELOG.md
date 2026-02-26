@@ -1,4 +1,6 @@
 ## X.Y.Z - changes pending release 
+### PaymentSheet
+* [Fixed] Improved loading times for integrations that set `configuration.customer`.
 
 ## 25.7.1 2026-02-25
 ### All

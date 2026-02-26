@@ -109,10 +109,13 @@ end
 earliest_timestamp = test_cases.flat_map(&:events).map(&:timestamp).min
 run_date = earliest_timestamp ? Time.at(earliest_timestamp).strftime('%Y-%m-%d %H:%M:%S') : 'Unknown'
 
+# Get current git branch name
+branch_name = `git rev-parse --abbrev-ref HEAD`.strip rescue 'unknown-branch'
+
 # Generate Mermaid Gantt chart
 diagram_lines = []
 diagram_lines << "gantt"
-diagram_lines << "    title PaymentSheetLoader Order of Operations - #{run_date}"
+diagram_lines << "    title PaymentSheetLoader Order of Operations - #{branch_name} - #{run_date}"
 diagram_lines << "    dateFormat x"
 diagram_lines << ""
 
