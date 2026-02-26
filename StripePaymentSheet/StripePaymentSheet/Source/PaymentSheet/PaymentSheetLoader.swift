@@ -388,6 +388,13 @@ final class PaymentSheetLoader {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 throw error
             }
+        case .checkoutSessionDirect(let checkoutSession):
+            guard let elementsSessionJSON = checkoutSession.allResponseFields["elements_session"] as? [AnyHashable: Any],
+                  let decodedElementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJSON) else {
+                throw PaymentSheetError.unknown(debugDescription: "Failed to decode elements session from provided checkout session object")
+            }
+            elementsSession = decodedElementsSession
+            intent = .checkoutSession(checkoutSession)
         }
 
         // Warn the merchant if we see unactivated payment method types in the Intent

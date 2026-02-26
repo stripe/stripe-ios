@@ -205,7 +205,7 @@ import UIKit
                     ) { [weak self] linkAccountSession, error in
                         self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                     }
-            case .checkoutSession:
+            case .checkoutSession, .checkoutSessionDirect:
                 continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Link payment controller is not yet supported by CheckoutSession"))
             }
         }
@@ -296,7 +296,7 @@ import UIKit
                 from: presentingViewController,
                 financialConnectionsCompletion: completionHandler
             )
-        case .checkoutSession:
+        case .checkoutSession, .checkoutSessionDirect:
             completionHandler(nil, nil, PaymentSheetError.unknown(debugDescription: "Link payment controller is not yet supported by CheckoutSession") as NSError)
         }
     }
@@ -504,7 +504,7 @@ import UIKit
                         continuation.resume()
                     }
                 }
-            case .checkoutSession:
+            case .checkoutSession, .checkoutSessionDirect:
                 continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Link payment controller is not yet supported by CheckoutSession"))
             }
         }
@@ -554,7 +554,7 @@ private extension PaymentSheet.InitializationMode {
             case .setup:
                 return nil
             }
-        case .checkoutSession:
+        case .checkoutSession, .checkoutSessionDirect:
             return nil
         }
     }
@@ -572,7 +572,7 @@ private extension PaymentSheet.InitializationMode {
             case .setup(let currency, _):
                 return currency
             }
-        case .checkoutSession:
+        case .checkoutSession, .checkoutSessionDirect:
             return nil
         }
     }

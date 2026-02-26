@@ -49,12 +49,13 @@ public class PaymentSheet {
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
         case checkoutSession(String)
+        case checkoutSessionDirect(STPCheckoutSession)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
             case .deferredIntent(let intentConfig):
                 return intentConfig
-            case .paymentIntentClientSecret, .setupIntentClientSecret, .checkoutSession:
+            case .paymentIntentClientSecret, .setupIntentClientSecret, .checkoutSession, .checkoutSessionDirect:
                 return nil
             }
         }
@@ -110,6 +111,16 @@ public class PaymentSheet {
     @_spi(CheckoutSessionPreview) public convenience init(checkoutSessionId: String, configuration: Configuration) {
         self.init(
             mode: .checkoutSession(checkoutSessionId),
+            configuration: configuration
+        )
+    }
+
+    /// Initializes PaymentSheet with a CheckoutSession object
+    /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
+    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+    @_spi(CheckoutSessionPreview) public convenience init(checkoutSession: STPCheckoutSession, configuration: Configuration) {
+        self.init(
+            mode: .checkoutSessionDirect(checkoutSession),
             configuration: configuration
         )
     }

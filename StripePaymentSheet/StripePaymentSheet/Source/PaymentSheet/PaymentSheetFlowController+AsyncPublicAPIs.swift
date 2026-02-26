@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 3/1/25.
 //
 
+@_spi(STP) import StripePayments
 import UIKit
 
 extension PaymentSheet.FlowController {
@@ -75,6 +76,23 @@ extension PaymentSheet.FlowController {
     ) async throws -> PaymentSheet.FlowController {
         return try await withCheckedThrowingContinuation { continuation in
             create(checkoutSessionId: checkoutSessionId, configuration: configuration) { result in
+                continuation.resume(with: result)
+            }
+        }
+    }
+
+    /// An asynchronous failable initializer for PaymentSheet.FlowController
+    /// This asynchronously loads the CheckoutSession's payment methods and configuration.
+    /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
+    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
+    /// - Returns: A valid PaymentSheet.FlowController instance.
+    /// - Throws: An error if loading failed.
+    @_spi(CheckoutSessionPreview) public static func create(
+        checkoutSession: STPCheckoutSession,
+        configuration: PaymentSheet.Configuration
+    ) async throws -> PaymentSheet.FlowController {
+        return try await withCheckedThrowingContinuation { continuation in
+            create(checkoutSession: checkoutSession, configuration: configuration) { result in
                 continuation.resume(with: result)
             }
         }
