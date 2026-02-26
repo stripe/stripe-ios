@@ -28,9 +28,6 @@ extension FaceScanner {
         let minCoverageThreshold: CGFloat
         /// Max portion of the image the face bounding should cover
         let maxCoverageThreshold: CGFloat
-        /// Threshold to determine if the face image is blurry.
-        /// If nil, blur checks are disabled.
-        let blurThreshold: Float?
 
     }
 }

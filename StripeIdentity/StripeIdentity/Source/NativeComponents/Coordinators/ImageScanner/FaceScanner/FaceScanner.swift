@@ -14,10 +14,14 @@ import Vision
 typealias AnyFaceScanner = AnyImageScanner<FaceScannerOutput>
 
 final class FaceScanner {
+    private enum MotionBlurGate {
+        static let minIOU: Float = 0.95
+        static let minDuration: Double = 0.5
+    }
 
     private let faceDetector: FaceDetector
     private let configuration: Configuration
-    private let blurDetector: LaplacianBlurDetector?
+    private let motionBlurDetector: MotionBlurDetector
 
     init(
         faceDetector: FaceDetector,
@@ -25,8 +29,10 @@ final class FaceScanner {
     ) {
         self.faceDetector = faceDetector
         self.configuration = configuration
-        self.blurDetector = configuration.blurThreshold
-            .flatMap { $0 > 0 ? LaplacianBlurDetector(blurThreshold: $0) : nil }
+        self.motionBlurDetector = MotionBlurDetector(
+            minIOU: MotionBlurGate.minIOU,
+            minTime: MotionBlurGate.minDuration
+        )
     }
 
     convenience init(
@@ -65,8 +71,7 @@ extension FaceScanner: ImageScanner {
                     faceDetectorOutput: faceDetectorOutput,
                     cameraProperties: cameraProperties,
                     configuration: configuration,
-                    blurResult: blurResult(
-                        for: pixelBuffer,
+                    motionBlurResult: motionBlurResult(
                         faceDetectorOutput: faceDetectorOutput
                     )
                 )
@@ -78,29 +83,31 @@ extension FaceScanner: ImageScanner {
     }
 
     func reset() {
+        motionBlurDetector.reset()
         faceDetector.metricsTracker?.reset()
     }
 }
 
 extension FaceScanner {
-    fileprivate func blurResult(
-        for pixelBuffer: CVPixelBuffer,
+    fileprivate func motionBlurResult(
         faceDetectorOutput: FaceDetectorOutput
-    ) -> LaplacianBlurDetector.Output? {
+    ) -> MotionBlurDetector.Output? {
         guard
-            let blurDetector = blurDetector,
             faceDetectorOutput.predictions.count == 1,
-            let faceRect = faceDetectorOutput.predictions.first?.rect,
-            let originalImage = pixelBuffer.cgImage(),
-            let croppedImage = try? originalImage.cropping(
-                toNormalizedRegion: faceRect,
-                withPadding: 0,
-                computationMethod: .regionWidth
-            )
+            let faceRect = faceDetectorOutput.predictions.first?.rect
         else {
             return nil
         }
+        let motionBlurOutput = motionBlurDetector.determineMotionBlur(
+            documentBounds: faceRect
+        )
 
-        return blurDetector.calculateBlurOutput(inputImage: croppedImage)
+        #if DEBUG
+        print(
+            "[StripeIdentity][SelfieMotionBlur] hasMotionBlur=\(motionBlurOutput.hasMotionBlur) iou=\(String(describing: motionBlurOutput.iou)) frameCount=\(motionBlurOutput.frameCount) duration=\(motionBlurOutput.duration)"
+        )
+        #endif
+
+        return motionBlurOutput
     }
 }
