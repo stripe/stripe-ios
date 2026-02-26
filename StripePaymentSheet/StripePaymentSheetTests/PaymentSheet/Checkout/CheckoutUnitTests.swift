@@ -39,15 +39,15 @@ final class CheckoutUnitTests: XCTestCase {
     func testApplyPromotionCodeRequiresOpenSession() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
 
-        // Session is nil (not loaded), should throw sessionNotOpen
+        // Session is nil (not loaded), should throw sessionNotLoaded
         await MainActor.run { XCTAssertNil(checkout.session) }
 
         do {
             try await checkout.applyPromotionCode("SAVE25")
-            XCTFail("Expected CheckoutError.sessionNotOpen")
+            XCTFail("Expected CheckoutError.sessionNotLoaded")
         } catch let error as CheckoutError {
-            guard case .sessionNotOpen = error else {
-                XCTFail("Expected .sessionNotOpen, got \(error)")
+            guard case .sessionNotLoaded = error else {
+                XCTFail("Expected .sessionNotLoaded, got \(error)")
                 return
             }
         }
@@ -56,15 +56,15 @@ final class CheckoutUnitTests: XCTestCase {
     func testRemovePromotionCodeRequiresOpenSession() async throws {
         let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
 
-        // Session is nil (not loaded), should throw sessionNotOpen
+        // Session is nil (not loaded), should throw sessionNotLoaded
         await MainActor.run { XCTAssertNil(checkout.session) }
 
         do {
             try await checkout.removePromotionCode()
-            XCTFail("Expected CheckoutError.sessionNotOpen")
+            XCTFail("Expected CheckoutError.sessionNotLoaded")
         } catch let error as CheckoutError {
-            guard case .sessionNotOpen = error else {
-                XCTFail("Expected .sessionNotOpen, got \(error)")
+            guard case .sessionNotLoaded = error else {
+                XCTFail("Expected .sessionNotLoaded, got \(error)")
                 return
             }
         }

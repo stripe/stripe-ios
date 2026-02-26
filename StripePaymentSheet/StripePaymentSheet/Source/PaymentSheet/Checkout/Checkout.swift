@@ -103,7 +103,7 @@ public final class Checkout: ObservableObject {
     /// Validates that the session is loaded and open.
     private func requireOpenSession() throws {
         guard let currentSession = session else {
-            throw CheckoutError.sessionNotOpen
+            throw CheckoutError.sessionNotLoaded
         }
         guard currentSession.status == .open else {
             throw CheckoutError.sessionNotOpen
