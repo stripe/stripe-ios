@@ -80,7 +80,7 @@ final class PaymentSheetLoader {
             async let _elementsSessionAndIntent: ElementSessionAndIntent = fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper)
 
             // Fetch Customer email if using EK for Link and it wasn't provided in `configuration`. If using CS, Customer will be in v1/e/s response.
-            async let prefetchedLinkEmailAndSource: (email: String, source: EmailSource)? = getCustomerEmailForLinkWithEphemeralKey(configuration: configuration)
+            async let prefetchedLinkEmailAndSource: (email: String, source: EmailSource)? = try? getCustomerEmailForLinkWithEphemeralKey(configuration: configuration)
 
             // Load misc singletons
             await loadMiscellaneousSingletons()
