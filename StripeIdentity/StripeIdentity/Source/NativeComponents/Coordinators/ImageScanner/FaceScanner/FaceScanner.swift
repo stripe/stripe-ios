@@ -15,8 +15,8 @@ typealias AnyFaceScanner = AnyImageScanner<FaceScannerOutput>
 
 final class FaceScanner {
     private enum MotionBlurGate {
-        static let minIOU: Float = 0.95
-        static let minDuration: Double = 0.35
+        static let minIOU: Float = 0.94
+        static let minDuration: Double = 0.1
     }
 
     private let faceDetector: FaceDetector
