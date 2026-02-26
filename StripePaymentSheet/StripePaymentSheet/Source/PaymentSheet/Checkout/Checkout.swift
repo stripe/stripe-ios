@@ -70,6 +70,23 @@ public final class Checkout: ObservableObject {
         }
     }
 
+    // MARK: - Promotion Codes
+
+    /// Applies a promotion code to the session.
+    /// - Parameter code: The promotion code to apply.
+    /// - Throws: ``CheckoutError`` if applying the promotion code fails.
+    public func applyPromotionCode(_ code: String) async throws {
+        try requireOpenSession()
+        try await performAPIUpdate(["promotion_code": code])
+    }
+
+    /// Removes the currently applied promotion code.
+    /// - Throws: `CheckoutError` if removing the promotion code fails.
+    public func removePromotionCode() async throws {
+        try requireOpenSession()
+        try await performAPIUpdate(["promotion_code": ""])
+    }
+
     // MARK: - Internal Methods
 
     /// Replaces ``session`` and notifies the delegate when the session data has changed.
@@ -82,6 +99,33 @@ public final class Checkout: ObservableObject {
     }
 
     // MARK: - Private Methods
+
+    /// Validates that the session is loaded and open.
+    private func requireOpenSession() throws {
+        guard let currentSession = session else {
+            throw CheckoutError.sessionNotLoaded
+        }
+        guard currentSession.status == .open else {
+            throw CheckoutError.sessionNotOpen
+        }
+    }
+
+    /// Performs an API update, then reloads full session state from init.
+    /// The update endpoint can return partial data, so we always refresh from init
+    /// to keep ``session`` as the single source of truth.
+    private func performAPIUpdate(_ parameters: [String: Any]) async throws {
+        do {
+            let sessionId = Self.extractSessionId(from: clientSecret)
+            _ = try await apiClient.updateCheckoutSession(
+                checkoutSessionId: sessionId,
+                parameters: parameters
+            )
+            let refreshedResponse = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+            updateSession(refreshedResponse.checkoutSession)
+        } catch {
+            throw CheckoutError.apiError(message: error.nonGenericDescription)
+        }
+    }
 
     /// Returns the session ID portion of a client secret.
     ///
