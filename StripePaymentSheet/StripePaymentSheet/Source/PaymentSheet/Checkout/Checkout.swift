@@ -63,8 +63,8 @@ public final class Checkout: ObservableObject {
 
         do {
             let sessionId = Self.extractSessionId(from: clientSecret)
-            let response = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
-            updateSession(response.checkoutSession)
+            let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+            updateSession(checkoutSession)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }

@@ -379,16 +379,7 @@ final class PaymentSheetLoader {
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
-        case .checkoutSession(let checkoutSessionId):
-            do {
-                let response = try await configuration.apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
-                elementsSession = response.elementsSession
-                intent = .checkoutSession(response.checkoutSession)
-            } catch {
-                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
-                throw error
-            }
-        case .checkoutSessionDirect(let checkoutSession):
+        case .checkoutSession(let checkoutSession):
             guard let elementsSessionJSON = checkoutSession.allResponseFields["elements_session"] as? [AnyHashable: Any],
                   let decodedElementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJSON) else {
                 throw PaymentSheetError.unknown(debugDescription: "Failed to decode elements session from provided checkout session object")

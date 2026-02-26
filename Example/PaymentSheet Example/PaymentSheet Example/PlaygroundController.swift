@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(CheckoutSessionPreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(CheckoutSessionPreview) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -593,7 +593,7 @@ class PlaygroundController: ObservableObject {
     }
 
     var clientSecret: String?
-    var checkoutSessionId: String?
+    var checkoutSession: STPCheckoutSession?
     var customerId: String?
     var ephemeralKey: String?
     var customerSessionClientSecret: String?
@@ -707,7 +707,7 @@ class PlaygroundController: ObservableObject {
         case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc:
             mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
         case .checkoutSession:
-            mc = PaymentSheet(checkoutSessionId: self.checkoutSessionId!, configuration: configuration)
+            mc = PaymentSheet(checkoutSession: self.checkoutSession!, configuration: configuration)
         }
 
         self.paymentSheet = mc
@@ -902,7 +902,7 @@ extension PlaygroundController {
                 return
             }
 
-            DispatchQueue.main.async {
+            Task { @MainActor in
                 AnalyticsLogObserver.shared.analyticsLog.removeAll()
                 self.lastPaymentResult = nil
                 self.clientSecret = json["intentClientSecret"]
@@ -914,11 +914,18 @@ extension PlaygroundController {
                     STPAPIClient.shared.publishableKey = publishableKey
                 }
 
-                // Extract checkout session ID from client secret if using CheckoutSession
+                // Load checkout session using Checkout SDK if using CheckoutSession
                 if let checkoutSessionClientSecret = json["checkoutSessionClientSecret"] {
-                    self.checkoutSessionId = Self.extractCheckoutSessionId(from: checkoutSessionClientSecret)
+                    let checkout = Checkout(clientSecret: checkoutSessionClientSecret)
+                    do {
+                        try await checkout.load()
+                        self.checkoutSession = checkout.session
+                    } catch {
+                        self.checkoutSession = nil
+                        print("Failed to load checkout session: \(error)")
+                    }
                 } else {
-                    self.checkoutSessionId = nil
+                    self.checkoutSession = nil
                 }
 
                 self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
@@ -926,7 +933,7 @@ extension PlaygroundController {
                 // Persist customerId / customerMode
                 self.serializeSettingsToNSUserDefaults()
                 let idDescription: String = {
-                    if let checkoutSessionId = self.checkoutSessionId {
+                    if let checkoutSessionId = self.checkoutSession?.stripeId {
                         return "checkout session id: \(checkoutSessionId)"
                     }
                     let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") ?? STPSetupIntent.id(fromClientSecret: self.clientSecret ?? "")
@@ -991,7 +998,7 @@ extension PlaygroundController {
 
                     case .checkoutSession:
                         PaymentSheet.FlowController.create(
-                            checkoutSessionId: self.checkoutSessionId!,
+                            checkoutSession: self.checkoutSession!,
                             configuration: self.configuration,
                             completion: completion
                         )
@@ -1102,14 +1109,6 @@ extension PlaygroundController {
         return body
     }
 
-    /// Extracts the CheckoutSession ID from a client secret
-    /// Format: cs_test_xxx_secret_yyy -> cs_test_xxx
-    static func extractCheckoutSessionId(from clientSecret: String) -> String {
-        if let range = clientSecret.range(of: "_secret_") {
-            return String(clientSecret[..<range.lowerBound])
-        }
-        return clientSecret
-    }
 }
 
 // MARK: - AddressViewControllerDelegate
@@ -1378,7 +1377,7 @@ extension PlaygroundController {
         embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(
             configuration: embeddedConfiguration,
             intentConfig: settings.integrationType == .checkoutSession ? nil : intentConfig,
-            checkoutSessionId: settings.integrationType == .checkoutSession ? checkoutSessionId : nil,
+            checkoutSession: settings.integrationType == .checkoutSession ? checkoutSession : nil,
             playgroundController: self
         )
     }
