@@ -644,7 +644,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         // Create a new EK for the Customer
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
         configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
-        configuration.defaultBillingDetails.email = "foo@stripe.com"
+        configuration.defaultBillingDetails.email = "davidestes@stripe.com"
 
         // Stub the customer endpoint to fail if called
         stub(condition: isPath("/v1/customers/\(testCustomerID)")) { _ in
