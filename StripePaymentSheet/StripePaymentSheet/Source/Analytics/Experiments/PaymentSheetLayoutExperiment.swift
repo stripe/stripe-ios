@@ -16,12 +16,12 @@ struct PaymentSheetLayoutExperiment {
     let hasSPM: Bool
     let integrationShape: String
 
-    var dimensionsDictionary: [String: Any] {
+    var dimensionsDictionary: [String: String] {
         var displayedPaymentMethodTypesIncludingWallets: [String] = displayedPaymentMethodTypes
         displayedPaymentMethodTypesIncludingWallets.append(contentsOf: walletPaymentMethodTypes)
         return [
             "displayed_payment_method_types": displayedPaymentMethodTypes.joined(separator: ","),
-            "has_saved_payment_method": hasSPM,
+            "has_saved_payment_method": hasSPM.description,
             "displayed_payment_method_types_including_wallets": displayedPaymentMethodTypesIncludingWallets.joined(separator: ","),
             "in_app_elements_integration_type": integrationShape,
         ]
@@ -100,7 +100,7 @@ struct OCSMobileHorizontalMode: LoggableExperiment {
         experiment.group
     }
 
-    var dimensions: [String: Any] {
+    var dimensions: [String: String] {
         experiment.dimensionsDictionary
     }
 
@@ -137,7 +137,7 @@ struct OCSMobileHorizontalModeAA: LoggableExperiment {
         experiment.group
     }
 
-    var dimensions: [String: Any] {
+    var dimensions: [String: String] {
         experiment.dimensionsDictionary
     }
 

@@ -18,7 +18,7 @@ struct LinkGlobalHoldback: LoggableExperiment {
         baseExperiment.group
     }
 
-    var dimensions: [String: Any] {
+    var dimensions: [String: String] {
         baseExperiment.dimensionsDictionary
     }
 
