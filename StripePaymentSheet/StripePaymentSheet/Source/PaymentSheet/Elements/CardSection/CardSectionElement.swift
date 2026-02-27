@@ -336,11 +336,12 @@ final class CardSectionElement: ContainerElement {
             if let indexToSelect = dropdown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {
                 dropdown.select(index: indexToSelect, shouldAutoAdvance: false)
             }
-        } else if selector.selectorElement != nil {
+        } else if let selector = selector.selectorElement {
             // Inline selector mode: directly set selected brand
             // The selector will handle the selection internally via its tap gesture
             // For now, we rely on user interaction for inline selector
             // Auto-selection for inline selector could be implemented if needed
+            selector.selectBrand(brand)
         }
     }
 

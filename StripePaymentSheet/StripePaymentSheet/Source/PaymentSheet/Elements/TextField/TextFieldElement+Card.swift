@@ -61,7 +61,7 @@ extension TextFieldElement {
                 // If using dropdown, try to get the first brand
                 if let dropdown = cardBrandSelector.dropdownElement,
                    let firstBrandString = dropdown.nonPlacerholderItems.first?.rawData {
-                    let cardBrandFromDropDown = STPCard.brand(from: firstBrandString)
+                    let cardBrandFromDropDown = STPCard.brand(from: dropdown.selectedItem.isPlaceholder ? firstBrandString : dropdown.selectedItem.rawData)
                     let cardBrandFromBin = STPCardValidator.brand(forNumber: text)
                     return cardBrandFromDropDown == .unknown ? cardBrandFromBin : cardBrandFromDropDown
                 }

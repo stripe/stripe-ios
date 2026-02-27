@@ -140,7 +140,7 @@ final class SelectorElement: Element {
         )
 
         selectorView.onBrandSelected = { [weak self] brand in
-            self?.handleBrandSelection(brand)
+            self?.selectBrand(brand)
         }
     }
 
@@ -158,13 +158,31 @@ final class SelectorElement: Element {
             selectedBrand = nil
         }
 
+        // Auto-select if there's only one allowed brand
+        let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
+        if allowedBrands.count == 1, let onlyAllowedBrand = allowedBrands.first {
+            if selectedBrand != onlyAllowedBrand {
+                selectedBrand = onlyAllowedBrand
+                didSelectBrand?(selectedBrand)
+                delegate?.didUpdate(element: self)
+            }
+        } else if allowedBrands.isEmpty && selectedBrand != nil {
+            // If no brands are allowed, clear selection
+            selectedBrand = nil
+            didSelectBrand?(selectedBrand)
+            delegate?.didUpdate(element: self)
+        }
+
         selectorView.update(
             cardBrands: Array(cardBrands.sorted()),
             disallowedCardBrands: disallowedCardBrands
         )
+
+        // Update the view to reflect the current selection
+        selectorView.setSelectedBrand(selectedBrand, animated: false)
     }
 
-    private func handleBrandSelection(_ brand: STPCardBrand?) {
+    func selectBrand(_ brand: STPCardBrand?) {
         // Toggle behavior: if already selected, deselect
         if selectedBrand == brand {
             selectedBrand = nil
@@ -264,32 +282,36 @@ private final class CardBrandSelectorView: UIView {
         invalidateIntrinsicContentSize()
     }
 
+    func setSelectedBrand(_ brand: STPCardBrand?, animated: Bool) {
+        // Deselect previous
+        if let previousBrand = selectedBrand,
+           let previousView = brandViews[previousBrand] {
+            previousView.setSelected(false)
+        }
+
+        selectedBrand = brand
+
+        // Select new brand
+        if let brand = brand, let itemView = brandViews[brand] {
+            itemView.prepareCheckmarkForFadeIn()
+            if animated {
+                UIView.animate(withDuration: 0.2) {
+                    itemView.fadeInCheckmark()
+                }
+            } else {
+                itemView.fadeInCheckmark()
+            }
+        }
+    }
+
     @objc private func brandTapped(_ sender: UITapGestureRecognizer) {
         guard let itemView = sender.view as? CardBrandItemView else { return }
 
         let brand = itemView.brand
 
         // Toggle selection
-        if selectedBrand == brand {
-            selectedBrand = nil
-            itemView.setSelected(false)
-        } else {
-            // Deselect previous
-            if let previousBrand = selectedBrand,
-               let previousView = brandViews[previousBrand] {
-                previousView.setSelected(false)
-            }
-
-            selectedBrand = brand
-            itemView.prepareCheckmarkForFadeIn()
-        }
-
-        // Animate the size change and fade in checkmark simultaneously  
-        UIView.animate(withDuration: 0.2) {
-            if self.selectedBrand == brand {
-                itemView.fadeInCheckmark()
-            }
-        }
+        let newSelection: STPCardBrand? = (selectedBrand == brand) ? nil : brand
+        setSelectedBrand(newSelection, animated: true)
 
         onBrandSelected?(selectedBrand)
     }
