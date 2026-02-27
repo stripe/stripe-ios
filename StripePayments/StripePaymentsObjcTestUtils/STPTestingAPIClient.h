@@ -56,6 +56,9 @@ static NSString * const STPTestingDEPublishableKey =
 static NSString * const STPTestingITPublishableKey =
     @"pk_test_51PSnETIFbdis1OxTALF4Z8ugUQpVS06UQDVahMSmwrbEYphjNYitXtOSqMPVKfzl3jukg6gLLrtZNnPlDrRbDpMd00U0tId6iv";
 
+// Sandbox w/ payments orchestration rules, under US account
+// See https://dashboard.stripe.com/acct_1T4pKXFRhicYlEF7/test/orchestration/rules/extn_test_61UEDJ3udBbhjozqU41FRhicYlEF7A4u/edit
+static NSString * const STPTestingPaymentsOrchestrationPublishableKey = @"pk_test_51T4pKXFRhicYlEF7yTT9Yv7W56S32foU0UlbE0zujkJOVEokHszMyuHi4k376ss1m4k57xym5wfWThb2Jek58K6y00fx7nEpgW";
 @interface STPTestingAPIClient : NSObject
 
 + (instancetype)sharedClient;
