@@ -1,4 +1,6 @@
 ## X.Y.Z - changes pending release 
+### Payments
+* [Added] Adds support for [payments orchestration](https://docs.stripe.com/payments/orchestration) (private preview) by allowing `processing` as a PaymentIntent state for cards.
 
 ## 25.7.1 2026-02-25
 ### All
