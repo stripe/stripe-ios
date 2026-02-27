@@ -77,7 +77,7 @@ final class CheckoutUnitTests: XCTestCase {
         await MainActor.run { XCTAssertNil(checkout.session) }
 
         do {
-            try await checkout.updateQuantity(2, forLineItem: "li_123")
+            try await checkout.updateQuantity(.init(lineItemId: "li_123", quantity: 2))
             XCTFail("Expected CheckoutError.sessionNotLoaded")
         } catch let error as CheckoutError {
             guard case .sessionNotLoaded = error else {
