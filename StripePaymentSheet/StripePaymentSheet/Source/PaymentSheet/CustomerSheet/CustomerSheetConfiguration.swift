@@ -92,7 +92,7 @@ extension CustomerSheet {
         @_spi(STP) public var enableAttestationOnConfirmation: Bool = false
 
         /// If true, use the new inline card brand selector UI instead of a dropdown
-        @_spi(STP) public var enableCBCRedesign: Bool = true
+        @_spi(STP) public var enableCBCRedesign: Bool = false
 
         public init () {
         }
