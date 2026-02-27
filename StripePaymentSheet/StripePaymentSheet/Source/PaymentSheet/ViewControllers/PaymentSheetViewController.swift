@@ -126,7 +126,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 return .customWithLock(title: customCtaLabel)
             }
 
-            return .makeDefaultTypeForPaymentSheet(intent: intent)
+            return .makeDefaultType(intent: intent)
         }()
 
         let button = ConfirmButton(
@@ -335,7 +335,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         var buyButtonStatus: ConfirmButton.Status
         var showBuyButton: Bool = true
 
-        var callToAction = self.intent.callToAction
+        var callToAction = ConfirmButton.CallToActionType.makeDefaultType(intent: self.intent)
         if let customCtaLabel = configuration.primaryButtonLabel {
             callToAction = .customWithLock(title: customCtaLabel)
         }

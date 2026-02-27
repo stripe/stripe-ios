@@ -167,7 +167,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.launchedFromFlowController = launchedFromFlowController
             self.canSkipWalletAfterVerification = canSkipWalletAfterVerification
             self.initiallySelectedPaymentDetailsID = initiallySelectedPaymentDetailsID
-            self.callToAction = callToAction ?? .makeDefaultTypeForLink(intent: intent)
+            self.callToAction = callToAction ?? .makeDefaultType(intent: intent, withLock: false)
             self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
             self.analyticsHelper = analyticsHelper
             self.linkAppearance = linkAppearance

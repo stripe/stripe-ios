@@ -68,6 +68,18 @@ import Foundation
     /// The URL the customer will be directed to if they decide to cancel payment.
     public let cancelUrl: String?
 
+    /// Applied discounts for this session.
+    public let discounts: [STPCheckoutSessionDiscount]
+
+    /// The currently applied promotion code, if one is present.
+    public var appliedPromotionCode: String? {
+        discounts.first(where: { $0.promotionCode != nil })?.promotionCode?.code
+    }
+
+    /// Server-side flag controlling the "Save for future use" checkbox.
+    /// Parsed from `customer_managed_saved_payment_methods_offer_save` in the init response.
+    public let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
+
     /// The raw API response used to create this object.
     public let allResponseFields: [AnyHashable: Any]
 
@@ -90,6 +102,8 @@ import Foundation
             "customerEmail = \(String(describing: customerEmail))",
             "url = \(String(describing: url))",
             "returnUrl = \(String(describing: returnUrl))",
+            "discounts = \(discounts)",
+            "savedPaymentMethodsOfferSave = \(String(describing: savedPaymentMethodsOfferSave))",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -113,6 +127,8 @@ import Foundation
         url: URL?,
         returnUrl: String?,
         cancelUrl: String?,
+        discounts: [STPCheckoutSessionDiscount],
+        savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.stripeId = stripeId
@@ -132,6 +148,8 @@ import Foundation
         self.url = url
         self.returnUrl = returnUrl
         self.cancelUrl = cancelUrl
+        self.discounts = discounts
+        self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -173,6 +191,14 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             customer = nil
         }
 
+        // Parse discounts
+        let discounts = STPCheckoutSessionDiscount.discounts(from: dict)
+
+        // Parse saved payment methods offer save configuration
+        let savedPaymentMethodsOfferSave = STPCheckoutSessionSavedPaymentMethodsOfferSave.decodedObject(
+            from: dict["customer_managed_saved_payment_methods_offer_save"] as? [AnyHashable: Any]
+        )
+
         return STPCheckoutSession(
             stripeId: stripeId,
             clientSecret: clientSecret,
@@ -193,6 +219,8 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             url: urlString.flatMap { URL(string: $0) },
             returnUrl: dict["return_url"] as? String ?? dict["success_url"] as? String,
             cancelUrl: dict["cancel_url"] as? String,
+            discounts: discounts,
+            savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
             allResponseFields: dict
         ) as? Self
     }

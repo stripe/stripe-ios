@@ -1033,14 +1033,14 @@ extension PaymentSheetLPMConfirmFlowTests {
                 customerID: customer
             )
             let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            let initResponse = try await csApiClient.initCheckoutSession(
+            let checkoutSession = try await csApiClient.initCheckoutSession(
                 checkoutSessionId: checkoutSessionResponse.id
             )
 
             intents = [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("CheckoutSession", .checkoutSession(initResponse.checkoutSession)),
+                ("CheckoutSession", .checkoutSession(checkoutSession)),
             ]
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation

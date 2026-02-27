@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
 
   # Do not update s.version directly.
   # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
-  s.version                        = '25.6.3'
+  s.version                        = '25.7.1'
 
   s.summary                        = 'StripeCameraCore contains shared infrastructure used by Stripe pods. '\
                                      'It is not meant to be used without other Stripe pods.'

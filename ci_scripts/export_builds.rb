@@ -127,6 +127,14 @@ Dir.chdir(root_dir) do
   end # modules.each
 end # Dir.chdir
 
+# Verify no xcframework contains an embedded Frameworks folder
+info 'Checking for embedded Frameworks folders in xcframeworks...'
+embedded_frameworks = Dir.glob(File.join(build_dir, '*.xcframework', '**', 'Frameworks'))
+unless embedded_frameworks.empty?
+  embedded_frameworks.each { |path| info "Found: #{path}" }
+  die 'One or more xcframeworks contain an embedded Frameworks folder. This indicates a dependency was incorrectly embedded.'
+end
+
 Dir.chdir(build_dir) do
   `zip -r Stripe.xcframework.zip *.xcframework`
 end

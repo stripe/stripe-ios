@@ -1,10 +1,20 @@
 ## X.Y.Z - changes pending release 
 
-## 25.6.3 2026-02-17
+## 25.7.1 2026-02-25
+### All
+* [Fixed] [#6098](https://github.com/stripe/stripe-ios/pull/6098) Fixed an issue with App Store submissions in which StripeIssuing.xcframework contained copies of other StripePayments frameworks.
+ 
+## 25.7.0 2026-02-23
 
-### CryptoOnramp (Beta)
-* [Added] Added `PaymentMethodType.cardAndBankAccount` for use in `CryptoOnrampCoordinator.collectPaymentMethod`, which displays both card-based and bank account payment options in the Link wallet interface, rather than filtering to only one type.
-* [Added] Added `paymentMethodType` property to `PaymentMethodDisplayData` in order to better differentiate between different selected payment types in client UI.
+### Payment Method Messaging Element
+* [Changed] Breaking change for `PaymentMethodMessagingElement.Appearance`. The info icon has been removed and replaced with a CTA to see available plans. The `infoIconColor` configuration has been removed, and the new link text color is customizable through `linkTextColor`.
+
+## 25.6.4 2026-02-23
+
+### PaymentSheet
+* [Changed] Reverted an undocumented public API change for PaymentMethodMessagingElement
+
+## 25.6.3 2026-02-17
 
 ### PaymentSheet
 * [Changed] Afterpay/Clearpay no longer requires billing address by default. Set `billingDetailsCollectionConfiguration.address = .full` if you need to collect billing address for Afterpay.
@@ -17,9 +27,6 @@
 * [Added] Added a best frame detector to document capture.
 
 ## 25.6.2 2026-02-09
-
-### CryptoOnramp (Beta)
-* [Removed] Removed `CryptoOnrampCoordinator.authenticateUser()` in favor of `CryptoOnrampCoordinator.authorize()`.
 
 ### PaymentSheet
 * [Fixed] Fixed build for visionOS 26.2 SDK.

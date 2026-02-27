@@ -20,10 +20,9 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let checkoutSessionId = checkoutSessionResponse.id
 
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let response = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
+        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
 
         // Verify checkout session fields
-        let checkoutSession = response.checkoutSession
         XCTAssertEqual(checkoutSession.stripeId, checkoutSessionId)
         XCTAssertEqual(checkoutSession.mode, .payment)
         XCTAssertEqual(checkoutSession.status, .open)
@@ -33,10 +32,9 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertTrue(checkoutSession.paymentMethodTypes.contains(.card))
 
         // Verify elements session fields
-        let elementsSession = response.elementsSession
-        XCTAssertTrue(elementsSession.sessionID.hasPrefix("elements_session_"))
-        XCTAssertEqual(elementsSession.merchantCountryCode, "US")
-        XCTAssertTrue(elementsSession.orderedPaymentMethodTypes.contains(.card))
+        let elementsSessionDict = checkoutSession.allResponseFields["elements_session"] as! [String: Any]
+        XCTAssertTrue((elementsSessionDict["session_id"] as! String).hasPrefix("elements_session_"))
+        XCTAssertEqual(elementsSessionDict["merchant_country"] as? String, "US")
     }
 
     func testConfirmCheckoutSession() async throws {
@@ -48,7 +46,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // 2. Init the checkout session to get the actual amount
         let initResponse = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
-        let expectedAmount = initResponse.checkoutSession.totalSummary?.total ?? 0
+        let expectedAmount = initResponse.totalSummary?.total ?? 0
 
         // 3. Create a payment method with test card and billing email
         let cardParams = STPPaymentMethodCardParams()
