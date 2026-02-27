@@ -33,45 +33,34 @@ class ConfirmButton: UIControl {
         case custom(title: String)
         case customWithLock(title: String)
 
-        static func makeDefaultTypeForPaymentSheet(intent: Intent) -> CallToActionType {
+        static func makeDefaultType(intent: Intent, withLock: Bool = true) -> Self {
             switch intent {
             case .paymentIntent(let paymentIntent):
-                return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
+                return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency, withLock: withLock)
             case .setupIntent:
                 return .setup
             case .deferredIntent(let intentConfig):
                 switch intentConfig.mode {
                 case .payment(let amount, let currency, _, _, _):
-                    return .pay(amount: amount, currency: currency)
+                    return .pay(amount: amount, currency: currency, withLock: withLock)
                 case .setup:
                     return .setup
                 }
             case .checkoutSession(let checkoutSession):
-                if let amount = checkoutSession.totalSummary?.total, let currency = checkoutSession.currency {
-                    return .pay(amount: amount, currency: currency)
-                }
-                return .setup
-            }
-        }
-
-        static func makeDefaultTypeForLink(intent: Intent) -> CallToActionType {
-            switch intent {
-            case .paymentIntent(let paymentIntent):
-                return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency, withLock: false)
-            case .setupIntent:
-                return .continue
-            case .deferredIntent(let intentConfig):
-                switch intentConfig.mode {
-                case .payment(let amount, let currency, _, _, _):
-                    return .pay(amount: amount, currency: currency, withLock: false)
+                switch checkoutSession.mode {
+                case .payment:
+                    if let amount = checkoutSession.totalSummary?.total,
+                       let currency = checkoutSession.currency {
+                        return .pay(amount: amount, currency: currency, withLock: withLock)
+                    }
+                    stpAssertionFailure("Missing amount and currency in checkout session for .payment mode")
+                    return .setup
                 case .setup:
-                    return .continue
+                    return .setup
+                case .subscription, .unknown:
+                    stpAssertionFailure("Unknown and subscription modes not yet supported in checkout sessions")
+                    return .setup
                 }
-            case .checkoutSession(let checkoutSession):
-                if let amount = checkoutSession.totalSummary?.total, let currency = checkoutSession.currency {
-                    return .pay(amount: amount, currency: currency, withLock: false)
-                }
-                return .continue
             }
         }
     }

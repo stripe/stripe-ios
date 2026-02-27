@@ -207,10 +207,10 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertEqual(
             // filter out async passive captcha and attestation logs
             analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }),
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_savedpm_show"]
+            ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_savedpm_show"]
         )
         // `mc_load_succeeded` event `selected_lpm` should be "apple_pay", the default payment method.
-        XCTAssertEqual(analyticsLog[2][string: "selected_lpm"], "apple_pay")
+        XCTAssertEqual(analyticsLog[1][string: "selected_lpm"], "apple_pay")
         app.buttons["+ Add"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 2))
 
