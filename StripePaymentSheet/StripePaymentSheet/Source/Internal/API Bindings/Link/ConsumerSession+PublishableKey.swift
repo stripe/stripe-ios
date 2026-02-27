@@ -41,6 +41,10 @@ extension ConsumerSession {
         enum PaymentType: String, SafeEnumDecodable, CaseIterable {
             case card = "CARD"
             case bankAccount = "BANK_ACCOUNT"
+            case klarna = "KLARNA"
+            case balance = "BALANCE"
+            case pix = "PIX"
+            case crypto = "CRYPTO"
             case unparsable = ""
         }
 
