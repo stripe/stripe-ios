@@ -404,8 +404,7 @@ private final class CardBrandItemView: UIView {
             } else {
                 checkmarkImageView.alpha = 1.0
             }
-        }
-        else {
+        } else {
             checkmarkImageView.isHidden = true
             UIView.animate(withDuration: 0.2) {
                 self.backgroundColor = .clear
