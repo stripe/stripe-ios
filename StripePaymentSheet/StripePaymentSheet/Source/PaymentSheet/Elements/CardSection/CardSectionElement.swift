@@ -119,7 +119,7 @@ final class CardSectionElement: ContainerElement {
                 )
             ) { field, params in
                 let cardBrand = field.selectedBrand ?? .unknown
-                
+
                 // Only set preferred networks for the confirm params if we have more than 1 brand fetched
                 let hasMultipleCardBrands = enableCBCRedesign ? (field.selectorElement?.cardBrands.count ?? 1 > 1) : (field.dropdownElement?.nonPlacerholderItems.count ?? 1 > 1)
                 if hasMultipleCardBrands {
