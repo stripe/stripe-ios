@@ -21,11 +21,6 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
-    override func setUp() {
-        self.recordingMode = false
-        super.setUp()
-    }
-
     func testPollingBehaviorWithFinalCall() {
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)

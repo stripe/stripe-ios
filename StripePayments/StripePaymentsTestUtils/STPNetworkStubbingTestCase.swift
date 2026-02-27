@@ -10,12 +10,10 @@ import OHHTTPStubs
 @testable@_spi(STP) import StripeCore
 import XCTest
 
-/// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run with `recordingMode = YES` and save it to disk. When run with `recordingMode = NO`, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
+/// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run using the `AllStripeFrameworks-NetworkRecordMode` scheme and save it to disk. Otherwise, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
 /// ⚠️ Warning: `STPAPIClient`s created before `setUp` is called are not recorded!
 /// To write manual requests, try APIStubbedTestCase instead.
 @objc(STPNetworkStubbingTestCase) open class STPNetworkStubbingTestCase: XCTestCase {
-    /// Set this to YES to record all traffic during this test. The test will then fail, to remind you to set this back to NO before pushing.
-    open var recordingMode = false
 
     /// Set this to YES to disable network mocking entirely (e.g. in a nightly test)
     open var disableMocking = false
@@ -37,7 +35,7 @@ import XCTest
 
         AnalyticsHelper.shared.clearSessionID()
 
-        recordingMode = ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] != nil
+        let recordingMode = ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] != nil
         disableMocking = ProcessInfo.processInfo.environment["STP_NO_NETWORK_MOCKS"] != nil
 
         if disableMocking {
@@ -166,13 +164,6 @@ import XCTest
             else {
                 assert(false, "❌ Error recording requests")
                 return
-            }
-
-            // Make sure to fail, to remind ourselves to turn this off
-            addTeardownBlock {
-                XCTFail(
-                    "❌ Network traffic has been recorded - re-run with self.recordingMode = NO for this test to succeed"
-                )
             }
         } else {
             // Stubs are evaluated in the reverse order that they are added, so if the network is hit and no other stub is matched, raise an exception
