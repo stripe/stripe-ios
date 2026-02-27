@@ -137,4 +137,31 @@ extension XCTestCase {
     func assertLinkPaymentSuccess(_ app: XCUIApplication) {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
+
+    func tapTestNonOAuthInstituition(_ app: XCUIApplication) {
+        sleep(5) // allow search to become tappable, even if it's on screen
+        let searchTextField = app.textFields
+            .matching(NSPredicate(format: "label CONTAINS 'Search'"))
+            .firstMatch
+        searchTextField.waitForExistenceAndTap(timeout: 10)
+        app.typeText("Test (Non-OAuth)" + XCUIKeyboardKey.return.rawValue)
+        searchTextField
+            .coordinate(
+                withNormalizedOffset: CGVector(
+                    dx: 0.5,
+                    // bottom of search text field
+                    dy: 1.0
+                )
+            )
+        // at this point, we searched "Test (Non-OAuth)"
+        // and the first search result is "Test (Non-OAuth),"
+        // so here we guess that 80 pixels below search bar
+        // there will be a "Test (Non-OAuth)"
+        //
+        // we do this "guess" because every other method of
+        // selecting the institution did not work
+            .withOffset(CGVector(dx: 0, dy: 80))
+            .tap()
+    }
+
 }
