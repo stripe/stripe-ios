@@ -2,6 +2,8 @@
 //  CardBrandChoiceElementSnapshotTest.swift
 //  StripePaymentSheet
 //
+//  Created by Joyce Qin on 2/27/26.
+//
 
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
