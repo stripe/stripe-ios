@@ -41,6 +41,8 @@ public struct MobilePaymentElementAnalyticEvent {
         case removedSavedPaymentMethod(RemovedSavedPaymentMethod)
         /// User tapped an express checkout button
         case tappedExpressButton(TappedExpressButton)
+        /// User successfully scanned a card using the card scanner
+        case scannedCardSuccessfully
     }
 
     /// Details of the .selectedPaymentMethodType event

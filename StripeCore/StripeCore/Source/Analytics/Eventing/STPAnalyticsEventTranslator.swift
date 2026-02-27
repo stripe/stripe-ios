@@ -82,6 +82,10 @@ struct STPAnalyticsEventTranslator {
             }
             return .tappedExpressButton(.init(expressButtonType: expressButtonType))
 
+        // Card Scanning
+        case .cardScanSucceeded:
+            return .scannedCardSuccessfully
+
         default:
             return nil
         }
