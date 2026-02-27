@@ -84,7 +84,7 @@ struct STPAnalyticsEventTranslator {
 
         // Card Scanning
         case .cardScanSucceeded:
-            return .usedCardScanner
+            return .scannedCardSuccessfully
 
         default:
             return nil

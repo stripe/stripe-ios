@@ -280,7 +280,7 @@ class STPAnalyticsClientTest: XCTestCase {
     func testCardScanSucceeded() {
         let e = expectation(description: "")
         let observer = TestObserver { eventName in
-            guard case .usedCardScanner = eventName else {
+            guard case .scannedCardSuccessfully = eventName else {
                 XCTFail("Failed to convert eventName")
                 return
             }
