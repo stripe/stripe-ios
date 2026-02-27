@@ -106,6 +106,48 @@ final class STPPaymentHandlerFunctionalTests: STPNetworkStubbingTestCase, STPAut
         self.waitForExpectations(timeout: 10)
     }
 
+    func test_confirm_payment_intent_with_payments_orchestration() async throws {
+        // See https://dashboard.stripe.com/acct_1T4pKXFRhicYlEF7/test/orchestration/rules/extn_test_61UEDJ3udBbhjozqU41FRhicYlEF7A4u/edit
+        let apiClient = STPAPIClient(publishableKey: STPTestingPaymentsOrchestrationPublishableKey)
+        let clientSecret = try await STPTestingAPIClient.shared().createPaymentIntent(
+            withParams: [
+                "payment_method_types": ["card"],
+                "currency": "usd",
+                "payments_orchestration": [
+                    "enabled": true,
+                ],
+            ],
+            account: "us_payments_orchestration"
+        )
+        let sut = STPPaymentHandler(apiClient: apiClient)
+        let params = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
+        params.paymentMethodId = "pm_card_visa"
+        let (status, intent, _) = await sut.confirmPaymentIntent(params: params, authenticationContext: self)
+        XCTAssertEqual(intent?.status, .processing)
+        XCTAssertEqual(status, .succeeded)
+    }
+
+    func test_handle_next_action_payment_intent_with_payments_orchestration() async throws {
+        // See https://dashboard.stripe.com/acct_1T4pKXFRhicYlEF7/test/orchestration/rules/extn_test_61UEDJ3udBbhjozqU41FRhicYlEF7A4u/edit
+        let apiClient = STPAPIClient(publishableKey: STPTestingPaymentsOrchestrationPublishableKey)
+        let clientSecret = try await STPTestingAPIClient.shared().createPaymentIntent(
+            withParams: [
+                "payment_method_types": ["card"],
+                "currency": "usd",
+                "payments_orchestration": [
+                    "enabled": true,
+                ],
+                "confirm": true,
+                "payment_method": "pm_card_visa",
+            ],
+            account: "us_payments_orchestration"
+        )
+        let sut = STPPaymentHandler(apiClient: apiClient)
+        let (status, _, _) = await sut.handleNextAction(paymentIntentClientSecret: clientSecret, authenticationContext: self, returnURL: nil)
+        // Don't check intent status == processing, in testmode PI status switches from `processing` to `succeeded` fast enough that it flakes.
+        XCTAssertEqual(status, .succeeded)
+    }
+
     // MARK: - SetupIntent tests
 
     func test_card_setup_intent_server_side_confirmation() {
