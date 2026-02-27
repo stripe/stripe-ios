@@ -187,8 +187,6 @@ private final class CardBrandSelectorView: UIView {
         let stack = UIStackView()
         stack.axis = .horizontal
         stack.spacing = 0
-        stack.alignment = .fill
-        stack.distribution = .fill
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -196,7 +194,6 @@ private final class CardBrandSelectorView: UIView {
     private let theme: ElementsAppearance
     private var brandViews: [STPCardBrand: CardBrandItemView] = [:]
     private var selectedBrand: STPCardBrand?
-    private var separatorViews: [UIView] = []
 
     init(cardBrands: [STPCardBrand],
          disallowedCardBrands: Set<STPCardBrand>,
@@ -225,24 +222,14 @@ private final class CardBrandSelectorView: UIView {
             stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
             stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
             stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            stackView.heightAnchor.constraint(equalToConstant: 32),
         ])
-
-        // Set content hugging and compression resistance to keep it compact
-        setContentHuggingPriority(.required, for: .horizontal)
-        setContentCompressionResistancePriority(.required, for: .horizontal)
     }
 
     func update(cardBrands: [STPCardBrand], disallowedCardBrands: Set<STPCardBrand>) {
-        // Remove all existing views
         stackView.arrangedSubviews.forEach {
             $0.removeFromSuperview()
         }
         brandViews.removeAll()
-
-        // Remove separator views
-        separatorViews.forEach { $0.removeFromSuperview() }
-        separatorViews.removeAll()
 
         // Add views for each brand with separators
         let validBrands = cardBrands.filter { $0 != .unknown }
@@ -266,31 +253,15 @@ private final class CardBrandSelectorView: UIView {
                 let separator = UIView()
                 separator.translatesAutoresizingMaskIntoConstraints = false
                 separator.backgroundColor = theme.colors.divider
-                addSubview(separator)
-                separatorViews.append(separator)
-
-                let constraints = [
+                stackView.addArrangedSubview(separator)
+                NSLayoutConstraint.activate([
                     separator.widthAnchor.constraint(equalToConstant: 1),
-                    separator.topAnchor.constraint(equalTo: topAnchor),
-                    separator.bottomAnchor.constraint(equalTo: bottomAnchor),
-                    separator.leadingAnchor.constraint(equalTo: itemView.trailingAnchor),
-                ]
-                NSLayoutConstraint.activate(constraints)
+                ])
             }
         }
 
         // Update intrinsic content size after adding/removing brands
         invalidateIntrinsicContentSize()
-    }
-
-    override func willMove(toSuperview newSuperview: UIView?) {
-        super.willMove(toSuperview: newSuperview)
-
-        // Clean up separators when view is being removed
-        if newSuperview == nil {
-            separatorViews.forEach { $0.removeFromSuperview() }
-            separatorViews.removeAll()
-        }
     }
 
     @objc private func brandTapped(_ sender: UITapGestureRecognizer) {
@@ -310,16 +281,14 @@ private final class CardBrandSelectorView: UIView {
             }
 
             selectedBrand = brand
-            // Prepare checkmark for fade-in
             itemView.prepareCheckmarkForFadeIn()
         }
 
-        // Animate the size change and fade in checkmark simultaneously
+        // Animate the size change and fade in checkmark simultaneously  
         UIView.animate(withDuration: 0.2) {
             if self.selectedBrand == brand {
                 itemView.fadeInCheckmark()
             }
-            self.superview?.layoutIfNeeded()
         }
 
         onBrandSelected?(selectedBrand)
@@ -354,7 +323,6 @@ private final class CardBrandItemView: UIView {
         stack.axis = .horizontal
         stack.spacing = 4
         stack.alignment = .center
-        stack.distribution = .fill
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
@@ -372,17 +340,13 @@ private final class CardBrandItemView: UIView {
     }
 
     private func setupView() {
-        // Set up brand icon with fixed size
         iconImageView.image = STPImageLibrary.cardBrandImage(for: brand)
-        iconImageView.contentMode = .scaleAspectFit
         if isDisallowed {
             iconImageView.alpha = 0.4
         }
 
-        if #available(iOS 13.0, *) {
-            checkmarkImageView.image = UIImage(systemName: "checkmark")
-            checkmarkImageView.tintColor = theme.colors.bodyText
-        }
+        checkmarkImageView.image = Image.embedded_check.makeImage(template: true)
+        checkmarkImageView.tintColor = theme.colors.bodyText
 
         // Add checkmark on the left, then icon on the right
         containerStack.addArrangedSubview(checkmarkImageView)
@@ -395,9 +359,6 @@ private final class CardBrandItemView: UIView {
             containerStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
             containerStack.topAnchor.constraint(equalTo: topAnchor, constant: 6),
             containerStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
-
-            iconImageView.widthAnchor.constraint(equalToConstant: 30),
-            iconImageView.heightAnchor.constraint(equalToConstant: 20),
 
             checkmarkImageView.widthAnchor.constraint(equalToConstant: 12),
             checkmarkImageView.heightAnchor.constraint(equalToConstant: 12),
@@ -413,7 +374,6 @@ private final class CardBrandItemView: UIView {
         if !selected {
             // Deselecting: hide checkmark and clear background
             checkmarkImageView.isHidden = true
-            checkmarkImageView.alpha = 0
             UIView.animate(withDuration: 0.2) {
                 self.backgroundColor = .clear
             }
@@ -422,7 +382,6 @@ private final class CardBrandItemView: UIView {
     }
 
     func prepareCheckmarkForFadeIn() {
-        // Make checkmark visible (for layout) but transparent
         checkmarkImageView.isHidden = false
         checkmarkImageView.alpha = 0
 
