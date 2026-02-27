@@ -125,9 +125,8 @@ final class LinkPaymentMethodFormElement: Element {
             return nil
         }
 
-        // Create CardBrandSelectorElement which will create the dropdown internally
-        let selectorElement = CardBrandSelectorElement(
-            enableCBCRedesign: false,
+        let cardBrandSelectorElement = CardBrandSelectorElement(
+            enableCBCRedesign: configuration.enableCBCRedesign,
             cardBrands: Set(cardBrands),
             disallowedCardBrands: [
                 // We will add brands from card brand filtering here
@@ -135,24 +134,30 @@ final class LinkPaymentMethodFormElement: Element {
             theme: theme
         )
 
-        // Pre-select the current brand
-        if let selectedBrand = paymentMethod.cardDetails?.cardBrand,
-           let dropdown = selectorElement.dropdownElement {
-            let index = dropdown.items.firstIndex { item in
-                item.rawData == STPCardBrandUtilities.apiValue(from: selectedBrand)
-            }
+        if let selectedBrand = paymentMethod.cardDetails?.cardBrand {
+            if let dropdown = cardBrandSelectorElement.dropdownElement {
+                let index = dropdown.items.firstIndex { item in
+                    item.rawData == STPCardBrandUtilities.apiValue(from: selectedBrand)
+                }
 
-            if let index {
-                dropdown.selectedIndex = Int(index)
+                if let index {
+                    dropdown.selectedIndex = Int(index)
+                }
+            } else if let selector = cardBrandSelectorElement.selectorElement {
+                selector.selectBrand(selectedBrand)
             }
         }
 
-        return PaymentMethodElementWrapper<CardBrandSelectorElement>(selectorElement) { field, params in
-            guard let dropdown = field.dropdownElement else { return params }
-            let selectedBrandAPIValue = dropdown.selectedItem.rawData
-            let cardBrand = STPCard.brand(from: selectedBrandAPIValue)
-            let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
-            params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+        return PaymentMethodElementWrapper<CardBrandSelectorElement>(cardBrandSelectorElement) { field, params in
+            if let dropdown = field.dropdownElement {
+                let selectedBrandAPIValue = dropdown.selectedItem.rawData
+                let cardBrand = STPCard.brand(from: selectedBrandAPIValue)
+                let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
+                params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+            } else if let selector = field.selectorElement, let cardBrand = selector.selectedBrand {
+                let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
+                params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+            }
             return params
         }
     }()

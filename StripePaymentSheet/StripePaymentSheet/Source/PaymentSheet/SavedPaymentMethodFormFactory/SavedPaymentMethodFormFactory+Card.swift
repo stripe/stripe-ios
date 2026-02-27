@@ -21,28 +21,32 @@ extension SavedPaymentMethodFormFactory {
             let cardBrands = configuration.paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }) ?? []
             let disallowedCardBrands = cardBrands.filter { !configuration.cardBrandFilter.isAccepted(cardBrand: $0) }
 
-            // Create CardBrandSelectorElement which will create the dropdown internally
-            let selectorElement = CardBrandSelectorElement(
-                enableCBCRedesign: false,
-                cardBrands: Set<STPCardBrand>(cardBrands),
+            let cardBrandSelectorElement = CardBrandSelectorElement(
+                enableCBCRedesign: configuration.enableCBCRedesign,
+                cardBrands: Set(cardBrands),
                 disallowedCardBrands: Set<STPCardBrand>(disallowedCardBrands),
                 theme: theme
             )
-
             // pre-select current card brand
-            if let currentCardBrand = configuration.paymentMethod.card?.preferredDisplayBrand,
-               let dropdown = selectorElement.dropdownElement,
-               let indexToSelect = dropdown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
-                dropdown.select(index: indexToSelect, shouldAutoAdvance: false)
+            if let currentCardBrand = configuration.paymentMethod.card?.preferredDisplayBrand {
+                if let dropdown = cardBrandSelectorElement.dropdownElement, let indexToSelect = dropdown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
+                    dropdown.select(index: indexToSelect, shouldAutoAdvance: false)
+                } else if let selector = cardBrandSelectorElement.selectorElement {
+                    selector.selectBrand(currentCardBrand)
+                }
             }
 
             // Handler when user selects different card brand
-            let wrappedElement = PaymentMethodElementWrapper<CardBrandSelectorElement>(selectorElement){ field, params in
-                guard let dropdown = field.dropdownElement else { return params }
-                let selectedBrandAPIValue = dropdown.selectedItem.rawData
-                let cardBrand = STPCard.brand(from: selectedBrandAPIValue)
-                let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
-                params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+            let wrappedElement = PaymentMethodElementWrapper<CardBrandSelectorElement>(cardBrandSelectorElement){ field, params in
+                if let dropdown = field.dropdownElement {
+                    let selectedBrandAPIValue = dropdown.selectedItem.rawData
+                    let cardBrand = STPCard.brand(from: selectedBrandAPIValue)
+                    let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
+                    params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+                } else if let selector = field.selectorElement, let cardBrand = selector.selectedBrand {
+                    let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
+                    params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+                }
                 return params
             }
             return wrappedElement

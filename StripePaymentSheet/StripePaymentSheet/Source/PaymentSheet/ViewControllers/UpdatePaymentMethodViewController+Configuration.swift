@@ -22,6 +22,7 @@ extension UpdatePaymentMethodViewController {
         let isCBCEligible: Bool
         let isSetAsDefaultPMEnabled: Bool
         let isDefault: Bool
+        let enableCBCRedesign: Bool
 
         var shouldShowSaveButton: Bool {
             guard !paymentMethod.isLinkPaymentMethod else {
@@ -91,7 +92,7 @@ extension UpdatePaymentMethodViewController {
             }
         }
 
-        init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdate: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false) {
+        init(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration, hostedSurface: HostedSurface, cardBrandFilter: CardBrandFilter = .default, canRemove: Bool, canUpdate: Bool, isCBCEligible: Bool, allowsSetAsDefaultPM: Bool = false, isDefault: Bool = false, enableCBCRedesign: Bool = false) {
             if !PaymentSheet.supportedSavedPaymentMethods.contains(paymentMethod.type) {
                 assertionFailure("Unsupported payment type \(paymentMethod.type) in UpdatePaymentMethodViewModel")
             }
@@ -105,6 +106,7 @@ extension UpdatePaymentMethodViewController {
             self.isCBCEligible = isCBCEligible
             self.isSetAsDefaultPMEnabled = allowsSetAsDefaultPM
             self.isDefault = isDefault
+            self.enableCBCRedesign = enableCBCRedesign
         }
     }
 }

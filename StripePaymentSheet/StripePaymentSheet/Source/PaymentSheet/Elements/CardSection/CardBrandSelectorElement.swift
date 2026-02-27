@@ -35,11 +35,8 @@ final class CardBrandSelectorElement: Element {
         if enableCBCRedesign {
             return selectorElement?.selectedBrand
         } else {
-            guard let dropdown = dropdownElement,
-                  let rawValue = Int(dropdown.selectedItem.rawData) else {
-                return nil
-            }
-            return STPCardBrand(rawValue: rawValue)
+            guard let dropdown = dropdownElement else { return nil }
+            return STPCard.brand(from: dropdown.selectedItem.rawData)
         }
     }
 
@@ -158,6 +155,10 @@ final class SelectorElement: Element {
             selectedBrand = nil
         }
 
+        guard cardBrands.count > 1 else {
+            return
+        }
+
         // Auto-select if there's only one allowed brand
         let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
         if allowedBrands.count == 1, let onlyAllowedBrand = allowedBrands.first {
@@ -182,13 +183,13 @@ final class SelectorElement: Element {
         selectorView.setSelectedBrand(selectedBrand, animated: false)
     }
 
-    func selectBrand(_ brand: STPCardBrand?) {
+    func selectBrand(_ brand: STPCardBrand?, animated: Bool = false) {
         // Toggle behavior: if already selected, deselect
-        if selectedBrand == brand {
-            selectedBrand = nil
-        } else {
-            selectedBrand = brand
-        }
+        let newSelection: STPCardBrand? = (selectedBrand == brand) ? nil : brand
+        selectedBrand = newSelection
+
+        // Update the visual UI
+        selectorView.setSelectedBrand(newSelection, animated: animated)
 
         didSelectBrand?(selectedBrand)
         delegate?.didUpdate(element: self)
@@ -309,11 +310,8 @@ private final class CardBrandSelectorView: UIView {
 
         let brand = itemView.brand
 
-        // Toggle selection
-        let newSelection: STPCardBrand? = (selectedBrand == brand) ? nil : brand
-        setSelectedBrand(newSelection, animated: true)
-
-        onBrandSelected?(selectedBrand)
+        // Notify SelectorElement to handle the selection (which will call back to update the view)
+        onBrandSelected?(brand)
     }
 }
 

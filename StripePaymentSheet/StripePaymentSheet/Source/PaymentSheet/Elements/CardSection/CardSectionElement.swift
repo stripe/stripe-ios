@@ -76,11 +76,6 @@ final class CardSectionElement: ContainerElement {
     let preferredNetworks: [STPCardBrand]?
     let hostedSurface: HostedSurface
 
-    // Convenience accessor for backward compatibility
-    var cardBrandDropDown: DropdownFieldElement? {
-        return cardBrandSelector?.dropdownElement
-    }
-
     init(
         collectName: Bool = false,
         defaultValues: DefaultValues = .init(),
@@ -123,17 +118,14 @@ final class CardSectionElement: ContainerElement {
                     theme: theme
                 )
             ) { field, params in
-                let selectedBrand = field.selectedBrand ?? .unknown
+                let cardBrand = field.selectedBrand ?? .unknown
+                
                 // Only set preferred networks for the confirm params if we have more than 1 brand fetched
-                let brandCount = enableCBCRedesign
-                    ? (field.selectorElement?.selectedBrand != nil ? 2 : 1)  // If a brand is selected, there must be multiple
-                    : (field.dropdownElement?.nonPlacerholderItems.count ?? 1)
-                if brandCount > 1 {
-                    cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(
-                        preferred: selectedBrand != .unknown ? STPCardBrandUtilities.apiValue(from: selectedBrand) : nil
-                    )
+                let hasMultipleCardBrands = enableCBCRedesign ? (field.selectorElement?.cardBrands.count ?? 1 > 1) : (field.dropdownElement?.nonPlacerholderItems.count ?? 1 > 1)
+                if hasMultipleCardBrands {
+                    cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: cardBrand != .unknown ? STPCardBrandUtilities.apiValue(from: cardBrand) : nil)
                 }
-                analyticsHelper?.logCardBrandSelected(hostedSurface: hostedSurface, cardBrand: selectedBrand)
+                analyticsHelper?.logCardBrandSelected(hostedSurface: hostedSurface, cardBrand: cardBrand)
                 return params
             }
         }
@@ -329,19 +321,12 @@ final class CardSectionElement: ContainerElement {
         }
     }
 
-    // Select a brand in the card brand selector (works with both dropdown and inline selector)
     private func selectBrand(_ brand: STPCardBrand, in selector: CardBrandSelectorElement) {
         if let dropdown = selector.dropdownElement {
             // Dropdown mode: find index and select
             if let indexToSelect = dropdown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {
                 dropdown.select(index: indexToSelect, shouldAutoAdvance: false)
             }
-        } else if let selector = selector.selectorElement {
-            // Inline selector mode: directly set selected brand
-            // The selector will handle the selection internally via its tap gesture
-            // For now, we rely on user interaction for inline selector
-            // Auto-selection for inline selector could be implemented if needed
-            selector.selectBrand(brand)
         }
     }
 

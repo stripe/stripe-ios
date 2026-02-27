@@ -29,11 +29,6 @@ extension TextFieldElement {
         /// See: https://jira.corp.stripe.com/browse/RUN_MOBILESDK-5052
         let fundingBinController: STPBINController?
 
-        // Convenience accessor for dropdown element
-        var cardBrandDropDown: DropdownFieldElement? {
-            return cardBrandSelector?.dropdownElement
-        }
-
         init(
             defaultValue: String? = nil,
             cardBrand: STPCardBrand? = nil,
@@ -53,49 +48,21 @@ extension TextFieldElement {
         private func cardBrand(for text: String) -> STPCardBrand {
             // Try to read the selected brand from the cardBrandSelector
             if let cardBrandSelector = cardBrandSelector {
-                // If using inline selector and a brand is selected, use it
-                if let selectedBrand = cardBrandSelector.selectedBrand {
-                    return selectedBrand
-                }
-
-                // If using dropdown, try to get the first brand
-                if let dropdown = cardBrandSelector.dropdownElement,
-                   let firstBrandString = dropdown.nonPlacerholderItems.first?.rawData {
-                    let cardBrandFromDropDown = STPCard.brand(from: dropdown.selectedItem.isPlaceholder ? firstBrandString : dropdown.selectedItem.rawData)
-                    let cardBrandFromBin = STPCardValidator.brand(forNumber: text)
-                    return cardBrandFromDropDown == .unknown ? cardBrandFromBin : cardBrandFromDropDown
-                }
+                let selectedBrand = cardBrandSelector.selectedBrand ?? .unknown
+                let cardBrandFromBin = STPCardValidator.brand(forNumber: text)
+                return selectedBrand == .unknown ? cardBrandFromBin : selectedBrand
             }
 
             return STPCardValidator.brand(forNumber: text)
         }
 
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
-            // Handle CardBrandSelectorElement
+            // If CBC is enabled and the PAN is not empty...
             if let cardBrandSelector = cardBrandSelector, !text.isEmpty {
-                let enableCBCRedesign = cardBrandSelector.enableCBCRedesign
-
-                // For inline selector (CBC redesign), check if we have multiple brands
-                if enableCBCRedesign, let selectorElement = cardBrandSelector.selectorElement {
-                    if text.count >= 8 && selectorElement.cardBrands.count > 1 {
-                        // Show the inline selector if we have 8 or more digits and at least 2 brands
-                        return selectorElement.view
-                    } else if text.count < 8 {
-                        // Show unknown card brand if we have under 8 digits
-                        return DynamicImageView.makeUnknownCardImageView(theme: theme)
-                    }
-                    // With only 1 brand, fall through to show regular rotating card brand view
-                }
-
-                // For dropdown via selector, use existing logic
-                if let cardBrandDropDown = cardBrandSelector.dropdownElement {
-                    // Show unknown card brand if we have under 9 pan digits and no card brands
-                    if 9 > text.count && cardBrandDropDown.nonPlacerholderItems.isEmpty {
-                        return DynamicImageView.makeUnknownCardImageView(theme: theme)
-                    } else if text.count >= 8 && cardBrandDropDown.nonPlacerholderItems.count > 1 {
-                        // Show the dropdown if we have 8 or more digits and at least 2 brands
-                        return cardBrandDropDown.view
-                    }
+                if 9 > text.count && cardBrandSelector.brandCount == 0 {
+                    return DynamicImageView.makeUnknownCardImageView(theme: theme)
+                } else if text.count >= 8 && cardBrandSelector.brandCount > 1 {
+                    return cardBrandSelector.view
                 }
             }
 
@@ -184,8 +151,7 @@ extension TextFieldElement {
 
             let cardBrand = cardBrand(for: text)
             // If the merchant is CBC eligible, don't show the disallowed error until we have time to hit the card metadata service to determine brands (at 8 digits)
-            let isCBCEnabled = cardBrandSelector != nil
-            let shouldShowDisallowedError = !isCBCEnabled || text.count > 8
+            let shouldShowDisallowedError = cardBrandSelector == nil || text.count > 8
             if !cardBrandFilter.isAccepted(cardBrand: cardBrand) && shouldShowDisallowedError {
                 return .invalid(Error.disallowedBrand(brand: cardBrand))
             }
