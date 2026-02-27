@@ -277,6 +277,20 @@ class STPAnalyticsClientTest: XCTestCase {
                       params: ["selected_lpm": "card"], observer: observer)
         wait(for: [e], timeout: 1)
     }
+    func testCardScanSucceeded() {
+        let e = expectation(description: "")
+        let observer = TestObserver { eventName in
+            guard case .usedCardScanner = eventName else {
+                XCTFail("Failed to convert eventName")
+                return
+            }
+            e.fulfill()
+        }
+        _testLogEvent(event: .cardScanSucceeded,
+                      params: ["duration": NSNumber(value: 3.0)], observer: observer)
+        wait(for: [e], timeout: 1)
+    }
+
     func _testLogEvent(event: STPAnalyticEvent, params: [String: Any], observer: TestObserver) {
         let notificationCenter = NotificationCenter()
         let analyticsClient = STPAnalyticsClient()
