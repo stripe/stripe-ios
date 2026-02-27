@@ -41,9 +41,11 @@ struct LinkPaymentMethodPreview {
                 fallthrough
             }
             self.init(icon: icon, last4: last4)
+        case .klarna, .balance, .pix, .crypto:
+            fallthrough // Not yet supported here.
         case .unparsable:
             fallthrough
-        default:
+        @unknown default:
             return nil
         }
     }
