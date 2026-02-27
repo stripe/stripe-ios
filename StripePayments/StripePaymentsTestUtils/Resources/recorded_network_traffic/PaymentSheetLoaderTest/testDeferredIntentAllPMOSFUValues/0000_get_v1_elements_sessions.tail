@@ -5,21 +5,21 @@ application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KVin3EpDo3ubaBVrlNSG1YefBkSFng7ljOMYmppzMtElJCuGnmmPSPdpDpVAq6a85jeR53eMDrzOr1SL
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=15CP76DpH8_EwxsE8Bejig1DpIEZhkzHPJE03RplWMvq6p1wHMs6TKACKBPur7uCWmzBvpkTiYkOmwY1
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Tue, 09 Dec 2025 17:53:18 GMT
+Date: Thu, 26 Feb 2026 00:23:17 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 15520
+Content-Length: 15946
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_PEqdOvD0Xmnmgz
+request-id: req_LsOCqQbyqR6Jme
 
 {
   "payment_method_preference" : {
@@ -40,8 +40,7 @@ request-id: req_PEqdOvD0Xmnmgz
     "discover"
   ],
   "flags" : {
-    "link_express_checkout_element_inline_otp_killswitch" : true,
-    "link_dedupe_shipping_address_creation" : false,
+    "link_dedupe_shipping_address_creation" : true,
     "distinctly_link_cbc_killswitch" : false,
     "elements_enable_invalid_country_for_pm_error" : true,
     "legacy_confirmation_tokens" : false,
@@ -50,50 +49,51 @@ request-id: req_PEqdOvD0Xmnmgz
     "elements_easel_disable" : false,
     "elements_easel_disable_payment_fill" : false,
     "elements_enable_read_allow_redisplay" : false,
-    "elements_enable_jp_installments_updated_ui" : true,
     "enable_afterpay_clearpay_cbt_afterpay_rails" : false,
     "elements_enable_express_checkout_button_demo_pay" : false,
     "link_enable_auth_partner_communication" : true,
-    "elements_enable_au_becs_debit_spm" : false,
-    "elements_enable_payment_element_custom_payment_methods_byof" : false,
+    "elements_enable_au_becs_debit_spm" : true,
+    "always_show_ece_paypal_recurring_button" : false,
     "elements_enable_mx_card_installments" : true,
     "elements_disable_link_global_holdback_lookup" : false,
     "elements_enable_billing_details_in_pe_change_event" : true,
+    "elements_enable_payment_element_custom_payment_methods_byof" : false,
     "link_disable_auth_partner_ua_check" : false,
     "distinctly_link_pe_purchase_protection" : true,
-    "elements_enable_payment_method_options_setup_future_usage" : false,
+    "ocs_buyer_xp_elements_remove_redirect_lpm_content" : false,
+    "elements_enable_payment_method_options_setup_future_usage" : true,
     "show_swish_factoring_notice" : true,
     "elements_disable_payment_element_card_country_zip_validations" : false,
-    "elements_enable_nz_bank_account_spm" : false,
-    "link_express_checkout_element_one_click_killswitch" : true,
+    "elements_enable_nz_bank_account_spm" : true,
+    "elements_easel_disable_appearance_api" : true,
     "elements_enable_remove_last_validation" : true,
     "elements_enable_save_for_future_payments_pre_check" : false,
     "elements_spm_set_as_default" : true,
     "payment_element_link_modal_preload_killswitch" : false,
+    "link_auth_partner_enable_ios_instagram" : true,
+    "upi_intent_flow_on_mobile" : true,
     "elements_enable_write_allow_redisplay" : false,
     "link_auth_partner_enable_authentication_element" : true,
+    "elements_enable_google_pay_webview_heuristics" : false,
     "elements_allow_manual_payment_method_creation_with_spm" : false,
-    "elements_enable_cb_apple_pay_for_connect_platforms" : true,
     "elements_mobile_force_setup_future_use_behavior_and_new_mandate_text" : false,
     "link_purchase_protections_rollout" : true,
-    "link_express_checkout_element_two_step_killswitch" : true,
     "id_bank_transfers_v1_integration" : false,
     "networked_business_profile_demo" : false,
     "elements_disable_fc_lite" : false,
-    "elements_enable_acss_debit_spm" : false,
+    "elements_enable_acss_debit_spm" : true,
     "elements_enable_fraud_signal_data_transfer_to_hcaptcha" : false,
     "ocs_buyer_xp_elements_remove_wallets_redirect_text" : false,
     "disable_cbc_in_link_popup" : false,
     "elements_easel_disable_health_check" : false,
-    "elements_enable_bacs_debit_spm" : false,
-    "link_modal_enable_ui_revamp" : true,
+    "elements_enable_bacs_debit_spm" : true,
     "elements_disable_sepa_debit_eea_address_requirement" : false,
-    "elements_mobile_card_funding_filtering" : false,
+    "elements_mobile_card_funding_filtering" : true,
     "elements_enable_ephemeral_key_for_confirmation_token_creation" : true,
     "elements_show_expanded_spm" : false,
     "elements_enable_19_digit_pans" : false,
     "link_auth_partner_delay_recognition" : true,
-    "bank_connections_enable_us_bank_account_in_universal_link_modal" : false,
+    "bank_connections_enable_us_bank_account_in_universal_link_modal" : true,
     "elements_easel_disable_optimizations_check" : false,
     "elements_enable_new_google_places_api" : true,
     "elements_spm_messages" : false,
@@ -103,12 +103,12 @@ request-id: req_PEqdOvD0Xmnmgz
     "ece_apple_pay_payment_request_passthrough" : false,
     "link_enable_white_ece_button_theme" : false,
     "elements_easel_disable_tax_id_fill" : false,
-    "paypal_express_checkout_recurring_support" : false,
-    "elements_easel_enable_elements_inspector" : false,
+    "elements_hcaptcha_in_payment_method_data_radar_options" : false,
+    "elements_easel_enable_elements_inspector" : true,
     "elements_mobile_attest_on_intent_confirmation" : false,
     "link_decommission_autofill_modal" : true,
     "elements_easel_disable_position_customization" : false,
-    "link_disable_login_if_signed_up_outside_of_elements" : false,
+    "link_disable_login_if_signed_up_outside_of_elements" : true,
     "apple_pay_pe_killswitch" : false,
     "apple_pay_prb_killswitch" : false,
     "elements_enable_payment_method_logo_position" : true,
@@ -122,8 +122,10 @@ request-id: req_PEqdOvD0Xmnmgz
     "paypal_phone_number_support_in_ece" : false,
     "distinctly_link_pe_backup_payment_method" : true,
     "linkglobalholdbackmanager_test_rollout" : true,
-    "elements_enable_br_card_installments" : false,
     "elements_easel_disable_session_summary" : false,
+    "link_auth_partner_delay_android_fb_cookie_login" : false,
+    "link_enable_payment_details_refresh" : true,
+    "elements_apply_amex_icon_sorting" : false,
     "elements_enable_pay_by_bank_remember_bank_selection" : false,
     "abstracted_adaptive_pricing_should_show_markup_disclosure_percentage" : false,
     "elements_extend_hcaptcha_refresh_time" : true,
@@ -134,7 +136,8 @@ request-id: req_PEqdOvD0Xmnmgz
     "elements_enable_jp_card_installments" : true,
     "elements_prefer_fc_lite" : false,
     "link_enable_address_country_restrictions" : false,
-    "upi_qrcode_for_mandate_setup" : false,
+    "upi_qrcode_for_mandate_setup" : true,
+    "elements_human_security_enabled" : false,
     "elements_enable_easel_for_pi" : true,
     "elements_does_not_collect_postal_code_for_non_us_card_transactions_killswitch" : false,
     "link_auth_partner_consume_link_auth_intent" : true,
@@ -154,9 +157,9 @@ request-id: req_PEqdOvD0Xmnmgz
     "elements_enable_pay_by_bank_multi_country_bank_selector_rollout_countries" : false,
     "elements_enable_south_korea_market_underlying_pms" : false,
     "link_enable_card_brand_choice" : true,
-    "link_enable_universal_ncdv_l3" : true,
     "link_payment_element_keep_optional_doi_open_rollout" : true,
     "link_enable_auth_partner_sizing_logging" : true,
+    "checkout_link_in_habanero_enabled" : false,
     "elements_enable_link_spm" : true,
     "elements_spm_max_visible_payment_methods" : false,
     "elements_disable_link_email_otp" : false,
@@ -165,24 +168,30 @@ request-id: req_PEqdOvD0Xmnmgz
     "elements_allow_custom_payment_method_creation" : false,
     "elements_enable_appearance_recompute" : false,
     "distinctly_link_payment_element_ramp" : true,
-    "link_user_action_attempt_login_using_stored_credentials" : true,
+    "link_auth_partner_enable_android_fb" : false,
     "elements_enable_interac_apple_pay" : false,
     "elements_disable_paypal_express" : false,
     "elements_disable_recurring_express_checkout_button_amazon_pay" : false,
+    "link_ewcs_email_and_cookie_lookup_enabled" : false,
+    "link_user_action_attempt_login_using_stored_credentials" : true,
+    "avoid_redundant_billing_details_for_klarna" : false,
+    "link_auth_partner_bypass_bridge_check" : false,
     "elements_easel_disable_customer_location_mocking" : false,
+    "link_enable_link_session_key_consumer_person_details" : false,
     "elements_disable_express_checkout_button_amazon_pay" : false,
     "disable_payment_element_if_required_billing_config" : false,
     "elements_stop_move_focus_to_first_errored_field" : true,
     "link_in_accordion_layout_available_in_stripejs" : false,
-    "paypal_express_checkout_recurring_support_elements_for_new_ece_shape" : true,
+    "link_payment_element_widget_view_enabled" : true,
+    "ocs_buyer_xp_enable_payment_element_accordion_box_shadow" : false,
     "legacy_customer_session_payment_element_features" : false,
     "link_forest_enable_ece_bank_use_shipping_as_billing" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_10TaaZyv0eU",
+  "session_id" : "elements_session_11VPnXRORee",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "42002f02-e3bc-4c3b-bf6c-6e65b009324b",
+  "config_id" : "fd19466a-7bb3-4cfa-becb-c1695f49eadc",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -210,15 +219,14 @@ request-id: req_PEqdOvD0Xmnmgz
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "5c4a00b4-745b-4cdd-a2bc-4e3effd35b5f",
+    "arb_id" : "5a33334f-6087-48af-8124-fb0ba17a6d13",
     "experiment_metadata" : {
-      "seed" : "69106bc3bde0aa836fd3ae0cd0a16b608b6dc63c79b3f916efab02248bda30ef",
+      "seed" : "723b393413a5177d3783cbce421421270a07e697b94deaba6646cadff671c628",
       "semi_dominant_payment_methods" : [
 
       ],
       "lpm_holdback_t1_payment_methods" : [
-        "us_bank_account",
-        "amazon_pay"
+        "cashapp"
       ],
       "lpm_adoption_ranking_upe_v2_ignore_fixed_lpms" : false,
       "lpm_holdback_t2_payment_methods" : [
@@ -228,16 +236,19 @@ request-id: req_PEqdOvD0Xmnmgz
       ]
     },
     "experiment_assignments" : {
-      "ocs_buyer_xp_elements_remove_postal_code_card_non_us" : "control",
-      "paypal_payment_handler" : "control",
-      "ocs_buyer_xp_elements_lpm_holdback" : "control",
-      "ocs_buyer_xp_redirect_simplification_v3" : "control",
-      "ocs_buyer_xp_redirect_simplification_v2" : "treatment_1",
-      "ocs_buyer_xp_elements_ece_timeout_time" : "control",
+      "link_blue_line_opt_in_aa" : "control",
       "link_ab_test_aa" : "control",
-      "ocs_buyer_xp_elements_redirect_form_simplification" : "control",
+      "link_ece_fb_ig_aa" : "control",
+      "ocs_buyer_xp_elements_lpm_holdback" : "control",
+      "ocs_mobile_horizontal_mode" : "control",
+      "paypal_payment_handler" : "control",
+      "link_in_ewcs_fixes" : "control",
+      "ocs_buyer_xp_elements_ece_pe_does_not_wait" : "control",
+      "link_blue_line_opt_in" : "control",
+      "link_ece_fb_ig" : "control",
+      "ocs_mobile_horizontal_mode_aa" : "control",
       "ocs_buyer_xp_elements_clover_collect_postal_code" : "control",
-      "ocs_buyer_xp_elements_ece_pe_does_not_wait" : "control"
+      "link_in_ewcs_fixes_aa" : "control"
     }
   },
   "legacy_customer" : null,
@@ -254,6 +265,7 @@ request-id: req_PEqdOvD0Xmnmgz
     "link_wanderlust_in_elements_enabled" : false,
     "link_consumer_incentive" : null,
     "link_crypto_onramp_bank_upsell" : false,
+    "link_ece_browser_compatibility_override" : false,
     "link_enable_email_otp_for_link_popup" : false,
     "link_crypto_onramp_elements_logout_disabled" : false,
     "link_no_code_default_values_identification" : true,
@@ -262,7 +274,6 @@ request-id: req_PEqdOvD0Xmnmgz
     "link_bank_onboarding_enabled" : false,
     "link_enable_instant_debits_in_testmode" : false,
     "link_payment_element_disabled_by_targeting" : false,
-    "link_payment_element_disable_signup_experiment" : false,
     "link_sign_up_opt_in_feature_enabled" : false,
     "link_only_for_payment_method_types_enabled" : false,
     "link_disabled_reasons" : {
