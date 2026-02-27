@@ -87,6 +87,31 @@ public final class Checkout: ObservableObject {
         try await performAPIUpdate(["promotion_code": ""])
     }
 
+    // MARK: - Line Items
+
+    /// Updates the quantity of a line item.
+    /// - Parameters:
+    ///   - quantity: The new quantity.
+    ///   - lineItemId: The ID of the line item to update.
+    /// - Throws: ``CheckoutError`` if the update fails.
+    public func updateQuantity(_ quantity: Int, forLineItem lineItemId: String) async throws {
+        try requireOpenSession()
+        try await performAPIUpdate([
+            "updated_line_item_quantity[line_item_id]": lineItemId,
+            "updated_line_item_quantity[quantity]": quantity,
+        ])
+    }
+
+    // MARK: - Shipping
+
+    /// Selects a shipping option for the session.
+    /// - Parameter optionId: The ID of the shipping rate to select.
+    /// - Throws: ``CheckoutError`` if the update fails.
+    public func selectShippingOption(_ optionId: String) async throws {
+        try requireOpenSession()
+        try await performAPIUpdate(["shipping_rate": optionId])
+    }
+
     // MARK: - Internal Methods
 
     /// Replaces ``session`` and notifies the delegate when the session data has changed.
@@ -121,7 +146,7 @@ public final class Checkout: ObservableObject {
                 parameters: parameters
             )
             let refreshedResponse = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
-            updateSession(refreshedResponse.checkoutSession)
+            updateSession(refreshedResponse)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }

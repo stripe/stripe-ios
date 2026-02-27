@@ -138,6 +138,74 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         }
     }
 
+    func testUpdateQuantity() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+            allowAdjustableLineItemQuantity: true
+        )
+        let checkout = await Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
+
+        try await checkout.load()
+
+        let lineItemId = await MainActor.run { () -> String? in
+            XCTAssertNotNil(checkout.session)
+            if let lineItemGroup = checkout.session?.allResponseFields["line_item_group"] as? [AnyHashable: Any],
+               let lineItems = lineItemGroup["line_items"] as? [[AnyHashable: Any]],
+               let firstItem = lineItems.first,
+               let id = firstItem["id"] as? String {
+                return id
+            }
+            return nil
+        }
+
+        let itemId = try XCTUnwrap(lineItemId, "Session should have at least one line item")
+
+        try await checkout.updateQuantity(2, forLineItem: itemId)
+
+        await MainActor.run {
+            XCTAssertNotNil(checkout.session)
+        }
+    }
+
+    func testSelectShippingOption() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+            includeShippingOptions: true
+        )
+        let checkout = await Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
+
+        try await checkout.load()
+
+        let shippingRateId = await MainActor.run { () -> String? in
+            XCTAssertNotNil(checkout.session)
+            if let shippingOptions = checkout.session?.allResponseFields["shipping_options"] as? [[AnyHashable: Any]],
+               let firstOption = shippingOptions.first,
+               let shippingRate = firstOption["shipping_rate"] as? [AnyHashable: Any],
+               let id = shippingRate["id"] as? String {
+                return id
+            }
+            // Fallback: shipping_rate might be a string ID directly
+            if let shippingOptions = checkout.session?.allResponseFields["shipping_options"] as? [[AnyHashable: Any]],
+               let firstOption = shippingOptions.first,
+               let id = firstOption["shipping_rate"] as? String {
+                return id
+            }
+            return nil
+        }
+
+        let rateId = try XCTUnwrap(shippingRateId, "Session should have at least one shipping option")
+
+        try await checkout.selectShippingOption(rateId)
+
+        await MainActor.run {
+            XCTAssertNotNil(checkout.session)
+        }
+    }
+
     func testDelegateCalledOnPromotionCodeApply() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
             allowPromotionCodes: true

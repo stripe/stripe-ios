@@ -201,11 +201,44 @@ extension STPTestingAPIClient {
         amount: Int? = nil,
         merchantCountry: String? = "us",
         customerID: String? = nil,
-        allowPromotionCodes: Bool = false
+        allowPromotionCodes: Bool = false,
+        allowAdjustableLineItemQuantity: Bool = false,
+        includeShippingOptions: Bool = false
     ) async throws -> CreateCheckoutSessionResponse {
         var additionalParameters: [String: Any] = [:]
         if allowPromotionCodes {
             additionalParameters["allow_promotion_codes"] = true
+        }
+        if allowAdjustableLineItemQuantity {
+            additionalParameters["line_items"] = [
+                [
+                    "price_data": [
+                        "currency": currency,
+                        "product_data": ["name": "Test Product"],
+                        "unit_amount": amount ?? 5050,
+                    ] as [String: Any],
+                    "quantity": 1,
+                    "adjustable_quantity": [
+                        "enabled": true,
+                        "minimum": 1,
+                        "maximum": 10,
+                    ] as [String: Any],
+                ] as [String: Any],
+            ]
+        }
+        if includeShippingOptions {
+            additionalParameters["shipping_options"] = [
+                [
+                    "shipping_rate_data": [
+                        "display_name": "Standard Shipping",
+                        "type": "fixed_amount",
+                        "fixed_amount": [
+                            "amount": 500,
+                            "currency": currency,
+                        ] as [String: Any],
+                    ] as [String: Any],
+                ] as [String: Any],
+            ]
         }
         let params: [String: Any?] = [
             "account": merchantCountry,

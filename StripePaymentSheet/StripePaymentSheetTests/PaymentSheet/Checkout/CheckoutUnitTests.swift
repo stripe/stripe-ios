@@ -69,4 +69,38 @@ final class CheckoutUnitTests: XCTestCase {
             }
         }
     }
+
+    func testUpdateQuantityRequiresOpenSession() async throws {
+        let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
+
+        // Session is nil (not loaded), should throw sessionNotLoaded
+        await MainActor.run { XCTAssertNil(checkout.session) }
+
+        do {
+            try await checkout.updateQuantity(2, forLineItem: "li_123")
+            XCTFail("Expected CheckoutError.sessionNotLoaded")
+        } catch let error as CheckoutError {
+            guard case .sessionNotLoaded = error else {
+                XCTFail("Expected .sessionNotLoaded, got \(error)")
+                return
+            }
+        }
+    }
+
+    func testSelectShippingOptionRequiresOpenSession() async throws {
+        let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
+
+        // Session is nil (not loaded), should throw sessionNotLoaded
+        await MainActor.run { XCTAssertNil(checkout.session) }
+
+        do {
+            try await checkout.selectShippingOption("shr_123")
+            XCTFail("Expected CheckoutError.sessionNotLoaded")
+        } catch let error as CheckoutError {
+            guard case .sessionNotLoaded = error else {
+                XCTFail("Expected .sessionNotLoaded, got \(error)")
+                return
+            }
+        }
+    }
 }
