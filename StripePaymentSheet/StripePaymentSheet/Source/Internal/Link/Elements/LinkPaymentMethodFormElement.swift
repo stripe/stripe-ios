@@ -91,7 +91,7 @@ final class LinkPaymentMethodFormElement: Element {
             billingDetails.email = email
         }
 
-        let preferredNetwork = cardBrandSelectorElement?.element.dropdownElement?.selectedItem.rawData
+        let preferredNetwork = STPCardBrandUtilities.stringFrom(cardBrandSelectorElement?.element.selectedBrand ?? .unknown)
 
         return Params(
             expiryDate: expiryDate,
@@ -131,7 +131,8 @@ final class LinkPaymentMethodFormElement: Element {
             disallowedCardBrands: [
                 // We will add brands from card brand filtering here
             ],
-            theme: theme
+            theme: theme,
+            includePlaceholder: false
         )
 
         if let selectedBrand = paymentMethod.cardDetails?.cardBrand {

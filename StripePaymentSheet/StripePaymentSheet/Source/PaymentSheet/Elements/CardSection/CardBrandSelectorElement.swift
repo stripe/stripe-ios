@@ -26,6 +26,7 @@ final class CardBrandSelectorElement: Element {
     }
 
     let enableCBCRedesign: Bool
+    let includePlaceholder: Bool
 
     var selectorElement: SelectorElement?
     var dropdownElement: DropdownFieldElement?
@@ -53,8 +54,10 @@ final class CardBrandSelectorElement: Element {
          cardBrands: Set<STPCardBrand> = [],
          disallowedCardBrands: Set<STPCardBrand> = [],
          theme: ElementsAppearance = .default,
+         includePlaceholder: Bool = true,
          didSelectBrand: ((STPCardBrand?) -> Void)? = nil) {
         self.enableCBCRedesign = enableCBCRedesign
+        self.includePlaceholder = includePlaceholder
 
         if enableCBCRedesign {
             self.selectorElement = SelectorElement(
@@ -69,7 +72,7 @@ final class CardBrandSelectorElement: Element {
                 cardBrands: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
                 theme: theme,
-                includePlaceholder: true,
+                includePlaceholder: includePlaceholder,
                 hasPadding: true
             )
             self.dropdownElement?.delegate = self
@@ -84,7 +87,7 @@ final class CardBrandSelectorElement: Element {
                 from: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
                 theme: dropdownElement?.theme ?? .default,
-                includePlaceholder: true
+                includePlaceholder: includePlaceholder
             )
             dropdownElement?.update(items: items)
         }

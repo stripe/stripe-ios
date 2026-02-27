@@ -25,7 +25,8 @@ extension SavedPaymentMethodFormFactory {
                 enableCBCRedesign: configuration.enableCBCRedesign,
                 cardBrands: Set(cardBrands),
                 disallowedCardBrands: Set<STPCardBrand>(disallowedCardBrands),
-                theme: theme
+                theme: theme,
+                includePlaceholder: false
             )
             // pre-select current card brand
             if let currentCardBrand = configuration.paymentMethod.card?.preferredDisplayBrand {
