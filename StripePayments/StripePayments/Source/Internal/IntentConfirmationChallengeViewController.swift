@@ -18,10 +18,12 @@ class IntentConfirmationChallengeViewController: UIViewController {
     // MARK: - Properties
     private let publishableKey: String
     private let clientSecret: String
+    private let applyLiquidGlass: Bool
     private let completion: (Result<Void, Error>) -> Void
 
     private var webView: WKWebView!
     private var dimmedBackgroundView: UIView!
+    private var closeButton: UIButton!
 
     // Hard-coded challenge URL
     private static let challengeHost = "b.stripecdn.com"
@@ -34,10 +36,12 @@ class IntentConfirmationChallengeViewController: UIViewController {
     init(
         publishableKey: String,
         clientSecret: String,
+        applyLiquidGlass: Bool,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         self.publishableKey = publishableKey
         self.clientSecret = clientSecret
+        self.applyLiquidGlass = applyLiquidGlass
         self.completion = { result in
             completion(result)
         }
@@ -58,6 +62,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
         setupDimmedBackground()
         setupWebView()
+        setupCloseButton()
         loadChallenge()
     }
 
@@ -95,6 +100,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
         webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.customUserAgent = PaymentsSDKVariant.paymentUserAgent
 
         // Make webview transparent
         webView.isOpaque = false
@@ -116,6 +122,54 @@ class IntentConfirmationChallengeViewController: UIViewController {
         ])
     }
 
+    private func setupCloseButton() {
+        // Use glass style if configured, plain style otherwise (matching PaymentSheet pattern)
+        if applyLiquidGlass {
+            let glassButtonSize = 44.0
+            closeButton = UIButton(type: .system)
+            closeButton.translatesAutoresizingMaskIntoConstraints = false
+            closeButton.frame = CGRect(x: 0, y: 0, width: glassButtonSize, height: glassButtonSize)
+            closeButton.widthAnchor.constraint(equalToConstant: glassButtonSize).isActive = true
+            closeButton.heightAnchor.constraint(equalToConstant: glassButtonSize).isActive = true
+            let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
+            let image = UIImage(systemName: "xmark", withConfiguration: config)
+            closeButton.setImage(image, for: .normal)
+            // These checks are a convenience because .glass is only available on iOS (not visionOS)
+            // when compiling with XCode 26
+#if compiler(>=6.2)
+            #if !os(visionOS)
+            if #available(iOS 26.0, visionOS 26.0, *) {
+                closeButton.configuration = .glass()
+            }
+            #endif
+#endif
+        } else {
+            closeButton = UIButton(type: .system)
+            closeButton.translatesAutoresizingMaskIntoConstraints = false
+            let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .medium)
+            let image = UIImage(systemName: "xmark", withConfiguration: config)
+            closeButton.setImage(image, for: .normal)
+            closeButton.tintColor = .white
+        }
+
+        // Add action
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+
+        // Accessibility
+        closeButton.accessibilityLabel = String.Localized.close
+        closeButton.accessibilityIdentifier = "UIButton.Close"
+
+        // Initially hidden, will show when webview is ready
+        closeButton.alpha = 0
+
+        view.addSubview(closeButton)
+
+        NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            closeButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+        ])
+    }
+
     private func loadChallenge() {
         let request = URLRequest(url: Self.challengeURL)
         webView.load(request)
@@ -129,6 +183,12 @@ class IntentConfirmationChallengeViewController: UIViewController {
         webView?.configuration.userContentController.removeScriptMessageHandler(forName: "onError")
     }
 
+    @objc private func closeButtonTapped() {
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeCanceled(duration: Date().timeIntervalSince(startTime))
+        cleanup()
+        completion(.failure(ChallengeError.userCanceled))
+    }
+
     // MARK: - Handlers
     private func handleReady() {
         STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeWebViewLoaded(duration: Date().timeIntervalSince(startTime))
@@ -136,6 +196,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
             UIView.animate(withDuration: 0.3) {
                 self.dimmedBackgroundView.alpha = 1.0
                 self.webView.alpha = 1.0
+                self.closeButton.alpha = 1.0
             }
         }
     }
@@ -250,6 +311,7 @@ extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
 enum ChallengeError: LocalizedError, AnalyticLoggableError {
     case webError(message: String, type: String, code: String?)
     case navigationFailed(Error)
+    case userCanceled
     case unknownError
 
     var analyticsErrorType: String {
@@ -285,6 +347,8 @@ enum ChallengeError: LocalizedError, AnalyticLoggableError {
             return message
         case .navigationFailed(let error):
             return "Navigation failed: \(error.localizedDescription)"
+        case .userCanceled:
+            return nil  // No error message for user cancellation
         case .unknownError:
             return "Unknown error."
         }
@@ -315,6 +379,12 @@ extension STPAnalyticsClient {
     func logIntentConfirmationChallengeError(error: Error, duration: TimeInterval) {
         log(
             analytic: ErrorAnalytic(event: .intentConfirmationChallengeError, error: error, additionalNonPIIParams: ["duration": duration * 1000])
+        )
+    }
+
+    func logIntentConfirmationChallengeCanceled(duration: TimeInterval) {
+        log(
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeCanceled, params: ["duration": duration * 1000])
         )
     }
 }

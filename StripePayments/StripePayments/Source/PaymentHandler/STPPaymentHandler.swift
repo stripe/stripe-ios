@@ -125,10 +125,12 @@ public class STPPaymentHandler: NSObject {
     @_spi(STP) public init(
         apiClient: STPAPIClient = .shared,
         threeDSCustomizationSettings: STPThreeDSCustomizationSettings =
-            STPThreeDSCustomizationSettings()
+            STPThreeDSCustomizationSettings(),
+        applyLiquidGlass: Bool = false
     ) {
         self.apiClient = apiClient
         self.threeDSCustomizationSettings = threeDSCustomizationSettings
+        self.applyLiquidGlass = applyLiquidGlass
         super.init()
     }
 
@@ -139,6 +141,9 @@ public class STPPaymentHandler: NSObject {
     /// Note: Configure this before calling any methods.
     /// Defaults to `STPThreeDSCustomizationSettings()`.
     @objc public var threeDSCustomizationSettings: STPThreeDSCustomizationSettings
+
+    /// Whether to use glass-style UI for challenge views.
+    private let applyLiquidGlass: Bool
 
     internal var _simulateAppToAppRedirect: Bool = false
 
@@ -1962,7 +1967,8 @@ public class STPPaymentHandler: NSObject {
 
                 let challengeVC = IntentConfirmationChallengeViewController(
                     publishableKey: publishableKey,
-                    clientSecret: clientSecret
+                    clientSecret: clientSecret,
+                    applyLiquidGlass: self.applyLiquidGlass
                 ) { [weak self] result in
                     guard let self = self else { return }
 
@@ -1975,7 +1981,13 @@ public class STPPaymentHandler: NSObject {
                             self._retrieveAndCheckIntentForCurrentAction()
 
                         case .failure(let error):
-                            currentAction.complete(with: .failed, error: error as NSError)
+                            // Handle user cancellation separately - don't show error message
+                            if case ChallengeError.userCanceled = error {
+                                // We don't forward cancelation errors
+                                currentAction.complete(with: .canceled, error: nil)
+                            } else {
+                                currentAction.complete(with: .failed, error: error as NSError)
+                            }
                         }
                     }
                 }
