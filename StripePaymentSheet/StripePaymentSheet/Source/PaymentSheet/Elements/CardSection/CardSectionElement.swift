@@ -121,7 +121,7 @@ final class CardSectionElement: ContainerElement {
                 let cardBrand = field.selectedBrand ?? .unknown
 
                 // Only set preferred networks for the confirm params if we have more than 1 brand fetched
-                let hasMultipleCardBrands = enableCBCRedesign ? (field.selectorElement?.cardBrands.count ?? 1 > 1) : (field.dropdownElement?.nonPlacerholderItems.count ?? 1 > 1)
+                let hasMultipleCardBrands = field.brandCount > 1
                 if hasMultipleCardBrands {
                     cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: cardBrand != .unknown ? STPCardBrandUtilities.apiValue(from: cardBrand) : nil)
                 }

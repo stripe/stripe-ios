@@ -54,8 +54,7 @@ final class CardBrandSelectorElement: Element {
          cardBrands: Set<STPCardBrand> = [],
          disallowedCardBrands: Set<STPCardBrand> = [],
          theme: ElementsAppearance = .default,
-         includePlaceholder: Bool = true,
-         didSelectBrand: ((STPCardBrand?) -> Void)? = nil) {
+         includePlaceholder: Bool = true) {
         self.enableCBCRedesign = enableCBCRedesign
         self.includePlaceholder = includePlaceholder
 
@@ -63,8 +62,7 @@ final class CardBrandSelectorElement: Element {
             self.selectorElement = SelectorElement(
                 cardBrands: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
-                theme: theme,
-                didSelectBrand: didSelectBrand
+                theme: theme
             )
             self.selectorElement?.delegate = self
         } else {
@@ -119,7 +117,6 @@ final class SelectorElement: Element {
 
     private let selectorView: CardBrandSelectorView
     private let theme: ElementsAppearance
-    private var didSelectBrand: ((STPCardBrand?) -> Void)?
 
     private(set) var selectedBrand: STPCardBrand?
     var cardBrands: Set<STPCardBrand>
@@ -127,21 +124,17 @@ final class SelectorElement: Element {
 
     init(cardBrands: Set<STPCardBrand> = [],
          disallowedCardBrands: Set<STPCardBrand> = [],
-         theme: ElementsAppearance = .default,
-         didSelectBrand: ((STPCardBrand?) -> Void)? = nil) {
+         theme: ElementsAppearance = .default) {
         self.cardBrands = cardBrands
         self.disallowedCardBrands = disallowedCardBrands
         self.theme = theme
-        self.didSelectBrand = didSelectBrand
         self.selectorView = CardBrandSelectorView(
             cardBrands: Array(cardBrands.sorted()),
             disallowedCardBrands: disallowedCardBrands,
             theme: theme
         )
 
-        selectorView.onBrandSelected = { [weak self] brand in
-            self?.selectBrand(brand)
-        }
+        selectorView.delegate = self
     }
 
     func update(cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand> = []) {
@@ -167,13 +160,11 @@ final class SelectorElement: Element {
         if allowedBrands.count == 1, let onlyAllowedBrand = allowedBrands.first {
             if selectedBrand != onlyAllowedBrand {
                 selectedBrand = onlyAllowedBrand
-                didSelectBrand?(selectedBrand)
                 delegate?.didUpdate(element: self)
             }
         } else if allowedBrands.isEmpty && selectedBrand != nil {
             // If no brands are allowed, clear selection
             selectedBrand = nil
-            didSelectBrand?(selectedBrand)
             delegate?.didUpdate(element: self)
         }
 
@@ -194,16 +185,28 @@ final class SelectorElement: Element {
         // Update the visual UI
         selectorView.setSelectedBrand(newSelection, animated: animated)
 
-        didSelectBrand?(selectedBrand)
         delegate?.didUpdate(element: self)
+    }
+}
+
+// MARK: - CardBrandSelectorViewDelegate
+
+extension SelectorElement: CardBrandSelectorViewDelegate {
+    func didSelectBrand(_ brand: STPCardBrand?) {
+        selectBrand(brand)
     }
 }
 
 // MARK: - CardBrandSelectorView
 
+/// Delegate protocol for CardBrandSelectorView, matching the pattern used by PickerFieldView
+private protocol CardBrandSelectorViewDelegate: AnyObject {
+    func didSelectBrand(_ brand: STPCardBrand?)
+}
+
 /// The actual UIView that displays card brand icons with checkmarks (segmented control style)
 private final class CardBrandSelectorView: UIView {
-    var onBrandSelected: ((STPCardBrand?) -> Void)?
+    weak var delegate: CardBrandSelectorViewDelegate?
 
     private let stackView: UIStackView = {
         let stack = UIStackView()
@@ -314,7 +317,7 @@ private final class CardBrandSelectorView: UIView {
         let brand = itemView.brand
 
         // Notify SelectorElement to handle the selection (which will call back to update the view)
-        onBrandSelected?(brand)
+        delegate?.didSelectBrand(brand)
     }
 }
 
