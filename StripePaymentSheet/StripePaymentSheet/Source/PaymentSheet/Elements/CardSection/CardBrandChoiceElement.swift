@@ -55,8 +55,7 @@ final class CardBrandChoiceElement: Element {
          cardBrands: Set<STPCardBrand> = [],
          disallowedCardBrands: Set<STPCardBrand> = [],
          theme: ElementsAppearance = .default,
-         includePlaceholder: Bool = true,
-         didSelectBrand: ((STPCardBrand?) -> Void)? = nil) {
+         includePlaceholder: Bool = true) {
         self.enableCBCRedesign = enableCBCRedesign
         self.includePlaceholder = includePlaceholder
 
@@ -64,8 +63,7 @@ final class CardBrandChoiceElement: Element {
             self.selectorElement = SelectorElement(
                 cardBrands: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
-                theme: theme,
-                didSelectBrand: didSelectBrand
+                theme: theme
             )
             self.selectorElement?.delegate = self
         } else {
@@ -104,6 +102,13 @@ extension CardBrandChoiceElement: ElementDelegate {
     }
 }
 
+// MARK: - CardBrandChoiceViewDelegate
+
+/// Delegate protocol for CardBrandSelectorView, matching the pattern used by PickerFieldView
+private protocol CardBrandChoiceViewDelegate: AnyObject {
+    func didTapBrand(_ brand: STPCardBrand?)
+}
+
 // MARK: - SelectorElement
 
 /// Displays card brand icons in a horizontal row with tap-to-select behavior.
@@ -119,7 +124,6 @@ final class SelectorElement: Element {
 
     private let cbcView: CardBrandChoiceView
     private let theme: ElementsAppearance
-    private var didSelectBrand: ((STPCardBrand?) -> Void)?
 
     private(set) var selectedBrand: STPCardBrand?
     var cardBrands: Set<STPCardBrand>
@@ -127,21 +131,16 @@ final class SelectorElement: Element {
 
     init(cardBrands: Set<STPCardBrand> = [],
          disallowedCardBrands: Set<STPCardBrand> = [],
-         theme: ElementsAppearance = .default,
-         didSelectBrand: ((STPCardBrand?) -> Void)? = nil) {
+         theme: ElementsAppearance = .default) {
         self.cardBrands = cardBrands
         self.disallowedCardBrands = disallowedCardBrands
         self.theme = theme
-        self.didSelectBrand = didSelectBrand
         self.cbcView = CardBrandChoiceView(
             cardBrands: Array(cardBrands.sorted()),
             disallowedCardBrands: disallowedCardBrands,
             theme: theme
         )
-
-        cbcView.onBrandSelected = { [weak self] brand in
-            self?.selectBrand(brand)
-        }
+        self.cbcView.delegate = self
     }
 
     func update(cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand> = []) {
@@ -153,28 +152,22 @@ final class SelectorElement: Element {
             selectedBrand = nil
         }
 
-        // Clear selected brand if no brands are available
-        if cardBrands.isEmpty {
-            selectedBrand = nil
-        }
-
+        // Don't make any selection changes if there aren't multiple brands to choose from
         guard cardBrands.count > 1 else {
             return
         }
 
         // Auto-select if there's only one allowed brand
+        // Note: Don't call delegate?.didUpdate here - this method is called by the parent
+        // as part of its update cycle. The parent will handle propagating changes.
         let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
         if allowedBrands.count == 1, let onlyAllowedBrand = allowedBrands.first {
             if selectedBrand != onlyAllowedBrand {
                 selectedBrand = onlyAllowedBrand
-                didSelectBrand?(selectedBrand)
-                delegate?.didUpdate(element: self)
             }
         } else if allowedBrands.isEmpty && selectedBrand != nil {
             // If no brands are allowed, clear selection
             selectedBrand = nil
-            didSelectBrand?(selectedBrand)
-            delegate?.didUpdate(element: self)
         }
 
         cbcView.update(
@@ -186,7 +179,7 @@ final class SelectorElement: Element {
         cbcView.setSelectedBrand(selectedBrand, animated: false)
     }
 
-    func selectBrand(_ brand: STPCardBrand?, animated: Bool = false) {
+    func updateBrandSelection(_ brand: STPCardBrand?, animated: Bool = false) {
         // Toggle behavior: if already selected, deselect
         let newSelection: STPCardBrand? = (selectedBrand == brand) ? nil : brand
         selectedBrand = newSelection
@@ -194,16 +187,20 @@ final class SelectorElement: Element {
         // Update the visual UI
         cbcView.setSelectedBrand(newSelection, animated: animated)
 
-        didSelectBrand?(selectedBrand)
         delegate?.didUpdate(element: self)
     }
 }
 
+extension SelectorElement: CardBrandChoiceViewDelegate {
+    func didTapBrand(_ brand: STPCardBrand?) {
+        updateBrandSelection(brand)
+    }
+}
 // MARK: - CardBrandChoiceView
 
 /// The actual UIView that displays card brand icons with checkmarks (segmented control style)
 private final class CardBrandChoiceView: UIView {
-    var onBrandSelected: ((STPCardBrand?) -> Void)?
+    weak var delegate: CardBrandChoiceViewDelegate?
 
     private let stackView: UIStackView = {
         let stack = UIStackView()
@@ -303,11 +300,8 @@ private final class CardBrandChoiceView: UIView {
 
     @objc private func brandTapped(_ sender: UITapGestureRecognizer) {
         guard let itemView = sender.view as? CardBrandItemView else { return }
-
-        let brand = itemView.brand
-
-        // Notify SelectorElement to handle the selection (which will call back to update the view)
-        onBrandSelected?(brand)
+        // Notify SelectorElement to handle the selection
+        delegate?.didTapBrand(itemView.brand)
     }
 }
 

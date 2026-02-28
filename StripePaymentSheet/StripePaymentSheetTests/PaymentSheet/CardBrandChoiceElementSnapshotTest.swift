@@ -49,7 +49,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             theme: theme
         )
         // Select a brand
-        element.selectorElement?.selectBrand(.cartesBancaires)
+        element.selectorElement?.updateBrandSelection(.cartesBancaires)
         verify(element)
     }
 
@@ -61,7 +61,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             theme: theme
         )
         // Select a brand
-        element.selectorElement?.selectBrand(.visa)
+        element.selectorElement?.updateBrandSelection(.visa)
         verify(element)
     }
 
@@ -74,7 +74,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             disallowedCardBrands: [],
             theme: theme
         )
-        element.selectorElement?.selectBrand(.visa)
+        element.selectorElement?.updateBrandSelection(.visa)
         verify(element)
     }
 
