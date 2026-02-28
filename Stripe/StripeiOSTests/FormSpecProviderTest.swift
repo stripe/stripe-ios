@@ -34,16 +34,15 @@ class FormSpecProviderTest: XCTestCase {
             .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
 
-        // ...and iDEAL has the correct dropdown spec
-        guard let ideal = sut.formSpec(for: "ideal"),
-              case .name = ideal.fields[0],
-              case .selector(let selector) = ideal.fields[3]
+        // ...and FPX has the correct dropdown spec
+        guard let fpx = sut.formSpec(for: "fpx"),
+              case .selector(let selector) = fpx.fields[0]
         else {
             XCTFail()
             return
         }
-        XCTAssertEqual(selector.apiPath?["v1"], "ideal[bank]")
-        XCTAssertEqual(selector.items.count, 14)
+        XCTAssertEqual(selector.apiPath?["v1"], "fpx[bank]")
+        XCTAssertEqual(selector.items.count, 18)
     }
 
     func testLoadJsonCanOverwriteLoadedSpecs() throws {

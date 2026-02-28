@@ -11,6 +11,10 @@
 ### Payment Method Messaging Element
 * [Changed] Breaking change for `PaymentMethodMessagingElement.Appearance`. The info icon has been removed and replaced with a CTA to see available plans. The `infoIconColor` configuration has been removed, and the new link text color is customizable through `linkTextColor`.
 
+### PaymentSheet
+* [Changed] Rebranded iDEAL to iDEAL | Wero
+* [Changed] Removed bank selector from iDEAL | Wero form
+
 ## 25.6.4 2026-02-23
 
 ### PaymentSheet

@@ -65,10 +65,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             intent: ._testValue(),
             elementsSession: ._testCardValue(),
             configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.iDEAL) // We use iDEAL because it has a LUXE form spec
+            paymentMethod: .stripe(.FPX)
         )
         let name = factory.makeName(apiPath: "custom_location[name]")
-        let params = IntentConfirmParams(type: .stripe(.iDEAL))
+        let params = IntentConfirmParams(type: .stripe(.FPX))
 
         let updatedParams = name.updateParams(params: params)
 
@@ -78,13 +78,13 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 as! String,
             "someName"
         )
-        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .iDEAL)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .FPX)
 
         // Using the params as previous customer input...
         let name_with_previous_customer_input = PaymentSheetFormFactory(
             intent: ._testValue(), elementsSession: ._testCardValue(),
             configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.iDEAL),
+            paymentMethod: .stripe(.FPX),
             previousCustomerInput: updatedParams
         ).makeName(apiPath: "custom_location[name]")
         // ...should result in a valid element filled out with the previous customer input
@@ -739,23 +739,23 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(), elementsSession: ._testCardValue(),
             configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.iDEAL)
+            paymentMethod: .stripe(.FPX)
         )
         let spec = FormSpec(
-            type: "ideal",
+            type: "fpx",
             async: false,
             fields: [.country(.init(apiPath: nil, allowedCountryCodes: ["AT", "BE"]))],
             selectorIcon: nil
         )
         let formElement = factory.makeFormElementFromSpec(spec: spec)
-        let params = IntentConfirmParams(type: .stripe(.iDEAL))
+        let params = IntentConfirmParams(type: .stripe(.FPX))
 
         let updatedParams = formElement.updateParams(params: params)
 
         XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.country, "AT")
         XCTAssert(updatedParams?.paymentMethodParams.additionalAPIParameters.isEmpty ?? false)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "ideal")
-        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .iDEAL)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "fpx")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .FPX)
     }
 
     func testMakeFormElement_Country() {
@@ -763,29 +763,29 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(), elementsSession: ._testCardValue(),
             configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.iDEAL)
+            paymentMethod: .stripe(.FPX)
         )
         let country = factory.makeCountry(countryCodes: ["AT", "BE"], apiPath: nil)
         (country as! PaymentMethodElementWrapper<DropdownFieldElement>).element.select(index: 1) // select a different index than the default of 0
 
-        let params = IntentConfirmParams(type: .stripe(.iDEAL))
+        let params = IntentConfirmParams(type: .stripe(.FPX))
         let updatedParams = country.updateParams(params: params)
 
         XCTAssertEqual(updatedParams?.paymentMethodParams.billingDetails?.address?.country, "BE")
         XCTAssert(updatedParams?.paymentMethodParams.additionalAPIParameters.isEmpty ?? false)
-        XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "ideal")
-        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .iDEAL)
+        XCTAssertEqual(updatedParams?.paymentMethodParams.rawTypeString, "fpx")
+        XCTAssertEqual(updatedParams?.paymentMethodParams.type, .FPX)
 
         // Using the params as previous customer input...
         let country_with_previous_input = PaymentSheetFormFactory(
             intent: ._testValue(), elementsSession: ._testCardValue(),
             configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.iDEAL),
+            paymentMethod: .stripe(.FPX),
             previousCustomerInput: updatedParams
         ).makeCountry(countryCodes: ["AT", "BE"], apiPath: nil)
         // ...should result in a valid, filled out element
         XCTAssert(country_with_previous_input.validationState == .valid)
-        let updatedParams_with_previous_input = country_with_previous_input.updateParams(params: .init(type: .stripe(.iDEAL)))
+        let updatedParams_with_previous_input = country_with_previous_input.updateParams(params: .init(type: .stripe(.FPX)))
         XCTAssertEqual(updatedParams_with_previous_input?.paymentMethodParams.billingDetails?.address?.country, "BE")
     }
 
@@ -1729,8 +1729,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let analyticsClient = STPAnalyticsClient()
 
         let factory = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL, .card]),
-            elementsSession: ._testValue(paymentMethodTypes: ["ideal", "card"]),
+            intent: ._testPaymentIntent(paymentMethodTypes: [.FPX, .card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["fpx", "card"]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.cardPresent), // A payment method that doesn't have LUXE specs and in-code form definition
             accountService: LinkAccountService._testValue(),
@@ -2019,12 +2019,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(cardForm_si.getMandateElement() == nil)
     }
 
-    func testiDEALFormContainsMandateText() {
+    func testFPXFormContainsMandateText() {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
-            FormSpecProvider.shared.load { _ in
-                expectation.fulfill()
-            }
+            expectation.fulfill()
         }
         waitForExpectations(timeout: 1)
 
@@ -2037,35 +2035,35 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 intent: intent,
                 elementsSession: ._testValue(intent: intent),
                 configuration: .paymentElement(configuration),
-                paymentMethod: .stripe(.iDEAL),
+                paymentMethod: .stripe(.FPX),
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
             ).make()
         }
-        let iDEALForm_pi = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL]))
-        XCTAssertTrue(iDEALForm_pi.getMandateElement() == nil)
+        let fpxForm_pi = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.FPX]))
+        XCTAssertTrue(fpxForm_pi.getMandateElement() == nil)
 
-        let iDEALForm_pi_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], setupFutureUsage: .offSession))
-        XCTAssertTrue(iDEALForm_pi_sfu.getMandateElement() != nil)
+        let fpxForm_pi_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.FPX], setupFutureUsage: .offSession))
+        XCTAssertTrue(fpxForm_pi_sfu.getMandateElement() != nil)
 
-        let iDEALForm_pi_pmo_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], paymentMethodOptionsSetupFutureUsage: [.iDEAL: "off_session"]))
-        XCTAssertTrue(iDEALForm_pi_pmo_sfu.getMandateElement() != nil)
-        // iDEAL displays SEPA mandate if setting up
-        XCTAssertEqual(iDEALForm_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text, String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
+        let fpxForm_pi_pmo_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.FPX], paymentMethodOptionsSetupFutureUsage: [.FPX: "off_session"]))
+        XCTAssertTrue(fpxForm_pi_pmo_sfu.getMandateElement() != nil)
+        // FPX displays SEPA mandate if setting up
+        XCTAssertEqual(fpxForm_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text, String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
 
-        let iDEALForm_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.iDEAL: "none"]))
-        XCTAssertTrue(iDEALForm_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
+        let fpxForm_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.FPX], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.FPX: "none"]))
+        XCTAssertTrue(fpxForm_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
 
-        let iDEALForm_deferred_pi_pmo_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.iDEAL], paymentMethodOptionsSetupFutureUsage: [.iDEAL: .offSession]))
-        XCTAssertTrue(iDEALForm_deferred_pi_pmo_sfu.getMandateElement() != nil)
-        // iDEAL displays SEPA mandate if setting up
-        XCTAssertEqual(iDEALForm_deferred_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text, String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
+        let fpxForm_deferred_pi_pmo_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.FPX], paymentMethodOptionsSetupFutureUsage: [.FPX: .offSession]))
+        XCTAssertTrue(fpxForm_deferred_pi_pmo_sfu.getMandateElement() != nil)
+        // FPX displays SEPA mandate if setting up
+        XCTAssertEqual(fpxForm_deferred_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text, String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
 
-        let iDEALForm_deferred_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.iDEAL], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.iDEAL: .none]))
-        XCTAssertTrue(iDEALForm_deferred_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
+        let fpxForm_deferred_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.FPX], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.FPX: .none]))
+        XCTAssertTrue(fpxForm_deferred_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
 
-        let iDEALForm_si = makeForm(intent: ._testSetupIntent(paymentMethodTypes: [.iDEAL]))
-        XCTAssertTrue(iDEALForm_si.getMandateElement() != nil)
+        let fpxForm_si = makeForm(intent: ._testSetupIntent(paymentMethodTypes: [.FPX]))
+        XCTAssertTrue(fpxForm_si.getMandateElement() != nil)
     }
 
     // MARK: Instant Debits

@@ -256,6 +256,8 @@ class PaymentSheetFormFactory {
                 return makeAffirm()
             } else if paymentMethod == .klarna {
                 return makeKlarna()
+            } else if paymentMethod == .iDEAL {
+                return makeiDEAL()
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
@@ -263,9 +265,7 @@ class PaymentSheetFormFactory {
                 analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
                 return FormElement(elements: [], theme: theme)
             }
-            if paymentMethod == .iDEAL {
-                return makeiDEAL(spec: spec)
-            } else if paymentMethod == .SEPADebit {
+            if paymentMethod == .SEPADebit {
                 return makeSepaDebit()
             }
 
@@ -631,31 +631,6 @@ extension PaymentSheetFormFactory {
             theme: theme
         )
         let elements: [Element?] = [contactSection, bacsAccountSection, addressSection, mandate]
-        return FormElement(
-            autoSectioningElements: elements.compactMap { $0 },
-            theme: theme
-        )
-    }
-
-    func makeiDEAL(spec: FormSpec) -> PaymentMethodElement {
-        let contactSection: Element? = makeContactInformationSection(
-            nameRequiredByPaymentMethod: true,
-            emailRequiredByPaymentMethod: isSettingUp,
-            phoneRequiredByPaymentMethod: false
-        )
-        // Hack: Use the luxe spec to make the dropdown for convenience; it has the latest list of banks
-        let bankDropdown: Element? = spec.fields.reduce(nil) { dropdown, spec in
-            // Find the dropdown spec
-            if case .selector(let spec) = spec {
-                return makeDropdown(for: spec)
-            }
-            return dropdown
-        }
-
-        let addressSection: Element? = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        let mandate: Element? = isSettingUp ? makeSepaMandate() : nil // Note: We show a SEPA mandate b/c iDEAL saves bank details as a SEPA Direct Debit Payment Method
-        let checkboxElement = makeSepaBasedPMCheckbox()
-        let elements: [Element?] = [contactSection, bankDropdown, addressSection, checkboxElement, mandate]
         return FormElement(
             autoSectioningElements: elements.compactMap { $0 },
             theme: theme
