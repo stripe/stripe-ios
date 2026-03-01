@@ -60,6 +60,11 @@ import UIKit
     }
 
     public func select(_ item: SegmentedSelectorItem?, animated: Bool = false, shouldAutoAdvance: Bool = true) {
+        // Validate that item exists in items array (if not nil)
+        if let item = item, !items.contains(item) {
+            return
+        }
+
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
         selectedItem = newSelection
@@ -70,7 +75,7 @@ import UIKit
         delegate?.didUpdate(element: self)
 
         // Auto-advance to next field when selecting (not when deselecting) if requested
-        if newSelection == nil && shouldAutoAdvance {
+        if newSelection != nil && shouldAutoAdvance {
             delegate?.continueToNextField(element: self)
         }
     }
