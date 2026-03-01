@@ -29,8 +29,8 @@ import UIKit
     private var disabledItems: Set<SegmentedSelectorItem>
 
     public init(items: [SegmentedSelectorItem] = [],
-         disabledItems: Set<SegmentedSelectorItem> = [],
-         theme: ElementsAppearance = .default) {
+                disabledItems: Set<SegmentedSelectorItem> = [],
+                theme: ElementsAppearance = .default) {
         self.items = items
         self.disabledItems = disabledItems
         self.theme = theme
