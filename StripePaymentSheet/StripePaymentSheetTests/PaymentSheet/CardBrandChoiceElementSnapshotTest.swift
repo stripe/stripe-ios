@@ -38,7 +38,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             theme: theme
         )
         // Trigger auto-select by updating with one brand disallowed
-        element.update(cardBrands: [.visa, .cartesBancaires], disallowedBrands: [.visa])
+        element.update(cardBrands: [.visa, .cartesBancaires], disallowedCardBrands: [.visa])
         verify(element)
     }
 
@@ -51,13 +51,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         )
         // Select a brand
         let brand: STPCardBrand = .cartesBancaires
-        element.selectorElement?.updateSelection(
-            SegmentedSelectorItem(
-                rawData: STPCardBrandUtilities.apiValue(from: brand),
-                image: STPImageLibrary.cardBrandImage(for: brand),
-                accessibilityLabel: STPCardBrandUtilities.stringFrom(brand) ?? ""
-            )
-        )
+        element.selectorElement?.select(brand.makeCardBrandItem())
         verify(element)
     }
 
@@ -70,13 +64,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         )
         // Select a brand
         let brand: STPCardBrand = .visa
-        element.selectorElement?.updateSelection(
-            SegmentedSelectorItem(
-                rawData: STPCardBrandUtilities.apiValue(from: brand),
-                image: STPImageLibrary.cardBrandImage(for: brand),
-                accessibilityLabel: STPCardBrandUtilities.stringFrom(brand) ?? ""
-            )
-        )
+        element.selectorElement?.select(brand.makeCardBrandItem())
         verify(element)
     }
 
