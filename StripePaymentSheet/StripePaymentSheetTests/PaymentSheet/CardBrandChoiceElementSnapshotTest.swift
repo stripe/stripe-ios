@@ -8,6 +8,7 @@
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
 @_spi(STP) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentsUI
 @_spi(STP) @testable import StripeUICore
 import UIKit
 
@@ -37,7 +38,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             theme: theme
         )
         // Trigger auto-select by updating with one brand disallowed
-        element.update(cardBrands: [.visa, .cartesBancaires], disallowedCardBrands: [.visa])
+        element.update(cardBrands: [.visa, .cartesBancaires], disallowedBrands: [.visa])
         verify(element)
     }
 
@@ -49,7 +50,14 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             theme: theme
         )
         // Select a brand
-        element.selectorElement?.updateBrandSelection(.cartesBancaires)
+        let brand: STPCardBrand = .cartesBancaires
+        element.selectorElement?.updateSelection(
+            SegmentedSelectorItem(
+                rawData: STPCardBrandUtilities.apiValue(from: brand),
+                image: STPImageLibrary.cardBrandImage(for: brand),
+                accessibilityLabel: STPCardBrandUtilities.stringFrom(brand) ?? ""
+            )
+        )
         verify(element)
     }
 
@@ -61,7 +69,14 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             theme: theme
         )
         // Select a brand
-        element.selectorElement?.updateBrandSelection(.visa)
+        let brand: STPCardBrand = .visa
+        element.selectorElement?.updateSelection(
+            SegmentedSelectorItem(
+                rawData: STPCardBrandUtilities.apiValue(from: brand),
+                image: STPImageLibrary.cardBrandImage(for: brand),
+                accessibilityLabel: STPCardBrandUtilities.stringFrom(brand) ?? ""
+            )
+        )
         verify(element)
     }
 
@@ -74,7 +89,6 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             disallowedCardBrands: [],
             theme: theme
         )
-        element.selectorElement?.updateBrandSelection(.visa)
         verify(element)
     }
 
