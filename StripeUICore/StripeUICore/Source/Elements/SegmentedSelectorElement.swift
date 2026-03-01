@@ -1,0 +1,326 @@
+//
+//  SegmentedSelectorElement.swift
+//  StripeUICore
+//
+//  Created by Joyce Qin on 3/1/26.
+//
+
+import Foundation
+import UIKit
+
+// MARK: - SegmentedSelectorElement
+
+/// Element that displays items in a horizontal row with tap-to-select behavior.
+/// Selecting an item shows a checkmark, tapping again deselects it (toggle).
+@_spi(STP) public final class SegmentedSelectorElement: Element {
+    weak public var delegate: ElementDelegate?
+
+    lazy public var view: UIView = {
+        return selectorView
+    }()
+
+    public let collectsUserInput: Bool = true
+
+    private let selectorView: SegmentedSelectorView
+    private let theme: ElementsAppearance
+
+    public private(set) var selectedItem: SegmentedSelectorItem?
+    public var items: Set<SegmentedSelectorItem>
+    private var disabledItems: Set<SegmentedSelectorItem>
+
+    public init(items: Set<SegmentedSelectorItem> = [],
+         disabledItems: Set<SegmentedSelectorItem> = [],
+         theme: ElementsAppearance = .default) {
+        self.items = items
+        self.disabledItems = disabledItems
+        self.theme = theme
+        self.selectorView = SegmentedSelectorView(
+            items: Array(items.sorted { $0.hashValue < $1.hashValue }),
+            disabledItems: disabledItems,
+            theme: theme
+        )
+        self.selectorView.delegate = self
+    }
+
+    public func update(items: Set<SegmentedSelectorItem>, disabledItems: Set<SegmentedSelectorItem> = []) {
+        self.items = items
+        self.disabledItems = disabledItems
+
+        // Clear selected item if it's not in the new items set
+        if let selected = selectedItem, !items.contains(selected) {
+            selectedItem = nil
+        }
+
+        // Don't make any selection changes if there aren't multiple items to choose from
+        guard items.count > 1 else {
+            return
+        }
+
+        selectorView.update(
+            items: Array(items.sorted { $0.hashValue < $1.hashValue }),
+            disabledItems: disabledItems
+        )
+
+        // Update the view to reflect the current selection
+        selectorView.setSelectedItem(selectedItem, animated: false)
+    }
+
+    public func updateSelection(_ item: SegmentedSelectorItem?, animated: Bool = false) {
+        // Toggle behavior: if already selected, deselect
+        let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
+        selectedItem = newSelection
+
+        // Update the visual UI
+        selectorView.setSelectedItem(newSelection, animated: animated)
+
+        delegate?.didUpdate(element: self)
+    }
+}
+
+extension SegmentedSelectorElement: SegmentedSelectorViewDelegate {
+    func didSelectItem(_ item: SegmentedSelectorItem) {
+        updateSelection(item)
+    }
+}
+
+// MARK: - SegmentedSelectorView
+
+/// UIView that displays selectable items with checkmarks (segmented control style)
+final class SegmentedSelectorView: UIView {
+    weak var delegate: SegmentedSelectorViewDelegate?
+
+    private let stackView: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 0
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
+    private let theme: ElementsAppearance
+    private var itemViews: [SegmentedSelectorItem: SegmentedItemView] = [:]
+    private var selectedItem: SegmentedSelectorItem?
+
+    init(items: [SegmentedSelectorItem],
+         disabledItems: Set<SegmentedSelectorItem>,
+         theme: ElementsAppearance) {
+        self.theme = theme
+        super.init(frame: .zero)
+        setupView()
+        update(items: items, disabledItems: disabledItems)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setupView() {
+        // Add segmented control styling
+        layer.cornerRadius = theme.cornerRadius ?? 5
+        layer.borderWidth = theme.borderWidth
+        layer.borderColor = theme.colors.border.cgColor
+        backgroundColor = theme.colors.componentBackground
+        clipsToBounds = true // Clip child backgrounds to rounded corners
+
+        addSubview(stackView)
+        NSLayoutConstraint.activate([
+            stackView.topAnchor.constraint(equalTo: topAnchor),
+            stackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            stackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+    }
+
+    func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem>) {
+        stackView.arrangedSubviews.forEach {
+            $0.removeFromSuperview()
+        }
+        itemViews.removeAll()
+
+        // Add views for each item with separators
+        for (index, item) in items.enumerated() {
+            let isDisabled = disabledItems.contains(item)
+            let itemView = SegmentedItemView(
+                item: item,
+                isDisabled: isDisabled,
+                theme: theme
+            )
+
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(itemTapped(_:)))
+            itemView.addGestureRecognizer(tapGesture)
+            itemView.isUserInteractionEnabled = !isDisabled
+
+            stackView.addArrangedSubview(itemView)
+            itemViews[item] = itemView
+
+            // Add separator between segments (except after the last one)
+            if index < items.count - 1 {
+                let separator = UIView()
+                separator.translatesAutoresizingMaskIntoConstraints = false
+                separator.backgroundColor = theme.colors.divider
+                stackView.addArrangedSubview(separator)
+                NSLayoutConstraint.activate([
+                    separator.widthAnchor.constraint(equalToConstant: 1),
+                ])
+            }
+        }
+
+        // Update intrinsic content size after adding/removing items
+        invalidateIntrinsicContentSize()
+    }
+
+    func setSelectedItem(_ item: SegmentedSelectorItem?, animated: Bool) {
+        // Deselect previous
+        if let previousItem = selectedItem,
+           let previousView = itemViews[previousItem] {
+            previousView.updateSelectionState(false, animated: animated)
+        }
+
+        selectedItem = item
+
+        // Select new item
+        if let item = item, let itemView = itemViews[item] {
+            itemView.updateSelectionState(true, animated: animated)
+        }
+    }
+
+    @objc private func itemTapped(_ sender: UITapGestureRecognizer) {
+        guard let itemView = sender.view as? SegmentedItemView else { return }
+        delegate?.didSelectItem(itemView.item)
+    }
+}
+
+// MARK: - SegmentedItemView
+
+/// A single tappable item icon with optional checkmark (segmented control style)
+private final class SegmentedItemView: UIView {
+    let item: SegmentedSelectorItem
+    private let isDisabled: Bool
+    private let theme: ElementsAppearance
+
+    private let iconImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
+    private let checkmarkImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.isHidden = true
+        return imageView
+    }()
+
+    private let containerStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 4
+        stack.alignment = .center
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        return stack
+    }()
+
+    init(item: SegmentedSelectorItem, isDisabled: Bool, theme: ElementsAppearance) {
+        self.item = item
+        self.isDisabled = isDisabled
+        self.theme = theme
+        super.init(frame: .zero)
+        setupView()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    private func setupView() {
+        iconImageView.image = item.image
+        if isDisabled {
+            iconImageView.alpha = 0.4
+        }
+
+//        checkmarkImageView.image = Image.embedded_check.makeImage(template: true)
+        checkmarkImageView.tintColor = theme.colors.bodyText
+
+        // Add checkmark on the left, then icon on the right
+        containerStack.addArrangedSubview(checkmarkImageView)
+        containerStack.addArrangedSubview(iconImageView)
+
+        addSubview(containerStack)
+
+        NSLayoutConstraint.activate([
+            containerStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
+            containerStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
+            containerStack.topAnchor.constraint(equalTo: topAnchor, constant: 6),
+            containerStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
+
+            checkmarkImageView.widthAnchor.constraint(equalToConstant: 12),
+            checkmarkImageView.heightAnchor.constraint(equalToConstant: 12),
+        ])
+
+        // Add accessibility
+        isAccessibilityElement = true
+        accessibilityLabel = item.accessibilityLabel
+        accessibilityTraits = .button
+    }
+
+    func updateSelectionState(_ selected: Bool, animated: Bool) {
+        if selected {
+            checkmarkImageView.isHidden = false
+            checkmarkImageView.alpha = 0
+
+            // Start background color animation
+            UIView.animate(withDuration: 0.2) {
+                self.backgroundColor = self.theme.colors.disabledBackground
+            }
+
+            accessibilityTraits.insert(.selected)
+            if animated {
+                UIView.animate(withDuration: 0.2) {
+                    self.checkmarkImageView.alpha = 1.0
+                }
+            } else {
+                checkmarkImageView.alpha = 1.0
+            }
+        } else {
+            checkmarkImageView.isHidden = true
+            UIView.animate(withDuration: 0.2) {
+                self.backgroundColor = .clear
+            }
+            accessibilityTraits.remove(.selected)
+        }
+    }
+
+}
+
+// MARK: - SegmentedSelectorItem
+
+/// A struct that encapsulates the display information for a selectable item.
+/// Uses type erasure with rawData to support any type.
+@_spi(STP) public struct SegmentedSelectorItem: Hashable {
+    public let rawData: String
+    public let image: UIImage
+    public let accessibilityLabel: String
+
+    public init(rawData: String, image: UIImage, accessibilityLabel: String) {
+        self.rawData = rawData
+        self.image = image
+        self.accessibilityLabel = accessibilityLabel
+    }
+
+    // Hashable conformance based only on rawData (UIImage is not Hashable)
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.rawData == rhs.rawData
+    }
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(rawData)
+    }
+}
+
+// MARK: - SegmentedSelectorViewDelegate
+
+protocol SegmentedSelectorViewDelegate: AnyObject {
+    func didSelectItem(_ item: SegmentedSelectorItem)
+}
