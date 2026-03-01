@@ -7,19 +7,24 @@
 
 import iOSSnapshotTestCase
 import StripeCoreTestUtils
-import StripePayments
-import StripePaymentsUI
 @_spi(STP) @testable import StripeUICore
 
 final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
     let items: [SegmentedSelectorItem] = {
-        let brandNames = ["visa", "mastercard", "amex"]
-        return brandNames.map { brand in
-            let image = STPImageLibrary.cardBrandImage(for: STPCard.brand(from: brand))
+        let itemNames = ["A", "B", "C"]
+        let colors: [UIColor] = [.systemBlue, .systemGreen, .systemRed]
+        return zip(itemNames, colors).map { name, color in
+            // Create a simple colored circle as a placeholder image
+            let size = CGSize(width: 16, height: 16)
+            let renderer = UIGraphicsImageRenderer(size: size)
+            let image = renderer.image { context in
+                color.setFill()
+                context.cgContext.fillEllipse(in: CGRect(origin: .zero, size: size))
+            }
             return SegmentedSelectorItem(
-                rawData: brand,
+                rawData: name,
                 image: image,
-                accessibilityLabel: brand.capitalized
+                accessibilityLabel: "Item \(name)"
             )
         }
     }()
