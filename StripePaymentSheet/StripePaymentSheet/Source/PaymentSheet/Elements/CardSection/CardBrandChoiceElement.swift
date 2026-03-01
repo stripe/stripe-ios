@@ -1,8 +1,8 @@
 //
-//  CardBrandSelectorElement.swift
+//  CardBrandChoiceElement.swift
 //  StripePaymentSheet
 //
-//  Created by Joyce Qin on 2/24/26.
+//  Created by Joyce Qin on 2/27/26.
 //
 
 import Foundation
@@ -14,7 +14,8 @@ import UIKit
 
 /// An Element wrapper that provides inline tappable brand icons for card brand choice (CBC).
 /// Can switch between the new inline selector and the old dropdown based on `enableCBCRedesign`.
-final class CardBrandSelectorElement: Element {
+/// Will be collapsed when we ship and remove `enableCBCRedesign`, replacing the old dropdown
+final class CardBrandChoiceElement: Element {
     weak var delegate: ElementDelegate?
 
     var view: UIView {
@@ -70,8 +71,7 @@ final class CardBrandSelectorElement: Element {
                 cardBrands: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
                 theme: theme,
-                includePlaceholder: includePlaceholder,
-                hasPadding: true
+                includePlaceholder: includePlaceholder
             )
             self.dropdownElement?.delegate = self
         }
@@ -92,7 +92,7 @@ final class CardBrandSelectorElement: Element {
     }
 }
 
-extension CardBrandSelectorElement: ElementDelegate {
+extension CardBrandChoiceElement: ElementDelegate {
     func didUpdate(element: Element) {
         delegate?.didUpdate(element: self)
     }
@@ -100,6 +100,13 @@ extension CardBrandSelectorElement: ElementDelegate {
     func continueToNextField(element: Element) {
         delegate?.continueToNextField(element: self)
     }
+}
+
+// MARK: - CardBrandChoiceViewDelegate
+
+/// Delegate protocol for CardBrandChoiceView
+private protocol CardBrandChoiceViewDelegate: AnyObject {
+    func didTapBrand(_ brand: STPCardBrand?)
 }
 
 // MARK: - SelectorElement
@@ -110,12 +117,12 @@ final class SelectorElement: Element {
     weak var delegate: ElementDelegate?
 
     lazy var view: UIView = {
-        return selectorView
+        return cbcView
     }()
 
     let collectsUserInput: Bool = true
 
-    private let selectorView: CardBrandSelectorView
+    private let cbcView: CardBrandChoiceView
     private let theme: ElementsAppearance
 
     private(set) var selectedBrand: STPCardBrand?
@@ -128,13 +135,12 @@ final class SelectorElement: Element {
         self.cardBrands = cardBrands
         self.disallowedCardBrands = disallowedCardBrands
         self.theme = theme
-        self.selectorView = CardBrandSelectorView(
+        self.cbcView = CardBrandChoiceView(
             cardBrands: Array(cardBrands.sorted()),
             disallowedCardBrands: disallowedCardBrands,
             theme: theme
         )
-
-        selectorView.delegate = self
+        self.cbcView.delegate = self
     }
 
     func update(cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand> = []) {
@@ -146,67 +152,55 @@ final class SelectorElement: Element {
             selectedBrand = nil
         }
 
-        // Clear selected brand if no brands are available
-        if cardBrands.isEmpty {
-            selectedBrand = nil
-        }
-
+        // Don't make any selection changes if there aren't multiple brands to choose from
         guard cardBrands.count > 1 else {
             return
         }
 
         // Auto-select if there's only one allowed brand
+        // Note: Don't call delegate?.didUpdate here - this method is called by the parent
+        // as part of its update cycle. The parent will handle propagating changes.
         let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
         if allowedBrands.count == 1, let onlyAllowedBrand = allowedBrands.first {
             if selectedBrand != onlyAllowedBrand {
                 selectedBrand = onlyAllowedBrand
-                delegate?.didUpdate(element: self)
             }
         } else if allowedBrands.isEmpty && selectedBrand != nil {
             // If no brands are allowed, clear selection
             selectedBrand = nil
-            delegate?.didUpdate(element: self)
         }
 
-        selectorView.update(
+        cbcView.update(
             cardBrands: Array(cardBrands.sorted()),
             disallowedCardBrands: disallowedCardBrands
         )
 
         // Update the view to reflect the current selection
-        selectorView.setSelectedBrand(selectedBrand, animated: false)
+        cbcView.setSelectedBrand(selectedBrand, animated: false)
     }
 
-    func selectBrand(_ brand: STPCardBrand?, animated: Bool = false) {
+    func updateBrandSelection(_ brand: STPCardBrand?, animated: Bool = false) {
         // Toggle behavior: if already selected, deselect
         let newSelection: STPCardBrand? = (selectedBrand == brand) ? nil : brand
         selectedBrand = newSelection
 
         // Update the visual UI
-        selectorView.setSelectedBrand(newSelection, animated: animated)
+        cbcView.setSelectedBrand(newSelection, animated: animated)
 
         delegate?.didUpdate(element: self)
     }
 }
 
-// MARK: - CardBrandSelectorViewDelegate
-
-extension SelectorElement: CardBrandSelectorViewDelegate {
-    func didSelectBrand(_ brand: STPCardBrand?) {
-        selectBrand(brand)
+extension SelectorElement: CardBrandChoiceViewDelegate {
+    func didTapBrand(_ brand: STPCardBrand?) {
+        updateBrandSelection(brand)
     }
 }
-
-// MARK: - CardBrandSelectorView
-
-/// Delegate protocol for CardBrandSelectorView, matching the pattern used by PickerFieldView
-private protocol CardBrandSelectorViewDelegate: AnyObject {
-    func didSelectBrand(_ brand: STPCardBrand?)
-}
+// MARK: - CardBrandChoiceView
 
 /// The actual UIView that displays card brand icons with checkmarks (segmented control style)
-private final class CardBrandSelectorView: UIView {
-    weak var delegate: CardBrandSelectorViewDelegate?
+private final class CardBrandChoiceView: UIView {
+    weak var delegate: CardBrandChoiceViewDelegate?
 
     private let stackView: UIStackView = {
         let stack = UIStackView()
@@ -293,31 +287,21 @@ private final class CardBrandSelectorView: UIView {
         // Deselect previous
         if let previousBrand = selectedBrand,
            let previousView = brandViews[previousBrand] {
-            previousView.setSelected(false)
+            previousView.updateSelectionState(false, animated: animated)
         }
 
         selectedBrand = brand
 
         // Select new brand
         if let brand = brand, let itemView = brandViews[brand] {
-            itemView.prepareCheckmarkForFadeIn()
-            if animated {
-                UIView.animate(withDuration: 0.2) {
-                    itemView.fadeInCheckmark()
-                }
-            } else {
-                itemView.fadeInCheckmark()
-            }
+            itemView.updateSelectionState(true, animated: animated)
         }
     }
 
     @objc private func brandTapped(_ sender: UITapGestureRecognizer) {
         guard let itemView = sender.view as? CardBrandItemView else { return }
-
-        let brand = itemView.brand
-
-        // Notify SelectorElement to handle the selection (which will call back to update the view)
-        delegate?.didSelectBrand(brand)
+        // Notify SelectorElement to handle the selection
+        delegate?.didTapBrand(itemView.brand)
     }
 }
 
@@ -396,9 +380,25 @@ private final class CardBrandItemView: UIView {
         accessibilityTraits = .button
     }
 
-    func setSelected(_ selected: Bool) {
-        if !selected {
-            // Deselecting: hide checkmark and clear background
+    func updateSelectionState(_ selected: Bool, animated: Bool) {
+        if selected {
+            checkmarkImageView.isHidden = false
+            checkmarkImageView.alpha = 0
+
+            // Start background color animation
+            UIView.animate(withDuration: 0.2) {
+                self.backgroundColor = self.theme.colors.disabledBackground
+            }
+
+            accessibilityTraits.insert(.selected)
+            if animated {
+                UIView.animate(withDuration: 0.2) {
+                    self.checkmarkImageView.alpha = 1.0
+                }
+            } else {
+                checkmarkImageView.alpha = 1.0
+            }
+        } else {
             checkmarkImageView.isHidden = true
             UIView.animate(withDuration: 0.2) {
                 self.backgroundColor = .clear
@@ -407,20 +407,4 @@ private final class CardBrandItemView: UIView {
         }
     }
 
-    func prepareCheckmarkForFadeIn() {
-        checkmarkImageView.isHidden = false
-        checkmarkImageView.alpha = 0
-
-        // Start background color animation
-        UIView.animate(withDuration: 0.2) {
-            self.backgroundColor = self.theme.colors.disabledBackground
-        }
-
-        accessibilityTraits.insert(.selected)
-    }
-
-    func fadeInCheckmark() {
-        // Animate alpha from 0 to 1 (called inside animation block)
-        checkmarkImageView.alpha = 1.0
-    }
 }

@@ -69,7 +69,7 @@ final class CardSectionElement: ContainerElement {
     // References to the underlying TextFieldElements
     let nameElement: TextFieldElement?
     let panElement: TextFieldElement
-    let cardBrandSelector: CardBrandSelectorElement?
+    let cardBrandSelector: CardBrandChoiceElement?
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
     let theme: ElementsAppearance
@@ -108,10 +108,10 @@ final class CardSectionElement: ContainerElement {
                 return params
             }
             : nil
-        var cardBrandSelector: PaymentMethodElementWrapper<CardBrandSelectorElement>?
+        var cardBrandSelector: PaymentMethodElementWrapper<CardBrandChoiceElement>?
         if cardBrandChoiceEligible {
             cardBrandSelector = PaymentMethodElementWrapper(
-                CardBrandSelectorElement(
+                CardBrandChoiceElement(
                     enableCBCRedesign: enableCBCRedesign,
                     cardBrands: [],
                     disallowedCardBrands: [],
@@ -321,7 +321,7 @@ final class CardSectionElement: ContainerElement {
         }
     }
 
-    private func selectBrand(_ brand: STPCardBrand, in selector: CardBrandSelectorElement) {
+    private func selectBrand(_ brand: STPCardBrand, in selector: CardBrandChoiceElement) {
         if let dropdown = selector.dropdownElement {
             // Dropdown mode: find index and select
             if let indexToSelect = dropdown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {

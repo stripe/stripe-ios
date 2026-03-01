@@ -22,7 +22,7 @@ extension TextFieldElement {
         let rotatingCardBrandsView = RotatingCardBrandsView()
         let defaultValue: String?
         let cardBrand: STPCardBrand?
-        let cardBrandSelector: CardBrandSelectorElement?
+        let cardBrandSelector: CardBrandChoiceElement?
         let cardBrandFilter: CardBrandFilter
         let cardFundingFilter: CardFundingFilter
         /// Separate BIN controller for funding filtering to avoid polluting
@@ -32,7 +32,7 @@ extension TextFieldElement {
         init(
             defaultValue: String? = nil,
             cardBrand: STPCardBrand? = nil,
-            cardBrandSelector: CardBrandSelectorElement? = nil,
+            cardBrandSelector: CardBrandChoiceElement? = nil,
             cardBrandFilter: CardBrandFilter = .default,
             cardFundingFilter: CardFundingFilter = .default,
             fundingBinController: STPBINController? = nil
@@ -399,13 +399,13 @@ extension TextFieldElement {
         let lastFour: String
         let editConfiguration: EditConfiguration
         let cardBrand: STPCardBrand?
-        let cardBrandSelector: CardBrandSelectorElement?
+        let cardBrandSelector: CardBrandChoiceElement?
 
         private var lastFourFormatted: String {
             "•••• •••• •••• \(lastFour)"
         }
 
-        init(lastFour: String, editConfiguration: EditConfiguration, cardBrand: STPCardBrand?, cardBrandSelector: CardBrandSelectorElement?) {
+        init(lastFour: String, editConfiguration: EditConfiguration, cardBrand: STPCardBrand?, cardBrandSelector: CardBrandChoiceElement?) {
             self.lastFour = lastFour
             self.cardBrandSelector = cardBrandSelector
             self.cardBrand = cardBrand

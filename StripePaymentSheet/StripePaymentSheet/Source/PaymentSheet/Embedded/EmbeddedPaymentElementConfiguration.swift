@@ -100,8 +100,8 @@ extension EmbeddedPaymentElement {
             }
         }
 
-        /// If true, displays the redesigned CBC selector
-        @_spi(STP) public var enableCBCRedesign: Bool = true
+        /// If true, use the new inline card brand selector UI instead of a dropdown
+        @_spi(STP) public var enableCBCRedesign: Bool = false
 
         /// Override country for test purposes
         @_spi(STP) public var userOverrideCountry: String?

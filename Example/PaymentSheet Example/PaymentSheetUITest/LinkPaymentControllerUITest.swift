@@ -41,6 +41,9 @@ class LinkPaymentControllerUITest: XCTestCase {
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
 
+        // "Institution Picker" pane
+        tapTestNonOAuthInstituition(app)
+
         // "Consent" pane
         app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: timeout)
 
@@ -56,30 +59,6 @@ class LinkPaymentControllerUITest: XCTestCase {
         // press the "Continue with Link" button to proceed to next
         // screen
         app.typeText("4015006000" + XCUIKeyboardKey.return.rawValue)
-
-        // "Institution Picker" pane
-        let searchTextField = app.textFields
-            .matching(NSPredicate(format: "label CONTAINS 'Search'"))
-            .firstMatch
-        searchTextField.waitForExistenceAndTap(timeout: 10)
-        app.typeText("Test (Non-OAuth)" + XCUIKeyboardKey.return.rawValue)
-        searchTextField
-            .coordinate(
-                withNormalizedOffset: CGVector(
-                    dx: 0.5,
-                    // bottom of search text field
-                    dy: 1.0
-                )
-            )
-        // at this point, we searched "Test (Non-OAuth)"
-        // and the first search result is "Test (Non-OAuth),"
-        // so here we guess that 80 pixels below search bar
-        // there will be a "Test (Non-OAuth)"
-        //
-        // we do this "guess" because every other method of
-        // selecting the institution did not work on iOS 17
-            .withOffset(CGVector(dx: 0, dy: 80))
-            .tap()
 
         // "Account Picker" pane
         _ = app.staticTexts["Select account"].waitForExistence(timeout: 10)

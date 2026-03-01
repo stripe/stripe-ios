@@ -79,6 +79,9 @@ final class PaymentSheetLoader {
             // Fetch ElementsSession
             async let _elementsSessionAndIntent: ElementSessionAndIntent = fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper)
 
+            // Fetch Customer email if using EK for Link and it wasn't provided in `configuration`. If using CS, Customer will be in v1/e/s response.
+            async let prefetchedLinkEmailAndSource: (email: String, source: EmailSource)? = try? getCustomerEmailForLinkWithEphemeralKey(configuration: configuration)
+
             // Load misc singletons
             await loadMiscellaneousSingletons()
 
@@ -104,6 +107,7 @@ final class PaymentSheetLoader {
             let linkAccount = try? await lookupLinkAccount(
                 elementsSession: elementsSession,
                 configuration: configuration,
+                prefetchedEmailAndSource: prefetchedLinkEmailAndSource,
                 isUpdate: isUpdate
             )
             LinkAccountContext.shared.account = linkAccount
@@ -240,6 +244,7 @@ final class PaymentSheetLoader {
     static func lookupLinkAccount(
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        prefetchedEmailAndSource: (email: String, source: EmailSource)?,
         isUpdate: Bool
     ) async throws -> PaymentSheetLinkAccount? {
         // If we already have a verified Link account and the merchant is just calling `update` on FlowController or Embedded,
@@ -263,51 +268,48 @@ final class PaymentSheetLoader {
         let doNotLogConsumerFunnelEvent = !isLinkEnabled
 
         // This lookup call will only happen if we have access to a user's email:
-        return try await _lookupLinkAccount(
-            elementsSession: elementsSession,
-            configuration: configuration,
-            doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
-        )
-    }
-
-    private static func _lookupLinkAccount(
-        elementsSession: STPElementsSession,
-        configuration: PaymentElementConfiguration,
-        doNotLogConsumerFunnelEvent: Bool
-    ) async throws -> PaymentSheetLinkAccount? {
-        let linkAccountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession)
-        func lookUpConsumerSession(email: String?, emailSource: EmailSource) async throws -> PaymentSheetLinkAccount? {
-            return try await withCheckedThrowingContinuation { continuation in
-                printTimingLog("START lookUpLinkAccount")
-                linkAccountService.lookupAccount(
-                    withEmail: email,
-                    emailSource: emailSource,
-                    doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
-                ) { result in
-                    printTimingLog("END lookUpLinkAccount")
-                    switch result {
-                    case .success(let linkAccount):
-                        continuation.resume(with: .success(linkAccount))
-                    case .failure(let error):
-                        continuation.resume(throwing: error)
-                    }
-                }
-            }
-        }
-
+        // There are a couple different sources.
+        let lookupEmail: (email: String, source: EmailSource)
         if let email = configuration.defaultBillingDetails.email {
-            return try await lookUpConsumerSession(email: email, emailSource: .customerEmail)
-        } else if let customerID = configuration.customer?.id,
-                  let ephemeralKey = configuration.customer?.ephemeralKeySecret(basedOn: elementsSession)
-        {
-            printTimingLog("START retrieveCustomer")
-            let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
-            printTimingLog("END retrieveCustomer")
-            // If there's an error in this call we can just ignore it
-            return try await lookUpConsumerSession(email: customer.email, emailSource: .customerObject)
+            // 1. Merchant provided in `defaultBillingDetails`
+            lookupEmail = (email, EmailSource.customerEmail)
+        } else if let prefetchedEmailAndSource {
+            // 2. We fetched the Customer object before calling this method to get its email when using EKs
+            lookupEmail = prefetchedEmailAndSource
+        } else if let email = elementsSession.customer?.email {
+            // 3. The v1/e/s response returns the email when using CustomerSession
+            lookupEmail = (email, EmailSource.customerObject)
         } else {
             return nil
         }
+
+        let linkAccountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession)
+        printTimingLog("START lookUpLinkAccount")
+        let linkAccount = try await linkAccountService.lookupAccount(
+            withEmail: lookupEmail.email,
+            emailSource: lookupEmail.source,
+            doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
+        )
+        printTimingLog("END lookUpLinkAccount")
+        return linkAccount
+    }
+
+    /// If configuration uses Ephemeral Key, retrieve Customer object and return email
+    static func getCustomerEmailForLinkWithEphemeralKey(configuration: PaymentElementConfiguration) async throws -> (email: String, source: EmailSource)? {
+        guard
+            configuration.defaultBillingDetails.email == nil, // If email was already provided, don't make a network request to retrieve it.
+            let customerID = configuration.customer?.id,
+            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider
+        else {
+            return nil
+        }
+        printTimingLog("START retrieveCustomer")
+        let customer = try await configuration.apiClient.retrieveCustomer(customerID, using: ephemeralKey)
+        printTimingLog("END retrieveCustomer")
+        if let email = customer.email {
+            return (email, EmailSource.customerObject)
+        }
+        return nil
     }
 
     typealias ElementSessionAndIntent = (elementsSession: STPElementsSession, intent: Intent)
@@ -379,15 +381,13 @@ final class PaymentSheetLoader {
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
-        case .checkoutSession(let checkoutSessionId):
-            do {
-                let response = try await configuration.apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
-                elementsSession = response.elementsSession
-                intent = .checkoutSession(response.checkoutSession)
-            } catch {
-                analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
-                throw error
+        case .checkoutSession(let checkoutSession):
+            guard let elementsSessionJSON = checkoutSession.allResponseFields["elements_session"] as? [AnyHashable: Any],
+                  let decodedElementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJSON) else {
+                throw PaymentSheetError.unknown(debugDescription: "Failed to decode elements session from provided checkout session object")
             }
+            elementsSession = decodedElementsSession
+            intent = .checkoutSession(checkoutSession)
         }
 
         // Warn the merchant if we see unactivated payment method types in the Intent

@@ -94,6 +94,7 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.applePay)
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
                         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
+                        SettingView(setting: $playgroundController.settings.cbcRedesignEnabled)
                         SettingView(setting: $playgroundController.settings.cardBrandAcceptance)
                         SettingView(setting: $playgroundController.settings.enablePassiveCaptcha)
                         SettingView(setting: $playgroundController.settings.enableAttestationOnConfirmation)

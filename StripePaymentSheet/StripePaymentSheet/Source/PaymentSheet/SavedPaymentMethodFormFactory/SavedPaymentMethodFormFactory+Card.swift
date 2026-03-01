@@ -14,14 +14,14 @@ import UIKit
 extension SavedPaymentMethodFormFactory {
     func makeCard(configuration: UpdatePaymentMethodViewController.Configuration) -> PaymentMethodElement {
         let theme = configuration.appearance.asElementsTheme
-        let cardBrandSelector: PaymentMethodElementWrapper<CardBrandSelectorElement>? = {
+        let cardBrandSelector: PaymentMethodElementWrapper<CardBrandChoiceElement>? = {
             guard configuration.isCBCEligible else {
                 return nil
             }
             let cardBrands = configuration.paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }) ?? []
             let disallowedCardBrands = cardBrands.filter { !configuration.cardBrandFilter.isAccepted(cardBrand: $0) }
 
-            let cardBrandSelectorElement = CardBrandSelectorElement(
+            let cardBrandChoiceElement = CardBrandChoiceElement(
                 enableCBCRedesign: configuration.enableCBCRedesign,
                 cardBrands: Set(cardBrands),
                 disallowedCardBrands: Set<STPCardBrand>(disallowedCardBrands),
@@ -30,15 +30,15 @@ extension SavedPaymentMethodFormFactory {
             )
             // pre-select current card brand
             if let currentCardBrand = configuration.paymentMethod.card?.preferredDisplayBrand {
-                if let dropdown = cardBrandSelectorElement.dropdownElement, let indexToSelect = dropdown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
+                if let dropdown = cardBrandChoiceElement.dropdownElement, let indexToSelect = dropdown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
                     dropdown.select(index: indexToSelect, shouldAutoAdvance: false)
-                } else if let selector = cardBrandSelectorElement.selectorElement {
-                    selector.selectBrand(currentCardBrand)
+                } else if let selector = cardBrandChoiceElement.selectorElement {
+                    selector.updateBrandSelection(currentCardBrand)
                 }
             }
 
             // Handler when user selects different card brand
-            let wrappedElement = PaymentMethodElementWrapper<CardBrandSelectorElement>(cardBrandSelectorElement){ field, params in
+            let wrappedElement = PaymentMethodElementWrapper<CardBrandChoiceElement>(cardBrandChoiceElement){ field, params in
                 if let dropdown = field.dropdownElement {
                     let selectedBrandAPIValue = dropdown.selectedItem.rawData
                     let cardBrand = STPCard.brand(from: selectedBrandAPIValue)

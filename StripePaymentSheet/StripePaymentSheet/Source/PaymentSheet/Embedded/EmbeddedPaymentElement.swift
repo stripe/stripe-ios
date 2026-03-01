@@ -89,13 +89,13 @@ public final class EmbeddedPaymentElement {
     }
 
     /// An asynchronous failable initializer for CheckoutSession mode
-    /// Loads the CheckoutSession's payment methods and configuration.
-    /// - Parameter checkoutSessionId: The ID of a Stripe CheckoutSession object (e.g., "cs_test_xxx")
+    /// Loads payment methods and configuration from a fully loaded CheckoutSession object.
+    /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
     @_spi(CheckoutSessionPreview) public static func create(
-        checkoutSessionId: String,
+        checkoutSession: STPCheckoutSession,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
         try validateRowSelectionConfiguration(configuration: configuration)
@@ -105,7 +105,7 @@ public final class EmbeddedPaymentElement {
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
 
         let loadResult = try await PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSessionId),
+            mode: .checkoutSession(checkoutSession),
             configuration: configuration,
             analyticsHelper: analyticsHelper,
             integrationShape: .embedded
