@@ -673,7 +673,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         // ...and setting a preferred network (ie what happens if you select a brand from the dropdown)...
         // Hack: Since the dropdown field isn't properly hooked up to the Element hierarchy, we can't access it via `cardForm.getDropdownFieldElement`
         // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-3088): Make the CBC dropdown field participate in the Element hierarchy correctly!
-        let cbcDropdown = (cardForm.getTextFieldElement("Card number").configuration as! TextFieldElement.PANConfiguration).cardBrandDropDown
+        let cbcDropdown = (cardForm.getTextFieldElement("Card number").configuration as! TextFieldElement.PANConfiguration).cardBrandChoiceElement?.dropdownElement
         cbcDropdown?.selectedIndex = 1
         // ...the label should read "Cartes Bancaire ****1001"
         sut.updateChangeButtonAndSublabelState(for: .new(paymentMethodType: .stripe(.card)))
