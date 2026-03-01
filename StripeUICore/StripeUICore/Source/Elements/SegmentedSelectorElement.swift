@@ -60,6 +60,11 @@ import UIKit
     }
 
     public func select(_ item: SegmentedSelectorItem?, animated: Bool = false, shouldAutoAdvance: Bool = true) {
+        // Validate that item exists in items array (if not nil)
+        if let item = item, !items.contains(item) {
+            return
+        }
+
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
         selectedItem = newSelection

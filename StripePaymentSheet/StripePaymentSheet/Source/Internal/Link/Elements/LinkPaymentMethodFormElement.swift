@@ -137,16 +137,15 @@ final class LinkPaymentMethodFormElement: Element {
 
         if let selectedBrand = paymentMethod.cardDetails?.cardBrand {
             if cardBrandChoiceElement.enableCBCRedesign {
-                let cardBrandDropdown = cardBrandChoiceElement.dropdownElement
-                let index = cardBrandDropdown?.items.firstIndex { item in
+                cardBrandChoiceElement.selectorElement?.select(selectedBrand.makeCardBrandItem())
+            } else {
+                let index = cardBrandChoiceElement.dropdownElement?.items.firstIndex { item in
                     item.rawData == STPCardBrandUtilities.apiValue(from: selectedBrand)
                 }
 
                 if let index {
-                    cardBrandDropdown?.selectedIndex = index
+                    cardBrandChoiceElement.dropdownElement?.selectedIndex = index
                 }
-            } else {
-                cardBrandChoiceElement.selectorElement?.select(selectedBrand.makeCardBrandItem())
             }
         }
 

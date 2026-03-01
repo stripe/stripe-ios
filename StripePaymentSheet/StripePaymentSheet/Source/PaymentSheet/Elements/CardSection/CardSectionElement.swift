@@ -340,13 +340,10 @@ final class CardSectionElement: ContainerElement {
 
     private func selectBrand(_ brand: STPCardBrand, in cardBrandChoiceElement: CardBrandChoiceElement) {
         if cardBrandChoiceElement.enableCBCRedesign {
-            let selector = cardBrandChoiceElement.selectorElement
-            selector?.select(brand.makeCardBrandItem(), shouldAutoAdvance: false)
+            cardBrandChoiceElement.selectorElement?.select(brand.makeCardBrandItem(), shouldAutoAdvance: false)
         } else {
-            // Dropdown mode: find index and select
-            let dropdown = cardBrandChoiceElement.dropdownElement
-            if let indexToSelect = dropdown?.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {
-                dropdown?.select(index: indexToSelect, shouldAutoAdvance: false)
+            if let indexToSelect = cardBrandChoiceElement.dropdownElement?.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {
+                cardBrandChoiceElement.dropdownElement?.select(index: indexToSelect, shouldAutoAdvance: false)
             }
         }
     }
