@@ -69,7 +69,7 @@ final class CardSectionElement: ContainerElement {
     // References to the underlying TextFieldElements
     let nameElement: TextFieldElement?
     let panElement: TextFieldElement
-    let cardBrandSelector: CardBrandChoiceElement?
+    let cardBrandChoiceElement: CardBrandChoiceElement?
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
     let theme: ElementsAppearance
@@ -122,7 +122,7 @@ final class CardSectionElement: ContainerElement {
         }
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(
             defaultValue: defaultValues.pan,
-            cardBrandSelector: cardBrandSelector?.element,
+            cardBrandChoiceElement: cardBrandSelector?.element,
             cardBrandFilter: cardBrandFilter,
             cardFundingFilter: cardFundingFilter,
             fundingBinController: fundingBinController
@@ -169,7 +169,7 @@ final class CardSectionElement: ContainerElement {
 
         self.nameElement = nameElement?.element
         self.panElement = panElement.element
-        self.cardBrandSelector = cardBrandSelector?.element
+        self.cardBrandChoiceElement = cardBrandSelector?.element
         self.cvcElement = cvcElement.element
         self.expiryElement = expiryElement.element
         self.preferredNetworks = preferredNetworks
@@ -181,10 +181,10 @@ final class CardSectionElement: ContainerElement {
     // MARK: - ElementDelegate
     private var cardBrand: STPCardBrand = .unknown
     private var selectedBrand: STPCardBrand? {
-        guard let cardBrandSelector = cardBrandSelector else {
+        guard let cardBrandChoiceElement = cardBrandChoiceElement else {
             return nil
         }
-        return cardBrandSelector.selectedBrand ?? .unknown
+        return cardBrandChoiceElement.selectedBrand ?? .unknown
     }
 
     /// Tracks the last known validation state of the PAN element, so that we can know when it changes from invalid to valid
@@ -267,11 +267,11 @@ final class CardSectionElement: ContainerElement {
     private var cardBrands = Set<STPCardBrand>()
     func fetchAndUpdateCardBrands() {
         // Only fetch card brands if we have at least 8 digits in the pan
-        guard let cardBrandSelector = cardBrandSelector, panElement.text.count >= 8 else {
+        guard let cardBrandChoiceElement = cardBrandChoiceElement, panElement.text.count >= 8 else {
             // Clear any previously fetched card brands from the dropdown
             if !self.cardBrands.isEmpty {
                 self.cardBrands = Set<STPCardBrand>()
-                cardBrandSelector?.update(cardBrands: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>())
+                cardBrandChoiceElement?.update(cardBrands: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>())
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
             return
@@ -298,16 +298,16 @@ final class CardSectionElement: ContainerElement {
                 self.cardBrands = fetchedCardBrands
                 let disallowedCardBrands = fetchedCardBrands.filter { !self.cardBrandFilter.isAccepted(cardBrand: $0) }
 
-                cardBrandSelector.update(
+                cardBrandChoiceElement.update(
                     cardBrands: fetchedCardBrands,
                     disallowedCardBrands: disallowedCardBrands
                 )
 
                 // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
                 if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
-                    selectBrand(brandToSelect, in: cardBrandSelector)
+                    selectBrand(brandToSelect, in: cardBrandChoiceElement)
                 } else if let brandToSelect = useDefaultSelectionLogic(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
-                    selectBrand(brandToSelect, in: cardBrandSelector)
+                    selectBrand(brandToSelect, in: cardBrandChoiceElement)
                 }
 
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
@@ -338,13 +338,13 @@ final class CardSectionElement: ContainerElement {
         return brandToSelect
     }
 
-    private func selectBrand(_ brand: STPCardBrand, in cardBrandSelector: CardBrandChoiceElement) {
-        if cardBrandSelector.enableCBCRedesign {
-            let selector = cardBrandSelector.selectorElement
-            selector?.select(rawData: STPCardBrandUtilities.apiValue(from: brand), shouldAutoAdvance: false)
+    private func selectBrand(_ brand: STPCardBrand, in cardBrandChoiceElement: CardBrandChoiceElement) {
+        if cardBrandChoiceElement.enableCBCRedesign {
+            let selector = cardBrandChoiceElement.selectorElement
+            selector?.select(brand.makeCardBrandItem(), shouldAutoAdvance: false)
         } else {
             // Dropdown mode: find index and select
-            let dropdown = cardBrandSelector.dropdownElement
+            let dropdown = cardBrandChoiceElement.dropdownElement
             if let indexToSelect = dropdown?.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {
                 dropdown?.select(index: indexToSelect, shouldAutoAdvance: false)
             }

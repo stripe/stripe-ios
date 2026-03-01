@@ -125,7 +125,7 @@ final class LinkPaymentMethodFormElement: Element {
             return nil
         }
 
-        let cardBrandSelector = CardBrandChoiceElement(
+        let cardBrandChoiceElement = CardBrandChoiceElement(
             enableCBCRedesign: configuration.enableCBCRedesign,
             cardBrands: Set(cardBrands),
             disallowedCardBrands: [
@@ -136,8 +136,8 @@ final class LinkPaymentMethodFormElement: Element {
         )
 
         if let selectedBrand = paymentMethod.cardDetails?.cardBrand {
-            if cardBrandSelector.enableCBCRedesign {
-                let cardBrandDropdown = cardBrandSelector.dropdownElement
+            if cardBrandChoiceElement.enableCBCRedesign {
+                let cardBrandDropdown = cardBrandChoiceElement.dropdownElement
                 let index = cardBrandDropdown?.items.firstIndex { item in
                     item.rawData == STPCardBrandUtilities.apiValue(from: selectedBrand)
                 }
@@ -146,11 +146,11 @@ final class LinkPaymentMethodFormElement: Element {
                     cardBrandDropdown?.selectedIndex = index
                 }
             } else {
-                cardBrandSelector.selectorElement?.updateSelection(selectedBrand.makeCardBrandItem())
+                cardBrandChoiceElement.selectorElement?.select(selectedBrand.makeCardBrandItem())
             }
         }
 
-        return PaymentMethodElementWrapper<CardBrandChoiceElement>(cardBrandSelector) { field, params in
+        return PaymentMethodElementWrapper<CardBrandChoiceElement>(cardBrandChoiceElement) { field, params in
             let cardBrand = field.selectedBrand ?? .unknown
             let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
             params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
@@ -165,7 +165,7 @@ final class LinkPaymentMethodFormElement: Element {
             lastFour: paymentMethod.cardDetails?.last4 ?? "",
             editConfiguration: isCoBranded ? .readOnlyWithoutDisabledAppearance : .readOnly,
             cardBrand: paymentMethod.cardDetails?.cardBrand,
-            cardBrandSelector: cardBrandSelector?.element
+            cardBrandChoiceElement: cardBrandSelector?.element
         )
 
         return panElementConfig.makeElement(theme: LinkUI.appearance.asElementsTheme)

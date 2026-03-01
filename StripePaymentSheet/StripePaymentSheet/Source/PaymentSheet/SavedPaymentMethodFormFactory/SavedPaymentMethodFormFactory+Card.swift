@@ -32,8 +32,7 @@ extension SavedPaymentMethodFormFactory {
             // pre-select current card brand
             if let currentCardBrand = configuration.paymentMethod.card?.preferredDisplayBrand {
                 if cardBrandChoiceElement.enableCBCRedesign {
-                    let apiValue = STPCardBrandUtilities.apiValue(from: currentCardBrand)
-                    cardBrandChoiceElement.selectorElement?.select(rawData: apiValue, shouldAutoAdvance: false)
+                    cardBrandChoiceElement.selectorElement?.select(currentCardBrand.makeCardBrandItem(), shouldAutoAdvance: false)
                 } else {
                     let dropdown = cardBrandChoiceElement.dropdownElement
                     if let indexToSelect = dropdown?.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
@@ -55,7 +54,7 @@ extension SavedPaymentMethodFormFactory {
             let panElementConfig = TextFieldElement.LastFourConfiguration(lastFour: configuration.paymentMethod.card?.last4 ?? "",
                                                                           editConfiguration: cardBrandSelector != nil ? .readOnlyWithoutDisabledAppearance : .readOnly,
                                                                           cardBrand: configuration.paymentMethod.calculateCardBrandToDisplay(),
-                                                                          cardBrandSelector: cardBrandSelector?.element)
+                                                                          cardBrandChoiceElement: cardBrandSelector?.element)
 
             let panElement = panElementConfig.makeElement(theme: theme)
             return panElement
