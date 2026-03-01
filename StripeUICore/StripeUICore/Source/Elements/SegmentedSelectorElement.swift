@@ -51,50 +51,34 @@ import UIKit
             selectedItem = nil
         }
 
-        // Don't make any selection changes if there aren't multiple items to choose from
-        guard items.count > 1 else {
-            return
-        }
-
         selectorView.update(
             items: items,
             disabledItems: disabledItems
         )
 
-        // Update the view to reflect the current selection
-        selectorView.setSelectedItem(selectedItem, animated: false)
+        select(selectedItem, animated: false, shouldAutoAdvance: false)
     }
 
-    /// Programmatically select an item by its rawData value
-    public func select(rawData: String, shouldAutoAdvance: Bool = true) {
-        guard let item = items.first(where: { $0.rawData == rawData }) else {
-            return
-        }
-        updateSelection(item, shouldAutoAdvance: shouldAutoAdvance)
-    }
-
-    public func updateSelection(_ item: SegmentedSelectorItem?, animated: Bool = false, shouldAutoAdvance: Bool = true) {
+    public func select(_ item: SegmentedSelectorItem?, animated: Bool = false, shouldAutoAdvance: Bool = true) {
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
-        let wasSelection = newSelection != nil
         selectedItem = newSelection
 
         // Update the visual UI
-        selectorView.setSelectedItem(newSelection, animated: animated)
+        selectorView.select(newSelection, animated: animated)
 
         delegate?.didUpdate(element: self)
 
         // Auto-advance to next field when selecting (not when deselecting) if requested
-        if wasSelection && shouldAutoAdvance {
+        if newSelection != nil && shouldAutoAdvance {
             delegate?.continueToNextField(element: self)
         }
     }
 }
 
 extension SegmentedSelectorElement: SegmentedSelectorViewDelegate {
-    func didSelectItem(_ item: SegmentedSelectorItem) {
-        // User taps should auto-advance by default (like DropdownFieldElement)
-        updateSelection(item, shouldAutoAdvance: true)
+    func didSelect(_ item: SegmentedSelectorItem) {
+        select(item, shouldAutoAdvance: true)
     }
 }
 
@@ -184,24 +168,24 @@ final class SegmentedSelectorView: UIView {
         invalidateIntrinsicContentSize()
     }
 
-    func setSelectedItem(_ item: SegmentedSelectorItem?, animated: Bool) {
+    func select(_ item: SegmentedSelectorItem?, animated: Bool) {
         // Deselect previous
         if let previousItem = selectedItem,
            let previousView = itemViews[previousItem] {
-            previousView.updateSelectionState(false, animated: animated)
+            previousView.select(false, animated: animated)
         }
 
         selectedItem = item
 
         // Select new item
         if let item = item, let itemView = itemViews[item] {
-            itemView.updateSelectionState(true, animated: animated)
+            itemView.select(true, animated: animated)
         }
     }
 
     @objc private func itemTapped(_ sender: UITapGestureRecognizer) {
         guard let itemView = sender.view as? SegmentedItemView else { return }
-        delegate?.didSelectItem(itemView.item)
+        delegate?.didSelect(itemView.item)
     }
 }
 
@@ -281,7 +265,7 @@ private final class SegmentedItemView: UIView {
         accessibilityTraits = .button
     }
 
-    func updateSelectionState(_ selected: Bool, animated: Bool) {
+    func select(_ selected: Bool, animated: Bool) {
         if selected {
             checkmarkImageView.isHidden = false
             checkmarkImageView.alpha = 0
@@ -338,5 +322,5 @@ private final class SegmentedItemView: UIView {
 // MARK: - SegmentedSelectorViewDelegate
 
 protocol SegmentedSelectorViewDelegate: AnyObject {
-    func didSelectItem(_ item: SegmentedSelectorItem)
+    func didSelect(_ item: SegmentedSelectorItem)
 }
