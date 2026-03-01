@@ -78,16 +78,16 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
-    func update(cardBrands: Set<STPCardBrand>, disallowedBrands: Set<STPCardBrand> = []) {
+    func update(cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand> = []) {
         if enableCBCRedesign {
             selectorElement?.update(
                 items: Self.makeItems(from: cardBrands),
-                disabledItems: Set(Self.makeItems(from: disallowedBrands))
+                disabledItems: Set(Self.makeItems(from: disallowedCardBrands))
             )
         } else {
             let items = DropdownFieldElement.items(
                 from: cardBrands,
-                disallowedCardBrands: disallowedBrands,
+                disallowedCardBrands: disallowedCardBrands,
                 theme: dropdownElement?.theme ?? .default,
                 includePlaceholder: includePlaceholder
             )
@@ -103,11 +103,7 @@ final class CardBrandChoiceElement: Element {
         return brands
             .sorted { $0.rawValue < $1.rawValue }
             .map { brand in
-                SegmentedSelectorItem(
-                    rawData: STPCardBrandUtilities.apiValue(from: brand),
-                    image: STPImageLibrary.cardBrandImage(for: brand),
-                    accessibilityLabel: STPCardBrandUtilities.stringFrom(brand) ?? ""
-                )
+                brand.makeCardBrandItem()
             }
     }
 }
@@ -119,5 +115,15 @@ extension CardBrandChoiceElement: ElementDelegate {
 
     func continueToNextField(element: Element) {
         delegate?.continueToNextField(element: self)
+    }
+}
+
+extension STPCardBrand {
+    func makeCardBrandItem() -> SegmentedSelectorItem {
+        return SegmentedSelectorItem(
+            rawData: STPCardBrandUtilities.apiValue(from: self),
+            image: STPImageLibrary.cardBrandImage(for: self),
+            accessibilityLabel: STPCardBrandUtilities.stringFrom(self) ?? ""
+        )
     }
 }
