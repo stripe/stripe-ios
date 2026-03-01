@@ -91,6 +91,9 @@ extension CustomerSheet {
         /// If true, device will attest and assert on confirmation requests
         @_spi(STP) public var enableAttestationOnConfirmation: Bool = false
 
+        /// If true, use the new inline card brand selector UI instead of a dropdown
+        @_spi(STP) public var enableCBCRedesign: Bool = false
+
         public init () {
         }
     }

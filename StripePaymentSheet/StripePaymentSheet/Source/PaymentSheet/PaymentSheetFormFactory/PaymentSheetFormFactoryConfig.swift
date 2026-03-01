@@ -134,6 +134,15 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
+    var enableCBCRedesign: Bool {
+        switch self {
+        case .paymentElement(let config, _):
+            return config.enableCBCRedesign
+        case .customerSheet(let config):
+            return config.enableCBCRedesign
+        }
+    }
+
     func termsDisplayFor(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentSheet.TermsDisplay {
         switch self {
         case .paymentElement(let configuration, _):

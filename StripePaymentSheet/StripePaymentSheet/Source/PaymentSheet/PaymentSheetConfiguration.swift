@@ -168,6 +168,9 @@ extension PaymentSheet {
             }
         }
 
+        /// If true, use the new inline card brand selector UI instead of a dropdown
+        @_spi(STP) public var enableCBCRedesign: Bool = false
+
         /// Controls whether to filter out wallet payment methods from the saved payment method list.
         @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
 

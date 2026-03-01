@@ -76,6 +76,7 @@ extension PaymentSheetFormFactory {
             defaultValues: cardDefaultValues,
             preferredNetworks: configuration.preferredNetworks,
             cardBrandChoiceEligible: cardBrandChoiceEligible,
+            enableCBCRedesign: configuration.enableCBCRedesign,
             hostedSurface: .init(config: configuration),
             theme: theme,
             analyticsHelper: analyticsHelper,

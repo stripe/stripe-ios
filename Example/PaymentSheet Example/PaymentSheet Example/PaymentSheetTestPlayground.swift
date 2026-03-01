@@ -62,6 +62,7 @@ struct PaymentSheetTestPlayground: View {
             SearchableSettingView(setting: $playgroundController.settings.customPaymentMethods, searchText: searchText)
         }
         SearchableSettingView(setting: $playgroundController.settings.preferredNetworksEnabled, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.cbcRedesignEnabled, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.cardBrandAcceptance, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.cardFundingAcceptance, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod, searchText: searchText)

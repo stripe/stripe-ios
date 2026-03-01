@@ -14,40 +14,49 @@ import UIKit
 extension SavedPaymentMethodFormFactory {
     func makeCard(configuration: UpdatePaymentMethodViewController.Configuration) -> PaymentMethodElement {
         let theme = configuration.appearance.asElementsTheme
-        let cardBrandDropDown: PaymentMethodElementWrapper<DropdownFieldElement>? = {
+        let cardBrandSelector: PaymentMethodElementWrapper<CardBrandChoiceElement>? = {
             guard configuration.isCBCEligible else {
                 return nil
             }
             let cardBrands = configuration.paymentMethod.card?.networks?.available.map({ STPCard.brand(from: $0) }) ?? []
             let disallowedCardBrands = cardBrands.filter { !configuration.cardBrandFilter.isAccepted(cardBrand: $0) }
 
-            let cardBrandDropDown = DropdownFieldElement.makeCardBrandDropdown(cardBrands: Set<STPCardBrand>(cardBrands),
-                                                                               disallowedCardBrands: Set<STPCardBrand>(disallowedCardBrands),
-                                                                               theme: theme,
-                                                                               includePlaceholder: false)
+            let cardBrandChoiceElement = CardBrandChoiceElement(
+                enableCBCRedesign: configuration.enableCBCRedesign,
+                cardBrands: Set(cardBrands),
+                disallowedCardBrands: Set<STPCardBrand>(disallowedCardBrands),
+                theme: theme,
+                includePlaceholder: false
+            )
             // pre-select current card brand
-            if let currentCardBrand = configuration.paymentMethod.card?.preferredDisplayBrand,
-               let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
-                cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
+            if let currentCardBrand = configuration.paymentMethod.card?.preferredDisplayBrand {
+                if let dropdown = cardBrandChoiceElement.dropdownElement, let indexToSelect = dropdown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
+                    dropdown.select(index: indexToSelect, shouldAutoAdvance: false)
+                } else if let selector = cardBrandChoiceElement.selectorElement {
+                    selector.updateBrandSelection(currentCardBrand)
+                }
             }
 
             // Handler when user selects different card brand
-            let wrappedElement = PaymentMethodElementWrapper<DropdownFieldElement>(cardBrandDropDown){ field, params in
-                let cardBrands = configuration.paymentMethod.card?.networks?.available.map({
-                    STPCard.brand(from: $0)
-                }) ?? []
-                let cardBrand = cardBrands[field.selectedIndex]
-                let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
-                params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+            let wrappedElement = PaymentMethodElementWrapper<CardBrandChoiceElement>(cardBrandChoiceElement){ field, params in
+                if let dropdown = field.dropdownElement {
+                    let selectedBrandAPIValue = dropdown.selectedItem.rawData
+                    let cardBrand = STPCard.brand(from: selectedBrandAPIValue)
+                    let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
+                    params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+                } else if let selector = field.selectorElement, let cardBrand = selector.selectedBrand {
+                    let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
+                    params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+                }
                 return params
             }
             return wrappedElement
         }()
         let panElement: TextFieldElement = {
             let panElementConfig = TextFieldElement.LastFourConfiguration(lastFour: configuration.paymentMethod.card?.last4 ?? "",
-                                                                          editConfiguration: cardBrandDropDown != nil ? .readOnlyWithoutDisabledAppearance : .readOnly,
+                                                                          editConfiguration: cardBrandSelector != nil ? .readOnlyWithoutDisabledAppearance : .readOnly,
                                                                           cardBrand: configuration.paymentMethod.calculateCardBrandToDisplay(),
-                                                                          cardBrandDropDown: cardBrandDropDown?.element)
+                                                                          cardBrandSelector: cardBrandSelector?.element)
 
             let panElement = panElementConfig.makeElement(theme: theme)
             return panElement
@@ -95,7 +104,7 @@ extension SavedPaymentMethodFormFactory {
         let cardSection: SectionElement = {
             let allSubElements: [Element?] = [
                 panElement,
-                SectionElement.HiddenElement(cardBrandDropDown),
+                SectionElement.HiddenElement(cardBrandSelector),
                 SectionElement.MultiElementRow([expiryDateElement, cvcElement], theme: theme),
             ]
             return SectionElement(title: billingAddressSection != nil ? String.Localized.card_information : nil,
