@@ -9,7 +9,6 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
-import XCTest
 
 // ☠️ WARNING: These snapshots are missing selected borders at the corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
 // @iOS26

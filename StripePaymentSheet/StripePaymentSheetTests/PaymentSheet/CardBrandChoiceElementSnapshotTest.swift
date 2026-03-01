@@ -11,6 +11,7 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentsUI
 @_spi(STP) @testable import StripeUICore
 import UIKit
+import XCTest
 
 final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
     var appearance = PaymentSheet.Appearance()
