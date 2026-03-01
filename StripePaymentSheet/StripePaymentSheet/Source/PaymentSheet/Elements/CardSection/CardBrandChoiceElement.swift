@@ -63,7 +63,7 @@ final class CardBrandChoiceElement: Element {
         if enableCBCRedesign {
             self.selectorElement = SegmentedSelectorElement(
                 items: Self.makeItems(from: cardBrands),
-                disabledItems: Self.makeItems(from: disallowedCardBrands),
+                disabledItems: Set(Self.makeItems(from: disallowedCardBrands)),
                 theme: theme
             )
             self.selectorElement?.delegate = self
@@ -82,7 +82,7 @@ final class CardBrandChoiceElement: Element {
         if enableCBCRedesign {
             selectorElement?.update(
                 items: Self.makeItems(from: cardBrands),
-                disabledItems: Self.makeItems(from: disallowedBrands)
+                disabledItems: Set(Self.makeItems(from: disallowedBrands))
             )
         } else {
             let items = DropdownFieldElement.items(
@@ -97,15 +97,18 @@ final class CardBrandChoiceElement: Element {
 
     // MARK: - Helper Methods
 
-    /// Converts a set of card brands to selector items
-    private static func makeItems(from brands: Set<STPCardBrand>) -> Set<SegmentedSelectorItem> {
-        return Set(brands.map { brand in
-            SegmentedSelectorItem(
-                rawData: STPCardBrandUtilities.apiValue(from: brand),
-                image: STPImageLibrary.cardBrandImage(for: brand),
-                accessibilityLabel: STPCardBrandUtilities.stringFrom(brand) ?? ""
-            )
-        })
+    /// Converts a set of card brands to an ordered array of selector items.
+    /// Sorts by brand's rawValue to ensure deterministic ordering.
+    private static func makeItems(from brands: Set<STPCardBrand>) -> [SegmentedSelectorItem] {
+        return brands
+            .sorted { $0.rawValue < $1.rawValue }
+            .map { brand in
+                SegmentedSelectorItem(
+                    rawData: STPCardBrandUtilities.apiValue(from: brand),
+                    image: STPImageLibrary.cardBrandImage(for: brand),
+                    accessibilityLabel: STPCardBrandUtilities.stringFrom(brand) ?? ""
+                )
+            }
     }
 }
 

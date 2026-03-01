@@ -25,28 +25,28 @@ import UIKit
     private let theme: ElementsAppearance
 
     public private(set) var selectedItem: SegmentedSelectorItem?
-    public var items: Set<SegmentedSelectorItem>
+    public var items: [SegmentedSelectorItem]
     private var disabledItems: Set<SegmentedSelectorItem>
 
-    public init(items: Set<SegmentedSelectorItem> = [],
+    public init(items: [SegmentedSelectorItem] = [],
          disabledItems: Set<SegmentedSelectorItem> = [],
          theme: ElementsAppearance = .default) {
         self.items = items
         self.disabledItems = disabledItems
         self.theme = theme
         self.selectorView = SegmentedSelectorView(
-            items: Array(items.sorted { $0.hashValue < $1.hashValue }),
+            items: items,
             disabledItems: disabledItems,
             theme: theme
         )
         self.selectorView.delegate = self
     }
 
-    public func update(items: Set<SegmentedSelectorItem>, disabledItems: Set<SegmentedSelectorItem> = []) {
+    public func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem> = []) {
         self.items = items
         self.disabledItems = disabledItems
 
-        // Clear selected item if it's not in the new items set
+        // Clear selected item if it's not in the new items array
         if let selected = selectedItem, !items.contains(selected) {
             selectedItem = nil
         }
@@ -57,7 +57,7 @@ import UIKit
         }
 
         selectorView.update(
-            items: Array(items.sorted { $0.hashValue < $1.hashValue }),
+            items: items,
             disabledItems: disabledItems
         )
 
@@ -216,7 +216,7 @@ private final class SegmentedItemView: UIView {
     private let containerStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
-        stack.spacing = 4
+        stack.spacing = 2
         stack.alignment = .center
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
@@ -240,7 +240,8 @@ private final class SegmentedItemView: UIView {
             iconImageView.alpha = 0.4
         }
 
-//        checkmarkImageView.image = Image.embedded_check.makeImage(template: true)
+        let configuration = UIImage.SymbolConfiguration(weight: .medium)
+        checkmarkImageView.image = UIImage(systemName: "checkmark", withConfiguration: configuration)
         checkmarkImageView.tintColor = theme.colors.bodyText
 
         // Add checkmark on the left, then icon on the right
