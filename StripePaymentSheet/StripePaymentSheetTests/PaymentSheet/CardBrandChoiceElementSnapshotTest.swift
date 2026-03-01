@@ -7,8 +7,8 @@
 
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentsUI
 @_spi(STP) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentsUI
 @_spi(STP) @testable import StripeUICore
 import UIKit
 
