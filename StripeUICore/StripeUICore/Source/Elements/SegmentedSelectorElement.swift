@@ -65,21 +65,36 @@ import UIKit
         selectorView.setSelectedItem(selectedItem, animated: false)
     }
 
-    public func updateSelection(_ item: SegmentedSelectorItem?, animated: Bool = false) {
+    /// Programmatically select an item by its rawData value
+    public func select(rawData: String, shouldAutoAdvance: Bool = true) {
+        guard let item = items.first(where: { $0.rawData == rawData }) else {
+            return
+        }
+        updateSelection(item, shouldAutoAdvance: shouldAutoAdvance)
+    }
+
+    public func updateSelection(_ item: SegmentedSelectorItem?, animated: Bool = false, shouldAutoAdvance: Bool = true) {
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
+        let wasSelection = newSelection != nil
         selectedItem = newSelection
 
         // Update the visual UI
         selectorView.setSelectedItem(newSelection, animated: animated)
 
         delegate?.didUpdate(element: self)
+
+        // Auto-advance to next field when selecting (not when deselecting) if requested
+        if wasSelection && shouldAutoAdvance {
+            delegate?.continueToNextField(element: self)
+        }
     }
 }
 
 extension SegmentedSelectorElement: SegmentedSelectorViewDelegate {
     func didSelectItem(_ item: SegmentedSelectorItem) {
-        updateSelection(item)
+        // User taps should auto-advance by default (like DropdownFieldElement)
+        updateSelection(item, shouldAutoAdvance: true)
     }
 }
 
