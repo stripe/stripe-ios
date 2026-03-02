@@ -158,7 +158,7 @@ final class SegmentedSelectorView: UIView {
                     isDisabled: isDisabled,
                     theme: theme
                 )
-                
+
                 let tapGesture = UITapGestureRecognizer(target: self, action: #selector(itemTapped(_:)))
                 itemView.addGestureRecognizer(tapGesture)
                 itemView.isUserInteractionEnabled = !isDisabled
