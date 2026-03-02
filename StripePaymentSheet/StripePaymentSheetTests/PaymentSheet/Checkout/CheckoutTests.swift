@@ -215,7 +215,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         // Before providing an address, tax hasn't been computed yet
         XCTAssertNil(taxContextBefore?["automatic_tax_taxability_reason"] as? String)
 
-        let billingUpdate = Checkout.BillingAddressUpdate(
+        let billingUpdate = Checkout.AddressUpdate(
             name: "Jane Doe",
             address: .init(
                 country: "US",
@@ -228,7 +228,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         try await checkout.updateBillingAddress(billingUpdate)
 
         // Address should be stored on the session
-        let storedBilling = checkout.session?.billingAddressOverride as? Checkout.BillingAddressUpdate
+        let storedBilling = checkout.session?.billingAddressOverride as? Checkout.AddressUpdate
         XCTAssertNotNil(storedBilling)
         XCTAssertEqual(storedBilling?.name, "Jane Doe")
         XCTAssertEqual(storedBilling?.address.country, "US")
@@ -266,7 +266,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         // Before providing an address, tax hasn't been computed yet
         XCTAssertNil(taxContextBefore?["automatic_tax_taxability_reason"] as? String)
 
-        let shippingUpdate = Checkout.ShippingAddressUpdate(
+        let shippingUpdate = Checkout.AddressUpdate(
             name: "John Smith",
             address: .init(
                 country: "US",
@@ -279,7 +279,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         try await checkout.updateShippingAddress(shippingUpdate)
 
         // Address should be stored on the session
-        let storedShipping = checkout.session?.shippingAddressOverride as? Checkout.ShippingAddressUpdate
+        let storedShipping = checkout.session?.shippingAddressOverride as? Checkout.AddressUpdate
         XCTAssertNotNil(storedShipping)
         XCTAssertEqual(storedShipping?.name, "John Smith")
         XCTAssertEqual(storedShipping?.address.country, "US")

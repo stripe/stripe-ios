@@ -118,7 +118,7 @@ public final class Checkout: ObservableObject {
     /// - Parameter params: The billing address to set, or `nil` to clear.
     /// - Throws: ``CheckoutError`` if the session is not loaded/open, or if
     ///   the server request fails.
-    public func updateBillingAddress(_ params: BillingAddressUpdate?) async throws {
+    public func updateBillingAddress(_ params: AddressUpdate?) async throws {
         try requireOpenSession()
         session?.billingAddressOverride = params
         if let params, shouldSendTaxRegion(for: "billing") {
@@ -136,7 +136,7 @@ public final class Checkout: ObservableObject {
     /// - Parameter params: The shipping address to set, or `nil` to clear.
     /// - Throws: ``CheckoutError`` if the session is not loaded/open, or if
     ///   the server request fails.
-    public func updateShippingAddress(_ params: ShippingAddressUpdate?) async throws {
+    public func updateShippingAddress(_ params: AddressUpdate?) async throws {
         try requireOpenSession()
         session?.shippingAddressOverride = params
         if let params, shouldSendTaxRegion(for: "shipping") {

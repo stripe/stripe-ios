@@ -1,9 +1,9 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1xUCgYHi0vsyEjB9JZjSeSvLXIFKKNkA9vIr9RmgqnI7BKHlGI3Qbd7rO\/init$
+https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1Nr4o1u8yKzcyQTgc2PgE4Fqp4X88OSNCWBce8h9AUkqPV4UyEAzHacEn\/init$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QTIhqa0W0IMTEh_wNyNdpz43yzF6ldmAxvRKZTQfZ8nbs1nrqu4n8yVVCIA38UMV-dnzTD4YyBoWK129
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=33B8YzLnARNnt1icxenqWAiIMO2XWNQXlswzDj9Pfl_amJN0cDa65vxgRy6pJy_ptjM9DI0Yd5u7GBjK
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_lMycnyhqvWbmHq
-Content-Length: 29119
+request-id: req_otX7m1MDGlPLTV
+Content-Length: 29778
 Vary: Origin
-Date: Mon, 02 Mar 2026 22:12:17 GMT
-original-request: req_lMycnyhqvWbmHq
+Date: Mon, 02 Mar 2026 22:19:12 GMT
+original-request: req_otX7m1MDGlPLTV
 stripe-version: 2020-08-27
-idempotency-key: e24c8389-300d-42b3-ab1f-44630eb963fc
+idempotency-key: 31efe3d5-1698-4187-aaf5-8b5109eede0a
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -31,14 +31,14 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   "tax_context" : {
     "automatic_tax_error" : null,
     "automatic_tax_enabled" : true,
-    "automatic_tax_taxability_reason" : null,
+    "automatic_tax_taxability_reason" : "not_collecting",
     "dynamic_tax_enabled" : false,
     "tax_id_collection_enabled" : false,
-    "automatic_tax_exempt" : null,
+    "automatic_tax_exempt" : "none",
     "customer_tax_country" : null,
     "tax_id_collection_required" : "never",
     "has_maximum_tax_ids" : false,
-    "automatic_tax_address_source" : "session.billing"
+    "automatic_tax_address_source" : "session.shipping"
   },
   "payment_method_types" : [
     "card"
@@ -56,7 +56,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   "blocked_billing_address_countries" : [
 
   ],
-  "id" : "ppage_1T6ehIFY0qyl6XeWq4JLUgPw",
+  "id" : "ppage_1T6enyFY0qyl6XeW3EfFbU3k",
   "subscription_settings" : null,
   "consent" : null,
   "application" : null,
@@ -70,8 +70,13 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   },
   "capture_method" : "automatic_async",
   "statement_descriptor" : "mobile",
-  "session_id" : "cs_test_a1xUCgYHi0vsyEjB9JZjSeSvLXIFKKNkA9vIr9RmgqnI7BKHlGI3Qbd7rO",
-  "shipping_address_collection" : null,
+  "session_id" : "cs_test_a1Nr4o1u8yKzcyQTgc2PgE4Fqp4X88OSNCWBce8h9AUkqPV4UyEAzHacEn",
+  "shipping_address_collection" : {
+    "allowed_countries" : [
+      "US",
+      "CA"
+    ]
+  },
   "konbini_confirmation_number" : null,
   "setup_future_usage" : null,
   "invoice_creation" : {
@@ -149,13 +154,10 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       "KLARNA_EXPRESS" : {
         "disabled_reason" : "not_in_payment_method_types"
       },
-      "GOOGLE_PAY" : {
-        "disabled_reason" : "google_pay_automatic_taxes_address_source_session_shipping_address_not_required"
-      },
-      "AMAZON_PAY" : {
+      "PAYPAL_ECS" : {
         "disabled_reason" : "not_in_payment_method_types"
       },
-      "PAYPAL_ECS" : {
+      "AMAZON_PAY" : {
         "disabled_reason" : "not_in_payment_method_types"
       }
     },
@@ -166,13 +168,13 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
     "payment_method_configuration_details" : null
   },
   "token_notification_url" : "https:\/\/pm-hooks.stripe.com\/apple_pay\/merchant_token\/pDq7tf9uieoQWMVJixFwuOve\/acct_1G6m1pFY0qyl6XeW\/",
-  "init_checksum" : "f2a0n9tQOu7qPjqpVuAv7MGEUXGR1aiP",
+  "init_checksum" : "xXc8j1Otm1aNXAFTtWSspuGaCPK5QwRW",
   "bnpl_link_experiment_payment_method_type" : null,
   "tax_meta" : {
-    "status" : "requires_location_inputs",
-    "error_reason" : "no_buyer_location_provided",
+    "status" : "complete",
+    "error_reason" : null,
     "computation_type" : "automatic",
-    "customer_tax_exempt" : null
+    "customer_tax_exempt" : "none"
   },
   "payment_status" : "unpaid",
   "enabled_third_party_wallets" : [
@@ -186,7 +188,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
     },
     {
       "id" : "GOOGLE_PAY",
-      "enabled" : false,
+      "enabled" : true,
       "google_pay" : {
         "id" : "GOOGLE_PAY",
         "version_minor" : 0,
@@ -303,7 +305,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
     "expand" : [
 
     ],
-    "checkout_session_id" : "cs_test_a1xUCgYHi0vsyEjB9JZjSeSvLXIFKKNkA9vIr9RmgqnI7BKHlGI3Qbd7rO",
+    "checkout_session_id" : "cs_test_a1Nr4o1u8yKzcyQTgc2PgE4Fqp4X88OSNCWBce8h9AUkqPV4UyEAzHacEn",
     "merchant_support_shipping" : null,
     "mobile_app_id" : null,
     "currency" : null,
@@ -349,9 +351,9 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   "shipping_tax_amounts" : [
 
   ],
-  "billing_address_collection" : "required",
+  "billing_address_collection" : null,
   "experiments_data" : {
-    "event_id" : "122dafee-eaa3-4e0a-8de9-c05487f61a46",
+    "event_id" : "8c5838b2-8806-4079-9319-308050d17386",
     "experiment_metadata" : {
       "ocs_buyer_xp_cpl_lpm_holdback" : {
         "heldback_special_wallets" : [
@@ -553,10 +555,10 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       "link_forest_enable_ece_bank_use_shipping_as_billing" : false
     },
     "merchant_logo_url" : null,
-    "session_id" : "elements_session_1CSL14RE5Lh",
+    "session_id" : "elements_session_1wa2TRY4YqA",
     "card_installments_enabled" : false,
     "account_id" : "acct_1G6m1pFY0qyl6XeW",
-    "config_id" : "ac58ebf4-b55c-4fc4-9b61-84f4effb9ec4",
+    "config_id" : "3bbeafb3-dbb4-4294-9c37-852c937bc439",
     "merchant_currency" : "usd",
     "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
     "card_brand_choice" : {
@@ -584,7 +586,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       "paypal_merchant_id" : null
     },
     "experiments_data" : {
-      "arb_id" : "db99a4f9-3589-44a0-a885-ab2c322b83a3",
+      "arb_id" : "cbca51dd-6d8b-43f2-9562-207bd6e50808",
       "experiment_metadata" : {
         "seed" : "6f3407e11d795c34f4d3414fe1575190bbc9f39ba8033d463910f5932219257d",
         "semi_dominant_payment_methods" : [
@@ -735,7 +737,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
     ],
     "customer_error" : null
   },
-  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1xUCgYHi0vsyEjB9JZjSeSvLXIFKKNkA9vIr9RmgqnI7BKHlGI3Qbd7rO#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
+  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1Nr4o1u8yKzcyQTgc2PgE4Fqp4X88OSNCWBce8h9AUkqPV4UyEAzHacEn#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
   "prefilled" : null,
   "redirect_on_completion" : null,
   "blob" : null,
@@ -771,7 +773,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   },
   "shipping" : null,
   "crypto_in_link_ui_enabled" : false,
-  "rqdata" : "bjOJq9P7e5uzsnohDhW5EY6Q2QHjw\/I+ZaQyLlCzlcVfF9Jcl6GeQSckpkFbA2DBU\/nWxds8nvmR79FXxgNwa8d1OYBTlw5a6rKrgcMeULVI5EMGmFgc\/UnOawuxnIL325AQPDbxhleUbKx75i1wRezfw8t9vlRVlzJ8YeKqnob8neevUDEYLaRCRS0tTXAFhF9BjcVIeqOG\/HtVkGB8\/82yjIKG7H49mfWJ4TdFdk9GXzzeFYs8+rBMnyK8zTaZp1I5WoRFPXDdPwavRGiT+jkdeOA1pLhNYsWSKr6EVA0k0UeEeLDpm\/H4gw==0CCrmXMtsK1RRxcW",
+  "rqdata" : "2yc4bCc78mH+eHmqsHg0eevY\/cD0a5y4f809i0EH0jxIR6YoLXgoCNwnu2ZsK7lACf+uRecpytNvgSfRlKBIIfB8KWyjwuJlhzC\/NdhWBpVVMqhgX+5um114hw+UF9tEkSgOYpJsg2s3UTEvHMQdP\/45F0K+sfz3dz5tJlsde57QpGsAtbSAc+wBZAVnDgN9sZ30msXrXJhg0nxpIf0Y69H4ijRXegAO8SPYG4ekJkkhvl3FHiPqdagPvR\/ZV7yFD7Ks+V8SQ+uA8Qv56qs5RDLJkK7DBche8F9x8JzCncXUSjITY5V\/J0B7NQ==oLpvuPACC1k3Ca1T",
   "total_summary" : {
     "due" : 2000,
     "subtotal" : 2000,
@@ -781,16 +783,29 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   "cross_sell_group" : null,
   "site_key" : "20000000-ffff-ffff-ffff-000000000002",
   "checkout_multistep_ui" : false,
-  "eid" : "CFCDBE52-C825-455B-928D-74AC414A20AA",
+  "eid" : "34DD2BD2-4131-44FA-8CDB-3D378C75CE4B",
   "line_item_group" : {
     "tax_amounts" : [
-
+      {
+        "amount" : 0,
+        "tax_rate" : {
+          "object" : "tax_rate",
+          "active" : false,
+          "inclusive" : false,
+          "rate_type" : "percentage",
+          "description" : null,
+          "display_name" : "Sales Tax",
+          "percentage" : 9.75
+        },
+        "taxable_amount" : 0,
+        "inclusive" : false
+      }
     ],
     "localized_prices_metas" : null,
     "total" : 2000,
     "line_items" : [
       {
-        "id" : "li_1T6ehIFY0qyl6XeWtDCpoMG3",
+        "id" : "li_1T6enyFY0qyl6XeWi8Y8vxv0",
         "description" : null,
         "discount_amounts" : [
 
@@ -799,13 +814,26 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
         "is_removable" : false,
         "total" : 2000,
         "tax_amounts" : [
-
+          {
+            "amount" : 0,
+            "tax_rate" : {
+              "object" : "tax_rate",
+              "active" : false,
+              "inclusive" : false,
+              "rate_type" : "percentage",
+              "description" : null,
+              "display_name" : "Sales Tax",
+              "percentage" : 9.75
+            },
+            "taxable_amount" : 0,
+            "inclusive" : false
+          }
         ],
         "subtotal" : 2000,
         "cross_sell_from" : null,
         "object" : "item",
         "price" : {
-          "id" : "price_1T6ehIFY0qyl6XeWFwKMRM06",
+          "id" : "price_1T6enyFY0qyl6XeWTL8WJtMx",
           "livemode" : false,
           "active" : false,
           "product" : {
@@ -860,6 +888,6 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   },
   "name_collection" : null,
   "payment_intent" : null,
-  "config_id" : "4b753bea-f025-4431-898a-a1603ecb26bd",
+  "config_id" : "8fff644f-a651-42bf-8253-fb80cb023f2d",
   "is_sandbox_merchant" : false
 }

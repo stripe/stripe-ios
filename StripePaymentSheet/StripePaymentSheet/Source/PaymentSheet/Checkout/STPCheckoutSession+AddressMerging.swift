@@ -15,11 +15,11 @@ extension STPCheckoutSession {
     /// Populates empty fields in the configuration with checkout-collected addresses.
     /// Configuration values always take precedence over checkout-collected values.
     func applyAddressOverrides(to configuration: inout PaymentSheet.Configuration) {
-        if let billing = billingAddressOverride as? Checkout.BillingAddressUpdate {
+        if let billing = billingAddressOverride as? Checkout.AddressUpdate {
             applyBillingAddress(billing, to: &configuration.defaultBillingDetails)
         }
 
-        if let shipping = shippingAddressOverride as? Checkout.ShippingAddressUpdate,
+        if let shipping = shippingAddressOverride as? Checkout.AddressUpdate,
            configuration.shippingDetails() == nil {
             configuration.shippingDetails = {
                 AddressViewController.AddressDetails(
@@ -41,11 +41,11 @@ extension STPCheckoutSession {
     /// Populates empty fields in the embedded configuration with checkout-collected addresses.
     /// Configuration values always take precedence over checkout-collected values.
     func applyAddressOverrides(to configuration: inout EmbeddedPaymentElement.Configuration) {
-        if let billing = billingAddressOverride as? Checkout.BillingAddressUpdate {
+        if let billing = billingAddressOverride as? Checkout.AddressUpdate {
             applyBillingAddress(billing, to: &configuration.defaultBillingDetails)
         }
 
-        if let shipping = shippingAddressOverride as? Checkout.ShippingAddressUpdate,
+        if let shipping = shippingAddressOverride as? Checkout.AddressUpdate,
            configuration.shippingDetails() == nil {
             configuration.shippingDetails = {
                 AddressViewController.AddressDetails(
@@ -65,7 +65,7 @@ extension STPCheckoutSession {
     }
 
     private func applyBillingAddress(
-        _ billing: Checkout.BillingAddressUpdate,
+        _ billing: Checkout.AddressUpdate,
         to details: inout PaymentSheet.BillingDetails
     ) {
         details.name = details.name ?? billing.name
