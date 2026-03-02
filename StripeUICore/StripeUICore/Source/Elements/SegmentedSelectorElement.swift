@@ -25,11 +25,13 @@ import UIKit
 
     public private(set) var selectedItem: SegmentedSelectorItem?
     public var items: [SegmentedSelectorItem]
+    private var disabledItems: Set<SegmentedSelectorItem>
 
     public init(items: [SegmentedSelectorItem] = [],
                 disabledItems: Set<SegmentedSelectorItem> = [],
                 theme: ElementsAppearance = .default) {
         self.items = items
+        self.disabledItems = disabledItems
         self.selectorView = SegmentedSelectorView(
             items: items,
             disabledItems: disabledItems,
@@ -40,17 +42,17 @@ import UIKit
 
     public func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem> = []) {
         guard items.count > 1, items != self.items || disabledItems != self.disabledItems else { return }
-
         self.items = items
+        self.disabledItems = disabledItems
 
         selectorView.update(
             items: items,
             disabledItems: disabledItems
         )
 
-        // Deselect item if it's not in the new items array
-        if let selected = selectedItem, !items.contains(selected) {
-            select(selectedItem, animated: false, shouldAutoAdvance: false)
+        // Deselect item if it's not in the new items array or if it's now disabled
+        if let selected = selectedItem, !items.contains(selected) || disabledItems.contains(selected) {
+            select(nil, shouldAutoAdvance: false)
         }
     }
 
@@ -76,7 +78,7 @@ import UIKit
     private func itemTapped(_ item: SegmentedSelectorItem) {
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
-        select(newSelection)
+        select(newSelection, animated: true)
     }
 }
 
