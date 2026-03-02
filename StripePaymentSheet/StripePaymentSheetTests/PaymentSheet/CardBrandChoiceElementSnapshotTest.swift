@@ -77,6 +77,9 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             disallowedCardBrands: [],
             theme: theme
         )
+        // Select a brand
+        let brand: STPCardBrand = .cartesBancaires
+        element.selectorElement?.select(brand.makeCardBrandItem())
         verify(element)
     }
 
