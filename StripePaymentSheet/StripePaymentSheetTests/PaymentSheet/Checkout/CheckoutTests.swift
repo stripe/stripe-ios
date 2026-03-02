@@ -195,6 +195,72 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(3000, checkout.session?.totalSummary?.total)
     }
 
+    func testUpdateBillingAddress() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+            collectBillingAddress: true,
+            automaticTax: true
+        )
+        let checkout = Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
+
+        try await checkout.load()
+        XCTAssertNil(checkout.session?.billingAddressOverride)
+
+        let billingUpdate = Checkout.BillingAddressUpdate(
+            name: "Jane Doe",
+            address: .init(
+                country: "US",
+                line1: "123 Main St",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94105"
+            )
+        )
+        try await checkout.updateBillingAddress(billingUpdate)
+
+        let storedBilling = checkout.session?.billingAddressOverride as? Checkout.BillingAddressUpdate
+        XCTAssertNotNil(storedBilling)
+        XCTAssertEqual(storedBilling?.name, "Jane Doe")
+        XCTAssertEqual(storedBilling?.address.country, "US")
+        XCTAssertEqual(storedBilling?.address.postalCode, "94105")
+        XCTAssertNotNil(checkout.session)
+    }
+
+    func testUpdateShippingAddress() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+            collectShippingAddress: true,
+            automaticTax: true
+        )
+        let checkout = Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
+
+        try await checkout.load()
+        XCTAssertNil(checkout.session?.shippingAddressOverride)
+
+        let shippingUpdate = Checkout.ShippingAddressUpdate(
+            name: "John Smith",
+            address: .init(
+                country: "US",
+                line1: "456 Oak Ave",
+                city: "Los Angeles",
+                state: "CA",
+                postalCode: "90001"
+            )
+        )
+        try await checkout.updateShippingAddress(shippingUpdate)
+
+        let storedShipping = checkout.session?.shippingAddressOverride as? Checkout.ShippingAddressUpdate
+        XCTAssertNotNil(storedShipping)
+        XCTAssertEqual(storedShipping?.name, "John Smith")
+        XCTAssertEqual(storedShipping?.address.country, "US")
+        XCTAssertEqual(storedShipping?.address.postalCode, "90001")
+        XCTAssertNotNil(checkout.session)
+    }
+
     func testDelegateCalledOnPromotionCodeApply() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
             allowPromotionCodes: true

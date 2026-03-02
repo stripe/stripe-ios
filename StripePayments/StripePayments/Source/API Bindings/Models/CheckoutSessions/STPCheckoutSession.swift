@@ -83,6 +83,14 @@ import Foundation
     /// The raw API response used to create this object.
     public let allResponseFields: [AnyHashable: Any]
 
+    /// Client-side billing address override, set via Checkout.updateBillingAddress(_:).
+    /// Stored as `Any?` to avoid a module dependency on StripePaymentSheet types.
+    public var billingAddressOverride: Any?
+
+    /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
+    /// Stored as `Any?` to avoid a module dependency on StripePaymentSheet types.
+    public var shippingAddressOverride: Any?
+
     /// :nodoc:
     public override var description: String {
         let props: [String] = [

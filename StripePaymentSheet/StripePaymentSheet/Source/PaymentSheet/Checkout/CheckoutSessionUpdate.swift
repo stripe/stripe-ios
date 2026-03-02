@@ -14,6 +14,7 @@ extension Checkout {
         case setPromotionCode(String)
         case setLineItemQuantity(lineItemId: String, quantity: Int)
         case setShippingRate(String)
+        case setTaxRegion(Address)
 
         var parameters: [String: Any] {
             switch self {
@@ -26,6 +27,15 @@ extension Checkout {
                 ]
             case .setShippingRate(let optionId):
                 return ["shipping_rate": optionId]
+            case .setTaxRegion(let address):
+                return ([
+                    "tax_region[country]": address.country,
+                    "tax_region[line1]": address.line1,
+                    "tax_region[line2]": address.line2,
+                    "tax_region[city]": address.city,
+                    "tax_region[state]": address.state,
+                    "tax_region[postal_code]": address.postalCode,
+                ] as [String: Any?]).compactMapValues { $0 }
             }
         }
     }

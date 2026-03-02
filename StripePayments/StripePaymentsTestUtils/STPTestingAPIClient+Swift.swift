@@ -203,7 +203,10 @@ extension STPTestingAPIClient {
         customerID: String? = nil,
         allowPromotionCodes: Bool = false,
         allowAdjustableLineItemQuantity: Bool = false,
-        includeShippingOptions: Bool = false
+        includeShippingOptions: Bool = false,
+        collectShippingAddress: Bool = false,
+        collectBillingAddress: Bool = false,
+        automaticTax: Bool = false
     ) async throws -> CreateCheckoutSessionResponse {
         var additionalParameters: [String: Any] = [:]
         if allowPromotionCodes {
@@ -249,6 +252,15 @@ extension STPTestingAPIClient {
                     ] as [String: Any],
                 ] as [String: Any],
             ]
+        }
+        if collectShippingAddress {
+            additionalParameters["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
+        }
+        if collectBillingAddress {
+            additionalParameters["billing_address_collection"] = "required"
+        }
+        if automaticTax {
+            additionalParameters["automatic_tax"] = ["enabled": true]
         }
         let params: [String: Any?] = [
             "account": merchantCountry,
