@@ -68,6 +68,8 @@ import UIKit
         // Update the visual UI
         selectorView.select(item, animated: animated)
 
+        delegate?.didUpdate(element: self)
+
         // Auto-advance to next field
         if shouldAutoAdvance {
             delegate?.continueToNextField(element: self)
@@ -78,7 +80,6 @@ import UIKit
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
         select(newSelection, animated: true)
-        delegate?.didUpdate(element: self)
     }
 }
 
