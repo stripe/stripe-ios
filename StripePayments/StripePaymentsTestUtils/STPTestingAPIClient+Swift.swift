@@ -239,6 +239,16 @@ extension STPTestingAPIClient {
                         ] as [String: Any],
                     ] as [String: Any],
                 ] as [String: Any],
+                [
+                    "shipping_rate_data": [
+                        "display_name": "Express Shipping",
+                        "type": "fixed_amount",
+                        "fixed_amount": [
+                            "amount": 1000,
+                            "currency": currency,
+                        ] as [String: Any],
+                    ] as [String: Any],
+                ] as [String: Any],
             ]
         }
         if enableTaxIdCollection {

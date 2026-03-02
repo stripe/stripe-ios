@@ -13,86 +13,79 @@
 @testable @_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
+@MainActor
 final class CheckoutTests: STPNetworkStubbingTestCase {
 
     func testLoadCheckoutSession() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
-        let checkout = await Checkout(
+        let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         )
 
-        await MainActor.run { XCTAssertNil(checkout.session) }
+        XCTAssertNil(checkout.session)
 
         try await checkout.load()
 
-        await MainActor.run {
-            let session = checkout.session
-            XCTAssertNotNil(session)
-            XCTAssertEqual(session?.stripeId, checkoutSessionResponse.id)
-            XCTAssertEqual(session?.mode, .payment)
-            XCTAssertEqual(session?.status, .open)
-            XCTAssertEqual(session?.paymentStatus, .unpaid)
-            XCTAssertEqual(session?.currency, "usd")
-            XCTAssertFalse(session?.livemode ?? true)
-            XCTAssertTrue(session?.paymentMethodTypes.contains(.card) ?? false)
-            XCTAssertNotNil(session?.totalSummary)
-        }
+        let session = checkout.session
+        XCTAssertNotNil(session)
+        XCTAssertEqual(session?.stripeId, checkoutSessionResponse.id)
+        XCTAssertEqual(session?.mode, .payment)
+        XCTAssertEqual(session?.status, .open)
+        XCTAssertEqual(session?.paymentStatus, .unpaid)
+        XCTAssertEqual(session?.currency, "usd")
+        XCTAssertFalse(session?.livemode ?? true)
+        XCTAssertTrue(session?.paymentMethodTypes.contains(.card) ?? false)
+        XCTAssertNotNil(session?.totalSummary)
     }
 
     func testDelegateCalledOnLoad() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
-        let checkout = await Checkout(
+        let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         )
 
-        let delegate = await MockCheckoutDelegate()
-        await MainActor.run {
-            checkout.delegate = delegate
-        }
+        let delegate = MockCheckoutDelegate()
+        checkout.delegate = delegate
 
         try await checkout.load()
 
-        await MainActor.run {
-            XCTAssertTrue(delegate.didUpdateCalled)
-            XCTAssertNotNil(delegate.lastSession)
-            XCTAssertEqual(delegate.lastSession?.stripeId, checkoutSessionResponse.id)
-        }
+        XCTAssertTrue(delegate.didUpdateCalled)
+        XCTAssertNotNil(delegate.lastSession)
+        XCTAssertEqual(delegate.lastSession?.stripeId, checkoutSessionResponse.id)
     }
 
     func testApplyPromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
             allowPromotionCodes: true
         )
-        let checkout = await Checkout(
+        let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         )
 
         try await checkout.load()
 
-        await MainActor.run {
-            XCTAssertNotNil(checkout.session)
-            XCTAssertTrue(checkout.session?.discounts.isEmpty ?? false)
-            XCTAssertNil(checkout.session?.appliedPromotionCode)
-        }
+        XCTAssertNotNil(checkout.session)
+        XCTAssertTrue(checkout.session?.discounts.isEmpty ?? false)
+        XCTAssertNil(checkout.session?.appliedPromotionCode)
+        XCTAssertEqual(2000, checkout.session?.totalSummary?.total)
 
         try await checkout.applyPromotionCode("SAVE25")
 
-        await MainActor.run {
-            let session = checkout.session
-            XCTAssertNotNil(session)
-            XCTAssertFalse(session?.discounts.isEmpty ?? true)
-            XCTAssertEqual(session?.appliedPromotionCode, "SAVE25")
-        }
+        let session = checkout.session
+        XCTAssertNotNil(session)
+        XCTAssertFalse(session?.discounts.isEmpty ?? true)
+        XCTAssertEqual(session?.appliedPromotionCode, "SAVE25")
+        XCTAssertEqual(1500, checkout.session?.totalSummary?.total)
     }
 
     func testRemovePromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
             allowPromotionCodes: true
         )
-        let checkout = await Checkout(
+        let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         )
@@ -101,26 +94,24 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         // Apply first
         try await checkout.applyPromotionCode("SAVE25")
-        await MainActor.run {
-            XCTAssertFalse(checkout.session?.discounts.isEmpty ?? true)
-            XCTAssertEqual(checkout.session?.appliedPromotionCode, "SAVE25")
-        }
+        XCTAssertFalse(checkout.session?.discounts.isEmpty ?? true)
+        XCTAssertEqual(checkout.session?.appliedPromotionCode, "SAVE25")
+        XCTAssertEqual(1500, checkout.session?.totalSummary?.total)
 
         // Then remove
         try await checkout.removePromotionCode()
-        await MainActor.run {
-            let session = checkout.session
-            XCTAssertNotNil(session)
-            XCTAssertTrue(session?.discounts.isEmpty ?? false)
-            XCTAssertNil(session?.appliedPromotionCode)
-        }
+        let session = checkout.session
+        XCTAssertNotNil(session)
+        XCTAssertTrue(session?.discounts.isEmpty ?? false)
+        XCTAssertNil(session?.appliedPromotionCode)
+        XCTAssertEqual(2000, checkout.session?.totalSummary?.total)
     }
 
     func testApplyInvalidPromotionCode() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
             allowPromotionCodes: true
         )
-        let checkout = await Checkout(
+        let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         )
@@ -142,12 +133,13 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
             allowAdjustableLineItemQuantity: true
         )
-        let checkout = await Checkout(
+        let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         )
 
         try await checkout.load()
+        XCTAssertEqual(5050, checkout.session?.totalSummary?.total)
 
         let lineItemId = await MainActor.run { () -> String? in
             XCTAssertNotNil(checkout.session)
@@ -162,28 +154,27 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         let itemId = try XCTUnwrap(lineItemId, "Session should have at least one line item")
 
-        try await checkout.updateQuantity(with: .init(lineItemId: itemId, quantity: 2))
-
-        await MainActor.run {
-            XCTAssertNotNil(checkout.session)
-        }
+        try await checkout.updateQuantity(.init(lineItemId: itemId, quantity: 2))
+        XCTAssertEqual(10100, checkout.session?.totalSummary?.total)
+        XCTAssertNotNil(checkout.session)
     }
 
     func testSelectShippingOption() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
             includeShippingOptions: true
         )
-        let checkout = await Checkout(
+        let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         )
 
         try await checkout.load()
+        XCTAssertEqual(2500, checkout.session?.totalSummary?.total)
 
         let shippingRateId = await MainActor.run { () -> String? in
             XCTAssertNotNil(checkout.session)
             if let shippingOptions = checkout.session?.allResponseFields["shipping_options"] as? [[AnyHashable: Any]],
-               let firstOption = shippingOptions.first,
+               let firstOption = shippingOptions.last,
                let shippingRate = firstOption["shipping_rate"] as? [AnyHashable: Any],
                let id = shippingRate["id"] as? String {
                 return id
@@ -200,10 +191,8 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let rateId = try XCTUnwrap(shippingRateId, "Session should have at least one shipping option")
 
         try await checkout.selectShippingOption(rateId)
-
-        await MainActor.run {
-            XCTAssertNotNil(checkout.session)
-        }
+        XCTAssertNotNil(checkout.session)
+        XCTAssertEqual(3000, checkout.session?.totalSummary?.total)
     }
 
     func testUpdateTaxId() async throws {
@@ -233,31 +222,26 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
             allowPromotionCodes: true
         )
-        let checkout = await Checkout(
+        let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         )
 
-        let delegate = await MockCheckoutDelegate()
-        await MainActor.run {
-            checkout.delegate = delegate
-        }
+        let delegate = MockCheckoutDelegate()
+        checkout.delegate = delegate
+        checkout.delegate = delegate
 
         try await checkout.load()
 
         // Reset delegate state after load
-        await MainActor.run {
-            delegate.didUpdateCalled = false
-            delegate.lastSession = nil
-        }
+        delegate.didUpdateCalled = false
+        delegate.lastSession = nil
 
         try await checkout.applyPromotionCode("SAVE25")
 
-        await MainActor.run {
-            XCTAssertTrue(delegate.didUpdateCalled)
-            XCTAssertNotNil(delegate.lastSession)
-            XCTAssertEqual(delegate.lastSession?.appliedPromotionCode, "SAVE25")
-        }
+        XCTAssertTrue(delegate.didUpdateCalled)
+        XCTAssertNotNil(delegate.lastSession)
+        XCTAssertEqual(delegate.lastSession?.appliedPromotionCode, "SAVE25")
     }
 }
 
