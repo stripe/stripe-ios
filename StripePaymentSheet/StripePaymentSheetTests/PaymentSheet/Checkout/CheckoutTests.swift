@@ -208,6 +208,13 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         try await checkout.load()
         XCTAssertNil(checkout.session?.billingAddressOverride)
 
+        // Verify automatic tax is enabled with billing as the address source
+        let taxContext = checkout.session?.allResponseFields["tax_context"] as? [String: Any]
+        XCTAssertEqual(taxContext?["automatic_tax_enabled"] as? Bool, true)
+        XCTAssertEqual(taxContext?["automatic_tax_address_source"] as? String, "session.billing")
+
+        let initialTotal = checkout.session?.totalSummary?.total
+
         let billingUpdate = Checkout.BillingAddressUpdate(
             name: "Jane Doe",
             address: .init(
@@ -220,12 +227,19 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         )
         try await checkout.updateBillingAddress(billingUpdate)
 
+        // Address should be stored on the session
         let storedBilling = checkout.session?.billingAddressOverride as? Checkout.BillingAddressUpdate
         XCTAssertNotNil(storedBilling)
         XCTAssertEqual(storedBilling?.name, "Jane Doe")
         XCTAssertEqual(storedBilling?.address.country, "US")
         XCTAssertEqual(storedBilling?.address.postalCode, "94105")
+
+        // Session should be refreshed (tax_region was sent to the server)
         XCTAssertNotNil(checkout.session)
+        XCTAssertEqual(checkout.session?.status, .open)
+        XCTAssertNotNil(checkout.session?.totalSummary?.total)
+        // Total may or may not change depending on tax rules; verify it's at least the subtotal
+        XCTAssertGreaterThanOrEqual(checkout.session?.totalSummary?.total ?? 0, initialTotal ?? 0)
     }
 
     func testUpdateShippingAddress() async throws {
@@ -241,6 +255,13 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         try await checkout.load()
         XCTAssertNil(checkout.session?.shippingAddressOverride)
 
+        // Verify automatic tax is enabled with shipping as the address source
+        let taxContext = checkout.session?.allResponseFields["tax_context"] as? [String: Any]
+        XCTAssertEqual(taxContext?["automatic_tax_enabled"] as? Bool, true)
+        XCTAssertEqual(taxContext?["automatic_tax_address_source"] as? String, "session.shipping")
+
+        let initialTotal = checkout.session?.totalSummary?.total
+
         let shippingUpdate = Checkout.ShippingAddressUpdate(
             name: "John Smith",
             address: .init(
@@ -253,12 +274,19 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         )
         try await checkout.updateShippingAddress(shippingUpdate)
 
+        // Address should be stored on the session
         let storedShipping = checkout.session?.shippingAddressOverride as? Checkout.ShippingAddressUpdate
         XCTAssertNotNil(storedShipping)
         XCTAssertEqual(storedShipping?.name, "John Smith")
         XCTAssertEqual(storedShipping?.address.country, "US")
         XCTAssertEqual(storedShipping?.address.postalCode, "90001")
+
+        // Session should be refreshed (tax_region was sent to the server)
         XCTAssertNotNil(checkout.session)
+        XCTAssertEqual(checkout.session?.status, .open)
+        XCTAssertNotNil(checkout.session?.totalSummary?.total)
+        // Total may or may not change depending on tax rules; verify it's at least the subtotal
+        XCTAssertGreaterThanOrEqual(checkout.session?.totalSummary?.total ?? 0, initialTotal ?? 0)
     }
 
     func testDelegateCalledOnPromotionCodeApply() async throws {

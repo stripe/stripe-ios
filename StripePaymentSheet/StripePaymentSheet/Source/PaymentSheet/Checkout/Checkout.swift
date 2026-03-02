@@ -171,10 +171,12 @@ public final class Checkout: ObservableObject {
     }
 
     /// Returns `true` when the server needs a `tax_region` update for the given address type.
+    /// The server returns address source values like `"session.billing"` or `"session.shipping"`.
     private func shouldSendTaxRegion(for addressType: String) -> Bool {
         guard let taxContext = session?.allResponseFields["tax_context"] as? [String: Any],
               taxContext["automatic_tax_enabled"] as? Bool == true,
-              taxContext["automatic_tax_address_source"] as? String == addressType else {
+              let source = taxContext["automatic_tax_address_source"] as? String,
+              source == "session.\(addressType)" else {
             return false
         }
         return true
