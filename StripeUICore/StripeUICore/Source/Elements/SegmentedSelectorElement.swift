@@ -43,20 +43,20 @@ import UIKit
     }
 
     public func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem> = []) {
+        guard items.count > 1, (items != self.items || disabledItems != self.disabledItems) else { return }
+
         self.items = items
         self.disabledItems = disabledItems
-
-        // Clear selected item if it's not in the new items array
-        if let selected = selectedItem, !items.contains(selected) {
-            selectedItem = nil
-        }
 
         selectorView.update(
             items: items,
             disabledItems: disabledItems
         )
 
-        select(selectedItem, animated: false, shouldAutoAdvance: false)
+        // Deselect item if it's not in the new items array
+        if let selected = selectedItem, !items.contains(selected) {
+            select(selectedItem, animated: false, shouldAutoAdvance: false)
+        }
     }
 
     public func select(_ item: SegmentedSelectorItem?, animated: Bool = false, shouldAutoAdvance: Bool = true) {
@@ -65,25 +65,29 @@ import UIKit
             return
         }
 
-        // Toggle behavior: if already selected, deselect
-        let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
-        selectedItem = newSelection
+        selectedItem = item
 
         // Update the visual UI
-        selectorView.select(newSelection, animated: animated)
+        selectorView.select(item, animated: animated)
 
         delegate?.didUpdate(element: self)
 
         // Auto-advance to next field when selecting (not when deselecting) if requested
-        if newSelection != nil && shouldAutoAdvance {
+        if item != nil && shouldAutoAdvance {
             delegate?.continueToNextField(element: self)
         }
+    }
+
+    private func itemTapped(_ item: SegmentedSelectorItem) {
+        // Toggle behavior: if already selected, deselect
+        let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
+        select(newSelection)
     }
 }
 
 extension SegmentedSelectorElement: SegmentedSelectorViewDelegate {
-    func didSelect(_ item: SegmentedSelectorItem) {
-        select(item, shouldAutoAdvance: true)
+    func didTap(_ item: SegmentedSelectorItem) {
+        itemTapped(item)
     }
 }
 
@@ -190,7 +194,7 @@ final class SegmentedSelectorView: UIView {
 
     @objc private func itemTapped(_ sender: UITapGestureRecognizer) {
         guard let itemView = sender.view as? SegmentedItemView else { return }
-        delegate?.didSelect(itemView.item)
+        delegate?.didTap(itemView.item)
     }
 }
 
@@ -327,5 +331,5 @@ private final class SegmentedItemView: UIView {
 // MARK: - SegmentedSelectorViewDelegate
 
 protocol SegmentedSelectorViewDelegate: AnyObject {
-    func didSelect(_ item: SegmentedSelectorItem)
+    func didTap(_ item: SegmentedSelectorItem)
 }

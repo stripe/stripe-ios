@@ -305,9 +305,9 @@ final class CardSectionElement: ContainerElement {
 
                 // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
                 if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
-                    selectBrand(brandToSelect, in: cardBrandChoiceElement)
+                    selectBrandIfNecessary(brandToSelect, in: cardBrandChoiceElement)
                 } else if let brandToSelect = useDefaultSelectionLogic(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
-                    selectBrand(brandToSelect, in: cardBrandChoiceElement)
+                    selectBrandIfNecessary(brandToSelect, in: cardBrandChoiceElement)
                 }
 
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
@@ -338,7 +338,8 @@ final class CardSectionElement: ContainerElement {
         return brandToSelect
     }
 
-    private func selectBrand(_ brand: STPCardBrand, in cardBrandChoiceElement: CardBrandChoiceElement) {
+    private func selectBrandIfNecessary(_ brand: STPCardBrand, in cardBrandChoiceElement: CardBrandChoiceElement) {
+        guard cardBrandChoiceElement.selectedBrand != brand else { return }
         if cardBrandChoiceElement.enableCBCRedesign {
             cardBrandChoiceElement.selectorElement?.select(brand.makeCardBrandItem(), shouldAutoAdvance: false)
         } else {
