@@ -45,11 +45,6 @@ import UIKit
         self.items = items
         self.disabledItems = disabledItems
 
-        // Clear selection if it's not in the new items array or if it's now disabled
-        if let selected = selectedItem, !items.contains(selected) || disabledItems.contains(selected) {
-            self.selectedItem = nil
-        }
-
         // Update view based on new card brand info
         selectorView.update(
             items: items,
