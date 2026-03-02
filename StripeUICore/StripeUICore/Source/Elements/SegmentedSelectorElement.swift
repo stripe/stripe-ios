@@ -291,7 +291,7 @@ private final class SegmentedItemView: UIView {
 
             // Start background color animation
             UIView.animate(withDuration: 0.2) {
-                self.backgroundColor = self.theme.colors.border.withAlphaComponent(0.3)
+                self.backgroundColor = self.theme.colors.border.withAlphaComponent(0.2)
             }
 
             accessibilityTraits.insert(.selected)
