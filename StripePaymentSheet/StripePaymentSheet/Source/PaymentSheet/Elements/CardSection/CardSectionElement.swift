@@ -265,7 +265,34 @@ final class CardSectionElement: ContainerElement {
     }
 
     // MARK: Card brand choice
-    private var cbcTooltipView: UIView?
+    private lazy var cbcTooltipView: UIView = {
+        let label = UILabel()
+        label.text = STPLocalizedString("Choose a card brand", "Tooltip prompting user to select their card brand when a co-branded card is detected")
+        label.font = theme.fonts.footnote
+        label.textColor = theme.colors.textFieldText
+        label.numberOfLines = 0
+
+        let container = UIView()
+        container.backgroundColor = theme.colors.componentBackground
+        container.applyCornerRadius(appearance: theme)
+        container.layer.applyShadow(shadow: theme.shadow)
+        container.layer.borderColor = theme.colors.border.cgColor
+        container.layer.borderWidth = theme.borderWidth
+
+        label.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
+            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -8),
+            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 8),
+            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
+        ])
+        container.frame.size = container.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        return container
+    }()
+    /// Latches `true` once the user selects a brand; suppresses the tooltip if they later
+    /// toggle the selection off. Reset when the set of available brands changes.
+    private var hasBrandBeenSelected = false
     private var cardBrands = Set<STPCardBrand>()
     func fetchAndUpdateCardBrands() {
         // Only fetch card brands if we have at least 8 digits in the pan
@@ -273,6 +300,7 @@ final class CardSectionElement: ContainerElement {
             // Clear any previously fetched card brands from the dropdown
             if !self.cardBrands.isEmpty {
                 self.cardBrands = Set<STPCardBrand>()
+                self.hasBrandBeenSelected = false
                 cardBrandChoiceElement?.update(cardBrands: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>())
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
@@ -298,6 +326,7 @@ final class CardSectionElement: ContainerElement {
 
             if self.cardBrands != fetchedCardBrands {
                 self.cardBrands = fetchedCardBrands
+                self.hasBrandBeenSelected = false
                 let disallowedCardBrands = fetchedCardBrands.filter { !self.cardBrandFilter.isAccepted(cardBrand: $0) }
 
                 cardBrandChoiceElement.update(
@@ -317,50 +346,19 @@ final class CardSectionElement: ContainerElement {
         }
     }
 
-    private func makeCBCTooltipView() -> UIView {
-        let label = UILabel()
-        label.text = STPLocalizedString("Choose a card brand", "Tooltip prompting user to select their card brand when a co-branded card is detected")
-        label.font = theme.fonts.footnote
-        label.textColor = theme.colors.textFieldText
-        label.numberOfLines = 0
-
-        let container = UIView()
-        container.backgroundColor = theme.colors.componentBackground
-        container.applyCornerRadius(appearance: theme)
-        container.layer.applyShadow(shadow: theme.shadow)
-        container.layer.borderColor = theme.colors.border.cgColor
-        container.layer.borderWidth = theme.borderWidth
-
-        label.translatesAutoresizingMaskIntoConstraints = false
-        container.addSubview(label)
-        NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
-            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -8),
-            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 8),
-            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
-        ])
-        return container
-    }
-
     /// Show the tooltip when the PAN field is in focus, the card brand selector is visible
     /// (multiple brands), and no brand has been selected. Hide it otherwise.
     private func updateCBCTooltipVisibility() {
+        if cardBrandChoiceElement?.selectedBrand != nil {
+            hasBrandBeenSelected = true
+        }
+
         let shouldShow = panElement.isEditing
             && cardBrands.count > 1
-            && cardBrandChoiceElement?.selectedBrand == nil
+            && !hasBrandBeenSelected
 
+        let tooltip = cbcTooltipView
         if shouldShow {
-            let tooltip: UIView
-            if let existing = cbcTooltipView {
-                tooltip = existing
-            } else {
-                tooltip = makeCBCTooltipView()
-                // Pre-compute the intrinsic size once before the view enters the hierarchy
-                // so Auto Layout never tries to solve constraints inside a zero-size container.
-                tooltip.frame.size = tooltip.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-                cbcTooltipView = tooltip
-            }
-
             // Position trailing-aligned below the PAN field.
             let panFrame = panElement.view.convert(panElement.view.bounds, to: view)
             tooltip.frame.origin = CGPoint(
@@ -377,7 +375,7 @@ final class CardSectionElement: ContainerElement {
             UIView.animate(withDuration: 0.2) {
                 tooltip.alpha = 1
             }
-        } else if let tooltip = cbcTooltipView, tooltip.alpha > 0 {
+        } else if tooltip.alpha > 0 {
             UIView.animate(withDuration: 0.2) {
                 tooltip.alpha = 0
             }
