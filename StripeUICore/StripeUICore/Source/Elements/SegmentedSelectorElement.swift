@@ -122,7 +122,7 @@ final class SegmentedSelectorView: UIView {
         applyCornerRadius(appearance: theme)
         layer.borderWidth = theme.borderWidth
         layer.borderColor = theme.colors.border.cgColor
-        backgroundColor = theme.colors.componentBackground
+        stackView.backgroundColor = theme.colors.componentBackground
         clipsToBounds = true // Clip child backgrounds to rounded corners
 
         addSubview(stackView)
@@ -170,7 +170,7 @@ final class SegmentedSelectorView: UIView {
                     separator.backgroundColor = theme.colors.divider
                     stackView.addArrangedSubview(separator)
                     NSLayoutConstraint.activate([
-                        separator.widthAnchor.constraint(equalToConstant: 1),
+                        separator.widthAnchor.constraint(equalToConstant: theme.separatorWidth),
                     ])
                 }
             }
@@ -286,7 +286,7 @@ private final class SegmentedItemView: UIView {
 
             // Start background color animation
             UIView.animate(withDuration: 0.2) {
-                self.backgroundColor = self.theme.colors.disabledBackground
+                self.backgroundColor = self.theme.colors.border.withAlphaComponent(0.3)
             }
 
             accessibilityTraits.insert(.selected)

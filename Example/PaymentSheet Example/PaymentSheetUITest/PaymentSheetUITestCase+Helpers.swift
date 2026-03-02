@@ -269,10 +269,9 @@ extension PaymentSheetUITestCase {
         app.typeText("12345") // Postal
 
         // Card brand choice selector should be enabled
-        XCTAssertTrue(cardBrandChoiceVisa.waitForExistenceAndTap(timeout: 5))
-        app.toolbars.buttons["Done"].tap()
+        XCTAssertTrue(cardBrandChoiceVisa.waitForExistence(timeout: 5))
 
-        // We should have selected Visa
+        // We should have remembered selecting Visa
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
 
         // Finish checkout
