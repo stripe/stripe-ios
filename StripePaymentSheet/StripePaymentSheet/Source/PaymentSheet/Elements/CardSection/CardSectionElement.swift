@@ -202,7 +202,7 @@ final class CardSectionElement: ContainerElement {
         fetchAndUpdateCardBrands()
         fetchAndCacheCardFunding()
 
-        if selectedBrand != nil {
+        if selectedBrand != nil || !panElement.isEditing {
             dismissCBCTooltip()
         }
 
@@ -268,7 +268,7 @@ final class CardSectionElement: ContainerElement {
     }
 
     // MARK: Card brand choice
-    private weak var cbcTooltipView: UIView?
+    private var cbcTooltipView: UIView?
     private var cardBrands = Set<STPCardBrand>()
     func fetchAndUpdateCardBrands() {
         // Only fetch card brands if we have at least 8 digits in the pan
@@ -338,66 +338,61 @@ final class CardSectionElement: ContainerElement {
 
         let container = UIView()
         container.backgroundColor = theme.colors.componentBackground
-        container.layer.cornerRadius = theme.cornerRadius ?? 8
-        container.layer.shadowColor = UIColor.black.cgColor
-        container.layer.shadowOpacity = 0.15
-        container.layer.shadowRadius = 4
-        container.layer.shadowOffset = CGSize(width: 0, height: 2)
+        container.applyCornerRadius(appearance: theme)
+        container.layer.applyShadow(shadow: theme.shadow)
+        container.layer.borderColor = theme.colors.border.cgColor
+        container.layer.borderWidth = theme.borderWidth
 
         label.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(label)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
             label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -8),
-            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 12),
-            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -12),
+            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 8),
+            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
         ])
         return container
     }
 
     private func showCBCTooltip() {
         // Don't show the tooltip if a brand is already selected (e.g. via preferred networks)
-        guard cardBrandChoiceElement?.selectedBrand == nil else { return }
+        // or if the PAN field lost focus (e.g. auto-advanced to expiry after completing the number)
+        guard cardBrandChoiceElement?.selectedBrand == nil, panElement.isEditing else { return }
 
-        cbcTooltipView?.removeFromSuperview()
+        let tooltip: UIView
+        if let existing = cbcTooltipView {
+            tooltip = existing
+        } else {
+            tooltip = makeCBCTooltipView()
+            // Pre-compute the intrinsic size once before the view enters the hierarchy
+            // so Auto Layout never tries to solve constraints inside a zero-size container.
+            tooltip.frame.size = tooltip.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+            cbcTooltipView = tooltip
+        }
 
-        // Record the current selection so didUpdate can detect when the user
-        // makes a new explicit selection and dismiss the tooltip.
-//        tooltipShownWithSelected = cardBrandChoiceElement?.selectedBrand
-
-        // Calculate the PAN frame first — the view is already laid out by the time this
-        // runs on the main queue, so no layoutIfNeeded() is needed.
+        // Position trailing-aligned below the PAN field.
         let panFrame = panElement.view.convert(panElement.view.bounds, to: view)
-
-        let tooltip = makeCBCTooltipView()
-        // Size and frame the tooltip before adding to the hierarchy so that Auto Layout
-        // never tries to satisfy the label's inset constraints inside a zero-size container.
-        let tooltipSize = tooltip.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        tooltip.frame = CGRect(
-            x: panFrame.maxX - tooltipSize.width,
-            y: panFrame.maxY + 4,
-            width: tooltipSize.width,
-            height: tooltipSize.height
+        tooltip.frame.origin = CGPoint(
+            x: panFrame.maxX - tooltip.frame.width - 4,
+            y: panFrame.maxY + 4
         )
-        tooltip.alpha = 0
-        view.addSubview(tooltip)
+
+        if tooltip.superview == nil {
+            tooltip.alpha = 0
+            view.addSubview(tooltip)
+        }
         view.bringSubviewToFront(tooltip)
 
         UIView.animate(withDuration: 0.2) {
             tooltip.alpha = 1
         }
-        cbcTooltipView = tooltip
     }
 
     private func dismissCBCTooltip() {
-        let tooltip = cbcTooltipView
-        cbcTooltipView = nil
-//        tooltipShownWithSelected = nil
-        UIView.animate(withDuration: 0.2, animations: {
-            tooltip?.alpha = 0
-        }, completion: { _ in
-            tooltip?.removeFromSuperview()
-        })
+        guard let tooltip = cbcTooltipView, tooltip.alpha > 0 else { return }
+        UIView.animate(withDuration: 0.2) {
+            tooltip.alpha = 0
+        }
     }
 
     // Select the first brand in the fetched brands that appears earliest in the merchants preferred networks
