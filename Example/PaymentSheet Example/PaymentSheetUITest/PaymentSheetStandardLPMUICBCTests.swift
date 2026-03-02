@@ -5,7 +5,6 @@
 //  Created by David Estes on 2/11/26.
 //
 
-
 import XCTest
 
 class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
@@ -74,31 +73,26 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         app.buttons["Present PaymentSheet"].tap()
 
         // We should have selected Visa due to preferreedNetworks configuration API
-        let cardBrandTextField = app.textFields["Visa"]
-        let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
+        let cardBrandChoiceVisa = app.buttons["Visa"]
         // Card brand choice textfield/dropdown should not be visible
-        XCTAssertFalse(cardBrandTextField.waitForExistence(timeout: 2))
+        XCTAssertFalse(cardBrandChoiceVisa.waitForExistence(timeout: 2))
 
         let numberField = app.textFields["Card number"]
         numberField.tap()
         // Enter 8 digits to start fetching card brand
         numberField.typeText("49730197")
 
-        // Card brand choice drop down should be enabled
-        cardBrandTextField.tap()
-        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
-        cardBrandChoiceDropdown.swipeDown()
-        app.toolbars.buttons["Cancel"].tap()
-
+        // Card brand choice selector should be enabled
+        XCTAssertTrue(cardBrandChoiceVisa.waitForExistence(timeout: 5))
         // We should have selected Visa due to preferreedNetworks configuration API
-        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 2))
+        XCTAssertTrue(cardBrandChoiceVisa.isSelected)
 
         // Clear card text field, should reset selected card brand
         numberField.tap()
         numberField.clearText()
 
         // We should reset to showing unknown in the textfield for card brand
-        XCTAssertFalse(app.textFields["Select card brand (optional)"].waitForExistence(timeout: 2))
+        XCTAssertFalse(cardBrandChoiceVisa.waitForExistence(timeout: 2))
 
         // Type full card number to start fetching card brands again
         numberField.forceTapWhenHittableInTestCase(self)
@@ -108,8 +102,9 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         app.typeText("123") // CVC
         app.typeText("12345") // Postal
 
-        // Card brand choice drop down should be enabled and we should auto select Visa
-        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
+        // Card brand choice selector should be enabled and we should auto select Visa
+        XCTAssertTrue(cardBrandChoiceVisa.waitForExistence(timeout: 5))
+        XCTAssertTrue(cardBrandChoiceVisa.isSelected)
 
         // Finish checkout
         app.buttons["Pay €50.99"].tap()
@@ -130,7 +125,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
 
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap(timeout: 5)
         let numberField = app.textFields["Card number"]
-        let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
+        let cardBrandChoiceCB = app.buttons["Cartes Bancaires"]
 
         // Type full card number to start fetching card brands again
         numberField.forceTapWhenHittableInTestCase(self)
@@ -140,14 +135,13 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         app.typeText("123") // CVC
         app.typeText("12345") // Postal
 
-        // Card brand choice drop down should be enabled
-        XCTAssertTrue(app.textFields["Select card brand (optional)"].waitForExistenceAndTap(timeout: 5))
-        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
-        cardBrandChoiceDropdown.selectNextOption()
+        // Card brand choice selector should be enabled
+        XCTAssertTrue(cardBrandChoiceCB.waitForExistence(timeout: 5))
+        cardBrandChoiceCB.tap()
         app.toolbars.buttons["Done"].tap()
 
         // We should have selected cartes bancaires
-        XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistence(timeout: 5))
+        XCTAssertTrue(cardBrandChoiceCB.isSelected)
 
         // toggle save this card on
         let saveThisCardToggle = app.switches["Save payment details to Example, Inc. for future purchases"]
@@ -174,9 +168,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
 
         // Update this card
-        XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistenceAndTap(timeout: 5))
-        XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: 5))
-        app.pickerWheels.firstMatch.swipeUp()
+        XCTAssertTrue(app.buttons["Visa"].waitForExistenceAndTap(timeout: 5))
         app.toolbars.buttons["Done"].tap()
         app.buttons["Save"].waitForExistenceAndTap(timeout: 5)
 
@@ -185,9 +177,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
 
         // Update this card again
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
-        XCTAssertTrue(app.textFields["Visa"].waitForExistenceAndTap(timeout: 5))
-        XCTAssertTrue(app.pickerWheels.firstMatch.waitForExistence(timeout: 5))
-        app.pickerWheels.firstMatch.swipeDown()
+        XCTAssertTrue(app.buttons["Cartes Bancaires"].waitForExistenceAndTap(timeout: 5))
         app.toolbars.buttons["Done"].tap()
         app.buttons["Save"].waitForExistenceAndTap(timeout: 5)
 
@@ -240,10 +230,9 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         XCTAssertEqual(app.buttons.matching(identifier: "CircularButton.Edit").count, 2)
 
         app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap()
-        app.otherElements.matching(identifier: "Card Brand Dropdown").firstMatch.waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.selectNextOption()
+        app.buttons["Visa"].waitForExistenceAndTap()
         app.toolbars.buttons["Done"].tap()
-        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["Visa"].isSelected)
         app.buttons["Save"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))
         XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 2)

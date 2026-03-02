@@ -117,7 +117,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 paymentMethodRemoveIsPartial: paymentMethodRemoveIsPartial,
                 paymentMethodUpdate: paymentMethodUpdate,
                 paymentMethodSyncDefault: paymentMethodSyncDefault,
-                isTestMode: configuration.apiClient.isTestmode
+                isTestMode: configuration.apiClient.isTestmode,
+                enableCBCRedesign: configuration.enableCBCRedesign
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,
@@ -693,7 +694,8 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 paymentMethodRemoveIsPartial: paymentMethodRemoveIsPartial,
                 paymentMethodUpdate: paymentMethodUpdate,
                 paymentMethodSyncDefault: paymentMethodSyncDefault,
-                isTestMode: configuration.apiClient.isTestmode
+                isTestMode: configuration.apiClient.isTestmode,
+                enableCBCRedesign: configuration.enableCBCRedesign
             ),
             appearance: configuration.appearance,
             cbcEligible: cbcEligible,

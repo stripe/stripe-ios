@@ -197,7 +197,8 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
                                                                             allowsRemovalOfLastSavedPaymentMethod: removeLastPM,
                                                                             allowsRemovalOfPaymentMethods: removePM,
                                                                             allowsSetAsDefaultPM: defaultPM,
-                                                                            allowsUpdatePaymentMethod: updatePM)
+                                                                            allowsUpdatePaymentMethod: updatePM,
+                                                                            enableCBCRedesign: false)
         let controller = SavedPaymentOptionsViewController(savedPaymentMethods: savedPaymentMethods,
                                                            configuration: configuration,
                                                            paymentSheetConfiguration: paymentSheetConfiguration,
