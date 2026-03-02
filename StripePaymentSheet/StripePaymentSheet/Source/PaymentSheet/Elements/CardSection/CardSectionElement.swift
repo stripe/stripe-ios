@@ -203,6 +203,12 @@ final class CardSectionElement: ContainerElement {
         fetchAndUpdateCardBrands()
         fetchAndCacheCardFunding()
 
+        // Dismiss the CBC tooltip when the user selects a brand different from what was
+        // selected when the tooltip first appeared.
+        if cbcTooltipView != nil, cardBrandDropDown?.selectedItem.rawData != tooltipShownWithSelectedRawData {
+            dismissCBCTooltip()
+        }
+
         /// Send an analytic whenever the card number field is completed
         if lastPanElementValidationState.isValid != panElement.validationState.isValid {
             lastPanElementValidationState = panElement.validationState
@@ -265,6 +271,10 @@ final class CardSectionElement: ContainerElement {
     }
 
     // MARK: Card brand choice
+    private weak var cbcTooltipView: UIView?
+    /// The dropdown's rawData value at the time the CBC tooltip was shown; used to detect when
+    /// the user makes a new explicit selection so we know when to dismiss.
+    private var tooltipShownWithSelectedRawData: String?
     private var cardBrands = Set<STPCardBrand>()
     func fetchAndUpdateCardBrands() {
         // Only fetch card brands if we have at least 8 digits in the pan
@@ -274,12 +284,14 @@ final class CardSectionElement: ContainerElement {
                 self.cardBrands = Set<STPCardBrand>()
                 cardBrandDropDown?.update(items: DropdownFieldElement.items(from: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>(), theme: self.theme))
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
+                self.dismissCBCTooltip()
             }
             return
         }
 
         var fetchedCardBrands = Set<STPCardBrand>()
         let hadBrands = !cardBrands.isEmpty
+        let hadMultipleBrands = cardBrands.count > 1
         STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -293,6 +305,11 @@ final class CardSectionElement: ContainerElement {
             // If we had no brands but now have brands the CBC indicator will appear, log the analytic
             if !hadBrands, !fetchedCardBrands.isEmpty {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandDropdownIndicator))
+            }
+
+            // Show the tooltip when the brand selector newly appears (going from ≤1 to 2+ brands)
+            if !hadMultipleBrands && fetchedCardBrands.count > 1 {
+                DispatchQueue.main.async { self.showCBCTooltip() }
             }
 
             if self.cardBrands != fetchedCardBrands {
@@ -315,6 +332,74 @@ final class CardSectionElement: ContainerElement {
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
         }
+    }
+
+    private func makeCBCTooltipView() -> UIView {
+        let label = UILabel()
+        label.text = STPLocalizedString("Choose a card brand", "Tooltip prompting user to select their card brand when a co-branded card is detected")
+        label.font = theme.fonts.footnote
+        label.textColor = theme.colors.textFieldText
+        label.numberOfLines = 0
+
+        let container = UIView()
+        container.backgroundColor = theme.colors.componentBackground
+        container.layer.cornerRadius = theme.cornerRadius ?? 8
+        container.layer.shadowColor = UIColor.black.cgColor
+        container.layer.shadowOpacity = 0.15
+        container.layer.shadowRadius = 4
+        container.layer.shadowOffset = CGSize(width: 0, height: 2)
+
+        label.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(label)
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
+            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -8),
+            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 12),
+            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -12),
+        ])
+        return container
+    }
+
+    private func showCBCTooltip() {
+        cbcTooltipView?.removeFromSuperview()
+
+        // Record the dropdown's current raw selection so didUpdate can detect when the
+        // user makes a new explicit selection and dismiss the tooltip.
+        tooltipShownWithSelectedRawData = cardBrandDropDown?.selectedItem.rawData
+
+        // Calculate the PAN frame first — the view is already laid out by the time this
+        // runs on the main queue, so no layoutIfNeeded() is needed.
+        let panFrame = panElement.view.convert(panElement.view.bounds, to: view)
+
+        let tooltip = makeCBCTooltipView()
+        // Size and frame the tooltip before adding to the hierarchy so that Auto Layout
+        // never tries to satisfy the label's inset constraints inside a zero-size container.
+        let tooltipSize = tooltip.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+        tooltip.frame = CGRect(
+            x: panFrame.maxX - tooltipSize.width,
+            y: panFrame.maxY + 4,
+            width: tooltipSize.width,
+            height: tooltipSize.height
+        )
+        tooltip.alpha = 0
+        view.addSubview(tooltip)
+        view.bringSubviewToFront(tooltip)
+
+        UIView.animate(withDuration: 0.2) {
+            tooltip.alpha = 1
+        }
+        cbcTooltipView = tooltip
+    }
+
+    private func dismissCBCTooltip() {
+        let tooltip = cbcTooltipView
+        cbcTooltipView = nil
+        tooltipShownWithSelectedRawData = nil
+        UIView.animate(withDuration: 0.2, animations: {
+            tooltip?.alpha = 0
+        }, completion: { _ in
+            tooltip?.removeFromSuperview()
+        })
     }
 
     // Select the first brand in the fetched brands that appears earliest in the merchants preferred networks
