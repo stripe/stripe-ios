@@ -22,6 +22,7 @@ class RotatingCardBrandsViewTests: XCTestCase {
                         .dinersClub,
                         .JCB,
                         .unionPay,
+                        .cartesBancaires,
                        ], RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases))
     }
 
