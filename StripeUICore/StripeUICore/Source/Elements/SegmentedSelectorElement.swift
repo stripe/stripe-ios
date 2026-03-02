@@ -43,7 +43,7 @@ import UIKit
     }
 
     public func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem> = []) {
-        guard items.count > 1, (items != self.items || disabledItems != self.disabledItems) else { return }
+        guard items.count > 1, items != self.items || disabledItems != self.disabledItems else { return }
 
         self.items = items
         self.disabledItems = disabledItems
