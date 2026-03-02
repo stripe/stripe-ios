@@ -184,7 +184,7 @@ final class CardSectionElement: ContainerElement {
         guard let cardBrandChoiceElement = cardBrandChoiceElement else {
             return nil
         }
-        return cardBrandChoiceElement.selectedBrand ?? .unknown
+        return cardBrandChoiceElement.selectedBrand
     }
 
     /// Tracks the last known validation state of the PAN element, so that we can know when it changes from invalid to valid
