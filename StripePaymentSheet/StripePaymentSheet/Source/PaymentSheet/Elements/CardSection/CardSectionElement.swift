@@ -201,10 +201,7 @@ final class CardSectionElement: ContainerElement {
 
         fetchAndUpdateCardBrands()
         fetchAndCacheCardFunding()
-
-        if selectedBrand != nil || !panElement.isEditing {
-            dismissCBCTooltip()
-        }
+        updateCBCTooltipVisibility()
 
         /// Send an analytic whenever the card number field is completed
         if lastPanElementValidationState.isValid != panElement.validationState.isValid {
@@ -278,14 +275,12 @@ final class CardSectionElement: ContainerElement {
                 self.cardBrands = Set<STPCardBrand>()
                 cardBrandChoiceElement?.update(cardBrands: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>())
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
-                self.dismissCBCTooltip()
             }
             return
         }
 
         var fetchedCardBrands = Set<STPCardBrand>()
         let hadBrands = !cardBrands.isEmpty
-        let hadMultipleBrands = cardBrands.count > 1
         STPCardValidator.possibleBrands(forNumber: panElement.text) { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -299,13 +294,6 @@ final class CardSectionElement: ContainerElement {
             // If we had no brands but now have brands the CBC indicator will appear, log the analytic
             if !hadBrands, !fetchedCardBrands.isEmpty {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandDropdownIndicator))
-            }
-
-            // Show the tooltip when the panElement is in focus, brand selector appears, and a brand is not already selected
-            if !hadMultipleBrands && fetchedCardBrands.count > 1 && cardBrandChoiceElement.selectedBrand == nil && panElement.isEditing {
-                DispatchQueue.main.async { self.showCBCTooltip() }
-            } else if hadMultipleBrands && fetchedCardBrands.count <= 1 { // Hide the tooltip when the brand selector disappears
-                dismissCBCTooltip()
             }
 
             if self.cardBrands != fetchedCardBrands {
@@ -354,40 +342,45 @@ final class CardSectionElement: ContainerElement {
         return container
     }
 
-    private func showCBCTooltip() {
-        let tooltip: UIView
-        if let existing = cbcTooltipView {
-            tooltip = existing
-        } else {
-            tooltip = makeCBCTooltipView()
-            // Pre-compute the intrinsic size once before the view enters the hierarchy
-            // so Auto Layout never tries to solve constraints inside a zero-size container.
-            tooltip.frame.size = tooltip.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-            cbcTooltipView = tooltip
-        }
+    /// Show the tooltip when the PAN field is in focus, the card brand selector is visible
+    /// (multiple brands), and no brand has been selected. Hide it otherwise.
+    private func updateCBCTooltipVisibility() {
+        let shouldShow = panElement.isEditing
+            && cardBrands.count > 1
+            && cardBrandChoiceElement?.selectedBrand == nil
 
-        // Position trailing-aligned below the PAN field.
-        let panFrame = panElement.view.convert(panElement.view.bounds, to: view)
-        tooltip.frame.origin = CGPoint(
-            x: panFrame.maxX - tooltip.frame.width - 4,
-            y: panFrame.maxY + 4
-        )
+        if shouldShow {
+            let tooltip: UIView
+            if let existing = cbcTooltipView {
+                tooltip = existing
+            } else {
+                tooltip = makeCBCTooltipView()
+                // Pre-compute the intrinsic size once before the view enters the hierarchy
+                // so Auto Layout never tries to solve constraints inside a zero-size container.
+                tooltip.frame.size = tooltip.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
+                cbcTooltipView = tooltip
+            }
 
-        if tooltip.superview == nil {
-            tooltip.alpha = 0
-            view.addSubview(tooltip)
-        }
-        view.bringSubviewToFront(tooltip)
+            // Position trailing-aligned below the PAN field.
+            let panFrame = panElement.view.convert(panElement.view.bounds, to: view)
+            tooltip.frame.origin = CGPoint(
+                x: panFrame.maxX - tooltip.frame.width - 4,
+                y: panFrame.maxY + 4
+            )
 
-        UIView.animate(withDuration: 0.2) {
-            tooltip.alpha = 1
-        }
-    }
+            if tooltip.superview == nil {
+                tooltip.alpha = 0
+                view.addSubview(tooltip)
+            }
+            view.bringSubviewToFront(tooltip)
 
-    private func dismissCBCTooltip() {
-        guard let tooltip = cbcTooltipView, tooltip.alpha > 0 else { return }
-        UIView.animate(withDuration: 0.2) {
-            tooltip.alpha = 0
+            UIView.animate(withDuration: 0.2) {
+                tooltip.alpha = 1
+            }
+        } else if let tooltip = cbcTooltipView, tooltip.alpha > 0 {
+            UIView.animate(withDuration: 0.2) {
+                tooltip.alpha = 0
+            }
         }
     }
 
