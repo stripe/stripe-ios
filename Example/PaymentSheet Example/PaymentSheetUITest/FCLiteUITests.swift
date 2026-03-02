@@ -38,7 +38,7 @@ class FCLiteUITests: XCTestCase {
         // The FC Lite flow should usually open to the consent pane,
         // but there are niche scenarios where we open to the institution picker pane.
         let agreeButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Agree'") // Consent pane
-        let institutionButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Institution'") // Institution picker pane
+        let institutionButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'bank'") // Institution picker pane
         let agreeButtonOrInstitutionButtonPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [agreeButtonPredicate, institutionButtonPredicate])
         let agreeButtonOrInstitutionButton = app.webViews.firstMatch.buttons.containing(agreeButtonOrInstitutionButtonPredicate).firstMatch
         // Webviews can take a while to load.
@@ -70,6 +70,9 @@ class FCLiteUITests: XCTestCase {
         let continueButton = app.buttons["Continue"]
         XCTAssertTrue(continueButton.waitForExistenceAndTap())
 
+        // "Institution Picker" pane
+        tapTestNonOAuthInstituition(app)
+
         // Find and tap "Manually verify instead" button
         let manuallyVerifyButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Manually verify instead'")
         let manuallyVerifyButton = app.webViews.firstMatch.buttons.containing(manuallyVerifyButtonPredicate).firstMatch
@@ -80,11 +83,17 @@ class FCLiteUITests: XCTestCase {
         let autofillButton = app.webViews.firstMatch.buttons.containing(autofillButtonPredicate).firstMatch
         XCTAssertTrue(autofillButton.waitForExistenceAndTap(timeout: 5.0))
 
+        // Dismiss keyboard if open - check for "Done" (iOS 18) or checkmark button (iOS 26)
+        let keyboardDoneButton = app.toolbars.buttons["Done"]
+        if keyboardDoneButton.waitForExistence(timeout: 1.0) {
+            keyboardDoneButton.tap()
+            Thread.sleep(forTimeInterval: 0.5)
+        }
+
         // Tap "Save with Link" button (tapPrimaryButton handles keyboard dismissal if needed)
         let saveWithLinkButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Save with Link'")
         let saveWithLinkButton = app.webViews.firstMatch.buttons.containing(saveWithLinkButtonPredicate).firstMatch
-        XCTAssertTrue(saveWithLinkButton.waitForExistence(timeout: 5.0))
-        tapPrimaryButton()
+        XCTAssertTrue(saveWithLinkButton.waitForExistenceAndTap(timeout: 5.0))
 
         // Tap "Done" button
         let doneButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Done'")
