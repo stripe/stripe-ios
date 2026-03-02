@@ -77,7 +77,7 @@ final class CheckoutUnitTests: XCTestCase {
         await MainActor.run { XCTAssertNil(checkout.session) }
 
         do {
-            try await checkout.updateQuantity(.init(lineItemId: "li_123", quantity: 2))
+            try await checkout.updateQuantity(with: .init(lineItemId: "li_123", quantity: 2))
             XCTFail("Expected CheckoutError.sessionNotLoaded")
         } catch let error as CheckoutError {
             guard case .sessionNotLoaded = error else {
@@ -111,7 +111,7 @@ final class CheckoutUnitTests: XCTestCase {
         await MainActor.run { XCTAssertNil(checkout.session) }
 
         do {
-            try await checkout.updateTaxId(.init(type: "eu_vat", value: "DE123456789"))
+            try await checkout.updateTaxId(with: .init(type: "eu_vat", value: "DE123456789"))
             XCTFail("Expected CheckoutError.sessionNotLoaded")
         } catch let error as CheckoutError {
             guard case .sessionNotLoaded = error else {

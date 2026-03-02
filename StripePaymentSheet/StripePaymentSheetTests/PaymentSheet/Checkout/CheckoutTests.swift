@@ -162,7 +162,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         let itemId = try XCTUnwrap(lineItemId, "Session should have at least one line item")
 
-        try await checkout.updateQuantity(.init(lineItemId: itemId, quantity: 2))
+        try await checkout.updateQuantity(with: .init(lineItemId: itemId, quantity: 2))
 
         await MainActor.run {
             XCTAssertNotNil(checkout.session)
@@ -221,7 +221,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             XCTAssertNotNil(checkout.session)
         }
 
-        try await checkout.updateTaxId(.init(type: "eu_vat", value: "DE123456789"))
+        try await checkout.updateTaxId(with: .init(type: "eu_vat", value: "DE123456789"))
 
         await MainActor.run {
             XCTAssertNotNil(checkout.session)

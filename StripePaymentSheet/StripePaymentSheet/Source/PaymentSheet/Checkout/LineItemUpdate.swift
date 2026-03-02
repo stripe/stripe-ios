@@ -11,7 +11,7 @@ import Foundation
 @_spi(CheckoutSessionsPreview)
 extension Checkout {
     /// Parameters for updating a line item's quantity.
-    public struct LineItemUpdate {
+    public struct LineItemUpdate: Sendable {
         public let lineItemId: String
         public let quantity: Int
 
