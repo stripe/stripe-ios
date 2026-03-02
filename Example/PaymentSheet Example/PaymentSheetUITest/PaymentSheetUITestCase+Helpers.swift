@@ -231,7 +231,6 @@ extension PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].tap()
 
         let cardBrandChoiceVisa = app.buttons["Visa"]
-        let cardBrandChoiceCB = app.buttons["Cartes Bancaires"]
         // Card brand choice textfield/dropdown should not be visible
         XCTAssertFalse(cardBrandChoiceVisa.waitForExistence(timeout: 2))
 
@@ -240,15 +239,16 @@ extension PaymentSheetUITestCase {
         // Enter 8 digits to start fetching card brand
         numberField.typeText("49730197")
 
-        // Card brand choice drop down should be enabled
+        // Card brand choice selector should be enabled
         XCTAssertTrue(cardBrandChoiceVisa.waitForExistence(timeout: 5))
 
         // We should still have no selected card brand
         XCTAssertFalse(cardBrandChoiceVisa.isSelected)
-        XCTAssertFalse(cardBrandChoiceCB.isSelected)
+        XCTAssertFalse(app.buttons["Cartes Bancaires"].isSelected)
 
-        // Select Visa from the CBC dropdown
+        // Select Visa from the CBC selector
         cardBrandChoiceVisa.tap()
+        app.toolbars.buttons["Done"].tap()
 
         // We should have selected Visa
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
@@ -268,8 +268,9 @@ extension PaymentSheetUITestCase {
         app.typeText("123") // CVC
         app.typeText("12345") // Postal
 
-        // Card brand choice drop down should be enabled
+        // Card brand choice selector should be enabled
         XCTAssertTrue(cardBrandChoiceVisa.waitForExistenceAndTap(timeout: 5))
+        app.toolbars.buttons["Done"].tap()
 
         // We should have selected Visa
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)

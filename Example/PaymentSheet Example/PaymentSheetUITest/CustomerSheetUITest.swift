@@ -458,6 +458,7 @@ class CustomerSheetUITest: XCTestCase {
 
         // Update this card
         app.buttons["Visa"].waitForExistenceAndTap(timeout: timeout)
+        app.toolbars.buttons["Done"].tap()
         app.buttons["Save"].waitForExistenceAndTap(timeout: timeout)
 
         // We should have updated to Visa
@@ -496,7 +497,7 @@ class CustomerSheetUITest: XCTestCase {
 
         // We should have selected Visa due to preferreedNetworks configuration API
         let cardBrandChoiceVisa = app.buttons["Visa"]
-        // Card brand choice textfield/dropdown should not be visible
+        // Card brand choice textfield/selector should not be visible
         XCTAssertFalse(cardBrandChoiceVisa.waitForExistence(timeout: 2))
 
         let numberField = app.textFields["Card number"]
@@ -504,7 +505,7 @@ class CustomerSheetUITest: XCTestCase {
         // Enter 8 digits to start fetching card brand
         numberField.typeText("49730197")
 
-        // Card brand choice drop down should be enabled
+        // Card brand choice selector should be enabled
         XCTAssertTrue(cardBrandChoiceVisa.waitForExistence(timeout: 2))
 
         // We should have selected Visa due to preferreedNetworks configuration API
@@ -525,7 +526,7 @@ class CustomerSheetUITest: XCTestCase {
         app.typeText("123") // CVC
         app.typeText("12345") // Postal
 
-        // Card brand choice drop down should be enabled and we should auto select Visa
+        // Card brand choice selector should be enabled and we should auto select Visa
         XCTAssertTrue(cardBrandChoiceVisa.waitForExistence(timeout: timeout))
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
 
@@ -551,6 +552,7 @@ class CustomerSheetUITest: XCTestCase {
         startCoordinate.press(forDuration: 0.1, thenDragTo: app.collectionViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
         XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
         app.buttons["Visa"].waitForExistenceAndTap(timeout: timeout)
+        app.toolbars.buttons["Done"].tap()
         XCTAssertTrue(app.buttons["Visa"].isSelected)
         app.buttons["Save"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))

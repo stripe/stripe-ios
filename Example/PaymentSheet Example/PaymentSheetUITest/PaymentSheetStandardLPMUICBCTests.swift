@@ -5,6 +5,7 @@
 //  Created by David Estes on 2/11/26.
 //
 
+
 import XCTest
 
 class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
@@ -82,7 +83,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         // Enter 8 digits to start fetching card brand
         numberField.typeText("49730197")
 
-        // Card brand choice drop down should be enabled
+        // Card brand choice selector should be enabled
         XCTAssertTrue(cardBrandChoiceVisa.waitForExistence(timeout: 5))
         // We should have selected Visa due to preferreedNetworks configuration API
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
@@ -102,7 +103,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         app.typeText("123") // CVC
         app.typeText("12345") // Postal
 
-        // Card brand choice drop down should be enabled and we should auto select Visa
+        // Card brand choice selector should be enabled and we should auto select Visa
         XCTAssertTrue(cardBrandChoiceVisa.waitForExistence(timeout: 5))
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
 
@@ -135,7 +136,7 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         app.typeText("123") // CVC
         app.typeText("12345") // Postal
 
-        // Card brand choice drop down should be enabled
+        // Card brand choice selector should be enabled
         XCTAssertTrue(cardBrandChoiceCB.waitForExistence(timeout: 5))
         cardBrandChoiceCB.tap()
         app.toolbars.buttons["Done"].tap()

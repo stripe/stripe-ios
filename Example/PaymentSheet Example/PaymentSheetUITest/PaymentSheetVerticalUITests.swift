@@ -277,6 +277,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Cartes Bancaires"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.buttons["Cartes Bancaires"].isSelected)
         XCTAssertTrue(app.buttons["Visa"].waitForExistenceAndTap(timeout: 5))
+        app.toolbars.buttons["Done"].tap()
 
         // We should have selected Visa
         XCTAssertTrue(app.buttons["Visa"].isSelected)
