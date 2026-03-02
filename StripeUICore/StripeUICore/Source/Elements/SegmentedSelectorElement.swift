@@ -175,7 +175,7 @@ final class SegmentedSelectorView: UIView {
                     separator.backgroundColor = theme.colors.divider
                     stackView.addArrangedSubview(separator)
                     NSLayoutConstraint.activate([
-                        separator.widthAnchor.constraint(equalToConstant: 1),
+                        separator.widthAnchor.constraint(equalToConstant: theme.separatorWidth),
                     ])
                 }
             }
