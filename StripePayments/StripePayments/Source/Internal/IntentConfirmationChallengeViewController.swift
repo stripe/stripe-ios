@@ -196,34 +196,15 @@ class IntentConfirmationChallengeViewController: UIViewController {
     }
 
     @objc private func closeButtonTapped() {
-        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeCanceled(duration: Date().timeIntervalSince(startTime))
-        cleanup()
-
-        // Call the cancel API based on intent type
+        self.completion(.failure(ChallengeError.userCanceled))
         switch intentType {
         case .paymentIntent(let id):
-            apiClient.cancelPaymentIntentCaptchaChallenge(paymentIntentId: id, clientSecret: clientSecret) { [weak self] _, error in
-                guard let self = self else { return }
-                if error != nil {
-                    // If the cancel API fails, still treat it as user canceled
-                    // to match the expected behavior
-                    self.completion(.failure(ChallengeError.userCanceled))
-                } else {
-                    self.completion(.failure(ChallengeError.userCanceled))
-                }
-            }
+            apiClient.cancelPaymentIntentCaptchaChallenge(paymentIntentId: id, clientSecret: clientSecret) {_,_ in}
         case .setupIntent(let id):
-            apiClient.cancelSetupIntentCaptchaChallenge(setupIntentId: id, clientSecret: clientSecret) { [weak self] _, error in
-                guard let self = self else { return }
-                if error != nil {
-                    // If the cancel API fails, still treat it as user canceled
-                    // to match the expected behavior
-                    self.completion(.failure(ChallengeError.userCanceled))
-                } else {
-                    self.completion(.failure(ChallengeError.userCanceled))
-                }
-            }
+            apiClient.cancelSetupIntentCaptchaChallenge(setupIntentId: id, clientSecret: clientSecret) {_,_ in}
         }
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeCanceled(duration: Date().timeIntervalSince(startTime))
+        cleanup()
     }
 
     // MARK: - Handlers
