@@ -1,5 +1,5 @@
 //
-//  BillingAddressUpdate.swift
+//  AddressUpdate.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/2/26.
@@ -10,18 +10,18 @@ import Foundation
 
 @_spi(CheckoutSessionsPreview)
 extension Checkout {
-    /// Parameters for ``updateBillingAddress(_:)``.
-    public struct BillingAddressUpdate {
+    /// Parameters for ``updateBillingAddress(_:)`` and ``updateShippingAddress(_:)``.
+    public struct AddressUpdate {
         /// The customer's full name.
         public let name: String?
 
-        /// The customer's billing address.
+        /// The customer's address.
         public let address: Address
 
-        /// Creates a billing address update.
+        /// Creates an address update.
         /// - Parameters:
         ///   - name: The customer's full name.
-        ///   - address: The customer's billing address.
+        ///   - address: The customer's address.
         public init(name: String? = nil, address: Address) {
             self.name = name
             self.address = address
