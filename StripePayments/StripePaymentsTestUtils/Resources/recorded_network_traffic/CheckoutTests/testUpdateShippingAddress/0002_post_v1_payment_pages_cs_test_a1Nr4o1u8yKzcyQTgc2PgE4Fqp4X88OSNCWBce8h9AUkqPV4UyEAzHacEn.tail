@@ -1,9 +1,9 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1vDNTF3wObutYGPQJBnypU3rIyBtkDheIRiHY3Bh3ggB2NdHXmxXLJjo1$
+https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1Nr4o1u8yKzcyQTgc2PgE4Fqp4X88OSNCWBce8h9AUkqPV4UyEAzHacEn$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=3ds_rSNx0IkIHN6JLj6U1eZkyZKdKk7x2gwjqkkRfpFSPWdimdbIzRtOlIgYj7BqTZV1Sjlo0cPxQhSm
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=htx7uj5NZm7iXp9iFT8N2idVsId3G6osNpes85oogjC5FQdcN2pY83wbH3YtbpKYYaZuSaJqEW8ipK34
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_f8lMFcc0VlztZW
-Content-Length: 29773
+request-id: req_sWnecv0UfWMq8C
+Content-Length: 29775
 Vary: Origin
-Date: Mon, 02 Mar 2026 22:13:05 GMT
-original-request: req_f8lMFcc0VlztZW
+Date: Mon, 02 Mar 2026 22:19:12 GMT
+original-request: req_sWnecv0UfWMq8C
 stripe-version: 2020-08-27
-idempotency-key: 0c95a9a9-997c-45df-bfd3-6f4b5fcb8ae6
+idempotency-key: e62101fe-4389-4668-9c0a-75302f52a47e
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -56,7 +56,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
   "blocked_billing_address_countries" : [
 
   ],
-  "id" : "ppage_1T6ei2FY0qyl6XeWke9Wvivo",
+  "id" : "ppage_1T6enyFY0qyl6XeW3EfFbU3k",
   "subscription_settings" : null,
   "consent" : null,
   "application" : null,
@@ -70,7 +70,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
   },
   "capture_method" : "automatic_async",
   "statement_descriptor" : "mobile",
-  "session_id" : "cs_test_a1vDNTF3wObutYGPQJBnypU3rIyBtkDheIRiHY3Bh3ggB2NdHXmxXLJjo1",
+  "session_id" : "cs_test_a1Nr4o1u8yKzcyQTgc2PgE4Fqp4X88OSNCWBce8h9AUkqPV4UyEAzHacEn",
   "shipping_address_collection" : {
     "allowed_countries" : [
       "US",
@@ -168,7 +168,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
     "payment_method_configuration_details" : null
   },
   "token_notification_url" : "https:\/\/pm-hooks.stripe.com\/apple_pay\/merchant_token\/pDq7tf9uieoQWMVJixFwuOve\/acct_1G6m1pFY0qyl6XeW\/",
-  "init_checksum" : "hjzBqi7k1PExZc6N3W7XtonpcmgshFn4",
+  "init_checksum" : "xXc8j1Otm1aNXAFTtWSspuGaCPK5QwRW",
   "bnpl_link_experiment_payment_method_type" : null,
   "tax_meta" : {
     "status" : "complete",
@@ -305,7 +305,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
     "expand" : [
 
     ],
-    "checkout_session_id" : "cs_test_a1vDNTF3wObutYGPQJBnypU3rIyBtkDheIRiHY3Bh3ggB2NdHXmxXLJjo1",
+    "checkout_session_id" : "cs_test_a1Nr4o1u8yKzcyQTgc2PgE4Fqp4X88OSNCWBce8h9AUkqPV4UyEAzHacEn",
     "merchant_support_shipping" : null,
     "mobile_app_id" : null,
     "currency" : null,
@@ -353,7 +353,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
   ],
   "billing_address_collection" : null,
   "experiments_data" : {
-    "event_id" : "1d0827fe-6b2d-4a9f-a999-e0d7993e0bf4",
+    "event_id" : "48f40fae-b001-4538-948e-f6abc6a02971",
     "experiment_metadata" : {
       "ocs_buyer_xp_cpl_lpm_holdback" : {
         "heldback_special_wallets" : [
@@ -362,7 +362,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
       }
     },
     "experiment_assignments" : {
-      "emea_wallets_ideal_wero_rebranding" : "control",
+      "emea_wallets_ideal_wero_rebranding" : "treatment",
       "ocs_buyer_xp_cpl_embedded_pay_button" : "control",
       "connections_checkout_us_bank_account_picker_icons" : "control",
       "link_cpl_billing_details_recollection_prefill_aa" : "control",
@@ -555,10 +555,10 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
       "link_forest_enable_ece_bank_use_shipping_as_billing" : false
     },
     "merchant_logo_url" : null,
-    "session_id" : "elements_session_1FPm8i7a4S8",
+    "session_id" : "elements_session_1bTYBCDxgWA",
     "card_installments_enabled" : false,
     "account_id" : "acct_1G6m1pFY0qyl6XeW",
-    "config_id" : "6dcbe5b7-f8bf-4bda-92af-b99e7ffd740e",
+    "config_id" : "95db6d89-2609-4fb9-a2d1-ed89a14bce06",
     "merchant_currency" : "usd",
     "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
     "card_brand_choice" : {
@@ -586,7 +586,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
       "paypal_merchant_id" : null
     },
     "experiments_data" : {
-      "arb_id" : "448729a9-fb6b-4759-984f-45c7317a0008",
+      "arb_id" : "342f6c56-d1ee-4278-be01-e78f25616416",
       "experiment_metadata" : {
         "seed" : "6f3407e11d795c34f4d3414fe1575190bbc9f39ba8033d463910f5932219257d",
         "semi_dominant_payment_methods" : [
@@ -737,7 +737,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
     ],
     "customer_error" : null
   },
-  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1vDNTF3wObutYGPQJBnypU3rIyBtkDheIRiHY3Bh3ggB2NdHXmxXLJjo1#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
+  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1Nr4o1u8yKzcyQTgc2PgE4Fqp4X88OSNCWBce8h9AUkqPV4UyEAzHacEn#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
   "prefilled" : null,
   "redirect_on_completion" : null,
   "blob" : null,
@@ -773,7 +773,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
   },
   "shipping" : null,
   "crypto_in_link_ui_enabled" : false,
-  "rqdata" : "kvxN\/7rxcTq44JAchPJtueOGySwupGUbkHspFC180REd8UBlyXf+llhyRIhLUFLyQF7LJiQbkXJiAG7ENE4MHxBWyspiR+uBZ8f9r02lnlPz76KBI11FPdlCDaHI4o0DjOOY0TMTcTrWK+B\/dgxWuu9CjaJUcs3LinvpeA3UgZcaxJwtnJCavsb1d2GFpym0XEf1\/15gqaByDAIzP2e60mqveoB798F1GVxeg5sR4h0KI1fg32NWm5v\/LT1hewYVxo01OhjZB0wufQaci+kdgj5vRVeBYJ2njnzJT\/0T3JFEIeosX11F36HtwQ==Ig269Ql6fdFT3JOG",
+  "rqdata" : "qfXQ9n\/IeK+qt4j7pmuB4X7lVaiTJdZ8PA80nsWVDWWYHFJrpWLPvFas2iFd4sXLKscCIE4ZoRQLnX6E0VScm+tgoNKgQaO+my876A2CM9BjcxumLBIFnZL9lPdGGbxQUrgw8zHCZy7apMPeDvLjVME1XFjCQRz84+UXfh\/7Y+XaEObINZjMIwKWozoG+CxGnJVAGv4ds8zWAwu5XsrFvPuHHwTaMxfpX5jTHej3vObsjDVtv+gCJcf1TwLCgbgXRkyMWjPZvEzukEms8fEnGVVcXUYQDCAHsRLSM4ZHvGi6AlZtx6AvinV0Pw==xd6iAc9E3jg12BHm",
   "total_summary" : {
     "due" : 2000,
     "subtotal" : 2000,
@@ -783,7 +783,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
   "cross_sell_group" : null,
   "site_key" : "20000000-ffff-ffff-ffff-000000000002",
   "checkout_multistep_ui" : false,
-  "eid" : "ac1d9538-3052-48a8-97e9-a6c8709faf28",
+  "eid" : "9e19a0e9-5315-4b00-b0ed-aa4695329b8e",
   "line_item_group" : {
     "tax_amounts" : [
       {
@@ -805,7 +805,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
     "total" : 2000,
     "line_items" : [
       {
-        "id" : "li_1T6ei2FY0qyl6XeWVAMvTZIH",
+        "id" : "li_1T6enyFY0qyl6XeWi8Y8vxv0",
         "description" : null,
         "discount_amounts" : [
 
@@ -833,7 +833,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
         "cross_sell_from" : null,
         "object" : "item",
         "price" : {
-          "id" : "price_1T6ei2FY0qyl6XeWDNK793yV",
+          "id" : "price_1T6enyFY0qyl6XeWTL8WJtMx",
           "livemode" : false,
           "active" : false,
           "product" : {
@@ -888,6 +888,6 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=Los%20Angeles&tax_region%5Bcountry%5
   },
   "name_collection" : null,
   "payment_intent" : null,
-  "config_id" : "98a379ff-5ca4-45ea-9d77-ac3ba4762d39",
+  "config_id" : "021899d4-4fb9-400e-8249-52fd21e555fc",
   "is_sandbox_merchant" : false
 }

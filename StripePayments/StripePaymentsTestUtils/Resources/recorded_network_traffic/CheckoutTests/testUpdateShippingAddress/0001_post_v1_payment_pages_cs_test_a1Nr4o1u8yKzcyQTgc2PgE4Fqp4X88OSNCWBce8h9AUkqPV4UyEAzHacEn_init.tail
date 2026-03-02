@@ -1,9 +1,9 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1xUCgYHi0vsyEjB9JZjSeSvLXIFKKNkA9vIr9RmgqnI7BKHlGI3Qbd7rO$
+https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1Nr4o1u8yKzcyQTgc2PgE4Fqp4X88OSNCWBce8h9AUkqPV4UyEAzHacEn\/init$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=mFhHjqRG0QUDdm-R8wAC94TTAYkNR3NUi7idkuBNSAt6uJO-Vin8dYXfXMep8QRr6dYmtURAHCfl_t0W
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Cc7MteiflfDq0HQLyX7BD9m06p3plyaRLKDm0CCwlCgUOvUIbwpncj79RvgFp54C-Wx7O52SZ_ELELLr
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,18 +12,18 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_RDbOhujRliqsmH
-Content-Length: 29866
+request-id: req_ROA4NQwOTLleSQ
+Content-Length: 29030
 Vary: Origin
-Date: Mon, 02 Mar 2026 22:12:18 GMT
-original-request: req_RDbOhujRliqsmH
+Date: Mon, 02 Mar 2026 22:19:11 GMT
+original-request: req_ROA4NQwOTLleSQ
 stripe-version: 2020-08-27
-idempotency-key: 4775f287-32ea-4ef9-b83c-476cf2498d74
+idempotency-key: b684d245-d2a8-44fa-bc8f-0b223602f9d0
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry%5D=US&tax_region%5Bline1%5D=123%20Main%20St&tax_region%5Bpostal_code%5D=94105&tax_region%5Bstate%5D=CA
+X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_session_client\[is_aggregation_expected]=true&redirect_type=embedded
 
 {
   "sepa_debit_info" : null,
@@ -31,14 +31,14 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
   "tax_context" : {
     "automatic_tax_error" : null,
     "automatic_tax_enabled" : true,
-    "automatic_tax_taxability_reason" : "not_collecting",
+    "automatic_tax_taxability_reason" : null,
     "dynamic_tax_enabled" : false,
     "tax_id_collection_enabled" : false,
-    "automatic_tax_exempt" : "none",
+    "automatic_tax_exempt" : null,
     "customer_tax_country" : null,
     "tax_id_collection_required" : "never",
     "has_maximum_tax_ids" : false,
-    "automatic_tax_address_source" : "session.billing"
+    "automatic_tax_address_source" : "session.shipping"
   },
   "payment_method_types" : [
     "card"
@@ -56,7 +56,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
   "blocked_billing_address_countries" : [
 
   ],
-  "id" : "ppage_1T6ehIFY0qyl6XeWq4JLUgPw",
+  "id" : "ppage_1T6enyFY0qyl6XeW3EfFbU3k",
   "subscription_settings" : null,
   "consent" : null,
   "application" : null,
@@ -70,8 +70,13 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
   },
   "capture_method" : "automatic_async",
   "statement_descriptor" : "mobile",
-  "session_id" : "cs_test_a1xUCgYHi0vsyEjB9JZjSeSvLXIFKKNkA9vIr9RmgqnI7BKHlGI3Qbd7rO",
-  "shipping_address_collection" : null,
+  "session_id" : "cs_test_a1Nr4o1u8yKzcyQTgc2PgE4Fqp4X88OSNCWBce8h9AUkqPV4UyEAzHacEn",
+  "shipping_address_collection" : {
+    "allowed_countries" : [
+      "US",
+      "CA"
+    ]
+  },
   "konbini_confirmation_number" : null,
   "setup_future_usage" : null,
   "invoice_creation" : {
@@ -149,13 +154,10 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
       "KLARNA_EXPRESS" : {
         "disabled_reason" : "not_in_payment_method_types"
       },
-      "GOOGLE_PAY" : {
-        "disabled_reason" : "google_pay_automatic_taxes_address_source_session_shipping_address_not_required"
-      },
-      "AMAZON_PAY" : {
+      "PAYPAL_ECS" : {
         "disabled_reason" : "not_in_payment_method_types"
       },
-      "PAYPAL_ECS" : {
+      "AMAZON_PAY" : {
         "disabled_reason" : "not_in_payment_method_types"
       }
     },
@@ -166,13 +168,13 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
     "payment_method_configuration_details" : null
   },
   "token_notification_url" : "https:\/\/pm-hooks.stripe.com\/apple_pay\/merchant_token\/pDq7tf9uieoQWMVJixFwuOve\/acct_1G6m1pFY0qyl6XeW\/",
-  "init_checksum" : "f2a0n9tQOu7qPjqpVuAv7MGEUXGR1aiP",
+  "init_checksum" : "xXc8j1Otm1aNXAFTtWSspuGaCPK5QwRW",
   "bnpl_link_experiment_payment_method_type" : null,
   "tax_meta" : {
-    "status" : "complete",
-    "error_reason" : null,
+    "status" : "requires_location_inputs",
+    "error_reason" : "no_buyer_location_provided",
     "computation_type" : "automatic",
-    "customer_tax_exempt" : "none"
+    "customer_tax_exempt" : null
   },
   "payment_status" : "unpaid",
   "enabled_third_party_wallets" : [
@@ -186,7 +188,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
     },
     {
       "id" : "GOOGLE_PAY",
-      "enabled" : false,
+      "enabled" : true,
       "google_pay" : {
         "id" : "GOOGLE_PAY",
         "version_minor" : 0,
@@ -303,7 +305,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
     "expand" : [
 
     ],
-    "checkout_session_id" : "cs_test_a1xUCgYHi0vsyEjB9JZjSeSvLXIFKKNkA9vIr9RmgqnI7BKHlGI3Qbd7rO",
+    "checkout_session_id" : "cs_test_a1Nr4o1u8yKzcyQTgc2PgE4Fqp4X88OSNCWBce8h9AUkqPV4UyEAzHacEn",
     "merchant_support_shipping" : null,
     "mobile_app_id" : null,
     "currency" : null,
@@ -312,7 +314,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
     "mobile_session_id" : null,
     "app_info_partner_id" : null,
     "disable_link_passthrough" : null,
-    "locale" : null,
+    "locale" : "en-US",
     "client_secret" : null,
     "client_default_payment_method" : null,
     "adaptive_pricing_context" : null,
@@ -349,9 +351,9 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
   "shipping_tax_amounts" : [
 
   ],
-  "billing_address_collection" : "required",
+  "billing_address_collection" : null,
   "experiments_data" : {
-    "event_id" : "4d3bb165-64b5-4f53-9fe7-0645d0922d70",
+    "event_id" : "2166a4a6-cb06-471e-95a7-2caeec7cd66b",
     "experiment_metadata" : {
       "ocs_buyer_xp_cpl_lpm_holdback" : {
         "heldback_special_wallets" : [
@@ -553,10 +555,10 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
       "link_forest_enable_ece_bank_use_shipping_as_billing" : false
     },
     "merchant_logo_url" : null,
-    "session_id" : "elements_session_1Tu2emn1pBb",
+    "session_id" : "elements_session_1hwdrwHncBx",
     "card_installments_enabled" : false,
     "account_id" : "acct_1G6m1pFY0qyl6XeW",
-    "config_id" : "b0629df8-2939-416e-a224-401de7070ed7",
+    "config_id" : "f19bcdef-5247-443a-a8a0-2480bd9bcd0a",
     "merchant_currency" : "usd",
     "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
     "card_brand_choice" : {
@@ -584,7 +586,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
       "paypal_merchant_id" : null
     },
     "experiments_data" : {
-      "arb_id" : "10798b0e-c3ac-496a-a574-df6b236b62c6",
+      "arb_id" : "dde20d62-64fd-4f01-894e-b94e56bff5fa",
       "experiment_metadata" : {
         "seed" : "6f3407e11d795c34f4d3414fe1575190bbc9f39ba8033d463910f5932219257d",
         "semi_dominant_payment_methods" : [
@@ -735,7 +737,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
     ],
     "customer_error" : null
   },
-  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1xUCgYHi0vsyEjB9JZjSeSvLXIFKKNkA9vIr9RmgqnI7BKHlGI3Qbd7rO#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
+  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1Nr4o1u8yKzcyQTgc2PgE4Fqp4X88OSNCWBce8h9AUkqPV4UyEAzHacEn#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
   "prefilled" : null,
   "redirect_on_completion" : null,
   "blob" : null,
@@ -771,7 +773,7 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
   },
   "shipping" : null,
   "crypto_in_link_ui_enabled" : false,
-  "rqdata" : "7MREe\/gsQADNcPWzUCLf\/NTssFtAR7oLaGqax1fpbSUYtE3cD343+Bjx8YNtGu5kvPh9i57Gl9bVqUT3EyjhJPipPy\/HXHgMawxa1wAs2e0zY+rtFKmE4MXdE5oItv4LIcLZ3zTVJgZwL3aEs0yGUl3zNKHaStwCuWv05iB86\/2ydpvfZo83TV\/VqeElJiO\/damMAyrfwKC+cqCEUbnjy8CS0SOcignKjByldGBSZLn21Q0eBzqWdDsAdsX5jz7GvqXeQjJ5Ny+\/6\/0AhkiXp2+GxuzSIIys\/bpFDPgYwZkOFsOqFiurupEUDw==gC5QwFm8ua0M+tsv",
+  "rqdata" : "dorCN+WnWpvJVgijIFXPeUbTI2ulBDgOLEd4rbLHKQOLJ14Z5ZvfPpLM3X5jzBOGyErI\/y3vQgXol2Rdd6K\/\/dYdqG2Kklto5VKq32eCu0qAeT1vUu7Gq4kE8Vl3wqBQHDIOC1g3iLUEvamGhWjn1IdTDZC0SPnfea7ZCVw1cy1LWAFo6N5lRilYe\/5Xq08B84RAPCvkFE0yZK\/dIdlMcQUdmTq4DNEosETytZzixu1PNtvDSRPAmJLUlicYDfvXjdrnjEQBpl92yjtL1tULu\/37kCtPqZAu7oIQCzjYtHAJpBQENJfFrAMH+A==7TTtBLO8ECWSaNe2",
   "total_summary" : {
     "due" : 2000,
     "subtotal" : 2000,
@@ -781,29 +783,16 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
   "cross_sell_group" : null,
   "site_key" : "20000000-ffff-ffff-ffff-000000000002",
   "checkout_multistep_ui" : false,
-  "eid" : "9a6f5816-e024-421c-9476-0e9f0339fa8f",
+  "eid" : "F2DEFFF1-E31A-4A2A-B362-1749B3C46047",
   "line_item_group" : {
     "tax_amounts" : [
-      {
-        "amount" : 0,
-        "tax_rate" : {
-          "object" : "tax_rate",
-          "active" : false,
-          "inclusive" : false,
-          "rate_type" : "percentage",
-          "description" : null,
-          "display_name" : "Sales Tax",
-          "percentage" : 8.625
-        },
-        "taxable_amount" : 0,
-        "inclusive" : false
-      }
+
     ],
     "localized_prices_metas" : null,
     "total" : 2000,
     "line_items" : [
       {
-        "id" : "li_1T6ehIFY0qyl6XeWtDCpoMG3",
+        "id" : "li_1T6enyFY0qyl6XeWi8Y8vxv0",
         "description" : null,
         "discount_amounts" : [
 
@@ -812,26 +801,13 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
         "is_removable" : false,
         "total" : 2000,
         "tax_amounts" : [
-          {
-            "amount" : 0,
-            "tax_rate" : {
-              "object" : "tax_rate",
-              "active" : false,
-              "inclusive" : false,
-              "rate_type" : "percentage",
-              "description" : null,
-              "display_name" : "Sales Tax",
-              "percentage" : 8.625
-            },
-            "taxable_amount" : 0,
-            "inclusive" : false
-          }
+
         ],
         "subtotal" : 2000,
         "cross_sell_from" : null,
         "object" : "item",
         "price" : {
-          "id" : "price_1T6ehIFY0qyl6XeWFwKMRM06",
+          "id" : "price_1T6enyFY0qyl6XeWTL8WJtMx",
           "livemode" : false,
           "active" : false,
           "product" : {
@@ -886,6 +862,6 @@ X-Stripe-Mock-Request: tax_region%5Bcity%5D=San%20Francisco&tax_region%5Bcountry
   },
   "name_collection" : null,
   "payment_intent" : null,
-  "config_id" : "3d6696bb-c68d-4712-abe2-9bb40256662d",
+  "config_id" : "85765550-23f3-40a8-aadf-03a5e0aa8e81",
   "is_sandbox_merchant" : false
 }
