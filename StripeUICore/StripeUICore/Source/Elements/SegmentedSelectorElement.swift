@@ -41,7 +41,6 @@ import UIKit
     }
 
     public func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem> = []) {
-        guard items != self.items || disabledItems != self.disabledItems else { return }
         self.items = items
         self.disabledItems = disabledItems
 
@@ -50,7 +49,7 @@ import UIKit
             self.selectedItem = nil
         }
 
-        // Rebuild view based on new card brand info
+        // Update view based on new card brand info
         selectorView.update(
             items: items,
             disabledItems: disabledItems,
@@ -69,8 +68,8 @@ import UIKit
         // Update the visual UI
         selectorView.select(item, animated: animated)
 
-        // Auto-advance to next field when selecting (not when deselecting) if requested
-        if item != nil && shouldAutoAdvance {
+        // Auto-advance to next field
+        if shouldAutoAdvance {
             delegate?.continueToNextField(element: self)
         }
     }
@@ -139,46 +138,52 @@ final class SegmentedSelectorView: UIView {
     }
 
     func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem>, selectedItem: SegmentedSelectorItem?) {
-        stackView.arrangedSubviews.forEach {
-            $0.removeFromSuperview()
-        }
-        itemViews.removeAll()
+        // If we have the same items as before, just update the disabled state
+        if items == Array(itemViews.keys) {
+            items.forEach { item in
+                let isDisabled = disabledItems.contains(item)
+                itemViews[item]?.updateDisabledState(isDisabled)
+            }
+        } else { // Otherwise, rebuild the view with the new items
+            stackView.arrangedSubviews.forEach {
+                $0.removeFromSuperview()
+            }
+            itemViews.removeAll()
 
-        // Add views for each item with separators
-        for (index, item) in items.enumerated() {
-            let isDisabled = disabledItems.contains(item)
-            let itemView = SegmentedItemView(
-                item: item,
-                isDisabled: isDisabled,
-                theme: theme
-            )
+            // Add views for each item with separators
+            for (index, item) in items.enumerated() {
+                let isDisabled = disabledItems.contains(item)
+                let itemView = SegmentedItemView(
+                    item: item,
+                    isDisabled: isDisabled,
+                    theme: theme
+                )
+                
+                let tapGesture = UITapGestureRecognizer(target: self, action: #selector(itemTapped(_:)))
+                itemView.addGestureRecognizer(tapGesture)
+                itemView.isUserInteractionEnabled = !isDisabled
 
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(itemTapped(_:)))
-            itemView.addGestureRecognizer(tapGesture)
-            itemView.isUserInteractionEnabled = !isDisabled
+                stackView.addArrangedSubview(itemView)
+                itemViews[item] = itemView
 
-            stackView.addArrangedSubview(itemView)
-            itemViews[item] = itemView
-
-            // Add separator between segments (except after the last one)
-            if index < items.count - 1 {
-                let separator = UIView()
-                separator.translatesAutoresizingMaskIntoConstraints = false
-                separator.backgroundColor = theme.colors.divider
-                stackView.addArrangedSubview(separator)
-                NSLayoutConstraint.activate([
-                    separator.widthAnchor.constraint(equalToConstant: 1),
-                ])
+                // Add separator between segments (except after the last one)
+                if index < items.count - 1 {
+                    let separator = UIView()
+                    separator.translatesAutoresizingMaskIntoConstraints = false
+                    separator.backgroundColor = theme.colors.divider
+                    stackView.addArrangedSubview(separator)
+                    NSLayoutConstraint.activate([
+                        separator.widthAnchor.constraint(equalToConstant: 1),
+                    ])
+                }
             }
         }
-
-        self.selectedItem = selectedItem
-        if let selected = selectedItem, let itemView = itemViews[selected] {
-            itemView.select(true, animated: false)
+        if self.selectedItem != selectedItem {
+            self.selectedItem = selectedItem
+            if let selected = selectedItem, let itemView = itemViews[selected] {
+                itemView.select(true, animated: false)
+            }
         }
-
-        // Update intrinsic content size after adding/removing items
-        invalidateIntrinsicContentSize()
     }
 
     func select(_ item: SegmentedSelectorItem?, animated: Bool) {
@@ -206,8 +211,8 @@ final class SegmentedSelectorView: UIView {
 
 /// A single tappable item icon with optional checkmark (segmented control style)
 private final class SegmentedItemView: UIView {
-    let item: SegmentedSelectorItem
-    private let isDisabled: Bool
+    var item: SegmentedSelectorItem
+    private var isDisabled: Bool
     private let theme: ElementsAppearance
 
     private let iconImageView: UIImageView = {
@@ -248,9 +253,6 @@ private final class SegmentedItemView: UIView {
 
     private func setupView() {
         iconImageView.image = item.image
-        if isDisabled {
-            iconImageView.alpha = 0.4
-        }
 
         let configuration = UIImage.SymbolConfiguration(weight: .medium)
         checkmarkImageView.image = UIImage(systemName: "checkmark", withConfiguration: configuration)
@@ -276,6 +278,10 @@ private final class SegmentedItemView: UIView {
         isAccessibilityElement = true
         accessibilityLabel = item.accessibilityLabel
         accessibilityTraits = .button
+        if isDisabled {
+            iconImageView.alpha = 0.4
+            accessibilityTraits.insert(.notEnabled)
+        }
     }
 
     func select(_ selected: Bool, animated: Bool) {
@@ -305,6 +311,20 @@ private final class SegmentedItemView: UIView {
         }
     }
 
+    func updateDisabledState(_ isDisabled: Bool) {
+        guard isDisabled != self.isDisabled else { return }
+        self.isDisabled = isDisabled
+        // Update visual state
+        isUserInteractionEnabled = !isDisabled
+        iconImageView.alpha = isDisabled ? 0.4 : 1.0
+        // If disabled, deselect it
+        if isDisabled {
+            select(false, animated: false)
+            accessibilityTraits.insert(.notEnabled)
+        } else {
+            accessibilityTraits.remove(.notEnabled)
+        }
+    }
 }
 
 // MARK: - SegmentedSelectorItem
@@ -322,7 +342,6 @@ private final class SegmentedItemView: UIView {
         self.accessibilityLabel = accessibilityLabel
     }
 
-    // Hashable conformance based only on rawData (UIImage is not Hashable)
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.rawData == rhs.rawData
     }
