@@ -37,8 +37,8 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             disallowedCardBrands: [],
             theme: theme
         )
-        // Trigger auto-select by updating with one brand disallowed
         element.update(cardBrands: [.visa, .cartesBancaires], disallowedCardBrands: [.visa])
+        element.selectorElement?.select(STPCardBrand.cartesBancaires.makeCardBrandItem())
         verify(element)
     }
 
