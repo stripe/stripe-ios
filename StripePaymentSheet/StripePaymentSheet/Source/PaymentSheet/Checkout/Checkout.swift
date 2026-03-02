@@ -106,6 +106,16 @@ public final class Checkout: ObservableObject {
         try await performAPIUpdate(.setShippingRate(optionId))
     }
 
+    // MARK: - Tax ID
+
+    /// Updates the tax ID on the session.
+    /// - Parameter params: Typed parameters for the tax ID update.
+    /// - Throws: ``CheckoutError`` if the update fails.
+    public func updateTaxId(_ params: TaxIdUpdate) async throws {
+        try requireOpenSession()
+        try await performAPIUpdate(.setTaxId(type: params.type, value: params.value))
+    }
+
     // MARK: - Internal Methods
 
     /// Replaces ``session`` and notifies the delegate when the session data has changed.

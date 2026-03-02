@@ -203,7 +203,8 @@ extension STPTestingAPIClient {
         customerID: String? = nil,
         allowPromotionCodes: Bool = false,
         allowAdjustableLineItemQuantity: Bool = false,
-        includeShippingOptions: Bool = false
+        includeShippingOptions: Bool = false,
+        enableTaxIdCollection: Bool = false
     ) async throws -> CreateCheckoutSessionResponse {
         var additionalParameters: [String: Any] = [:]
         if allowPromotionCodes {
@@ -239,6 +240,9 @@ extension STPTestingAPIClient {
                     ] as [String: Any],
                 ] as [String: Any],
             ]
+        }
+        if enableTaxIdCollection {
+            additionalParameters["tax_id_collection"] = ["enabled": true]
         }
         let params: [String: Any?] = [
             "account": merchantCountry,

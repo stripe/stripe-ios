@@ -206,6 +206,29 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         }
     }
 
+    func testUpdateTaxId() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+            enableTaxIdCollection: true
+        )
+        let checkout = await Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
+
+        try await checkout.load()
+
+        await MainActor.run {
+            XCTAssertNotNil(checkout.session)
+        }
+
+        try await checkout.updateTaxId(.init(type: "eu_vat", value: "DE123456789"))
+
+        await MainActor.run {
+            XCTAssertNotNil(checkout.session)
+            XCTAssertEqual(checkout.session?.status, .open)
+        }
+    }
+
     func testDelegateCalledOnPromotionCodeApply() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
             allowPromotionCodes: true
