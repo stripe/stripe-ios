@@ -301,10 +301,10 @@ final class CardSectionElement: ContainerElement {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandDropdownIndicator))
             }
 
-            // Show the tooltip when the brand selector newly appears (going from ≤1 to 2+ brands)
-            if !hadMultipleBrands && fetchedCardBrands.count > 1 {
+            // Show the tooltip when the panElement is in focus, brand selector appears, and a brand is not already selected
+            if !hadMultipleBrands && fetchedCardBrands.count > 1 && cardBrandChoiceElement.selectedBrand == nil && panElement.isEditing {
                 DispatchQueue.main.async { self.showCBCTooltip() }
-            } else if hadMultipleBrands && fetchedCardBrands.count <= 1 {
+            } else if hadMultipleBrands && fetchedCardBrands.count <= 1 { // Hide the tooltip when the brand selector disappears
                 dismissCBCTooltip()
             }
 
@@ -317,8 +317,8 @@ final class CardSectionElement: ContainerElement {
                     disallowedCardBrands: disallowedCardBrands
                 )
 
+                // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
                 if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
-                    // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
                     selectBrandIfNecessary(brandToSelect, in: cardBrandChoiceElement)
                 } else if let brandToSelect = useDefaultSelectionLogic(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
                     selectBrandIfNecessary(brandToSelect, in: cardBrandChoiceElement)
@@ -355,10 +355,6 @@ final class CardSectionElement: ContainerElement {
     }
 
     private func showCBCTooltip() {
-        // Don't show the tooltip if a brand is already selected (e.g. via preferred networks)
-        // or if the PAN field lost focus (e.g. auto-advanced to expiry after completing the number)
-        guard cardBrandChoiceElement?.selectedBrand == nil, panElement.isEditing else { return }
-
         let tooltip: UIView
         if let existing = cbcTooltipView {
             tooltip = existing
