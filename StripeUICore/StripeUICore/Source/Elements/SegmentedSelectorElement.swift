@@ -41,19 +41,21 @@ import UIKit
     }
 
     public func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem> = []) {
-        guard items.count > 1, items != self.items || disabledItems != self.disabledItems else { return }
+        guard items != self.items || disabledItems != self.disabledItems else { return }
         self.items = items
         self.disabledItems = disabledItems
 
+        // Clear selection if it's not in the new items array or if it's now disabled
+        if let selected = selectedItem, !items.contains(selected) || disabledItems.contains(selected) {
+            self.selectedItem = nil
+        }
+
+        // Rebuild view based on new card brand info
         selectorView.update(
             items: items,
-            disabledItems: disabledItems
+            disabledItems: disabledItems,
+            selectedItem: self.selectedItem
         )
-
-        // Deselect item if it's not in the new items array or if it's now disabled
-        if let selected = selectedItem, !items.contains(selected) || disabledItems.contains(selected) {
-            select(nil, shouldAutoAdvance: false)
-        }
     }
 
     public func select(_ item: SegmentedSelectorItem?, animated: Bool = false, shouldAutoAdvance: Bool = true) {
@@ -67,8 +69,6 @@ import UIKit
         // Update the visual UI
         selectorView.select(item, animated: animated)
 
-        delegate?.didUpdate(element: self)
-
         // Auto-advance to next field when selecting (not when deselecting) if requested
         if item != nil && shouldAutoAdvance {
             delegate?.continueToNextField(element: self)
@@ -79,6 +79,7 @@ import UIKit
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
         select(newSelection, animated: true)
+        delegate?.didUpdate(element: self)
     }
 }
 
@@ -108,11 +109,12 @@ final class SegmentedSelectorView: UIView {
 
     init(items: [SegmentedSelectorItem],
          disabledItems: Set<SegmentedSelectorItem>,
+         selectedItem: SegmentedSelectorItem? = nil,
          theme: ElementsAppearance) {
         self.theme = theme
         super.init(frame: .zero)
         setupView()
-        update(items: items, disabledItems: disabledItems)
+        update(items: items, disabledItems: disabledItems, selectedItem: selectedItem)
     }
 
     required init?(coder: NSCoder) {
@@ -121,7 +123,7 @@ final class SegmentedSelectorView: UIView {
 
     private func setupView() {
         // Add segmented control styling
-        layer.cornerRadius = theme.cornerRadius ?? 5
+        applyCornerRadius(appearance: theme)
         layer.borderWidth = theme.borderWidth
         layer.borderColor = theme.colors.border.cgColor
         backgroundColor = theme.colors.componentBackground
@@ -136,7 +138,7 @@ final class SegmentedSelectorView: UIView {
         ])
     }
 
-    func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem>) {
+    func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem>, selectedItem: SegmentedSelectorItem?) {
         stackView.arrangedSubviews.forEach {
             $0.removeFromSuperview()
         }
@@ -168,6 +170,11 @@ final class SegmentedSelectorView: UIView {
                     separator.widthAnchor.constraint(equalToConstant: 1),
                 ])
             }
+        }
+
+        self.selectedItem = selectedItem
+        if let selected = selectedItem, let itemView = itemViews[selected] {
+            itemView.select(true, animated: false)
         }
 
         // Update intrinsic content size after adding/removing items
