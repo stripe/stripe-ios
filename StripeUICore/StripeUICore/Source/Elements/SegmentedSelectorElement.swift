@@ -22,18 +22,14 @@ import UIKit
     public let collectsUserInput: Bool = true
 
     private let selectorView: SegmentedSelectorView
-    private let theme: ElementsAppearance
 
     public private(set) var selectedItem: SegmentedSelectorItem?
     public var items: [SegmentedSelectorItem]
-    private var disabledItems: Set<SegmentedSelectorItem>
 
     public init(items: [SegmentedSelectorItem] = [],
                 disabledItems: Set<SegmentedSelectorItem> = [],
                 theme: ElementsAppearance = .default) {
         self.items = items
-        self.disabledItems = disabledItems
-        self.theme = theme
         self.selectorView = SegmentedSelectorView(
             items: items,
             disabledItems: disabledItems,
@@ -46,7 +42,6 @@ import UIKit
         guard items.count > 1, items != self.items || disabledItems != self.disabledItems else { return }
 
         self.items = items
-        self.disabledItems = disabledItems
 
         selectorView.update(
             items: items,
