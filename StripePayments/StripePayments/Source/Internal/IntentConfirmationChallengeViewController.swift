@@ -199,9 +199,9 @@ class IntentConfirmationChallengeViewController: UIViewController {
         self.completion(.failure(ChallengeError.userCanceled))
         switch intentType {
         case .paymentIntent(let id):
-            apiClient.cancelPaymentIntentCaptchaChallenge(paymentIntentId: id, clientSecret: clientSecret) {_,_ in}
+            apiClient.cancelPaymentIntentCaptchaChallenge(paymentIntentId: id, clientSecret: clientSecret) { _, _ in }
         case .setupIntent(let id):
-            apiClient.cancelSetupIntentCaptchaChallenge(setupIntentId: id, clientSecret: clientSecret) {_,_ in}
+            apiClient.cancelSetupIntentCaptchaChallenge(setupIntentId: id, clientSecret: clientSecret) { _, _ in }
         }
         STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeCanceled(duration: Date().timeIntervalSince(startTime))
         cleanup()
