@@ -184,7 +184,7 @@ final class CardSectionElement: ContainerElement {
         guard let cardBrandChoiceElement = cardBrandChoiceElement else {
             return nil
         }
-        return cardBrandChoiceElement.selectedBrand ?? .unknown
+        return cardBrandChoiceElement.selectedBrand
     }
 
     /// Tracks the last known validation state of the PAN element, so that we can know when it changes from invalid to valid
@@ -202,9 +202,7 @@ final class CardSectionElement: ContainerElement {
         fetchAndUpdateCardBrands()
         fetchAndCacheCardFunding()
 
-        // Dismiss the CBC tooltip when the user selects a brand different from what was
-        // selected when the tooltip first appeared.
-        if cbcTooltipView != nil, cardBrandChoiceElement?.selectedBrand != tooltipShownWithSelected {
+        if selectedBrand != nil {
             dismissCBCTooltip()
         }
 
@@ -271,9 +269,6 @@ final class CardSectionElement: ContainerElement {
 
     // MARK: Card brand choice
     private weak var cbcTooltipView: UIView?
-    /// The dropdown's rawData value at the time the CBC tooltip was shown; used to detect when
-    /// the user makes a new explicit selection so we know when to dismiss.
-    private var tooltipShownWithSelected: STPCardBrand?
     private var cardBrands = Set<STPCardBrand>()
     func fetchAndUpdateCardBrands() {
         // Only fetch card brands if we have at least 8 digits in the pan
@@ -309,6 +304,8 @@ final class CardSectionElement: ContainerElement {
             // Show the tooltip when the brand selector newly appears (going from ≤1 to 2+ brands)
             if !hadMultipleBrands && fetchedCardBrands.count > 1 {
                 DispatchQueue.main.async { self.showCBCTooltip() }
+            } else if hadMultipleBrands && fetchedCardBrands.count <= 1 {
+                dismissCBCTooltip()
             }
 
             if self.cardBrands != fetchedCardBrands {
@@ -320,10 +317,7 @@ final class CardSectionElement: ContainerElement {
                     disallowedCardBrands: disallowedCardBrands
                 )
 
-                if fetchedCardBrands.count <= 1 {
-                    // Selector is no longer visible — dismiss tooltip
-                    self.dismissCBCTooltip()
-                } else if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
+                if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
                     // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
                     selectBrandIfNecessary(brandToSelect, in: cardBrandChoiceElement)
                 } else if let brandToSelect = useDefaultSelectionLogic(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
@@ -369,7 +363,7 @@ final class CardSectionElement: ContainerElement {
 
         // Record the current selection so didUpdate can detect when the user
         // makes a new explicit selection and dismiss the tooltip.
-        tooltipShownWithSelected = cardBrandChoiceElement?.selectedBrand
+//        tooltipShownWithSelected = cardBrandChoiceElement?.selectedBrand
 
         // Calculate the PAN frame first — the view is already laid out by the time this
         // runs on the main queue, so no layoutIfNeeded() is needed.
@@ -398,7 +392,7 @@ final class CardSectionElement: ContainerElement {
     private func dismissCBCTooltip() {
         let tooltip = cbcTooltipView
         cbcTooltipView = nil
-        tooltipShownWithSelected = nil
+//        tooltipShownWithSelected = nil
         UIView.animate(withDuration: 0.2, animations: {
             tooltip?.alpha = 0
         }, completion: { _ in
