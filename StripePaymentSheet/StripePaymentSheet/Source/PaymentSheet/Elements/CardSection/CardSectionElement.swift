@@ -282,7 +282,6 @@ final class CardSectionElement: ContainerElement {
             if !self.cardBrands.isEmpty {
                 self.cardBrands = Set<STPCardBrand>()
                 cardBrandChoiceElement?.update(cardBrands: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>())
-                self.clearBrandSelection()
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
                 self.dismissCBCTooltip()
             }
@@ -322,8 +321,7 @@ final class CardSectionElement: ContainerElement {
                 )
 
                 if fetchedCardBrands.count <= 1 {
-                    // Selector is no longer visible — reset to placeholder and dismiss tooltip
-                    self.clearBrandSelection()
+                    // Selector is no longer visible — dismiss tooltip
                     self.dismissCBCTooltip()
                 } else if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
                     // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
@@ -364,10 +362,13 @@ final class CardSectionElement: ContainerElement {
     }
 
     private func showCBCTooltip() {
+        // Don't show the tooltip if a brand is already selected (e.g. via preferred networks)
+        guard cardBrandChoiceElement?.selectedBrand == nil else { return }
+
         cbcTooltipView?.removeFromSuperview()
 
-        // Record the dropdown's current raw selection so didUpdate can detect when the
-        // user makes a new explicit selection and dismiss the tooltip.
+        // Record the current selection so didUpdate can detect when the user
+        // makes a new explicit selection and dismiss the tooltip.
         tooltipShownWithSelected = cardBrandChoiceElement?.selectedBrand
 
         // Calculate the PAN frame first — the view is already laid out by the time this
@@ -426,15 +427,6 @@ final class CardSectionElement: ContainerElement {
             return nil
         }
         return brandToSelect
-    }
-
-    private func clearBrandSelection() {
-        guard let cardBrandChoiceElement = cardBrandChoiceElement else { return }
-        if cardBrandChoiceElement.enableCBCRedesign {
-            cardBrandChoiceElement.selectorElement?.select(nil, shouldAutoAdvance: false)
-        } else {
-            cardBrandChoiceElement.dropdownElement?.select(index: 0, shouldAutoAdvance: false)
-        }
     }
 
     private func selectBrandIfNecessary(_ brand: STPCardBrand, in cardBrandChoiceElement: CardBrandChoiceElement) {
