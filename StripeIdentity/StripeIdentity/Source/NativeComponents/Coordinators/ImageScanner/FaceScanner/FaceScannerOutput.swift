@@ -12,10 +12,10 @@ import Foundation
 
 struct FaceScannerOutput: Equatable {
     private enum BestFrame {
-        static let faceScoreWeight: Float = 0.6
+        static let faceScoreWeight: Float = 0.25
         static let centeringWeight: Float = 0.25
-        static let coverageWeight: Float = 0.1
-        static let stabilityWeight: Float = 0.05
+        static let coverageWeight: Float = 0.25
+        static let stabilityWeight: Float = 0.25
         static let targetCoverage: CGFloat = 0.16
         static let maxCoverageDelta: CGFloat = 0.16
     }
