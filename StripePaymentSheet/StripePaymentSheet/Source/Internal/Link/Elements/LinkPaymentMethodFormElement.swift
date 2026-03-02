@@ -91,7 +91,10 @@ final class LinkPaymentMethodFormElement: Element {
             billingDetails.email = email
         }
 
-        let preferredNetwork = STPCardBrandUtilities.stringFrom(cardBrandSelector?.element.selectedBrand ?? .unknown)
+        let preferredNetwork: String? = {
+            guard let brand = cardBrandSelector?.element.selectedBrand else { return nil }
+            return STPCardBrandUtilities.apiValue(from: brand)
+        }()
 
         return Params(
             expiryDate: expiryDate,
