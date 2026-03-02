@@ -212,7 +212,7 @@ final class SegmentedSelectorView: UIView {
 
 /// A single tappable item icon with optional checkmark (segmented control style)
 private final class SegmentedItemView: UIView {
-    var item: SegmentedSelectorItem
+    let item: SegmentedSelectorItem
     private var isDisabled: Bool
     private let theme: ElementsAppearance
 
