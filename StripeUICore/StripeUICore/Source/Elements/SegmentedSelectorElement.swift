@@ -22,18 +22,14 @@ import UIKit
     public let collectsUserInput: Bool = true
 
     private let selectorView: SegmentedSelectorView
-    private let theme: ElementsAppearance
 
     public private(set) var selectedItem: SegmentedSelectorItem?
     public var items: [SegmentedSelectorItem]
-    private var disabledItems: Set<SegmentedSelectorItem>
 
     public init(items: [SegmentedSelectorItem] = [],
                 disabledItems: Set<SegmentedSelectorItem> = [],
                 theme: ElementsAppearance = .default) {
         self.items = items
-        self.disabledItems = disabledItems
-        self.theme = theme
         self.selectorView = SegmentedSelectorView(
             items: items,
             disabledItems: disabledItems,
@@ -44,7 +40,6 @@ import UIKit
 
     public func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem> = []) {
         self.items = items
-        self.disabledItems = disabledItems
 
         // Clear selected item if it's not in the new items array
         if let selected = selectedItem, !items.contains(selected) {
