@@ -27,7 +27,6 @@ import Foundation
 @_spi(CheckoutSessionsPreview)
 @MainActor
 public final class Checkout: ObservableObject {
-
     // MARK: - Public Properties
 
     /// The loaded session, or `nil` if ``load()`` hasn't completed yet.
@@ -63,11 +62,48 @@ public final class Checkout: ObservableObject {
 
         do {
             let sessionId = Self.extractSessionId(from: clientSecret)
-            let response = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
-            updateSession(response.checkoutSession)
+            let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+            updateSession(checkoutSession)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
+    }
+
+    // MARK: - Promotion Codes
+
+    /// Applies a promotion code to the session.
+    /// - Parameter code: The promotion code to apply.
+    /// - Throws: ``CheckoutError`` if applying the promotion code fails.
+    public func applyPromotionCode(_ code: String) async throws {
+        try requireOpenSession()
+        try await performAPIUpdate(.setPromotionCode(code))
+    }
+
+    /// Removes the currently applied promotion code.
+    /// - Throws: `CheckoutError` if removing the promotion code fails.
+    public func removePromotionCode() async throws {
+        try requireOpenSession()
+        try await performAPIUpdate(.setPromotionCode(""))
+    }
+
+    // MARK: - Line Items
+
+    /// Updates the quantity of a line item.
+    /// - Parameter params: Typed parameters for the line item quantity update.
+    /// - Throws: ``CheckoutError`` if the update fails.
+    public func updateQuantity(_ params: LineItemUpdate) async throws {
+        try requireOpenSession()
+        try await performAPIUpdate(.setLineItemQuantity(lineItemId: params.lineItemId, quantity: params.quantity))
+    }
+
+    // MARK: - Shipping
+
+    /// Selects a shipping option for the session.
+    /// - Parameter optionId: The ID of the shipping rate to select.
+    /// - Throws: ``CheckoutError`` if the update fails.
+    public func selectShippingOption(_ optionId: String) async throws {
+        try requireOpenSession()
+        try await performAPIUpdate(.setShippingRate(optionId))
     }
 
     // MARK: - Internal Methods
@@ -82,6 +118,33 @@ public final class Checkout: ObservableObject {
     }
 
     // MARK: - Private Methods
+
+    /// Validates that the session is loaded and open.
+    private func requireOpenSession() throws {
+        guard let currentSession = session else {
+            throw CheckoutError.sessionNotLoaded
+        }
+        guard currentSession.status == .open else {
+            throw CheckoutError.sessionNotOpen
+        }
+    }
+
+    /// Performs an API update, then reloads full session state from init.
+    /// The update endpoint can return partial data, so we always refresh from init
+    /// to keep ``session`` as the single source of truth.
+    private func performAPIUpdate(_ update: SessionUpdate) async throws {
+        do {
+            let sessionId = Self.extractSessionId(from: clientSecret)
+            _ = try await apiClient.updateCheckoutSession(
+                checkoutSessionId: sessionId,
+                parameters: update.parameters
+            )
+            let refreshedCheckoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+            updateSession(refreshedCheckoutSession)
+        } catch {
+            throw CheckoutError.apiError(message: error.nonGenericDescription)
+        }
+    }
 
     /// Returns the session ID portion of a client secret.
     ///

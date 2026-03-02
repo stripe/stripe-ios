@@ -48,14 +48,13 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkoutSession(String)
-        case checkoutSessionDirect(STPCheckoutSession)
+        case checkoutSession(STPCheckoutSession)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
             case .deferredIntent(let intentConfig):
                 return intentConfig
-            case .paymentIntentClientSecret, .setupIntentClientSecret, .checkoutSession, .checkoutSessionDirect:
+            case .paymentIntentClientSecret, .setupIntentClientSecret, .checkoutSession:
                 return nil
             }
         }
@@ -105,22 +104,12 @@ public class PaymentSheet {
         )
     }
 
-    /// Initializes PaymentSheet with a CheckoutSession ID
-    /// - Parameter checkoutSessionId: The ID of a Stripe CheckoutSession object (e.g., "cs_test_xxx")
-    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @_spi(CheckoutSessionPreview) public convenience init(checkoutSessionId: String, configuration: Configuration) {
-        self.init(
-            mode: .checkoutSession(checkoutSessionId),
-            configuration: configuration
-        )
-    }
-
     /// Initializes PaymentSheet with a CheckoutSession object
     /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     @_spi(CheckoutSessionPreview) public convenience init(checkoutSession: STPCheckoutSession, configuration: Configuration) {
         self.init(
-            mode: .checkoutSessionDirect(checkoutSession),
+            mode: .checkoutSession(checkoutSession),
             configuration: configuration
         )
     }
