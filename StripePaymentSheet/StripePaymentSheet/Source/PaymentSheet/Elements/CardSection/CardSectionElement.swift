@@ -204,7 +204,7 @@ final class CardSectionElement: ContainerElement {
 
         // Dismiss the CBC tooltip when the user selects a brand different from what was
         // selected when the tooltip first appeared.
-        if cbcTooltipView != nil, cardBrandDropDown?.selectedItem.rawData != tooltipShownWithSelectedRawData {
+        if cbcTooltipView != nil, cardBrandChoiceElement?.selectedBrand != tooltipShownWithSelected {
             dismissCBCTooltip()
         }
 
@@ -273,7 +273,7 @@ final class CardSectionElement: ContainerElement {
     private weak var cbcTooltipView: UIView?
     /// The dropdown's rawData value at the time the CBC tooltip was shown; used to detect when
     /// the user makes a new explicit selection so we know when to dismiss.
-    private var tooltipShownWithSelectedRawData: String?
+    private var tooltipShownWithSelected: STPCardBrand?
     private var cardBrands = Set<STPCardBrand>()
     func fetchAndUpdateCardBrands() {
         // Only fetch card brands if we have at least 8 digits in the pan
@@ -282,6 +282,7 @@ final class CardSectionElement: ContainerElement {
             if !self.cardBrands.isEmpty {
                 self.cardBrands = Set<STPCardBrand>()
                 cardBrandChoiceElement?.update(cardBrands: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>())
+                self.clearBrandSelection()
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
                 self.dismissCBCTooltip()
             }
@@ -320,8 +321,12 @@ final class CardSectionElement: ContainerElement {
                     disallowedCardBrands: disallowedCardBrands
                 )
 
-                // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
-                if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
+                if fetchedCardBrands.count <= 1 {
+                    // Selector is no longer visible — reset to placeholder and dismiss tooltip
+                    self.clearBrandSelection()
+                    self.dismissCBCTooltip()
+                } else if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
+                    // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
                     selectBrandIfNecessary(brandToSelect, in: cardBrandChoiceElement)
                 } else if let brandToSelect = useDefaultSelectionLogic(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
                     selectBrandIfNecessary(brandToSelect, in: cardBrandChoiceElement)
@@ -363,7 +368,7 @@ final class CardSectionElement: ContainerElement {
 
         // Record the dropdown's current raw selection so didUpdate can detect when the
         // user makes a new explicit selection and dismiss the tooltip.
-        tooltipShownWithSelectedRawData = cardBrandDropDown?.selectedItem.rawData
+        tooltipShownWithSelected = cardBrandChoiceElement?.selectedBrand
 
         // Calculate the PAN frame first — the view is already laid out by the time this
         // runs on the main queue, so no layoutIfNeeded() is needed.
@@ -392,7 +397,7 @@ final class CardSectionElement: ContainerElement {
     private func dismissCBCTooltip() {
         let tooltip = cbcTooltipView
         cbcTooltipView = nil
-        tooltipShownWithSelectedRawData = nil
+        tooltipShownWithSelected = nil
         UIView.animate(withDuration: 0.2, animations: {
             tooltip?.alpha = 0
         }, completion: { _ in
@@ -421,6 +426,15 @@ final class CardSectionElement: ContainerElement {
             return nil
         }
         return brandToSelect
+    }
+
+    private func clearBrandSelection() {
+        guard let cardBrandChoiceElement = cardBrandChoiceElement else { return }
+        if cardBrandChoiceElement.enableCBCRedesign {
+            cardBrandChoiceElement.selectorElement?.select(nil, shouldAutoAdvance: false)
+        } else {
+            cardBrandChoiceElement.dropdownElement?.select(index: 0, shouldAutoAdvance: false)
+        }
     }
 
     private func selectBrandIfNecessary(_ brand: STPCardBrand, in cardBrandChoiceElement: CardBrandChoiceElement) {
