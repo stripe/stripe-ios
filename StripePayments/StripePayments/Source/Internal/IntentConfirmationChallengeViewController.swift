@@ -196,6 +196,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
     }
 
     @objc private func closeButtonTapped() {
+        closeButton.isEnabled = false
         self.completion(.failure(ChallengeError.userCanceled))
         switch intentType {
         case .paymentIntent(let id):
