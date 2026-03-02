@@ -180,11 +180,9 @@ final class SegmentedSelectorView: UIView {
                 }
             }
         }
-        if self.selectedItem != selectedItem {
-            self.selectedItem = selectedItem
-            if let selected = selectedItem, let itemView = itemViews[selected] {
-                itemView.select(true, animated: false)
-            }
+        self.selectedItem = selectedItem
+        if let selected = selectedItem, let itemView = itemViews[selected] {
+            itemView.select(true, animated: false)
         }
     }
 
