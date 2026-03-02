@@ -41,18 +41,23 @@ import UIKit
     }
 
     public func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem> = []) {
-        guard items.count > 1, items != self.items || disabledItems != self.disabledItems else { return }
+        guard items != self.items || disabledItems != self.disabledItems else { return }
         self.items = items
         self.disabledItems = disabledItems
 
+        // Rebuild view based on new card brand info
         selectorView.update(
             items: items,
             disabledItems: disabledItems
         )
 
-        // Deselect item if it's not in the new items array or if it's now disabled
-        if let selected = selectedItem, !items.contains(selected) || disabledItems.contains(selected) {
-            select(nil, shouldAutoAdvance: false)
+        if let selected = selectedItem {
+            // Deselect item if it's not in the new items array or if it's now disabled
+            if !items.contains(selected) || disabledItems.contains(selected) {
+                select(nil, shouldAutoAdvance: false)
+            } else { // Otherwise, keep the current selection selected
+                selectorView.select(selected, animated: false)
+            }
         }
     }
 
