@@ -14,7 +14,6 @@ import XCTest
 class PaymentDetailsViewControllerTests: XCTestCase {
     @MainActor
     func testDelegate() async throws {
-        STPAPIClient.shared.publishableKey = "pk_test"
         let componentManager = EmbeddedComponentManager(fetchClientSecret: {
             return nil
         })
@@ -35,7 +34,6 @@ class PaymentDetailsViewControllerTests: XCTestCase {
     }
 
     func testSetPayment() throws {
-        STPAPIClient.shared.publishableKey = "pk_test"
         let componentManager = EmbeddedComponentManager(fetchClientSecret: {
             return nil
         })

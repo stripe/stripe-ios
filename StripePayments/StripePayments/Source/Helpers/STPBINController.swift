@@ -136,7 +136,7 @@ extension STPBINRange {
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
     static func retrieve(
-        apiClient: STPAPIClient = .shared,
+        apiClient: STPAPIClient,
         forPrefix binPrefix: String,
         completion: @escaping BINRangeCompletionBlock
     ) {
@@ -268,6 +268,7 @@ extension STPBINRange {
     /// Use caution when disabling this: The BIN length information coming from the service may not be correct, which will
     /// cause issues when validating PAN length.
     @_spi(STP) public func retrieveBINRanges(
+        apiClient: STPAPIClient, // TODO: BIN retrieval is broken if you don't use STPAPIClient.shared (https://jira.corp.stripe.com/browse/MOBILESDK-4322)
         forPrefix binPrefix: String,
         recordErrorsAsSuccess: Bool = true,
         onlyFetchForVariableLengthBINs: Bool = true,
@@ -297,6 +298,7 @@ extension STPBINRange {
                 self.sPendingRequests[binPrefixKey] = [completion]
 
                 STPBINRange.retrieve(
+                    apiClient: apiClient,
                     forPrefix: binPrefixKey,
                     completion: { result in
                         self._retrievalQueue.async(execute: {

@@ -253,7 +253,9 @@ final class CardSectionElement: ContainerElement {
             return
         }
 
+        // TODO: BIN retrieval is broken if you don't use STPAPIClient.shared (https://jira.corp.stripe.com/browse/MOBILESDK-4322)
         fundingBinController.retrieveBINRanges(
+            apiClient: STPAPIClient.shared,
             forPrefix: binPrefix,
             recordErrorsAsSuccess: false,
             onlyFetchForVariableLengthBINs: false

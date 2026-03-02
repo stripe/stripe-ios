@@ -53,6 +53,7 @@ class STPPaymentCardTextFieldSnapshotTests: STPSnapshotTestCase {
             exp.fulfill()
         }
         waitForExpectations(timeout: 3.0)
+        STPAPIClient.shared.publishableKey = nil
     }
 
 }

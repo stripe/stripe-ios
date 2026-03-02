@@ -67,6 +67,7 @@ class STPAnalyticsClientTest: XCTestCase {
         // ...should use the passed in apiClient publishable key and not the shared apiClient
         let payload = analyticsClient._testLogHistory.first!
         XCTAssertEqual("pk_not_shared", payload["publishable_key"] as? String)
+        STPAPIClient.shared.publishableKey = nil
     }
     func testmcShowCustomNewPM() {
         let e = expectation(description: "")

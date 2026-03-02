@@ -45,6 +45,11 @@ class STPPaymentCardTextFieldTest: XCTestCase {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
     }
 
+    override class func tearDown() {
+        STPAPIClient.shared.publishableKey = nil
+        super.tearDown()
+    }
+
     func testIntrinsicContentSize() {
         let textField = STPPaymentCardTextField()
 

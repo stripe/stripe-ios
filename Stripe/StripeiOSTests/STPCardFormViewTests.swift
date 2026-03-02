@@ -141,6 +141,9 @@ class STPCardFormViewTests: XCTestCase {
 
     func testCBCWithPreferredNetwork() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        defer {
+            STPAPIClient.shared.publishableKey = nil
+        }
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "5555552500001001"
@@ -163,6 +166,9 @@ class STPCardFormViewTests: XCTestCase {
 
     func testCBCOBO() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        defer {
+            STPAPIClient.shared.publishableKey = nil
+        }
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         cardFormView.onBehalfOf = "acct_abc123"
         XCTAssertEqual((cardFormView.numberField.validator as! STPCardNumberInputTextFieldValidator).cbcController.onBehalfOf, "acct_abc123")
@@ -170,6 +176,9 @@ class STPCardFormViewTests: XCTestCase {
 
     func testCBCFourDigitCVCIsInvalid() {
         STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        defer {
+            STPAPIClient.shared.publishableKey = nil
+        }
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "5555552500001001"
