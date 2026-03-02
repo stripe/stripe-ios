@@ -94,6 +94,13 @@ public typealias STPPaymentHandlerActionSetupIntentCompletionBlock = (
 
 let missingReturnURLErrorMessage = "The payment method requires a return URL and one was not provided. Your integration should provide one in your `STPPaymentIntentConfirmParams`/`STPSetupIntentConfirmParams` object if you call `STPPaymentHandler.confirm...` or when you call  `STPPaymentHandler.handleNextAction`."
 
+@_spi(STP) public struct IntentConfirmationChallengeSettings {
+    let applyLiquidGlass: Bool
+    public init(applyLiquidGlass: Bool = false) {
+        self.applyLiquidGlass = applyLiquidGlass
+    }
+}
+
 /// `STPPaymentHandler` is a utility class that confirms PaymentIntents/SetupIntents and handles any authentication required, such as 3DS1/3DS2 for Strong Customer Authentication.
 /// It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
 /// - seealso: https://stripe.com/docs/payments/3d-secure
@@ -126,11 +133,11 @@ public class STPPaymentHandler: NSObject {
         apiClient: STPAPIClient = .shared,
         threeDSCustomizationSettings: STPThreeDSCustomizationSettings =
             STPThreeDSCustomizationSettings(),
-        applyLiquidGlass: Bool = false
+        intentConfirmationChallengeSettings: IntentConfirmationChallengeSettings = IntentConfirmationChallengeSettings()
     ) {
         self.apiClient = apiClient
         self.threeDSCustomizationSettings = threeDSCustomizationSettings
-        self.applyLiquidGlass = applyLiquidGlass
+        self.intentConfirmationChallengeSettings = intentConfirmationChallengeSettings
         super.init()
     }
 
@@ -142,8 +149,8 @@ public class STPPaymentHandler: NSObject {
     /// Defaults to `STPThreeDSCustomizationSettings()`.
     @objc public var threeDSCustomizationSettings: STPThreeDSCustomizationSettings
 
-    /// Whether to use glass-style UI for challenge views.
-    private let applyLiquidGlass: Bool
+    /// Settings for intent confirmation challenge.
+    private let intentConfirmationChallengeSettings: IntentConfirmationChallengeSettings
 
     internal var _simulateAppToAppRedirect: Bool = false
 
@@ -1973,7 +1980,7 @@ public class STPPaymentHandler: NSObject {
                     clientSecret: clientSecret,
                     intentType: intentType,
                     apiClient: self.apiClient,
-                    applyLiquidGlass: self.applyLiquidGlass
+                    intentConfirmationChallengeSettings: self.intentConfirmationChallengeSettings
                 ) { [weak self] result in
                     guard let self = self else { return }
 

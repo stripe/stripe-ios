@@ -26,7 +26,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private let clientSecret: String
     private let intentType: IntentType
     private let apiClient: STPAPIClient
-    private let applyLiquidGlass: Bool
+    private let intentConfirmationChallengeSettings: IntentConfirmationChallengeSettings
     private let completion: (Result<Void, Error>) -> Void
 
     private var webView: WKWebView!
@@ -46,14 +46,14 @@ class IntentConfirmationChallengeViewController: UIViewController {
         clientSecret: String,
         intentType: IntentType,
         apiClient: STPAPIClient,
-        applyLiquidGlass: Bool,
+        intentConfirmationChallengeSettings: IntentConfirmationChallengeSettings,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         self.publishableKey = publishableKey
         self.clientSecret = clientSecret
         self.intentType = intentType
         self.apiClient = apiClient
-        self.applyLiquidGlass = applyLiquidGlass
+        self.intentConfirmationChallengeSettings = intentConfirmationChallengeSettings
         self.completion = { result in
             completion(result)
         }
@@ -136,7 +136,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
     private func setupCloseButton() {
         // Use glass style if configured, plain style otherwise (matching PaymentSheet pattern)
-        if applyLiquidGlass {
+        if intentConfirmationChallengeSettings.applyLiquidGlass {
             let glassButtonSize = 44.0
             closeButton = UIButton(type: .system)
             closeButton.translatesAutoresizingMaskIntoConstraints = false
