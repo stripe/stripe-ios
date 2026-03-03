@@ -120,9 +120,14 @@ public final class Checkout: ObservableObject {
     ///   the server request fails.
     public func updateBillingAddress(_ params: AddressUpdate?) async throws {
         try requireOpenSession()
-        session?.billingAddressOverride = params
         if let params, shouldSendTaxRegion(for: "billing") {
             try await performAPIUpdate(.setTaxRegion(params.address))
+            session?.billingAddressOverride = params
+        } else {
+            session?.billingAddressOverride = params
+            if let session {
+                delegate?.checkout(self, didUpdate: session)
+            }
         }
     }
 
@@ -138,9 +143,14 @@ public final class Checkout: ObservableObject {
     ///   the server request fails.
     public func updateShippingAddress(_ params: AddressUpdate?) async throws {
         try requireOpenSession()
-        session?.shippingAddressOverride = params
         if let params, shouldSendTaxRegion(for: "shipping") {
             try await performAPIUpdate(.setTaxRegion(params.address))
+            session?.shippingAddressOverride = params
+        } else {
+            session?.shippingAddressOverride = params
+            if let session {
+                delegate?.checkout(self, didUpdate: session)
+            }
         }
     }
 
