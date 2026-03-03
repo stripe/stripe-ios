@@ -103,10 +103,8 @@ final class SegmentedSelectorView: UIView {
 
     init(items: [SegmentedSelectorItem],
          disabledItems: Set<SegmentedSelectorItem>,
-         selectedItem: SegmentedSelectorItem? = nil,
          theme: ElementsAppearance) {
         self.theme = theme
-        self.selectedItem = selectedItem
         super.init(frame: .zero)
         setupView()
         update(items: items, disabledItems: disabledItems)
