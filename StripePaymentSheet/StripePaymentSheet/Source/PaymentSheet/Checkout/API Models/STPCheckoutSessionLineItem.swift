@@ -20,7 +20,7 @@ import Foundation
     public let amount: Int
     /// The three-letter lowercase ISO currency code.
     public let currency: String
-    
+
     init(id: String, name: String, quantity: Int, amount: Int, currency: String) {
         self.id = id
         self.name = name
