@@ -100,6 +100,7 @@ class STPBSBNumberValidator: STPNumericStringValidator {
     }()
 
     class func _BSBData() -> [AnyHashable: Any] {
+        // TODO: This is broken for integrations that don't use STPAPIClient.shared
         if let key = STPAPIClient.shared.publishableKey, key.contains("_test_") {
             var editedBSBData = _BSBDataSBSBData
             // Add Stripe Test Bank

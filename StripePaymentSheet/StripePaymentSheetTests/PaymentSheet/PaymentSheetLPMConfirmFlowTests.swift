@@ -1033,14 +1033,14 @@ extension PaymentSheetLPMConfirmFlowTests {
                 customerID: customer
             )
             let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            let initResponse = try await csApiClient.initCheckoutSession(
+            let checkoutSession = try await csApiClient.initCheckoutSession(
                 checkoutSessionId: checkoutSessionResponse.id
             )
 
             intents = [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("CheckoutSession", .checkoutSession(initResponse.checkoutSession)),
+                ("CheckoutSession", .checkoutSession(checkoutSession)),
             ]
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation
@@ -1278,7 +1278,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 customerID: customer
             )
             let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            let initResposne = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id)
+            let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id)
 
             return [
                 ("SetupIntent", .setupIntent(setupIntent)),
@@ -1286,7 +1286,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
                 ("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                 ("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
-                ("CheckoutSession", .checkoutSession(initResposne.checkoutSession)),
+                ("CheckoutSession", .checkoutSession(checkoutSession)),
             ]
         }
     }

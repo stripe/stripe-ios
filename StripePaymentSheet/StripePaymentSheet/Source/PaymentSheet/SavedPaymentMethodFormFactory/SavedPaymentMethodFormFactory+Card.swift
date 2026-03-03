@@ -35,7 +35,7 @@ extension SavedPaymentMethodFormFactory {
             let wrappedElement = PaymentMethodElementWrapper<DropdownFieldElement>(cardBrandDropDown){ field, params in
                 let cardBrands = configuration.paymentMethod.card?.networks?.available.map({
                     STPCard.brand(from: $0)
-                }).filter { configuration.cardBrandFilter.isAccepted(cardBrand: $0) } ?? []
+                }) ?? []
                 let cardBrand = cardBrands[field.selectedIndex]
                 let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
                 params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)

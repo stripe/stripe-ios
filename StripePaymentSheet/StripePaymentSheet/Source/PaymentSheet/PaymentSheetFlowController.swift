@@ -364,15 +364,15 @@ extension PaymentSheet {
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the CheckoutSession's payment methods and configuration.
-        /// - Parameter checkoutSessionId: The ID of a Stripe CheckoutSession object (e.g., "cs_test_xxx")
+        /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
         @_spi(CheckoutSessionPreview) public static func create(
-            checkoutSessionId: String,
+            checkoutSession: STPCheckoutSession,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(mode: .checkoutSession(checkoutSessionId),
+            create(mode: .checkoutSession(checkoutSession),
                    configuration: configuration,
                    completion: completion
             )

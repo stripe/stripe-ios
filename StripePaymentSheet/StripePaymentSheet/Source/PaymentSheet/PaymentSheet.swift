@@ -48,7 +48,7 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkoutSession(String)
+        case checkoutSession(STPCheckoutSession)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
@@ -104,12 +104,12 @@ public class PaymentSheet {
         )
     }
 
-    /// Initializes PaymentSheet with a CheckoutSession ID
-    /// - Parameter checkoutSessionId: The ID of a Stripe CheckoutSession object (e.g., "cs_test_xxx")
+    /// Initializes PaymentSheet with a CheckoutSession object
+    /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @_spi(CheckoutSessionPreview) public convenience init(checkoutSessionId: String, configuration: Configuration) {
+    @_spi(CheckoutSessionPreview) public convenience init(checkoutSession: STPCheckoutSession, configuration: Configuration) {
         self.init(
-            mode: .checkoutSession(checkoutSessionId),
+            mode: .checkoutSession(checkoutSession),
             configuration: configuration
         )
     }

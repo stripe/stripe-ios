@@ -16,11 +16,6 @@ class PaymentsViewControllerTests: XCTestCase {
         return nil
     })
 
-    override func setUp() {
-        super.setUp()
-        STPAPIClient.shared.publishableKey = "pk_test"
-    }
-
     @MainActor
     func testDelegate() async throws {
         let delegate = PaymentsViewControllerDelegatePassThrough()
