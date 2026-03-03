@@ -120,7 +120,7 @@ class STPCardFormViewSnapshotTests: STPSnapshotTestCase {
     }
 
     func testCBC() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
         let formView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         formView.countryCode = "US"
         formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
@@ -135,10 +135,11 @@ class STPCardFormViewSnapshotTests: STPSnapshotTestCase {
             exp.fulfill()
         }
         waitForExpectations(timeout: 3.0)
+        STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
     }
 
     func testCBCPreselectVisa() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
         let formView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         formView.countryCode = "US"
         formView.frame = CGRect(origin: .zero, size: CGSize(width: 300, height: 225))
@@ -155,6 +156,7 @@ class STPCardFormViewSnapshotTests: STPSnapshotTestCase {
             exp.fulfill()
         }
         waitForExpectations(timeout: 3.0)
+        STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
     }
 
 }

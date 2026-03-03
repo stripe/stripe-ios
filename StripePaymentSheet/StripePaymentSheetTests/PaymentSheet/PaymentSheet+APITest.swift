@@ -919,8 +919,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             case (.canceled, .canceled):
                 expectation.fulfill()
             case (.failed(let resultError), .failed(let expectedError)):
-                // Hack: Use hasSuffix b/c the test backend prepends "Error creating PaymentIntent:" to its returned error string
-                XCTAssertTrue(resultError.localizedDescription.hasSuffix(expectedError.localizedDescription))
+                // Hack: Use contains b/c the test backend prepends "Error creating PaymentIntent:" and appends "(request_id: ...)" to its returned error string
+                XCTAssertTrue(resultError.localizedDescription.contains(expectedError.localizedDescription))
                 expectation.fulfill()
             default:
                 XCTFail("Result did not match. Expected \(expectedResult) but got \(result)")

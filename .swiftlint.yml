@@ -112,3 +112,11 @@ custom_rules:
     severity: error
     included:
       - "StripePaymentSheet/StripePaymentSheet/Source/Internal/API Bindings/"
+  no_shared_api_client_mutation_in_tests:
+    name: "Don't use STPAPIClient.shared in tests"
+    message: "Avoid setting STPAPIClient.shared.publishableKey in tests. Create a dedicated STPAPIClient instance instead to prevent test pollution. Note also that it's valid for merchants to pass their own instance of STPAPIClient and *not* use STPAPIClient.shared."
+    regex: 'STPAPIClient\.shared\.publishableKey\s*='
+    severity: warning
+    included:
+      - ".*Tests\\.swift$"
+      - ".*Tests/"
