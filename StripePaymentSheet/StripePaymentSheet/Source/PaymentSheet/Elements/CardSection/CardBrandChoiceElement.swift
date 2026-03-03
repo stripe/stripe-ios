@@ -43,6 +43,15 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
+    var enableCBCRedesign: Bool {
+        switch variant {
+        case .selector:
+            return true
+        case .dropdown:
+            return false
+        }
+    }
+
     // Expose selected brand for external access
     var selectedBrand: STPCardBrand? {
         switch variant {
