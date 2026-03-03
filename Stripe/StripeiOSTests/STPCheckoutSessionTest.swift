@@ -48,9 +48,9 @@ class STPCheckoutSessionTest: XCTestCase {
 
         XCTAssertEqual(session.stripeId, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
-        XCTAssertEqual(session.totalSummary?.total, 2000)
+        XCTAssertEqual(session.totalSummary?.total, 2500)
         XCTAssertEqual(session.totalSummary?.subtotal, 2000)
-        XCTAssertEqual(session.totalSummary?.due, 2000)
+        XCTAssertEqual(session.totalSummary?.due, 2500)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertEqual(session.mode, .payment)
         XCTAssertEqual(session.status, .open)  // status is nullable but present in JSON
@@ -86,6 +86,34 @@ class STPCheckoutSessionTest: XCTestCase {
         )
 
         XCTAssertNotNil(session.paymentMethodOptions)
+
+        // Line items
+        XCTAssertEqual(session.lineItems.count, 2)
+        XCTAssertEqual(session.lineItems[0].id, "li_1abc")
+        XCTAssertEqual(session.lineItems[0].name, "Widget")
+        XCTAssertEqual(session.lineItems[0].quantity, 2)
+        XCTAssertEqual(session.lineItems[0].amount, 750)
+        XCTAssertEqual(session.lineItems[0].currency, "usd")
+        XCTAssertEqual(session.lineItems[1].id, "li_2def")
+        XCTAssertEqual(session.lineItems[1].name, "Gadget")
+        XCTAssertEqual(session.lineItems[1].quantity, 1)
+        XCTAssertEqual(session.lineItems[1].amount, 500)
+        XCTAssertEqual(session.lineItems[1].currency, "usd")
+
+        // Shipping options
+        XCTAssertEqual(session.shippingOptions.count, 2)
+        XCTAssertEqual(session.shippingOptions[0].id, "shr_standard")
+        XCTAssertEqual(session.shippingOptions[0].displayName, "Standard Shipping")
+        XCTAssertEqual(session.shippingOptions[0].amount, 500)
+        XCTAssertEqual(session.shippingOptions[0].currency, "usd")
+        XCTAssertEqual(session.shippingOptions[1].id, "shr_express")
+        XCTAssertEqual(session.shippingOptions[1].displayName, "Express Shipping")
+        XCTAssertEqual(session.shippingOptions[1].amount, 1500)
+        XCTAssertEqual(session.shippingOptions[1].currency, "usd")
+
+        // Selected shipping option
+        XCTAssertEqual(session.selectedShippingOptionId, "shr_standard")
+        XCTAssertEqual(session.totalShippingAmount, 500)
 
         XCTAssertEqual(
             session.allResponseFields as NSDictionary,
