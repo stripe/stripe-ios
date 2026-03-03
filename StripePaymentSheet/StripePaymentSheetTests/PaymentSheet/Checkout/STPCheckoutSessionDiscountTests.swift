@@ -3,7 +3,7 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
 final class STPCheckoutSessionDiscountTests: XCTestCase {
