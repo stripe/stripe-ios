@@ -18,37 +18,50 @@ import UIKit
 final class CardBrandChoiceElement: Element {
     weak var delegate: ElementDelegate?
 
+    private enum Variant {
+        case selector(SegmentedSelectorElement)
+        case dropdown(DropdownFieldElement, includePlaceholder: Bool)
+    }
+
+    private let variant: Variant
+
     var view: UIView {
-        return enableCBCRedesign ? (selectorElement?.view ?? UIView()) : (dropdownElement?.view ?? UIView())
+        switch variant {
+        case .selector(let element):
+            return element.view
+        case .dropdown(let element, _):
+            return element.view
+        }
     }
 
     var collectsUserInput: Bool {
-        return enableCBCRedesign ? (selectorElement?.collectsUserInput ?? false) : (dropdownElement?.collectsUserInput ?? false)
+        switch variant {
+        case .selector(let element):
+            return element.collectsUserInput
+        case .dropdown(let element, _):
+            return element.collectsUserInput
+        }
     }
-
-    let enableCBCRedesign: Bool
-    let includePlaceholder: Bool
-
-    var selectorElement: SegmentedSelectorElement?
-    var dropdownElement: DropdownFieldElement?
 
     // Expose selected brand for external access
     var selectedBrand: STPCardBrand? {
-        if enableCBCRedesign {
-            guard let rawData = selectorElement?.selectedItem?.rawData else { return nil }
+        switch variant {
+        case .selector(let element):
+            guard let rawData = element.selectedItem?.rawData else { return nil }
             return STPCard.brand(from: rawData)
-        } else {
-            guard let dropdown = dropdownElement, let selectedBrand = dropdown.selectedItem.isPlaceholder ? nil : dropdown.selectedItem.rawData else { return nil }
-            return STPCard.brand(from: selectedBrand)
+        case .dropdown(let element, _):
+            guard !element.selectedItem.isPlaceholder else { return nil }
+            return STPCard.brand(from: element.selectedItem.rawData)
         }
     }
 
     // Expose brand count for determining if selector should be shown
     var brandCount: Int {
-        if enableCBCRedesign {
-            return selectorElement?.items.count ?? 0
-        } else {
-            return dropdownElement?.nonPlacerholderItems.count ?? 0
+        switch variant {
+        case .selector(let element):
+            return element.items.count
+        case .dropdown(let element, _):
+            return element.nonPlacerholderItems.count
         }
     }
 
@@ -57,41 +70,52 @@ final class CardBrandChoiceElement: Element {
          disallowedCardBrands: Set<STPCardBrand> = [],
          theme: ElementsAppearance = .default,
          includePlaceholder: Bool = true) {
-        self.enableCBCRedesign = enableCBCRedesign
-        self.includePlaceholder = includePlaceholder
-
         if enableCBCRedesign {
-            self.selectorElement = SegmentedSelectorElement(
+            let element = SegmentedSelectorElement(
                 items: Self.makeItems(from: cardBrands),
                 disabledItems: Set(Self.makeItems(from: disallowedCardBrands)),
                 theme: theme
             )
-            self.selectorElement?.delegate = self
+            self.variant = .selector(element)
+            element.delegate = self
         } else {
-            self.dropdownElement = DropdownFieldElement.makeCardBrandDropdown(
+            let element = DropdownFieldElement.makeCardBrandDropdown(
                 cardBrands: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
                 theme: theme,
                 includePlaceholder: includePlaceholder
             )
-            self.dropdownElement?.delegate = self
+            self.variant = .dropdown(element, includePlaceholder: includePlaceholder)
+            element.delegate = self
         }
     }
 
     func update(cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand> = []) {
-        if enableCBCRedesign {
-            selectorElement?.update(
+        switch variant {
+        case .selector(let element):
+            element.update(
                 items: Self.makeItems(from: cardBrands),
                 disabledItems: Set(Self.makeItems(from: disallowedCardBrands))
             )
-        } else {
+        case .dropdown(let element, let includePlaceholder):
             let items = DropdownFieldElement.items(
                 from: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
-                theme: dropdownElement?.theme ?? .default,
+                theme: element.theme,
                 includePlaceholder: includePlaceholder
             )
-            dropdownElement?.update(items: items)
+            element.update(items: items)
+        }
+    }
+
+    func select(_ brand: STPCardBrand) {
+        switch variant {
+        case .selector(let element):
+            element.select(brand.makeCardBrandItem())
+        case .dropdown(let element, _):
+            if let index = element.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {
+                element.select(index: index)
+            }
         }
     }
 
