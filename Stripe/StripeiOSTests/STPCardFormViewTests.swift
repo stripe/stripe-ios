@@ -140,7 +140,10 @@ class STPCardFormViewTests: XCTestCase {
     }
 
     func testCBCWithPreferredNetwork() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        defer {
+            STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        }
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "5555552500001001"
@@ -162,14 +165,20 @@ class STPCardFormViewTests: XCTestCase {
     }
 
     func testCBCOBO() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        defer {
+            STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        }
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         cardFormView.onBehalfOf = "acct_abc123"
         XCTAssertEqual((cardFormView.numberField.validator as! STPCardNumberInputTextFieldValidator).cbcController.onBehalfOf, "acct_abc123")
     }
 
     func testCBCFourDigitCVCIsInvalid() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        defer {
+            STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        }
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "5555552500001001"

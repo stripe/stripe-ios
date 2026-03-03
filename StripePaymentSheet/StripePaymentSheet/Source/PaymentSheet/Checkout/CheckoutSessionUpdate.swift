@@ -15,6 +15,7 @@ extension Checkout {
         case setLineItemQuantity(lineItemId: String, quantity: Int)
         case setShippingRate(String)
         case setTaxRegion(Address)
+        case setTaxId(type: String, value: String)
 
         var parameters: [String: Any] {
             switch self {
@@ -36,6 +37,11 @@ extension Checkout {
                     "tax_region[state]": address.state,
                     "tax_region[postal_code]": address.postalCode,
                 ] as [String: Any?]).compactMapValues { $0 }
+            case .setTaxId(let type, let value):
+                return [
+                    "tax_id_collection[tax_id][type]": type,
+                    "tax_id_collection[tax_id][value]": value,
+                ]
             }
         }
     }

@@ -89,9 +89,9 @@ public final class Checkout: ObservableObject {
     // MARK: - Line Items
 
     /// Updates the quantity of a line item.
-    /// - Parameter params: Typed parameters for the line item quantity update.
+    /// - Parameter params: The line item ID and new quantity to set.
     /// - Throws: ``CheckoutError`` if the update fails.
-    public func updateQuantity(_ params: LineItemUpdate) async throws {
+    public func updateQuantity(with params: LineItemUpdate) async throws {
         try requireOpenSession()
         try await performAPIUpdate(.setLineItemQuantity(lineItemId: params.lineItemId, quantity: params.quantity))
     }
@@ -152,6 +152,16 @@ public final class Checkout: ObservableObject {
                 delegate?.checkout(self, didUpdate: session)
             }
         }
+    }
+
+    // MARK: - Tax ID
+
+    /// Sets the customer's tax ID on the session.
+    /// - Parameter params: The tax ID type and value to set.
+    /// - Throws: ``CheckoutError`` if the update fails.
+    public func updateTaxId(with params: TaxIdUpdate) async throws {
+        try requireOpenSession()
+        try await performAPIUpdate(.setTaxId(type: params.type, value: params.value))
     }
 
     // MARK: - Internal Methods

@@ -1,6 +1,6 @@
 //
 //  STPCheckoutSessionSavedPaymentMethodsOfferSave.swift
-//  StripePayments
+//  StripePaymentSheet
 //
 //  Created by George Birch on 2/17/26.
 //  Copyright © 2026 Stripe, Inc. All rights reserved.

@@ -154,7 +154,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         let itemId = try XCTUnwrap(lineItemId, "Session should have at least one line item")
 
-        try await checkout.updateQuantity(.init(lineItemId: itemId, quantity: 2))
+        try await checkout.updateQuantity(with: .init(lineItemId: itemId, quantity: 2))
         XCTAssertEqual(10100, checkout.session?.totalSummary?.total)
         XCTAssertNotNil(checkout.session)
     }
@@ -295,6 +295,26 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
                         "Tax taxability reason should be populated after providing an address")
         XCTAssertNotNil(taxContextAfter?["automatic_tax_exempt"] as? String,
                         "Tax exempt status should be populated after providing an address")
+    }
+
+    func testUpdateTaxId() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+            enableTaxIdCollection: true
+        )
+        let checkout = Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
+
+        try await checkout.load()
+        XCTAssertNotNil(checkout.session)
+
+        try await checkout.updateTaxId(with: .init(type: "eu_vat", value: "DE123456789"))
+
+        // Updating the tax ID does not change any properties on the payment page init response
+        // Nothing to assert on other than it did not fail/throw
+        XCTAssertNotNil(checkout.session)
+        XCTAssertEqual(checkout.session?.status, .open)
     }
 
     func testDelegateCalledOnPromotionCodeApply() async throws {
