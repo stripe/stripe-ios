@@ -1,12 +1,13 @@
 //
 //  STPCheckoutSession.swift
-//  StripePayments
+//  StripePaymentSheet
 //
 //  Created by Nick Porter on 1/14/26.
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
+@_spi(STP) import StripePayments
 
 /// A CheckoutSession represents a session for a customer to complete a payment.
 /// - seealso: https://stripe.com/docs/api/checkout/sessions/object
@@ -209,7 +210,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             paymentStatus: STPCheckoutSessionPaymentStatus.paymentStatus(from: rawPaymentStatus),
             paymentIntentId: dict["payment_intent"] as? String,
             setupIntentId: dict["setup_intent"] as? String,
-            paymentMethodTypes: STPPaymentMethod.types(from: paymentMethodTypeStrings),
+            paymentMethodTypes: paymentMethodTypeStrings.map { STPPaymentMethod.type(from: $0) },
             paymentMethodOptions: STPPaymentMethodOptions.decodedObject(
                 fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]
             ),
