@@ -438,7 +438,10 @@ class STPCardValidatorTest: XCTestCase {
     }
 
     func testCBCFetch() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        defer {
+            STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        }
         let mcExp = expectation(description: "Mastercard/CBC")
         let visaExp = expectation(description: "Visa/CBC")
         let justVisaExp = expectation(description: "Visa Only")

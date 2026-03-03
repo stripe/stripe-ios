@@ -12,7 +12,6 @@ class CheckScanningControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        STPAPIClient.shared.publishableKey = "pk_test"
         componentManager.shouldLoadContent = false
         componentManager.analyticsClientFactory = MockComponentAnalyticsClient.init
     }
