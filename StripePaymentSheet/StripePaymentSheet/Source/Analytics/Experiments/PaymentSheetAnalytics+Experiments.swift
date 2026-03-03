@@ -12,7 +12,7 @@ protocol LoggableExperiment {
     var name: String { get }
     var arbId: String { get }
     var group: ExperimentGroup { get }
-    var dimensions: [String: Any] { get }
+    var dimensions: [String: String] { get }
 }
 
 extension PaymentSheetAnalyticsHelper {
