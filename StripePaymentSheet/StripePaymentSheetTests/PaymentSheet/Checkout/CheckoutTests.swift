@@ -196,7 +196,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testUpdateTaxId() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             enableTaxIdCollection: true
         )
         let checkout = Checkout(
