@@ -1,14 +1,16 @@
 //
 //  STPCheckoutSessionLineItemAndShippingTest.swift
-//  StripeiOS Tests
+//  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 3/3/26.
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-@testable @_spi(STP) import Stripe
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
+@testable @_spi(STP) import StripePaymentSheet
+import StripePaymentsObjcTestUtils
+import XCTest
 
 class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
 
