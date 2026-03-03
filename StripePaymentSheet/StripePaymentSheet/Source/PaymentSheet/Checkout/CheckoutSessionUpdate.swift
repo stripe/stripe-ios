@@ -14,6 +14,7 @@ extension Checkout {
         case setPromotionCode(String)
         case setLineItemQuantity(lineItemId: String, quantity: Int)
         case setShippingRate(String)
+        case setTaxId(type: String, value: String)
 
         var parameters: [String: Any] {
             switch self {
@@ -26,6 +27,11 @@ extension Checkout {
                 ]
             case .setShippingRate(let optionId):
                 return ["shipping_rate": optionId]
+            case .setTaxId(let type, let value):
+                return [
+                    "tax_id_collection[tax_id][type]": type,
+                    "tax_id_collection[tax_id][value]": value,
+                ]
             }
         }
     }
