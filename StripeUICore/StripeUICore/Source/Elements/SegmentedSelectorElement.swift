@@ -45,11 +45,9 @@ import UIKit
         self.items = items
         self.disabledItems = disabledItems
 
-        // Update view based on new card brand info
         selectorView.update(
             items: items,
-            disabledItems: disabledItems,
-            selectedItem: self.selectedItem
+            disabledItems: disabledItems
         )
     }
 
@@ -108,9 +106,10 @@ final class SegmentedSelectorView: UIView {
          selectedItem: SegmentedSelectorItem? = nil,
          theme: ElementsAppearance) {
         self.theme = theme
+        self.selectedItem = selectedItem
         super.init(frame: .zero)
         setupView()
-        update(items: items, disabledItems: disabledItems, selectedItem: selectedItem)
+        update(items: items, disabledItems: disabledItems)
     }
 
     required init?(coder: NSCoder) {
@@ -134,9 +133,9 @@ final class SegmentedSelectorView: UIView {
         ])
     }
 
-    func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem>, selectedItem: SegmentedSelectorItem?) {
+    func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem>) {
         // If we have the same items as before, just update the disabled state
-        if items == Array(itemViews.keys) {
+        if Set(items) == Set(itemViews.keys) {
             items.forEach { item in
                 let isDisabled = disabledItems.contains(item)
                 itemViews[item]?.updateDisabledState(isDisabled)
@@ -175,8 +174,7 @@ final class SegmentedSelectorView: UIView {
                 }
             }
         }
-        self.selectedItem = selectedItem
-        if let selected = selectedItem, let itemView = itemViews[selected] {
+        if let selectedItem, let itemView = itemViews[selectedItem] {
             itemView.select(true, animated: false)
         }
     }
