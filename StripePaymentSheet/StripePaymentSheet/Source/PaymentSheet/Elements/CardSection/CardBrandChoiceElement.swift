@@ -38,8 +38,8 @@ final class CardBrandChoiceElement: Element {
             guard let rawData = selectorElement?.selectedItem?.rawData else { return nil }
             return STPCard.brand(from: rawData)
         } else {
-            guard let dropdown = dropdownElement else { return nil }
-            return STPCard.brand(from: dropdown.selectedItem.rawData)
+            guard let dropdown = dropdownElement, let selectedBrand = dropdown.selectedItem.isPlaceholder ? nil : dropdown.selectedItem.rawData else { return nil }
+            return STPCard.brand(from: selectedBrand)
         }
     }
 
