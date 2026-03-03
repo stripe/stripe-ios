@@ -59,7 +59,7 @@ class STPAnalyticsClientTest: XCTestCase {
     }
 
     func testLogShouldRespectAPIClient() {
-        STPAPIClient.shared.publishableKey = "pk_shared"
+        STPAPIClient.shared.publishableKey = "pk_shared" // swiftlint:disable:this no_shared_api_client_mutation_in_tests
         let apiClient = STPAPIClient(publishableKey: "pk_not_shared")
         let analyticsClient = STPAnalyticsClient()
         // ...logging an arbitrary analytic and passing apiClient...
@@ -67,6 +67,7 @@ class STPAnalyticsClientTest: XCTestCase {
         // ...should use the passed in apiClient publishable key and not the shared apiClient
         let payload = analyticsClient._testLogHistory.first!
         XCTAssertEqual("pk_not_shared", payload["publishable_key"] as? String)
+        STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
     }
     func testmcShowCustomNewPM() {
         let e = expectation(description: "")
