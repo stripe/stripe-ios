@@ -273,30 +273,24 @@ private final class SegmentedItemView: UIView {
     }
 
     func select(_ selected: Bool, animated: Bool) {
-        let applyChanges = {
-            if selected {
+        if selected {
+            let showSelection = {
                 self.checkmarkImageView.isHidden = false
                 self.checkmarkImageView.alpha = 1.0
                 self.backgroundColor = self.theme.colors.border.withAlphaComponent(0.3)
-                self.accessibilityTraits.insert(.selected)
+            }
+            if animated {
+                UIView.animate(withDuration: 0.2) {
+                    showSelection()
+                }
             } else {
-                self.checkmarkImageView.isHidden = true
-                self.backgroundColor = .clear
-                self.accessibilityTraits.remove(.selected)
+                showSelection()
             }
-        }
-
-        if animated {
-            if selected {
-                // Pre-set hidden/alpha for animation start state
-                checkmarkImageView.isHidden = false
-                checkmarkImageView.alpha = 0
-            }
-            UIView.animate(withDuration: 0.2) {
-                applyChanges()
-            }
-        } else {
-            applyChanges()
+            self.accessibilityTraits.insert(.selected)
+        } else { // instantly hide selection
+            self.checkmarkImageView.isHidden = true
+            self.backgroundColor = .clear
+            self.accessibilityTraits.remove(.selected)
         }
     }
 
