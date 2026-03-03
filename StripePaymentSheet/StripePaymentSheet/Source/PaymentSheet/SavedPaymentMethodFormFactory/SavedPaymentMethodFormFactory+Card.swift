@@ -31,14 +31,7 @@ extension SavedPaymentMethodFormFactory {
 
             // pre-select current card brand
             if let currentCardBrand = configuration.paymentMethod.card?.preferredDisplayBrand {
-                if cardBrandChoiceElement.enableCBCRedesign {
-                    cardBrandChoiceElement.selectorElement?.select(currentCardBrand.makeCardBrandItem(), shouldAutoAdvance: false)
-                } else {
-                    let dropdown = cardBrandChoiceElement.dropdownElement
-                    if let indexToSelect = dropdown?.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: currentCardBrand) }) {
-                        dropdown?.select(index: indexToSelect, shouldAutoAdvance: false)
-                    }
-                }
+                cardBrandChoiceElement.select(currentCardBrand)
             }
 
             // Handler when user selects different card brand

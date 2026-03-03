@@ -255,7 +255,9 @@ final class CardSectionElement: ContainerElement {
             return
         }
 
+        // TODO: BIN retrieval is broken if you don't use STPAPIClient.shared (https://jira.corp.stripe.com/browse/MOBILESDK-4322)
         fundingBinController.retrieveBINRanges(
+            apiClient: STPAPIClient.shared,
             forPrefix: binPrefix,
             recordErrorsAsSuccess: false,
             onlyFetchForVariableLengthBINs: false
@@ -409,13 +411,7 @@ final class CardSectionElement: ContainerElement {
 
     private func selectBrandIfNecessary(_ brand: STPCardBrand, in cardBrandChoiceElement: CardBrandChoiceElement) {
         guard cardBrandChoiceElement.selectedBrand != brand else { return }
-        if cardBrandChoiceElement.enableCBCRedesign {
-            cardBrandChoiceElement.selectorElement?.select(brand.makeCardBrandItem(), shouldAutoAdvance: false)
-        } else {
-            if let indexToSelect = cardBrandChoiceElement.dropdownElement?.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {
-                cardBrandChoiceElement.dropdownElement?.select(index: indexToSelect, shouldAutoAdvance: false)
-            }
-        }
+        cardBrandChoiceElement.select(brand)
     }
 }
 
