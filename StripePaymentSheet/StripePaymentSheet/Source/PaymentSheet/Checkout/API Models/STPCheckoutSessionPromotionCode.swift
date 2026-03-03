@@ -1,6 +1,6 @@
 //
 //  STPCheckoutSessionPromotionCode.swift
-//  StripePayments
+//  StripePaymentSheet
 //
 //  Created by Nick Porter on 2/26/26.
 //  Copyright © 2026 Stripe, Inc. All rights reserved.

@@ -47,7 +47,8 @@ import UIKit
 
         selectorView.update(
             items: items,
-            disabledItems: disabledItems
+            disabledItems: disabledItems,
+            selectedItem: selectedItem
         )
     }
 
@@ -56,6 +57,8 @@ import UIKit
         if let item = item, !items.contains(item) {
             return
         }
+
+        guard selectedItem != item else { return }
 
         selectedItem = item
 
@@ -73,7 +76,7 @@ import UIKit
     private func itemTapped(_ item: SegmentedSelectorItem) {
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
-        select(newSelection, animated: true)
+        select(newSelection, animated: true, shouldAutoAdvance: true)
     }
 }
 
@@ -99,7 +102,6 @@ final class SegmentedSelectorView: UIView {
 
     private let theme: ElementsAppearance
     private var itemViews: [SegmentedSelectorItem: SegmentedItemView] = [:]
-    private var selectedItem: SegmentedSelectorItem?
 
     init(items: [SegmentedSelectorItem],
          disabledItems: Set<SegmentedSelectorItem>,
@@ -107,7 +109,7 @@ final class SegmentedSelectorView: UIView {
         self.theme = theme
         super.init(frame: .zero)
         setupView()
-        update(items: items, disabledItems: disabledItems)
+        update(items: items, disabledItems: disabledItems, selectedItem: nil)
     }
 
     required init?(coder: NSCoder) {
@@ -131,7 +133,7 @@ final class SegmentedSelectorView: UIView {
         ])
     }
 
-    func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem>) {
+    func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem>, selectedItem: SegmentedSelectorItem?) {
         // If we have the same items as before, just update the disabled state
         if Set(items) == Set(itemViews.keys) {
             items.forEach { item in
@@ -178,15 +180,10 @@ final class SegmentedSelectorView: UIView {
     }
 
     func select(_ item: SegmentedSelectorItem?, animated: Bool) {
-        // Deselect previous
-        if let previousItem = selectedItem,
-           let previousView = itemViews[previousItem] {
-            previousView.select(false, animated: animated)
+        // Deselect all, then select the new item
+        for (viewItem, itemView) in itemViews where viewItem != item {
+            itemView.select(false, animated: animated)
         }
-
-        selectedItem = item
-
-        // Select new item
         if let item = item, let itemView = itemViews[item] {
             itemView.select(true, animated: animated)
         }
@@ -276,29 +273,30 @@ private final class SegmentedItemView: UIView {
     }
 
     func select(_ selected: Bool, animated: Bool) {
-        if selected {
-            checkmarkImageView.isHidden = false
-            checkmarkImageView.alpha = 0
-
-            // Start background color animation
-            UIView.animate(withDuration: 0.2) {
+        let applyChanges = {
+            if selected {
+                self.checkmarkImageView.isHidden = false
+                self.checkmarkImageView.alpha = 1.0
                 self.backgroundColor = self.theme.colors.border.withAlphaComponent(0.3)
-            }
-
-            accessibilityTraits.insert(.selected)
-            if animated {
-                UIView.animate(withDuration: 0.2) {
-                    self.checkmarkImageView.alpha = 1.0
-                }
+                self.accessibilityTraits.insert(.selected)
             } else {
-                checkmarkImageView.alpha = 1.0
+                self.checkmarkImageView.isHidden = true
+                self.backgroundColor = .clear
+                self.accessibilityTraits.remove(.selected)
+            }
+        }
+
+        if animated {
+            if selected {
+                // Pre-set hidden/alpha for animation start state
+                checkmarkImageView.isHidden = false
+                checkmarkImageView.alpha = 0
+            }
+            UIView.animate(withDuration: 0.2) {
+                applyChanges()
             }
         } else {
-            checkmarkImageView.isHidden = true
-            UIView.animate(withDuration: 0.2) {
-                self.backgroundColor = .clear
-            }
-            accessibilityTraits.remove(.selected)
+            applyChanges()
         }
     }
 
