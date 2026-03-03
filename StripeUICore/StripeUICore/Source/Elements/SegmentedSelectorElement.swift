@@ -27,11 +27,16 @@ import UIKit
     public var items: [SegmentedSelectorItem]
     private var disabledItems: Set<SegmentedSelectorItem>
 
+    /// When true, the user cannot deselect the currently selected item — one item must always be selected.
+    public var requiresSelection: Bool
+
     public init(items: [SegmentedSelectorItem] = [],
                 disabledItems: Set<SegmentedSelectorItem> = [],
+                requiresSelection: Bool = false,
                 theme: ElementsAppearance = .default) {
         self.items = items
         self.disabledItems = disabledItems
+        self.requiresSelection = requiresSelection
         self.selectorView = SegmentedSelectorView(
             items: items,
             disabledItems: disabledItems,
@@ -74,6 +79,9 @@ import UIKit
     }
 
     private func itemTapped(_ item: SegmentedSelectorItem) {
+        if requiresSelection && selectedItem == item {
+            return
+        }
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
         select(newSelection, animated: true, shouldAutoAdvance: true)
@@ -273,30 +281,24 @@ private final class SegmentedItemView: UIView {
     }
 
     func select(_ selected: Bool, animated: Bool) {
-        let applyChanges = {
-            if selected {
+        if selected {
+            let showSelection = {
                 self.checkmarkImageView.isHidden = false
                 self.checkmarkImageView.alpha = 1.0
                 self.backgroundColor = self.theme.colors.border.withAlphaComponent(0.3)
-                self.accessibilityTraits.insert(.selected)
+            }
+            if animated {
+                UIView.animate(withDuration: 0.2) {
+                    showSelection()
+                }
             } else {
-                self.checkmarkImageView.isHidden = true
-                self.backgroundColor = .clear
-                self.accessibilityTraits.remove(.selected)
+                showSelection()
             }
-        }
-
-        if animated {
-            if selected {
-                // Pre-set hidden/alpha for animation start state
-                checkmarkImageView.isHidden = false
-                checkmarkImageView.alpha = 0
-            }
-            UIView.animate(withDuration: 0.2) {
-                applyChanges()
-            }
-        } else {
-            applyChanges()
+            self.accessibilityTraits.insert(.selected)
+        } else { // instantly hide selection
+            self.checkmarkImageView.isHidden = true
+            self.backgroundColor = .clear
+            self.accessibilityTraits.remove(.selected)
         }
     }
 
