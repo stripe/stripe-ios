@@ -1,0 +1,12 @@
+POST
+http:\/\/0\.0\.0\.0:4567\/create_setup_intent$
+200
+text/html
+X-Content-Type-Options: nosniff
+Set-Cookie: rack.session=rmI9Ams0YTR0yUazC66joR0UEje8kVMduQ8cHJSuFUWNlyeo1NQpTVMetVaOt%2BtFaLmG476qz%2BrK%2FfBiD1ljxIFaLlT%2FZzLdon3YlmUa0FZQh0roupDUhN4WnNEQElSvN8VFZOEnTG0ogxkiVKpZKCTvazPQ4XGpz2JdNOxCwGAPiv%2FNSVAM2N%2FM8RbRPbR3; path=/
+Content-Length: 220
+Content-Type: text/html;charset=utf-8
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+
+{"intent":"seti_1T5F9nFY0qyl6XeWMFgQenK2","secret":"seti_1T5F9nFY0qyl6XeWMFgQenK2_secret_U3Lrj1TpmoSt2kX02mEWq1ksKuvFImU","status":"requires_payment_method","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}

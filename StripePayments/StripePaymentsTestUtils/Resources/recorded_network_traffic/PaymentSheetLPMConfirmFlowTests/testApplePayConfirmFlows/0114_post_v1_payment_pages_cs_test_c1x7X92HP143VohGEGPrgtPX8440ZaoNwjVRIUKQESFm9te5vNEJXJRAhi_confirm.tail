@@ -1,0 +1,35 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_c1x7X92HP143VohGEGPrgtPX8440ZaoNwjVRIUKQESFm9te5vNEJXJRAhi\/confirm$
+400
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=EeEQMfTfIsEZn25fLdWkyKN0K6m8Vn5gO3m8out5mYoLGivsYa8AqfiEGKMQscSSFGh7Q0aYp4fyhK_g
+Server: nginx
+x-wc: ABGHIJ
+Cache-Control: no-cache, no-store
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+request-id: req_nZqiH7lgNzxrwn
+Content-Length: 256
+Vary: Origin
+Date: Fri, 27 Feb 2026 00:42:37 GMT
+original-request: req_nZqiH7lgNzxrwn
+stripe-version: 2020-08-27
+idempotency-key: 4d2d616e-f6a8-49c7-ac82-776df6019ff5
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=standard&client_attribution_metadata\[payment_method_selection_flow]=automatic&expand\[0]=payment_intent&expand\[1]=payment_intent\.payment_method&expand\[2]=setup_intent&expand\[3]=setup_intent\.payment_method&expected_amount=0&expected_payment_method_type=card&payment_method=pm_1T5F8bFY0qyl6XeWYh207il4&return_url=https%3A\/\/foo\.com&shipping\[address]\[city]=San%20Francisco&shipping\[address]\[country]=US&shipping\[address]\[line1]=510%20Townsend%20St&shipping\[address]\[postal_code]=94103&shipping\[address]\[state]=CA&shipping\[name]=Jane%20Doe
+
+{
+  "error" : {
+    "code" : "parameter_unknown",
+    "message" : "Received unknown parameter: expected_amount",
+    "param" : "expected_amount",
+    "type" : "invalid_request_error",
+    "doc_url" : "https:\/\/stripe.com\/docs\/error-codes\/parameter-unknown"
+  }
+}

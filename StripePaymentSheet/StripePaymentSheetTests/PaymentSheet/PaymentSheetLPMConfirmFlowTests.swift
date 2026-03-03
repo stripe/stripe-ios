@@ -1025,7 +1025,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             }
 
             // CheckoutSession
-            let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+            let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
                 types: paymentMethodTypes,
                 currency: currency,
                 amount: amount,
@@ -1270,12 +1270,23 @@ extension PaymentSheetLPMConfirmFlowTests {
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer, confirm: true, otherParams: ["confirmation_token": confirmationToken.stripeId])
             })
 
+            // CheckoutSession
+            let checkoutSessionResponse = try await STPTestingAPIClient.shared().fetchCheckoutSessionSetupMode(
+                types: paymentMethodTypes,
+                currency: currency,
+                merchantCountry: merchantCountry.rawValue,
+                customerID: customer
+            )
+            let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+            let initResposne = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id)
+
             return [
                 ("SetupIntent", .setupIntent(setupIntent)),
                 ("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
                 ("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                 ("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                ("CheckoutSession", .checkoutSession(initResposne.checkoutSession)),
             ]
         }
     }

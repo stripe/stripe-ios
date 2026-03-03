@@ -14,9 +14,9 @@ import XCTest
 
 final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
-    func testInitCheckoutSession() async throws {
+    func testInitCheckoutSessionPayment() async throws {
         // Fetch a fresh checkout session from the test backend
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let checkoutSessionId = checkoutSessionResponse.id
 
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -39,9 +39,9 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertTrue(elementsSession.orderedPaymentMethodTypes.contains(.card))
     }
 
-    func testConfirmCheckoutSession() async throws {
+    func testConfirmCheckoutSessionPayment() async throws {
         // 1. Fetch a checkout session from test backend
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let sessionId = checkoutSessionResponse.id
 
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -73,5 +73,67 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(response.status, .complete)
         XCTAssertEqual(response.paymentStatus, .paid)
         XCTAssertNotNil(response.paymentIntent)
+    }
+
+    // MARK: - Setup Mode
+
+    func testInitCheckoutSessionSetup() async throws {
+        // Fetch a fresh checkout session in setup mode from the test backend
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionSetupMode()
+        let checkoutSessionId = checkoutSessionResponse.id
+
+        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let response = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
+
+        // Verify checkout session fields
+        let checkoutSession = response.checkoutSession
+        XCTAssertEqual(checkoutSession.stripeId, checkoutSessionId)
+        XCTAssertEqual(checkoutSession.mode, .setup)
+        XCTAssertEqual(checkoutSession.status, .open)
+        XCTAssertEqual(checkoutSession.paymentStatus, .noPaymentRequired)
+        XCTAssertEqual(checkoutSession.currency, "usd")
+        XCTAssertFalse(checkoutSession.livemode)
+        XCTAssertTrue(checkoutSession.paymentMethodTypes.contains(.card))
+
+        // Verify elements session fields
+        let elementsSession = response.elementsSession
+        XCTAssertTrue(elementsSession.sessionID.hasPrefix("elements_session_"))
+        XCTAssertEqual(elementsSession.merchantCountryCode, "US")
+        XCTAssertTrue(elementsSession.orderedPaymentMethodTypes.contains(.card))
+    }
+
+    func testConfirmCheckoutSessionSetup() async throws {
+        // 1. Fetch a checkout session in setup mode from test backend
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionSetupMode()
+        let sessionId = checkoutSessionResponse.id
+
+        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+
+        // 2. Init the checkout session
+        _ = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+
+        // 3. Create a payment method with test card and billing email
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        cardParams.expMonth = 12
+        cardParams.expYear = 2030
+        cardParams.cvc = "123"
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.email = "test@example.com"
+        let paymentMethodParams = STPPaymentMethodParams(card: cardParams, billingDetails: billingDetails, metadata: nil)
+        let paymentMethod = try await apiClient.createPaymentMethod(with: paymentMethodParams)
+
+        // 4. Confirm the checkout session (no expected amount for setup mode)
+        let response = try await apiClient.confirmCheckoutSession(
+            sessionId: sessionId,
+            paymentMethod: paymentMethod.stripeId,
+            expectedAmount: nil,
+            expectedPaymentMethodType: "card"
+        )
+
+        // 5. Verify response
+        XCTAssertEqual(response.status, .complete)
+        XCTAssertEqual(response.paymentStatus, .noPaymentRequired)
+        XCTAssertNotNil(response.setupIntent)
     }
 }

@@ -195,7 +195,7 @@ extension STPTestingAPIClient {
         let publishableKey: String
     }
 
-    func fetchCheckoutSession(
+    func fetchCheckoutSessionPaymentMode(
         types: [String] = ["card"],
         currency: String = "usd",
         amount: Int? = nil,
@@ -210,6 +210,21 @@ extension STPTestingAPIClient {
             "customer": customerID,
         ]
         return try await makeRequest(endpoint: "create_checkout_session", params: params)
+    }
+
+    func fetchCheckoutSessionSetupMode(
+        types: [String] = ["card"],
+        currency: String = "usd",
+        merchantCountry: String? = "us",
+        customerID: String? = nil
+    ) async throws -> CreateCheckoutSessionResponse {
+        let params: [String: Any?] = [
+            "account": merchantCountry,
+            "payment_method_types": types,
+            "currency": currency,
+            "customer": customerID,
+        ]
+        return try await makeRequest(endpoint: "create_checkout_session_setup", params: params)
     }
 
     // MARK: - Helpers
