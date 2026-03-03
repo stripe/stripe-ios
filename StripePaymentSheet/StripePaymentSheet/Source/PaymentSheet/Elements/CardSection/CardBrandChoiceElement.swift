@@ -142,7 +142,7 @@ extension CardBrandChoiceElement: ElementDelegate {
     }
 }
 
-extension STPCardBrand {
+private extension STPCardBrand {
     func makeCardBrandItem() -> SegmentedSelectorItem {
         return SegmentedSelectorItem(
             rawData: STPCardBrandUtilities.apiValue(from: self),
