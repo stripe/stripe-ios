@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Hi73iT1t8ME4DAW-3eIGtJM3rYRpFvXAYpvtCB7eWMLYwnfjzCh6_l_3P4-VAh_27B7yAaKPosPXPobB
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=X2ITYd-SMhKqtT2npO7AQt1ckYMOUXpuyq1ooQk8gHbpJ9ubG1h0gvEwSCt7XaFqvTJ5CTYRwLCZZdzM
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_7Ec0h6OesljDlv
+request-id: req_fqnkdQO011mWPM
 Content-Length: 496
 Vary: Origin
-Date: Fri, 27 Feb 2026 00:38:50 GMT
-original-request: req_7Ec0h6OesljDlv
+Date: Tue, 03 Mar 2026 17:37:18 GMT
+original-request: req_fqnkdQO011mWPM
 stripe-version: 2020-08-27
-idempotency-key: fc45ee6b-9754-47ca-889b-7bcbe228a8e2
+idempotency-key: f346a19c-be81-4515-93c9-2955c2dce039
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "affirm" : {
 
   },
-  "id" : "pm_1T5F4wFY0qyl6XeW7yk6Oz0u",
+  "id" : "pm_1T6wskFY0qyl6XeWDllMHqGi",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1772152730,
+  "created" : 1772559438,
   "allow_redisplay" : "unspecified",
   "type" : "affirm",
   "customer" : null,

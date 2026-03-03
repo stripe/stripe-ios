@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=EeEQMfTfIsEZn25fLdWkyKN0K6m8Vn5gO3m8out5mYoLGivsYa8AqfiEGKMQscSSFGh7Q0aYp4fyhK_g
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Ej7qcwMG3jUu-OXZkWAhyDbK1eVWy_TXUrOipWJXMwHgeN1Qzj_6UHaSytG6O8hXX5ydnoqwOtT_2sJT
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_FZWNg2DJdBvqym
+request-id: req_La0FLz8jqfSnOa
 Content-Length: 1157
 Vary: Origin
-Date: Fri, 27 Feb 2026 00:42:08 GMT
-original-request: req_FZWNg2DJdBvqym
+Date: Tue, 03 Mar 2026 17:41:03 GMT
+original-request: req_La0FLz8jqfSnOa
 stripe-version: 2020-08-27
-idempotency-key: e8c1d3f8-7708-410d-8f56-a4224fbec323
+idempotency-key: 021e24de-7c44-4304-9503-94b97576fa89
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -26,7 +26,7 @@ Content-Type: application/json
 
 {
   "object" : "payment_method",
-  "id" : "pm_1T5F88FY0qyl6XeW8oDwofUs",
+  "id" : "pm_1T6wwNFY0qyl6XeW3mCFOK6J",
   "billing_details" : {
     "email" : "jane@example.com",
     "phone" : null,
@@ -74,7 +74,7 @@ Content-Type: application/json
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1772152928,
+  "created" : 1772559663,
   "allow_redisplay" : "unspecified",
   "type" : "card",
   "customer" : null,

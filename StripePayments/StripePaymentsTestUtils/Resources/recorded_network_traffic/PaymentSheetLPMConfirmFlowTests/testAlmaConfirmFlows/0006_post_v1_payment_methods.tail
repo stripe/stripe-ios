@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=oV2ujzwku0iw-GZeE3IlUzf7tYNx9msOSh_GitXLiu0VsPHVns2vWdq6uqC3Ttfp8OWl1qf4gwqWCmGd
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=PMQe7aRx8khEfyHjmcHM_6isREf2Q284BlrsIeC0ZZxcwhJnvZb-nj7zdrYaUuwBORXqS1AFUli1eC_f
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_g3f0e0Oj80lnG0
+request-id: req_LEYldFeHHuh8Dl
 Content-Length: 492
 Vary: Origin
-Date: Fri, 27 Feb 2026 00:39:19 GMT
-original-request: req_g3f0e0Oj80lnG0
+Date: Tue, 03 Mar 2026 17:37:55 GMT
+original-request: req_LEYldFeHHuh8Dl
 stripe-version: 2020-08-27
-idempotency-key: df2e01c5-0d19-46d8-8f8f-2a41097fd04a
+idempotency-key: 323cc938-f4d0-4696-bb94-4434ad344e94
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "alma" : {
 
   },
-  "id" : "pm_1T5F5PKG6vc7r7YC7yu1A0NX",
+  "id" : "pm_1T6wtLKG6vc7r7YCnj0SPuR6",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1772152759,
+  "created" : 1772559475,
   "allow_redisplay" : "unspecified",
   "type" : "alma",
   "customer" : null,
