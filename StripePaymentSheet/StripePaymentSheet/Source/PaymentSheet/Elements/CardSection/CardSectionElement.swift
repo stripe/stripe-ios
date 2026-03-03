@@ -201,7 +201,9 @@ final class CardSectionElement: ContainerElement {
 
         fetchAndUpdateCardBrands()
         fetchAndCacheCardFunding()
-        updateCBCTooltipVisibility()
+        if cardBrandChoiceElement?.enableCBCRedesign == true {
+            updateCBCTooltipVisibility()
+        }
 
         /// Send an analytic whenever the card number field is completed
         if lastPanElementValidationState.isValid != panElement.validationState.isValid {
