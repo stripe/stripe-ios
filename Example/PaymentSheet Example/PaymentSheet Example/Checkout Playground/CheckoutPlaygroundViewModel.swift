@@ -115,5 +115,3 @@ extension CheckoutPlayground {
         }
     }
 }
-
-// test swift file change
