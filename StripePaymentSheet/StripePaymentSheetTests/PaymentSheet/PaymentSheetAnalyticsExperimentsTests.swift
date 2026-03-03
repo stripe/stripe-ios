@@ -17,7 +17,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         var name: String
         var arbId: String
         var group: StripePaymentSheet.ExperimentGroup
-        var dimensions: [String: Any]
+        var dimensions: [String: String]
     }
 
     private var analyticsClientV2: MockAnalyticsClientV2!
@@ -53,8 +53,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             group: .treatment,
             dimensions: [
                 "string": "value",
-                "bool": false,
-                "array": ["a", "b"],
+                "bool": "false",
             ]
         )
 
@@ -67,8 +66,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["experiment_retrieved"] as? String, "mock_experiment")
         XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
         XCTAssertEqual(payload["dimensions-string"] as? String, "value")
-        XCTAssertEqual(payload["dimensions-bool"] as? Bool, false)
-        XCTAssertEqual(payload["dimensions-array"] as? [String], ["a", "b"])
+        XCTAssertEqual(payload["dimensions-bool"] as? String, "false")
     }
 
     func testLinkGlobalHoldback() {
@@ -133,14 +131,14 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
 
         XCTAssertEqual(payload["dimensions-recognition_type"] as? String, "email")
-        XCTAssertEqual(payload["dimensions-link_native"] as? Bool, true)
+        XCTAssertEqual(payload["dimensions-link_native"] as? String, "true")
         XCTAssertEqual(payload["dimensions-link_default_opt_in"] as? String, "FULL")
         XCTAssertEqual(payload["dimensions-integration_type"] as? String, "mpe_ios")
         XCTAssertEqual(payload["dimensions-dvs_provided"] as? String, "email name")
-        XCTAssertEqual(payload["dimensions-is_returning_link_user"] as? Bool, false)
-        XCTAssertEqual(payload["dimensions-link_displayed"] as? Bool, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration))
+        XCTAssertEqual(payload["dimensions-is_returning_link_user"] as? String, "false")
+        XCTAssertEqual(payload["dimensions-link_displayed"] as? String, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration).description)
         XCTAssertEqual(payload["dimensions-integration_shape"] as? String, "paymentsheet")
-        XCTAssertEqual(payload["dimensions-has_spms"] as? Bool, false)
+        XCTAssertEqual(payload["dimensions-has_spms"] as? String, "false")
     }
 
     func testLinkABTest() {
@@ -204,14 +202,14 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.holdback.rawValue)
 
         XCTAssertEqual(payload["dimensions-recognition_type"] as? String, "email")
-        XCTAssertEqual(payload["dimensions-link_native"] as? Bool, true)
+        XCTAssertEqual(payload["dimensions-link_native"] as? String, "true")
         XCTAssertEqual(payload["dimensions-link_default_opt_in"] as? String, "OPTIONAL")
         XCTAssertEqual(payload["dimensions-integration_type"] as? String, "mpe_ios")
         XCTAssertEqual(payload["dimensions-dvs_provided"] as? String, "phone")
-        XCTAssertEqual(payload["dimensions-is_returning_link_user"] as? Bool, true)
-        XCTAssertEqual(payload["dimensions-link_displayed"] as? Bool, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration))
+        XCTAssertEqual(payload["dimensions-is_returning_link_user"] as? String, "true")
+        XCTAssertEqual(payload["dimensions-link_displayed"] as? String, PaymentSheet.isLinkEnabled(elementsSession: session, configuration: configuration).description)
         XCTAssertEqual(payload["dimensions-integration_shape"] as? String, "flowcontroller")
-        XCTAssertEqual(payload["dimensions-has_spms"] as? Bool, false)
+        XCTAssertEqual(payload["dimensions-has_spms"] as? String, "false")
     }
 
     func testOCSMobileHorizontalMode() {
@@ -245,9 +243,9 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["experiment_retrieved"] as? String, "ocs_mobile_horizontal_mode")
         XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
 
-        XCTAssertEqual(payload["dimensions-displayed_payment_method_types"] as? [String], ["card"])
-        XCTAssertEqual(payload["dimensions-displayed_payment_method_types_including_wallets"] as? [String], ["card", "apple_pay", "link"])
-        XCTAssertEqual(payload["dimensions-has_saved_payment_method"] as? Bool, true)
+        XCTAssertEqual(payload["dimensions-displayed_payment_method_types"] as? String, "card")
+        XCTAssertEqual(payload["dimensions-displayed_payment_method_types_including_wallets"] as? String, "card,apple_pay,link")
+        XCTAssertEqual(payload["dimensions-has_saved_payment_method"] as? String, "true")
         XCTAssertEqual(payload["dimensions-in_app_elements_integration_type"] as? String, "paymentsheet")
     }
 
@@ -282,9 +280,9 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["experiment_retrieved"] as? String, "ocs_mobile_horizontal_mode_aa")
         XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.controlTest.rawValue)
 
-        XCTAssertEqual(payload["dimensions-displayed_payment_method_types"] as? [String], ["card"])
-        XCTAssertEqual(payload["dimensions-displayed_payment_method_types_including_wallets"] as? [String], ["card", "apple_pay", "link"])
-        XCTAssertEqual(payload["dimensions-has_saved_payment_method"] as? Bool, true)
+        XCTAssertEqual(payload["dimensions-displayed_payment_method_types"] as? String, "card")
+        XCTAssertEqual(payload["dimensions-displayed_payment_method_types_including_wallets"] as? String, "card,apple_pay,link")
+        XCTAssertEqual(payload["dimensions-has_saved_payment_method"] as? String, "true")
         XCTAssertEqual(payload["dimensions-in_app_elements_integration_type"] as? String, "flowcontroller")
     }
 }
