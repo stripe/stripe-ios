@@ -9,7 +9,7 @@
 import Foundation
 
 /// Represents an available shipping option in a Checkout session.
-@_spi(STP) public struct STPCheckoutSessionShippingOption {
+@_spi(STP) public class STPCheckoutSessionShippingOption {
     /// The shipping rate ID.
     public let id: String
     /// The display name shown to the customer.
@@ -18,6 +18,13 @@ import Foundation
     public let amount: Int
     /// The three-letter lowercase ISO currency code.
     public let currency: String
+    
+    init(id: String, displayName: String, amount: Int, currency: String) {
+        self.id = id
+        self.displayName = displayName
+        self.amount = amount
+        self.currency = currency
+    }
 }
 
 // MARK: - Parsing

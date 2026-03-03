@@ -9,7 +9,7 @@
 import Foundation
 
 /// Represents a line item in a Checkout session.
-@_spi(STP) public struct STPCheckoutSessionLineItem {
+@_spi(STP) public class STPCheckoutSessionLineItem {
     /// The line item ID.
     public let id: String
     /// The display name for the line item.
@@ -20,6 +20,14 @@ import Foundation
     public let amount: Int
     /// The three-letter lowercase ISO currency code.
     public let currency: String
+    
+    init(id: String, name: String, quantity: Int, amount: Int, currency: String) {
+        self.id = id
+        self.name = name
+        self.quantity = quantity
+        self.amount = amount
+        self.currency = currency
+    }
 }
 
 // MARK: - Parsing
