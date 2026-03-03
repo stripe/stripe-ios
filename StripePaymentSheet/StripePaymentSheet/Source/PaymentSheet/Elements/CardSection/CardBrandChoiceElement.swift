@@ -20,7 +20,7 @@ final class CardBrandChoiceElement: Element {
 
     private enum Variant {
         case selector(SegmentedSelectorElement)
-        case dropdown(DropdownFieldElement, includePlaceholder: Bool)
+        case dropdown(DropdownFieldElement)
     }
 
     private let variant: Variant
@@ -29,7 +29,7 @@ final class CardBrandChoiceElement: Element {
         switch variant {
         case .selector(let element):
             return element.view
-        case .dropdown(let element, _):
+        case .dropdown(let element):
             return element.view
         }
     }
@@ -38,7 +38,7 @@ final class CardBrandChoiceElement: Element {
         switch variant {
         case .selector(let element):
             return element.collectsUserInput
-        case .dropdown(let element, _):
+        case .dropdown(let element):
             return element.collectsUserInput
         }
     }
@@ -49,7 +49,7 @@ final class CardBrandChoiceElement: Element {
         case .selector(let element):
             guard let rawData = element.selectedItem?.rawData else { return nil }
             return STPCard.brand(from: rawData)
-        case .dropdown(let element, _):
+        case .dropdown(let element):
             guard !element.selectedItem.isPlaceholder else { return nil }
             return STPCard.brand(from: element.selectedItem.rawData)
         }
@@ -60,7 +60,7 @@ final class CardBrandChoiceElement: Element {
         switch variant {
         case .selector(let element):
             return element.items.count
-        case .dropdown(let element, _):
+        case .dropdown(let element):
             return element.nonPlacerholderItems.count
         }
     }
@@ -85,7 +85,7 @@ final class CardBrandChoiceElement: Element {
                 theme: theme,
                 includePlaceholder: includePlaceholder
             )
-            self.variant = .dropdown(element, includePlaceholder: includePlaceholder)
+            self.variant = .dropdown(element)
             element.delegate = self
         }
     }
@@ -97,12 +97,12 @@ final class CardBrandChoiceElement: Element {
                 items: Self.makeItems(from: cardBrands),
                 disabledItems: Set(Self.makeItems(from: disallowedCardBrands))
             )
-        case .dropdown(let element, let includePlaceholder):
+        case .dropdown(let element):
             let items = DropdownFieldElement.items(
                 from: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
                 theme: element.theme,
-                includePlaceholder: includePlaceholder
+                includePlaceholder: element.items.contains { $0.isPlaceholder }
             )
             element.update(items: items)
         }
@@ -112,7 +112,7 @@ final class CardBrandChoiceElement: Element {
         switch variant {
         case .selector(let element):
             element.select(brand.makeCardBrandItem())
-        case .dropdown(let element, _):
+        case .dropdown(let element):
             if let index = element.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {
                 element.select(index: index)
             }
