@@ -647,9 +647,12 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.defaultBillingDetails.email = "davidestes@stripe.com"
 
         // Stub the customer endpoint to fail if called
-        stub(condition: isPath("/v1/customers/\(testCustomerID)")) { _ in
+        let stubDescriptor = stub(condition: isPath("/v1/customers/\(testCustomerID)")) { _ in
             XCTFail("Customer endpoint should not be called when default billing email is provided")
             return HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
+        }
+        defer {
+            HTTPStubs.removeStub(stubDescriptor)
         }
 
         // Loading w/ ^ customer...

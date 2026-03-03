@@ -7,7 +7,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
 
 /// Receives updates when a ``Checkout`` session changes.
 @_spi(CheckoutSessionsPreview)
