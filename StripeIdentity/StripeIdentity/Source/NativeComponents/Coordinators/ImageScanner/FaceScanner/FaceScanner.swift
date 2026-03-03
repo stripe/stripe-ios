@@ -101,8 +101,6 @@ extension FaceScanner {
         let motionBlurOutput = motionBlurDetector.determineMotionBlur(
             documentBounds: faceRect
         )
-
-
         return motionBlurOutput
     }
 }
