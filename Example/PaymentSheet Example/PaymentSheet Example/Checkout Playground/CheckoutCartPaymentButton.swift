@@ -6,7 +6,7 @@
 //
 
 @_spi(STP) import StripePayments
-@_spi(CheckoutSessionsPreview) @_spi(CheckoutSessionPreview) import StripePaymentSheet
+@_spi(CheckoutSessionsPreview) @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 15.0, *)

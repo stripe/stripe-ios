@@ -6,7 +6,7 @@
 //
 
 @_spi(STP) import StripePayments
-@_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@_spi(CheckoutSessionsPreview) @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 15.0, *)
@@ -326,7 +326,7 @@ struct CheckoutCartContentView: View {
             isLoading = true
             errorMessage = nil
             do {
-                try await checkout.updateQuantity(.init(lineItemId: lineItemId, quantity: quantity))
+                try await checkout.updateQuantity(with: .init(lineItemId: lineItemId, quantity: quantity))
             } catch {
                 errorMessage = error.localizedDescription
             }
