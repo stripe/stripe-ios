@@ -38,6 +38,8 @@ class RotatingCardBrandsViewTests: XCTestCase {
         XCTAssertFalse(rotatingCardBrandsView.rotatingCardBrandView.isHidden)
         rotatingCardBrandsView.cardBrands = [.visa, .mastercard, .amex, .dinersClub, .JCB]
         XCTAssertFalse(rotatingCardBrandsView.rotatingCardBrandView.isHidden)
+        rotatingCardBrandsView.cardBrands = [.visa, .mastercard, .amex, .dinersClub, .JCB, .cartesBancaires]
+        XCTAssertFalse(rotatingCardBrandsView.rotatingCardBrandView.isHidden)
     }
 
 }
