@@ -98,18 +98,7 @@ extension CheckoutPlayground {
                 "include_shipping_options": enableShipping,
                 "automatic_tax": automaticTaxForRequest,
                 "payment_method_types": Array(paymentMethodTypes),
-            "use_checkout_session": true,
             ]
-
-            if mode != .setup {
-                body["line_items"] = lineItems.map { item -> [String: Any] in
-                    [
-                        "name": item.name,
-                        "unit_amount": item.unitAmount,
-                        "quantity": item.quantity,
-                    ]
-                }
-            }
 
             return body
         }
