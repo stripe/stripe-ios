@@ -166,7 +166,8 @@ extension TextFieldElement {
                 let isCorrectPANLengthKnownYet = binController.hasBINRanges(forPrefix: text)
                 if !isCorrectPANLengthKnownYet {
                     // If `hasBINRanges` returns false, we need to call `retrieveBINRanges` to fetch the correct card length from the card metadata service. See go/card-metadata-edge.
-                    binController.retrieveBINRanges(forPrefix: text, recordErrorsAsSuccess: false) { _ in }
+                    // TODO: BIN retrieval is broken if you don't use STPAPIClient.shared (https://jira.corp.stripe.com/browse/MOBILESDK-4322)
+                    binController.retrieveBINRanges(apiClient: STPAPIClient.shared, forPrefix: text, recordErrorsAsSuccess: false) { _ in }
                     // If we don't know the correct length, return the shortest possible length for the brand
                     return binController.minCardNumberLength(for: binRange.brand)
                 } else {
