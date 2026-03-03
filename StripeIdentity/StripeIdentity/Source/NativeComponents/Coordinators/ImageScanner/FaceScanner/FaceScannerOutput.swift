@@ -32,10 +32,6 @@ struct FaceScannerOutput: Equatable {
         return faceDetectorOutput.predictions.first?.rect ?? .zero
     }
 
-    /// The quality of the image
-    var quality: Float {
-        return faceScore
-    }
 
     /// A basic ranking score for selecting the best frame among valid samples.
     /// Range: [0, 1], where higher is better.
