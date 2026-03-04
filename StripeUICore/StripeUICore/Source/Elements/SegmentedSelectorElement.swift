@@ -45,8 +45,8 @@ import UIKit
         self.items = items
         self.disabledItems = disabledItems
 
-        // If the previously selected item is no longer enabled, deselect it
-        if let selectedItem, disabledItems.contains(selectedItem) {
+        // If the previously selected item is no longer present or enabled, deselect it
+        if let selectedItem, !items.contains(selectedItem) || disabledItems.contains(selectedItem) {
             self.selectedItem = nil
             delegate?.didUpdate(element: self)
         }
