@@ -209,7 +209,7 @@ final class CheckoutUnitTests: XCTestCase {
         checkout.delegate = delegate
 =======
         await MainActor.run {
-            let stored = checkout.session?.billingAddressOverride as? Checkout.AddressUpdate
+            let stored = checkout.session?.billingAddressOverride
             XCTAssertEqual(stored?.name, "Jane Doe")
             XCTAssertEqual(stored?.address.country, "US")
             XCTAssertTrue(delegate.didUpdateCalled)
@@ -235,7 +235,7 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(delegate.didUpdateCalled)
 =======
         await MainActor.run {
-            let stored = checkout.session?.shippingAddressOverride as? Checkout.AddressUpdate
+            let stored = checkout.session?.shippingAddressOverride
             XCTAssertEqual(stored?.name, "John Smith")
             XCTAssertEqual(stored?.address.country, "US")
             XCTAssertTrue(delegate.didUpdateCalled)

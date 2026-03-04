@@ -121,12 +121,16 @@ import Foundation
     }
 =======
     /// Stored as `Any?` to avoid an upward dependency from the data model to `Checkout.AddressUpdate`.
-    public var billingAddressOverride: Any?
+    public var billingAddressOverride: Checkout.AddressUpdate?
 
     /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
     /// Stored as `Any?` to avoid an upward dependency from the data model to `Checkout.AddressUpdate`.
+<<<<<<< HEAD
     public var shippingAddressOverride: Any?
 >>>>>>> 149a504ca63 (Small bug fixes)
+=======
+    public var shippingAddressOverride: Checkout.AddressUpdate?
+>>>>>>> a5f3c8e9de0 (Remove any usage)
 
     /// :nodoc:
     public override var description: String {
