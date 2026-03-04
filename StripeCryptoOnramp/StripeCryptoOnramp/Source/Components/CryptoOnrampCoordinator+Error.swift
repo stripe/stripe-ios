@@ -29,6 +29,9 @@ public extension CryptoOnrampCoordinator {
         /// The Link account is not in a verified state.
         case linkAccountNotVerified
 
+        /// The provided sign-in token is invalid for a reason described in the non-localized associated value. Use the `authorize` API to sign in manually.
+        case seamlessSignInTokenInvalid(reason: String?)
+
         public var errorDescription: String? {
             switch self {
             case .invalidPhoneFormat:
@@ -43,6 +46,8 @@ public extension CryptoOnrampCoordinator {
                 return "A crypto customer ID is missing but required. A crypto customer ID must either be provided to the Crypto Onramp Coordinator in the `create` API, or generated during the onramp flow by verifying a Link account using the `registerLinkUser`, `authenticateUserWithToken`, or `authorize` APIs."
             case .linkAccountNotVerified:
                 return "No active Link consumer is available in a verified state."
+            case .seamlessSignInTokenInvalid:
+                return "An error occurred while automatically signing in to your Link account. Please sign in manually."
             }
         }
     }
