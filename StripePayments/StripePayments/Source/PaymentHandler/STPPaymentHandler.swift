@@ -94,13 +94,6 @@ public typealias STPPaymentHandlerActionSetupIntentCompletionBlock = (
 
 let missingReturnURLErrorMessage = "The payment method requires a return URL and one was not provided. Your integration should provide one in your `STPPaymentIntentConfirmParams`/`STPSetupIntentConfirmParams` object if you call `STPPaymentHandler.confirm...` or when you call  `STPPaymentHandler.handleNextAction`."
 
-@_spi(STP) public struct IntentConfirmationChallengeSettings {
-    let applyLiquidGlass: Bool
-    public init(applyLiquidGlass: Bool = false) {
-        self.applyLiquidGlass = applyLiquidGlass
-    }
-}
-
 /// `STPPaymentHandler` is a utility class that confirms PaymentIntents/SetupIntents and handles any authentication required, such as 3DS1/3DS2 for Strong Customer Authentication.
 /// It can present authentication UI on top of your app or redirect users out of your app (to e.g. their banking app).
 /// - seealso: https://stripe.com/docs/payments/3d-secure
@@ -132,12 +125,10 @@ public class STPPaymentHandler: NSObject {
     @_spi(STP) public init(
         apiClient: STPAPIClient = .shared,
         threeDSCustomizationSettings: STPThreeDSCustomizationSettings =
-            STPThreeDSCustomizationSettings(),
-        intentConfirmationChallengeSettings: IntentConfirmationChallengeSettings = IntentConfirmationChallengeSettings()
+            STPThreeDSCustomizationSettings()
     ) {
         self.apiClient = apiClient
         self.threeDSCustomizationSettings = threeDSCustomizationSettings
-        self.intentConfirmationChallengeSettings = intentConfirmationChallengeSettings
         super.init()
     }
 
@@ -148,9 +139,6 @@ public class STPPaymentHandler: NSObject {
     /// Note: Configure this before calling any methods.
     /// Defaults to `STPThreeDSCustomizationSettings()`.
     @objc public var threeDSCustomizationSettings: STPThreeDSCustomizationSettings
-
-    /// Settings for intent confirmation challenge.
-    private let intentConfirmationChallengeSettings: IntentConfirmationChallengeSettings
 
     internal var _simulateAppToAppRedirect: Bool = false
 
@@ -1934,15 +1922,12 @@ public class STPPaymentHandler: NSObject {
         }
 
         if #available(iOS 14.0, *) {
-            // Extract client secret and intent type
+            // Extract client secret
             let clientSecret: String
-            let intentType: IntentType
             if let piAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
                 clientSecret = piAction.paymentIntent.clientSecret
-                intentType = .paymentIntent(id: piAction.paymentIntent.stripeId)
             } else if let siAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
                 clientSecret = siAction.setupIntent.clientSecret
-                intentType = .setupIntent(id: siAction.setupIntent.stripeID)
             } else {
                 currentAction.complete(
                     with: .failed,
@@ -1977,10 +1962,7 @@ public class STPPaymentHandler: NSObject {
 
                 let challengeVC = IntentConfirmationChallengeViewController(
                     publishableKey: publishableKey,
-                    clientSecret: clientSecret,
-                    intentType: intentType,
-                    apiClient: self.apiClient,
-                    intentConfirmationChallengeSettings: self.intentConfirmationChallengeSettings
+                    clientSecret: clientSecret
                 ) { [weak self] result in
                     guard let self = self else { return }
 
@@ -1993,13 +1975,7 @@ public class STPPaymentHandler: NSObject {
                             self._retrieveAndCheckIntentForCurrentAction()
 
                         case .failure(let error):
-                            // Handle user cancellation separately - don't show error message
-                            if case ChallengeError.userCanceled = error {
-                                // We don't forward cancelation errors
-                                currentAction.complete(with: .canceled, error: nil)
-                            } else {
-                                currentAction.complete(with: .failed, error: error as NSError)
-                            }
+                            currentAction.complete(with: .failed, error: error as NSError)
                         }
                     }
                 }

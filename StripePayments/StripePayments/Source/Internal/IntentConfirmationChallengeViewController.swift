@@ -26,7 +26,6 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private let clientSecret: String
     private let intentType: IntentType
     private let apiClient: STPAPIClient
-    private let intentConfirmationChallengeSettings: IntentConfirmationChallengeSettings
     private let completion: (Result<Void, Error>) -> Void
 
     private var webView: WKWebView!
@@ -46,14 +45,12 @@ class IntentConfirmationChallengeViewController: UIViewController {
         clientSecret: String,
         intentType: IntentType,
         apiClient: STPAPIClient,
-        intentConfirmationChallengeSettings: IntentConfirmationChallengeSettings,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         self.publishableKey = publishableKey
         self.clientSecret = clientSecret
         self.intentType = intentType
         self.apiClient = apiClient
-        self.intentConfirmationChallengeSettings = intentConfirmationChallengeSettings
         self.completion = { result in
             completion(result)
         }
@@ -135,8 +132,8 @@ class IntentConfirmationChallengeViewController: UIViewController {
     }
 
     private func setupCloseButton() {
-        // Use glass style if configured, plain style otherwise (matching PaymentSheet pattern)
-        if intentConfirmationChallengeSettings.applyLiquidGlass {
+        // Use glass style if available, plain style otherwise
+        if #available(iOS 26.0, visionOS 26.0, *), LiquidGlassDetector.isEnabledInMerchantApp {
             let glassButtonSize = 44.0
             closeButton = UIButton(type: .system)
             closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -148,13 +145,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
             closeButton.setImage(image, for: .normal)
             // These checks are a convenience because .glass is only available on iOS (not visionOS)
             // when compiling with XCode 26
-#if compiler(>=6.2)
-            #if !os(visionOS)
-            if #available(iOS 26.0, visionOS 26.0, *) {
-                closeButton.configuration = .glass()
-            }
-            #endif
-#endif
+            closeButton.configuration = .glass()
         } else {
             closeButton = UIButton(type: .system)
             closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -405,5 +396,32 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericAnalytic(event: .intentConfirmationChallengeCanceled, params: ["duration": duration * 1000])
         )
+    }
+}
+
+@_spi(STP) public class LiquidGlassDetector {
+    /// Whether or not the merchant's app (not MPE) has Liquid Glass enabled
+    @_spi(STP) public static var isEnabledInMerchantApp: Bool {
+        guard #available(iOS 26.0, visionOS 26.0, *) else {
+            return false
+        }
+        return meetsCompilerRequirements && !hasOptedOut
+    }
+
+    /// Whether the app was built with Xcode 26 or later (which includes Swift compiler 6.2)
+    @_spi(STP) public static var meetsCompilerRequirements: Bool {
+        #if compiler(>=6.2)
+        return true
+        #else
+        return false
+        #endif
+    }
+
+    /// Whether the app hasn't opted out of the new design
+    @_spi(STP) public static var hasOptedOut: Bool {
+        if let optOutFlag = Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool {
+            return optOutFlag
+        }
+        return false
     }
 }

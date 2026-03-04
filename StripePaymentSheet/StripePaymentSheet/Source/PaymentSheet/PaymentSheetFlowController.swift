@@ -73,11 +73,12 @@ extension PaymentSheet {
                 case .new(let confirmParams) = self,
                 let linkedBank = confirmParams.instantDebitsLinkedBank
             {
-                if linkedBank.linkMode == .linkCardBrand {
-                    return "link_card_brand"
-                } else {
-                    return "instant_debits"
-                }
+                return linkedBank.linkContextAnalyticsValue
+            } else if
+                case .saved(_, let confirmParams) = self,
+                let linkedBank = confirmParams?.instantDebitsLinkedBank
+            {
+                return linkedBank.linkContextAnalyticsValue
             } else {
                 return nil
             }
@@ -221,7 +222,7 @@ extension PaymentSheet {
         // MARK: - Private properties
         var intent: Intent { viewController.loadResult.intent }
         var elementsSession: STPElementsSession { viewController.loadResult.elementsSession }
-        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient, intentConfirmationChallengeSettings: IntentConfirmationChallengeSettings(applyLiquidGlass: configuration.appearance.navigationBarStyle.isGlass)) }()
+        lazy var paymentHandler: STPPaymentHandler = { STPPaymentHandler(apiClient: configuration.apiClient) }()
         var viewController: FlowControllerViewControllerProtocol
 
         private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
@@ -926,5 +927,11 @@ extension PaymentOption {
         case .applePay, .new, .external:
             return nil
         }
+    }
+}
+
+private extension InstantDebitsLinkedBank {
+    var linkContextAnalyticsValue: String {
+        linkMode == .linkCardBrand ? "link_card_brand" : "instant_debits"
     }
 }
