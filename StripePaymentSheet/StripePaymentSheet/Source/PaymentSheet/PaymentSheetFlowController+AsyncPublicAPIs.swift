@@ -70,7 +70,7 @@ extension PaymentSheet.FlowController {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     /// - Returns: A valid PaymentSheet.FlowController instance.
     /// - Throws: An error if loading failed.
-    @_spi(CheckoutSessionPreview) public static func create(
+    @_spi(CheckoutSessionsPreview) public static func create(
         checkoutSession: STPCheckoutSession,
         configuration: PaymentSheet.Configuration
     ) async throws -> PaymentSheet.FlowController {
