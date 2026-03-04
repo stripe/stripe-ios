@@ -273,14 +273,15 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Should present the update card view controller
         XCTAssertTrue(app.staticTexts["Manage card"].waitForExistence(timeout: 2.0))
 
+        let cardBrandChoiceVisa = app.buttons["Visa"]
+        let cardBrandChoiceCB = app.buttons["Cartes Bancaires"]
         // Update card brand to Visa
-        XCTAssertTrue(app.buttons["Cartes Bancaires"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["Cartes Bancaires"].isSelected)
-        XCTAssertTrue(app.buttons["Visa"].waitForExistenceAndTap(timeout: 5))
-        app.toolbars.buttons["Done"].tap()
+        XCTAssertTrue(cardBrandChoiceCB.waitForExistence(timeout: 5))
+        XCTAssertTrue(cardBrandChoiceCB.isSelected)
+        XCTAssertTrue(cardBrandChoiceVisa.waitForExistenceAndTap(timeout: 5))
 
         // We should have selected Visa
-        XCTAssertTrue(app.buttons["Visa"].isSelected)
+        XCTAssertTrue(cardBrandChoiceVisa.isSelected)
 
         // Update the card
         app.buttons["Save"].waitForExistenceAndTap(timeout: 5)

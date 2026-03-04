@@ -568,7 +568,6 @@ class CustomerSheetUITest: XCTestCase {
         let cardBrandChoiceVisa = app.buttons["Visa"]
         let cardBrandChoiceCB = app.buttons["Cartes Bancaires"]
         cardBrandChoiceVisa.waitForExistenceAndTap(timeout: timeout)
-        app.toolbars.buttons["Done"].tap()
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
         XCTAssertFalse(cardBrandChoiceCB.isSelected)
         app.buttons["Save"].waitForExistenceAndTap()
