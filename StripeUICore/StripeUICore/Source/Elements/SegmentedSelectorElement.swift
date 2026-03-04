@@ -250,6 +250,9 @@ private final class SegmentedItemView: UIControl {
     }
 
     private func setupView() {
+        // Disable so touches pass through to this UIControl, preventing BottomSheetViewController's keyboard-dismiss gesture from firing.
+        containerStack.isUserInteractionEnabled = false
+
         iconImageView.image = item.image
 
         let configuration = UIImage.SymbolConfiguration(weight: .medium)
