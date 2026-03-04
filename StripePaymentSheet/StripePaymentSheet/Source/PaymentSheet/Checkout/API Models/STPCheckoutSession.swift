@@ -138,6 +138,13 @@ import Foundation
     public var shippingAddressOverride: Checkout.AddressUpdate?
 >>>>>>> a5f3c8e9de0 (Remove any usage)
 
+    /// Returns `true` when the server needs a `tax_region` update for the given address type.
+    ///
+    /// - Parameter addressType: Either `"billing"` or `"shipping"`.
+    func shouldSendTaxRegion(for addressType: String) -> Bool {
+        return automaticTaxEnabled && automaticTaxAddressSource == addressType
+    }
+
     /// :nodoc:
     public override var description: String {
         let props: [String] = [
