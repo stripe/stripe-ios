@@ -85,11 +85,9 @@ import Foundation
     public let allResponseFields: [AnyHashable: Any]
 
     /// Client-side billing address override, set via Checkout.updateBillingAddress(_:).
-    /// Stored as `Any?` to avoid an upward dependency from the data model to `Checkout.AddressUpdate`.
     public var billingAddressOverride: Checkout.AddressUpdate?
 
     /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
-    /// Stored as `Any?` to avoid an upward dependency from the data model to `Checkout.AddressUpdate`.
     public var shippingAddressOverride: Checkout.AddressUpdate?
 
     /// :nodoc:
