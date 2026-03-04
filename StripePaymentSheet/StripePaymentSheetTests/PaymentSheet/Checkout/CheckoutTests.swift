@@ -197,6 +197,8 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
     func testUpdateBillingAddress() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+            merchantCountry: "us_tax",
+            allowAdjustableLineItemQuantity: true,
             collectBillingAddress: true,
             automaticTax: true
         )
@@ -214,7 +216,11 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(taxContextBefore?["automatic_tax_address_source"] as? String, "session.billing")
         // Before providing an address, tax hasn't been computed yet
         XCTAssertNil(taxContextBefore?["automatic_tax_taxability_reason"] as? String)
-
+        // Pre-tax price, CA sales has not yet been applied
+        XCTAssertEqual(checkout.session?.totalSummary?.subtotal, 5050)
+        XCTAssertEqual(checkout.session?.totalSummary?.total, 5050)
+        
+        // Update the billing address to get tax applied
         let billingUpdate = Checkout.AddressUpdate(
             name: "Jane Doe",
             address: .init(
@@ -232,6 +238,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertNotNil(storedBilling)
         XCTAssertEqual(storedBilling?.name, "Jane Doe")
         XCTAssertEqual(storedBilling?.address.country, "US")
+        XCTAssertEqual(storedBilling?.address.line1, "123 Main St")
+        XCTAssertEqual(storedBilling?.address.city, "San Francisco")
+        XCTAssertEqual(storedBilling?.address.state, "CA")
         XCTAssertEqual(storedBilling?.address.postalCode, "94105")
 
         // Session should be refreshed (tax_region was sent to the server)
@@ -240,14 +249,18 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         // After providing an address, the server computes tax and updates the tax context
         let taxContextAfter = checkout.session?.allResponseFields["tax_context"] as? [String: Any]
-        XCTAssertNotNil(taxContextAfter?["automatic_tax_taxability_reason"] as? String,
-                        "Tax taxability reason should be populated after providing an address")
-        XCTAssertNotNil(taxContextAfter?["automatic_tax_exempt"] as? String,
-                        "Tax exempt status should be populated after providing an address")
+        XCTAssertEqual(taxContextAfter?["automatic_tax_taxability_reason"] as? String, "standard_rated")
+        XCTAssertEqual(taxContextAfter?["automatic_tax_exempt"] as? String, "none")
+
+        // Post-tax price, CA sales tax was applied; subtotal unchanged proves the increase is purely tax
+        XCTAssertEqual(checkout.session?.totalSummary?.subtotal, 5050)
+        XCTAssertEqual(checkout.session?.totalSummary?.total, 5486)
     }
 
     func testUpdateShippingAddress() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+            merchantCountry: "us_tax",
+            allowAdjustableLineItemQuantity: true,
             collectShippingAddress: true,
             automaticTax: true
         )
@@ -265,6 +278,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(taxContextBefore?["automatic_tax_address_source"] as? String, "session.shipping")
         // Before providing an address, tax hasn't been computed yet
         XCTAssertNil(taxContextBefore?["automatic_tax_taxability_reason"] as? String)
+        // Pre-tax price, CA sales tax has not yet been applied
+        XCTAssertEqual(checkout.session?.totalSummary?.subtotal, 5050)
+        XCTAssertEqual(checkout.session?.totalSummary?.total, 5050)
 
         let shippingUpdate = Checkout.AddressUpdate(
             name: "John Smith",
@@ -283,6 +299,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertNotNil(storedShipping)
         XCTAssertEqual(storedShipping?.name, "John Smith")
         XCTAssertEqual(storedShipping?.address.country, "US")
+        XCTAssertEqual(storedShipping?.address.line1, "456 Oak Ave")
+        XCTAssertEqual(storedShipping?.address.city, "Los Angeles")
+        XCTAssertEqual(storedShipping?.address.state, "CA")
         XCTAssertEqual(storedShipping?.address.postalCode, "90001")
 
         // Session should be refreshed (tax_region was sent to the server)
@@ -291,10 +310,12 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         // After providing an address, the server computes tax and updates the tax context
         let taxContextAfter = checkout.session?.allResponseFields["tax_context"] as? [String: Any]
-        XCTAssertNotNil(taxContextAfter?["automatic_tax_taxability_reason"] as? String,
-                        "Tax taxability reason should be populated after providing an address")
-        XCTAssertNotNil(taxContextAfter?["automatic_tax_exempt"] as? String,
-                        "Tax exempt status should be populated after providing an address")
+        XCTAssertEqual(taxContextAfter?["automatic_tax_taxability_reason"] as? String, "standard_rated")
+        XCTAssertEqual(taxContextAfter?["automatic_tax_exempt"] as? String, "none")
+
+        // Post-tax price, CA sales tax was applied; subtotal unchanged proves the increase is purely tax
+        XCTAssertEqual(checkout.session?.totalSummary?.subtotal, 5050)
+        XCTAssertEqual(checkout.session?.totalSummary?.total, 5542)
     }
 
     func testUpdateTaxId() async throws {
