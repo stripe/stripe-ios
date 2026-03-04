@@ -94,7 +94,7 @@ public final class EmbeddedPaymentElement {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
-    @_spi(CheckoutSessionPreview) public static func create(
+    @_spi(CheckoutSessionsPreview) public static func create(
         checkoutSession: STPCheckoutSession,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {

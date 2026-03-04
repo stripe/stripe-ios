@@ -11,7 +11,7 @@ struct CheckoutPlaygroundView: View {
     @StateObject private var viewModel = CheckoutPlayground.ViewModel()
 
     var body: some View {
-        NavigationView {
+        Group {
             ZStack(alignment: .bottom) {
                 Color(uiColor: .systemGroupedBackground)
                     .ignoresSafeArea()
@@ -72,17 +72,11 @@ struct CheckoutPlaygroundView: View {
             }
             .navigationTitle("Checkout Playground")
             .navigationBarTitleDisplayMode(.inline)
-            .background(
-                NavigationLink(
-                    destination: Group {
-                        if let clientSecret = viewModel.clientSecret {
-                            Text("Checkout View Placeholder: \(clientSecret)")
-                        }
-                    },
-                    isActive: $viewModel.navigateToCheckout
-                ) { EmptyView() }
-                    .hidden()
-            )
+            .sheet(isPresented: $viewModel.navigateToCheckout) {
+                if let clientSecret = viewModel.clientSecret {
+                    CheckoutCartView(clientSecret: clientSecret)
+                }
+            }
         }
     }
 }
