@@ -234,7 +234,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         try await checkout.updateBillingAddress(billingUpdate)
 
         // Address should be stored on the session
-        let storedBilling = checkout.session?.billingAddressOverride as? Checkout.AddressUpdate
+        let storedBilling = checkout.session?.billingAddressOverride
         XCTAssertNotNil(storedBilling)
         XCTAssertEqual(storedBilling?.name, "Jane Doe")
         XCTAssertEqual(storedBilling?.address.country, "US")
@@ -295,7 +295,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         try await checkout.updateShippingAddress(shippingUpdate)
 
         // Address should be stored on the session
-        let storedShipping = checkout.session?.shippingAddressOverride as? Checkout.AddressUpdate
+        let storedShipping = checkout.session?.shippingAddressOverride
         XCTAssertNotNil(storedShipping)
         XCTAssertEqual(storedShipping?.name, "John Smith")
         XCTAssertEqual(storedShipping?.address.country, "US")

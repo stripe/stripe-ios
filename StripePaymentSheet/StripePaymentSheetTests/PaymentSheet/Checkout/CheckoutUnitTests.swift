@@ -205,7 +205,7 @@ final class CheckoutUnitTests: XCTestCase {
         try await checkout.updateBillingAddress(update)
 
         await MainActor.run {
-            let stored = checkout.session?.billingAddressOverride as? Checkout.AddressUpdate
+            let stored = checkout.session?.billingAddressOverride
             XCTAssertEqual(stored?.name, "Jane Doe")
             XCTAssertEqual(stored?.address.country, "US")
             XCTAssertTrue(delegate.didUpdateCalled)
@@ -224,7 +224,7 @@ final class CheckoutUnitTests: XCTestCase {
         try await checkout.updateShippingAddress(update)
 
         await MainActor.run {
-            let stored = checkout.session?.shippingAddressOverride as? Checkout.AddressUpdate
+            let stored = checkout.session?.shippingAddressOverride
             XCTAssertEqual(stored?.name, "John Smith")
             XCTAssertEqual(stored?.address.country, "US")
             XCTAssertTrue(delegate.didUpdateCalled)
