@@ -135,7 +135,7 @@ final class LinkPaymentMethodFormElement: Element {
                 // We will add brands from card brand filtering here
             ],
             theme: theme,
-            includePlaceholder: false
+            allowDeselection: false
         )
 
         if let selectedBrand = paymentMethod.cardDetails?.cardBrand {
