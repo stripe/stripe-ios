@@ -32,7 +32,7 @@ class STPE2ETest: XCTestCase {
                 let expectedCurrency = json["expectedCurrency"] as! String
                 let expectedAccountID = json["expectedAccountID"] as! String
                 let publishableKey = json["publishableKey"] as! String
-                STPAPIClient.shared.publishableKey = publishableKey
+                STPAPIClient.shared.publishableKey = publishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
                 completion(
                     STPPaymentIntentConfirmParams(clientSecret: paymentIntentClientSecret),
                     E2EExpectation(

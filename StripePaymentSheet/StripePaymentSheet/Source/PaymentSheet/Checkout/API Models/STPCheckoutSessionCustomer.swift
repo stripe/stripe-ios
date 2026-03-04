@@ -1,12 +1,13 @@
 //
 //  STPCheckoutSessionCustomer.swift
-//  StripePayments
+//  StripePaymentSheet
 //
 //  Created by Nick Porter on 2/5/26.
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
+@_spi(STP) import StripePayments
 
 /// Customer data from a CheckoutSession response.
 @_spi(STP) public struct STPCheckoutSessionCustomer {
