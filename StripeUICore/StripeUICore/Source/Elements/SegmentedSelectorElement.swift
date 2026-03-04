@@ -259,10 +259,6 @@ private final class SegmentedItemView: UIControl {
         checkmarkImageView.image = UIImage(systemName: "checkmark", withConfiguration: configuration)
         checkmarkImageView.tintColor = theme.colors.bodyText
 
-        // Disable so touches pass through to this UIControl,
-        // preventing BottomSheetViewController's keyboard-dismiss gesture from firing.
-        containerStack.isUserInteractionEnabled = false
-
         // Add checkmark on the left, then icon on the right
         containerStack.addArrangedSubview(checkmarkImageView)
         containerStack.addArrangedSubview(iconImageView)
