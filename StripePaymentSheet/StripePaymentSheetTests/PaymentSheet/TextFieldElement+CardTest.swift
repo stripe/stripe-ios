@@ -85,6 +85,10 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     }
 
     func testBINRangeThatRequiresNetworkCallToValidate() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        defer {
+            STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        }
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         var configuration = TextFieldElement.PANConfiguration()
