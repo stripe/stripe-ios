@@ -208,7 +208,7 @@ final class SegmentedSelectorView: UIView {
 // MARK: - SegmentedItemView
 
 /// A single tappable item icon with optional checkmark (segmented control style)
-private final class SegmentedItemView: UIView {
+private final class SegmentedItemView: UIControl {
     let item: SegmentedSelectorItem
     private var isDisabled: Bool
     private let theme: ElementsAppearance
@@ -250,6 +250,9 @@ private final class SegmentedItemView: UIView {
     }
 
     private func setupView() {
+        // Disable so touches pass through to this UIControl, preventing BottomSheetViewController's keyboard-dismiss gesture from firing.
+        containerStack.isUserInteractionEnabled = false
+
         iconImageView.image = item.image
 
         let configuration = UIImage.SymbolConfiguration(weight: .medium)

@@ -111,10 +111,10 @@ final class CardBrandChoiceElement: Element {
     func select(_ brand: STPCardBrand) {
         switch variant {
         case .selector(let element):
-            element.select(brand.makeCardBrandItem(), shouldAutoAdvance: false)
+            element.select(brand.makeCardBrandItem())
         case .dropdown(let element):
             if let index = element.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {
-                element.select(index: index, shouldAutoAdvance: false)
+                element.select(index: index)
             }
         }
     }
