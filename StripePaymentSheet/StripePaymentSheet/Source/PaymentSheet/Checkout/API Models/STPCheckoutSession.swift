@@ -92,10 +92,10 @@ import Foundation
     public let allResponseFields: [AnyHashable: Any]
 
     /// Client-side billing address override, set via Checkout.updateBillingAddress(_:).
-    public var billingAddressOverride: Checkout.AddressUpdate?
+    public internal(set) var billingAddressOverride: Checkout.AddressUpdate?
 
     /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
-    public var shippingAddressOverride: Checkout.AddressUpdate?
+    public internal(set) var shippingAddressOverride: Checkout.AddressUpdate?
 
     /// Returns `true` when the server needs a `tax_region` update for the given address type.
     ///
