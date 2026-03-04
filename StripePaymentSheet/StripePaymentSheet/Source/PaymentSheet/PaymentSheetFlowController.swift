@@ -373,8 +373,10 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
+            var config = configuration
+            checkoutSession.applyAddressOverrides(to: &config)
             create(mode: .checkoutSession(checkoutSession),
-                   configuration: configuration,
+                   configuration: config,
                    completion: completion
             )
         }
