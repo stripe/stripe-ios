@@ -142,7 +142,6 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         // Card brand choice selector should be enabled
         XCTAssertTrue(cardBrandChoiceCB.waitForExistence(timeout: 5))
         cardBrandChoiceCB.tap()
-        app.toolbars.buttons["Done"].tap()
 
         // We should have selected cartes bancaires
         XCTAssertTrue(cardBrandChoiceCB.isSelected)
@@ -189,7 +188,6 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         // Update this card again
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: 5))
         XCTAssertTrue(app.buttons["Cartes Bancaires"].waitForExistenceAndTap(timeout: 5))
-        app.toolbars.buttons["Done"].tap()
         app.buttons["Save"].waitForExistenceAndTap(timeout: 5)
 
         // We should have updated to Cartes Bancaires
@@ -242,7 +240,6 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
 
         app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap()
         app.buttons["Visa"].waitForExistenceAndTap()
-        app.toolbars.buttons["Done"].tap()
         XCTAssertTrue(app.buttons["Visa"].isSelected)
         app.buttons["Save"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))

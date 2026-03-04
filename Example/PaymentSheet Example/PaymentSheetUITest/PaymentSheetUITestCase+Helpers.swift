@@ -249,7 +249,6 @@ extension PaymentSheetUITestCase {
 
         // Select Visa from the CBC selector
         cardBrandChoiceVisa.tap()
-        app.toolbars.buttons["Done"].tap()
 
         // We should have selected Visa
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
@@ -257,7 +256,6 @@ extension PaymentSheetUITestCase {
 
         // Select Cartes Bancaires
         cardBrandChoiceCB.tap()
-        app.toolbars.buttons["Done"].tap()
 
         // We should have selected Cartes Bancaires and deselected Visa
         XCTAssertTrue(cardBrandChoiceCB.isSelected)
@@ -265,7 +263,6 @@ extension PaymentSheetUITestCase {
 
         // Deselect Cartes Bancaires
         cardBrandChoiceCB.tap()
-        app.toolbars.buttons["Done"].tap()
 
         // We should have deselected Cartes Bancaires
         XCTAssertFalse(cardBrandChoiceCB.isSelected)
@@ -273,7 +270,6 @@ extension PaymentSheetUITestCase {
 
         // Select Visa from the CBC selector
         cardBrandChoiceVisa.tap()
-        app.toolbars.buttons["Done"].tap()
 
         // We should have selected Visa
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
@@ -298,7 +294,6 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(cardBrandChoiceVisa.waitForExistence(timeout: 5))
         // Select Visa from the CBC selector
         cardBrandChoiceVisa.tap()
-        app.toolbars.buttons["Done"].tap()
 
         // We should have selected Visa
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
