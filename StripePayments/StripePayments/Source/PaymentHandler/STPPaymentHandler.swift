@@ -1922,12 +1922,15 @@ public class STPPaymentHandler: NSObject {
         }
 
         if #available(iOS 14.0, *) {
-            // Extract client secret
+            // Extract client secret and intent type
             let clientSecret: String
+            let intentType: IntentType
             if let piAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
                 clientSecret = piAction.paymentIntent.clientSecret
+                intentType = .paymentIntent(id: piAction.paymentIntent.stripeId)
             } else if let siAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
                 clientSecret = siAction.setupIntent.clientSecret
+                intentType = .setupIntent(id: siAction.setupIntent.stripeID)
             } else {
                 currentAction.complete(
                     with: .failed,
@@ -1962,7 +1965,9 @@ public class STPPaymentHandler: NSObject {
 
                 let challengeVC = IntentConfirmationChallengeViewController(
                     publishableKey: publishableKey,
-                    clientSecret: clientSecret
+                    clientSecret: clientSecret,
+                    intentType: intentType,
+                    apiClient: apiClient
                 ) { [weak self] result in
                     guard let self = self else { return }
 
@@ -1975,7 +1980,13 @@ public class STPPaymentHandler: NSObject {
                             self._retrieveAndCheckIntentForCurrentAction()
 
                         case .failure(let error):
-                            currentAction.complete(with: .failed, error: error as NSError)
+                            // Handle user cancellation separately - don't show error message
+                            if case ChallengeError.userCanceled = error {
+                                // We don't forward cancelation errors
+                                currentAction.complete(with: .canceled, error: nil)
+                            } else {
+                                currentAction.complete(with: .failed, error: error as NSError)
+                            }
                         }
                     }
                 }
