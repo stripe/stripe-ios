@@ -108,6 +108,7 @@ import Foundation
 
     /// Client-side billing address override, set via Checkout.updateBillingAddress(_:).
 <<<<<<< HEAD
+<<<<<<< HEAD
     public internal(set) var billingAddressOverride: Checkout.AddressUpdate?
 
     /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
@@ -129,6 +130,11 @@ import Foundation
     public var shippingAddressOverride: Any?
 >>>>>>> 149a504ca63 (Small bug fixes)
 =======
+=======
+    public var billingAddressOverride: Checkout.AddressUpdate?
+
+    /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
+>>>>>>> 3ceab7c423c (Minor updates)
     public var shippingAddressOverride: Checkout.AddressUpdate?
 >>>>>>> a5f3c8e9de0 (Remove any usage)
 
