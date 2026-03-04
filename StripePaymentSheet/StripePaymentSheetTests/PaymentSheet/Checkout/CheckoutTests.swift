@@ -349,7 +349,6 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
-        checkout.delegate = delegate
 
         try await checkout.load()
 

@@ -21,20 +21,8 @@ extension STPCheckoutSession {
 
         if let shipping = shippingAddressOverride as? Checkout.AddressUpdate,
            configuration.shippingDetails() == nil {
-            configuration.shippingDetails = {
-                AddressViewController.AddressDetails(
-                    address: .init(
-                        city: shipping.address.city,
-                        country: shipping.address.country,
-                        line1: shipping.address.line1 ?? "",
-                        line2: shipping.address.line2,
-                        postalCode: shipping.address.postalCode,
-                        state: shipping.address.state
-                    ),
-                    name: shipping.name,
-                    phone: nil
-                )
-            }
+            let details = shippingAddressDetails(from: shipping)
+            configuration.shippingDetails = { details }
         }
     }
 
@@ -47,21 +35,24 @@ extension STPCheckoutSession {
 
         if let shipping = shippingAddressOverride as? Checkout.AddressUpdate,
            configuration.shippingDetails() == nil {
-            configuration.shippingDetails = {
-                AddressViewController.AddressDetails(
-                    address: .init(
-                        city: shipping.address.city,
-                        country: shipping.address.country,
-                        line1: shipping.address.line1 ?? "",
-                        line2: shipping.address.line2,
-                        postalCode: shipping.address.postalCode,
-                        state: shipping.address.state
-                    ),
-                    name: shipping.name,
-                    phone: nil
-                )
-            }
+            let details = shippingAddressDetails(from: shipping)
+            configuration.shippingDetails = { details }
         }
+    }
+
+    private func shippingAddressDetails(from shipping: Checkout.AddressUpdate) -> AddressViewController.AddressDetails {
+        AddressViewController.AddressDetails(
+            address: .init(
+                city: shipping.address.city,
+                country: shipping.address.country,
+                line1: shipping.address.line1 ?? "",
+                line2: shipping.address.line2,
+                postalCode: shipping.address.postalCode,
+                state: shipping.address.state
+            ),
+            name: shipping.name,
+            phone: nil
+        )
     }
 
     private func applyBillingAddress(
