@@ -27,7 +27,7 @@ extension SavedPaymentMethodFormFactory {
                 disallowedCardBrands: Set<STPCardBrand>(disallowedCardBrands),
                 theme: theme,
                 includePlaceholder: false,
-                canToggle: false
+                allowDeselection: false
             )
 
             // pre-select current card brand
