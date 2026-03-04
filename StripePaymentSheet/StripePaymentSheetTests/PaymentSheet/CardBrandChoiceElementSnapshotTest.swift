@@ -91,7 +91,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             cardBrands: [.visa, .cartesBancaires],
             disallowedCardBrands: [],
             theme: theme,
-            includePlaceholder: true
+            allowDeselection: true
         )
         verify(element)
     }
@@ -102,7 +102,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             cardBrands: [.visa, .cartesBancaires],
             disallowedCardBrands: [],
             theme: theme,
-            includePlaceholder: false
+            allowDeselection: false
         )
         verify(element)
     }
