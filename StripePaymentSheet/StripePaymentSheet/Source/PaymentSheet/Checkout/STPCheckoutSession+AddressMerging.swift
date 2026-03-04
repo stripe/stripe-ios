@@ -15,10 +15,11 @@ extension STPCheckoutSession {
     /// Populates empty fields in the configuration with checkout-collected addresses.
     /// Configuration values always take precedence over checkout-collected values.
     func applyAddressOverrides(to configuration: inout PaymentSheet.Configuration) {
-        applyBillingAddress(billingAddressOverride!, to: &configuration.defaultBillingDetails)
-
-        if configuration.shippingDetails() == nil {
-            let details = shippingAddressDetails(from: shippingAddressOverride!)
+        if let billing = billingAddressOverride {
+            applyBillingAddress(billing, to: &configuration.defaultBillingDetails)
+        }
+        if let shipping = shippingAddressOverride, configuration.shippingDetails() == nil {
+            let details = shippingAddressDetails(from: shipping)
             configuration.shippingDetails = { details }
         }
     }
@@ -26,10 +27,11 @@ extension STPCheckoutSession {
     /// Populates empty fields in the embedded configuration with checkout-collected addresses.
     /// Configuration values always take precedence over checkout-collected values.
     func applyAddressOverrides(to configuration: inout EmbeddedPaymentElement.Configuration) {
-        applyBillingAddress(billingAddressOverride!, to: &configuration.defaultBillingDetails)
-
-        if configuration.shippingDetails() == nil {
-            let details = shippingAddressDetails(from: shippingAddressOverride!)
+        if let billing = billingAddressOverride {
+            applyBillingAddress(billing, to: &configuration.defaultBillingDetails)
+        }
+        if let shipping = shippingAddressOverride, configuration.shippingDetails() == nil {
+            let details = shippingAddressDetails(from: shipping)
             configuration.shippingDetails = { details }
         }
     }
