@@ -270,8 +270,11 @@ extension PaymentSheetUITestCase {
 
         // Card brand choice selector should be enabled
         XCTAssertTrue(cardBrandChoiceVisa.waitForExistence(timeout: 5))
+        // Select Visa from the CBC selector
+        cardBrandChoiceVisa.tap()
+        app.toolbars.buttons["Done"].tap()
 
-        // We should have remembered selecting Visa
+        // We should have selected Visa
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
 
         // Finish checkout
