@@ -27,11 +27,16 @@ import UIKit
     public private(set) var items: [SegmentedSelectorItem]
     private var disabledItems: Set<SegmentedSelectorItem>
 
+    /// When false, the user cannot deselect the currently selected item.
+    private var allowDeselection: Bool
+
     public init(items: [SegmentedSelectorItem] = [],
                 disabledItems: Set<SegmentedSelectorItem> = [],
+                allowDeselection: Bool = true,
                 theme: ElementsAppearance = .default) {
         self.items = items
         self.disabledItems = disabledItems
+        self.allowDeselection = allowDeselection
         self.selectorView = SegmentedSelectorView(
             items: items,
             disabledItems: disabledItems,
@@ -58,7 +63,7 @@ import UIKit
         )
     }
 
-    public func select(_ item: SegmentedSelectorItem?, animated: Bool = false, shouldAutoAdvance: Bool = true) {
+    public func select(_ item: SegmentedSelectorItem?, animated: Bool = false) {
         // Validate that item exists in items array (if not nil)
         if let item = item, !items.contains(item) {
             return
@@ -72,17 +77,16 @@ import UIKit
         selectorView.select(item, animated: animated)
 
         delegate?.didUpdate(element: self)
-
-        // Auto-advance to next field
-        if shouldAutoAdvance {
-            delegate?.continueToNextField(element: self)
-        }
     }
 
     private func itemTapped(_ item: SegmentedSelectorItem) {
+        // If deselection is not allowed, no-op when tapping on already selected item
+        if selectedItem == item && !allowDeselection {
+            return
+        }
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
-        select(newSelection, animated: true, shouldAutoAdvance: true)
+        select(newSelection, animated: true)
     }
 }
 
