@@ -47,7 +47,7 @@ public struct KycInfo: Equatable {
     public var lastName: String
 
     /// The number associated with the customer’s id.
-    public var idNumber: String
+    public var idNumber: String?
 
     /// The type of id provided by the customer.
     public var idType: IdType = .socialSecurityNumber
@@ -56,7 +56,7 @@ public struct KycInfo: Equatable {
     public var address: Address
 
     /// The customer’s date of birth.
-    public var dateOfBirth: DateOfBirth
+    public var dateOfBirth: DateOfBirth?
 
     /// Creates a new instance of `KycInfo`.
     /// - Parameters:
@@ -68,9 +68,9 @@ public struct KycInfo: Equatable {
     public init(
         firstName: String,
         lastName: String,
-        idNumber: String,
+        idNumber: String?,
         address: Address,
-        dateOfBirth: DateOfBirth
+        dateOfBirth: DateOfBirth?
     ) {
         self.firstName = firstName
         self.lastName = lastName

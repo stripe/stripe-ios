@@ -9,7 +9,7 @@ import SwiftUI
 
 /// Convenience `View` that wraps a field on a form with a `headline` title.
 struct FormField<Content: View>: View {
-    private let title: String
+    private let title: Text
 
     @ViewBuilder
     private let content: () -> Content
@@ -18,16 +18,24 @@ struct FormField<Content: View>: View {
     /// - Parameters:
     ///   - title: The title displayed above the field.
     ///   - content: The content of the field itself.
-    init(_ title: String, @ViewBuilder content: @escaping () -> Content) {
+    init(_ title: Text, @ViewBuilder content: @escaping () -> Content) {
         self.title = title
         self.content = content
+    }
+
+    /// Creates a new `FormField`.
+    /// - Parameters:
+    ///   - title: The localized title displayed above the field.
+    ///   - content: The content of the field itself.
+    init(_ title: LocalizedStringKey, @ViewBuilder content: @escaping () -> Content) {
+        self.init(Text(title), content: content)
     }
 
     // MARK: - View
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title)
+            title
                 .font(.headline)
 
             content()

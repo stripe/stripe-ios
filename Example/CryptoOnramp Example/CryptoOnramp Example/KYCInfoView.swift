@@ -16,11 +16,33 @@ import StripePaymentSheet
 /// A view used to collect KYC (Know Your Customer) data and exercise the `CryptoOnrampCoordinator's` `attachKYCInfo(info:)` functionality.
 struct KYCInfoView: View {
 
+    /// Defines which KYC collection level the form is enforcing.
+    enum Mode {
+
+        /// Initial collection where SSN and date of birth may be omitted.
+        case level0
+
+        /// Follow-up collection where SSN and date of birth are required.
+        case level1
+
+        fileprivate var requiresDateOfBirthAndIdNumber: Bool {
+            switch self {
+            case .level0:
+                return false
+            case .level1:
+                return true
+            }
+        }
+    }
+
     /// The coordinator to use to submit KYC information.
     let coordinator: CryptoOnrampCoordinator
 
     /// Closure called when KYC submission succeeds, allowing parent flows to advance.
     let onCompleted: (() -> Void)
+
+    /// Controls which fields are required for collection.
+    let mode: Mode
 
     @State private var firstName: String = ""
     @State private var lastName: String = ""
@@ -31,7 +53,7 @@ struct KYCInfoView: View {
     @State private var state: String = ""
     @State private var postalCode: String = ""
     @State private var country: String = "US"
-    @State private var dateOfBirth: Date = Self.today
+    @State private var dateOfBirth: Date?
     @State private var errorMessage: String?
 
     @Environment(\.isLoading) private var isLoading
@@ -44,8 +66,62 @@ struct KYCInfoView: View {
         case firstName, lastName, idNumber, addressLine1, addressLine2, city, state, postalCode, country
     }
 
+    init(
+        coordinator: CryptoOnrampCoordinator,
+        mode: Mode = .level0,
+        onCompleted: @escaping () -> Void
+    ) {
+        self.coordinator = coordinator
+        self.onCompleted = onCompleted
+        self.mode = mode
+        _dateOfBirth = State(initialValue: mode.requiresDateOfBirthAndIdNumber ? Self.today : nil)
+    }
+
     private var isSubmitButtonDisabled: Bool {
-        isLoading.wrappedValue || firstName.isEmpty || lastName.isEmpty || idNumber.isEmpty || addressLine1.isEmpty || city.isEmpty || country.isEmpty
+        if isLoading.wrappedValue
+            || firstName.isEmpty
+            || lastName.isEmpty
+            || addressLine1.isEmpty
+            || city.isEmpty
+            || state.isEmpty
+            || postalCode.isEmpty
+            || country.isEmpty {
+            return true
+        }
+
+        if mode.requiresDateOfBirthAndIdNumber && (idNumber.isEmpty || dateOfBirth == nil) {
+            return true
+        }
+
+        return false
+    }
+
+    private var dateOfBirthBinding: Binding<Date> {
+        Binding(
+            get: { dateOfBirth ?? Self.today },
+            set: { dateOfBirth = $0 }
+        )
+    }
+
+    private var isDateOfBirthIncluded: Binding<Bool> {
+        Binding(
+            get: { dateOfBirth != nil },
+            set: { shouldIncludeDateOfBirth in
+                dateOfBirth = shouldIncludeDateOfBirth ? (dateOfBirth ?? Self.today) : nil
+            }
+        )
+    }
+
+    private func title(_ label: LocalizedStringKey, required: Bool) -> Text {
+        if required {
+            Text(label)
+        } else {
+            Text(label)
+            + Text(" ")
+            + Text("(optional)")
+                .font(.body)
+                .foregroundColor(.secondary)
+        }
     }
 
     // MARK: - View
@@ -60,7 +136,7 @@ struct KYCInfoView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                FormField("First Name") {
+                FormField(title("First Name", required: true)) {
                     makeTextField(
                         "Enter your first name",
                         text: $firstName,
@@ -69,7 +145,7 @@ struct KYCInfoView: View {
                     )
                 }
 
-                FormField("Last Name") {
+                FormField(title("Last Name", required: true)) {
                     makeTextField(
                         "Enter your last name",
                         text: $lastName,
@@ -78,7 +154,7 @@ struct KYCInfoView: View {
                     )
                 }
 
-                FormField("Social Security Number") {
+                FormField(title("Social Security Number", required: mode.requiresDateOfBirthAndIdNumber)) {
                     makeTextField(
                         "Enter your SSN",
                         text: $idNumber,
@@ -87,14 +163,27 @@ struct KYCInfoView: View {
                     )
                 }
 
-                FormField("Date of Birth") {
-                    DatePicker("", selection: $dateOfBirth, in: ...Self.today, displayedComponents: .date)
-                        .datePickerStyle(WheelDatePickerStyle())
-                        .labelsHidden()
-                        .frame(maxWidth: .infinity)
+                FormField(title("Date of Birth", required: mode.requiresDateOfBirthAndIdNumber)) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        if mode.requiresDateOfBirthAndIdNumber {
+                            DatePicker("", selection: dateOfBirthBinding, in: ...Self.today, displayedComponents: .date)
+                                .datePickerStyle(WheelDatePickerStyle())
+                                .labelsHidden()
+                                .frame(maxWidth: .infinity)
+                        } else {
+                            Toggle("Add date of birth now", isOn: isDateOfBirthIncluded)
+
+                            if dateOfBirth != nil {
+                                DatePicker("", selection: dateOfBirthBinding, in: ...Self.today, displayedComponents: .date)
+                                    .datePickerStyle(WheelDatePickerStyle())
+                                    .labelsHidden()
+                                    .frame(maxWidth: .infinity)
+                            }
+                        }
+                    }
                 }
 
-                FormField("Address Line 1") {
+                FormField(title("Address Line 1", required: true)) {
                     makeTextField(
                         "Enter your street address",
                         text: $addressLine1,
@@ -103,7 +192,7 @@ struct KYCInfoView: View {
                     )
                 }
 
-                FormField("Address Line 2 (optional)") {
+                FormField(title("Address Line 2", required: false)) {
                     makeTextField(
                         "Apartment, suite, etc.",
                         text: $addressLine2,
@@ -112,7 +201,7 @@ struct KYCInfoView: View {
                     )
                 }
 
-                FormField("City") {
+                FormField(title("City", required: true)) {
                     makeTextField(
                         "Enter your city",
                         text: $city,
@@ -121,7 +210,7 @@ struct KYCInfoView: View {
                     )
                 }
 
-                FormField("State/Province") {
+                FormField(title("State/Province", required: true)) {
                     makeTextField(
                         "Enter your state or province",
                         text: $state,
@@ -130,7 +219,7 @@ struct KYCInfoView: View {
                     )
                 }
 
-                FormField("Postal Code") {
+                FormField(title("Postal Code", required: true)) {
                     makeTextField(
                         "Enter your postal code",
                         text: $postalCode,
@@ -138,7 +227,7 @@ struct KYCInfoView: View {
                     )
                 }
 
-                FormField("Country") {
+                FormField(title("Country", required: true)) {
                     makeTextField(
                         "Country code",
                         text: $country,
@@ -174,22 +263,23 @@ struct KYCInfoView: View {
             country: country.isEmpty ? nil : country,
             line1: addressLine1.isEmpty ? nil : addressLine1,
             line2: addressLine2.isEmpty ? nil : addressLine2,
-            postalCode: postalCode.isEmpty ? nil : postalCode,
-            state: state.isEmpty ? nil : state
+            postalCode: postalCode,
+            state: state
         )
 
-        let dateOfBirthComponents = Calendar.current.dateComponents([.day, .month, .year], from: dateOfBirth)
-
-        let dateOfBirth = KycInfo.DateOfBirth(
-            day: dateOfBirthComponents.day ?? 0,
-            month: dateOfBirthComponents.month ?? 0,
-            year: dateOfBirthComponents.year ?? 0
-        )
+        let dateOfBirth = dateOfBirth.map { dateOfBirth in
+            let dateOfBirthComponents = Calendar.current.dateComponents([.day, .month, .year], from: dateOfBirth)
+            return KycInfo.DateOfBirth(
+                day: dateOfBirthComponents.day ?? 0,
+                month: dateOfBirthComponents.month ?? 0,
+                year: dateOfBirthComponents.year ?? 0
+            )
+        }
 
         let kycInfo = KycInfo(
             firstName: firstName,
             lastName: lastName,
-            idNumber: idNumber,
+            idNumber: idNumber.isEmpty ? nil : idNumber,
             address: address,
             dateOfBirth: dateOfBirth
         )
@@ -225,8 +315,14 @@ struct KYCInfoView: View {
     }
 }
 
-#Preview {
+#Preview("Level 0") {
     PreviewWrapperView { coordinator in
-        KYCInfoView(coordinator: coordinator, onCompleted: {})
+        KYCInfoView(coordinator: coordinator) {}
+    }
+}
+
+#Preview("Level 1") {
+    PreviewWrapperView { coordinator in
+        KYCInfoView(coordinator: coordinator, mode: .level1) {}
     }
 }
