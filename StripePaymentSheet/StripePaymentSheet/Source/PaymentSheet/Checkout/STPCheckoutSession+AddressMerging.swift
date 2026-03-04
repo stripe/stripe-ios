@@ -18,7 +18,13 @@ extension STPCheckoutSession {
         if let billing = billingAddressOverride {
             applyBillingAddress(billing, to: &configuration.defaultBillingDetails)
         }
+<<<<<<< HEAD
         if let shipping = shippingAddressOverride, configuration.shippingDetails() == nil {
+=======
+
+        if let shipping = shippingAddressOverride as? Checkout.AddressUpdate,
+           configuration.shippingDetails() == nil {
+>>>>>>> 149a504ca63 (Small bug fixes)
             let details = shippingAddressDetails(from: shipping)
             configuration.shippingDetails = { details }
         }
@@ -30,7 +36,13 @@ extension STPCheckoutSession {
         if let billing = billingAddressOverride {
             applyBillingAddress(billing, to: &configuration.defaultBillingDetails)
         }
+<<<<<<< HEAD
         if let shipping = shippingAddressOverride, configuration.shippingDetails() == nil {
+=======
+
+        if let shipping = shippingAddressOverride as? Checkout.AddressUpdate,
+           configuration.shippingDetails() == nil {
+>>>>>>> 149a504ca63 (Small bug fixes)
             let details = shippingAddressDetails(from: shipping)
             configuration.shippingDetails = { details }
         }

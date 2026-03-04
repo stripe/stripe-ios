@@ -107,6 +107,7 @@ import Foundation
     public let allResponseFields: [AnyHashable: Any]
 
     /// Client-side billing address override, set via Checkout.updateBillingAddress(_:).
+<<<<<<< HEAD
     public internal(set) var billingAddressOverride: Checkout.AddressUpdate?
 
     /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
@@ -118,6 +119,14 @@ import Foundation
     func shouldSendTaxRegion(for addressType: String) -> Bool {
         return automaticTaxEnabled && automaticTaxAddressSource == addressType
     }
+=======
+    /// Stored as `Any?` to avoid an upward dependency from the data model to `Checkout.AddressUpdate`.
+    public var billingAddressOverride: Any?
+
+    /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
+    /// Stored as `Any?` to avoid an upward dependency from the data model to `Checkout.AddressUpdate`.
+    public var shippingAddressOverride: Any?
+>>>>>>> 149a504ca63 (Small bug fixes)
 
     /// :nodoc:
     public override var description: String {

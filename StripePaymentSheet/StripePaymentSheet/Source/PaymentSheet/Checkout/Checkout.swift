@@ -121,9 +121,14 @@ public final class Checkout: ObservableObject {
     ///   the server request fails.
     public func updateBillingAddress(_ params: AddressUpdate) async throws {
         try requireOpenSession()
+<<<<<<< HEAD
         if session?.shouldSendTaxRegion(for: "billing") == true {
             try await performAPIUpdate(.setTaxRegion(params.address))
+=======
+        if let params, shouldSendTaxRegion(for: "billing") {
+>>>>>>> 149a504ca63 (Small bug fixes)
             session?.billingAddressOverride = params
+            try await performAPIUpdate(.setTaxRegion(params.address))
         } else {
             session?.billingAddressOverride = params
             if let session {
@@ -146,9 +151,14 @@ public final class Checkout: ObservableObject {
     ///   the server request fails.
     public func updateShippingAddress(_ params: AddressUpdate) async throws {
         try requireOpenSession()
+<<<<<<< HEAD
         if session?.shouldSendTaxRegion(for: "shipping") == true {
             try await performAPIUpdate(.setTaxRegion(params.address))
+=======
+        if let params, shouldSendTaxRegion(for: "shipping") {
+>>>>>>> 149a504ca63 (Small bug fixes)
             session?.shippingAddressOverride = params
+            try await performAPIUpdate(.setTaxRegion(params.address))
         } else {
             session?.shippingAddressOverride = params
             if let session {
