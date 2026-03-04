@@ -27,7 +27,7 @@ import UIKit
     public private(set) var items: [SegmentedSelectorItem]
     private var disabledItems: Set<SegmentedSelectorItem>
 
-    /// When true, the user cannot deselect the currently selected item — one item must always be selected.
+    /// When false, the user cannot deselect the currently selected item.
     private var allowDeselection: Bool
 
     public init(items: [SegmentedSelectorItem] = [],
@@ -63,7 +63,7 @@ import UIKit
         )
     }
 
-    public func select(_ item: SegmentedSelectorItem?, animated: Bool = false, shouldAutoAdvance: Bool = true) {
+    public func select(_ item: SegmentedSelectorItem?, animated: Bool = false) {
         // Validate that item exists in items array (if not nil)
         if let item = item, !items.contains(item) {
             return
@@ -77,21 +77,16 @@ import UIKit
         selectorView.select(item, animated: animated)
 
         delegate?.didUpdate(element: self)
-
-        // Auto-advance to next field
-        if shouldAutoAdvance {
-            delegate?.continueToNextField(element: self)
-        }
     }
 
     private func itemTapped(_ item: SegmentedSelectorItem) {
         // If deselection is not allowed, no-op when tapping on already selected item
-        if !allowDeselection && selectedItem == item {
+        if selectedItem == item && !allowDeselection {
             return
         }
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
-        select(newSelection, animated: true, shouldAutoAdvance: true)
+        select(newSelection, animated: true)
     }
 }
 
@@ -213,7 +208,7 @@ final class SegmentedSelectorView: UIView {
 // MARK: - SegmentedItemView
 
 /// A single tappable item icon with optional checkmark (segmented control style)
-private final class SegmentedItemView: UIView {
+private final class SegmentedItemView: UIControl {
     let item: SegmentedSelectorItem
     private var isDisabled: Bool
     private let theme: ElementsAppearance
@@ -260,6 +255,10 @@ private final class SegmentedItemView: UIView {
         let configuration = UIImage.SymbolConfiguration(weight: .medium)
         checkmarkImageView.image = UIImage(systemName: "checkmark", withConfiguration: configuration)
         checkmarkImageView.tintColor = theme.colors.bodyText
+
+        // Disable so touches pass through to this UIControl,
+        // preventing BottomSheetViewController's keyboard-dismiss gesture from firing.
+        containerStack.isUserInteractionEnabled = false
 
         // Add checkmark on the left, then icon on the right
         containerStack.addArrangedSubview(checkmarkImageView)
