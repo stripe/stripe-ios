@@ -219,7 +219,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         // Pre-tax price, CA sales has not yet been applied
         XCTAssertEqual(checkout.session?.totalSummary?.subtotal, 5050)
         XCTAssertEqual(checkout.session?.totalSummary?.total, 5050)
-        
+
         // Update the billing address to get tax applied
         let billingUpdate = Checkout.AddressUpdate(
             name: "Jane Doe",

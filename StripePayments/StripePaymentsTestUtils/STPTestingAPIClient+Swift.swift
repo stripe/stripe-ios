@@ -218,9 +218,9 @@ extension STPTestingAPIClient {
                 [
                     "price_data": [
                         "currency": currency,
-                        "product_data": ["name": "Test Product", "tax_code": "txcd_99999999",],
+                        "product_data": ["name": "Test Product", "tax_code": "txcd_99999999", ],
                         "unit_amount": amount ?? 5050,
-                        "tax_behavior": "exclusive"
+                        "tax_behavior": "exclusive",
                     ] as [String: Any],
                     "quantity": 1,
                     "adjustable_quantity": [
