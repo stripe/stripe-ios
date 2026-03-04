@@ -15,16 +15,16 @@ import UIKit
 @_spi(STP) public final class SegmentedSelectorElement: Element {
     weak public var delegate: ElementDelegate?
 
-    lazy public var view: UIView = {
+    public var view: UIView {
         return selectorView
-    }()
+    }
 
     public let collectsUserInput: Bool = true
 
     private let selectorView: SegmentedSelectorView
 
     public private(set) var selectedItem: SegmentedSelectorItem?
-    public var items: [SegmentedSelectorItem]
+    public private(set) var items: [SegmentedSelectorItem]
     private var disabledItems: Set<SegmentedSelectorItem>
 
     /// When true, the user cannot deselect the currently selected item — one item must always be selected.
@@ -49,6 +49,12 @@ import UIKit
         guard items != self.items || disabledItems != self.disabledItems else { return }
         self.items = items
         self.disabledItems = disabledItems
+
+        // If the previously selected item is no longer present or enabled, deselect it
+        if let selectedItem, !items.contains(selectedItem) || disabledItems.contains(selectedItem) {
+            self.selectedItem = nil
+            delegate?.didUpdate(element: self)
+        }
 
         selectorView.update(
             items: items,
