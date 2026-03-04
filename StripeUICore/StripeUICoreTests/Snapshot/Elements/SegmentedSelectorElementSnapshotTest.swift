@@ -86,6 +86,71 @@ final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
         selectorElement.select(twoItems[1], animated: false, shouldAutoAdvance: false)
         verify(selectorElement)
     }
+
+    // MARK: - Dark mode
+
+    func testNoSelection_darkMode() {
+        let selectorElement = makeSegmentedSelectorElement()
+        verify(selectorElement, darkMode: true)
+    }
+
+    func testFirstItemSelected_darkMode() {
+        let selectorElement = makeSegmentedSelectorElement()
+        selectorElement.select(items[0], animated: false, shouldAutoAdvance: false)
+        verify(selectorElement, darkMode: true)
+    }
+
+    func testWithDisabledItems_darkMode() {
+        let disabledItems = Set([items[1], items[2]])
+        let selectorElement = makeSegmentedSelectorElement(disabledItems: disabledItems)
+        verify(selectorElement, darkMode: true)
+    }
+
+    func testWithDisabledItemsAndSelection_darkMode() {
+        let disabledItems = Set([items[1], items[2]])
+        let selectorElement = makeSegmentedSelectorElement(disabledItems: disabledItems)
+        selectorElement.select(items[0], animated: false, shouldAutoAdvance: false)
+        verify(selectorElement, darkMode: true)
+    }
+
+    // MARK: - Update
+
+    func testUpdateAddItems() {
+        let twoItems = Array(items.prefix(2))
+        let selectorElement = SegmentedSelectorElement(
+            items: twoItems,
+            disabledItems: [],
+            theme: .default
+        )
+        // Update to three items
+        selectorElement.update(items: items, disabledItems: [])
+        verify(selectorElement)
+    }
+
+    func testUpdateRemoveItems() {
+        let selectorElement = makeSegmentedSelectorElement()
+        // Update to two items
+        let twoItems = Array(items.prefix(2))
+        selectorElement.update(items: twoItems, disabledItems: [])
+        verify(selectorElement)
+    }
+
+    func testUpdateDisabledItems() {
+        let selectorElement = makeSegmentedSelectorElement()
+        // Select an item
+        selectorElement.select(items[1])
+        // Update to disable the last two items, including the previously selected item
+        selectorElement.update(items: items, disabledItems: Set([items[1], items[2]]))
+        verify(selectorElement)
+    }
+
+    func testUpdatePreservesSelection() {
+        let selectorElement = makeSegmentedSelectorElement()
+        selectorElement.select(items[0], animated: false, shouldAutoAdvance: false)
+        // Update disabled items while keeping the selection
+        selectorElement.update(items: items, disabledItems: Set([items[2]]))
+        verify(selectorElement)
+    }
 }
 
 private extension SegmentedSelectorElementSnapshotTest {
@@ -99,13 +164,22 @@ private extension SegmentedSelectorElementSnapshotTest {
         )
     }
 
-    func verify(_ element: SegmentedSelectorElement) {
+    func verify(_ element: SegmentedSelectorElement, darkMode: Bool = false) {
         let view = element.view
         // Let the view size itself based on its intrinsic content size
         let size = view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         view.bounds = CGRect(origin: .zero, size: size)
-        view.layoutIfNeeded()
 
-        STPSnapshotVerifyView(view)
+        if darkMode {
+            let window = UIWindow(frame: view.bounds)
+            window.overrideUserInterfaceStyle = .dark
+            window.isHidden = false
+            window.addSubview(view)
+            window.layoutIfNeeded()
+            STPSnapshotVerifyView(view)
+        } else {
+            view.layoutIfNeeded()
+            STPSnapshotVerifyView(view)
+        }
     }
 }
