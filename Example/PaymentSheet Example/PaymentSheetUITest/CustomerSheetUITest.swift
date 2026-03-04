@@ -430,8 +430,11 @@ class CustomerSheetUITest: XCTestCase {
         app.typeText("123") // CVC
         app.typeText("12345") // Postal
 
+        let cardBrandChoiceCB = app.buttons["Cartes Bancaires"]
+        let cardBrandChoiceVisa = app.buttons["Visa"]
+
         // Card brand choice should be enabled
-        app.buttons["Cartes Bancaires"].waitForExistenceAndTap(timeout: timeout)
+        cardBrandChoiceCB.waitForExistenceAndTap(timeout: timeout)
         // Bug where it autoadvances to the MM / YY field even though it's filled out, have to tap Done again
         app.toolbars.buttons["Done"].tap()
 
@@ -456,8 +459,21 @@ class CustomerSheetUITest: XCTestCase {
         // Saved card should show the edit icon since it is co-branded
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
 
+        // Tapping the selected card brand again should not deselect it
+        XCTAssertTrue(cardBrandChoiceCB.isSelected)
+        cardBrandChoiceCB.tap()
+        XCTAssertTrue(cardBrandChoiceCB.isSelected)
+
+        // Select Visa
+        XCTAssertFalse(cardBrandChoiceVisa.isSelected)
+        cardBrandChoiceVisa.tap()
+        XCTAssertTrue(cardBrandChoiceVisa.isSelected)
+
+        // We should have updated to Visa
+        XCTAssertTrue(app.images["carousel_card_visa"].waitForExistence(timeout: timeout))
+
         // Update this card
-        app.buttons["Visa"].waitForExistenceAndTap(timeout: timeout)
+        cardBrandChoiceVisa.waitForExistenceAndTap(timeout: timeout)
         app.toolbars.buttons["Done"].tap()
         app.buttons["Save"].waitForExistenceAndTap(timeout: timeout)
 
@@ -497,6 +513,7 @@ class CustomerSheetUITest: XCTestCase {
 
         // We should have selected Visa due to preferreedNetworks configuration API
         let cardBrandChoiceVisa = app.buttons["Visa"]
+        let cardBrandChoiceCB = app.buttons["Cartes Bancaires"]
         // Card brand choice textfield/selector should not be visible
         XCTAssertFalse(cardBrandChoiceVisa.waitForExistence(timeout: 2))
 
@@ -510,6 +527,7 @@ class CustomerSheetUITest: XCTestCase {
 
         // We should have selected Visa due to preferreedNetworks configuration API
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
+        XCTAssertFalse(cardBrandChoiceCB.isSelected)
 
         // Clear card text field, should reset selected card brand
         numberField.tap()
@@ -529,6 +547,7 @@ class CustomerSheetUITest: XCTestCase {
         // Card brand choice selector should be enabled and we should auto select Visa
         XCTAssertTrue(cardBrandChoiceVisa.waitForExistence(timeout: timeout))
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
+        XCTAssertFalse(cardBrandChoiceCB.isSelected)
 
         // Finish saving card
         app.buttons["Save"].tap()
@@ -551,9 +570,12 @@ class CustomerSheetUITest: XCTestCase {
         let startCoordinate = app.collectionViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.9, dy: 0.99))
         startCoordinate.press(forDuration: 0.1, thenDragTo: app.collectionViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.1, dy: 0.99)))
         XCTAssertTrue(app.buttons.matching(identifier: "CircularButton.Edit").firstMatch.waitForExistenceAndTap())
-        app.buttons["Visa"].waitForExistenceAndTap(timeout: timeout)
+        let cardBrandChoiceVisa = app.buttons["Visa"]
+        let cardBrandChoiceCB = app.buttons["Cartes Bancaires"]
+        cardBrandChoiceVisa.waitForExistenceAndTap(timeout: timeout)
         app.toolbars.buttons["Done"].tap()
-        XCTAssertTrue(app.buttons["Visa"].isSelected)
+        XCTAssertTrue(cardBrandChoiceVisa.isSelected)
+        XCTAssertFalse(cardBrandChoiceCB.isSelected)
         app.buttons["Save"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Done"].waitForExistence(timeout: 3))
         XCTAssertEqual(app.images.matching(identifier: "carousel_card_visa").count, 2)

@@ -336,6 +336,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
         app.buttons["Visa"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Visa"].isSelected)
+        XCTAssertFalse(app.buttons["Cartes Bancaires"].isSelected)
         app.buttons["Done"].waitForExistenceAndTap()
         app.buttons["Save"].waitForExistenceAndTap()
 
