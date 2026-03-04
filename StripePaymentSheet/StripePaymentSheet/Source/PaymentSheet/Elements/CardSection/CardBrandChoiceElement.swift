@@ -69,7 +69,6 @@ final class CardBrandChoiceElement: Element {
          cardBrands: Set<STPCardBrand> = [],
          disallowedCardBrands: Set<STPCardBrand> = [],
          theme: ElementsAppearance = .default,
-         includePlaceholder: Bool = true,
          allowDeselection: Bool = true) {
         if enableCBCRedesign {
             let element = SegmentedSelectorElement(
@@ -85,7 +84,7 @@ final class CardBrandChoiceElement: Element {
                 cardBrands: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
                 theme: theme,
-                includePlaceholder: includePlaceholder
+                includePlaceholder: allowDeselection
             )
             self.variant = .dropdown(element)
             element.delegate = self
