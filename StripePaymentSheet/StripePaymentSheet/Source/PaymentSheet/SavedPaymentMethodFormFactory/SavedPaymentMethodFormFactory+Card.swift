@@ -26,7 +26,6 @@ extension SavedPaymentMethodFormFactory {
                 cardBrands: Set<STPCardBrand>(cardBrands),
                 disallowedCardBrands: Set<STPCardBrand>(disallowedCardBrands),
                 theme: theme,
-                includePlaceholder: false,
                 allowDeselection: false
             )
 
