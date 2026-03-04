@@ -370,6 +370,7 @@ class PlaygroundController: ObservableObject {
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
         configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
         configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
+
         switch settings.cardBrandAcceptance {
         case .all:
             configuration.cardBrandAcceptance = .all
