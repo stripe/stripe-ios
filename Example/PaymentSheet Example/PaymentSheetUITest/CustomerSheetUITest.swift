@@ -459,22 +459,17 @@ class CustomerSheetUITest: XCTestCase {
         // Saved card should show the edit icon since it is co-branded
         XCTAssertTrue(app.buttons["CircularButton.Edit"].waitForExistenceAndTap(timeout: timeout))
 
+        XCTAssertTrue(cardBrandChoiceCB.waitForExistence(timeout: timeout))
+
         // Tapping the selected card brand again should not deselect it
         XCTAssertTrue(cardBrandChoiceCB.isSelected)
         cardBrandChoiceCB.tap()
         XCTAssertTrue(cardBrandChoiceCB.isSelected)
 
-        // Select Visa
+        // Update this card
         XCTAssertFalse(cardBrandChoiceVisa.isSelected)
         cardBrandChoiceVisa.tap()
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
-
-        // We should have updated to Visa
-        XCTAssertTrue(app.images["carousel_card_visa"].waitForExistence(timeout: timeout))
-
-        // Update this card
-        cardBrandChoiceVisa.waitForExistenceAndTap(timeout: timeout)
-        app.toolbars.buttons["Done"].tap()
         app.buttons["Save"].waitForExistenceAndTap(timeout: timeout)
 
         // We should have updated to Visa

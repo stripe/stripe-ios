@@ -145,7 +145,7 @@ final class LinkPaymentMethodFormElement: Element {
         return PaymentMethodElementWrapper<CardBrandChoiceElement>(cardBrandChoiceElement) { field, params in
             let cardBrand = field.selectedBrand ?? .unknown
             let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
-            params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+            params.paymentMethodParams.card?.networks = .init(preferred: cardBrand != .unknown ? preferredNetworkAPIValue : nil)
             return params
         }
     }()
