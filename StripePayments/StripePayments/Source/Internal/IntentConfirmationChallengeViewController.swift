@@ -132,26 +132,33 @@ class IntentConfirmationChallengeViewController: UIViewController {
     }
 
     private func setupCloseButton() {
-        // Use glass style if available, plain style otherwise
-        if #available(iOS 26.0, visionOS 26.0, *), LiquidGlassDetector.isEnabledInMerchantApp {
-            let glassButtonSize = 44.0
-            closeButton = UIButton(type: .system)
-            closeButton.translatesAutoresizingMaskIntoConstraints = false
-            closeButton.frame = CGRect(x: 0, y: 0, width: glassButtonSize, height: glassButtonSize)
-            closeButton.widthAnchor.constraint(equalToConstant: glassButtonSize).isActive = true
-            closeButton.heightAnchor.constraint(equalToConstant: glassButtonSize).isActive = true
-            let config = UIImage.SymbolConfiguration(pointSize: 20, weight: .regular)
-            let image = UIImage(systemName: "xmark", withConfiguration: config)
-            closeButton.setImage(image, for: .normal)
+        let useLiquidGlass = Self.shouldApplyLiquidGlass
+
+        closeButton = UIButton(type: .system)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+
+        let symbolConfig = UIImage.SymbolConfiguration(
+            pointSize: useLiquidGlass ? 20 : 16,
+            weight: useLiquidGlass ? .regular : .medium
+        )
+        closeButton.setImage(UIImage(systemName: "xmark", withConfiguration: symbolConfig), for: .normal)
+
+        if useLiquidGlass {
+            let glassButtonSize: CGFloat = 44
+            NSLayoutConstraint.activate([
+                closeButton.widthAnchor.constraint(equalToConstant: glassButtonSize),
+                closeButton.heightAnchor.constraint(equalToConstant: glassButtonSize),
+            ])
             // These checks are a convenience because .glass is only available on iOS (not visionOS)
             // when compiling with XCode 26
-            closeButton.configuration = .glass()
+#if compiler(>=6.2)
+            #if !os(visionOS)
+            if #available(iOS 26.0, visionOS 26.0, *) {
+                closeButton.configuration = .glass()
+            }
+            #endif
+#endif
         } else {
-            closeButton = UIButton(type: .system)
-            closeButton.translatesAutoresizingMaskIntoConstraints = false
-            let config = UIImage.SymbolConfiguration(pointSize: 16, weight: .medium)
-            let image = UIImage(systemName: "xmark", withConfiguration: config)
-            closeButton.setImage(image, for: .normal)
             closeButton.tintColor = .white
         }
 
@@ -317,6 +324,22 @@ extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
     }
 }
 
+// MARK: - Liquid Glass
+@available(iOS 14.0, *)
+extension IntentConfirmationChallengeViewController {
+    private static var shouldApplyLiquidGlass: Bool {
+        #if compiler(>=6.2)
+        guard #available(iOS 26.0, *) else { return false }
+        if let optedOut = Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool, optedOut {
+            return false
+        }
+        return true
+        #else
+        return false
+        #endif
+    }
+}
+
 // MARK: - Errors
 enum ChallengeError: LocalizedError, AnalyticLoggableError {
     case webError(message: String, type: String, code: String?)
@@ -396,32 +419,5 @@ extension STPAnalyticsClient {
         log(
             analytic: GenericAnalytic(event: .intentConfirmationChallengeCanceled, params: ["duration": duration * 1000])
         )
-    }
-}
-
-@_spi(STP) public class LiquidGlassDetector {
-    /// Whether or not the merchant's app (not MPE) has Liquid Glass enabled
-    @_spi(STP) public static var isEnabledInMerchantApp: Bool {
-        guard #available(iOS 26.0, visionOS 26.0, *) else {
-            return false
-        }
-        return meetsCompilerRequirements && !hasOptedOut
-    }
-
-    /// Whether the app was built with Xcode 26 or later (which includes Swift compiler 6.2)
-    @_spi(STP) public static var meetsCompilerRequirements: Bool {
-        #if compiler(>=6.2)
-        return true
-        #else
-        return false
-        #endif
-    }
-
-    /// Whether the app hasn't opted out of the new design
-    @_spi(STP) public static var hasOptedOut: Bool {
-        if let optOutFlag = Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool {
-            return optOutFlag
-        }
-        return false
     }
 }
