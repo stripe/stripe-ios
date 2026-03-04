@@ -113,7 +113,7 @@ final class CardSectionElement: ContainerElement {
             cardBrandSelector = PaymentMethodElementWrapper(CardBrandChoiceElement(enableCBCRedesign: enableCBCRedesign, theme: theme)) { field, params in
                 let cardBrand = field.selectedBrand ?? .unknown
                 // Only set preferred networks for the confirm params if we have more than 1 brand fetched
-                if (cardBrandSelector?.element.brandCount ?? 1) > 1 {
+                if field.brandCount > 1 {
                     cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: cardBrand != .unknown ? STPCardBrandUtilities.apiValue(from: cardBrand) : nil)
                 }
                 analyticsHelper?.logCardBrandSelected(hostedSurface: hostedSurface, cardBrand: cardBrand)

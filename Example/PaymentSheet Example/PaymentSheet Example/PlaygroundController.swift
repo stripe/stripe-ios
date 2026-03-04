@@ -245,7 +245,6 @@ class PlaygroundController: ObservableObject {
         }
 
         configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
-
         switch settings.cardBrandAcceptance {
         case .all:
             configuration.cardBrandAcceptance = .all
