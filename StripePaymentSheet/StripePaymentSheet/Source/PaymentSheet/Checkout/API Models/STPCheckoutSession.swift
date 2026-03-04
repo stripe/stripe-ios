@@ -109,6 +109,7 @@ import Foundation
     /// Client-side billing address override, set via Checkout.updateBillingAddress(_:).
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     public internal(set) var billingAddressOverride: Checkout.AddressUpdate?
 
     /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
@@ -137,6 +138,12 @@ import Foundation
 >>>>>>> 3ceab7c423c (Minor updates)
     public var shippingAddressOverride: Checkout.AddressUpdate?
 >>>>>>> a5f3c8e9de0 (Remove any usage)
+=======
+    public internal(set) var billingAddressOverride: Checkout.AddressUpdate?
+
+    /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
+    public internal(set) var shippingAddressOverride: Checkout.AddressUpdate?
+>>>>>>> b4a7efaddce (PR feedback)
 
     /// Returns `true` when the server needs a `tax_region` update for the given address type.
     ///
