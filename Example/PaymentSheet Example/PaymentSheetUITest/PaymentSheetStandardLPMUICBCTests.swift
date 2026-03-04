@@ -181,7 +181,6 @@ class PaymentSheetStandardLPMUICBCTests: PaymentSheetStandardLPMUICase {
         XCTAssertFalse(cardBrandChoiceVisa.isSelected)
         cardBrandChoiceVisa.tap()
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
-        app.toolbars.buttons["Done"].tap()
         app.buttons["Save"].waitForExistenceAndTap(timeout: 5)
 
         // We should have updated to Visa
