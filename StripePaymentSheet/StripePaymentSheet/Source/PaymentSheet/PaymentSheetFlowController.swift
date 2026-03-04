@@ -73,11 +73,12 @@ extension PaymentSheet {
                 case .new(let confirmParams) = self,
                 let linkedBank = confirmParams.instantDebitsLinkedBank
             {
-                if linkedBank.linkMode == .linkCardBrand {
-                    return "link_card_brand"
-                } else {
-                    return "instant_debits"
-                }
+                return linkedBank.linkContextAnalyticsValue
+            } else if
+                case .saved(_, let confirmParams) = self,
+                let linkedBank = confirmParams?.instantDebitsLinkedBank
+            {
+                return linkedBank.linkContextAnalyticsValue
             } else {
                 return nil
             }
@@ -928,5 +929,11 @@ extension PaymentOption {
         case .applePay, .new, .external:
             return nil
         }
+    }
+}
+
+private extension InstantDebitsLinkedBank {
+    var linkContextAnalyticsValue: String {
+        linkMode == .linkCardBrand ? "link_card_brand" : "instant_debits"
     }
 }
