@@ -70,12 +70,12 @@ final class CardBrandChoiceElement: Element {
          disallowedCardBrands: Set<STPCardBrand> = [],
          theme: ElementsAppearance = .default,
          includePlaceholder: Bool = true,
-         allowToggle: Bool = true) {
+         canToggle: Bool = true) {
         if enableCBCRedesign {
             let element = SegmentedSelectorElement(
                 items: Self.makeItems(from: cardBrands),
                 disabledItems: Set(Self.makeItems(from: disallowedCardBrands)),
-                allowToggle: allowToggle,
+                canToggle: canToggle,
                 theme: theme
             )
             self.variant = .selector(element)

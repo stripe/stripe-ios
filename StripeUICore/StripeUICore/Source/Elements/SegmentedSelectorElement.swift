@@ -28,15 +28,15 @@ import UIKit
     private var disabledItems: Set<SegmentedSelectorItem>
 
     /// When true, the user cannot deselect the currently selected item — one item must always be selected.
-    private var allowToggle: Bool
+    private var canToggle: Bool
 
     public init(items: [SegmentedSelectorItem] = [],
                 disabledItems: Set<SegmentedSelectorItem> = [],
-                allowToggle: Bool = true,
+                canToggle: Bool = true,
                 theme: ElementsAppearance = .default) {
         self.items = items
         self.disabledItems = disabledItems
-        self.allowToggle = allowToggle
+        self.canToggle = canToggle
         self.selectorView = SegmentedSelectorView(
             items: items,
             disabledItems: disabledItems,
@@ -86,7 +86,7 @@ import UIKit
 
     private func itemTapped(_ item: SegmentedSelectorItem) {
         // If toggling is not allowed, no-op when tapping on already selected item
-        if !allowToggle && selectedItem == item {
+        if !canToggle && selectedItem == item {
             return
         }
         // Toggle behavior: if already selected, deselect
