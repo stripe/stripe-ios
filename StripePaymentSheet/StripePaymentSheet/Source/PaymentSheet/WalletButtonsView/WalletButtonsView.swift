@@ -169,7 +169,6 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 from: WindowAuthenticationContext().authenticationPresentingViewController(),
                 initiallySelectedPaymentDetailsID: nil,
                 shouldShowSecondaryCta: false,
-                canSkipWalletAfterVerification: flowController.elementsSession.canSkipLinkWallet,
                 completion: { confirmOptions, _ in
                     guard let confirmOptions else {
                         return

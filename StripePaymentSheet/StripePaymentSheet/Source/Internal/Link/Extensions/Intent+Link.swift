@@ -38,10 +38,6 @@ extension STPElementsSession {
         linkSettings?.popupWebviewOption ?? .shared
     }
 
-    var canSkipLinkWallet: Bool {
-        linkFlags["link_mobile_skip_wallet_in_flow_controller"] ?? false
-    }
-
     func shouldShowLink2FABeforePaymentSheet(for linkAccount: PaymentSheetLinkAccount) -> Bool {
         return self.supportsLink &&
         linkAccount.sessionState == .requiresVerification &&

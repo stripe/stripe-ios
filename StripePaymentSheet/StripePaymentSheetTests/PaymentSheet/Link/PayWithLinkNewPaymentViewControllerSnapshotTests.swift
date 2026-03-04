@@ -72,7 +72,6 @@ extension PayWithLinkNewPaymentViewControllerSnapshotTests {
                 configuration: config,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
-                canSkipWalletAfterVerification: false,
                 initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,
                 analyticsHelper: ._testValue()
