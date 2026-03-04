@@ -36,19 +36,19 @@ final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
 
     func testFirstItemSelected() {
         let selectorElement = makeSegmentedSelectorElement()
-        selectorElement.select(items[0], animated: false, shouldAutoAdvance: false)
+        selectorElement.select(items[0])
         verify(selectorElement)
     }
 
     func testMiddleItemSelected() {
         let selectorElement = makeSegmentedSelectorElement()
-        selectorElement.select(items[1], animated: false, shouldAutoAdvance: false)
+        selectorElement.select(items[1])
         verify(selectorElement)
     }
 
     func testLastItemSelected() {
         let selectorElement = makeSegmentedSelectorElement()
-        selectorElement.select(items[2], animated: false, shouldAutoAdvance: false)
+        selectorElement.select(items[2])
         verify(selectorElement)
     }
 
@@ -62,7 +62,7 @@ final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
         let disabledItems = Set([items[1], items[2]])
         let selectorElement = makeSegmentedSelectorElement(disabledItems: disabledItems)
         // Select an enabled item
-        selectorElement.select(items[0], animated: false, shouldAutoAdvance: false)
+        selectorElement.select(items[0])
         verify(selectorElement)
     }
 
@@ -83,7 +83,7 @@ final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
             disabledItems: [],
             theme: .default
         )
-        selectorElement.select(twoItems[1], animated: false, shouldAutoAdvance: false)
+        selectorElement.select(twoItems[1])
         verify(selectorElement)
     }
 
@@ -96,7 +96,7 @@ final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
 
     func testFirstItemSelected_darkMode() {
         let selectorElement = makeSegmentedSelectorElement()
-        selectorElement.select(items[0], animated: false, shouldAutoAdvance: false)
+        selectorElement.select(items[0])
         verify(selectorElement, darkMode: true)
     }
 
@@ -109,7 +109,7 @@ final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
     func testWithDisabledItemsAndSelection_darkMode() {
         let disabledItems = Set([items[1], items[2]])
         let selectorElement = makeSegmentedSelectorElement(disabledItems: disabledItems)
-        selectorElement.select(items[0], animated: false, shouldAutoAdvance: false)
+        selectorElement.select(items[0])
         verify(selectorElement, darkMode: true)
     }
 
@@ -146,7 +146,7 @@ final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
 
     func testUpdatePreservesSelection() {
         let selectorElement = makeSegmentedSelectorElement()
-        selectorElement.select(items[0], animated: false, shouldAutoAdvance: false)
+        selectorElement.select(items[0])
         // Update disabled items while keeping the selection
         selectorElement.update(items: items, disabledItems: Set([items[2]]))
         verify(selectorElement)
