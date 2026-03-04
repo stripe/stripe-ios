@@ -250,7 +250,7 @@ extension PaymentSheetUITestCase {
         // Select Visa from the CBC selector
         cardBrandChoiceVisa.tap()
         app.toolbars.buttons["Done"].tap()
-        
+
         // We should have selected Visa
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
         XCTAssertFalse(cardBrandChoiceCB.isSelected)
@@ -274,7 +274,7 @@ extension PaymentSheetUITestCase {
         // Select Visa from the CBC selector
         cardBrandChoiceVisa.tap()
         app.toolbars.buttons["Done"].tap()
-        
+
         // We should have selected Visa
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
         XCTAssertFalse(cardBrandChoiceCB.isSelected)
