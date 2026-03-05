@@ -236,6 +236,9 @@ class PaymentSheetFormFactory {
             } else if paymentMethod == .satispay && isSettingUp {
                 // special case, display mandate for Satispay when setting up or pi+sfu
                 additionalElements = [makeSatispayMandate()]
+            } else if paymentMethod == .twint && isSettingUp {
+                // special case, display mandate for Twint when setting up or pi+sfu
+                additionalElements = [makeTwintMandate()]
             } else if paymentMethod == .bancontact {
                 return makeBancontact()
             } else if paymentMethod == .bacsDebit {
