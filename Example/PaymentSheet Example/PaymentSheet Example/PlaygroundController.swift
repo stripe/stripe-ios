@@ -244,6 +244,7 @@ class PlaygroundController: ObservableObject {
             configuration.paymentMethodLayout = .automatic
         }
 
+        configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
         switch settings.cardBrandAcceptance {
         case .all:
             configuration.cardBrandAcceptance = .all
@@ -366,6 +367,7 @@ class PlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
         configuration.billingDetailsCollectionConfiguration.allowedCountries = settings.allowedCountries.countries
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
+        configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
         configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
 
         switch settings.cardBrandAcceptance {

@@ -36,7 +36,7 @@ extension SavedPaymentMethodFormFactory {
                 lastFour: cardDetails.last4,
                 editConfiguration: .readOnly,
                 cardBrand: cardDetails.brand,
-                cardBrandDropDown: nil
+                cardBrandChoiceElement: nil
             )
 
             let panElement = panElementConfig.makeElement(theme: theme)
