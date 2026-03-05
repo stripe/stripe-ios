@@ -39,7 +39,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         case TH = "th"
         case DE = "de"
         case IT = "it"
-        case CH = "ch"
 
         var publishableKey: String {
             switch self {
@@ -69,8 +68,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 return STPTestingDEPublishableKey
             case .IT:
                 return STPTestingITPublishableKey
-            case .IT:
-                return STPTestingCHPublishableKey
             }
         }
     }
@@ -239,19 +236,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.Satispay.settingUp) { _ in }
     }
 
-    func testTwintConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent],
-                               currency: "CHF",
-                               paymentMethodType: .twint,
-                               merchantCountry: .CH,
-                               expectedHierarchy: ExpectedFormHierarchy.Twint.paymentIntent) { _ in }
-        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
-                               currency: "CHF",
-                               paymentMethodType: .twint,
-                               merchantCountry: .CH,
-                               expectedHierarchy: ExpectedFormHierarchy.Twint.settingUp) { _ in }
-    }
-
     func testCryptoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
@@ -388,6 +372,11 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .twint,
                                merchantCountry: .GB,
                                expectedHierarchy: ExpectedFormHierarchy.Twint.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "CHF",
+                               paymentMethodType: .twint,
+                               merchantCountry: .GB,
+                               expectedHierarchy: ExpectedFormHierarchy.Twint.settingUp) { _ in }
     }
 
     func testSavedSEPA() async throws {
