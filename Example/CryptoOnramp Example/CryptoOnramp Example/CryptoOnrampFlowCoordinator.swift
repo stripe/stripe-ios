@@ -15,6 +15,22 @@ import StripeCryptoOnramp
 @MainActor
 final class CryptoOnrampFlowCoordinator: ObservableObject {
 
+    fileprivate enum KYCLevel {
+        case none
+        case level0
+        case level1
+        case level2
+
+        var includesLevel0: Bool {
+            switch self {
+            case .none:
+                return false
+            case .level0, .level1, .level2:
+                return true
+            }
+        }
+    }
+
     /// Represents the possible steps in the flow.
     enum Route: Hashable {
         case registration(email: String, oAuthScopes: [OAuthScopes])
@@ -33,8 +49,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     @Published var path: [Route] = []
 
     private(set) var selectedWallet: CustomerWalletsResponse.Wallet?
-    private var isKycVerified = false
-    private var isIdDocumentVerified = false
+    private var kycLevel: KYCLevel = .none
     private var createOnrampSessionResponse: CreateOnrampSessionResponse?
     private var selectedPaymentMethodDescription: String?
     private var settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed?
@@ -71,13 +86,15 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
     /// Advances to the next step of the flow post-KYC info collection.
     func advanceAfterKyc() {
-        isKycVerified = true
+        if !kycLevel.includesLevel0 {
+            kycLevel = .level0
+        }
         advanceToNextStep()
     }
 
     /// Advances to the next step in the flow post-identity verification.
     func advanceAfterIdentity() {
-        isIdDocumentVerified = true
+        kycLevel = .level2
         advanceToNextStep()
     }
 
@@ -112,8 +129,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         defer { isLoading?.wrappedValue = false }
         do {
             let info = try await APIClient.shared.fetchCustomerInfo()
-            isKycVerified = info.isKycVerified
-            isIdDocumentVerified = info.isIdDocumentVerified
+            kycLevel = info.kycLevel
             advanceToNextStep()
         } catch {
             presentAlert(
@@ -124,10 +140,11 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     private func advanceToNextStep() {
-        if !isKycVerified {
+        // Temporary flow behavior:
+        // Only auto-route to KYC if the customer has not completed level 0.
+        // Level 1 and identity collection steps will happen just-in-time when an error occurs during the onramp session / checkout process.
+        if !kycLevel.includesLevel0 {
             path.append(.kycInfo)
-        } else if !isIdDocumentVerified {
-            path.append(.identity)
         } else if let successfulCheckoutMessage {
             path.append(.checkoutSuccess(message: successfulCheckoutMessage))
         } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription, let settlementSpeed {
@@ -147,8 +164,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     private func resetInternalState() {
-        isKycVerified = false
-        isIdDocumentVerified = false
+        kycLevel = .none
         selectedWallet = nil
         createOnrampSessionResponse = nil
         selectedPaymentMethodDescription = nil
@@ -157,13 +173,36 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 }
 
-private extension CustomerInformationResponse {
-    var isKycVerified: Bool {
-        verifications.contains { $0.name == "kyc_verified" && $0.status == "verified" }
+extension CustomerInformationResponse {
+
+    private static let level0Fields: Set<String> = [
+        "first_name",
+        "last_name",
+        "address_line_1",
+        "address_city",
+        "address_state",
+        "address_postal_code",
+        "address_country",
+    ]
+
+    private static let level1AdditionalFields: Set<String> = [
+        "id_number",
+        "dob",
+    ]
+
+    private var isIdDocumentVerified: Bool {
+        verifications.contains { $0.name == "id_document_verified" && $0.status == "verified" }
     }
 
-    var isIdDocumentVerified: Bool {
-        verifications.contains { $0.name == "id_document_verified" && $0.status == "verified" }
+    fileprivate var kycLevel: CryptoOnrampFlowCoordinator.KYCLevel {
+        let providedFieldSet = Set(providedFields)
+        let hasLevel0 = providedFieldSet.isSuperset(of: Self.level0Fields)
+        guard hasLevel0 else { return .none }
+
+        let hasLevel1 = providedFieldSet.isSuperset(of: Self.level1AdditionalFields)
+        guard hasLevel1 else { return .level0 }
+
+        return isIdDocumentVerified ? .level2 : .level1
     }
 }
 

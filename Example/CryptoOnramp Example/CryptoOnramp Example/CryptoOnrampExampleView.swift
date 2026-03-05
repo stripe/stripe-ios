@@ -82,7 +82,7 @@ struct CryptoOnrampExampleView: View {
                                 flowCoordinator.advanceAfterRegistration()
                             }
                         case .kycInfo:
-                            KYCInfoView(coordinator: coordinator) {
+                            KYCInfoView(coordinator: coordinator, mode: .level0) {
                                 flowCoordinator.advanceAfterKyc()
                             }
                         case .identity:
