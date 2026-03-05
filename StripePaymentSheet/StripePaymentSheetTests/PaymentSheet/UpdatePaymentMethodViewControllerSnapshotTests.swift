@@ -246,9 +246,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
 
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: bottomSheet.view.frame.size.height + sut.view.frame.size.height))
         testWindow.isHidden = false
-        if darkMode {
-            testWindow.overrideUserInterfaceStyle = .dark
-        }
+        testWindow.overrideUserInterfaceStyle = darkMode ? .dark : .light
         testWindow.rootViewController = bottomSheet
         STPSnapshotVerifyView(bottomSheet.view)
     }

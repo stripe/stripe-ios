@@ -172,8 +172,8 @@ private extension SegmentedSelectorElementSnapshotTest {
 
         let window = UIWindow(frame: view.bounds)
         window.overrideUserInterfaceStyle = darkMode ? .dark : .light
-        window.isHidden = false
         window.addSubview(view)
+        window.makeKeyAndVisible()
         window.layoutIfNeeded()
         STPSnapshotVerifyView(view)
     }
