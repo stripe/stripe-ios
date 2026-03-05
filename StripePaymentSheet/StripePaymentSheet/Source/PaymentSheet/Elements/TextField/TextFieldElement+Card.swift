@@ -81,8 +81,12 @@ extension TextFieldElement {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
                 } else {
                     // display all available card brands
+                    // Only show Cartes Bancaires when card brand choice is enabled
+                    let isCBCEnabled = cardBrandDropDown != nil
                     rotatingCardBrandsView.cardBrands =
-                    RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter { cardBrandFilter.isAccepted(cardBrand: $0) })
+                    RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter {
+                        cardBrandFilter.isAccepted(cardBrand: $0) && ($0 != .cartesBancaires || isCBCEnabled)
+                    })
                     return rotatingCardBrandsView
                 }
             } else {

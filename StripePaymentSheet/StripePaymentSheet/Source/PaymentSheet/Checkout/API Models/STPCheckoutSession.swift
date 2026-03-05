@@ -96,8 +96,28 @@ import Foundation
     /// Parsed from `customer_managed_saved_payment_methods_offer_save` in the init response.
     public let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
 
+    /// Whether automatic tax calculation is enabled for this session.
+    public let automaticTaxEnabled: Bool
+
+    /// The address source used for automatic tax calculation (e.g. `"billing"` or `"shipping"`).
+    /// Only meaningful when ``automaticTaxEnabled`` is `true`.
+    public let automaticTaxAddressSource: String?
+
     /// The raw API response used to create this object.
     public let allResponseFields: [AnyHashable: Any]
+
+    /// Client-side billing address override, set via Checkout.updateBillingAddress(_:).
+    public internal(set) var billingAddressOverride: Checkout.AddressUpdate?
+
+    /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
+    public internal(set) var shippingAddressOverride: Checkout.AddressUpdate?
+
+    /// Returns `true` when the server needs a `tax_region` update for the given address type.
+    ///
+    /// - Parameter addressType: Either `"billing"` or `"shipping"`.
+    func shouldSendTaxRegion(for addressType: String) -> Bool {
+        return automaticTaxEnabled && automaticTaxAddressSource == addressType
+    }
 
     /// :nodoc:
     public override var description: String {
@@ -150,6 +170,8 @@ import Foundation
         totalDiscountAmount: Int,
         totalShippingAmount: Int,
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
+        automaticTaxEnabled: Bool,
+        automaticTaxAddressSource: String?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.stripeId = stripeId
@@ -176,6 +198,8 @@ import Foundation
         self.totalDiscountAmount = totalDiscountAmount
         self.totalShippingAmount = totalShippingAmount
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
+        self.automaticTaxEnabled = automaticTaxEnabled
+        self.automaticTaxAddressSource = automaticTaxAddressSource
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -230,6 +254,16 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             from: dict["customer_managed_saved_payment_methods_offer_save"] as? [AnyHashable: Any]
         )
 
+        // Parse tax context for automatic tax settings.
+        // The server returns the address source as e.g. "session.billing"; strip
+        // the "session." prefix so callers can compare against plain "billing"/"shipping".
+        let taxContext = dict["tax_context"] as? [String: Any]
+        let automaticTaxEnabled = taxContext?["automatic_tax_enabled"] as? Bool ?? false
+        let automaticTaxAddressSource: String? = {
+            guard let raw = taxContext?["automatic_tax_address_source"] as? String else { return nil }
+            return raw.hasPrefix("session.") ? String(raw.dropFirst("session.".count)) : raw
+        }()
+
         return STPCheckoutSession(
             stripeId: stripeId,
             clientSecret: clientSecret,
@@ -257,6 +291,8 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             totalDiscountAmount: totalDiscountAmount,
             totalShippingAmount: totalShippingAmount,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
+            automaticTaxEnabled: automaticTaxEnabled,
+            automaticTaxAddressSource: automaticTaxAddressSource,
             allResponseFields: dict
         ) as? Self
     }
