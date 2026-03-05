@@ -2019,13 +2019,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(cardForm_si.getMandateElement() == nil)
     }
 
-    func testFPXFormContainsMandateText() {
-        let expectation = expectation(description: "Load specs")
-        AddressSpecProvider.shared.loadAddressSpecs {
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: 1)
-
+    func testiDEALFormContainsMandateText() {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
         let analyticsClient = STPAnalyticsClient()
@@ -2035,35 +2029,35 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 intent: intent,
                 elementsSession: ._testValue(intent: intent),
                 configuration: .paymentElement(configuration),
-                paymentMethod: .stripe(.FPX),
+                paymentMethod: .stripe(.iDEAL),
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
             ).make()
         }
-        let fpxForm_pi = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.FPX]))
-        XCTAssertTrue(fpxForm_pi.getMandateElement() == nil)
+        let iDEALForm_pi = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL]))
+        XCTAssertTrue(iDEALForm_pi.getMandateElement() == nil)
 
-        let fpxForm_pi_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.FPX], setupFutureUsage: .offSession))
-        XCTAssertTrue(fpxForm_pi_sfu.getMandateElement() != nil)
+        let iDEALForm_pi_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], setupFutureUsage: .offSession))
+        XCTAssertTrue(iDEALForm_pi_sfu.getMandateElement() != nil)
 
-        let fpxForm_pi_pmo_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.FPX], paymentMethodOptionsSetupFutureUsage: [.FPX: "off_session"]))
-        XCTAssertTrue(fpxForm_pi_pmo_sfu.getMandateElement() != nil)
-        // FPX displays SEPA mandate if setting up
-        XCTAssertEqual(fpxForm_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text, String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
+        let iDEALForm_pi_pmo_sfu = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], paymentMethodOptionsSetupFutureUsage: [.iDEAL: "off_session"]))
+        XCTAssertTrue(iDEALForm_pi_pmo_sfu.getMandateElement() != nil)
+        // iDEAL displays SEPA mandate if setting up
+        XCTAssertEqual(iDEALForm_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text, String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
 
-        let fpxForm_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.FPX], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.FPX: "none"]))
-        XCTAssertTrue(fpxForm_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
+        let iDEALForm_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testPaymentIntent(paymentMethodTypes: [.iDEAL], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.iDEAL: "none"]))
+        XCTAssertTrue(iDEALForm_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
 
-        let fpxForm_deferred_pi_pmo_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.FPX], paymentMethodOptionsSetupFutureUsage: [.FPX: .offSession]))
-        XCTAssertTrue(fpxForm_deferred_pi_pmo_sfu.getMandateElement() != nil)
-        // FPX displays SEPA mandate if setting up
-        XCTAssertEqual(fpxForm_deferred_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text, String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
+        let iDEALForm_deferred_pi_pmo_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.iDEAL], paymentMethodOptionsSetupFutureUsage: [.iDEAL: .offSession]))
+        XCTAssertTrue(iDEALForm_deferred_pi_pmo_sfu.getMandateElement() != nil)
+        // iDEAL displays SEPA mandate if setting up
+        XCTAssertEqual(iDEALForm_deferred_pi_pmo_sfu.getMandateElement()?.mandateTextView.textView.text, String(format: String.Localized.sepa_mandate_text, configuration.merchantDisplayName))
 
-        let fpxForm_deferred_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.FPX], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.FPX: .none]))
-        XCTAssertTrue(fpxForm_deferred_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
+        let iDEALForm_deferred_pi_top_level_sfu_pmo_sfu_none = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.iDEAL], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.iDEAL: .none]))
+        XCTAssertTrue(iDEALForm_deferred_pi_top_level_sfu_pmo_sfu_none.getMandateElement() == nil)
 
-        let fpxForm_si = makeForm(intent: ._testSetupIntent(paymentMethodTypes: [.FPX]))
-        XCTAssertTrue(fpxForm_si.getMandateElement() != nil)
+        let iDEALForm_si = makeForm(intent: ._testSetupIntent(paymentMethodTypes: [.iDEAL]))
+        XCTAssertTrue(iDEALForm_si.getMandateElement() != nil)
     }
 
     // MARK: Instant Debits
