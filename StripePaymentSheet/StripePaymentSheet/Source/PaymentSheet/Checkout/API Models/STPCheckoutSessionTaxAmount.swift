@@ -9,15 +9,16 @@
 import Foundation
 
 /// Tax amounts applied to a CheckoutSession.
-@_spi(STP) public class STPCheckoutSessionTaxAmount: Hashable, Equatable {
+@_spi(STP) public struct STPCheckoutSessionTaxAmount: Hashable {
     /// The amount of tax.
     public let amount: Int
     /// Whether this tax amount is inclusive.
     public let inclusive: Bool
-    /// The taxable amount.
-    public let taxableAmount: Int
     /// The tax rate.
     public let taxRate: STPCheckoutSessionTaxRate?
+
+    /// The taxable amount (internal use only).
+    let taxableAmount: Int
 
     init(amount: Int, inclusive: Bool, taxableAmount: Int, taxRate: STPCheckoutSessionTaxRate?) {
         self.amount = amount
@@ -50,36 +51,16 @@ import Foundation
             taxRate: taxRate
         )
     }
-
-    public static func == (lhs: STPCheckoutSessionTaxAmount, rhs: STPCheckoutSessionTaxAmount) -> Bool {
-        return lhs.amount == rhs.amount &&
-               lhs.inclusive == rhs.inclusive &&
-               lhs.taxableAmount == rhs.taxableAmount &&
-               lhs.taxRate == rhs.taxRate
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(amount)
-        hasher.combine(inclusive)
-        hasher.combine(taxableAmount)
-        hasher.combine(taxRate)
-    }
 }
 
 /// A tax rate applied to a CheckoutSession.
-@_spi(STP) public class STPCheckoutSessionTaxRate: Hashable, Equatable {
+@_spi(STP) public struct STPCheckoutSessionTaxRate: Hashable {
     /// The display name of the tax rate.
     public let displayName: String?
     /// The percentage of the tax rate.
     public let percentage: Double
     /// The state/jurisdiction of the tax rate.
     public let jurisdiction: String?
-
-    init(displayName: String?, percentage: Double, jurisdiction: String?) {
-        self.displayName = displayName
-        self.percentage = percentage
-        self.jurisdiction = jurisdiction
-    }
 
     static func decode(from dict: [AnyHashable: Any]?) -> STPCheckoutSessionTaxRate? {
         guard let dict = dict,
@@ -92,16 +73,18 @@ import Foundation
             jurisdiction: dict["jurisdiction"] as? String
         )
     }
+}
 
-    public static func == (lhs: STPCheckoutSessionTaxRate, rhs: STPCheckoutSessionTaxRate) -> Bool {
-        return lhs.displayName == rhs.displayName &&
-               lhs.percentage == rhs.percentage &&
-               lhs.jurisdiction == rhs.jurisdiction
+// MARK: - Convenience Properties
+
+extension STPCheckoutSessionTaxRate {
+    /// A formatted percentage string, e.g. "8.25%".
+    public var formattedPercentage: String {
+        String(format: "%g%%", percentage)
     }
 
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(displayName)
-        hasher.combine(percentage)
-        hasher.combine(jurisdiction)
+    /// A human-readable description combining jurisdiction and rate, e.g. "CA 8.25%" or "8.25%".
+    public var rateDescription: String {
+        [jurisdiction, formattedPercentage].compactMap { $0 }.joined(separator: " ")
     }
 }

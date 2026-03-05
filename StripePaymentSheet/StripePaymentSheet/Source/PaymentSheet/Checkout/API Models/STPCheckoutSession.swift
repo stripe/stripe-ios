@@ -90,6 +90,11 @@ import Foundation
     /// The tax amounts associated with this session.
     public let taxAmounts: [STPCheckoutSessionTaxAmount]
 
+    /// The total tax amount for this session, in the smallest currency unit.
+    public var totalTaxAmount: Int {
+        taxAmounts.reduce(0) { $0 + $1.amount }
+    }
+
     /// The currently applied promotion code, if one is present.
     public var appliedPromotionCode: String? {
         discounts.first(where: { $0.promotionCode != nil })?.promotionCode?.code
@@ -101,12 +106,18 @@ import Foundation
 
     /// Whether billing address collection is required for this session.
     /// Derived from `billing_address_collection == "required"` in the API response.
-    public let billingAddressRequired: Bool
+    public let requiresBillingAddress: Bool
 
     /// The allowed countries for shipping address collection, or `nil` if shipping
     /// address collection is not configured. When non-nil, the merchant should
     /// present a shipping address form restricted to these country codes.
     public let allowedShippingCountries: [String]?
+
+    /// Whether the session requires a shipping address.
+    /// When `true`, use `allowedShippingCountries` to restrict the address form.
+    public var requiresShippingAddress: Bool {
+        allowedShippingCountries != nil
+    }
 
     /// Whether automatic tax calculation is enabled for this session.
     public let automaticTaxEnabled: Bool
@@ -216,7 +227,7 @@ import Foundation
         totalShippingAmount: Int,
         taxAmounts: [STPCheckoutSessionTaxAmount],
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
-        billingAddressRequired: Bool,
+        requiresBillingAddress: Bool,
         allowedShippingCountries: [String]?,
         automaticTaxEnabled: Bool,
         automaticTaxAddressSource: String?,
@@ -247,7 +258,7 @@ import Foundation
         self.totalShippingAmount = totalShippingAmount
         self.taxAmounts = taxAmounts
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
-        self.billingAddressRequired = billingAddressRequired
+        self.requiresBillingAddress = requiresBillingAddress
         self.allowedShippingCountries = allowedShippingCountries
         self.automaticTaxEnabled = automaticTaxEnabled
         self.automaticTaxAddressSource = automaticTaxAddressSource
@@ -307,7 +318,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
         )
 
         // Parse address collection settings
-        let billingAddressRequired = (dict["billing_address_collection"] as? String) == "required"
+        let requiresBillingAddress = (dict["billing_address_collection"] as? String) == "required"
         let allowedShippingCountries: [String]? = {
             guard let shippingCollection = dict["shipping_address_collection"] as? [String: Any],
                   let countries = shippingCollection["allowed_countries"] as? [String]
@@ -353,7 +364,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             totalShippingAmount: totalShippingAmount,
             taxAmounts: taxAmounts,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
-            billingAddressRequired: billingAddressRequired,
+            requiresBillingAddress: requiresBillingAddress,
             allowedShippingCountries: allowedShippingCountries,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,

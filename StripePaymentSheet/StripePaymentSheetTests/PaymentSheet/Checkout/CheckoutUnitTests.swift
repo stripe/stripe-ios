@@ -325,24 +325,24 @@ final class CheckoutUnitTests: XCTestCase {
 
     // MARK: - Address Collection Decoding Tests
 
-    func testBillingAddressRequired_whenRequired() {
+    func testRequiresBillingAddress_whenRequired() {
         var json = Self.makeOpenSessionJSON()
         json["billing_address_collection"] = "required"
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
-        XCTAssertTrue(session.billingAddressRequired)
+        XCTAssertTrue(session.requiresBillingAddress)
     }
 
-    func testBillingAddressRequired_whenAutoOrNil() {
+    func testRequiresBillingAddress_whenAutoOrNil() {
         // "auto" should not be required
         var jsonAuto = Self.makeOpenSessionJSON()
         jsonAuto["billing_address_collection"] = "auto"
         let sessionAuto = STPCheckoutSession.decodedObject(fromAPIResponse: jsonAuto)!
-        XCTAssertFalse(sessionAuto.billingAddressRequired)
+        XCTAssertFalse(sessionAuto.requiresBillingAddress)
 
         // absent field should not be required
         let jsonNil = Self.makeOpenSessionJSON()
         let sessionNil = STPCheckoutSession.decodedObject(fromAPIResponse: jsonNil)!
-        XCTAssertFalse(sessionNil.billingAddressRequired)
+        XCTAssertFalse(sessionNil.requiresBillingAddress)
     }
 
     func testAllowedShippingCountries_whenPresent() {
