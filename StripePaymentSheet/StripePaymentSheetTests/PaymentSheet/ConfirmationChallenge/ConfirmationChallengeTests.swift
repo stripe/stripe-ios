@@ -137,7 +137,7 @@ class ConfirmationChallengeTests: XCTestCase {
         // didn't take the full timeout time, exited early
         XCTAssertLessThan(Date().timeIntervalSince(startTime), 10)
         XCTAssertNotNil(assertion)
-        XCTAssertTrue(STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).contains("elements.attestation.confirmation.request_token_succeeded"))
+        XCTAssertTrue(STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).contains("elements.attestation.confirmation.request_token.succeeded"))
         await confirmationChallenge.complete()
     }
 
@@ -192,7 +192,7 @@ class ConfirmationChallengeTests: XCTestCase {
         // should be ready
         XCTAssertEqual(attachAnalytic?["is_ready"] as? Bool, true)
 
-        XCTAssertTrue(STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).contains("elements.attestation.confirmation.request_token_succeeded"))
+        XCTAssertTrue(STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).contains("elements.attestation.confirmation.request_token.succeeded"))
         await confirmationChallenge.complete()
     }
 
