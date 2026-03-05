@@ -1109,9 +1109,8 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
                 return
             }
 
-            StripeAPI.defaultPublishableKey = publishableKey
-
             var config = self.configuration
+            config.apiClient = STPAPIClient(publishableKey: publishableKey)
             if customer != "guest" {
                 config.customer = .init(id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
             }
@@ -1143,10 +1142,10 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         }
         config.appearance = appearance
         config.apiClient = stubbedAPIClient()
+        config.apiClient.publishableKey = "pk_test_123456789"
         if !applePayEnabled {
             config.applePay = nil
         }
-        StripeAPI.defaultPublishableKey = "pk_test_123456789"
 
         var mode: PaymentSheet.InitializationMode = .paymentIntentClientSecret("pi_111111_secret_000000")
         if let intentConfig = intentConfig {
