@@ -106,6 +106,58 @@ public final class Checkout: ObservableObject {
         try await performAPIUpdate(.setShippingRate(optionId))
     }
 
+    // MARK: - Addresses
+
+    /// Sets the billing address for this checkout.
+    ///
+    /// The address is stored locally and merged into PaymentSheet configuration
+    /// when presenting payment UI. If automatic tax is enabled and the tax
+    /// address source is "billing", the address is also sent to the server to
+    /// compute updated tax amounts.
+    ///
+    /// - Parameter params: The billing address to set. To reset tax computation
+    ///   to a country-only region, pass an ``AddressUpdate`` with just the country.
+    /// - Throws: ``CheckoutError`` if the session is not loaded/open, or if
+    ///   the server request fails.
+    public func updateBillingAddress(_ params: AddressUpdate) async throws {
+        try requireOpenSession()
+        if session?.shouldSendTaxRegion(for: "billing") == true {
+            try await performAPIUpdate(.setTaxRegion(params.address))
+            session?.billingAddressOverride = params
+        } else {
+            session?.billingAddressOverride = params
+            if let session {
+                self.session = session
+                delegate?.checkout(self, didUpdate: session)
+            }
+        }
+    }
+
+    /// Sets the shipping address for this checkout.
+    ///
+    /// The address is stored locally and merged into PaymentSheet configuration
+    /// when presenting payment UI. If automatic tax is enabled and the tax
+    /// address source is "shipping", the address is also sent to the server to
+    /// compute updated tax amounts.
+    ///
+    /// - Parameter params: The shipping address to set. To reset tax computation
+    ///   to a country-only region, pass an ``AddressUpdate`` with just the country.
+    /// - Throws: ``CheckoutError`` if the session is not loaded/open, or if
+    ///   the server request fails.
+    public func updateShippingAddress(_ params: AddressUpdate) async throws {
+        try requireOpenSession()
+        if session?.shouldSendTaxRegion(for: "shipping") == true {
+            try await performAPIUpdate(.setTaxRegion(params.address))
+            session?.shippingAddressOverride = params
+        } else {
+            session?.shippingAddressOverride = params
+            if let session {
+                self.session = session
+                delegate?.checkout(self, didUpdate: session)
+            }
+        }
+    }
+
     // MARK: - Tax ID
 
     /// Sets the customer's tax ID on the session.
@@ -120,6 +172,9 @@ public final class Checkout: ObservableObject {
 
     /// Replaces ``session`` and notifies the delegate when the session data has changed.
     func updateSession(_ newSession: STPCheckoutSession) {
+        // Carry over client-side address overrides to the new session.
+        newSession.billingAddressOverride = session?.billingAddressOverride
+        newSession.shippingAddressOverride = session?.shippingAddressOverride
         let changed = session?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
         session = newSession
         if changed {
