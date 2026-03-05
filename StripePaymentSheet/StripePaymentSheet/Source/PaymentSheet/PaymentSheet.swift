@@ -108,6 +108,8 @@ public class PaymentSheet {
     /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     @_spi(CheckoutSessionsPreview) public convenience init(checkoutSession: STPCheckoutSession, configuration: Configuration) {
+        var config = configuration
+        checkoutSession.applyAddressOverrides(to: &config)
         self.init(
             mode: .checkoutSession(checkoutSession),
             configuration: config
