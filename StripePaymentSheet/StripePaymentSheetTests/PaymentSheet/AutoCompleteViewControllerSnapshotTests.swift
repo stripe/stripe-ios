@@ -64,7 +64,6 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
         let vc = AutoCompleteViewController(
             configuration: configuration,
             initialLine1Text: nil,
-            addressSpecProvider: addressSpecProvider
         )
         vc.results = mockSearchResults
         testWindow.rootViewController = vc
@@ -86,7 +85,6 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
         let vc = AutoCompleteViewController(
             configuration: configuration,
             initialLine1Text: nil,
-            addressSpecProvider: addressSpecProvider
         )
 
         vc.results = mockSearchResults
@@ -121,7 +119,6 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
         let vc = AutoCompleteViewController(
             configuration: config,
             initialLine1Text: nil,
-            addressSpecProvider: addressSpecProvider
         )
         vc.results = mockSearchResults
         testWindow.rootViewController = vc

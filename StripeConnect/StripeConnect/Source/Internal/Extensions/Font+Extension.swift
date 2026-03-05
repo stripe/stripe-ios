@@ -26,8 +26,4 @@ extension UIFont {
         return .regular
     }
 
-    var characterSet: CharacterSet? {
-        fontDescriptor.fontAttributes[.characterSet] as? CharacterSet
-        ?? CTFontCopyCharacterSet(self) as CharacterSet
-    }
 }

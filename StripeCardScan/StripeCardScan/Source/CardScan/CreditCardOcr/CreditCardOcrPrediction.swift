@@ -9,17 +9,6 @@
 import CoreGraphics
 import Foundation
 
-struct UxFrameConfidenceValues {
-    let hasOcr: Bool
-    let uxPan: Double
-    let uxNoPan: Double
-    let uxNoCard: Double
-
-    func toArray() -> [Double] {
-        return [hasOcr ? 1.0 : 0.0, uxPan, uxNoPan, uxNoCard]
-    }
-}
-
 enum CenteredCardState {
     case numberSide
     case nonNumberSide
@@ -44,7 +33,6 @@ struct CreditCardOcrPrediction {
 
     // this is only used by Card Verify and the Liveness check and filled in by the UxModel
     var centeredCardState: CenteredCardState?
-    var uxFrameConfidenceValues: UxFrameConfidenceValues?
 
     init(
         image: CGImage,
@@ -57,8 +45,7 @@ struct CreditCardOcrPrediction {
         numberBoxes: [CGRect]?,
         expiryBoxes: [CGRect]?,
         nameBoxes: [CGRect]?,
-        centeredCardState: CenteredCardState? = nil,
-        uxFrameConfidenceValues: UxFrameConfidenceValues? = nil
+        centeredCardState: CenteredCardState? = nil
     ) {
 
         self.image = image
@@ -72,23 +59,9 @@ struct CreditCardOcrPrediction {
         self.expiryBoxes = expiryBoxes
         self.nameBoxes = nameBoxes
         self.centeredCardState = centeredCardState
-        self.uxFrameConfidenceValues = uxFrameConfidenceValues
     }
 
     func with(uxPrediction: UxModelOutput) -> CreditCardOcrPrediction {
-        let uxFrameConfidenceValues: UxFrameConfidenceValues? = {
-            if let (hasPan, hasNoPan, hasNoCard) = uxPrediction.confidenceValues() {
-                let hasOcr = self.number != nil
-                return UxFrameConfidenceValues(
-                    hasOcr: hasOcr,
-                    uxPan: hasPan,
-                    uxNoPan: hasNoPan,
-                    uxNoCard: hasNoCard
-                )
-            }
-            return nil
-        }()
-
         return CreditCardOcrPrediction(
             image: self.image,
             ocrCroppingRectangle: self.ocrCroppingRectangle,
@@ -100,8 +73,7 @@ struct CreditCardOcrPrediction {
             numberBoxes: self.numberBoxes,
             expiryBoxes: self.expiryBoxes,
             nameBoxes: self.nameBoxes,
-            centeredCardState: uxPrediction.cardCenteredState(),
-            uxFrameConfidenceValues: uxFrameConfidenceValues
+            centeredCardState: uxPrediction.cardCenteredState()
         )
     }
 
@@ -123,38 +95,6 @@ struct CreditCardOcrPrediction {
     var expiryForDisplay: String? {
         guard let month = expiryMonth, let year = expiryYear else { return nil }
         return "\(month)/\(year)"
-    }
-
-    var expiryAsUInt: (UInt, UInt)? {
-        guard let month = expiryMonth.flatMap({ UInt($0) }) else { return nil }
-        guard let year = expiryYear.flatMap({ UInt($0) }) else { return nil }
-
-        return (month, year)
-    }
-
-    var numberBox: CGRect? {
-        let xmin = numberBoxes?.map { $0.minX }.min() ?? 0.0
-        let xmax = numberBoxes?.map { $0.maxX }.max() ?? 0.0
-        let ymin = numberBoxes?.map { $0.minY }.min() ?? 0.0
-        let ymax = numberBoxes?.map { $0.maxY }.max() ?? 0.0
-        return CGRect(x: xmin, y: ymin, width: (xmax - xmin), height: (ymax - ymin))
-    }
-
-    var expiryBox: CGRect? {
-        return expiryBoxes.flatMap { $0.first }
-    }
-
-    var numberBoxesInFullImageFrame: [CGRect]? {
-        guard let boxes = numberBoxes else { return nil }
-        let cropOrigin = ocrCroppingRectangle.origin
-        return boxes.map {
-            CGRect(
-                x: $0.origin.x + cropOrigin.x,
-                y: $0.origin.y + cropOrigin.y,
-                width: $0.size.width,
-                height: $0.size.height
-            )
-        }
     }
 
     static func likelyExpiry(_ string: String) -> (String, String)? {

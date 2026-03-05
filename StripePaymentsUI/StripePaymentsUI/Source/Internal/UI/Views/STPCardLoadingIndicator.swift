@@ -90,10 +90,6 @@ class STPCardLoadingIndicator: UIView {
         indicatorLayer?.add(spinAnimation, forKey: kLoadingAnimationIdentifier)
     }
 
-    func stopAnimating() {
-        indicatorLayer?.removeAnimation(forKey: kLoadingAnimationIdentifier)
-    }
-
     required init?(
         coder aDecoder: NSCoder
     ) {

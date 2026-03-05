@@ -123,62 +123,6 @@ extension String.Localized {
         )
     }
 
-    static var rotate_document: String {
-        return STPLocalizedString(
-            "Keep ID level",
-            "Instructional text when user needs to rorate to document to align with camera"
-        )
-    }
-
-    static var keep_fully_visibile: String {
-        return STPLocalizedString(
-            "Details not visible",
-            "Instructional text when user needs remove anything blocking the document"
-        )
-    }
-
-    static var align_document: String {
-        return STPLocalizedString(
-            "Keep ID level",
-            "Instructional text when user align the edge with camera"
-        )
-    }
-
-    static var increase_lighting: String {
-        return STPLocalizedString(
-            "Move to a well-lit area",
-            "Instructional text when environement is too dark"
-        )
-    }
-
-    static var decrease_lighting: String {
-        return STPLocalizedString(
-            "Details not visible",
-            "Instructional text when environement is too bright"
-        )
-    }
-
-    static var decrease_lighting_2: String {
-        return STPLocalizedString(
-            "Move to a darker area",
-            "Instructional text when environement is too bright"
-        )
-    }
-
-    static var reduce_glare: String {
-        return STPLocalizedString(
-            "Details not visible",
-            "Instructional text when the document is too glarry"
-        )
-    }
-
-    static var reduce_glare_2: String {
-        return STPLocalizedString(
-            "Try reduce glare and make ID visible",
-            "Instructional text when the document is too glarry"
-        )
-    }
-
     static var reduce_blur: String {
         return STPLocalizedString(
             "Image is blurry. Hold your phone steady and try again.",
@@ -197,13 +141,6 @@ extension String.Localized {
         return STPLocalizedString(
             "Center ID in view",
             "Instructional text when the document is not centered in the frame"
-        )
-    }
-
-    static var point_camera_to_document: String {
-        return STPLocalizedString(
-            "No document detected",
-            "Instructional text when there is no document in camera frame"
         )
     }
 

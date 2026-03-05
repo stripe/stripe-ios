@@ -12,18 +12,6 @@ import UIKit
 
 /// Specifies how to style HTML used to generate an NSAttributedString.
 struct HTMLStyle {
-    static let `default` = HTMLStyle(
-        bodyFont: UIFont.preferredFont(forTextStyle: .body, weight: .regular),
-        bodyColor: .label,
-        h1Font: UIFont.preferredFont(forTextStyle: .title1),
-        h2Font: UIFont.preferredFont(forTextStyle: .title2),
-        h3Font: UIFont.preferredFont(forTextStyle: .title3),
-        h4Font: UIFont.preferredFont(forTextStyle: .headline),
-        h5Font: UIFont.preferredFont(forTextStyle: .subheadline),
-        h6Font: UIFont.preferredFont(forTextStyle: .footnote),
-        isLinkUnderlined: false
-    )
-
     let bodyFont: UIFont
     let bodyColor: UIColor?
 

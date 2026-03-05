@@ -68,8 +68,6 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // 5. Verify response
-        XCTAssertEqual(response.status, .complete)
-        XCTAssertEqual(response.paymentStatus, .paid)
         XCTAssertNotNil(response.paymentIntent)
     }
 }

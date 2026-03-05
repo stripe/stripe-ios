@@ -232,10 +232,6 @@ public class STPCard: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc func stripeObject() -> String {
-        return "card"
-    }
-
     required init(
         stripeID: String,
         last4: String

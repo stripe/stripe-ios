@@ -62,7 +62,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
     }
 
     func testInitialState() {
-        let vc = makeViewController(documentType: .idCard)
+        let vc = makeViewController()
         verify(
             vc,
             expectedState: .initial,
@@ -360,7 +360,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         let mockFrontImage = UIImage()
 
         // Mock that file has been captured and upload has begun
-        let vc = makeViewController(documentType: .drivingLicense)
+        let vc = makeViewController()
 
         mockDocumentUploader.frontUploadPromise.resolve(with: frontFileData)
 
@@ -389,7 +389,7 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         let mockBackImage = UIImage()
 
         // Mock that file has been captured and upload has begun
-        let vc = makeViewController(documentType: .drivingLicense)
+        let vc = makeViewController()
 
         mockDocumentUploader.backUploadPromise.resolve(with: backFileData)
 
@@ -836,7 +836,6 @@ extension DocumentCaptureViewControllerTest {
     }
 
     fileprivate func makeViewController(
-        documentType: DocumentType
     ) -> DocumentCaptureViewController {
         return .init(
             apiConfig: DocumentCaptureViewControllerTest.mockVerificationPage.documentCapture,
@@ -878,15 +877,12 @@ extension DocumentCaptureViewControllerTest {
             output,
             .init(
                 hasBarcode: true,
-                isTimedOut: false,
                 symbology: .pdf417,
                 timeTryingToFindBarcode: 1
             ),
             .init(
                 hasMotionBlur: false,
-                iou: nil,
-                frameCount: 0,
-                duration: 0
+                iou: nil
             ),
             .init(
                 .init(
@@ -917,15 +913,12 @@ extension DocumentCaptureViewControllerTest {
             ),
             .init(
                 hasBarcode: hasBarcode,
-                isTimedOut: false,
                 symbology: .pdf417,
                 timeTryingToFindBarcode: 1
             ),
             .init(
                 hasMotionBlur: !isBlurry,
-                iou: nil,
-                frameCount: 0,
-                duration: 0
+                iou: nil
             ),
             .init(
                 .init(

@@ -39,7 +39,28 @@ import Foundation
 
     static let UnknownString = "STPSTRINGNOTFOUND"
 
-    public class func localizedStripeString(
+    // MARK: - Testing
+    static var languageOverride: String?
+    static func overrideLanguage(to string: String?) {
+        STPLocalizationUtils.languageOverride = string
+    }
+    static func testing_localizedStripeString(
+        forKey key: String,
+        bundleLocator: BundleLocatorProtocol.Type
+    ) -> String {
+        var bundle = bundleLocator.resourcesBundle
+
+        if let languageOverride = languageOverride {
+
+            let lprojPath = bundle.path(forResource: languageOverride, ofType: "lproj")
+            if let lprojPath = lprojPath {
+                bundle = Bundle(path: lprojPath)!
+            }
+        }
+        return bundle.localizedString(forKey: key, value: nil, table: nil)
+    }
+
+    public static func localizedStripeString(
         forKey key: String,
         bundleLocator: BundleLocatorProtocol.Type
     ) -> String {
@@ -66,27 +87,6 @@ import Foundation
             value: nil,
             table: nil
         )
-    }
-
-    // MARK: - Testing
-    static var languageOverride: String?
-    static func overrideLanguage(to string: String?) {
-        STPLocalizationUtils.languageOverride = string
-    }
-    static func testing_localizedStripeString(
-        forKey key: String,
-        bundleLocator: BundleLocatorProtocol.Type
-    ) -> String {
-        var bundle = bundleLocator.resourcesBundle
-
-        if let languageOverride = languageOverride {
-
-            let lprojPath = bundle.path(forResource: languageOverride, ofType: "lproj")
-            if let lprojPath = lprojPath {
-                bundle = Bundle(path: lprojPath)!
-            }
-        }
-        return bundle.localizedString(forKey: key, value: nil, table: nil)
     }
 }
 

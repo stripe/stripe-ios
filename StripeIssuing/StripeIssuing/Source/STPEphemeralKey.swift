@@ -11,7 +11,6 @@ import Foundation
 
 class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
     private(set) var stripeID: String
-    private(set) var created: Date
     private(set) var livemode = false
     private(set) var secret: String
     private(set) var expires: Date
@@ -21,12 +20,10 @@ class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
     /// `decodedObjectFromAPIResponse:` to create a key from a JSON response.
     required init(
         stripeID: String,
-        created: Date,
         secret: String,
         expires: Date
     ) {
         self.stripeID = stripeID
-        self.created = created
         self.secret = secret
         self.expires = expires
         super.init()
@@ -43,7 +40,7 @@ class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
         // required fields
         guard
             let stripeId = dict.stp_string(forKey: "id"),
-            let created = dict.stp_date(forKey: "created"),
+            dict.stp_date(forKey: "created") != nil,
             let secret = dict.stp_string(forKey: "secret"),
             let expires = dict.stp_date(forKey: "expires"),
             let associatedObjects = dict.stp_array(forKey: "associated_objects"),
@@ -68,11 +65,10 @@ class STPEphemeralKey: NSObject, STPAPIResponseDecodable {
         if customerID == nil && issuingCardID == nil {
             return nil
         }
-        let key = self.init(stripeID: stripeId, created: created, secret: secret, expires: expires)
+        let key = self.init(stripeID: stripeId, secret: secret, expires: expires)
         key.issuingCardID = issuingCardID
         key.stripeID = stripeId
         key.livemode = dict.stp_bool(forKey: "livemode", or: true)
-        key.created = created
         key.secret = secret
         key.expires = expires
         key.allResponseFields = response

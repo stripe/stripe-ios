@@ -23,7 +23,6 @@ extension PayWithLinkViewController {
     final class UpdatePaymentViewController: BaseViewController {
         weak var delegate: UpdatePaymentViewControllerDelegate?
         let linkAccount: PaymentSheetLinkAccount
-        let intent: Intent
         var configuration: PaymentElementConfiguration
         let paymentMethod: ConsumerPaymentDetails
 
@@ -89,7 +88,6 @@ extension PayWithLinkViewController {
             linkAppearance: LinkAppearance? = nil
         ) {
             self.linkAccount = linkAccount
-            self.intent = context.intent
             self.configuration = context.configuration
             self.configuration.linkPaymentMethodsOnly = true
             self.paymentMethod = paymentMethod

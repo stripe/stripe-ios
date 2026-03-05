@@ -428,24 +428,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
-    /// Creates params for a WeChat Pay PaymentMethod.
-    /// - Parameters:
-    ///   - weChatPay:                An object containing additional WeChat Pay details.
-    ///   - billingDetails:      An object containing the user's billing details.
-    ///   - metadata:            Additional information to attach to the PaymentMethod.
-    @objc
-    convenience init(
-        weChatPay: STPPaymentMethodWeChatPayParams,
-        billingDetails: STPPaymentMethodBillingDetails?,
-        metadata: [String: String]?
-    ) {
-        self.init()
-        self.type = .weChatPay
-        self.weChatPay = weChatPay
-        self.billingDetails = billingDetails
-        self.metadata = metadata
-    }
-
     /// Creates params for an Boleto PaymentMethod;
     /// - Parameters:
     ///   - boleto:   An object containing additional Boleto details.
@@ -711,24 +693,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.init()
         self.type = .multibanco
         self.multibanco = multibanco
-        self.billingDetails = billingDetails
-        self.metadata = metadata
-    }
-
-    /// Creates params for an ShopPay PaymentMethod.
-    /// - Parameters:
-    ///   - shopPay:          An object containing additional ShopPay details.
-    ///   - billingDetails:      An object containing the user's billing details.
-    ///   - metadata:            Additional information to attach to the PaymentMethod.
-    @objc
-    @_spi(STP) public convenience init(
-        shopPay: STPPaymentMethodShopPayParams,
-        billingDetails: STPPaymentMethodBillingDetails?,
-        metadata: [String: String]?
-    ) {
-        self.init()
-        self.type = .shopPay
-        self.shopPay = shopPay
         self.billingDetails = billingDetails
         self.metadata = metadata
     }
@@ -1120,24 +1084,6 @@ extension STPPaymentMethodParams {
     ) -> STPPaymentMethodParams {
         return STPPaymentMethodParams(
             blik: blik,
-            billingDetails: billingDetails,
-            metadata: metadata
-        )
-    }
-
-    /// Creates params for a WeChat Pay PaymentMethod.
-    /// - Parameters:
-    ///   - weChatPay:           An object containing additional WeChat Pay details.
-    ///   - billingDetails: An object containing the user's billing details.
-    ///   - metadata:       Additional information to attach to the PaymentMethod.
-    @objc(paramsWithWeChatPay:billingDetails:metadata:)
-    class func paramsWith(
-        weChatPay: STPPaymentMethodWeChatPayParams,
-        billingDetails: STPPaymentMethodBillingDetails?,
-        metadata: [String: String]?
-    ) -> STPPaymentMethodParams {
-        return STPPaymentMethodParams(
-            weChatPay: weChatPay,
             billingDetails: billingDetails,
             metadata: metadata
         )

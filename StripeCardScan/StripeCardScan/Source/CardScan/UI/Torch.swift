@@ -8,14 +8,12 @@ struct Torch {
     }
     let device: AVCaptureDevice?
     var state: State
-    var lastStateChange: Date
     var level: Float
 
     init(
         device: AVCaptureDevice
     ) {
         self.state = .off
-        self.lastStateChange = Date()
         if device.hasTorch {
             self.device = device
             if device.isTorchActive { self.state = .on }

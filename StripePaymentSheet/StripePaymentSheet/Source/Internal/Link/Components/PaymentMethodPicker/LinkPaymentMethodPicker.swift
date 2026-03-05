@@ -428,17 +428,6 @@ private extension BillingAddress {
         return postalCode == address.postalCode && countryCode == address.country
     }
 
-    func update(with billingDetails: PaymentSheet.BillingDetails) -> BillingAddress {
-        return .init(
-            line1: line1 ?? billingDetails.address.line1,
-            line2: line2 ?? billingDetails.address.line2,
-            city: city ?? billingDetails.address.city,
-            state: state ?? billingDetails.address.state,
-            postalCode: postalCode ?? billingDetails.address.postalCode,
-            countryCode: countryCode ?? billingDetails.address.country
-        )
-    }
-
     func withName(_ name: String?) -> BillingAddress {
         return .init(
             name: name,
@@ -449,12 +438,6 @@ private extension BillingAddress {
             postalCode: postalCode,
             countryCode: countryCode
         )
-    }
-}
-
-private extension PaymentSheet.Address {
-    var isIncomplete: Bool {
-        return line1 == nil || city == nil || postalCode == nil || country == nil
     }
 }
 

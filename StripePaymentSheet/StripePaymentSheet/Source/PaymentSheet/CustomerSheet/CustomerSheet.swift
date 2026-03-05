@@ -270,7 +270,6 @@ public class CustomerSheet {
 
     // MARK: - Internal Properties
     var completion: (() -> Void)?
-    var userCompletion: ((Result<PaymentOptionSelection?, Error>) -> Void)?
 }
 
 extension CustomerSheet {
@@ -297,13 +296,6 @@ extension CustomerSheet: CustomerSavedPaymentMethodsViewControllerDelegate {
         }
         self.confirmIntent(intent: intent, elementsSession: elementsSession, paymentOption: paymentOption, confirmationChallenge: confirmationChallenge) { result in
             completion(result)
-        }
-    }
-
-    func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion _completion: @escaping () -> Void) {
-        savedPaymentMethodsViewController.dismiss(animated: true) {
-            _completion()
-            self.completion?()
         }
     }
 

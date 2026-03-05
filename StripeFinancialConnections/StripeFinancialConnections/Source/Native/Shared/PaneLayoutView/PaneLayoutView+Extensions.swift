@@ -289,8 +289,3 @@ private class FooterStackView: UIStackView {
         didSelectSecondaryButtonHandler?()
     }
 }
-
-protocol FooterViewActions: NSObjectProtocol {
-    func didSelectPrimaryButton()
-    func didSelectSecondaryButton()
-}

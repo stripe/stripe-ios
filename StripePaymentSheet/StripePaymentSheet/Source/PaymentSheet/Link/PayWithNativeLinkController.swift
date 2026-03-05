@@ -46,8 +46,6 @@ final class PayWithNativeLinkController {
 
     private var completion: ((CompletionResult) -> Void)?
 
-    private var selfRetainer: PayWithNativeLinkController?
-
     let mode: Mode
     let intent: Intent
     let elementsSession: STPElementsSession
@@ -145,8 +143,6 @@ final class PayWithNativeLinkController {
         canSkipWalletAfterVerification: Bool,
         completion: @escaping (CompletionResult) -> Void
     ) {
-        self.selfRetainer = self
-
         let targetBottomSheet = presentingController as? BottomSheetViewController ?? presentingController.bottomSheetController
         let targetPresentationController = targetBottomSheet?.presentingViewController
 
@@ -252,14 +248,14 @@ extension PayWithNativeLinkController: PayWithLinkViewControllerDelegate {
             }()
 
             self.completion?(completionResult)
-            self.selfRetainer = nil
+
         }
     }
 
     func payWithLinkViewControllerDidFinish(_ payWithLinkViewController: PayWithLinkViewController, result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         payWithLinkViewController.dismiss(animated: true) {
             self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
-            self.selfRetainer = nil
+
         }
     }
 
@@ -290,12 +286,12 @@ extension PayWithNativeLinkController: PayWithLinkWebControllerDelegate {
             analyticsHelper: analyticsHelper
         ) { result, deferredIntentConfirmationType in
             self.completion?(.full(result: result, deferredIntentConfirmationType: deferredIntentConfirmationType, didFinish: true))
-            self.selfRetainer = nil
+
         }
     }
 
     func payWithLinkWebControllerDidCancel() {
         completion?(.full(result: .canceled, deferredIntentConfirmationType: nil, didFinish: false))
-        selfRetainer = nil
+
     }
 }

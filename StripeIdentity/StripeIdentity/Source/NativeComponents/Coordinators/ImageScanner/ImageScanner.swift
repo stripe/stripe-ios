@@ -30,7 +30,6 @@ protocol ImageScanner {
 
 /// Type-erased ImageScanner
 struct AnyImageScanner<Output> {
-    typealias Completion = (Output) -> Void
 
     private let _getModelMetricsTrackers: () -> [MLDetectorMetricsTrackerProtocol]
 

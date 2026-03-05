@@ -78,13 +78,6 @@ public class STPInputTextField: STPFloatingPlaceholderTextField, STPFormInputVal
         }
     }
 
-    internal func removeAccessoryViews(_ accessoryViews: [UIView]) {
-        for view in accessoryViews {
-            accessoryImageStackView.removeArrangedSubview(view)
-            view.removeFromSuperview()
-        }
-    }
-
     @objc
     func textDidChange() {
         let text = self.text ?? ""
@@ -287,10 +280,6 @@ extension STPInputTextField: STPFormInput {
 
     func addObserver(_ validationObserver: STPFormInputValidationObserver) {
         validator.addObserver(validationObserver)
-    }
-
-    func removeObserver(_ validationObserver: STPFormInputValidationObserver) {
-        validator.removeObserver(validationObserver)
     }
 
 }

@@ -5,9 +5,6 @@
 //  Created by Eduardo Urias on 9/6/23.
 //
 
-import Foundation
-@_spi(STP) import StripeCore
-@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
 

@@ -162,32 +162,3 @@ private func CreateCountryCodeRowItems(locale: Locale) -> [CountryCodeRowItem] {
         )
     }
 }
-
-#if DEBUG
-
-import SwiftUI
-
-private struct PhoneCountryCodePickerViewUIViewRepresentable: UIViewRepresentable {
-    func makeUIView(context: Context) -> PhoneCountryCodePickerView {
-        PhoneCountryCodePickerView(defaultCountryCode: nil)
-    }
-
-    func updateUIView(
-        _ phoneCountryCodePickerView: PhoneCountryCodePickerView,
-        context: Context
-    ) {}
-}
-
-struct PhoneCountryCodePickerView_Previews: PreviewProvider {
-    static var previews: some View {
-        if #available(iOS 14.0, *) {
-            VStack(spacing: 0) {
-                PhoneCountryCodePickerViewUIViewRepresentable()
-                Spacer()
-            }
-            .padding(.horizontal, 40)
-        }
-    }
-}
-
-#endif

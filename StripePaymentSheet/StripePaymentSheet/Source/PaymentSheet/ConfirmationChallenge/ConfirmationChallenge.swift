@@ -15,10 +15,6 @@ actor ConfirmationChallenge {
 
     private var timeout: TimeInterval = 6 // same as web
 
-    func setTimeout(timeout: TimeInterval) {
-        self.timeout = timeout
-    }
-
     typealias ChallengeTokens = (hcaptchaToken: String?, assertion: StripeAttest.Assertion?)
 
     // enablePassiveCaptcha and enableAttestation are determined by the playground switches and will be removed on release

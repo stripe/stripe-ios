@@ -54,13 +54,6 @@ final class BottomAlignedLabel: UIView {
         installConstraints()
     }
 
-    convenience init(
-        from viewModel: ViewModel
-    ) {
-        self.init()
-        configure(from: viewModel)
-    }
-
     required init?(
         coder: NSCoder
     ) {

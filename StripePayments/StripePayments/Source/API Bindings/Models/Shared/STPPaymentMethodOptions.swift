@@ -144,28 +144,3 @@ extension STPPaymentMethodOptions {
         }
     }
 }
-
-// MARK: - Test Helpers
-extension STPPaymentMethodOptions {
-    var dictionaryValue: [AnyHashable: Any] {
-        var dictionaryValue = [AnyHashable: Any]()
-        if let usBankAccount = usBankAccount {
-            dictionaryValue["us_bank_account"] = usBankAccount.dictionaryValue
-        }
-        return dictionaryValue.merging(allResponseFields) { a, _ in
-            a
-        }
-    }
-}
-extension STPPaymentMethodOptions.USBankAccount {
-    var dictionaryValue: [AnyHashable: Any] {
-        var dictionaryValue = [AnyHashable: Any]()
-        dictionaryValue["verification_method"] = verificationMethod.rawValue
-        if let setupFutureUsage = setupFutureUsage {
-            dictionaryValue["setup_future_usage"] = setupFutureUsage.stringValue
-        }
-        return dictionaryValue.merging(allResponseFields) { a, _ in
-            a
-        }
-    }
-}

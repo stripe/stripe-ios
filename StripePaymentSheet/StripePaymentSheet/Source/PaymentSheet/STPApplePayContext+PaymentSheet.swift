@@ -17,8 +17,6 @@ typealias PaymentSheetResultCompletionBlock = ((PaymentSheetResult, STPAnalytics
 /// A shim class; ApplePayContext expects a protocol/delegate, but PaymentSheet uses closures.
 private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate {
     let completion: PaymentSheetResultCompletionBlock
-    /// Retain this class until Apple Pay completes
-    var selfRetainer: ApplePayContextClosureDelegate?
     let authorizationResultHandler: PaymentSheet.ApplePayConfiguration.Handlers.AuthorizationResultHandler?
     let shippingMethodUpdateHandler:
     ((PKShippingMethod, @escaping ((PKPaymentRequestShippingMethodUpdate) -> Void)) -> Void)?
@@ -47,7 +45,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         self.intent = intent
         self.elementsSession = elementsSession
         super.init()
-        self.selfRetainer = self
     }
 
     func applePayContext(
@@ -261,7 +258,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         case .userCancellation:
             completion(.canceled, confirmType)
         }
-        selfRetainer = nil
     }
 
     func applePayContext(
@@ -338,9 +334,6 @@ extension STPApplePayContext {
             applePayContext.clientAttributionMetadata = clientAttributionMetadata
             return applePayContext
         } else {
-            // Delegate only deallocs when Apple Pay completes
-            // Since Apple Pay failed to start, nil it out now
-            delegate.selfRetainer = nil
             return nil
         }
     }

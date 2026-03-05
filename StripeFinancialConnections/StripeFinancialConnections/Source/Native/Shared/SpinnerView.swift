@@ -53,29 +53,3 @@ final class SpinnerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
-#if DEBUG
-
-import SwiftUI
-
-private struct SpinnerViewUIViewRepresentable: UIViewRepresentable {
-    let appearance: FinancialConnectionsAppearance?
-
-    func makeUIView(context: Context) -> SpinnerView {
-        SpinnerView(appearance: appearance)
-    }
-
-    func updateUIView(_ uiView: SpinnerView, context: Context) {}
-}
-
-struct SpinnerView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            SpinnerViewUIViewRepresentable(appearance: .stripe)
-            SpinnerViewUIViewRepresentable(appearance: .link)
-            SpinnerViewUIViewRepresentable(appearance: nil)
-        }
-    }
-}
-
-#endif

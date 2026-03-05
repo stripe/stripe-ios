@@ -81,13 +81,6 @@ final class DocumentScanningView: UIView {
         installConstraints()
     }
 
-    convenience init(
-        from viewModel: ViewModel
-    ) {
-        self.init()
-        configure(with: viewModel)
-    }
-
     required init(
         coder: NSCoder
     ) {

@@ -27,16 +27,6 @@ enum VerificationSheetFlowControllerError: Error {
     case noDocumentUploader
 }
 
-extension VerificationSheetFlowControllerError: LocalizedError {
-    /// Localized description of the error that displays to the user inside `ErrorViewController`
-    var localizedDescription: String {
-        // Note: Since this displays to end-users, these are all errors that
-        // occur as a result of a bad server-side configuration that the user
-        // cannot action on, only display a generic error message.
-        return NSError.stp_unexpectedErrorMessage()
-    }
-}
-
 extension VerificationSheetFlowControllerError: AnalyticLoggableErrorV2 {
     func analyticLoggableSerializeForLogging() -> [String: Any] {
         var payload: [String: Any]

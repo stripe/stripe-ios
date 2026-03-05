@@ -77,15 +77,14 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
             return .link(option: .withPaymentDetails(
                 account: .init(
                     email: exampleBillingEmail,
-                    session: .init(
+                    session: ConsumerSession.makeForTest(
                         clientSecret: "cs_xxx",
                         emailAddress: exampleBillingEmail,
                         redactedFormattedPhoneNumber: "(***) *** **55",
                         unredactedPhoneNumber: "(555) 555-5555",
                         phoneNumberCountry: "US",
-                        verificationSessions: [.init(type: .sms, state: .verified)],
-                        supportedPaymentDetailsTypes: [.card],
-                        mobileFallbackWebviewParams: nil
+                        verificationSessions: [["type": "SMS", "state": "VERIFIED"]],
+                        supportedPaymentDetailsTypes: [.card]
                     ),
                     publishableKey: "pk_xxx_for_link_account_xxx",
                     displayablePaymentDetails: nil,
@@ -185,15 +184,14 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                 option: .withPaymentDetails(
                     account: .init(
                         email: "test@example.com",
-                        session: .init(
+                        session: ConsumerSession.makeForTest(
                             clientSecret: "cs_xxx",
                             emailAddress: "test@example.com",
                             redactedFormattedPhoneNumber: "(***) *** **55",
                             unredactedPhoneNumber: "(555) 555-5555",
                             phoneNumberCountry: "US",
-                            verificationSessions: [.init(type: .sms, state: .verified)],
-                            supportedPaymentDetailsTypes: [.card],
-                            mobileFallbackWebviewParams: nil
+                            verificationSessions: [["type": "SMS", "state": "VERIFIED"]],
+                            supportedPaymentDetailsTypes: [.card]
                         ),
                         publishableKey: MockParams.publicKey,
                         displayablePaymentDetails: nil,
@@ -312,15 +310,14 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
             option: .withPaymentDetails(
                 account: .init(
                     email: "test@example.com",
-                    session: .init(
+                    session: ConsumerSession.makeForTest(
                         clientSecret: "cs_xxx",
                         emailAddress: "test@example.com",
                         redactedFormattedPhoneNumber: "(***) *** **55",
                         unredactedPhoneNumber: "(555) 555-5555",
                         phoneNumberCountry: "US",
-                        verificationSessions: [.init(type: .sms, state: .verified)],
-                        supportedPaymentDetailsTypes: [.card],
-                        mobileFallbackWebviewParams: nil
+                        verificationSessions: [["type": "SMS", "state": "VERIFIED"]],
+                        supportedPaymentDetailsTypes: [.card]
                     ),
                     publishableKey: MockParams.publicKey,
                     displayablePaymentDetails: nil,

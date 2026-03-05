@@ -12,7 +12,6 @@ import Foundation
 let HTTPMethodPOST = "POST"
 let HTTPMethodGET = "GET"
 let HTTPMethodDELETE = "DELETE"
-let JSONKeyObject = "object"
 
 /// - Note: The shape of this class is only for backwards compatibility with `STPAPIResponseDecodable` public API bindings.
 ///         If you're not dealing with `STPAPIResponseDecodable` objects, use STPAPIClient's `get`, `post`, etc. methods.

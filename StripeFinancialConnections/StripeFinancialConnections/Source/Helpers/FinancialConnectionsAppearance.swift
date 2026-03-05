@@ -8,7 +8,6 @@
 import UIKit
 
 struct FinancialConnectionsAppearance: Equatable {
-    static let stripe: Self = .init(from: .light)
     static let link: Self = .init(from: .linkLight)
 
     struct Colors: Equatable {

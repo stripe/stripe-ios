@@ -157,11 +157,6 @@ class PhoneOtpView: UIView {
 }
 
 extension PhoneOtpView {
-    fileprivate func installViews() {
-        stackView.addArrangedSubview(otpTextField)
-        addAndPinSubview(stackView)
-    }
-
     func reset() {
         configure(with: .InputtingOTP)
         otpTextField.value = ""

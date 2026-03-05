@@ -313,10 +313,6 @@ class PollingViewController: UIViewController {
 
 extension PollingViewController: BottomSheetContentViewController {
 
-    var allowsDragToDismiss: Bool {
-        return false
-    }
-
     func didTapOrSwipeToDismiss() {
         // no-op
     }

@@ -72,13 +72,6 @@ class STPApplePayContextLegacyHelper: NSObject {
         let delegate = storage.delegate as! STPApplePayContextDelegate
         let stpStatus = STPPaymentStatus(applePayStatus: storage.status)
 
-        // If this is a modern API error, convert it down to a legacy STPError.
-        // This is to avoid changing the API experience for users.
-        // We can re-evaluate this as we release more of the modern API.
-        if let modernError = storage.error as? StripeError {
-            storage.error = NSError.stp_error(from: modernError)
-        }
-
         delegate.applePayContext(storage.context, didCompleteWith: stpStatus, error: storage.error)
     }
 

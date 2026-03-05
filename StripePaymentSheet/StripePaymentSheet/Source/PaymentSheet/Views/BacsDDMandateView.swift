@@ -172,9 +172,3 @@ struct BacsDDMandateAccountInfoView: View {
         .cornerRadius(5)
     }
 }
-
-struct BacsDDMandateView_Previews: PreviewProvider {
-    static var previews: some View {
-        BacsDDMandateView(email: "j.diaz@example.com", name: "Jane Diaz", sortCode: "10-88-00", accountNumber: "00012345", confirmAction: {}, cancelAction: {})
-    }
-}

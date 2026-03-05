@@ -14,7 +14,6 @@ protocol CustomerSavedPaymentMethodsViewControllerDelegate: AnyObject {
                                                         elementsSession: STPElementsSession,
                                                         with paymentOption: PaymentOption,
                                                         completion: @escaping (InternalCustomerSheetResult) -> Void)
-    func savedPaymentMethodsViewControllerDidCancel(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
     func savedPaymentMethodsViewControllerDidFinish(_ savedPaymentMethodsViewController: CustomerSavedPaymentMethodsViewController, completion: @escaping () -> Void)
 }
 
@@ -57,7 +56,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     private var mode: Mode
     private(set) var error: Swift.Error?
     private var processingInFlight: Bool = false
-    private(set) var intent: Intent?
     private lazy var addPaymentMethodViewController: CustomerAddPaymentMethodViewController = {
         return CustomerAddPaymentMethodViewController(
             configuration: configuration,
@@ -841,10 +839,6 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 }
 
 extension CustomerSavedPaymentMethodsViewController: BottomSheetContentViewController {
-    var allowsDragToDismiss: Bool {
-        return isDismissable
-    }
-
     func didTapOrSwipeToDismiss() {
         if isDismissable {
             handleDismissSheet()

@@ -12,19 +12,6 @@ import XCTest
 
 final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
 
-    func testFinancialConnectionsSheetFailedAnalyticEncoding() {
-        let analytic = FinancialConnectionsSheetFailedAnalytic(
-            linkAccountSessionId: "linkAccountSessionId",
-            error: FinancialConnectionsSheetError.unknown(debugDescription: "some description")
-        )
-        XCTAssertNotNil(analytic.error)
-
-        let errorDict = analytic.error.serializeForV2Logging()
-        XCTAssertNil(errorDict["user_info"])
-        XCTAssertEqual(errorDict["code"] as? Int, 0)
-        XCTAssertEqual(errorDict["domain"] as? String, "Stripe.FinancialConnectionsSheetError")
-    }
-
     func testFinancialConnectionsSheetCompletionAnalyticCompleted() {
         let accountList = StripeAPI.FinancialConnectionsSession.AccountList(data: [], hasMore: false)
         let session = StripeAPI.FinancialConnectionsSession(
@@ -69,6 +56,5 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
         }
 
         XCTAssertEqual(failedAnalytic.linkAccountSessionId, "linkAccountSessionId")
-        XCTAssert(failedAnalytic.error is FinancialConnectionsSheetError)
     }
 }

@@ -89,15 +89,13 @@ extension LinkStubs {
     }
 
     static func consumerSession(supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType> = [.card, .bankAccount]) -> ConsumerSession {
-        return ConsumerSession(
+        return ConsumerSession.makeForTest(
             clientSecret: "client_secret",
             emailAddress: "user@example.com",
             redactedFormattedPhoneNumber: "(***) *** **55",
             unredactedPhoneNumber: "(555) 555-5555",
             phoneNumberCountry: "US",
-            verificationSessions: [],
-            supportedPaymentDetailsTypes: supportedPaymentDetailsTypes,
-            mobileFallbackWebviewParams: nil
+            supportedPaymentDetailsTypes: supportedPaymentDetailsTypes
         )
     }
 

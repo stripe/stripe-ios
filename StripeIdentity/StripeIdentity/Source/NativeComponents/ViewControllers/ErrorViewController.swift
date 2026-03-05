@@ -204,22 +204,4 @@ extension ErrorViewController.Model {
         }
     }
 
-    func buttonText(isFirstViewController: Bool) -> String {
-        switch self {
-        case .inputError(let inputError):
-            guard let buttonText = inputError.backButtonText else {
-                fallthrough
-            }
-            return buttonText
-        case .error:
-            if isFirstViewController {
-                return String.Localized.close
-            } else {
-                return STPLocalizedString(
-                    "Go Back",
-                    "Button to go back to the previous screen"
-                )
-            }
-        }
-    }
 }

@@ -11,16 +11,6 @@ import Foundation
 
 /// Response model for the CheckoutSession confirm endpoint (POST /v1/payment_pages/:session_id/confirm)
 final class CheckoutSessionConfirmResponse: NSObject {
-    /// The current lifecycle state of the checkout session.
-    ///
-    /// Determines whether the session is active, completed, or expired.
-    /// Only sessions in an active state can be confirmed.
-    let status: STPCheckoutSessionStatus
-    /// Indicates whether payment has been collected for this session.
-    ///
-    /// Different from `status` - this specifically tracks payment state, not overall
-    /// session lifecycle. Sessions in `setup` mode will show no payment required.
-    let paymentStatus: STPCheckoutSessionPaymentStatus
     /// The PaymentIntent for this session, if in `payment` or `subscription` mode.
     ///
     /// Contains payment details including amount, currency, payment method, and status.
@@ -34,14 +24,10 @@ final class CheckoutSessionConfirmResponse: NSObject {
     let allResponseFields: [AnyHashable: Any]
 
     init(
-        status: STPCheckoutSessionStatus,
-        paymentStatus: STPCheckoutSessionPaymentStatus,
         paymentIntent: STPPaymentIntent?,
         setupIntent: STPSetupIntent?,
         allResponseFields: [AnyHashable: Any]
     ) {
-        self.status = status
-        self.paymentStatus = paymentStatus
         self.paymentIntent = paymentIntent
         self.setupIntent = setupIntent
         self.allResponseFields = allResponseFields
@@ -56,9 +42,6 @@ extension CheckoutSessionConfirmResponse: STPAPIResponseDecodable {
               let paymentStatusString = response["payment_status"] as? String
         else { return nil }
 
-        let status = STPCheckoutSessionStatus.status(from: statusString)
-        let paymentStatus = STPCheckoutSessionPaymentStatus.paymentStatus(from: paymentStatusString)
-
         // Parse payment intent if present
         let paymentIntent = (response["payment_intent"] as? [AnyHashable: Any])
             .flatMap { STPPaymentIntent.decodedObject(fromAPIResponse: $0) }
@@ -68,8 +51,6 @@ extension CheckoutSessionConfirmResponse: STPAPIResponseDecodable {
             .flatMap { STPSetupIntent.decodedObject(fromAPIResponse: $0) }
 
         return CheckoutSessionConfirmResponse(
-            status: status,
-            paymentStatus: paymentStatus,
             paymentIntent: paymentIntent,
             setupIntent: setupIntent,
             allResponseFields: response

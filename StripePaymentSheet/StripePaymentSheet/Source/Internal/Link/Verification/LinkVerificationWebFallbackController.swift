@@ -17,8 +17,6 @@ final class LinkVerificationWebFallbackController: NSObject {
     private let window: UIWindow?
     private var authenticationSession: ASWebAuthenticationSession?
     private var completion: CompletionBlock?
-    private var selfRetainer: LinkVerificationWebFallbackController?
-
     init(authenticationUrl: URL, presentingWindow: UIWindow?) {
         self.authenticationUrl = authenticationUrl
         self.window = presentingWindow
@@ -27,8 +25,6 @@ final class LinkVerificationWebFallbackController: NSObject {
 
     func present(completion: @escaping CompletionBlock) {
         self.completion = completion
-        self.selfRetainer = self
-
         authenticationSession = ASWebAuthenticationSession(
             url: authenticationUrl,
             callbackURLScheme: Self.callbackURLSchme
@@ -44,7 +40,6 @@ final class LinkVerificationWebFallbackController: NSObject {
     private func handleAuthenticationResult(callbackURL: URL?, error: Error?) {
         defer {
             authenticationSession = nil
-            selfRetainer = nil
         }
 
         if let error {

@@ -117,8 +117,7 @@ extension STPAnalyticsClient {
                 event: ._3DS2AuthenticationRequestParamsFailed,
                 additionalParams: [
                     "intent_id": intentID,
-                ],
-                error: error
+                ]
             )
         )
     }
@@ -231,8 +230,7 @@ extension STPAnalyticsClient {
                 event: ._3DS2ChallengeFlowErrored,
                 additionalParams: [
                     "intent_id": intentID,
-                ],
-                error: error
+                ]
             )
         )
     }

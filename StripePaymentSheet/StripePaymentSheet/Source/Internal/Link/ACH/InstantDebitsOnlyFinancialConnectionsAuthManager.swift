@@ -29,9 +29,6 @@ final class InstantDebitsOnlyAuthenticationSessionManager: NSObject {
 
     struct RedactedPaymentDetails {
         let paymentMethodID: String
-        let bankName: String?
-        let bankIconCode: String?
-        let last4: String?
     }
 
     enum Result {
@@ -97,10 +94,7 @@ final class InstantDebitsOnlyAuthenticationSessionManager: NSObject {
 
                 if returnUrl.matchesSchemeHostAndPath(of: manifest.successURL) {
                     if let paymentMethodID = Self.extractValue(from: returnUrl, key: "payment_method_id") {
-                        let details = RedactedPaymentDetails(paymentMethodID: paymentMethodID,
-                                                             bankName: Self.extractValue(from: returnUrl, key: "bank_name")?.replacingOccurrences(of: "+", with: " "),
-                                                             bankIconCode: Self.extractValue(from: returnUrl, key: "bank_icon_code"),
-                                                             last4: Self.extractValue(from: returnUrl, key: "last4"))
+                        let details = RedactedPaymentDetails(paymentMethodID: paymentMethodID)
                         promise.fullfill(with: .success(.success(details: details)))
                     } else {
                         promise.reject(with: InstantDebitsOnlyAuthenticationSessionManager.Error.noPaymentMethodID)

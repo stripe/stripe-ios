@@ -16,7 +16,6 @@ import UIKit
 final class PrepaneViews {
 
     private let didSelectContinue: () -> Void
-    private let didSelectCancel: () -> Void
 
     let contentStackView: UIStackView = {
         let contentStackView = UIStackView()
@@ -40,7 +39,6 @@ final class PrepaneViews {
         didSelectCancel: @escaping () -> Void
     ) {
         self.didSelectContinue = didSelectContinue
-        self.didSelectCancel = didSelectCancel
         self.headerView = PaneLayoutView.createHeaderView(
             iconView: {
                 if let institutionIconUrl = prepaneModel.institutionIcon?.default {
@@ -112,9 +110,6 @@ final class PrepaneViews {
         secondaryButton?.isEnabled = !show
     }
 
-    @objc fileprivate func didSelectContinueButton() {
-        didSelectContinue()
-    }
 }
 
 private func CreateContentView(
@@ -157,115 +152,3 @@ private func CreateContentView(
 
     return verticalStackView
 }
-
-#if DEBUG
-
-import SwiftUI
-
-private class PrepanePreviewView: UIView {
-
-    let prepaneViews = PrepaneViews(
-        prepaneModel: FinancialConnectionsOAuthPrepane(
-            institutionIcon: nil,
-            title: "Log in to Capital One and grant the right permissions",
-            subtitle: "Next, you'll be promted to log in and connect your accounts.",
-            body: FinancialConnectionsOAuthPrepane.OauthPrepaneBody(
-                entries: [
-                    .init(
-                        content: .text("Be sure to select **Account Number & Routing Number**.")
-                    ),
-                    .init(
-                        content: .image(
-                            FinancialConnectionsImage(
-                                default: "https://js.stripe.com/v3/f0620405e3235ff4736f6876f4d3d045.gif"
-                            )
-                        )
-                    ),
-                    .init(
-                        content: .text(
-                            "We will only share the [requested data](https://www.stripe.com) with [Merchant] even if your bank grants Stripe access to more."
-                        )
-                    ),
-                ]
-            ),
-            partnerNotice: FinancialConnectionsOAuthPrepane.OauthPrepanePartnerNotice(
-                partnerIcon: nil,
-                text:
-                    "Stripe works with partners like [Partner Name] to reliability offer access to thousands of financial institutions. [Learn more](https://www.stripe.com)"
-            ),
-            cta: FinancialConnectionsOAuthPrepane.OauthPrepaneCTA(
-                text: "Continue",
-                icon: nil
-            ),
-            dataAccessNotice: FinancialConnectionsDataAccessNotice(
-                icon: nil,
-                title: "",
-                connectedAccountNotice: nil,
-                subtitle: nil,
-                body: FinancialConnectionsDataAccessNotice.Body(bullets: []),
-                disclaimer: nil,
-                cta: "OK"
-            )
-        ),
-        hideSecondaryButton: false,
-        panePresentationStyle: .sheet,
-        appearance: .stripe,
-        didSelectURL: { _ in },
-        didSelectContinue: {},
-        didSelectCancel: {}
-    )
-
-    init() {
-        super.init(frame: .zero)
-        let paneLayoutView = PaneLayoutView(
-            contentView: prepaneViews.contentStackView,
-            footerView: prepaneViews.footerView
-        )
-        paneLayoutView.addTo(view: self)
-        backgroundColor = FinancialConnectionsAppearance.Colors.background
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-private struct PrepaneViewsUIViewRepresentable: UIViewRepresentable {
-
-    let isLoading: Bool
-
-    func makeUIView(context: Context) -> PrepanePreviewView {
-        PrepanePreviewView()
-    }
-
-    func updateUIView(_ prepanePreviewView: PrepanePreviewView, context: Context) {
-        prepanePreviewView.prepaneViews.showLoadingView(isLoading)
-    }
-}
-
-@available(iOS 14.0, *)
-struct PrepaneViews_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            VStack {
-                PrepaneViewsUIViewRepresentable(isLoading: false)
-            }
-            .frame(maxWidth: .infinity)
-            .background(Color.purple.opacity(0.1))
-            .navigationTitle("stripe")
-            .navigationBarTitleDisplayMode(.inline)
-        }
-
-        NavigationView {
-            VStack {
-                PrepaneViewsUIViewRepresentable(isLoading: true)
-            }
-            .frame(maxWidth: .infinity)
-            .background(Color.purple.opacity(0.1))
-            .navigationTitle("stripe")
-            .navigationBarTitleDisplayMode(.inline)
-        }
-    }
-}
-
-#endif

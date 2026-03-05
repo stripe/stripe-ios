@@ -15,18 +15,6 @@ extension ConsumerSession {
         let displayablePaymentDetails: DisplayablePaymentDetails?
         let consentDataModel: LinkConsentDataModel?
 
-        init(
-            consumerSession: ConsumerSession,
-            publishableKey: String,
-            displayablePaymentDetails: DisplayablePaymentDetails? = nil,
-            consentDataModel: LinkConsentDataModel? = nil
-        ) {
-            self.consumerSession = consumerSession
-            self.publishableKey = publishableKey
-            self.displayablePaymentDetails = displayablePaymentDetails
-            self.consentDataModel = consentDataModel
-        }
-
         private enum CodingKeys: String, CodingKey {
             case consumerSession = "consumer_session"
             case publishableKey = "publishable_key"

@@ -100,7 +100,6 @@ class OcrMainLoop: MachineLearningLoop {
     var analyzerQueue: [CreditCardOcrImplementation] = []
     let mutexQueue = DispatchQueue(label: "OcrMainLoopMutex")
     var inBackground = false
-    var machineLearningQueues: [DispatchQueue] = []
     var userDidCancel = false
 
     init(
@@ -132,10 +131,6 @@ class OcrMainLoop: MachineLearningLoop {
         mutexQueue.async {
             self.errorCorrection = self.errorCorrection.reset()
         }
-    }
-
-    static func warmUp() {
-        // TODO(stk): Implement this later
     }
 
     // see the Correctness Criteria note in the comments above for why this is correct

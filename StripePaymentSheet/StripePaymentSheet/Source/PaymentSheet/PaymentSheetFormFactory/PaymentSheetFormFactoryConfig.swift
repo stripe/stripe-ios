@@ -78,15 +78,6 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
-    var isUsingBillingAddressCollection: Bool {
-        switch self {
-        case .paymentElement(let config, _):
-            return config.requiresBillingDetailCollection()
-        case .customerSheet(let config):
-            return config.isUsingBillingAddressCollection()
-        }
-    }
-
     var cardBrandFilter: CardBrandFilter {
         switch self {
         case .paymentElement(let config, _):

@@ -81,13 +81,6 @@ extension LinkPaymentMethodPicker {
 
         private let contentView = CellContentView()
 
-        private let cardNumberLabel: UILabel = {
-            let label = UILabel()
-            label.font = UIFont.monospacedDigitSystemFont(ofSize: 14, weight: .medium)
-                .scaled(withTextStyle: .body, maximumPointSize: 20)
-            return label
-        }()
-
         private lazy var chevron: UIImageView = {
             let chevron = UIImageView(image: StripeUICore.Image.icon_chevron_down.makeImage(template: true))
             chevron.contentMode = .center

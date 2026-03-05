@@ -170,16 +170,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         }
     }
 
-    /// Whether or not there are any payment options we can show
-    /// i.e. Are there any cells besides the Add cell?
-    var hasPaymentOptions: Bool {
-        return viewModels.contains {
-            if case .add = $0 {
-                return false
-            }
-            return true
-        }
-    }
     weak var delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate?
     let originalSelectedSavedPaymentMethod: CustomerPaymentOption?
     var originalSelectedViewModelIndex: Int? {
@@ -341,14 +331,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: .bottom)
     }
 
-    func unselectPaymentMethod() {
-        guard let selectedIndexPath = selectedIndexPath else {
-            return
-        }
-        selectedViewModelIndex = nil
-        collectionView.deselectItem(at: selectedIndexPath, animated: true)
-        collectionView.reloadItems(at: [selectedIndexPath])
-    }
     func didSelectDifferentPaymentMethod() -> Bool {
         if let selectedViewModelIndex = self.selectedViewModelIndex {
             let selectedViewModel = self.viewModels[selectedViewModelIndex]

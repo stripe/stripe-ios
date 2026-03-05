@@ -11,13 +11,10 @@ import UIKit
 
 final class InstitutionNoResultsView: UIView {
 
-    private let didSelectManuallyEnterDetails: (() -> Void)?
-
     init(
         appearance: FinancialConnectionsAppearance,
         didSelectManuallyEnterDetails: (() -> Void)?
     ) {
-        self.didSelectManuallyEnterDetails = didSelectManuallyEnterDetails
         super.init(frame: .zero)
 
         let verticalStackView = UIStackView()
@@ -91,45 +88,3 @@ final class InstitutionNoResultsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
-#if DEBUG
-
-import SwiftUI
-
-private struct InstitutionNoResultsViewUIViewRepresentable: UIViewRepresentable {
-
-    let showManualEntry: Bool
-
-    func makeUIView(context: Context) -> InstitutionNoResultsView {
-        InstitutionNoResultsView(
-            appearance: .stripe,
-            didSelectManuallyEnterDetails: (showManualEntry ? {} : nil)
-        )
-    }
-
-    func updateUIView(_ uiView: InstitutionNoResultsView, context: Context) {
-        uiView.sizeToFit()
-    }
-}
-
-struct InstitutionNoResultsView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            InstitutionNoResultsViewUIViewRepresentable(
-                showManualEntry: true
-            )
-            .frame(maxHeight: 140)
-
-            InstitutionNoResultsViewUIViewRepresentable(
-                showManualEntry: false
-            )
-            .frame(maxHeight: 100)
-
-            Spacer()
-        }
-        .padding()
-        .padding()
-    }
-}
-
-#endif

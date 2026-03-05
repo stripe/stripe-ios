@@ -12,9 +12,4 @@ struct Expiry: Hashable {
     func hash(into hasher: inout Hasher) {
         self.string.hash(into: &hasher)
     }
-
-    func display() -> String {
-        let twoDigitYear = self.year % 100
-        return String(format: "%02d/%02d", self.month, twoDigitYear)
-    }
 }

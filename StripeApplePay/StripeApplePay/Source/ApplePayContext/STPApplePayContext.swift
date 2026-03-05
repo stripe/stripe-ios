@@ -944,8 +944,6 @@ extension STPApplePayContext {
     }
 }
 
-private var kSTPApplePayContextAssociatedObjectKey = 0
-
 private class _stpinternal_STPApplePayContextLegacyHelper: NSObject {
     @objc class func performDidCreatePaymentMethod(
         _ storage: _stpinternal_ApplePayContextDidCreatePaymentMethodStorage

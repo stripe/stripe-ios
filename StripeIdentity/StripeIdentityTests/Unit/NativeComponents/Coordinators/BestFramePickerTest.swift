@@ -158,9 +158,7 @@ extension BestFramePickerTest {
             nil,
             .init(
                 hasMotionBlur: false,
-                iou: nil,
-                frameCount: 0,
-                duration: 0
+                iou: nil
             ),
             nil,
             .init(isBlurry: false, variance: 0.1)

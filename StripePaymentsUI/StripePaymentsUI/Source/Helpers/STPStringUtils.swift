@@ -49,24 +49,6 @@ import Foundation
         return string
     }
 
-    static let stringMayContainExpirationDateRegex: NSRegularExpression? = {
-        return try! NSRegularExpression(
-            pattern: "^(\\d{2}\\D{1,3})(\\d{1,4})?",
-            options: []
-        )
-    }()
-
-    /// Returns YES if the string is likely to contain something formatted similar to an expiration date.
-    /// It doesn't confirm that the expiration date is valid, or that it is even a date.
-    @_spi(STP) public class func stringMayContainExpirationDate(_ string: String?) -> Bool {
-        let result = stringMayContainExpirationDateRegex?.matches(
-            in: string ?? "",
-            options: [],
-            range: NSRange(location: 0, length: string?.count ?? 0)
-        ).first
-        return result != nil && (result?.numberOfRanges ?? 0) > 0
-    }
-
     static let slashFormattedExpirationDateRegex: NSRegularExpression? = {
         return try? NSRegularExpression(pattern: #"\b(\d{2})/(\d{2,4})\b"#)
     }()

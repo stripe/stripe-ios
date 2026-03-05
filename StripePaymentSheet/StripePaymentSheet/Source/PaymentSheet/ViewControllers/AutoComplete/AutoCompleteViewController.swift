@@ -24,7 +24,6 @@ protocol AutoCompleteViewControllerDelegate: AnyObject {
 class AutoCompleteViewController: UIViewController {
     let configuration: AddressViewController.Configuration
     let initialLine1Text: String?
-    let addressSpecProvider: AddressSpecProvider
     /// Vertical offset for the view controller content. Negative values move content up, positive values move content down.
     let verticalOffset: CGFloat
 
@@ -115,12 +114,10 @@ class AutoCompleteViewController: UIViewController {
     required init(
         configuration: AddressViewController.Configuration,
         initialLine1Text: String?,
-        addressSpecProvider: AddressSpecProvider = .shared,
         verticalOffset: CGFloat = 0
     ) {
         self.configuration = configuration
         self.initialLine1Text = initialLine1Text
-        self.addressSpecProvider = addressSpecProvider
         self.verticalOffset = verticalOffset
         super.init(nibName: nil, bundle: nil)
         if let initialLine1Text = initialLine1Text, !initialLine1Text.isEmpty {

@@ -27,10 +27,6 @@ final class LinkInlineSignupElement: Element {
 
     weak var delegate: ElementDelegate?
 
-    var isChecked: Bool {
-        return viewModel.saveCheckboxChecked
-    }
-
     var action: LinkInlineSignupViewModel.Action? {
         return viewModel.action
     }

@@ -32,7 +32,6 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         // This allows the network stubbing recorder to intercept API requests
         let urlSessionConfig = StripeAPIConfiguration.sharedUrlSessionConfiguration
         downloadManager = DownloadManager(urlSessionConfiguration: urlSessionConfig)
-        downloadManager.resetCache()
 
         // Create an STPAPIClient with the US test publishable key
         apiClient = STPAPIClient(publishableKey: Self.usPublishableKey)

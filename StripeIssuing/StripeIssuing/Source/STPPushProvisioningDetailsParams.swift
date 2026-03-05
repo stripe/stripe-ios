@@ -52,20 +52,6 @@ public class STPPushProvisioningDetailsParams: NSObject {
         self.nonceSignature = nonceSignature
     }
 
-    @objc(paramsWithCardId:certificates:nonce:nonceSignature:) class func paramsWithCardId(
-        cardId: String,
-        certificates: [Data],
-        nonce: Data,
-        nonceSignature: Data
-    ) -> Self {
-        return self.init(
-            cardId: cardId,
-            certificates: certificates,
-            nonce: nonce,
-            nonceSignature: nonceSignature
-        )
-    }
-
     // Adapted from https://stackoverflow.com/questions/39075043/how-to-convert-data-to-hex-string-in-swift
     class func hexadecimalString(for data: Data) -> String {
         return data.map { String(format: "%02hhx", $0) }.joined()

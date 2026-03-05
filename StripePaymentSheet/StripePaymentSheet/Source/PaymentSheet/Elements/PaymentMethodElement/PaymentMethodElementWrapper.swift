@@ -15,14 +15,12 @@ import UIKit
  This exists because `IntentConfirmParams` is a type specific to `StripePaymentSheet`, whereas `Element` is shared
  */
 class PaymentMethodElementWrapper<WrappedElementType: Element> {
-    typealias DefaultsApplier = (WrappedElementType, IntentConfirmParams) -> IntentConfirmParams
     typealias ParamsUpdater = (WrappedElementType, IntentConfirmParams) -> IntentConfirmParams?
 
     let element: WrappedElementType
     weak var delegate: ElementDelegate?
 
     // MARK: IntentConfirmParams updating glue
-    let defaultsApplier: DefaultsApplier?
     let paramsUpdater: ParamsUpdater
 
     /**
@@ -30,29 +28,25 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
      */
     fileprivate init(
         privateElement element: WrappedElementType,
-        defaultsApplier: DefaultsApplier? = nil,
         paramsUpdater: @escaping ParamsUpdater
     ) {
         self.element = element
-        self.defaultsApplier = defaultsApplier
         self.paramsUpdater = paramsUpdater
         element.delegate = self
     }
 
     convenience init(
         _ element: WrappedElementType,
-        defaultsApplier: DefaultsApplier? = nil,
         paramsUpdater: @escaping ParamsUpdater
     ) {
-        self.init(privateElement: element, defaultsApplier: defaultsApplier, paramsUpdater: paramsUpdater)
+        self.init(privateElement: element, paramsUpdater: paramsUpdater)
     }
 
     convenience init(
         _ element: TextFieldElement,
-        defaultsApplier: DefaultsApplier? = nil,
         paramsUpdater: @escaping ParamsUpdater
     ) where WrappedElementType == TextFieldElement {
-        self.init(privateElement: element, defaultsApplier: defaultsApplier) { textField, params in
+        self.init(privateElement: element) { textField, params in
             guard case .valid = textField.validationState else {
                 return nil
             }
@@ -62,11 +56,10 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
     convenience init(
         _ textFieldElementConfiguration: TextFieldElementConfiguration,
         theme: ElementsAppearance,
-        defaultsApplier: DefaultsApplier? = nil,
         paramsUpdater: @escaping ParamsUpdater
     ) where WrappedElementType == TextFieldElement {
         let textFieldElement = TextFieldElement(configuration: textFieldElementConfiguration, theme: theme)
-        self.init(textFieldElement, defaultsApplier: defaultsApplier, paramsUpdater: paramsUpdater)
+        self.init(textFieldElement, paramsUpdater: paramsUpdater)
     }
 
     public var debugDescription: String {

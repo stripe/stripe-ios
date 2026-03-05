@@ -93,30 +93,3 @@ private func CreateAvatarView(email: String) -> UIView {
 
     return circleView
 }
-
-#if DEBUG
-
-import SwiftUI
-
-private struct NetworkingLinkLoginWarmupBodyViewUIViewRepresentable: UIViewRepresentable {
-
-    func makeUIView(context: Context) -> NetworkingLinkLoginWarmupBodyView {
-        NetworkingLinkLoginWarmupBodyView(email: "test@stripe.com")
-    }
-
-    func updateUIView(_ uiView: NetworkingLinkLoginWarmupBodyView, context: Context) {}
-}
-
-struct NetworkingLinkLoginWarmupBodyView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(alignment: .leading) {
-            Spacer()
-            NetworkingLinkLoginWarmupBodyViewUIViewRepresentable()
-                .frame(maxHeight: 200)
-                .padding()
-            Spacer()
-        }
-    }
-}
-
-#endif

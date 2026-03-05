@@ -29,7 +29,6 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         FormSpecProvider.shared.load { _ in
             e.fulfill()
         }
-        DownloadManager.sharedManager.resetCache()
         waitForExpectations(timeout: 10)
         // A Payment methods with a client-side asset and a form spec image URL...
         let loadExpectation = expectation(description: "Load form spec image")
@@ -952,7 +951,7 @@ extension STPFixtures {
 
         }
         if let paymentMethodOptions = paymentMethodOptions {
-            json["payment_method_options"] = paymentMethodOptions.dictionaryValue
+            json["payment_method_options"] = paymentMethodOptions.allResponseFields
         }
         return STPPaymentIntent.decodedObject(fromAPIResponse: json)!
     }

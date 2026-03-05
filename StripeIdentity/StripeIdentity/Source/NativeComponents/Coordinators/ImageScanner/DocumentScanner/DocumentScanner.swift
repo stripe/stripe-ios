@@ -24,8 +24,6 @@ final class DocumentScanner {
     private let barcodeDetector: BarcodeDetector?
     private let blurDetector: LaplacianBlurDetector
     private let highResImageCropPadding: CGFloat
-    private let analyticsClient: IdentityAnalyticsClient
-    private let sheetController: VerificationSheetControllerProtocol
 
     /// Initializes a DocumentScanner with detectors.
     ///
@@ -46,8 +44,6 @@ final class DocumentScanner {
         self.barcodeDetector = barcodeDetector
         self.blurDetector = blurDetector
         self.highResImageCropPadding = highResImageCropPadding
-        self.analyticsClient = sheetController.analyticsClient
-        self.sheetController = sheetController
     }
 
     convenience init(

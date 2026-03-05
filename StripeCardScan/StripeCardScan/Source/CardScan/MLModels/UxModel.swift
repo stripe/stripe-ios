@@ -29,56 +29,6 @@ class UxModelInput: MLFeatureProvider {
     ) {
         self.input1 = input1
     }
-
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    convenience init(
-        input1With input1: CGImage
-    ) throws {
-        let __input1 = try MLFeatureValue(
-            cgImage: input1,
-            pixelsWide: 224,
-            pixelsHigh: 224,
-            pixelFormatType: kCVPixelFormatType_32ARGB,
-            options: nil
-        ).imageBufferValue!
-        self.init(input1: __input1)
-    }
-
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    convenience init(
-        input1At input1: URL
-    ) throws {
-        let __input1 = try MLFeatureValue(
-            imageAt: input1,
-            pixelsWide: 224,
-            pixelsHigh: 224,
-            pixelFormatType: kCVPixelFormatType_32ARGB,
-            options: nil
-        ).imageBufferValue!
-        self.init(input1: __input1)
-    }
-
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func setInput1(with input1: CGImage) throws {
-        self.input1 = try MLFeatureValue(
-            cgImage: input1,
-            pixelsWide: 224,
-            pixelsHigh: 224,
-            pixelFormatType: kCVPixelFormatType_32ARGB,
-            options: nil
-        ).imageBufferValue!
-    }
-
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func setInput1(with input1: URL) throws {
-        self.input1 = try MLFeatureValue(
-            imageAt: input1,
-            pixelsWide: 224,
-            pixelsHigh: 224,
-            pixelFormatType: kCVPixelFormatType_32ARGB,
-            options: nil
-        ).imageBufferValue!
-    }
 }
 
 /// Model Prediction Output Type
@@ -100,14 +50,6 @@ class UxModelOutput: MLFeatureProvider {
 
     func featureValue(for featureName: String) -> MLFeatureValue? {
         return self.provider.featureValue(for: featureName)
-    }
-
-    init(
-        output1: MLMultiArray
-    ) {
-        self.provider = try! MLDictionaryFeatureProvider(dictionary: [
-            "output1": MLFeatureValue(multiArray: output1)
-        ])
     }
 
     init(
@@ -141,32 +83,6 @@ class UxModelOutput: MLFeatureProvider {
         self.model = model
     }
 
-    ///    Construct UxModel instance by automatically loading the model from the app's bundle.
-    @available(
-        *,
-        deprecated,
-        message: "Use init(configuration:) instead and handle errors appropriately."
-    )
-    convenience init() {
-        try! self.init(contentsOf: type(of: self).urlOfModelInThisBundle)
-    }
-
-    ///    Construct a model with configuration
-    ///
-    ///    - parameters:
-    ///       - configuration: the desired model configuration
-    ///
-    ///    - throws: an NSError object that describes the problem
-    @available(macOS 10.14, iOS 12.0, tvOS 12.0, watchOS 5.0, *)
-    convenience init(
-        configuration: MLModelConfiguration
-    ) throws {
-        try self.init(
-            contentsOf: type(of: self).urlOfModelInThisBundle,
-            configuration: configuration
-        )
-    }
-
     ///    Construct UxModel instance with explicit path to mlmodelc file
     ///    - parameters:
     ///       - modelURL: the file url of the model
@@ -176,67 +92,6 @@ class UxModelOutput: MLFeatureProvider {
         contentsOf modelURL: URL
     ) throws {
         try self.init(model: MLModel(contentsOf: modelURL))
-    }
-
-    ///    Construct a model with URL of the .mlmodelc directory and configuration
-    ///
-    ///    - parameters:
-    ///       - modelURL: the file url of the model
-    ///       - configuration: the desired model configuration
-    ///
-    ///    - throws: an NSError object that describes the problem
-    @available(macOS 10.14, iOS 12.0, tvOS 12.0, watchOS 5.0, *)
-    convenience init(
-        contentsOf modelURL: URL,
-        configuration: MLModelConfiguration
-    ) throws {
-        try self.init(model: MLModel(contentsOf: modelURL, configuration: configuration))
-    }
-
-    ///    Construct UxModel instance asynchronously with optional configuration.
-    ///
-    ///    Model loading may take time when the model content is not immediately available (e.g. encrypted model). Use this factory method especially when the caller is on the main thread.
-    ///
-    ///    - parameters:
-    ///      - configuration: the desired model configuration
-    ///      - handler: the completion handler to be called when the model loading completes successfully or unsuccessfully
-    @available(macOS 11.0, iOS 14.0, tvOS 14.0, watchOS 7.0, *)
-    class func load(
-        configuration: MLModelConfiguration = MLModelConfiguration(),
-        completionHandler handler: @escaping (Swift.Result<UxModel, Error>) -> Void
-    ) {
-        return self.load(
-            contentsOf: self.urlOfModelInThisBundle,
-            configuration: configuration,
-            completionHandler: handler
-        )
-    }
-
-    ///    Construct UxModel instance asynchronously with URL of the .mlmodelc directory with optional configuration.
-    ///
-    ///    Model loading may take time when the model content is not immediately available (e.g. encrypted model). Use this factory method especially when the caller is on the main thread.
-    ///
-    ///    - parameters:
-    ///      - modelURL: the URL to the model
-    ///      - configuration: the desired model configuration
-    ///      - handler: the completion handler to be called when the model loading completes successfully or unsuccessfully
-    @available(macOS 11.0, iOS 14.0, tvOS 14.0, watchOS 7.0, *)
-    class func load(
-        contentsOf modelURL: URL,
-        configuration: MLModelConfiguration = MLModelConfiguration(),
-        completionHandler handler: @escaping (Swift.Result<UxModel, Error>) -> Void
-    ) {
-        MLModel.__loadContents(of: modelURL, configuration: configuration) { (model, error) in
-            if let error = error {
-                handler(.failure(error))
-            } else if let model = model {
-                handler(.success(UxModel(model: model)))
-            } else {
-                fatalError(
-                    "SPI failure: -[MLModel loadContentsOfURL:configuration::completionHandler:] vends nil for both model and error."
-                )
-            }
-        }
     }
 
     ///    Make a prediction using the structured interface
@@ -276,31 +131,5 @@ class UxModelOutput: MLFeatureProvider {
     func prediction(input1: CVPixelBuffer) throws -> UxModelOutput {
         let input_ = UxModelInput(input1: input1)
         return try self.prediction(input: input_)
-    }
-
-    ///    Make a batch prediction using the structured interface
-    ///
-    ///    - parameters:
-    ///       - inputs: the inputs to the prediction as [UxModelInput]
-    ///       - options: prediction options
-    ///
-    ///    - throws: an NSError object that describes the problem
-    ///
-    ///    - returns: the result of the prediction as [UxModelOutput]
-    @available(macOS 10.14, iOS 12.0, tvOS 12.0, watchOS 5.0, *)
-    func predictions(
-        inputs: [UxModelInput],
-        options: MLPredictionOptions = MLPredictionOptions()
-    ) throws -> [UxModelOutput] {
-        let batchIn = MLArrayBatchProvider(array: inputs)
-        let batchOut = try model.predictions(from: batchIn, options: options)
-        var results: [UxModelOutput] = []
-        results.reserveCapacity(inputs.count)
-        for i in 0..<batchOut.count {
-            let outProvider = batchOut.features(at: i)
-            let result = UxModelOutput(features: outProvider)
-            results.append(result)
-        }
-        return results
     }
 }

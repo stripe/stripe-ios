@@ -31,12 +31,6 @@ class CardScanningView: UIView {
 
     weak var delegate: STP_Internal_CardScanningViewDelegate?
 
-    var deviceOrientation: UIDeviceOrientation = UIDevice.current.orientation {
-        didSet {
-            cardScanner?.deviceOrientation = deviceOrientation
-        }
-    }
-
     private var isDisplayingError = false {
         didSet {
             errorLabel.isHidden = !isDisplayingError
@@ -276,11 +270,6 @@ class CardScanningView: UIView {
 
 @available(macCatalyst 14.0, *)
 extension CardScanningView: STPCardScannerDelegate {
-
-    func cardScanner(_ scanner: STPCardScanner, didCompleteWith cardParams: StripePayments.STPPaymentMethodCardParams) {
-        cardScanner?.stop()
-        delegate?.cardScanningViewShouldClose(self, cardParams: cardParams)
-    }
 
     func cardScannerDidError(_ scanner: STPCardScanner) {
         isDisplayingError = true

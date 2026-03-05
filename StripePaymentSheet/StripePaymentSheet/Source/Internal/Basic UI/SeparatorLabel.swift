@@ -44,15 +44,6 @@ final class SeparatorLabel: UIView {
         }
     }
 
-    var adjustsFontForContentSizeCategory: Bool {
-        get {
-            return label.adjustsFontForContentSizeCategory
-        }
-        set {
-            label.adjustsFontForContentSizeCategory = newValue
-        }
-    }
-
     var separatorColor: UIColor? {
         get {
             return leftLineView.backgroundColor

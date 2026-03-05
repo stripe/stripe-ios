@@ -34,15 +34,6 @@ import Foundation
         )
     }
 
-    @objc(formattedRedactedPhoneNumberForString:) class func formattedRedactedPhoneNumber(
-        for string: String
-    ) -> String {
-        return self.formattedRedactedPhoneNumber(
-            for: string,
-            forCountryCode: nil
-        )
-    }
-
     @objc(formattedRedactedPhoneNumberForString:forCountryCode:)
     class func formattedRedactedPhoneNumber(
         for string: String,

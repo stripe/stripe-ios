@@ -19,9 +19,6 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var apiClient: STPAPIClient { get set }
     var applePay: PaymentSheet.ApplePayConfiguration? { get set }
     var link: PaymentSheet.LinkConfiguration { get set }
-    var shopPay: PaymentSheet.ShopPayConfiguration? { get set }
-    var primaryButtonColor: UIColor? { get set }
-    var primaryButtonLabel: String? { get set }
     var style: PaymentSheet.UserInterfaceStyle { get set }
     var customer: PaymentSheet.CustomerConfiguration? { get set }
     var merchantDisplayName: String { get set }
@@ -101,11 +98,5 @@ extension PaymentElementConfiguration {
 
 extension PaymentSheet.Configuration: PaymentElementConfiguration {}
 extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
-    // Stubbed out w/ Embedded Payment Element
-    var shopPay: PaymentSheet.ShopPayConfiguration? {
-        get { return nil }
-        set {}
-    }
-
     var resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout? { .vertical }
 }

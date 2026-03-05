@@ -102,8 +102,6 @@ final class HTMLViewWithIconLabels: UIView {
 
     // MARK: - Properties
 
-    private var didOpenURL: (URL) -> Void = { _ in }
-
     // MARK: - Init
 
     init() {
@@ -126,7 +124,6 @@ final class HTMLViewWithIconLabels: UIView {
             viewModel.nonIconLabelViewModels.isEmpty && viewModel.iconLabelViewModels.isEmpty
         try rebuildNonIconTextViews(for: viewModel.nonIconLabelViewModels)
         try rebuildIconTextViews(for: viewModel.iconLabelViewModels)
-        self.didOpenURL = viewModel.didOpenURL
     }
 }
 
@@ -188,10 +185,6 @@ extension HTMLViewWithIconLabels.Styling {
 
     static var nonIconLabelFont: UIFont {
         return IdentityUI.preferredFont(forTextStyle: nonIconLabelTextStyle)
-    }
-
-    static var bodyTextFont: UIFont {
-        return IdentityUI.preferredFont(forTextStyle: bodyTextStyle)
     }
 
     static func iconLabelHTMLStyle() -> HTMLStyle {

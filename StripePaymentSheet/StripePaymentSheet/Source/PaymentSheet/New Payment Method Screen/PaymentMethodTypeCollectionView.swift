@@ -35,7 +35,6 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     }
     internal static let minInteritemSpacing: CGFloat = 12
 
-    let reuseIdentifier: String = "PaymentMethodTypeCollectionView.PaymentTypeCell"
     private(set) var selected: PaymentSheet.PaymentMethodType {
         didSet(old) {
             if old != selected {

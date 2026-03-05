@@ -8,7 +8,6 @@
 
 import CoreVideo
 import Foundation
-@_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCore
 import Vision
 

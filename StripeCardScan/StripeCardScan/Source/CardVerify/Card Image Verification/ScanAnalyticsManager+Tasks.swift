@@ -24,19 +24,6 @@ enum ScanAnalyticsEvent: String {
 }
 
 extension ScanAnalyticsNonRepeatingTask {
-    /// Many events will have a fixed start time. The duration will be measured from when the task is created.
-    init(
-        event: ScanAnalyticsEvent,
-        startTime: Date,
-        endTime: Date = Date()
-    ) {
-        self.init(
-            event: event,
-            startTime: startTime,
-            duration: endTime.timeIntervalSince(startTime)
-        )
-    }
-
     init(
         event: ScanAnalyticsEvent,
         startTime: Date,

@@ -144,24 +144,6 @@ public func paymentRequest(
 @available(
     *,
     deprecated,
-    message: "Use StripeAPI.paymentRequest(withMerchantIdentifier:country:currency:) instead."
-)
-func paymentRequest(
-    withMerchantIdentifier merchantIdentifier: String
-)
-    -> PKPaymentRequest
-{
-    return StripeAPI.paymentRequest(
-        withMerchantIdentifier: merchantIdentifier,
-        country: "US",
-        currency: "USD"
-    )
-}
-
-/// :nodoc:
-@available(
-    *,
-    deprecated,
     message: "Use StripeAPI.handleURLCallback(with:) instead."
 )
 public func handleURLCallback(with url: URL) -> Bool {

@@ -294,10 +294,6 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
 // MARK: - BottomSheetContentViewController
 extension VerticalSavedPaymentMethodsViewController: BottomSheetContentViewController {
-    var allowsDragToDismiss: Bool {
-        return true
-    }
-
     func didTapOrSwipeToDismiss() {
         complete(didTapToDismiss: true)
     }

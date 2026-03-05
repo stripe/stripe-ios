@@ -35,34 +35,6 @@ final class AccountPickerHelpers {
         )
     }
 
-    static func rowTitles(
-        forAccount account: FinancialConnectionsPartnerAccount,
-        // caption, for networked accounts, will hide account numbers, so we should show account numbers in the title
-        captionWillHideAccountNumbers: Bool
-    ) -> (
-        leadingTitle: String, trailingTitle: String?
-    ) {
-        // balance info in subtitle will hide account numbers, so we should show account numbers in the title
-        let balanceWillHideAccountNumbersInSubtitle = account.balanceInfo != nil
-        if balanceWillHideAccountNumbersInSubtitle || captionWillHideAccountNumbers {
-            return (account.name, "••••\(account.displayableAccountNumbers ?? "")")
-        } else {
-            return (account.name, nil)
-        }
-    }
-
-    static func rowSubtitle(forAccount account: FinancialConnectionsPartnerAccount) -> String? {
-        if let balanceInfo = account.balanceInfo {
-            return currencyString(currency: balanceInfo.currency, balanceAmount: balanceInfo.balanceAmount)
-        } else {
-            if let displayableAccountNumbers = account.displayableAccountNumbers {
-                return "••••••••\(displayableAccountNumbers)"
-            } else {
-                return nil
-            }
-        }
-    }
-
     // exposed for testing purposes
     static func currencyString(
         currency: String,
@@ -95,16 +67,6 @@ extension NSDecimalNumber {
             return number
         }
         return number.multiplying(byPowerOf10: -2)
-    }
-
-    @objc func stp_fn_amount(withCurrency currency: String?) -> Int {
-        let noDecimalCurrencies = NSDecimalNumber.stp_fn_currenciesWithNoDecimal()
-
-        var ourNumber = self
-        if !(noDecimalCurrencies.contains(currency?.lowercased() ?? "")) {
-            ourNumber = multiplying(byPowerOf10: 2)
-        }
-        return Int(ourNumber.doubleValue)
     }
 
     class func stp_fn_currenciesWithNoDecimal() -> [String] {

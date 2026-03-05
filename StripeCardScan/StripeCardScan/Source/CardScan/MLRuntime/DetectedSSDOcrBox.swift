@@ -10,8 +10,6 @@ import Foundation
 struct DetectedSSDOcrBox {
     let rect: CGRect
     let label: Int
-    let confidence: Float
-    let imgSize: CGSize
 
     init(
         category: Int,
@@ -29,13 +27,6 @@ struct DetectedSSDOcrBox {
         let YMax_ = YMax * Double(imageSize.height)
 
         self.label = category
-        self.confidence = conf
         self.rect = CGRect(x: XMin_, y: YMin_, width: XMax_ - XMin_, height: YMax_ - YMin_)
-        self.imgSize = imageSize
-    }
-
-    func toDict() -> [String: Any] {
-
-        return ["": ""]
     }
 }

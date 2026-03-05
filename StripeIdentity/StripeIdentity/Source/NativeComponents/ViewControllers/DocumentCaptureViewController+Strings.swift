@@ -132,10 +132,4 @@ extension DocumentCaptureViewController {
         return "\(String.Localized.timeoutErrorBodyText)\n\n\(line2)"
     }
 
-    static var uploadButtonText: String {
-        STPLocalizedString(
-            "Upload a Photo",
-            "Button to upload a photo"
-        )
-    }
 }

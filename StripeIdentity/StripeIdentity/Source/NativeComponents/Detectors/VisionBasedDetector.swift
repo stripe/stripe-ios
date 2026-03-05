@@ -14,11 +14,7 @@ import Vision
 /// A Detector that scans an image using a VisionRequest
 
 protocol VisionBasedDetector {
-    associatedtype Configuration
     associatedtype Output: VisionBasedDetectorOutput where Output.Detector == Self
-
-    /// Configuration for this detector
-    var configuration: Configuration { get }
 
     /// Tracks performance metrics for this detector
     var metricsTracker: MLDetectorMetricsTracker? { get }

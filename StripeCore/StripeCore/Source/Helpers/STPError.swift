@@ -138,20 +138,6 @@ extension NSError {
 
 /// NSError extensions for creating error objects from Stripe API responses.
 extension NSError {
-    @_spi(STP) public static func stp_error(from modernStripeError: StripeError) -> NSError? {
-        switch modernStripeError {
-        case .apiError(let stripeAPIError):
-            // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-3965 We're dropping some info in this conversion w/o http response
-            return stp_error(fromStripeResponse: ["error": stripeAPIError.allResponseFields], httpResponse: nil)
-        case .invalidRequest:
-            return NSError(
-                domain: STPError.stripeDomain,
-                code: STPErrorCode.invalidRequestError.rawValue,
-                userInfo: nil
-            )
-        }
-    }
-
     @_spi(STP) public static func stp_error(
         errorType: String?,
         stripeErrorCode: String?,

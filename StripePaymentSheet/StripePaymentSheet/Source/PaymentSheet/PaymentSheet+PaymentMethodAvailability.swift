@@ -124,11 +124,6 @@ extension PaymentSheet {
         return reasons
     }
 
-    /// An unordered list of paymentMethodTypes that can be used with Link in PaymentSheet
-    /// - Note: This is a var because it depends on the authenticated Link user
-    ///
-    /// :nodoc:
-    internal static var supportedLinkPaymentMethods: [STPPaymentMethodType] = []
 }
 
 private extension STPElementsSession {

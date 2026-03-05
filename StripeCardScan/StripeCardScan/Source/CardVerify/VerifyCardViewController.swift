@@ -34,7 +34,6 @@ protocol VerifyViewControllerDelegate: AnyObject {
 }
 
 class VerifyCardViewController: SimpleScanViewController {
-    typealias StrictModeFramesCount = CardImageVerificationSheet.StrictModeFrameCount
 
     // our UI components
     var cardDescriptionText = UILabel()
@@ -47,9 +46,6 @@ class VerifyCardViewController: SimpleScanViewController {
     private let acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?
     private let configuration: CardImageVerificationSheet.Configuration
 
-    // TODO(jaimepark): Put card brands  from `Stripe` into `StripeCore`
-    var cardNetwork: CardNetwork?
-
     // String
     static var wrongCardString = String.Localized.card_doesnt_match
 
@@ -60,8 +56,6 @@ class VerifyCardViewController: SimpleScanViewController {
 
     private var lastWrongCard: Date?
     private let mainLoopDurationTask: TrackableTask
-
-    var userId: String?
 
     init(
         acceptedImageConfigs: CardImageVerificationAcceptedImageConfigs?,
@@ -197,7 +191,6 @@ class VerifyCardViewController: SimpleScanViewController {
         card.expiryMonth = expiryMonth
         card.expiryYear = expiryYear
         card.name = predictedName
-        card.image = scannedImage
 
         showFullScreenActivityIndicator()
 

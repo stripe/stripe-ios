@@ -28,7 +28,6 @@ class DownloadManagerTest: APIStubbedTestCase {
         self.urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
         self.analyticsClient = STPAnalyticsClient()
         self.rm = DownloadManager(urlSessionConfiguration: urlSessionConfig, analyticsClient: analyticsClient)
-        self.rm.resetCache()
     }
 
     func testURLCacheConfiguration() {

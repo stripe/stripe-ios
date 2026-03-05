@@ -9,10 +9,6 @@ class ErrorCorrection {
     let startTime = Date()
     var mostRecentPrediction: CreditCardOcrPrediction?
 
-    var framesPerSecond: Double {
-        return Double(frames) / -startTime.timeIntervalSinceNow
-    }
-
     init(
         stateMachine: MainLoopStateMachine
     ) {
@@ -35,7 +31,6 @@ class ErrorCorrection {
             // but don't have a OCR (e.g., non-number side for liveness)
             if stateMachine.loopState() == .finished {
                 return CreditCardOcrResult.finishedWithNonNumberSideCard(
-                    prediction: prediction,
                     duration: -startTime.timeIntervalSinceNow,
                     frames: frames
                 )
@@ -43,7 +38,6 @@ class ErrorCorrection {
 
             if stateMachine.loopState() == .ocrIncorrect, let number = prediction.number {
                 return CreditCardOcrResult(
-                    mostRecentPrediction: prediction,
                     number: number,
                     expiry: prediction.expiryForDisplay,
                     name: prediction.name,
@@ -57,7 +51,6 @@ class ErrorCorrection {
         }
 
         return CreditCardOcrResult(
-            mostRecentPrediction: prediction,
             number: number,
             expiry: predictedExpiry,
             name: predictedName,

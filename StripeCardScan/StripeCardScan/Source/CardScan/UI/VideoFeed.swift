@@ -16,7 +16,6 @@ class VideoFeed {
     private var isSessionRunning = false
     private let sessionQueue = DispatchQueue(label: "session queue")
     private var setupResult: SessionSetupResult = .success
-    var videoDeviceInput: AVCaptureDeviceInput!
     var videoDevice: AVCaptureDevice?
     var videoDeviceConnection: AVCaptureConnection?
     var torch: Torch?
@@ -120,7 +119,6 @@ class VideoFeed {
 
             if session.canAddInput(videoDeviceInput) {
                 session.addInput(videoDeviceInput)
-                self.videoDeviceInput = videoDeviceInput
             } else {
                 setupResult = .configurationFailed
                 session.commitConfiguration()

@@ -636,19 +636,3 @@ extension DocumentCaptureViewController: IdentityDataCollecting {
         isDecidingBack = false
     }
 }
-
-// MARK: - DocumentSide
-
-extension DocumentSide {
-    fileprivate func nextSide(for documentType: DocumentType) -> DocumentSide? {
-        switch (documentType, self) {
-        case (.drivingLicense, .front),
-            (.idCard, .front):
-            return .back
-        case (.passport, _),
-            (.drivingLicense, .back),
-            (.idCard, .back):
-            return nil
-        }
-    }
-}

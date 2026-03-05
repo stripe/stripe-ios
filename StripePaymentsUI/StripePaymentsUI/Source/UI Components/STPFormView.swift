@@ -44,7 +44,6 @@ protocol STPFormInput where Self: UIView {
     var inputValue: String? { get }
 
     func addObserver(_ validationObserver: STPFormInputValidationObserver)
-    func removeObserver(_ validationObserver: STPFormInputValidationObserver)
 
     var wantsAutoFocus: Bool { get }
 

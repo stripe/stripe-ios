@@ -45,7 +45,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     private(set) var didLoadAndUpdateUI = false
 
     private(set) var savedData: StripeAPI.VerificationPageCollectedData?
-    private(set) var uploadedDocumentsResult: Result<DocumentUploaderProtocol.CombinedFileData, Error>?
+    private(set) var uploadedDocumentsResult: Result<(front: StripeAPI.VerificationPageDataDocumentFileData?, back: StripeAPI.VerificationPageDataDocumentFileData?), Error>?
     private(set) var frontUploadedDocumentsResult: Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
     private(set) var backUploadedDocumentsResult: Result<StripeAPI.VerificationPageDataDocumentFileData, Error>?
     private(set) var uploadedSelfieResult: Result<SelfieUploader.FileData, Error>?

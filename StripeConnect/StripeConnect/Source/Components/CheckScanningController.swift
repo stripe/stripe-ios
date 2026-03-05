@@ -25,8 +25,6 @@ public final class CheckScanningController {
 
     private(set) var webVC: ConnectComponentWebViewController!
 
-    var retainedSelf: CheckScanningController?
-
     public var delegate: CheckScanningControllerDelegate?
 
     /// Sets the title for the check scanning experience
@@ -98,11 +96,6 @@ public final class CheckScanningController {
 
         webVC.navigationItem.rightBarButtonItem = closeButton
         viewController.present(navController, animated: animated)
-        retainedSelf = self
-        webVC.onDismiss = { [weak self] in
-            guard let self else { return }
-            self.retainedSelf = nil
-        }
     }
 
     /// Dismisses the currently presented check scanning experience.

@@ -76,10 +76,6 @@ class BottomSheet3DS2ViewController: UIViewController {
 // MARK: - BottomSheetContentViewController
 /// :nodoc:
 extension BottomSheet3DS2ViewController: BottomSheetContentViewController {
-    var allowsDragToDismiss: Bool {
-        return false
-    }
-
     func didTapOrSwipeToDismiss() {
         // no-op
     }

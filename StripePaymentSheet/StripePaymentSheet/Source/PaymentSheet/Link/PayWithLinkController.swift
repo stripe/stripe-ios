@@ -20,8 +20,6 @@ final class PayWithLinkController {
 
     private var completion: CompletionBlock?
 
-    private var selfRetainer: PayWithLinkController?
-
     let intent: Intent
     let elementsSession: STPElementsSession
     let configuration: PaymentElementConfiguration
@@ -43,7 +41,6 @@ final class PayWithLinkController {
     ) {
         // Similarly to `PKPaymentAuthorizationController`, `LinkController` should retain
         // itself while presented.
-        self.selfRetainer = self
         self.completion = completion
 
         let payWithLinkWebController = PayWithLinkWebController(intent: intent, elementsSession: elementsSession, configuration: configuration)
@@ -73,13 +70,13 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
             analyticsHelper: analyticsHelper
         ) { result, deferredIntentConfirmationType in
             self.completion?(result, deferredIntentConfirmationType)
-            self.selfRetainer = nil
+
         }
     }
 
     func payWithLinkWebControllerDidCancel() {
         completion?(.canceled, nil)
-        selfRetainer = nil
+
     }
 
 }

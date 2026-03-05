@@ -13,28 +13,11 @@ import UIKit
     let ocr: CreditCardOcrImplementation
 
     init(
-        with ocr: CreditCardOcrImplementation
-    ) {
-        self.ocr = ocr
-        uxModel = UxAnalyzer.loadModelFromBundle()
-        super.init(dispatchQueue: ocr.dispatchQueue)
-    }
-
-    init(
         asyncWith ocr: CreditCardOcrImplementation
     ) {
         self.ocr = ocr
         super.init(dispatchQueue: ocr.dispatchQueue)
         loadModel()
-    }
-
-    @_spi(STP) public static func loadModelFromBundle() -> UxModel? {
-        let bundle = StripeCardScanBundleLocator.resourcesBundle
-        guard let url = bundle.url(forResource: UxAnalyzer.uxResource, withExtension: UxAnalyzer.uxExtension) else {
-            return nil
-        }
-
-        return try? UxModel(contentsOf: url)
     }
 
     override func recognizeCard(

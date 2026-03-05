@@ -28,7 +28,7 @@ class UxModelTests: XCTestCase {
             return
         }
         let ocr = AppleCreditCardOcr(dispatchQueueLabel: "test")
-        let uxAnalyzer = UxAnalyzer(with: ocr)
+        let uxAnalyzer = UxAnalyzer(asyncWith: ocr)
 
         let prediction = uxAnalyzer.recognizeCard(in: image, roiRectangle: roiRectangle)
         XCTAssert(prediction.centeredCardState == .numberSide)
@@ -40,7 +40,7 @@ class UxModelTests: XCTestCase {
             return
         }
         let ocr = SSDCreditCardOcr(dispatchQueueLabel: "test")
-        let uxAnalyzer = UxAnalyzer(with: ocr)
+        let uxAnalyzer = UxAnalyzer(asyncWith: ocr)
 
         let prediction = uxAnalyzer.recognizeCard(in: image, roiRectangle: roiRectangle)
         XCTAssert(prediction.centeredCardState == .numberSide)

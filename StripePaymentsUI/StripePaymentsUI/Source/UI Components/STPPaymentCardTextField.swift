@@ -1118,12 +1118,6 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         return nil
     }
 
-    // MARK: public convenience methods
-
-    @objc func valid() -> Bool {
-        return isValid
-    }
-
     // MARK: readonly variables
 
     func setText(_ text: String?, inField field: STPCardFieldType) {

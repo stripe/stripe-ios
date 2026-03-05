@@ -41,8 +41,6 @@ final class LinkLegalTermsView: UIView {
     private let mode: LinkInlineSignupViewModel.Mode
     /// If true, we're in a separate Link VC (instead of the inline PS one)
     private let isStandalone: Bool
-    private let emailWasPrefilled: Bool
-
     var textColor: UIColor? {
         get {
             return textView.textColor
@@ -79,11 +77,9 @@ final class LinkLegalTermsView: UIView {
 
     init(textAlignment: NSTextAlignment = .left,
          mode: LinkInlineSignupViewModel.Mode = .checkbox,
-         emailWasPrefilled: Bool = false,
          isStandalone: Bool = false,
          delegate: LinkLegalTermsViewDelegate? = nil) {
         self.mode = mode
-        self.emailWasPrefilled = emailWasPrefilled
         self.isStandalone = isStandalone
         super.init(frame: .zero)
         self.textView.textAlignment = textAlignment

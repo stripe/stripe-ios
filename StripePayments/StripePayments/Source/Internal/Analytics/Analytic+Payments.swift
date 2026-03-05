@@ -21,7 +21,6 @@ struct GenericPaymentAnalytic: PaymentAnalytic {
 struct GenericPaymentErrorAnalytic: PaymentAnalytic {
     let event: STPAnalyticEvent
     let additionalParams: [String: Any]
-    let error: Error
 }
 
 extension GenericPaymentAnalytic {

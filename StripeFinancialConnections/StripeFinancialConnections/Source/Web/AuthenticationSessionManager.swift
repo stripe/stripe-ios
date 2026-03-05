@@ -22,7 +22,6 @@ final class AuthenticationSessionManager: NSObject {
 
     // MARK: - Properties
 
-    private var authSession: ASWebAuthenticationSession?
     private let manifest: FinancialConnectionsSessionManifest
     private var window: UIWindow?
 
@@ -85,7 +84,6 @@ final class AuthenticationSessionManager: NSObject {
         authSession.presentationContextProvider = self
         authSession.prefersEphemeralWebBrowserSession = true
 
-        self.authSession = authSession
         if #available(iOS 13.4, *) {
             if !authSession.canStart {
                 promise.reject(

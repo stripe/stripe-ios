@@ -13,11 +13,6 @@ import UIKit
 protocol IDConsentContentViewControllerDelegate: AnyObject {
     func idConsentContentViewController(
         _ viewController: IDConsentContentViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
-        nextPaneOrDrawerOnSecondaryCta: String?
-    )
-    func idConsentContentViewController(
-        _ viewController: IDConsentContentViewController,
         didConsentWithManifest manifest: FinancialConnectionsSessionManifest
     )
 }

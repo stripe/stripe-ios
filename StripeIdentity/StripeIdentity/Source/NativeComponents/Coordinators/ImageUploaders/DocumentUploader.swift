@@ -21,12 +21,6 @@ protocol DocumentUploaderDelegate: AnyObject {
 
 protocol DocumentUploaderProtocol: AnyObject {
 
-    /// Tuple of front and back document file data
-    typealias CombinedFileData = (
-        front: StripeAPI.VerificationPageDataDocumentFileData?,
-        back: StripeAPI.VerificationPageDataDocumentFileData?
-    )
-
     var delegate: DocumentUploaderDelegate? { get set }
 
     var frontUploadStatus: DocumentUploader.UploadStatus { get }

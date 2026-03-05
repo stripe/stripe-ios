@@ -21,7 +21,6 @@ protocol LinkSignUpViewControllerDelegate: AnyObject {
         _ controller: LinkSignUpViewController,
         didFailWithError error: Error
     )
-    func signUpControllerDidCancel(_ controller: LinkSignUpViewController)
     func signUpControllerDidEncounterAttestationError(_ controller: LinkSignUpViewController)
 }
 

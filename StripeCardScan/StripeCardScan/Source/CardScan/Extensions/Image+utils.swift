@@ -26,18 +26,6 @@ extension CGSize {
     }
 }
 
-extension UIImage {
-    static func grayImage(size: CGSize) -> UIImage? {
-        UIGraphicsBeginImageContext(size)
-        UIColor.gray.setFill()
-        UIRectFill(CGRect(x: 0, y: 0, width: size.width, height: size.height))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-
-        return newImage
-    }
-}
-
 extension CGImage {
 
     func extendedEdges(targetSize: CGSize) -> CGImage? {
@@ -109,20 +97,6 @@ extension CGImage {
 
         // if the expanded roi rectangle is too big, fall back to the tight roi rectangle
         return self.cropping(to: roiPlusBuffer) ?? self.cropping(to: roiRectangle)
-    }
-
-    // This cropping is used by the object detector
-    func squareCardImage(roiRectangle: CGRect) -> CGImage? {
-        let width = CGFloat(self.width)
-        let height = width
-        let centerY = (roiRectangle.maxY + roiRectangle.minY) * 0.5
-        let cropRectangle = CGRect(
-            x: 0.0,
-            y: centerY - height * 0.5,
-            width: width,
-            height: height
-        )
-        return self.cropping(to: cropRectangle)
     }
 
     func drawBoundingBoxesOnImage(boxes: [(UIColor, CGRect)]) -> UIImage? {

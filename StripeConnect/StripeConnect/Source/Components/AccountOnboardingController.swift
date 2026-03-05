@@ -61,11 +61,6 @@ public final class AccountOnboardingController {
         }
     }
 
-    // The controller should exist for at least the length that the ViewController is presented.
-    // Delegate callbacks remove the need for the implementor to hold onto the controller
-    // so we set retainedSelf on present, and unset it when the VC is dismissed.
-    var retainedSelf: AccountOnboardingController?
-
     /// Delegate that receives callbacks for this component
     public weak var delegate: AccountOnboardingControllerDelegate?
 
@@ -124,11 +119,9 @@ public final class AccountOnboardingController {
 
         webVC.navigationItem.rightBarButtonItem = closeButton
         viewController.present(navController, animated: animated)
-        retainedSelf = self
         webVC.onDismiss = { [weak self] in
             guard let self else { return }
             self.delegate?.accountOnboardingDidExit(self)
-            self.retainedSelf = nil
         }
     }
 

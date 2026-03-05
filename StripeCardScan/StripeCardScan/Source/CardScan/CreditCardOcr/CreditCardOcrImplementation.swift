@@ -14,15 +14,6 @@ import UIKit
     let dispatchQueue: ActiveStateComputation
     var frames = 0
     var computationTime = 0.0
-    let startTime = Date()
-
-    var framesPerSecond: Double {
-        return Double(frames) / -startTime.timeIntervalSinceNow
-    }
-
-    var mlFramesPerSecond: Double {
-        return Double(frames) / computationTime
-    }
 
     init(
         dispatchQueueLabel: String

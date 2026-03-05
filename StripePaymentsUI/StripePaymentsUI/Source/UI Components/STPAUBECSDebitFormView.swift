@@ -39,14 +39,12 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
     private var bankIconView: UIImageView!
     private var bsbLabel: UILabel!
     private var mandateLabel: UITextView!
-    private var companyName: String
 
     /// - Parameter companyName: The name of the company collecting AU BECS Debit payment details information. This will be used to provide the required service agreement text. - seealso: https://stripe.com/au-becs/legal
     @objc(initWithCompanyName:)
     public required init(
         companyName: String
     ) {
-        self.companyName = companyName
         super.init(frame: CGRect.zero)
         viewModel = STPAUBECSFormViewModel()
         _nameTextField = _buildTextField()
@@ -261,8 +259,6 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
         return viewModel.paymentMethodParams
     }
 
-    private var _paymentMethodParams: STPPaymentMethodParams?
-
     func _buildTextField() -> STPFormTextField {
         let textField = STPFormTextField(frame: CGRect.zero)
         textField.keyboardType = .asciiCapableNumberPad
@@ -289,10 +285,6 @@ public class STPAUBECSDebitFormView: STPMultiFormTextField, STPMultiFormFieldDel
 
     class func _bsbNumberTextFieldLabel() -> String {
         return String.Localized.bank_account
-    }
-
-    class func _accountNumberTextFieldLabel() -> String {
-        return self._bsbNumberTextFieldLabel()  // same label
     }
 
     func _updateValidText(for formTextField: STPFormTextField) {

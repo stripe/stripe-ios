@@ -22,19 +22,9 @@ final class PayWithLinkButton: UIControl {
         static let defaultSize: CGSize = .init(width: 200, height: 44)
         static let logoSize: CGSize = .init(width: 48, height: 16)
         static let cardBrandSize: CGSize = .init(width: 28, height: 18)
-        static let arrowSize: CGSize = .init(width: 17, height: 13)
         static let separatorSize: CGSize = .init(width: 1, height: 22)
         static let margins: NSDirectionalEdgeInsets = .init(top: 7, leading: 16, bottom: 7, trailing: 10)
         static let cardBrandInsets: UIEdgeInsets = .init(top: 1, left: 0, bottom: 0, right: 0)
-        static let arrowInsets: UIEdgeInsets = .init(top: 1, left: 0, bottom: 0, right: 0)
-    }
-
-    fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
-        let email: String
-        let redactedPhoneNumber: String?
-        let isRegistered: Bool
-        let sessionState: PaymentSheetLinkAccount.SessionState
-        let consumerSessionClientSecret: String?
     }
 
     /// Link account of the current user.
@@ -65,8 +55,6 @@ final class PayWithLinkButton: UIControl {
     override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: Constants.defaultSize.height)
     }
-
-    private let titleBaseFont: UIFont = UIFont.systemFont(ofSize: 16, weight: .medium)
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -442,62 +430,3 @@ private extension PayWithLinkButton {
     }
 
 }
-
-// For previews in Xcode
-#if DEBUG
-import SwiftUI
-
-struct UIViewPreview<View: UIView>: UIViewRepresentable {
-    let view: View
-
-    init(_ builder: @escaping () -> View) {
-        view = builder()
-    }
-
-    // MARK: UIViewRepresentable
-    func makeUIView(context: Context) -> UIView {
-        return view
-    }
-
-    func updateUIView(_ view: UIView, context: Context) {
-        view.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        view.setContentHuggingPriority(.defaultHigh, for: .vertical)
-    }
-}
-
-private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> PayWithLinkButton.LinkAccountStub {
-    return PayWithLinkButton.LinkAccountStub(
-        email: email,
-        redactedPhoneNumber: nil,
-        isRegistered: isRegistered,
-        sessionState: .verified,
-        consumerSessionClientSecret: nil
-    )
-}
-
-struct LinkButtonPreviews_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack {
-            UIViewPreview {
-                let lb = PayWithLinkButton()
-                return lb
-            }.padding()
-            UIViewPreview {
-                let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "theop@example.com", isRegistered: true, lastPM: nil)
-                return lb
-            }.padding()
-            UIViewPreview {
-                let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "theopetersonmarks@longestemaildomain.com", isRegistered: true, lastPM: nil)
-                return lb
-            }.padding()
-            UIViewPreview {
-                let lb = PayWithLinkButton()
-                lb.linkAccount = makeAccountStub(email: "test@test.com", isRegistered: true, lastPM: .init(last4: "3155", brand: .visa))
-                return lb
-            }.padding()
-        }
-    }
-}
-#endif

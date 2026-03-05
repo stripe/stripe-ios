@@ -66,7 +66,17 @@ final class NSAttributedString_HTMLSnapshotTest: STPSnapshotTestCase {
     func testDefaultStyle() throws {
         try verifyView(
             htmlString: NSAttributedString_HTMLSnapshotTest.htmlText,
-            style: .default
+            style: .init(
+                bodyFont: UIFont.preferredFont(forTextStyle: .body),
+                bodyColor: .label,
+                h1Font: UIFont.preferredFont(forTextStyle: .title1),
+                h2Font: UIFont.preferredFont(forTextStyle: .title2),
+                h3Font: UIFont.preferredFont(forTextStyle: .title3),
+                h4Font: UIFont.preferredFont(forTextStyle: .headline),
+                h5Font: UIFont.preferredFont(forTextStyle: .subheadline),
+                h6Font: UIFont.preferredFont(forTextStyle: .footnote),
+                isLinkUnderlined: false
+            )
         )
     }
 
@@ -90,7 +100,17 @@ final class NSAttributedString_HTMLSnapshotTest: STPSnapshotTestCase {
     func testDefaultStyleForUlText() throws {
         try verifyView(
             htmlString: NSAttributedString_HTMLSnapshotTest.htmlTextWithUl,
-            style: .default
+            style: .init(
+                bodyFont: UIFont.preferredFont(forTextStyle: .body),
+                bodyColor: .label,
+                h1Font: UIFont.preferredFont(forTextStyle: .title1),
+                h2Font: UIFont.preferredFont(forTextStyle: .title2),
+                h3Font: UIFont.preferredFont(forTextStyle: .title3),
+                h4Font: UIFont.preferredFont(forTextStyle: .headline),
+                h5Font: UIFont.preferredFont(forTextStyle: .subheadline),
+                h6Font: UIFont.preferredFont(forTextStyle: .footnote),
+                isLinkUnderlined: false
+            )
         )
     }
 

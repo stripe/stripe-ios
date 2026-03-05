@@ -55,9 +55,6 @@ final class LinkAccountPickerViewController: UIViewController {
 
     private let dataSource: LinkAccountPickerDataSource
     weak var delegate: LinkAccountPickerViewControllerDelegate?
-    private var businessName: String? {
-        return dataSource.manifest.businessName
-    }
     private lazy var contentStackView: UIStackView = {
         let verticalStackView = UIStackView(
             arrangedSubviews: [

@@ -31,10 +31,6 @@ struct FinancialConnectionsOAuthPrepane: Decodable {
 
             let content: Content
 
-            init(content: Content) {
-                self.content = content
-            }
-
             enum CodingKeys: String, CodingKey {
                 case type
                 case content

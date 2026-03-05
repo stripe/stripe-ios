@@ -10,7 +10,6 @@
 import UIKit
 
 protocol DebugViewDelegate: AnyObject {
-    func debugOptionsDidChange()
 }
 
 // A view to list debug options for a VS in test mode.
@@ -30,8 +29,6 @@ class DebugView: UIView {
         static let stackViewSpacing: CGFloat = 8
         static let buttonStackViewSpacing: CGFloat = 4
     }
-
-    weak var delegate: DebugViewDelegate?
 
     private var selectedOption: CompleteOptionView.CompleteOption? {
         didSet {

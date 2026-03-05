@@ -12,13 +12,6 @@ import Foundation
 // We use snake case to make long names easier to read.
 extension String.Localized {
 
-    static var learn_more: String {
-        return STPLocalizedString(
-            "Learn more",
-            "Represents the text of a button that can be clicked to learn more about some topic. Once clicked, a web-browser will be opened to give users more info."
-        )
-    }
-
     static var select_another_bank: String {
         return STPLocalizedString(
             "Select another bank",

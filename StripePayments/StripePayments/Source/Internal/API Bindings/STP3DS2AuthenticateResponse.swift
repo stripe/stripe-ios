@@ -25,12 +25,8 @@ class STP3DS2AuthenticateResponse: NSObject, STPAPIResponseDecodable {
     private(set) var allResponseFields: [AnyHashable: Any] = [:]
     /// The Authentication Response received from the Access Control Server
     private(set) var authenticationResponse: STDSAuthenticationResponse?
-    /// When the 3DS2 Authenticate Response was created.
-    private(set) var created: Date?
     /// Whether or not this Authenticate Response was created in livemode.
     private(set) var livemode = false
-    /// The identifier for the Source associated with this Authenticate Response
-    private(set) var sourceID: String?
     /// A fallback URL to redirect to instead of running native 3DS2
     private(set) var fallbackURL: URL?
     /// The state of the authentication
@@ -70,9 +66,7 @@ class STP3DS2AuthenticateResponse: NSObject, STPAPIResponseDecodable {
         let authResponse = self.init()
         authResponse.authenticationResponse = authenticationResponse
         authResponse.state = state
-        authResponse.created = dict.stp_date(forKey: "created")
         authResponse.livemode = dict.stp_bool(forKey: "livemode", or: true)
-        authResponse.sourceID = dict.stp_string(forKey: "source")
         authResponse.fallbackURL = fallbackURL
         authResponse.allResponseFields = response
 

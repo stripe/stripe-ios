@@ -43,9 +43,6 @@ extension STPAnalyticsClient {
     }
 
     // Add via setup intent success/failure
-    func logCSAddPaymentMethodViaSetupIntentSuccess() {
-        self.logPaymentSheetEvent(event: .cs_add_payment_method_via_setupintent_success)
-    }
     func logCSAddPaymentMethodViaSetupIntentCanceled() {
         self.logPaymentSheetEvent(event: .cs_add_payment_method_via_setupintent_canceled)
     }
@@ -54,9 +51,6 @@ extension STPAnalyticsClient {
     }
 
     // Add via attach success/failure
-    func logCSAddPaymentMethodViaCreateAttachSuccess() {
-        self.logPaymentSheetEvent(event: .cs_add_payment_method_via_createAttach_success)
-    }
     func logCSAddPaymentMethodViaCreateAttachFailure() {
         self.logPaymentSheetEvent(event: .cs_add_payment_method_via_createAttach_failure)
     }

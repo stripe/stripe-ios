@@ -79,10 +79,6 @@ extension PayWithLinkViewController.SignUpViewController: LinkSignUpViewControll
         // No-op: Error handling is already done in the standalone controller + view model.
     }
 
-    func signUpControllerDidCancel(_ controller: LinkSignUpViewController) {
-        // No-op: BaseViewController handles cancelling the flow.
-    }
-
     func signUpControllerDidEncounterAttestationError(_ controller: LinkSignUpViewController) {
         coordinator?.bailToWebFlow()
     }

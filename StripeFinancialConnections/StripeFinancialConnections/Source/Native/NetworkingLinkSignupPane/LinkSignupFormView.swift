@@ -197,29 +197,3 @@ extension LinkSignupFormView: PhoneTextFieldDelegate {
         delegate?.linkSignupFormViewDidUpdateFields(self)
     }
 }
-
-#if DEBUG
-
-import SwiftUI
-
-private struct NetworkingLinkSignupBodyFormViewUIViewRepresentable: UIViewRepresentable {
-
-    func makeUIView(context: Context) -> LinkSignupFormView {
-        LinkSignupFormView(accountholderPhoneNumber: nil, appearance: .stripe)
-    }
-
-    func updateUIView(_ uiView: LinkSignupFormView, context: Context) {}
-}
-
-struct NetworkingLinkSignupBodyFormView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(alignment: .leading) {
-            NetworkingLinkSignupBodyFormViewUIViewRepresentable()
-                .frame(maxHeight: 200)
-                .padding()
-            Spacer()
-        }
-    }
-}
-
-#endif

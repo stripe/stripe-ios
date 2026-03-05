@@ -9,17 +9,7 @@ import Foundation
 
 typealias StrictModeFramesCount = CardImageVerificationSheet.StrictModeFrameCount
 
-protocol CardVerifyStateMachineProtocol {
-    var requiredLastFour: String? { get }
-    var requiredBin: String? { get }
-    var strictModeFramesCount: StrictModeFramesCount { get }
-    var visibleMatchingCardCount: Int { get set }
-
-    func resetCountAndReturnToInitialState() -> MainLoopState
-    func determineFinishedState() -> MainLoopState
-}
-
-class CardVerifyStateMachine: OcrMainLoopStateMachine, CardVerifyStateMachineProtocol {
+class CardVerifyStateMachine: OcrMainLoopStateMachine {
     var requiredLastFour: String?
     var requiredBin: String?
     var strictModeFramesCount: StrictModeFramesCount
@@ -156,7 +146,7 @@ class CardVerifyStateMachine: OcrMainLoopStateMachine, CardVerifyStateMachinePro
     }
 }
 
-class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine, CardVerifyStateMachineProtocol {
+class CardVerifyAccurateStateMachine: OcrMainLoopStateMachine {
     var requiredLastFour: String?
     var requiredBin: String?
     var strictModeFramesCount: StrictModeFramesCount

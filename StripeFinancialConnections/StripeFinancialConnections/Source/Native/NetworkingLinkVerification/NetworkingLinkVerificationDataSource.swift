@@ -15,7 +15,6 @@ protocol NetworkingLinkVerificationDataSource: AnyObject {
     var networkingOTPDataSource: NetworkingOTPDataSource { get }
 
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest>
-    func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse>
     func attachConsumerToLinkAccountAndSynchronize() -> Future<FinancialConnectionsSynchronize>
 }
 
@@ -64,13 +63,6 @@ final class NetworkingLinkVerificationDataSourceImplementation: NetworkingLinkVe
 
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest> {
         return apiClient.markLinkVerified(clientSecret: clientSecret)
-    }
-
-    func fetchNetworkedAccounts() -> Future<FinancialConnectionsNetworkedAccountsResponse> {
-        return apiClient.fetchNetworkedAccounts(
-            clientSecret: clientSecret,
-            consumerSessionClientSecret: consumerSession.clientSecret
-        )
     }
 
     func attachConsumerToLinkAccountAndSynchronize() -> Future<FinancialConnectionsSynchronize> {

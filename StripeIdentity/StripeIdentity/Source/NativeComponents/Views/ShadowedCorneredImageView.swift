@@ -36,13 +36,6 @@ class ShadowedCorneredImageView: UIView {
         addAndPinSubview(imageView)
     }
 
-    convenience init(
-        with viewModel: ViewModel
-    ) {
-        self.init()
-        configure(viewModel: viewModel)
-    }
-
     required init?(
         coder: NSCoder
     ) {

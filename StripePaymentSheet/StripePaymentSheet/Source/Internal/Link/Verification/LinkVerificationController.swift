@@ -15,7 +15,6 @@ final class LinkVerificationController {
 
     private var completion: CompletionBlock?
 
-    private var selfRetainer: LinkVerificationController?
     private let verificationViewController: LinkVerificationViewController
     private let linkAccount: PaymentSheetLinkAccount
 
@@ -45,7 +44,6 @@ final class LinkVerificationController {
         from presentingController: UIViewController,
         completion: @escaping CompletionBlock
     ) {
-        self.selfRetainer = self
         self.completion = completion
 
         // Determine the verification flow (potentially with refresh)
@@ -113,11 +111,11 @@ final class LinkVerificationController {
             if case .completed = result {
                 self.linkAccount.refresh { [weak self] _ in
                     self?.completion?(result)
-                    self?.selfRetainer = nil
+
                 }
             } else {
                 self.completion?(result)
-                self.selfRetainer = nil
+
             }
         }
     }
@@ -132,7 +130,7 @@ extension LinkVerificationController: LinkVerificationViewControllerDelegate {
     ) {
         controller.dismiss(animated: true) { [weak self] in
             self?.completion?(result)
-            self?.selfRetainer = nil
+
         }
     }
 

@@ -347,8 +347,4 @@ extension PayWithLinkViewController.NewPaymentViewController: AddPaymentMethodVi
         updateErrorLabel(for: nil)
     }
 
-    func shouldOfferLinkSignup(_ viewController: AddPaymentMethodViewController) -> Bool {
-        return false
-    }
-
 }

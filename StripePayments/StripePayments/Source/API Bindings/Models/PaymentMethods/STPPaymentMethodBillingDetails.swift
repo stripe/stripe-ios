@@ -60,19 +60,6 @@ public class STPPaymentMethodBillingDetails: NSObject, STPAPIResponseDecodable, 
         return nil
     }
 
-    // MARK: - NSCopying
-    @objc(copyWithZone:) func copy(with zone: NSZone? = nil) -> Any {
-        let copyBillingDetails = type(of: self).init()
-
-        copyBillingDetails.allResponseFields = allResponseFields
-        copyBillingDetails.address = address?.copy() as? STPPaymentMethodAddress
-        copyBillingDetails.email = email
-        copyBillingDetails.name = name
-        copyBillingDetails.phone = phone
-
-        return copyBillingDetails
-    }
-
     // MARK: - Equality
     /// :nodoc:
     @objc

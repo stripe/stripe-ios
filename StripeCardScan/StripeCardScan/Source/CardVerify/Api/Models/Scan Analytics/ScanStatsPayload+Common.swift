@@ -13,7 +13,13 @@ extension ScanAnalyticsPayload {
     struct AppInfo: Encodable {
         let appPackageName = Bundle.stp_applicationName() ?? ""
         let build = Bundle.buildVersion() ?? ""
-        let isDebugBuild = AppInfoUtils.getIsDebugBuild()
+        let isDebugBuild: Bool = {
+            #if DEBUG
+                return true
+            #else
+                return false
+            #endif
+        }()
         let sdkVersion = StripeAPIConfiguration.STPSDKVersion
     }
 
@@ -21,8 +27,28 @@ extension ScanAnalyticsPayload {
     struct DeviceInfo: Encodable {
         /// API  requirement but have no purpose
         let deviceId = "Redacted"
-        let deviceType = DeviceUtils.getDeviceType()
-        let osVersion = DeviceUtils.getOsVersion()
+        let deviceType: String = {
+            var systemInfo = utsname()
+            uname(&systemInfo)
+            var deviceType = ""
+            for char in Mirror(reflecting: systemInfo.machine).children {
+                guard let charDigit = (char.value as? Int8) else {
+                    return ""
+                }
+
+                if charDigit == 0 {
+                    break
+                }
+
+                deviceType += String(UnicodeScalar(UInt8(charDigit)))
+            }
+
+            return deviceType
+        }()
+        let osVersion: String = {
+            let version = ProcessInfo().operatingSystemVersion
+            return "\(version.majorVersion).\(version.minorVersion).\(version.patchVersion)"
+        }()
         let platform = "iOS"
         /// API  requirement but have no purpose
         let vendorId = "Redacted"

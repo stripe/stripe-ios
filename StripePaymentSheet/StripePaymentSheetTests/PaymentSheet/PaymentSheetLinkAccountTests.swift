@@ -101,33 +101,25 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
     }
 
     func testMeetsMinimumAuthenticationLevel_meets() {
-        let session = ConsumerSession(
+        let session = ConsumerSession.makeForTest(
             clientSecret: "secret",
             emailAddress: "user@example.com",
             redactedFormattedPhoneNumber: "(***) *** **55",
-            unredactedPhoneNumber: nil,
-            phoneNumberCountry: nil,
-            verificationSessions: [],
             supportedPaymentDetailsTypes: [.card],
-            mobileFallbackWebviewParams: nil,
-            currentAuthenticationLevel: .oneFactorAuth,
-            minimumAuthenticationLevel: .oneFactorAuth
+            currentAuthenticationLevel: "1FA",
+            minimumAuthenticationLevel: "1FA"
         )
         XCTAssertTrue(session.meetsMinimumAuthenticationLevel)
     }
 
     func testMeetsMinimumAuthenticationLevel_doesNotMeet() {
-        let session = ConsumerSession(
+        let session = ConsumerSession.makeForTest(
             clientSecret: "secret",
             emailAddress: "user@example.com",
             redactedFormattedPhoneNumber: "(***) *** **55",
-            unredactedPhoneNumber: nil,
-            phoneNumberCountry: nil,
-            verificationSessions: [],
             supportedPaymentDetailsTypes: [.card],
-            mobileFallbackWebviewParams: nil,
-            currentAuthenticationLevel: .notAuthenticated,
-            minimumAuthenticationLevel: .oneFactorAuth
+            currentAuthenticationLevel: "NOT_AUTHENTICATED",
+            minimumAuthenticationLevel: "1FA"
         )
         XCTAssertFalse(session.meetsMinimumAuthenticationLevel)
     }
@@ -185,15 +177,12 @@ class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {
 
     func refreshLinkSession(completion: @escaping (Result<ConsumerSession, Error>) -> Void) {
         // Return a fake session with a "good" key
-        let stubSession = ConsumerSession(
+        let stubSession = ConsumerSession.makeForTest(
             clientSecret: "unexpired_key",
             emailAddress: "user@example.com",
             redactedFormattedPhoneNumber: "(***) *** **55",
             unredactedPhoneNumber: "(555) 555-5555",
-            phoneNumberCountry: "US",
-            verificationSessions: [],
-            supportedPaymentDetailsTypes: [.card, .bankAccount],
-            mobileFallbackWebviewParams: nil
+            phoneNumberCountry: "US"
         )
         completion(.success(stubSession))
         expectation.fulfill()

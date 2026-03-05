@@ -65,9 +65,6 @@ extension UnknownFieldsDecodable {
         }
     }
 
-    static func decodedObject(jsonData: Data) throws -> Self {
-        return try StripeJSONDecoder.decode(jsonData: jsonData)
-    }
 }
 
 extension UnknownFieldsEncodable {

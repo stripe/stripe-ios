@@ -11,8 +11,6 @@
 @_spi(STP) import StripePaymentsUI
 import UIKit
 
-typealias ConsumerSessionWithPaymentDetails = (session: ConsumerSession, paymentDetails: [ConsumerPaymentDetails])
-
 /**
  PaymentDetails response for Link accounts
  

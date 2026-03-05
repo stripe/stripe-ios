@@ -130,36 +130,3 @@ class TestModeAutofillBannerView: UIView {
         didTapAutofill()
     }
 }
-
-#if DEBUG
-
-import SwiftUI
-
-private struct TestModeAutofillBannerViewRepresentable: UIViewRepresentable {
-    let bannerContext: TestModeAutofillBannerView.Context
-    let appearance: FinancialConnectionsAppearance
-
-    func makeUIView(context: Context) -> TestModeAutofillBannerView {
-        TestModeAutofillBannerView(context: bannerContext, appearance: appearance, didTapAutofill: {})
-    }
-
-    func updateUIView(_ uiView: TestModeAutofillBannerView, context: Context) {}
-}
-
-struct TestModeAutofillBannerView_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            TestModeAutofillBannerViewRepresentable(bannerContext: .account, appearance: .stripe)
-                .frame(height: 38)
-
-            TestModeAutofillBannerViewRepresentable(bannerContext: .otp, appearance: .stripe)
-                .frame(height: 38)
-
-            TestModeAutofillBannerViewRepresentable(bannerContext: .otp, appearance: .link)
-                .frame(height: 38)
-        }
-        .padding()
-    }
-}
-
-#endif

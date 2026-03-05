@@ -177,29 +177,6 @@ extension STPGenericInputPickerField: UIPickerViewDelegate {
     }
 }
 
-// MARK: - Formatter
-
-extension STPGenericInputPickerField.Formatter {
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        guard let inputField = textField as? STPGenericInputPickerField else {
-            return
-        }
-
-        // If this is the first time the picker displays, we need to display the
-        // current selection by manually calling the update method
-        inputField.updateValue()
-        UIAccessibility.post(notification: .layoutChanged, argument: inputField.pickerView)
-    }
-
-    func textFieldDidChangeSelection(_ textField: UITextField) {
-        // Disable text selection
-        textField.selectedTextRange = textField.textRange(
-            from: textField.beginningOfDocument,
-            to: textField.beginningOfDocument
-        )
-    }
-}
-
 // MARK: - DoneButtonToolbarDelegate
 
 /// :nodoc:

@@ -19,11 +19,6 @@ import UIKit
     @_spi(STP) var consumerSessionClientSecret: String? { get }
 }
 
-struct LinkPMDisplayDetails {
-    let last4: String
-    let brand: STPCardBrand
-}
-
 @_spi(STP) public class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
     @_spi(STP) public enum SessionState: String {
         case requiresSignUp
@@ -278,29 +273,6 @@ struct LinkPMDisplayDetails {
             case .failure(let error):
                 completion(.failure(error))
             }
-        }
-    }
-
-    func createLinkAccountSession(
-        completion: @escaping (Result<LinkAccountSession, Error>) -> Void
-    ) {
-        retryingOnAuthError(completion: completion) { completionRetryingOnAuthErrors in
-            guard let session = self.currentSession else {
-                stpAssertionFailure()
-                completion(
-                    .failure(
-                        PaymentSheetError.unknown(
-                            debugDescription: "Linking account session without valid consumer session"
-                        )
-                    )
-                )
-                return
-            }
-
-            session.createLinkAccountSession(
-                requestSurface: self.requestSurface,
-                completion: completionRetryingOnAuthErrors
-            )
         }
     }
 

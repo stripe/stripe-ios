@@ -48,10 +48,8 @@ class CVCReconfirmationViewController: UIViewController {
     }()
 
     // MARK: - Internal Properties
-    private let intent: Intent
     private let paymentMethod: STPPaymentMethod
     private let configuration: PaymentElementConfiguration
-    private let cardBrand: STPCardBrand
     private var isPaymentInFlight: Bool = false
     var paymentOptionIntentConfirmParams: IntentConfirmParams? {
         let params = IntentConfirmParams(type: .stripe(.card))
@@ -76,8 +74,6 @@ class CVCReconfirmationViewController: UIViewController {
         self.configuration = configuration
         self.onCompletion = onCompletion
         self.onCancel = onCancel
-        self.cardBrand = paymentMethod.card?.brand ?? .unknown
-        self.intent = intent
         super.init(nibName: nil, bundle: nil)
     }
 

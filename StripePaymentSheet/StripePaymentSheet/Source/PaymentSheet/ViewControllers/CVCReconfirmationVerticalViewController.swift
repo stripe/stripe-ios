@@ -29,7 +29,6 @@ class CVCReconfirmationVerticalViewController: UIViewController {
     }
     let paymentMethod: STPPaymentMethod
     let configuration: PaymentSheet.Configuration
-    let cardBrand: STPCardBrand
     let cvcRecollectionElement: CVCRecollectionElement
 
     required init?(coder: NSCoder) {
@@ -48,7 +47,6 @@ class CVCReconfirmationVerticalViewController: UIViewController {
         )
         self.paymentMethod = paymentMethod
         self.configuration = configuration
-        self.cardBrand = paymentMethod.card?.brand ?? .unknown
         self.cvcRecollectionElement.delegate = elementDelegate
         super.init(nibName: nil, bundle: nil)
     }

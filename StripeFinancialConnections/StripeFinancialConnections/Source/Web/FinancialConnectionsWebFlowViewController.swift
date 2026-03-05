@@ -64,8 +64,6 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     private var subscribedToAppActiveNotifications = false
     private var lastOpenedNativeURL: URL?
 
-    private let clientSecret: String
-    private let apiClient: any FinancialConnectionsAPI
     private let sessionFetcher: FinancialConnectionsSessionFetcher
     private let manifest: FinancialConnectionsSessionManifest
     private let returnURL: String?
@@ -92,16 +90,12 @@ final class FinancialConnectionsWebFlowViewController: UIViewController {
     // MARK: - Init
 
     init(
-        clientSecret: String,
-        apiClient: any FinancialConnectionsAPI,
         manifest: FinancialConnectionsSessionManifest,
         sessionFetcher: FinancialConnectionsSessionFetcher,
         returnURL: String?,
         elementsSessionContext: ElementsSessionContext?,
         prefillDetailsOverride: WebPrefillDetails?
     ) {
-        self.clientSecret = clientSecret
-        self.apiClient = apiClient
         self.manifest = manifest
         self.sessionFetcher = sessionFetcher
         self.returnURL = returnURL

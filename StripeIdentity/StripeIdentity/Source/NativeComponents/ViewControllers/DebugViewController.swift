@@ -18,7 +18,6 @@ final class DebugViewController: IdentityFlowViewController {
         super.init(
             sheetController: sheetController, analyticsScreenName: .debug, shouldShowCancelButton: false
         )
-        debugView.delegate = self
     }
 
     required init?(
@@ -64,24 +63,5 @@ final class DebugViewController: IdentityFlowViewController {
     private func finishWithResult(result: IdentityVerificationSheet.VerificationFlowResult) {
         sheetController?.overrideTestModeReturnValue(result: result)
         dismiss(animated: true)
-    }
-}
-
-extension StripeUICore.Button {
-    fileprivate convenience init(
-        title: String,
-        target: Any?,
-        action: Selector
-    ) {
-        self.init()
-        self.title = title
-        addTarget(target, action: action, for: .touchUpInside)
-        self.configuration = .identityPrimary()
-    }
-}
-
-extension DebugViewController: DebugViewDelegate {
-    func debugOptionsDidChange() {
-        self.updateUI()
     }
 }

@@ -102,76 +102,10 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         return self.videoFeed.isTorchOn()
     }
 
-    func hasTorchAndIsAvailable() -> Bool {
-        return self.videoFeed.hasTorchAndIsAvailable()
-    }
-
     func setTorchLevel(level: Float) {
         if 0.0...1.0 ~= level {
             self.videoFeed.setTorchLevel(level: level)
         }
-    }
-
-    static func configure(apiKey: String? = nil) {
-        // TODO: remove this and just use stripe's main configuration path
-    }
-
-    static func supportedOrientationMaskOrDefault() -> UIInterfaceOrientationMask {
-        guard ScanBaseViewController.isAppearing else {
-            // If the ScanBaseViewController isn't appearing then fall back
-            // to getting the orientation mask from the infoDictionary, just like
-            // the system would do if the user didn't override the
-            // supportedInterfaceOrientationsFor method
-            let supportedOrientations =
-                (Bundle.main.infoDictionary?["UISupportedInterfaceOrientations"] as? [String]) ?? [
-                    "UIInterfaceOrientationPortrait"
-                ]
-
-            let maskArray = supportedOrientations.map { option -> UIInterfaceOrientationMask in
-                switch option {
-                case "UIInterfaceOrientationPortrait":
-                    return UIInterfaceOrientationMask.portrait
-                case "UIInterfaceOrientationPortraitUpsideDown":
-                    return UIInterfaceOrientationMask.portraitUpsideDown
-                case "UIInterfaceOrientationLandscapeLeft":
-                    return UIInterfaceOrientationMask.landscapeLeft
-                case "UIInterfaceOrientationLandscapeRight":
-                    return UIInterfaceOrientationMask.landscapeRight
-                default:
-                    return UIInterfaceOrientationMask.portrait
-                }
-            }
-
-            let mask: UIInterfaceOrientationMask = maskArray.reduce(
-                UIInterfaceOrientationMask.portrait
-            ) { result, element in
-                return UIInterfaceOrientationMask(rawValue: result.rawValue | element.rawValue)
-            }
-
-            return mask
-        }
-        return ScanBaseViewController.isPadAndFormsheet ? .allButUpsideDown : .portrait
-    }
-
-    static func isCompatible() -> Bool {
-        return self.isCompatible(configuration: ScanConfiguration())
-    }
-
-    static func isCompatible(configuration: ScanConfiguration) -> Bool {
-        // check to see if the user has already denined camera permission
-        let authorizationStatus = AVCaptureDevice.authorizationStatus(for: .video)
-        if authorizationStatus != .authorized && authorizationStatus != .notDetermined
-            && configuration.setPreviouslyDeniedDevicesAsIncompatible
-        {
-            return false
-        }
-
-        // make sure that we don't run on iPhone 6 / 6plus or older
-        if configuration.runOnOldDevices {
-            return true
-        }
-
-        return true
     }
 
     func cancelScan() {
@@ -457,13 +391,6 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
             )
         } else {
             mainLoop?.push(imageData: scannedImageData)
-        }
-    }
-
-    func updateDebugImageView(image: UIImage) {
-        self.debugImageView?.image = image
-        if self.debugImageView?.isHidden ?? false {
-            self.debugImageView?.isHidden = false
         }
     }
 

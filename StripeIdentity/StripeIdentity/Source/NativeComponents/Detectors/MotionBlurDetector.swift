@@ -15,8 +15,6 @@ final class MotionBlurDetector {
     struct Output: Equatable {
         let hasMotionBlur: Bool
         let iou: Float?
-        let frameCount: Int
-        let duration: TimeInterval
     }
 
     /// Wrap all instance property modifications in a serial queue
@@ -65,7 +63,7 @@ final class MotionBlurDetector {
             guard let firstFrameTimestamp = firstFrameTimestamp,
                 let lastBoundingBox = lastBoundingBox
             else {
-                output = .init(hasMotionBlur: true, iou: nil, frameCount: 0, duration: 0)
+                output = .init(hasMotionBlur: true, iou: nil)
                 return
             }
 
@@ -73,7 +71,7 @@ final class MotionBlurDetector {
             guard iou >= minIOU else {
                 self.numFramesUnderThreshold = 0
                 self.firstFrameTimestamp = nil
-                output = .init(hasMotionBlur: true, iou: nil, frameCount: 0, duration: 0)
+                output = .init(hasMotionBlur: true, iou: nil)
                 return
             }
 
@@ -81,9 +79,7 @@ final class MotionBlurDetector {
             let duration = timestamp.timeIntervalSince(firstFrameTimestamp)
             output = .init(
                 hasMotionBlur: duration < minTime,
-                iou: iou,
-                frameCount: numFramesUnderThreshold,
-                duration: duration
+                iou: iou
             )
         }
         return output

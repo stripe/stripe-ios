@@ -19,14 +19,6 @@ class HeaderView: UIView {
 
         static let stackViewSpacing: CGFloat = 24
 
-        static func topConstraint(headerType: ViewModel.HeaderType) -> CGFloat {
-            switch headerType {
-            case .banner:
-                return 16
-            case .plain:
-                return 57
-            }
-        }
     }
 
     struct ViewModel {

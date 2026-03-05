@@ -19,9 +19,6 @@ extension StripeContact {
     ) {
         let nameComponents = contact.name
         if let nameComponents = nameComponents {
-            givenName = stringIfHasContentsElseNil(nameComponents.givenName)
-            familyName = stringIfHasContentsElseNil(nameComponents.familyName)
-
             name = stringIfHasContentsElseNil(
                 PersonNameComponentsFormatter.localizedString(from: nameComponents, style: .default)
             )

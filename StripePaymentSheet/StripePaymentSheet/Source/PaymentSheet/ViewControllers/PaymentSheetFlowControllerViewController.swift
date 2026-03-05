@@ -499,10 +499,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 // MARK: - BottomSheetContentViewController
 /// :nodoc:
 extension PaymentSheetFlowControllerViewController: BottomSheetContentViewController {
-    var allowsDragToDismiss: Bool {
-        return isDismissable
-    }
-
     func didTapOrSwipeToDismiss() {
         if isDismissable {
             didDismiss(didCancel: true)

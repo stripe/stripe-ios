@@ -54,16 +54,6 @@ public class STPBankAccount: NSObject, STPAPIResponseDecodable, STPSourceProtoco
 
     // MARK: - Deprecated methods
 
-    /// A set of key/value pairs associated with the bank account object.
-    /// @deprecated Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead.
-    /// - seealso: https://stripe.com/docs/api#metadata
-    @available(
-        *,
-        deprecated,
-        message:
-            "Metadata is no longer returned to clients using publishable keys. Retrieve them on your server using yoursecret key instead."
-    )
-    private(set) var metadata: [String: String]?
     /// The Stripe ID for the bank account.
     @available(
         *,

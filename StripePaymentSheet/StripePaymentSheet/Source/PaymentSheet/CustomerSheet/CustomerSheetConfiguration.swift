@@ -144,12 +144,3 @@ extension CustomerSheet {
         }
     }
 }
-
-extension CustomerSheet.Configuration {
-    func isUsingBillingAddressCollection() -> Bool {
-        return billingDetailsCollectionConfiguration.name == .always
-        || billingDetailsCollectionConfiguration.phone == .always
-        || billingDetailsCollectionConfiguration.email == .always
-        || billingDetailsCollectionConfiguration.address == .full
-    }
-}

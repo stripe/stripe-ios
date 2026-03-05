@@ -54,21 +54,6 @@ import UIKit
     // defaults to NO
     @_spi(STP) public var preservesContentsOnPaste = false
     // defaults to NO
-    private var _compressed = false
-    var compressed: Bool {
-        get {
-            _compressed
-        }
-        set(compressed) {
-            if compressed != _compressed {
-                _compressed = compressed
-                // reset text values as needed
-                _didSetText(text: self.text ?? "")
-                _didSetAttributedPlaceholder(attributedPlaceholder: attributedPlaceholder)
-            }
-        }
-    }
-    // defaults to NO
     private var _autoFormattingBehavior: STPFormTextFieldAutoFormattingBehavior = .none
     @_spi(STP) public var autoFormattingBehavior: STPFormTextFieldAutoFormattingBehavior {
         get {

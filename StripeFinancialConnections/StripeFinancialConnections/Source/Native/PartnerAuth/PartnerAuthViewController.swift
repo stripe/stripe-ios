@@ -19,10 +19,6 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
     )
     func partnerAuthViewController(
         _ viewController: PartnerAuthViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
-    )
-    func partnerAuthViewController(
-        _ viewController: PartnerAuthViewController,
         didReceiveError error: Error
     )
     func partnerAuthViewController(
@@ -45,7 +41,6 @@ final class PartnerAuthViewController: SheetViewController {
     private var institution: FinancialConnectionsInstitution {
         return dataSource.institution
     }
-    private var webAuthenticationSession: ASWebAuthenticationSession?
     private var lastHandledAuthenticationSessionReturnUrl: URL?
     weak var delegate: PartnerAuthViewControllerDelegate?
 
@@ -449,10 +444,8 @@ final class PartnerAuthViewController: SheetViewController {
                     )
                 }
 
-                self.webAuthenticationSession = nil
             }
         )
-        self.webAuthenticationSession = webAuthenticationSession
 
         webAuthenticationSession.presentationContextProvider = self
         webAuthenticationSession.prefersEphemeralWebBrowserSession = true

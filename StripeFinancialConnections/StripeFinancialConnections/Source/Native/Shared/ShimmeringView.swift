@@ -33,8 +33,4 @@ class ShimmeringView: UIView {
         )
     }
 
-    func stopShimmering() {
-        layer.removeAllAnimations()
-        self.alpha = 1.0
-    }
 }

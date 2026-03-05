@@ -199,7 +199,6 @@ import UIKit
     // MARK: - Phone number
     struct PhoneNumberConfiguration: TextFieldElementConfiguration {
         static let incompleteError = Error.incomplete(localizedDescription: .Localized.incomplete_phone_number)
-        static let invalidError = Error.invalid(localizedDescription: .Localized.invalid_phone_number)
         public let label: String = .Localized.phoneNumber
         /// - Note: Country code helps us format the phone number
         public let countryCodeProvider: () -> String

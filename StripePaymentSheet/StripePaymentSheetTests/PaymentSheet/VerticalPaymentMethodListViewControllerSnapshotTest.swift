@@ -49,11 +49,6 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
         .UPI,
     ]
 
-    override func setUp() {
-        super.setUp()
-        DownloadManager.sharedManager.resetCache()
-    }
-
     func testNoSavedPM_noApplePayLink() {
         let sut = VerticalPaymentMethodListViewController(initialSelection: nil, savedPaymentMethods: [], paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: false, shouldShowLink: false, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default.applyingLiquidGlassIfPossible(), currency: "USD", amount: 1099, incentive: nil, delegate: self)
         STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375)

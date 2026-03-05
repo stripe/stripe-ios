@@ -191,10 +191,6 @@ public class STPSource: NSObject, STPAPIResponseDecodable, STPSourceProtocol {
     }
 
     // MARK: - STPAPIResponseDecodable
-    @objc func stripeObject() -> String {
-        return "source"
-    }
-
     @objc
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let response = response else {

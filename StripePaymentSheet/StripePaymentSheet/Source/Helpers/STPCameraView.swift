@@ -27,25 +27,6 @@ class STPCameraView: UIView {
         return layer as! AVCaptureVideoPreviewLayer
     }
 
-    func playSnapshotAnimation() {
-        CATransaction.begin()
-        CATransaction.setValue(
-            kCFBooleanTrue,
-            forKey: kCATransactionDisableActions)
-        flashLayer?.frame = CGRect(
-            x: 0, y: 0, width: layer.bounds.size.width, height: layer.bounds.size.height)
-        flashLayer?.opacity = 1.0
-        CATransaction.commit()
-        DispatchQueue.main.async(execute: {
-            let fadeAnim = CABasicAnimation(keyPath: "opacity")
-            fadeAnim.fromValue = NSNumber(value: 1.0)
-            fadeAnim.toValue = NSNumber(value: 0.0)
-            fadeAnim.duration = 1.0
-            self.flashLayer?.add(fadeAnim, forKey: "opacity")
-            self.flashLayer?.opacity = 0.0
-        })
-    }
-
     override init(frame: CGRect) {
         super.init(frame: frame)
         flashLayer = CALayer()

@@ -18,7 +18,6 @@ import UIKit
 @objc(STPBottomSheetPresentationController)
 class BottomSheetPresentationController: UIPresentationController {
     // MARK: - Properties
-    private var bottomAnchor: NSLayoutConstraint?
     private var presentable: BottomSheetPresentable? {
         return presentedViewController as? BottomSheetPresentable
     }
@@ -147,7 +146,6 @@ extension BottomSheetPresentationController {
         // We'll use this constraint to handle the keyboard
         let bottomAnchor = presentedView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         bottomAnchor.priority = .required
-        self.bottomAnchor = bottomAnchor
 
         NSLayoutConstraint.activate([
             presentedView.topAnchor.constraint(greaterThanOrEqualTo: containerView.safeAreaLayoutGuide.topAnchor),

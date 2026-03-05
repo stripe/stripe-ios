@@ -1421,17 +1421,14 @@ extension PaymentSheetLinkAccount {
     ) -> PaymentSheetLinkAccount {
         var session: ConsumerSession?
         if isRegistered {
-            session = ConsumerSession(
+            session = ConsumerSession.makeForTest(
                 clientSecret: "client_secret",
                 emailAddress: email,
                 redactedFormattedPhoneNumber: "+1********55",
-                unredactedPhoneNumber: nil,
-                phoneNumberCountry: nil,
                 verificationSessions: [
-                    .init(type: .sms, state: .verified)
+                    ["type": "SMS", "state": "VERIFIED"]
                 ],
-                supportedPaymentDetailsTypes: [.card],
-                mobileFallbackWebviewParams: nil
+                supportedPaymentDetailsTypes: [.card]
             )
         }
         return .init(

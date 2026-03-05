@@ -61,15 +61,12 @@ final class DocumentUploaderTest: XCTestCase {
         ),
         .init(
             hasBarcode: true,
-            isTimedOut: false,
             symbology: .pdf417,
             timeTryingToFindBarcode: 1
         ),
         .init(
             hasMotionBlur: false,
-            iou: nil,
-            frameCount: 0,
-            duration: 0
+            iou: nil
         ),
         .init(
             .init(

@@ -144,7 +144,7 @@ import UIKit
 
     private init(
         apiClient: STPAPIClient = .shared,
-        mode: Mode,
+        mode: Mode = .payment,
         elementsSession: STPElementsSession,
         intent: Intent,
         configuration: PaymentElementConfiguration,
@@ -199,7 +199,7 @@ import UIKit
     /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
     @_spi(STP) public static func create(
         apiClient: STPAPIClient = .shared,
-        mode: LinkController.Mode,
+        mode: LinkController.Mode = .payment,
         appearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         requestSurface: LinkRequestSurface = .default,
@@ -375,9 +375,6 @@ import UIKit
         if collectName {
             configuration.billingDetailsCollectionConfiguration.name = .always
         }
-
-        // TODO: We need a way to override Link's default primary button label, since we don't want to show "Pay $xx.xx" even for payment mode.
-        print("Presenting Link wallet for \(mode)")
 
         presentingViewController.presentNativeLink(
             selectedPaymentDetailsID: selectedPaymentDetails?.stripeID,
@@ -892,7 +889,7 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     /// - Returns: A `LinkController` if successful, or throws an error if the creation failed.
     static func create(
         apiClient: STPAPIClient = .shared,
-        mode: LinkController.Mode,
+        mode: LinkController.Mode = .payment,
         appearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         requestSurface: LinkRequestSurface = .default

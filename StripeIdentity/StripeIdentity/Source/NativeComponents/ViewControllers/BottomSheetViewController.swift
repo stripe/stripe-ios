@@ -18,12 +18,9 @@ final class BottomSheetViewController: UIViewController {
 
     typealias BottomSheetContent = StripeAPI.VerificationPageStaticContentBottomSheetContent
 
-    private let content: BottomSheetContent
-
     init(
         content: BottomSheetContent
     ) throws {
-        self.content = content
         super.init(nibName: nil, bundle: nil)
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTap))

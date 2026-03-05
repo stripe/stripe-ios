@@ -38,10 +38,6 @@ class CardScanFraudData: ScanEvents {
     var requireOcrBeforeCapturingUxOnlyFrames = true
 
     var debugRetainImages = false
-    // Note: Only access these arrays on the main loop
-    var savedSquareImages: [CGImage]?
-    var savedFullImages: [CGImage]?
-    var savedNumberBoxes: [[CGRect]]?
 
     init() {}
 

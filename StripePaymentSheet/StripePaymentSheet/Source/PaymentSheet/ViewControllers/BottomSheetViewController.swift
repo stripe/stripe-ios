@@ -317,8 +317,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     }
 
     // MARK: -
-    private var scrollViewHeightConstraint: NSLayoutConstraint?
-
     private var bottomAnchor: NSLayoutConstraint?
 
     private lazy var manualHeightConstraint: NSLayoutConstraint = {
@@ -375,7 +373,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
         // Give the scroll view a desired height
         let scrollViewHeightConstraint = scrollView.heightAnchor.constraint(equalTo: scrollView.contentLayoutGuide.heightAnchor)
         scrollViewHeightConstraint.priority = .fittingSizeLevel
-        self.scrollViewHeightConstraint = scrollViewHeightConstraint
 
         // Move the contentContainerView to start below the sheet
         let topOffset = appearance.navigationBarStyle.isGlass ? navigationBarHeight : 0.0
@@ -497,11 +494,6 @@ class BottomSheetViewController: UIViewController, BottomSheetPresentable {
     }
 
     // MARK: - BottomSheetPresentable
-
-    var panScrollable: UIScrollView? {
-        // Returning the scroll view causes contentInset issues; I'm not sure why.
-        return nil
-    }
 
     func didTapOrSwipeToDismiss() {
         contentViewController.didTapOrSwipeToDismiss()

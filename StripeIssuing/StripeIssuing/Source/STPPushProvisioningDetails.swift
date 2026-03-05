@@ -10,21 +10,15 @@ import Foundation
 @_spi(STP) import StripePayments
 
 class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
-    let cardId: String
-    let livemode: Bool
     let encryptedPassData: Data
     let activationData: Data
     let ephemeralPublicKey: Data
 
     required init(
-        cardId: String,
-        livemode: Bool,
         encryptedPass encryptedPassData: Data,
         activationData: Data,
         ephemeralPublicKey: Data
     ) {
-        self.cardId = cardId
-        self.livemode = livemode
         self.encryptedPassData = encryptedPassData
         self.activationData = activationData
         self.ephemeralPublicKey = ephemeralPublicKey
@@ -41,8 +35,6 @@ class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
         }
 
         // required fields
-        let cardId = dict.stp_string(forKey: "card")
-        let livemode = dict.stp_bool(forKey: "livemode", or: false)
         let encryptedPassString = dict.stp_string(forKey: "contents")
         let encryptedPassData =
             encryptedPassString != nil
@@ -57,7 +49,7 @@ class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
             ephemeralPublicKeyString != nil
             ? Data(base64Encoded: ephemeralPublicKeyString ?? "", options: []) : nil
 
-        if cardId == nil || encryptedPassData == nil || activationData == nil
+        if encryptedPassData == nil || activationData == nil
             || ephemeralPublicKeyData == nil
         {
             return nil
@@ -67,8 +59,6 @@ class STPPushProvisioningDetails: NSObject, STPAPIResponseDecodable {
             let ephemeralPublicKeyData = ephemeralPublicKeyData
         {
             let details = self.init(
-                cardId: cardId ?? "",
-                livemode: livemode,
                 encryptedPass: encryptedPassData,
                 activationData: activationData,
                 ephemeralPublicKey: ephemeralPublicKeyData

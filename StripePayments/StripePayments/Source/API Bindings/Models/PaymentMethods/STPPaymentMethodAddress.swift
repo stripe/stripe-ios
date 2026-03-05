@@ -85,20 +85,6 @@ public class STPPaymentMethodAddress: NSObject, STPAPIResponseDecodable, STPForm
         return nil
     }
 
-    // MARK: - NSCopying
-    @objc(copyWithZone:) func copy(with zone: NSZone? = nil) -> Any {
-        let copyPaymentMethodAddress = type(of: self).init()
-
-        copyPaymentMethodAddress.allResponseFields = allResponseFields
-        copyPaymentMethodAddress.city = city
-        copyPaymentMethodAddress.country = country
-        copyPaymentMethodAddress.line1 = line1
-        copyPaymentMethodAddress.line2 = line2
-        copyPaymentMethodAddress.postalCode = postalCode
-        copyPaymentMethodAddress.state = state
-        return copyPaymentMethodAddress
-    }
-
     // MARK: - Equality
     /// :nodoc:
     @objc

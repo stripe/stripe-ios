@@ -103,27 +103,3 @@ private func CreateLabelView(width: CGFloat) -> UIView {
     ])
     return labelView
 }
-
-#if DEBUG
-
-import SwiftUI
-
-private struct InstitutionTableLoadingViewUIViewRepresentable: UIViewRepresentable {
-
-    func makeUIView(context: Context) -> InstitutionTableLoadingView {
-        InstitutionTableLoadingView()
-    }
-
-    func updateUIView(
-        _ institutionTableLoadingView: InstitutionTableLoadingView,
-        context: Context
-    ) {}
-}
-
-struct InstitutionTableLoadingView_Previews: PreviewProvider {
-    static var previews: some View {
-        InstitutionTableLoadingViewUIViewRepresentable()
-    }
-}
-
-#endif

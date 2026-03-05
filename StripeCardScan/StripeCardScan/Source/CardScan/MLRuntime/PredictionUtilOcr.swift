@@ -7,6 +7,18 @@
 
 import Foundation
 
+struct Result {
+    var pickedBoxProbs: [Float]
+    var pickedLabels: [Int]
+    var pickedBoxes: [[Float]]
+
+    init() {
+        pickedBoxProbs = [Float]()
+        pickedLabels = [Int]()
+        pickedBoxes = [[Float]]()
+    }
+}
+
 struct PredictionUtilOcr {
 
     /// * A utitliy struct that applies non-max supression to each class

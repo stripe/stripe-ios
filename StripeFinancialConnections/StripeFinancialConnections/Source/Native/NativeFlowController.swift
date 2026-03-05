@@ -752,20 +752,6 @@ extension NativeFlowController: ConsentViewControllerDelegate {
 // MARK: - IDConsentContentViewControllerDelegate
 
 extension NativeFlowController: IDConsentContentViewControllerDelegate {
-    func idConsentContentViewController(
-        _ viewController: IDConsentContentViewController,
-        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
-        nextPaneOrDrawerOnSecondaryCta: String?
-    ) {
-        let parameters = CreatePaneParameters(
-            nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
-        )
-        if nextPane == .networkingLinkLoginWarmup {
-            presentPaneAsSheet(nextPane, parameters: parameters)
-        } else {
-            pushPane(nextPane, parameters: parameters, animated: true)
-        }
-    }
 
     func idConsentContentViewController(
         _ viewController: IDConsentContentViewController,
@@ -897,13 +883,6 @@ extension NativeFlowController: PartnerAuthViewControllerDelegate {
         // and already have the same loading screen.
         let shouldAnimate = !authSession.isOauthNonOptional
         pushPane(.accountPicker, animated: shouldAnimate)
-    }
-
-    func partnerAuthViewController(
-        _ viewController: PartnerAuthViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
-    ) {
-        delegate?.nativeFlowController(self, didReceiveEvent: event)
     }
 
     func partnerAuthViewController(
@@ -1204,13 +1183,6 @@ extension NativeFlowController: AttachLinkedPaymentAccountViewControllerDelegate
         _ viewController: AttachLinkedPaymentAccountViewController
     ) {
         pushPane(.manualEntry, animated: true)
-    }
-
-    func attachLinkedPaymentAccountViewController(
-        _ viewController: AttachLinkedPaymentAccountViewController,
-        didReceiveEvent event: FinancialConnectionsEvent
-    ) {
-        delegate?.nativeFlowController(self, didReceiveEvent: event)
     }
 }
 
@@ -1641,8 +1613,6 @@ private func CreatePaneViewController(
             manifest: dataManager.manifest,
             linkedAccountsCount: dataManager.linkedAccounts?.count ?? 0,
             saveToLinkWithStripeSucceeded: dataManager.saveToLinkWithStripeSucceeded,
-            apiClient: dataManager.apiClient,
-            clientSecret: dataManager.clientSecret,
             analyticsClient: dataManager.analyticsClient,
             customSuccessPaneCaption: dataManager.customSuccessPaneCaption,
             customSuccessPaneSubCaption: dataManager.customSuccessPaneSubCaption

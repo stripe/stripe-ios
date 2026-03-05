@@ -283,8 +283,6 @@ final class PayWithLinkViewController: BottomSheetViewController {
 
         context.configuration.style.configure(self)
 
-        updateSupportedPaymentMethods()
-
         if linkAccount?.sessionState == .verified {
             loadAndPresentWallet()
         }
@@ -535,11 +533,6 @@ private extension PayWithLinkViewController {
         setViewControllers([viewController])
     }
 
-    func updateSupportedPaymentMethods() {
-        PaymentSheet.supportedLinkPaymentMethods =
-            linkAccount?.supportedPaymentMethodTypes(for: context.elementsSession) ?? []
-    }
-
 }
 
 // MARK: - Navigation
@@ -759,7 +752,6 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
-        updateSupportedPaymentMethods()
         updateUI()
     }
 

@@ -36,13 +36,6 @@ final class DocumentCaptureView: UIView {
         installViews()
     }
 
-    convenience init(
-        from viewModel: ViewModel
-    ) {
-        self.init()
-        configure(with: viewModel)
-    }
-
     required init?(
         coder: NSCoder
     ) {

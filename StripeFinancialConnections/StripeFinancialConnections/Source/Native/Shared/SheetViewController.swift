@@ -62,7 +62,6 @@ class SheetViewController: UIViewController {
     private var dismissAnimationInitialSpringVelocityY: CGFloat = 0
 
     private var paneViewContainerView: UIView?
-    private var paneView: PaneLayoutView?
     private var sheetTopConstraint: NSLayoutConstraint?
 
     private lazy var darkAreaTapGestureRecognizer: UITapGestureRecognizer = {
@@ -188,7 +187,6 @@ class SheetViewController: UIViewController {
     func setup(withContentView contentView: UIView, footerView: UIView?) {
         self.paneViewContainerView?.removeFromSuperview()
         self.paneViewContainerView = nil
-        self.paneView = nil
 
         let paneLayoutView = PaneLayoutView(contentView: contentView, footerView: footerView)
         let paneContainerView = UIView()
@@ -196,7 +194,6 @@ class SheetViewController: UIViewController {
         paneLayoutView.addTo(view: paneContainerView)
         contentStackView.addArrangedSubview(paneContainerView)
 
-        self.paneView = paneLayoutView
         self.paneViewContainerView = paneContainerView
     }
 

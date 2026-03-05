@@ -10,7 +10,6 @@ import Foundation
 
 protocol NetworkingSaveToLinkVerificationDataSource: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get }
-    var consumerSession: ConsumerSessionData { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var networkingOTPDataSource: NetworkingOTPDataSource { get }
 

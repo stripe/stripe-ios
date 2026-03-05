@@ -215,58 +215,6 @@ private class IncreasedHitTestTextField: UITextField {
     }
 }
 
-#if DEBUG
-
-import SwiftUI
-
-private struct InstitutionSearchBarUIViewRepresentable: UIViewRepresentable {
-
-    let text: String
-    var isSelected: Bool = false
-    let appearance: FinancialConnectionsAppearance
-
-    func makeUIView(context: Context) -> InstitutionSearchBar {
-        InstitutionSearchBar(appearance: appearance)
-    }
-
-    func updateUIView(_ searchBar: InstitutionSearchBar, context: Context) {
-        searchBar.text = text
-
-        if isSelected {
-            _ = searchBar.becomeFirstResponder()
-        }
-    }
-}
-
-struct InstitutionSearchBar_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            InstitutionSearchBarUIViewRepresentable(text: "", appearance: .stripe)
-                .frame(width: 327)
-                .frame(height: 56)
-
-            InstitutionSearchBarUIViewRepresentable(text: "Chase", appearance: .stripe)
-                .frame(width: 327)
-                .frame(height: 56)
-
-            Spacer()
-        }
-        .frame(maxWidth: .infinity)
-
-        InstitutionSearchBarUIViewRepresentable(text: "Chase", isSelected: true, appearance: .stripe)
-            .frame(width: 327)
-            .frame(height: 56)
-            .previewDisplayName("Selected - Light theme")
-
-        InstitutionSearchBarUIViewRepresentable(text: "Chase", isSelected: true, appearance: .link)
-            .frame(width: 327)
-            .frame(height: 56)
-            .previewDisplayName("Selected - Link Light theme")
-    }
-}
-
-#endif
-
 private class TextFieldClearButton: UIButton {
 
     // increase hit-test area of the clear button

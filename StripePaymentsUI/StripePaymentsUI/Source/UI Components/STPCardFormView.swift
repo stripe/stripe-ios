@@ -505,10 +505,6 @@ public class STPCardFormView: STPFormView {
         updateBindedPaymentMethodParams()
     }
 
-    @objc func scanButtonTapped(sender: UIButton) {
-        self.formViewInternalDelegate?.formView(self, didTapAccessoryButton: sender)
-    }
-
     /// Returns true iff the form can mark the error to one of its fields
     @_spi(STP) public func markFormErrors(for apiError: Error) -> Bool {
         let error = apiError as NSError

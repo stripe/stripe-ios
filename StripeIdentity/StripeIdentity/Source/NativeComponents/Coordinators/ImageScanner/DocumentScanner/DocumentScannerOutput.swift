@@ -80,14 +80,6 @@ enum DocumentScannerOutput: Equatable {
         return idDetectorOutput.classification.matchesDocument(side: side)
     }
 
-    func getDocumentBounds() -> CGRect {
-        return idDetectorOutput.documentBounds
-    }
-
-    func getAllClassificationScores() -> [IDDetectorOutput.Classification: Float] {
-        return idDetectorOutput.allClassificationScores
-    }
-
     func qualityScore(side: DocumentSide) -> Float {
         switch self {
         case let .legacy(idDetectorOutput, _, motionBlur, _, _):

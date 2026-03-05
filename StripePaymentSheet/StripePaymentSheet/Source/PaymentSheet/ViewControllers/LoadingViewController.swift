@@ -40,7 +40,6 @@ class LoadingViewController: UIViewController, BottomSheetContentViewController 
         delegate?.shouldDismiss(self)
     }
     let loadingViewHeight: CGFloat
-    var panScrollable: UIScrollView?
     let activityIndicator = UIActivityIndicatorView(style: .medium)
     weak var delegate: LoadingViewControllerDelegate?
 

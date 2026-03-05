@@ -462,7 +462,6 @@ class SimpleScanViewController: ScanBaseViewController {
         card.expiryMonth = expiryMonth
         card.expiryYear = expiryYear
         card.name = predictedName
-        card.image = scannedImage
 
         delegate?.userDidScanCardSimple(self, creditCard: card)
     }

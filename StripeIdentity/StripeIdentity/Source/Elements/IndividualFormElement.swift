@@ -88,7 +88,6 @@ final class IndividualFormElement: ContainerElement {
     let idNumberElement: IdNumberElement?
     let phoneNumberSectionElement: SectionElement?
     let idCountryNotListedButtonElement: IdentityTextButtonElement?
-    let countryNotListedButtonClicked: CountryNotListedButtonClicked
     let dateFormatter: DateFormatter
     weak var delegate: StripeUICore.ElementDelegate?
 
@@ -97,7 +96,6 @@ final class IndividualFormElement: ContainerElement {
         missing: Set<StripeAPI.VerificationPageFieldType>,
         countryNotListedButtonClicked: @escaping CountryNotListedButtonClicked
     ) {
-        self.countryNotListedButtonClicked = countryNotListedButtonClicked
         self.dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMddyyyy"
         dateFormatter.locale = .current

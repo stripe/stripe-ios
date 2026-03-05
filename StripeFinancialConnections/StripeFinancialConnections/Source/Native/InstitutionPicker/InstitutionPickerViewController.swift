@@ -259,9 +259,8 @@ class InstitutionPickerViewController: UIViewController {
         institutionTableView.showLoadingView(show)
     }
 
-    private var partnerAuthDismissObserver: Any?
     private func observePartnerAuthDismissToHideOverlay() {
-        partnerAuthDismissObserver = NotificationCenter.default.addObserver(
+        _ = NotificationCenter.default.addObserver(
             forName: .sheetViewControllerWillDismiss,
             object: nil,
             queue: nil
@@ -271,7 +270,6 @@ class InstitutionPickerViewController: UIViewController {
                 return
             }
             self.hideOverlayView()
-            self.partnerAuthDismissObserver = nil
         }
     }
 

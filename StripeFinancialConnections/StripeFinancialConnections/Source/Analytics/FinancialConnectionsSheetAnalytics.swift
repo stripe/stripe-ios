@@ -63,7 +63,6 @@ struct FinancialConnectionsSheetFailedAnalytic: FinancialConnectionsSheetAnalyti
     let event = STPAnalyticEvent.financialConnectionsSheetFailed
     let linkAccountSessionId: String?
     let additionalParams: [String: Any] = [:]
-    let error: Error
 }
 
 /// Logged at the begining of the initial `synchronize` API call.
@@ -109,8 +108,7 @@ struct FinancialConnectionsSheetCompletionAnalytic {
             )
         case .failed(let error):
             return FinancialConnectionsSheetFailedAnalytic(
-                linkAccountSessionId: linkAccountSessionId,
-                error: error
+                linkAccountSessionId: linkAccountSessionId
             )
         }
     }

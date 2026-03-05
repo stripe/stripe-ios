@@ -11,7 +11,6 @@ import Vision
 
 struct BarcodeDetectorOutput: Equatable {
     let hasBarcode: Bool
-    let isTimedOut: Bool
     let symbology: VNBarcodeSymbology
     let timeTryingToFindBarcode: TimeInterval
 }
@@ -37,7 +36,6 @@ extension BarcodeDetectorOutput: VisionBasedDetectorOutput {
         }
         self.init(
             hasBarcode: !barcodeObservations.isEmpty,
-            isTimedOut: false,
             symbology: detector.configuration.symbology,
             timeTryingToFindBarcode: timeTryingToFindBarcode
         )
@@ -88,7 +86,6 @@ final class BarcodeDetector: VisionBasedDetector {
 
         return .init(
             hasBarcode: false,
-            isTimedOut: true,
             symbology: configuration.symbology,
             timeTryingToFindBarcode: timeSinceScan
         )

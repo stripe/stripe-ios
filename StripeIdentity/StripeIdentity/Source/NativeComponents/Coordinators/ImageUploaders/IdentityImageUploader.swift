@@ -49,38 +49,6 @@ final class IdentityImageUploader {
         self.sheetController = sheetController
     }
 
-    func uploadLowAndHighResImagesNoCropping(
-        highResImage: CGImage,
-        lowResImage: CGImage,
-        highResFileName: String,
-        lowResFileName: String
-    ) -> Future<LowHighResFiles> {
-        let lowResUploadFuture = uploadLowResImage(
-            lowResImage,
-            fileName: lowResFileName
-        )
-
-        return uploadJPEGResize(
-            image: highResImage,
-            fileName: highResFileName,
-            jpegCompressionQuality: configuration.highResImageCompressionQuality,
-            newSize: CGSize(
-                width: configuration.highResImageMaxDimension,
-                height: configuration.highResImageMaxDimension
-            )
-        ).chained { highResFile in
-            return lowResUploadFuture.chained { lowResFile in
-                // Convert promise to a tuple of file IDs
-                return Promise(
-                    value: (
-                        lowRes: lowResFile,
-                        highRes: highResFile
-                    )
-                )
-            }
-        }
-    }
-
     func uploadLowAndHighResImages(
         _ image: CGImage,
         highResRegionOfInterest: CGRect,

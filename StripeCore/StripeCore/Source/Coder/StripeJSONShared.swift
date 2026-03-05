@@ -24,14 +24,6 @@ internal struct STPCodingKey: CodingKey {
         self.stringValue = intValue.description
     }
 
-    init(
-        stringValue: String,
-        intValue: Int?
-    ) {
-        self.intValue = intValue
-        self.stringValue = stringValue
-    }
-
     var stringValue: String
     var intValue: Int?
 }

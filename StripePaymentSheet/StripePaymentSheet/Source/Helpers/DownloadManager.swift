@@ -119,12 +119,6 @@ extension DownloadManager {
         }
     }
 
-    func resetCache() {
-        session.configuration.urlCache?.removeAllCachedResponses()
-        imageCacheLock.lock()
-        imageCache = [:]
-        imageCacheLock.unlock()
-    }
 }
 
 // MARK: Image Placeholder

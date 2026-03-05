@@ -29,56 +29,6 @@ class SSDOcrInput: MLFeatureProvider {
     ) {
         self._0 = _0
     }
-
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    convenience init(
-        _0With _0: CGImage
-    ) throws {
-        let ___0 = try MLFeatureValue(
-            cgImage: _0,
-            pixelsWide: 600,
-            pixelsHigh: 375,
-            pixelFormatType: kCVPixelFormatType_32ARGB,
-            options: nil
-        ).imageBufferValue!
-        self.init(_0: ___0)
-    }
-
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    convenience init(
-        _0At _0: URL
-    ) throws {
-        let ___0 = try MLFeatureValue(
-            imageAt: _0,
-            pixelsWide: 600,
-            pixelsHigh: 375,
-            pixelFormatType: kCVPixelFormatType_32ARGB,
-            options: nil
-        ).imageBufferValue!
-        self.init(_0: ___0)
-    }
-
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func set_0(with _0: CGImage) throws {
-        self._0 = try MLFeatureValue(
-            cgImage: _0,
-            pixelsWide: 600,
-            pixelsHigh: 375,
-            pixelFormatType: kCVPixelFormatType_32ARGB,
-            options: nil
-        ).imageBufferValue!
-    }
-
-    @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-    func set_0(with _0: URL) throws {
-        self._0 = try MLFeatureValue(
-            imageAt: _0,
-            pixelsWide: 600,
-            pixelsHigh: 375,
-            pixelFormatType: kCVPixelFormatType_32ARGB,
-            options: nil
-        ).imageBufferValue!
-    }
 }
 
 /// Model Prediction Output Type
@@ -113,18 +63,6 @@ class SSDOcrOutput: MLFeatureProvider {
     }
 
     init(
-        scores: MLMultiArray,
-        boxes: MLMultiArray,
-        filter: MLMultiArray
-    ) {
-        self.provider = try! MLDictionaryFeatureProvider(dictionary: [
-            "scores": MLFeatureValue(multiArray: scores),
-            "boxes": MLFeatureValue(multiArray: boxes),
-            "filter": MLFeatureValue(multiArray: filter),
-        ])
-    }
-
-    init(
         features: MLFeatureProvider
     ) {
         self.provider = features
@@ -155,32 +93,6 @@ class SSDOcrOutput: MLFeatureProvider {
         self.model = model
     }
 
-    ///    Construct SSDOcr instance by automatically loading the model from the app's bundle.
-    @available(
-        *,
-        deprecated,
-        message: "Use init(configuration:) instead and handle errors appropriately."
-    )
-    convenience init() {
-        try! self.init(contentsOf: type(of: self).urlOfModelInThisBundle)
-    }
-
-    ///    Construct a model with configuration
-    ///
-    ///    - parameters:
-    ///       - configuration: the desired model configuration
-    ///
-    ///    - throws: an NSError object that describes the problem
-    @available(macOS 10.14, iOS 12.0, tvOS 12.0, watchOS 5.0, *)
-    convenience init(
-        configuration: MLModelConfiguration
-    ) throws {
-        try self.init(
-            contentsOf: type(of: self).urlOfModelInThisBundle,
-            configuration: configuration
-        )
-    }
-
     ///    Construct SSDOcr instance with explicit path to mlmodelc file
     ///    - parameters:
     ///       - modelURL: the file url of the model
@@ -190,67 +102,6 @@ class SSDOcrOutput: MLFeatureProvider {
         contentsOf modelURL: URL
     ) throws {
         try self.init(model: MLModel(contentsOf: modelURL))
-    }
-
-    ///    Construct a model with URL of the .mlmodelc directory and configuration
-    ///
-    ///    - parameters:
-    ///       - modelURL: the file url of the model
-    ///       - configuration: the desired model configuration
-    ///
-    ///    - throws: an NSError object that describes the problem
-    @available(macOS 10.14, iOS 12.0, tvOS 12.0, watchOS 5.0, *)
-    convenience init(
-        contentsOf modelURL: URL,
-        configuration: MLModelConfiguration
-    ) throws {
-        try self.init(model: MLModel(contentsOf: modelURL, configuration: configuration))
-    }
-
-    ///    Construct SSDOcr instance asynchronously with optional configuration.
-    ///
-    ///    Model loading may take time when the model content is not immediately available (e.g. encrypted model). Use this factory method especially when the caller is on the main thread.
-    ///
-    ///    - parameters:
-    ///      - configuration: the desired model configuration
-    ///      - handler: the completion handler to be called when the model loading completes successfully or unsuccessfully
-    @available(macOS 11.0, iOS 14.0, tvOS 14.0, watchOS 7.0, *)
-    class func load(
-        configuration: MLModelConfiguration = MLModelConfiguration(),
-        completionHandler handler: @escaping (Swift.Result<SSDOcr, Error>) -> Void
-    ) {
-        return self.load(
-            contentsOf: self.urlOfModelInThisBundle,
-            configuration: configuration,
-            completionHandler: handler
-        )
-    }
-
-    ///    Construct SSDOcr instance asynchronously with URL of the .mlmodelc directory with optional configuration.
-    ///
-    ///    Model loading may take time when the model content is not immediately available (e.g. encrypted model). Use this factory method especially when the caller is on the main thread.
-    ///
-    ///    - parameters:
-    ///      - modelURL: the URL to the model
-    ///      - configuration: the desired model configuration
-    ///      - handler: the completion handler to be called when the model loading completes successfully or unsuccessfully
-    @available(macOS 11.0, iOS 14.0, tvOS 14.0, watchOS 7.0, *)
-    class func load(
-        contentsOf modelURL: URL,
-        configuration: MLModelConfiguration = MLModelConfiguration(),
-        completionHandler handler: @escaping (Swift.Result<SSDOcr, Error>) -> Void
-    ) {
-        MLModel.__loadContents(of: modelURL, configuration: configuration) { (model, error) in
-            if let error = error {
-                handler(.failure(error))
-            } else if let model = model {
-                handler(.success(SSDOcr(model: model)))
-            } else {
-                fatalError(
-                    "SPI failure: -[MLModel loadContentsOfURL:configuration::completionHandler:] vends nil for both model and error."
-                )
-            }
-        }
     }
 
     ///    Make a prediction using the structured interface
@@ -277,44 +128,5 @@ class SSDOcrOutput: MLFeatureProvider {
     func prediction(input: SSDOcrInput, options: MLPredictionOptions) throws -> SSDOcrOutput {
         let outFeatures = try model.prediction(from: input, options: options)
         return SSDOcrOutput(features: outFeatures)
-    }
-
-    ///    Make a prediction using the convenience interface
-    ///
-    ///    - parameters:
-    ///        - _0 as color (kCVPixelFormatType_32BGRA) image buffer, 600 pixels wide by 375 pixels high
-    ///
-    ///    - throws: an NSError object that describes the problem
-    ///
-    ///    - returns: the result of the prediction as SSDOcrOutput
-    func prediction(_0: CVPixelBuffer) throws -> SSDOcrOutput {
-        let input_ = SSDOcrInput(_0: _0)
-        return try self.prediction(input: input_)
-    }
-
-    ///    Make a batch prediction using the structured interface
-    ///
-    ///    - parameters:
-    ///       - inputs: the inputs to the prediction as [SSDOcrInput]
-    ///       - options: prediction options
-    ///
-    ///    - throws: an NSError object that describes the problem
-    ///
-    ///    - returns: the result of the prediction as [SSDOcrOutput]
-    @available(macOS 10.14, iOS 12.0, tvOS 12.0, watchOS 5.0, *)
-    func predictions(
-        inputs: [SSDOcrInput],
-        options: MLPredictionOptions = MLPredictionOptions()
-    ) throws -> [SSDOcrOutput] {
-        let batchIn = MLArrayBatchProvider(array: inputs)
-        let batchOut = try model.predictions(from: batchIn, options: options)
-        var results: [SSDOcrOutput] = []
-        results.reserveCapacity(inputs.count)
-        for i in 0..<batchOut.count {
-            let outProvider = batchOut.features(at: i)
-            let result = SSDOcrOutput(features: outProvider)
-            results.append(result)
-        }
-        return results
     }
 }

@@ -32,52 +32,6 @@ import UIKit
 
     // Statistics about last prediction
     var lastDetectedBoxes: [CGRect] = []
-    static var hasPrintedInitError = false
-
-    func warmUp() {
-        SSDOcrDetect.initializeModels()
-        UIGraphicsBeginImageContext(
-            CGSize(
-                width: ssdOcrImageWidth,
-                height: ssdOcrImageHeight
-            )
-        )
-        UIColor.white.setFill()
-        UIRectFill(
-            CGRect(
-                x: 0,
-                y: 0,
-                width: ssdOcrImageWidth,
-                height: ssdOcrImageHeight
-            )
-        )
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-
-        guard let ssdOcrModel = ssdOcrModel else {
-            return
-        }
-        if let pixelBuffer = newImage?.pixelBuffer(
-            width: ssdOcrImageWidth,
-            height: ssdOcrImageHeight
-        ) {
-            let input = SSDOcrInput(_0: pixelBuffer)
-            _ = try? ssdOcrModel.prediction(input: input)
-        }
-    }
-
-    @_spi(STP) public static func loadModelFromBundle() -> SSDOcr? {
-        guard
-            let ssdOcrUrl = StripeCardScanBundleLocator.resourcesBundle.url(
-                forResource: SSDOcrDetect.ssdOcrResource,
-                withExtension: SSDOcrDetect.ssdOcrExtension
-            )
-        else {
-            return nil
-        }
-
-        return try? SSDOcr(contentsOf: ssdOcrUrl)
-    }
 
     init() {
         if SSDOcrDetect.priors == nil {

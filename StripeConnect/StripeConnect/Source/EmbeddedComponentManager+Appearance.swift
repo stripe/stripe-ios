@@ -39,20 +39,6 @@ extension EmbeddedComponentManager {
                 }
             }
 
-            init?(rawValue: String) {
-                switch rawValue {
-                case "none":
-                    self = .none
-                case "uppercase":
-                    self = .uppercase
-                case "lowercase":
-                    self = .lowercase
-                case "capitalize":
-                    self = .capitalize
-                default:
-                    return nil
-                }
-            }
         }
 
         /// Describes the typography attributes used in embedded components

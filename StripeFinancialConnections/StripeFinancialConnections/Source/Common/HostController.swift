@@ -223,8 +223,6 @@ private extension HostController {
             accountFetcher: accountFetcher
         )
         let webFlowViewController = FinancialConnectionsWebFlowViewController(
-            clientSecret: clientSecret,
-            apiClient: apiClient,
             manifest: manifest,
             sessionFetcher: sessionFetcher,
             returnURL: returnURL,

@@ -6,7 +6,6 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -58,13 +57,6 @@ final class InstructionalDocumentScanningView: UIView {
         installViews()
 
         isAccessibilityElement = true
-    }
-
-    convenience init(
-        from viewModel: ViewModel
-    ) {
-        self.init()
-        configure(with: viewModel)
     }
 
     required init(

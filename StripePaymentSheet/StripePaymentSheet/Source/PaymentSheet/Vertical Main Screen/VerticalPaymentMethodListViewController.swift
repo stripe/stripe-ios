@@ -13,10 +13,6 @@ import UIKit
 // MARK: - VerticalPaymentMethodListViewController
 /// A simple container VC for the VerticalPaymentMethodListView, which displays payment options in a vertical list.
 class VerticalPaymentMethodListViewController: UIViewController {
-    /// Returns the number of row buttons in the vertical list
-    var rowCount: Int {
-        return rowButtons.count
-    }
     var rowButtons: [RowButton] {
         return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
     }
