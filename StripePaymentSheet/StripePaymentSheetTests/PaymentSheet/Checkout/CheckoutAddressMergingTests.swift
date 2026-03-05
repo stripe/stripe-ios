@@ -7,7 +7,7 @@ import XCTest
 final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_billingFillsEmptyFields() {
-        let session = Self.makeOpenSession()
+        let session = CheckoutTestHelpers.makeOpenSession()
         session.billingAddressOverride = Checkout.AddressUpdate(
             name: "Jane Doe",
             address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
@@ -25,7 +25,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
     }
 
     func testApplyAddressOverrides_billingConfigTakesPrecedence() {
-        let session = Self.makeOpenSession()
+        let session = CheckoutTestHelpers.makeOpenSession()
         session.billingAddressOverride = Checkout.AddressUpdate(
             name: "Override Name",
             address: .init(country: "GB", line1: "Override Line1")
@@ -43,7 +43,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
     }
 
     func testApplyAddressOverrides_shippingApplied() {
-        let session = Self.makeOpenSession()
+        let session = CheckoutTestHelpers.makeOpenSession()
         session.shippingAddressOverride = Checkout.AddressUpdate(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
@@ -64,7 +64,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
     }
 
     func testApplyAddressOverrides_shippingNotOverriddenWhenConfigHasShipping() {
-        let session = Self.makeOpenSession()
+        let session = CheckoutTestHelpers.makeOpenSession()
         session.shippingAddressOverride = Checkout.AddressUpdate(
             name: "Override",
             address: .init(country: "GB")
@@ -84,22 +84,30 @@ final class CheckoutAddressMergingTests: XCTestCase {
         XCTAssertEqual(details?.address.country, "US")
     }
 
-    // MARK: - Helpers
+    // MARK: - EmbeddedPaymentElement.Configuration
 
-    private static func makeOpenSessionJSON() -> [AnyHashable: Any] {
-        [
-            "session_id": "cs_test_123",
-            "client_secret": "cs_test_123_secret_abc",
-            "livemode": false,
-            "mode": "payment",
-            "status": "open",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "currency": "usd",
-        ]
+    func testApplyAddressOverrides_embeddedBillingAndShipping() {
+        let session = CheckoutTestHelpers.makeOpenSession()
+        session.billingAddressOverride = Checkout.AddressUpdate(
+            name: "Jane Doe",
+            address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
+        )
+        session.shippingAddressOverride = Checkout.AddressUpdate(
+            name: "John Smith",
+            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
+        )
+
+        var config = EmbeddedPaymentElement.Configuration()
+        session.applyAddressOverrides(to: &config)
+
+        XCTAssertEqual(config.defaultBillingDetails.name, "Jane Doe")
+        XCTAssertEqual(config.defaultBillingDetails.address.country, "US")
+        XCTAssertEqual(config.defaultBillingDetails.address.line1, "123 Main St")
+
+        let shipping = config.shippingDetails()
+        XCTAssertNotNil(shipping)
+        XCTAssertEqual(shipping?.name, "John Smith")
+        XCTAssertEqual(shipping?.address.line1, "456 Oak Ave")
     }
 
-    private static func makeOpenSession() -> STPCheckoutSession {
-        STPCheckoutSession.decodedObject(fromAPIResponse: makeOpenSessionJSON())!
-    }
 }

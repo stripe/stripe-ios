@@ -182,26 +182,9 @@ final class CheckoutUnitTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private static func makeOpenSessionJSON() -> [AnyHashable: Any] {
-        [
-            "session_id": "cs_test_123",
-            "client_secret": "cs_test_123_secret_abc",
-            "livemode": false,
-            "mode": "payment",
-            "status": "open",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "currency": "usd",
-        ]
-    }
-
-    private static func makeOpenSession() -> STPCheckoutSession {
-        STPCheckoutSession.decodedObject(fromAPIResponse: makeOpenSessionJSON())!
-    }
-
     private func makeCheckoutWithOpenSession() -> Checkout {
         let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
-        let session = Self.makeOpenSession()
+        let session = CheckoutTestHelpers.makeOpenSession()
         checkout.updateSession(session)
         return checkout
     }
