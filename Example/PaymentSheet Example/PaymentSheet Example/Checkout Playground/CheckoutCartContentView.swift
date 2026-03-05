@@ -16,6 +16,10 @@ struct CheckoutCartContentView: View {
     @Binding var errorMessage: String?
 
     @State private var promoCodeInput = ""
+    @State private var showShippingAddressSheet = false
+    @State private var showBillingAddressSheet = false
+    @State private var shippingAddressDetails: AddressElement.AddressDetails?
+    @State private var billingAddressDetails: AddressElement.AddressDetails?
 
     @ViewBuilder
     var body: some View {
@@ -35,6 +39,12 @@ struct CheckoutCartContentView: View {
 
                     // Shipping Options
                     shippingOptionsSection(session: session)
+
+                    // Shipping Address
+                    shippingAddressSection(session: session)
+
+                    // Billing Address
+                    billingAddressSection(session: session)
 
                     // Promotion Code
                     promotionCodeSection(session: session)
@@ -186,6 +196,174 @@ struct CheckoutCartContentView: View {
                 .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
             }
         }
+    }
+
+    @ViewBuilder
+    private func shippingAddressSection(session: STPCheckoutSession) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Shipping Address")
+                .font(.title2).bold()
+                .padding(.horizontal)
+
+            if let override = session.shippingAddressOverride {
+                addressCard(
+                    name: override.name,
+                    address: override.address,
+                    onEdit: { showShippingAddressSheet = true }
+                )
+            } else {
+                emptyAddressCard(label: "Add shipping address", onAdd: { showShippingAddressSheet = true })
+            }
+        }
+        .sheet(isPresented: $showShippingAddressSheet) {
+            handleShippingAddressDismiss()
+        } content: {
+            AddressElement(
+                address: $shippingAddressDetails,
+                configuration: makeShippingAddressConfiguration(session: session)
+            )
+        }
+    }
+
+    @ViewBuilder
+    private func billingAddressSection(session: STPCheckoutSession) -> some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Billing Address")
+                .font(.title2).bold()
+                .padding(.horizontal)
+
+            if let override = session.billingAddressOverride {
+                addressCard(
+                    name: override.name,
+                    address: override.address,
+                    onEdit: { showBillingAddressSheet = true }
+                )
+            } else {
+                emptyAddressCard(label: "Add billing address", onAdd: { showBillingAddressSheet = true })
+            }
+        }
+        .sheet(isPresented: $showBillingAddressSheet) {
+            handleBillingAddressDismiss()
+        } content: {
+            AddressElement(
+                address: $billingAddressDetails,
+                configuration: makeBillingAddressConfiguration(session: session)
+            )
+        }
+    }
+
+    // MARK: - Address Helpers
+
+    @ViewBuilder
+    private func addressCard(name: String?, address: Checkout.Address, onEdit: @escaping () -> Void) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: "mappin.circle.fill")
+                .foregroundColor(.blue)
+                .font(.system(size: 24))
+
+            VStack(alignment: .leading, spacing: 4) {
+                if let name, !name.isEmpty {
+                    Text(name)
+                        .font(.headline)
+                }
+                if let line1 = address.line1, !line1.isEmpty {
+                    Text(line1)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                if let line2 = address.line2, !line2.isEmpty {
+                    Text(line2)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                let cityStateZip = [address.city, address.state, address.postalCode].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: ", ")
+                if !cityStateZip.isEmpty {
+                    Text(cityStateZip)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                Text(address.country)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+
+            Spacer()
+
+            Button("Edit", action: onEdit)
+                .foregroundColor(.blue)
+                .font(.subheadline)
+        }
+        .padding()
+        .background(Color(UIColor.systemBackground))
+        .cornerRadius(16)
+        .padding(.horizontal)
+        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+    }
+
+    @ViewBuilder
+    private func emptyAddressCard(label: String, onAdd: @escaping () -> Void) -> some View {
+        Button(action: onAdd) {
+            HStack {
+                Image(systemName: "plus.circle.fill")
+                    .foregroundColor(.blue)
+                    .font(.system(size: 24))
+                Text(label)
+                    .font(.body)
+                    .foregroundColor(.primary)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundColor(.secondary)
+            }
+            .padding()
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(PlainButtonStyle())
+        .background(Color(UIColor.systemBackground))
+        .cornerRadius(16)
+        .padding(.horizontal)
+        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 4)
+    }
+
+    // MARK: - Address Configuration
+
+    private func makeShippingAddressConfiguration(session: STPCheckoutSession) -> AddressElement.Configuration {
+        var config = AddressElement.Configuration()
+        config.title = "Shipping Address"
+        config.buttonTitle = "Save Address"
+        if let override = session.shippingAddressOverride {
+            config.defaultValues = .init(
+                address: .init(
+                    city: override.address.city,
+                    country: override.address.country,
+                    line1: override.address.line1 ?? "",
+                    line2: override.address.line2,
+                    postalCode: override.address.postalCode,
+                    state: override.address.state
+                ),
+                name: override.name
+            )
+        }
+        return config
+    }
+
+    private func makeBillingAddressConfiguration(session: STPCheckoutSession) -> AddressElement.Configuration {
+        var config = AddressElement.Configuration()
+        config.title = "Billing Address"
+        config.buttonTitle = "Save Address"
+        if let override = session.billingAddressOverride {
+            config.defaultValues = .init(
+                address: .init(
+                    city: override.address.city,
+                    country: override.address.country,
+                    line1: override.address.line1 ?? "",
+                    line2: override.address.line2,
+                    postalCode: override.address.postalCode,
+                    state: override.address.state
+                ),
+                name: override.name
+            )
+        }
+        return config
     }
 
     @ViewBuilder
@@ -355,6 +533,63 @@ struct CheckoutCartContentView: View {
             do {
                 try await checkout.applyPromotionCode(code)
                 promoCodeInput = ""
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+            isLoading = false
+        }
+    }
+
+    private func convertToAddressUpdate(_ details: AddressElement.AddressDetails) -> Checkout.AddressUpdate {
+        let line1 = details.address.line1.isEmpty ? nil : details.address.line1
+        return Checkout.AddressUpdate(
+            name: details.name,
+            address: Checkout.Address(
+                country: details.address.country,
+                line1: line1,
+                line2: details.address.line2,
+                city: details.address.city,
+                state: details.address.state,
+                postalCode: details.address.postalCode
+            )
+        )
+    }
+
+    private func handleShippingAddressDismiss() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            guard let details = shippingAddressDetails else { return }
+            let update = convertToAddressUpdate(details)
+            updateShippingAddress(update)
+        }
+    }
+
+    private func handleBillingAddressDismiss() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            guard let details = billingAddressDetails else { return }
+            let update = convertToAddressUpdate(details)
+            updateBillingAddress(update)
+        }
+    }
+
+    private func updateShippingAddress(_ update: Checkout.AddressUpdate) {
+        Task {
+            isLoading = true
+            errorMessage = nil
+            do {
+                try await checkout.updateShippingAddress(update)
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+            isLoading = false
+        }
+    }
+
+    private func updateBillingAddress(_ update: Checkout.AddressUpdate) {
+        Task {
+            isLoading = true
+            errorMessage = nil
+            do {
+                try await checkout.updateBillingAddress(update)
             } catch {
                 errorMessage = error.localizedDescription
             }
