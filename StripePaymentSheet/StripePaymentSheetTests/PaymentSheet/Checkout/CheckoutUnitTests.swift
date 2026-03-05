@@ -323,6 +323,41 @@ final class CheckoutUnitTests: XCTestCase {
 >>>>>>> 149a504ca63 (Small bug fixes)
     }
 
+    // MARK: - Address Collection Decoding Tests
+
+    func testBillingAddressRequired_whenRequired() {
+        var json = Self.makeOpenSessionJSON()
+        json["billing_address_collection"] = "required"
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertTrue(session.billingAddressRequired)
+    }
+
+    func testBillingAddressRequired_whenAutoOrNil() {
+        // "auto" should not be required
+        var jsonAuto = Self.makeOpenSessionJSON()
+        jsonAuto["billing_address_collection"] = "auto"
+        let sessionAuto = STPCheckoutSession.decodedObject(fromAPIResponse: jsonAuto)!
+        XCTAssertFalse(sessionAuto.billingAddressRequired)
+
+        // absent field should not be required
+        let jsonNil = Self.makeOpenSessionJSON()
+        let sessionNil = STPCheckoutSession.decodedObject(fromAPIResponse: jsonNil)!
+        XCTAssertFalse(sessionNil.billingAddressRequired)
+    }
+
+    func testAllowedShippingCountries_whenPresent() {
+        var json = Self.makeOpenSessionJSON()
+        json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "IE", "GB"]]
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertEqual(session.allowedShippingCountries, ["US", "CA", "IE", "GB"])
+    }
+
+    func testAllowedShippingCountries_whenNil() {
+        let json = Self.makeOpenSessionJSON()
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertNil(session.allowedShippingCountries)
+    }
+
     // MARK: - Helpers
 
 <<<<<<< HEAD

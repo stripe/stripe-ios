@@ -11,6 +11,19 @@ import SwiftUI
 
 @available(iOS 15.0, *)
 struct CheckoutCartContentView: View {
+    private struct TaxSummaryLine: Hashable {
+        let title: String
+        let subtitle: String?
+        let amount: Int
+    }
+
+    private struct TaxGroupingKey: Hashable {
+        let title: String
+        let jurisdiction: String?
+        let percentage: Double?
+        let inclusive: Bool
+    }
+
     @ObservedObject var checkout: Checkout
     @Binding var isLoading: Bool
     @Binding var errorMessage: String?
@@ -40,11 +53,15 @@ struct CheckoutCartContentView: View {
                     // Shipping Options
                     shippingOptionsSection(session: session)
 
-                    // Shipping Address
-                    shippingAddressSection(session: session)
+                    if let _ = session.allowedShippingCountries {
+                        // Shipping Address
+                        shippingAddressSection(session: session)
+                    }
 
-                    // Billing Address
-                    billingAddressSection(session: session)
+                    if session.billingAddressRequired {
+                        // Billing Address
+                        billingAddressSection(session: session)
+                    }
 
                     // Promotion Code
                     promotionCodeSection(session: session)
@@ -220,7 +237,7 @@ struct CheckoutCartContentView: View {
         } content: {
             AddressElement(
                 address: $shippingAddressDetails,
-                configuration: makeShippingAddressConfiguration(session: session)
+                configuration: makeShippingAddressConfiguration(session: session),
             )
         }
     }
@@ -330,6 +347,7 @@ struct CheckoutCartContentView: View {
         var config = AddressElement.Configuration()
         config.title = "Shipping Address"
         config.buttonTitle = "Save Address"
+        config.allowedCountries = session.allowedShippingCountries ?? []
         if let override = session.shippingAddressOverride {
             config.defaultValues = .init(
                 address: .init(
@@ -478,6 +496,24 @@ struct CheckoutCartContentView: View {
                                 .foregroundColor(.primary)
                         }
                     }
+
+                    if let taxSummaryLine = consolidatedTaxSummaryLine(from: session.taxAmounts) {
+                        HStack(alignment: .top) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(taxSummaryLine.title)
+                                    .foregroundColor(.secondary)
+                                if let subtitle = taxSummaryLine.subtitle, !subtitle.isEmpty {
+                                    Text(subtitle)
+                                        .font(.caption)
+                                        .foregroundColor(.secondary)
+                                }
+                            }
+                            Spacer()
+                            Text(formatCartCurrency(amount: taxSummaryLine.amount, currency: session.currency))
+                                .foregroundColor(.primary)
+                        }
+                    }
+
                     Divider()
                         .padding(.vertical, 4)
                     HStack {
@@ -498,6 +534,35 @@ struct CheckoutCartContentView: View {
     }
 
     // MARK: - Actions
+
+    private func consolidatedTaxSummaryLine(from amounts: [STPCheckoutSessionTaxAmount]) -> TaxSummaryLine? {
+        let nonZeroTaxes = amounts.filter { $0.amount > 0 }
+        guard !nonZeroTaxes.isEmpty else {
+            return nil
+        }
+
+        let totalAmount = nonZeroTaxes.reduce(0) { $0 + $1.amount }
+        let uniqueKeys = Set(nonZeroTaxes.map { tax in
+            TaxGroupingKey(
+                title: tax.taxRate?.displayName ?? "Tax",
+                jurisdiction: tax.taxRate?.jurisdiction,
+                percentage: tax.taxRate?.percentage,
+                inclusive: tax.inclusive
+            )
+        })
+
+        guard uniqueKeys.count == 1, let key = uniqueKeys.first else {
+            return TaxSummaryLine(title: "Tax", subtitle: nil, amount: totalAmount)
+        }
+
+        let percentageText = key.percentage.map { String(format: "%.3g%%", $0) }
+        let subtitleParts = [key.jurisdiction, percentageText].compactMap { $0 }.filter { !$0.isEmpty }
+        return TaxSummaryLine(
+            title: key.title,
+            subtitle: subtitleParts.isEmpty ? nil : subtitleParts.joined(separator: " "),
+            amount: totalAmount
+        )
+    }
 
     private func updateQuantity(for lineItemId: String, to quantity: Int) {
         Task {
@@ -556,7 +621,7 @@ struct CheckoutCartContentView: View {
     }
 
     private func handleShippingAddressDismiss() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             guard let details = shippingAddressDetails else { return }
             let update = convertToAddressUpdate(details)
             updateShippingAddress(update)
@@ -564,7 +629,7 @@ struct CheckoutCartContentView: View {
     }
 
     private func handleBillingAddressDismiss() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
             guard let details = billingAddressDetails else { return }
             let update = convertToAddressUpdate(details)
             updateBillingAddress(update)

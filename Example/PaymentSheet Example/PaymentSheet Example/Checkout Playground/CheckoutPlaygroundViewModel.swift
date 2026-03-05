@@ -24,9 +24,9 @@ extension CheckoutPlayground {
         @Published var phoneNumberCollection = false
         @Published var shippingAddressCollection = true
         @Published var billingAddressCollection = false
-        @Published var automaticTax = false
+        @Published var automaticTax = true
         @Published var paymentMethodTypes: Set<String> = ["card"]
-        @Published var checkoutEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout_session"
+        @Published var checkoutEndpoint = "http://localhost:8081/checkout_session"
 
         @Published var isCreating = false
         @Published var errorMessage: String?
@@ -87,7 +87,8 @@ extension CheckoutPlayground {
             let phoneNumberCollectionForRequest = supportsAdvancedCollection ? phoneNumberCollection : false
             let automaticTaxForRequest = supportsAdvancedCollection ? automaticTax : false
 
-            var body: [String: Any] = [
+            let body: [String: Any] = [
+                "merchant_country_code": "us_tax",
                 "mode": mode.rawValue,
                 "currency": currency.rawValue,
                 "customer": customerType.rawValue,
