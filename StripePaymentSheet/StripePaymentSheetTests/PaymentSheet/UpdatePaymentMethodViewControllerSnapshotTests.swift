@@ -167,6 +167,10 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
 
     // MARK: - CBC Redesign Tests (SegmentedSelectorElement)
 
+    func test_UpdatePaymentMethodViewController_CBCRedesign() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, enableCBCRedesign: true)
+    }
+
     func test_UpdatePaymentMethodViewController_CBCRedesign_darkMode() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, isCBCEligible: true, enableCBCRedesign: true)
     }
@@ -178,14 +182,6 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
     func test_UpdatePaymentMethodViewController_CBCRedesign_blockedBrands() {
         let cardBrandFilter = CardBrandFilter(cardBrandAcceptance: .disallowed(brands: [.amex]))
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, enableCBCRedesign: true, cardBrandFilter: cardBrandFilter)
-    }
-
-    func test_UpdatePaymentMethodViewController_CBCRedesign_canUpdate() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, canUpdate: true, isCBCEligible: true, enableCBCRedesign: true)
-    }
-
-    func test_UpdatePaymentMethodViewController_CBCRedesign_setAsDefault() {
-        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, enableCBCRedesign: true, canSetAsDefaultPM: true)
     }
 
     func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType,
