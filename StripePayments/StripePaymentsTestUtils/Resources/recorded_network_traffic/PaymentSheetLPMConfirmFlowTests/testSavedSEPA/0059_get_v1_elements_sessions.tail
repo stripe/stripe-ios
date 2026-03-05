@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_U5atIiFBoih2kSpcsYsdlGeXuF4P67kRngNUdKCPRhsiqrn&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bpayment_method_types%5D%5B0%5D=sepa_debit&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_U5sge2FGBW0nbQfpF9PSn1BDrMVG9op9kMr8oNHZaElwzch&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bpayment_method_types%5D%5B0%5D=sepa_debit&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=C-Mfl0KbUD9Ezeqw4oXRGM4UFSbyVRncrmr1W-SDc8XYevjPWVDg1FnXa0jDzr3ivan4UuEAs26E9dpC
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=2q5xqfsMLEuoxDd56hA7zR5bk9GPkwet34gM5RF8vSF-vRZ7VBaMfcGudsyMv6rUD0H4027kOfxebHrt
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Thu, 05 Mar 2026 00:24:19 GMT
+Date: Thu, 05 Mar 2026 18:47:49 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 19630
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_SY6aE6DFQbXaSE
+request-id: req_lbKZThELRAzsd5
 
 {
   "payment_method_preference" : {
@@ -189,10 +189,10 @@ request-id: req_SY6aE6DFQbXaSE
     "link_forest_enable_ece_bank_use_shipping_as_billing" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1T41CLVb00u",
+  "session_id" : "elements_session_1FT3D7m0sfF",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "bdeb9dbb-2505-48c0-8e19-efb8bf5b8271",
+  "config_id" : "e36bffa4-5f14-422e-9913-a417b7ab4bc6",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "sepa_debit_info" : {
@@ -224,9 +224,9 @@ request-id: req_SY6aE6DFQbXaSE
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "faacc664-258e-4f79-9e2c-42a93bc9ae7b",
+    "arb_id" : "d9b9c095-8c1e-46c3-95a3-69c3488fcc22",
     "experiment_metadata" : {
-      "seed" : "11ca8e6bfb21de60ab72a1ca27ab3f32a659c1635c86f9d084516fb0e170d883",
+      "seed" : "16fb847df93163cee810b30b5234efac52d52142bd29737f609d97de7c34a1bb",
       "semi_dominant_payment_methods" : [
 
       ],
@@ -485,8 +485,8 @@ request-id: req_SY6aE6DFQbXaSE
     "default_payment_method" : null,
     "customer_session" : {
       "object" : "customer_session",
-      "api_key_expiry" : 1772673820,
-      "id" : "cuss_1T7PhWFY0qyl6XeWEVR2l3jC",
+      "api_key_expiry" : 1772740040,
+      "id" : "cuss_1T7gvZFY0qyl6XeWgvV9eXmB",
       "livemode" : false,
       "components" : {
         "customer_sheet" : {
@@ -528,7 +528,7 @@ request-id: req_SY6aE6DFQbXaSE
         }
       },
       "customer" : "cus_TUoUvtvPJvpHPA",
-      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLHJWRkVzbHlSdGFlSmxHMnllS3h0OUVwYjNuOFp1VlM_00OsfdSpa9"
+      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLGZXeE1GOWUyVTdaWDJzS2o1OEIwV0hVS1ZuSHJWeG0_00pNJlWocK"
     }
   },
   "klarna_express_config" : {
