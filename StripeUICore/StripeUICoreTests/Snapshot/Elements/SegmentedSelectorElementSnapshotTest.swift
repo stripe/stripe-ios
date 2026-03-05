@@ -170,16 +170,11 @@ private extension SegmentedSelectorElementSnapshotTest {
         let size = view.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
         view.bounds = CGRect(origin: .zero, size: size)
 
-        if darkMode {
-            let window = UIWindow(frame: view.bounds)
-            window.overrideUserInterfaceStyle = .dark
-            window.isHidden = false
-            window.addSubview(view)
-            window.layoutIfNeeded()
-            STPSnapshotVerifyView(view)
-        } else {
-            view.layoutIfNeeded()
-            STPSnapshotVerifyView(view)
-        }
+        let window = UIWindow(frame: view.bounds)
+        window.overrideUserInterfaceStyle = darkMode ? .dark : .light
+        window.isHidden = false
+        window.addSubview(view)
+        window.layoutIfNeeded()
+        STPSnapshotVerifyView(view)
     }
 }

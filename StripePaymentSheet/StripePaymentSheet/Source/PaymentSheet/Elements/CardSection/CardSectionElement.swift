@@ -337,13 +337,13 @@ final class CardSectionElement: ContainerElement {
             && cardBrands.count > 1
             && !hasBrandBeenSelected
 
-        // If 
+        // If the CBC tooltip has not been installed in the view, set it up
         if cbcTooltip.superview == nil {
             cbcTooltip.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(cbcTooltip)
             NSLayoutConstraint.activate([
-                cbcTooltip.trailingAnchor.constraint(equalTo: panElement.view.trailingAnchor, constant: -4),
-                cbcTooltip.topAnchor.constraint(equalTo: panElement.view.bottomAnchor, constant: 4),
+                cbcTooltip.trailingAnchor.constraint(equalTo: panElement.view.trailingAnchor, constant: -12),
+                cbcTooltip.topAnchor.constraint(equalTo: panElement.view.bottomAnchor, constant: -6),
             ])
         }
         view.bringSubviewToFront(cbcTooltip)
@@ -437,10 +437,10 @@ class TooltipContainerView: UIView {
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: topAnchor, constant: 4),
-            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
+            label.topAnchor.constraint(equalTo: topAnchor, constant: 6),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
         ])
     }
 
