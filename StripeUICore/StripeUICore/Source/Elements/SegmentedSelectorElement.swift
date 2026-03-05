@@ -215,7 +215,6 @@ final class SegmentedSelectorView: UIView {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         layer.borderColor = theme.colors.border.cgColor
-        stackView.backgroundColor = theme.colors.componentBackground
     }
 #endif
 
