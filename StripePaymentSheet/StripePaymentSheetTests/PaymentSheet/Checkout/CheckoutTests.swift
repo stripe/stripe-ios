@@ -196,7 +196,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testUpdateBillingAddress() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             merchantCountry: "us_tax",
             allowAdjustableLineItemQuantity: true,
             collectBillingAddress: true,
@@ -258,7 +258,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testUpdateShippingAddress() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             merchantCountry: "us_tax",
             allowAdjustableLineItemQuantity: true,
             collectShippingAddress: true,
