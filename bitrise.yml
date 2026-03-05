@@ -387,8 +387,6 @@ workflows:
     - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
-    after_run:
-    - notify_ci
     meta:
       bitrise.io:
         stack: osx-xcode-16.0.x
