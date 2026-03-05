@@ -82,7 +82,7 @@ extension TextFieldElement {
                 } else {
                     // display all available card brands
                     // Only show Cartes Bancaires when card brand choice is enabled
-                    let isCBCEnabled = cardBrandDropDown != nil
+                    let isCBCEnabled = cardBrandChoiceElement != nil
                     rotatingCardBrandsView.cardBrands =
                     RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter {
                         cardBrandFilter.isAccepted(cardBrand: $0) && ($0 != .cartesBancaires || isCBCEnabled)
