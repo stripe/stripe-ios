@@ -581,6 +581,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         config.applePayEnabled = applePayEnabled
         config.appearance = appearance
         config.apiClient = stubbedAPIClient()
+        config.apiClient.publishableKey = "pk_test_123456789"
         config.defaultBillingDetails = defaultBillingDetails
         config.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
 
@@ -590,7 +591,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         configuration: CustomerSheet.Configuration,
         customerAdapter: CustomerAdapter = StubCustomerAdapter()
     ) {
-        StripeAPI.defaultPublishableKey = "pk_test_123456789"
         self.cs = CustomerSheet(configuration: configuration, customer: customerAdapter)
     }
 

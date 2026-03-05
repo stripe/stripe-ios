@@ -204,6 +204,9 @@ extension STPTestingAPIClient {
         allowPromotionCodes: Bool = false,
         allowAdjustableLineItemQuantity: Bool = false,
         includeShippingOptions: Bool = false,
+        collectShippingAddress: Bool = false,
+        collectBillingAddress: Bool = false,
+        automaticTax: Bool = false,
         enableTaxIdCollection: Bool = false
     ) async throws -> CreateCheckoutSessionResponse {
         var additionalParameters: [String: Any] = [:]
@@ -215,8 +218,9 @@ extension STPTestingAPIClient {
                 [
                     "price_data": [
                         "currency": currency,
-                        "product_data": ["name": "Test Product"],
+                        "product_data": ["name": "Test Product", "tax_code": "txcd_99999999", ],
                         "unit_amount": amount ?? 5050,
+                        "tax_behavior": "exclusive",
                     ] as [String: Any],
                     "quantity": 1,
                     "adjustable_quantity": [
@@ -250,6 +254,15 @@ extension STPTestingAPIClient {
                     ] as [String: Any],
                 ] as [String: Any],
             ]
+        }
+        if collectShippingAddress {
+            additionalParameters["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
+        }
+        if collectBillingAddress {
+            additionalParameters["billing_address_collection"] = "required"
+        }
+        if automaticTax {
+            additionalParameters["automatic_tax"] = ["enabled": true]
         }
         if enableTaxIdCollection {
             additionalParameters["tax_id_collection"] = ["enabled": true]
