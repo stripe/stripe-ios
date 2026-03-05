@@ -108,19 +108,20 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Addresses
 
-    /// Sets (or clears) the billing address for this checkout.
+    /// Sets the billing address for this checkout.
     ///
     /// The address is stored locally and merged into PaymentSheet configuration
     /// when presenting payment UI. If automatic tax is enabled and the tax
     /// address source is "billing", the address is also sent to the server to
     /// compute updated tax amounts.
     ///
-    /// - Parameter params: The billing address to set, or `nil` to clear.
+    /// - Parameter params: The billing address to set. To reset tax computation
+    ///   to a country-only region, pass an ``AddressUpdate`` with just the country.
     /// - Throws: ``CheckoutError`` if the session is not loaded/open, or if
     ///   the server request fails.
-    public func updateBillingAddress(_ params: AddressUpdate?) async throws {
+    public func updateBillingAddress(_ params: AddressUpdate) async throws {
         try requireOpenSession()
-        if let params, session?.shouldSendTaxRegion(for: "billing") {
+        if session?.shouldSendTaxRegion(for: "billing") == true {
             try await performAPIUpdate(.setTaxRegion(params.address))
             session?.billingAddressOverride = params
         } else {
@@ -132,19 +133,20 @@ public final class Checkout: ObservableObject {
         }
     }
 
-    /// Sets (or clears) the shipping address for this checkout.
+    /// Sets the shipping address for this checkout.
     ///
     /// The address is stored locally and merged into PaymentSheet configuration
     /// when presenting payment UI. If automatic tax is enabled and the tax
     /// address source is "shipping", the address is also sent to the server to
     /// compute updated tax amounts.
     ///
-    /// - Parameter params: The shipping address to set, or `nil` to clear.
+    /// - Parameter params: The shipping address to set. To reset tax computation
+    ///   to a country-only region, pass an ``AddressUpdate`` with just the country.
     /// - Throws: ``CheckoutError`` if the session is not loaded/open, or if
     ///   the server request fails.
-    public func updateShippingAddress(_ params: AddressUpdate?) async throws {
+    public func updateShippingAddress(_ params: AddressUpdate) async throws {
         try requireOpenSession()
-        if let params, session?.shouldSendTaxRegion(for: "shipping") {
+        if session?.shouldSendTaxRegion(for: "shipping") == true {
             try await performAPIUpdate(.setTaxRegion(params.address))
             session?.shippingAddressOverride = params
         } else {

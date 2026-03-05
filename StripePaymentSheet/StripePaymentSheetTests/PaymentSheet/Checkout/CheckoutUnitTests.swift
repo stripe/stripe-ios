@@ -161,38 +161,6 @@ final class CheckoutUnitTests: XCTestCase {
 
     // MARK: - Address Override Tests
 
-    func testClearBillingAddress() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
-        await MainActor.run {
-            checkout.session?.billingAddressOverride = Checkout.AddressUpdate(
-                name: "Jane",
-                address: .init(country: "US")
-            )
-        }
-
-        try await checkout.updateBillingAddress(nil)
-
-        await MainActor.run {
-            XCTAssertNil(checkout.session?.billingAddressOverride)
-        }
-    }
-
-    func testClearShippingAddress() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
-        await MainActor.run {
-            checkout.session?.shippingAddressOverride = Checkout.AddressUpdate(
-                name: "Jane",
-                address: .init(country: "US")
-            )
-        }
-
-        try await checkout.updateShippingAddress(nil)
-
-        await MainActor.run {
-            XCTAssertNil(checkout.session?.shippingAddressOverride)
-        }
-    }
-
     func testUpdateBillingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
         let checkout = await makeCheckoutWithOpenSession()
         let delegate = await MainActor.run { MockCheckoutDelegate() }
