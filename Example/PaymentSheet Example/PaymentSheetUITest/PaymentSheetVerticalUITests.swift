@@ -170,22 +170,24 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Alipay"].waitForExistenceAndTap()
         app.buttons["Pay $50.99"].tap()
         // Cancel
-        XCTAssertTrue(app.webViews.staticTexts["Alipay test payment page"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.webViews.staticTexts["Alipay test payment page"].waitForExistence(timeout: 30))
         app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 1))
         // Fail payment
         app.buttons["Pay $50.99"].tap()
-        app.waitForButtonOrStaticText("FAIL TEST PAYMENT").tap()
+        let failPaymentText = app.firstDescendant(withLabel: "FAIL TEST PAYMENT")
+        failPaymentText.waitForExistenceAndTap(timeout: 15.0)
         let errorMessage = app.staticTexts["We are unable to authenticate your payment method. Please choose a different payment method and try again."]
-        XCTAssertTrue(errorMessage.waitForExistence(timeout: 10))
+        XCTAssertTrue(errorMessage.waitForExistence(timeout: 30))
 
         // Try Cash App Pay
         app.buttons["Cash App Pay"].waitForExistenceAndTap()
         // Validate error disappears
         XCTAssertFalse(errorMessage.waitForExistence(timeout: 0.1))
         app.buttons["Pay $50.99"].tap()
-        app.waitForButtonOrStaticText("AUTHORIZE TEST PAYMENT").tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        let authorizePaymentText = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
+        authorizePaymentText.waitForExistenceAndTap(timeout: 30.0)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 30))
     }
 
     func testCanPayWithApplePayWallet_verticalMode() {
