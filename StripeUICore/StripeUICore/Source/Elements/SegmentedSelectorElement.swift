@@ -143,13 +143,6 @@ final class SegmentedSelectorView: UIView {
         ])
     }
 
-    #if !os(visionOS)
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        layer.borderColor = theme.colors.border.cgColor
-    }
-    #endif
-
     func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem>, selectedItem: SegmentedSelectorItem?) {
         // If we have the same items as before, just update the disabled state
         if Set(items) == Set(itemViews.keys) {
