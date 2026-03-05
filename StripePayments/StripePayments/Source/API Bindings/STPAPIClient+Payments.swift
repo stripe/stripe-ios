@@ -1856,6 +1856,62 @@ extension STPAPIClient {
     }
 }
 
+// MARK: - Intent Confirmation Challenge
+
+extension STPAPIClient {
+    /// Cancels the captcha challenge for a PaymentIntent.
+    /// - Parameters:
+    ///   - paymentIntentId: The ID of the PaymentIntent.
+    ///   - clientSecret: The client secret of the PaymentIntent.
+    ///   - completion: The callback to run with the updated PaymentIntent object, or an error.
+    @_spi(STP) public func cancelPaymentIntentCaptchaChallenge(
+        paymentIntentId: String,
+        clientSecret: String,
+        completion: @escaping STPPaymentIntentCompletionBlock
+    ) {
+        let endpoint = "\(APIEndpointPaymentIntents)/\(paymentIntentId)/cancel_challenge"
+        var parameters: [String: Any] = [:]
+
+        if !publishableKeyIsUserKey {
+            parameters["client_secret"] = clientSecret
+        }
+
+        APIRequest<STPPaymentIntent>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { paymentIntent, _, error in
+            completion(paymentIntent, error)
+        }
+    }
+
+    /// Cancels the captcha challenge for a SetupIntent.
+    /// - Parameters:
+    ///   - setupIntentId: The ID of the SetupIntent.
+    ///   - clientSecret: The client secret of the SetupIntent.
+    ///   - completion: The callback to run with the updated SetupIntent object, or an error.
+    @_spi(STP) public func cancelSetupIntentCaptchaChallenge(
+        setupIntentId: String,
+        clientSecret: String,
+        completion: @escaping STPSetupIntentCompletionBlock
+    ) {
+        let endpoint = "\(APIEndpointSetupIntents)/\(setupIntentId)/cancel_challenge"
+        var parameters: [String: Any] = [:]
+
+        if !publishableKeyIsUserKey {
+            parameters["client_secret"] = clientSecret
+        }
+
+        APIRequest<STPSetupIntent>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        ) { setupIntent, _, error in
+            completion(setupIntent, error)
+        }
+    }
+}
+
 private let APIEndpointToken = "tokens"
 private let APIEndpointSources = "sources"
 @_spi(STP) public let APIEndpointCustomers = "customers"

@@ -368,7 +368,7 @@ extension PaymentSheet {
         /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        @_spi(CheckoutSessionPreview) public static func create(
+        @_spi(CheckoutSessionsPreview) public static func create(
             checkoutSession: STPCheckoutSession,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void

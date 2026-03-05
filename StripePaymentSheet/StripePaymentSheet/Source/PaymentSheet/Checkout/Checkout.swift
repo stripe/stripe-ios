@@ -120,7 +120,7 @@ public final class Checkout: ObservableObject {
     ///   the server request fails.
     public func updateBillingAddress(_ params: AddressUpdate?) async throws {
         try requireOpenSession()
-        if let params, shouldSendTaxRegion(for: "billing") {
+        if let params, session?.shouldSendTaxRegion(for: "billing") == true {
             session?.billingAddressOverride = params
             try await performAPIUpdate(.setTaxRegion(params.address))
         } else {
@@ -144,7 +144,7 @@ public final class Checkout: ObservableObject {
     ///   the server request fails.
     public func updateShippingAddress(_ params: AddressUpdate?) async throws {
         try requireOpenSession()
-        if let params, shouldSendTaxRegion(for: "shipping") {
+        if let params, session?.shouldSendTaxRegion(for: "shipping") == true {
             session?.shippingAddressOverride = params
             try await performAPIUpdate(.setTaxRegion(params.address))
         } else {
@@ -190,18 +190,6 @@ public final class Checkout: ObservableObject {
         guard currentSession.status == .open else {
             throw CheckoutError.sessionNotOpen
         }
-    }
-
-    /// Returns `true` when the server needs a `tax_region` update for the given address type.
-    /// The server returns address source values like `"session.billing"` or `"session.shipping"`.
-    private func shouldSendTaxRegion(for addressType: String) -> Bool {
-        guard let taxContext = session?.allResponseFields["tax_context"] as? [String: Any],
-              taxContext["automatic_tax_enabled"] as? Bool == true,
-              let source = taxContext["automatic_tax_address_source"] as? String,
-              source == "session.\(addressType)" else {
-            return false
-        }
-        return true
     }
 
     /// Performs an API update, then reloads full session state from init.

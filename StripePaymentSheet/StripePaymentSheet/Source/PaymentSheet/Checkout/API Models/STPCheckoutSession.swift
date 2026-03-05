@@ -72,6 +72,21 @@ import Foundation
     /// Applied discounts for this session.
     public let discounts: [STPCheckoutSessionDiscount]
 
+    /// The line items associated with this session.
+    public let lineItems: [STPCheckoutSessionLineItem]
+
+    /// The available shipping options for this session.
+    public let shippingOptions: [STPCheckoutSessionShippingOption]
+
+    /// The ID of the currently selected shipping option, if any.
+    public let selectedShippingOptionId: String?
+
+    /// The total discount amount applied to this session.
+    public let totalDiscountAmount: Int
+
+    /// The total shipping amount applied to this session.
+    public let totalShippingAmount: Int
+
     /// The currently applied promotion code, if one is present.
     public var appliedPromotionCode: String? {
         discounts.first(where: { $0.promotionCode != nil })?.promotionCode?.code
@@ -81,14 +96,28 @@ import Foundation
     /// Parsed from `customer_managed_saved_payment_methods_offer_save` in the init response.
     public let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
 
+    /// Whether automatic tax calculation is enabled for this session.
+    public let automaticTaxEnabled: Bool
+
+    /// The address source used for automatic tax calculation (e.g. `"billing"` or `"shipping"`).
+    /// Only meaningful when ``automaticTaxEnabled`` is `true`.
+    public let automaticTaxAddressSource: String?
+
     /// The raw API response used to create this object.
     public let allResponseFields: [AnyHashable: Any]
 
     /// Client-side billing address override, set via Checkout.updateBillingAddress(_:).
-    public var billingAddressOverride: Checkout.AddressUpdate?
+    public internal(set) var billingAddressOverride: Checkout.AddressUpdate?
 
     /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
-    public var shippingAddressOverride: Checkout.AddressUpdate?
+    public internal(set) var shippingAddressOverride: Checkout.AddressUpdate?
+
+    /// Returns `true` when the server needs a `tax_region` update for the given address type.
+    ///
+    /// - Parameter addressType: Either `"billing"` or `"shipping"`.
+    func shouldSendTaxRegion(for addressType: String) -> Bool {
+        return automaticTaxEnabled && automaticTaxAddressSource == addressType
+    }
 
     /// :nodoc:
     public override var description: String {
@@ -135,7 +164,14 @@ import Foundation
         returnUrl: String?,
         cancelUrl: String?,
         discounts: [STPCheckoutSessionDiscount],
+        lineItems: [STPCheckoutSessionLineItem],
+        shippingOptions: [STPCheckoutSessionShippingOption],
+        selectedShippingOptionId: String?,
+        totalDiscountAmount: Int,
+        totalShippingAmount: Int,
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
+        automaticTaxEnabled: Bool,
+        automaticTaxAddressSource: String?,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.stripeId = stripeId
@@ -156,7 +192,14 @@ import Foundation
         self.returnUrl = returnUrl
         self.cancelUrl = cancelUrl
         self.discounts = discounts
+        self.lineItems = lineItems
+        self.shippingOptions = shippingOptions
+        self.selectedShippingOptionId = selectedShippingOptionId
+        self.totalDiscountAmount = totalDiscountAmount
+        self.totalShippingAmount = totalShippingAmount
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
+        self.automaticTaxEnabled = automaticTaxEnabled
+        self.automaticTaxAddressSource = automaticTaxAddressSource
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -200,11 +243,26 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 
         // Parse discounts
         let discounts = STPCheckoutSessionDiscount.discounts(from: dict)
+        let lineItems = STPCheckoutSessionLineItem.lineItems(from: dict, defaultCurrency: currency)
+        let shippingOptions = STPCheckoutSessionShippingOption.shippingOptions(from: dict, defaultCurrency: currency)
+        let selectedShippingOptionId = STPCheckoutSessionShippingOption.selectedShippingOptionId(from: dict)
+        let totalDiscountAmount = discounts.reduce(0) { $0 + $1.amount }
+        let totalShippingAmount = STPCheckoutSessionShippingOption.selectedShippingAmount(from: dict)
 
         // Parse saved payment methods offer save configuration
         let savedPaymentMethodsOfferSave = STPCheckoutSessionSavedPaymentMethodsOfferSave.decodedObject(
             from: dict["customer_managed_saved_payment_methods_offer_save"] as? [AnyHashable: Any]
         )
+
+        // Parse tax context for automatic tax settings.
+        // The server returns the address source as e.g. "session.billing"; strip
+        // the "session." prefix so callers can compare against plain "billing"/"shipping".
+        let taxContext = dict["tax_context"] as? [String: Any]
+        let automaticTaxEnabled = taxContext?["automatic_tax_enabled"] as? Bool ?? false
+        let automaticTaxAddressSource: String? = {
+            guard let raw = taxContext?["automatic_tax_address_source"] as? String else { return nil }
+            return raw.hasPrefix("session.") ? String(raw.dropFirst("session.".count)) : raw
+        }()
 
         return STPCheckoutSession(
             stripeId: stripeId,
@@ -227,7 +285,14 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             returnUrl: dict["return_url"] as? String ?? dict["success_url"] as? String,
             cancelUrl: dict["cancel_url"] as? String,
             discounts: discounts,
+            lineItems: lineItems,
+            shippingOptions: shippingOptions,
+            selectedShippingOptionId: selectedShippingOptionId,
+            totalDiscountAmount: totalDiscountAmount,
+            totalShippingAmount: totalShippingAmount,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
+            automaticTaxEnabled: automaticTaxEnabled,
+            automaticTaxAddressSource: automaticTaxAddressSource,
             allResponseFields: dict
         ) as? Self
     }
