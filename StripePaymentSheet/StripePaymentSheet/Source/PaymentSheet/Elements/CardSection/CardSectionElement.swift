@@ -270,7 +270,7 @@ final class CardSectionElement: ContainerElement {
     func fetchAndUpdateCardBrands() {
         // Only fetch card brands if we have at least 8 digits in the pan
         guard let cardBrandChoiceElement = cardBrandChoiceElement, panElement.text.count >= 8 else {
-            // Clear any previously fetched card brands from the dropdown
+            // Clear any previously fetched card brands from the card brand selector
             if !self.cardBrands.isEmpty {
                 self.cardBrands = Set<STPCardBrand>()
                 cardBrandChoiceElement?.update(cardBrands: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>())
