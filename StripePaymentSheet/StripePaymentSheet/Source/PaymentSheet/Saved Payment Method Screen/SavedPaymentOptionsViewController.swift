@@ -108,7 +108,6 @@ class SavedPaymentOptionsViewController: UIViewController {
         let allowsRemovalOfPaymentMethods: Bool
         let allowsSetAsDefaultPM: Bool
         let allowsUpdatePaymentMethod: Bool
-        let enableCBCRedesign: Bool
     }
 
     // MARK: - Internal Properties
@@ -602,7 +601,7 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                                            canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                                                            canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible,
-                                                                           enableCBCRedesign: configuration.enableCBCRedesign,
+                                                                           enableCBCRedesign: paymentSheetConfiguration.enableCBCRedesign,
                                                                            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                                                                            isDefault: isDefaultPaymentMethod(savedPaymentMethodId: paymentMethod.stripeId))
         let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(

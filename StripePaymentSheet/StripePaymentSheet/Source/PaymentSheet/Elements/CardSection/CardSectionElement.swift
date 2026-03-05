@@ -113,7 +113,7 @@ final class CardSectionElement: ContainerElement {
             cardBrandSelector = PaymentMethodElementWrapper(CardBrandChoiceElement(enableCBCRedesign: enableCBCRedesign, theme: theme)) { field, params in
                 let cardBrand = field.selectedBrand ?? .unknown
                 // Only set preferred networks for the confirm params if we have more than 1 brand fetched
-                if (cardBrandSelector?.element.brandCount ?? 1) > 1 {
+                if field.brandCount > 1 {
                     cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: cardBrand != .unknown ? STPCardBrandUtilities.apiValue(from: cardBrand) : nil)
                 }
                 analyticsHelper?.logCardBrandSelected(hostedSurface: hostedSurface, cardBrand: cardBrand)
@@ -340,9 +340,9 @@ final class CardSectionElement: ContainerElement {
 
                 // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
                 if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
-                    selectBrandIfNecessary(brandToSelect, in: cardBrandChoiceElement)
+                    cardBrandChoiceElement.select(brandToSelect)
                 } else if let brandToSelect = useDefaultSelectionLogic(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
-                    selectBrandIfNecessary(brandToSelect, in: cardBrandChoiceElement)
+                    cardBrandChoiceElement.select(brandToSelect)
                 }
 
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
@@ -409,10 +409,6 @@ final class CardSectionElement: ContainerElement {
         return brandToSelect
     }
 
-    private func selectBrandIfNecessary(_ brand: STPCardBrand, in cardBrandChoiceElement: CardBrandChoiceElement) {
-        guard cardBrandChoiceElement.selectedBrand != brand else { return }
-        cardBrandChoiceElement.select(brand)
-    }
 }
 
 // MARK: - Helpers

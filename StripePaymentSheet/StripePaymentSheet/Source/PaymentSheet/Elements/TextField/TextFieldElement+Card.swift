@@ -47,12 +47,13 @@ extension TextFieldElement {
 
         private func cardBrand(for text: String) -> STPCardBrand {
             // Try to read the selected brand from the CBC selector
-            if let cardBrandChoiceElement = cardBrandChoiceElement {
-                let selectedBrand = cardBrandChoiceElement.selectedBrand ?? .unknown
-                let cardBrandFromBin = STPCardValidator.brand(forNumber: text)
-                return selectedBrand == .unknown ? cardBrandFromBin : selectedBrand
+            guard let cardBrandChoiceElement = cardBrandChoiceElement else {
+                return STPCardValidator.brand(forNumber: text)
             }
-            return STPCardValidator.brand(forNumber: text)
+
+            let selectedBrand = cardBrandChoiceElement.selectedBrand ?? .unknown
+            let cardBrandFromBin = STPCardValidator.brand(forNumber: text)
+            return selectedBrand == .unknown ? cardBrandFromBin : selectedBrand
         }
 
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {

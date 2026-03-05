@@ -135,7 +135,7 @@ final class LinkPaymentMethodFormElement: Element {
                 // We will add brands from card brand filtering here
             ],
             theme: theme,
-            includePlaceholder: false
+            allowDeselection: false
         )
 
         if let selectedBrand = paymentMethod.cardDetails?.cardBrand {
@@ -145,7 +145,7 @@ final class LinkPaymentMethodFormElement: Element {
         return PaymentMethodElementWrapper<CardBrandChoiceElement>(cardBrandChoiceElement) { field, params in
             let cardBrand = field.selectedBrand ?? .unknown
             let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
-            params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+            params.paymentMethodParams.card?.networks = .init(preferred: cardBrand != .unknown ? preferredNetworkAPIValue : nil)
             return params
         }
     }()

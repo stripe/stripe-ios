@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(CheckoutSessionPreview) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -245,7 +245,6 @@ class PlaygroundController: ObservableObject {
         }
 
         configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
-
         switch settings.cardBrandAcceptance {
         case .all:
             configuration.cardBrandAcceptance = .all
@@ -370,6 +369,7 @@ class PlaygroundController: ObservableObject {
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
         configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
         configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
+
         switch settings.cardBrandAcceptance {
         case .all:
             configuration.cardBrandAcceptance = .all

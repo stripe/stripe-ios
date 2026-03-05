@@ -231,6 +231,7 @@ extension PaymentSheetUITestCase {
         app.buttons["Present PaymentSheet"].tap()
 
         let cardBrandChoiceVisa = app.buttons["Visa"]
+        let cardBrandChoiceCB = app.buttons["Cartes Bancaires"]
         // Card brand choice textfield/dropdown should not be visible
         XCTAssertFalse(cardBrandChoiceVisa.waitForExistence(timeout: 2))
 
@@ -244,14 +245,35 @@ extension PaymentSheetUITestCase {
 
         // We should still have no selected card brand
         XCTAssertFalse(cardBrandChoiceVisa.isSelected)
-        XCTAssertFalse(app.buttons["Cartes Bancaires"].isSelected)
+        XCTAssertFalse(cardBrandChoiceCB.isSelected)
 
         // Select Visa from the CBC selector
         cardBrandChoiceVisa.tap()
-        app.toolbars.buttons["Done"].tap()
 
         // We should have selected Visa
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
+        XCTAssertFalse(cardBrandChoiceCB.isSelected)
+
+        // Select Cartes Bancaires
+        cardBrandChoiceCB.tap()
+
+        // We should have selected Cartes Bancaires and deselected Visa
+        XCTAssertTrue(cardBrandChoiceCB.isSelected)
+        XCTAssertFalse(cardBrandChoiceVisa.isSelected)
+
+        // Deselect Cartes Bancaires
+        cardBrandChoiceCB.tap()
+
+        // We should have deselected Cartes Bancaires
+        XCTAssertFalse(cardBrandChoiceCB.isSelected)
+        XCTAssertFalse(cardBrandChoiceVisa.isSelected)
+
+        // Select Visa from the CBC selector
+        cardBrandChoiceVisa.tap()
+
+        // We should have selected Visa
+        XCTAssertTrue(cardBrandChoiceVisa.isSelected)
+        XCTAssertFalse(cardBrandChoiceCB.isSelected)
 
         // Clear card text field, should reset selected card brand
         numberField.tap()
@@ -270,8 +292,10 @@ extension PaymentSheetUITestCase {
 
         // Card brand choice selector should be enabled
         XCTAssertTrue(cardBrandChoiceVisa.waitForExistence(timeout: 5))
+        // Select Visa from the CBC selector
+        cardBrandChoiceVisa.tap()
 
-        // We should have remembered selecting Visa
+        // We should have selected Visa
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
 
         // Finish checkout

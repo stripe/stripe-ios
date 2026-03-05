@@ -86,7 +86,6 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let paymentMethodUpdate: Bool
         let paymentMethodSyncDefault: Bool
         let isTestMode: Bool
-        let enableCBCRedesign: Bool
     }
 
     /// Whether or not you can edit save payment methods by removing or updating them.
@@ -454,7 +453,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
                                                                            canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                                                            canUpdate: configuration.paymentMethodUpdate,
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible,
-                                                                           enableCBCRedesign: configuration.enableCBCRedesign)
+                                                                           enableCBCRedesign: savedPaymentMethodsConfiguration.enableCBCRedesign)
         let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(
             removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
             paymentMethodRemoveIsPartial: configuration.paymentMethodRemoveIsPartial,

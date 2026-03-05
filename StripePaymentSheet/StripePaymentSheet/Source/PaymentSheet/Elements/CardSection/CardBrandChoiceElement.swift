@@ -78,11 +78,12 @@ final class CardBrandChoiceElement: Element {
          cardBrands: Set<STPCardBrand> = [],
          disallowedCardBrands: Set<STPCardBrand> = [],
          theme: ElementsAppearance = .default,
-         includePlaceholder: Bool = true) {
+         allowDeselection: Bool = true) {
         if enableCBCRedesign {
             let element = SegmentedSelectorElement(
                 items: Self.makeItems(from: cardBrands),
                 disabledItems: Set(Self.makeItems(from: disallowedCardBrands)),
+                allowDeselection: allowDeselection,
                 theme: theme
             )
             self.variant = .selector(element)
@@ -92,7 +93,7 @@ final class CardBrandChoiceElement: Element {
                 cardBrands: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
                 theme: theme,
-                includePlaceholder: includePlaceholder
+                includePlaceholder: allowDeselection
             )
             self.variant = .dropdown(element)
             element.delegate = self
@@ -120,7 +121,7 @@ final class CardBrandChoiceElement: Element {
     func select(_ brand: STPCardBrand) {
         switch variant {
         case .selector(let element):
-            element.select(brand.makeCardBrandItem(), shouldAutoAdvance: false)
+            element.select(brand.makeCardBrandItem())
         case .dropdown(let element):
             if let index = element.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {
                 element.select(index: index, shouldAutoAdvance: false)

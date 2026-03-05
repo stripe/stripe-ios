@@ -11,7 +11,6 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentsUI
 @_spi(STP) @testable import StripeUICore
 import UIKit
-import XCTest
 
 final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
     var appearance = PaymentSheet.Appearance()
@@ -92,7 +91,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             cardBrands: [.visa, .cartesBancaires],
             disallowedCardBrands: [],
             theme: theme,
-            includePlaceholder: true
+            allowDeselection: true
         )
         verify(element)
     }
@@ -103,7 +102,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
             cardBrands: [.visa, .cartesBancaires],
             disallowedCardBrands: [],
             theme: theme,
-            includePlaceholder: false
+            allowDeselection: false
         )
         verify(element)
     }

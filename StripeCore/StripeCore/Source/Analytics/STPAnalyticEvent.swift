@@ -339,6 +339,7 @@ import Foundation
     case intentConfirmationChallengeSuccess = "elements.intent_confirmation_challenge.success"
     case intentConfirmationChallengeError = "elements.intent_confirmation_challenge.error"
     case intentConfirmationChallengeWebViewLoaded = "elements.intent_confirmation_challenge.web_view_loaded"
+    case intentConfirmationChallengeCanceled = "elements.intent_confirmation_challenge.cancel"
 
     // MARK: - STPApplePayContext
     case applePayContextStarted = "stripeios.applepaycontext.confirm.started"

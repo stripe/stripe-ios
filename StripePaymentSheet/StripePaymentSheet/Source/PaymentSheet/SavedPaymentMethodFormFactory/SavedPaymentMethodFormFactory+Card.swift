@@ -26,7 +26,7 @@ extension SavedPaymentMethodFormFactory {
                 cardBrands: Set<STPCardBrand>(cardBrands),
                 disallowedCardBrands: Set<STPCardBrand>(disallowedCardBrands),
                 theme: theme,
-                includePlaceholder: false
+                allowDeselection: false
             )
 
             // pre-select current card brand
@@ -38,7 +38,7 @@ extension SavedPaymentMethodFormFactory {
             let wrappedElement = PaymentMethodElementWrapper<CardBrandChoiceElement>(cardBrandChoiceElement){ field, params in
                 let cardBrand = field.selectedBrand ?? .unknown
                 let preferredNetworkAPIValue = STPCardBrandUtilities.apiValue(from: cardBrand)
-                params.paymentMethodParams.card?.networks = .init(preferred: preferredNetworkAPIValue)
+                params.paymentMethodParams.card?.networks = .init(preferred: cardBrand != .unknown ? preferredNetworkAPIValue : nil)
                 return params
             }
             return wrappedElement
