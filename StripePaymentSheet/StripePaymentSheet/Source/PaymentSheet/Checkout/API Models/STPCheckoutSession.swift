@@ -130,43 +130,10 @@ import Foundation
     public let allResponseFields: [AnyHashable: Any]
 
     /// Client-side billing address override, set via Checkout.updateBillingAddress(_:).
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     public internal(set) var billingAddressOverride: Checkout.AddressUpdate?
 
     /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
     public internal(set) var shippingAddressOverride: Checkout.AddressUpdate?
-
-    /// Returns `true` when the server needs a `tax_region` update for the given address type.
-    ///
-    /// - Parameter addressType: Either `"billing"` or `"shipping"`.
-    func shouldSendTaxRegion(for addressType: String) -> Bool {
-        return automaticTaxEnabled && automaticTaxAddressSource == addressType
-    }
-=======
-    /// Stored as `Any?` to avoid an upward dependency from the data model to `Checkout.AddressUpdate`.
-    public var billingAddressOverride: Checkout.AddressUpdate?
-
-    /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
-    /// Stored as `Any?` to avoid an upward dependency from the data model to `Checkout.AddressUpdate`.
-<<<<<<< HEAD
-    public var shippingAddressOverride: Any?
->>>>>>> 149a504ca63 (Small bug fixes)
-=======
-=======
-    public var billingAddressOverride: Checkout.AddressUpdate?
-
-    /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
->>>>>>> 3ceab7c423c (Minor updates)
-    public var shippingAddressOverride: Checkout.AddressUpdate?
->>>>>>> a5f3c8e9de0 (Remove any usage)
-=======
-    public internal(set) var billingAddressOverride: Checkout.AddressUpdate?
-
-    /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
-    public internal(set) var shippingAddressOverride: Checkout.AddressUpdate?
->>>>>>> b4a7efaddce (PR feedback)
 
     /// Returns `true` when the server needs a `tax_region` update for the given address type.
     ///

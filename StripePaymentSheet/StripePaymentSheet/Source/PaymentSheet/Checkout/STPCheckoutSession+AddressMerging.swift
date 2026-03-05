@@ -15,24 +15,11 @@ extension STPCheckoutSession {
     /// Populates empty fields in the configuration with checkout-collected addresses.
     /// Configuration values always take precedence over checkout-collected values.
     func applyAddressOverrides(to configuration: inout PaymentSheet.Configuration) {
-<<<<<<< HEAD
         if let billing = billingAddressOverride {
             applyBillingAddress(billing, to: &configuration.defaultBillingDetails)
         }
-<<<<<<< HEAD
         if let shipping = shippingAddressOverride, configuration.shippingDetails() == nil {
-=======
-
-        if let shipping = shippingAddressOverride as? Checkout.AddressUpdate,
-           configuration.shippingDetails() == nil {
->>>>>>> 149a504ca63 (Small bug fixes)
             let details = shippingAddressDetails(from: shipping)
-=======
-        applyBillingAddress(billingAddressOverride!, to: &configuration.defaultBillingDetails)
-
-        if configuration.shippingDetails() == nil {
-            let details = shippingAddressDetails(from: shippingAddressOverride!)
->>>>>>> a5f3c8e9de0 (Remove any usage)
             configuration.shippingDetails = { details }
         }
     }
@@ -40,24 +27,11 @@ extension STPCheckoutSession {
     /// Populates empty fields in the embedded configuration with checkout-collected addresses.
     /// Configuration values always take precedence over checkout-collected values.
     func applyAddressOverrides(to configuration: inout EmbeddedPaymentElement.Configuration) {
-<<<<<<< HEAD
         if let billing = billingAddressOverride {
             applyBillingAddress(billing, to: &configuration.defaultBillingDetails)
         }
-<<<<<<< HEAD
         if let shipping = shippingAddressOverride, configuration.shippingDetails() == nil {
-=======
-
-        if let shipping = shippingAddressOverride as? Checkout.AddressUpdate,
-           configuration.shippingDetails() == nil {
->>>>>>> 149a504ca63 (Small bug fixes)
             let details = shippingAddressDetails(from: shipping)
-=======
-        applyBillingAddress(billingAddressOverride!, to: &configuration.defaultBillingDetails)
-
-        if configuration.shippingDetails() == nil {
-            let details = shippingAddressDetails(from: shippingAddressOverride!)
->>>>>>> a5f3c8e9de0 (Remove any usage)
             configuration.shippingDetails = { details }
         }
     }

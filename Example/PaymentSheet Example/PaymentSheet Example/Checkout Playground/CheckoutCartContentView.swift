@@ -220,10 +220,8 @@ struct CheckoutCartContentView: View {
             }
         }
         .sheet(isPresented: $showShippingAddressSheet) {
-            handleShippingAddressDismiss()
-        } content: {
             AddressElement(
-                address: $shippingAddressDetails,
+                address: shippingAddressBinding,
                 configuration: makeShippingAddressConfiguration(session: session),
             )
         }
@@ -247,10 +245,8 @@ struct CheckoutCartContentView: View {
             }
         }
         .sheet(isPresented: $showBillingAddressSheet) {
-            handleBillingAddressDismiss()
-        } content: {
             AddressElement(
-                address: $billingAddressDetails,
+                address: billingAddressBinding,
                 configuration: makeBillingAddressConfiguration(session: session)
             )
         }
@@ -286,9 +282,11 @@ struct CheckoutCartContentView: View {
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                 }
-                Text(address.country)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
+                if !address.country.isEmpty {
+                    Text(address.country)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
             }
 
             Spacer()
@@ -331,31 +329,31 @@ struct CheckoutCartContentView: View {
     // MARK: - Address Configuration
 
     private func makeShippingAddressConfiguration(session: STPCheckoutSession) -> AddressElement.Configuration {
-        var config = AddressElement.Configuration()
-        config.title = "Shipping Address"
-        config.buttonTitle = "Save Address"
-        config.allowedCountries = session.allowedShippingCountries ?? []
-        if let override = session.shippingAddressOverride {
-            config.defaultValues = .init(
-                address: .init(
-                    city: override.address.city,
-                    country: override.address.country,
-                    line1: override.address.line1 ?? "",
-                    line2: override.address.line2,
-                    postalCode: override.address.postalCode,
-                    state: override.address.state
-                ),
-                name: override.name
-            )
-        }
-        return config
+        makeAddressConfiguration(
+            title: "Shipping Address",
+            allowedCountries: session.allowedShippingCountries ?? [],
+            override: session.shippingAddressOverride
+        )
     }
 
     private func makeBillingAddressConfiguration(session: STPCheckoutSession) -> AddressElement.Configuration {
+        makeAddressConfiguration(
+            title: "Billing Address",
+            allowedCountries: [],
+            override: session.billingAddressOverride
+        )
+    }
+
+    private func makeAddressConfiguration(
+        title: String,
+        allowedCountries: [String],
+        override: Checkout.AddressUpdate?
+    ) -> AddressElement.Configuration {
         var config = AddressElement.Configuration()
-        config.title = "Billing Address"
+        config.title = title
         config.buttonTitle = "Save Address"
-        if let override = session.billingAddressOverride {
+        config.allowedCountries = allowedCountries
+        if let override {
             config.defaultValues = .init(
                 address: .init(
                     city: override.address.city,
@@ -486,11 +484,17 @@ struct CheckoutCartContentView: View {
 
                     let tax = session.totalTaxAmount
                     if tax > 0 {
+                        let taxLabel = session.taxAmounts.count == 1
+                            ? (session.taxAmounts.first?.taxRate?.displayName ?? "Tax")
+                            : "Tax"
+                        let taxRateDesc: String? = session.taxAmounts.count == 1
+                            ? session.taxAmounts.first?.taxRate?.rateDescription
+                            : nil
                         HStack(alignment: .top) {
                             VStack(alignment: .leading, spacing: 2) {
-                                Text(session.taxAmounts.first?.taxRate?.displayName ?? "Tax")
+                                Text(taxLabel)
                                     .foregroundColor(.secondary)
-                                if let rateDesc = session.taxAmounts.first?.taxRate?.rateDescription, !rateDesc.isEmpty {
+                                if let rateDesc = taxRateDesc, !rateDesc.isEmpty {
                                     Text(rateDesc)
                                         .font(.caption)
                                         .foregroundColor(.secondary)
@@ -579,20 +583,26 @@ struct CheckoutCartContentView: View {
         )
     }
 
-    private func handleShippingAddressDismiss() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            guard let details = shippingAddressDetails else { return }
-            let update = convertToAddressUpdate(details)
-            updateShippingAddress(update)
-        }
+    private var shippingAddressBinding: Binding<AddressElement.AddressDetails?> {
+        Binding(
+            get: { shippingAddressDetails },
+            set: { newValue in
+                shippingAddressDetails = newValue
+                guard let details = newValue else { return }
+                updateShippingAddress(convertToAddressUpdate(details))
+            }
+        )
     }
 
-    private func handleBillingAddressDismiss() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            guard let details = billingAddressDetails else { return }
-            let update = convertToAddressUpdate(details)
-            updateBillingAddress(update)
-        }
+    private var billingAddressBinding: Binding<AddressElement.AddressDetails?> {
+        Binding(
+            get: { billingAddressDetails },
+            set: { newValue in
+                billingAddressDetails = newValue
+                guard let details = newValue else { return }
+                updateBillingAddress(convertToAddressUpdate(details))
+            }
+        )
     }
 
     private func updateShippingAddress(_ update: Checkout.AddressUpdate) {

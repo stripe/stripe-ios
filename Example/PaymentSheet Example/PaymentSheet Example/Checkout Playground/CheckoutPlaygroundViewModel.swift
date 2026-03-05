@@ -26,7 +26,7 @@ extension CheckoutPlayground {
         @Published var billingAddressCollection = false
         @Published var automaticTax = true
         @Published var paymentMethodTypes: Set<String> = ["card"]
-        @Published var checkoutEndpoint = "http://localhost:8081/checkout_session"
+        @Published var checkoutEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout_session"
 
         @Published var isCreating = false
         @Published var errorMessage: String?

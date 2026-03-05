@@ -94,6 +94,78 @@ final class STPCheckoutSessionTaxAmountTests: XCTestCase {
         XCTAssertTrue(taxAmounts.isEmpty)
     }
 
+    func testDecodeMultipleTaxAmounts() {
+        let dict: [AnyHashable: Any] = [
+            "line_item_group": [
+                "tax_amounts": [
+                    [
+                        "amount": 500,
+                        "inclusive": false,
+                        "taxable_amount": 10000,
+                        "tax_rate": [
+                            "display_name": "State Tax",
+                            "percentage": 5.0,
+                            "jurisdiction": "CA",
+                        ],
+                    ],
+                    [
+                        "amount": 200,
+                        "inclusive": false,
+                        "taxable_amount": 10000,
+                        "tax_rate": [
+                            "display_name": "County Tax",
+                            "percentage": 2.0,
+                            "jurisdiction": "LA County",
+                        ],
+                    ],
+                ],
+            ],
+        ]
+
+        let taxAmounts = STPCheckoutSessionTaxAmount.taxAmounts(from: dict)
+        XCTAssertEqual(taxAmounts.count, 2)
+        XCTAssertEqual(taxAmounts[0].amount, 500)
+        XCTAssertEqual(taxAmounts[0].taxRate?.displayName, "State Tax")
+        XCTAssertEqual(taxAmounts[1].amount, 200)
+        XCTAssertEqual(taxAmounts[1].taxRate?.displayName, "County Tax")
+    }
+
+    func testDecodeTaxAmountWithoutTaxRate() {
+        let dict: [AnyHashable: Any] = [
+            "line_item_group": [
+                "tax_amounts": [
+                    [
+                        "amount": 300,
+                        "inclusive": true,
+                        "taxable_amount": 5000,
+                    ],
+                ],
+            ],
+        ]
+
+        let taxAmounts = STPCheckoutSessionTaxAmount.taxAmounts(from: dict)
+        XCTAssertEqual(taxAmounts.count, 1)
+        XCTAssertEqual(taxAmounts[0].amount, 300)
+        XCTAssertTrue(taxAmounts[0].inclusive)
+        XCTAssertNil(taxAmounts[0].taxRate)
+    }
+
+    func testFormattedPercentage() {
+        let rate = STPCheckoutSessionTaxRate(displayName: "Sales Tax", percentage: 8.25, jurisdiction: "CA")
+        XCTAssertEqual(rate.formattedPercentage, "8.25%")
+
+        let wholeRate = STPCheckoutSessionTaxRate(displayName: "VAT", percentage: 20.0, jurisdiction: nil)
+        XCTAssertEqual(wholeRate.formattedPercentage, "20%")
+    }
+
+    func testRateDescription() {
+        let rateWithJurisdiction = STPCheckoutSessionTaxRate(displayName: "Sales Tax", percentage: 8.25, jurisdiction: "CA")
+        XCTAssertEqual(rateWithJurisdiction.rateDescription, "CA 8.25%")
+
+        let rateWithoutJurisdiction = STPCheckoutSessionTaxRate(displayName: "VAT", percentage: 20.0, jurisdiction: nil)
+        XCTAssertEqual(rateWithoutJurisdiction.rateDescription, "20%")
+    }
+
     func testHashableAndEquatable() {
         let rate1 = STPCheckoutSessionTaxRate(displayName: "A", percentage: 5.0, jurisdiction: "CA")
         let rate2 = STPCheckoutSessionTaxRate(displayName: "A", percentage: 5.0, jurisdiction: "CA")

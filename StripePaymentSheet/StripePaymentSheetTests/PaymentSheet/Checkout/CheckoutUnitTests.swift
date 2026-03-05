@@ -146,49 +146,10 @@ final class CheckoutUnitTests: XCTestCase {
 
     // MARK: - Address Override Tests
 
-<<<<<<< HEAD
     func testUpdateBillingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
         let checkout = makeCheckoutWithOpenSession()
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
-=======
-    func testClearBillingAddress() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
-        await MainActor.run {
-            checkout.session?.billingAddressOverride = Checkout.AddressUpdate(
-                name: "Jane",
-                address: .init(country: "US")
-            )
-        }
-
-        try await checkout.updateBillingAddress(nil)
-
-        await MainActor.run {
-            XCTAssertNil(checkout.session?.billingAddressOverride)
-        }
-    }
-
-    func testClearShippingAddress() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
-        await MainActor.run {
-            checkout.session?.shippingAddressOverride = Checkout.AddressUpdate(
-                name: "Jane",
-                address: .init(country: "US")
-            )
-        }
-
-        try await checkout.updateShippingAddress(nil)
-
-        await MainActor.run {
-            XCTAssertNil(checkout.session?.shippingAddressOverride)
-        }
-    }
-
-    func testUpdateBillingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
-        let delegate = await MainActor.run { MockCheckoutDelegate() }
-        await MainActor.run { checkout.delegate = delegate }
->>>>>>> 149a504ca63 (Small bug fixes)
 
         let update = Checkout.AddressUpdate(
             name: "Jane Doe",
@@ -196,7 +157,6 @@ final class CheckoutUnitTests: XCTestCase {
         )
         try await checkout.updateBillingAddress(update)
 
-<<<<<<< HEAD
         let stored = checkout.session?.billingAddressOverride
         XCTAssertEqual(stored?.name, "Jane Doe")
         XCTAssertEqual(stored?.address.country, "US")
@@ -207,20 +167,6 @@ final class CheckoutUnitTests: XCTestCase {
         let checkout = makeCheckoutWithOpenSession()
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
-=======
-        await MainActor.run {
-            let stored = checkout.session?.billingAddressOverride
-            XCTAssertEqual(stored?.name, "Jane Doe")
-            XCTAssertEqual(stored?.address.country, "US")
-            XCTAssertTrue(delegate.didUpdateCalled)
-        }
-    }
-
-    func testUpdateShippingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
-        let delegate = await MainActor.run { MockCheckoutDelegate() }
-        await MainActor.run { checkout.delegate = delegate }
->>>>>>> 149a504ca63 (Small bug fixes)
 
         let update = Checkout.AddressUpdate(
             name: "John Smith",
@@ -228,24 +174,16 @@ final class CheckoutUnitTests: XCTestCase {
         )
         try await checkout.updateShippingAddress(update)
 
-<<<<<<< HEAD
         let stored = checkout.session?.shippingAddressOverride
         XCTAssertEqual(stored?.name, "John Smith")
         XCTAssertEqual(stored?.address.country, "US")
         XCTAssertTrue(delegate.didUpdateCalled)
-=======
-        await MainActor.run {
-            let stored = checkout.session?.shippingAddressOverride
-            XCTAssertEqual(stored?.name, "John Smith")
-            XCTAssertEqual(stored?.address.country, "US")
-            XCTAssertTrue(delegate.didUpdateCalled)
-        }
     }
 
     // MARK: - Address Merging Tests
 
-    func testApplyAddressOverrides_billingFillsEmptyFields() async {
-        let session = await MainActor.run { Self.makeOpenSession() }
+    func testApplyAddressOverrides_billingFillsEmptyFields() {
+        let session = Self.makeOpenSession()
         session.billingAddressOverride = Checkout.AddressUpdate(
             name: "Jane Doe",
             address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
@@ -262,8 +200,8 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(config.defaultBillingDetails.address.postalCode, "94105")
     }
 
-    func testApplyAddressOverrides_billingConfigTakesPrecedence() async {
-        let session = await MainActor.run { Self.makeOpenSession() }
+    func testApplyAddressOverrides_billingConfigTakesPrecedence() {
+        let session = Self.makeOpenSession()
         session.billingAddressOverride = Checkout.AddressUpdate(
             name: "Override Name",
             address: .init(country: "GB", line1: "Override Line1")
@@ -280,8 +218,8 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(config.defaultBillingDetails.address.line1, "Override Line1")
     }
 
-    func testApplyAddressOverrides_shippingApplied() async {
-        let session = await MainActor.run { Self.makeOpenSession() }
+    func testApplyAddressOverrides_shippingApplied() {
+        let session = Self.makeOpenSession()
         session.shippingAddressOverride = Checkout.AddressUpdate(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
@@ -301,8 +239,8 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(details?.address.postalCode, "90001")
     }
 
-    func testApplyAddressOverrides_shippingNotOverriddenWhenConfigHasShipping() async {
-        let session = await MainActor.run { Self.makeOpenSession() }
+    func testApplyAddressOverrides_shippingNotOverriddenWhenConfigHasShipping() {
+        let session = Self.makeOpenSession()
         session.shippingAddressOverride = Checkout.AddressUpdate(
             name: "Override",
             address: .init(country: "GB")
@@ -320,7 +258,6 @@ final class CheckoutUnitTests: XCTestCase {
         let details = config.shippingDetails()
         XCTAssertEqual(details?.name, "Existing Name")
         XCTAssertEqual(details?.address.country, "US")
->>>>>>> 149a504ca63 (Small bug fixes)
     }
 
     // MARK: - Address Collection Decoding Tests
@@ -358,13 +295,129 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertNil(session.allowedShippingCountries)
     }
 
+    // MARK: - Tax Amount Tests
+
+    func testTotalTaxAmount_singleAmount() {
+        var json = Self.makeOpenSessionJSON()
+        json["line_item_group"] = [
+            "tax_amounts": [
+                [
+                    "amount": 1185,
+                    "inclusive": false,
+                    "taxable_amount": 12000,
+                    "tax_rate": [
+                        "display_name": "Sales Tax",
+                        "percentage": 9.875,
+                        "jurisdiction": "UT",
+                    ],
+                ],
+            ],
+        ]
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertEqual(session.totalTaxAmount, 1185)
+        XCTAssertEqual(session.taxAmounts.count, 1)
+    }
+
+    func testTotalTaxAmount_multipleAmounts() {
+        var json = Self.makeOpenSessionJSON()
+        json["line_item_group"] = [
+            "tax_amounts": [
+                [
+                    "amount": 500,
+                    "inclusive": false,
+                    "taxable_amount": 10000,
+                    "tax_rate": [
+                        "display_name": "State Tax",
+                        "percentage": 5.0,
+                        "jurisdiction": "CA",
+                    ],
+                ],
+                [
+                    "amount": 200,
+                    "inclusive": false,
+                    "taxable_amount": 10000,
+                    "tax_rate": [
+                        "display_name": "County Tax",
+                        "percentage": 2.0,
+                        "jurisdiction": "LA County",
+                    ],
+                ],
+            ],
+        ]
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertEqual(session.totalTaxAmount, 700)
+        XCTAssertEqual(session.taxAmounts.count, 2)
+    }
+
+    func testTotalTaxAmount_noTaxAmounts() {
+        let json = Self.makeOpenSessionJSON()
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertEqual(session.totalTaxAmount, 0)
+        XCTAssertTrue(session.taxAmounts.isEmpty)
+    }
+
+    // MARK: - Requires Shipping Address Tests
+
+    func testRequiresShippingAddress_whenCountriesPresent() {
+        var json = Self.makeOpenSessionJSON()
+        json["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertTrue(session.requiresShippingAddress)
+    }
+
+    func testRequiresShippingAddress_whenNil() {
+        let json = Self.makeOpenSessionJSON()
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertFalse(session.requiresShippingAddress)
+    }
+
+    // MARK: - Full Session Decoding with Tax Amounts
+
+    func testFullSessionDecodingWithTaxAmounts() {
+        var json = Self.makeOpenSessionJSON()
+        json["billing_address_collection"] = "required"
+        json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "GB"]]
+        json["line_item_group"] = [
+            "tax_amounts": [
+                [
+                    "amount": 1000,
+                    "inclusive": false,
+                    "taxable_amount": 20000,
+                    "tax_rate": [
+                        "display_name": "Sales Tax",
+                        "percentage": 5.0,
+                        "jurisdiction": "NY",
+                    ],
+                ],
+            ],
+        ]
+        json["total_summary"] = [
+            "due": 21000,
+            "subtotal": 20000,
+            "total": 21000,
+        ]
+
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+
+        // Verify tax amounts
+        XCTAssertEqual(session.taxAmounts.count, 1)
+        XCTAssertEqual(session.totalTaxAmount, 1000)
+        XCTAssertEqual(session.taxAmounts.first?.taxRate?.displayName, "Sales Tax")
+        XCTAssertEqual(session.taxAmounts.first?.taxRate?.jurisdiction, "NY")
+
+        // Verify address collection settings
+        XCTAssertTrue(session.requiresBillingAddress)
+        XCTAssertTrue(session.requiresShippingAddress)
+        XCTAssertEqual(session.allowedShippingCountries, ["US", "CA", "GB"])
+
+        // Verify total summary
+        XCTAssertNotNil(session.totalSummary)
+        XCTAssertEqual(session.totalSummary?.subtotal, 20000)
+        XCTAssertEqual(session.totalSummary?.total, 21000)
+    }
+
     // MARK: - Helpers
 
-<<<<<<< HEAD
-    private func makeCheckoutWithOpenSession() -> Checkout {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
-        let session = CheckoutTestHelpers.makeOpenSession()
-=======
     private static func makeOpenSessionJSON() -> [AnyHashable: Any] {
         [
             "session_id": "cs_test_123",
@@ -378,16 +431,13 @@ final class CheckoutUnitTests: XCTestCase {
         ]
     }
 
-    @MainActor
     private static func makeOpenSession() -> STPCheckoutSession {
         STPCheckoutSession.decodedObject(fromAPIResponse: makeOpenSessionJSON())!
     }
 
-    @MainActor
     private func makeCheckoutWithOpenSession() -> Checkout {
         let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
         let session = Self.makeOpenSession()
->>>>>>> 149a504ca63 (Small bug fixes)
         checkout.updateSession(session)
         return checkout
     }
