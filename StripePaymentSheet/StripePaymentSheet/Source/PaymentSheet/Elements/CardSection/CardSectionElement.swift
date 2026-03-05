@@ -269,31 +269,7 @@ final class CardSectionElement: ContainerElement {
     }
 
     // MARK: Card brand choice
-    private lazy var cbcTooltipView: UIView = {
-        let label = UILabel()
-        label.text = STPLocalizedString("Choose a card brand", "Tooltip prompting user to select their card brand when a co-branded card is detected")
-        label.font = theme.fonts.footnote
-        label.textColor = theme.colors.textFieldText
-        label.numberOfLines = 0
-
-        let container = UIView()
-        container.backgroundColor = theme.colors.componentBackground
-        container.applyCornerRadius(appearance: theme)
-        container.layer.applyShadow(shadow: theme.shadow)
-        container.layer.borderColor = theme.colors.border.cgColor
-        container.layer.borderWidth = theme.borderWidth
-
-        label.translatesAutoresizingMaskIntoConstraints = false
-        container.addSubview(label)
-        NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 8),
-            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -8),
-            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 8),
-            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
-        ])
-        container.frame.size = container.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
-        return container
-    }()
+    lazy var cbcTooltip = TooltipContainerView(theme: theme)
     /// Latches `true` once the user selects a brand; suppresses the tooltip if they later
     /// toggle the selection off. Reset when the set of available brands changes.
     private var hasBrandBeenSelected = false
@@ -361,28 +337,18 @@ final class CardSectionElement: ContainerElement {
             && cardBrands.count > 1
             && !hasBrandBeenSelected
 
-        let tooltip = cbcTooltipView
-        if shouldShow {
-            // Position trailing-aligned below the PAN field.
-            let panFrame = panElement.view.convert(panElement.view.bounds, to: view)
-            tooltip.frame.origin = CGPoint(
-                x: panFrame.maxX - tooltip.frame.width - 4,
-                y: panFrame.maxY + 4
-            )
-
-            if tooltip.superview == nil {
-                tooltip.alpha = 0
-                view.addSubview(tooltip)
-            }
-            view.bringSubviewToFront(tooltip)
-
-            UIView.animate(withDuration: 0.2) {
-                tooltip.alpha = 1
-            }
-        } else if tooltip.alpha > 0 {
-            UIView.animate(withDuration: 0.2) {
-                tooltip.alpha = 0
-            }
+        // If 
+        if cbcTooltip.superview == nil {
+            cbcTooltip.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(cbcTooltip)
+            NSLayoutConstraint.activate([
+                cbcTooltip.trailingAnchor.constraint(equalTo: panElement.view.trailingAnchor, constant: -4),
+                cbcTooltip.topAnchor.constraint(equalTo: panElement.view.bottomAnchor, constant: 4),
+            ])
+        }
+        view.bringSubviewToFront(cbcTooltip)
+        UIView.animate(withDuration: 0.2) {
+            self.cbcTooltip.alpha = shouldShow ? 1 : 0
         }
     }
 
@@ -445,3 +411,47 @@ extension CardSectionElement: CardSectionWithScannerViewDelegate {
     }
 }
 #endif
+
+// MARK: - TooltipContainerView
+
+class TooltipContainerView: UIView {
+    private let theme: ElementsAppearance
+
+    init(theme: ElementsAppearance) {
+        self.theme = theme
+        super.init(frame: .zero)
+
+        let label = UILabel()
+        label.text = STPLocalizedString("Choose a card brand", "Tooltip prompting user to select their card brand when a co-branded card is detected")
+        label.font = theme.fonts.caption
+        label.textColor = theme.colors.textFieldText
+        label.numberOfLines = 0
+
+        backgroundColor = theme.colors.componentBackground
+        applyCornerRadius(appearance: theme)
+        layer.applyShadow(shadow: theme.shadow)
+        layer.borderWidth = theme.borderWidth
+        layer.borderColor = theme.colors.border.cgColor
+        alpha = 0
+
+        label.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(label)
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: topAnchor, constant: 4),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
+        ])
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    #if !os(visionOS)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        layer.borderColor = theme.colors.border.cgColor
+    }
+    #endif
+}
