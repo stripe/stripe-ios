@@ -67,9 +67,9 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         XCTAssertEqual(
             analyticsLog.map({ $0[string: "event"] }).filter({ $0?.starts(with: "elements.attestation.confirmation") ?? false }),
             ["elements.attestation.confirmation.prepare",
-             "elements.attestation.confirmation.prepare_failed",
+             "elements.attestation.confirmation.prepare.failed",
              "elements.attestation.confirmation.request_token",
-             "elements.attestation.confirmation.request_token_succeeded", ]
+             "elements.attestation.confirmation.request_token.succeeded", ]
         )
 
         // Make sure they all have the same session id
