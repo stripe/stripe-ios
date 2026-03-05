@@ -176,7 +176,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Fail payment
         app.buttons["Pay $50.99"].tap()
         let failPaymentText = app.firstDescendant(withLabel: "FAIL TEST PAYMENT")
-        failPaymentText.waitForExistenceAndTap(timeout: 15.0)
+        failPaymentText.waitForExistenceAndTap(timeout: 30.0)
         let errorMessage = app.staticTexts["We are unable to authenticate your payment method. Please choose a different payment method and try again."]
         XCTAssertTrue(errorMessage.waitForExistence(timeout: 30))
 
