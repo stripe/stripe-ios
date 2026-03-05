@@ -1,18 +1,18 @@
 POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_payment_intent$
-402
+200
 text/html
 Content-Type: text/html;charset=utf-8
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=b06bhIIxprgrl0TX2Sr%2FOJJEioLMbdo8jSAgVn6fuxWzfpyLzYOiUhujd4OwpH6BDBQSVu2NfFUBW8AZidQ45seq4VWEzOKl5hKIrZ2kC5euwH4iHRGL6NF7vkeJ3wTetrDuvAZV62HK7yi0lCmrnW8stYeyS5SaUbF2P0QwkghNmcg5y60vGh2KaExPOZF7fNH7tIC7%2FA9I51ECY7uk8rp8PFH0eZXslqH34ZtMQuc%3D; path=/
+Set-Cookie: rack.session=o1%2BMnYc%2BqIl4z31JbfQCs5rbLndUbS0CO4F7HIrNQQTCzXEJVU1NIadG8DQdokI95pyp4yapI2fMwigG47PAqSmbE4nN%2F96aYNmZFxoTIKzScQ2cOIeevWn%2FafkGKtPceRIcZ5cUA7pk%2F6EnT7PqqcOD40DuLvWIu6vGp6pq3o1lWTN15MuxV4%2FCSHkgJU%2BDCDLMoe8y7glN6tEmmcDHI2v%2FuZki3b71vviMFK%2FWUaY%3D; path=/
 Server: Google Frontend
-x-cloud-trace-context: c6526c8dd0d092b59be1112a04d8e8da
+x-cloud-trace-context: 2c42fd3ccea9e47478bcb6eb515cb752
 Via: 1.1 google
 x-xss-protection: 1; mode=block
-Date: Tue, 03 Mar 2026 17:56:23 GMT
+Date: Thu, 05 Mar 2026 00:24:07 GMT
 x-robots-tag: noindex, nofollow
-Content-Length: 378
+Content-Length: 197
 x-content-type-options: nosniff
 x-frame-options: SAMEORIGIN
 
-Error creating PaymentIntent: This object cannot be accessed right now because another API request or Stripe process is currently accessing it. If you see this error intermittently, retry the request. If you see this error frequently and are making multiple concurrent requests to a single object, make your requests serially or at a lower rate. (request_id: req_UfsOyCdPsSmLSz)
+{"intent":"pi_3T7PhyFY0qyl6XeW0ECad1UV","secret":"pi_3T7PhyFY0qyl6XeW0ECad1UV_secret_EW366ggd3pD5hID1A5P8i5Ayd","status":"processing","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}
