@@ -163,7 +163,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
     /// 3. The response from request is empty
     func testSubmitVerificationFrames() throws {
         let base64EncodedVerificationFrames = "base64_encoded_list_of_verify_frames"
-        let mockResponse = "{}".data(using: .utf8)!
+        let mockResponse = Data("{}".utf8)
         let mockParameter = VerifyFrames(
             clientSecret: CIVIntentMockData.clientSecret,
             verificationFramesData: base64EncodedVerificationFrames
@@ -224,11 +224,11 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
     /// 3. The response from request is empty
     func testSubmitVerificationFrames_Expanded() throws {
         let verificationFrameData = VerificationFramesData(
-            imageData: "image_data".data(using: .utf8)!,
+            imageData: Data("image_data".utf8),
             viewfinderMargins: ViewFinderMargins(left: 0, upper: 0, right: 0, lower: 0)
         )
 
-        let mockResponse = "{}".data(using: .utf8)!
+        let mockResponse = Data("{}".utf8)
 
         /// The list of verification frame datas are encoded with snake_case before converting to a `VerifyFrames` object
         let jsonEncoder = JSONEncoder()
@@ -296,7 +296,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
     /// 2. The response from request is empty
     func testUploadScanStats() throws {
         let startDate = Date()
-        let mockResponse = "{}".data(using: .utf8)!
+        let mockResponse = Data("{}".utf8)
         let payload: ScanAnalyticsPayload = .init(
             configuration: .init(strictModeFrames: 0),
             payloadInfo: .init(

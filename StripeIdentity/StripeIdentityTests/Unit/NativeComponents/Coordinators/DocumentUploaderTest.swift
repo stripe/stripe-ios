@@ -81,7 +81,7 @@ final class DocumentUploaderTest: XCTestCase {
         .init(isBlurry: false, variance: 0.1)
     )
 
-    override class func setUp() {
+    override static func setUp() {
         super.setUp()
         mockStripeFile = try! FileMock.identityDocument.make()
     }

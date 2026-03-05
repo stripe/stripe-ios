@@ -150,7 +150,7 @@ extension HTMLViewWithIconLabels {
     fileprivate func rebuildIconTextViews(for viewModels: [IconLabelHTMLView.ViewModel]) throws {
         iconLabelViews.forEach { $0.removeFromSuperview() }
 
-        iconLabelViews = try viewModels.enumerated().map { _, viewModel in
+        iconLabelViews = try viewModels.map { viewModel in
             let view = IconLabelHTMLView()
             try view.configure(with: viewModel)
             vStack.insertArrangedSubview(view, at: 0)
