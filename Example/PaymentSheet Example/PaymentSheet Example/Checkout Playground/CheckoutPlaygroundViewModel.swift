@@ -21,10 +21,10 @@ extension CheckoutPlayground {
         @Published var lineItems: [LineItemConfig] = LineItemConfig.defaults
         @Published var enableShipping = true
         @Published var allowPromotionCodes = true
-        @Published var phoneNumberCollection = true
+        @Published var phoneNumberCollection = false
         @Published var shippingAddressCollection = true
         @Published var billingAddressCollection = false
-        @Published var automaticTax = true
+        @Published var automaticTax = false
         @Published var paymentMethodTypes: Set<String> = ["card"]
         @Published var checkoutEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout_session"
 
@@ -98,18 +98,7 @@ extension CheckoutPlayground {
                 "include_shipping_options": enableShipping,
                 "automatic_tax": automaticTaxForRequest,
                 "payment_method_types": Array(paymentMethodTypes),
-            "use_checkout_session": true,
             ]
-
-            if mode != .setup {
-                body["line_items"] = lineItems.map { item -> [String: Any] in
-                    [
-                        "name": item.name,
-                        "unit_amount": item.unitAmount,
-                        "quantity": item.quantity,
-                    ]
-                }
-            }
 
             return body
         }

@@ -88,11 +88,26 @@ struct SeamlessSignInView: View {
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    alert = Alert(
-                        title: "Failed to sign-in seamlessly. Please log in again manually.",
-                        message: error.localizedDescription
-                    )
-                    APIClient.shared.clearAuthState()
+
+                    if let error = error as? CryptoOnrampCoordinator.Error, case let .seamlessSignInTokenInvalid(reason) = error {
+                        alert = Alert(
+                            title: "Sign-in failed.",
+                            message: error.localizedDescription
+                        )
+
+                        // Clear the invalid token to allow signing in manually.
+                        APIClient.shared.clearAuthState()
+
+                        // Log the error reason for debugging purposes.
+                        if let reason {
+                            print(reason)
+                        }
+                    } else {
+                        alert = Alert(
+                            title: "Failed to sign in seamlessly. Please try again.",
+                            message: error.localizedDescription
+                        )
+                    }
                 }
             }
         }

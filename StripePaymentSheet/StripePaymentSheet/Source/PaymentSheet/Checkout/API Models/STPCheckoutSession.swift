@@ -72,6 +72,21 @@ import Foundation
     /// Applied discounts for this session.
     public let discounts: [STPCheckoutSessionDiscount]
 
+    /// The line items associated with this session.
+    public let lineItems: [STPCheckoutSessionLineItem]
+
+    /// The available shipping options for this session.
+    public let shippingOptions: [STPCheckoutSessionShippingOption]
+
+    /// The ID of the currently selected shipping option, if any.
+    public let selectedShippingOptionId: String?
+
+    /// The total discount amount applied to this session.
+    public let totalDiscountAmount: Int
+
+    /// The total shipping amount applied to this session.
+    public let totalShippingAmount: Int
+
     /// The currently applied promotion code, if one is present.
     public var appliedPromotionCode: String? {
         discounts.first(where: { $0.promotionCode != nil })?.promotionCode?.code
@@ -149,6 +164,11 @@ import Foundation
         returnUrl: String?,
         cancelUrl: String?,
         discounts: [STPCheckoutSessionDiscount],
+        lineItems: [STPCheckoutSessionLineItem],
+        shippingOptions: [STPCheckoutSessionShippingOption],
+        selectedShippingOptionId: String?,
+        totalDiscountAmount: Int,
+        totalShippingAmount: Int,
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
         automaticTaxEnabled: Bool,
         automaticTaxAddressSource: String?,
@@ -172,6 +192,11 @@ import Foundation
         self.returnUrl = returnUrl
         self.cancelUrl = cancelUrl
         self.discounts = discounts
+        self.lineItems = lineItems
+        self.shippingOptions = shippingOptions
+        self.selectedShippingOptionId = selectedShippingOptionId
+        self.totalDiscountAmount = totalDiscountAmount
+        self.totalShippingAmount = totalShippingAmount
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
         self.automaticTaxEnabled = automaticTaxEnabled
         self.automaticTaxAddressSource = automaticTaxAddressSource
@@ -218,6 +243,11 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 
         // Parse discounts
         let discounts = STPCheckoutSessionDiscount.discounts(from: dict)
+        let lineItems = STPCheckoutSessionLineItem.lineItems(from: dict, defaultCurrency: currency)
+        let shippingOptions = STPCheckoutSessionShippingOption.shippingOptions(from: dict, defaultCurrency: currency)
+        let selectedShippingOptionId = STPCheckoutSessionShippingOption.selectedShippingOptionId(from: dict)
+        let totalDiscountAmount = discounts.reduce(0) { $0 + $1.amount }
+        let totalShippingAmount = STPCheckoutSessionShippingOption.selectedShippingAmount(from: dict)
 
         // Parse saved payment methods offer save configuration
         let savedPaymentMethodsOfferSave = STPCheckoutSessionSavedPaymentMethodsOfferSave.decodedObject(
@@ -255,6 +285,11 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             returnUrl: dict["return_url"] as? String ?? dict["success_url"] as? String,
             cancelUrl: dict["cancel_url"] as? String,
             discounts: discounts,
+            lineItems: lineItems,
+            shippingOptions: shippingOptions,
+            selectedShippingOptionId: selectedShippingOptionId,
+            totalDiscountAmount: totalDiscountAmount,
+            totalShippingAmount: totalShippingAmount,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
