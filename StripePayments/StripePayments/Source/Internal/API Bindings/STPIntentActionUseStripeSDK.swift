@@ -42,6 +42,12 @@ class STPIntentActionUseStripeSDK: NSObject {
     // MARK: - 3DS2 Redirect
     let redirectURL: URL?
 
+    // MARK: - Intent Confirmation Challenge
+    struct StripeJS {
+        let captchaVendorName: String?
+    }
+    let stripeJs: StripeJS?
+
     private init(
         type: STPIntentActionUseStripeSDKType,
         directoryServerName: String?,
@@ -54,6 +60,7 @@ class STPIntentActionUseStripeSDK: NSObject {
         publishableKeyOverride: String?,
         threeDS2IntentOverride: String?,
         redirectURL: URL?,
+        stripeJs: StripeJS? = nil,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.type = type
@@ -67,6 +74,7 @@ class STPIntentActionUseStripeSDK: NSObject {
         self.publishableKeyOverride = publishableKeyOverride
         self.threeDS2IntentOverride = threeDS2IntentOverride
         self.redirectURL = redirectURL
+        self.stripeJs = stripeJs
         self.allResponseFields = allResponseFields
         super.init()
     }
@@ -205,6 +213,10 @@ extension STPIntentActionUseStripeSDK: STPAPIResponseDecodable {
                 return nil
             }
         case "intent_confirmation_challenge":
+            let stripeJsDict = dict["stripe_js"] as? [String: Any]
+            let stripeJs = stripeJsDict.map {
+                StripeJS(captchaVendorName: $0["captcha_vendor_name"] as? String)
+            }
             return STPIntentActionUseStripeSDK(
                 type: .intentConfirmationChallenge,
                 directoryServerName: nil,
@@ -217,6 +229,7 @@ extension STPIntentActionUseStripeSDK: STPAPIResponseDecodable {
                 publishableKeyOverride: nil,
                 threeDS2IntentOverride: nil,
                 redirectURL: nil,
+                stripeJs: stripeJs,
                 allResponseFields: dict
             ) as? Self
         default:

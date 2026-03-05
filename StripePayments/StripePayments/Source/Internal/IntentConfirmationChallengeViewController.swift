@@ -37,6 +37,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
     private static let challengeVersion = 1
     private static let challengeURL = URL(string: "https://\(challengeHost)/mobile-confirmation-challenge/assets/index.html?v=\(challengeVersion)")!
 
+    private let stripeJs: STPIntentActionUseStripeSDK.StripeJS?
     private let startTime: Date
 
     // MARK: - Initialization
@@ -45,16 +46,18 @@ class IntentConfirmationChallengeViewController: UIViewController {
         clientSecret: String,
         intentType: IntentType,
         apiClient: STPAPIClient,
+        stripeJs: STPIntentActionUseStripeSDK.StripeJS?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         self.publishableKey = publishableKey
         self.clientSecret = clientSecret
         self.intentType = intentType
         self.apiClient = apiClient
+        self.stripeJs = stripeJs
         self.completion = { result in
             completion(result)
         }
-        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeStart()
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeStart(captchaVendorName: stripeJs?.captchaVendorName)
         self.startTime = Date()
         super.init(nibName: nil, bundle: nil)
     }
@@ -202,13 +205,13 @@ class IntentConfirmationChallengeViewController: UIViewController {
         case .setupIntent(let id):
             apiClient.cancelSetupIntentCaptchaChallenge(setupIntentId: id, clientSecret: clientSecret) { _, _ in }
         }
-        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeCanceled(duration: Date().timeIntervalSince(startTime))
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeCanceled(duration: Date().timeIntervalSince(startTime), captchaVendorName: stripeJs?.captchaVendorName)
         cleanup()
     }
 
     // MARK: - Handlers
     private func handleReady() {
-        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeWebViewLoaded(duration: Date().timeIntervalSince(startTime))
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeWebViewLoaded(duration: Date().timeIntervalSince(startTime), captchaVendorName: stripeJs?.captchaVendorName)
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.3) {
                 self.dimmedBackgroundView.alpha = 1.0
@@ -219,13 +222,13 @@ class IntentConfirmationChallengeViewController: UIViewController {
     }
 
     private func handleSuccess() {
-        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeSuccess(duration: Date().timeIntervalSince(startTime))
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeSuccess(duration: Date().timeIntervalSince(startTime), captchaVendorName: stripeJs?.captchaVendorName)
         cleanup()
         completion(.success(()))
     }
 
     private func handleError(_ error: Error) {
-        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeError(error: error, duration: Date().timeIntervalSince(startTime))
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeError(error: error, duration: Date().timeIntervalSince(startTime), captchaVendorName: stripeJs?.captchaVendorName)
         cleanup()
         completion(.failure(error))
     }
@@ -391,33 +394,53 @@ enum ChallengeError: LocalizedError, AnalyticLoggableError {
 
 // All duration analytics are in milliseconds
 extension STPAnalyticsClient {
-    func logIntentConfirmationChallengeStart() {
+    func logIntentConfirmationChallengeStart(captchaVendorName: String?) {
+        var params: [String: Any] = [:]
+        if let captchaVendorName {
+            params["captcha_vendor_name"] = captchaVendorName
+        }
         log(
-            analytic: GenericAnalytic(event: .intentConfirmationChallengeStart, params: [:])
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeStart, params: params)
         )
     }
 
-    func logIntentConfirmationChallengeSuccess(duration: TimeInterval) {
+    func logIntentConfirmationChallengeSuccess(duration: TimeInterval, captchaVendorName: String?) {
+        var params: [String: Any] = ["duration": duration * 1000]
+        if let captchaVendorName {
+            params["captcha_vendor_name"] = captchaVendorName
+        }
         log(
-            analytic: GenericAnalytic(event: .intentConfirmationChallengeSuccess, params: ["duration": duration * 1000])
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeSuccess, params: params)
         )
     }
 
-    func logIntentConfirmationChallengeWebViewLoaded(duration: TimeInterval) {
+    func logIntentConfirmationChallengeWebViewLoaded(duration: TimeInterval, captchaVendorName: String?) {
+        var params: [String: Any] = ["duration": duration * 1000]
+        if let captchaVendorName {
+            params["captcha_vendor_name"] = captchaVendorName
+        }
         log(
-            analytic: GenericAnalytic(event: .intentConfirmationChallengeWebViewLoaded, params: ["duration": duration * 1000])
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeWebViewLoaded, params: params)
         )
     }
 
-    func logIntentConfirmationChallengeError(error: Error, duration: TimeInterval) {
+    func logIntentConfirmationChallengeError(error: Error, duration: TimeInterval, captchaVendorName: String?) {
+        var params: [String: Any] = ["duration": duration * 1000]
+        if let captchaVendorName {
+            params["captcha_vendor_name"] = captchaVendorName
+        }
         log(
-            analytic: ErrorAnalytic(event: .intentConfirmationChallengeError, error: error, additionalNonPIIParams: ["duration": duration * 1000])
+            analytic: ErrorAnalytic(event: .intentConfirmationChallengeError, error: error, additionalNonPIIParams: params)
         )
     }
 
-    func logIntentConfirmationChallengeCanceled(duration: TimeInterval) {
+    func logIntentConfirmationChallengeCanceled(duration: TimeInterval, captchaVendorName: String?) {
+        var params: [String: Any] = ["duration": duration * 1000]
+        if let captchaVendorName {
+            params["captcha_vendor_name"] = captchaVendorName
+        }
         log(
-            analytic: GenericAnalytic(event: .intentConfirmationChallengeCanceled, params: ["duration": duration * 1000])
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeCanceled, params: params)
         )
     }
 }

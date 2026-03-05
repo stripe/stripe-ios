@@ -1364,7 +1364,7 @@ public class STPPaymentHandler: NSObject {
                     }
                     _handleRedirect(to: redirectURL, withReturn: returnURL, useWebAuthSession: false)
                 case .intentConfirmationChallenge:
-                    _handleIntentConfirmationChallenge()
+                    _handleIntentConfirmationChallenge(stripeJs: useStripeSDK.stripeJs)
                 }
             } else {
                 failCurrentActionWithMissingNextActionDetails()
@@ -1913,7 +1913,7 @@ public class STPPaymentHandler: NSObject {
     }
 
     /// Handles intent confirmation challenge by presenting a WebView with the Stripe-hosted challenge page
-    func _handleIntentConfirmationChallenge() {
+    func _handleIntentConfirmationChallenge(stripeJs: STPIntentActionUseStripeSDK.StripeJS?) {
         guard let currentAction else {
             stpAssertionFailure("Calling _handleIntentConfirmationChallenge without a currentAction")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling _handleIntentConfirmationChallenge without a currentAction"])
@@ -1967,7 +1967,8 @@ public class STPPaymentHandler: NSObject {
                     publishableKey: publishableKey,
                     clientSecret: clientSecret,
                     intentType: intentType,
-                    apiClient: apiClient
+                    apiClient: apiClient,
+                    stripeJs: stripeJs
                 ) { [weak self] result in
                     guard let self = self else { return }
 
