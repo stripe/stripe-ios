@@ -203,6 +203,15 @@ final class SegmentedSelectorView: UIView {
         guard let itemView = sender.view as? SegmentedItemView else { return }
         delegate?.didTap(itemView.item)
     }
+
+#if !os(visionOS)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        layer.borderColor = theme.colors.border.cgColor
+        stackView.backgroundColor = theme.colors.componentBackground
+    }
+#endif
+
 }
 
 // MARK: - SegmentedItemView
