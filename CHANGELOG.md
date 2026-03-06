@@ -3,7 +3,8 @@
 * [Added] Adds support for [payments orchestration](https://docs.stripe.com/payments/orchestration) (private preview) by allowing `processing` as a PaymentIntent state for cards.
 
 ### PaymentSheet
-* [Fixed] Fixed a visual bug in PaymentSheet when the Link sign-in modal appears first where the Apple Pay button was not full width on > iOS 26.2 
+* [Added] Added support for Wero payments (private preview).
+* [Fixed] Fixed a visual bug in PaymentSheet when the Link sign-in modal appears first where the Apple Pay button was not full width on > iOS 26.2
 
 ## 25.7.1 2026-02-25
 ### All

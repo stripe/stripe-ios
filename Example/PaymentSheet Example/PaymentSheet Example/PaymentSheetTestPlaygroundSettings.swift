@@ -432,6 +432,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
         case US
         case GB
+        case DE
     }
 
     enum BillingDetailsAttachDefaults: String, PickerEnum {
