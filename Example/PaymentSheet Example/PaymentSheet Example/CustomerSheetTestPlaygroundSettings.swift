@@ -238,7 +238,8 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
 
     var base64Data: String {
         let jsonData = try! JSONEncoder().encode(self)
-        return jsonData.base64EncodedString()
+        let compressedData = try! (jsonData as NSData).compressed(using: .lzfse) as Data
+        return compressedData.base64EncodedString()
     }
 
     static let nsUserDefaultsKey = "CustomerSheetPlaygroundSettings"
