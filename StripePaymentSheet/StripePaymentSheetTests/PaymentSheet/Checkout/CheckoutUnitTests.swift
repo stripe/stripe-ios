@@ -11,13 +11,12 @@
 @testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 import XCTest
 
+@MainActor
 final class CheckoutUnitTests: XCTestCase {
 
-    func testInitialStateIsNil() async {
-        let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
-        await MainActor.run {
-            XCTAssertNil(checkout.session)
-        }
+    func testInitialStateIsNil() {
+        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
+        XCTAssertNil(checkout.session)
     }
 
     func testExtractSessionId() {
@@ -37,10 +36,8 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testApplyPromotionCodeRequiresOpenSession() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
-
-        // Session is nil (not loaded), should throw sessionNotLoaded
-        await MainActor.run { XCTAssertNil(checkout.session) }
+        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
+        XCTAssertNil(checkout.session)
 
         do {
             try await checkout.applyPromotionCode("SAVE25")
@@ -54,10 +51,8 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testRemovePromotionCodeRequiresOpenSession() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
-
-        // Session is nil (not loaded), should throw sessionNotLoaded
-        await MainActor.run { XCTAssertNil(checkout.session) }
+        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
+        XCTAssertNil(checkout.session)
 
         do {
             try await checkout.removePromotionCode()
@@ -71,10 +66,8 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdateQuantityRequiresOpenSession() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
-
-        // Session is nil (not loaded), should throw sessionNotLoaded
-        await MainActor.run { XCTAssertNil(checkout.session) }
+        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
+        XCTAssertNil(checkout.session)
 
         do {
             try await checkout.updateQuantity(with: .init(lineItemId: "li_123", quantity: 2))
@@ -88,10 +81,8 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testSelectShippingOptionRequiresOpenSession() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
-
-        // Session is nil (not loaded), should throw sessionNotLoaded
-        await MainActor.run { XCTAssertNil(checkout.session) }
+        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
+        XCTAssertNil(checkout.session)
 
         do {
             try await checkout.selectShippingOption("shr_123")
@@ -105,10 +96,8 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdateBillingAddressRequiresOpenSession() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
-
-        // Session is nil (not loaded), should throw sessionNotLoaded
-        await MainActor.run { XCTAssertNil(checkout.session) }
+        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
+        XCTAssertNil(checkout.session)
 
         do {
             try await checkout.updateBillingAddress(
@@ -124,10 +113,8 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdateShippingAddressRequiresOpenSession() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
-
-        // Session is nil (not loaded), should throw sessionNotLoaded
-        await MainActor.run { XCTAssertNil(checkout.session) }
+        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
+        XCTAssertNil(checkout.session)
 
         do {
             try await checkout.updateShippingAddress(
@@ -143,10 +130,8 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testUpdateTaxIdRequiresOpenSession() async throws {
-        let checkout = await Checkout(clientSecret: "cs_test_fake_secret_abc")
-
-        // Session is nil (not loaded), should throw sessionNotLoaded
-        await MainActor.run { XCTAssertNil(checkout.session) }
+        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
+        XCTAssertNil(checkout.session)
 
         do {
             try await checkout.updateTaxId(with: .init(type: "eu_vat", value: "DE123456789"))
@@ -162,9 +147,9 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - Address Override Tests
 
     func testUpdateBillingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
-        let delegate = await MainActor.run { MockCheckoutDelegate() }
-        await MainActor.run { checkout.delegate = delegate }
+        let checkout = makeCheckoutWithOpenSession()
+        let delegate = MockCheckoutDelegate()
+        checkout.delegate = delegate
 
         let update = Checkout.AddressUpdate(
             name: "Jane Doe",
@@ -172,18 +157,16 @@ final class CheckoutUnitTests: XCTestCase {
         )
         try await checkout.updateBillingAddress(update)
 
-        await MainActor.run {
-            let stored = checkout.session?.billingAddressOverride
-            XCTAssertEqual(stored?.name, "Jane Doe")
-            XCTAssertEqual(stored?.address.country, "US")
-            XCTAssertTrue(delegate.didUpdateCalled)
-        }
+        let stored = checkout.session?.billingAddressOverride
+        XCTAssertEqual(stored?.name, "Jane Doe")
+        XCTAssertEqual(stored?.address.country, "US")
+        XCTAssertTrue(delegate.didUpdateCalled)
     }
 
     func testUpdateShippingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
-        let checkout = await makeCheckoutWithOpenSession()
-        let delegate = await MainActor.run { MockCheckoutDelegate() }
-        await MainActor.run { checkout.delegate = delegate }
+        let checkout = makeCheckoutWithOpenSession()
+        let delegate = MockCheckoutDelegate()
+        checkout.delegate = delegate
 
         let update = Checkout.AddressUpdate(
             name: "John Smith",
@@ -191,38 +174,17 @@ final class CheckoutUnitTests: XCTestCase {
         )
         try await checkout.updateShippingAddress(update)
 
-        await MainActor.run {
-            let stored = checkout.session?.shippingAddressOverride
-            XCTAssertEqual(stored?.name, "John Smith")
-            XCTAssertEqual(stored?.address.country, "US")
-            XCTAssertTrue(delegate.didUpdateCalled)
-        }
+        let stored = checkout.session?.shippingAddressOverride
+        XCTAssertEqual(stored?.name, "John Smith")
+        XCTAssertEqual(stored?.address.country, "US")
+        XCTAssertTrue(delegate.didUpdateCalled)
     }
 
     // MARK: - Helpers
 
-    private static func makeOpenSessionJSON() -> [AnyHashable: Any] {
-        [
-            "session_id": "cs_test_123",
-            "client_secret": "cs_test_123_secret_abc",
-            "livemode": false,
-            "mode": "payment",
-            "status": "open",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "currency": "usd",
-        ]
-    }
-
-    @MainActor
-    private static func makeOpenSession() -> STPCheckoutSession {
-        STPCheckoutSession.decodedObject(fromAPIResponse: makeOpenSessionJSON())!
-    }
-
-    @MainActor
     private func makeCheckoutWithOpenSession() -> Checkout {
         let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
-        let session = Self.makeOpenSession()
+        let session = CheckoutTestHelpers.makeOpenSession()
         checkout.updateSession(session)
         return checkout
     }

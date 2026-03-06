@@ -98,20 +98,23 @@ public final class EmbeddedPaymentElement {
         checkoutSession: STPCheckoutSession,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        try validateRowSelectionConfiguration(configuration: configuration)
+        var config = configuration
+        checkoutSession.applyAddressOverrides(to: &config)
+
+        try validateRowSelectionConfiguration(configuration: config)
 
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
-        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: config)
 
         let loadResult = try await PaymentSheetLoader.load(
             mode: .checkoutSession(checkoutSession),
-            configuration: configuration,
+            configuration: config,
             analyticsHelper: analyticsHelper,
             integrationShape: .embedded
         )
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(
-            configuration: configuration,
+            configuration: config,
             loadResult: loadResult,
             analyticsHelper: analyticsHelper
         )
