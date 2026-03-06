@@ -2,6 +2,8 @@
 //  STPPaymentMethodWeroParams.swift
 //  StripePayments
 //
+//  Created by Nick Porter on 3/6/26.
+//
 
 import Foundation
 
