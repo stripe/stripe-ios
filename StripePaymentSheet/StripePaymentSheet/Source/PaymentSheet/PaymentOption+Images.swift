@@ -264,6 +264,8 @@ extension STPPaymentMethodType {
                 return .pm_type_promptpay
             case .satispay:
                 return .pm_type_satispay
+            case .wero:
+                return .pm_type_wero
             case .sunbit:
                 return .pm_type_sunbit
             case .swish:

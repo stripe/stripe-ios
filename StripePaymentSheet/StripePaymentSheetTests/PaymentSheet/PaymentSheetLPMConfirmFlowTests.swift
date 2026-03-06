@@ -236,6 +236,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.Satispay.settingUp) { _ in }
     }
 
+    func testWeroConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .wero,
+                               merchantCountry: .DE,
+                               expectedHierarchy: ExpectedFormHierarchy.Wero.paymentIntent) { _ in }
+    }
+
     func testCryptoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
@@ -1423,7 +1431,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         XCTAssertNil(getState(from: form))
         // Klarna has a bug where the country is still shown; rather than change this and potentially break integrations,
         // we'll preserve existing behavior until the next major version
-        if ![.klarna].contains(paymentMethodType) {
+        if ![.klarna, .wero].contains(paymentMethodType) {
             XCTAssertNil(form.getDropdownFieldElement("Country or region"))
         }
         XCTAssertNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))
