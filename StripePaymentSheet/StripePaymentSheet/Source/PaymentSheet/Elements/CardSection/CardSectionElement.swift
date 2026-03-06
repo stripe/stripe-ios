@@ -350,7 +350,6 @@ final class CardSectionElement: ContainerElement {
         let wasHidden = cbcTooltip.accessibilityElementsHidden
         cbcTooltip.accessibilityElementsHidden = !shouldShow
         UIView.animate(withDuration: 0.2) {
-            self.cbcTooltip.isHidden = !shouldShow
             self.cbcTooltip.alpha = shouldShow ? 1 : 0
         }
         if shouldShow && wasHidden {
