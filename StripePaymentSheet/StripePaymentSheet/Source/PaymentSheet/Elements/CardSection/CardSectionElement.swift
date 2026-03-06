@@ -201,7 +201,7 @@ final class CardSectionElement: ContainerElement {
 
         fetchAndUpdateCardBrands()
         fetchAndCacheCardFunding()
-        if cardBrandChoiceElement?.enableCBCRedesign == true {
+        if cardBrandChoiceElement?.enableCBCRedesign ?? false {
             updateCBCTooltipVisibility()
         }
 
