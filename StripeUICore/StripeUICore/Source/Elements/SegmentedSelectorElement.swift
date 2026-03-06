@@ -129,10 +129,12 @@ final class SegmentedSelectorView: UIView {
     private func setupView() {
         // Add segmented control styling
         applyCornerRadius(appearance: theme)
-        layer.borderWidth = theme.borderWidth
+        layer.borderWidth = theme.separatorWidth
         layer.borderColor = theme.colors.border.cgColor
         stackView.backgroundColor = theme.colors.componentBackground
-        clipsToBounds = true // Clip child backgrounds to rounded corners
+        stackView.applyCornerRadius(appearance: theme)
+        // Clip the stackView instead of self so child backgrounds are clipped to rounded corners without affecting the border rendering
+        stackView.clipsToBounds = true
 
         addSubview(stackView)
         NSLayoutConstraint.activate([
@@ -159,9 +161,16 @@ final class SegmentedSelectorView: UIView {
             // Add views for each item with separators
             for (index, item) in items.enumerated() {
                 let isDisabled = disabledItems.contains(item)
+                let position: SegmentedItemView.Position = {
+                    if items.count == 1 { return .only }
+                    if index == 0 { return .first }
+                    if index == items.count - 1 { return .last }
+                    return .middle
+                }()
                 let itemView = SegmentedItemView(
                     item: item,
                     isDisabled: isDisabled,
+                    position: position,
                     theme: theme
                 )
 
@@ -245,9 +254,21 @@ private final class SegmentedItemView: UIControl {
         return stack
     }()
 
-    init(item: SegmentedSelectorItem, isDisabled: Bool, theme: ElementsAppearance) {
+    enum Position {
+        case first, middle, last, only
+    }
+
+    private let position: Position
+    private var leadingConstraint: NSLayoutConstraint?
+
+    private static let padding: CGFloat = 6
+    private static let liquidGlassOuterPadding: CGFloat = 10
+    private static let liquidGlassSelectedLeadingPadding: CGFloat = 8
+
+    init(item: SegmentedSelectorItem, isDisabled: Bool, position: Position, theme: ElementsAppearance) {
         self.item = item
         self.isDisabled = isDisabled
+        self.position = position
         self.theme = theme
         super.init(frame: .zero)
         setupView()
@@ -273,11 +294,20 @@ private final class SegmentedItemView: UIControl {
 
         addSubview(containerStack)
 
+        // When Liquid Glass is enabled, the rounded style makes the outer segments feel crowded, so we add a little extra padding
+        let isLiquidGlass = LiquidGlassDetector.isEnabledInMerchantApp && theme.cornerRadius == nil
+        let outerPadding: CGFloat = isLiquidGlass ? Self.liquidGlassOuterPadding : Self.padding
+        let leadingPadding: CGFloat = (position == .first || position == .only) ? outerPadding : Self.padding
+        let trailingPadding: CGFloat = (position == .last || position == .only) ? outerPadding : Self.padding
+
+        let leading = containerStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leadingPadding)
+        self.leadingConstraint = leading
+
         NSLayoutConstraint.activate([
-            containerStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
-            containerStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
-            containerStack.topAnchor.constraint(equalTo: topAnchor, constant: 6),
-            containerStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
+            leading,
+            containerStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -trailingPadding),
+            containerStack.topAnchor.constraint(equalTo: topAnchor, constant: Self.padding),
+            containerStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Self.padding),
 
             checkmarkImageView.widthAnchor.constraint(equalToConstant: 12),
             checkmarkImageView.heightAnchor.constraint(equalToConstant: 12),
@@ -294,6 +324,9 @@ private final class SegmentedItemView: UIControl {
     }
 
     func select(_ selected: Bool, animated: Bool) {
+        // When Liquid Glass is enabled, we inject some extra padding to the first item, but when it's selected, the checkmark adds some visual spacing, so we can decrease it a bit
+        updateLiquidGlassLeadingPadding(isSelected: selected)
+
         if selected {
             let showSelection = {
                 self.checkmarkImageView.isHidden = false
@@ -313,6 +346,18 @@ private final class SegmentedItemView: UIControl {
             self.backgroundColor = .clear
             self.accessibilityTraits.remove(.selected)
         }
+    }
+
+    private func updateLiquidGlassLeadingPadding(isSelected: Bool) {
+        guard LiquidGlassDetector.isEnabledInMerchantApp,
+              theme.cornerRadius == nil,
+              (position == .first || position == .only) else {
+            return
+        }
+        // When selected, the checkmark provides some visual spacing so decrease the amount of padding
+        // When deselected, use the larger outer padding to avoid feeling cramped.
+        let defaultPadding: CGFloat = (position == .first || position == .only) ? Self.liquidGlassOuterPadding : Self.padding
+        leadingConstraint?.constant = isSelected ? Self.liquidGlassSelectedLeadingPadding : defaultPadding
     }
 
     func updateDisabledState(_ isDisabled: Bool) {
