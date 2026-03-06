@@ -222,7 +222,7 @@ struct CheckoutCartContentView: View {
         .sheet(isPresented: $showShippingAddressSheet) {
             AddressElement(
                 address: shippingAddressBinding,
-                configuration: makeShippingAddressConfiguration(session: session),
+                configuration: makeShippingAddressConfiguration(session: session)
             )
         }
     }
