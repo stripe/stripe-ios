@@ -85,4 +85,82 @@ class CardSectionElementTest: XCTestCase {
         // Preferred brand is disallowed, falls back to default logic which autoselects the only allowed brand
         XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .cartesBancaires)
     }
+
+    // MARK: - CBC Tooltip visibility
+
+    /// Places the card section view in a window so that `becomeFirstResponder()` works,
+    /// and begins editing the PAN field.
+    @discardableResult
+    private func beginEditingPAN(_ cardSection: CardSectionElement) -> UIWindow {
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 480))
+        window.addSubview(cardSection.view)
+        window.makeKeyAndVisible()
+        cardSection.view.layoutIfNeeded()
+        _ = cardSection.panElement.textFieldView.textField.becomeFirstResponder()
+        return window
+    }
+
+    func testTooltip_showsWhenEditingWithMultipleBrands() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let cardSection = makeCardSectionElement()
+        let window = beginEditingPAN(cardSection)
+        _ = window
+
+        cardSection.panElement.setText(cbcVisaTestCard)
+
+        XCTAssertNotNil(cardSection.cbcTooltip.superview)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
+    }
+
+    func testTooltip_hidesWhenNotEditing() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let cardSection = makeCardSectionElement()
+
+        // Set CBC card without making PAN field first responder
+        cardSection.panElement.setText(cbcVisaTestCard)
+
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
+    }
+
+    func testTooltip_hidesAfterBrandSelected() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let cardSection = makeCardSectionElement()
+        let window = beginEditingPAN(cardSection)
+        _ = window
+
+        cardSection.panElement.setText(cbcVisaTestCard)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
+
+        cardSection.cardBrandChoiceElement?.select(.visa)
+        cardSection.didUpdate(element: cardSection.panElement)
+
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
+    }
+
+    func testTooltip_reappearsAfterBrandsReset() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let cardSection = makeCardSectionElement()
+        let window = beginEditingPAN(cardSection)
+        _ = window
+
+        cardSection.panElement.setText(cbcVisaTestCard)
+        cardSection.cardBrandChoiceElement?.select(.visa)
+        cardSection.didUpdate(element: cardSection.panElement)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
+
+        // Clear PAN to reset brands and the hasBrandBeenSelected latch
+        cardSection.panElement.setText("")
+        // Re-enter CBC card — tooltip should reappear
+        cardSection.panElement.setText(cbcVisaTestCard)
+
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
+    }
 }
