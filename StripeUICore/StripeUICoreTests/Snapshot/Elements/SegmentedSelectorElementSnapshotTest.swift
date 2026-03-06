@@ -9,6 +9,7 @@ import iOSSnapshotTestCase
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 
+// iOS26
 final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
     let items: [SegmentedSelectorItem] = {
         let itemNames = ["A", "B", "C"]
@@ -87,6 +88,27 @@ final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
         verify(selectorElement)
     }
 
+    func testOneItem() {
+        let oneItem = Array(items.prefix(1))
+        let selectorElement = SegmentedSelectorElement(
+            items: oneItem,
+            disabledItems: [],
+            theme: .default
+        )
+        verify(selectorElement)
+    }
+
+    func testOneItemWithSelection() {
+        let oneItem = Array(items.prefix(1))
+        let selectorElement = SegmentedSelectorElement(
+            items: oneItem,
+            disabledItems: [],
+            theme: .default
+        )
+        selectorElement.select(oneItem[0])
+        verify(selectorElement)
+    }
+
     // MARK: - Dark mode
 
     func testNoSelection_darkMode() {
@@ -154,13 +176,21 @@ final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
 }
 
 private extension SegmentedSelectorElementSnapshotTest {
+    var liquidGlassTheme: ElementsAppearance {
+        var theme = ElementsAppearance.default
+        theme.cornerRadius = nil
+        theme.borderWidth = 0
+        return theme
+    }
+
     func makeSegmentedSelectorElement(
-        disabledItems: Set<SegmentedSelectorItem> = []
+        disabledItems: Set<SegmentedSelectorItem> = [],
+        theme: ElementsAppearance = .default
     ) -> SegmentedSelectorElement {
         return SegmentedSelectorElement(
             items: items,
             disabledItems: disabledItems,
-            theme: .default
+            theme: theme
         )
     }
 
