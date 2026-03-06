@@ -428,7 +428,7 @@ class TooltipContainerView: UIView {
         label.numberOfLines = 0
 
         backgroundColor = theme.colors.componentBackground
-        layer.cornerRadius = theme.cornerRadius ?? 10
+        applyCornerRadius(appearance: theme)
         layer.applyShadow(shadow: theme.shadow)
         layer.borderWidth = theme.separatorWidth
         layer.borderColor = theme.colors.border.cgColor

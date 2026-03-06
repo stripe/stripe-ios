@@ -287,7 +287,7 @@ private final class SegmentedItemView: UIControl {
 
         iconImageView.image = item.image
 
-        let configuration = UIImage.SymbolConfiguration(pointSize: 10, weight: .medium)
+        let configuration = UIImage.SymbolConfiguration(pointSize: 8, weight: .medium)
         checkmarkImageView.image = UIImage(systemName: "checkmark", withConfiguration: configuration)
         checkmarkImageView.tintColor = theme.colors.bodyText
 
