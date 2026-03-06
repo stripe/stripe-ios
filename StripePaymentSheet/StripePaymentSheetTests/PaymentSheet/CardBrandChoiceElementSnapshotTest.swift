@@ -83,6 +83,33 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         verify(element)
     }
 
+    // MARK: - CBC Tooltip Tests
+
+    func testCBCTooltipView() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let cardSection = makeCardSectionWithTooltip(appearance: appearance)
+        STPSnapshotVerifyView(cardSection.view)
+    }
+
+    func testCBCTooltipView_darkMode() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let cardSection = makeCardSectionWithTooltip(appearance: appearance, darkMode: true)
+        STPSnapshotVerifyView(cardSection.view)
+    }
+
+    func testCBCTooltipView_appearance() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        appearance = ._testMSPaintTheme
+        let cardSection = makeCardSectionWithTooltip(appearance: appearance)
+        STPSnapshotVerifyView(cardSection.view)
+    }
+
     // MARK: - DropdownElement (Legacy) Tests
 
     func testDropdownElement() {
@@ -119,5 +146,37 @@ private extension CardBrandChoiceElementSnapshotTest {
         view.layoutIfNeeded()
 
         STPSnapshotVerifyView(view)
+    }
+
+    /// Creates a CardSectionElement in a window with the CBC tooltip visible.
+    func makeCardSectionWithTooltip(appearance: PaymentSheet.Appearance, darkMode: Bool = false) -> CardSectionElement {
+        let cardSection = CardSectionElement(
+            cardBrandChoiceEligible: true,
+            enableCBCRedesign: true,
+            hostedSurface: .paymentSheet,
+            theme: appearance.asElementsTheme,
+            analyticsHelper: ._testValue(),
+            opensCardScannerAutomatically: false
+        )
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 480))
+        if darkMode {
+            window.overrideUserInterfaceStyle = .dark
+        }
+        cardSection.view.translatesAutoresizingMaskIntoConstraints = false
+        window.addSubview(cardSection.view)
+        NSLayoutConstraint.activate([
+            cardSection.view.topAnchor.constraint(equalTo: window.topAnchor),
+            cardSection.view.leadingAnchor.constraint(equalTo: window.leadingAnchor),
+            cardSection.view.widthAnchor.constraint(equalToConstant: 320),
+        ])
+        window.makeKeyAndVisible()
+        window.layoutIfNeeded()
+
+        _ = cardSection.panElement.textFieldView.textField.becomeFirstResponder()
+        cardSection.panElement.setText("4000002500001001")
+        window.layoutIfNeeded()
+
+        return cardSection
     }
 }
