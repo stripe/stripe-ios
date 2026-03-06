@@ -180,90 +180,10 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(delegate.didUpdateCalled)
     }
 
-    // MARK: - Address Merging Tests
-
-    func testApplyAddressOverrides_billingFillsEmptyFields() {
-        let session = Self.makeOpenSession()
-        session.billingAddressOverride = Checkout.AddressUpdate(
-            name: "Jane Doe",
-            address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
-        )
-
-        var config = PaymentSheet.Configuration()
-        session.applyAddressOverrides(to: &config)
-
-        XCTAssertEqual(config.defaultBillingDetails.name, "Jane Doe")
-        XCTAssertEqual(config.defaultBillingDetails.address.country, "US")
-        XCTAssertEqual(config.defaultBillingDetails.address.line1, "123 Main St")
-        XCTAssertEqual(config.defaultBillingDetails.address.city, "SF")
-        XCTAssertEqual(config.defaultBillingDetails.address.state, "CA")
-        XCTAssertEqual(config.defaultBillingDetails.address.postalCode, "94105")
-    }
-
-    func testApplyAddressOverrides_billingConfigTakesPrecedence() {
-        let session = Self.makeOpenSession()
-        session.billingAddressOverride = Checkout.AddressUpdate(
-            name: "Override Name",
-            address: .init(country: "GB", line1: "Override Line1")
-        )
-
-        var config = PaymentSheet.Configuration()
-        config.defaultBillingDetails.name = "Config Name"
-        config.defaultBillingDetails.address.country = "US"
-        session.applyAddressOverrides(to: &config)
-
-        XCTAssertEqual(config.defaultBillingDetails.name, "Config Name")
-        XCTAssertEqual(config.defaultBillingDetails.address.country, "US")
-        // line1 was empty in config, so override fills it
-        XCTAssertEqual(config.defaultBillingDetails.address.line1, "Override Line1")
-    }
-
-    func testApplyAddressOverrides_shippingApplied() {
-        let session = Self.makeOpenSession()
-        session.shippingAddressOverride = Checkout.AddressUpdate(
-            name: "John Smith",
-            address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
-        )
-
-        var config = PaymentSheet.Configuration()
-        XCTAssertNil(config.shippingDetails())
-        session.applyAddressOverrides(to: &config)
-
-        let details = config.shippingDetails()
-        XCTAssertNotNil(details)
-        XCTAssertEqual(details?.name, "John Smith")
-        XCTAssertEqual(details?.address.country, "US")
-        XCTAssertEqual(details?.address.line1, "456 Oak Ave")
-        XCTAssertEqual(details?.address.city, "LA")
-        XCTAssertEqual(details?.address.state, "CA")
-        XCTAssertEqual(details?.address.postalCode, "90001")
-    }
-
-    func testApplyAddressOverrides_shippingNotOverriddenWhenConfigHasShipping() {
-        let session = Self.makeOpenSession()
-        session.shippingAddressOverride = Checkout.AddressUpdate(
-            name: "Override",
-            address: .init(country: "GB")
-        )
-
-        var config = PaymentSheet.Configuration()
-        let existingDetails = AddressViewController.AddressDetails(
-            address: .init(country: "US", line1: "Existing"),
-            name: "Existing Name",
-            phone: nil
-        )
-        config.shippingDetails = { existingDetails }
-        session.applyAddressOverrides(to: &config)
-
-        let details = config.shippingDetails()
-        XCTAssertEqual(details?.name, "Existing Name")
-        XCTAssertEqual(details?.address.country, "US")
-    }
-
     // MARK: - Address Collection Decoding Tests
 
     func testRequiresBillingAddress_whenRequired() {
-        var json = Self.makeOpenSessionJSON()
+        var json = CheckoutTestHelpers.makeOpenSessionJSON()
         json["billing_address_collection"] = "required"
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
         XCTAssertTrue(session.requiresBillingAddress)
@@ -271,26 +191,26 @@ final class CheckoutUnitTests: XCTestCase {
 
     func testRequiresBillingAddress_whenAutoOrNil() {
         // "auto" should not be required
-        var jsonAuto = Self.makeOpenSessionJSON()
+        var jsonAuto = CheckoutTestHelpers.makeOpenSessionJSON()
         jsonAuto["billing_address_collection"] = "auto"
         let sessionAuto = STPCheckoutSession.decodedObject(fromAPIResponse: jsonAuto)!
         XCTAssertFalse(sessionAuto.requiresBillingAddress)
 
         // absent field should not be required
-        let jsonNil = Self.makeOpenSessionJSON()
+        let jsonNil = CheckoutTestHelpers.makeOpenSessionJSON()
         let sessionNil = STPCheckoutSession.decodedObject(fromAPIResponse: jsonNil)!
         XCTAssertFalse(sessionNil.requiresBillingAddress)
     }
 
     func testAllowedShippingCountries_whenPresent() {
-        var json = Self.makeOpenSessionJSON()
+        var json = CheckoutTestHelpers.makeOpenSessionJSON()
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "IE", "GB"]]
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
         XCTAssertEqual(session.allowedShippingCountries, ["US", "CA", "IE", "GB"])
     }
 
     func testAllowedShippingCountries_whenNil() {
-        let json = Self.makeOpenSessionJSON()
+        let json = CheckoutTestHelpers.makeOpenSessionJSON()
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
         XCTAssertNil(session.allowedShippingCountries)
     }
@@ -298,7 +218,7 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - Tax Amount Tests
 
     func testTotalTaxAmount_singleAmount() {
-        var json = Self.makeOpenSessionJSON()
+        var json = CheckoutTestHelpers.makeOpenSessionJSON()
         json["line_item_group"] = [
             "tax_amounts": [
                 [
@@ -319,7 +239,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testTotalTaxAmount_multipleAmounts() {
-        var json = Self.makeOpenSessionJSON()
+        var json = CheckoutTestHelpers.makeOpenSessionJSON()
         json["line_item_group"] = [
             "tax_amounts": [
                 [
@@ -350,7 +270,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testTotalTaxAmount_noTaxAmounts() {
-        let json = Self.makeOpenSessionJSON()
+        let json = CheckoutTestHelpers.makeOpenSessionJSON()
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
         XCTAssertEqual(session.totalTaxAmount, 0)
         XCTAssertTrue(session.taxAmounts.isEmpty)
@@ -359,14 +279,14 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - Requires Shipping Address Tests
 
     func testRequiresShippingAddress_whenCountriesPresent() {
-        var json = Self.makeOpenSessionJSON()
+        var json = CheckoutTestHelpers.makeOpenSessionJSON()
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
         XCTAssertTrue(session.requiresShippingAddress)
     }
 
     func testRequiresShippingAddress_whenNil() {
-        let json = Self.makeOpenSessionJSON()
+        let json = CheckoutTestHelpers.makeOpenSessionJSON()
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
         XCTAssertFalse(session.requiresShippingAddress)
     }
@@ -374,7 +294,7 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - Full Session Decoding with Tax Amounts
 
     func testFullSessionDecodingWithTaxAmounts() {
-        var json = Self.makeOpenSessionJSON()
+        var json = CheckoutTestHelpers.makeOpenSessionJSON()
         json["billing_address_collection"] = "required"
         json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "GB"]]
         json["line_item_group"] = [
@@ -418,26 +338,9 @@ final class CheckoutUnitTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private static func makeOpenSessionJSON() -> [AnyHashable: Any] {
-        [
-            "session_id": "cs_test_123",
-            "client_secret": "cs_test_123_secret_abc",
-            "livemode": false,
-            "mode": "payment",
-            "status": "open",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "currency": "usd",
-        ]
-    }
-
-    private static func makeOpenSession() -> STPCheckoutSession {
-        STPCheckoutSession.decodedObject(fromAPIResponse: makeOpenSessionJSON())!
-    }
-
     private func makeCheckoutWithOpenSession() -> Checkout {
         let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
-        let session = Self.makeOpenSession()
+        let session = CheckoutTestHelpers.makeOpenSession()
         checkout.updateSession(session)
         return checkout
     }
