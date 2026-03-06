@@ -347,13 +347,15 @@ final class CardSectionElement: ContainerElement {
                 cbcTooltip.topAnchor.constraint(equalTo: panElement.view.bottomAnchor, constant: -6),
             ])
         }
-        let wasHidden = cbcTooltip.accessibilityElementsHidden
-        cbcTooltip.accessibilityElementsHidden = !shouldShow
-        UIView.animate(withDuration: 0.2) {
-            self.cbcTooltip.alpha = shouldShow ? 1 : 0
-        }
-        if shouldShow && wasHidden {
-            UIAccessibility.post(notification: .layoutChanged, argument: cbcTooltip)
+        let wasHidden = cbcTooltip.alpha == 0
+        if shouldShow != wasHidden { // if the visibility should change
+            cbcTooltip.accessibilityElementsHidden = !shouldShow // update accessibility hidden state
+            UIView.animate(withDuration: 0.2) {
+                self.cbcTooltip.alpha = shouldShow ? 1 : 0
+            }
+            if shouldShow { // if the tooltip is being newly shown, announce it
+                UIAccessibility.post(notification: .layoutChanged, argument: cbcTooltip)
+            }
         }
     }
 
