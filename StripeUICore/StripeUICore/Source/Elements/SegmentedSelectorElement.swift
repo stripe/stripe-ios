@@ -190,6 +190,7 @@ final class SegmentedSelectorView: UIView {
         if let selectedItem, let itemView = itemViews[selectedItem] {
             itemView.select(true, animated: false)
         }
+        invalidateIntrinsicContentSize()
     }
 
     func select(_ item: SegmentedSelectorItem?, animated: Bool) {
@@ -200,6 +201,12 @@ final class SegmentedSelectorView: UIView {
         if let item = item, let itemView = itemViews[item] {
             itemView.select(true, animated: animated)
         }
+        invalidateIntrinsicContentSize()
+    }
+
+    override var intrinsicContentSize: CGSize {
+        let size = stackView.systemLayoutSizeFitting(.zero)
+        return CGSize(width: size.width, height: size.height)
     }
 
     @objc private func itemTapped(_ sender: UITapGestureRecognizer) {
