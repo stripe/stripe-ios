@@ -347,7 +347,7 @@ final class CardSectionElement: ContainerElement {
                 cbcTooltip.topAnchor.constraint(equalTo: panElement.view.bottomAnchor, constant: -6),
             ])
         }
-        let wasHidden = cbcTooltip.alpha == 0
+        let wasHidden = cbcTooltip.accessibilityElementsHidden
         if shouldShow != wasHidden { // if the visibility should change
             cbcTooltip.accessibilityElementsHidden = !shouldShow // update accessibility hidden state
             UIView.animate(withDuration: 0.2) {
