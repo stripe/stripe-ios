@@ -176,21 +176,12 @@ final class SegmentedSelectorElementSnapshotTest: STPSnapshotTestCase {
 }
 
 private extension SegmentedSelectorElementSnapshotTest {
-    var liquidGlassTheme: ElementsAppearance {
-        var theme = ElementsAppearance.default
-        theme.cornerRadius = nil
-        theme.borderWidth = 0
-        return theme
-    }
-
     func makeSegmentedSelectorElement(
-        disabledItems: Set<SegmentedSelectorItem> = [],
-        theme: ElementsAppearance = .default
+        disabledItems: Set<SegmentedSelectorItem> = []
     ) -> SegmentedSelectorElement {
         return SegmentedSelectorElement(
             items: items,
-            disabledItems: disabledItems,
-            theme: theme
+            disabledItems: disabledItems
         )
     }
 
