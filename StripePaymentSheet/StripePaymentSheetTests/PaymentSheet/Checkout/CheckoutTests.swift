@@ -17,7 +17,7 @@ import XCTest
 final class CheckoutTests: STPNetworkStubbingTestCase {
 
     func testLoadCheckoutSession() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -40,7 +40,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testDelegateCalledOnLoad() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -57,7 +57,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testApplyPromotionCode() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
         let checkout = Checkout(
@@ -82,7 +82,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testRemovePromotionCode() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
         let checkout = Checkout(
@@ -108,7 +108,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testApplyInvalidPromotionCode() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
         let checkout = Checkout(
@@ -130,7 +130,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testUpdateQuantity() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowAdjustableLineItemQuantity: true
         )
         let checkout = Checkout(
@@ -160,7 +160,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testSelectShippingOption() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             includeShippingOptions: true
         )
         let checkout = Checkout(
@@ -196,7 +196,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testUpdateBillingAddress() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             merchantCountry: "us_tax",
             allowAdjustableLineItemQuantity: true,
             collectBillingAddress: true,
@@ -258,7 +258,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testUpdateShippingAddress() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             merchantCountry: "us_tax",
             allowAdjustableLineItemQuantity: true,
             collectShippingAddress: true,
@@ -319,7 +319,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testUpdateTaxId() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             enableTaxIdCollection: true
         )
         let checkout = Checkout(
@@ -339,7 +339,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testDelegateCalledOnPromotionCodeApply() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
         let checkout = Checkout(
