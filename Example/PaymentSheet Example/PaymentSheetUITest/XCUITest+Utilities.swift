@@ -99,13 +99,6 @@ extension XCUIApplication {
         }
     }
 
-    func waitForButtonOrStaticText(_ identifier: String, timeout: TimeInterval = 10.0) -> XCUIElement {
-        if buttons[identifier].waitForExistence(timeout: timeout) {
-            return buttons[identifier]
-        }
-        return staticTexts[identifier]
-    }
-
     func tapCoordinate(at point: CGPoint) {
         let normalized = coordinate(withNormalizedOffset: .zero)
         let offset = CGVector(dx: point.x, dy: point.y)

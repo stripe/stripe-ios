@@ -432,6 +432,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
         case US
         case GB
+        case DE
     }
 
     enum BillingDetailsAttachDefaults: String, PickerEnum {
@@ -842,7 +843,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     var base64Data: String {
         let jsonData = try! JSONEncoder().encode(self)
-        return jsonData.base64EncodedString()
+        let compressedData = try! (jsonData as NSData).compressed(using: .lzfse) as Data
+        return compressedData.base64EncodedString()
     }
 
     var base64URL: URL {
@@ -850,12 +852,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     static func fromBase64<T: Decodable>(base64: String, className: T.Type) -> T? {
-        if let base64Data = base64.data(using: .utf8),
-           let data = Data(base64Encoded: base64Data),
-           let decodedObject = try? JSONDecoder().decode(className.self, from: data) {
-            return decodedObject
+        guard let base64Data = base64.data(using: .utf8),
+              let compressedData = Data(base64Encoded: base64Data) else {
+            return nil
         }
-        return nil
+        let data = try! (compressedData as NSData).decompressed(using: .lzfse) as Data
+        let decodedObject = try! JSONDecoder().decode(className.self, from: data)
+        return decodedObject
     }
 }
 

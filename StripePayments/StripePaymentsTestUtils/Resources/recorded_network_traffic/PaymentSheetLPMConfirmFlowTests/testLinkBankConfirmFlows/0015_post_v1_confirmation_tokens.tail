@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=zJGqmEwkGkRYW7dd5aG-imZz6XhbYIdaOw5JcFGlecsJh48YLeYjXNX9c818xWLmtfYI-AA2MR6hN4nA
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=-J7KsPJvDohsHEWo3eP42sIFz2KY5MgahAnKjMDiqErdS1eFG1sj02xloFpR1S_MM9d2odcFp71hrxXi
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,25 +12,25 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_xPPeOfw8HbNsRQ
+request-id: req_eCbSLrMMS3L72E
 Content-Length: 1277
 Vary: Origin
-Date: Tue, 17 Feb 2026 23:14:36 GMT
-original-request: req_xPPeOfw8HbNsRQ
+Date: Thu, 05 Mar 2026 00:16:45 GMT
+original-request: req_eCbSLrMMS3L72E
 stripe-version: 2020-08-27
-idempotency-key: 4badc97d-0257-473b-b919-477978ef6c97
+idempotency-key: 735b0106-f35a-430c-838a-c68b33e5c666
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[customer]=cus_TUoUvtvPJvpHPA&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=us_bank_account&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1T1xTUFY0qyl6XeWHdoJZdVP&return_url=https%3A\/\/foo\.com
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[customer]=cus_TUoUvtvPJvpHPA&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=us_bank_account&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method=pm_1T7ParFY0qyl6XeWKlOxiqYK&return_url=https%3A\/\/foo\.com
 
 {
-  "id" : "ctoken_1T1xTUFY0qyl6XeWtK7bNwL4",
+  "id" : "ctoken_1T7ParFY0qyl6XeWbO7QVNl8",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1771413276,
+  "expires_at" : 1772713005,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : null,
   "object" : "confirmation_token",
@@ -70,7 +70,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     },
     "customer_account" : null
   },
-  "created" : 1771370076,
+  "created" : 1772669805,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

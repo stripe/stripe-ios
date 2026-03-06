@@ -113,6 +113,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var payPay: STPPaymentMethodPayPayParams?
     /// If this is a TWINT PaymentMethod, this contains additional details.
     @objc public var twint: STPPaymentMethodTwintParams?
+    /// If this is a Wero PaymentMethod, this contains additional details.
+    @objc public var wero: STPPaymentMethodWeroParams?
 
     /// Radar options that may contain HCaptcha token
     @objc @_spi(STP) public var radarOptions: STPRadarOptions?
@@ -766,6 +768,24 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.metadata = metadata
     }
 
+    /// Creates params for a Wero PaymentMethod.
+    /// - Parameters:
+    ///   - wero:                An object containing additional Wero details.
+    ///   - billingDetails:      An object containing the user's billing details.
+    ///   - metadata:            Additional information to attach to the PaymentMethod.
+    @objc
+    public convenience init(
+        wero: STPPaymentMethodWeroParams,
+        billingDetails: STPPaymentMethodBillingDetails?,
+        metadata: [String: String]?
+    ) {
+        self.init()
+        self.type = .wero
+        self.wero = wero
+        self.billingDetails = billingDetails
+        self.metadata = metadata
+    }
+
     // MARK: - STPFormEncodable
     @objc
     public class func rootObjectName() -> String? {
@@ -811,6 +831,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: multibanco)): "multibanco",
             NSStringFromSelector(#selector(getter: payPay)): "paypay",
             NSStringFromSelector(#selector(getter: twint)): "twint",
+            NSStringFromSelector(#selector(getter: wero)): "wero",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
@@ -1276,6 +1297,8 @@ extension STPPaymentMethodParams {
             payPay = STPPaymentMethodPayPayParams()
         case .twint:
             twint = STPPaymentMethodTwintParams()
+        case .wero:
+            wero = STPPaymentMethodWeroParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay:
             // These payment methods don't have any params
             break
