@@ -728,12 +728,12 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         // Fetch a fresh checkout session from the test backend
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let checkoutSessionId = checkoutSessionResponse.id
-        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = apiClient
+        configuration.apiClient = customApiClient
 
         // Fetch the full STPCheckoutSession object (with allResponseFields containing elements_session)
-        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
+        let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
 
         PaymentSheetLoader.load(
             mode: .checkoutSession(checkoutSession),
@@ -768,11 +768,12 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         // Fetch a fresh checkout session in setup mode from the test backend
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionSetupMode()
         let checkoutSessionId = checkoutSessionResponse.id
+        let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        configuration.apiClient = customApiClient
 
         // Fetch the full STPCheckoutSession object (with allResponseFields containing elements_session)
-        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
+        let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
 
         PaymentSheetLoader.load(
             mode: .checkoutSession(checkoutSession),
