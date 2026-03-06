@@ -351,7 +351,7 @@ private final class SegmentedItemView: UIControl {
     private func updateLiquidGlassLeadingPadding(isSelected: Bool) {
         guard LiquidGlassDetector.isEnabledInMerchantApp,
               theme.cornerRadius == nil,
-              (position == .first || position == .only) else {
+              position == .first || position == .only else {
             return
         }
         // When selected, the checkmark provides some visual spacing so decrease the amount of padding
