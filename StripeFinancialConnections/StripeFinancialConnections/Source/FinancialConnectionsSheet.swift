@@ -361,18 +361,28 @@ final public class FinancialConnectionsSheet {
         _ navigationController: FinancialConnectionsNavigationController,
         _ presentingViewController: UIViewController
     ) {
-        let toPresent: UIViewController
-        let animated: Bool
+        let shouldUseWrapper: Bool = {
+            guard UIDevice.current.userInterfaceIdiom != .pad else {
+                return false
+            }
+            if #available(iOS 26.0, *) {
+                // iOS 26 doesn't shrink the presenting ViewController in the way that
+                // earlier versions do, so we don't need to use the wrapper for it.
+                return false
+            } else {
+                return true
+            }
+        }()
+
         if UIDevice.current.userInterfaceIdiom == .pad {
             navigationController.modalPresentationStyle = .formSheet
-            toPresent = navigationController
-            animated = true
-        } else {
+            PresentationManager.shared.present(navigationController, from: presentingViewController, animated: true)
+        } else if shouldUseWrapper {
             wrapperViewController = ModalPresentationWrapperViewController(vc: navigationController)
-            toPresent = wrapperViewController!
-            animated = false
+            PresentationManager.shared.present(wrapperViewController!, from: presentingViewController, animated: false)
+        } else {
+            PresentationManager.shared.present(navigationController, from: presentingViewController, animated: true)
         }
-        PresentationManager.shared.present(toPresent, from: presentingViewController, animated: animated)
     }
 }
 
