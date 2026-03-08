@@ -386,17 +386,15 @@ extension FinancialConnectionsSheet: HostControllerDelegate {
         didFinish result: HostControllerResult,
         linkAccountSessionId: String?
     ) {
+        wrapperViewController?.startFadeOutIfNeeded()
         viewController.dismiss(
             animated: true,
             completion: {
                 let flowResult = HostControllerOutcome(result: result, sessionId: linkAccountSessionId)
                 if let wrapperViewController = self.wrapperViewController {
-                    wrapperViewController.dismiss(
-                        animated: false,
-                        completion: {
-                            self.completion?(flowResult)
-                        }
-                    )
+                    wrapperViewController.dismiss(animated: false) {
+                        self.completion?(flowResult)
+                    }
                     self.wrapperViewController = nil
                 } else {
                     self.completion?(flowResult)
