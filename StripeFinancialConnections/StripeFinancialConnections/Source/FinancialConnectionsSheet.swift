@@ -376,13 +376,13 @@ final public class FinancialConnectionsSheet {
 
         if UIDevice.current.userInterfaceIdiom == .pad {
             navigationController.modalPresentationStyle = .formSheet
-            PresentationManager.shared.present(navigationController, from: presentingViewController, animated: true)
         } else if shouldUseWrapper {
             wrapperViewController = ModalPresentationWrapperViewController(vc: navigationController)
-            PresentationManager.shared.present(wrapperViewController!, from: presentingViewController, animated: false)
-        } else {
-            PresentationManager.shared.present(navigationController, from: presentingViewController, animated: true)
         }
+
+        let toPresent = wrapperViewController ?? navigationController
+        let animated = !shouldUseWrapper
+        PresentationManager.shared.present(toPresent, from: presentingViewController, animated: animated)
     }
 }
 

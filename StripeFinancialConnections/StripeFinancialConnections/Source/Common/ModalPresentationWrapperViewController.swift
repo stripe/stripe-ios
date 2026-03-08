@@ -9,9 +9,10 @@ import UIKit
 
 class ModalPresentationWrapperViewController: UIViewController {
 
+    private static let dimmingAlpha: CGFloat = 0.3
+    private static let dimmingAnimationDuration: TimeInterval = 0.2
+
     private weak var vc: UIViewController?
-    private let dimmingAlpha: CGFloat = 0.3
-    private let dimmingAnimationDuration: TimeInterval = 0.2
     private var didAnimateDimmingIn = false
     private var isDimmingFadingOut = false
 
@@ -42,7 +43,7 @@ class ModalPresentationWrapperViewController: UIViewController {
 
         if !didAnimateDimmingIn {
             didAnimateDimmingIn = true
-            animateDimming(to: dimmingAlpha)
+            animateDimming(to: Self.dimmingAlpha)
         }
 
         if let vc = vc, presentedViewController == nil {
@@ -71,7 +72,7 @@ class ModalPresentationWrapperViewController: UIViewController {
 
     private func animateDimming(to targetAlpha: CGFloat, completion: (() -> Void)? = nil) {
         UIView.animate(
-            withDuration: dimmingAnimationDuration,
+            withDuration: Self.dimmingAnimationDuration,
             animations: {
                 self.view.alpha = targetAlpha
             },
