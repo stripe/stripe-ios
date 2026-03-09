@@ -8,6 +8,10 @@ require 'optparse'
 require 'colorize'
 require 'octokit'
 require 'erb'
+require 'net/http'
+require 'json'
+require 'uri'
+require 'pathname'
 
 SCRIPT_DIR = __dir__
 abort 'Unable to find SCRIPT_DIR' if SCRIPT_DIR.nil? || SCRIPT_DIR.empty?
@@ -182,3 +186,39 @@ def execute_steps(steps, step_index)
 end
 
 @github_client = github_login unless @is_dry_run
+
+# React Native CI Integration
+# These functions enable triggering stripe-react-native CI builds when creating iOS releases
+
+def get_stripe_react_native_stripe_ios_version
+  podspec_url = 'https://raw.githubusercontent.com/stripe/stripe-react-native/refs/heads/master/stripe-react-native.podspec'
+
+  uri = URI(podspec_url)
+  response = Net::HTTP.get_response(uri)
+
+  unless response.is_a?(Net::HTTPSuccess)
+    rputs "Warning: Failed to fetch stripe-react-native podspec: #{response.code}".yellow
+    return nil
+  end
+
+  content = response.body
+  match = content.match(/stripe_version\s*=\s*['"]~>\s*(\d+\.\d+)\.\d+['"]/)
+
+  return nil unless match
+
+  match[1] # Returns "25.7"
+rescue => e
+  rputs "Warning: Failed to fetch stripe-react-native version: #{e.message}".yellow
+  nil
+end
+
+def should_test_react_native?(release_version)
+  rn_version_prefix = get_stripe_react_native_stripe_ios_version
+
+  return false if rn_version_prefix.nil?
+
+  # Extract major.minor from release version (e.g., "25.7" from "25.7.2")
+  release_version_prefix = release_version.match(/^(\d+\.\d+)/)[1]
+
+  rn_version_prefix == release_version_prefix
+end
