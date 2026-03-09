@@ -95,6 +95,9 @@ struct PaymentView: View {
 
     @State private var amountText: String = "0"
     @State private var shouldShowPaymentMethodSheet: Bool = false
+    @State private var shouldShowKYCRecoverySheet: Bool = false
+    @State private var currentKYCRecoveryLevel: KYCLevel = .none
+    @State private var requiredKYCRecoveryLevel: KYCLevel = .level2
     @State private var paymentTokens: [PaymentTokensResponse.PaymentToken] = []
     @State private var alert: Alert?
     @State private var selectedPaymentMethod: SelectedPaymentMethod?
@@ -349,6 +352,18 @@ struct PaymentView: View {
                 .padding()
             }
             .presentationDetents([.medium])
+        }
+        .sheet(isPresented: $shouldShowKYCRecoverySheet) {
+            KYCRecoveryFlowView(
+                coordinator: coordinator,
+                currentLevel: currentKYCRecoveryLevel,
+                requiredLevel: requiredKYCRecoveryLevel
+            ) {
+                alert = Alert(
+                    title: "Verification complete",
+                    message: "Please try the transaction again."
+                )
+            }
         }
         .onAppear {
             fetchPaymentTokens()
@@ -748,9 +763,30 @@ struct PaymentView: View {
                     onContinue(response, selectPaymentMethodButtonTitle, settlementSpeed)
                 }
             } catch {
-                await MainActor.run {
-                    isLoading.wrappedValue = false
-                    alert = Alert(title: "Failed to create onramp session", message: error.localizedDescription)
+                // Temporary error handling: compare message text until the backend
+                // provides a stable machine-readable error code for this failure case.
+                if error.localizedDescription.hasPrefix("HTTP 500") {
+                    // TODO: Replace this with parsed backend error codes when available.
+                    let requiredLevel: KYCLevel = .level2
+                    let currentLevel: KYCLevel
+                    do {
+                        let info = try await APIClient.shared.fetchCustomerInfo()
+                        currentLevel = info.kycLevel
+                    } catch {
+                        currentLevel = .none
+                    }
+
+                    await MainActor.run {
+                        isLoading.wrappedValue = false
+                        requiredKYCRecoveryLevel = requiredLevel
+                        currentKYCRecoveryLevel = currentLevel
+                        shouldShowKYCRecoverySheet = true
+                    }
+                } else {
+                    await MainActor.run {
+                        isLoading.wrappedValue = false
+                        alert = Alert(title: "Failed to create onramp session", message: error.localizedDescription)
+                    }
                 }
             }
         }

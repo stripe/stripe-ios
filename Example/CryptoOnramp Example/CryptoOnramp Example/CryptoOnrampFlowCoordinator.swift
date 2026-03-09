@@ -15,22 +15,6 @@ import StripeCryptoOnramp
 @MainActor
 final class CryptoOnrampFlowCoordinator: ObservableObject {
 
-    fileprivate enum KYCLevel {
-        case none
-        case level0
-        case level1
-        case level2
-
-        var includesLevel0: Bool {
-            switch self {
-            case .none:
-                return false
-            case .level0, .level1, .level2:
-                return true
-            }
-        }
-    }
-
     /// Represents the possible steps in the flow.
     enum Route: Hashable {
         case registration(email: String, oAuthScopes: [OAuthScopes])
@@ -194,7 +178,8 @@ extension CustomerInformationResponse {
         verifications.contains { $0.name == "id_document_verified" && $0.status == "verified" }
     }
 
-    fileprivate var kycLevel: CryptoOnrampFlowCoordinator.KYCLevel {
+    /// Temporarily exposed until we have proper KYC level errors to parse in `PaymentView`. Switch back to `fileprivate` before PR.
+    var kycLevel: KYCLevel {
         let providedFieldSet = Set(providedFields)
         let hasLevel0 = providedFieldSet.isSuperset(of: Self.level0Fields)
         guard hasLevel0 else { return .none }
