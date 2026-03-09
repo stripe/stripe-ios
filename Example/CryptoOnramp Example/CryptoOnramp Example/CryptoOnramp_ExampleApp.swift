@@ -16,12 +16,9 @@ struct CryptoOnramp_ExampleApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ZStack {
-                CryptoOnrampExampleView()
-                    .environment(\.isLoading, $isLoading)
-
-                LoadingOverlayView(isVisible: isLoading)
-            }
+            CryptoOnrampExampleView()
+                .environment(\.isLoading, $isLoading)
+                .loadingOverlay(isVisible: isLoading)
         }
     }
 }

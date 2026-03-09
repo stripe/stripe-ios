@@ -7,8 +7,17 @@
 
 import SwiftUI
 
+extension View {
+
+    /// Wraps the receiver in a ZStack and optionally displays a loading overlay above it.
+    /// - Parameter isVisible: Whether the loading view should be shown.
+    func loadingOverlay(isVisible: Bool) -> some View {
+        modifier(LoadingOverlayModifier(isVisible: isVisible))
+    }
+}
+
 /// Reusable loading overlay for blocking UI while asynchronous work is in progress.
-struct LoadingOverlayView: View {
+private struct LoadingOverlayView: View {
 
     /// Whether to display the loading overlay.
     let isVisible: Bool
@@ -19,12 +28,25 @@ struct LoadingOverlayView: View {
         if isVisible {
             Color.black.opacity(0.3)
                 .ignoresSafeArea()
+
             ProgressView("Loading…")
                 .padding()
                 .background {
                     Color(.tertiarySystemBackground)
                         .cornerRadius(8)
                 }
+        }
+    }
+}
+
+private struct LoadingOverlayModifier: ViewModifier {
+    let isVisible: Bool
+
+    func body(content: Content) -> some View {
+        ZStack {
+            content
+
+            LoadingOverlayView(isVisible: isVisible)
         }
     }
 }

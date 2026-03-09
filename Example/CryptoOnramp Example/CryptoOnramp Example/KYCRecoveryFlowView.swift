@@ -38,22 +38,19 @@ struct KYCRecoveryFlowView: View {
     // MARK: - View
 
     var body: some View {
-        ZStack {
-            NavigationStack(path: $path) {
-                rootContent
-                    .toolbar {
-                        cancelToolbarItem
+        NavigationStack(path: $path) {
+            rootContent
+                .toolbar {
+                    cancelToolbarItem
+                }
+                .navigationDestination(for: Route.self) { route in
+                    switch route {
+                    case .identity:
+                        identityVerificationView
                     }
-                    .navigationDestination(for: Route.self) { route in
-                        switch route {
-                        case .identity:
-                            identityVerificationView
-                        }
-                    }
-            }
-
-            LoadingOverlayView(isVisible: isLoading.wrappedValue)
+                }
         }
+        .loadingOverlay(isVisible: isLoading.wrappedValue)
     }
 
     @ViewBuilder
