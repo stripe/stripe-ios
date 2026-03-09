@@ -24,6 +24,7 @@ class STPAPIClientTest: XCTestCase {
     func testSetDefaultPublishableKey() {
         let clientInitializedBefore = STPAPIClient()
         StripeAPI.defaultPublishableKey = "test"
+        defer { StripeAPI.defaultPublishableKey = nil }
         let clientInitializedAfter = STPAPIClient()
         let sharedClient = STPAPIClient.shared
         XCTAssertEqual(clientInitializedBefore.publishableKey, "test")
@@ -31,6 +32,7 @@ class STPAPIClientTest: XCTestCase {
 
         // Setting the STPAPIClient instance overrides Stripe.defaultPublishableKey...
         sharedClient.publishableKey = "test2"
+        defer { sharedClient.publishableKey = nil }
         XCTAssertEqual(sharedClient.publishableKey, "test2")
 
         // ...while Stripe.defaultPublishableKey remains the same

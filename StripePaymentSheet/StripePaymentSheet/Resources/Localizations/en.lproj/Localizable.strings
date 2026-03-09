@@ -140,6 +140,9 @@
 /* Label for a button that lets you change the details of a payment method */
 "Change" = "Change";
 
+/* Tooltip prompting user to select their card brand when a co-branded card is detected */
+"Choose a card brand" = "Choose a card brand";
+
 /* TODO */
 "Choose a payment method" = "Choose a payment method";
 

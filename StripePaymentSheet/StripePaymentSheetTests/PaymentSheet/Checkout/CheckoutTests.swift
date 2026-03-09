@@ -17,7 +17,7 @@ import XCTest
 final class CheckoutTests: STPNetworkStubbingTestCase {
 
     func testLoadCheckoutSession() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -40,7 +40,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testDelegateCalledOnLoad() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -57,7 +57,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testApplyPromotionCode() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
         let checkout = Checkout(
@@ -82,7 +82,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testRemovePromotionCode() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
         let checkout = Checkout(
@@ -108,7 +108,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testApplyInvalidPromotionCode() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
         let checkout = Checkout(
@@ -130,7 +130,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testUpdateQuantity() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowAdjustableLineItemQuantity: true
         )
         let checkout = Checkout(
@@ -160,7 +160,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testSelectShippingOption() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             includeShippingOptions: true
         )
         let checkout = Checkout(
@@ -195,8 +195,131 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(3000, checkout.session?.totalSummary?.total)
     }
 
+    func testUpdateBillingAddress() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
+            merchantCountry: "us_tax",
+            allowAdjustableLineItemQuantity: true,
+            collectBillingAddress: true,
+            automaticTax: true
+        )
+        let checkout = Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
+
+        try await checkout.load()
+        XCTAssertNil(checkout.session?.billingAddressOverride)
+
+        // Verify automatic tax is enabled with billing as the address source
+        let taxContextBefore = checkout.session?.allResponseFields["tax_context"] as? [String: Any]
+        XCTAssertEqual(taxContextBefore?["automatic_tax_enabled"] as? Bool, true)
+        XCTAssertEqual(taxContextBefore?["automatic_tax_address_source"] as? String, "session.billing")
+        // Before providing an address, tax hasn't been computed yet
+        XCTAssertNil(taxContextBefore?["automatic_tax_taxability_reason"] as? String)
+        // Pre-tax price, CA sales has not yet been applied
+        XCTAssertEqual(checkout.session?.totalSummary?.subtotal, 5050)
+        XCTAssertEqual(checkout.session?.totalSummary?.total, 5050)
+
+        // Update the billing address to get tax applied
+        let billingUpdate = Checkout.AddressUpdate(
+            name: "Jane Doe",
+            address: .init(
+                country: "US",
+                line1: "123 Main St",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94105"
+            )
+        )
+        try await checkout.updateBillingAddress(billingUpdate)
+
+        // Address should be stored on the session
+        let storedBilling = checkout.session?.billingAddressOverride
+        XCTAssertNotNil(storedBilling)
+        XCTAssertEqual(storedBilling?.name, "Jane Doe")
+        XCTAssertEqual(storedBilling?.address.country, "US")
+        XCTAssertEqual(storedBilling?.address.line1, "123 Main St")
+        XCTAssertEqual(storedBilling?.address.city, "San Francisco")
+        XCTAssertEqual(storedBilling?.address.state, "CA")
+        XCTAssertEqual(storedBilling?.address.postalCode, "94105")
+
+        // Session should be refreshed (tax_region was sent to the server)
+        XCTAssertNotNil(checkout.session)
+        XCTAssertEqual(checkout.session?.status, .open)
+
+        // After providing an address, the server computes tax and updates the tax context
+        let taxContextAfter = checkout.session?.allResponseFields["tax_context"] as? [String: Any]
+        XCTAssertEqual(taxContextAfter?["automatic_tax_taxability_reason"] as? String, "standard_rated")
+        XCTAssertEqual(taxContextAfter?["automatic_tax_exempt"] as? String, "none")
+
+        // Post-tax price, CA sales tax was applied; subtotal unchanged proves the increase is purely tax
+        XCTAssertEqual(checkout.session?.totalSummary?.subtotal, 5050)
+        XCTAssertEqual(checkout.session?.totalSummary?.total, 5486)
+    }
+
+    func testUpdateShippingAddress() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
+            merchantCountry: "us_tax",
+            allowAdjustableLineItemQuantity: true,
+            collectShippingAddress: true,
+            automaticTax: true
+        )
+        let checkout = Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
+
+        try await checkout.load()
+        XCTAssertNil(checkout.session?.shippingAddressOverride)
+
+        // Verify automatic tax is enabled with shipping as the address source
+        let taxContextBefore = checkout.session?.allResponseFields["tax_context"] as? [String: Any]
+        XCTAssertEqual(taxContextBefore?["automatic_tax_enabled"] as? Bool, true)
+        XCTAssertEqual(taxContextBefore?["automatic_tax_address_source"] as? String, "session.shipping")
+        // Before providing an address, tax hasn't been computed yet
+        XCTAssertNil(taxContextBefore?["automatic_tax_taxability_reason"] as? String)
+        // Pre-tax price, CA sales tax has not yet been applied
+        XCTAssertEqual(checkout.session?.totalSummary?.subtotal, 5050)
+        XCTAssertEqual(checkout.session?.totalSummary?.total, 5050)
+
+        let shippingUpdate = Checkout.AddressUpdate(
+            name: "John Smith",
+            address: .init(
+                country: "US",
+                line1: "456 Oak Ave",
+                city: "Los Angeles",
+                state: "CA",
+                postalCode: "90001"
+            )
+        )
+        try await checkout.updateShippingAddress(shippingUpdate)
+
+        // Address should be stored on the session
+        let storedShipping = checkout.session?.shippingAddressOverride
+        XCTAssertNotNil(storedShipping)
+        XCTAssertEqual(storedShipping?.name, "John Smith")
+        XCTAssertEqual(storedShipping?.address.country, "US")
+        XCTAssertEqual(storedShipping?.address.line1, "456 Oak Ave")
+        XCTAssertEqual(storedShipping?.address.city, "Los Angeles")
+        XCTAssertEqual(storedShipping?.address.state, "CA")
+        XCTAssertEqual(storedShipping?.address.postalCode, "90001")
+
+        // Session should be refreshed (tax_region was sent to the server)
+        XCTAssertNotNil(checkout.session)
+        XCTAssertEqual(checkout.session?.status, .open)
+
+        // After providing an address, the server computes tax and updates the tax context
+        let taxContextAfter = checkout.session?.allResponseFields["tax_context"] as? [String: Any]
+        XCTAssertEqual(taxContextAfter?["automatic_tax_taxability_reason"] as? String, "standard_rated")
+        XCTAssertEqual(taxContextAfter?["automatic_tax_exempt"] as? String, "none")
+
+        // Post-tax price, CA sales tax was applied; subtotal unchanged proves the increase is purely tax
+        XCTAssertEqual(checkout.session?.totalSummary?.subtotal, 5050)
+        XCTAssertEqual(checkout.session?.totalSummary?.total, 5542)
+    }
+
     func testUpdateTaxId() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             enableTaxIdCollection: true
         )
         let checkout = Checkout(
@@ -216,7 +339,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testDelegateCalledOnPromotionCodeApply() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
         let checkout = Checkout(
@@ -225,7 +348,6 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         )
 
         let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
         checkout.delegate = delegate
 
         try await checkout.load()

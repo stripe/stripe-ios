@@ -259,6 +259,8 @@ class PaymentSheetFormFactory {
                 return makeAffirm()
             } else if paymentMethod == .klarna {
                 return makeKlarna()
+            } else if paymentMethod == .wero {
+                return makeWero()
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
@@ -764,6 +766,17 @@ extension PaymentSheetFormFactory {
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
+    }
+
+    func makeWero() -> PaymentMethodElement {
+        let country = makeCountry(countryCodes: ["DE", "BE", "FR"])
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        return FormElement(autoSectioningElements: [country, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
     }
 
     // Only show checkbox for PI+SFU & Setup Intent

@@ -236,6 +236,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.Satispay.settingUp) { _ in }
     }
 
+    func testWeroConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "EUR",
+                               paymentMethodType: .wero,
+                               merchantCountry: .DE,
+                               expectedHierarchy: ExpectedFormHierarchy.Wero.paymentIntent) { _ in }
+    }
+
     func testCryptoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
@@ -669,6 +677,11 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 apiClient: apiClient
             )
             for (description, intent) in intents {
+                // CheckoutSession doesn't support Apple Pay in setup mode
+                // TODO(gbirch) remove once checkout sessions apple pay support is added
+                if case .checkoutSession(let checkoutSession) = intent, checkoutSession.mode == .setup {
+                    continue
+                }
                 let e = expectation(description: "Confirm Apple Pay (\(description))")
                 let elementsSession = STPElementsSession._testValue(intent: intent)
                 let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -1030,7 +1043,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             }
 
             // CheckoutSession
-            let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+            let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
                 types: paymentMethodTypes,
                 currency: currency,
                 amount: amount,
@@ -1275,12 +1288,23 @@ extension PaymentSheetLPMConfirmFlowTests {
                 return try await STPTestingAPIClient.shared.fetchSetupIntent(types: paymentMethodTypes, merchantCountry: merchantCountry.rawValue, customerID: customer, confirm: true, otherParams: ["confirmation_token": confirmationToken.stripeId])
             })
 
+            // CheckoutSession
+            let checkoutSessionResponse = try await STPTestingAPIClient.shared().fetchCheckoutSessionSetupMode(
+                types: paymentMethodTypes,
+                currency: currency,
+                merchantCountry: merchantCountry.rawValue,
+                customerID: customer
+            )
+            let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+            let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id)
+
             return [
                 ("SetupIntent", .setupIntent(setupIntent)),
                 ("Deferred SetupIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
                 ("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                 ("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                ("CheckoutSession", .checkoutSession(checkoutSession)),
             ]
         }
     }
@@ -1411,8 +1435,10 @@ extension PaymentSheetLPMConfirmFlowTests {
         XCTAssertNil(form.getTextFieldElement(addressSpec.cityNameType.localizedLabel))
         XCTAssertNil(getState(from: form))
         // Klarna has a bug where the country is still shown; rather than change this and potentially break integrations,
-        // we'll preserve existing behavior until the next major version
-        if ![.klarna].contains(paymentMethodType) {
+        // we'll preserve existing behavior until the next major version.
+        // Wero's country dropdown is a required payment method field (selects which country's banking system to redirect to),
+        // not a billing detail, so it's always shown regardless of billing details collection configuration.
+        if ![.klarna, .wero].contains(paymentMethodType) {
             XCTAssertNil(form.getDropdownFieldElement("Country or region"))
         }
         XCTAssertNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))

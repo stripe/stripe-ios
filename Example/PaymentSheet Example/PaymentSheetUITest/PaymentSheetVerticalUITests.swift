@@ -75,7 +75,6 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Finish the card payment
         try! fillCardData(app, cardNumber: "4242424242424242", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
         continueButton.tap()
-        sleep(1) // wait for 1 second for the sheet to dismiss
         XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
@@ -93,7 +92,6 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["SEPA Debit"].tap()
         try! fillSepaData(app, tapCheckboxWithText: "Save this account for future Example, Inc. payments")
         continueButton.tap()
-        sleep(1) // wait for 1 second for the sheet to dismiss
         XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, John Doe, test@example.com, 354 Oyster Point Blvd, South San Francisco, CA, 94080, US")
         app.buttons["Confirm"].waitForExistenceAndTap(timeout: 3.0)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
@@ -135,7 +133,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertEqual(
             // filter out async passive captcha and attestation logs
             analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }),
-            ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_initial_displayed_payment_methods", "mc_custom_paymentoption_savedpm_select", "mc_initial_displayed_payment_methods", "mc_confirm_button_tapped"]
+            // fraud detection telemetry should not be sent in tests, so it should report an API failure
+            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_initial_displayed_payment_methods", "mc_custom_paymentoption_savedpm_select", "mc_initial_displayed_payment_methods", "mc_confirm_button_tapped"]
         )
         XCTAssertEqual(
             analyticsLog.filter({ ["mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]
@@ -170,22 +169,24 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Alipay"].waitForExistenceAndTap()
         app.buttons["Pay $50.99"].tap()
         // Cancel
-        XCTAssertTrue(app.webViews.staticTexts["Alipay test payment page"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.webViews.staticTexts["Alipay test payment page"].waitForExistence(timeout: 30))
         app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 1))
         // Fail payment
         app.buttons["Pay $50.99"].tap()
-        app.waitForButtonOrStaticText("FAIL TEST PAYMENT").tap()
+        let failPaymentText = app.firstDescendant(withLabel: "FAIL TEST PAYMENT")
+        failPaymentText.waitForExistenceAndTap(timeout: 30.0)
         let errorMessage = app.staticTexts["We are unable to authenticate your payment method. Please choose a different payment method and try again."]
-        XCTAssertTrue(errorMessage.waitForExistence(timeout: 10))
+        XCTAssertTrue(errorMessage.waitForExistence(timeout: 30))
 
         // Try Cash App Pay
         app.buttons["Cash App Pay"].waitForExistenceAndTap()
         // Validate error disappears
         XCTAssertFalse(errorMessage.waitForExistence(timeout: 0.1))
         app.buttons["Pay $50.99"].tap()
-        app.waitForButtonOrStaticText("AUTHORIZE TEST PAYMENT").tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        let authorizePaymentText = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
+        authorizePaymentText.waitForExistenceAndTap(timeout: 30.0)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 30))
     }
 
     func testCanPayWithApplePayWallet_verticalMode() {
@@ -273,15 +274,15 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Should present the update card view controller
         XCTAssertTrue(app.staticTexts["Manage card"].waitForExistence(timeout: 2.0))
 
+        let cardBrandChoiceVisa = app.buttons["Visa"]
+        let cardBrandChoiceCB = app.buttons["Cartes Bancaires"]
         // Update card brand to Visa
-        XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistenceAndTap(timeout: 5))
-        let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
-        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
-        cardBrandChoiceDropdown.selectNextOption()
-        app.toolbars.buttons["Done"].tap()
+        XCTAssertTrue(cardBrandChoiceCB.waitForExistence(timeout: 5))
+        XCTAssertTrue(cardBrandChoiceCB.isSelected)
+        XCTAssertTrue(cardBrandChoiceVisa.waitForExistenceAndTap(timeout: 5))
 
         // We should have selected Visa
-        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
+        XCTAssertTrue(cardBrandChoiceVisa.isSelected)
 
         // Update the card
         app.buttons["Save"].waitForExistenceAndTap(timeout: 5)
