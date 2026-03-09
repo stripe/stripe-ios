@@ -44,6 +44,7 @@ pipelines:
 
   releases-trigger-pipeline:
     workflows:
+      trigger-react-native-ci: {}
       lint-tests:
         abort_on_fail: true
       framework-tests-no-mocks: {}
@@ -123,6 +124,15 @@ workflows:
         stack: osx-xcode-26.1.x
     envs:
     - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_1
+  trigger-react-native-ci:
+    steps:
+    - git-clone@8.2:
+        inputs:
+        - merge_pr: "no"
+    - script@1:
+        inputs:
+        - content: ./ci_scripts/trigger_react_native_ci_for_release.rb
+        title: Trigger stripe-react-native CI
   deploy-dry-run:
     steps:
     - script@1:
