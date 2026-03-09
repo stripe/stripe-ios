@@ -84,6 +84,57 @@ final class CheckoutAddressMergingTests: XCTestCase {
         XCTAssertEqual(details?.address.country, "US")
     }
 
+    // MARK: - Email
+
+    func testApplyAddressOverrides_emailCollectionAlwaysForced() {
+        let session = CheckoutTestHelpers.makeOpenSession()
+
+        var config = PaymentSheet.Configuration()
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.email, .automatic)
+        session.applyAddressOverrides(to: &config)
+
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.email, .always)
+    }
+
+    func testApplyAddressOverrides_emailCollectionForcedEvenWhenNever() {
+        let session = CheckoutTestHelpers.makeOpenSession()
+
+        var config = PaymentSheet.Configuration()
+        config.billingDetailsCollectionConfiguration.email = .never
+        session.applyAddressOverrides(to: &config)
+
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.email, .always)
+    }
+
+    func testApplyAddressOverrides_emailPopulatedFromSession() {
+        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com")
+
+        var config = PaymentSheet.Configuration()
+        session.applyAddressOverrides(to: &config)
+
+        XCTAssertEqual(config.defaultBillingDetails.email, "session@example.com")
+    }
+
+    func testApplyAddressOverrides_configEmailTakesPrecedenceOverSession() {
+        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com")
+
+        var config = PaymentSheet.Configuration()
+        config.defaultBillingDetails.email = "config@example.com"
+        session.applyAddressOverrides(to: &config)
+
+        XCTAssertEqual(config.defaultBillingDetails.email, "config@example.com")
+    }
+
+    func testApplyAddressOverrides_noEmailStaysNil() {
+        let session = CheckoutTestHelpers.makeOpenSession()
+
+        var config = PaymentSheet.Configuration()
+        session.applyAddressOverrides(to: &config)
+
+        XCTAssertNil(config.defaultBillingDetails.email)
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.email, .always)
+    }
+
     // MARK: - EmbeddedPaymentElement.Configuration
 
     func testApplyAddressOverrides_embeddedBillingAndShipping() {
@@ -108,6 +159,35 @@ final class CheckoutAddressMergingTests: XCTestCase {
         XCTAssertNotNil(shipping)
         XCTAssertEqual(shipping?.name, "John Smith")
         XCTAssertEqual(shipping?.address.line1, "456 Oak Ave")
+    }
+
+    func testApplyAddressOverrides_embeddedEmailCollectionAlwaysForced() {
+        let session = CheckoutTestHelpers.makeOpenSession()
+
+        var config = EmbeddedPaymentElement.Configuration()
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.email, .automatic)
+        session.applyAddressOverrides(to: &config)
+
+        XCTAssertEqual(config.billingDetailsCollectionConfiguration.email, .always)
+    }
+
+    func testApplyAddressOverrides_embeddedEmailPopulatedFromSession() {
+        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com")
+
+        var config = EmbeddedPaymentElement.Configuration()
+        session.applyAddressOverrides(to: &config)
+
+        XCTAssertEqual(config.defaultBillingDetails.email, "session@example.com")
+    }
+
+    func testApplyAddressOverrides_embeddedConfigEmailTakesPrecedence() {
+        let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com")
+
+        var config = EmbeddedPaymentElement.Configuration()
+        config.defaultBillingDetails.email = "config@example.com"
+        session.applyAddressOverrides(to: &config)
+
+        XCTAssertEqual(config.defaultBillingDetails.email, "config@example.com")
     }
 
 }
