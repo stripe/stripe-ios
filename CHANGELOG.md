@@ -2,6 +2,9 @@
 ### Payments
 * [Added] Adds support for [payments orchestration](https://docs.stripe.com/payments/orchestration) (private preview) by allowing `processing` as a PaymentIntent state for cards.
 
+### Identity
+* [Improved] Improved selfie capture best-frame selection by ranking samples with face score, centering, coverage, and stability (focus/motion blur).
+
 ## 25.7.1 2026-02-25
 ### All
 * [Fixed] [#6098](https://github.com/stripe/stripe-ios/pull/6098) Fixed an issue with App Store submissions in which StripeIssuing.xcframework contained copies of other StripePayments frameworks.
