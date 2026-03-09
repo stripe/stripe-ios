@@ -341,14 +341,19 @@ final class CardSectionElement: ContainerElement {
         if cbcTooltip.superview == nil {
             cbcTooltip.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(cbcTooltip)
+            view.bringSubviewToFront(cbcTooltip)
             NSLayoutConstraint.activate([
                 cbcTooltip.trailingAnchor.constraint(equalTo: panElement.view.trailingAnchor, constant: -theme.textFieldInsets.trailing),
                 cbcTooltip.topAnchor.constraint(equalTo: panElement.view.bottomAnchor, constant: -6),
             ])
         }
-        view.bringSubviewToFront(cbcTooltip)
+        let wasHidden = cbcTooltip.accessibilityElementsHidden
+        cbcTooltip.accessibilityElementsHidden = !shouldShow
         UIView.animate(withDuration: 0.2) {
             self.cbcTooltip.alpha = shouldShow ? 1 : 0
+        }
+        if shouldShow && wasHidden {
+            UIAccessibility.post(notification: .layoutChanged, argument: cbcTooltip)
         }
     }
 
@@ -414,18 +419,25 @@ extension CardSectionElement: CardSectionWithScannerViewDelegate {
 
 // MARK: - TooltipContainerView
 
-class TooltipContainerView: UIView {
+final class TooltipContainerView: UIView {
     private let theme: ElementsAppearance
 
     init(theme: ElementsAppearance) {
         self.theme = theme
         super.init(frame: .zero)
 
+        let tooltipText = STPLocalizedString("Choose a card brand", "Tooltip prompting user to select their card brand when a co-branded card is detected")
+
         let label = UILabel()
-        label.text = STPLocalizedString("Choose a card brand", "Tooltip prompting user to select their card brand when a co-branded card is detected")
+        label.text = tooltipText
         label.font = theme.fonts.smallFootnote.regular
         label.textColor = theme.colors.textFieldText
         label.numberOfLines = 0
+
+        isAccessibilityElement = true
+        accessibilityLabel = tooltipText
+        accessibilityTraits = .staticText
+        accessibilityElementsHidden = true
 
         backgroundColor = theme.colors.componentBackground
         applyCornerRadius(appearance: theme)

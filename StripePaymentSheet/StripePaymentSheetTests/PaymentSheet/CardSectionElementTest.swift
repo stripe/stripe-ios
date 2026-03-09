@@ -105,8 +105,7 @@ class CardSectionElementTest: XCTestCase {
         defer { UIView.setAnimationsEnabled(true) }
 
         let cardSection = makeCardSectionElement()
-        let window = beginEditingPAN(cardSection)
-        _ = window
+        _ = beginEditingPAN(cardSection)
 
         cardSection.panElement.setText(cbcVisaTestCard)
 
@@ -131,8 +130,22 @@ class CardSectionElementTest: XCTestCase {
         defer { UIView.setAnimationsEnabled(true) }
 
         let cardSection = makeCardSectionElement()
-        let window = beginEditingPAN(cardSection)
-        _ = window
+        _ = beginEditingPAN(cardSection)
+
+        cardSection.panElement.setText(cbcVisaTestCard)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
+
+        _ = cardSection.expiryElement.textFieldView.textField.becomeFirstResponder()
+
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
+    }
+
+    func testTooltip_hidesAfterFocusChanged() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let cardSection = makeCardSectionElement()
+        _ = beginEditingPAN(cardSection)
 
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
@@ -148,8 +161,7 @@ class CardSectionElementTest: XCTestCase {
         defer { UIView.setAnimationsEnabled(true) }
 
         let cardSection = makeCardSectionElement()
-        let window = beginEditingPAN(cardSection)
-        _ = window
+        _ = beginEditingPAN(cardSection)
 
         cardSection.panElement.setText(cbcVisaTestCard)
         cardSection.cardBrandChoiceElement?.select(.visa)
