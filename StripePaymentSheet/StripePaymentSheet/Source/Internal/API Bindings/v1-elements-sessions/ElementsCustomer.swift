@@ -11,7 +11,6 @@ import Foundation
 /// - Seealso: https://git.corp.stripe.com/stripe-internal/pay-server/blob/master/lib/elements/api/resources/elements_customer_resource.rb
 struct ElementsCustomer: Equatable, Hashable {
 
-    let email: String?
     let paymentMethods: [STPPaymentMethod]
     let defaultPaymentMethod: String?
     let customerSession: CustomerSession
@@ -41,10 +40,7 @@ struct ElementsCustomer: Equatable, Hashable {
 
         // Optional
         let defaultPaymentMethod = response["default_payment_method"] as? String
-        let email = response["email"] as? String
-
         return ElementsCustomer(
-            email: email,
             paymentMethods: paymentMethods,
             defaultPaymentMethod: defaultPaymentMethod,
             customerSession: customerSession
