@@ -448,13 +448,14 @@ final class TooltipContainerView: UIView {
         layer.borderColor = theme.colors.border.cgColor
         alpha = 0
 
+        let isLiquidGlass = LiquidGlassDetector.isEnabledInMerchantApp && theme.cornerRadius == nil
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: topAnchor, constant: 6),
             label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: isLiquidGlass ? 10 : 6),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: isLiquidGlass ? -10 : -6),
         ])
     }
 

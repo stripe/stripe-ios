@@ -12,14 +12,16 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 import UIKit
 
+// @iOS26
 final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
-    var appearance = PaymentSheet.Appearance()
+    var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
     var theme: ElementsAppearance {
         return appearance.asElementsTheme
     }
 
     // MARK: - CardBrandChoiceElement (CBC Redesign) Tests
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func testCardBrandChoiceElement() {
         let element = CardBrandChoiceElement(
             enableCBCRedesign: true,
@@ -30,6 +32,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         verify(element)
     }
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func testCardBrandChoiceElement_withDisallowedBrands() {
         let element = CardBrandChoiceElement(
             enableCBCRedesign: true,
@@ -42,6 +45,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         verify(element)
     }
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func testCardBrandChoiceElement_CB() {
         let element = CardBrandChoiceElement(
             enableCBCRedesign: true,
@@ -55,6 +59,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         verify(element)
     }
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func testCardBrandChoiceElement_Visa() {
         let element = CardBrandChoiceElement(
             enableCBCRedesign: true,
@@ -85,6 +90,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
 
     // MARK: - CBC Tooltip Tests
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func testCBCTooltipView() {
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(true) }
@@ -93,6 +99,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         STPSnapshotVerifyView(cardSection.view)
     }
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func testCBCTooltipView_darkMode() {
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(true) }
