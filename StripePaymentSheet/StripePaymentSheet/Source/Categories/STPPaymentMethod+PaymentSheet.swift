@@ -128,8 +128,7 @@ extension STPPaymentMethod {
         }
         let updatedCountry = self.billingDetails?.address?.country != updatedParams.address?.country
         // Only compare postal code if the form actually collected it (non-nil).
-        // In countryAndPostal mode, some countries don't have a postal code field,
-        // so the updated params won't include one — treat that as unchanged.
+        // In countryAndPostal mode, some countries don't have a postal code field, so the updated params won't include one— treat that as unchanged.
         let updatedPostalCode = updatedParams.address?.postalCode != nil
             && self.billingDetails?.address?.postalCode != updatedParams.address?.postalCode
         return updatedCountry || updatedPostalCode
