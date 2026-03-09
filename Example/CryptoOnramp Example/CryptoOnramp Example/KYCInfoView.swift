@@ -129,12 +129,17 @@ struct KYCInfoView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Please provide additional information to continue.")
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                ZStack {
+                    switch mode {
+                    case .level0:
+                        Text("Please provide additional information to continue.")
+                    case .level1:
+                        Text("We need a bit more information before you can complete checkout.")
+                    }
                 }
+                .font(.subheadline)
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
                 FormField(title("First Name", required: true)) {
                     makeTextField(
