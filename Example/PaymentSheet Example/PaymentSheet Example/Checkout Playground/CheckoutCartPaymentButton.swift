@@ -91,7 +91,7 @@ struct CheckoutCartPaymentButton: View {
         }
     }
 
-    private func makePaymentSheet() -> PaymentSheet? {
+    private func makePaymentSheet() -> PaymentSheet {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "payments-example://stripe-redirect"
         configuration.billingDetailsCollectionConfiguration.email = .always
