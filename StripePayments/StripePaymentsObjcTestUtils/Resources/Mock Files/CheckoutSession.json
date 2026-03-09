@@ -4,6 +4,7 @@
   "total_summary": {
     "due": 2500,
     "subtotal": 2000,
+    "tax": 500,
     "total": 2500
   },
   "line_item_group": {

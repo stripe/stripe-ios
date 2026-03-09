@@ -8,7 +8,7 @@
 
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 import StripePaymentsObjcTestUtils
 import XCTest
 
@@ -50,9 +50,9 @@ class STPCheckoutSessionTest: XCTestCase {
 
         XCTAssertEqual(session.stripeId, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
-        XCTAssertEqual(session.totalSummary?.total, 2500)
-        XCTAssertEqual(session.totalSummary?.subtotal, 2000)
-        XCTAssertEqual(session.totalSummary?.due, 2500)
+        XCTAssertEqual(session.totals?.total, 2500)
+        XCTAssertEqual(session.totals?.subtotal, 2000)
+        XCTAssertEqual(session.totals?.due, 2500)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertEqual(session.mode, .payment)
         XCTAssertEqual(session.status, .open)  // status is nullable but present in JSON
@@ -94,12 +94,12 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.lineItems[0].id, "li_1abc")
         XCTAssertEqual(session.lineItems[0].name, "Widget")
         XCTAssertEqual(session.lineItems[0].quantity, 2)
-        XCTAssertEqual(session.lineItems[0].amount, 750)
+        XCTAssertEqual(session.lineItems[0].unitAmount, 750)
         XCTAssertEqual(session.lineItems[0].currency, "usd")
         XCTAssertEqual(session.lineItems[1].id, "li_2def")
         XCTAssertEqual(session.lineItems[1].name, "Gadget")
         XCTAssertEqual(session.lineItems[1].quantity, 1)
-        XCTAssertEqual(session.lineItems[1].amount, 500)
+        XCTAssertEqual(session.lineItems[1].unitAmount, 500)
         XCTAssertEqual(session.lineItems[1].currency, "usd")
 
         // Shipping options
@@ -113,9 +113,13 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.shippingOptions[1].amount, 1500)
         XCTAssertEqual(session.shippingOptions[1].currency, "usd")
 
+        // Totals — discount and tax
+        XCTAssertEqual(session.totals?.discount, 0)
+        XCTAssertEqual(session.totals?.tax, 500)
+
         // Selected shipping option
         XCTAssertEqual(session.selectedShippingOptionId, "shr_standard")
-        XCTAssertEqual(session.totalShippingAmount, 500)
+        XCTAssertEqual(session.totals?.shipping, 500)
 
         XCTAssertEqual(
             session.allResponseFields as NSDictionary,
@@ -146,7 +150,7 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session?.paymentMethodTypes, [.card])
 
         // Optional fields should be nil
-        XCTAssertNil(session?.totalSummary)
+        XCTAssertNil(session?.totals)
         XCTAssertNil(session?.currency)
         XCTAssertNil(session?.clientSecret)
         XCTAssertNil(session?.paymentIntentId)
@@ -181,30 +185,56 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertNil(session?.paymentIntentId)
     }
 
+    func testDecodedObjectWithTaxInTotalSummary() {
+        let json: [String: Any] = [
+            "session_id": "cs_test_tax",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "currency": "usd",
+            "total_summary": [
+                "due": 5486,
+                "subtotal": 5050,
+                "total": 5486,
+                "tax": 436,
+            ],
+        ]
+
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+        XCTAssertNotNil(session)
+        XCTAssertEqual(session?.totals?.subtotal, 5050)
+        XCTAssertEqual(session?.totals?.total, 5486)
+        XCTAssertEqual(session?.totals?.tax, 436)
+        XCTAssertEqual(session?.totals?.discount, 0)
+        XCTAssertEqual(session?.totals?.shipping, 0)
+    }
+
     // MARK: - Enum Tests
 
     func testStatusEnumParsing() {
-        XCTAssertEqual(STPCheckoutSessionStatus.status(from: "open"), .open)
-        XCTAssertEqual(STPCheckoutSessionStatus.status(from: "complete"), .complete)
-        XCTAssertEqual(STPCheckoutSessionStatus.status(from: "expired"), .expired)
-        XCTAssertEqual(STPCheckoutSessionStatus.status(from: "OPEN"), .open)
-        XCTAssertEqual(STPCheckoutSessionStatus.status(from: "unknown_value"), .unknown)
+        XCTAssertEqual(Checkout.Status.status(from: "open"), .open)
+        XCTAssertEqual(Checkout.Status.status(from: "complete"), .complete)
+        XCTAssertEqual(Checkout.Status.status(from: "expired"), .expired)
+        XCTAssertEqual(Checkout.Status.status(from: "OPEN"), .open)
+        XCTAssertEqual(Checkout.Status.status(from: "unknown_value"), .unknown)
     }
 
     func testModeEnumParsing() {
-        XCTAssertEqual(STPCheckoutSessionMode.mode(from: "payment"), .payment)
-        XCTAssertEqual(STPCheckoutSessionMode.mode(from: "setup"), .setup)
-        XCTAssertEqual(STPCheckoutSessionMode.mode(from: "subscription"), .subscription)
-        XCTAssertEqual(STPCheckoutSessionMode.mode(from: "PAYMENT"), .payment)
-        XCTAssertEqual(STPCheckoutSessionMode.mode(from: "unknown_value"), .unknown)
+        XCTAssertEqual(Checkout.Mode.mode(from: "payment"), .payment)
+        XCTAssertEqual(Checkout.Mode.mode(from: "setup"), .setup)
+        XCTAssertEqual(Checkout.Mode.mode(from: "subscription"), .subscription)
+        XCTAssertEqual(Checkout.Mode.mode(from: "PAYMENT"), .payment)
+        XCTAssertEqual(Checkout.Mode.mode(from: "unknown_value"), .unknown)
     }
 
     func testPaymentStatusEnumParsing() {
-        XCTAssertEqual(STPCheckoutSessionPaymentStatus.paymentStatus(from: "paid"), .paid)
-        XCTAssertEqual(STPCheckoutSessionPaymentStatus.paymentStatus(from: "unpaid"), .unpaid)
-        XCTAssertEqual(STPCheckoutSessionPaymentStatus.paymentStatus(from: "no_payment_required"), .noPaymentRequired)
-        XCTAssertEqual(STPCheckoutSessionPaymentStatus.paymentStatus(from: "PAID"), .paid)
-        XCTAssertEqual(STPCheckoutSessionPaymentStatus.paymentStatus(from: "unknown_value"), .unknown)
+        XCTAssertEqual(Checkout.PaymentStatus.paymentStatus(from: "paid"), .paid)
+        XCTAssertEqual(Checkout.PaymentStatus.paymentStatus(from: "unpaid"), .unpaid)
+        XCTAssertEqual(Checkout.PaymentStatus.paymentStatus(from: "no_payment_required"), .noPaymentRequired)
+        XCTAssertEqual(Checkout.PaymentStatus.paymentStatus(from: "PAID"), .paid)
+        XCTAssertEqual(Checkout.PaymentStatus.paymentStatus(from: "unknown_value"), .unknown)
     }
 
 }
