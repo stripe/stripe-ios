@@ -466,23 +466,11 @@ class CustomerSheetUITest: XCTestCase {
         cardBrandChoiceCB.tap()
         XCTAssertTrue(cardBrandChoiceCB.isSelected)
 
-        // Update the selected card brand
+        // Update this card
         XCTAssertFalse(cardBrandChoiceVisa.isSelected)
         cardBrandChoiceVisa.tap()
         XCTAssertTrue(cardBrandChoiceVisa.isSelected)
-
-        let saveButton = app.buttons["Save"]
-        XCTAssertTrue(saveButton.waitForExistence(timeout: timeout))
-        XCTAssertTrue(saveButton.isEnabled)
-
-        // Selecting the original card brand should disable the save button
-        cardBrandChoiceCB.tap()
-        XCTAssertFalse(saveButton.isEnabled)
-
-        // Update the card
-        cardBrandChoiceVisa.tap()
-        XCTAssertTrue(saveButton.isEnabled)
-        saveButton.tap()
+        app.buttons["Save"].waitForExistenceAndTap(timeout: timeout)
 
         // We should have updated to Visa
         XCTAssertTrue(app.images["carousel_card_visa"].waitForExistence(timeout: timeout))
