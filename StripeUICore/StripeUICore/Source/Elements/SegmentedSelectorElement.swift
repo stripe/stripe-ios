@@ -205,8 +205,7 @@ final class SegmentedSelectorView: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        let size = stackView.systemLayoutSizeFitting(.zero)
-        return CGSize(width: size.width, height: size.height)
+        return stackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
 
     @objc private func itemTapped(_ sender: UITapGestureRecognizer) {
