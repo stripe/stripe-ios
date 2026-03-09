@@ -437,9 +437,7 @@ final class PlaygroundViewModel: ObservableObject {
                                 )
                             }
                         case .canceled:
-                            UIAlertController.showAlert(
-                                title: "Cancelled"
-                            )
+                            break
                         case .failed(let error):
                             UIAlertController.showAlert(
                                 title: "Failed",
