@@ -5,6 +5,8 @@
 //  Created by Yuki Tokuhiro on 6/24/23.
 //
 
+import OHHTTPStubs
+import OHHTTPStubsSwift
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
@@ -20,6 +22,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     override func setUp() {
         super.setUp()
         self.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        LinkAccountContext.shared.account = nil
     }
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()
@@ -34,7 +37,6 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         super.tearDown()
     }
 
-    @MainActor
     func testPaymentSheetLoadWithPaymentIntent() async throws {
         let expectation = XCTestExpectation(description: "Load w/ PaymentIntent")
         let types = ["ideal", "card", "bancontact"]
@@ -607,6 +609,89 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             }
         }
         await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
+    func testLoaderLooksUpLink_EphemeralKey() async throws {
+        var configuration = self.configuration
+        // A hardcoded test Customer w/ email and attached card, us bank account
+        let testCustomerID = "cus_TqanA973bOrpoP"
+
+        // Create a new EK for the Customer
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
+        configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+        // This should disable us bank account, a delayed payment method
+        configuration.allowsDelayedPaymentMethods = false
+
+        // Loading w/ ^ customer...
+        let loadResult = try await PaymentSheetLoader.load(
+            mode: .deferredIntent(._testValue()),
+            configuration: configuration,
+            analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
+            integrationShape: .flowController
+        )
+        // ...should have 1 saved pm (us bank is filtered out)
+        XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
+        // ...and looks up link
+        XCTAssertNotNil(LinkAccountContext.shared.account)
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "yuki@stripe.com")
+    }
+
+    func test_loader_doesnt_fetch_Customer_when_default_billing_email() async throws {
+        var configuration = self.configuration
+        // A hardcoded test Customer w/ yuki@stripe.com email and attached card, us bank account
+        let testCustomerID = "cus_TqanA973bOrpoP"
+
+        // Create a new EK for the Customer
+        let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: testCustomerID, merchantCountry: "us")
+        configuration.customer = .init(id: testCustomerID, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
+        configuration.defaultBillingDetails.email = "davidestes@stripe.com"
+
+        // Stub the customer endpoint to fail if called
+        let stubDescriptor = stub(condition: isPath("/v1/customers/\(testCustomerID)")) { _ in
+            XCTFail("Customer endpoint should not be called when default billing email is provided")
+            return HTTPStubsResponse(data: Data(), statusCode: 500, headers: nil)
+        }
+        defer {
+            HTTPStubs.removeStub(stubDescriptor)
+        }
+
+        // Loading w/ ^ customer...
+        _ = try await PaymentSheetLoader.load(
+            mode: .deferredIntent(._testValue()),
+            configuration: configuration,
+            analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
+            integrationShape: .flowController
+        )
+        // ...and looks up link, preferring the default email provided
+        XCTAssertNotNil(LinkAccountContext.shared.account)
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, configuration.defaultBillingDetails.email)
+    }
+
+    func testLoaderLooksUpLink_CustomerSession() async throws {
+        var configuration = self.configuration
+        // A hardcoded test Customer w/ email and attached card, us bank account
+        let testCustomerID = "cus_TqanA973bOrpoP"
+
+        // Create a new CS for the Customer
+        let customerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(customerID: testCustomerID, merchantCountry: "us")
+        configuration.customer = .init(id: testCustomerID, customerSessionClientSecret: customerSession.customerSessionClientSecret)
+        // This should disable us bank account, a delayed payment method
+        configuration.allowsDelayedPaymentMethods = false
+
+        // Loading w/ ^ customer...
+        let loadResult = try await PaymentSheetLoader.load(
+            mode: .deferredIntent(._testValue()),
+            configuration: configuration,
+            analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
+            integrationShape: .flowController
+        )
+        // ...should have 1 saved pm (us bank is filtered out)
+        XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
+        // ...and the email
+        XCTAssertEqual(loadResult.elementsSession.customer?.email, "yuki@stripe.com")
+        // ...and looks up link
+        XCTAssertNotNil(LinkAccountContext.shared.account)
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "yuki@stripe.com")
     }
 
     func testLoadPerformance() {

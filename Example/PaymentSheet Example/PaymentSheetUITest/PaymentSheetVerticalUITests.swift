@@ -75,6 +75,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Finish the card payment
         try! fillCardData(app, cardNumber: "4242424242424242", tapCheckboxWithText: "Save payment details to Example, Inc. for future purchases")
         continueButton.tap()
+        sleep(1) // wait for 1 second for the sheet to dismiss
         XCTAssertEqual(paymentMethodButton.label, "•••• 4242, card, 12345, US")
         app.buttons["Confirm"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
@@ -92,6 +93,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["SEPA Debit"].tap()
         try! fillSepaData(app, tapCheckboxWithText: "Save this account for future Example, Inc. payments")
         continueButton.tap()
+        sleep(1) // wait for 1 second for the sheet to dismiss
         XCTAssertEqual(paymentMethodButton.label, "SEPA Debit, sepa_debit, John Doe, test@example.com, 354 Oyster Point Blvd, South San Francisco, CA, 94080, US")
         app.buttons["Confirm"].waitForExistenceAndTap(timeout: 3.0)
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
@@ -133,8 +135,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertEqual(
             // filter out async passive captcha and attestation logs
             analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }),
-            // fraud detection telemetry should not be sent in tests, so it should report an API failure
-            ["mc_load_started", "link.account_lookup.complete", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_initial_displayed_payment_methods", "mc_custom_paymentoption_savedpm_select", "mc_initial_displayed_payment_methods", "mc_confirm_button_tapped"]
+            ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_newpm_show", "mc_initial_displayed_payment_methods", "mc_custom_paymentoption_savedpm_select", "mc_initial_displayed_payment_methods", "mc_confirm_button_tapped"]
         )
         XCTAssertEqual(
             analyticsLog.filter({ ["mc_custom_paymentoption_savedpm_select", "mc_confirm_button_tapped"]
