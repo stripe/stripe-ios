@@ -364,6 +364,7 @@ struct PaymentView: View {
                     message: "Please try the transaction again."
                 )
             }
+            .environment(\.isLoading, isLoading)
         }
         .onAppear {
             fetchPaymentTokens()

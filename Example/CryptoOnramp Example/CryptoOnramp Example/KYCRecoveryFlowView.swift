@@ -31,23 +31,28 @@ struct KYCRecoveryFlowView: View {
     /// Closure called after the recovery flow succeeds.
     let onSuccess: () -> Void
 
+    @Environment(\.isLoading) private var isLoading
     @Environment(\.dismiss) private var dismiss
     @State private var path: [Route] = []
 
     // MARK: - View
 
     var body: some View {
-        NavigationStack(path: $path) {
-            rootContent
-            .toolbar {
-                cancelToolbarItem
+        ZStack {
+            NavigationStack(path: $path) {
+                rootContent
+                    .toolbar {
+                        cancelToolbarItem
+                    }
+                    .navigationDestination(for: Route.self) { route in
+                        switch route {
+                        case .identity:
+                            identityVerificationView
+                        }
+                    }
             }
-            .navigationDestination(for: Route.self) { route in
-                switch route {
-                case .identity:
-                    identityVerificationView
-                }
-            }
+
+            LoadingOverlayView(isVisible: isLoading.wrappedValue)
         }
     }
 
