@@ -109,9 +109,7 @@ public class PaymentSheet {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     @_spi(CheckoutSessionsPreview) public convenience init(checkoutSession: Checkout.Session, configuration: Configuration) {
         guard let stpSession = checkoutSession as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
-            self.init(mode: .deferredIntent(.init(mode: .payment(amount: 0, currency: "usd"), confirmHandler: { _, _, _ in })), configuration: configuration)
-            return
+            fatalError("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
         }
         var config = configuration
         stpSession.applyAddressOverrides(to: &config)

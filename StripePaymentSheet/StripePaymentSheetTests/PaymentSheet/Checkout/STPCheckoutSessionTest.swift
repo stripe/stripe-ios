@@ -50,9 +50,9 @@ class STPCheckoutSessionTest: XCTestCase {
 
         XCTAssertEqual(session.stripeId, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
-        XCTAssertEqual(session.totals?.total, 2500)
+        XCTAssertEqual(session.totals?.total, 2686)
         XCTAssertEqual(session.totals?.subtotal, 2000)
-        XCTAssertEqual(session.totals?.due, 2500)
+        XCTAssertEqual(session.totals?.due, 2686)
         XCTAssertEqual(session.currency, "usd")
         XCTAssertEqual(session.mode, .payment)
         XCTAssertEqual(session.status, .open)  // status is nullable but present in JSON
@@ -115,7 +115,23 @@ class STPCheckoutSessionTest: XCTestCase {
 
         // Totals — discount and tax
         XCTAssertEqual(session.totals?.discount, 0)
-        XCTAssertEqual(session.totals?.tax, 500)
+        XCTAssertEqual(session.totals?.tax, 186)
+
+        // Tax amounts
+        XCTAssertEqual(session.taxAmounts.count, 1)
+        XCTAssertEqual(session.taxAmounts[0].amount, 186)
+        XCTAssertFalse(session.taxAmounts[0].inclusive)
+        XCTAssertEqual(session.taxAmounts[0].taxableAmount, 2500)
+        XCTAssertEqual(session.taxAmounts[0].taxRate?.percentage, 7.45)
+        XCTAssertEqual(session.taxAmounts[0].taxRate?.displayName, "Sales Tax")
+
+        // Automatic tax
+        XCTAssertTrue(session.automaticTaxEnabled)
+        XCTAssertEqual(session.automaticTaxAddressSource, "billing")
+
+        // Shipping address collection
+        XCTAssertEqual(session.allowedShippingCountries, ["US", "CA"])
+        XCTAssertTrue(session.requiresShippingAddress)
 
         // Selected shipping option
         XCTAssertEqual(session.selectedShippingOptionId, "shr_standard")
@@ -185,30 +201,33 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertNil(session?.paymentIntentId)
     }
 
-    func testDecodedObjectWithTaxInTotalSummary() {
+    func testTotalsWithTaxFromTaxAmounts() {
         let json: [String: Any] = [
             "session_id": "cs_test_tax",
-            "object": "checkout.session",
             "livemode": false,
             "mode": "payment",
             "payment_status": "unpaid",
             "payment_method_types": ["card"],
-            "currency": "usd",
-            "total_summary": [
-                "due": 5486,
-                "subtotal": 5050,
-                "total": 5486,
-                "tax": 436,
+            "total_summary": ["due": 2186, "subtotal": 2000, "total": 2186],
+            "line_item_group": [
+                "tax_amounts": [
+                    ["amount": 186, "inclusive": false, "taxable_amount": 2000,
+                     "tax_rate": ["percentage": 7.45, "display_name": "Sales Tax"],],
+                ],
             ],
         ]
-
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
         XCTAssertNotNil(session)
-        XCTAssertEqual(session?.totals?.subtotal, 5050)
-        XCTAssertEqual(session?.totals?.total, 5486)
-        XCTAssertEqual(session?.totals?.tax, 436)
+        XCTAssertEqual(session?.totals?.tax, 186)
+        XCTAssertEqual(session?.totals?.subtotal, 2000)
+        XCTAssertEqual(session?.totals?.total, 2186)
+        XCTAssertEqual(session?.totals?.due, 2186)
         XCTAssertEqual(session?.totals?.discount, 0)
         XCTAssertEqual(session?.totals?.shipping, 0)
+        XCTAssertEqual(session?.taxAmounts.count, 1)
+        XCTAssertEqual(session?.taxAmounts[0].amount, 186)
+        XCTAssertFalse(session?.taxAmounts[0].inclusive ?? true)
+        XCTAssertEqual(session?.taxAmounts[0].taxRate?.displayName, "Sales Tax")
     }
 
     // MARK: - Enum Tests

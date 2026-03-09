@@ -278,7 +278,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
                 due: due,
                 discount: discounts.reduce(0) { $0 + $1.amount },
                 shipping: Self.parseSelectedShippingAmount(from: dict),
-                tax: summary["tax"] as? Int ?? 0
+                tax: taxAmounts.reduce(0) { $0 + $1.amount }
             )
         }()
 
