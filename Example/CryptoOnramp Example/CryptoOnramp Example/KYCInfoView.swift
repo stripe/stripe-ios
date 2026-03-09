@@ -16,25 +16,6 @@ import StripePaymentSheet
 /// A view used to collect KYC (Know Your Customer) data and exercise the `CryptoOnrampCoordinator's` `attachKYCInfo(info:)` functionality.
 struct KYCInfoView: View {
 
-    /// Defines which KYC collection level the form is enforcing.
-    enum Mode {
-
-        /// Initial collection where SSN and date of birth may be omitted.
-        case level0
-
-        /// Follow-up collection where SSN and date of birth are required.
-        case level1
-
-        fileprivate var requiresDateOfBirthAndIdNumber: Bool {
-            switch self {
-            case .level0:
-                return false
-            case .level1:
-                return true
-            }
-        }
-    }
-
     /// The coordinator to use to submit KYC information.
     let coordinator: CryptoOnrampCoordinator
 
@@ -42,7 +23,7 @@ struct KYCInfoView: View {
     let onCompleted: (() -> Void)
 
     /// Controls which fields are required for collection.
-    let mode: Mode
+    let requiredLevel: KYCLevel
 
     @State private var firstName: String = ""
     @State private var lastName: String = ""
@@ -68,13 +49,13 @@ struct KYCInfoView: View {
 
     init(
         coordinator: CryptoOnrampCoordinator,
-        mode: Mode = .level0,
+        requiredLevel: KYCLevel = .level0,
         onCompleted: @escaping () -> Void
     ) {
         self.coordinator = coordinator
         self.onCompleted = onCompleted
-        self.mode = mode
-        _dateOfBirth = State(initialValue: mode.requiresDateOfBirthAndIdNumber ? Self.today : nil)
+        self.requiredLevel = requiredLevel
+        _dateOfBirth = State(initialValue: requiredLevel.requiresDateOfBirthAndIdNumber ? Self.today : nil)
     }
 
     private var isSubmitButtonDisabled: Bool {
@@ -89,7 +70,7 @@ struct KYCInfoView: View {
             return true
         }
 
-        if mode.requiresDateOfBirthAndIdNumber && (idNumber.isEmpty || dateOfBirth == nil) {
+        if requiredLevel.requiresDateOfBirthAndIdNumber && (idNumber.isEmpty || dateOfBirth == nil) {
             return true
         }
 
@@ -130,10 +111,10 @@ struct KYCInfoView: View {
         ScrollView {
             VStack(spacing: 20) {
                 ZStack {
-                    switch mode {
-                    case .level0:
+                    switch requiredLevel {
+                    case .none, .level0:
                         Text("Please provide additional information to continue.")
-                    case .level1:
+                    case .level1, .level2:
                         Text("We need a bit more information before you can complete checkout.")
                     }
                 }
@@ -159,7 +140,7 @@ struct KYCInfoView: View {
                     )
                 }
 
-                FormField(title("Social Security Number", required: mode.requiresDateOfBirthAndIdNumber)) {
+                FormField(title("Social Security Number", required: requiredLevel.requiresDateOfBirthAndIdNumber)) {
                     makeTextField(
                         "Enter your SSN",
                         text: $idNumber,
@@ -168,9 +149,9 @@ struct KYCInfoView: View {
                     )
                 }
 
-                FormField(title("Date of Birth", required: mode.requiresDateOfBirthAndIdNumber)) {
+                FormField(title("Date of Birth", required: requiredLevel.requiresDateOfBirthAndIdNumber)) {
                     VStack(alignment: .leading, spacing: 12) {
-                        if mode.requiresDateOfBirthAndIdNumber {
+                        if requiredLevel.requiresDateOfBirthAndIdNumber {
                             DatePicker("", selection: dateOfBirthBinding, in: ...Self.today, displayedComponents: .date)
                                 .datePickerStyle(WheelDatePickerStyle())
                                 .labelsHidden()
@@ -328,6 +309,12 @@ struct KYCInfoView: View {
 
 #Preview("Level 1") {
     PreviewWrapperView { coordinator in
-        KYCInfoView(coordinator: coordinator, mode: .level1) {}
+        KYCInfoView(coordinator: coordinator, requiredLevel: .level1) {}
+    }
+}
+
+#Preview("Level 2") {
+    PreviewWrapperView { coordinator in
+        KYCInfoView(coordinator: coordinator, requiredLevel: .level2) {}
     }
 }
