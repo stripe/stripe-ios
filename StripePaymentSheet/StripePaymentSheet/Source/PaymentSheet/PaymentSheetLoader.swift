@@ -443,7 +443,7 @@ final class PaymentSheetLoader {
         } else if let customerID = configuration.customer?.id,
             case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider {
             // C. Retrieve SPMs manually for Ephemeral Key.
-            savedPaymentMethods = try await fetchSavedPaymentMethods(ephemeralKey: ephemeralKey, customerID: customerID, configuration: configuration, elementsSession: elementsSession)
+            savedPaymentMethods = try await fetchSavedPaymentMethods(ephemeralKey: ephemeralKey, customerID: customerID, configuration: configuration, paymentMethodTypes: elementsSession.orderedPaymentMethodTypes)
         } else {
             return []
         }
@@ -483,18 +483,16 @@ final class PaymentSheetLoader {
         ephemeralKey: String,
         customerID: String,
         configuration: PaymentElementConfiguration,
-        elementsSession: STPElementsSession
+        paymentMethodTypes: [STPPaymentMethodType]
     ) async throws -> [STPPaymentMethod] {
-        let orderdPaymentMethodTypes = elementsSession.orderedPaymentMethodTypes
-
-        // We don't support Link payment methods with customer ephemeral keys
-        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link && orderdPaymentMethodTypes.contains($0) }
         var paymentMethods = try await configuration.apiClient.listPaymentMethods(
             customerID: customerID,
             ephemeralKeySecret: ephemeralKey
         )
 
         // Remove unsupported types
+        // We don't support Link payment methods with customer ephemeral keys
+        let types = PaymentSheet.supportedSavedPaymentMethods.filter { $0 != .link && paymentMethodTypes.contains($0) }
         paymentMethods = paymentMethods.filter { types.contains($0.type) }
 
         // Dedupe Link PMs
