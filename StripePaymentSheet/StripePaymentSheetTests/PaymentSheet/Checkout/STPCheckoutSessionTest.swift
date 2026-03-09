@@ -212,7 +212,7 @@ class STPCheckoutSessionTest: XCTestCase {
             "line_item_group": [
                 "tax_amounts": [
                     ["amount": 186, "inclusive": false, "taxable_amount": 2000,
-                     "tax_rate": ["percentage": 7.45, "display_name": "Sales Tax"],],
+                     "tax_rate": ["percentage": 7.45, "display_name": "Sales Tax"], ],
                 ],
             ],
         ]
