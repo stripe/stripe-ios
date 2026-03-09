@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(CheckoutSessionPreview) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -244,6 +244,7 @@ class PlaygroundController: ObservableObject {
             configuration.paymentMethodLayout = .automatic
         }
 
+        configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
         switch settings.cardBrandAcceptance {
         case .all:
             configuration.cardBrandAcceptance = .all
@@ -366,6 +367,7 @@ class PlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
         configuration.billingDetailsCollectionConfiguration.allowedCountries = settings.allowedCountries.countries
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
+        configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
         configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
 
         switch settings.cardBrandAcceptance {
@@ -1048,15 +1050,17 @@ extension PlaygroundController {
 
     /// Builds the common request body parameters used for both loading backend and creating intents
     private func buildRequestBody(shouldCreateCustomerKey: Bool = true) -> [String: Any] {
-        // TODO(porter) Expand to PI+SFU and SI later, we only support payment mode with CheckoutSession for now
-        let mode = settings.integrationType == .checkoutSession ? "payment" : settings.mode.rawValue
+        // TODO(porter) Expand to PI+SFU and later, we only support payment and setup mode with CheckoutSession for now
+        if case .checkoutSession = settings.integrationType, case .paymentWithSetup = settings.mode {
+            assertionFailure("payment with setup mode is not currently supported with CheckoutSession integration type")
+        }
 
         var body = [
             "customer": customerIdOrType,
             "currency": settings.currency.rawValue,
             "amount": settings.amount.rawValue,
             "merchant_country_code": settings.merchantCountryCode.rawValue,
-            "mode": mode,
+            "mode": settings.mode.rawValue,
             "automatic_payment_methods": settings.apmsEnabled == .on,
             "use_link": settings.linkPassthroughMode == .pm,
             "link_mode": settings.linkEnabledMode.rawValue,

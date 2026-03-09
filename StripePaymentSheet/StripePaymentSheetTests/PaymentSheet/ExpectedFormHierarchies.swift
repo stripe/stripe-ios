@@ -168,6 +168,18 @@ enum ExpectedFormHierarchy {
         }
     }
 
+    // MARK: - Wero
+
+    enum Wero {
+        static var paymentIntent: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SectionElement", children: [
+                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "3", "label": "Country or region"])
+                ]),
+            ])
+        }
+    }
+
     // MARK: - FPX
 
     enum FPX {

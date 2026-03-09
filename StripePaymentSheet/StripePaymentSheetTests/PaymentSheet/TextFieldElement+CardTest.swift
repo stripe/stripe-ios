@@ -85,6 +85,10 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
     }
 
     func testBINRangeThatRequiresNetworkCallToValidate() {
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        defer {
+            STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        }
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
 
         var configuration = TextFieldElement.PANConfiguration()
@@ -556,6 +560,29 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
             XCTAssertEqual(configuration.simulateValidationState(text), .valid)
             XCTAssertNil(configuration.warningLabel(text: text), "No warning should be shown when all funding types are allowed")
         }
+    }
+
+    func testAccessoryView_excludesCartesBancairesWithoutCBC() {
+        let configuration = TextFieldElement.PANConfiguration()
+        let view = configuration.accessoryView(for: "", theme: .default)
+        let rotatingView = view as? RotatingCardBrandsView
+        XCTAssertNotNil(rotatingView)
+        XCTAssertFalse(rotatingView!.cardBrands.contains(.cartesBancaires))
+        XCTAssertTrue(rotatingView!.cardBrands.contains(.visa))
+        XCTAssertTrue(rotatingView!.cardBrands.contains(.mastercard))
+        XCTAssertTrue(rotatingView!.cardBrands.contains(.amex))
+        XCTAssertTrue(rotatingView!.cardBrands.contains(.discover))
+    }
+
+    func testAccessoryView_includesCartesBancairesWithCBC() {
+        let cardBrandChoiceElement = CardBrandChoiceElement(enableCBCRedesign: true)
+        let configuration = TextFieldElement.PANConfiguration(cardBrandChoiceElement: cardBrandChoiceElement)
+        let view = configuration.accessoryView(for: "", theme: .default)
+        let rotatingView = view as? RotatingCardBrandsView
+        XCTAssertNotNil(rotatingView)
+        XCTAssertTrue(rotatingView!.cardBrands.contains(.cartesBancaires))
+        XCTAssertTrue(rotatingView!.cardBrands.contains(.visa))
+        XCTAssertTrue(rotatingView!.cardBrands.contains(.mastercard))
     }
 }
 

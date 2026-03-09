@@ -32,14 +32,14 @@
     OCMStub([self.applicationMock openURL:[OCMArg any]
                              options:[OCMArg any]
                    completionHandler:([OCMArg invokeBlockWithArgs:@NO, nil])]);
-    [STPAPIClient sharedClient].publishableKey = STPTestingDefaultPublishableKey;
 }
 
 // N.B. Test mode alipay PaymentIntent's never have a native redirect so we can't test that here
 - (void)testAlipayOpensWebviewAfterNativeURLUnavailable {
     __block NSString *clientSecret = @"pi_123_secret_456";
 
-    id apiClient = OCMPartialMock(STPAPIClient.sharedClient);
+    STPAPIClient *_apiClient = [[STPAPIClient alloc] initWithPublishableKey: STPTestingDefaultPublishableKey];
+    id apiClient = OCMPartialMock(_apiClient);
     NSMutableDictionary *paymentIntentJSON = [[STPTestUtils jsonNamed:@"PaymentIntent"] mutableCopy];
     paymentIntentJSON[@"payment_method"] = [STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard];
     STPPaymentIntent *paymentIntent = [STPPaymentIntent decodedObjectFromAPIResponse:paymentIntentJSON];
@@ -56,6 +56,7 @@
         handler(paymentIntent, nil);
     });
 
+    STPPaymentHandler.sharedHandler.apiClient = _apiClient;
     id paymentHandler = OCMPartialMock(STPPaymentHandler.sharedHandler);
     OCMStub([paymentHandler apiClient]).andReturn(apiClient);
     
@@ -97,8 +98,8 @@
     });
     
     STPAPIClient *apiClient = [[STPAPIClient alloc] initWithPublishableKey: STPTestingMEXPublishableKey];
-    [STPAPIClient sharedClient].publishableKey = STPTestingMEXPublishableKey;
-    
+    STPPaymentHandler.sharedHandler.apiClient = apiClient;
+
     STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
     billingDetails.name = @"Test Customer";
     billingDetails.email = @"test@example.com";
