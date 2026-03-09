@@ -180,6 +180,162 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(delegate.didUpdateCalled)
     }
 
+    // MARK: - Address Collection Decoding Tests
+
+    func testRequiresBillingAddress_whenRequired() {
+        var json = CheckoutTestHelpers.makeOpenSessionJSON()
+        json["billing_address_collection"] = "required"
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertTrue(session.requiresBillingAddress)
+    }
+
+    func testRequiresBillingAddress_whenAutoOrNil() {
+        // "auto" should not be required
+        var jsonAuto = CheckoutTestHelpers.makeOpenSessionJSON()
+        jsonAuto["billing_address_collection"] = "auto"
+        let sessionAuto = STPCheckoutSession.decodedObject(fromAPIResponse: jsonAuto)!
+        XCTAssertFalse(sessionAuto.requiresBillingAddress)
+
+        // absent field should not be required
+        let jsonNil = CheckoutTestHelpers.makeOpenSessionJSON()
+        let sessionNil = STPCheckoutSession.decodedObject(fromAPIResponse: jsonNil)!
+        XCTAssertFalse(sessionNil.requiresBillingAddress)
+    }
+
+    func testAllowedShippingCountries_whenPresent() {
+        var json = CheckoutTestHelpers.makeOpenSessionJSON()
+        json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "IE", "GB"]]
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertEqual(session.allowedShippingCountries, ["US", "CA", "IE", "GB"])
+    }
+
+    func testAllowedShippingCountries_whenNil() {
+        let json = CheckoutTestHelpers.makeOpenSessionJSON()
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertNil(session.allowedShippingCountries)
+    }
+
+    // MARK: - Tax Amount Tests
+
+    func testTotalTaxAmount_singleAmount() {
+        var json = CheckoutTestHelpers.makeOpenSessionJSON()
+        json["line_item_group"] = [
+            "tax_amounts": [
+                [
+                    "amount": 1185,
+                    "inclusive": false,
+                    "taxable_amount": 12000,
+                    "tax_rate": [
+                        "display_name": "Sales Tax",
+                        "percentage": 9.875,
+                        "jurisdiction": "UT",
+                    ],
+                ],
+            ],
+        ]
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertEqual(session.totalTaxAmount, 1185)
+        XCTAssertEqual(session.taxAmounts.count, 1)
+    }
+
+    func testTotalTaxAmount_multipleAmounts() {
+        var json = CheckoutTestHelpers.makeOpenSessionJSON()
+        json["line_item_group"] = [
+            "tax_amounts": [
+                [
+                    "amount": 500,
+                    "inclusive": false,
+                    "taxable_amount": 10000,
+                    "tax_rate": [
+                        "display_name": "State Tax",
+                        "percentage": 5.0,
+                        "jurisdiction": "CA",
+                    ],
+                ],
+                [
+                    "amount": 200,
+                    "inclusive": false,
+                    "taxable_amount": 10000,
+                    "tax_rate": [
+                        "display_name": "County Tax",
+                        "percentage": 2.0,
+                        "jurisdiction": "LA County",
+                    ],
+                ],
+            ],
+        ]
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertEqual(session.totalTaxAmount, 700)
+        XCTAssertEqual(session.taxAmounts.count, 2)
+    }
+
+    func testTotalTaxAmount_noTaxAmounts() {
+        let json = CheckoutTestHelpers.makeOpenSessionJSON()
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertEqual(session.totalTaxAmount, 0)
+        XCTAssertTrue(session.taxAmounts.isEmpty)
+    }
+
+    // MARK: - Requires Shipping Address Tests
+
+    func testRequiresShippingAddress_whenCountriesPresent() {
+        var json = CheckoutTestHelpers.makeOpenSessionJSON()
+        json["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertTrue(session.requiresShippingAddress)
+    }
+
+    func testRequiresShippingAddress_whenNil() {
+        let json = CheckoutTestHelpers.makeOpenSessionJSON()
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertFalse(session.requiresShippingAddress)
+    }
+
+    // MARK: - Full Session Decoding with Tax Amounts
+
+    func testFullSessionDecodingWithTaxAmounts() {
+        var json = CheckoutTestHelpers.makeOpenSessionJSON()
+        json["billing_address_collection"] = "required"
+        json["shipping_address_collection"] = ["allowed_countries": ["US", "CA", "GB"]]
+        json["line_item_group"] = [
+            "tax_amounts": [
+                [
+                    "amount": 1000,
+                    "inclusive": false,
+                    "taxable_amount": 20000,
+                    "tax_rate": [
+                        "display_name": "Sales Tax",
+                        "percentage": 5.0,
+                        "jurisdiction": "NY",
+                    ],
+                ],
+            ],
+        ]
+        json["total_summary"] = [
+            "due": 21000,
+            "subtotal": 20000,
+            "total": 21000,
+        ]
+
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+
+        // Verify tax amounts
+        XCTAssertEqual(session.taxAmounts.count, 1)
+        XCTAssertEqual(session.totalTaxAmount, 1000)
+        XCTAssertEqual(session.taxAmounts.first?.taxRate?.displayName, "Sales Tax")
+        XCTAssertEqual(session.taxAmounts.first?.taxRate?.jurisdiction, "NY")
+
+        // Verify address collection settings
+        XCTAssertTrue(session.requiresBillingAddress)
+        XCTAssertTrue(session.requiresShippingAddress)
+        XCTAssertEqual(session.allowedShippingCountries, ["US", "CA", "GB"])
+
+        // Verify totals
+        XCTAssertNotNil(session.totals)
+        XCTAssertEqual(session.totals?.subtotal, 20000)
+        XCTAssertEqual(session.totals?.total, 21000)
+    }
+
     // MARK: - Helpers
 
     private func makeCheckoutWithOpenSession() -> Checkout {

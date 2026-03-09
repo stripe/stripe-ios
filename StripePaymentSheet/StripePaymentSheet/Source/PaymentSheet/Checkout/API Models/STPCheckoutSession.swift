@@ -81,6 +81,14 @@ class STPCheckoutSession: NSObject {
     /// The ID of the currently selected shipping option, if any.
     let selectedShippingOptionId: String?
 
+    /// The tax amounts associated with this session.
+    public let taxAmounts: [STPCheckoutSessionTaxAmount]
+
+    /// The total tax amount for this session, in the smallest currency unit.
+    public var totalTaxAmount: Int {
+        taxAmounts.reduce(0) { $0 + $1.amount }
+    }
+
     /// The currently applied promotion code, if one is present.
     var appliedPromotionCode: String? {
         discounts.first(where: { $0.promotionCode != nil })?.promotionCode
@@ -89,6 +97,21 @@ class STPCheckoutSession: NSObject {
     /// Server-side flag controlling the "Save for future use" checkbox.
     /// Parsed from `customer_managed_saved_payment_methods_offer_save` in the init response.
     let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
+
+    /// Whether billing address collection is required for this session.
+    /// Derived from `billing_address_collection == "required"` in the API response.
+    public let requiresBillingAddress: Bool
+
+    /// The allowed countries for shipping address collection, or `nil` if shipping
+    /// address collection is not configured. When non-nil, the merchant should
+    /// present a shipping address form restricted to these country codes.
+    public let allowedShippingCountries: [String]?
+
+    /// Whether the session requires a shipping address.
+    /// When `true`, use `allowedShippingCountries` to restrict the address form.
+    public var requiresShippingAddress: Bool {
+        allowedShippingCountries != nil
+    }
 
     /// Whether automatic tax calculation is enabled for this session.
     let automaticTaxEnabled: Bool
@@ -161,7 +184,10 @@ class STPCheckoutSession: NSObject {
         lineItems: [Checkout.LineItem],
         shippingOptions: [Checkout.ShippingOption],
         selectedShippingOptionId: String?,
+        taxAmounts: [STPCheckoutSessionTaxAmount],
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
+        requiresBillingAddress: Bool,
+        allowedShippingCountries: [String]?,
         automaticTaxEnabled: Bool,
         automaticTaxAddressSource: String?,
         allResponseFields: [AnyHashable: Any]
@@ -187,7 +213,10 @@ class STPCheckoutSession: NSObject {
         self.lineItems = lineItems
         self.shippingOptions = shippingOptions
         self.selectedShippingOptionId = selectedShippingOptionId
+        self.taxAmounts = taxAmounts
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
+        self.requiresBillingAddress = requiresBillingAddress
+        self.allowedShippingCountries = allowedShippingCountries
         self.automaticTaxEnabled = automaticTaxEnabled
         self.automaticTaxAddressSource = automaticTaxAddressSource
         self.allResponseFields = allResponseFields
@@ -233,6 +262,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
         let lineItems = Self.parseLineItems(from: dict, defaultCurrency: currency)
         let shippingOptions = Self.parseShippingOptions(from: dict, defaultCurrency: currency)
         let selectedShippingOptionId = Self.parseSelectedShippingOptionId(from: dict)
+        let taxAmounts = STPCheckoutSessionTaxAmount.taxAmounts(from: dict)
 
         // Build totals from total_summary + derived amounts
         let totals: Checkout.Totals? = {
@@ -256,6 +286,15 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
         let savedPaymentMethodsOfferSave = STPCheckoutSessionSavedPaymentMethodsOfferSave.decodedObject(
             from: dict["customer_managed_saved_payment_methods_offer_save"] as? [AnyHashable: Any]
         )
+
+        // Parse address collection settings
+        let requiresBillingAddress = (dict["billing_address_collection"] as? String) == "required"
+        let allowedShippingCountries: [String]? = {
+            guard let shippingCollection = dict["shipping_address_collection"] as? [String: Any],
+                  let countries = shippingCollection["allowed_countries"] as? [String]
+            else { return nil }
+            return countries
+        }()
 
         // Parse tax context for automatic tax settings.
         // The server returns the address source as e.g. "session.billing"; strip
@@ -291,7 +330,10 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             lineItems: lineItems,
             shippingOptions: shippingOptions,
             selectedShippingOptionId: selectedShippingOptionId,
+            taxAmounts: taxAmounts,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
+            requiresBillingAddress: requiresBillingAddress,
+            allowedShippingCountries: allowedShippingCountries,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
             allResponseFields: dict
