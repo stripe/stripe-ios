@@ -18,12 +18,12 @@ import UIKit
 final class CardBrandChoiceElement: Element {
     weak var delegate: ElementDelegate?
 
-    private enum Variant {
+    enum Variant {
         case selector(SegmentedSelectorElement)
         case dropdown(DropdownFieldElement)
     }
 
-    private let variant: Variant
+    let variant: Variant
 
     var view: UIView {
         switch variant {
@@ -74,11 +74,14 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
+    private let allowDeselection: Bool
+
     init(enableCBCRedesign: Bool,
          cardBrands: Set<STPCardBrand> = [],
          disallowedCardBrands: Set<STPCardBrand> = [],
          theme: ElementsAppearance = .default,
          allowDeselection: Bool = true) {
+        self.allowDeselection = allowDeselection
         if enableCBCRedesign {
             let element = SegmentedSelectorElement(
                 items: Self.makeItems(from: cardBrands),
@@ -101,16 +104,17 @@ final class CardBrandChoiceElement: Element {
     }
 
     func update(cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand> = []) {
+        // If there's only one allowed brand, select it and don't allow deselection
+        let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
+
         switch variant {
         case .selector(let element):
             element.update(
                 items: Self.makeItems(from: cardBrands),
                 disabledItems: Set(Self.makeItems(from: disallowedCardBrands))
             )
-            // If there's only one allowed brand, select it and don't allow deselection
-            let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
+            element.allowDeselection = allowDeselection && allowedBrands.count > 1
             if allowedBrands.count == 1, let allowedBrand = allowedBrands.first {
-                element.allowDeselection = false
                 element.select(allowedBrand.makeCardBrandItem())
             }
         case .dropdown(let element):
@@ -118,7 +122,7 @@ final class CardBrandChoiceElement: Element {
                 from: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
                 theme: element.theme,
-                includePlaceholder: element.items.contains { $0.isPlaceholder }
+                includePlaceholder: allowDeselection && allowedBrands.count > 1
             )
             element.update(items: items)
         }
