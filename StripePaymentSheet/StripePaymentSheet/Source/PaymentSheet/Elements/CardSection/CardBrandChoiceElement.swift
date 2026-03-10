@@ -110,7 +110,6 @@ final class CardBrandChoiceElement: Element {
                 items: Self.makeItems(from: cardBrands),
                 disabledItems: Set(Self.makeItems(from: disallowedCardBrands))
             )
-            guard cardBrands.count > 1 else { return }
             // If there's only one allowed brand, don't allow deselection
             let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
             element.allowDeselection = allowDeselection && allowedBrands.count > 1
