@@ -64,7 +64,7 @@ final class CardBrandChoiceElementTest: XCTestCase {
 
         // Start with 1 enabled brand — deselection blocked
         element.update(cardBrands: [.visa, .cartesBancaires], disallowedCardBrands: [.cartesBancaires])
-        
+
         // The only enabled brand (Visa) should be auto-selected
         XCTAssertEqual(element.selectedBrand, .visa)
 
