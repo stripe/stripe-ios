@@ -107,6 +107,12 @@ final class CardBrandChoiceElement: Element {
                 items: Self.makeItems(from: cardBrands),
                 disabledItems: Set(Self.makeItems(from: disallowedCardBrands))
             )
+            // If there's only one allowed brand, select it and don't allow deselection
+            let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
+            if allowedBrands.count == 1, let allowedBrand = allowedBrands.first {
+                element.allowDeselection = false
+                element.select(allowedBrand.makeCardBrandItem())
+            }
         case .dropdown(let element):
             let items = DropdownFieldElement.items(
                 from: cardBrands,

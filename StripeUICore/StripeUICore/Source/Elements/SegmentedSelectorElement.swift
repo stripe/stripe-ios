@@ -28,7 +28,7 @@ import UIKit
     private var disabledItems: Set<SegmentedSelectorItem>
 
     /// When false, the user cannot deselect the currently selected item.
-    private var allowDeselection: Bool
+    public var allowDeselection: Bool
 
     public init(items: [SegmentedSelectorItem] = [],
                 disabledItems: Set<SegmentedSelectorItem> = [],
