@@ -380,6 +380,11 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .twint,
                                merchantCountry: .GB,
                                expectedHierarchy: ExpectedFormHierarchy.Twint.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "CHF",
+                               paymentMethodType: .twint,
+                               merchantCountry: .GB,
+                               expectedHierarchy: ExpectedFormHierarchy.Twint.settingUp) { _ in }
     }
 
     func testSavedSEPA() async throws {
