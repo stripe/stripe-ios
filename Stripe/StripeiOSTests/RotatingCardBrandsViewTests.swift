@@ -42,4 +42,10 @@ class RotatingCardBrandsViewTests: XCTestCase {
         XCTAssertFalse(rotatingCardBrandsView.rotatingCardBrandView.isHidden)
     }
 
+    func testCartesBancairesFirstInRotatingBrands() {
+        let view = RotatingCardBrandsView()
+        // CB is last in the ordered list, so it would normally be last in rotating brands
+        view.cardBrands = [.visa, .mastercard, .amex, .discover, .JCB, .cartesBancaires]
+        XCTAssertEqual(view.rotatingCardBrands.first, .cartesBancaires)
+    }
 }
