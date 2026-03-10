@@ -181,7 +181,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         )
 
         // 2. Get expected amount from checkout session
-        guard let expectedAmount = checkoutSession.totalSummary?.total else {
+        guard let expectedAmount = checkoutSession.totals?.total else {
             throw PaymentSheetError.unknown(debugDescription: "Missing expected amount from checkout session")
         }
 

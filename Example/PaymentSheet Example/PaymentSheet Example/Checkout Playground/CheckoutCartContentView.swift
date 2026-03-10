@@ -23,7 +23,7 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     var body: some View {
-        if let session = checkout.session {
+        if checkout.session != nil {
             ScrollView {
                 VStack(spacing: 24) {
                     if let error = errorMessage {
@@ -34,27 +34,12 @@ struct CheckoutCartContentView: View {
                             .padding(.horizontal)
                     }
 
-                    // Line Items
-                    lineItemsSection(session: session)
-
-                    // Shipping Options
-                    shippingOptionsSection(session: session)
-
-                    if session.requiresShippingAddress {
-                        // Shipping Address
-                        shippingAddressSection(session: session)
-                    }
-
-                    if session.requiresBillingAddress {
-                        // Billing Address
-                        billingAddressSection(session: session)
-                    }
-
-                    // Promotion Code
-                    promotionCodeSection(session: session)
-
-                    // Order Summary
-                    orderSummarySection(session: session)
+                    lineItemsSection
+                    shippingOptionsSection
+                    shippingAddressSection
+                    billingAddressSection
+                    promotionCodeSection
+                    orderSummarySection
 
                     Spacer().frame(height: 100)
                 }
@@ -66,20 +51,20 @@ struct CheckoutCartContentView: View {
     // MARK: - Sections
 
     @ViewBuilder
-    private func lineItemsSection(session: STPCheckoutSession) -> some View {
+    private var lineItemsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Items")
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            let items = session.lineItems
+            let items = checkout.session?.lineItems ?? []
             if items.isEmpty {
                 Text("No items")
                     .foregroundColor(.secondary)
                     .padding(.horizontal)
             } else {
                 VStack(spacing: 0) {
-                    ForEach(items, id: \.id) { item in
+                    ForEach(items) { item in
                         HStack(alignment: .top, spacing: 16) {
                             RoundedRectangle(cornerRadius: 12)
                                 .fill(Color(UIColor.secondarySystemBackground))
@@ -93,7 +78,7 @@ struct CheckoutCartContentView: View {
                                 Text(item.name)
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text(formatCartCurrency(amount: item.amount, currency: item.currency))
+                                Text(formatCartCurrency(amount: item.unitAmount, currency: item.currency))
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
 
@@ -127,7 +112,7 @@ struct CheckoutCartContentView: View {
                                 }
                             }
                             Spacer()
-                            Text(formatCartCurrency(amount: item.amount * item.quantity, currency: item.currency))
+                            Text(formatCartCurrency(amount: item.unitAmount * item.quantity, currency: item.currency))
                                 .font(.headline)
                         }
                         .padding()
@@ -146,21 +131,21 @@ struct CheckoutCartContentView: View {
     }
 
     @ViewBuilder
-    private func shippingOptionsSection(session: STPCheckoutSession) -> some View {
+    private var shippingOptionsSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Shipping Options")
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            let options = session.shippingOptions
+            let options = checkout.session?.shippingOptions ?? []
             if options.isEmpty {
                 Text("No shipping options available")
                     .foregroundColor(.secondary)
                     .padding(.horizontal)
             } else {
-                let selectedId = session.selectedShippingOptionId ?? ""
+                let selectedId = checkout.session?.selectedShippingOption?.id ?? ""
                 VStack(spacing: 0) {
-                    ForEach(options, id: \.id) { option in
+                    ForEach(options) { option in
                         Button(action: {
                             selectShippingOption(option.id)
                         }) {
@@ -203,13 +188,13 @@ struct CheckoutCartContentView: View {
     }
 
     @ViewBuilder
-    private func shippingAddressSection(session: STPCheckoutSession) -> some View {
+    private var shippingAddressSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Shipping Address")
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            if let override = session.shippingAddressOverride {
+            if let override = checkout.session?.shippingAddress {
                 addressCard(
                     name: override.name,
                     address: override.address,
@@ -222,19 +207,22 @@ struct CheckoutCartContentView: View {
         .sheet(isPresented: $showShippingAddressSheet) {
             AddressElement(
                 address: shippingAddressBinding,
-                configuration: makeShippingAddressConfiguration(session: session)
+                configuration: makeAddressConfiguration(
+                    title: "Shipping Address",
+                    override: checkout.session?.shippingAddress
+                )
             )
         }
     }
 
     @ViewBuilder
-    private func billingAddressSection(session: STPCheckoutSession) -> some View {
+    private var billingAddressSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Billing Address")
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            if let override = session.billingAddressOverride {
+            if let override = checkout.session?.billingAddress {
                 addressCard(
                     name: override.name,
                     address: override.address,
@@ -247,7 +235,10 @@ struct CheckoutCartContentView: View {
         .sheet(isPresented: $showBillingAddressSheet) {
             AddressElement(
                 address: billingAddressBinding,
-                configuration: makeBillingAddressConfiguration(session: session)
+                configuration: makeAddressConfiguration(
+                    title: "Billing Address",
+                    override: checkout.session?.billingAddress
+                )
             )
         }
     }
@@ -328,31 +319,13 @@ struct CheckoutCartContentView: View {
 
     // MARK: - Address Configuration
 
-    private func makeShippingAddressConfiguration(session: STPCheckoutSession) -> AddressElement.Configuration {
-        makeAddressConfiguration(
-            title: "Shipping Address",
-            allowedCountries: session.allowedShippingCountries ?? [],
-            override: session.shippingAddressOverride
-        )
-    }
-
-    private func makeBillingAddressConfiguration(session: STPCheckoutSession) -> AddressElement.Configuration {
-        makeAddressConfiguration(
-            title: "Billing Address",
-            allowedCountries: [],
-            override: session.billingAddressOverride
-        )
-    }
-
     private func makeAddressConfiguration(
         title: String,
-        allowedCountries: [String],
         override: Checkout.AddressUpdate?
     ) -> AddressElement.Configuration {
         var config = AddressElement.Configuration()
         config.title = title
         config.buttonTitle = "Save Address"
-        config.allowedCountries = allowedCountries
         if let override {
             config.defaultValues = .init(
                 address: .init(
@@ -370,14 +343,14 @@ struct CheckoutCartContentView: View {
     }
 
     @ViewBuilder
-    private func promotionCodeSection(session: STPCheckoutSession) -> some View {
+    private var promotionCodeSection: some View {
         VStack(alignment: .leading, spacing: 16) {
             Text("Promotion Code")
                 .font(.title2).bold()
                 .padding(.horizontal)
 
             VStack {
-                if let appliedCode = session.appliedPromotionCode {
+                if let appliedCode = checkout.session?.appliedPromotionCode {
                     HStack {
                         Image(systemName: "tag.fill")
                             .foregroundColor(.green)
@@ -445,8 +418,9 @@ struct CheckoutCartContentView: View {
     }
 
     @ViewBuilder
-    private func orderSummarySection(session: STPCheckoutSession) -> some View {
-        if let summary = session.totalSummary {
+    private var orderSummarySection: some View {
+        if let totals = checkout.session?.totals {
+            let currency = checkout.session?.currency
             VStack(alignment: .leading, spacing: 16) {
                 Text("Order Summary")
                     .font(.title2).bold()
@@ -457,51 +431,35 @@ struct CheckoutCartContentView: View {
                         Text("Subtotal")
                             .foregroundColor(.secondary)
                         Spacer()
-                        Text(formatCartCurrency(amount: summary.subtotal, currency: session.currency))
+                        Text(formatCartCurrency(amount: totals.subtotal, currency: currency))
                             .foregroundColor(.primary)
                     }
-                    let discount = session.totalDiscountAmount
-                    if discount > 0 {
+                    if totals.discount > 0 {
                         HStack {
                             Text("Discount")
                                 .foregroundColor(.green)
                             Spacer()
-                            Text("-" + formatCartCurrency(amount: discount, currency: session.currency))
+                            Text("-" + formatCartCurrency(amount: totals.discount, currency: currency))
                                 .foregroundColor(.green)
                         }
                     }
 
-                    let shipping = session.totalShippingAmount
-                    if shipping > 0 {
+                    if totals.shipping > 0 {
                         HStack {
                             Text("Shipping")
                                 .foregroundColor(.secondary)
                             Spacer()
-                            Text(formatCartCurrency(amount: shipping, currency: session.currency))
+                            Text(formatCartCurrency(amount: totals.shipping, currency: currency))
                                 .foregroundColor(.primary)
                         }
                     }
 
-                    let tax = session.totalTaxAmount
-                    if tax > 0 {
-                        let taxLabel = session.taxAmounts.count == 1
-                            ? (session.taxAmounts.first?.taxRate?.displayName ?? "Tax")
-                            : "Tax"
-                        let taxRateDesc: String? = session.taxAmounts.count == 1
-                            ? session.taxAmounts.first?.taxRate?.rateDescription
-                            : nil
-                        HStack(alignment: .top) {
-                            VStack(alignment: .leading, spacing: 2) {
-                                Text(taxLabel)
-                                    .foregroundColor(.secondary)
-                                if let rateDesc = taxRateDesc, !rateDesc.isEmpty {
-                                    Text(rateDesc)
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
+                    if totals.tax > 0 {
+                        HStack {
+                            Text("Tax")
+                                .foregroundColor(.secondary)
                             Spacer()
-                            Text(formatCartCurrency(amount: tax, currency: session.currency))
+                            Text(formatCartCurrency(amount: totals.tax, currency: currency))
                                 .foregroundColor(.primary)
                         }
                     }
@@ -512,7 +470,7 @@ struct CheckoutCartContentView: View {
                         Text("Total")
                             .font(.title3).bold()
                         Spacer()
-                        Text(formatCartCurrency(amount: summary.total, currency: session.currency))
+                        Text(formatCartCurrency(amount: totals.total, currency: currency))
                             .font(.title3).bold()
                     }
                 }

@@ -54,7 +54,7 @@ extension PaymentSheet {
             let expectedAmount: Int?
             switch checkoutSession.mode {
             case .payment:
-                guard let total = checkoutSession.totalSummary?.total else {
+                guard let total = checkoutSession.totals?.total else {
                     throw PaymentSheetError.unknown(debugDescription: "Missing expected amount from checkout session")
                 }
                 expectedAmount = total

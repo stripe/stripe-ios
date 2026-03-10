@@ -90,16 +90,20 @@ public final class EmbeddedPaymentElement {
 
     /// An asynchronous failable initializer for CheckoutSession mode
     /// Loads payment methods and configuration from a fully loaded CheckoutSession object.
-    /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
+    /// - Parameter checkoutSession: A fully loaded Checkout.Session object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
     @_spi(CheckoutSessionsPreview) public static func create(
-        checkoutSession: STPCheckoutSession,
+        checkoutSession: Checkout.Session,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
+        guard let stpSession = checkoutSession as? STPCheckoutSession else {
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+            throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
+        }
         var config = configuration
-        checkoutSession.applyAddressOverrides(to: &config)
+        stpSession.applyAddressOverrides(to: &config)
 
         try validateRowSelectionConfiguration(configuration: config)
 
@@ -108,7 +112,7 @@ public final class EmbeddedPaymentElement {
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: config)
 
         let loadResult = try await PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkoutSession(stpSession),
             configuration: config,
             analyticsHelper: analyticsHelper,
             integrationShape: .embedded

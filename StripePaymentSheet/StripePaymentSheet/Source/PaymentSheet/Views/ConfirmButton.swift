@@ -49,7 +49,7 @@ class ConfirmButton: UIControl {
             case .checkoutSession(let checkoutSession):
                 switch checkoutSession.mode {
                 case .payment:
-                    if let amount = checkoutSession.totalSummary?.total,
+                    if let amount = checkoutSession.totals?.total,
                        let currency = checkoutSession.currency {
                         return .pay(amount: amount, currency: currency, withLock: withLock)
                     }
