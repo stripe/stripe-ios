@@ -60,6 +60,11 @@ enum ExpectedFormHierarchy {
 
     enum Twint {
         static var paymentIntent: FormHierarchyNode { emptyForm }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By continuing, you authorize StripePaymentSheetTes..."])
+            ])
+        }
     }
 
     // MARK: - Zip
