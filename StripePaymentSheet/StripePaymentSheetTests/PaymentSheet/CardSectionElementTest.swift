@@ -175,4 +175,16 @@ class CardSectionElementTest: XCTestCase {
 
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
     }
+
+    func testTooltip_hiddenWhenAllDisabled() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let filter = CardBrandFilter(cardBrandAcceptance: .allowed(brands: [.mastercard]))
+        let cardSection = makeCardSectionElement(cardBrandFilter: filter)
+        _ = beginEditingPAN(cardSection)
+
+        cardSection.panElement.setText(cbcVisaTestCard)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
+    }
 }
