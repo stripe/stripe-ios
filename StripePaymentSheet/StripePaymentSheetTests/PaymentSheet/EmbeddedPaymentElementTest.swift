@@ -7,7 +7,7 @@
 
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CheckoutSessionsPreview) @testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
@@ -805,6 +805,66 @@ class EmbeddedPaymentElementTest: XCTestCase {
         cardForm.getTextFieldElement("ZIP").setText("12345")
         sut.selectedFormViewController?.didTapOrSwipeToDismiss() // Tap cancel to close
         XCTAssertNil(sut.paymentOption, "Payment option should be nil after filling out the card form, but hitting cancel.")
+    }
+
+    // MARK: - Checkout Session update tests
+
+    func testUpdateCheckoutSession() async throws {
+        let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
+        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: response.id)
+
+        var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        config.apiClient = apiClient
+
+        let sut = try await EmbeddedPaymentElement.create(checkoutSession: checkoutSession, configuration: config)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+
+        // Update with the same checkout session should succeed
+        let updateResult = await sut.update(checkoutSession: checkoutSession)
+        XCTAssertEqual(updateResult, .succeeded)
+    }
+
+    func testUpdateCheckoutSessionCancelsInFlight() async throws {
+        let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
+        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: response.id)
+
+        var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        config.apiClient = apiClient
+
+        let sut = try await EmbeddedPaymentElement.create(checkoutSession: checkoutSession, configuration: config)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+
+        // Fire two concurrent updates, first should be canceled
+        async let _updateResult1 = sut.update(checkoutSession: checkoutSession)
+        async let _updateResult2 = sut.update(checkoutSession: checkoutSession)
+        let updateResult1 = await _updateResult1
+        let updateResult2 = await _updateResult2
+        XCTAssertEqual(updateResult1, .canceled)
+        XCTAssertEqual(updateResult2, .succeeded)
+    }
+
+    func testUpdateCheckoutSessionWithCompletionBlock() async throws {
+        let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
+        let apiClient = STPAPIClient(publishableKey: response.publishableKey)
+        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: response.id)
+
+        var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        config.apiClient = apiClient
+
+        let sut = try await EmbeddedPaymentElement.create(checkoutSession: checkoutSession, configuration: config)
+        sut.delegate = self
+        sut.presentingViewController = UIViewController()
+
+        let updateExpectation = expectation(description: "Update completes")
+        sut.update(checkoutSession: checkoutSession) { result in
+            XCTAssertEqual(result, .succeeded)
+            updateExpectation.fulfill()
+        }
+        await fulfillment(of: [updateExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
     // MARK: Immediate action tests
