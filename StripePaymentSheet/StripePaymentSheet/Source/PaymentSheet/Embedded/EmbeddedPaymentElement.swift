@@ -497,7 +497,7 @@ extension EmbeddedPaymentElement {
 
     /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
     /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
-    /// - Parameter checkoutSession: An updated STPCheckoutSession.
+    /// - Parameter checkoutSession: An updated Checkout.Session.
     /// - Parameter completion: A completion block containing the result of the update. Called on the main thread.
     /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
