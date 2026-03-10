@@ -455,6 +455,21 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         }
 #endif
     }
+
+    func testCreatePaymentRequest_CheckoutSession_SetupMode() {
+        let intent = Intent._testCheckoutSession(mode: .setup, amount: nil, currency: "USD")
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.paymentSummaryItems[0].amount, .zero)
+        XCTAssertEqual(sut.paymentSummaryItems[0].type, .pending)
+        XCTAssertEqual(sut.currencyCode, "USD")
+        XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
+        XCTAssertEqual(sut.countryCode, "GB")
+#if compiler(>=5.9)
+        if #available(macOS 14.0, iOS 17.0, *) {
+            XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
+        }
+#endif
+    }
 }
 
 #if compiler(>=5.9)
