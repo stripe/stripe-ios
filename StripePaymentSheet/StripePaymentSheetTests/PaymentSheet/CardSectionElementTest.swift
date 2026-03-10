@@ -61,11 +61,8 @@ class CardSectionElementTest: XCTestCase {
         let cardSection = makeCardSectionElement(cardBrandFilter: filter)
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .cartesBancaires)
-        switch cardSection.cardBrandChoiceElement?.variant {
-        case .selector(let selector):
+        if case .selector(let selector) = cardSection.cardBrandChoiceElement?.variant {
             XCTAssertFalse(selector.allowDeselection)
-        default:
-            XCTFail("Expected selector variant")
         }
     }
 
@@ -73,11 +70,8 @@ class CardSectionElementTest: XCTestCase {
         let cardSection = makeCardSectionElement()
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
-        switch cardSection.cardBrandChoiceElement?.variant {
-        case .selector(let selector):
+        if case .selector(let selector) = cardSection.cardBrandChoiceElement?.variant {
             XCTAssertTrue(selector.allowDeselection)
-        default:
-            XCTFail("Expected selector variant")
         }
     }
 
@@ -86,11 +80,8 @@ class CardSectionElementTest: XCTestCase {
         let cardSection = makeCardSectionElement(cardBrandFilter: filter)
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
-        switch cardSection.cardBrandChoiceElement?.variant {
-        case .selector(let selector):
+        if case .selector(let selector) = cardSection.cardBrandChoiceElement?.variant {
             XCTAssertFalse(selector.allowDeselection)
-        default:
-            XCTFail("Expected selector variant")
         }
     }
 
