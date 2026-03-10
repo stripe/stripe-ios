@@ -24,6 +24,7 @@ public final class EmbeddedPaymentElement {
     public var presentingViewController: UIViewController?
 
     /// This contains the `configuration` you passed in to `create`.
+    /// - Note: `internal(set)` because checkout session updates may apply address overrides to the configuration.
     public internal(set) var configuration: Configuration
 
     /// See `EmbeddedPaymentElementDelegate`.

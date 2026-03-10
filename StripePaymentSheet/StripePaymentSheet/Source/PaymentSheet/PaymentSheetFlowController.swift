@@ -213,6 +213,7 @@ extension PaymentSheet {
         }
 
         /// This contains all configurable properties of PaymentSheet
+        /// - Note: `internal(set)` because checkout session updates may apply address overrides to the configuration.
         public internal(set) var configuration: Configuration
 
         /// Contains information about the customer's desired payment option.
