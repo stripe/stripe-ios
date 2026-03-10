@@ -60,7 +60,8 @@ struct CheckoutCartPaymentButton: View {
                             .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
                     )
                 }
-            } else if let paymentSheet = makePaymentSheet() {
+            } else {
+                let paymentSheet = makePaymentSheet()
                 PaymentSheet.PaymentButton(
                     paymentSheet: paymentSheet,
                     onCompletion: { result in

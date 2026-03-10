@@ -82,10 +82,10 @@ class STPCheckoutSession: NSObject {
     let selectedShippingOptionId: String?
 
     /// The tax amounts associated with this session.
-    public let taxAmounts: [STPCheckoutSessionTaxAmount]
+    let taxAmounts: [STPCheckoutSessionTaxAmount]
 
     /// The total tax amount for this session, in the smallest currency unit.
-    public var totalTaxAmount: Int {
+    var totalTaxAmount: Int {
         taxAmounts.reduce(0) { $0 + $1.amount }
     }
 
@@ -100,16 +100,16 @@ class STPCheckoutSession: NSObject {
 
     /// Whether billing address collection is required for this session.
     /// Derived from `billing_address_collection == "required"` in the API response.
-    public let requiresBillingAddress: Bool
+    let requiresBillingAddress: Bool
 
     /// The allowed countries for shipping address collection, or `nil` if shipping
     /// address collection is not configured. When non-nil, the merchant should
     /// present a shipping address form restricted to these country codes.
-    public let allowedShippingCountries: [String]?
+    let allowedShippingCountries: [String]?
 
     /// Whether the session requires a shipping address.
     /// When `true`, use `allowedShippingCountries` to restrict the address form.
-    public var requiresShippingAddress: Bool {
+    var requiresShippingAddress: Bool {
         allowedShippingCountries != nil
     }
 
@@ -228,7 +228,7 @@ class STPCheckoutSession: NSObject {
 extension STPCheckoutSession: STPAPIResponseDecodable {
 
     @objc
-    public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+    class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
               let stripeId = dict["session_id"] as? String,
               let livemode = dict["livemode"] as? Bool,
