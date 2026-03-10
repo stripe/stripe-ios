@@ -12,6 +12,7 @@
 @_spi(STP)@testable import StripePaymentsTestUtils
 import XCTest
 
+@MainActor
 final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     let analyticsClient = STPTestingAnalyticsClient()
 
@@ -129,7 +130,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
             // Load started -> failed
             sut.logLoadStarted()
-            sut.logLoadFailed(error: NSError(domain: "domain", code: 1))
+            sut.logLoadFailed(error: NSError(domain: "domain", code: 1), loadTimings: .init())
 
             XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
             XCTAssertEqual(analyticsClient._testLogHistory[0]["integration_shape"] as? String, shapeString)
@@ -193,7 +194,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                 intent: ._testValue(),
                 elementsSession: elementsSession,
                 defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-                orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+                orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init()
             )
 
             XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
@@ -263,7 +264,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init()
         )
         // PI with SFU and PMO SFU
         var loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -281,7 +282,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init()
         )
         // PI with SFU and no PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -300,7 +301,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init()
         )
         // Deferred PI with SFU and PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -318,7 +319,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init()
         )
         // Deferred PI with SFU and no PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -333,7 +334,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: ._testSetupIntent(),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init()
         )
         // SI
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -517,7 +518,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: ._testDeferredIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)]
+            orderedPaymentMethodTypes: [.stripe(.card)], loadTimings: .init()
         )
         sut.logPayment(
             paymentOption: .applePay,
@@ -645,7 +646,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: regularIntent,
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)]
+            orderedPaymentMethodTypes: [.stripe(.card)], loadTimings: .init()
         )
 
         let regularEvent = analyticsClient._testLogHistory.last!
@@ -661,7 +662,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: deferredIntent,
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)]
+            orderedPaymentMethodTypes: [.stripe(.card)], loadTimings: .init()
         )
 
         let deferredEvent = analyticsClient._testLogHistory.last!
@@ -684,7 +685,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: sptIntent,
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)]
+            orderedPaymentMethodTypes: [.stripe(.card)], loadTimings: .init()
         )
 
         let sptEvent = analyticsClient._testLogHistory.last!

@@ -101,12 +101,11 @@ final class PaymentSheetAnalyticsHelper {
 
     func logLoadStarted() {
         loadingStartDate = Date()
-        printTimingLog("START logLoadStarted")
         log(event: .paymentSheetLoadStarted, params: ["integration_shape": integrationShape.analyticsValue])
-        printTimingLog("END logLoadStarted")
     }
 
-    func logLoadFailed(error: Error) {
+    @MainActor
+    func logLoadFailed(error: Error, loadTimings: PaymentSheetLoader.LoadTimings) {
         stpAssert(loadingStartDate != nil)
         let duration: TimeInterval = {
             guard let loadingStartDate else { return 0 }
@@ -116,17 +115,21 @@ final class PaymentSheetAnalyticsHelper {
             event: .paymentSheetLoadFailed,
             duration: duration,
             error: error,
-            params: ["integration_shape": integrationShape.analyticsValue]
+            params: [
+                "integration_shape": integrationShape.analyticsValue,
+                "load_timings": loadTimings.jsonObject,
+            ]
         )
     }
 
+    @MainActor
     func logLoadSucceeded(
         intent: Intent,
         elementsSession: STPElementsSession,
         defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
-        orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType]
+        orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        loadTimings: PaymentSheetLoader.LoadTimings
     ) {
-        printTimingLog("START logLoadSucceeded")
         stpAssert(loadingStartDate != nil)
         self.intent = intent
         self.elementsSession = elementsSession
@@ -150,6 +153,7 @@ final class PaymentSheetAnalyticsHelper {
             "intent_type": intent.analyticsValue,
             "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
             "integration_shape": integrationShape.analyticsValue,
+            "load_timings": loadTimings.jsonObject,
         ]
         if let linkMode = elementsSession.linkSettings?.linkMode {
             params["link_mode"] = linkMode.rawValue
@@ -176,7 +180,6 @@ final class PaymentSheetAnalyticsHelper {
             duration: duration,
             params: params
         )
-        printTimingLog("END logLoadSucceeded")
     }
 
     func logShow(showingSavedPMList: Bool) {
@@ -487,9 +490,7 @@ final class PaymentSheetAnalyticsHelper {
             additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
         }
 
-        for (param, param_value) in params {
-            additionalParams[param] = param_value
-        }
+        additionalParams.mergeAssertingOnOverwrites(params)
         let analytic = PaymentSheetAnalytic(event: event, additionalParams: additionalParams)
         analyticsClient.log(analytic: analytic, apiClient: configuration.apiClient)
     }
