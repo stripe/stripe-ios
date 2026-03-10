@@ -44,6 +44,7 @@ pipelines:
 
   releases-trigger-pipeline:
     workflows:
+      trigger-react-native-ci: {}
       lint-tests:
         abort_on_fail: true
       framework-tests-no-mocks: {}
@@ -123,6 +124,29 @@ workflows:
         stack: osx-xcode-26.1.x
     envs:
     - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_1
+  trigger-react-native-ci:
+    steps:
+    - script@1:
+        inputs:
+        - content: bundle config set path 'vendor/bundle'
+        is_always_run: true
+        title: Set Bundler to use local vendor directory
+    - git-clone@8.2:
+        inputs:
+        - merge_pr: "no"
+    - restore-cache@2.4:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+    - bundler@0: {}
+    - save-cache@1:
+        inputs:
+        - key: bundle-cache-{{ checksum "Gemfile.lock" }}
+        - paths: |
+            vendor
+    - script@1:
+        inputs:
+        - content: bundle exec ./ci_scripts/trigger_react_native_ci_for_release.rb
+        title: Trigger stripe-react-native CI
   deploy-dry-run:
     steps:
     - script@1:
