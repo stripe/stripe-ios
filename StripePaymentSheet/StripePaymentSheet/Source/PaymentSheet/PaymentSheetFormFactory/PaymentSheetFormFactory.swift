@@ -236,6 +236,9 @@ class PaymentSheetFormFactory {
             } else if paymentMethod == .satispay && isSettingUp {
                 // special case, display mandate for Satispay when setting up or pi+sfu
                 additionalElements = [makeSatispayMandate()]
+            } else if paymentMethod == .twint && isSettingUp {
+                // special case, display mandate for Twint when setting up or pi+sfu
+                additionalElements = [makeTwintMandate()]
             } else if paymentMethod == .bancontact {
                 return makeBancontact()
             } else if paymentMethod == .bacsDebit {
@@ -258,6 +261,8 @@ class PaymentSheetFormFactory {
                 return makeKlarna()
             } else if paymentMethod == .iDEAL {
                 return makeiDEAL()
+            } else if paymentMethod == .wero {
+                return makeWero()
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
@@ -736,6 +741,17 @@ extension PaymentSheetFormFactory {
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
         return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
+    }
+
+    func makeWero() -> PaymentMethodElement {
+        let country = makeCountry(countryCodes: ["DE", "BE", "FR"])
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        return FormElement(autoSectioningElements: [country, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
     }
 
     // Only show checkbox for PI+SFU & Setup Intent

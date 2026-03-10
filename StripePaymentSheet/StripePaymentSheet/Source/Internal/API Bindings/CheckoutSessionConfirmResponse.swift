@@ -15,12 +15,12 @@ final class CheckoutSessionConfirmResponse: NSObject {
     ///
     /// Determines whether the session is active, completed, or expired.
     /// Only sessions in an active state can be confirmed.
-    let status: STPCheckoutSessionStatus
+    let status: Checkout.Status
     /// Indicates whether payment has been collected for this session.
     ///
     /// Different from `status` - this specifically tracks payment state, not overall
     /// session lifecycle. Sessions in `setup` mode will show no payment required.
-    let paymentStatus: STPCheckoutSessionPaymentStatus
+    let paymentStatus: Checkout.PaymentStatus
     /// The PaymentIntent for this session, if in `payment` or `subscription` mode.
     ///
     /// Contains payment details including amount, currency, payment method, and status.
@@ -34,8 +34,8 @@ final class CheckoutSessionConfirmResponse: NSObject {
     let allResponseFields: [AnyHashable: Any]
 
     init(
-        status: STPCheckoutSessionStatus,
-        paymentStatus: STPCheckoutSessionPaymentStatus,
+        status: Checkout.Status,
+        paymentStatus: Checkout.PaymentStatus,
         paymentIntent: STPPaymentIntent?,
         setupIntent: STPSetupIntent?,
         allResponseFields: [AnyHashable: Any]
@@ -56,8 +56,8 @@ extension CheckoutSessionConfirmResponse: STPAPIResponseDecodable {
               let paymentStatusString = response["payment_status"] as? String
         else { return nil }
 
-        let status = STPCheckoutSessionStatus.status(from: statusString)
-        let paymentStatus = STPCheckoutSessionPaymentStatus.paymentStatus(from: paymentStatusString)
+        let status = Checkout.Status.status(from: statusString)
+        let paymentStatus = Checkout.PaymentStatus.paymentStatus(from: paymentStatusString)
 
         // Parse payment intent if present
         let paymentIntent = (response["payment_intent"] as? [AnyHashable: Any])
@@ -82,7 +82,7 @@ extension CheckoutSessionConfirmResponse {
     /// - Parameter mode: The checkout session mode (payment, setup, or subscription)
     /// - Returns: The client secret string from the underlying intent
     /// - Throws: PaymentSheetError if the expected intent is missing
-    func clientSecret(for mode: STPCheckoutSessionMode) throws -> String {
+    func clientSecret(for mode: Checkout.Mode) throws -> String {
         switch mode {
         case .setup:
             guard let setupIntent = setupIntent else {

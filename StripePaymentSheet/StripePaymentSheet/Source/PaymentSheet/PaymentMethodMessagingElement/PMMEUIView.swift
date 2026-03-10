@@ -41,7 +41,7 @@ class PMMEUIView: UIView {
         self.didUpdateHeight = didUpdateHeight
         super.init(frame: .zero)
 
-        // on tap behavior for opening info url
+        // Tap anywhere to open info modal
         addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTap)))
 
         // set interface style
@@ -69,11 +69,25 @@ class PMMEUIView: UIView {
         // choose which style to initialize
         switch viewData.mode {
         case .singlePartner(let logo):
-            let view = PMMESinglePartnerView(logoSet: logo, promotion: viewData.promotion, appearance: appearance)
+            let view = PMMESinglePartnerView(
+                logoSet: logo,
+                promotion: viewData.promotion,
+                learnMoreText: viewData.learnMoreText,
+                infoUrl: viewData.infoUrl,
+                appearance: appearance,
+                textViewDelegate: self
+            )
             stackView.addArrangedSubview(view)
             accessibilityLabel = view.customAccessibilityLabel
         case .multiPartner(let logos):
-            let view = PMMEMultiPartnerView(logoSets: logos, promotion: viewData.promotion, appearance: appearance)
+            let view = PMMEMultiPartnerView(
+                logoSets: logos,
+                promotion: viewData.promotion,
+                learnMoreText: viewData.learnMoreText,
+                infoUrl: viewData.infoUrl,
+                appearance: appearance,
+                textViewDelegate: self
+            )
             stackView.addArrangedSubview(view)
             accessibilityLabel = view.customAccessibilityLabel
         }
@@ -112,10 +126,33 @@ class PMMEUIView: UIView {
     }
 
     @objc private func didTap() {
+        openInfoModal()
+    }
+
+    private func openInfoModal() {
         analyticsHelper.logTapped()
 
         let infoController = PMMEInfoModal(infoUrl: infoUrl, style: appearance.style)
         infoController.modalPresentationStyle = .formSheet
         window?.findTopMostPresentedViewController()?.present(infoController, animated: true)
     }
+}
+
+extension PMMEUIView: UITextViewDelegate {
+    #if !os(visionOS)
+    func textView(
+        _ textView: UITextView,
+        shouldInteractWith URL: URL,
+        in characterRange: NSRange,
+        interaction: UITextItemInteraction
+    ) -> Bool {
+        guard interaction == .invokeDefaultAction else {
+            // Disable preview and actions
+            return false
+        }
+
+        openInfoModal()
+        return false
+    }
+    #endif
 }

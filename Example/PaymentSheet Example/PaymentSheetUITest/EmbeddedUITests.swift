@@ -197,8 +197,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertFalse(app.images["stp_card_visa"].waitForExistence(timeout: 3))
 
         app.buttons["Edit"].waitForExistenceAndTap()
-        app.otherElements["Card Brand Dropdown"].waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.swipeUp()
+        app.buttons["Visa"].waitForExistenceAndTap()
         app.buttons["Done"].waitForExistenceAndTap()
         app.buttons["Save"].waitForExistenceAndTap()
         XCTAssertFalse(app.staticTexts["Manage card"].waitForExistence(timeout: 3))
@@ -335,8 +334,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["View more"].waitForExistenceAndTap()
         app.buttons["Edit"].waitForExistenceAndTap()
         app.buttons["chevron"].firstMatch.waitForExistenceAndTap()
-        app.otherElements["Card Brand Dropdown"].waitForExistenceAndTap()
-        app.pickerWheels.firstMatch.swipeUp()
+        app.buttons["Visa"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Visa"].isSelected)
+        XCTAssertFalse(app.buttons["Cartes Bancaires"].isSelected)
         app.buttons["Done"].waitForExistenceAndTap()
         app.buttons["Save"].waitForExistenceAndTap()
 

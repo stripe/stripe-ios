@@ -89,29 +89,36 @@ public final class EmbeddedPaymentElement {
     }
 
     /// An asynchronous failable initializer for CheckoutSession mode
-    /// Loads the CheckoutSession's payment methods and configuration.
-    /// - Parameter checkoutSessionId: The ID of a Stripe CheckoutSession object (e.g., "cs_test_xxx")
+    /// Loads payment methods and configuration from a fully loaded CheckoutSession object.
+    /// - Parameter checkoutSession: A fully loaded Checkout.Session object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
-    @_spi(CheckoutSessionPreview) public static func create(
-        checkoutSessionId: String,
+    @_spi(CheckoutSessionsPreview) public static func create(
+        checkoutSession: Checkout.Session,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        try validateRowSelectionConfiguration(configuration: configuration)
+        guard let stpSession = checkoutSession as? STPCheckoutSession else {
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+            throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
+        }
+        var config = configuration
+        stpSession.applyAddressOverrides(to: &config)
+
+        try validateRowSelectionConfiguration(configuration: config)
 
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
-        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: config)
 
         let loadResult = try await PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSessionId),
-            configuration: configuration,
+            mode: .checkoutSession(stpSession),
+            configuration: config,
             analyticsHelper: analyticsHelper,
             integrationShape: .embedded
         )
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(
-            configuration: configuration,
+            configuration: config,
             loadResult: loadResult,
             analyticsHelper: analyticsHelper
         )

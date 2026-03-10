@@ -1,0 +1,76 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1T9ZYXFY0qyl6XeWN0kLJXEA\?client_secret=seti_1T9ZYXFY0qyl6XeWN0kLJXEA_secret_U7pCcjxY3N4LlNEOeQLJ5chqkOsWeB3&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=dFAgXIncosw4xeGDNdey2FnZjzUyIYomwixAuy_zqQP1aq_oPOJhVpfLErU_qJ2QiSKCjmMVGKCO1YA0
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Tue, 10 Mar 2026 23:19:26 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 1380
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_rXM8vzZLEPAxB6
+
+{
+  "id" : "seti_1T9ZYXFY0qyl6XeWN0kLJXEA",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_U7pDv1CYf6MdmmM8GUCH8UoY0pYn53J"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "ideal" : {
+      "bic" : null,
+      "bank" : null
+    },
+    "id" : "pm_1T9ZYfFY0qyl6XeWiP808ReS",
+    "billing_details" : {
+      "email" : "test@example.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Foo",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1773184765,
+    "allow_redisplay" : "always",
+    "type" : "ideal",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "ideal"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1773184757,
+  "client_secret" : "seti_1T9ZYXFY0qyl6XeWN0kLJXEA_secret_U7pCcjxY3N4LlNEOeQLJ5chqkOsWeB3",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

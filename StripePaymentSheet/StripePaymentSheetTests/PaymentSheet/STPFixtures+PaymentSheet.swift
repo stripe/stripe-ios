@@ -11,7 +11,7 @@ import PassKit
 @_spi(STP) @testable import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CheckoutSessionsPreview) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
 
@@ -297,7 +297,7 @@ extension Intent {
     }
 
     static func _testCheckoutSession(
-        mode: STPCheckoutSessionMode = .payment,
+        mode: Checkout.Mode = .payment,
         amount: Int = 2345,
         currency: String = "USD"
     ) -> Intent {

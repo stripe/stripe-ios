@@ -292,7 +292,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             if isFlowController {
                 return .continue
             }
-            return .makeDefaultTypeForPaymentSheet(intent: intent)
+            return .makeDefaultType(intent: intent)
         }()
         let status: ConfirmButton.Status = {
             if isPaymentInFlight {
@@ -778,6 +778,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                                                                                canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
                                                                                canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
+                                                                               enableCBCRedesign: configuration.enableCBCRedesign,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                                                                                isDefault: paymentMethod == defaultPaymentMethod)
             let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(

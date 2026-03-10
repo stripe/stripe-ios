@@ -169,22 +169,24 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Alipay"].waitForExistenceAndTap()
         app.buttons["Pay $50.99"].tap()
         // Cancel
-        XCTAssertTrue(app.webViews.staticTexts["Alipay test payment page"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.webViews.staticTexts["Alipay test payment page"].waitForExistence(timeout: 30))
         app.otherElements["TopBrowserBar"].buttons["Close"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Pay $50.99"].waitForExistence(timeout: 1))
         // Fail payment
         app.buttons["Pay $50.99"].tap()
-        app.waitForButtonOrStaticText("FAIL TEST PAYMENT").tap()
+        let failPaymentText = app.firstDescendant(withLabel: "FAIL TEST PAYMENT")
+        failPaymentText.waitForExistenceAndTap(timeout: 30.0)
         let errorMessage = app.staticTexts["We are unable to authenticate your payment method. Please choose a different payment method and try again."]
-        XCTAssertTrue(errorMessage.waitForExistence(timeout: 10))
+        XCTAssertTrue(errorMessage.waitForExistence(timeout: 30))
 
         // Try Cash App Pay
         app.buttons["Cash App Pay"].waitForExistenceAndTap()
         // Validate error disappears
         XCTAssertFalse(errorMessage.waitForExistence(timeout: 0.1))
         app.buttons["Pay $50.99"].tap()
-        app.waitForButtonOrStaticText("AUTHORIZE TEST PAYMENT").tap()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        let authorizePaymentText = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
+        authorizePaymentText.waitForExistenceAndTap(timeout: 30.0)
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 30))
     }
 
     func testCanPayWithApplePayWallet_verticalMode() {
@@ -272,15 +274,15 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // Should present the update card view controller
         XCTAssertTrue(app.staticTexts["Manage card"].waitForExistence(timeout: 2.0))
 
+        let cardBrandChoiceVisa = app.buttons["Visa"]
+        let cardBrandChoiceCB = app.buttons["Cartes Bancaires"]
         // Update card brand to Visa
-        XCTAssertTrue(app.textFields["Cartes Bancaires"].waitForExistenceAndTap(timeout: 5))
-        let cardBrandChoiceDropdown = app.pickerWheels.firstMatch
-        XCTAssertTrue(cardBrandChoiceDropdown.waitForExistence(timeout: 5))
-        cardBrandChoiceDropdown.selectNextOption()
-        app.toolbars.buttons["Done"].tap()
+        XCTAssertTrue(cardBrandChoiceCB.waitForExistence(timeout: 5))
+        XCTAssertTrue(cardBrandChoiceCB.isSelected)
+        XCTAssertTrue(cardBrandChoiceVisa.waitForExistenceAndTap(timeout: 5))
 
         // We should have selected Visa
-        XCTAssertTrue(app.textFields["Visa"].waitForExistence(timeout: 5))
+        XCTAssertTrue(cardBrandChoiceVisa.isSelected)
 
         // Update the card
         app.buttons["Save"].waitForExistenceAndTap(timeout: 5)

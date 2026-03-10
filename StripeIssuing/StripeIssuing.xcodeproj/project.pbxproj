@@ -19,11 +19,8 @@
 		3D136BEA2EB4494900186DA1 /* Version.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BE02EB4494900186DA1 /* Version.xcconfig */; };
 		3D136BEB2EB4494900186DA1 /* Project-Shared.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 3D136BD92EB4494900186DA1 /* Project-Shared.xcconfig */; };
 		A2C357112EF33DEA00BE7824 /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3570D2EF33DEA00BE7824 /* StripeCore.framework */; };
-		A2C357122EF33DEA00BE7824 /* StripeCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3570D2EF33DEA00BE7824 /* StripeCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A2C357132EF33DEA00BE7824 /* StripePayments.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3570E2EF33DEA00BE7824 /* StripePayments.framework */; };
-		A2C357142EF33DEA00BE7824 /* StripePayments.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3570E2EF33DEA00BE7824 /* StripePayments.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A2C357152EF33DEA00BE7824 /* StripePaymentsUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3570F2EF33DEA00BE7824 /* StripePaymentsUI.framework */; };
-		A2C357162EF33DEA00BE7824 /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3570F2EF33DEA00BE7824 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A2C357292EF35CE700BE7824 /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2C357282EF35CE700BE7824 /* StripeCoreTestUtils.framework */; };
 		A2C3572D2EF35D7500BE7824 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3572C2EF35D7500BE7824 /* XCTest.framework */; platformFilter = ios; };
 		A2C3572E2EF35D7500BE7824 /* XCTest.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A2C3572C2EF35D7500BE7824 /* XCTest.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -44,19 +41,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		A2C357192EF33DEA00BE7824 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				A2C357162EF33DEA00BE7824 /* StripePaymentsUI.framework in Embed Frameworks */,
-				A2C357142EF33DEA00BE7824 /* StripePayments.framework in Embed Frameworks */,
-				A2C357122EF33DEA00BE7824 /* StripeCore.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A2C3572F2EF35D7500BE7824 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -223,7 +207,6 @@
 				3D136BB62EB4493500186DA1 /* Sources */,
 				3D136BB72EB4493500186DA1 /* Frameworks */,
 				3D136BB82EB4493500186DA1 /* Resources */,
-				A2C357192EF33DEA00BE7824 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

@@ -78,7 +78,7 @@ extension PaymentMethodMessagingElement {
 
     /// The element's view data for the SwiftUI view.
     public var viewData: ViewData {
-        .init(mode: mode, infoUrl: infoUrl, legalDisclosure: legalDisclosure, promotion: promotion, appearance: appearance, analyticsHelper: analyticsHelper)
+        .init(mode: mode, infoUrl: infoUrl, learnMoreText: learnMoreText, legalDisclosure: legalDisclosure, promotion: promotion, appearance: appearance, analyticsHelper: analyticsHelper)
     }
 
     /// Displayable data of an initialized Payment Method Messaging Element.
@@ -86,6 +86,7 @@ extension PaymentMethodMessagingElement {
     public struct ViewData {
         let mode: Mode
         let infoUrl: URL
+        let learnMoreText: String
         let legalDisclosure: String?
         let promotion: String
         let appearance: PaymentMethodMessagingElement.Appearance

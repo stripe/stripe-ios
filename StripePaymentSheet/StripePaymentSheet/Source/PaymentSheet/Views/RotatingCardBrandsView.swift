@@ -50,9 +50,8 @@ class RotatingCardBrandsView: UIView {
                     return 5
                 case .unionPay:
                     return 6
-                // CB should not appear as one of the rotating brands.
                 case .cartesBancaires:
-                    return nil
+                    return 7
                 case .unknown:
                     return nil
                 @unknown default:
@@ -174,6 +173,11 @@ class RotatingCardBrandsView: UIView {
                 return imageView
             }) + [rotatingCardBrandView]
             rotatingCardBrands = Array(cardBrands.suffix(from: min(cardBrands.count, Self.MaxStaticBrands)))
+            // If CBC is enabled, show Cartes Bancaires as the first rotating brand
+            if let cartesBancairesIndex = rotatingCardBrands.firstIndex(of: .cartesBancaires) {
+                rotatingCardBrands.remove(at: cartesBancairesIndex)
+                rotatingCardBrands.insert(.cartesBancaires, at: 0)
+            }
 
             let stackView = UIStackView(arrangedSubviews: cardBrandViews)
             stackView.spacing = Self.LogoSpacing

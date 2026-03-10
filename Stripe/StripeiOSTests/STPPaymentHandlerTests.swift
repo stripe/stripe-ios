@@ -21,11 +21,6 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
-    override func setUp() {
-        self.recordingMode = false
-        super.setUp()
-    }
-
     func testPollingBehaviorWithFinalCall() {
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
@@ -36,9 +31,9 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         let startTime = Date()
 
         let paymentIntent = STPFixtures.paymentIntent(
-            paymentMethodTypes: ["card"],
+            paymentMethodTypes: ["amazon_pay"],
             status: .processing,
-            paymentMethod: ["id": "pm_test", "type": "card", "created": Date().timeIntervalSince1970]
+            paymentMethod: ["id": "pm_test", "type": "amazon_pay", "created": Date().timeIntervalSince1970]
         )
 
         mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
@@ -155,7 +150,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         let startTime = Date()
 
         let setupIntent = STPFixtures.setupIntent(
-            paymentMethodTypes: ["card"],
+            paymentMethodTypes: ["amazon_pay"],
             status: .processing,
             paymentMethod: ["id": "pm_test", "type": "card"]
         )
@@ -216,9 +211,9 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         let startTime = Date()
 
         let setupIntent = STPFixtures.setupIntent(
-            paymentMethodTypes: ["card"],
+            paymentMethodTypes: ["amazon_pay"],
             status: .processing,
-            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+            paymentMethod: ["id": "pm_test", "type": "amazon_pay", "created": 12345]
         )
 
         mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in

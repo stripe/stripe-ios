@@ -9,6 +9,12 @@
 import UIKit
 @preconcurrency import WebKit
 
+/// Represents the type of intent being confirmed
+enum IntentType {
+    case paymentIntent(id: String)
+    case setupIntent(id: String)
+}
+
 /// View controller for handling intent confirmation challenges via WebView
 /// This handles the `intent_confirmation_challenge` next action type by loading
 /// a Stripe-hosted web page that performs authentication via Stripe.js
@@ -18,30 +24,40 @@ class IntentConfirmationChallengeViewController: UIViewController {
     // MARK: - Properties
     private let publishableKey: String
     private let clientSecret: String
+    private let intentType: IntentType
+    private let apiClient: STPAPIClient
     private let completion: (Result<Void, Error>) -> Void
 
     private var webView: WKWebView!
     private var dimmedBackgroundView: UIView!
+    private var closeButton: UIButton!
 
     // Hard-coded challenge URL
     private static let challengeHost = "b.stripecdn.com"
     private static let challengeVersion = 1
     private static let challengeURL = URL(string: "https://\(challengeHost)/mobile-confirmation-challenge/assets/index.html?v=\(challengeVersion)")!
 
+    private let stripeJs: STPIntentActionUseStripeSDK.StripeJS?
     private let startTime: Date
 
     // MARK: - Initialization
     init(
         publishableKey: String,
         clientSecret: String,
+        intentType: IntentType,
+        apiClient: STPAPIClient,
+        stripeJs: STPIntentActionUseStripeSDK.StripeJS?,
         completion: @escaping (Result<Void, Error>) -> Void
     ) {
         self.publishableKey = publishableKey
         self.clientSecret = clientSecret
+        self.intentType = intentType
+        self.apiClient = apiClient
+        self.stripeJs = stripeJs
         self.completion = { result in
             completion(result)
         }
-        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeStart()
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeStart(captchaVendorName: stripeJs?.captchaVendorName)
         self.startTime = Date()
         super.init(nibName: nil, bundle: nil)
     }
@@ -58,6 +74,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
 
         setupDimmedBackground()
         setupWebView()
+        setupCloseButton()
         loadChallenge()
     }
 
@@ -95,6 +112,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.navigationDelegate = self
         webView.translatesAutoresizingMaskIntoConstraints = false
+        webView.customUserAgent = PaymentsSDKVariant.paymentUserAgent
 
         // Make webview transparent
         webView.isOpaque = false
@@ -116,6 +134,55 @@ class IntentConfirmationChallengeViewController: UIViewController {
         ])
     }
 
+    private func setupCloseButton() {
+        let useLiquidGlass = Self.shouldApplyLiquidGlass
+
+        closeButton = UIButton(type: .system)
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+
+        let symbolConfig = UIImage.SymbolConfiguration(
+            pointSize: useLiquidGlass ? 20 : 16,
+            weight: useLiquidGlass ? .regular : .medium
+        )
+        closeButton.setImage(UIImage(systemName: "xmark", withConfiguration: symbolConfig), for: .normal)
+
+        if useLiquidGlass {
+            let glassButtonSize: CGFloat = 44
+            NSLayoutConstraint.activate([
+                closeButton.widthAnchor.constraint(equalToConstant: glassButtonSize),
+                closeButton.heightAnchor.constraint(equalToConstant: glassButtonSize),
+            ])
+            // These checks are a convenience because .glass is only available on iOS (not visionOS)
+            // when compiling with XCode 26
+#if compiler(>=6.2)
+            #if !os(visionOS)
+            if #available(iOS 26.0, visionOS 26.0, *) {
+                closeButton.configuration = .glass()
+            }
+            #endif
+#endif
+        } else {
+            closeButton.tintColor = .white
+        }
+
+        // Add action
+        closeButton.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+
+        // Accessibility
+        closeButton.accessibilityLabel = String.Localized.close
+        closeButton.accessibilityIdentifier = "UIButton.Close"
+
+        // Initially hidden, will show when webview is ready
+        closeButton.alpha = 0
+
+        view.addSubview(closeButton)
+
+        NSLayoutConstraint.activate([
+            closeButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            closeButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+        ])
+    }
+
     private func loadChallenge() {
         let request = URLRequest(url: Self.challengeURL)
         webView.load(request)
@@ -129,25 +196,39 @@ class IntentConfirmationChallengeViewController: UIViewController {
         webView?.configuration.userContentController.removeScriptMessageHandler(forName: "onError")
     }
 
+    @objc private func closeButtonTapped() {
+        closeButton.isEnabled = false
+        self.completion(.failure(ChallengeError.userCanceled))
+        switch intentType {
+        case .paymentIntent(let id):
+            apiClient.cancelPaymentIntentCaptchaChallenge(paymentIntentId: id, clientSecret: clientSecret) { _, _ in }
+        case .setupIntent(let id):
+            apiClient.cancelSetupIntentCaptchaChallenge(setupIntentId: id, clientSecret: clientSecret) { _, _ in }
+        }
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeCanceled(duration: Date().timeIntervalSince(startTime), captchaVendorName: stripeJs?.captchaVendorName)
+        cleanup()
+    }
+
     // MARK: - Handlers
     private func handleReady() {
-        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeWebViewLoaded(duration: Date().timeIntervalSince(startTime))
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeWebViewLoaded(duration: Date().timeIntervalSince(startTime), captchaVendorName: stripeJs?.captchaVendorName)
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.3) {
                 self.dimmedBackgroundView.alpha = 1.0
                 self.webView.alpha = 1.0
+                self.closeButton.alpha = 1.0
             }
         }
     }
 
     private func handleSuccess() {
-        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeSuccess(duration: Date().timeIntervalSince(startTime))
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeSuccess(duration: Date().timeIntervalSince(startTime), captchaVendorName: stripeJs?.captchaVendorName)
         cleanup()
         completion(.success(()))
     }
 
     private func handleError(_ error: Error) {
-        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeError(error: error, duration: Date().timeIntervalSince(startTime))
+        STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeError(error: error, duration: Date().timeIntervalSince(startTime), captchaVendorName: stripeJs?.captchaVendorName)
         cleanup()
         completion(.failure(error))
     }
@@ -246,10 +327,27 @@ extension IntentConfirmationChallengeViewController: WKNavigationDelegate {
     }
 }
 
+// MARK: - Liquid Glass
+@available(iOS 14.0, *)
+extension IntentConfirmationChallengeViewController {
+    private static var shouldApplyLiquidGlass: Bool {
+        #if compiler(>=6.2)
+        guard #available(iOS 26.0, *) else { return false }
+        if let optedOut = Bundle.main.infoDictionary?["UIDesignRequiresCompatibility"] as? Bool, optedOut {
+            return false
+        }
+        return true
+        #else
+        return false
+        #endif
+    }
+}
+
 // MARK: - Errors
 enum ChallengeError: LocalizedError, AnalyticLoggableError {
     case webError(message: String, type: String, code: String?)
     case navigationFailed(Error)
+    case userCanceled
     case unknownError
 
     var analyticsErrorType: String {
@@ -285,6 +383,8 @@ enum ChallengeError: LocalizedError, AnalyticLoggableError {
             return message
         case .navigationFailed(let error):
             return "Navigation failed: \(error.localizedDescription)"
+        case .userCanceled:
+            return nil  // No error message for user cancellation
         case .unknownError:
             return "Unknown error."
         }
@@ -294,27 +394,53 @@ enum ChallengeError: LocalizedError, AnalyticLoggableError {
 
 // All duration analytics are in milliseconds
 extension STPAnalyticsClient {
-    func logIntentConfirmationChallengeStart() {
+    func logIntentConfirmationChallengeStart(captchaVendorName: String?) {
+        var params: [String: Any] = [:]
+        if let captchaVendorName {
+            params["captcha_vendor_name"] = captchaVendorName
+        }
         log(
-            analytic: GenericAnalytic(event: .intentConfirmationChallengeStart, params: [:])
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeStart, params: params)
         )
     }
 
-    func logIntentConfirmationChallengeSuccess(duration: TimeInterval) {
+    func logIntentConfirmationChallengeSuccess(duration: TimeInterval, captchaVendorName: String?) {
+        var params: [String: Any] = ["duration": duration * 1000]
+        if let captchaVendorName {
+            params["captcha_vendor_name"] = captchaVendorName
+        }
         log(
-            analytic: GenericAnalytic(event: .intentConfirmationChallengeSuccess, params: ["duration": duration * 1000])
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeSuccess, params: params)
         )
     }
 
-    func logIntentConfirmationChallengeWebViewLoaded(duration: TimeInterval) {
+    func logIntentConfirmationChallengeWebViewLoaded(duration: TimeInterval, captchaVendorName: String?) {
+        var params: [String: Any] = ["duration": duration * 1000]
+        if let captchaVendorName {
+            params["captcha_vendor_name"] = captchaVendorName
+        }
         log(
-            analytic: GenericAnalytic(event: .intentConfirmationChallengeWebViewLoaded, params: ["duration": duration * 1000])
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeWebViewLoaded, params: params)
         )
     }
 
-    func logIntentConfirmationChallengeError(error: Error, duration: TimeInterval) {
+    func logIntentConfirmationChallengeError(error: Error, duration: TimeInterval, captchaVendorName: String?) {
+        var params: [String: Any] = ["duration": duration * 1000]
+        if let captchaVendorName {
+            params["captcha_vendor_name"] = captchaVendorName
+        }
         log(
-            analytic: ErrorAnalytic(event: .intentConfirmationChallengeError, error: error, additionalNonPIIParams: ["duration": duration * 1000])
+            analytic: ErrorAnalytic(event: .intentConfirmationChallengeError, error: error, additionalNonPIIParams: params)
+        )
+    }
+
+    func logIntentConfirmationChallengeCanceled(duration: TimeInterval, captchaVendorName: String?) {
+        var params: [String: Any] = ["duration": duration * 1000]
+        if let captchaVendorName {
+            params["captcha_vendor_name"] = captchaVendorName
+        }
+        log(
+            analytic: GenericAnalytic(event: .intentConfirmationChallengeCanceled, params: params)
         )
     }
 }

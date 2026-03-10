@@ -8,7 +8,7 @@
 @testable import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CheckoutSessionsPreview) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 

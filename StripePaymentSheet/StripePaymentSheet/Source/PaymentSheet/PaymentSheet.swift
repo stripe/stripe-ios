@@ -48,7 +48,7 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkoutSession(String)
+        case checkoutSession(STPCheckoutSession)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
@@ -104,13 +104,18 @@ public class PaymentSheet {
         )
     }
 
-    /// Initializes PaymentSheet with a CheckoutSession ID
-    /// - Parameter checkoutSessionId: The ID of a Stripe CheckoutSession object (e.g., "cs_test_xxx")
+    /// Initializes PaymentSheet with a CheckoutSession object
+    /// - Parameter checkoutSession: A fully loaded Checkout.Session object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @_spi(CheckoutSessionPreview) public convenience init(checkoutSessionId: String, configuration: Configuration) {
+    @_spi(CheckoutSessionsPreview) public convenience init(checkoutSession: Checkout.Session, configuration: Configuration) {
+        guard let stpSession = checkoutSession as? STPCheckoutSession else {
+            fatalError("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+        }
+        var config = configuration
+        stpSession.applyAddressOverrides(to: &config)
         self.init(
-            mode: .checkoutSession(checkoutSessionId),
-            configuration: configuration
+            mode: .checkoutSession(stpSession),
+            configuration: config
         )
     }
 

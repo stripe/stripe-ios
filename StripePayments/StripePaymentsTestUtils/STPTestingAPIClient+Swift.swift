@@ -195,10 +195,92 @@ extension STPTestingAPIClient {
         let publishableKey: String
     }
 
-    func fetchCheckoutSession(
+    func fetchCheckoutSessionPaymentMode(
         types: [String] = ["card"],
         currency: String = "usd",
         amount: Int? = nil,
+        merchantCountry: String? = "us",
+        customerID: String? = nil,
+        allowPromotionCodes: Bool = false,
+        allowAdjustableLineItemQuantity: Bool = false,
+        includeShippingOptions: Bool = false,
+        collectShippingAddress: Bool = false,
+        collectBillingAddress: Bool = false,
+        automaticTax: Bool = false,
+        enableTaxIdCollection: Bool = false
+    ) async throws -> CreateCheckoutSessionResponse {
+        var additionalParameters: [String: Any] = [:]
+        if allowPromotionCodes {
+            additionalParameters["allow_promotion_codes"] = true
+        }
+        if allowAdjustableLineItemQuantity {
+            additionalParameters["line_items"] = [
+                [
+                    "price_data": [
+                        "currency": currency,
+                        "product_data": ["name": "Test Product", "tax_code": "txcd_99999999", ],
+                        "unit_amount": amount ?? 5050,
+                        "tax_behavior": "exclusive",
+                    ] as [String: Any],
+                    "quantity": 1,
+                    "adjustable_quantity": [
+                        "enabled": true,
+                        "minimum": 1,
+                        "maximum": 10,
+                    ] as [String: Any],
+                ] as [String: Any],
+            ]
+        }
+        if includeShippingOptions {
+            additionalParameters["shipping_options"] = [
+                [
+                    "shipping_rate_data": [
+                        "display_name": "Standard Shipping",
+                        "type": "fixed_amount",
+                        "fixed_amount": [
+                            "amount": 500,
+                            "currency": currency,
+                        ] as [String: Any],
+                    ] as [String: Any],
+                ] as [String: Any],
+                [
+                    "shipping_rate_data": [
+                        "display_name": "Express Shipping",
+                        "type": "fixed_amount",
+                        "fixed_amount": [
+                            "amount": 1000,
+                            "currency": currency,
+                        ] as [String: Any],
+                    ] as [String: Any],
+                ] as [String: Any],
+            ]
+        }
+        if collectShippingAddress {
+            additionalParameters["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
+        }
+        if collectBillingAddress {
+            additionalParameters["billing_address_collection"] = "required"
+        }
+        if automaticTax {
+            additionalParameters["automatic_tax"] = ["enabled": true]
+        }
+        if enableTaxIdCollection {
+            additionalParameters["tax_id_collection"] = ["enabled": true]
+        }
+        let params: [String: Any?] = [
+            "account": merchantCountry,
+            "payment_method_types": types,
+            "currency": currency,
+            "amount": amount,
+            "customer": customerID,
+            "additional_parameters": additionalParameters.isEmpty ? nil : additionalParameters,
+        ]
+        return try await makeRequest(endpoint: "create_checkout_session", params: params)
+    }
+
+    func fetchCheckoutSessionSetupMode(
+        types: [String] = ["card"],
+        currency: String = "usd",
         merchantCountry: String? = "us",
         customerID: String? = nil
     ) async throws -> CreateCheckoutSessionResponse {
@@ -206,10 +288,9 @@ extension STPTestingAPIClient {
             "account": merchantCountry,
             "payment_method_types": types,
             "currency": currency,
-            "amount": amount,
             "customer": customerID,
         ]
-        return try await makeRequest(endpoint: "create_checkout_session", params: params)
+        return try await makeRequest(endpoint: "create_checkout_session_setup", params: params)
     }
 
     // MARK: - Helpers

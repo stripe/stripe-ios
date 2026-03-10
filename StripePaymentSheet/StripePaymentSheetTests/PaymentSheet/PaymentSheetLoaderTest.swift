@@ -8,7 +8,7 @@
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CheckoutSessionsPreview) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
@@ -638,16 +638,60 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     // MARK: - CheckoutSession
 
     @MainActor
-    func testPaymentSheetLoadWithCheckoutSession() async throws {
-        let expectation = XCTestExpectation(description: "Load w/ CheckoutSession")
+    func testPaymentSheetLoadWithDirectCheckoutSessionPayment() async throws {
+        let expectation = XCTestExpectation(description: "Load w/ direct CheckoutSession")
         // Fetch a fresh checkout session from the test backend
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let checkoutSessionId = checkoutSessionResponse.id
+        let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         var configuration = PaymentSheet.Configuration()
-        configuration.apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        configuration.apiClient = customApiClient
+
+        // Fetch the full STPCheckoutSession object (with allResponseFields containing elements_session)
+        let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
 
         PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSessionId),
+            mode: .checkoutSession(checkoutSession),
+            configuration: configuration,
+            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            integrationShape: .paymentSheet
+        ) { result in
+            expectation.fulfill()
+            switch result {
+            case .success(let loadResult):
+                // Verify the intent is a checkoutSession
+                guard case let .checkoutSession(loadedSession) = loadResult.intent else {
+                    XCTFail("Expected checkoutSession intent type")
+                    return
+                }
+                // Verify CheckoutSession properties
+                XCTAssertEqual(loadedSession.stripeId, checkoutSessionId)
+                // Verify elements session is loaded
+                XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
+                // Verify payment methods are loaded
+                XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
+            case .failure(let error):
+                XCTFail(error.nonGenericDescription)
+            }
+        }
+        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
+    @MainActor
+    func testPaymentSheetLoadWithCheckoutSessionSetup() async throws {
+        let expectation = XCTestExpectation(description: "Load w/ CheckoutSession setup mode")
+        // Fetch a fresh checkout session in setup mode from the test backend
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionSetupMode()
+        let checkoutSessionId = checkoutSessionResponse.id
+        let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = customApiClient
+
+        // Fetch the full STPCheckoutSession object (with allResponseFields containing elements_session)
+        let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
+
+        PaymentSheetLoader.load(
+            mode: .checkoutSession(checkoutSession),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
             integrationShape: .paymentSheet
@@ -662,15 +706,51 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 }
                 // Verify CheckoutSession properties
                 XCTAssertEqual(checkoutSession.stripeId, checkoutSessionId)
-                XCTAssertEqual(checkoutSession.mode, .payment)
+                XCTAssertEqual(checkoutSession.mode, .setup)
                 XCTAssertEqual(checkoutSession.status, .open)
-                XCTAssertEqual(checkoutSession.totalSummary?.total, 2000)
+                XCTAssertEqual(checkoutSession.paymentStatus, .noPaymentRequired)
                 // Verify elements session is loaded
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 // Verify payment methods are loaded
                 XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
+            }
+        }
+        await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
+    }
+
+    @MainActor
+    func testPaymentSheetLoadWithDirectCheckoutSessionMissingElementsSession() async throws {
+        let expectation = XCTestExpectation(description: "Load w/ direct CheckoutSession missing elements_session")
+        // Create a minimal STPCheckoutSession without elements_session in allResponseFields
+        let mockJSON: [AnyHashable: Any] = [
+            "session_id": "cs_test_fake",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+        ]
+        guard let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: mockJSON) else {
+            XCTFail("Failed to create mock STPCheckoutSession")
+            return
+        }
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        PaymentSheetLoader.load(
+            mode: .checkoutSession(checkoutSession),
+            configuration: configuration,
+            analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
+            integrationShape: .paymentSheet
+        ) { result in
+            expectation.fulfill()
+            switch result {
+            case .success:
+                XCTFail("Expected failure when elements_session is missing")
+            case .failure:
+                // Expected: should fail because elements_session is not in allResponseFields
+                break
             }
         }
         await fulfillment(of: [expectation], timeout: STPTestingNetworkRequestTimeout)
@@ -764,7 +844,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Test successful load with valid payment method options
         let all_payment_methods_pmo_sfu_values: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = STPPaymentMethodType.allCases.reduce([:]) { partialResult, type in
-            guard type != .unknown else { return partialResult }
+            // Skip unknown and wero (private preview, not yet recognized by /v1/elements/sessions)
+            guard type != .unknown, type != .wero else { return partialResult }
             return partialResult.merging([type: .offSession]) { a, _ in a }
         }
         let intentConfig = PaymentSheet.IntentConfiguration(

@@ -12,13 +12,19 @@ struct LinkPayoutsDemoView: View {
     @State private var errorMessage: String?
     @State private var isLoading = false
     @State private var testResult: TestResult = .none
+    @State private var isLivemode = false
     @State private var webViewURL: URL?
     @State private var lastOnboardingURL: URL?
 
     private let callbackHost = "example.com"
     private let callbackPath = "/link-onboarding"
     private let callbackURL = "https://example.com/link-onboarding"
-    private let publishableKey = "pk_test_51SDsD6CqcrCW3xmZyjsGLU4mk6x9JYlcmcD7mPCzFTevC27Nli6eTrCoG5ziuVCYVuOKA1tHu9RCZxyMnExikeDP00n1ngMsjy"
+    private let testPublishableKey = "pk_test_51SDsD6CqcrCW3xmZyjsGLU4mk6x9JYlcmcD7mPCzFTevC27Nli6eTrCoG5ziuVCYVuOKA1tHu9RCZxyMnExikeDP00n1ngMsjy"
+    private let livePublishableKey = "pk_live_51Sz01tI5I3AL1Ogx3tk3ejSuSYZsKN2d4KWmNBU7sKfaXmEfDdLWg3yMQ17kN8OlwHjphgU3rEduWDaDvUj4NoKJ00zeeD5lb1"
+
+    private var publishableKey: String {
+        isLivemode ? livePublishableKey : testPublishableKey
+    }
 
     var body: some View {
         VStack(spacing: 24) {
@@ -38,6 +44,9 @@ struct LinkPayoutsDemoView: View {
                 .pickerStyle(.segmented)
             }
             .padding(.horizontal, 32)
+
+            Toggle("Livemode", isOn: $isLivemode)
+                .padding(.horizontal, 32)
 
             Button {
                 launchFlow()
@@ -159,7 +168,7 @@ struct LinkPayoutsDemoView: View {
 
         Task {
             do {
-                let connectionSession = try await LinkPayoutsAPIClient.getConnectionSession()
+                let connectionSession = try await LinkPayoutsAPIClient.getConnectionSession(liveMode: isLivemode)
                 await MainActor.run {
                     presentWebView(clientSecret: connectionSession.clientSecret)
                 }
@@ -359,12 +368,17 @@ struct LinkPayoutsResult {
 enum LinkPayoutsAPIClient {
     private static let baseURL = URL(string: "https://link-payouts-demo.stripedemos.com")!
 
-    static func getConnectionSession() async throws -> ConnectionSession {
+    static func getConnectionSession(liveMode: Bool = false) async throws -> ConnectionSession {
         let url = baseURL.appendingPathComponent("connection_session")
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        if liveMode {
+            let requestBody = ["livemode": true]
+            request.httpBody = try JSONSerialization.data(withJSONObject: requestBody)
+        }
 
         let (data, response) = try await URLSession.shared.data(for: request)
 

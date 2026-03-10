@@ -432,6 +432,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
         case US
         case GB
+        case DE
     }
 
     enum BillingDetailsAttachDefaults: String, PickerEnum {
@@ -628,6 +629,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             }
         }
     }
+    enum EnableCBCRedesign: String, PickerEnum {
+        static let enumName: String = "CBC Redesign"
+
+        case on
+        case off
+    }
     enum RequireCVCRecollectionEnabled: String, PickerEnum {
         static let enumName: String = "Require CVC Recollection"
         case on
@@ -738,6 +745,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var externalPaymentMethods: ExternalPaymentMethods
     var customPaymentMethods: CustomPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
+    var enableCBCRedesign: EnableCBCRedesign
     var requireCVCRecollection: RequireCVCRecollectionEnabled
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
 
@@ -799,6 +807,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             externalPaymentMethods: .off,
             customPaymentMethods: .off,
             preferredNetworksEnabled: .off,
+            enableCBCRedesign: .on,
             requireCVCRecollection: .off,
             allowsRemovalOfLastSavedPaymentMethod: .on,
             attachDefaults: .off,
@@ -834,7 +843,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     var base64Data: String {
         let jsonData = try! JSONEncoder().encode(self)
-        return jsonData.base64EncodedString()
+        let compressedData = try! (jsonData as NSData).compressed(using: .lzfse) as Data
+        return compressedData.base64EncodedString()
     }
 
     var base64URL: URL {
@@ -842,12 +852,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     }
 
     static func fromBase64<T: Decodable>(base64: String, className: T.Type) -> T? {
-        if let base64Data = base64.data(using: .utf8),
-           let data = Data(base64Encoded: base64Data),
-           let decodedObject = try? JSONDecoder().decode(className.self, from: data) {
-            return decodedObject
+        guard let base64Data = base64.data(using: .utf8),
+              let compressedData = Data(base64Encoded: base64Data) else {
+            return nil
         }
-        return nil
+        let data = try! (compressedData as NSData).decompressed(using: .lzfse) as Data
+        let decodedObject = try! JSONDecoder().decode(className.self, from: data)
+        return decodedObject
     }
 }
 
