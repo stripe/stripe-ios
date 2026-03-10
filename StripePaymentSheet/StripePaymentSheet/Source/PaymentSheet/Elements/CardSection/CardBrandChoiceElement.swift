@@ -105,25 +105,26 @@ final class CardBrandChoiceElement: Element {
 
     func update(cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand> = []) {
         let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
+        // If we only fetched one card brand that is not disallowed, don't allow deselection
+        let allowDeselection = allowDeselectionByDefault && allowedBrands.count > 1
         switch variant {
         case .selector(let element):
             element.update(
                 items: Self.makeItems(from: cardBrands),
                 disabledItems: Set(Self.makeItems(from: disallowedCardBrands))
             )
-            // If there's only one allowed brand, don't allow deselection
-            element.allowDeselection = allowDeselectionByDefault && allowedBrands.count > 1
+            element.allowDeselection = allowDeselection
         case .dropdown(let element):
             let items = DropdownFieldElement.items(
                 from: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
                 theme: element.theme,
-                includePlaceholder: allowDeselectionByDefault && allowedBrands.count > 1
+                includePlaceholder: allowDeselection
             )
             element.update(items: items)
         }
-        guard cardBrands.count > 1 else { return } // only auto-select if we have more than one brand to choose from
-        // If there's only one allowed brand due to filtering, auto-select it
+        // If we only fetched one card brand that is not disallowed, auto select it.
+        // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
         if allowedBrands.count == 1,
            !disallowedCardBrands.isEmpty,
            let brand = allowedBrands.first {
