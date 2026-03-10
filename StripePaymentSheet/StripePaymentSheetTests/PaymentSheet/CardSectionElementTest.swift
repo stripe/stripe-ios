@@ -61,18 +61,14 @@ class CardSectionElementTest: XCTestCase {
         let cardSection = makeCardSectionElement(cardBrandFilter: filter)
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .cartesBancaires)
-        if case .selector(let selector) = cardSection.cardBrandChoiceElement?.variant {
-            XCTAssertFalse(selector.allowDeselection)
-        }
+        XCTAssertFalse(cardSection.cardBrandChoiceElement?.view.isUserInteractionEnabled ?? true)
     }
 
     func testFiltering_noSelectionWhenMultipleBrandsAllowed() {
         let cardSection = makeCardSectionElement()
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
-        if case .selector(let selector) = cardSection.cardBrandChoiceElement?.variant {
-            XCTAssertTrue(selector.allowDeselection)
-        }
+        XCTAssertTrue(cardSection.cardBrandChoiceElement?.view.isUserInteractionEnabled ?? false)
     }
 
     func testFiltering_noSelectionWhenAllDisallowed() {
@@ -80,9 +76,7 @@ class CardSectionElementTest: XCTestCase {
         let cardSection = makeCardSectionElement(cardBrandFilter: filter)
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
-        if case .selector(let selector) = cardSection.cardBrandChoiceElement?.variant {
-            XCTAssertFalse(selector.allowDeselection)
-        }
+        XCTAssertFalse(cardSection.cardBrandChoiceElement?.view.isUserInteractionEnabled ?? true)
     }
 
     // MARK: - Preferred networks + card brand filtering combined

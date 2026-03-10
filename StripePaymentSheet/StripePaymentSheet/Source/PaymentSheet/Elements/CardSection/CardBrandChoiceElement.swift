@@ -18,12 +18,12 @@ import UIKit
 final class CardBrandChoiceElement: Element {
     weak var delegate: ElementDelegate?
 
-    enum Variant {
+    private enum Variant {
         case selector(SegmentedSelectorElement)
         case dropdown(DropdownFieldElement)
     }
 
-    let variant: Variant
+    private let variant: Variant
 
     var view: UIView {
         switch variant {
@@ -74,14 +74,11 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
-    private let allowDeselectionByDefault: Bool
-
     init(enableCBCRedesign: Bool,
          cardBrands: Set<STPCardBrand> = [],
          disallowedCardBrands: Set<STPCardBrand> = [],
          theme: ElementsAppearance = .default,
          allowDeselection: Bool = true) {
-        self.allowDeselectionByDefault = allowDeselection
         if enableCBCRedesign {
             let element = SegmentedSelectorElement(
                 items: Self.makeItems(from: cardBrands),
@@ -105,26 +102,24 @@ final class CardBrandChoiceElement: Element {
 
     func update(cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand> = []) {
         let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
-        // If we only fetched one card brand that is not disallowed, don't allow deselection
-        let allowDeselection = allowDeselectionByDefault && allowedBrands.count > 1
         switch variant {
         case .selector(let element):
             element.update(
                 items: Self.makeItems(from: cardBrands),
                 disabledItems: Set(Self.makeItems(from: disallowedCardBrands))
             )
-            element.allowDeselection = allowDeselection
         case .dropdown(let element):
             let items = DropdownFieldElement.items(
                 from: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
                 theme: element.theme,
-                includePlaceholder: allowDeselection
+                includePlaceholder: element.items.contains { $0.isPlaceholder }
             )
             element.update(items: items)
         }
-        // If we only fetched one card brand that is not disallowed, auto select it.
+        // If we only fetched one card brand that is not disallowed, disable interaction and auto select it.
         // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
+        view.isUserInteractionEnabled = allowedBrands.count > 1
         if allowedBrands.count == 1,
            !disallowedCardBrands.isEmpty,
            let brand = allowedBrands.first {

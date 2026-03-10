@@ -118,30 +118,4 @@ final class SegmentedSelectorElementTest: XCTestCase {
         element.update(items: items, disabledItems: Set([items[2]]))
         XCTAssertEqual(element.selectedItem, items[0])
     }
-
-    func testChangingAllowDeselectionPreventsDeselection() {
-        let element = SegmentedSelectorElement(items: items, allowDeselection: true)
-        element.didTap(items[1])
-        XCTAssertEqual(element.selectedItem, items[1])
-
-        // Dynamically disallow deselection
-        element.allowDeselection = false
-
-        // Tap the already-selected item — should not toggle off
-        element.didTap(items[1])
-        XCTAssertEqual(element.selectedItem, items[1])
-    }
-
-    func testChangingAllowDeselectionAllowsDeselection() {
-        let element = SegmentedSelectorElement(items: items, allowDeselection: false)
-        element.didTap(items[1])
-        XCTAssertEqual(element.selectedItem, items[1])
-
-        // Dynamically allow deselection
-        element.allowDeselection = true
-
-        // Tap the already-selected item — should toggle off
-        element.didTap(items[1])
-        XCTAssertNil(element.selectedItem)
-    }
 }
