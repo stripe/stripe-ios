@@ -74,7 +74,7 @@ import UIKit
     }
 
     private func updateKeyboard() {
-        if countryCode == "US" {
+        if countryCode == "US" && !UIDevice.current.shouldAvoidNumericKeyboard {
             keyboardType = .asciiCapableNumberPad
         } else {
             keyboardType = .numbersAndPunctuation

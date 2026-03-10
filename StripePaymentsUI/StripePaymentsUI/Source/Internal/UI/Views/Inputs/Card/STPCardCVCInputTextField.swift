@@ -54,7 +54,8 @@ import UIKit
         assert(formatter.isKind(of: STPCardCVCInputTextFieldFormatter.self))
         assert(validator.isKind(of: STPCardCVCInputTextFieldValidator.self))
         super.init(formatter: formatter, validator: validator)
-        keyboardType = .asciiCapableNumberPad
+        keyboardType = UIDevice.current.shouldAvoidNumericKeyboard
+            ? .numbersAndPunctuation : .asciiCapableNumberPad
     }
 
     required init?(

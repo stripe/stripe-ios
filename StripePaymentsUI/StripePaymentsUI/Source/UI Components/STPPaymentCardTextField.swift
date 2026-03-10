@@ -1577,7 +1577,8 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         textField.backgroundColor = UIColor.clear
         textField.adjustsFontForContentSizeCategory = true
         // setCountryCode: updates the postalCodeField keyboardType, this is safe
-        textField.keyboardType = .asciiCapableNumberPad
+        textField.keyboardType = UIDevice.current.shouldAvoidNumericKeyboard
+            ? .numbersAndPunctuation : .asciiCapableNumberPad
         textField.textAlignment = .left
         textField.font = font
         textField.defaultColor = textColor
