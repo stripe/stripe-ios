@@ -66,12 +66,12 @@ extension PaymentSheet.FlowController {
 
     /// An asynchronous failable initializer for PaymentSheet.FlowController
     /// This asynchronously loads the CheckoutSession's payment methods and configuration.
-    /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
+    /// - Parameter checkoutSession: A fully loaded Checkout.Session object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     /// - Returns: A valid PaymentSheet.FlowController instance.
     /// - Throws: An error if loading failed.
     @_spi(CheckoutSessionsPreview) public static func create(
-        checkoutSession: STPCheckoutSession,
+        checkoutSession: Checkout.Session,
         configuration: PaymentSheet.Configuration
     ) async throws -> PaymentSheet.FlowController {
         return try await withCheckedThrowingContinuation { continuation in

@@ -116,7 +116,7 @@ enum Intent {
                 return nil
             }
         case .checkoutSession(let session):
-            return session.totalSummary?.total
+            return session.totals?.total
         }
     }
 
