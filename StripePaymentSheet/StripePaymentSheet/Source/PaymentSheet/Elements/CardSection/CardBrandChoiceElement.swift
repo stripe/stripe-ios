@@ -74,14 +74,14 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
-    private let allowDeselection: Bool
+    private let allowDeselectionByDefault: Bool
 
     init(enableCBCRedesign: Bool,
          cardBrands: Set<STPCardBrand> = [],
          disallowedCardBrands: Set<STPCardBrand> = [],
          theme: ElementsAppearance = .default,
          allowDeselection: Bool = true) {
-        self.allowDeselection = allowDeselection
+        self.allowDeselectionByDefault = allowDeselection
         if enableCBCRedesign {
             let element = SegmentedSelectorElement(
                 items: Self.makeItems(from: cardBrands),
@@ -112,13 +112,13 @@ final class CardBrandChoiceElement: Element {
                 disabledItems: Set(Self.makeItems(from: disallowedCardBrands))
             )
             // If there's only one allowed brand, don't allow deselection
-            element.allowDeselection = allowDeselection && allowedBrands.count > 1
+            element.allowDeselection = allowDeselectionByDefault && allowedBrands.count > 1
         case .dropdown(let element):
             let items = DropdownFieldElement.items(
                 from: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
                 theme: element.theme,
-                includePlaceholder: allowDeselection && allowedBrands.count > 1
+                includePlaceholder: allowDeselectionByDefault && allowedBrands.count > 1
             )
             element.update(items: items)
         }
