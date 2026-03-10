@@ -333,11 +333,11 @@ final class CardSectionElement: ContainerElement {
             hasInteractedWithCBCElement = true
         }
 
-        let noAllowedBrands = cardBrands.filter({ cardBrandFilter.isAccepted(cardBrand: $0) }).isEmpty
+        let hasAllowedBrand = !cardBrands.filter({ cardBrandFilter.isAccepted(cardBrand: $0) }).isEmpty
         let shouldShow = panElement.isEditing
             && cardBrands.count > 1
             && !hasInteractedWithCBCElement
-            && !noAllowedBrands
+            && hasAllowedBrand
 
         // If the CBC tooltip has not been installed in the view, set it up
         if cbcTooltip.superview == nil {
