@@ -104,6 +104,7 @@ final class CardBrandChoiceElement: Element {
     }
 
     func update(cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand> = []) {
+        let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
         switch variant {
         case .selector(let element):
             element.update(
@@ -111,16 +112,22 @@ final class CardBrandChoiceElement: Element {
                 disabledItems: Set(Self.makeItems(from: disallowedCardBrands))
             )
             // If there's only one allowed brand, don't allow deselection
-            let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
             element.allowDeselection = allowDeselection && allowedBrands.count > 1
         case .dropdown(let element):
             let items = DropdownFieldElement.items(
                 from: cardBrands,
                 disallowedCardBrands: disallowedCardBrands,
                 theme: element.theme,
-                includePlaceholder: element.items.contains { $0.isPlaceholder }
+                includePlaceholder: allowDeselection && allowedBrands.count > 1
             )
             element.update(items: items)
+        }
+        guard cardBrands.count > 1 else { return } // only auto-select if we have more than one brand to choose from
+        // If there's only one allowed brand due to filtering, auto-select it
+        if allowedBrands.count == 1,
+           !disallowedCardBrands.isEmpty,
+           let brand = allowedBrands.first {
+            select(brand)
         }
     }
 

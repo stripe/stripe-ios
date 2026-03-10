@@ -314,13 +314,10 @@ final class CardSectionElement: ContainerElement {
                     disallowedCardBrands: disallowedCardBrands
                 )
 
-                // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
+                // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands
                 if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
                     cardBrandChoiceElement.select(brandToSelect)
-                } else if let brandToSelect = useDefaultSelectionLogic(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
-                    cardBrandChoiceElement.select(brandToSelect)
                 }
-
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
         }
@@ -368,18 +365,6 @@ final class CardSectionElement: ContainerElement {
 
         return brandToSelect
 
-    }
-
-    // If we only fetched one card brand that is not disallowed, auto select it.
-    // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
-    func useDefaultSelectionLogic(fetchedCardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand>) -> STPCardBrand? {
-        let validBrands = fetchedCardBrands.subtracting(disallowedCardBrands)
-        guard validBrands.count == 1,
-              !disallowedCardBrands.isEmpty,
-              let brandToSelect = validBrands.first else {
-            return nil
-        }
-        return brandToSelect
     }
 
 }
