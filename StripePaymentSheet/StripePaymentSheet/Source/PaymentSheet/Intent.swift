@@ -116,6 +116,9 @@ enum Intent {
                 return nil
             }
         case .checkoutSession(let session):
+            if session.mode == .setup {
+                return nil
+            }
             return session.totals?.total
         }
     }
