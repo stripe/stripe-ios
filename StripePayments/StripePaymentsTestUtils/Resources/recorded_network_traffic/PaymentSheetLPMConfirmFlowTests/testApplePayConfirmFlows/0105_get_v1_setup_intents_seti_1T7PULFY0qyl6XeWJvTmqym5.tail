@@ -1,47 +1,28 @@
 GET
-<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testiDEALConfirmFlows/0086_get_v1_setup_intents_seti_1T456vFY0qyl6XeWeljK7GAG.tail
-https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1T456vFY0qyl6XeWeljK7GAG\?client_secret=seti_1T456vFY0qyl6XeWeljK7GAG_secret_U29PDvvJ4p8e51HlHAOFUEUFtyVLwjP&expand%5B0%5D=payment_method$
-========
 https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1T7PULFY0qyl6XeWJvTmqym5\?client_secret=seti_1T7PULFY0qyl6XeWJvTmqym5_secret_U5afvd1ZHDY33zxMSD92BTjWZWUkkIB$
->>>>>>>> e2145268d968492aff2f2af08f123338b9c531a3:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testApplePayConfirmFlows/0105_get_v1_setup_intents_seti_1T7PULFY0qyl6XeWJvTmqym5.tail
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testiDEALConfirmFlows/0086_get_v1_setup_intents_seti_1T456vFY0qyl6XeWeljK7GAG.tail
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=hP4Ta945JGjkPFURZaxXHo0roM4TQRIrIcRm9UUzXTaJvwv_Gcy9D7PrQD-enVZQaoXziRPXizXqN8mr
-========
 content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=bM99W-4t1w15sAfVeort8dvSo3T0jam0Ffd7RmFuIFK2Lfs24-2NQ4CT-uo9MUy9pyhV356MxtR4769j
->>>>>>>> e2145268d968492aff2f2af08f123338b9c531a3:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testApplePayConfirmFlows/0105_get_v1_setup_intents_seti_1T7PULFY0qyl6XeWJvTmqym5.tail
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testiDEALConfirmFlows/0086_get_v1_setup_intents_seti_1T456vFY0qyl6XeWeljK7GAG.tail
-Date: Mon, 23 Feb 2026 19:48:06 GMT
-========
 Date: Thu, 05 Mar 2026 00:10:02 GMT
->>>>>>>> e2145268d968492aff2f2af08f123338b9c531a3:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testApplePayConfirmFlows/0105_get_v1_setup_intents_seti_1T7PULFY0qyl6XeWJvTmqym5.tail
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 574
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testiDEALConfirmFlows/0086_get_v1_setup_intents_seti_1T456vFY0qyl6XeWeljK7GAG.tail
-request-id: req_jwrCFBTv70xT0N
-
-{
-  "id" : "seti_1T456vFY0qyl6XeWeljK7GAG",
-========
 request-id: req_Yd8AVZXzvcXAc6
 
 {
   "id" : "seti_1T7PULFY0qyl6XeWJvTmqym5",
->>>>>>>> e2145268d968492aff2f2af08f123338b9c531a3:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testApplePayConfirmFlows/0105_get_v1_setup_intents_seti_1T7PULFY0qyl6XeWJvTmqym5.tail
   "description" : null,
   "excluded_payment_method_types" : null,
   "next_action" : null,
@@ -54,13 +35,8 @@ request-id: req_Yd8AVZXzvcXAc6
   ],
   "object" : "setup_intent",
   "last_setup_error" : null,
-<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testiDEALConfirmFlows/0086_get_v1_setup_intents_seti_1T456vFY0qyl6XeWeljK7GAG.tail
-  "created" : 1771876085,
-  "client_secret" : "seti_1T456vFY0qyl6XeWeljK7GAG_secret_U29PDvvJ4p8e51HlHAOFUEUFtyVLwjP",
-========
   "created" : 1772669401,
   "client_secret" : "seti_1T7PULFY0qyl6XeWJvTmqym5_secret_U5afvd1ZHDY33zxMSD92BTjWZWUkkIB",
->>>>>>>> e2145268d968492aff2f2af08f123338b9c531a3:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testApplePayConfirmFlows/0105_get_v1_setup_intents_seti_1T7PULFY0qyl6XeWJvTmqym5.tail
   "automatic_payment_methods" : null,
   "cancellation_reason" : null,
   "status" : "requires_payment_method"
