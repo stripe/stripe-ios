@@ -135,13 +135,13 @@ extension PaymentSheet.FlowController {
     /// Call this method when the CheckoutSession you used to initialize PaymentSheet.FlowController changes.
     /// This ensures the appropriate payment methods are displayed, etc.
     /// When this method returns, your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI.
-    /// - Parameter checkoutSession: An updated Checkout.Session
+    /// - Parameter checkout: The Checkout instance whose session has been updated.
     /// - Throws: An error if the update fails. You should retry the update; the FlowController instance is not usable until the update succeeds.
     /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
-    @_spi(CheckoutSessionsPreview) public func update(checkoutSession: Checkout.Session) async throws {
+    @_spi(CheckoutSessionsPreview) public func update(checkout: Checkout) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
-                update(checkoutSession: checkoutSession) { error in
+                update(checkout: checkout) { error in
                     if let error {
                         continuation.resume(throwing: error)
                     } else {

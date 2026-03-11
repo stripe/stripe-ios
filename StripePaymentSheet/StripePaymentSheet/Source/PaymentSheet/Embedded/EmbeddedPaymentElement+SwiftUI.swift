@@ -158,11 +158,11 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
 
     /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElementViewModel` changes.
     /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
-    /// - Parameter checkoutSession: An updated Checkout.Session.
+    /// - Parameter checkout: The Checkout instance whose session has been updated.
     /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
     @_spi(CheckoutSessionsPreview) public func update(
-        checkoutSession: Checkout.Session
+        checkout: Checkout
     ) async -> EmbeddedPaymentElement.UpdateResult {
         // Wait for the load task to complete if it exists
         if let loadTask = self.loadTask {
@@ -178,7 +178,7 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
             return .failed(error: ViewModelError.notLoaded)
         }
 
-        return await embeddedPaymentElement.update(checkoutSession: checkoutSession)
+        return await embeddedPaymentElement.update(checkout: checkout)
     }
 
     /// Completes the payment or setup.

@@ -639,17 +639,17 @@ extension PaymentSheet {
 
         /// Call this method when the CheckoutSession you used to initialize PaymentSheet.FlowController changes.
         /// This ensures the appropriate payment methods are displayed, etc.
-        /// - Parameter checkoutSession: An updated Checkout.Session
+        /// - Parameter checkout: The Checkout instance whose session has been updated.
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
         /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
-        @_spi(CheckoutSessionsPreview) public func update(
-            checkoutSession: Checkout.Session,
+        @MainActor @_spi(CheckoutSessionsPreview) public func update(
+            checkout: Checkout,
             completion: @escaping (Error?) -> Void
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
-            guard let stpSession = checkoutSession as? STPCheckoutSession else {
-                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+            guard let stpSession = checkout.session as? STPCheckoutSession else {
+                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
                 completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
                 return
             }
