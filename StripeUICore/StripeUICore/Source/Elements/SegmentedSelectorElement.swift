@@ -181,8 +181,12 @@ final class SegmentedSelectorView: UIView {
                     separator.translatesAutoresizingMaskIntoConstraints = false
                     separator.backgroundColor = theme.colors.divider
                     stackView.addArrangedSubview(separator)
+                    // Snap to a whole-pixel value to avoid sub-pixel rounding that
+                    // shifts between 1px and 2px as the separator's position changes.
+                    let scale = UIScreen.main.scale
+                    let pixelAlignedWidth = max(1.0, floor(theme.separatorWidth * scale)) / scale
                     NSLayoutConstraint.activate([
-                        separator.widthAnchor.constraint(equalToConstant: theme.separatorWidth),
+                        separator.widthAnchor.constraint(equalToConstant: pixelAlignedWidth),
                     ])
                 }
             }
@@ -212,6 +216,7 @@ final class SegmentedSelectorView: UIView {
             applyChanges()
         }
         invalidateIntrinsicContentSize()
+        print(stackView.arrangedSubviews[1].frame.width)
     }
 
     override var intrinsicContentSize: CGSize {
