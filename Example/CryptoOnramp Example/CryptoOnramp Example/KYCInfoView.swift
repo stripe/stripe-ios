@@ -81,7 +81,7 @@ struct KYCInfoView: View {
 
     init(
         coordinator: CryptoOnrampCoordinator,
-        collectionMode: CollectionMode = .kycLevel0,
+        collectionMode: CollectionMode = .original,
         onCompleted: @escaping () -> Void
     ) {
         self.coordinator = coordinator
