@@ -64,15 +64,6 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
-    var allowDeselection: Bool {
-        switch variant {
-        case .selector(let element):
-            return element.allowDeselection
-        case .dropdown(let element):
-            return element.items.contains { $0.isPlaceholder }
-        }
-    }
-
     // Expose brand count for determining if selector should be shown
     var brandCount: Int {
         switch variant {
@@ -80,6 +71,15 @@ final class CardBrandChoiceElement: Element {
             return element.items.count
         case .dropdown(let element):
             return element.nonPlacerholderItems.count
+        }
+    }
+
+    var allowDeselection: Bool {
+        switch variant {
+        case .selector(let element):
+            return element.allowDeselection
+        case .dropdown(let element):
+            return element.items.contains { $0.isPlaceholder }
         }
     }
 
@@ -136,15 +136,6 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
-    func setAllowDeselection(_ allow: Bool) {
-        switch variant {
-        case .selector(let element):
-            element.setAllowDeselection(allow)
-        case .dropdown:
-            break
-        }
-    }
-
     func select(_ brand: STPCardBrand) {
         switch variant {
         case .selector(let element):
@@ -153,6 +144,15 @@ final class CardBrandChoiceElement: Element {
             if let index = element.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {
                 element.select(index: index, shouldAutoAdvance: false)
             }
+        }
+    }
+
+    func setAllowDeselection(_ allow: Bool) {
+        switch variant {
+        case .selector(let element):
+            element.setAllowDeselection(allow)
+        case .dropdown:
+            break
         }
     }
 
