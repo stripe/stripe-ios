@@ -341,12 +341,10 @@ private final class SegmentedItemView: UIControl {
 
         if selected {
             self.checkmarkImageView.isHidden = false
-            self.checkmarkImageView.alpha = 1.0
             self.backgroundColor = self.theme.colors.border.withAlphaComponent(0.3)
             self.accessibilityTraits.insert(.selected)
         } else { // instantly hide selection
             self.checkmarkImageView.isHidden = true
-            checkmarkImageView.alpha = 0
             self.backgroundColor = .clear
             self.accessibilityTraits.remove(.selected)
         }
