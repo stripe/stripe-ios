@@ -188,17 +188,17 @@ final class SegmentedSelectorView: UIView {
             }
         }
         if let selectedItem, let itemView = itemViews[selectedItem] {
-            itemView.select(true)
+            itemView.select(true, animated: false)
         }
         invalidateIntrinsicContentSize()
     }
 
     func select(_ item: SegmentedSelectorItem?, animated: Bool) {
         // Deselect all, then select the new item
-        for (viewItem, itemView) in self.itemViews where viewItem != item {
+        for (viewItem, itemView) in itemViews where viewItem != item {
             itemView.select(false, animated: animated)
         }
-        if let item = item, let itemView = self.itemViews[item] {
+        if let item = item, let itemView = itemViews[item] {
             itemView.select(true, animated: animated)
         }
         invalidateIntrinsicContentSize()
