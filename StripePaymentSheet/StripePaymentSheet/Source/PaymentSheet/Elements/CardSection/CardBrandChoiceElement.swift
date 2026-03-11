@@ -165,7 +165,7 @@ private extension STPCardBrand {
     func makeCardBrandItem() -> SegmentedSelectorItem {
         return SegmentedSelectorItem(
             rawData: STPCardBrandUtilities.apiValue(from: self),
-            image: STPImageLibrary.cardBrandImage(for: self),
+            image: STPImageLibrary.unpaddedCardBrandImage(for: self),
             accessibilityLabel: STPCardBrandUtilities.stringFrom(self) ?? ""
         )
     }

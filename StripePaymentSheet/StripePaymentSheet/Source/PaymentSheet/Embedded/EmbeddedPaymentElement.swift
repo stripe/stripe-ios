@@ -24,7 +24,8 @@ public final class EmbeddedPaymentElement {
     public var presentingViewController: UIViewController?
 
     /// This contains the `configuration` you passed in to `create`.
-    public let configuration: Configuration
+    /// - Note: `internal(set)` because checkout session updates may apply address overrides to the configuration.
+    public internal(set) var configuration: Configuration
 
     /// See `EmbeddedPaymentElementDelegate`.
     public weak var delegate: EmbeddedPaymentElementDelegate?
@@ -146,6 +147,27 @@ public final class EmbeddedPaymentElement {
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
+        return await performUpdate(mode: .deferredIntent(intentConfiguration))
+    }
+
+    /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
+    /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
+    /// - Parameter checkoutSession: An updated Checkout.Session.
+    /// - Returns: The result of the update.
+    /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
+    /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
+    @_spi(CheckoutSessionsPreview) public func update(
+        checkoutSession: Checkout.Session
+    ) async -> UpdateResult {
+        guard let stpSession = checkoutSession as? STPCheckoutSession else {
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+            return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
+        }
+        stpSession.applyAddressOverrides(to: &configuration)
+        return await performUpdate(mode: .checkoutSession(stpSession))
+    }
+
+    private func performUpdate(mode: PaymentSheet.InitializationMode) async -> UpdateResult {
         let newUpdateContext = EmbeddedUpdateContext(status: .inProgress)
         self.latestUpdateContext = newUpdateContext
 
@@ -177,7 +199,7 @@ public final class EmbeddedPaymentElement {
             do {
                 // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-3079): Make `load` respect task cancellation to reduce network consumption
                 loadResult = try await PaymentSheetLoader.load(
-                    mode: .deferredIntent(intentConfiguration),
+                    mode: mode,
                     configuration: configuration,
                     analyticsHelper: analyticsHelper,
                     integrationShape: .embedded,
@@ -477,6 +499,24 @@ extension EmbeddedPaymentElement {
     ) {
         Task {
             let result = await update(intentConfiguration: intentConfiguration)
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
+    }
+
+    /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
+    /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
+    /// - Parameter checkoutSession: An updated Checkout.Session.
+    /// - Parameter completion: A completion block containing the result of the update. Called on the main thread.
+    /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
+    /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
+    @_spi(CheckoutSessionsPreview) public func update(
+        checkoutSession: Checkout.Session,
+        completion: @escaping (UpdateResult) -> Void
+    ) {
+        Task {
+            let result = await update(checkoutSession: checkoutSession)
             DispatchQueue.main.async {
                 completion(result)
             }
