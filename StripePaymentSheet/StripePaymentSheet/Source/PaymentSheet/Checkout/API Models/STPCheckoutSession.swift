@@ -136,6 +136,23 @@ class STPCheckoutSession: NSObject {
         return automaticTaxEnabled && automaticTaxAddressSource == addressType
     }
 
+    /// Returns the expectedAmount if in `payment` mode, `nil` if in `setup` mode, and asserts if in `subscription` or `unknown` mode.
+    /// Throws if in `payment` mode but expectedAmount is missing.
+    func expectedAmount() throws -> Int? {
+        switch mode {
+        case .payment:
+            guard let total = totals?.total else {
+                throw PaymentSheetError.unknown(debugDescription: "Missing expected amount from checkout session")
+            }
+            return total
+        case .setup:
+            return nil
+        case .unknown, .subscription:
+            stpAssertionFailure("Unknown and subscription modes are not currently supported with checkout sessions")
+            return nil
+        }
+    }
+
     /// :nodoc:
     override var description: String {
         let props: [String] = [
