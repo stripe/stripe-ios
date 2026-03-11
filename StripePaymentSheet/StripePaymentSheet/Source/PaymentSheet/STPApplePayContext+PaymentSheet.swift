@@ -181,9 +181,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         )
 
         // 2. Get expected amount from checkout session
-        guard let expectedAmount = checkoutSession.totals?.total else {
-            throw PaymentSheetError.unknown(debugDescription: "Missing expected amount from checkout session")
-        }
+        let expectedAmount = try checkoutSession.expectedAmount()
 
         // 3. Extract shipping details from PKPayment (if provided)
         let shipping = makeShippingDetailsParams(from: paymentInformation)
