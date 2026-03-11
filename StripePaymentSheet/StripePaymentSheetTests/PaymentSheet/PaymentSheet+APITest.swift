@@ -1151,27 +1151,31 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
     // MARK: - Checkout Session update tests
 
+    @MainActor
     func testUpdateCheckoutSession() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: response.id)
+        let checkout = Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
+        try await checkout.load()
 
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
 
-        let sut = try await PaymentSheet.FlowController.create(checkoutSession: checkoutSession, configuration: config)
-        try await sut.update(checkoutSession: checkoutSession)
+        let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
+        try await sut.update(checkout: checkout)
     }
 
+    @MainActor
     func testUpdateCheckoutSessionFails() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: response.id)
+        let checkout = Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
+        try await checkout.load()
 
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
 
-        let sut = try await PaymentSheet.FlowController.create(checkoutSession: checkoutSession, configuration: config)
+        let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
 
         // Update with an invalid intent config should fail
         let invalidIntentConfig = PaymentSheet.IntentConfiguration(mode: .setup(currency: "Invalid currency", setupFutureUsage: .offSession)) { _, _ in return "" }
@@ -1182,30 +1186,31 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             // Expected
         }
 
-        // Update with the valid checkout session should succeed after a failure
-        try await sut.update(checkoutSession: checkoutSession)
+        // Update with the valid checkout should succeed after a failure
+        try await sut.update(checkout: checkout)
     }
 
     @MainActor
     func testUpdateCheckoutSessionIgnoresInFlightUpdate() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: response.id)
+        let checkout = Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
+        try await checkout.load()
 
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
 
-        let sut = try await PaymentSheet.FlowController.create(checkoutSession: checkoutSession, configuration: config)
+        let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
 
         let firstUpdateExpectation = expectation(description: "First update should not invoke callback")
         firstUpdateExpectation.isInverted = true
         let secondUpdateExpectation = expectation(description: "Second update succeeds")
 
         // Fire two updates; the first should be ignored
-        sut.update(checkoutSession: checkoutSession) { _ in
+        sut.update(checkout: checkout) { _ in
             firstUpdateExpectation.fulfill()
         }
-        sut.update(checkoutSession: checkoutSession) { error in
+        sut.update(checkout: checkout) { error in
             XCTAssertNil(error)
             secondUpdateExpectation.fulfill()
         }
