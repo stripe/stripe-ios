@@ -677,11 +677,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 apiClient: apiClient
             )
             for (description, intent) in intents {
-                // CheckoutSession doesn't support Apple Pay in setup mode
-                // TODO(gbirch) remove once checkout sessions apple pay support is added
-                if case .checkoutSession(let checkoutSession) = intent, checkoutSession.mode == .setup {
-                    continue
-                }
                 let e = expectation(description: "Confirm Apple Pay (\(description))")
                 let elementsSession = STPElementsSession._testValue(intent: intent)
                 let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(

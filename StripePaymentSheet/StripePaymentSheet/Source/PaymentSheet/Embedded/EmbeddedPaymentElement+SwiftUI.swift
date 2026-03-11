@@ -93,6 +93,44 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
         }
     }
 
+    /// Asynchronously loads the EmbeddedPaymentElementViewModel using a Checkout.Session.
+    /// This function should only be called once to initially load the EmbeddedPaymentElementViewModel.
+    /// - Parameter checkoutSession: A fully loaded Checkout.Session object.
+    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
+    /// - Note: This method may only be called once. Subsequent calls will throw an error.
+    /// - Throws: An error if loading failed.
+    @_spi(CheckoutSessionsPreview) public func load(
+        checkoutSession: Checkout.Session,
+        configuration: EmbeddedPaymentElement.Configuration
+    ) async throws {
+        // If we already have a load task (whether it's in progress or finished), throw an error
+        guard loadTask == nil else {
+            throw ViewModelError.alreadyLoaded
+        }
+
+        // Store the load task
+        loadTask = Task { [weak self] in
+            let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
+                checkoutSession: checkoutSession,
+                configuration: configuration
+            )
+            guard let self else { return }
+            self.embeddedPaymentElement = embeddedPaymentElement
+            self.embeddedPaymentElement?.delegate = self
+            self.paymentOption = embeddedPaymentElement.paymentOption
+            calculateAndPublishHeight(embeddedPaymentElement: embeddedPaymentElement) // compute initial height
+            self.isLoaded = true
+        }
+
+        do {
+            try await loadTask?.value
+        } catch {
+            // Reset loadTask to allow for load retries after errors
+            loadTask = nil
+            throw error
+        }
+    }
+
     /// Call this method when the IntentConfiguration values you used to initialize `EmbeddedPaymentElementViewModel` (amount, currency, etc.) change.
     /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
     /// - Parameter intentConfiguration: An updated IntentConfiguration.
