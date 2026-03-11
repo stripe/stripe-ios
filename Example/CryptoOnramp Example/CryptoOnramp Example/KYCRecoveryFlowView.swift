@@ -56,7 +56,7 @@ struct KYCRecoveryFlowView: View {
     @ViewBuilder
     private var rootContent: some View {
         if shouldCollectLevel1 {
-            KYCInfoView(coordinator: coordinator, requiredLevel: requiredLevel) {
+            KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel1StepUp) {
                 handleKYCSuccess()
             }
         } else if shouldCollectIdentity {

@@ -16,14 +16,46 @@ import StripePaymentSheet
 /// A view used to collect KYC (Know Your Customer) data and exercise the `CryptoOnrampCoordinator's` `attachKYCInfo(info:)` functionality.
 struct KYCInfoView: View {
 
+    /// Controls which KYC information set this form collects.
+    enum CollectionMode {
+
+        /// Original behavior where all fields are shown and date of birth + id number are required.
+        case original
+
+        /// Level 0 collection where name/address fields are required and date of birth + id number are optional.
+        case kycLevel0
+
+        /// Level 1 step-up collection where required level 0 fields are already collected,
+        /// so only date of birth + id number are collected and required.
+        case kycLevel1StepUp
+
+        fileprivate var requiresLevel0Fields: Bool {
+            switch self {
+            case .original, .kycLevel0:
+                return true
+            case .kycLevel1StepUp:
+                return false
+            }
+        }
+
+        fileprivate var requiresDateOfBirthAndIdNumber: Bool {
+            switch self {
+            case .original, .kycLevel1StepUp:
+                return true
+            case .kycLevel0:
+                return false
+            }
+        }
+    }
+
     /// The coordinator to use to submit KYC information.
     let coordinator: CryptoOnrampCoordinator
 
     /// Closure called when KYC submission succeeds, allowing parent flows to advance.
     let onCompleted: (() -> Void)
 
-    /// Controls which fields are required for collection.
-    let requiredLevel: KYCLevel
+    /// Controls which variant of KYC data collection this form performs.
+    let collectionMode: CollectionMode
 
     @State private var firstName: String = ""
     @State private var lastName: String = ""
@@ -49,13 +81,13 @@ struct KYCInfoView: View {
 
     init(
         coordinator: CryptoOnrampCoordinator,
-        requiredLevel: KYCLevel = .level0,
+        collectionMode: CollectionMode = .kycLevel0,
         onCompleted: @escaping () -> Void
     ) {
         self.coordinator = coordinator
         self.onCompleted = onCompleted
-        self.requiredLevel = requiredLevel
-        _dateOfBirth = State(initialValue: requiredLevel.requiresDateOfBirthAndIdNumber ? Self.today : nil)
+        self.collectionMode = collectionMode
+        _dateOfBirth = State(initialValue: collectionMode.requiresDateOfBirthAndIdNumber ? Self.today : nil)
     }
 
     private var isSubmitButtonDisabled: Bool {
@@ -63,9 +95,7 @@ struct KYCInfoView: View {
             return true
         }
 
-        if requiredLevel.requiresDateOfBirthAndIdNumber {
-            return idNumber.isEmpty || dateOfBirth == nil
-        } else {
+        if collectionMode.requiresLevel0Fields {
             return firstName.isEmpty
                 || lastName.isEmpty
                 || addressLine1.isEmpty
@@ -73,6 +103,9 @@ struct KYCInfoView: View {
                 || state.isEmpty
                 || postalCode.isEmpty
                 || country.isEmpty
+                || (collectionMode.requiresDateOfBirthAndIdNumber && (idNumber.isEmpty || dateOfBirth == nil))
+        } else {
+            return idNumber.isEmpty || dateOfBirth == nil
         }
     }
 
@@ -110,10 +143,10 @@ struct KYCInfoView: View {
         ScrollView {
             VStack(spacing: 20) {
                 ZStack {
-                    switch requiredLevel {
-                    case .none, .level0:
+                    switch collectionMode {
+                    case .original, .kycLevel0:
                         Text("Please provide additional information to continue.")
-                    case .level1, .level2:
+                    case .kycLevel1StepUp:
                         Text("We need a bit more information before you can complete checkout.")
                     }
                 }
@@ -121,7 +154,7 @@ struct KYCInfoView: View {
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                if !requiredLevel.requiresDateOfBirthAndIdNumber {
+                if collectionMode.requiresLevel0Fields {
                     FormField(title("First Name", required: true)) {
                         makeTextField(
                             "Enter your first name",
@@ -141,7 +174,7 @@ struct KYCInfoView: View {
                     }
                 }
 
-                FormField(title("Social Security Number", required: requiredLevel.requiresDateOfBirthAndIdNumber)) {
+                FormField(title("Social Security Number", required: collectionMode.requiresDateOfBirthAndIdNumber)) {
                     makeTextField(
                         "Enter your SSN",
                         text: $idNumber,
@@ -150,9 +183,9 @@ struct KYCInfoView: View {
                     )
                 }
 
-                FormField(title("Date of Birth", required: requiredLevel.requiresDateOfBirthAndIdNumber)) {
+                FormField(title("Date of Birth", required: collectionMode.requiresDateOfBirthAndIdNumber)) {
                     VStack(alignment: .leading, spacing: 12) {
-                        if requiredLevel.requiresDateOfBirthAndIdNumber {
+                        if collectionMode.requiresDateOfBirthAndIdNumber {
                             DatePicker("", selection: dateOfBirthBinding, in: ...Self.today, displayedComponents: .date)
                                 .datePickerStyle(WheelDatePickerStyle())
                                 .labelsHidden()
@@ -170,7 +203,7 @@ struct KYCInfoView: View {
                     }
                 }
 
-                if !requiredLevel.requiresDateOfBirthAndIdNumber {
+                if collectionMode.requiresLevel0Fields {
                     FormField(title("Address Line 1", required: true)) {
                         makeTextField(
                             "Enter your street address",
@@ -248,7 +281,7 @@ struct KYCInfoView: View {
         errorMessage = nil
 
         let address: Address? = {
-            if !requiredLevel.requiresDateOfBirthAndIdNumber {
+            if collectionMode.requiresLevel0Fields {
                 Address(
                     city: city.isEmpty ? nil : city,
                     country: country.isEmpty ? nil : country,
@@ -272,8 +305,8 @@ struct KYCInfoView: View {
         }
 
         let kycInfo = KycInfo(
-            firstName: requiredLevel.requiresDateOfBirthAndIdNumber ? nil : firstName,
-            lastName: requiredLevel.requiresDateOfBirthAndIdNumber ? nil : lastName,
+            firstName: collectionMode.requiresLevel0Fields ? firstName : nil,
+            lastName: collectionMode.requiresLevel0Fields ? lastName : nil,
             idNumber: idNumber.isEmpty ? nil : idNumber,
             address: address,
             dateOfBirth: dateOfBirth
@@ -310,20 +343,20 @@ struct KYCInfoView: View {
     }
 }
 
+#Preview("Original") {
+    PreviewWrapperView { coordinator in
+        KYCInfoView(coordinator: coordinator, collectionMode: .original) {}
+    }
+}
+
 #Preview("Level 0") {
     PreviewWrapperView { coordinator in
-        KYCInfoView(coordinator: coordinator) {}
+        KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel0) {}
     }
 }
 
-#Preview("Level 1") {
+#Preview("Level 1 Step Up") {
     PreviewWrapperView { coordinator in
-        KYCInfoView(coordinator: coordinator, requiredLevel: .level1) {}
-    }
-}
-
-#Preview("Level 2") {
-    PreviewWrapperView { coordinator in
-        KYCInfoView(coordinator: coordinator, requiredLevel: .level2) {}
+        KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel1StepUp) {}
     }
 }
