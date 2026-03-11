@@ -438,10 +438,6 @@ final class PaymentSheetLoader {
             // Filter them manually now that we have the v1/e/s response. This step should ~mimick the filtering in v1/elements/sessions.
             savedPaymentMethods = prefetchedSPMs
         } else {
-            if case .legacyCustomerEphemeralKey = configuration.customer?.customerAccessProvider, prefetchedSPMs == nil {
-                stpAssertionFailure("Expected prefetchedSPMs to not be nil when using legacyCustomerEphemeralKey")
-                analyticsHelper.log(event: .unexpectedPaymentSheetError, error: PaymentSheetLoaderError.didNotFetchSPMsForEK)
-            }
             return []
         }
 
@@ -458,8 +454,8 @@ final class PaymentSheetLoader {
 
         // Hide any saved cards whose brands or funding types are not allowed
         let cardFundingFilter = configuration.cardFundingFilter(for: elementsSession)
-        let result = savedPaymentMethods.filter {
-            guard let card = $0.card else { return true }
+        let result = savedPaymentMethods.filter { paymentMethod in
+            guard let card = paymentMethod.card else { return true }
             // Filter by card brand
             if !configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand) {
                 return false
@@ -470,19 +466,25 @@ final class PaymentSheetLoader {
             if !cardFundingFilter.isAccepted(cardFundingType: fundingType) {
                 return false
             }
+
+            // Filter out unsupported pm types
+            guard elementsSession.orderedPaymentMethodTypes.contains(paymentMethod.type) else {
+                return false
+            }
+            guard paymentMethod.supportsSavedPaymentMethod(
+                configuration: configuration,
+                intent: intent,
+                elementsSession: elementsSession
+            ) else {
+                return false
+            }
+
+            // Filter out pm whose billing country is not allowed
+            guard Self.shouldIncludePaymentMethod(paymentMethod, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries) else {
+                return false
+            }
             return true
         }
-
-        // Perform other filtering
-            .filter { elementsSession.orderedPaymentMethodTypes.contains($0.type) }
-            .filter {
-                $0.supportsSavedPaymentMethod(
-                    configuration: configuration,
-                    intent: intent,
-                    elementsSession: elementsSession
-                )
-            }
-            .filter { Self.shouldIncludePaymentMethod($0, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries) }
         return result
     }
 
@@ -562,8 +564,4 @@ final class PaymentSheetLoader {
 func printTimingLog(_ event: String) {
     guard PaymentSheetLoader._enableGranularTimingLogs else { return }
     print("[LOADER_TIMING] \(event) \(Date().timeIntervalSince1970)")
-}
-
-enum PaymentSheetLoaderError: Error {
-    case didNotFetchSPMsForEK
 }
