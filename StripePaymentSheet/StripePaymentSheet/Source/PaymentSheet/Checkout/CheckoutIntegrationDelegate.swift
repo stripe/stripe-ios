@@ -6,8 +6,6 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-@_spi(STP) import StripePayments
-
 /// Internal delegate for payment integrations (PaymentSheet, FlowController, EmbeddedPaymentElement)
 /// to communicate with a ``Checkout`` instance.
 @MainActor

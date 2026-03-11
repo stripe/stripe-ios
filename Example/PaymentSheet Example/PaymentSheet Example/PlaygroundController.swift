@@ -18,7 +18,7 @@ import PassKit
 import SwiftUI
 import UIKit
 
-class PlaygroundController: ObservableObject {
+@MainActor class PlaygroundController: ObservableObject {
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentSheet: PaymentSheet?
     @Published var embeddedPlaygroundViewController: EmbeddedPlaygroundViewController?
