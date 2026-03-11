@@ -1306,7 +1306,7 @@ extension PlaygroundController {
         UserDefaults.standard.set(appearanceData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey)
     }
 
-    static func settingsFromDefaults() -> PaymentSheetTestPlaygroundSettings? {
+    nonisolated static func settingsFromDefaults() -> PaymentSheetTestPlaygroundSettings? {
         if let data = UserDefaults.standard.value(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey) as? Data {
             do {
                 return try JSONDecoder().decode(PaymentSheetTestPlaygroundSettings.self, from: data)
@@ -1318,7 +1318,7 @@ extension PlaygroundController {
         return nil
     }
 
-    static func appearanceFromDefaults() -> PaymentSheet.Appearance? {
+    nonisolated static func appearanceFromDefaults() -> PaymentSheet.Appearance? {
         if let appearanceData = UserDefaults.standard.value(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey) as? Data {
             do {
                 return try JSONDecoder().decode(PaymentSheet.Appearance.self, from: appearanceData)

@@ -548,7 +548,7 @@ final class CheckoutUnitTests: XCTestCase {
         window.rootViewController = hostViewController
         window.makeKeyAndVisible()
 
-        flowController.presentPaymentOptions(from: hostViewController)
+        flowController.presentPaymentOptions(from: hostViewController) {}
         return (flowController, hostViewController, window)
     }
 }
