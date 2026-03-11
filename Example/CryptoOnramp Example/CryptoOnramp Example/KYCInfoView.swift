@@ -59,22 +59,21 @@ struct KYCInfoView: View {
     }
 
     private var isSubmitButtonDisabled: Bool {
-        if isLoading.wrappedValue
-            || firstName.isEmpty
-            || lastName.isEmpty
-            || addressLine1.isEmpty
-            || city.isEmpty
-            || state.isEmpty
-            || postalCode.isEmpty
-            || country.isEmpty {
+        if isLoading.wrappedValue {
             return true
         }
 
-        if requiredLevel.requiresDateOfBirthAndIdNumber && (idNumber.isEmpty || dateOfBirth == nil) {
-            return true
+        if requiredLevel.requiresDateOfBirthAndIdNumber {
+            return idNumber.isEmpty || dateOfBirth == nil
+        } else {
+            return firstName.isEmpty
+                || lastName.isEmpty
+                || addressLine1.isEmpty
+                || city.isEmpty
+                || state.isEmpty
+                || postalCode.isEmpty
+                || country.isEmpty
         }
-
-        return false
     }
 
     private var dateOfBirthBinding: Binding<Date> {
@@ -122,22 +121,24 @@ struct KYCInfoView: View {
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                FormField(title("First Name", required: true)) {
-                    makeTextField(
-                        "Enter your first name",
-                        text: $firstName,
-                        field: .firstName,
-                        autocapitalization: .words
-                    )
-                }
+                if !requiredLevel.requiresDateOfBirthAndIdNumber {
+                    FormField(title("First Name", required: true)) {
+                        makeTextField(
+                            "Enter your first name",
+                            text: $firstName,
+                            field: .firstName,
+                            autocapitalization: .words
+                        )
+                    }
 
-                FormField(title("Last Name", required: true)) {
-                    makeTextField(
-                        "Enter your last name",
-                        text: $lastName,
-                        field: .lastName,
-                        autocapitalization: .words
-                    )
+                    FormField(title("Last Name", required: true)) {
+                        makeTextField(
+                            "Enter your last name",
+                            text: $lastName,
+                            field: .lastName,
+                            autocapitalization: .words
+                        )
+                    }
                 }
 
                 FormField(title("Social Security Number", required: requiredLevel.requiresDateOfBirthAndIdNumber)) {
@@ -169,57 +170,59 @@ struct KYCInfoView: View {
                     }
                 }
 
-                FormField(title("Address Line 1", required: true)) {
-                    makeTextField(
-                        "Enter your street address",
-                        text: $addressLine1,
-                        field: .addressLine1,
-                        autocapitalization: .words
-                    )
-                }
+                if !requiredLevel.requiresDateOfBirthAndIdNumber {
+                    FormField(title("Address Line 1", required: true)) {
+                        makeTextField(
+                            "Enter your street address",
+                            text: $addressLine1,
+                            field: .addressLine1,
+                            autocapitalization: .words
+                        )
+                    }
 
-                FormField(title("Address Line 2", required: false)) {
-                    makeTextField(
-                        "Apartment, suite, etc.",
-                        text: $addressLine2,
-                        field: .addressLine2,
-                        autocapitalization: .words
-                    )
-                }
+                    FormField(title("Address Line 2", required: false)) {
+                        makeTextField(
+                            "Apartment, suite, etc.",
+                            text: $addressLine2,
+                            field: .addressLine2,
+                            autocapitalization: .words
+                        )
+                    }
 
-                FormField(title("City", required: true)) {
-                    makeTextField(
-                        "Enter your city",
-                        text: $city,
-                        field: .city,
-                        autocapitalization: .words
-                    )
-                }
+                    FormField(title("City", required: true)) {
+                        makeTextField(
+                            "Enter your city",
+                            text: $city,
+                            field: .city,
+                            autocapitalization: .words
+                        )
+                    }
 
-                FormField(title("State/Province", required: true)) {
-                    makeTextField(
-                        "Enter your state or province",
-                        text: $state,
-                        field: .state,
-                        autocapitalization: .words
-                    )
-                }
+                    FormField(title("State/Province", required: true)) {
+                        makeTextField(
+                            "Enter your state or province",
+                            text: $state,
+                            field: .state,
+                            autocapitalization: .words
+                        )
+                    }
 
-                FormField(title("Postal Code", required: true)) {
-                    makeTextField(
-                        "Enter your postal code",
-                        text: $postalCode,
-                        field: .postalCode
-                    )
-                }
+                    FormField(title("Postal Code", required: true)) {
+                        makeTextField(
+                            "Enter your postal code",
+                            text: $postalCode,
+                            field: .postalCode
+                        )
+                    }
 
-                FormField(title("Country", required: true)) {
-                    makeTextField(
-                        "Country code",
-                        text: $country,
-                        field: .country,
-                        autocapitalization: .allCharacters
-                    )
+                    FormField(title("Country", required: true)) {
+                        makeTextField(
+                            "Country code",
+                            text: $country,
+                            field: .country,
+                            autocapitalization: .allCharacters
+                        )
+                    }
                 }
 
                 if let errorMessage {
@@ -244,14 +247,20 @@ struct KYCInfoView: View {
         isLoading.wrappedValue = true
         errorMessage = nil
 
-        let address = Address(
-            city: city.isEmpty ? nil : city,
-            country: country.isEmpty ? nil : country,
-            line1: addressLine1.isEmpty ? nil : addressLine1,
-            line2: addressLine2.isEmpty ? nil : addressLine2,
-            postalCode: postalCode,
-            state: state
-        )
+        let address: Address? = {
+            if !requiredLevel.requiresDateOfBirthAndIdNumber {
+                Address(
+                    city: city.isEmpty ? nil : city,
+                    country: country.isEmpty ? nil : country,
+                    line1: addressLine1.isEmpty ? nil : addressLine1,
+                    line2: addressLine2.isEmpty ? nil : addressLine2,
+                    postalCode: postalCode,
+                    state: state
+                )
+            } else {
+                nil
+            }
+        }()
 
         let dateOfBirth = dateOfBirth.map { dateOfBirth in
             let dateOfBirthComponents = Calendar.current.dateComponents([.day, .month, .year], from: dateOfBirth)
@@ -263,8 +272,8 @@ struct KYCInfoView: View {
         }
 
         let kycInfo = KycInfo(
-            firstName: firstName,
-            lastName: lastName,
+            firstName: requiredLevel.requiresDateOfBirthAndIdNumber ? nil : firstName,
+            lastName: requiredLevel.requiresDateOfBirthAndIdNumber ? nil : lastName,
             idNumber: idNumber.isEmpty ? nil : idNumber,
             address: address,
             dateOfBirth: dateOfBirth

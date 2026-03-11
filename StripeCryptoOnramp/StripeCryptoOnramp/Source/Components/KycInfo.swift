@@ -40,11 +40,11 @@ public struct KycInfo: Equatable {
         }
     }
 
-    /// The customer’s first name.
-    public var firstName: String
+    /// The customer’s first name, if collected.
+    public var firstName: String?
 
-    /// The customer’s last name.
-    public var lastName: String
+    /// The customer’s last name, if collected.
+    public var lastName: String?
 
     /// The number associated with the customer’s id.
     public var idNumber: String?
@@ -52,24 +52,24 @@ public struct KycInfo: Equatable {
     /// The type of id provided by the customer.
     public var idType: IdType = .socialSecurityNumber
 
-    /// The address of the customer.
-    public var address: Address
+    /// The address of the customer, if collected.
+    public var address: Address?
 
     /// The customer’s date of birth.
     public var dateOfBirth: DateOfBirth?
 
     /// Creates a new instance of `KycInfo`.
     /// - Parameters:
-    ///   - firstName: The customer’s first name.
-    ///   - lastName: The customer’s last name.
+    ///   - firstName: The customer’s first name, if collected.
+    ///   - lastName: The customer’s last name, if collected.
     ///   - idNumber: The number associated with the customer’s id.
-    ///   - address: The address of the customer.
+    ///   - address: The address of the customer, if collected.
     ///   - dateOfBirth: The customer’s date of birth.
     public init(
-        firstName: String,
-        lastName: String,
+        firstName: String?,
+        lastName: String?,
         idNumber: String?,
-        address: Address,
+        address: Address?,
         dateOfBirth: DateOfBirth?
     ) {
         self.firstName = firstName

@@ -73,10 +73,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         // /v1/crypto/internal/refresh_consumer_person
         static let refreshKYCInfoAPIPath = "/v1/crypto/internal/refresh_consumer_person"
         static let validKycRefreshInfo = KYCRefreshInfo(
-            firstName: validL1KycInfo.firstName,
+            firstName: validL1KycInfo.firstName!,
             lastName: validL1KycInfo.lastName,
             dateOfBirth: validL1KycInfo.dateOfBirth!,
-            address: validL1KycInfo.address,
+            address: validL1KycInfo.address!,
             idNumberLast4: validL1KycInfo.idNumber.map { String($0.suffix(4)) },
             idType: .socialSecurityNumber
         )
@@ -266,11 +266,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             }
 
             let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
-
             XCTAssertEqual(parameters.count, 9)
-
-            // L0 required fields
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+
+            // L0 required fields (name and address)
             XCTAssertEqual(parameters["first_name"], "John")
             XCTAssertEqual(parameters["last_name"], "Smith")
             XCTAssertEqual(parameters["line1"], "123%20Fake%20Street")
@@ -280,7 +279,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             XCTAssertEqual(parameters["zip"], "11201")
             XCTAssertEqual(parameters["country"], "US")
 
-            /// L0 optional fields
+            /// L0 optional fields, required for L1
             XCTAssertNil(parameters["id_number"])
             XCTAssertNil(parameters["id_type"])
             XCTAssertNil(parameters["dob[day]"])
@@ -295,6 +294,56 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
         let response = try await apiClient.collectKycInfo(info: Constant.validL0KycInfo, linkAccountInfo: Constant.validLinkAccountInfo)
 
+        XCTAssertEqual(response.personId, Constant.kycMockResponseObject.personId)
+    }
+
+    func testCollectKycInfoL1OnlyOmitsL0Fields() async throws {
+        let mockResponseData = try jsonEncoder.encode(Constant.kycMockResponseObject)
+        let l1OnlyKycInfo = KycInfo(
+            firstName: nil,
+            lastName: nil,
+            idNumber: "123456789",
+            address: nil,
+            dateOfBirth: .init(day: 31, month: 3, year: 1975)
+        )
+
+        stub { request in
+            XCTAssertEqual(request.url?.path, Constant.collectKycInfoAPIPath)
+            XCTAssertEqual(request.httpMethod, "POST")
+
+            guard let httpBody = request.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody data but found none.")
+                return false
+            }
+
+            let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
+            XCTAssertEqual(parameters.count, 6)
+            XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
+
+            // L1 required fields not previously collected (ID number+type and DOB)
+            XCTAssertEqual(parameters["id_number"], "123456789")
+            XCTAssertEqual(parameters["id_type"], "social_security_number")
+            XCTAssertEqual(parameters["dob[day]"], "31")
+            XCTAssertEqual(parameters["dob[month]"], "3")
+            XCTAssertEqual(parameters["dob[year]"], "1975")
+
+            // Fields already collected for L0
+            XCTAssertNil(parameters["first_name"])
+            XCTAssertNil(parameters["last_name"])
+            XCTAssertNil(parameters["line1"])
+            XCTAssertNil(parameters["line2"])
+            XCTAssertNil(parameters["city"])
+            XCTAssertNil(parameters["state"])
+            XCTAssertNil(parameters["zip"])
+            XCTAssertNil(parameters["country"])
+
+            return true
+        } response: { _ in
+            HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        let apiClient = stubbedAPIClient()
+        let response = try await apiClient.collectKycInfo(info: l1OnlyKycInfo, linkAccountInfo: Constant.validLinkAccountInfo)
         XCTAssertEqual(response.personId, Constant.kycMockResponseObject.personId)
     }
 
