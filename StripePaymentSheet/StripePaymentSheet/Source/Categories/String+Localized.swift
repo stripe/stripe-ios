@@ -321,6 +321,13 @@ extension String.Localized {
         )
     }
 
+    static var twint_mandate_text: String {
+        STPLocalizedString(
+            "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan.",
+            "Twint mandate text"
+        )
+    }
+
     static var blik_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")

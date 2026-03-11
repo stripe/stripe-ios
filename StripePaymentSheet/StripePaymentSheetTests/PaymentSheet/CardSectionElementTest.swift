@@ -61,12 +61,14 @@ class CardSectionElementTest: XCTestCase {
         let cardSection = makeCardSectionElement(cardBrandFilter: filter)
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .cartesBancaires)
+        XCTAssertFalse(cardSection.cardBrandChoiceElement?.view.isUserInteractionEnabled ?? true)
     }
 
     func testFiltering_noSelectionWhenMultipleBrandsAllowed() {
         let cardSection = makeCardSectionElement()
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
+        XCTAssertTrue(cardSection.cardBrandChoiceElement?.view.isUserInteractionEnabled ?? false)
     }
 
     func testFiltering_noSelectionWhenAllDisallowed() {
@@ -74,6 +76,7 @@ class CardSectionElementTest: XCTestCase {
         let cardSection = makeCardSectionElement(cardBrandFilter: filter)
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
+        XCTAssertFalse(cardSection.cardBrandChoiceElement?.view.isUserInteractionEnabled ?? true)
     }
 
     // MARK: - Preferred networks + card brand filtering combined
@@ -174,5 +177,17 @@ class CardSectionElementTest: XCTestCase {
         cardSection.panElement.setText(cbcVisaTestCard)
 
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
+    }
+
+    func testTooltip_hiddenWhenAllDisabled() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let filter = CardBrandFilter(cardBrandAcceptance: .allowed(brands: [.mastercard]))
+        let cardSection = makeCardSectionElement(cardBrandFilter: filter)
+        _ = beginEditingPAN(cardSection)
+
+        cardSection.panElement.setText(cbcVisaTestCard)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
     }
 }

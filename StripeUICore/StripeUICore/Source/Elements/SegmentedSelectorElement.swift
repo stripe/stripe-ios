@@ -129,10 +129,11 @@ final class SegmentedSelectorView: UIView {
     private func setupView() {
         // Add segmented control styling
         applyCornerRadius(appearance: theme)
-        layer.borderWidth = theme.borderWidth
+        layer.borderWidth = theme.separatorWidth
         layer.borderColor = theme.colors.border.cgColor
         stackView.backgroundColor = theme.colors.componentBackground
-        clipsToBounds = true // Clip child backgrounds to rounded corners
+        stackView.applyCornerRadius(appearance: theme)
+        stackView.clipsToBounds = true // Clip child backgrounds to rounded corners
 
         addSubview(stackView)
         NSLayoutConstraint.activate([
@@ -162,6 +163,8 @@ final class SegmentedSelectorView: UIView {
                 let itemView = SegmentedItemView(
                     item: item,
                     isDisabled: isDisabled,
+                    isFirst: index == 0,
+                    isLast: index == items.count - 1,
                     theme: theme
                 )
 
@@ -187,6 +190,7 @@ final class SegmentedSelectorView: UIView {
         if let selectedItem, let itemView = itemViews[selectedItem] {
             itemView.select(true, animated: false)
         }
+        invalidateIntrinsicContentSize()
     }
 
     func select(_ item: SegmentedSelectorItem?, animated: Bool) {
@@ -197,6 +201,11 @@ final class SegmentedSelectorView: UIView {
         if let item = item, let itemView = itemViews[item] {
             itemView.select(true, animated: animated)
         }
+        invalidateIntrinsicContentSize()
+    }
+
+    override var intrinsicContentSize: CGSize {
+        return stackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
 
     @objc private func itemTapped(_ sender: UITapGestureRecognizer) {
@@ -217,9 +226,17 @@ final class SegmentedSelectorView: UIView {
 
 /// A single tappable item icon with optional checkmark (segmented control style)
 private final class SegmentedItemView: UIControl {
+    private enum Constants {
+        static let padding: CGFloat = 6
+        static let liquidGlassOuterPadding: CGFloat = 10
+    }
+
     let item: SegmentedSelectorItem
     private var isDisabled: Bool
+    private let isFirst: Bool
+    private let isLast: Bool
     private let theme: ElementsAppearance
+    private var leadingConstraint: NSLayoutConstraint?
 
     private let iconImageView: UIImageView = {
         let imageView = UIImageView()
@@ -245,9 +262,15 @@ private final class SegmentedItemView: UIControl {
         return stack
     }()
 
-    init(item: SegmentedSelectorItem, isDisabled: Bool, theme: ElementsAppearance) {
+    private var isLiquidGlass: Bool {
+        return LiquidGlassDetector.isEnabledInMerchantApp && theme.cornerRadius == nil
+    }
+
+    init(item: SegmentedSelectorItem, isDisabled: Bool, isFirst: Bool, isLast: Bool, theme: ElementsAppearance) {
         self.item = item
         self.isDisabled = isDisabled
+        self.isFirst = isFirst
+        self.isLast = isLast
         self.theme = theme
         super.init(frame: .zero)
         setupView()
@@ -263,7 +286,7 @@ private final class SegmentedItemView: UIControl {
 
         iconImageView.image = item.image
 
-        let configuration = UIImage.SymbolConfiguration(weight: .medium)
+        let configuration = UIImage.SymbolConfiguration(pointSize: 9, weight: .medium)
         checkmarkImageView.image = UIImage(systemName: "checkmark", withConfiguration: configuration)
         checkmarkImageView.tintColor = theme.colors.bodyText
 
@@ -273,14 +296,19 @@ private final class SegmentedItemView: UIControl {
 
         addSubview(containerStack)
 
-        NSLayoutConstraint.activate([
-            containerStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
-            containerStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
-            containerStack.topAnchor.constraint(equalTo: topAnchor, constant: 6),
-            containerStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
+        // When Liquid Glass is enabled, the rounded style makes the outer segments feel crowded, so we add extra padding
+        let outerPadding = isLiquidGlass ? Constants.liquidGlassOuterPadding : Constants.padding
+        let leadingPadding: CGFloat = isFirst ? outerPadding : Constants.padding
+        let trailingPadding: CGFloat = isLast ? outerPadding : Constants.padding
 
-            checkmarkImageView.widthAnchor.constraint(equalToConstant: 12),
-            checkmarkImageView.heightAnchor.constraint(equalToConstant: 12),
+        let leading = containerStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leadingPadding)
+        self.leadingConstraint = leading
+
+        NSLayoutConstraint.activate([
+            leading,
+            containerStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -trailingPadding),
+            containerStack.topAnchor.constraint(equalTo: topAnchor, constant: Constants.padding),
+            containerStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.padding),
         ])
 
         // Add accessibility
@@ -294,6 +322,8 @@ private final class SegmentedItemView: UIControl {
     }
 
     func select(_ selected: Bool, animated: Bool) {
+        updateLiquidGlassLeadingPadding(isSelected: selected)
+
         if selected {
             let showSelection = {
                 self.checkmarkImageView.isHidden = false
@@ -313,6 +343,13 @@ private final class SegmentedItemView: UIControl {
             self.backgroundColor = .clear
             self.accessibilityTraits.remove(.selected)
         }
+    }
+
+    /// Under Liquid Glass, the checkmark adds visual spacing when selected, so we decrease leading padding.
+    /// When deselected, we restore the larger outer padding.
+    private func updateLiquidGlassLeadingPadding(isSelected: Bool) {
+        guard isLiquidGlass, isFirst else { return }
+        leadingConstraint?.constant = isSelected ? Constants.liquidGlassOuterPadding - 2 : Constants.liquidGlassOuterPadding
     }
 
     func updateDisabledState(_ isDisabled: Bool) {

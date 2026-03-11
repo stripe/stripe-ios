@@ -9,7 +9,6 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-@_spi(CheckoutSessionsPreview)
 extension STPCheckoutSession {
 
     /// Populates empty fields in the configuration with checkout-collected addresses.

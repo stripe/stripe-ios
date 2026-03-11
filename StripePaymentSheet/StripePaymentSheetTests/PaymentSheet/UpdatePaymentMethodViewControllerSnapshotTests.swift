@@ -167,10 +167,12 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
 
     // MARK: - CBC Redesign Tests (SegmentedSelectorElement)
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func test_UpdatePaymentMethodViewController_CBCRedesign() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, enableCBCRedesign: true)
     }
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func test_UpdatePaymentMethodViewController_CBCRedesign_darkMode() {
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, isCBCEligible: true, enableCBCRedesign: true)
     }
@@ -179,6 +181,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, appearance: ._testMSPaintTheme, isCBCEligible: true, enableCBCRedesign: true)
     }
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func test_UpdatePaymentMethodViewController_CBCRedesign_blockedBrands() {
         let cardBrandFilter = CardBrandFilter(cardBrandAcceptance: .disallowed(brands: [.amex]))
         _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, enableCBCRedesign: true, cardBrandFilter: cardBrandFilter)

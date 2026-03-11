@@ -314,28 +314,27 @@ final class CardSectionElement: ContainerElement {
                     disallowedCardBrands: disallowedCardBrands
                 )
 
-                // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
+                // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands
                 if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
                     cardBrandChoiceElement.select(brandToSelect)
-                } else if let brandToSelect = useDefaultSelectionLogic(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
-                    cardBrandChoiceElement.select(brandToSelect)
                 }
-
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
         }
     }
 
-    /// Show the tooltip when the PAN field is in focus, the card brand selector is visible
-    /// (multiple brands), and no brand has been selected. Hide it otherwise.
+    /// Show the tooltip when the PAN field is in focus, the card brand selector is visible (multiple brands),
+    /// no brand has been selected, and at least one brand is allowed. Hide it otherwise.
     private func updateCBCTooltipVisibility() {
         if cardBrandChoiceElement?.selectedBrand != nil {
             hasInteractedWithCBCElement = true
         }
 
+        let hasAllowedBrand = !cardBrands.filter({ cardBrandFilter.isAccepted(cardBrand: $0) }).isEmpty
         let shouldShow = panElement.isEditing
             && cardBrands.count > 1
             && !hasInteractedWithCBCElement
+            && hasAllowedBrand
 
         // If the CBC tooltip has not been installed in the view, set it up
         if cbcTooltip.superview == nil {
@@ -368,18 +367,6 @@ final class CardSectionElement: ContainerElement {
 
         return brandToSelect
 
-    }
-
-    // If we only fetched one card brand that is not disallowed, auto select it.
-    // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
-    func useDefaultSelectionLogic(fetchedCardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand>) -> STPCardBrand? {
-        let validBrands = fetchedCardBrands.subtracting(disallowedCardBrands)
-        guard validBrands.count == 1,
-              !disallowedCardBrands.isEmpty,
-              let brandToSelect = validBrands.first else {
-            return nil
-        }
-        return brandToSelect
     }
 
 }
@@ -448,13 +435,14 @@ final class TooltipContainerView: UIView {
         layer.borderColor = theme.colors.border.cgColor
         alpha = 0
 
+        let isLiquidGlass = LiquidGlassDetector.isEnabledInMerchantApp && theme.cornerRadius == nil
         label.translatesAutoresizingMaskIntoConstraints = false
         addSubview(label)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: topAnchor, constant: 6),
             label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: isLiquidGlass ? 10 : 6),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: isLiquidGlass ? -10 : -6),
         ])
     }
 

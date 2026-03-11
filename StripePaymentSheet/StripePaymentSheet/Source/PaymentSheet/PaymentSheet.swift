@@ -105,13 +105,16 @@ public class PaymentSheet {
     }
 
     /// Initializes PaymentSheet with a CheckoutSession object
-    /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
+    /// - Parameter checkoutSession: A fully loaded Checkout.Session object
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @_spi(CheckoutSessionsPreview) public convenience init(checkoutSession: STPCheckoutSession, configuration: Configuration) {
+    @_spi(CheckoutSessionsPreview) public convenience init(checkoutSession: Checkout.Session, configuration: Configuration) {
+        guard let stpSession = checkoutSession as? STPCheckoutSession else {
+            fatalError("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+        }
         var config = configuration
-        checkoutSession.applyAddressOverrides(to: &config)
+        stpSession.applyAddressOverrides(to: &config)
         self.init(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkoutSession(stpSession),
             configuration: config
         )
     }

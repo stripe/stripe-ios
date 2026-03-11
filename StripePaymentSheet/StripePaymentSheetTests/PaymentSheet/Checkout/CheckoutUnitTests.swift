@@ -157,7 +157,7 @@ final class CheckoutUnitTests: XCTestCase {
         )
         try await checkout.updateBillingAddress(update)
 
-        let stored = checkout.session?.billingAddressOverride
+        let stored = checkout.session?.billingAddress
         XCTAssertEqual(stored?.name, "Jane Doe")
         XCTAssertEqual(stored?.address.country, "US")
         XCTAssertTrue(delegate.didUpdateCalled)
@@ -174,7 +174,7 @@ final class CheckoutUnitTests: XCTestCase {
         )
         try await checkout.updateShippingAddress(update)
 
-        let stored = checkout.session?.shippingAddressOverride
+        let stored = checkout.session?.shippingAddress
         XCTAssertEqual(stored?.name, "John Smith")
         XCTAssertEqual(stored?.address.country, "US")
         XCTAssertTrue(delegate.didUpdateCalled)
@@ -330,10 +330,10 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(session.requiresShippingAddress)
         XCTAssertEqual(session.allowedShippingCountries, ["US", "CA", "GB"])
 
-        // Verify total summary
-        XCTAssertNotNil(session.totalSummary)
-        XCTAssertEqual(session.totalSummary?.subtotal, 20000)
-        XCTAssertEqual(session.totalSummary?.total, 21000)
+        // Verify totals
+        XCTAssertNotNil(session.totals)
+        XCTAssertEqual(session.totals?.subtotal, 20000)
+        XCTAssertEqual(session.totals?.total, 21000)
     }
 
     // MARK: - Helpers
@@ -351,9 +351,9 @@ final class CheckoutUnitTests: XCTestCase {
 @MainActor
 private class MockCheckoutDelegate: CheckoutDelegate {
     var didUpdateCalled = false
-    var lastSession: STPCheckoutSession?
+    var lastSession: Checkout.Session?
 
-    func checkout(_ checkout: Checkout, didUpdate session: STPCheckoutSession) {
+    func checkout(_ checkout: Checkout, didUpdate session: Checkout.Session) {
         didUpdateCalled = true
         lastSession = session
     }

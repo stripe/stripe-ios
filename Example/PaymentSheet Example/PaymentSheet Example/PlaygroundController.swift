@@ -595,7 +595,7 @@ class PlaygroundController: ObservableObject {
     }
 
     var clientSecret: String?
-    var checkoutSession: STPCheckoutSession?
+    var checkoutSession: Checkout.Session?
     var customerId: String?
     var ephemeralKey: String?
     var customerSessionClientSecret: String?
@@ -935,7 +935,7 @@ extension PlaygroundController {
                 // Persist customerId / customerMode
                 self.serializeSettingsToNSUserDefaults()
                 let idDescription: String = {
-                    if let checkoutSessionId = self.checkoutSession?.stripeId {
+                    if let checkoutSessionId = self.checkoutSession?.id {
                         return "checkout session id: \(checkoutSessionId)"
                     }
                     let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") ?? STPSetupIntent.id(fromClientSecret: self.clientSecret ?? "")

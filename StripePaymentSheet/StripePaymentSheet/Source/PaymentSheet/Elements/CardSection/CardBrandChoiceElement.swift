@@ -101,6 +101,7 @@ final class CardBrandChoiceElement: Element {
     }
 
     func update(cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand> = []) {
+        let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
         switch variant {
         case .selector(let element):
             element.update(
@@ -115,6 +116,14 @@ final class CardBrandChoiceElement: Element {
                 includePlaceholder: element.items.contains { $0.isPlaceholder }
             )
             element.update(items: items)
+        }
+        // If we only fetched one card brand that is not disallowed, disable interaction and auto select it.
+        // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
+        view.isUserInteractionEnabled = allowedBrands.count > 1
+        if allowedBrands.count == 1,
+           !disallowedCardBrands.isEmpty,
+           let brand = allowedBrands.first {
+            select(brand)
         }
     }
 
@@ -156,7 +165,7 @@ private extension STPCardBrand {
     func makeCardBrandItem() -> SegmentedSelectorItem {
         return SegmentedSelectorItem(
             rawData: STPCardBrandUtilities.apiValue(from: self),
-            image: STPImageLibrary.cardBrandImage(for: self),
+            image: STPImageLibrary.unpaddedCardBrandImage(for: self),
             accessibilityLabel: STPCardBrandUtilities.stringFrom(self) ?? ""
         )
     }

@@ -11,7 +11,7 @@ import PassKit
 @_spi(STP) @testable import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CheckoutSessionsPreview) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
 
@@ -48,19 +48,19 @@ public extension EmbeddedPaymentElement.Configuration {
 
 public extension PaymentSheet.Appearance {
     mutating func applyLiquidGlassIfPossible() {
-        #if !os(visionOS)
+#if !os(visionOS)
         if #available(iOS 26.0, visionOS 26.0, *) {
             self.applyLiquidGlass()
         }
-        #endif
+#endif
     }
     func applyingLiquidGlassIfPossible() -> PaymentSheet.Appearance {
         var copy = self
-        #if !os(visionOS)
+#if !os(visionOS)
         if #available(iOS 26.0, visionOS 26.0, *) {
             copy.applyLiquidGlass()
         }
-        #endif
+#endif
         return copy
     }
 }
@@ -160,8 +160,8 @@ extension STPElementsSession {
                                     "api_key_expiry": 12345,
                                     "customer": "cus_123",
                                     "components": customerSessionData,
-                                    ],
-                                ]
+                                ],
+            ]
             if let defaultPaymentMethod {
                 json[jsonDict: "customer"]?["default_payment_method"] = defaultPaymentMethod
             }
@@ -297,25 +297,39 @@ extension Intent {
     }
 
     static func _testCheckoutSession(
-        mode: STPCheckoutSessionMode = .payment,
-        amount: Int = 2345,
+        mode: Checkout.Mode = .payment,
+        amount: Int? = 2345,
         currency: String = "USD"
     ) -> Intent {
-        let json: [String: Any] = [
+        let modeParam = switch mode {
+        case .payment: "payment"
+        case .setup: "setup"
+        default: fatalError("TODO: implement for subscription/unknown mode")
+        }
+        guard let paymentStatus = switch mode {
+        case .payment: "unpaid"
+        case .setup: "no_payment_required"
+        case .subscription, .unknown: nil
+        } else {
+            fatalError("TODO: add subscription/unknown support")
+        }
+        var json: [String: Any] = [
             "session_id": "cs_test_xxx",
             "object": "checkout.session",
-            "mode": mode == .payment ? "payment" : "setup",
+            "mode": modeParam,
             "status": "open",
-            "payment_status": "unpaid",
+            "payment_status": paymentStatus,
             "currency": currency.lowercased(),
             "livemode": false,
-            "total_summary": [
+            "payment_method_types": ["card"],
+        ]
+        if let amount {
+            json["total_summary"] = [
                 "due": amount,
                 "subtotal": amount,
                 "total": amount,
-            ],
-            "payment_method_types": ["card"],
-        ]
+            ]
+        }
         let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
         return .checkoutSession(checkoutSession)
     }

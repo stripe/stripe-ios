@@ -30,12 +30,19 @@ public final class Checkout: ObservableObject {
     // MARK: - Public Properties
 
     /// The loaded session, or `nil` if ``load()`` hasn't completed yet.
-    @Published public private(set) var session: STPCheckoutSession?
+    @Published public private(set) var session: Checkout.Session?
 
     /// A delegate that is notified when the session changes.
     public weak var delegate: CheckoutDelegate?
 
     // MARK: - Private Properties
+
+    /// Concrete accessor for internal use where `STPCheckoutSession`-specific
+    /// properties (e.g. `allResponseFields`, `billingAddressOverride`) are needed.
+    private var stpSession: STPCheckoutSession? {
+        get { session as? STPCheckoutSession }
+        set { session = newValue }
+    }
 
     private let clientSecret: String
     private let apiClient: STPAPIClient
@@ -121,11 +128,11 @@ public final class Checkout: ObservableObject {
     ///   the server request fails.
     public func updateBillingAddress(_ params: AddressUpdate) async throws {
         try requireOpenSession()
-        if session?.shouldSendTaxRegion(for: "billing") == true {
+        if stpSession?.shouldSendTaxRegion(for: "billing") == true {
             try await performAPIUpdate(.setTaxRegion(params.address))
-            session?.billingAddressOverride = params
+            stpSession?.billingAddressOverride = params
         } else {
-            session?.billingAddressOverride = params
+            stpSession?.billingAddressOverride = params
             if let session {
                 self.session = session
                 delegate?.checkout(self, didUpdate: session)
@@ -146,11 +153,11 @@ public final class Checkout: ObservableObject {
     ///   the server request fails.
     public func updateShippingAddress(_ params: AddressUpdate) async throws {
         try requireOpenSession()
-        if session?.shouldSendTaxRegion(for: "shipping") == true {
+        if stpSession?.shouldSendTaxRegion(for: "shipping") == true {
             try await performAPIUpdate(.setTaxRegion(params.address))
-            session?.shippingAddressOverride = params
+            stpSession?.shippingAddressOverride = params
         } else {
-            session?.shippingAddressOverride = params
+            stpSession?.shippingAddressOverride = params
             if let session {
                 self.session = session
                 delegate?.checkout(self, didUpdate: session)
@@ -173,9 +180,9 @@ public final class Checkout: ObservableObject {
     /// Replaces ``session`` and notifies the delegate when the session data has changed.
     func updateSession(_ newSession: STPCheckoutSession) {
         // Carry over client-side address overrides to the new session.
-        newSession.billingAddressOverride = session?.billingAddressOverride
-        newSession.shippingAddressOverride = session?.shippingAddressOverride
-        let changed = session?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
+        newSession.billingAddressOverride = stpSession?.billingAddressOverride
+        newSession.shippingAddressOverride = stpSession?.shippingAddressOverride
+        let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
         session = newSession
         if changed {
             delegate?.checkout(self, didUpdate: newSession)
