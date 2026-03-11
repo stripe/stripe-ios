@@ -95,12 +95,12 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
 
     /// Asynchronously loads the EmbeddedPaymentElementViewModel using a Checkout.Session.
     /// This function should only be called once to initially load the EmbeddedPaymentElementViewModel.
-    /// - Parameter checkoutSession: A fully loaded Checkout.Session object.
+    /// - Parameter checkout: A fully loaded Checkout object.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Note: This method may only be called once. Subsequent calls will throw an error.
     /// - Throws: An error if loading failed.
     @_spi(CheckoutSessionsPreview) public func load(
-        checkoutSession: Checkout.Session,
+        checkout: Checkout,
         configuration: EmbeddedPaymentElement.Configuration
     ) async throws {
         // If we already have a load task (whether it's in progress or finished), throw an error
@@ -111,7 +111,7 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
         // Store the load task
         loadTask = Task { [weak self] in
             let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
-                checkoutSession: checkoutSession,
+                checkout: checkout,
                 configuration: configuration
             )
             guard let self else { return }
