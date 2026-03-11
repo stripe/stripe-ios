@@ -181,12 +181,8 @@ final class SegmentedSelectorView: UIView {
                     separator.translatesAutoresizingMaskIntoConstraints = false
                     separator.backgroundColor = theme.colors.divider
                     stackView.addArrangedSubview(separator)
-                    // Snap to a whole-pixel value to avoid sub-pixel rounding that
-                    // shifts between 1px and 2px as the separator's position changes.
-                    let scale = UIScreen.main.scale
-                    let pixelAlignedWidth = max(1.0, floor(theme.separatorWidth * scale)) / scale
                     NSLayoutConstraint.activate([
-                        separator.widthAnchor.constraint(equalToConstant: pixelAlignedWidth),
+                        separator.widthAnchor.constraint(equalToConstant: theme.separatorWidth),
                     ])
                 }
             }
@@ -256,6 +252,7 @@ private final class SegmentedItemView: UIControl {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         return imageView
     }()
 
@@ -318,14 +315,11 @@ private final class SegmentedItemView: UIControl {
         let leading = containerStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leadingPadding)
         self.leadingConstraint = leading
 
-        let iconSize = item.image.size
         NSLayoutConstraint.activate([
             leading,
             containerStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -trailingPadding),
             containerStack.topAnchor.constraint(equalTo: topAnchor, constant: Constants.padding),
             containerStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.padding),
-            iconImageView.widthAnchor.constraint(equalToConstant: iconSize.width),
-            iconImageView.heightAnchor.constraint(equalToConstant: iconSize.height),
         ])
 
         // Add accessibility
