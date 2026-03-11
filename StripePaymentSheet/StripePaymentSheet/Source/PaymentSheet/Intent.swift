@@ -116,7 +116,7 @@ enum Intent {
                 return nil
             }
         case .checkoutSession(let session):
-            return session.totalSummary?.total
+            return session.totals?.total
         }
     }
 
@@ -171,9 +171,14 @@ enum Intent {
             case .setup:
                 return true
             }
-        case .checkoutSession:
-            // TODO(porter) Figure out SFU during confirmation work
-            return false
+        case .checkoutSession(let checkoutSession):
+            switch checkoutSession.mode {
+            case .payment, .subscription, .unknown:
+                // TODO(porter) Figure out SFU during confirmation work
+                return false
+            case .setup:
+                return true
+            }
         }
     }
 }

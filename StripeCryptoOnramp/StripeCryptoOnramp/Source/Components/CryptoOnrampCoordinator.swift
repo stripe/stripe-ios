@@ -318,8 +318,15 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             await cryptoCustomerState.setCustomerId(customerId)
             analyticsClient.log(.linkUserAuthenticationWithTokenCompleted)
         } catch {
-            analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: error.localizedDescription))
-            throw error
+            if let stripeError = error as? StripeError,
+               case let .apiError(stripeAPIError) = stripeError,
+               stripeAPIError.code == "link_auth_token_invalid" || stripeAPIError.code == "resource_missing" {
+                analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: stripeAPIError.message ?? error.localizedDescription))
+                throw CryptoOnrampCoordinator.Error.seamlessSignInTokenInvalid(reason: stripeAPIError.message)
+            } else {
+                analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: error.localizedDescription))
+                throw error
+            }
         }
     }
 

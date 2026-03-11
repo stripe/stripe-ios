@@ -9,7 +9,6 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
-import XCTest
 
 // ☠️ WARNING: These snapshots are missing selected borders at the corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
 // @iOS26
@@ -166,6 +165,28 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
         _test_UpdatePaymentMethodViewController(paymentMethodType: .link, darkMode: true)
     }
 
+    // MARK: - CBC Redesign Tests (SegmentedSelectorElement)
+
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
+    func test_UpdatePaymentMethodViewController_CBCRedesign() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, enableCBCRedesign: true)
+    }
+
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
+    func test_UpdatePaymentMethodViewController_CBCRedesign_darkMode() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: true, isCBCEligible: true, enableCBCRedesign: true)
+    }
+
+    func test_UpdatePaymentMethodViewController_CBCRedesign_appearance() {
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, appearance: ._testMSPaintTheme, isCBCEligible: true, enableCBCRedesign: true)
+    }
+
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
+    func test_UpdatePaymentMethodViewController_CBCRedesign_blockedBrands() {
+        let cardBrandFilter = CardBrandFilter(cardBrandAcceptance: .disallowed(brands: [.amex]))
+        _test_UpdatePaymentMethodViewController(paymentMethodType: .card, darkMode: false, isCBCEligible: true, enableCBCRedesign: true, cardBrandFilter: cardBrandFilter)
+    }
+
     func _test_UpdatePaymentMethodViewController(paymentMethodType: STPPaymentMethodType,
                                                  darkMode: Bool,
                                                  appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(),
@@ -173,6 +194,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                  canRemove: Bool = true,
                                                  canUpdate: Bool = false,
                                                  isCBCEligible: Bool = false,
+                                                 enableCBCRedesign: Bool = false,
                                                  expired: Bool = false,
                                                  canSetAsDefaultPM: Bool = false,
                                                  isDefault: Bool = false,
@@ -211,6 +233,7 @@ final class UpdatePaymentMethodViewControllerSnapshotTests: STPSnapshotTestCase 
                                                                            canRemove: canRemove,
                                                                            canUpdate: canUpdate,
                                                                            isCBCEligible: isCBCEligible,
+                                                                           enableCBCRedesign: enableCBCRedesign,
                                                                            allowsSetAsDefaultPM: canSetAsDefaultPM,
                                                                            isDefault: isDefault
         )

@@ -12,15 +12,15 @@ import Foundation
 ///
 /// This data comes from the checkout session's `customer_managed_saved_payment_methods_offer_save`
 /// configuration, which is set when creating the checkout session.
-@_spi(STP) public struct STPCheckoutSessionSavedPaymentMethodsOfferSave {
+struct STPCheckoutSessionSavedPaymentMethodsOfferSave {
     /// Whether the save checkbox should be shown to the user.
-    public let enabled: Bool
+    let enabled: Bool
 
     /// The initial state of the checkbox.
-    public let status: Status
+    let status: Status
 
     /// Represents the initial checked state of the save checkbox.
-    @_spi(STP) public enum Status {
+    enum Status {
         /// Checkbox should be pre-checked (user has previously agreed to save).
         case accepted
         /// Checkbox should be unchecked by default.

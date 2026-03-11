@@ -17,7 +17,7 @@ import XCTest
 final class CheckoutTests: STPNetworkStubbingTestCase {
 
     func testLoadCheckoutSession() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -29,18 +29,17 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         let session = checkout.session
         XCTAssertNotNil(session)
-        XCTAssertEqual(session?.stripeId, checkoutSessionResponse.id)
+        XCTAssertEqual(session?.id, checkoutSessionResponse.id)
         XCTAssertEqual(session?.mode, .payment)
         XCTAssertEqual(session?.status, .open)
         XCTAssertEqual(session?.paymentStatus, .unpaid)
         XCTAssertEqual(session?.currency, "usd")
         XCTAssertFalse(session?.livemode ?? true)
-        XCTAssertTrue(session?.paymentMethodTypes.contains(.card) ?? false)
-        XCTAssertNotNil(session?.totalSummary)
+        XCTAssertNotNil(session?.totals)
     }
 
     func testDelegateCalledOnLoad() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession()
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let checkout = Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -53,11 +52,11 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 
         XCTAssertTrue(delegate.didUpdateCalled)
         XCTAssertNotNil(delegate.lastSession)
-        XCTAssertEqual(delegate.lastSession?.stripeId, checkoutSessionResponse.id)
+        XCTAssertEqual(delegate.lastSession?.id, checkoutSessionResponse.id)
     }
 
     func testApplyPromotionCode() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
         let checkout = Checkout(
@@ -70,7 +69,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertNotNil(checkout.session)
         XCTAssertTrue(checkout.session?.discounts.isEmpty ?? false)
         XCTAssertNil(checkout.session?.appliedPromotionCode)
-        XCTAssertEqual(2000, checkout.session?.totalSummary?.total)
+        XCTAssertEqual(2000, checkout.session?.totals?.total)
 
         try await checkout.applyPromotionCode("SAVE25")
 
@@ -78,11 +77,11 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertNotNil(session)
         XCTAssertFalse(session?.discounts.isEmpty ?? true)
         XCTAssertEqual(session?.appliedPromotionCode, "SAVE25")
-        XCTAssertEqual(1500, checkout.session?.totalSummary?.total)
+        XCTAssertEqual(1500, session?.totals?.total)
     }
 
     func testRemovePromotionCode() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
         let checkout = Checkout(
@@ -96,7 +95,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         try await checkout.applyPromotionCode("SAVE25")
         XCTAssertFalse(checkout.session?.discounts.isEmpty ?? true)
         XCTAssertEqual(checkout.session?.appliedPromotionCode, "SAVE25")
-        XCTAssertEqual(1500, checkout.session?.totalSummary?.total)
+        XCTAssertEqual(1500, checkout.session?.totals?.total)
 
         // Then remove
         try await checkout.removePromotionCode()
@@ -104,11 +103,11 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertNotNil(session)
         XCTAssertTrue(session?.discounts.isEmpty ?? false)
         XCTAssertNil(session?.appliedPromotionCode)
-        XCTAssertEqual(2000, checkout.session?.totalSummary?.total)
+        XCTAssertEqual(2000, session?.totals?.total)
     }
 
     func testApplyInvalidPromotionCode() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
         let checkout = Checkout(
@@ -130,7 +129,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testUpdateQuantity() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowAdjustableLineItemQuantity: true
         )
         let checkout = Checkout(
@@ -139,28 +138,20 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         )
 
         try await checkout.load()
-        XCTAssertEqual(5050, checkout.session?.totalSummary?.total)
+        XCTAssertEqual(5050, checkout.session?.totals?.total)
 
-        let lineItemId = await MainActor.run { () -> String? in
-            XCTAssertNotNil(checkout.session)
-            if let lineItemGroup = checkout.session?.allResponseFields["line_item_group"] as? [AnyHashable: Any],
-               let lineItems = lineItemGroup["line_items"] as? [[AnyHashable: Any]],
-               let firstItem = lineItems.first,
-               let id = firstItem["id"] as? String {
-                return id
-            }
-            return nil
-        }
-
-        let itemId = try XCTUnwrap(lineItemId, "Session should have at least one line item")
+        let itemId = try XCTUnwrap(
+            checkout.session?.lineItems.first?.id,
+            "Session should have at least one line item"
+        )
 
         try await checkout.updateQuantity(with: .init(lineItemId: itemId, quantity: 2))
-        XCTAssertEqual(10100, checkout.session?.totalSummary?.total)
+        XCTAssertEqual(10100, checkout.session?.totals?.total)
         XCTAssertNotNil(checkout.session)
     }
 
     func testSelectShippingOption() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             includeShippingOptions: true
         )
         let checkout = Checkout(
@@ -169,34 +160,121 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         )
 
         try await checkout.load()
-        XCTAssertEqual(2500, checkout.session?.totalSummary?.total)
+        XCTAssertEqual(2500, checkout.session?.totals?.total)
 
-        let shippingRateId = await MainActor.run { () -> String? in
-            XCTAssertNotNil(checkout.session)
-            if let shippingOptions = checkout.session?.allResponseFields["shipping_options"] as? [[AnyHashable: Any]],
-               let firstOption = shippingOptions.last,
-               let shippingRate = firstOption["shipping_rate"] as? [AnyHashable: Any],
-               let id = shippingRate["id"] as? String {
-                return id
-            }
-            // Fallback: shipping_rate might be a string ID directly
-            if let shippingOptions = checkout.session?.allResponseFields["shipping_options"] as? [[AnyHashable: Any]],
-               let firstOption = shippingOptions.first,
-               let id = firstOption["shipping_rate"] as? String {
-                return id
-            }
-            return nil
-        }
-
-        let rateId = try XCTUnwrap(shippingRateId, "Session should have at least one shipping option")
+        let rateId = try XCTUnwrap(
+            checkout.session?.shippingOptions.last?.id,
+            "Session should have at least one shipping option"
+        )
 
         try await checkout.selectShippingOption(rateId)
         XCTAssertNotNil(checkout.session)
-        XCTAssertEqual(3000, checkout.session?.totalSummary?.total)
+        XCTAssertEqual(3000, checkout.session?.totals?.total)
+    }
+
+    func testUpdateBillingAddress() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
+            merchantCountry: "us_tax",
+            allowAdjustableLineItemQuantity: true,
+            collectBillingAddress: true,
+            automaticTax: true
+        )
+        let checkout = Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
+
+        try await checkout.load()
+        XCTAssertNil(checkout.session?.billingAddress)
+
+        // Pre-tax price, CA sales has not yet been applied
+        XCTAssertEqual(checkout.session?.totals?.subtotal, 5050)
+        XCTAssertEqual(checkout.session?.totals?.total, 5050)
+
+        // Update the billing address to get tax applied
+        let billingUpdate = Checkout.AddressUpdate(
+            name: "Jane Doe",
+            address: .init(
+                country: "US",
+                line1: "123 Main St",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94105"
+            )
+        )
+        try await checkout.updateBillingAddress(billingUpdate)
+
+        // Address should be stored on the session
+        let storedBilling = checkout.session?.billingAddress
+        XCTAssertNotNil(storedBilling)
+        XCTAssertEqual(storedBilling?.name, "Jane Doe")
+        XCTAssertEqual(storedBilling?.address.country, "US")
+        XCTAssertEqual(storedBilling?.address.line1, "123 Main St")
+        XCTAssertEqual(storedBilling?.address.city, "San Francisco")
+        XCTAssertEqual(storedBilling?.address.state, "CA")
+        XCTAssertEqual(storedBilling?.address.postalCode, "94105")
+
+        // Session should be refreshed (tax_region was sent to the server)
+        XCTAssertNotNil(checkout.session)
+        XCTAssertEqual(checkout.session?.status, .open)
+
+        // Post-tax price, CA sales tax was applied; subtotal unchanged proves the increase is purely tax
+        XCTAssertEqual(checkout.session?.totals?.subtotal, 5050)
+        XCTAssertEqual(checkout.session?.totals?.total, 5486)
+    }
+
+    func testUpdateShippingAddress() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
+            merchantCountry: "us_tax",
+            allowAdjustableLineItemQuantity: true,
+            collectShippingAddress: true,
+            automaticTax: true
+        )
+        let checkout = Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
+
+        try await checkout.load()
+        XCTAssertNil(checkout.session?.shippingAddress)
+
+        // Pre-tax price, CA sales tax has not yet been applied
+        XCTAssertEqual(checkout.session?.totals?.subtotal, 5050)
+        XCTAssertEqual(checkout.session?.totals?.total, 5050)
+
+        let shippingUpdate = Checkout.AddressUpdate(
+            name: "John Smith",
+            address: .init(
+                country: "US",
+                line1: "456 Oak Ave",
+                city: "Los Angeles",
+                state: "CA",
+                postalCode: "90001"
+            )
+        )
+        try await checkout.updateShippingAddress(shippingUpdate)
+
+        // Address should be stored on the session
+        let storedShipping = checkout.session?.shippingAddress
+        XCTAssertNotNil(storedShipping)
+        XCTAssertEqual(storedShipping?.name, "John Smith")
+        XCTAssertEqual(storedShipping?.address.country, "US")
+        XCTAssertEqual(storedShipping?.address.line1, "456 Oak Ave")
+        XCTAssertEqual(storedShipping?.address.city, "Los Angeles")
+        XCTAssertEqual(storedShipping?.address.state, "CA")
+        XCTAssertEqual(storedShipping?.address.postalCode, "90001")
+
+        // Session should be refreshed (tax_region was sent to the server)
+        XCTAssertNotNil(checkout.session)
+        XCTAssertEqual(checkout.session?.status, .open)
+
+        // Post-tax price, CA sales tax was applied; subtotal unchanged proves the increase is purely tax
+        XCTAssertEqual(checkout.session?.totals?.subtotal, 5050)
+        XCTAssertEqual(checkout.session?.totals?.total, 5542)
     }
 
     func testUpdateTaxId() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             enableTaxIdCollection: true
         )
         let checkout = Checkout(
@@ -216,7 +294,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
     }
 
     func testDelegateCalledOnPromotionCodeApply() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSession(
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
         )
         let checkout = Checkout(
@@ -225,7 +303,6 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         )
 
         let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
         checkout.delegate = delegate
 
         try await checkout.load()
@@ -247,9 +324,9 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
 @MainActor
 private class MockCheckoutDelegate: CheckoutDelegate {
     var didUpdateCalled = false
-    var lastSession: STPCheckoutSession?
+    var lastSession: (Checkout.Session)?
 
-    func checkout(_ checkout: Checkout, didUpdate session: STPCheckoutSession) {
+    func checkout(_ checkout: Checkout, didUpdate session: Checkout.Session) {
         didUpdateCalled = true
         lastSession = session
     }

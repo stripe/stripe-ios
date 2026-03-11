@@ -30,12 +30,19 @@ public final class Checkout: ObservableObject {
     // MARK: - Public Properties
 
     /// The loaded session, or `nil` if ``load()`` hasn't completed yet.
-    @Published public private(set) var session: STPCheckoutSession?
+    @Published public private(set) var session: Checkout.Session?
 
     /// A delegate that is notified when the session changes.
     public weak var delegate: CheckoutDelegate?
 
     // MARK: - Private Properties
+
+    /// Concrete accessor for internal use where `STPCheckoutSession`-specific
+    /// properties (e.g. `allResponseFields`, `billingAddressOverride`) are needed.
+    private var stpSession: STPCheckoutSession? {
+        get { session as? STPCheckoutSession }
+        set { session = newValue }
+    }
 
     private let clientSecret: String
     private let apiClient: STPAPIClient
@@ -106,6 +113,58 @@ public final class Checkout: ObservableObject {
         try await performAPIUpdate(.setShippingRate(optionId))
     }
 
+    // MARK: - Addresses
+
+    /// Sets the billing address for this checkout.
+    ///
+    /// The address is stored locally and merged into PaymentSheet configuration
+    /// when presenting payment UI. If automatic tax is enabled and the tax
+    /// address source is "billing", the address is also sent to the server to
+    /// compute updated tax amounts.
+    ///
+    /// - Parameter params: The billing address to set. To reset tax computation
+    ///   to a country-only region, pass an ``AddressUpdate`` with just the country.
+    /// - Throws: ``CheckoutError`` if the session is not loaded/open, or if
+    ///   the server request fails.
+    public func updateBillingAddress(_ params: AddressUpdate) async throws {
+        try requireOpenSession()
+        if stpSession?.shouldSendTaxRegion(for: "billing") == true {
+            try await performAPIUpdate(.setTaxRegion(params.address))
+            stpSession?.billingAddressOverride = params
+        } else {
+            stpSession?.billingAddressOverride = params
+            if let session {
+                self.session = session
+                delegate?.checkout(self, didUpdate: session)
+            }
+        }
+    }
+
+    /// Sets the shipping address for this checkout.
+    ///
+    /// The address is stored locally and merged into PaymentSheet configuration
+    /// when presenting payment UI. If automatic tax is enabled and the tax
+    /// address source is "shipping", the address is also sent to the server to
+    /// compute updated tax amounts.
+    ///
+    /// - Parameter params: The shipping address to set. To reset tax computation
+    ///   to a country-only region, pass an ``AddressUpdate`` with just the country.
+    /// - Throws: ``CheckoutError`` if the session is not loaded/open, or if
+    ///   the server request fails.
+    public func updateShippingAddress(_ params: AddressUpdate) async throws {
+        try requireOpenSession()
+        if stpSession?.shouldSendTaxRegion(for: "shipping") == true {
+            try await performAPIUpdate(.setTaxRegion(params.address))
+            stpSession?.shippingAddressOverride = params
+        } else {
+            stpSession?.shippingAddressOverride = params
+            if let session {
+                self.session = session
+                delegate?.checkout(self, didUpdate: session)
+            }
+        }
+    }
+
     // MARK: - Tax ID
 
     /// Sets the customer's tax ID on the session.
@@ -120,7 +179,10 @@ public final class Checkout: ObservableObject {
 
     /// Replaces ``session`` and notifies the delegate when the session data has changed.
     func updateSession(_ newSession: STPCheckoutSession) {
-        let changed = session?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
+        // Carry over client-side address overrides to the new session.
+        newSession.billingAddressOverride = stpSession?.billingAddressOverride
+        newSession.shippingAddressOverride = stpSession?.shippingAddressOverride
+        let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
         session = newSession
         if changed {
             delegate?.checkout(self, didUpdate: newSession)

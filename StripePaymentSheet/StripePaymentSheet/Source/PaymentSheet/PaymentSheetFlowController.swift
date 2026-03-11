@@ -365,16 +365,23 @@ extension PaymentSheet {
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the CheckoutSession's payment methods and configuration.
-        /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
+        /// - Parameter checkoutSession: A fully loaded Checkout.Session object
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        @_spi(CheckoutSessionPreview) public static func create(
-            checkoutSession: STPCheckoutSession,
+        @_spi(CheckoutSessionsPreview) public static func create(
+            checkoutSession: Checkout.Session,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            create(mode: .checkoutSession(checkoutSession),
-                   configuration: configuration,
+            guard let stpSession = checkoutSession as? STPCheckoutSession else {
+                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+                completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
+                return
+            }
+            var config = configuration
+            stpSession.applyAddressOverrides(to: &config)
+            create(mode: .checkoutSession(stpSession),
+                   configuration: config,
                    completion: completion
             )
         }

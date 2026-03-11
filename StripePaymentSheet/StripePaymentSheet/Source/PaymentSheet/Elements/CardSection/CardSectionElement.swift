@@ -69,7 +69,7 @@ final class CardSectionElement: ContainerElement {
     // References to the underlying TextFieldElements
     let nameElement: TextFieldElement?
     let panElement: TextFieldElement
-    let cardBrandDropDown: DropdownFieldElement?
+    let cardBrandChoiceElement: CardBrandChoiceElement?
     let cvcElement: TextFieldElement
     let expiryElement: TextFieldElement
     let theme: ElementsAppearance
@@ -81,6 +81,7 @@ final class CardSectionElement: ContainerElement {
         defaultValues: DefaultValues = .init(),
         preferredNetworks: [STPCardBrand]? = nil,
         cardBrandChoiceEligible: Bool = false,
+        enableCBCRedesign: Bool = false,
         hostedSurface: HostedSurface,
         theme: ElementsAppearance = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
@@ -107,12 +108,12 @@ final class CardSectionElement: ContainerElement {
                 return params
             }
             : nil
-        var cardBrandDropDown: PaymentMethodElementWrapper<DropdownFieldElement>?
+        var cardBrandSelector: PaymentMethodElementWrapper<CardBrandChoiceElement>?
         if cardBrandChoiceEligible {
-            cardBrandDropDown = PaymentMethodElementWrapper(DropdownFieldElement.makeCardBrandDropdown(theme: theme)) { field, params in
-                let cardBrand = STPCard.brand(from: field.selectedItem.rawData)
+            cardBrandSelector = PaymentMethodElementWrapper(CardBrandChoiceElement(enableCBCRedesign: enableCBCRedesign, theme: theme)) { field, params in
+                let cardBrand = field.selectedBrand ?? .unknown
                 // Only set preferred networks for the confirm params if we have more than 1 brand fetched
-                if (cardBrandDropDown?.element.nonPlacerholderItems.count ?? 1) > 1 {
+                if field.brandCount > 1 {
                     cardParams(for: params).networks = STPPaymentMethodCardNetworksParams(preferred: cardBrand != .unknown ? STPCardBrandUtilities.apiValue(from: cardBrand) : nil)
                 }
                 analyticsHelper?.logCardBrandSelected(hostedSurface: hostedSurface, cardBrand: cardBrand)
@@ -121,7 +122,7 @@ final class CardSectionElement: ContainerElement {
         }
         let panElement = PaymentMethodElementWrapper(TextFieldElement.PANConfiguration(
             defaultValue: defaultValues.pan,
-            cardBrandDropDown: cardBrandDropDown?.element,
+            cardBrandChoiceElement: cardBrandSelector?.element,
             cardBrandFilter: cardBrandFilter,
             cardFundingFilter: cardFundingFilter,
             fundingBinController: fundingBinController
@@ -156,7 +157,7 @@ final class CardSectionElement: ContainerElement {
 
         let allSubElements: [Element?] = [
             nameElement,
-            panElement, SectionElement.HiddenElement(cardBrandDropDown),
+            panElement, SectionElement.HiddenElement(cardBrandSelector),
             SectionElement.MultiElementRow([expiryElement, cvcElement], theme: theme),
         ]
         let subElements = allSubElements.compactMap { $0 }
@@ -168,7 +169,7 @@ final class CardSectionElement: ContainerElement {
 
         self.nameElement = nameElement?.element
         self.panElement = panElement.element
-        self.cardBrandDropDown = cardBrandDropDown?.element
+        self.cardBrandChoiceElement = cardBrandSelector?.element
         self.cvcElement = cvcElement.element
         self.expiryElement = expiryElement.element
         self.preferredNetworks = preferredNetworks
@@ -180,12 +181,10 @@ final class CardSectionElement: ContainerElement {
     // MARK: - ElementDelegate
     private var cardBrand: STPCardBrand = .unknown
     private var selectedBrand: STPCardBrand? {
-        guard let cardBrandDropDown = cardBrandDropDown,
-              let cardBrandCaseIndex = Int(cardBrandDropDown.selectedItem.rawData) else {
+        guard let cardBrandChoiceElement = cardBrandChoiceElement else {
             return nil
         }
-
-        return .init(rawValue: cardBrandCaseIndex) ?? .unknown
+        return cardBrandChoiceElement.selectedBrand
     }
 
     /// Tracks the last known validation state of the PAN element, so that we can know when it changes from invalid to valid
@@ -202,6 +201,9 @@ final class CardSectionElement: ContainerElement {
 
         fetchAndUpdateCardBrands()
         fetchAndCacheCardFunding()
+        if cardBrandChoiceElement?.enableCBCRedesign ?? false {
+            updateCBCTooltipVisibility()
+        }
 
         /// Send an analytic whenever the card number field is completed
         if lastPanElementValidationState.isValid != panElement.validationState.isValid {
@@ -267,14 +269,19 @@ final class CardSectionElement: ContainerElement {
     }
 
     // MARK: Card brand choice
+    lazy var cbcTooltip = TooltipContainerView(theme: theme)
+    /// Latches `true` once the user selects a brand; suppresses the tooltip if they later
+    /// toggle the selection off. Reset when the set of available brands changes.
+    private var hasInteractedWithCBCElement = false
     private var cardBrands = Set<STPCardBrand>()
     func fetchAndUpdateCardBrands() {
         // Only fetch card brands if we have at least 8 digits in the pan
-        guard let cardBrandDropDown = cardBrandDropDown, panElement.text.count >= 8 else {
-            // Clear any previously fetched card brands from the dropdown
+        guard let cardBrandChoiceElement = cardBrandChoiceElement, panElement.text.count >= 8 else {
+            // Clear any previously fetched card brands from the card brand selector
             if !self.cardBrands.isEmpty {
                 self.cardBrands = Set<STPCardBrand>()
-                cardBrandDropDown?.update(items: DropdownFieldElement.items(from: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>(), theme: self.theme))
+                self.hasInteractedWithCBCElement = false
+                cardBrandChoiceElement?.update(cardBrands: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>())
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
             return
@@ -299,51 +306,69 @@ final class CardSectionElement: ContainerElement {
 
             if self.cardBrands != fetchedCardBrands {
                 self.cardBrands = fetchedCardBrands
+                self.hasInteractedWithCBCElement = false
                 let disallowedCardBrands = fetchedCardBrands.filter { !self.cardBrandFilter.isAccepted(cardBrand: $0) }
 
-                cardBrandDropDown.update(items: DropdownFieldElement.items(
-                    from: fetchedCardBrands,
-                    disallowedCardBrands: disallowedCardBrands,
-                    theme: self.theme
-                ))
+                cardBrandChoiceElement.update(
+                    cardBrands: fetchedCardBrands,
+                    disallowedCardBrands: disallowedCardBrands
+                )
 
-                // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands, otherwise use default logic
-                if !hadBrands, let indexToSelect = hasPreferredBrandIndex(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands, cardBrandDropDown: cardBrandDropDown) {
-                    cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
-                } else if let indexToSelect = useDefaultSelectionLogic(disallowedCardBrands: disallowedCardBrands, cardBrandDropDown: cardBrandDropDown) {
-                    cardBrandDropDown.select(index: indexToSelect, shouldAutoAdvance: false)
+                // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands
+                if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
+                    cardBrandChoiceElement.select(brandToSelect)
                 }
-
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
         }
     }
 
+    /// Show the tooltip when the PAN field is in focus, the card brand selector is visible (multiple brands),
+    /// no brand has been selected, and at least one brand is allowed. Hide it otherwise.
+    private func updateCBCTooltipVisibility() {
+        if cardBrandChoiceElement?.selectedBrand != nil {
+            hasInteractedWithCBCElement = true
+        }
+
+        let hasAllowedBrand = !cardBrands.filter({ cardBrandFilter.isAccepted(cardBrand: $0) }).isEmpty
+        let shouldShow = panElement.isEditing
+            && cardBrands.count > 1
+            && !hasInteractedWithCBCElement
+            && hasAllowedBrand
+
+        // If the CBC tooltip has not been installed in the view, set it up
+        if cbcTooltip.superview == nil {
+            cbcTooltip.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(cbcTooltip)
+            view.bringSubviewToFront(cbcTooltip)
+            NSLayoutConstraint.activate([
+                cbcTooltip.trailingAnchor.constraint(equalTo: panElement.view.trailingAnchor, constant: -theme.textFieldInsets.trailing),
+                cbcTooltip.topAnchor.constraint(equalTo: panElement.view.bottomAnchor, constant: -6),
+            ])
+        }
+        let wasShown = !cbcTooltip.accessibilityElementsHidden
+        if shouldShow != wasShown { // if the visibility should change
+            cbcTooltip.accessibilityElementsHidden = !shouldShow // update accessibility hidden state
+            UIView.animate(withDuration: 0.2) {
+                self.cbcTooltip.alpha = shouldShow ? 1 : 0
+            }
+            if shouldShow { // if the tooltip is being newly shown, announce it
+                UIAccessibility.post(notification: .layoutChanged, argument: cbcTooltip)
+            }
+        }
+    }
+
     // Select the first brand in the fetched brands that appears earliest in the merchants preferred networks
-    func hasPreferredBrandIndex(fetchedCardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand>, cardBrandDropDown: DropdownFieldElement) -> Int? {
+    func hasPreferredBrand(fetchedCardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand>) -> STPCardBrand? {
         guard let preferredNetworks = self.preferredNetworks,
-              let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) && !disallowedCardBrands.contains($0) }),
-              let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brandToSelect) }) else {
+              let brandToSelect = preferredNetworks.first(where: { fetchedCardBrands.contains($0) && !disallowedCardBrands.contains($0) }) else {
             return nil
         }
 
-        return indexToSelect
+        return brandToSelect
 
     }
 
-    // If we only fetched one card brand that is not disallowed, auto select it.
-    // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
-    func useDefaultSelectionLogic(disallowedCardBrands: Set<STPCardBrand>, cardBrandDropDown: DropdownFieldElement) -> Int? {
-        let validBrandSelections = cardBrandDropDown.items.filter { !$0.isPlaceholder && !$0.isDisabled }
-        guard validBrandSelections.count == 1,
-              !disallowedCardBrands.isEmpty,
-              let firstItem = validBrandSelections.first,
-              let indexToSelect = cardBrandDropDown.items.firstIndex(where: { $0.rawData == firstItem.rawData }) else {
-            return nil
-        }
-
-        return indexToSelect
-    }
 }
 
 // MARK: - Helpers
@@ -380,3 +405,55 @@ extension CardSectionElement: CardSectionWithScannerViewDelegate {
     }
 }
 #endif
+
+// MARK: - TooltipContainerView
+
+final class TooltipContainerView: UIView {
+    private let theme: ElementsAppearance
+
+    init(theme: ElementsAppearance) {
+        self.theme = theme
+        super.init(frame: .zero)
+
+        let tooltipText = STPLocalizedString("Choose a card brand", "Tooltip prompting user to select their card brand when a co-branded card is detected")
+
+        let label = UILabel()
+        label.text = tooltipText
+        label.font = theme.fonts.smallFootnote.regular
+        label.textColor = theme.colors.textFieldText
+        label.numberOfLines = 0
+
+        isAccessibilityElement = true
+        accessibilityLabel = tooltipText
+        accessibilityTraits = .staticText
+        accessibilityElementsHidden = true
+
+        backgroundColor = theme.colors.componentBackground
+        applyCornerRadius(appearance: theme)
+        layer.applyShadow(shadow: theme.shadow)
+        layer.borderWidth = theme.separatorWidth
+        layer.borderColor = theme.colors.border.cgColor
+        alpha = 0
+
+        let isLiquidGlass = LiquidGlassDetector.isEnabledInMerchantApp && theme.cornerRadius == nil
+        label.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(label)
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: topAnchor, constant: 6),
+            label.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -6),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: isLiquidGlass ? 10 : 6),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: isLiquidGlass ? -10 : -6),
+        ])
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    #if !os(visionOS)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        layer.borderColor = theme.colors.border.cgColor
+    }
+    #endif
+}

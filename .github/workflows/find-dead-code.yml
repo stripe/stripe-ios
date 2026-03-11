@@ -13,9 +13,9 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Setup Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
@@ -37,8 +37,8 @@ jobs:
 
       - name: Compare Periphery output with master baseline
         run: |
-          git fetch origin ${{ github.base_ref }}:${{ github.base_ref }}
-          git checkout ${{ github.base_ref }}
+          git fetch --depth=1 origin ${{ github.base_ref }}
+          git checkout FETCH_HEAD
           cp "$RUNNER_TEMP/.periphery.yml" .periphery.yml
           mkdir -p ci_scripts/dead_code/
           cp -r "$RUNNER_TEMP/" ci_scripts/dead_code/

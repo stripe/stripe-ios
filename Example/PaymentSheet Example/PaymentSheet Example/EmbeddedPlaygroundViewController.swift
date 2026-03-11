@@ -7,7 +7,7 @@
 
 import Combine
 import Foundation
-@_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CheckoutSessionPreview) import StripePaymentSheet
+@_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import SwiftUI
 import UIKit
@@ -37,7 +37,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
 
     private let intentConfig: EmbeddedPaymentElement.IntentConfiguration?
 
-    private let checkoutSession: STPCheckoutSession?
+    private let checkoutSession: Checkout.Session?
 
     private(set) var embeddedPaymentElement: EmbeddedPaymentElement?
     private var paymentMethodsViewController: EmbeddedPaymentElementWrapperViewController?
@@ -104,7 +104,7 @@ class EmbeddedPlaygroundViewController: UIViewController {
     init(
         configuration: EmbeddedPaymentElement.Configuration,
         intentConfig: EmbeddedPaymentElement.IntentConfiguration?,
-        checkoutSession: STPCheckoutSession?,
+        checkoutSession: Checkout.Session?,
         playgroundController: PlaygroundController
     ) {
         self.configuration = configuration
