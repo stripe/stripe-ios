@@ -323,13 +323,12 @@ private final class SegmentedItemView: UIControl {
     }
 
     func select(_ selected: Bool, animated: Bool) {
-        guard self.accessibilityTraits.contains(.selected) != selected else { return }
-
         updateLiquidGlassLeadingPadding(isSelected: selected)
 
         if selected {
             let showSelection = {
                 self.checkmarkImageView.isHidden = false
+                self.checkmarkImageView.alpha = 1.0
                 self.backgroundColor = self.theme.colors.border.withAlphaComponent(0.3)
             }
             if animated {
