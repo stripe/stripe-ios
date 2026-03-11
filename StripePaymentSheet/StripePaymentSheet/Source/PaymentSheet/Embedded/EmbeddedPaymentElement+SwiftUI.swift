@@ -93,6 +93,44 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
         }
     }
 
+    /// Asynchronously loads the EmbeddedPaymentElementViewModel using a Checkout.Session.
+    /// This function should only be called once to initially load the EmbeddedPaymentElementViewModel.
+    /// - Parameter checkoutSession: A fully loaded Checkout.Session object.
+    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
+    /// - Note: This method may only be called once. Subsequent calls will throw an error.
+    /// - Throws: An error if loading failed.
+    @_spi(CheckoutSessionsPreview) public func load(
+        checkoutSession: Checkout.Session,
+        configuration: EmbeddedPaymentElement.Configuration
+    ) async throws {
+        // If we already have a load task (whether it's in progress or finished), throw an error
+        guard loadTask == nil else {
+            throw ViewModelError.alreadyLoaded
+        }
+
+        // Store the load task
+        loadTask = Task { [weak self] in
+            let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
+                checkoutSession: checkoutSession,
+                configuration: configuration
+            )
+            guard let self else { return }
+            self.embeddedPaymentElement = embeddedPaymentElement
+            self.embeddedPaymentElement?.delegate = self
+            self.paymentOption = embeddedPaymentElement.paymentOption
+            calculateAndPublishHeight(embeddedPaymentElement: embeddedPaymentElement) // compute initial height
+            self.isLoaded = true
+        }
+
+        do {
+            try await loadTask?.value
+        } catch {
+            // Reset loadTask to allow for load retries after errors
+            loadTask = nil
+            throw error
+        }
+    }
+
     /// Call this method when the IntentConfiguration values you used to initialize `EmbeddedPaymentElementViewModel` (amount, currency, etc.) change.
     /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
     /// - Parameter intentConfiguration: An updated IntentConfiguration.
@@ -116,6 +154,31 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
         }
 
         return await embeddedPaymentElement.update(intentConfiguration: intentConfiguration)
+    }
+
+    /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElementViewModel` changes.
+    /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
+    /// - Parameter checkoutSession: An updated Checkout.Session.
+    /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
+    /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
+    @_spi(CheckoutSessionsPreview) public func update(
+        checkoutSession: Checkout.Session
+    ) async -> EmbeddedPaymentElement.UpdateResult {
+        // Wait for the load task to complete if it exists
+        if let loadTask = self.loadTask {
+            do {
+                try await loadTask.value
+            } catch {
+                return .failed(error: ViewModelError.notLoaded)
+            }
+        }
+
+        // Check if update was called before load, if so throw an error
+        guard let embeddedPaymentElement else {
+            return .failed(error: ViewModelError.notLoaded)
+        }
+
+        return await embeddedPaymentElement.update(checkoutSession: checkoutSession)
     }
 
     /// Completes the payment or setup.

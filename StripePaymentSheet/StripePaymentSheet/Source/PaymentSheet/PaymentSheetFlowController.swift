@@ -213,7 +213,8 @@ extension PaymentSheet {
         }
 
         /// This contains all configurable properties of PaymentSheet
-        public let configuration: Configuration
+        /// - Note: `internal(set)` because checkout session updates may apply address overrides to the configuration.
+        public internal(set) var configuration: Configuration
 
         /// Contains information about the customer's desired payment option.
         /// You can use this to e.g. display the payment option in your UI.
@@ -624,17 +625,40 @@ extension PaymentSheet {
         /// This ensures the appropriate payment methods are displayed, etc.
         /// - Parameter intentConfiguration: An updated IntentConfiguration
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
-        /// - Note: Don't call `confirm` or `present` until the update succeeds. Don’t call this method while PaymentSheet is being presented. 
+        /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
         public func update(intentConfiguration: IntentConfiguration, completion: @escaping (Error?) -> Void) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
+            performUpdate(mode: .deferredIntent(intentConfiguration), completion: completion)
+        }
 
+        /// Call this method when the CheckoutSession you used to initialize PaymentSheet.FlowController changes.
+        /// This ensures the appropriate payment methods are displayed, etc.
+        /// - Parameter checkoutSession: An updated Checkout.Session
+        /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
+        /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
+        @_spi(CheckoutSessionsPreview) public func update(
+            checkoutSession: Checkout.Session,
+            completion: @escaping (Error?) -> Void
+        ) {
+            assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
+            assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
+            guard let stpSession = checkoutSession as? STPCheckoutSession else {
+                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+                completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
+                return
+            }
+            stpSession.applyAddressOverrides(to: &configuration)
+            performUpdate(mode: .checkoutSession(stpSession), completion: completion)
+        }
+
+        private func performUpdate(mode: PaymentSheet.InitializationMode, completion: @escaping (Error?) -> Void) {
             let updateID = UUID()
             latestUpdateContext = UpdateContext(id: updateID)
 
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheetLoader.load(
-                mode: .deferredIntent(intentConfiguration),
+                mode: mode,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .flowController,
@@ -642,7 +666,7 @@ extension PaymentSheet {
             ) { [weak self] result in
                 assert(Thread.isMainThread, "PaymentSheet.FlowController.update load callback must be called from the main thread.")
                 guard let self = self else {
-                    assertionFailure("The PaymentSheet.FlowController instance was destroyed during a call to `update(intentConfiguration:completion:)`")
+                    assertionFailure("The PaymentSheet.FlowController instance was destroyed during a call to `update`")
                     return
                 }
 
