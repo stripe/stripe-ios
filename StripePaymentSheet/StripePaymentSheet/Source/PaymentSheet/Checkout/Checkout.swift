@@ -44,6 +44,8 @@ public final class Checkout: ObservableObject {
         set { session = newValue }
     }
 
+    weak var integrationDelegate: CheckoutIntegrationDelegate?
+
     private let clientSecret: String
     private let apiClient: STPAPIClient
 
@@ -65,6 +67,9 @@ public final class Checkout: ObservableObject {
     public func load() async throws {
         guard !clientSecret.isEmpty else {
             throw CheckoutError.invalidClientSecret
+        }
+        guard integrationDelegate?.isSheetPresented != true else {
+            throw CheckoutError.sheetCurrentlyPresented
         }
 
         do {
@@ -133,9 +138,10 @@ public final class Checkout: ObservableObject {
             stpSession?.billingAddressOverride = params
         } else {
             stpSession?.billingAddressOverride = params
-            if let session {
-                self.session = session
-                delegate?.checkout(self, didUpdate: session)
+            if let stpSession {
+                self.session = stpSession
+                delegate?.checkout(self, didUpdate: stpSession)
+                integrationDelegate?.checkoutDidUpdate(session: stpSession)
             }
         }
     }
@@ -158,9 +164,10 @@ public final class Checkout: ObservableObject {
             stpSession?.shippingAddressOverride = params
         } else {
             stpSession?.shippingAddressOverride = params
-            if let session {
-                self.session = session
-                delegate?.checkout(self, didUpdate: session)
+            if let stpSession {
+                self.session = stpSession
+                delegate?.checkout(self, didUpdate: stpSession)
+                integrationDelegate?.checkoutDidUpdate(session: stpSession)
             }
         }
     }
@@ -186,18 +193,22 @@ public final class Checkout: ObservableObject {
         session = newSession
         if changed {
             delegate?.checkout(self, didUpdate: newSession)
+            integrationDelegate?.checkoutDidUpdate(session: newSession)
         }
     }
 
     // MARK: - Private Methods
 
-    /// Validates that the session is loaded and open.
+    /// Validates that the session is loaded, open, and no sheet is presented.
     private func requireOpenSession() throws {
         guard let currentSession = session else {
             throw CheckoutError.sessionNotLoaded
         }
         guard currentSession.status == .open else {
             throw CheckoutError.sessionNotOpen
+        }
+        guard integrationDelegate?.isSheetPresented != true else {
+            throw CheckoutError.sheetCurrentlyPresented
         }
     }
 

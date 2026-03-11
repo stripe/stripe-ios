@@ -19,6 +19,9 @@ import Foundation
     /// The session is no longer open (e.g. it has been completed or expired).
     case sessionNotOpen
 
+    /// A payment sheet or form is currently presented. Dismiss it before making changes.
+    case sheetCurrentlyPresented
+
     /// The Stripe API returned an error with the given message.
     case apiError(message: String)
 
@@ -32,6 +35,8 @@ import Foundation
             return "The session has not been loaded yet. Call load() first."
         case .sessionNotOpen:
             return "The session is no longer active."
+        case .sheetCurrentlyPresented:
+            return "A payment sheet or form is currently presented. Dismiss it before making changes."
         case .apiError(let message):
             return message
         }
