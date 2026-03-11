@@ -28,7 +28,7 @@ import UIKit
     private var disabledItems: Set<SegmentedSelectorItem>
 
     /// When false, the user can update their selection but cannot clear it by toggling.
-    public private(set) var allowDeselection: Bool
+    private var allowDeselection: Bool
 
     public init(items: [SegmentedSelectorItem] = [],
                 disabledItems: Set<SegmentedSelectorItem> = [],
