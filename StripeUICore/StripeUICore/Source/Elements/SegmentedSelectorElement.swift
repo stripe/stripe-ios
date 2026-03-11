@@ -188,18 +188,28 @@ final class SegmentedSelectorView: UIView {
             }
         }
         if let selectedItem, let itemView = itemViews[selectedItem] {
-            itemView.select(true, animated: false)
+            itemView.select(true)
         }
         invalidateIntrinsicContentSize()
     }
 
     func select(_ item: SegmentedSelectorItem?, animated: Bool) {
-        // Deselect all, then select the new item
-        for (viewItem, itemView) in itemViews where viewItem != item {
-            itemView.select(false, animated: animated)
+        let applyChanges = {
+            // Deselect all, then select the new item
+            for (viewItem, itemView) in self.itemViews where viewItem != item {
+                itemView.select(false)
+            }
+            if let item = item, let itemView = self.itemViews[item] {
+                itemView.select(true)
+            }
         }
-        if let item = item, let itemView = itemViews[item] {
-            itemView.select(true, animated: animated)
+
+        if animated {
+            UIView.animate(withDuration: 0.2) {
+                applyChanges()
+            }
+        } else {
+            applyChanges()
         }
         invalidateIntrinsicContentSize()
     }
@@ -207,7 +217,6 @@ final class SegmentedSelectorView: UIView {
     override var intrinsicContentSize: CGSize {
         return stackView.systemLayoutSizeFitting(UIView.layoutFittingCompressedSize)
     }
-
     @objc private func itemTapped(_ sender: UITapGestureRecognizer) {
         guard let itemView = sender.view as? SegmentedItemView else { return }
         delegate?.didTap(itemView.item)
@@ -304,11 +313,14 @@ private final class SegmentedItemView: UIControl {
         let leading = containerStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leadingPadding)
         self.leadingConstraint = leading
 
+        let iconSize = item.image.size
         NSLayoutConstraint.activate([
             leading,
             containerStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -trailingPadding),
             containerStack.topAnchor.constraint(equalTo: topAnchor, constant: Constants.padding),
             containerStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -Constants.padding),
+            iconImageView.widthAnchor.constraint(equalToConstant: iconSize.width),
+            iconImageView.heightAnchor.constraint(equalToConstant: iconSize.height),
         ])
 
         // Add accessibility
@@ -321,25 +333,19 @@ private final class SegmentedItemView: UIControl {
         }
     }
 
-    func select(_ selected: Bool, animated: Bool) {
+    func select(_ selected: Bool) {
+        guard self.accessibilityTraits.contains(.selected) != selected else { return }
+
         updateLiquidGlassLeadingPadding(isSelected: selected)
 
         if selected {
-            let showSelection = {
-                self.checkmarkImageView.isHidden = false
-                self.checkmarkImageView.alpha = 1.0
-                self.backgroundColor = self.theme.colors.border.withAlphaComponent(0.3)
-            }
-            if animated {
-                UIView.animate(withDuration: 0.2) {
-                    showSelection()
-                }
-            } else {
-                showSelection()
-            }
+            self.checkmarkImageView.isHidden = false
+            self.checkmarkImageView.alpha = 1.0
+            self.backgroundColor = self.theme.colors.border.withAlphaComponent(0.3)
             self.accessibilityTraits.insert(.selected)
         } else { // instantly hide selection
             self.checkmarkImageView.isHidden = true
+            checkmarkImageView.alpha = 0
             self.backgroundColor = .clear
             self.accessibilityTraits.remove(.selected)
         }
@@ -360,7 +366,7 @@ private final class SegmentedItemView: UIControl {
         iconImageView.alpha = isDisabled ? 0.4 : 1.0
         // If disabled, deselect it
         if isDisabled {
-            select(false, animated: false)
+            select(false)
             accessibilityTraits.insert(.notEnabled)
         } else {
             accessibilityTraits.remove(.notEnabled)
