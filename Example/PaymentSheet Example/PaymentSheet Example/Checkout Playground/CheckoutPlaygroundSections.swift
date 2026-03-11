@@ -60,43 +60,19 @@ struct CheckoutPlaygroundConfigurationSection: View {
 
 @available(iOS 15.0, *)
 struct CheckoutPlaygroundLineItemsSection: View {
-    @Binding var lineItems: [CheckoutPlayground.LineItemConfig]
+    let lineItems: [CheckoutPlayground.LineItemConfig]
     let currency: CheckoutPlayground.Currency
-    @FocusState private var focusedItemID: UUID?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                CheckoutPlayground.SectionHeader(title: "Line Items", icon: "cart.fill")
-                Spacer()
-                Button(action: {
-                    let newItem = CheckoutPlayground.LineItemConfig(name: "", unitAmount: 1000, quantity: 1)
-                    withAnimation {
-                        lineItems.append(newItem)
-                    }
-                    // Delay slightly to allow the view to appear
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                        focusedItemID = newItem.id
-                    }
-                }) {
-                    Label("Add", systemImage: "plus")
-                        .font(.subheadline.weight(.medium))
-                }
-            }
+            CheckoutPlayground.SectionHeader(title: "Line Items", icon: "cart.fill")
 
             VStack(spacing: 12) {
-                ForEach($lineItems) { $item in
+                ForEach(lineItems) { item in
                     CheckoutPlaygroundLineItemCard(
-                        item: $item,
-                        currency: currency,
-                        focusedItemID: $focusedItemID
-                    ) {
-                        if let idx = lineItems.firstIndex(where: { $0.id == item.id }) {
-                            withAnimation {
-                                _ = lineItems.remove(at: idx)
-                            }
-                        }
-                    }
+                        item: item,
+                        currency: currency
+                    )
                 }
             }
         }
@@ -105,27 +81,14 @@ struct CheckoutPlaygroundLineItemsSection: View {
 
 @available(iOS 15.0, *)
 struct CheckoutPlaygroundLineItemCard: View {
-    @Binding var item: CheckoutPlayground.LineItemConfig
+    let item: CheckoutPlayground.LineItemConfig
     let currency: CheckoutPlayground.Currency
-    var focusedItemID: FocusState<UUID?>.Binding
-    let onDelete: () -> Void
 
-    private var priceBinding: Binding<Double> {
-        Binding(
-            get: {
-                if currency.isZeroDecimal {
-                    return Double(item.unitAmount)
-                }
-                return Double(item.unitAmount) / 100.0
-            },
-            set: { newValue in
-                if currency.isZeroDecimal {
-                    item.unitAmount = Int(newValue)
-                } else {
-                    item.unitAmount = Int(round(newValue * 100))
-                }
-            }
-        )
+    private var formattedPrice: String {
+        if currency.isZeroDecimal {
+            return "\(currency.symbol)\(item.unitAmount)"
+        }
+        return String(format: "%@%.2f", currency.symbol, Double(item.unitAmount) / 100.0)
     }
 
     var body: some View {
@@ -139,62 +102,29 @@ struct CheckoutPlaygroundLineItemCard: View {
             }
 
             VStack(alignment: .leading, spacing: 8) {
-                TextField("Product Name", text: $item.name)
+                Text(item.name)
                     .font(.system(size: 16, weight: .medium))
-                    .focused(focusedItemID, equals: item.id)
 
                 HStack(spacing: 16) {
                     HStack(spacing: 4) {
                         Text("Qty")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        TextField("1", value: $item.quantity, format: .number)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.center)
-                            .frame(width: 32)
-                            .padding(.vertical, 4)
-                            .background(Color(uiColor: .systemGray6))
-                            .cornerRadius(6)
+                        Text("\(item.quantity)")
+                            .font(.subheadline)
                     }
 
                     HStack(spacing: 4) {
                         Text("Price")
                             .font(.caption)
                             .foregroundColor(.secondary)
-
-                        HStack(spacing: 2) {
-                            Text(currency.symbol)
-                                .font(.system(size: 15, weight: .medium))
-                                .foregroundColor(.secondary)
-                                .padding(.leading, 8)
-
-                            TextField(
-                                "0.00",
-                                value: priceBinding,
-                                format: .number.precision(.fractionLength(currency.isZeroDecimal ? 0 : 2))
-                            )
-                            .keyboardType(currency.isZeroDecimal ? .numberPad : .decimalPad)
-                            .multilineTextAlignment(.trailing)
-                            .padding(.trailing, 8)
-                            .padding(.vertical, 6)
-                        }
-                        .frame(width: 110, height: 32)
-                        .background(Color(uiColor: .systemGray6))
-                        .cornerRadius(6)
+                        Text(formattedPrice)
+                            .font(.subheadline)
                     }
                 }
             }
 
             Spacer()
-
-            Button(action: onDelete) {
-                Image(systemName: "xmark")
-                    .font(.system(size: 12, weight: .bold))
-                    .foregroundColor(.secondary)
-                    .padding(8)
-                    .background(Color(uiColor: .systemGray6))
-                    .clipShape(Circle())
-            }
         }
         .padding(12)
         .background(Color(uiColor: .secondarySystemGroupedBackground))

@@ -34,7 +34,7 @@ struct CheckoutPlaygroundView: View {
 
                         if viewModel.mode != .setup {
                             CheckoutPlaygroundLineItemsSection(
-                                lineItems: $viewModel.lineItems,
+                                lineItems: viewModel.lineItems,
                                 currency: viewModel.currency
                             )
                         }
