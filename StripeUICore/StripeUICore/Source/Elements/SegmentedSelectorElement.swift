@@ -194,22 +194,12 @@ final class SegmentedSelectorView: UIView {
     }
 
     func select(_ item: SegmentedSelectorItem?, animated: Bool) {
-        let applyChanges = {
-            // Deselect all, then select the new item
-            for (viewItem, itemView) in self.itemViews where viewItem != item {
-                itemView.select(false)
-            }
-            if let item = item, let itemView = self.itemViews[item] {
-                itemView.select(true)
-            }
+        // Deselect all, then select the new item
+        for (viewItem, itemView) in self.itemViews where viewItem != item {
+            itemView.select(false, animated: animated)
         }
-
-        if animated {
-            UIView.animate(withDuration: 0.2) {
-                applyChanges()
-            }
-        } else {
-            applyChanges()
+        if let item = item, let itemView = self.itemViews[item] {
+            itemView.select(true, animated: animated)
         }
         invalidateIntrinsicContentSize()
     }
@@ -332,14 +322,23 @@ private final class SegmentedItemView: UIControl {
         }
     }
 
-    func select(_ selected: Bool) {
+    func select(_ selected: Bool, animated: Bool) {
         guard self.accessibilityTraits.contains(.selected) != selected else { return }
 
         updateLiquidGlassLeadingPadding(isSelected: selected)
 
         if selected {
-            self.checkmarkImageView.isHidden = false
-            self.backgroundColor = self.theme.colors.border.withAlphaComponent(0.3)
+            let showSelection = {
+                self.checkmarkImageView.isHidden = false
+                self.backgroundColor = self.theme.colors.border.withAlphaComponent(0.3)
+            }
+            if animated {
+                UIView.animate(withDuration: 0.2) {
+                    showSelection()
+                }
+            } else {
+                showSelection()
+            }
             self.accessibilityTraits.insert(.selected)
         } else { // instantly hide selection
             self.checkmarkImageView.isHidden = true
@@ -363,7 +362,7 @@ private final class SegmentedItemView: UIControl {
         iconImageView.alpha = isDisabled ? 0.4 : 1.0
         // If disabled, deselect it
         if isDisabled {
-            select(false)
+            select(false, animated: false)
             accessibilityTraits.insert(.notEnabled)
         } else {
             accessibilityTraits.remove(.notEnabled)
