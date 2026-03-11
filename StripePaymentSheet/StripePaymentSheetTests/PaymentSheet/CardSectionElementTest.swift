@@ -54,6 +54,32 @@ class CardSectionElementTest: XCTestCase {
         XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
     }
 
+    func testPreferredNetwork_preventsDeselection() {
+        let cardSection = makeCardSectionElement(preferredNetworks: [.cartesBancaires, .visa])
+        cardSection.panElement.setText(cbcVisaTestCard)
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .cartesBancaires)
+        // Deselection should be disabled after preferred network autoselection
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.allowDeselection, false)
+    }
+
+    func testPreferredNetwork_reEnablesDeselectionWhenBrandsCleared() {
+        let cardSection = makeCardSectionElement(preferredNetworks: [.cartesBancaires, .visa])
+        cardSection.panElement.setText(cbcVisaTestCard)
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.allowDeselection, false)
+
+        // Clear PAN to reset brands
+        cardSection.panElement.setText("")
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.allowDeselection, true)
+    }
+
+    func testPreferredNetwork_noDeselectionPreventionWhenNoPreferredMatch() {
+        let cardSection = makeCardSectionElement(preferredNetworks: [.mastercard])
+        cardSection.panElement.setText(cbcVisaTestCard)
+        XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
+        // Deselection should remain allowed when no preferred network matched
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.allowDeselection, true)
+    }
+
     // MARK: - Card brand filtering autoselection
 
     func testFiltering_autoselectsOnlyAllowedBrand() {

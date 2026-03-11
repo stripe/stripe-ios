@@ -281,6 +281,7 @@ final class CardSectionElement: ContainerElement {
             if !self.cardBrands.isEmpty {
                 self.cardBrands = Set<STPCardBrand>()
                 self.hasInteractedWithCBCElement = false
+                cardBrandChoiceElement?.setAllowDeselection(true)
                 cardBrandChoiceElement?.update(cardBrands: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>())
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
@@ -317,6 +318,7 @@ final class CardSectionElement: ContainerElement {
                 // Prioritize merchant preference if we did not have brands prior to calling .possibleBrands
                 if !hadBrands, let brandToSelect = hasPreferredBrand(fetchedCardBrands: fetchedCardBrands, disallowedCardBrands: disallowedCardBrands) {
                     cardBrandChoiceElement.select(brandToSelect)
+                    cardBrandChoiceElement.setAllowDeselection(false)
                 }
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }

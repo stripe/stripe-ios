@@ -28,7 +28,7 @@ import UIKit
     private var disabledItems: Set<SegmentedSelectorItem>
 
     /// When false, the user cannot deselect the currently selected item.
-    private var allowDeselection: Bool
+    private(set) public var allowDeselection: Bool
 
     public init(items: [SegmentedSelectorItem] = [],
                 disabledItems: Set<SegmentedSelectorItem> = [],
@@ -43,6 +43,10 @@ import UIKit
             theme: theme
         )
         self.selectorView.delegate = self
+    }
+
+    public func setAllowDeselection(_ allow: Bool) {
+        self.allowDeselection = allow
     }
 
     public func update(items: [SegmentedSelectorItem], disabledItems: Set<SegmentedSelectorItem> = []) {

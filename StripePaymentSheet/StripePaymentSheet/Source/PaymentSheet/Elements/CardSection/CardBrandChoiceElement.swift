@@ -64,6 +64,15 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
+    var allowDeselection: Bool {
+        switch variant {
+        case .selector(let element):
+            return element.allowDeselection
+        case .dropdown(let element):
+            return element.items.contains { $0.isPlaceholder }
+        }
+    }
+
     // Expose brand count for determining if selector should be shown
     var brandCount: Int {
         switch variant {
@@ -124,6 +133,15 @@ final class CardBrandChoiceElement: Element {
            !disallowedCardBrands.isEmpty,
            let brand = allowedBrands.first {
             select(brand)
+        }
+    }
+
+    func setAllowDeselection(_ allow: Bool) {
+        switch variant {
+        case .selector(let element):
+            element.setAllowDeselection(allow)
+        case .dropdown:
+            break
         }
     }
 
