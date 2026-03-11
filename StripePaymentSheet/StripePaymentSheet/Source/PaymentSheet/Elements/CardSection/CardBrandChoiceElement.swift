@@ -18,12 +18,12 @@ import UIKit
 final class CardBrandChoiceElement: Element {
     weak var delegate: ElementDelegate?
 
-    private enum Variant {
+    enum Variant {
         case selector(SegmentedSelectorElement)
         case dropdown(DropdownFieldElement)
     }
 
-    private let variant: Variant
+    let variant: Variant
 
     var view: UIView {
         switch variant {
@@ -71,15 +71,6 @@ final class CardBrandChoiceElement: Element {
             return element.items.count
         case .dropdown(let element):
             return element.nonPlacerholderItems.count
-        }
-    }
-
-    var allowDeselection: Bool {
-        switch variant {
-        case .selector(let element):
-            return element.allowDeselection
-        case .dropdown(let element):
-            return element.items.contains { $0.isPlaceholder }
         }
     }
 
@@ -147,10 +138,10 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
-    func setAllowDeselection(_ allow: Bool) {
+    func setAllowDeselection(_ allowDeselection: Bool) {
         switch variant {
         case .selector(let element):
-            element.setAllowDeselection(allow)
+            element.setAllowDeselection(allowDeselection)
         case .dropdown:
             break
         }
@@ -179,7 +170,7 @@ extension CardBrandChoiceElement: ElementDelegate {
     }
 }
 
-private extension STPCardBrand {
+extension STPCardBrand {
     func makeCardBrandItem() -> SegmentedSelectorItem {
         return SegmentedSelectorItem(
             rawData: STPCardBrandUtilities.apiValue(from: self),

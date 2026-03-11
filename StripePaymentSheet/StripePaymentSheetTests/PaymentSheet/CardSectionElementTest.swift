@@ -14,6 +14,8 @@ class CardSectionElementTest: XCTestCase {
 
     // CBC test card that returns [.cartesBancaires, .visa]
     let cbcVisaTestCard = "4000002500001001"
+    // Mastercard test card that returns [.cartesBancaires, .mastercard]
+    let cbcMastercardTestCard = "5555552500001001"
 
     private func makeCardSectionElement(
         preferredNetworks: [STPCardBrand]? = nil,
@@ -31,6 +33,17 @@ class CardSectionElementTest: XCTestCase {
             cardBrandFilter: cardBrandFilter,
             opensCardScannerAutomatically: false
         )
+    }
+
+    /// Simulates a user tap on the currently selected brand, which is how a user attempts
+    /// to deselect. Goes through the same `itemTapped` code path as a real tap.
+    private func simulateTap(_ cardBrandChoice: CardBrandChoiceElement?, brand: STPCardBrand?) {
+        guard case .selector(let element) = cardBrandChoice?.variant,
+              let brand = brand else {
+            XCTFail("Expected selector variant non-nil brand to tap")
+            return
+        }
+        element.didTap(brand.makeCardBrandItem())
     }
 
     // MARK: - Preferred networks
@@ -57,27 +70,46 @@ class CardSectionElementTest: XCTestCase {
     func testPreferredNetwork_preventsDeselection() {
         let cardSection = makeCardSectionElement(preferredNetworks: [.cartesBancaires, .visa])
         cardSection.panElement.setText(cbcVisaTestCard)
+        let cardBrandChoiceElement = cardSection.cardBrandChoiceElement
+        XCTAssertEqual(cardBrandChoiceElement?.selectedBrand, .cartesBancaires)
+        // Tapping the selected brand should not deselect it
+        simulateTap(cardBrandChoiceElement, brand: cardBrandChoiceElement?.selectedBrand)
         XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .cartesBancaires)
-        // Deselection should be disabled after preferred network autoselection
-        XCTAssertEqual(cardSection.cardBrandChoiceElement?.allowDeselection, false)
+        // Tapping the other brand should be allowed
+        simulateTap(cardBrandChoiceElement, brand: .visa)
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .visa)
     }
 
     func testPreferredNetwork_reEnablesDeselectionWhenBrandsCleared() {
-        let cardSection = makeCardSectionElement(preferredNetworks: [.cartesBancaires, .visa])
+        let cardSection = makeCardSectionElement(preferredNetworks: [.visa])
         cardSection.panElement.setText(cbcVisaTestCard)
-        XCTAssertEqual(cardSection.cardBrandChoiceElement?.allowDeselection, false)
+        let cardBrandChoiceElement = cardSection.cardBrandChoiceElement
+        XCTAssertEqual(cardBrandChoiceElement?.selectedBrand, .visa)
+        // Deselection is prevented after preferred-network autoselection
+        simulateTap(cardBrandChoiceElement, brand: cardBrandChoiceElement?.selectedBrand)
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .visa)
 
-        // Clear PAN to reset brands
+        // Reset
         cardSection.panElement.setText("")
-        XCTAssertEqual(cardSection.cardBrandChoiceElement?.allowDeselection, true)
+
+        // Deselection should be allowed again
+        cardSection.panElement.setText(cbcMastercardTestCard)
+        XCTAssertNil(cardBrandChoiceElement?.selectedBrand)
+        simulateTap(cardBrandChoiceElement, brand: .mastercard)
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .mastercard)
+        simulateTap(cardBrandChoiceElement, brand: .mastercard)
+        XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
     }
 
     func testPreferredNetwork_noDeselectionPreventionWhenNoPreferredMatch() {
         let cardSection = makeCardSectionElement(preferredNetworks: [.mastercard])
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
-        // Deselection should remain allowed when no preferred network matched
-        XCTAssertEqual(cardSection.cardBrandChoiceElement?.allowDeselection, true)
+        // Manually select a brand, then verify deselection is allowed
+        cardSection.cardBrandChoiceElement?.select(.cartesBancaires)
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .cartesBancaires)
+        simulateTap(cardSection.cardBrandChoiceElement, brand: .cartesBancaires)
+        XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
     }
 
     // MARK: - Card brand filtering autoselection
