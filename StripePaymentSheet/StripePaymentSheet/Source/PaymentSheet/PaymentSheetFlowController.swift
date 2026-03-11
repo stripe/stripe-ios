@@ -833,10 +833,6 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
     var isSheetPresented: Bool {
         isPresented
     }
-
-    func checkoutDidUpdate(session: STPCheckoutSession) {
-        // TODO(porter): Call update(session:) once https://github.com/stripe/stripe-ios/pull/6178 lands
-    }
 }
 
 // MARK: - FlowControllerViewControllerDelegate

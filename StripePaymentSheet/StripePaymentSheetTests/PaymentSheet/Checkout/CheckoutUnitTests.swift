@@ -181,64 +181,6 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(delegate.didUpdateCalled)
     }
 
-    // MARK: - Integration Delegate Tests
-
-    func testUpdateSession_notifiesIntegrationDelegate() {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        checkout.integrationDelegate = integrationDelegate
-
-        let session = CheckoutTestHelpers.makeOpenSession()
-        checkout.updateSession(session)
-
-        XCTAssertTrue(integrationDelegate.didUpdateCalled)
-        XCTAssertNotNil(integrationDelegate.lastSession)
-    }
-
-    func testUpdateSession_doesNotNotifyIntegrationDelegateWhenUnchanged() {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
-        let session = CheckoutTestHelpers.makeOpenSession()
-        checkout.updateSession(session)
-
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        checkout.integrationDelegate = integrationDelegate
-
-        // Update with same session data — should not notify
-        checkout.updateSession(session)
-
-        XCTAssertFalse(integrationDelegate.didUpdateCalled)
-    }
-
-    func testUpdateBillingAddress_noTax_notifiesIntegrationDelegate() async throws {
-        let checkout = makeCheckoutWithOpenSession()
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        checkout.integrationDelegate = integrationDelegate
-
-        let update = Checkout.AddressUpdate(
-            name: "Jane Doe",
-            address: .init(country: "US")
-        )
-        try await checkout.updateBillingAddress(update)
-
-        XCTAssertTrue(integrationDelegate.didUpdateCalled)
-        XCTAssertNotNil(integrationDelegate.lastSession)
-    }
-
-    func testUpdateShippingAddress_noTax_notifiesIntegrationDelegate() async throws {
-        let checkout = makeCheckoutWithOpenSession()
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        checkout.integrationDelegate = integrationDelegate
-
-        let update = Checkout.AddressUpdate(
-            name: "John Smith",
-            address: .init(country: "US")
-        )
-        try await checkout.updateShippingAddress(update)
-
-        XCTAssertTrue(integrationDelegate.didUpdateCalled)
-        XCTAssertNotNil(integrationDelegate.lastSession)
-    }
-
     // MARK: - Sheet Presented Guard Tests
 
     func testLoadThrowsWhenSheetPresented() async {
@@ -569,13 +511,6 @@ private class MockCheckoutDelegate: CheckoutDelegate {
 @MainActor
 private class MockCheckoutIntegrationDelegate: CheckoutIntegrationDelegate {
     var isSheetPresented: Bool = false
-    var didUpdateCalled = false
-    var lastSession: STPCheckoutSession?
-
-    func checkoutDidUpdate(session: STPCheckoutSession) {
-        didUpdateCalled = true
-        lastSession = session
-    }
 }
 
 @MainActor

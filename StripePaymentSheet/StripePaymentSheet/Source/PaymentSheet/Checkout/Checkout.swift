@@ -141,7 +141,6 @@ public final class Checkout: ObservableObject {
             if let stpSession {
                 self.session = stpSession
                 delegate?.checkout(self, didUpdate: stpSession)
-                integrationDelegate?.checkoutDidUpdate(session: stpSession)
             }
         }
     }
@@ -167,7 +166,6 @@ public final class Checkout: ObservableObject {
             if let stpSession {
                 self.session = stpSession
                 delegate?.checkout(self, didUpdate: stpSession)
-                integrationDelegate?.checkoutDidUpdate(session: stpSession)
             }
         }
     }
@@ -193,7 +191,6 @@ public final class Checkout: ObservableObject {
         session = newSession
         if changed {
             delegate?.checkout(self, didUpdate: newSession)
-            integrationDelegate?.checkoutDidUpdate(session: newSession)
         }
     }
 

@@ -390,10 +390,6 @@ extension PaymentSheet: CheckoutIntegrationDelegate {
     var isSheetPresented: Bool {
         bottomSheetViewController.presentingViewController != nil
     }
-
-    func checkoutDidUpdate(session: STPCheckoutSession) {
-        // TODO(porter): Call update(session:) once https://github.com/stripe/stripe-ios/pull/6178 lands
-    }
 }
 
 extension PaymentSheet: LoadingViewControllerDelegate {

@@ -12,7 +12,4 @@
 protocol CheckoutIntegrationDelegate: AnyObject {
     /// Whether the integration is currently presenting a payment sheet or form.
     var isSheetPresented: Bool { get }
-
-    /// Called when the checkout session has been updated.
-    func checkoutDidUpdate(session: STPCheckoutSession)
 }

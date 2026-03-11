@@ -426,10 +426,6 @@ extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
     var isSheetPresented: Bool {
         presentingViewController?.presentedViewController is BottomSheetViewController
     }
-
-    func checkoutDidUpdate(session: STPCheckoutSession) {
-        // TODO(porter): Call update(session:) once https://github.com/stripe/stripe-ios/pull/6178 lands
-    }
 }
 
 // MARK: - STPAnalyticsProtocol
