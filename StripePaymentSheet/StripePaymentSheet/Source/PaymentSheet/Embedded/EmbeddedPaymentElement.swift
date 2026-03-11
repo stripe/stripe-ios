@@ -89,17 +89,17 @@ public final class EmbeddedPaymentElement {
     }
 
     /// An asynchronous failable initializer for CheckoutSession mode
-    /// Loads payment methods and configuration from a fully loaded CheckoutSession object.
-    /// - Parameter checkoutSession: A fully loaded Checkout.Session object
+    /// Loads payment methods and configuration from a fully loaded Checkout instance.
+    /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
     @_spi(CheckoutSessionsPreview) public static func create(
-        checkoutSession: Checkout.Session,
+        checkout: Checkout,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        guard let stpSession = checkoutSession as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+        guard let stpSession = checkout.session as? STPCheckoutSession else {
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
             throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
         }
         var config = configuration
@@ -123,6 +123,7 @@ public final class EmbeddedPaymentElement {
             analyticsHelper: analyticsHelper
         )
         embeddedPaymentElement.clearPaymentOptionIfNeeded()
+        checkout.integrationDelegate = embeddedPaymentElement
         return embeddedPaymentElement
     }
 

@@ -365,25 +365,29 @@ extension PaymentSheet {
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
         /// This asynchronously loads the CheckoutSession's payment methods and configuration.
-        /// - Parameter checkoutSession: A fully loaded Checkout.Session object
+        /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        @_spi(CheckoutSessionsPreview) public static func create(
-            checkoutSession: Checkout.Session,
+        @MainActor @_spi(CheckoutSessionsPreview) public static func create(
+            checkout: Checkout,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            guard let stpSession = checkoutSession as? STPCheckoutSession else {
-                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+            guard let stpSession = checkout.session as? STPCheckoutSession else {
+                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
                 completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
                 return
             }
             var config = configuration
             stpSession.applyAddressOverrides(to: &config)
             create(mode: .checkoutSession(stpSession),
-                   configuration: config,
-                   completion: completion
-            )
+                   configuration: config
+            ) { result in
+                if case .success(let flowController) = result {
+                    checkout.integrationDelegate = flowController
+                }
+                completion(result)
+            }
         }
 
         /// An asynchronous failable initializer for PaymentSheet.FlowController
@@ -483,11 +487,12 @@ extension PaymentSheet {
                     }
                 )
 
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
                 self.isPresented = true
+                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: self.configuration.appearance)
             }
 
             if canPresentLinkInPlaceOfFlowController {
+                isPresented = true
                 presentNativeLinkInPlaceOfFlowController(
                     from: presentingViewController,
                     selectedPaymentDetailsID: internalPaymentOption?.currentLinkPaymentMethod,

@@ -595,7 +595,8 @@ class PlaygroundController: ObservableObject {
     }
 
     var clientSecret: String?
-    var checkoutSession: Checkout.Session?
+    var checkout: Checkout?
+    var checkoutSession: Checkout.Session? { checkout?.session }
     var customerId: String?
     var ephemeralKey: String?
     var customerSessionClientSecret: String?
@@ -709,7 +710,7 @@ class PlaygroundController: ObservableObject {
         case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc:
             mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
         case .checkoutSession:
-            mc = PaymentSheet(checkoutSession: self.checkoutSession!, configuration: configuration)
+            mc = PaymentSheet(checkout: self.checkout!, configuration: configuration)
         }
 
         self.paymentSheet = mc
@@ -921,13 +922,13 @@ extension PlaygroundController {
                     let checkout = Checkout(clientSecret: checkoutSessionClientSecret)
                     do {
                         try await checkout.load()
-                        self.checkoutSession = checkout.session
+                        self.checkout = checkout
                     } catch {
-                        self.checkoutSession = nil
+                        self.checkout = nil
                         print("Failed to load checkout session: \(error)")
                     }
                 } else {
-                    self.checkoutSession = nil
+                    self.checkout = nil
                 }
 
                 self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
@@ -1000,7 +1001,7 @@ extension PlaygroundController {
 
                     case .checkoutSession:
                         PaymentSheet.FlowController.create(
-                            checkoutSession: self.checkoutSession!,
+                            checkout: self.checkout!,
                             configuration: self.configuration,
                             completion: completion
                         )
@@ -1381,7 +1382,7 @@ extension PlaygroundController {
         embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(
             configuration: embeddedConfiguration,
             intentConfig: settings.integrationType == .checkoutSession ? nil : intentConfig,
-            checkoutSession: settings.integrationType == .checkoutSession ? checkoutSession : nil,
+            checkout: settings.integrationType == .checkoutSession ? checkout : nil,
             playgroundController: self
         )
     }

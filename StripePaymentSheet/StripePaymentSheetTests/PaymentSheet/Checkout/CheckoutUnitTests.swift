@@ -9,6 +9,7 @@
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+import UIKit
 import XCTest
 
 @MainActor
@@ -278,6 +279,62 @@ final class CheckoutUnitTests: XCTestCase {
         }
     }
 
+    func testLoadThrowsWhenFlowControllerNativeLinkIsPresented() async {
+        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
+        let (flowController, hostViewController, window) = makeFlowControllerPresentingNativeLink()
+        defer {
+            hostViewController.dismiss(animated: false)
+            window.isHidden = true
+            LinkAccountContext.shared.account = nil
+        }
+        checkout.integrationDelegate = flowController
+
+        XCTAssertTrue(flowController.isSheetPresented)
+        XCTAssertTrue(
+            (hostViewController.presentedViewController as? BottomSheetViewController)?.contentStack.first is PayWithLinkViewController
+        )
+
+        do {
+            try await checkout.load()
+            XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
+        } catch let error as CheckoutError {
+            guard case .sheetCurrentlyPresented = error else {
+                XCTFail("Expected .sheetCurrentlyPresented, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+    func testRequireOpenSessionThrowsWhenFlowControllerNativeLinkIsPresented() async {
+        let checkout = makeCheckoutWithOpenSession()
+        let (flowController, hostViewController, window) = makeFlowControllerPresentingNativeLink()
+        defer {
+            hostViewController.dismiss(animated: false)
+            window.isHidden = true
+            LinkAccountContext.shared.account = nil
+        }
+        checkout.integrationDelegate = flowController
+
+        XCTAssertTrue(flowController.isSheetPresented)
+        XCTAssertTrue(
+            (hostViewController.presentedViewController as? BottomSheetViewController)?.contentStack.first is PayWithLinkViewController
+        )
+
+        do {
+            try await checkout.applyPromotionCode("SAVE25")
+            XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
+        } catch let error as CheckoutError {
+            guard case .sheetCurrentlyPresented = error else {
+                XCTFail("Expected .sheetCurrentlyPresented, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
     // MARK: - Address Collection Decoding Tests
 
     func testRequiresBillingAddress_whenRequired() {
@@ -442,6 +499,58 @@ final class CheckoutUnitTests: XCTestCase {
         checkout.updateSession(session)
         return checkout
     }
+
+    private func makeFlowControllerPresentingNativeLink() -> (PaymentSheet.FlowController, UIViewController, UIWindow) {
+        let linkSettings = LinkSettings(
+            fundingSources: [.card, .bankAccount],
+            popupWebviewOption: nil,
+            passthroughModeEnabled: true,
+            disableSignup: false,
+            suppress2FAModal: false,
+            disableFlowControllerRUX: false,
+            useAttestationEndpoints: true,
+            linkMode: .passthrough,
+            linkFlags: nil,
+            linkConsumerIncentive: nil,
+            linkDefaultOptIn: nil,
+            linkEnableDisplayableDefaultValuesInECE: nil,
+            linkShowPreferDebitCardHint: nil,
+            attestationStateSyncEnabled: nil,
+            linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(
+            orderedPaymentMethodTypes: [.card],
+            linkSettings: linkSettings
+        )
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: Intent._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)]
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        let flowController = PaymentSheet.FlowController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue(integrationShape: .flowController, configuration: configuration)
+        )
+        let linkAccount = PaymentSheetLinkAccount._testValue(email: "user@example.com", isRegistered: true)
+        LinkAccountContext.shared.account = linkAccount
+        flowController.viewController = MockFlowControllerViewController(
+            loadResult: loadResult,
+            selectedPaymentOption: .link(option: .wallet)
+        )
+
+        let hostViewController = UIViewController()
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.rootViewController = hostViewController
+        window.makeKeyAndVisible()
+
+        flowController.presentPaymentOptions(from: hostViewController)
+        return (flowController, hostViewController, window)
+    }
 }
 
 // MARK: - Mock Delegate
@@ -466,5 +575,43 @@ private class MockCheckoutIntegrationDelegate: CheckoutIntegrationDelegate {
     func checkoutDidUpdate(session: STPCheckoutSession) {
         didUpdateCalled = true
         lastSession = session
+    }
+}
+
+@MainActor
+private final class MockFlowControllerViewController: UIViewController, FlowControllerViewControllerProtocol {
+    let navigationBar: SheetNavigationBar
+    let requiresFullScreen: Bool = false
+    let error: Error? = nil
+    let loadResult: PaymentSheetLoader.LoadResult
+    let savedPaymentMethods: [STPPaymentMethod]
+    var linkConfirmOption: PaymentSheet.LinkConfirmOption?
+    var selectedPaymentOption: PaymentSheet.PaymentOption?
+    var selectedPaymentMethodType: PaymentSheet.PaymentMethodType?
+    weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
+    var confirmationChallenge: ConfirmationChallenge?
+
+    init(
+        loadResult: PaymentSheetLoader.LoadResult,
+        selectedPaymentOption: PaymentSheet.PaymentOption?
+    ) {
+        self.navigationBar = SheetNavigationBar(isTestMode: true, appearance: .default)
+        self.loadResult = loadResult
+        self.savedPaymentMethods = loadResult.savedPaymentMethods
+        self.selectedPaymentOption = selectedPaymentOption
+        self.selectedPaymentMethodType = selectedPaymentOption?.paymentMethodType
+        self.linkConfirmOption = nil
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func didTapOrSwipeToDismiss() {}
+
+    func clearSelection() {
+        selectedPaymentOption = nil
+        selectedPaymentMethodType = nil
     }
 }
