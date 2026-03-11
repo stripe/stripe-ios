@@ -9,15 +9,10 @@
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
-import UIKit
 import XCTest
 
 @MainActor
 final class CheckoutUnitTests: XCTestCase {
-
-    override func setUp() async throws {
-        await PaymentSheetLoader.loadMiscellaneousSingletons()
-    }
 
     func testInitialStateIsNil() {
         let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
