@@ -216,7 +216,6 @@ final class SegmentedSelectorView: UIView {
             applyChanges()
         }
         invalidateIntrinsicContentSize()
-        print(stackView.arrangedSubviews[1].frame.width)
     }
 
     override var intrinsicContentSize: CGSize {
