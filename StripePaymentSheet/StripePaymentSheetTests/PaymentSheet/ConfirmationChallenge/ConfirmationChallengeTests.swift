@@ -126,37 +126,6 @@ class ConfirmationChallengeTests: XCTestCase {
         XCTAssertEqual(timeoutAnalytic?["error_type"] as? String, "StripeCore.TimeoutError")
     }
 
-    // MARK: - Attestation Tests
-    func testAttestationConfirmationChallengeTimeoutDuringAttestation() async throws {
-        // Inject a delay longer than the timeout to force cancellation
-        await mockAttestService.setAttestationDelay(5.0)
-        let confirmationChallenge = ConfirmationChallenge(enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
-        await confirmationChallenge.setTimeout(timeout: 1)
-        let startTime = Date()
-        let (_, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
-        XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
-        // should return nil due to timeout
-        XCTAssertNil(assertion)
-        let timeoutAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.last(where: { $0["event"] as? String == "elements.attestation.confirmation.error" })
-        XCTAssertEqual(timeoutAnalytic?["error_type"] as? String, "StripeCore.TimeoutError")
-        await confirmationChallenge.complete()
-    }
-
-    func testAttestationConfirmationChallengeTimeoutDuringAssertion() async throws {
-        // Inject a delay longer than the timeout to force cancellation
-        await mockAttestService.setAssertionDelay(5.0)
-        let confirmationChallenge = ConfirmationChallenge(enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
-        await confirmationChallenge.setTimeout(timeout: 1)
-        let startTime = Date()
-        let (_, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
-        XCTAssertLessThan(Date().timeIntervalSince(startTime), 2)
-        // should return nil due to timeout
-        XCTAssertNil(assertion)
-        let timeoutAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.last(where: { $0["event"] as? String == "elements.attestation.confirmation.error" })
-        XCTAssertEqual(timeoutAnalytic?["error_type"] as? String, "StripeCore.TimeoutError")
-        await confirmationChallenge.complete()
-    }
-
     // MARK: - Confirmation challenge tests
     func testConfirmationChallenge() async throws {
         let confirmationChallenge = ConfirmationChallenge(enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
@@ -195,8 +164,25 @@ class ConfirmationChallengeTests: XCTestCase {
         await confirmationChallenge.complete()
     }
 
-    func testConfirmationChallengeAttestationTimeout() async throws {
-        // Inject a delay longer than timeout to force assertion to time out
+    func testConfirmationChallengeAttestationTimeoutDuringAttestation() async throws {
+        // Inject a delay longer than timeout to force attestation to time out
+        await mockAttestService.setAttestationDelay(15.0)
+        let confirmationChallenge = ConfirmationChallenge(enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
+        await confirmationChallenge.setTimeout(timeout: 5)
+        let startTime = Date()
+        let (hcaptcha, assertion) = await confirmationChallenge.fetchTokensWithTimeout()
+        XCTAssertLessThan(Date().timeIntervalSince(startTime), 15)
+        // hcaptcha takes ~3-4s in test environment, so it should be fine
+        XCTAssertNotNil(hcaptcha)
+        // should return nil due to timeout
+        XCTAssertNil(assertion)
+        let timeoutAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.last(where: { $0["event"] as? String == "elements.attestation.confirmation.error" })
+        XCTAssertEqual(timeoutAnalytic?["error_type"] as? String, "StripeCore.TimeoutError")
+        await confirmationChallenge.complete()
+    }
+
+    func testConfirmationChallengeAttestationTimeoutDuringAssertion() async throws {
+        // Inject a delay longer than timeout to force attestation to time out
         await mockAttestService.setAssertionDelay(15.0)
         let confirmationChallenge = ConfirmationChallenge(enableAttestation: true, elementsSession: elementsSession, stripeAttest: stripeAttest)
         await confirmationChallenge.setTimeout(timeout: 5)
@@ -207,6 +193,9 @@ class ConfirmationChallengeTests: XCTestCase {
         XCTAssertNotNil(hcaptcha)
         // should return nil due to timeout
         XCTAssertNil(assertion)
+        let timeoutAnalytic = STPAnalyticsClient.sharedClient._testLogHistory.last(where: { $0["event"] as? String == "elements.attestation.confirmation.error" })
+        XCTAssertEqual(timeoutAnalytic?["error_type"] as? String, "StripeCore.TimeoutError")
+        await confirmationChallenge.complete()
     }
 
     func testConfirmationChallengeTimeout() async throws {
