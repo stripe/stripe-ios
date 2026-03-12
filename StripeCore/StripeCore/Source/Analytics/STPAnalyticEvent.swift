@@ -240,7 +240,7 @@ import Foundation
     case paymentSheetElementsSessionCPMLoadFailed = "mc_elements_session_cpms_load_failed"
 
     // MARK: - PaymentSheet card brand choice
-    case paymentSheetDisplayCardBrandDropdownIndicator = "mc_display_cbc_dropdown"
+    case paymentSheetDisplayCardBrandChoiceIndicator = "mc_display_cbc"
     case paymentSheetCardBrandSelected = "mc_cbc_selected"
     case paymentSheetOpenEditScreen = "mc_open_edit_screen"
     case paymentSheetUpdateCard = "mc_update_card"
@@ -249,7 +249,7 @@ import Foundation
     case paymentSheetDisallowedCardBrand = "mc_disallowed_card_brand"
 
     // MARK: - CustomerSheet card brand choice
-    case customerSheetDisplayCardBrandDropdownIndicator = "cs_display_cbc_dropdown"
+    case customerSheetDisplayCardBrandChoiceIndicator = "cs_display_cbc"
     case customerSheetCardBrandSelected = "cs_cbc_selected"
     case customerSheetOpenEditScreen = "cs_open_edit_screen"
     case customerSheetUpdateCard = "cs_update_card"

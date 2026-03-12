@@ -51,7 +51,7 @@ class HostedSurfaceTest: XCTestCase {
         ]
 
         let expectedEventsPaymentSheet: [HostedSurface.CardUpdateEvents: STPAnalyticEvent] = [
-            .displayCardBrandDropdownIndicator: .paymentSheetDisplayCardBrandDropdownIndicator,
+            .displayCardBrandDropdownIndicator: .paymentSheetDisplayCardBrandChoiceIndicator,
             .cardBrandSelected: .paymentSheetCardBrandSelected,
             .openEditScreen: .paymentSheetOpenEditScreen,
             .updateCard: .paymentSheetUpdateCard,
