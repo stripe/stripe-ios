@@ -51,8 +51,8 @@ struct KYCInfoView: View {
     /// The coordinator to use to submit KYC information.
     let coordinator: CryptoOnrampCoordinator
 
-    /// Closure called when KYC submission succeeds, allowing parent flows to advance.
-    let onCompleted: (() -> Void)
+    /// Closure called when KYC submission succeeds with the level collected by this view.
+    let onCompleted: (KYCLevel) -> Void
 
     /// Controls which variant of KYC data collection this form performs.
     let collectionMode: CollectionMode
@@ -82,7 +82,7 @@ struct KYCInfoView: View {
     init(
         coordinator: CryptoOnrampCoordinator,
         collectionMode: CollectionMode = .original,
-        onCompleted: @escaping () -> Void
+        onCompleted: @escaping (KYCLevel) -> Void
     ) {
         self.coordinator = coordinator
         self.onCompleted = onCompleted
@@ -123,6 +123,15 @@ struct KYCInfoView: View {
                 dateOfBirth = shouldIncludeDateOfBirth ? (dateOfBirth ?? Self.today) : nil
             }
         )
+    }
+
+    private var collectedKYCLevel: KYCLevel {
+        switch collectionMode {
+        case .original, .kycLevel1StepUp:
+            return .level1
+        case .kycLevel0:
+            return (dateOfBirth != nil && !idNumber.isEmpty) ? .level1 : .level0
+        }
     }
 
     private func title(_ label: LocalizedStringKey, required: Bool) -> Text {
@@ -317,7 +326,7 @@ struct KYCInfoView: View {
                 try await coordinator.attachKYCInfo(info: kycInfo)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    onCompleted()
+                    onCompleted(collectedKYCLevel)
                 }
             } catch {
                 await MainActor.run {
@@ -345,18 +354,18 @@ struct KYCInfoView: View {
 
 #Preview("Original") {
     PreviewWrapperView { coordinator in
-        KYCInfoView(coordinator: coordinator, collectionMode: .original) {}
+        KYCInfoView(coordinator: coordinator, collectionMode: .original) { _ in }
     }
 }
 
 #Preview("Level 0") {
     PreviewWrapperView { coordinator in
-        KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel0) {}
+        KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel0) { _ in }
     }
 }
 
 #Preview("Level 1 Step Up") {
     PreviewWrapperView { coordinator in
-        KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel1StepUp) {}
+        KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel1StepUp) { _ in }
     }
 }

@@ -80,16 +80,11 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     /// Advances to the next step of the flow post-KYC info collection.
-    func advanceAfterKyc() {
+    /// - Parameter collectedKYCLevel: The KYC level collected by the KYC info view.
+    func advanceAfterKyc(collectedKYCLevel: KYCLevel) {
+        kycLevel = collectedKYCLevel
         if kycInfoCollectionMode == .original {
             isKycVerified = true
-            if !kycLevel.includesLevel1 {
-                kycLevel = .level1
-            }
-        } else {
-            if !kycLevel.includesLevel0 {
-                kycLevel = .level0
-            }
         }
         advanceToNextStep()
     }

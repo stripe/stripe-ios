@@ -87,8 +87,8 @@ struct CryptoOnrampExampleView: View {
                             KYCInfoView(
                                 coordinator: coordinator,
                                 collectionMode: collectionMode
-                            ) {
-                                flowCoordinator.advanceAfterKyc()
+                            ) { collectedKYCLevel in
+                                flowCoordinator.advanceAfterKyc(collectedKYCLevel: collectedKYCLevel)
                             }
                         case .identity:
                             IdentityVerificationView(coordinator: coordinator) {
