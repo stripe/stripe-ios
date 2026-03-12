@@ -145,18 +145,19 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     private func advanceToNextStep() {
-        // Auto-route to KYC by selected collection mode:
+        // Auto-route to KYC info collection based on selected collection mode:
         // - `.original` uses `kyc_verified` demo backend status.
         // - Any non-original mode uses provided level-0 fields.
-        // For `.original`, identity verification also routes from this coordinator.
-        // Non-original modes skip identity routing here; level 1 and identity collection for those modes
-        // happen just-in-time when an error occurs during the onramp session / checkout process.
-        let shouldShowKYCInfo: Bool
-        if kycInfoCollectionMode == .original {
-            shouldShowKYCInfo = !isKycVerified
+        let shouldShowKYCInfo = if kycInfoCollectionMode == .original {
+            !isKycVerified
         } else {
-            shouldShowKYCInfo = !kycLevel.includesLevel0
+            !kycLevel.includesLevel0
         }
+
+        // For `.original`, identity verification also routes from this coordinator.
+        // Non-original modes skip identity routing here. Level 1 and identity collection for those modes
+        // will occur just-in-time when an error occurs during the onramp session / checkout process,
+        // not by this coordinator.
         let shouldShowIdentity = kycInfoCollectionMode == .original && !isIdDocumentVerified
 
         if shouldShowKYCInfo {
