@@ -22,6 +22,10 @@ import Foundation
     /// A payment sheet or form is currently presented. Dismiss it before making changes.
     case sheetCurrentlyPresented
 
+    /// A session update is currently in progress. Wait for it to complete before
+    /// creating a PaymentSheet, FlowController, or EmbeddedPaymentElement.
+    case sessionUpdateInProgress
+
     /// The Stripe API returned an error with the given message.
     case apiError(message: String)
 
@@ -37,6 +41,8 @@ import Foundation
             return "The session is no longer active."
         case .sheetCurrentlyPresented:
             return "A payment sheet or form is currently presented. Dismiss it before making changes."
+        case .sessionUpdateInProgress:
+            return "A session update is currently in progress. Wait for the update to complete before presenting payment UI."
         case .apiError(let message):
             return message
         }

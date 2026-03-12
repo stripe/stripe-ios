@@ -111,6 +111,9 @@ public class PaymentSheet {
         guard let stpSession = checkout.session as? STPCheckoutSession else {
             fatalError("Expected STPCheckoutSession, got \(type(of: checkout.session))")
         }
+        if checkout.isPerformingSessionUpdate {
+            stpAssertionFailure("PaymentSheet should not be created while a Checkout session update is in progress.")
+        }
         var config = configuration
         stpSession.applyAddressOverrides(to: &config)
         self.init(

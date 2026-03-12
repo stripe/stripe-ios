@@ -379,6 +379,10 @@ extension PaymentSheet {
                 completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
                 return
             }
+            guard !checkout.isPerformingSessionUpdate else {
+                completion(.failure(CheckoutError.sessionUpdateInProgress))
+                return
+            }
             var config = configuration
             stpSession.applyAddressOverrides(to: &config)
             create(mode: .checkoutSession(stpSession),
@@ -651,6 +655,10 @@ extension PaymentSheet {
             guard let stpSession = checkout.session as? STPCheckoutSession else {
                 stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
                 completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
+                return
+            }
+            guard !checkout.isPerformingSessionUpdate else {
+                completion(CheckoutError.sessionUpdateInProgress)
                 return
             }
             stpSession.applyAddressOverrides(to: &configuration)
