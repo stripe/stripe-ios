@@ -118,4 +118,21 @@ final class SegmentedSelectorElementTest: XCTestCase {
         element.update(items: items, disabledItems: Set([items[2]]))
         XCTAssertEqual(element.selectedItem, items[0])
     }
+
+    func testSetAllowDeselection() {
+        let element = SegmentedSelectorElement(items: items)
+        element.select(items[0])
+        element.didTap(items[0])
+        // Allow deselection by default
+        XCTAssertNil(element.selectedItem)
+        
+        // Don't allow deselection
+        element.setAllowDeselection(false)
+        element.select(items[0])
+        element.didTap(items[0])
+        XCTAssertEqual(element.selectedItem, items[0])
+        // But allow selecting other elements
+        element.didTap(items[1])
+        XCTAssertEqual(element.selectedItem, items[1])
+    }
 }
