@@ -35,6 +35,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private(set) var selectedWallet: CustomerWalletsResponse.Wallet?
     private var kycLevel: KYCLevel = .none
     private var isKycVerified = false
+    private var isIdDocumentVerified = false
     private var kycInfoCollectionMode: KYCInfoView.CollectionMode = .original
     private var createOnrampSessionResponse: CreateOnrampSessionResponse?
     private var selectedPaymentMethodDescription: String?
@@ -95,6 +96,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
     /// Advances to the next step in the flow post-identity verification.
     func advanceAfterIdentity() {
+        isIdDocumentVerified = true
         kycLevel = .level2
         advanceToNextStep()
     }
@@ -132,6 +134,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             let info = try await APIClient.shared.fetchCustomerInfo()
             kycLevel = info.kycLevel
             isKycVerified = info.isKycVerified
+            isIdDocumentVerified = info.isIdDocumentVerified
             advanceToNextStep()
         } catch {
             presentAlert(
@@ -145,15 +148,21 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         // Auto-route to KYC by selected collection mode:
         // - `.original` uses `kyc_verified` demo backend status.
         // - Any non-original mode uses provided level-0 fields.
-        // Level 1 and identity collection steps will happen just-in-time when an error occurs during the onramp session / checkout process.
-        let shouldShowKYCInfo = if (kycInfoCollectionMode == .original) {
-            !isKycVerified
+        // For `.original`, identity verification also routes from this coordinator.
+        // Non-original modes skip identity routing here; level 1 and identity collection for those modes
+        // happen just-in-time when an error occurs during the onramp session / checkout process.
+        let shouldShowKYCInfo: Bool
+        if kycInfoCollectionMode == .original {
+            shouldShowKYCInfo = !isKycVerified
         } else {
-            !kycLevel.includesLevel0
+            shouldShowKYCInfo = !kycLevel.includesLevel0
         }
+        let shouldShowIdentity = kycInfoCollectionMode == .original && !isIdDocumentVerified
 
         if shouldShowKYCInfo {
             path.append(.kycInfo(collectionMode: kycInfoCollectionMode))
+        } else if shouldShowIdentity {
+            path.append(.identity)
         } else if let successfulCheckoutMessage {
             path.append(.checkoutSuccess(message: successfulCheckoutMessage))
         } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription, let settlementSpeed {
@@ -175,6 +184,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private func resetInternalState() {
         kycLevel = .none
         isKycVerified = false
+        isIdDocumentVerified = false
         kycInfoCollectionMode = .original
         selectedWallet = nil
         createOnrampSessionResponse = nil
@@ -201,7 +211,7 @@ extension CustomerInformationResponse {
         "dob",
     ]
 
-    private var isIdDocumentVerified: Bool {
+    fileprivate var isIdDocumentVerified: Bool {
         verifications.contains { $0.name == "id_document_verified" && $0.status == "verified" }
     }
 
