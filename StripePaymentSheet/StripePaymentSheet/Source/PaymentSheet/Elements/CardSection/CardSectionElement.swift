@@ -280,7 +280,6 @@ final class CardSectionElement: ContainerElement {
             // Clear any previously fetched card brands from the card brand selector
             if !self.cardBrands.isEmpty {
                 self.cardBrands = Set<STPCardBrand>()
-                self.hasInteractedWithCBCElement = false
                 cardBrandChoiceElement?.update(cardBrands: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>())
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }

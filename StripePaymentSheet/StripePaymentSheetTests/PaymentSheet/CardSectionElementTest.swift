@@ -159,7 +159,7 @@ class CardSectionElementTest: XCTestCase {
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
     }
 
-    func testTooltip_reappearsAfterBrandsReset() {
+    func testTooltip_doesNotReappearAfterBrandsReset() {
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(true) }
 
@@ -173,10 +173,10 @@ class CardSectionElementTest: XCTestCase {
 
         // Clear PAN to reset brands and the hasBrandBeenSelected latch
         cardSection.panElement.setText("")
-        // Re-enter CBC card — tooltip should reappear
+        // Re-enter CBC card — tooltip should still not reappear
         cardSection.panElement.setText(cbcVisaTestCard)
 
-        XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
     }
 
     func testTooltip_hiddenWhenAllDisabled() {
