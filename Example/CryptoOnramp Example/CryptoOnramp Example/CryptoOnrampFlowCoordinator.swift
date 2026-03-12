@@ -142,14 +142,15 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     private func advanceToNextStep() {
-        // Temporary flow behavior:
         // Auto-route to KYC by selected collection mode:
-        // - `.original` uses `kyc_verified` backend status.
+        // - `.original` uses `kyc_verified` demo backend status.
         // - Any non-original mode uses provided level-0 fields.
         // Level 1 and identity collection steps will happen just-in-time when an error occurs during the onramp session / checkout process.
-        let shouldShowKYCInfo = kycInfoCollectionMode == .original
-            ? !isKycVerified
-            : !kycLevel.includesLevel0
+        let shouldShowKYCInfo = if (kycInfoCollectionMode == .original) {
+            !isKycVerified
+        } else {
+            !kycLevel.includesLevel0
+        }
 
         if shouldShowKYCInfo {
             path.append(.kycInfo(collectionMode: kycInfoCollectionMode))
