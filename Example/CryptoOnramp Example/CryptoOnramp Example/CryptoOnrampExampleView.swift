@@ -20,6 +20,7 @@ struct CryptoOnrampExampleView: View {
 
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var livemode: Bool = false
+    @State private var isL0KYCModeEnabled: Bool = false
     @State private var alert: Alert?
     @State private var seamlessSignInEmail: String? = APIClient.shared.seamlessSignInEmail
 
@@ -62,6 +63,7 @@ struct CryptoOnrampExampleView: View {
                         coordinator: coordinator,
                         flowCoordinator: flowCoordinator,
                         livemode: $livemode,
+                        isL0KYCModeEnabled: $isL0KYCModeEnabled,
                         alert: $alert
                     )
                 }
@@ -82,7 +84,10 @@ struct CryptoOnrampExampleView: View {
                                 flowCoordinator.advanceAfterRegistration()
                             }
                         case .kycInfo:
-                            KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel0) {
+                            KYCInfoView(
+                                coordinator: coordinator,
+                                collectionMode: isL0KYCModeEnabled ? .kycLevel0 : .original
+                            ) {
                                 flowCoordinator.advanceAfterKyc()
                             }
                         case .identity:
@@ -152,6 +157,9 @@ struct CryptoOnrampExampleView: View {
             initializeCoordinator()
         }
         .onChange(of: livemode) { _ in
+            if !livemode {
+                isL0KYCModeEnabled = false
+            }
             coordinator = nil
             APIClient.shared.clearAuthState()
             initializeCoordinator()

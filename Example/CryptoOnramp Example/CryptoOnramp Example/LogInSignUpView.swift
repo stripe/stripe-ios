@@ -22,6 +22,9 @@ struct LogInSignUpView: View {
     /// Whether livemode is enabled, which can be toggled from this view.
     @Binding var livemode: Bool
 
+    /// Whether to use level 0 KYC collection mode from the KYC info screen.
+    @Binding var isL0KYCModeEnabled: Bool
+
     /// Specifies an alert originating from this view to display by the parent.
     @Binding var alert: Alert?
 
@@ -88,6 +91,11 @@ struct LogInSignUpView: View {
                     // Livemode is disabled on the simulator.
                     .disabled(isRunningOnSimulator)
 
+                    Toggle(isOn: $isL0KYCModeEnabled) {
+                        Label("L0 KYC Mode", systemImage: "person.text.rectangle")
+                    }
+                    .disabled(!livemode)
+
                     Divider()
 
                     Button {
@@ -131,6 +139,11 @@ struct LogInSignUpView: View {
                 }
             )
             .presentationDetents([.medium])
+        }
+        .onChange(of: livemode) { isLivemodeEnabled in
+            if !isLivemodeEnabled {
+                isL0KYCModeEnabled = false
+            }
         }
     }
 
@@ -223,6 +236,7 @@ struct LogInSignUpView: View {
             coordinator: coordinator,
             flowCoordinator: .init(),
             livemode: .constant(false),
+            isL0KYCModeEnabled: .constant(false),
             alert: .constant(nil)
         )
     }
