@@ -22,6 +22,7 @@ extension STPAPIClient {
             "redirect_type": "embedded",
             "elements_session_client": [
                 "is_aggregation_expected": true,
+                "locale": Locale.current.toLanguageTag(),
             ],
         ]
 

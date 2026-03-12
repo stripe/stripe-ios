@@ -56,6 +56,57 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         XCTAssertFalse(isLinkEnabled, "Link should be disabled when billing details collection is required")
     }
 
+    func testIsLinkEnabled_checkoutSession_emailOnly_enabled() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card", "link"],
+            isLinkPassthroughModeEnabled: true
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.isUsingCheckoutSession = true
+        configuration.checkoutSessionCustomerEmailNil = false
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.phone = .automatic
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+
+        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        XCTAssertTrue(isLinkEnabled, "Link should be enabled for Checkout Sessions when only email is collected")
+    }
+
+    func testIsLinkEnabled_checkoutSession_emailOnly_disabled_if_customer_email_nil() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card", "link"],
+            isLinkPassthroughModeEnabled: true
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.isUsingCheckoutSession = true
+        configuration.checkoutSessionCustomerEmailNil = true
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.name = .automatic
+        configuration.billingDetailsCollectionConfiguration.phone = .automatic
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+
+        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        XCTAssertFalse(isLinkEnabled, "Link should be disabled for Checkout Sessions when customer email is nil")
+    }
+
+    func testIsLinkEnabled_checkoutSession_otherFields_disabled() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card", "link"],
+            isLinkPassthroughModeEnabled: true
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.isUsingCheckoutSession = true
+        configuration.checkoutSessionCustomerEmailNil = false
+        configuration.billingDetailsCollectionConfiguration.email = .always
+        configuration.billingDetailsCollectionConfiguration.name = .always
+        configuration.billingDetailsCollectionConfiguration.phone = .automatic
+        configuration.billingDetailsCollectionConfiguration.address = .automatic
+
+        let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        XCTAssertFalse(isLinkEnabled, "Link should be disabled for Checkout Sessions when other fields are collected")
+    }
+
     func testIsLinkEnabled_cardBrandAcceptanceNotAll() {
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: ["card", "link"],

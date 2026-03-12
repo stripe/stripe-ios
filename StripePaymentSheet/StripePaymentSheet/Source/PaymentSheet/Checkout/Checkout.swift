@@ -44,8 +44,10 @@ public final class Checkout: ObservableObject {
         set { session = newValue }
     }
 
+    /// Number of session-mutating API calls currently in flight.
+    private var sessionUpdateCount = 0
     /// Whether a session-mutating API call is currently in progress.
-    private(set) var isPerformingSessionUpdate: Bool = false
+    var isPerformingSessionUpdate: Bool { sessionUpdateCount > 0 }
     private let clientSecret: String
     private let apiClient: STPAPIClient
 
@@ -214,10 +216,13 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Private Methods
 
-    /// Sets ``isPerformingSessionUpdate`` for the duration of the given async operation.
+    /// Tracks that a session update is in progress for the duration of `body`.
+    /// Uses a counter so overlapping calls don't clear the flag early.
+    /// Note: an actor wouldn't help — actors are reentrant at suspension points,
+    /// so the same interleaving would occur.
     private func withSessionUpdateGuard<T>(_ body: () async throws -> T) async rethrows -> T {
-        isPerformingSessionUpdate = true
-        defer { isPerformingSessionUpdate = false }
+        sessionUpdateCount += 1
+        defer { sessionUpdateCount -= 1 }
         return try await body()
     }
 

@@ -47,6 +47,8 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var opensCardScannerAutomatically: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
     var enableCBCRedesign: Bool { get }
+    var isUsingCheckoutSession: Bool { get set }
+    var checkoutSessionCustomerEmailNil: Bool { get set }
 }
 
 extension PaymentElementConfiguration {

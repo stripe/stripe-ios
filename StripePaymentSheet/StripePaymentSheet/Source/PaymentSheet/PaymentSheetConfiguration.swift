@@ -204,6 +204,8 @@ extension PaymentSheet {
         // MARK: Internal
         // PaymentSheet components are only being used for Link.
         internal var linkPaymentMethodsOnly: Bool = false
+        internal var isUsingCheckoutSession: Bool = false
+        internal var checkoutSessionCustomerEmailNil: Bool = false
 
         /// This is an experimental feature that may be removed at any time.
         /// If true (the default), the customer can delete all saved payment methods.
