@@ -90,17 +90,17 @@ public final class EmbeddedPaymentElement {
     }
 
     /// An asynchronous failable initializer for CheckoutSession mode
-    /// Loads payment methods and configuration from a fully loaded CheckoutSession object.
-    /// - Parameter checkoutSession: A fully loaded Checkout.Session object
+    /// Loads payment methods and configuration from a fully loaded Checkout instance.
+    /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
     @_spi(CheckoutSessionsPreview) public static func create(
-        checkoutSession: Checkout.Session,
+        checkout: Checkout,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        guard let stpSession = checkoutSession as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+        guard let stpSession = checkout.session as? STPCheckoutSession else {
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
             throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
         }
         var config = configuration
@@ -124,6 +124,7 @@ public final class EmbeddedPaymentElement {
             analyticsHelper: analyticsHelper
         )
         embeddedPaymentElement.clearPaymentOptionIfNeeded()
+        checkout.integrationDelegate = embeddedPaymentElement
         return embeddedPaymentElement
     }
 
@@ -151,15 +152,15 @@ public final class EmbeddedPaymentElement {
 
     /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
     /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
-    /// - Parameter checkoutSession: An updated Checkout.Session.
+    /// - Parameter checkout: The Checkout instance whose session has been updated.
     /// - Returns: The result of the update.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
     /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
     @_spi(CheckoutSessionsPreview) public func update(
-        checkoutSession: Checkout.Session
+        checkout: Checkout
     ) async -> UpdateResult {
-        guard let stpSession = checkoutSession as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+        guard let stpSession = checkout.session as? STPCheckoutSession else {
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
             return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
         }
         stpSession.applyAddressOverrides(to: &configuration)
@@ -441,6 +442,14 @@ public final class EmbeddedPaymentElement {
     }
 }
 
+// MARK: - CheckoutIntegrationDelegate
+
+extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
+    var isSheetPresented: Bool {
+        presentingViewController?.presentedViewController is BottomSheetViewController
+    }
+}
+
 // MARK: - STPAnalyticsProtocol
 /// :nodoc:
 @_spi(STP) extension EmbeddedPaymentElement: STPAnalyticsProtocol {
@@ -498,16 +507,16 @@ extension EmbeddedPaymentElement {
 
     /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
     /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
-    /// - Parameter checkoutSession: An updated Checkout.Session.
+    /// - Parameter checkout: The Checkout instance whose session has been updated.
     /// - Parameter completion: A completion block containing the result of the update. Called on the main thread.
     /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
     @_spi(CheckoutSessionsPreview) public func update(
-        checkoutSession: Checkout.Session,
+        checkout: Checkout,
         completion: @escaping (UpdateResult) -> Void
     ) {
         Task {
-            let result = await update(checkoutSession: checkoutSession)
+            let result = await update(checkout: checkout)
             DispatchQueue.main.async {
                 completion(result)
             }

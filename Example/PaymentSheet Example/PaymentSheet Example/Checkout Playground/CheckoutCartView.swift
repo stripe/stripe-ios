@@ -36,7 +36,7 @@ struct CheckoutCartView: View {
                     .overlay(alignment: .bottom) {
                         if session.totals != nil {
                             CheckoutCartPaymentButton(
-                                session: session,
+                                checkout: checkout,
                                 onDismiss: { dismiss() }
                             )
                         }
