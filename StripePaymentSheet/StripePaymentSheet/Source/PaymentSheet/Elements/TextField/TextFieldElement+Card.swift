@@ -63,7 +63,13 @@ extension TextFieldElement {
                 if 9 > text.count && cardBrandChoiceElement.brandCount == 0 {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
                 } else if text.count >= 8 && cardBrandChoiceElement.brandCount > 1 {
-                    // Show the dropdown if we have 8 or more digits and at least 2 brands, otherwise fall through and show brand as normal
+                    // If only one brand is allowed after filtering, only show that brand
+                    if cardBrandChoiceElement.allowedBrandCount == 1,
+                       let cardBrand = cardBrandChoiceElement.selectedBrand {
+                        rotatingCardBrandsView.cardBrands = [cardBrand]
+                        return rotatingCardBrandsView
+                    }
+                    // Show the selector if we have 8 or more digits and at least 2 allowed brands
                     return cardBrandChoiceElement.view
                 }
             }
