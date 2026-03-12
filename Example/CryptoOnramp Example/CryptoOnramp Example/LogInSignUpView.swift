@@ -42,6 +42,10 @@ struct LogInSignUpView: View {
         isLoading.wrappedValue || email.isEmpty || password.isEmpty || coordinator == nil
     }
 
+    private var kycInfoCollectionMode: KYCInfoView.CollectionMode {
+        livemode && isL0KYCModeEnabled ? .kycLevel0 : .original
+    }
+
     private var isRunningOnSimulator: Bool {
         #if targetEnvironment(simulator)
         return true
@@ -206,7 +210,7 @@ struct LogInSignUpView: View {
                     isLoading.wrappedValue = false
                     switch authorizationResult {
                     case .consented:
-                        flowCoordinator.startForExistingUser()
+                        flowCoordinator.startForExistingUser(kycInfoCollectionMode: kycInfoCollectionMode)
                     case .denied:
                         alert = Alert(title: "Authorization Denied", message: "Authorization was denied.")
                     case .canceled:
@@ -218,7 +222,11 @@ struct LogInSignUpView: View {
             } else {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    flowCoordinator.startForNewUser(email: email, selectedScopes: scopes)
+                    flowCoordinator.startForNewUser(
+                        email: email,
+                        selectedScopes: scopes,
+                        kycInfoCollectionMode: kycInfoCollectionMode
+                    )
                 }
             }
         } catch {

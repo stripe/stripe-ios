@@ -83,10 +83,10 @@ struct CryptoOnrampExampleView: View {
                             ) {
                                 flowCoordinator.advanceAfterRegistration()
                             }
-                        case .kycInfo:
+                        case let .kycInfo(collectionMode):
                             KYCInfoView(
                                 coordinator: coordinator,
-                                collectionMode: isL0KYCModeEnabled ? .kycLevel0 : .original
+                                collectionMode: collectionMode
                             ) {
                                 flowCoordinator.advanceAfterKyc()
                             }

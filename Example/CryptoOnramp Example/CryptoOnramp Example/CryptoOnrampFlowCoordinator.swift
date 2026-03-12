@@ -18,7 +18,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     /// Represents the possible steps in the flow.
     enum Route: Hashable {
         case registration(email: String, oAuthScopes: [OAuthScopes])
-        case kycInfo
+        case kycInfo(collectionMode: KYCInfoView.CollectionMode)
         case identity
         case wallets
         case payment(wallet: CustomerWalletsResponse.Wallet)
@@ -34,6 +34,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
     private(set) var selectedWallet: CustomerWalletsResponse.Wallet?
     private var kycLevel: KYCLevel = .none
+    private var isKycVerified = false
+    private var kycInfoCollectionMode: KYCInfoView.CollectionMode = .original
     private var createOnrampSessionResponse: CreateOnrampSessionResponse?
     private var selectedPaymentMethodDescription: String?
     private var settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed?
@@ -45,8 +47,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     /// Begins the flow for an existing user.
-    func startForExistingUser() {
+    /// - Parameter kycInfoCollectionMode: The KYC info screen collection mode to use if KYC needs to be collected.
+    func startForExistingUser(kycInfoCollectionMode: KYCInfoView.CollectionMode = .original) {
         resetInternalState()
+        self.kycInfoCollectionMode = kycInfoCollectionMode
         Task {
             await refreshCustomerInfoAndPushNext()
         }
@@ -56,8 +60,14 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     /// - Parameters:
     ///   - email: The user’s email.
     ///   - selectedScopes: The OAuth scopes the user selected.
-    func startForNewUser(email: String, selectedScopes: [OAuthScopes]) {
+    ///   - kycInfoCollectionMode: The KYC info screen collection mode to use if KYC needs to be collected.
+    func startForNewUser(
+        email: String,
+        selectedScopes: [OAuthScopes],
+        kycInfoCollectionMode: KYCInfoView.CollectionMode = .original
+    ) {
         resetInternalState()
+        self.kycInfoCollectionMode = kycInfoCollectionMode
         path = [.registration(email: email, oAuthScopes: selectedScopes)]
     }
 
@@ -70,8 +80,15 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
     /// Advances to the next step of the flow post-KYC info collection.
     func advanceAfterKyc() {
-        if !kycLevel.includesLevel0 {
-            kycLevel = .level0
+        if kycInfoCollectionMode == .original {
+            isKycVerified = true
+            if !kycLevel.includesLevel0 {
+                kycLevel = .level0
+            }
+        } else {
+            if !kycLevel.includesLevel0 {
+                kycLevel = .level0
+            }
         }
         advanceToNextStep()
     }
@@ -114,6 +131,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         do {
             let info = try await APIClient.shared.fetchCustomerInfo()
             kycLevel = info.kycLevel
+            isKycVerified = info.isKycVerified
             advanceToNextStep()
         } catch {
             presentAlert(
@@ -125,10 +143,16 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
     private func advanceToNextStep() {
         // Temporary flow behavior:
-        // Only auto-route to KYC if the customer has not completed level 0.
+        // Auto-route to KYC by selected collection mode:
+        // - `.original` uses `kyc_verified` backend status.
+        // - Any non-original mode uses provided level-0 fields.
         // Level 1 and identity collection steps will happen just-in-time when an error occurs during the onramp session / checkout process.
-        if !kycLevel.includesLevel0 {
-            path.append(.kycInfo)
+        let shouldShowKYCInfo = kycInfoCollectionMode == .original
+            ? !isKycVerified
+            : !kycLevel.includesLevel0
+
+        if shouldShowKYCInfo {
+            path.append(.kycInfo(collectionMode: kycInfoCollectionMode))
         } else if let successfulCheckoutMessage {
             path.append(.checkoutSuccess(message: successfulCheckoutMessage))
         } else if let createOnrampSessionResponse, let selectedPaymentMethodDescription, let settlementSpeed {
@@ -149,6 +173,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
     private func resetInternalState() {
         kycLevel = .none
+        isKycVerified = false
+        kycInfoCollectionMode = .original
         selectedWallet = nil
         createOnrampSessionResponse = nil
         selectedPaymentMethodDescription = nil
@@ -176,6 +202,10 @@ extension CustomerInformationResponse {
 
     private var isIdDocumentVerified: Bool {
         verifications.contains { $0.name == "id_document_verified" && $0.status == "verified" }
+    }
+
+    fileprivate var isKycVerified: Bool {
+        verifications.contains { $0.name == "kyc_verified" && $0.status == "verified" }
     }
 
     /// Temporarily exposed until we have proper KYC level errors to parse in `PaymentView`. Switch back to `fileprivate` before PR.
