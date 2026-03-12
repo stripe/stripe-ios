@@ -98,12 +98,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
             }
         }
     }
-    enum EnableCBCRedesign: String, PickerEnum {
-        static let enumName: String = "CBC Redesign"
-
-        case on
-        case off
-    }
     enum AllowsRemovalOfLastSavedPaymentMethod: String, PickerEnum {
         static let enumName: String = "AllowsRemovalOfLastSavedPaymentMethod"
 
@@ -199,7 +193,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var collectAddress: BillingDetailsAddress
     var merchantCountryCode: MerchantCountry
     var preferredNetworksEnabled: PreferredNetworksEnabled
-    var enableCBCRedesign: EnableCBCRedesign
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethod
     var paymentMethodRemove: PaymentMethodRemove
     var paymentMethodRemoveLast: PaymentMethodRemoveLast
@@ -226,7 +219,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    collectAddress: .automatic,
                                                    merchantCountryCode: .US,
                                                    preferredNetworksEnabled: .off,
-                                                   enableCBCRedesign: .on,
                                                    allowsRemovalOfLastSavedPaymentMethod: .on,
                                                    paymentMethodRemove: .enabled,
                                                    paymentMethodRemoveLast: .enabled,

@@ -81,7 +81,6 @@ final class CardSectionElement: ContainerElement {
         defaultValues: DefaultValues = .init(),
         preferredNetworks: [STPCardBrand]? = nil,
         cardBrandChoiceEligible: Bool = false,
-        enableCBCRedesign: Bool = false,
         hostedSurface: HostedSurface,
         theme: ElementsAppearance = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
@@ -110,7 +109,7 @@ final class CardSectionElement: ContainerElement {
             : nil
         var cardBrandSelector: PaymentMethodElementWrapper<CardBrandChoiceElement>?
         if cardBrandChoiceEligible {
-            cardBrandSelector = PaymentMethodElementWrapper(CardBrandChoiceElement(enableCBCRedesign: enableCBCRedesign, theme: theme)) { field, params in
+            cardBrandSelector = PaymentMethodElementWrapper(CardBrandChoiceElement(theme: theme)) { field, params in
                 let cardBrand = field.selectedBrand ?? .unknown
                 // Only set preferred networks for the confirm params if we have more than 1 brand fetched
                 if field.brandCount > 1 {
@@ -201,9 +200,7 @@ final class CardSectionElement: ContainerElement {
 
         fetchAndUpdateCardBrands()
         fetchAndCacheCardFunding()
-        if cardBrandChoiceElement?.enableCBCRedesign ?? false {
-            updateCBCTooltipVisibility()
-        }
+        updateCBCTooltipVisibility()
 
         /// Send an analytic whenever the card number field is completed
         if lastPanElementValidationState.isValid != panElement.validationState.isValid {

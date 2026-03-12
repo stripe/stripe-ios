@@ -629,12 +629,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             }
         }
     }
-    enum EnableCBCRedesign: String, PickerEnum {
-        static let enumName: String = "CBC Redesign"
-
-        case on
-        case off
-    }
     enum RequireCVCRecollectionEnabled: String, PickerEnum {
         static let enumName: String = "Require CVC Recollection"
         case on
@@ -745,7 +739,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var externalPaymentMethods: ExternalPaymentMethods
     var customPaymentMethods: CustomPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
-    var enableCBCRedesign: EnableCBCRedesign
     var requireCVCRecollection: RequireCVCRecollectionEnabled
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
 
@@ -807,7 +800,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             externalPaymentMethods: .off,
             customPaymentMethods: .off,
             preferredNetworksEnabled: .off,
-            enableCBCRedesign: .on,
             requireCVCRecollection: .off,
             allowsRemovalOfLastSavedPaymentMethod: .on,
             attachDefaults: .off,

@@ -24,7 +24,6 @@ class CardSectionElementTest: XCTestCase {
             defaultValues: .init(),
             preferredNetworks: preferredNetworks,
             cardBrandChoiceEligible: true,
-            enableCBCRedesign: true,
             hostedSurface: .paymentSheet,
             theme: .default,
             analyticsHelper: ._testValue(),

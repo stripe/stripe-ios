@@ -149,7 +149,6 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.address = .init(rawValue: settings.collectAddress.rawValue)!
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
-        configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
         configuration.applePayEnabled = self.applePayEnabled()
         switch settings.cardBrandAcceptance {
         case .all:
