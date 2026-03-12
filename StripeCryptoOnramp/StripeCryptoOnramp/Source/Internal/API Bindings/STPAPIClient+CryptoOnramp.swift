@@ -13,7 +13,7 @@
 extension STPAPIClient {
 
     /// Errors that can occur that are specific to usage of crypto endpoints.
-    @_spi(STP)
+    @_spi(CryptoOnrampAlpha)
     public enum CryptoOnrampAPIError: LocalizedError {
 
         /// No consumer session client secret was found to be associated with the active link account session.
@@ -22,7 +22,7 @@ extension STPAPIClient {
         /// The request requires a session with a verified link account, but the account was found to not be verified.
         case linkAccountNotVerified
 
-        @_spi(STP)
+        @_spi(CryptoOnrampAlpha)
         public var errorDescription: String? {
             switch self {
             case .missingConsumerSessionClientSecret:

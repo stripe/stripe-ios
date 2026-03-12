@@ -8,7 +8,7 @@
 import Foundation
 
 /// The result of a call to `CryptoOnrampCoordinator.performCheckout()`.
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 public enum CheckoutResult {
 
     /// The checkout was completed successfully.

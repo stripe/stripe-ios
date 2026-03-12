@@ -9,7 +9,7 @@ import PassKit
 @_spi(STP) import StripePaymentSheet
 
 /// Represents possible payment types that can be collected for checkout.
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 public enum PaymentMethodType: Equatable {
 
     /// Limits payment options in Stripe's wallet UI to cards, such as a credit or debit card.
