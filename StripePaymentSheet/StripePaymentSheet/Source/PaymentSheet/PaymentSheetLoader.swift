@@ -419,8 +419,7 @@ final class PaymentSheetLoader {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
-        prefetchedSPMs: [STPPaymentMethod]?,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        prefetchedSPMs: [STPPaymentMethod]?
     ) -> [STPPaymentMethod] {
         printTimingLog("START filterPaymentMethods")
         defer { printTimingLog("END filterPaymentMethods") }
@@ -452,22 +451,9 @@ final class PaymentSheetLoader {
             }
         }
 
-        // Hide any saved cards whose brands or funding types are not allowed
-        let cardFundingFilter = configuration.cardFundingFilter(for: elementsSession)
+        // Filter payment methods
         let result = savedPaymentMethods.filter { paymentMethod in
-            guard let card = paymentMethod.card else { return true }
-            // Filter by card brand
-            if !configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand) {
-                return false
-            }
-            // Filter by card funding type
-            // If funding is nil, treat it as .other (unknown) and check if that's accepted
-            let fundingType: STPCardFundingType = card.funding.map { STPCard.funding(from: $0) } ?? .other
-            if !cardFundingFilter.isAccepted(cardFundingType: fundingType) {
-                return false
-            }
-
-            // Filter out unsupported pm types
+            // Filter out unsupported pm types (applies to all payment methods)
             guard elementsSession.orderedPaymentMethodTypes.contains(paymentMethod.type) else {
                 return false
             }
@@ -483,6 +469,21 @@ final class PaymentSheetLoader {
             guard Self.shouldIncludePaymentMethod(paymentMethod, allowedCountries: configuration.billingDetailsCollectionConfiguration.allowedCountries) else {
                 return false
             }
+
+            // Card-specific filtering: brands and funding types
+            if let card = paymentMethod.card {
+                // Filter by card brand
+                if !configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand) {
+                    return false
+                }
+                // Filter by card funding type
+                let cardFundingFilter = configuration.cardFundingFilter(for: elementsSession)
+                let fundingType: STPCardFundingType = card.funding.map { STPCard.funding(from: $0) } ?? .other
+                if !cardFundingFilter.isAccepted(cardFundingType: fundingType) {
+                    return false
+                }
+            }
+
             return true
         }
         return result
