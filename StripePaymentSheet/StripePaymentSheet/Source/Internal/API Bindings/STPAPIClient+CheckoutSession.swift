@@ -61,7 +61,7 @@ extension STPAPIClient {
     ///   - paymentMethodOptions: Optional payment method options. BLIK code is extracted and passed as top-level `blik_code` parameter.
     ///   - clientAttributionMetadata: Optional client attribution metadata for analytics
     ///   - passiveCaptchaToken: Optional hCaptcha challenge response token
-    /// - Returns: CheckoutSessionConfirmResponse containing the confirmation result
+    /// - Returns: STPCheckoutSession containing the full confirmed session with expanded intents
     func confirmCheckoutSession(
         sessionId: String,
         paymentMethod: String,
@@ -72,7 +72,7 @@ extension STPAPIClient {
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
         passiveCaptchaToken: String? = nil
-    ) async throws -> CheckoutSessionConfirmResponse {
+    ) async throws -> STPCheckoutSession {
         var parameters: [String: Any] = [
             "payment_method": paymentMethod,
             "expected_payment_method_type": expectedPaymentMethodType,
@@ -109,7 +109,7 @@ extension STPAPIClient {
             parameters["passive_captcha_token"] = passiveCaptchaToken
         }
 
-        return try await APIRequest<CheckoutSessionConfirmResponse>.post(
+        return try await APIRequest<STPCheckoutSession>.post(
             with: self,
             endpoint: "payment_pages/\(sessionId)/confirm",
             parameters: parameters

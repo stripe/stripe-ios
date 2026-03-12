@@ -80,7 +80,7 @@ extension PaymentSheet {
 
     @MainActor
     private static func handleCheckoutSessionConfirmResponse(
-        response: CheckoutSessionConfirmResponse,
+        response: STPCheckoutSession,
         checkoutSession: STPCheckoutSession,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,

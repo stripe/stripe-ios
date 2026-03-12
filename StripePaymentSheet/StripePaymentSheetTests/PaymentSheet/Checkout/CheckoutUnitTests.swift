@@ -180,6 +180,46 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(delegate.didUpdateCalled)
     }
 
+    // MARK: - Sheet Presented Guard Tests
+
+    func testLoadThrowsWhenSheetPresented() async {
+        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
+        let integrationDelegate = MockCheckoutIntegrationDelegate()
+        integrationDelegate.isSheetPresented = true
+        checkout.integrationDelegate = integrationDelegate
+
+        do {
+            try await checkout.load()
+            XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
+        } catch let error as CheckoutError {
+            guard case .sheetCurrentlyPresented = error else {
+                XCTFail("Expected .sheetCurrentlyPresented, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+    func testRequireOpenSessionThrowsWhenSheetPresented() async {
+        let checkout = makeCheckoutWithOpenSession()
+        let integrationDelegate = MockCheckoutIntegrationDelegate()
+        integrationDelegate.isSheetPresented = true
+        checkout.integrationDelegate = integrationDelegate
+
+        do {
+            try await checkout.applyPromotionCode("SAVE25")
+            XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
+        } catch let error as CheckoutError {
+            guard case .sheetCurrentlyPresented = error else {
+                XCTFail("Expected .sheetCurrentlyPresented, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
     // MARK: - Address Collection Decoding Tests
 
     func testRequiresBillingAddress_whenRequired() {
@@ -357,4 +397,9 @@ private class MockCheckoutDelegate: CheckoutDelegate {
         didUpdateCalled = true
         lastSession = session
     }
+}
+
+@MainActor
+private class MockCheckoutIntegrationDelegate: CheckoutIntegrationDelegate {
+    var isSheetPresented: Bool = false
 }
