@@ -246,6 +246,7 @@ private final class SegmentedItemView: UIControl {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.setContentCompressionResistancePriority(.required, for: .horizontal)
         return imageView
     }()
 
