@@ -125,7 +125,7 @@ final class SegmentedSelectorElementTest: XCTestCase {
         element.didTap(items[0])
         // Allow deselection by default
         XCTAssertNil(element.selectedItem)
-        
+
         // Don't allow deselection
         element.setAllowDeselection(false)
         element.select(items[0])
