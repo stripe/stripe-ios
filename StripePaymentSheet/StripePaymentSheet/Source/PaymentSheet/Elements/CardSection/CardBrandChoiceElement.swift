@@ -64,6 +64,9 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
+    /// Latches true once the user taps the selector.
+    private(set) var hasBeenInteractedWith = false
+
     // Expose brand count for determining if selector should be shown
     var brandCount: Int {
         switch variant {
@@ -153,6 +156,7 @@ final class CardBrandChoiceElement: Element {
 
 extension CardBrandChoiceElement: ElementDelegate {
     func didUpdate(element: Element) {
+        hasBeenInteractedWith = true
         delegate?.didUpdate(element: self)
     }
 

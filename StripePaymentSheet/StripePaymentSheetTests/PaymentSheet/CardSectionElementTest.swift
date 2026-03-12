@@ -116,6 +116,19 @@ class CardSectionElementTest: XCTestCase {
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
     }
 
+    func testTooltip_showsWhenPreselected() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let cardSection = makeCardSectionElement(preferredNetworks: [.cartesBancaires, .visa])
+        _ = beginEditingPAN(cardSection)
+
+        cardSection.panElement.setText(cbcVisaTestCard)
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .cartesBancaires)
+        XCTAssertNotNil(cardSection.cbcTooltip.superview)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
+    }
+
     func testTooltip_hidesWhenNotEditing() {
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(true) }

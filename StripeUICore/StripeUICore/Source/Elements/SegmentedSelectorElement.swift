@@ -53,7 +53,6 @@ import UIKit
         // If the previously selected item is no longer present or enabled, deselect it
         if let selectedItem, !items.contains(selectedItem) || disabledItems.contains(selectedItem) {
             self.selectedItem = nil
-            delegate?.didUpdate(element: self)
         }
 
         selectorView.update(
@@ -75,8 +74,6 @@ import UIKit
 
         // Update the visual UI
         selectorView.select(item, animated: animated)
-
-        delegate?.didUpdate(element: self)
     }
 
     private func itemTapped(_ item: SegmentedSelectorItem) {
@@ -87,6 +84,7 @@ import UIKit
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
         select(newSelection, animated: true)
+        delegate?.didUpdate(element: self)
     }
 }
 
