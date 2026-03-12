@@ -80,7 +80,7 @@ final class CardBrandChoiceElement: Element {
         case .selector(let element):
             return element.enabledItems.count
         case .dropdown(let element):
-            return element.items.filter { !$0.isPlaceholder && !$0.isDisabled }.count
+            return element.items.count // keep dropdown behavior unchanged
         }
     }
 
