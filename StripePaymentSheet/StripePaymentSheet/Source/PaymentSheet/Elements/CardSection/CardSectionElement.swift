@@ -321,11 +321,10 @@ final class CardSectionElement: ContainerElement {
     /// Show the tooltip when the PAN field is in focus, the card brand selector is visible (multiple brands),
     /// no brand has been selected, and at least one brand is allowed. Hide it otherwise.
     private func updateCBCTooltipVisibility() {
-        let hasAllowedBrand = !cardBrands.filter({ cardBrandFilter.isAccepted(cardBrand: $0) }).isEmpty
+        let hasAllowedBrands = cardBrands.filter({ cardBrandFilter.isAccepted(cardBrand: $0) }).count > 1
         let shouldShow = panElement.isEditing
-            && cardBrands.count > 1
+            && hasAllowedBrands
             && !(cardBrandChoiceElement?.hasBeenTapped ?? false)
-            && hasAllowedBrand
 
         // If the CBC tooltip has not been installed in the view, set it up
         if cbcTooltip.superview == nil {

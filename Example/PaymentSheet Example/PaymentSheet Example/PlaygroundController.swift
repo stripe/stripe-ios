@@ -249,7 +249,7 @@ import UIKit
         case .all:
             configuration.cardBrandAcceptance = .all
         case .blockAmEx:
-            configuration.cardBrandAcceptance = .disallowed(brands: [.amex])
+            configuration.cardBrandAcceptance = .disallowed(brands: [.visa, .mastercard])
         case .allowVisa:
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
