@@ -103,9 +103,6 @@ public final class EmbeddedPaymentElement {
             stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
             throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
         }
-        guard !checkout.isPerformingSessionUpdate else {
-            throw CheckoutError.sessionUpdateInProgress
-        }
         var config = configuration
         stpSession.applyAddressOverrides(to: &config)
 
@@ -165,9 +162,6 @@ public final class EmbeddedPaymentElement {
         guard let stpSession = checkout.session as? STPCheckoutSession else {
             stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
             return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
-        }
-        guard !checkout.isPerformingSessionUpdate else {
-            return .failed(error: CheckoutError.sessionUpdateInProgress)
         }
         stpSession.applyAddressOverrides(to: &configuration)
         return await performUpdate(mode: .checkoutSession(stpSession))
