@@ -62,13 +62,7 @@ extension TextFieldElement {
                 // Show unknown card brand if we have under 9 pan digits and no card brands
                 if 9 > text.count && cardBrandChoiceElement.brandCount == 0 {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
-                } else if text.count >= 8 && cardBrandChoiceElement.brandCount > 1 {
-                    // If only one brand is allowed after filtering, only show that brand
-                    if cardBrandChoiceElement.allowedBrandCount == 1,
-                       let cardBrand = cardBrandChoiceElement.selectedBrand {
-                        rotatingCardBrandsView.cardBrands = [cardBrand]
-                        return rotatingCardBrandsView
-                    }
+                } else if text.count >= 8 && cardBrandChoiceElement.allowedBrandCount > 1 {
                     // Show the selector if we have 8 or more digits and at least 2 allowed brands
                     return cardBrandChoiceElement.view
                 }
