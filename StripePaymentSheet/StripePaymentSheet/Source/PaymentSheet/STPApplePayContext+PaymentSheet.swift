@@ -187,8 +187,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         let shipping = makeShippingDetailsParams(from: paymentInformation)
 
         guard let checkoutSession = checkout.stpSession else {
-            stpAssertionFailure("Unexpectedly found nil on Checkout.stpSession")
-            return "TODO"
+            throw PaymentSheetError.unknown(debugDescription: "Unexpectedly found nil on Checkout.stpSession")
         }
 
         // 4. Call confirm API with the Apple Pay payment method

@@ -61,7 +61,7 @@ class ConfirmButton: UIControl {
                     stpAssertionFailure("Unknown and subscription modes not yet supported in checkout sessions")
                     return .setup
                 case .none:
-                    // TODO
+                    stpAssertionFailure("Unexpectedly found a .none case in checkout session")
                     return .setup
                 }
             }
