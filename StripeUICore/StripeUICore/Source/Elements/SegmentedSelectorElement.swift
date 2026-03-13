@@ -23,6 +23,7 @@ import UIKit
 
     private let selectorView: SegmentedSelectorView
 
+    public private(set) var hasBeenTapped = false
     public private(set) var selectedItem: SegmentedSelectorItem?
     public private(set) var items: [SegmentedSelectorItem]
     private var disabledItems: Set<SegmentedSelectorItem>
@@ -60,6 +61,8 @@ import UIKit
             disabledItems: disabledItems,
             selectedItem: selectedItem
         )
+
+        delegate?.didUpdate(element: self)
     }
 
     public func select(_ item: SegmentedSelectorItem?, animated: Bool = false) {
@@ -74,6 +77,8 @@ import UIKit
 
         // Update the visual UI
         selectorView.select(item, animated: animated)
+
+        delegate?.didUpdate(element: self)
     }
 
     private func itemTapped(_ item: SegmentedSelectorItem) {
@@ -81,10 +86,10 @@ import UIKit
         if selectedItem == item && !allowDeselection {
             return
         }
+        hasBeenTapped = true
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
         select(newSelection, animated: true)
-        delegate?.didUpdate(element: self)
     }
 }
 

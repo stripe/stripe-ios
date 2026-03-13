@@ -64,7 +64,14 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
-    private(set) var hasBeenTapped = false
+    var hasBeenTapped: Bool {
+        switch variant {
+        case .selector(let element):
+            return element.hasBeenTapped
+        case .dropdown:
+            return false
+        }
+    }
 
     // Expose brand count for determining if selector should be shown
     var brandCount: Int {
@@ -155,7 +162,6 @@ final class CardBrandChoiceElement: Element {
 
 extension CardBrandChoiceElement: ElementDelegate {
     func didUpdate(element: Element) {
-        hasBeenTapped = true
         delegate?.didUpdate(element: self)
     }
 
