@@ -204,7 +204,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         )
 
         // 5. Update the Checkout session with the latest response
-        checkoutSession.onConfirmed?(response)
+        await checkout.updateSession(response)
 
         // 6. Return client secret based on checkout session mode
         return try response.clientSecret(for: checkoutSession.mode)

@@ -187,9 +187,6 @@ public final class Checkout: ObservableObject {
         // Carry over client-side address overrides to the new session.
         newSession.billingAddressOverride = stpSession?.billingAddressOverride
         newSession.shippingAddressOverride = stpSession?.shippingAddressOverride
-        newSession.onConfirmed = { [weak self] response in
-            self?.updateSession(response)
-        }
         let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
         session = newSession
         if changed {

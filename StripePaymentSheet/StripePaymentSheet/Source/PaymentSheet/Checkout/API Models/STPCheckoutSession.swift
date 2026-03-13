@@ -138,11 +138,6 @@ class STPCheckoutSession: NSObject {
     /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
     var shippingAddressOverride: Checkout.AddressUpdate?
 
-    /// Called by confirm handlers with the updated session after a successful confirm.
-    /// `Checkout.updateSession(_:)` sets this so the confirm response flows back
-    /// to `Checkout` without passing closures through the confirm call chain.
-    var onConfirmed: ((STPCheckoutSession) -> Void)?
-
     /// Returns `true` when the server needs a `tax_region` update for the given address type.
     ///
     /// - Parameter addressType: Either `"billing"` or `"shipping"`.
