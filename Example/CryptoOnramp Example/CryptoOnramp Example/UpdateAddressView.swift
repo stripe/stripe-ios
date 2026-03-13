@@ -6,7 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
-@_spi(STP) import StripeCryptoOnramp
+@_spi(CryptoOnrampAlpha) import StripeCryptoOnramp
 
 import SwiftUI
 

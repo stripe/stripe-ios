@@ -8,7 +8,7 @@
 import Foundation
 
 /// Errors that can occur during checkout.
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 public enum CheckoutError: LocalizedError {
 
     /// The payment method is missing from the PaymentIntent.
@@ -23,7 +23,7 @@ public enum CheckoutError: LocalizedError {
     /// An unexpected error occurred.
     case unexpectedError
 
-    @_spi(STP)
+    @_spi(CryptoOnrampAlpha)
     public var errorDescription: String? {
         switch self {
         case .missingPaymentMethod:
