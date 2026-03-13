@@ -301,7 +301,7 @@ final class CardSectionElement: ContainerElement {
 
             // If we had no brands but now have brands the CBC indicator will appear, log the analytic
             if !hadBrands, fetchedCardBrands.count > 1 {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandChoice))
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandChoiceIndicator))
             }
 
             if self.cardBrands != fetchedCardBrands {
