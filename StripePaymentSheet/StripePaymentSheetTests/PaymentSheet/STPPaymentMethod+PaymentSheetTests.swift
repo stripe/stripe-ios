@@ -35,8 +35,9 @@ class STPPPaymentMethodPaymentSheetTests: XCTestCase {
         XCTAssertTrue(_testHasUpdatedAutomaticBillingDetailsParam(STPPaymentMethod._testCard(postalCode: "12345", countryCode: "US"), postalCode: "12345", country: "GB"))
         XCTAssertTrue(_testHasUpdatedAutomaticBillingDetailsParam(STPPaymentMethod._testCard(postalCode: "12345", countryCode: "US"), postalCode: "12344", country: "GB"))
         XCTAssertTrue(_testHasUpdatedAutomaticBillingDetailsParam(STPPaymentMethod._testCard(), postalCode: "12344", country: "GB"))
+        XCTAssertFalse(_testHasUpdatedAutomaticBillingDetailsParam(STPPaymentMethod._testCard(postalCode: "12345", countryCode: "FR"), postalCode: nil, country: "FR"))
     }
-    func _testHasUpdatedAutomaticBillingDetailsParam(_ paymentMethod: STPPaymentMethod, postalCode: String, country: String) -> Bool {
+    func _testHasUpdatedAutomaticBillingDetailsParam(_ paymentMethod: STPPaymentMethod, postalCode: String?, country: String) -> Bool {
         let updatedParams = STPPaymentMethodBillingDetails()
         updatedParams.nonnil_address.postalCode = postalCode
         updatedParams.nonnil_address.country = country

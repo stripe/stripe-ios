@@ -18,7 +18,7 @@ final class USBankAccountPaymentMethodElement: ContainerElement {
 
     var presentingViewControllerDelegate: PresentingViewControllerDelegate?
 
-    var delegate: ElementDelegate?
+    weak var delegate: ElementDelegate?
 
     var view: UIView {
         return formElement.view

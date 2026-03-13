@@ -16,21 +16,9 @@ struct CryptoOnramp_ExampleApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ZStack {
-                CryptoOnrampExampleView()
-                    .environment(\.isLoading, $isLoading)
-
-                if isLoading {
-                    Color.black.opacity(0.3)
-                        .ignoresSafeArea()
-                    ProgressView("Loading…")
-                        .padding()
-                        .background {
-                            Color(.tertiarySystemBackground)
-                                .cornerRadius(8)
-                        }
-                }
-            }
+            CryptoOnrampExampleView()
+                .environment(\.isLoading, $isLoading)
+                .loadingOverlay(isVisible: isLoading)
         }
     }
 }

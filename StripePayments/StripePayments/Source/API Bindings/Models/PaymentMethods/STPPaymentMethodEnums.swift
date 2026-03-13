@@ -109,7 +109,7 @@ import Foundation
         case .card:
             return STPLocalizedString("Card", "Payment Method for credit card")
         case .iDEAL:
-            return STPLocalizedString("iDEAL", "Source type brand name")
+            return STPLocalizedString("iDEAL | Wero", "Source type brand name")
         case .FPX:
             return STPLocalizedString("FPX", "Payment Method type brand name")
         case .SEPADebit:

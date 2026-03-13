@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
 /// The first screen in the example app flow, allowing a user to log in and sign up using the demo backend, and begin link authentication.

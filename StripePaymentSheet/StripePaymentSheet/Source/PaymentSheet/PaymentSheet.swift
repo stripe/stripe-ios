@@ -104,16 +104,20 @@ public class PaymentSheet {
         )
     }
 
-    /// Initializes PaymentSheet with a CheckoutSession object
-    /// - Parameter checkoutSession: A fully loaded STPCheckoutSession object
+    /// Initializes PaymentSheet with a Checkout object
+    /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @_spi(CheckoutSessionsPreview) public convenience init(checkoutSession: STPCheckoutSession, configuration: Configuration) {
+    @MainActor @_spi(CheckoutSessionsPreview) public convenience init(checkout: Checkout, configuration: Configuration) {
+        guard let stpSession = checkout.session as? STPCheckoutSession else {
+            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.session))")
+        }
         var config = configuration
-        checkoutSession.applyAddressOverrides(to: &config)
+        stpSession.applyAddressOverrides(to: &config)
         self.init(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkoutSession(stpSession),
             configuration: config
         )
+        checkout.integrationDelegate = self
     }
 
     required init(mode: InitializationMode, configuration: Configuration) {
@@ -377,6 +381,14 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 elementsSession: paymentSheetViewController.elementsSession
             )
         }
+    }
+}
+
+// MARK: - CheckoutIntegrationDelegate
+
+extension PaymentSheet: CheckoutIntegrationDelegate {
+    var isSheetPresented: Bool {
+        bottomSheetViewController.presentingViewController != nil
     }
 }
 

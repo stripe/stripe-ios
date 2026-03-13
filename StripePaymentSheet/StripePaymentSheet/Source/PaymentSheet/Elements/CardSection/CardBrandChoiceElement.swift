@@ -18,12 +18,12 @@ import UIKit
 final class CardBrandChoiceElement: Element {
     weak var delegate: ElementDelegate?
 
-    private enum Variant {
+    enum Variant {
         case selector(SegmentedSelectorElement)
         case dropdown(DropdownFieldElement)
     }
 
-    private let variant: Variant
+    let variant: Variant
 
     var view: UIView {
         switch variant {
@@ -64,6 +64,16 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
+    // Expose whether the user has tapped the selector for determining if tooltip should be shown
+    var hasBeenTapped: Bool {
+        switch variant {
+        case .selector(let element):
+            return element.hasBeenTapped
+        case .dropdown:
+            return false
+        }
+    }
+
     // Expose brand count for determining if selector should be shown
     var brandCount: Int {
         switch variant {
@@ -71,6 +81,16 @@ final class CardBrandChoiceElement: Element {
             return element.items.count
         case .dropdown(let element):
             return element.nonPlacerholderItems.count
+        }
+    }
+
+    // Expose allowed brand count for determining if selector should be shown
+    var allowedBrandCount: Int {
+        switch variant {
+        case .selector(let element):
+            return element.enabledItems.count
+        case .dropdown(let element):
+            return element.items.count // keep dropdown behavior unchanged
         }
     }
 
@@ -101,6 +121,7 @@ final class CardBrandChoiceElement: Element {
     }
 
     func update(cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand> = []) {
+        let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
         switch variant {
         case .selector(let element):
             element.update(
@@ -115,6 +136,14 @@ final class CardBrandChoiceElement: Element {
                 includePlaceholder: element.items.contains { $0.isPlaceholder }
             )
             element.update(items: items)
+        }
+        // If we only fetched one card brand that is not disallowed, disable interaction and auto select it.
+        // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
+        view.isUserInteractionEnabled = allowedBrands.count > 1
+        if allowedBrands.count == 1,
+           !disallowedCardBrands.isEmpty,
+           let brand = allowedBrands.first {
+            select(brand)
         }
     }
 
@@ -152,11 +181,11 @@ extension CardBrandChoiceElement: ElementDelegate {
     }
 }
 
-private extension STPCardBrand {
+extension STPCardBrand {
     func makeCardBrandItem() -> SegmentedSelectorItem {
         return SegmentedSelectorItem(
             rawData: STPCardBrandUtilities.apiValue(from: self),
-            image: STPImageLibrary.cardBrandImage(for: self),
+            image: STPImageLibrary.unpaddedCardBrandImage(for: self),
             accessibilityLabel: STPCardBrandUtilities.stringFrom(self) ?? ""
         )
     }

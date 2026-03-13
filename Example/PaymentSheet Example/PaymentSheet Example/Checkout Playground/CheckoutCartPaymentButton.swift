@@ -11,8 +11,10 @@ import SwiftUI
 
 @available(iOS 15.0, *)
 struct CheckoutCartPaymentButton: View {
-    let session: STPCheckoutSession
+    let checkout: Checkout
     let onDismiss: () -> Void
+
+    private var session: Checkout.Session? { checkout.session }
 
     @State private var paymentResult: PaymentSheetResult?
 
@@ -61,8 +63,9 @@ struct CheckoutCartPaymentButton: View {
                     )
                 }
             } else {
+                let paymentSheet = makePaymentSheet()
                 PaymentSheet.PaymentButton(
-                    paymentSheet: makePaymentSheet(),
+                    paymentSheet: paymentSheet,
                     onCompletion: { result in
                         paymentResult = result
                     }
@@ -70,8 +73,8 @@ struct CheckoutCartPaymentButton: View {
                     HStack {
                         Text("Checkout")
                         Spacer()
-                        if let summary = session.totalSummary {
-                            Text(formatCartCurrency(amount: summary.total, currency: session.currency))
+                        if let totals = session?.totals, let currency = session?.currency {
+                            Text(formatCartCurrency(amount: totals.total, currency: currency))
                         }
                     }
                     .font(.headline)
@@ -96,6 +99,6 @@ struct CheckoutCartPaymentButton: View {
         configuration.returnURL = "payments-example://stripe-redirect"
         configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.defaultBillingDetails.email = "jenny@example.com"
-        return PaymentSheet(checkoutSession: session, configuration: configuration)
+        return PaymentSheet(checkout: checkout, configuration: configuration)
     }
 }

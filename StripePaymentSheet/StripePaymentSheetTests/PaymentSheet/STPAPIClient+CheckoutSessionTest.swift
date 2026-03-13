@@ -8,7 +8,7 @@
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
@@ -46,7 +46,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
 
         // 2. Init the checkout session to get the actual amount
         let initResponse = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
-        let expectedAmount = initResponse.totalSummary?.total ?? 0
+        let expectedAmount = initResponse.totals?.total ?? 0
 
         // 3. Create a payment method with test card and billing email
         let cardParams = STPPaymentMethodCardParams()

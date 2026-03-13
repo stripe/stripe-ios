@@ -206,7 +206,7 @@ public class STPSetupIntentConfirmParams: NSObject, NSCopying, STPFormEncodable 
     @_spi(STP) public static func mandateDataIfRequired(for paymentMethodType: STPPaymentMethodType) -> STPMandateDataParams? {
         switch paymentMethodType {
         case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .link, .USBankAccount,
-             .cashApp, .payPal, .revolutPay, .klarna, .amazonPay:
+             .cashApp, .payPal, .revolutPay, .klarna, .amazonPay, .twint:
             return .makeWithInferredValues()
         default:
             return nil
