@@ -19,12 +19,12 @@ struct CustomThemeSettingsView: View {
 
     /// Binding to a custom theme field in UserDefaults; updates preview when value changes.
     private func customThemeBinding(_ keyPath: WritableKeyPath<AppSettings, String>) -> Binding<String> {
-        Binding(
-            get: { AppSettings.shared[keyPath: keyPath] },
+        let settings = AppSettings.shared
+        return Binding(
+            get: { settings[keyPath: keyPath] },
             set: { newValue in
-                var settings = AppSettings.shared
                 settings[keyPath: keyPath] = newValue
-                updateComponentManager()
+                self.updateComponentManager()
             }
         )
     }
