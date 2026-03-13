@@ -64,6 +64,7 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
+    // Expose whether the user has tapped the selector for determining if tooltip should be shown
     var hasBeenTapped: Bool {
         switch variant {
         case .selector(let element):

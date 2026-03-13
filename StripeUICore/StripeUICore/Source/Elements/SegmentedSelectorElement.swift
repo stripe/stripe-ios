@@ -54,6 +54,7 @@ import UIKit
         // If the previously selected item is no longer present or enabled, deselect it
         if let selectedItem, !items.contains(selectedItem) || disabledItems.contains(selectedItem) {
             self.selectedItem = nil
+            delegate?.didUpdate(element: self)
         }
 
         selectorView.update(
@@ -61,8 +62,6 @@ import UIKit
             disabledItems: disabledItems,
             selectedItem: selectedItem
         )
-
-        delegate?.didUpdate(element: self)
     }
 
     public func select(_ item: SegmentedSelectorItem?, animated: Bool = false) {
