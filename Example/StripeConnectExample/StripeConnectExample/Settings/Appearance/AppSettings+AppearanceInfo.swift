@@ -7,7 +7,6 @@
 
 import Foundation
 import StripeConnect
-@_spi(PreviewConnect) import StripeConnect
 import UIKit
 
 extension AppSettings {
