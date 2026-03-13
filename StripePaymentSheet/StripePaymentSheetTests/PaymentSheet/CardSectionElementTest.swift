@@ -209,7 +209,7 @@ class CardSectionElementTest: XCTestCase {
         cardSection.didUpdate(element: cardSection.panElement)
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
 
-        // Clear PAN to reset brands and the hasBrandBeenSelected latch
+        // Clear PAN to reset brands
         cardSection.panElement.setText("")
         // Re-enter CBC card — tooltip should still not reappear
         cardSection.panElement.setText(cbcVisaTestCard)
