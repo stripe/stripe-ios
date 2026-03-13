@@ -156,6 +156,9 @@ public extension AddressViewController {
         /// The title of the view controller. Defaults to "Shipping address".
         public var title: String = .Localized.shipping_address
 
+        /// Optionally hide the title label and set a title on the view controller instead.
+        @_spi(STP) public var useNavigationBarTitle: Bool = false
+
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = .shared
 
