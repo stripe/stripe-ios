@@ -134,27 +134,8 @@ extension PaymentSheet {
 
 private extension STPElementsSession {
     func isCompatibleWithBillingDetailsCollection(in configuration: PaymentElementConfiguration) -> Bool {
-        let nativeLink = deviceCanUseNativeLink(elementsSession: self, configuration: configuration)
-
-        if configuration.isUsingCheckoutSession && !nativeLink {
-            // The Link web flow doesn't support collecting billing details.
-            // Checkout Sessions always require email collection, which normally disables Link web.
-            // We can make an exception and enable Link web if the Checkout Session already has the customer's email
-            // and no other billing details are required.
-            if configuration.checkoutSessionCustomerEmailNil {
-                return false
-            }
-
-            let billingConfig = configuration.billingDetailsCollectionConfiguration
-            if billingConfig.email == .always &&
-                billingConfig.name != .always &&
-                billingConfig.phone != .always &&
-                billingConfig.address != .full {
-                return true
-            }
-        }
-
         // We can't collect billing details if we're in the web flow, so turn Link off for those cases.
+        let nativeLink = deviceCanUseNativeLink(elementsSession: self, configuration: configuration)
         return nativeLink || !configuration.requiresBillingDetailCollection()
     }
 }

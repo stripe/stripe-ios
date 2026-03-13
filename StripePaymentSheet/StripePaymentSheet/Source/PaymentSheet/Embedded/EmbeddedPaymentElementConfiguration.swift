@@ -186,8 +186,6 @@ extension EmbeddedPaymentElement {
         @_spi(DashboardOnly) public var disableWalletPaymentMethodFiltering: Bool = false
 
         internal var linkPaymentMethodsOnly: Bool = false
-        internal var isUsingCheckoutSession: Bool = false
-        internal var checkoutSessionCustomerEmailNil: Bool = false
 
         /// Describes how you handle row selections in EmbeddedPaymentElement
         public enum RowSelectionBehavior {
