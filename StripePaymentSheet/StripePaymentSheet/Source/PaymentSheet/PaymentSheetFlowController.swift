@@ -374,14 +374,9 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            guard let stpSession = checkout.session as? STPCheckoutSession else {
-                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
-                completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
-                return
-            }
             var config = configuration
-            stpSession.applyAddressOverrides(to: &config)
-            create(mode: .checkoutSession(stpSession),
+            checkout.stpSession?.applyAddressOverrides(to: &config)
+            create(mode: .checkoutSession(checkout),
                    configuration: config
             ) { result in
                 if case .success(let flowController) = result {
@@ -648,13 +643,8 @@ extension PaymentSheet {
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
-            guard let stpSession = checkout.session as? STPCheckoutSession else {
-                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
-                completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
-                return
-            }
-            stpSession.applyAddressOverrides(to: &configuration)
-            performUpdate(mode: .checkoutSession(stpSession), completion: completion)
+            checkout.stpSession?.applyAddressOverrides(to: &configuration)
+            performUpdate(mode: .checkoutSession(checkout), completion: completion)
         }
 
         private func performUpdate(mode: PaymentSheet.InitializationMode, completion: @escaping (Error?) -> Void) {

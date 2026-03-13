@@ -21,14 +21,14 @@ enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
-    case checkoutSession(STPCheckoutSession)
+    case checkoutSession(Checkout)
 
     var stripeId: String? {
         switch self {
         case .paymentIntent(let intent): intent.stripeId
         case .setupIntent(let intent): intent.stripeID
         case .deferredIntent: nil
-        case .checkoutSession(let session): session.stripeId
+        case .checkoutSession(let checkout): checkout.stpSession?.stripeId
         }
     }
 
@@ -46,7 +46,7 @@ enum Intent {
                 return false
             }
         case .checkoutSession(let session):
-            return session.mode == .payment || session.mode == .subscription
+            return session.stpSession?.mode == .payment || session.stpSession?.mode == .subscription
         }
     }
 
@@ -98,7 +98,7 @@ enum Intent {
                 return currency
             }
         case .checkoutSession(let session):
-            return session.currency
+            return session.stpSession?.currency
         }
     }
 
@@ -116,16 +116,19 @@ enum Intent {
                 return nil
             }
         case .checkoutSession(let session):
-            switch session.mode {
+            switch session.stpSession?.mode {
             case .unknown:
                 stpAssertionFailure("Received CheckoutSession in unknown mode")
                 return nil
             case .payment:
-                return session.totals?.total
+                return session.stpSession?.totals?.total
             case .setup:
                 return nil
             case .subscription:
                 fatalError("Subscriptoins not yet implemented for CheckoutSessions")
+            case .none:
+                // todo
+                return nil
             }
         }
     }
@@ -181,13 +184,16 @@ enum Intent {
             case .setup:
                 return true
             }
-        case .checkoutSession(let checkoutSession):
-            switch checkoutSession.mode {
+        case .checkoutSession(let checkout):
+            switch checkout.stpSession?.mode {
             case .payment, .subscription, .unknown:
                 // TODO(porter) Figure out SFU during confirmation work
                 return false
             case .setup:
                 return true
+            case .none:
+                // todo
+                return false
             }
         }
     }

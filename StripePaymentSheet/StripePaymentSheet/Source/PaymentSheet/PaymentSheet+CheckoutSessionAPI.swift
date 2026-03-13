@@ -14,7 +14,7 @@ extension PaymentSheet {
     /// Confirms a checkout session with a new payment method
     @MainActor
     static func handleCheckoutSessionConfirmation(
-        checkoutSession: STPCheckoutSession,
+        checkout: Checkout,
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
@@ -23,7 +23,7 @@ extension PaymentSheet {
     ) async -> PaymentSheetResult {
         do {
             let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-                intent: .checkoutSession(checkoutSession),
+                intent: .checkoutSession(checkout),
                 elementsSession: elementsSession
             )
 
@@ -51,8 +51,12 @@ extension PaymentSheet {
             }
 
             // 2. Get expected amount from checkout session
-            let expectedAmount = try checkoutSession.expectedAmount()
+            let expectedAmount = try checkout.stpSession?.expectedAmount()
 
+            guard let checkoutSession = checkout.stpSession else {
+                stpAssertionFailure("Unexpectedly found nil on Checkout.stpSession")
+                return .canceled
+            }
             // 3. Call confirm API
             let response = try await configuration.apiClient.confirmCheckoutSession(
                 sessionId: checkoutSession.stripeId,
@@ -68,7 +72,6 @@ extension PaymentSheet {
             // 4. Handle response based on checkout session mode
             return try await handleCheckoutSessionConfirmResponse(
                 response: response,
-                checkoutSession: checkoutSession,
                 configuration: configuration,
                 authenticationContext: authenticationContext,
                 paymentHandler: paymentHandler
@@ -81,12 +84,11 @@ extension PaymentSheet {
     @MainActor
     private static func handleCheckoutSessionConfirmResponse(
         response: STPCheckoutSession,
-        checkoutSession: STPCheckoutSession,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler
     ) async throws -> PaymentSheetResult {
-        if checkoutSession.mode == .setup {
+        if response.mode == .setup {
             // Setup mode - handle SetupIntent
             guard let setupIntent = response.setupIntent else {
                 throw PaymentSheetError.unknown(debugDescription: "Missing setup intent in confirm response")

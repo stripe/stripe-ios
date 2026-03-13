@@ -60,9 +60,9 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             return paymentIntent.clientSecret
         case .setupIntent(let setupIntent):
             return setupIntent.clientSecret
-        case .checkoutSession(let checkoutSession):
+        case .checkoutSession(let checkout):
             return try await handleCheckoutSessionApplePay(
-                checkoutSession: checkoutSession,
+                checkout: checkout,
                 paymentMethod: paymentMethod,
                 paymentInformation: paymentInformation,
                 context: context
@@ -169,7 +169,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
     /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
     private func handleCheckoutSessionApplePay(
-        checkoutSession: STPCheckoutSession,
+        checkout: Checkout,
         paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext
@@ -181,10 +181,15 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
         )
 
         // 2. Get expected amount from checkout session
-        let expectedAmount = try checkoutSession.expectedAmount()
+        let expectedAmount = try checkout.stpSession?.expectedAmount()
 
         // 3. Extract shipping details from PKPayment (if provided)
         let shipping = makeShippingDetailsParams(from: paymentInformation)
+
+        guard let checkoutSession = checkout.stpSession else {
+            stpAssertionFailure("Unexpectedly found nil on Checkout.stpSession")
+            return "TODO"
+        }
 
         // 4. Call confirm API with the Apple Pay payment method
         let response = try await context.apiClient.confirmCheckoutSession(

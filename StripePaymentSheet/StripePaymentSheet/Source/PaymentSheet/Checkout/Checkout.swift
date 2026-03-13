@@ -39,9 +39,9 @@ public final class Checkout: ObservableObject {
 
     /// Concrete accessor for internal use where `STPCheckoutSession`-specific
     /// properties (e.g. `allResponseFields`, `billingAddressOverride`) are needed.
-    private var stpSession: STPCheckoutSession? {
-        get { session as? STPCheckoutSession }
-        set { session = newValue }
+    nonisolated var stpSession: STPCheckoutSession? {
+        get { MainActor.assumeIsolated { session as? STPCheckoutSession } }
+        set { MainActor.assumeIsolated { session = newValue } }
     }
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?

@@ -276,10 +276,10 @@ extension PaymentSheet {
                         completion(result.result, result.deferredIntentConfirmationType)
                     }
                     // MARK: ↪ CheckoutSession
-                case .checkoutSession(let checkoutSession):
+                case .checkoutSession(let checkout):
                     Task { @MainActor in
                         let result = await handleCheckoutSessionConfirmation(
-                            checkoutSession: checkoutSession,
+                            checkout: checkout,
                             confirmType: .new(
                                 params: confirmParams.paymentMethodParams,
                                 paymentOptions: confirmParams.confirmPaymentMethodOptions,
@@ -351,7 +351,7 @@ extension PaymentSheet {
                     completion(result.result, result.deferredIntentConfirmationType)
                 }
                 // MARK: ↪ CheckoutSession
-            case .checkoutSession(let checkoutSession):
+            case .checkoutSession(let checkout):
                 Task { @MainActor in
                     let paymentOptions = intentConfirmParamsForDeferredIntent?.confirmPaymentMethodOptions != nil
                     // Flow controller and embedded collects CVC using interstitial:
@@ -359,7 +359,7 @@ extension PaymentSheet {
                     // PaymentSheet collects CVC in sheet:
                     : intentConfirmParamsFromSavedPaymentMethod?.confirmPaymentMethodOptions
                     let result = await handleCheckoutSessionConfirmation(
-                        checkoutSession: checkoutSession,
+                        checkout: checkout,
                         confirmType: .saved(paymentMethod,
                                             paymentOptions: paymentOptions,
                                             clientAttributionMetadata: clientAttributionMetadata,
@@ -443,9 +443,9 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkoutSession(let checkoutSession):
+                    case .checkoutSession(let checkout):
                         let result = await handleCheckoutSessionConfirmation(
-                            checkoutSession: checkoutSession,
+                            checkout: checkout,
                             confirmType: .new(
                                 params: paymentMethodParams,
                                 paymentOptions: STPConfirmPaymentMethodOptions(),
@@ -535,9 +535,9 @@ extension PaymentSheet {
                             await confirmationChallenge?.complete()
                             completion(result.result, result.deferredIntentConfirmationType)
                         }
-                    case .checkoutSession(let checkoutSession):
+                    case .checkoutSession(let checkout):
                         let result = await handleCheckoutSessionConfirmation(
-                            checkoutSession: checkoutSession,
+                            checkout: checkout,
                             confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: clientAttributionMetadata, radarOptions: radarOptions),
                             configuration: configuration,
                             authenticationContext: authenticationContext,

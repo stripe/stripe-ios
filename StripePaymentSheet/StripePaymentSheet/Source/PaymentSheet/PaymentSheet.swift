@@ -48,7 +48,7 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkoutSession(STPCheckoutSession)
+        case checkoutSession(Checkout)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
@@ -108,13 +108,10 @@ public class PaymentSheet {
     /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     @MainActor @_spi(CheckoutSessionsPreview) public convenience init(checkout: Checkout, configuration: Configuration) {
-        guard let stpSession = checkout.session as? STPCheckoutSession else {
-            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.session))")
-        }
         var config = configuration
-        stpSession.applyAddressOverrides(to: &config)
+        checkout.stpSession?.applyAddressOverrides(to: &config)
         self.init(
-            mode: .checkoutSession(stpSession),
+            mode: .checkoutSession(checkout),
             configuration: config
         )
         checkout.integrationDelegate = self

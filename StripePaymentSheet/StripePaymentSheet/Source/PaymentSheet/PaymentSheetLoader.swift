@@ -383,13 +383,13 @@ final class PaymentSheetLoader {
                 elementsSession = .makeBackupElementsSession(allResponseFields: [:], paymentMethodTypes: paymentMethodTypes)
                 intent = .deferredIntent(intentConfig: intentConfig)
             }
-        case .checkoutSession(let checkoutSession):
-            guard let elementsSessionJSON = checkoutSession.allResponseFields["elements_session"] as? [AnyHashable: Any],
+        case .checkoutSession(let checkout):
+            guard let elementsSessionJSON = checkout.stpSession?.allResponseFields["elements_session"] as? [AnyHashable: Any],
                   let decodedElementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJSON) else {
                 throw PaymentSheetError.unknown(debugDescription: "Failed to decode elements session from provided checkout session object")
             }
             elementsSession = decodedElementsSession
-            intent = .checkoutSession(checkoutSession)
+            intent = .checkoutSession(checkout)
         }
 
         // Warn the merchant if we see unactivated payment method types in the Intent
@@ -437,8 +437,8 @@ final class PaymentSheetLoader {
         var savedPaymentMethods: [STPPaymentMethod]
         if let elementsSessionPaymentMethods = elementsSession.customer?.paymentMethods {
             savedPaymentMethods = elementsSessionPaymentMethods
-        } else if case let .checkoutSession(checkoutSession) = intent,
-                  let customerPaymentMethods = checkoutSession.customer?.paymentMethods {
+        } else if case let .checkoutSession(checkout) = intent,
+                  let customerPaymentMethods = checkout.stpSession?.customer?.paymentMethods {
             savedPaymentMethods = customerPaymentMethods
         } else {
             savedPaymentMethods = try await fetchSavedPaymentMethodsUsingApiClient(configuration: configuration, elementsSession: elementsSession)
