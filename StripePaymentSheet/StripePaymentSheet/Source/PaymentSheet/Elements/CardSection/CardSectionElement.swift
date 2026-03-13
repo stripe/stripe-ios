@@ -299,9 +299,9 @@ final class CardSectionElement: ContainerElement {
                 fetchedCardBrands = Set<STPCardBrand>()
             }
 
-            // If we had no brands but now have brands the CBC indicator will appear, log the analytic
-            if !hadBrands, !fetchedCardBrands.isEmpty {
-                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandDropdownIndicator))
+            // If we had no brands but now have selectable brands the CBC indicator will appear, log the analytic
+            if !hadBrands, fetchedCardBrands.filter({ self.cardBrandFilter.isAccepted(cardBrand: $0) }).count > 1 {
+                STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: self.hostedSurface.analyticEvent(for: .displayCardBrandChoiceIndicator))
             }
 
             if self.cardBrands != fetchedCardBrands {
