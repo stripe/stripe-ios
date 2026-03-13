@@ -125,9 +125,9 @@ enum Intent {
             case .setup:
                 return nil
             case .subscription:
-                fatalError("Subscriptoins not yet implemented for CheckoutSessions")
+                fatalError("Subscriptions not yet implemented for CheckoutSessions")
             case .none:
-                // todo
+                stpAssertionFailure("Unexpectedly found nil case in CheckoutSession.stpSession?.mode")
                 return nil
             }
         }
@@ -192,7 +192,7 @@ enum Intent {
             case .setup:
                 return true
             case .none:
-                // todo
+                stpAssertionFailure("Unexpectedly found nil case in CheckoutSession.stpSession?.mode")
                 return false
             }
         }
