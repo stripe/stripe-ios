@@ -65,6 +65,9 @@ extension PaymentSheet {
                 clientAttributionMetadata: clientAttributionMetadata
             )
 
+            // Update the Checkout session with the latest response
+            checkoutSession.onConfirmed?(response)
+
             // 4. Handle response based on checkout session mode
             return try await handleCheckoutSessionConfirmResponse(
                 response: response,

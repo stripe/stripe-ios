@@ -32,9 +32,19 @@ final class CardBrandChoiceElement: Element {
         return STPCard.brand(from: rawData)
     }
 
+    // Expose whether the user has tapped the selector for determining if tooltip should be shown
+    var hasBeenTapped: Bool {
+        return element.hasBeenTapped
+    }
+
     // Expose brand count for determining if selector should be shown
     var brandCount: Int {
         return element.items.count
+    }
+
+    // Expose allowed brand count for determining if selector should be shown
+    var allowedBrandCount: Int {
+        return element.enabledItems.count
     }
 
     init(cardBrands: Set<STPCardBrand> = [],
@@ -93,7 +103,7 @@ extension CardBrandChoiceElement: ElementDelegate {
     }
 }
 
-private extension STPCardBrand {
+extension STPCardBrand {
     func makeCardBrandItem() -> SegmentedSelectorItem {
         return SegmentedSelectorItem(
             rawData: STPCardBrandUtilities.apiValue(from: self),
