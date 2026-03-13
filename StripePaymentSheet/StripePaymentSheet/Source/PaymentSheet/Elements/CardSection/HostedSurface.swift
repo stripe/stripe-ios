@@ -24,7 +24,7 @@ import Foundation
 
     func analyticEvent(for event: CardUpdateEvents) -> STPAnalyticEvent {
         switch (event, self) {
-        case (.displayCardBrandChoice, .paymentSheet):
+        case (.displayCardBrandChoiceIndicator, .paymentSheet):
             return .paymentSheetDisplayCardBrandChoiceIndicator
         case (.cardBrandSelected, .paymentSheet):
             return .paymentSheetCardBrandSelected
@@ -40,7 +40,7 @@ import Foundation
             return .paymentSheetSetDefaultPaymentMethodFailed
         case (.closeEditScreen, .paymentSheet):
             return .paymentSheetClosesEditScreen
-        case (.displayCardBrandChoice, .customerSheet):
+        case (.displayCardBrandChoiceIndicator, .customerSheet):
             return .customerSheetDisplayCardBrandChoiceIndicator
         case (.cardBrandSelected, .customerSheet):
             return .customerSheetCardBrandSelected
@@ -62,7 +62,7 @@ import Foundation
 
     // Helper for mapping between PaymentSheet and CustomerSheet CBC events
     enum CardUpdateEvents {
-        case displayCardBrandChoice
+        case displayCardBrandChoiceIndicator
         case cardBrandSelected
         case openEditScreen
         case updateCard
