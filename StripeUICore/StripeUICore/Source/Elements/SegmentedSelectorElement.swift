@@ -27,6 +27,9 @@ import UIKit
     public private(set) var selectedItem: SegmentedSelectorItem?
     public private(set) var items: [SegmentedSelectorItem]
     private var disabledItems: Set<SegmentedSelectorItem>
+    public var enabledItems: [SegmentedSelectorItem] {
+        return items.filter({ !disabledItems.contains($0) })
+    }
 
     /// When false, the user cannot deselect the currently selected item.
     private var allowDeselection: Bool

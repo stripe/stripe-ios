@@ -84,6 +84,16 @@ final class CardBrandChoiceElement: Element {
         }
     }
 
+    // Expose allowed brand count for determining if selector should be shown
+    var allowedBrandCount: Int {
+        switch variant {
+        case .selector(let element):
+            return element.enabledItems.count
+        case .dropdown(let element):
+            return element.items.count // keep dropdown behavior unchanged
+        }
+    }
+
     init(enableCBCRedesign: Bool,
          cardBrands: Set<STPCardBrand> = [],
          disallowedCardBrands: Set<STPCardBrand> = [],

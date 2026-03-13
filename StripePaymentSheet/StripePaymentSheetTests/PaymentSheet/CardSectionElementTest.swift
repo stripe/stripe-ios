@@ -74,6 +74,21 @@ class CardSectionElementTest: XCTestCase {
         XCTAssertFalse(cardSection.cardBrandChoiceElement?.view.isUserInteractionEnabled ?? true)
     }
 
+    func testFiltering_showsSingleBrandLogoWhenOnlyOneAllowed() {
+        let filter = CardBrandFilter(cardBrandAcceptance: .disallowed(brands: [.visa]))
+        let cardSection = makeCardSectionElement(cardBrandFilter: filter)
+        cardSection.panElement.setText(cbcVisaTestCard)
+        // allowedBrandCount should be 1 (only cartesBancaires), brandCount should be 2
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.allowedBrandCount, 1)
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.brandCount, 2)
+        // The PAN accessory view should be a RotatingCardBrandsView showing only the allowed brand
+        let panConfig = cardSection.panElement.configuration as! TextFieldElement.PANConfiguration
+        let accessoryView = panConfig.accessoryView(for: cardSection.panElement.text, theme: .default)
+        let rotatingView = accessoryView as? RotatingCardBrandsView
+        XCTAssertNotNil(rotatingView, "Should show single brand logo, not the brand selector")
+        XCTAssertEqual(rotatingView?.cardBrands, [.cartesBancaires])
+    }
+
     func testFiltering_noSelectionWhenMultipleBrandsAllowed() {
         let cardSection = makeCardSectionElement()
         cardSection.panElement.setText(cbcVisaTestCard)
