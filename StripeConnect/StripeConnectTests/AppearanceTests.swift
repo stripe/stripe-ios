@@ -8,6 +8,7 @@
 @_spi(PreviewConnect) @testable import StripeConnect
 import UIKit
 import XCTest
+
 class AppearanceTests: XCTestCase {
     typealias Appearance = EmbeddedComponentManager.Appearance
 
