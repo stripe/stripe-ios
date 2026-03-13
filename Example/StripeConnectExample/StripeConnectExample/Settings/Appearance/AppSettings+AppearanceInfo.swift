@@ -7,6 +7,7 @@
 
 import Foundation
 import StripeConnect
+@_spi(PreviewConnect) import StripeConnect
 import UIKit
 
 extension AppSettings {
@@ -27,11 +28,15 @@ extension AppSettings {
 
     var appearanceInfo: AppearanceInfo {
         get {
-            appearanceOptions.first(where: {
+            let preset = appearanceOptions.first(where: {
                 $0.id == AppSettings.shared.appearanceId
             }) ?? .default
+            let appearanceWithCustomValues = applyCustomThemeValues(to: preset.appearance)
+            return AppearanceInfo(displayName: preset.displayName, appearance: appearanceWithCustomValues)
         }
         set {
+            // When switching presets, clear all custom values so the new preset loads fresh
+            clearCustomThemeValues()
             appearanceId = newValue.id
         }
     }
@@ -357,6 +362,156 @@ extension AppearanceInfo {
     }
 }
 
+extension AppSettings {
+    /// Applies custom theme values (from UserDefaults) on top of a base appearance. Empty values leave the base unchanged.
+    func applyCustomThemeValues(to base: EmbeddedComponentManager.Appearance) -> EmbeddedComponentManager.Appearance {
+        var result = base
+
+        applyFormValues(to: &result)
+        applyActionValues(to: &result)
+        applyTableValues(to: &result)
+        applyButtonDangerValues(to: &result)
+        applyBadgeLabelValues(to: &result)
+        applyButtonLabelValues(to: &result)
+        applySpacingValues(to: &result)
+
+        return result
+    }
+
+    // Private Helper Methods
+
+    private func applyFormValues(to result: inout EmbeddedComponentManager.Appearance) {
+        if !formPlaceholderTextColor.isEmpty, let c = UIColor(hexString: formPlaceholderTextColor) {
+            result.form.colorPlaceholder = c
+        }
+        if let x = Double(inputFieldPaddingX).map({ CGFloat($0) }) {
+            result.form.horizontalPadding = x
+        }
+        if let y = Double(inputFieldPaddingY).map({ CGFloat($0) }) {
+            result.form.verticalPadding = y
+        }
+    }
+
+    private func applyActionValues(to result: inout EmbeddedComponentManager.Appearance) {
+        let primaryTransform = actionPrimaryTextTransform.trimmingCharacters(in: .whitespaces).lowercased()
+        let secondaryTransform = actionSecondaryTextTransform.trimmingCharacters(in: .whitespaces).lowercased()
+
+        if !primaryTransform.isEmpty {
+            result.actionPrimaryStyle.textTransform = EmbeddedComponentManager.Appearance.TextTransform(rawValue: primaryTransform)
+        }
+        if !secondaryTransform.isEmpty {
+            result.actionSecondaryStyle.textTransform = EmbeddedComponentManager.Appearance.TextTransform(rawValue: secondaryTransform)
+        }
+    }
+
+    private func applyTableValues(to result: inout EmbeddedComponentManager.Appearance) {
+        if let y = Double(tableRowPaddingY).map({ CGFloat($0) }) {
+            result.tableRowPaddingY = y
+        }
+    }
+
+    private func applyButtonDangerValues(to result: inout EmbeddedComponentManager.Appearance) {
+        if !buttonDangerColorBackground.isEmpty, let c = UIColor(hexString: buttonDangerColorBackground) {
+            result.buttonDanger.colorBackground = c
+        }
+        if !buttonDangerColorBorder.isEmpty, let c = UIColor(hexString: buttonDangerColorBorder) {
+            result.buttonDanger.colorBorder = c
+        }
+        if !buttonDangerColorText.isEmpty, let c = UIColor(hexString: buttonDangerColorText) {
+            result.buttonDanger.colorText = c
+        }
+    }
+
+    private func applyBadgeLabelValues(to result: inout EmbeddedComponentManager.Appearance) {
+        guard !badgeLabelTextTransform.isEmpty ||
+              !badgeLabelFontWeight.isEmpty ||
+              !badgeLabelFontSize.isEmpty ||
+              !badgePaddingY.isEmpty ||
+              !badgePaddingX.isEmpty else {
+            return
+        }
+
+        var badgeLabel = result.badgeNeutral.labelTypography ?? EmbeddedComponentManager.Appearance.Typography.Style()
+        let transform = badgeLabelTextTransform.trimmingCharacters(in: .whitespaces).lowercased()
+
+        if !transform.isEmpty {
+            badgeLabel.textTransform = EmbeddedComponentManager.Appearance.TextTransform(rawValue: transform)
+        }
+        if let weight = UIFont.Weight.fromCssValue(badgeLabelFontWeight) {
+            badgeLabel.weight = weight
+        }
+        if let size = Double(badgeLabelFontSize).map({ CGFloat($0) }) {
+            badgeLabel.fontSize = size
+        }
+
+        result.badgeNeutral.labelTypography = badgeLabel
+
+        if let y = Double(badgePaddingY).map({ CGFloat($0) }) {
+            result.badgeNeutral.verticalPadding = y
+        }
+        if let x = Double(badgePaddingX).map({ CGFloat($0) }) {
+            result.badgeNeutral.horizontalPadding = x
+        }
+    }
+
+    private func applyButtonLabelValues(to result: inout EmbeddedComponentManager.Appearance) {
+        guard !buttonLabelTextTransform.isEmpty ||
+              !buttonLabelFontWeight.isEmpty ||
+              !buttonLabelFontSize.isEmpty ||
+              !buttonPaddingY.isEmpty ||
+              !buttonPaddingX.isEmpty else {
+            return
+        }
+
+        var buttonLabel = result.buttonPrimary.labelTypography ?? EmbeddedComponentManager.Appearance.Typography.Style()
+        let transform = buttonLabelTextTransform.trimmingCharacters(in: .whitespaces).lowercased()
+
+        if !transform.isEmpty {
+            buttonLabel.textTransform = EmbeddedComponentManager.Appearance.TextTransform(rawValue: transform)
+        }
+        if let weight = UIFont.Weight.fromCssValue(buttonLabelFontWeight) {
+            buttonLabel.weight = weight
+        }
+        if let size = Double(buttonLabelFontSize).map({ CGFloat($0) }) {
+            buttonLabel.fontSize = size
+        }
+
+        result.buttonPrimary.labelTypography = buttonLabel
+
+        if let y = Double(buttonPaddingY).map({ CGFloat($0) }) {
+            result.buttonPrimary.verticalPadding = y
+        }
+        if let x = Double(buttonPaddingX).map({ CGFloat($0) }) {
+            result.buttonPrimary.horizontalPadding = x
+        }
+    }
+
+    private func applySpacingValues(to result: inout EmbeddedComponentManager.Appearance) {
+        if let spacing = Double(spacingUnit).map({ CGFloat($0) }) {
+            result.spacingUnit = spacing
+        }
+    }
+}
+
+extension UIFont.Weight {
+    /// Parses a CSS font-weight string ("100"-"900") to UIFont.Weight.
+    static func fromCssValue(_ s: String) -> UIFont.Weight? {
+        guard let n = Int(s.trimmingCharacters(in: .whitespaces)), (100...900).contains(n) else { return nil }
+        switch n {
+        case 100: return .thin
+        case 200: return .ultraLight
+        case 300: return .light
+        case 400: return .regular
+        case 500: return .medium
+        case 600: return .semibold
+        case 700: return .bold
+        case 800: return .heavy
+        case 900: return .black
+        default: return nil
+        }
+    }
+}
+
 extension UIColor {
     convenience init(hex: UInt) {
         let r = hex >> 16 & 0xFF
@@ -367,5 +522,14 @@ extension UIColor {
                   green: CGFloat(g) / 255,
                   blue: CGFloat(b) / 255,
                   alpha: 1)
+    }
+
+    convenience init?(hexString: String) {
+        let cleaned = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        guard let value = UInt(cleaned, radix: 16) else { return nil }
+        let r = (value >> 16) & 0xFF
+        let g = (value >> 8) & 0xFF
+        let b = value & 0xFF
+        self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: 1)
     }
 }

@@ -5,6 +5,7 @@
 //  Created by Chris Mays on 8/26/24.
 //
 
+import StripeConnect
 import SwiftUI
 
 struct AppSettingsView: View {
@@ -14,6 +15,8 @@ struct AppSettingsView: View {
 
     // App info is sometimes nil, if for example it fails to load.
     var appInfo: AppInfo?
+    /// When present (e.g. when Settings is opened from the main demo screen), theme can be configured here.
+    var componentManager: EmbeddedComponentManager?
 
     @State var selectedMerchant: MerchantInfo?
     @State var serverURLString: String = AppSettings.shared.selectedServerBaseURL
