@@ -3,7 +3,7 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
@@ -516,9 +516,10 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loaded2], timeout: 2)
     }
 
-    func testCheckoutSessionWithCustomerConfigurationThrowsError() {
+    @MainActor func testCheckoutSessionWithCustomerConfigurationThrowsError() {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
         let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        let checkout = Checkout._testValue(session: checkoutSession)
 
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = stubbedAPIClient()
@@ -527,7 +528,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let loaded = expectation(description: "Loaded")
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkoutSession(checkout),
             configuration: configuration,
             analyticsHelper: ._testValue(integrationShape: .complete),
             integrationShape: .paymentSheet

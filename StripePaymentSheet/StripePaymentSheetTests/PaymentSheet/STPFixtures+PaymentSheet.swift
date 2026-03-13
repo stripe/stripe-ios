@@ -232,8 +232,8 @@ extension STPElementsSession {
                 return setupIntent.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
             case .deferredIntent(let intentConfig):
                 return intentConfig.paymentMethodTypes ?? []
-            case .checkoutSession(let checkoutSession):
-                return checkoutSession.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
+            case .checkoutSession(let checkout):
+                return checkout.stpSession?.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" } ?? []
             }
         }()
         var customerSessionData: [String: Any]?
@@ -261,6 +261,16 @@ extension STPElementsSession {
             paymentMethods: paymentMethods,
             linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled
         )
+    }
+}
+
+extension Checkout {
+    /// Creates a `Checkout` pre-populated with the given `STPCheckoutSession` for testing.
+    @MainActor
+    static func _testValue(session: STPCheckoutSession) -> Checkout {
+        let checkout = Checkout(clientSecret: (session.stripeId ?? "cs_test") + "_secret_test")
+        checkout.stpSession = session
+        return checkout
     }
 }
 
@@ -296,6 +306,7 @@ extension Intent {
         return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in return "" }))
     }
 
+    @MainActor
     static func _testCheckoutSession(
         mode: Checkout.Mode = .payment,
         amount: Int? = 2345,
@@ -331,7 +342,7 @@ extension Intent {
             ]
         }
         let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
-        return .checkoutSession(checkoutSession)
+        return .checkoutSession(Checkout._testValue(session: checkoutSession))
     }
 }
 

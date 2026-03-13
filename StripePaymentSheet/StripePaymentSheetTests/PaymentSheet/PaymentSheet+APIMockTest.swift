@@ -8,7 +8,7 @@ import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 
@@ -294,7 +294,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
-    func testCheckoutSessionConfirmWithNewPaymentMethodViaLink() {
+    @MainActor func testCheckoutSessionConfirmWithNewPaymentMethodViaLink() {
         let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
 
         // In non-passthrough mode, Link payment details are converted to params and
@@ -349,10 +349,11 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
             )
         )
 
+        let checkout = Checkout._testValue(session: checkoutSession)
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkoutSession(checkout),
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,

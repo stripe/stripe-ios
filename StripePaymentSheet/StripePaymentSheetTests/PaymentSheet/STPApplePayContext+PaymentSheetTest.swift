@@ -441,7 +441,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     // MARK: - CheckoutSession Tests
 
-    func testCreatePaymentRequest_CheckoutSession_PaymentMode() {
+    @MainActor func testCreatePaymentRequest_CheckoutSession_PaymentMode() {
         let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
         XCTAssertEqual(sut.paymentSummaryItems[0].amount, 23.45)
@@ -456,7 +456,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 #endif
     }
 
-    func testCreatePaymentRequest_CheckoutSession_SetupMode() {
+    @MainActor func testCreatePaymentRequest_CheckoutSession_SetupMode() {
         let intent = Intent._testCheckoutSession(mode: .setup, amount: nil, currency: "USD")
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
         XCTAssertEqual(sut.paymentSummaryItems[0].amount, .zero)
@@ -471,7 +471,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 #endif
     }
 
-    func testCreatePaymentRequest_CheckoutSession_SetupMode_WithZeroAmount() {
+    @MainActor func testCreatePaymentRequest_CheckoutSession_SetupMode_WithZeroAmount() {
         // Real server returns total_summary with total: 0 for setup mode
         let intent = Intent._testCheckoutSession(mode: .setup, amount: 0, currency: "USD")
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)

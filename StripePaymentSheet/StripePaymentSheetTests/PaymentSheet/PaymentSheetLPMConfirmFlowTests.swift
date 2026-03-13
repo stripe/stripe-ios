@@ -1053,7 +1053,7 @@ extension PaymentSheetLPMConfirmFlowTests {
             intents = [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent - client side confirmation", makeDeferredIntent(deferredCSC)),
-                ("CheckoutSession", .checkoutSession(checkoutSession)),
+                ("CheckoutSession", .checkoutSession(Checkout._testValue(session: checkoutSession))),
             ]
             guard paymentMethod != .blik else {
                 // Blik doesn't support server-side confirmation
@@ -1299,7 +1299,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 ("Deferred SetupIntent - server side confirmation", makeDeferredIntent(deferredSSC)),
                 ("Deferred SetupIntent - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                 ("Deferred SetupIntent - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
-                ("CheckoutSession", .checkoutSession(checkoutSession)),
+                ("CheckoutSession", .checkoutSession(Checkout._testValue(session: checkoutSession))),
             ]
         }
     }
