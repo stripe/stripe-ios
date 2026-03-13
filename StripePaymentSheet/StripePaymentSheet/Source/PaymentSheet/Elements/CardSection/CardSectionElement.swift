@@ -270,9 +270,6 @@ final class CardSectionElement: ContainerElement {
 
     // MARK: Card brand choice
     lazy var cbcTooltip = TooltipContainerView(theme: theme)
-    /// Latches `true` once the user selects a brand; suppresses the tooltip if they later
-    /// toggle the selection off. Reset when the set of available brands changes.
-    private var hasInteractedWithCBCElement = false
     private var cardBrands = Set<STPCardBrand>()
     func fetchAndUpdateCardBrands() {
         // Only fetch card brands if we have at least 8 digits in the pan
@@ -280,7 +277,6 @@ final class CardSectionElement: ContainerElement {
             // Clear any previously fetched card brands from the card brand selector
             if !self.cardBrands.isEmpty {
                 self.cardBrands = Set<STPCardBrand>()
-                self.hasInteractedWithCBCElement = false
                 cardBrandChoiceElement?.update(cardBrands: self.cardBrands, disallowedCardBrands: Set<STPCardBrand>())
                 self.panElement.setText(self.panElement.text) // Hack to get the accessory view to update
             }
@@ -306,7 +302,6 @@ final class CardSectionElement: ContainerElement {
 
             if self.cardBrands != fetchedCardBrands {
                 self.cardBrands = fetchedCardBrands
-                self.hasInteractedWithCBCElement = false
                 let disallowedCardBrands = fetchedCardBrands.filter { !self.cardBrandFilter.isAccepted(cardBrand: $0) }
 
                 cardBrandChoiceElement.update(
@@ -326,15 +321,9 @@ final class CardSectionElement: ContainerElement {
     /// Show the tooltip when the PAN field is in focus, the card brand selector is visible (multiple brands),
     /// no brand has been selected, and at least one brand is allowed. Hide it otherwise.
     private func updateCBCTooltipVisibility() {
-        if cardBrandChoiceElement?.selectedBrand != nil {
-            hasInteractedWithCBCElement = true
-        }
-
-        let hasAllowedBrand = !cardBrands.filter({ cardBrandFilter.isAccepted(cardBrand: $0) }).isEmpty
         let shouldShow = panElement.isEditing
-            && cardBrands.count > 1
-            && !hasInteractedWithCBCElement
-            && hasAllowedBrand
+            && (cardBrandChoiceElement?.allowedBrandCount ?? 0) > 1
+            && !(cardBrandChoiceElement?.hasBeenTapped ?? false)
 
         // If the CBC tooltip has not been installed in the view, set it up
         if cbcTooltip.superview == nil {

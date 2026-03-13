@@ -18,12 +18,12 @@ import UIKit
 final class CardBrandChoiceElement: Element {
     weak var delegate: ElementDelegate?
 
-    private enum Variant {
+    enum Variant {
         case selector(SegmentedSelectorElement)
         case dropdown(DropdownFieldElement)
     }
 
-    private let variant: Variant
+    let variant: Variant
 
     var view: UIView {
         switch variant {
@@ -61,6 +61,16 @@ final class CardBrandChoiceElement: Element {
         case .dropdown(let element):
             guard !element.selectedItem.isPlaceholder else { return nil }
             return STPCard.brand(from: element.selectedItem.rawData)
+        }
+    }
+
+    // Expose whether the user has tapped the selector for determining if tooltip should be shown
+    var hasBeenTapped: Bool {
+        switch variant {
+        case .selector(let element):
+            return element.hasBeenTapped
+        case .dropdown:
+            return false
         }
     }
 
@@ -171,7 +181,7 @@ extension CardBrandChoiceElement: ElementDelegate {
     }
 }
 
-private extension STPCardBrand {
+extension STPCardBrand {
     func makeCardBrandItem() -> SegmentedSelectorItem {
         return SegmentedSelectorItem(
             rawData: STPCardBrandUtilities.apiValue(from: self),

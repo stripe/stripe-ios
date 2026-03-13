@@ -33,6 +33,16 @@ class CardSectionElementTest: XCTestCase {
         )
     }
 
+    /// Simulates a user tap on a brand
+    private func simulateTap(_ cardBrandChoiceElement: CardBrandChoiceElement?, brand: STPCardBrand?) {
+        guard case .selector(let element) = cardBrandChoiceElement?.variant,
+              let brand = brand else {
+            XCTFail("Expected selector variant non-nil brand to tap")
+            return
+        }
+        element.didTap(brand.makeCardBrandItem())
+    }
+
     // MARK: - Preferred networks
 
     func testPreferredNetwork_selectsPreferredBrand() {
@@ -131,6 +141,19 @@ class CardSectionElementTest: XCTestCase {
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
     }
 
+    func testTooltip_showsWhenPreselected() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let cardSection = makeCardSectionElement(preferredNetworks: [.cartesBancaires, .visa])
+        _ = beginEditingPAN(cardSection)
+
+        cardSection.panElement.setText(cbcVisaTestCard)
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .cartesBancaires)
+        XCTAssertNotNil(cardSection.cbcTooltip.superview)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
+    }
+
     func testTooltip_hidesWhenNotEditing() {
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(true) }
@@ -168,13 +191,13 @@ class CardSectionElementTest: XCTestCase {
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
 
-        cardSection.cardBrandChoiceElement?.select(.visa)
+        simulateTap(cardSection.cardBrandChoiceElement, brand: .visa)
         cardSection.didUpdate(element: cardSection.panElement)
 
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
     }
 
-    func testTooltip_reappearsAfterBrandsReset() {
+    func testTooltip_doesNotReappearAfterBrandsReset() {
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(true) }
 
@@ -182,16 +205,16 @@ class CardSectionElementTest: XCTestCase {
         _ = beginEditingPAN(cardSection)
 
         cardSection.panElement.setText(cbcVisaTestCard)
-        cardSection.cardBrandChoiceElement?.select(.visa)
+        simulateTap(cardSection.cardBrandChoiceElement, brand: .visa)
         cardSection.didUpdate(element: cardSection.panElement)
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
 
-        // Clear PAN to reset brands and the hasBrandBeenSelected latch
+        // Clear PAN to reset brands
         cardSection.panElement.setText("")
-        // Re-enter CBC card — tooltip should reappear
+        // Re-enter CBC card — tooltip should still not reappear
         cardSection.panElement.setText(cbcVisaTestCard)
 
-        XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
     }
 
     func testTooltip_hiddenWhenAllDisabled() {
