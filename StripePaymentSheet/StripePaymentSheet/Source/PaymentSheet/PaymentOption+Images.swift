@@ -265,7 +265,7 @@ extension STPPaymentMethodType {
             case .satispay:
                 return .pm_type_satispay
             case .payByBank:
-                return .pm_type_us_bank
+                return .pm_type_paybybank
             case .wero:
                 return .pm_type_wero
             case .sunbit:
