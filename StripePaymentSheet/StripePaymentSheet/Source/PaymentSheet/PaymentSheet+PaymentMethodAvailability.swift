@@ -42,6 +42,7 @@ extension PaymentSheet {
         .multibanco,
         .payPay,
         .wero,
+        .payByBank,
     ]
 
     /// A list of `STPPaymentMethodType` that can be saved in PaymentSheet

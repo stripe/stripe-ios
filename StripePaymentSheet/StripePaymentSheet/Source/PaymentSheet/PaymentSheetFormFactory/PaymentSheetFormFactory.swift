@@ -263,6 +263,8 @@ class PaymentSheetFormFactory {
                 return makeiDEAL()
             } else if paymentMethod == .wero {
                 return makeWero()
+            } else if paymentMethod == .payByBank {
+                return makePayByBank()
             }
 
             guard let spec = FormSpecProvider.shared.formSpec(for: paymentMethod.identifier) else {
@@ -745,6 +747,17 @@ extension PaymentSheetFormFactory {
 
     func makeWero() -> PaymentMethodElement {
         let country = makeCountry(countryCodes: ["DE", "BE", "FR"])
+        let contactInfoSection = makeContactInformationSection(
+            nameRequiredByPaymentMethod: false,
+            emailRequiredByPaymentMethod: false,
+            phoneRequiredByPaymentMethod: false
+        )
+        let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
+        return FormElement(autoSectioningElements: [country, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
+    }
+
+    func makePayByBank() -> PaymentMethodElement {
+        let country = makeCountry(countryCodes: ["GB"])
         let contactInfoSection = makeContactInformationSection(
             nameRequiredByPaymentMethod: false,
             emailRequiredByPaymentMethod: false,

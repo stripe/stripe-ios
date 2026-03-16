@@ -244,6 +244,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.Wero.paymentIntent) { _ in }
     }
 
+    func testPayByBankConfirmFlows() async throws {
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "GBP",
+                               paymentMethodType: .payByBank,
+                               merchantCountry: .GB,
+                               expectedHierarchy: ExpectedFormHierarchy.PayByBank.paymentIntent) { _ in }
+    }
+
     func testCryptoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
@@ -1433,7 +1441,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         // we'll preserve existing behavior until the next major version.
         // Wero's country dropdown is a required payment method field (selects which country's banking system to redirect to),
         // not a billing detail, so it's always shown regardless of billing details collection configuration.
-        if ![.klarna, .wero].contains(paymentMethodType) {
+        if ![.klarna, .wero, .payByBank].contains(paymentMethodType) {
             XCTAssertNil(form.getDropdownFieldElement("Country or region"))
         }
         XCTAssertNil(form.getTextFieldElement(addressSpec.zipNameType.localizedLabel))

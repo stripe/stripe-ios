@@ -96,6 +96,8 @@ import Foundation
     @_spi(STP) case shopPay
     /// A PayPay payment method
     case payPay
+    /// A Pay by Bank payment method
+    case payByBank
     /// A Wero payment method
     case wero
     /// An unknown type.
@@ -192,6 +194,8 @@ import Foundation
             return "ShopPay"
         case .payPay:
             return "PayPay"
+        case .payByBank:
+            return "Pay by Bank"
         case .wero:
             return "Wero"
         case .cardPresent,
@@ -291,6 +295,8 @@ import Foundation
             return "shop_pay"
         case .payPay:
             return "paypay"
+        case .payByBank:
+            return "pay_by_bank"
         case .wero:
             return "wero"
         }
