@@ -63,9 +63,9 @@ final class PaymentSheetLoader {
         integrationShape: IntegrationShape,
         isUpdate: Bool = false
     ) async throws -> LoadResult {
-        let loadTimings: LoadTimings = .init()
+        let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
-        analyticsHelper.logLoadStarted()
+        analyticsHelper.logLoadStarted(isUpdate: isUpdate)
         loadTimings.logEnd("logLoadStarted")
         // Note loadTimings isn't on PaymentSheetAnalyticsHelper because of an issue where multiple `update` calls can trigger concurrent loads, overwriting the storage of the single analytics helper. We need storage specific to *this* load.
         do {
@@ -209,11 +209,12 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                 orderedPaymentMethodTypes: paymentMethodTypes,
-                loadTimings: loadTimings
+                loadTimings: loadTimings,
+                isUpdate: isUpdate
             )
             return loadResult
         } catch {
-            analyticsHelper.logLoadFailed(error: error, loadTimings: loadTimings)
+            analyticsHelper.logLoadFailed(error: error, loadTimings: loadTimings, isUpdate: isUpdate)
             throw error
         }
     }
@@ -580,7 +581,13 @@ extension PaymentSheetLoader {
     @MainActor
     class LoadTimings {
         static var shouldPrintLogs: Bool = false
+        let loadingStartDate: Date
         private var timings: [String: (start: TimeInterval, end: TimeInterval)] = [:]
+
+        init(loadingStartDate: Date? = nil) {
+            self.loadingStartDate = loadingStartDate ?? Date()
+        }
+
         var jsonObject: [String: Any] {
             timings.mapValues {
                 // Convert to milliseconds because IDK if stuff like `5.9604644775390625e-06` will be a pain to deal with in our hubble queries.
