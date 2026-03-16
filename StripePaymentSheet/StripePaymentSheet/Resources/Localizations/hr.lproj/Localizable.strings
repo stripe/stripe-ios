@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Nastavkom ovlašćujete da %@ automatski tereti vaš saldo Satispay na ponavljajućoj osnovi u skladu s vašim planom kupnje ili pretplate.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Nastavkom ovlašćujete %@ da automatski tereti vaš saldo Twint na redovitoj osnovi u skladu s vašom kupnjom ili planom pretplate.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ako nastavite, autorizirate %1$@ da tereti vaš račun Cash App za ovo plaćanje i buduća plaćanja u skladu s uvjetima poduzeća %2$@, dok se ova autorizacija ne opozove. Ovo možete promijeniti bilo kada u postavkama aplikacije Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prisupanjem u Link, prihvaćate <terms>Uvjete</terms> i <privacy>Pravila privatnosti</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Podaci o kartici ne mogu se mijenjati.";
 
 "Change" = "Promijeni";
+
+"Choose a card brand" = "Odaberite marku kartice";
 
 "Choose a payment method" = "Odaberite način plaćanja";
 

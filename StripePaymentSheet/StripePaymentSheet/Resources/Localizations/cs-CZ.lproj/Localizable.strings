@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Pokračováním opravňujete společnost %@ k automatickému opakovanému strhávání částky z vašeho zůstatku na účtu Satispay podle vaší objednávky nebo zvoleného předplatného.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Pokračováním opravňujete společnost %@ k automatickému opakovanému strhávání částky z vašeho zůstatku na účtu Twint podle vaší objednávky nebo zvoleného předplatného.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračováním povolujete, %1$@ aby odepisovala z vašeho účtu Cash App tuto platbu a budoucí platby v souladu s podmínkami společnosti %2$@, dokud toto oprávnění neodvoláte. Toto oprávnění můžete kdykoli změnit v nastavení aplikace Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Připojením se ke službám Link vyjadřujete zároveň svůj souhlas s <terms>Podmínkami</terms> a <privacy>Zásadami ochrany osobních údajů</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Údaje na kartě nelze měnit.";
 
 "Change" = "Změnit";
+
+"Choose a card brand" = "Vyberte značku karty";
 
 "Choose a payment method" = "Zvolte platební metodu";
 

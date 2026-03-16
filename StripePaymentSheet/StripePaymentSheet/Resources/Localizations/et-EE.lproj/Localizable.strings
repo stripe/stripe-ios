@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Jätkates annate loa, et %@ debiteerib regulaarselt teie Satispay Balance'i kontot vastavalt teie ostule või tellimusplaanile.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Jätkates lubate %@ automaatselt oma Twint Balance'i debeteerida vastavalt ostu- või kordustellimusplaanile.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Jätkamisel volitate %1$@ debiteerima teie Cash Appi kontot selle makse ja tulevaste maksete eest vastavalt ettevõtte %2$@ tingimustele, kuni see volitus tühistatakse. Saate seda igal ajal oma Cash rakenduse seadetes muuta.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Kaardi andmeid ei saa muuta.";
 
 "Change" = "Muuda";
+
+"Choose a card brand" = "Vali kaardibränd";
 
 "Choose a payment method" = "Valige makseviis";
 

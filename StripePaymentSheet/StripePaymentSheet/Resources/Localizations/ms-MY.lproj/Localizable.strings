@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Dengan meneruskan, anda membenarkan %@ untuk mendebitkan Baki Satispay anda secara automatik dan berulang mengikut pembelian atau pelan langganan anda.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Dengan meneruskan, anda memberi kuasa kepada %@ untuk mendebitkan Baki Twint anda secara berulang secara automatik mengikut pelan pembelian atau langganan anda.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan meneruskan langkah, anda mengizinkan %1$@ untuk mendebitkan akaun Cash App anda bagi pembayaran ini dan pembayaran masa hadapan menurut terma %2$@, sehinggalah keizinan ini dibatalkan. Anda boleh mengubah keizinan ini pada bila-bila masa dalam Tetapan Cash App anda.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan menyertai Link, anda bersetuju dengan <terms>Terma</terms> dan <privacy>Dasar Privasi</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Butiran kad tidak boleh diubah.";
 
 "Change" = "Ubah";
+
+"Choose a card brand" = "Pilih jenama kad";
 
 "Choose a payment method" = "Pilih kaedah pembayaran";
 
