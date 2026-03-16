@@ -169,6 +169,18 @@ extension PaymentSheet {
         let isSettingUp: (STPPaymentMethodType) -> Bool = { paymentMethodType in
             intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
         }
+        let setAllowRedisplay: (IntentConfirmParams, STPPaymentMethodType) -> Void = { confirmParams, paymentMethodType in
+            if case .checkoutSession = intent {
+                confirmParams.setAllowRedisplayForCheckoutSession(
+                    isSettingUp: isSettingUp(paymentMethodType)
+                )
+            } else {
+                confirmParams.setAllowRedisplay(
+                    mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
+                    isSettingUp: isSettingUp(paymentMethodType)
+                )
+            }
+        }
 
         switch paymentOption {
         // MARK: - Apple Pay
@@ -201,10 +213,7 @@ extension PaymentSheet {
                     }
                 }()
                 // Set allow_redisplay on params
-                confirmParams.setAllowRedisplay(
-                    mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                    isSettingUp: isSettingUp(paymentMethodType)
-                )
+                setAllowRedisplay(confirmParams, paymentMethodType)
                 confirmParams.paymentMethodParams.radarOptions = radarOptions
                 confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                 switch intent {
@@ -666,18 +675,12 @@ extension PaymentSheet {
                         STPAnalyticsClient.sharedClient.logLinkSignupComplete()
                         let linkPaymentMethodType: STPPaymentMethodType = elementsSession.linkPassthroughModeEnabled ? intentConfirmParams.paymentMethodParams.type : .link
                         // Set allow_redisplay on params
-                        intentConfirmParams.setAllowRedisplay(
-                            mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                            isSettingUp: isSettingUp(linkPaymentMethodType)
-                        )
+                        setAllowRedisplay(intentConfirmParams, linkPaymentMethodType)
                         createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
                         // Attempt to confirm directly with params as a fallback.
-                        intentConfirmParams.setAllowRedisplay(
-                            mobilePaymentElementFeatures: elementsSession.customerSessionMobilePaymentElementFeatures,
-                            isSettingUp: isSettingUp(intentConfirmParams.paymentMethodParams.type)
-                        )
+                        setAllowRedisplay(intentConfirmParams, intentConfirmParams.paymentMethodParams.type)
                         confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
                     }
                 }

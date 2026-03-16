@@ -194,6 +194,17 @@ final class IntentConfirmParams {
         }
     }
 
+    func setAllowRedisplayForCheckoutSession(isSettingUp: Bool) {
+        switch saveForFutureUseCheckboxState {
+        case .selected:
+            paymentMethodParams.allowRedisplay = .always
+        case .deselected:
+            paymentMethodParams.allowRedisplay = isSettingUp ? .limited : .unspecified
+        case .hidden:
+            paymentMethodParams.allowRedisplay = .unspecified
+        }
+    }
+
     func setAllowRedisplayForCustomerSheet(_ savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior) {
         if savePaymentMethodConsentBehavior == .legacy {
             paymentMethodParams.allowRedisplay = .unspecified

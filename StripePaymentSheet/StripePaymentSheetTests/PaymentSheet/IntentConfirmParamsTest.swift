@@ -143,6 +143,25 @@ class IntentConfirmParamsTest: XCTestCase {
         XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
 
+    // MARK: CheckoutSession
+    func testSetAllowRedisplayForCheckoutSession_SI_deselected() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        intentConfirmParams.saveForFutureUseCheckboxState = .deselected
+
+        intentConfirmParams.setAllowRedisplayForCheckoutSession(isSettingUp: true)
+
+        XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+
+    func testSetAllowRedisplayForCheckoutSession_PI_selected() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        intentConfirmParams.saveForFutureUseCheckboxState = .selected
+
+        intentConfirmParams.setAllowRedisplayForCheckoutSession(isSettingUp: false)
+
+        XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+
     // MARK: CustomerSheet
     func testSetAllowRedisplayForCustomerSheet_legacy() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))

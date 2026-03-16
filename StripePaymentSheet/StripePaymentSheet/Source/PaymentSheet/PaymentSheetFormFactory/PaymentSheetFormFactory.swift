@@ -60,6 +60,10 @@ class PaymentSheetFormFactory {
             return false
         case .paymentSheetWithCustomerSessionPaymentMethodSaveEnabled:
             return !signupOptInFeatureEnabled && configuration.hasCustomer && paymentMethod.supportsSaveForFutureUseCheckbox()
+        case .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled:
+            return false
+        case .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled:
+            return !signupOptInFeatureEnabled && paymentMethod.supportsSaveForFutureUseCheckbox()
         case .customerSheetWithCustomerSession:
             return false
         }
@@ -128,7 +132,7 @@ class PaymentSheetFormFactory {
                   isSettingUp: intent.isSetupFutureUsageSet(for: paymentMethodType),
                   countryCode: elementsSession.countryCode,
                   currency: intent.currency,
-                  savePaymentMethodConsentBehavior: elementsSession.savePaymentMethodConsentBehavior,
+                  savePaymentMethodConsentBehavior: Self.makeSavePaymentMethodConsentBehavior(intent: intent, elementsSession: elementsSession),
                   allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                   allowsLinkDefaultOptIn: elementsSession.allowsLinkDefaultOptIn,
                   forceSaveFutureUseBehavior: elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
@@ -408,8 +412,13 @@ extension PaymentSheetFormFactory {
                 // Use the previous customer input checkbox state if it was shown
                 return previousCustomerInput.saveForFutureUseCheckboxState == .selected
             } else {
-                // Otherwise, use the default selected state
-                return configuration.savePaymentMethodOptInBehavior.isSelectedByDefault
+                switch savePaymentMethodConsentBehavior {
+                case .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled(let isSelectedByDefault):
+                    return isSelectedByDefault
+                default:
+                    // Otherwise, use the default selected state
+                    return configuration.savePaymentMethodOptInBehavior.isSelectedByDefault
+                }
             }
         }()
         let element = CheckboxElement(
@@ -1033,7 +1042,26 @@ extension PaymentSheetFormFactory {
         case legacy
         case paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
         case paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
+        case paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
+        case paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled(isSelectedByDefault: Bool)
         case customerSheetWithCustomerSession
+    }
+
+    static func makeSavePaymentMethodConsentBehavior(
+        intent: Intent,
+        elementsSession: STPElementsSession
+    ) -> SavePaymentMethodConsentBehavior {
+        guard case .checkoutSession(let checkoutSession) = intent else {
+            return elementsSession.savePaymentMethodConsentBehavior
+        }
+
+        guard let offerSave = checkoutSession.savedPaymentMethodsOfferSave, offerSave.enabled else {
+            return .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
+        }
+
+        return .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled(
+            isSelectedByDefault: offerSave.status == .accepted
+        )
     }
 }
 
