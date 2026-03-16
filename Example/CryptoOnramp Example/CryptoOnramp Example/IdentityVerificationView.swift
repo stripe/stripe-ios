@@ -41,7 +41,7 @@ struct IdentityVerificationView: View {
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Text("Before you can check out, you’ll need to complete identity verification. Link will ask for:")
+                    Text("You’re almost done! To complete identity verification, Link will ask for:")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
