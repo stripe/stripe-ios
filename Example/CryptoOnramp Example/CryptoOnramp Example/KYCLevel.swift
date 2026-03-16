@@ -42,11 +42,8 @@ enum KYCLevel {
         }
     }
 
-    var requiresDateOfBirthAndIdNumber: Bool {
-        includesLevel1
-    }
-
-    var requiresIdentityDocumentCollection: Bool {
+    /// Whether the receiver is level 2 or higher.
+    var includesLevel2: Bool {
         switch self {
         case .level2:
             return true
