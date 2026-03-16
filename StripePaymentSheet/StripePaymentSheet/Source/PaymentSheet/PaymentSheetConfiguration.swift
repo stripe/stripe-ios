@@ -218,9 +218,6 @@ extension PaymentSheet {
         /// - Note: Internal code should use this property instead of `paymentMethodLayout`.
         internal private(set) var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout?
 
-        /// If true, use the new inline card brand selector UI instead of a dropdown
-        @_spi(STP) public var enableCBCRedesign: Bool = false
-
         /// By default, PaymentSheet will accept all supported cards by Stripe.
         /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
         /// Note: For Apple Pay, the list of supported card brands is determined by combining `StripeAPI.supportedPKPaymentNetworks()` with `StripeAPI.additionalEnabledApplePayNetworks` and then applying the `cardBrandAcceptance` filter. This filtered list is then assigned to `PKPaymentRequest.supportedNetworks`, ensuring that only the allowed card brands are available for Apple Pay transactions. Any `PKPaymentNetwork` that does not correspond to a `BrandCategory` will be blocked if you have specified an allow list, or will not be blocked if you have specified a disallow list.
@@ -244,9 +241,6 @@ extension PaymentSheet {
         /// By default, the card form will provide a button to open the card scanner.
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
-
-        /// If true, an invisible challenge will be performed for human verification
-        @_spi(STP) public var enablePassiveCaptcha: Bool = false
 
         /// If true, device will attest and assert on confirmation requests
         @_spi(STP) public var enableAttestationOnConfirmation: Bool = false
