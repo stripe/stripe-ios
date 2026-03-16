@@ -22,6 +22,7 @@ enum KYCLevel {
     /// Level 1 fields + id document verification.
     case level2
 
+    /// Whether the receiver is level 0 or higher.
     var includesLevel0: Bool {
         switch self {
         case .none:
@@ -31,6 +32,7 @@ enum KYCLevel {
         }
     }
 
+    /// Whether the receiver is level 1 or higher.
     var includesLevel1: Bool {
         switch self {
         case .level1, .level2:
