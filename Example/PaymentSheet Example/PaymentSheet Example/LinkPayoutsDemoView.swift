@@ -16,9 +16,9 @@ struct LinkPayoutsDemoView: View {
     @State private var webViewURL: URL?
     @State private var lastOnboardingURL: URL?
 
-    private let callbackHost = "example.com"
-    private let callbackPath = "/link-onboarding"
-    private let callbackURL = "https://example.com/link-onboarding"
+    private let callbackHost = "iron-demo-git-mbryant-csp.vercelapp.stripe.dev"
+    private let callbackPath = "/iron/callback"
+    private let callbackURL = "https://iron-demo-git-mbryant-csp.vercelapp.stripe.dev/iron/callback"
     private let testPublishableKey = "pk_test_51SDsD6CqcrCW3xmZyjsGLU4mk6x9JYlcmcD7mPCzFTevC27Nli6eTrCoG5ziuVCYVuOKA1tHu9RCZxyMnExikeDP00n1ngMsjy"
     private let livePublishableKey = "pk_live_51Sz01tI5I3AL1Ogx3tk3ejSuSYZsKN2d4KWmNBU7sKfaXmEfDdLWg3yMQ17kN8OlwHjphgU3rEduWDaDvUj4NoKJ00zeeD5lb1"
 
