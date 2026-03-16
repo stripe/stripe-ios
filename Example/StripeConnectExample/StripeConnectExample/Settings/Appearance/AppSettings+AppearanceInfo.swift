@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import StripeConnect
+@_spi(PreviewConnect) import StripeConnect
 import UIKit
 
 extension AppSettings {
@@ -362,7 +362,7 @@ extension AppearanceInfo {
 }
 
 extension AppSettings {
-    /// Applies custom theme values (from UserDefaults) on top of a base appearance. Empty values leave the base unchanged.
+    // Applies custom theme values (from UserDefaults) on top of a base appearance. Empty values leave the base unchanged.
     func applyCustomThemeValues(to base: EmbeddedComponentManager.Appearance) -> EmbeddedComponentManager.Appearance {
         var result = base
 
@@ -493,7 +493,7 @@ extension AppSettings {
 }
 
 extension UIFont.Weight {
-    /// Parses a CSS font-weight string ("100"-"900") to UIFont.Weight.
+    // Parses a font-weight string ("100"-"900") to UIFont.Weight.
     static func fromCssValue(_ s: String) -> UIFont.Weight? {
         guard let n = Int(s.trimmingCharacters(in: .whitespaces)), (100...900).contains(n) else { return nil }
         switch n {

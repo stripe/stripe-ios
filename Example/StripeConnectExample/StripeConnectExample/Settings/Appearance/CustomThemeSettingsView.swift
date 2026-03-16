@@ -17,19 +17,18 @@ struct CustomThemeSettingsView: View {
         componentManager?.update(appearance: AppSettings.shared.appearanceInfo.appearance)
     }
 
-    /// Binding to a custom theme field in UserDefaults; updates preview when value changes.
-    private func customThemeBinding(_ keyPath: WritableKeyPath<AppSettings, String>) -> Binding<String> {
-        let settings = AppSettings.shared
+    // Binding to a custom theme field in UserDefaults. Updates theme when value changes.
+    private func customThemeBinding(_ keyPath: ReferenceWritableKeyPath<AppSettings, String>) -> Binding<String> {
         return Binding(
-            get: { settings[keyPath: keyPath] },
+            get: { AppSettings.shared[keyPath: keyPath] },
             set: { newValue in
-                settings[keyPath: keyPath] = newValue
+                AppSettings.shared[keyPath: keyPath] = newValue
                 self.updateComponentManager()
             }
         )
     }
 
-    /// Helper view that wraps TextInput and updates the theme instantly
+    // Helper that wraps TextInput and updates the theme instantly
     private func UpdateTextInput(label: String, placeholder: String, text: Binding<String>) -> some View {
         TextInput(label: label, placeholder: placeholder, text: text)
             .onChange(of: text.wrappedValue) { _ in
