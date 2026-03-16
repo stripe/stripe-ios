@@ -115,8 +115,9 @@ import XCTest
                         "eid=", // Ephemeral ID, random UUID
                         "browser_locale", // Locale varies by machine
                         "browser_timezone", // Timezone varies by machine
-                        "\\[locale\\]", // Nested locale param varies by machine
-                        "\\[mobile_app_id\\]", // App bundle ID varies by test target
+                        "\\[locale]", // Nested locale param varies by machine
+                        "\\[mobile_app_id]", // App bundle ID varies by test target
+                        "\\[mobile_session_id]", // Session ID varies by run
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
                 }
