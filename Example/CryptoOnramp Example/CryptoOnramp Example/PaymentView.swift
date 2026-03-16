@@ -836,9 +836,9 @@ struct PaymentView: View {
 
         if errorDescription.contains(KYCStepUpErrorCodes.missingIdentityVerification) {
             guard !currentLevel.includesLevel1 else {
-                /// We’re being told to L1 fields are missing, but customer information
-                /// includes L1 fields. This is an unexpected error scenario, and the user
-                /// should try again.
+                // We’re being told L1 fields are missing, but customer information
+                // includes L1 fields. This is an unexpected error scenario, and the user
+                // should try again.
                 return nil
             }
 
@@ -848,9 +848,9 @@ struct PaymentView: View {
 
         if errorDescription.contains(KYCStepUpErrorCodes.missingDocumentVerification) {
             guard !currentLevel.includesLevel2 else {
-                /// We’re being told L2 is required, but identity document verification
-                /// is already complete. This is an unexpected error scenario, and the
-                /// user should try again.
+                // We’re being told L2 is required, but identity document verification
+                // is already complete. This is an unexpected error scenario, and the
+                // user should try again.
                 return nil
             }
 
