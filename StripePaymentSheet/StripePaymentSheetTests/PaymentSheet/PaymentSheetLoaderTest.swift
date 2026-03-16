@@ -64,11 +64,10 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                 // Verify load_timings is present in mc_load_succeeded event
                 let loadSucceededEvents = STPAnalyticsClient.sharedClient._testLogHistory.filter { $0["event"] as? String == "mc_load_succeeded" }
                 XCTAssertEqual(loadSucceededEvents.count, 1, "Should have exactly one mc_load_succeeded event")
-                if let loadSucceededEvent = loadSucceededEvents.first {
-                    let loadTimings = loadSucceededEvent["load_timings"] as? [String: Int]
-                    XCTAssertNotNil(loadTimings, "load_timings should be present in mc_load_succeeded event")
-                    XCTAssertFalse(loadTimings?.isEmpty ?? true, "load_timings should not be empty")
-                }
+                let loadSucceededEvent = loadSucceededEvents.first!
+                let loadTimings = loadSucceededEvent["load_timings"] as? [String: Int]
+                XCTAssertNotNil(loadTimings, "load_timings should be present in mc_load_succeeded event")
+                XCTAssertFalse(loadTimings?.isEmpty ?? true, "load_timings should not be empty")
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
             }
