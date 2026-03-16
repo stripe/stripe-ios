@@ -322,13 +322,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum EnablePassiveCaptcha: String, PickerEnum {
-        static var enumName: String { "Enable passive captcha" }
-
-        case on
-        case off
-    }
-
     enum EnableAttestationOnConfirmation: String, PickerEnum {
         static var enumName: String { "Enable attestation on confirmation" }
 
@@ -720,7 +713,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayEnabled: ApplePayEnabled
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
-    var enablePassiveCaptcha: EnablePassiveCaptcha
     var enableAttestationOnConfirmation: EnableAttestationOnConfirmation
     var paymentMethodSave: PaymentMethodSave
     var allowRedisplayOverride: AllowRedisplayOverride
@@ -782,7 +774,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayEnabled: .on,
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
-            enablePassiveCaptcha: .on,
             enableAttestationOnConfirmation: .on,
             paymentMethodSave: .enabled,
             allowRedisplayOverride: .notSet,

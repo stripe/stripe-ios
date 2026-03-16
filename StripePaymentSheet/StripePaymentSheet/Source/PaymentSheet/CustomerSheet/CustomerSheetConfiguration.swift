@@ -88,9 +88,6 @@ extension CustomerSheet {
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
 
-        /// If true, an invisible challenge will be performed for human verification
-        @_spi(STP) public var enablePassiveCaptcha: Bool = false
-
         /// If true, device will attest and assert on confirmation requests
         @_spi(STP) public var enableAttestationOnConfirmation: Bool = false
 

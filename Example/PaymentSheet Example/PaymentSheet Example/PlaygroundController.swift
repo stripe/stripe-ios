@@ -210,10 +210,6 @@ import UIKit
             configuration.allowsDelayedPaymentMethods = true
         }
 
-        if settings.enablePassiveCaptcha == .on {
-            configuration.enablePassiveCaptcha = true
-        }
-
         if settings.enableAttestationOnConfirmation == .on {
             configuration.enableAttestationOnConfirmation = true
         }
@@ -342,10 +338,6 @@ import UIKit
 
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
-        }
-
-        if settings.enablePassiveCaptcha == .on {
-            configuration.enablePassiveCaptcha = true
         }
 
         if settings.enableAttestationOnConfirmation == .on {
