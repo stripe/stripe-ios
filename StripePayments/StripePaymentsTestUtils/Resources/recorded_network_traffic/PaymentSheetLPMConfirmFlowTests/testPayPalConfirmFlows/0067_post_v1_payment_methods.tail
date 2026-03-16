@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=6cWRcPPLPx55RKD-UooUpQHUtLkpJCiWzL4gnBE7h6FupAq5E5gD1eR9WC_6D0olJt2Wnf9_PX_p9gaV
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Uv2kdVz-c-FyzNAY3i3vh5N8Gfnl0mI36dpv7w5Sui2Ehyd_fE5kpS3tq1ucFAurJ7c9fcfBsBd1JmwL
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_JiDxQJh6OVPXFo
+request-id: req_Ox1mxGFkStmjeK
 Content-Length: 566
 Vary: Origin
-Date: Mon, 16 Mar 2026 15:52:45 GMT
-original-request: req_JiDxQJh6OVPXFo
+Date: Mon, 16 Mar 2026 18:40:17 GMT
+original-request: req_Ox1mxGFkStmjeK
 stripe-version: 2020-08-27
-idempotency-key: a430ca9a-f547-4c3c-98aa-74cba398a9ad
+idempotency-key: c67a4a7d-291b-4eae-b263-3de262bb822f
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -32,7 +32,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     "payer_id" : null,
     "payer_email" : null
   },
-  "id" : "pm_1TBdRhKG6vc7r7YCw8SzW20u",
+  "id" : "pm_1TBg3pKG6vc7r7YCakcLy2bX",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -48,7 +48,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1773676365,
+  "created" : 1773686417,
   "allow_redisplay" : "unspecified",
   "type" : "paypal",
   "customer" : null,

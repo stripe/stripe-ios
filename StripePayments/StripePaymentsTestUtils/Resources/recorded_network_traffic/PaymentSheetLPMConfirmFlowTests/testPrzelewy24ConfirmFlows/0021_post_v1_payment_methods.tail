@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=PIu1B-JhvgbsMRASOVr1WCmARiBN_JQCTQjRbRPHM8LAaO3MsOXWignJsdFBMghGi1JeUDGS7le9A9qr
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=-lJ-_yd8l4rXngQZFClkz2qA9OqVN6PA8zNaGAEvXtF7f-utgK8JxrdGU2Vm4waGLz3Vk53pRKlK5U1q
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_kq3zZYFuFSnrhw
+request-id: req_kcw7c5kzy3YMs7
 Content-Length: 535
 Vary: Origin
-Date: Mon, 16 Mar 2026 15:54:02 GMT
-original-request: req_kq3zZYFuFSnrhw
+Date: Mon, 16 Mar 2026 18:41:36 GMT
+original-request: req_kcw7c5kzy3YMs7
 stripe-version: 2020-08-27
-idempotency-key: 38ee0bac-7bf1-4636-b513-b3a1f359b354
+idempotency-key: d791a48b-2a56-4fda-b4f8-bf68b1f3fefa
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
   "p24" : {
     "bank" : "alior_bank"
   },
-  "id" : "pm_1TBdSwFY0qyl6XeWi5KnSYlN",
+  "id" : "pm_1TBg56FY0qyl6XeWS32DVe4T",
   "billing_details" : {
     "email" : "test@test.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     }
   },
   "livemode" : false,
-  "created" : 1773676442,
+  "created" : 1773686496,
   "allow_redisplay" : "unspecified",
   "type" : "p24",
   "customer" : null,

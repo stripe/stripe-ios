@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=pY-m9zDwE0b8V9GVywzOsqg1peTiVChA6ExAh9qF5f9uv-oo6-8pvqWMaWHK8-4ObM1m8K6ERCxvhtZA
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=AAWAftucBqe40LmPssFpHcNUQGAj9KqCRbfRTQyDmnb8k-MOOdaKwg2VY9-IiRg2NlNYIdxrFxcb3nOH
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_4Wrsuyf9ENlVwT
+request-id: req_2QbghWikBS0M9P
 Content-Length: 506
 Vary: Origin
-Date: Mon, 16 Mar 2026 15:38:39 GMT
-original-request: req_4Wrsuyf9ENlVwT
+Date: Mon, 16 Mar 2026 18:24:32 GMT
+original-request: req_2QbghWikBS0M9P
 stripe-version: 2020-08-27
-idempotency-key: 33bcf017-d44d-41a1-951c-b710b501faff
+idempotency-key: 1dea45f8-1215-4d32-b96b-f20c470300f2
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
   "alma" : {
 
   },
-  "id" : "pm_1TBdE3KG6vc7r7YCh9wIlCsw",
+  "id" : "pm_1TBfoaKG6vc7r7YCG7fXFIwk",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     }
   },
   "livemode" : false,
-  "created" : 1773675519,
+  "created" : 1773685472,
   "allow_redisplay" : "unspecified",
   "type" : "alma",
   "customer" : null,

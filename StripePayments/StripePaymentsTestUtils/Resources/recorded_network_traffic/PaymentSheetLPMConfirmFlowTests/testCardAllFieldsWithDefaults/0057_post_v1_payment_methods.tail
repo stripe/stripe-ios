@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=3RHl7AYy7-7gKHogQo0IImIj1HUp45LiNPiZVAb3pZFwdeepNBOBsS5upDSe-NoUblz9vSrv7cXMDtO7
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=3r_YY-ABxN6LZKOSEZFDBonNzAC7_BqUn8m6FiFb8BiHhDKfQw97lHV2OZZq2QGpKKSDY8QSNlDS2rBI
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_bMQY47E87CDqVp
+request-id: req_pqRBonPk6yOLhF
 Content-Length: 1080
 Vary: Origin
-Date: Mon, 16 Mar 2026 15:45:46 GMT
-original-request: req_bMQY47E87CDqVp
+Date: Mon, 16 Mar 2026 18:32:01 GMT
+original-request: req_pqRBonPk6yOLhF
 stripe-version: 2020-08-27
-idempotency-key: 5aa21212-6f67-4b76-a411-c24c42ddfc13
+idempotency-key: 7eada5a8-a860-4d6a-a671-2ebf1602ab8e
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
 
 {
   "object" : "payment_method",
-  "id" : "pm_1TBdKwFY0qyl6XeWPndhd1LU",
+  "id" : "pm_1TBfvpFY0qyl6XeWNP3q0lcB",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : "+13105551234",
@@ -69,7 +69,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[ci
     "country" : "US"
   },
   "livemode" : false,
-  "created" : 1773675946,
+  "created" : 1773685921,
   "allow_redisplay" : "unspecified",
   "type" : "card",
   "customer" : null,

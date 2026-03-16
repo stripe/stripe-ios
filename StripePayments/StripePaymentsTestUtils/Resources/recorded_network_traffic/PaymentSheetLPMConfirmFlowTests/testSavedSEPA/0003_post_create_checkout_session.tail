@@ -1,18 +1,18 @@
 POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
-200
+402
 text/html
 Content-Type: text/html;charset=utf-8
 Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=nILKSM2HrTNkLr3crEXd7ZOE5Dq2qeeS%2BUWublMm2UfKdUbbqAkfGscgHWNAAPpbT0iJObWk%2BFMjVlR%2FHdmolmkliXC9gUpSY1xgKV32S08te%2FS4Dv51cwgZ%2BfAAQV5hz83ab0ebL5CkMfvY4Vbz899AGttzWXHGWi3PQ8BppceV3o%2Bnp4eijnOdrnQqal8dMZeU3PBN%2B75kz%2BZibs6qtqFGRLhp06%2Fqd4k%2FL22u3OY%3D; path=/
+Set-Cookie: rack.session=FkJFx4wkwlEXRaLPBwZBbpDaqAUr8FSVJPS%2FSqao0ZzOY8kaM2tA8QQee%2FX45U8IrVBd6%2Fw83Hk8iL9MX5jSE68d4sF%2B1Jke8ITZMg1smndJx%2F8DLQzqy7J0%2B7QnmBmzRK0eRFbw7k747aA6lmkwB18JsjnY7yB3JkLUJN%2BUUsqL%2F6mgFjzGOpo1dzdN6zpbgdN1DEj7HQKNwQkQHZQeKhGyq8n14cXBUu0pVtpBZI0%3D; path=/
 Server: Google Frontend
-x-cloud-trace-context: 5d3e9ab03f001cd234782ab693fe29b6
+x-cloud-trace-context: f0c47a18b2b45a201853dab0d778dd4b
 Via: 1.1 google
 x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 16:09:22 GMT
+Date: Mon, 16 Mar 2026 18:45:31 GMT
 x-robots-tag: noindex, nofollow
-Content-Length: 293
+Content-Length: 121
 x-content-type-options: nosniff
 x-frame-options: SAMEORIGIN
 
-{"id":"cs_test_a1kSsIN66L59ZpGY5Ysn0KfTSySSnJBqjay97mvkkwL4SxQQwY4XCjWgwa","client_secret":"cs_test_a1kSsIN66L59ZpGY5Ysn0KfTSySSnJBqjay97mvkkwL4SxQQwY4XCjWgwa_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}
+Error creating CheckoutSession: Customer has maximum number of payment methods attached. (request_id: req_DtZlFPny2805Tn)

@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=1ClwAC_Z_V0OUz6F-v2DwCocOfz-ELUL6NgBA7TZgSNhM5Bs8m2ZMfVLUiZtRI-fYuh2adQo7mt2Vq3E
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ytkn52JeqD-ar_9yV-lYgfLPwc8FE10c7biWeasgTa7POzNkugql2Qg64adfqQMfTJy9q0unIRL53EeI
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_Q5miV3wBm132ck
+request-id: req_h6ovKZAjjWSkpo
 Content-Length: 631
 Vary: Origin
-Date: Mon, 16 Mar 2026 18:01:20 GMT
-original-request: req_Q5miV3wBm132ck
+Date: Mon, 16 Mar 2026 18:28:56 GMT
+original-request: req_h6ovKZAjjWSkpo
 stripe-version: 2020-08-27
-idempotency-key: 5b8f057f-7323-4979-81e5-789c1e8d1883
+idempotency-key: 474b30e1-3c1e-4c9e-bbf2-b9283457f8a8
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&au_becs_debit%5Baccount_numbe
 
 {
   "object" : "payment_method",
-  "id" : "pm_1TBfS8F7QokQdxBy3C2YOR60",
+  "id" : "pm_1TBfspF7QokQdxByRhEnnWJd",
   "billing_details" : {
     "email" : "example@link.com",
     "phone" : null,
@@ -48,7 +48,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&au_becs_debit%5Baccount_numbe
     "last4" : "3456"
   },
   "livemode" : false,
-  "created" : 1773684080,
+  "created" : 1773685736,
   "allow_redisplay" : "unspecified",
   "type" : "au_becs_debit",
   "customer" : null,

@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=TJWh_Jqg08abm48vKS0MZTpc56tVAdnanp8CjyD76lHZiMMCiDKODF03Y2fNg8dDOE8ComRXpctXGZ9g
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=7d6X-aZRXb9Nfs9RTsDsqV0l3ChY0_-0dAeJKX2sPJdr2zlStuVnmDsN32Tigvfpb7GWq51d8kon5ECI
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_g769xOrKAXZZjp
+request-id: req_SJYY3P6cthsYut
 Content-Length: 816
 Vary: Origin
-Date: Mon, 16 Mar 2026 16:04:40 GMT
-original-request: req_g769xOrKAXZZjp
+Date: Mon, 16 Mar 2026 18:37:14 GMT
+original-request: req_SJYY3P6cthsYut
 stripe-version: 2020-08-27
-idempotency-key: bdc7801f-7423-4321-860a-36fe350d09a6
+idempotency-key: c74107f0-ad39-4eb4-a71d-78ca85d34ca6
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -26,11 +26,11 @@ Content-Type: application/json
 X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=JPY&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=konbini&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[email]=foo%40bar\.com&payment_method_data\[billing_details]\[name]=Jane%20Doe&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=konbini&return_url=https%3A\/\/foo\.com
 
 {
-  "id" : "ctoken_1TBddEIq2LmpyICocgw1y1D6",
+  "id" : "ctoken_1TBg0sIq2LmpyICo3QvB5vao",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1773720280,
+  "expires_at" : 1773729434,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : null,
   "object" : "confirmation_token",
@@ -57,7 +57,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "type" : "konbini",
     "customer_account" : null
   },
-  "created" : 1773677080,
+  "created" : 1773686234,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null
