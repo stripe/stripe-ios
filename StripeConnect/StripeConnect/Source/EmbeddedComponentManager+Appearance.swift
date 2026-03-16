@@ -39,6 +39,7 @@ extension EmbeddedComponentManager {
                 }
             }
 
+            @_spi(STP)
             public init?(rawValue: String) {
                 switch rawValue {
                 case "none":
