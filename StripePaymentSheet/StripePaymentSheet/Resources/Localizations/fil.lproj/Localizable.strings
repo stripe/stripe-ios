@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Sa pagpapatuloy, pinahihintulutan mo ang %@ na awtomatikong i-debit ang Satispay Balance mo nang paulit-ulit alinsunod sa plano sa pagbili o subscription mo.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Sa pagpapatuloy, pinahihintulutan mo ang %@ na awtomatikong i-debit ang iyong Twint Balance nang paulit-ulit alinsunod sa iyong plano sa pagbili o subscription.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Sa pagpapatuloy, binibigyan mo ng awtorisasyon ang %1$@ na i-debit ang iyong Cash App account para sa pagbabayad na ito at sa mga pagbabayad sa hinaharap alinsunod sa mga tuntunin ng  %2$@, hanggang bawiin mo ang awtorisasyong ito. Maaari mong palitan ito sa anumang oras sa iyong Cash App Settings.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sa pagsali sa Link, sumasang-ayon ka sa <terms>Mga Tuntunin</terms> at <privacy>Patakaran sa Pagkapribado</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Hindi puwedeng baguhin ang mga detalye ng kard.";
 
 "Change" = "Palitan";
+
+"Choose a card brand" = "Pumili ng tatak ng card";
 
 "Choose a payment method" = "Pumili ng pamamaraan ng pagbabayad";
 

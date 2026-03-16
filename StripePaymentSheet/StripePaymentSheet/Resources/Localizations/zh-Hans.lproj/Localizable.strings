@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "如果继续，即表示您授权 %@ 根据您的购买或订阅计划定期自动从您的 Satispay 余额中扣款。";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "继续操作，即表示您授权 %@ 根据您的购买或订阅方案，定期从您的 Twint 余额中自动扣款。";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "继续操作，即表示您授权 %1$@ 按照 %2$@ 的条款从您的 Cash App 账户中扣取该款项及未来的款项，直至撤销授权。您可以随时在 Cash App 设置中进行修改。";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>条款</terms>和<privacy>隐私政策</privacy>。";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "无法更改银行卡详情。";
 
 "Change" = "更改";
+
+"Choose a card brand" = "选择银行卡品牌";
 
 "Choose a payment method" = "选择一个支付方式";
 
