@@ -23,6 +23,12 @@ import StripePaymentsUI
 
 /// A view that allows input of a specified crypto purchase amount and payment method.
 struct PaymentView: View {
+    private enum KYCStepUpErrorCodes {
+        static let missingMinimumIdentityVerification = "crypto_onramp_missing_minimum_identity_verification"
+        static let missingIdentityVerification = "crypto_onramp_missing_identity_verification"
+        static let missingDocumentVerification = "crypto_onramp_missing_document_verification"
+    }
+
     private enum NumberPadKey: String, Identifiable {
         case zero
         case one
@@ -803,9 +809,9 @@ struct PaymentView: View {
     }
 
     private func shouldFetchCustomerInfoForRecovery(from errorDescription: String) -> Bool {
-        errorDescription.contains("crypto_onramp_missing_minimum_identity_verification")
-            || errorDescription.contains("crypto_onramp_missing_identity_verification")
-            || errorDescription.contains("crypto_onramp_missing_document_verification")
+        errorDescription.contains(KYCStepUpErrorCodes.missingMinimumIdentityVerification)
+            || errorDescription.contains(KYCStepUpErrorCodes.missingIdentityVerification)
+            || errorDescription.contains(KYCStepUpErrorCodes.missingDocumentVerification)
     }
 
     private func recoveryLevels(
@@ -815,29 +821,45 @@ struct PaymentView: View {
         let currentLevel = customerInfo.providedKYCLevel
 
         guard currentLevel.includesLevel0 else {
+            // The user attempted to create an onramp session having never completed Level 0 KYC.
+            // This is not a supported flow step-up flow, as they should have been prompted to
+            // enter L0 KYC information after authentication.
             return nil
         }
 
-        if errorDescription.contains("crypto_onramp_missing_minimum_identity_verification") {
+        if errorDescription.contains(KYCStepUpErrorCodes.missingMinimumIdentityVerification) {
+            // In this case, the user has L0 fields, but session creation failed, likely due to
+            // a lag in verification status being updated. The user will need to try to check
+            // out again after some time.
             return nil
         }
 
-        if errorDescription.contains("crypto_onramp_missing_identity_verification") {
+        if errorDescription.contains(KYCStepUpErrorCodes.missingIdentityVerification) {
             guard !currentLevel.includesLevel1 else {
+                /// We’re being told to L1 fields are missing, but customer information
+                /// includes L1 fields. This is an unexpected error scenario, and the user
+                /// should try again.
                 return nil
             }
 
+            // Redirect the user to step up to level 1.
             return .init(currentLevel: currentLevel, requiredLevel: .level1)
         }
 
-        if errorDescription.contains("crypto_onramp_missing_document_verification") {
+        if errorDescription.contains(KYCStepUpErrorCodes.missingDocumentVerification) {
             guard !currentLevel.includesLevel2 else {
+                /// We’re being told L2 is required, but identity document verification
+                /// is already complete. This is an unexpected error scenario, and the
+                /// user should try again.
                 return nil
             }
 
+            // Redirect the user to step up to level 2.
             return .init(currentLevel: currentLevel, requiredLevel: .level2)
         }
 
+        // We didn't hit any expected error scenarios that would lead to a step-up
+        // redirect, so we return `nil` to report the error normally to the user.
         return nil
     }
 }
