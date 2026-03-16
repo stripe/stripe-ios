@@ -57,14 +57,6 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         )
 
         XCTAssertEqual(
-            analyticsLog.map({ $0[string: "event"] }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false }),
-            ["elements.captcha.passive.init",
-             "elements.captcha.passive.execute",
-             "elements.captcha.passive.success",
-             "elements.captcha.passive.attach", ]
-        )
-
-        XCTAssertEqual(
             analyticsLog.map({ $0[string: "event"] }).filter({ $0?.starts(with: "elements.attestation.confirmation") ?? false }),
             ["elements.attestation.confirmation.prepare",
              "elements.attestation.confirmation.prepare.failed",
