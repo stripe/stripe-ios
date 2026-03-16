@@ -95,9 +95,7 @@ struct PaymentView: View {
 
     @State private var amountText: String = "0"
     @State private var shouldShowPaymentMethodSheet: Bool = false
-    @State private var shouldShowKYCRecoverySheet: Bool = false
-    @State private var currentKYCRecoveryLevel: KYCLevel = .none
-    @State private var requiredKYCRecoveryLevel: KYCLevel = .level2
+    @State private var kycRecoveryLevels: KYCRecoveryFlowView.Levels?
     @State private var paymentTokens: [PaymentTokensResponse.PaymentToken] = []
     @State private var alert: Alert?
     @State private var selectedPaymentMethod: SelectedPaymentMethod?
@@ -353,11 +351,10 @@ struct PaymentView: View {
             }
             .presentationDetents([.medium])
         }
-        .sheet(isPresented: $shouldShowKYCRecoverySheet) {
+        .sheet(item: $kycRecoveryLevels) { kycRecoveryLevels in
             KYCRecoveryFlowView(
                 coordinator: coordinator,
-                currentLevel: currentKYCRecoveryLevel,
-                requiredLevel: requiredKYCRecoveryLevel
+                levels: kycRecoveryLevels
             ) {
                 alert = Alert(
                     title: "Verification complete",
@@ -779,9 +776,10 @@ struct PaymentView: View {
 
                     await MainActor.run {
                         isLoading.wrappedValue = false
-                        requiredKYCRecoveryLevel = requiredLevel
-                        currentKYCRecoveryLevel = currentLevel
-                        shouldShowKYCRecoverySheet = true
+                        kycRecoveryLevels = .init(
+                            currentLevel: currentLevel,
+                            requiredLevel: requiredLevel
+                        )
                     }
                 } else {
                     await MainActor.run {

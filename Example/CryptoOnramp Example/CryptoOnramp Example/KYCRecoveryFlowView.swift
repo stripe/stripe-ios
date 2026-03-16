@@ -15,6 +15,23 @@ import StripeCryptoOnramp
 /// - level 1: KYC collection only, including date of birth and id number (e.g. SSN).
 /// - level 2: KYC collection followed by identity verification
 struct KYCRecoveryFlowView: View {
+
+    /// The customer's current and required KYC levels for this recovery flow.
+    struct Levels: Identifiable {
+
+        /// The customer's current KYC level when entering this flow.
+        let currentLevel: KYCLevel
+
+        /// The KYC level required to continue checkout.
+        let requiredLevel: KYCLevel
+
+        // MARK: - Identifiable
+
+        var id: String {
+            "\(currentLevel.id)-\(requiredLevel.id)"
+        }
+    }
+
     private enum Route: Hashable {
         case identity
     }
@@ -22,11 +39,8 @@ struct KYCRecoveryFlowView: View {
     /// The coordinator used for KYC and identity collection.
     let coordinator: CryptoOnrampCoordinator
 
-    /// The customer's current KYC level when entering this flow.
-    let currentLevel: KYCLevel
-
-    /// The KYC level required to continue checkout.
-    let requiredLevel: KYCLevel
+    /// The customer's current and required KYC levels for this recovery flow.
+    let levels: Levels
 
     /// Closure called after the recovery flow succeeds.
     let onSuccess: () -> Void
@@ -76,11 +90,11 @@ struct KYCRecoveryFlowView: View {
     }
 
     private var shouldCollectLevel1: Bool {
-        requiredLevel.includesLevel1 && !currentLevel.includesLevel1
+        levels.requiredLevel.includesLevel1 && !levels.currentLevel.includesLevel1
     }
 
     private var shouldCollectIdentity: Bool {
-        requiredLevel.includesLevel2 && !currentLevel.includesLevel2
+        levels.requiredLevel.includesLevel2 && !levels.currentLevel.includesLevel2
     }
 
     @ToolbarContentBuilder
