@@ -155,13 +155,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
-    enum EnablePassiveCaptcha: String, PickerEnum {
-        static var enumName: String { "Enable passive captcha" }
-
-        case on
-        case off
-    }
-
     enum EnableAttestationOnConfirmation: String, PickerEnum {
         static var enumName: String { "Enable attestation on confirmation" }
 
@@ -182,7 +175,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var applePay: ApplePay
     var headerTextForSelectionScreen: String?
     var defaultBillingAddress: DefaultBillingAddress
-    var enablePassiveCaptcha: EnablePassiveCaptcha
     var enableAttestationOnConfirmation: EnableAttestationOnConfirmation
     var autoreload: Autoreload
 
@@ -209,7 +201,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    applePay: .on,
                                                    headerTextForSelectionScreen: nil,
                                                    defaultBillingAddress: .off,
-                                                   enablePassiveCaptcha: .on,
                                                    enableAttestationOnConfirmation: .on,
                                                    autoreload: .on,
                                                    attachDefaults: .off,

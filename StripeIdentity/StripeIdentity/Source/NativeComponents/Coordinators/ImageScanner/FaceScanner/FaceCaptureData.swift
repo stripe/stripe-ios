@@ -37,7 +37,7 @@ extension FaceCaptureData {
             let last = samples.last,
             samples.count >= 3,
             let bestMiddle = samples[1..<samples.count - 1].max(by: {
-                $0.scannerOutput.quality < $1.scannerOutput.quality
+                $0.scannerOutput.bestFrameScore < $1.scannerOutput.bestFrameScore
             })
         else {
             return nil
