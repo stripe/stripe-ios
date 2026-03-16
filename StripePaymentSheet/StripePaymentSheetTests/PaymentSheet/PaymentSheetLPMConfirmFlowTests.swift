@@ -1362,11 +1362,6 @@ extension PaymentSheetLPMConfirmFlowTests {
             )
 
             for (description, intent) in intents {
-                // TODO(gbirch): Uncomment these when adding CheckoutSessions Link support.
-                // CheckoutSession doesn't support a Link-only payment method type list.
-                if case .checkoutSession = intent {
-                    continue
-                }
                 let linkPaymentMethod = try await makeLinkPaymentMethod(apiClient)
 
                 let e = expectation(description: "Confirm Link (\(description))")
