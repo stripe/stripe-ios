@@ -761,34 +761,84 @@ struct PaymentView: View {
                     onContinue(response, selectPaymentMethodButtonTitle, settlementSpeed)
                 }
             } catch {
-                // Temporary error handling: compare message text until the backend
-                // provides a stable machine-readable error code for this failure case.
-                if error.localizedDescription.hasPrefix("HTTP 500") {
-                    // TODO: Replace this with parsed backend error codes when available.
-                    let requiredLevel: KYCLevel = .level2
-                    let currentLevel: KYCLevel
-                    do {
-                        let info = try await APIClient.shared.fetchCustomerInfo()
-                        currentLevel = info.kycLevel
-                    } catch {
-                        currentLevel = .none
-                    }
+                let errorDescription = error.localizedDescription
 
-                    await MainActor.run {
-                        isLoading.wrappedValue = false
-                        kycRecoveryLevels = .init(
-                            currentLevel: currentLevel,
-                            requiredLevel: requiredLevel
+                if errorDescription.hasPrefix("HTTP 400"), shouldFetchCustomerInfoForRecovery(from: errorDescription) {
+                    do {
+                        let customerInfo = try await APIClient.shared.fetchCustomerInfo()
+                        let recoveryLevels = recoveryLevels(
+                            forCreateOnrampSessionError: errorDescription,
+                            customerInfo: customerInfo
                         )
+
+                        await MainActor.run {
+                            isLoading.wrappedValue = false
+                            if let recoveryLevels {
+                                kycRecoveryLevels = recoveryLevels
+                            } else {
+                                alert = Alert(
+                                    title: "Failed to create onramp session",
+                                    message: errorDescription
+                                )
+                            }
+                        }
+                    } catch {
+                        await MainActor.run {
+                            isLoading.wrappedValue = false
+                            alert = Alert(
+                                title: "Failed to create onramp session",
+                                message: errorDescription
+                            )
+                        }
                     }
-                } else {
-                    await MainActor.run {
-                        isLoading.wrappedValue = false
-                        alert = Alert(title: "Failed to create onramp session", message: error.localizedDescription)
-                    }
+                    return
+                }
+
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    alert = Alert(title: "Failed to create onramp session", message: errorDescription)
                 }
             }
         }
+    }
+
+    private func shouldFetchCustomerInfoForRecovery(from errorDescription: String) -> Bool {
+        errorDescription.contains("crypto_onramp_missing_minimum_identity_verification")
+            || errorDescription.contains("crypto_onramp_missing_identity_verification")
+            || errorDescription.contains("crypto_onramp_missing_document_verification")
+    }
+
+    private func recoveryLevels(
+        forCreateOnrampSessionError errorDescription: String,
+        customerInfo: CustomerInformationResponse
+    ) -> KYCRecoveryFlowView.Levels? {
+        let currentLevel = customerInfo.providedKYCLevel
+
+        guard currentLevel.includesLevel0 else {
+            return nil
+        }
+
+        if errorDescription.contains("crypto_onramp_missing_minimum_identity_verification") {
+            return nil
+        }
+
+        if errorDescription.contains("crypto_onramp_missing_identity_verification") {
+            guard !currentLevel.includesLevel1 else {
+                return nil
+            }
+
+            return .init(currentLevel: currentLevel, requiredLevel: .level1)
+        }
+
+        if errorDescription.contains("crypto_onramp_missing_document_verification") {
+            guard !currentLevel.includesLevel2 else {
+                return nil
+            }
+
+            return .init(currentLevel: currentLevel, requiredLevel: .level2)
+        }
+
+        return nil
     }
 }
 
