@@ -24,7 +24,6 @@ class CardSectionElementTest: XCTestCase {
             defaultValues: .init(),
             preferredNetworks: preferredNetworks,
             cardBrandChoiceEligible: true,
-            enableCBCRedesign: true,
             hostedSurface: .paymentSheet,
             theme: .default,
             analyticsHelper: ._testValue(),
@@ -35,9 +34,7 @@ class CardSectionElementTest: XCTestCase {
 
     /// Simulates a user tap on a brand
     private func simulateTap(_ cardBrandChoiceElement: CardBrandChoiceElement?, brand: STPCardBrand?) {
-        guard case .selector(let element) = cardBrandChoiceElement?.variant,
-              let brand = brand else {
-            XCTFail("Expected selector variant non-nil brand to tap")
+        guard let element = cardBrandChoiceElement?.element, let brand else {
             return
         }
         element.didTap(brand.makeCardBrandItem())

@@ -8,6 +8,7 @@
 ### PaymentSheet
 * [Added] Added support for Wero payments (private preview).
 * [Fixed] Fixed a visual bug in PaymentSheet when the Link sign-in modal appears first where the Apple Pay button was not full width on > iOS 26.2
+* [Changed] Card brand choice selector UI from a dropdown to a segmented selector following Mastercard requirements.
 
 ## 25.7.1 2026-02-25
 ### All
