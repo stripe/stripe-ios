@@ -757,14 +757,13 @@ extension PaymentSheetFormFactory {
     }
 
     func makePayByBank() -> PaymentMethodElement {
-        let country = makeCountry(countryCodes: ["GB"])
         let contactInfoSection = makeContactInformationSection(
             nameRequiredByPaymentMethod: false,
             emailRequiredByPaymentMethod: false,
             phoneRequiredByPaymentMethod: false
         )
         let billingDetails = makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        return FormElement(autoSectioningElements: [country, contactInfoSection, billingDetails].compactMap { $0 }, theme: theme)
+        return FormElement(elements: [contactInfoSection, billingDetails], theme: theme)
     }
 
     // Only show checkbox for PI+SFU & Setup Intent

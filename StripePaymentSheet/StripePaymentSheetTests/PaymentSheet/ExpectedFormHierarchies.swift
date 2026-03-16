@@ -188,13 +188,7 @@ enum ExpectedFormHierarchy {
     // MARK: - PayByBank
 
     enum PayByBank {
-        static var paymentIntent: FormHierarchyNode {
-            FormHierarchyNode(type: "FormElement", children: [
-                FormHierarchyNode(type: "SectionElement", children: [
-                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "1", "label": "Country or region"])
-                ]),
-            ])
-        }
+        static var paymentIntent: FormHierarchyNode { emptyForm }
     }
 
     // MARK: - FPX

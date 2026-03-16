@@ -1,5 +1,5 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TBdhDGoesj9fw9Q1Ep9H9lf\?client_secret=pi_3TBdhDGoesj9fw9Q1Ep9H9lf_secret_PPmi9k2N1WYiV5PyqrFYXUt9X&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TBe54Goesj9fw9Q0p2xR2M4\?client_secret=pi_3TBe54Goesj9fw9Q0p2xR2M4_secret_8HXuPIRvlsdH8l8PAuM1oQDUp&expand%5B0%5D=payment_method$
 200
 application/json
 Content-Type: application/json
@@ -12,14 +12,14 @@ Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Mon, 16 Mar 2026 16:08:49 GMT
+Date: Mon, 16 Mar 2026 16:33:27 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 1602
+Content-Length: 1596
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_HUrCFo5SWw8Bz4
+request-id: req_33sMBjPe21uUm2
 
 {
   "payment_method_configuration_details" : null,
@@ -38,13 +38,13 @@ request-id: req_HUrCFo5SWw8Bz4
   "next_action" : {
     "type" : "redirect_to_url",
     "redirect_to_url" : {
-      "return_url" : "https:\/\/foo.com",
-      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1KmkHbGoesj9fw9Q\/pa_nonce_U9xcdBxUmNPP2lmXc1T56PrsVqVDlqf"
+      "return_url" : "foo:\/\/bar",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1KmkHbGoesj9fw9Q\/pa_nonce_U9y1xWaUy1C1eRMmZWTQt3NauczThBN"
     }
   },
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1TBdhFGoesj9fw9QpXgVNiCS",
+    "id" : "pm_1TBe54Goesj9fw9QWfyRIxQV",
     "billing_details" : {
       "email" : null,
       "phone" : null,
@@ -63,14 +63,14 @@ request-id: req_HUrCFo5SWw8Bz4
     "pay_by_bank" : {
 
     },
-    "created" : 1773677329,
+    "created" : 1773678806,
     "allow_redisplay" : "unspecified",
     "type" : "pay_by_bank",
     "customer" : null,
     "customer_account" : null
   },
-  "client_secret" : "pi_3TBdhDGoesj9fw9Q1Ep9H9lf_secret_PPmi9k2N1WYiV5PyqrFYXUt9X",
-  "id" : "pi_3TBdhDGoesj9fw9Q1Ep9H9lf",
+  "client_secret" : "pi_3TBe54Goesj9fw9Q0p2xR2M4_secret_8HXuPIRvlsdH8l8PAuM1oQDUp",
+  "id" : "pi_3TBe54Goesj9fw9Q0p2xR2M4",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -84,6 +84,6 @@ request-id: req_HUrCFo5SWw8Bz4
     "pay_by_bank"
   ],
   "setup_future_usage" : null,
-  "created" : 1773677327,
+  "created" : 1773678806,
   "description" : null
 }

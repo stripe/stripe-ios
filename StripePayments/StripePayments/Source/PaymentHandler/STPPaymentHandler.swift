@@ -849,7 +849,8 @@ public class STPPaymentHandler: NSObject {
             .multibanco,
             .shopPay,
             .payPay,
-            .wero:
+            .wero,
+            .payByBank:
             return false
 
         case .unknown:

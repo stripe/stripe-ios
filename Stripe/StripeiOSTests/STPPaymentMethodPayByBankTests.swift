@@ -9,7 +9,7 @@ import XCTest
 
 class STPPaymentMethodPayByBankTests: XCTestCase {
 
-    static let payByBankPaymentIntentClientSecret = "pi_TODO_secret_TODO"
+    static let payByBankPaymentIntentClientSecret = "pi_3TBdzVGoesj9fw9Q02JPHHQc_secret_NDNsHku6A1x1TNaAfVA4rhU6d"
 
     func _retrievePayByBankJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
         let client = STPAPIClient(publishableKey: STPTestingGBPublishableKey)
