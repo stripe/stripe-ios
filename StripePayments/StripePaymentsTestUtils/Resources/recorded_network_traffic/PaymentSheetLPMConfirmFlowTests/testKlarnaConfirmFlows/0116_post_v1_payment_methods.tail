@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=zmaw3erH6PEXkNApzv2CZl_PfHiZjZW9cXE81j-c-86RYTh70RP3VU1HxnxJxewbu7ONT4t75RWwY5-n
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=byMtCWeMyej_Mib8aR9w2uMqt85KYySGhxPV7ktkKAJ4ziIhaF_hY6ef1oNgiSiqyrIWZh3TsHwFoWmL
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_UScqQLCE7BStr5
+request-id: req_VBRYafQ6HWYFGI
 Content-Length: 510
 Vary: Origin
-Date: Thu, 05 Mar 2026 00:16:27 GMT
-original-request: req_UScqQLCE7BStr5
+Date: Mon, 16 Mar 2026 15:50:10 GMT
+original-request: req_VBRYafQ6HWYFGI
 stripe-version: 2020-08-27
-idempotency-key: b9eb5123-c73a-4e59-bf9f-5f2c13ad29de
+idempotency-key: 6d46f859-a03e-4a0f-85d6-52ada809abae
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[co
   "klarna" : {
 
   },
-  "id" : "pm_1T7PaZFY0qyl6XeWpzNix9Z2",
+  "id" : "pm_1TBdPCFY0qyl6XeWKAxZTgh0",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[address]\[co
     }
   },
   "livemode" : false,
-  "created" : 1772669787,
+  "created" : 1773676210,
   "allow_redisplay" : "unspecified",
   "type" : "klarna",
   "customer" : null,

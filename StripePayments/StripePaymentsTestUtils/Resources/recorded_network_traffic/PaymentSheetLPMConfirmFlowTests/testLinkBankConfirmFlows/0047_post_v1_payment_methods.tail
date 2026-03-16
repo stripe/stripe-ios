@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=fphnrR6qKjrHUDfDtRQrTOFcOzJMzxkbjzgNpbgrPjtYlmDwj8roKhWXmjNXbsXXyJDJa3IlYVd2CNhe
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=GOZzV0d8-C9Mqw7lna3OkhwpV_TgbxOOHwe7M1TK60_1NsRBKsOuoQ_KmfoCn2BwevQbrfp3b537ksFv
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_iBeei6BpjR2MQ8
+request-id: req_9snjil9PiXcZcq
 Content-Length: 944
 Vary: Origin
-Date: Thu, 05 Mar 2026 00:17:00 GMT
-original-request: req_iBeei6BpjR2MQ8
+Date: Mon, 16 Mar 2026 15:50:39 GMT
+original-request: req_9snjil9PiXcZcq
 stripe-version: 2020-08-27
-idempotency-key: 5cefa394-9cb3-485a-a5de-2096a3cfcb75
+idempotency-key: 121d61ee-7a52-4a92-8ed8-3be7e15ddf48
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=payme
 
 {
   "object" : "payment_method",
-  "id" : "pm_1T7Pb6FY0qyl6XeWH8ovkv8U",
+  "id" : "pm_1TBdPfFY0qyl6XeWKQo2gYTj",
   "billing_details" : {
     "email" : "paymentsheet-link-bank-confirm-flows@example.com",
     "phone" : null,
@@ -59,7 +59,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=payme
     "status_details" : null,
     "account_type" : "checking"
   },
-  "created" : 1772669820,
+  "created" : 1773676239,
   "allow_redisplay" : "unspecified",
   "type" : "us_bank_account",
   "customer" : null,

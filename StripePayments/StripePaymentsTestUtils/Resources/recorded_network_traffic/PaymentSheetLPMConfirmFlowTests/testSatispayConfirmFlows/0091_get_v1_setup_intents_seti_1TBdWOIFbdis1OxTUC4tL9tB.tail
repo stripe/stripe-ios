@@ -1,0 +1,75 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1TBdWOIFbdis1OxTUC4tL9tB\?client_secret=seti_1TBdWOIFbdis1OxTUC4tL9tB_secret_U9xRVdiSojQmfVY0mXcylnXNWiH8UAY&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=pT-X2JzD354BkB_ERLda4kayvX1cgrp5C626hcCZNhrbpjaIoGwktXpZEjoy_DOuc5rCWnFz0x6GB8vY
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Mon, 16 Mar 2026 15:57:37 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 1336
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_N1tCui8JopmiHU
+
+{
+  "id" : "seti_1TBdWOIFbdis1OxTUC4tL9tB",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1PSnETIFbdis1OxT\/sa_nonce_U9xRyJA3qsgYp2yhKpG4AtKgGACjN1x"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1TBdWOIFbdis1OxT4LgciFiU",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "satispay" : {
+
+    },
+    "created" : 1773676656,
+    "allow_redisplay" : "unspecified",
+    "type" : "satispay",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "satispay"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1773676656,
+  "client_secret" : "seti_1TBdWOIFbdis1OxTUC4tL9tB_secret_U9xRVdiSojQmfVY0mXcylnXNWiH8UAY",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=iDxe4XnM8uQrX59VzKkvtpc2ApH3Z7AhZHhCc2J9VW8NthimXDGR6NCSCh0ypAlLUlZe0qyGxJIS9zbC
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=KTha6lT1UYqgs7QHPJ3ylcWPJK6U3l84mcPgcx7XrkhKKmiZVOKtK884zNk8TZI4oRBTPLcikKbTPSLW
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_jz9effwjQHMkFO
+request-id: req_IMJ4ndh9C64Jg2
 Content-Length: 518
 Vary: Origin
-Date: Thu, 05 Mar 2026 00:06:56 GMT
-original-request: req_jz9effwjQHMkFO
+Date: Mon, 16 Mar 2026 15:39:02 GMT
+original-request: req_IMJ4ndh9C64Jg2
 stripe-version: 2020-08-27
-idempotency-key: d9ae5d30-4d87-4e8b-b096-b81488626f34
+idempotency-key: 1054a1a3-7eee-4832-999d-d3d8eacc7e32
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
   "amazon_pay" : {
 
   },
-  "id" : "pm_1T7PRMFY0qyl6XeWVa5dewvl",
+  "id" : "pm_1TBdEQFY0qyl6XeWUmrhqAmO",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     }
   },
   "livemode" : false,
-  "created" : 1772669216,
+  "created" : 1773675542,
   "allow_redisplay" : "unspecified",
   "type" : "amazon_pay",
   "customer" : null,

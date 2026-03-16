@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=M1U-Gg4XCxy5MGH2nDnHJaufqLBiE7sj0anxHSNGL7xtk-3X7vwKJ-_zmAOa7qtb7m9M_cGoPi06rusM
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=BaturUqpjbFXaiSpEFFgeoCljpe7ywJr0R00ifArCJ3_IRHJX03OQLmUcBauMkMnPzSSJka02WGtN-n_
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_Qb0CBb4yrOJlMF
+request-id: req_hoJ6n8m7g3BsXq
 Content-Length: 512
 Vary: Origin
-Date: Thu, 05 Mar 2026 00:18:19 GMT
-original-request: req_Qb0CBb4yrOJlMF
+Date: Mon, 16 Mar 2026 15:52:02 GMT
+original-request: req_hoJ6n8m7g3BsXq
 stripe-version: 2020-08-27
-idempotency-key: 8273f7c3-6691-447c-aebe-bcdbcc2f69cb
+idempotency-key: e8aa3f1d-be4e-44b2-a88c-b7adc2ef4dfb
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -30,7 +30,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
   "oxxo" : {
 
   },
-  "id" : "pm_1T7PcNHNG4o8pO5lH8RkDrdr",
+  "id" : "pm_1TBdR0HNG4o8pO5lQgHBoATL",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     }
   },
   "livemode" : false,
-  "created" : 1772669899,
+  "created" : 1773676322,
   "allow_redisplay" : "unspecified",
   "type" : "oxxo",
   "customer" : null,

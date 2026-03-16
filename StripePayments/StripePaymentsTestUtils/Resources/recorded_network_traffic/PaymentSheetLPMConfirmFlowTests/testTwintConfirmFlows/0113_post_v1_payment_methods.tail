@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Sbz9Yf2TbatLn0K91NXdsEzd8Ie5GJH8CoWqezVsa2g_v4zJdBw1m9x7rK3_mFWUCUz2Jq0PDV-yXHpp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ASsK_HcZPUauE7y1hCCH-ti75GJinC3q9Ds9ja4mV_lx3ztKbk2stDK7Ybl-zTQR85qvqTB33gOIbU7A
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_Eov17HpcX6ALf7
+request-id: req_E5ZWcCMB3Hrqhr
 Content-Length: 494
 Vary: Origin
-Date: Mon, 09 Mar 2026 10:29:33 GMT
-original-request: req_Eov17HpcX6ALf7
+Date: Mon, 16 Mar 2026 16:01:55 GMT
+original-request: req_E5ZWcCMB3Hrqhr
 stripe-version: 2020-08-27
-idempotency-key: 4e46b1e9-555b-4e5e-a037-d99961f1b21d
+idempotency-key: 7e255ec7-fbb6-45be-ac9a-6c952b6375bc
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
 
 {
   "object" : "payment_method",
-  "id" : "pm_1T9145Goesj9fw9Q7KoJJbiO",
+  "id" : "pm_1TBdaZGoesj9fw9Q3xmrJUSa",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
   "twint" : {
 
   },
-  "created" : 1773052173,
+  "created" : 1773676915,
   "allow_redisplay" : "unspecified",
   "type" : "twint",
   "customer" : null,

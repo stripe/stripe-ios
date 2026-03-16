@@ -1,0 +1,57 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TBdUxGoesj9fw9Q1PcI1jAh\?client_secret=pi_3TBdUxGoesj9fw9Q1PcI1jAh_secret_sBCgLLXG6iWHbxjwxJzzRHpoP&expand%5B0%5D=payment_method$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-stripe-priority-routing-enabled: true
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=N5Gq-rwtJ3ivbyI4DOPVDuXt_p5d1tXSosbaq_sEImpzXr6uJVFs_fsn3H6y1mUHGXlA2WDp_lJlKZiR
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Cache-Control: no-cache, no-store
+Date: Mon, 16 Mar 2026 15:56:07 GMT
+stripe-version: 2020-08-27
+access-control-allow-credentials: true
+Content-Length: 838
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_toLKmVoKelVhfv
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_payment_method",
+  "object" : "payment_intent",
+  "currency" : "gbp",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "payment_method" : null,
+  "client_secret" : "pi_3TBdUxGoesj9fw9Q1PcI1jAh_secret_sBCgLLXG6iWHbxjwxJzzRHpoP",
+  "id" : "pi_3TBdUxGoesj9fw9Q1PcI1jAh",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "revolut_pay"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1773676567,
+  "description" : null
+}

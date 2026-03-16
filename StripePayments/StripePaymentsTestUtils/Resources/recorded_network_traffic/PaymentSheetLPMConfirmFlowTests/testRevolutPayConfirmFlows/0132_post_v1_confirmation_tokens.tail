@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=95-f_jQZdbaQMrfoyPr97fpdSfz_Rrxk5Z32CpUYh-onC5JSCfVdZeyUfFdUxPkf7wfSZxa7Arf-XhQ1
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Cmb-Knt2_f_W3iNqhgPLswPAoem_HCpY56Wu7nOVs27YFAkRyXOeKK-SQSE-xrQtDVglQoLLW0LQmx66
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_qHV4ubJakX2xJJ
+request-id: req_r9UyzfOEFBGaKa
 Content-Length: 818
 Vary: Origin
-Date: Thu, 05 Mar 2026 00:22:10 GMT
-original-request: req_qHV4ubJakX2xJJ
+Date: Mon, 16 Mar 2026 15:56:07 GMT
+original-request: req_r9UyzfOEFBGaKa
 stripe-version: 2020-08-27
-idempotency-key: 06e10cb1-6044-45e0-89db-b52ede937778
+idempotency-key: 02d9b4c1-5e58-431a-aea7-0c771730c2dd
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -26,11 +26,11 @@ Content-Type: application/json
 X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=GBP&client_context\[mode]=payment&client_context\[payment_method_options]\[revolut_pay]\[setup_future_usage]=off_session&client_context\[payment_method_types]\[0]=revolut_pay&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=revolut_pay&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
 
 {
-  "id" : "ctoken_1T7Pg6Goesj9fw9QphNcQMXW",
+  "id" : "ctoken_1TBdUxGoesj9fw9Qc2srCGPu",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1772713330,
+  "expires_at" : 1773719767,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : "off_session",
   "object" : "confirmation_token",
@@ -57,7 +57,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "type" : "revolut_pay",
     "customer_account" : null
   },
-  "created" : 1772670130,
+  "created" : 1773676567,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

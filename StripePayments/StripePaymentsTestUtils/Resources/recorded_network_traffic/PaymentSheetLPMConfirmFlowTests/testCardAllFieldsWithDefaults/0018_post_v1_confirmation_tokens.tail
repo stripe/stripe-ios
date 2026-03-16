@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=7Q5vCk_bRDiNdBkPUUUv_MSgRBzIAab8aDs0BxPCXXAZl9sVWzhBTEI3hK2SNmQchehnT4-Adjk9SVGg
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=HSpmIGhbiRWVMc1oLSpKIoQzqRQz2NRxN74j2ZOrH2Eot7jCsr9KLavRfjjN87IDv_9KpWxedA16KAUO
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_wftHoyBYa45Wwq
+request-id: req_bPPSPEWL1ixPts
 Content-Length: 1415
 Vary: Origin
-Date: Thu, 05 Mar 2026 00:12:10 GMT
-original-request: req_wftHoyBYa45Wwq
+Date: Mon, 16 Mar 2026 15:45:21 GMT
+original-request: req_bPPSPEWL1ixPts
 stripe-version: 2020-08-27
-idempotency-key: 60372b24-1153-4a98-b81c-cc1ca7d6b5e1
+idempotency-key: 46768eb0-98bb-4c7e-8ffc-0c9dc69ded92
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -26,11 +26,11 @@ Content-Type: application/json
 X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=card&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[address]\[city]=San%20Francisco&payment_method_data\[billing_details]\[address]\[country]=US&payment_method_data\[billing_details]\[address]\[line1]=123%20Main%20Street&payment_method_data\[billing_details]\[address]\[line2]=line%202&payment_method_data\[billing_details]\[address]\[postal_code]=12345&payment_method_data\[billing_details]\[address]\[state]=CA&payment_method_data\[billing_details]\[email]=foo%40bar\.com&payment_method_data\[billing_details]\[name]=Jane%20Doe&payment_method_data\[billing_details]\[phone]=%2B13105551234&payment_method_data\[card]\[cvc]=123&payment_method_data\[card]\[exp_month]=12&payment_method_data\[card]\[exp_year]=28&payment_method_data\[card]\[number]=4242424242424242&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=card
 
 {
-  "id" : "ctoken_1T7PWQFY0qyl6XeWKIlmvYma",
+  "id" : "ctoken_1TBdKXFY0qyl6XeWJmR1DsZP",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1772712730,
+  "expires_at" : 1773719121,
   "return_url" : null,
   "setup_future_usage" : null,
   "object" : "confirmation_token",
@@ -80,7 +80,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "type" : "card",
     "customer_account" : null
   },
-  "created" : 1772669530,
+  "created" : 1773675921,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

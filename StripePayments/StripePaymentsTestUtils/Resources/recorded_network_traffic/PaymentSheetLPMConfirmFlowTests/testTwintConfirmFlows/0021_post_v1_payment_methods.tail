@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=GwngnNbnVMUhaoyPj7pzT_-aoc2qZLT83RneBApXSYJ3YhsQ0U8aKZUvHKAOey1Eip2zldiCpEY-RKtm
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=g84asAdvXqvUdHfdckDZkTDGCMamv9jC5Li2mwPCqf-HtbPNIJG47PgMWg9CTWw18ey4qip3VHU82YUd
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_U7y9uk3F6WsPrY
+request-id: req_KkH6M7HQlGxYih
 Content-Length: 508
 Vary: Origin
-Date: Mon, 09 Mar 2026 10:28:24 GMT
-original-request: req_U7y9uk3F6WsPrY
+Date: Mon, 16 Mar 2026 16:00:44 GMT
+original-request: req_KkH6M7HQlGxYih
 stripe-version: 2020-08-27
-idempotency-key: 44ab2660-2015-47dd-ad9a-7130e93a1db4
+idempotency-key: e300224b-6591-44db-af76-a522952f35d2
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
 
 {
   "object" : "payment_method",
-  "id" : "pm_1T912yGoesj9fw9QaUFUmXsU",
+  "id" : "pm_1TBdZQGoesj9fw9Q08WqWZEJ",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : null,
@@ -46,7 +46,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
   "twint" : {
 
   },
-  "created" : 1773052104,
+  "created" : 1773676844,
   "allow_redisplay" : "unspecified",
   "type" : "twint",
   "customer" : null,

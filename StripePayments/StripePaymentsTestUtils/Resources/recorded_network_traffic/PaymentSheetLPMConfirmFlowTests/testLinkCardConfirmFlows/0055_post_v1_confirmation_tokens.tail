@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=cAziRCVIhPlhhZfpFq10zjidt2Inq8dYDREzN9aO--C3IVDRhhUrOx7xoHdqVg8wla6XOddlRBEGDMqz
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=3SmridT0wGEoFrghbuOxDYpqN9KyJiIZBXILsf_4Z6Yq9lwJsTblyngn5p0JGg5Goj6cWYlg7S0CMCEq
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,25 +12,25 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_t4nlcHBwmq1p4k
+request-id: req_pMgBhaNVUzw8cn
 Content-Length: 1427
 Vary: Origin
-Date: Thu, 05 Mar 2026 00:17:35 GMT
-original-request: req_t4nlcHBwmq1p4k
+Date: Mon, 16 Mar 2026 15:51:18 GMT
+original-request: req_pMgBhaNVUzw8cn
 stripe-version: 2020-08-27
-idempotency-key: ef05ae78-d11a-4c36-a6d7-023c5c1ddc63
+idempotency-key: 1696ce6e-2b89-4c44-88cb-001b0c5ff8c5
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[customer]=cus_TUoUvtvPJvpHPA&client_context\[mode]=payment&client_context\[payment_method_options]\[card]\[setup_future_usage]=off_session&client_context\[payment_method_types]\[0]=card&payment_method=pm_1T7PbfFY0qyl6XeWkgi97iyx&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[customer]=cus_TUoUvtvPJvpHPA&client_context\[mode]=payment&client_context\[payment_method_options]\[card]\[setup_future_usage]=off_session&client_context\[payment_method_types]\[0]=card&payment_method=pm_1TBdQHFY0qyl6XeWJpontaGQ&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
 
 {
-  "id" : "ctoken_1T7PbfFY0qyl6XeWGzoWlNP2",
+  "id" : "ctoken_1TBdQIFY0qyl6XeWIHHZluJ1",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1772713055,
+  "expires_at" : 1773719478,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : "off_session",
   "object" : "confirmation_token",
@@ -80,7 +80,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "type" : "card",
     "customer_account" : null
   },
-  "created" : 1772669855,
+  "created" : 1773676278,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null
