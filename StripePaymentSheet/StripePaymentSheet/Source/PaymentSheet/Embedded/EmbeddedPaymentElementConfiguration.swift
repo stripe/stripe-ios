@@ -100,9 +100,6 @@ extension EmbeddedPaymentElement {
             }
         }
 
-        /// If true, use the new inline card brand selector UI instead of a dropdown
-        @_spi(STP) public var enableCBCRedesign: Bool = false
-
         /// Override country for test purposes
         @_spi(STP) public var userOverrideCountry: String?
 
@@ -150,9 +147,6 @@ extension EmbeddedPaymentElement {
         /// By default, the card form will provide a button to open the card scanner.
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
-
-        /// If true, an invisible challenge will be performed for human verification
-        @_spi(STP) public var enablePassiveCaptcha: Bool = false
 
         /// If true, device will attest and assert on confirmation requests
         @_spi(STP) public var enableAttestationOnConfirmation: Bool = false

@@ -210,10 +210,6 @@ import UIKit
             configuration.allowsDelayedPaymentMethods = true
         }
 
-        if settings.enablePassiveCaptcha == .on {
-            configuration.enablePassiveCaptcha = true
-        }
-
         if settings.enableAttestationOnConfirmation == .on {
             configuration.enableAttestationOnConfirmation = true
         }
@@ -244,7 +240,6 @@ import UIKit
             configuration.paymentMethodLayout = .automatic
         }
 
-        configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
         switch settings.cardBrandAcceptance {
         case .all:
             configuration.cardBrandAcceptance = .all
@@ -344,10 +339,6 @@ import UIKit
             configuration.allowsDelayedPaymentMethods = true
         }
 
-        if settings.enablePassiveCaptcha == .on {
-            configuration.enablePassiveCaptcha = true
-        }
-
         if settings.enableAttestationOnConfirmation == .on {
             configuration.enableAttestationOnConfirmation = true
         }
@@ -367,7 +358,6 @@ import UIKit
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
         configuration.billingDetailsCollectionConfiguration.allowedCountries = settings.allowedCountries.countries
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
-        configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
         configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
 
         switch settings.cardBrandAcceptance {
