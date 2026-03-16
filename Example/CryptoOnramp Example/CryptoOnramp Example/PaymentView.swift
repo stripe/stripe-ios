@@ -768,6 +768,7 @@ struct PaymentView: View {
                 }
             } catch {
                 let errorDescription = error.localizedDescription
+                let fallbackAlert = Alert(title: "Failed to create onramp session", message: errorDescription)
 
                 if errorDescription.hasPrefix("HTTP 400"), shouldFetchCustomerInfoForRecovery(from: errorDescription) {
                     do {
@@ -780,21 +781,16 @@ struct PaymentView: View {
                         await MainActor.run {
                             isLoading.wrappedValue = false
                             if let recoveryLevels {
+                                // Display the step-up flow.
                                 kycRecoveryLevels = recoveryLevels
                             } else {
-                                alert = Alert(
-                                    title: "Failed to create onramp session",
-                                    message: errorDescription
-                                )
+                                alert = fallbackAlert
                             }
                         }
                     } catch {
                         await MainActor.run {
                             isLoading.wrappedValue = false
-                            alert = Alert(
-                                title: "Failed to create onramp session",
-                                message: errorDescription
-                            )
+                            alert = fallbackAlert
                         }
                     }
                     return
@@ -802,7 +798,7 @@ struct PaymentView: View {
 
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    alert = Alert(title: "Failed to create onramp session", message: errorDescription)
+                    alert = fallbackAlert
                 }
             }
         }
