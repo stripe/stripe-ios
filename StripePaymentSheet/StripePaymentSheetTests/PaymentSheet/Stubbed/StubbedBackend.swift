@@ -58,6 +58,61 @@ class StubbedBackend {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
     }
+
+    static func stubPaymentMethods(paymentMethodTypes: [STPPaymentMethodType]) {
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+        } response: { _ in
+            // Map payment method types to their corresponding file mocks
+            let fileMocks: [FileMock] = paymentMethodTypes.compactMap { type in
+                switch type {
+                case .card:
+                    return .saved_payment_methods_withCard_200
+                case .USBankAccount:
+                    return .saved_payment_methods_withUSBank_200
+                case .SEPADebit:
+                    return .saved_payment_methods_withSepa_200
+                default:
+                    assertionFailure()
+                    return nil
+                }
+            }
+
+            // If no valid types, return empty list
+            guard !fileMocks.isEmpty else {
+                return HTTPStubsResponse(data: try! FileMock.saved_payment_methods_200.data(), statusCode: 200, headers: nil)
+            }
+
+            // Combine all payment methods from the file mocks
+            var allPaymentMethods: [[String: Any]] = []
+
+            for fileMock in fileMocks {
+                let mockData = try! fileMock.data()
+                let json = try! JSONSerialization.jsonObject(with: mockData) as! [String: Any]
+                let paymentMethods = json["data"] as! [[String: Any]]
+                allPaymentMethods.append(contentsOf: paymentMethods)
+            }
+
+            // Sort by created date (most recent first)
+            allPaymentMethods.sort { pm1, pm2 in
+                let created1 = pm1["created"] as? Int ?? 0
+                let created2 = pm2["created"] as? Int ?? 0
+                return created1 > created2
+            }
+
+            // Create combined response
+            let combinedResponse: [String: Any] = [
+                "object": "list",
+                "data": allPaymentMethods,
+                "has_more": false,
+                "url": "/v1/payment_methods",
+            ]
+
+            let responseData = try! JSONSerialization.data(withJSONObject: combinedResponse, options: [])
+            return HTTPStubsResponse(data: responseData, statusCode: 200, headers: nil)
+        }
+    }
+
     static func stubCustomers(fileMock: FileMock = .customers_200) {
         stub { urlRequest in
             urlRequest.url?.absoluteString.contains("/v1/customers") ?? false

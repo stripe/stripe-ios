@@ -103,6 +103,11 @@ public final class EmbeddedPaymentElement {
             stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
             throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
         }
+        if checkout.isPerformingSessionUpdate {
+            let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.create(checkout:configuration:)."
+            assertionFailure(message)
+            throw PaymentSheetError.integrationError(nonPIIDebugDescription: message)
+        }
         var config = configuration
         stpSession.applyAddressOverrides(to: &config)
 
@@ -162,6 +167,11 @@ public final class EmbeddedPaymentElement {
         guard let stpSession = checkout.session as? STPCheckoutSession else {
             stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
             return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
+        }
+        if checkout.isPerformingSessionUpdate {
+            let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.update(checkout:)."
+            assertionFailure(message)
+            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message))
         }
         stpSession.applyAddressOverrides(to: &configuration)
         return await performUpdate(mode: .checkoutSession(stpSession))

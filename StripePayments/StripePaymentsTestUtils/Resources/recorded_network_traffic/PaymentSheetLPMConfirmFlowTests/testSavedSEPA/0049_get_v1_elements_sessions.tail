@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_UA0yZnU4vpc5z8VrrfyCBfSmNBYPbliBQ8DsWz01ynMIBMN&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_UA24PjOgixsDtPmLVhyJKpr98x1p8Oux5M2BxfU4xXJcOfg&deferred_intent%5Bmode%5D=setup&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=.*&mobile_app_id=.*&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=TVElI6PWVV13kg6jcFf-Iw7-1Qqaa361ZNRsPfGDzwfyTpn2o55j6s6OTHcx2u-mNjwSbw8z11rSfpph
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=vdA0waQbJqnK7WJ71ECDzwPPupiETK49raMIzf0XuN9THHJ5S6FD15hgj1fqcjQYlnUqW7eali19aLo2
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Mon, 16 Mar 2026 19:37:25 GMT
+Date: Mon, 16 Mar 2026 20:45:41 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 17770
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_hL7LJ3BEIeOp1a
+request-id: req_Hroz8Kk1pkqAmQ
 
 {
   "payment_method_preference" : {
@@ -193,10 +193,10 @@ request-id: req_hL7LJ3BEIeOp1a
     "link_forest_enable_ece_bank_use_shipping_as_billing" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_11Dj6vZcTF3",
+  "session_id" : "elements_session_1Jk5tfu0Hsq",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "8bf42a0d-74c4-433d-b2a3-41999dbb9e4a",
+  "config_id" : "729acad7-118c-4ebc-84a7-447f65635e31",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -224,9 +224,9 @@ request-id: req_hL7LJ3BEIeOp1a
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "ab5dccf1-9305-418b-8c09-dc0b2d467261",
+    "arb_id" : "ec7a12ae-7759-4b72-8516-4d657a64354b",
     "experiment_metadata" : {
-      "seed" : "ea046bcd3e4c4c3cf2ee32389606e9a19393283e4e7f5b08f27ac35ba46e9921",
+      "seed" : "020c709c49aae4cc9fb8fa74ea4c9c87a7ccf84268e4c5362f614c08b2755edf",
       "semi_dominant_payment_methods" : [
 
       ],
@@ -410,8 +410,8 @@ request-id: req_hL7LJ3BEIeOp1a
     "default_payment_method" : null,
     "customer_session" : {
       "object" : "customer_session",
-      "api_key_expiry" : 1773693414,
-      "id" : "cuss_1TBgwYFY0qyl6XeWmBwh2K2x",
+      "api_key_expiry" : 1773697515,
+      "id" : "cuss_1TBi0hFY0qyl6XeWGvBb3Y6X",
       "livemode" : false,
       "components" : {
         "customer_sheet" : {
@@ -452,8 +452,8 @@ request-id: req_hL7LJ3BEIeOp1a
           }
         }
       },
-      "customer" : "cus_UA0yFGSX0RynMQ",
-      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLEhrck1kY2IzZ1Q5clFyVmJGdlJIQkZ3UDVnSmF3N1k_00usay5Yq9"
+      "customer" : "cus_UA24kIeWIPWq2C",
+      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLGhqbDZtc2pUaFUxMW40am5GZ01FemJLelRZT3NKc2Q_00TiUSFuRe"
     }
   },
   "klarna_express_config" : {
@@ -471,8 +471,8 @@ request-id: req_hL7LJ3BEIeOp1a
   "ordered_payment_method_types_and_wallets" : [
     "card",
     "apple_pay",
-    "cashapp",
     "google_pay",
+    "cashapp",
     "us_bank_account",
     "amazon_pay"
   ],

@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=zmaw3erH6PEXkNApzv2CZl_PfHiZjZW9cXE81j-c-86RYTh70RP3VU1HxnxJxewbu7ONT4t75RWwY5-n
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=5e3igi7tv8ah_mzxptMYCj2ZOIMnyoTLz2xS_RIw7Dbms7qnb8NNvHMiOPChGg4zc-sPs3Q3Mixj8OdC
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_Foe1tNhSW6yke0
+request-id: req_KhGZbYnRMwIe6E
 Content-Length: 573
 Vary: Origin
-Date: Thu, 05 Mar 2026 00:14:50 GMT
-original-request: req_Foe1tNhSW6yke0
+Date: Mon, 16 Mar 2026 18:34:54 GMT
+original-request: req_KhGZbYnRMwIe6E
 stripe-version: 2020-08-27
-idempotency-key: 12ddf9dc-677b-4b9e-92f4-ef93a5cf8f01
+idempotency-key: 4a14e7af-71ea-4442-b62d-41b2d6bda2a6
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -31,7 +31,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     "account_holder_type" : "individual",
     "bank" : "affin_bank"
   },
-  "id" : "pm_1T7PZ0INV13NEzqK5dUvWdV3",
+  "id" : "pm_1TBfycINV13NEzqKNCUbNH6h",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : null,
@@ -47,7 +47,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
     }
   },
   "livemode" : false,
-  "created" : 1772669690,
+  "created" : 1773686094,
   "allow_redisplay" : "unspecified",
   "type" : "fpx",
   "customer" : null,
