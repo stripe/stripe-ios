@@ -90,18 +90,23 @@ public final class EmbeddedPaymentElement {
     }
 
     /// An asynchronous failable initializer for CheckoutSession mode
-    /// Loads payment methods and configuration from a fully loaded CheckoutSession object.
-    /// - Parameter checkoutSession: A fully loaded Checkout.Session object
+    /// Loads payment methods and configuration from a fully loaded Checkout instance.
+    /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
     @_spi(CheckoutSessionsPreview) public static func create(
-        checkoutSession: Checkout.Session,
+        checkout: Checkout,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        guard let stpSession = checkoutSession as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+        guard let stpSession = checkout.session as? STPCheckoutSession else {
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
             throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
+        }
+        if checkout.isPerformingSessionUpdate {
+            let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.create(checkout:configuration:)."
+            assertionFailure(message)
+            throw PaymentSheetError.integrationError(nonPIIDebugDescription: message)
         }
         var config = configuration
         stpSession.applyAddressOverrides(to: &config)
@@ -124,6 +129,7 @@ public final class EmbeddedPaymentElement {
             analyticsHelper: analyticsHelper
         )
         embeddedPaymentElement.clearPaymentOptionIfNeeded()
+        checkout.integrationDelegate = embeddedPaymentElement
         return embeddedPaymentElement
     }
 
@@ -151,16 +157,21 @@ public final class EmbeddedPaymentElement {
 
     /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
     /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
-    /// - Parameter checkoutSession: An updated Checkout.Session.
+    /// - Parameter checkout: The Checkout instance whose session has been updated.
     /// - Returns: The result of the update.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
     /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
     @_spi(CheckoutSessionsPreview) public func update(
-        checkoutSession: Checkout.Session
+        checkout: Checkout
     ) async -> UpdateResult {
-        guard let stpSession = checkoutSession as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+        guard let stpSession = checkout.session as? STPCheckoutSession else {
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
             return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
+        }
+        if checkout.isPerformingSessionUpdate {
+            let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.update(checkout:)."
+            assertionFailure(message)
+            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message))
         }
         stpSession.applyAddressOverrides(to: &configuration)
         return await performUpdate(mode: .checkoutSession(stpSession))
@@ -437,7 +448,15 @@ public final class EmbeddedPaymentElement {
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
         self.lastUpdatedPaymentOption = paymentOption
-        self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: configuration.enablePassiveCaptcha, enableAttestation: configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: configuration.apiClient.stripeAttest)
+        self.confirmationChallenge = ConfirmationChallenge(enableAttestation: configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: configuration.apiClient.stripeAttest)
+    }
+}
+
+// MARK: - CheckoutIntegrationDelegate
+
+extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
+    var isSheetPresented: Bool {
+        presentingViewController?.presentedViewController is BottomSheetViewController
     }
 }
 
@@ -498,16 +517,16 @@ extension EmbeddedPaymentElement {
 
     /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
     /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
-    /// - Parameter checkoutSession: An updated Checkout.Session.
+    /// - Parameter checkout: The Checkout instance whose session has been updated.
     /// - Parameter completion: A completion block containing the result of the update. Called on the main thread.
     /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
     @_spi(CheckoutSessionsPreview) public func update(
-        checkoutSession: Checkout.Session,
+        checkout: Checkout,
         completion: @escaping (UpdateResult) -> Void
     ) {
         Task {
-            let result = await update(checkoutSession: checkoutSession)
+            let result = await update(checkout: checkout)
             DispatchQueue.main.async {
                 completion(result)
             }

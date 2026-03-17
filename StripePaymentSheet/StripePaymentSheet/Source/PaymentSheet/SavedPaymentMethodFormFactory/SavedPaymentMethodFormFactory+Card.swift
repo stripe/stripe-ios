@@ -22,7 +22,6 @@ extension SavedPaymentMethodFormFactory {
             let disallowedCardBrands = cardBrands.filter { !configuration.cardBrandFilter.isAccepted(cardBrand: $0) }
 
             let cardBrandChoiceElement = CardBrandChoiceElement(
-                enableCBCRedesign: configuration.enableCBCRedesign,
                 cardBrands: Set<STPCardBrand>(cardBrands),
                 disallowedCardBrands: Set<STPCardBrand>(disallowedCardBrands),
                 theme: theme,

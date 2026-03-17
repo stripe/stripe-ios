@@ -15,14 +15,22 @@ extension STPAPIClient {
     /// - Parameter checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx")
     /// - Returns: STPCheckoutSession object representing the checkout session.
     func initCheckoutSession(checkoutSessionId: String) async throws -> STPCheckoutSession {
+        var elementsSessionParameters: [String: Any] = [
+            "is_aggregation_expected": true,
+            "locale": Locale.current.toLanguageTag(),
+        ]
+        if let sessionId = AnalyticsHelper.shared.sessionID {
+            elementsSessionParameters["mobile_session_id"] = sessionId
+        }
+        if let appId = Bundle.main.bundleIdentifier {
+            elementsSessionParameters["mobile_app_id"] = appId
+        }
         let parameters: [String: Any] = [
             "browser_locale": Locale.current.toLanguageTag(),
             "browser_timezone": TimeZone.current.identifier,
             "eid": UUID().uuidString,
             "redirect_type": "embedded",
-            "elements_session_client": [
-                "is_aggregation_expected": true,
-            ],
+            "elements_session_client": elementsSessionParameters,
         ]
 
         let checkoutSession: STPCheckoutSession = try await APIRequest<STPCheckoutSession>.post(
@@ -61,7 +69,7 @@ extension STPAPIClient {
     ///   - paymentMethodOptions: Optional payment method options. BLIK code is extracted and passed as top-level `blik_code` parameter.
     ///   - clientAttributionMetadata: Optional client attribution metadata for analytics
     ///   - passiveCaptchaToken: Optional hCaptcha challenge response token
-    /// - Returns: CheckoutSessionConfirmResponse containing the confirmation result
+    /// - Returns: STPCheckoutSession containing the full confirmed session with expanded intents
     func confirmCheckoutSession(
         sessionId: String,
         paymentMethod: String,
@@ -72,7 +80,7 @@ extension STPAPIClient {
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
         clientAttributionMetadata: STPClientAttributionMetadata? = nil,
         passiveCaptchaToken: String? = nil
-    ) async throws -> CheckoutSessionConfirmResponse {
+    ) async throws -> STPCheckoutSession {
         var parameters: [String: Any] = [
             "payment_method": paymentMethod,
             "expected_payment_method_type": expectedPaymentMethodType,
@@ -109,7 +117,7 @@ extension STPAPIClient {
             parameters["passive_captcha_token"] = passiveCaptchaToken
         }
 
-        return try await APIRequest<CheckoutSessionConfirmResponse>.post(
+        return try await APIRequest<STPCheckoutSession>.post(
             with: self,
             endpoint: "payment_pages/\(sessionId)/confirm",
             parameters: parameters

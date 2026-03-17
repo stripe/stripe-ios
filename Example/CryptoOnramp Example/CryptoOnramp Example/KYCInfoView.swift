@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
 @_spi(STP)
@@ -53,6 +53,9 @@ struct KYCInfoView: View {
 
     /// Closure called when KYC submission succeeds with the level collected by this view.
     let onCompleted: (KYCLevel) -> Void
+
+    /// Controls which variant of KYC data collection this form performs.
+    let collectionMode: CollectionMode
 
     /// Controls which variant of KYC data collection this form performs.
     let collectionMode: CollectionMode

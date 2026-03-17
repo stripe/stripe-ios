@@ -165,7 +165,7 @@ private actor CryptoCustomerState {
 }
 
 /// Coordinates headless Link user authentication and identity verification, leaving most of the UI to the client.
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorProtocol {
 
     private let linkController: LinkController

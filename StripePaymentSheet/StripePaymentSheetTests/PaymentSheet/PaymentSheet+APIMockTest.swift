@@ -21,6 +21,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         static let paymentIntent = STPTestUtils.jsonNamed("PaymentIntent")!
         static let setupIntent = STPTestUtils.jsonNamed("SetupIntent")!
         static let checkoutSession = STPTestUtils.jsonNamed("CheckoutSession")!
+        static let checkoutSessionConfirmed = STPTestUtils.jsonNamed("CheckoutSessionConfirmed")!
     }
 
     enum MockParams {
@@ -530,15 +531,7 @@ private extension PaymentSheetAPIMockTest {
             defer { exp.fulfill() }
 
             if shouldSucceed {
-                var paymentIntentJson = MockJson.paymentIntent
-                paymentIntentJson["status"] = "succeeded"
-
-                let json: [String: Any] = [
-                    "status": "complete",
-                    "payment_status": "paid",
-                    "payment_intent": paymentIntentJson,
-                ]
-                return HTTPStubsResponse(jsonObject: json, statusCode: 200, headers: nil)
+                return HTTPStubsResponse(jsonObject: MockJson.checkoutSessionConfirmed, statusCode: 200, headers: nil)
             } else {
                 let errorJson: [String: Any] = [
                     "error": [
