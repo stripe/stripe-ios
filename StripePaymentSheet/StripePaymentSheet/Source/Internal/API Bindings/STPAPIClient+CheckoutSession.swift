@@ -15,14 +15,22 @@ extension STPAPIClient {
     /// - Parameter checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx")
     /// - Returns: STPCheckoutSession object representing the checkout session.
     func initCheckoutSession(checkoutSessionId: String) async throws -> STPCheckoutSession {
+        var elementsSessionParameters: [String: Any] = [
+            "is_aggregation_expected": true,
+            "locale": Locale.current.toLanguageTag(),
+        ]
+        if let sessionId = AnalyticsHelper.shared.sessionID {
+            elementsSessionParameters["mobile_session_id"] = sessionId
+        }
+        if let appId = Bundle.main.bundleIdentifier {
+            elementsSessionParameters["mobile_app_id"] = appId
+        }
         let parameters: [String: Any] = [
             "browser_locale": Locale.current.toLanguageTag(),
             "browser_timezone": TimeZone.current.identifier,
             "eid": UUID().uuidString,
             "redirect_type": "embedded",
-            "elements_session_client": [
-                "is_aggregation_expected": true,
-            ],
+            "elements_session_client": elementsSessionParameters,
         ]
 
         let checkoutSession: STPCheckoutSession = try await APIRequest<STPCheckoutSession>.post(

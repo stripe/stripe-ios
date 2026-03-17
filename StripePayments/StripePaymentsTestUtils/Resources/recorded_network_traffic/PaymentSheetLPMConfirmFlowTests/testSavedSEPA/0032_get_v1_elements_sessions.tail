@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_UA0yZnU4vpc5z8VrrfyCBfSmNBYPbliBQ8DsWz01ynMIBMN&deferred_intent%5Bamount%5D=1099&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=en-US&mobile_app_id=com\.stripe\.StripeiOSTestHostApp&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_UA24PjOgixsDtPmLVhyJKpr98x1p8Oux5M2BxfU4xXJcOfg&deferred_intent%5Bamount%5D=1099&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=.*&mobile_app_id=.*&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=GcTA7PAQph6JXuN-nUz1we5RChTkD8giZynD0g2RhaToH9zWFAJrSALAymGvmI3g_j7GOiEx-18lKNIC
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=qzYrksnVkzqUza7uHP_lFQX5txRiy6_F85vH_epiH-UmJFSj5LT5twuDTYbp_n5tPZxGd5DOmyVurEZd
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Mon, 16 Mar 2026 19:37:08 GMT
+Date: Mon, 16 Mar 2026 20:45:31 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 16400
+Content-Length: 16401
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_BdIqZfKdk5OFpI
+request-id: req_zzAoK1hIgk18ul
 
 {
   "payment_method_preference" : {
@@ -127,7 +127,7 @@ request-id: req_BdIqZfKdk5OFpI
     "link_auth_partner_delay_android_fb_cookie_login" : false,
     "link_enable_payment_details_refresh" : true,
     "elements_apply_amex_icon_sorting" : false,
-    "elements_enable_pay_by_bank_remember_bank_selection" : true,
+    "elements_enable_pay_by_bank_remember_bank_selection" : false,
     "abstracted_adaptive_pricing_should_show_markup_disclosure_percentage" : false,
     "elements_extend_hcaptcha_refresh_time" : true,
     "enable_payment_method_api_shop_pay" : true,
@@ -190,10 +190,10 @@ request-id: req_BdIqZfKdk5OFpI
     "link_forest_enable_ece_bank_use_shipping_as_billing" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1ikNl52PGKG",
+  "session_id" : "elements_session_1wzPlrfoZQS",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "980093e5-a40d-4a61-bb02-c17920acd943",
+  "config_id" : "2efb9590-67f5-4ab3-982f-c4bb35b8930e",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -221,9 +221,9 @@ request-id: req_BdIqZfKdk5OFpI
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "d33226f6-515f-4146-980d-ed95300daa91",
+    "arb_id" : "6a140d08-002d-46ac-915d-44d79d4acff0",
     "experiment_metadata" : {
-      "seed" : "ea046bcd3e4c4c3cf2ee32389606e9a19393283e4e7f5b08f27ac35ba46e9921",
+      "seed" : "020c709c49aae4cc9fb8fa74ea4c9c87a7ccf84268e4c5362f614c08b2755edf",
       "semi_dominant_payment_methods" : [
 
       ],
@@ -368,8 +368,8 @@ request-id: req_BdIqZfKdk5OFpI
     "default_payment_method" : null,
     "customer_session" : {
       "object" : "customer_session",
-      "api_key_expiry" : 1773693414,
-      "id" : "cuss_1TBgwYFY0qyl6XeWmBwh2K2x",
+      "api_key_expiry" : 1773697515,
+      "id" : "cuss_1TBi0hFY0qyl6XeWGvBb3Y6X",
       "livemode" : false,
       "components" : {
         "customer_sheet" : {
@@ -410,8 +410,8 @@ request-id: req_BdIqZfKdk5OFpI
           }
         }
       },
-      "customer" : "cus_UA0yFGSX0RynMQ",
-      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLEhrck1kY2IzZ1Q5clFyVmJGdlJIQkZ3UDVnSmF3N1k_00usay5Yq9"
+      "customer" : "cus_UA24kIeWIPWq2C",
+      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLGhqbDZtc2pUaFUxMW40am5GZ01FemJLelRZT3NKc2Q_00TiUSFuRe"
     }
   },
   "klarna_express_config" : {
