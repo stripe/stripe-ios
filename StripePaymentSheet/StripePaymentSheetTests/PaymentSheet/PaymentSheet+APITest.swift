@@ -1160,6 +1160,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
+        config.defaultBillingDetails.email = "test@example.com"
 
         let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
         try await sut.update(checkout: checkout)
@@ -1174,6 +1175,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
+        config.defaultBillingDetails.email = "test@example.com"
 
         let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
 
@@ -1199,6 +1201,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
 
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
+        config.defaultBillingDetails.email = "test@example.com"
 
         let sut = try await PaymentSheet.FlowController.create(checkout: checkout, configuration: config)
 
