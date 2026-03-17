@@ -129,7 +129,6 @@ final class LinkPaymentMethodFormElement: Element {
         }
 
         let cardBrandChoiceElement = CardBrandChoiceElement(
-            enableCBCRedesign: configuration.enableCBCRedesign,
             cardBrands: Set(cardBrands),
             disallowedCardBrands: [
                 // We will add brands from card brand filtering here

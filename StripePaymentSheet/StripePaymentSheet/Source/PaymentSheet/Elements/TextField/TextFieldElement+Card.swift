@@ -62,8 +62,8 @@ extension TextFieldElement {
                 // Show unknown card brand if we have under 9 pan digits and no card brands
                 if 9 > text.count && cardBrandChoiceElement.brandCount == 0 {
                     return DynamicImageView.makeUnknownCardImageView(theme: theme)
-                } else if text.count >= 8 && cardBrandChoiceElement.brandCount > 1 {
-                    // Show the dropdown if we have 8 or more digits and at least 2 brands, otherwise fall through and show brand as normal
+                } else if text.count >= 8 && cardBrandChoiceElement.allowedBrandCount > 1 {
+                    // Show the selector if we have 8 or more digits and at least 2 allowed brands, otherwise fall through and show brand as normal
                     return cardBrandChoiceElement.view
                 }
             }

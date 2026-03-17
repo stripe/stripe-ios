@@ -601,7 +601,6 @@ extension SavedPaymentOptionsViewController: PaymentOptionCellDelegate {
                                                                            canRemove: configuration.allowsRemovalOfPaymentMethods && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
                                                                            canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
                                                                            isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible,
-                                                                           enableCBCRedesign: paymentSheetConfiguration.enableCBCRedesign,
                                                                            allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                                                                            isDefault: isDefaultPaymentMethod(savedPaymentMethodId: paymentMethod.stripeId))
         let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(

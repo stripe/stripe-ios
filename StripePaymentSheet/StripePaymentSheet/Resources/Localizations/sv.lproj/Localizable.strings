@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Genom att fortsätta godkänner du att %@ automatiskt debiterar ditt Satispay-saldo på återkommande basis i enlighet med din köp- eller prenumerationsplan.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Genom att fortsätta ger du %@ rätt att automatiskt debitera ditt Twint-saldo på återkommande basis i enlighet med ditt köp eller din prenumerationsplan.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Genom att fortsätta godkänner du att %1$@ debiterar ditt Cash App-konto för den här betalningen och framtida betalningar i enlighet med %2$@s villkor, tills detta godkännande återkallas. Du kan när som helst ändra detta i dina Cash App-inställningar.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att registrera dig på Link, godkänner du våra <terms>villkor</terms> och vår <privacy>integritetspolicy</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Kortuppgifter kan inte ändras.";
 
 "Change" = "Ändra";
+
+"Choose a card brand" = "Välj ett kortmärke";
 
 "Choose a payment method" = "Välj en betalmetod";
 

@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Turpinot jūs pilnvarojat %@ automātiski un regulāri iekasēt maksājumus no jūsu Satispay konta atlikuma saskaņā ar jūsu pirkuma vai abonementa plānu.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Turpinot, jūs pilnvarojat %@ automātiski debitēt summu jūsu Twint atlikumā periodiski saskaņā ar jūsu pirkumu vai abonēšanas plānu.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Turpinot, jūs atļaujat %1$@ iekasēt no jūsu Cash App konta par šo un turpmākiem maksājumiem saskaņā ar %2$@ noteikumiem, līdz šī atļauja netiek atsaukta. To varat mainīt jebkurā laikā Cash App iestatījumos.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pievienojoties Link, jūs piekrītat <terms>noteikumiem</terms> un <privacy>konfidencialitātes politikai</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Kartes informāciju nevar mainīt.";
 
 "Change" = "Mainīt";
+
+"Choose a card brand" = "Izvēlieties kartes zīmolu";
 
 "Choose a payment method" = "Izvēlēties maksājuma veidu";
 

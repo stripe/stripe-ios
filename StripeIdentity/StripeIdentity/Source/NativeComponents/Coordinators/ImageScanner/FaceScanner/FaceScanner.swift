@@ -14,9 +14,14 @@ import Vision
 typealias AnyFaceScanner = AnyImageScanner<FaceScannerOutput>
 
 final class FaceScanner {
+    private enum MotionBlurGate {
+        static let minIOU: Float = 0.94
+        static let minDuration: Double = 0.1
+    }
 
     private let faceDetector: FaceDetector
     private let configuration: Configuration
+    private let motionBlurDetector: MotionBlurDetector
 
     init(
         faceDetector: FaceDetector,
@@ -24,6 +29,10 @@ final class FaceScanner {
     ) {
         self.faceDetector = faceDetector
         self.configuration = configuration
+        self.motionBlurDetector = MotionBlurDetector(
+            minIOU: MotionBlurGate.minIOU,
+            minTime: MotionBlurGate.minDuration
+        )
     }
 
     convenience init(
@@ -56,13 +65,15 @@ extension FaceScanner: ImageScanner {
         cameraProperties: CameraSession.DeviceProperties?
     ) -> StripeCore.Future<FaceScannerOutput> {
         do {
+            let faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
             return Promise(
                 value: .init(
-                    faceDetectorOutput: try faceDetector.scanImage(
-                        pixelBuffer: pixelBuffer
-                    ),
+                    faceDetectorOutput: faceDetectorOutput,
                     cameraProperties: cameraProperties,
-                    configuration: configuration
+                    configuration: configuration,
+                    motionBlurResult: motionBlurResult(
+                        faceDetectorOutput: faceDetectorOutput
+                    )
                 )
             )
         } catch {
@@ -72,6 +83,24 @@ extension FaceScanner: ImageScanner {
     }
 
     func reset() {
+        motionBlurDetector.reset()
         faceDetector.metricsTracker?.reset()
+    }
+}
+
+extension FaceScanner {
+    fileprivate func motionBlurResult(
+        faceDetectorOutput: FaceDetectorOutput
+    ) -> MotionBlurDetector.Output? {
+        guard
+            faceDetectorOutput.predictions.count == 1,
+            let faceRect = faceDetectorOutput.predictions.first?.rect
+        else {
+            return nil
+        }
+        let motionBlurOutput = motionBlurDetector.determineMotionBlur(
+            documentBounds: faceRect
+        )
+        return motionBlurOutput
     }
 }

@@ -305,7 +305,7 @@ extension PaymentSheet {
                 shouldLogExperimentExposure: false
             )
             self.viewController.flowControllerDelegate = self
-            self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: self.configuration.enablePassiveCaptcha, enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
+            self.confirmationChallenge = ConfirmationChallenge(enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
             self.viewController.confirmationChallenge = self.confirmationChallenge
             updatePaymentOption()
         }

@@ -388,21 +388,36 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testSavedSEPA() async throws {
-        let customer = "cus_TUoUvtvPJvpHPA"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
-        let savedSepaPM = STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_1SXosgFY0qyl6XeWkScLWnUN", // A hardcoded SEPA PM for the ^ customer
-            "created": "12345",
-            "type": "sepa_debit",
-        ])!
-
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: MerchantCountry.US.publishableKey)
 
         // Create customer session for confirmation token support
         let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
-            customerID: customer,
+            customerID: nil,
             merchantCountry: "us",
             paymentMethodSave: true
+        )
+        let customer = customerAndCustomerSession.customer
+
+        // Create a SEPA payment method and attach it to the customer via a confirmed SetupIntent
+        let savedSepaPM = try await apiClient.createPaymentMethod(with: ._testSEPA())
+        _ = try await STPTestingAPIClient.shared.fetchSetupIntent(
+            types: ["sepa_debit"],
+            merchantCountry: "us",
+            paymentMethodID: savedSepaPM.stripeId,
+            customerID: customer,
+            confirm: true,
+            otherParams: [
+                "mandate_data": [
+                    "customer_acceptance": [
+                        "type": "online",
+                        "online": [
+                            "user_agent": "123",
+                            "ip_address": "172.18.117.125",
+                        ],
+                    ] as [String: Any],
+                ],
+            ]
         )
 
         let configuration: PaymentSheet.Configuration = {
@@ -1319,9 +1334,9 @@ extension PaymentSheetLPMConfirmFlowTests {
         _ = PaymentSheet(mode: .deferredIntent(intentConfiguration), configuration: PaymentSheet.Configuration())
 
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        let customer = "cus_TUoUvtvPJvpHPA"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+        // Create a fresh customer so we don't accumulate payment methods on a shared customer
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(
-            customerID: customer,
+            customerID: nil,
             merchantCountry: merchantCountry.rawValue.lowercased()
         )
 
