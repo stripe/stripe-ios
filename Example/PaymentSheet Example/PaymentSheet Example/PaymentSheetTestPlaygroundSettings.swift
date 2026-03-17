@@ -167,7 +167,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case TH
         case DE
         case IT
-        case stripeShop = "stripe_shop"
+        case stripeShop = "stripe_shop_prod"
         case custom
     }
 
@@ -813,7 +813,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     static let nsUserDefaultsCustomerIDKey = "PaymentSheetTestPlaygroundCustomerId"
     static let nsUserDefaultsAppearanceKey = "PaymentSheetTestPlaygroundAppearance"
 
-    static let baseEndpoint = "https://stripe-shop-prod.stripedemos.com"
+    static let baseEndpoint = "https://passive-captcha-bugbash.stripedemos.com"
     static var endpointSelectorEndpoint: String {
         return "\(baseEndpoint)/endpoints"
     }
