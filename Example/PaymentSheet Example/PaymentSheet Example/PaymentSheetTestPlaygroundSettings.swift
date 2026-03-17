@@ -322,13 +322,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
-    enum EnablePassiveCaptcha: String, PickerEnum {
-        static var enumName: String { "Enable passive captcha" }
-
-        case on
-        case off
-    }
-
     enum EnableAttestationOnConfirmation: String, PickerEnum {
         static var enumName: String { "Enable attestation on confirmation" }
 
@@ -629,12 +622,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             }
         }
     }
-    enum EnableCBCRedesign: String, PickerEnum {
-        static let enumName: String = "CBC Redesign"
-
-        case on
-        case off
-    }
     enum RequireCVCRecollectionEnabled: String, PickerEnum {
         static let enumName: String = "Require CVC Recollection"
         case on
@@ -720,7 +707,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayEnabled: ApplePayEnabled
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
-    var enablePassiveCaptcha: EnablePassiveCaptcha
     var enableAttestationOnConfirmation: EnableAttestationOnConfirmation
     var paymentMethodSave: PaymentMethodSave
     var allowRedisplayOverride: AllowRedisplayOverride
@@ -745,7 +731,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var externalPaymentMethods: ExternalPaymentMethods
     var customPaymentMethods: CustomPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
-    var enableCBCRedesign: EnableCBCRedesign
     var requireCVCRecollection: RequireCVCRecollectionEnabled
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
 
@@ -782,7 +767,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayEnabled: .on,
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
-            enablePassiveCaptcha: .on,
             enableAttestationOnConfirmation: .on,
             paymentMethodSave: .enabled,
             allowRedisplayOverride: .notSet,
@@ -807,7 +791,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             externalPaymentMethods: .off,
             customPaymentMethods: .off,
             preferredNetworksEnabled: .off,
-            enableCBCRedesign: .on,
             requireCVCRecollection: .off,
             allowsRemovalOfLastSavedPaymentMethod: .on,
             attachDefaults: .off,

@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Συνεχίζοντας, εξουσιοδοτείτε το %@ να χρεώνει αυτόματα το Υπόλοιπο Satispay σε επαναλαμβανόμενη βάση σύμφωνα με το πρόγραμμα αγοράς ή συνδρομής σας.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Συνεχίζοντας, εξουσιοδοτείτε την %@ να χρεώνει αυτόματα το Υπόλοιπο Twint σε επαναλαμβανόμενη βάση σύμφωνα με το πρόγραμμα αγοράς ή συνδρομής σας.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Συνεχίζοντας, εξουσιοδοτείτε την %1$@ να χρεώσει τον λογαριασμό σας Cash App για αυτήν την πληρωμή και μελλοντικές πληρωμές σύμφωνα με τους όρους της %2$@, μέχρι να ανακληθεί αυτή η εξουσιοδότηση. Μπορείτε να αλλάξετε αυτήν την επιλογή οποιαδήποτε στιγμή στις ρυθμίσεις Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Με την εγγραφή σας στο Link, συμφωνείτε με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων κάρτας.";
 
 "Change" = "Αλλαγή";
+
+"Choose a card brand" = "Επιλέξτε μια επωνυμία κάρτας";
 
 "Choose a payment method" = "Επιλέξτε μέθοδο πληρωμής";
 

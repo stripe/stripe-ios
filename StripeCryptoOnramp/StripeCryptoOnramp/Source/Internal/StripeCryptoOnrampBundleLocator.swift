@@ -8,8 +8,8 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-@_spi(STP) public
-final class StripeCryptoOnrampBundleLocator: BundleLocatorProtocol {
+@_spi(CryptoOnrampAlpha)
+public final class StripeCryptoOnrampBundleLocator: BundleLocatorProtocol {
     public static let internalClass: AnyClass = StripeCryptoOnrampBundleLocator.self
     public static let bundleName = "StripeCryptoOnrampBundle"
     #if SWIFT_PACKAGE

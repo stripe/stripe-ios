@@ -1,0 +1,85 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1TBfxuFY0qyl6XeWo60vbi15\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=e9mErfyoPasdAVdYZ3KW2Vc2PJPihzfoXMjCNMO13KpBLwTmRb97gG5UWcPcFZqC2mv4aA7fsvDXXWy5
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_mWQz4FQqlhB41n
+Content-Length: 1963
+Vary: Origin
+Date: Mon, 16 Mar 2026 18:34:12 GMT
+original-request: req_mWQz4FQqlhB41n
+stripe-version: 2020-08-27
+idempotency-key: 9032e387-9efb-4b9e-9c4f-2b906310c2ec
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=seti_1TBfxuFY0qyl6XeWo60vbi15_secret_U9zxpRwf5q2obHnaC8xt2mFEQkZ00id&confirmation_token=ctoken_1TBfxtFY0qyl6XeWZbZ12WDy&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "id" : "seti_1TBfxuFY0qyl6XeWo60vbi15",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "cashapp_handle_redirect_or_display_qr_code",
+    "cashapp_handle_redirect_or_display_qr_code" : {
+      "qr_code" : {
+        "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9VOXp4OGxISzZYWHhwSWZMRXI1M3hscHdLODk4WEtu0100pjd4wkol.png",
+        "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9VOXp4OGxISzZYWHhwSWZMRXI1M3hscHdLODk4WEtu0100pjd4wkol.svg",
+        "expires_at" : 1773686072
+      },
+      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/qr\/instructions\/CDQaFwoVYWNjdF8xRzZtMXBGWTBxeWw2WGVXKKSa4c0GMgam4B3Voxo6MJV5Ds2VUa30YEF_VGhI_K7wJ6WcD5iWAAX6ltLG53GWxZhYJyezZdoxeYfbu_W61g",
+      "mobile_auth_url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_U9zxrl8LSOfRDluD7hAcxdIJRqT9dGn"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1TBfxtFY0qyl6XeWrgUV2IdN",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "created" : 1773686049,
+    "allow_redisplay" : "unspecified",
+    "type" : "cashapp",
+    "customer" : null,
+    "cashapp" : {
+      "cashtag" : null,
+      "buyer_id" : null
+    },
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "cashapp"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1773686050,
+  "client_secret" : "seti_1TBfxuFY0qyl6XeWo60vbi15_secret_U9zxpRwf5q2obHnaC8xt2mFEQkZ00id",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

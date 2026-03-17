@@ -104,12 +104,12 @@ public class PaymentSheet {
         )
     }
 
-    /// Initializes PaymentSheet with a CheckoutSession object
-    /// - Parameter checkoutSession: A fully loaded Checkout.Session object
+    /// Initializes PaymentSheet with a Checkout object
+    /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @_spi(CheckoutSessionsPreview) public convenience init(checkoutSession: Checkout.Session, configuration: Configuration) {
-        guard let stpSession = checkoutSession as? STPCheckoutSession else {
-            fatalError("Expected STPCheckoutSession, got \(type(of: checkoutSession))")
+    @MainActor @_spi(CheckoutSessionsPreview) public convenience init(checkout: Checkout, configuration: Configuration) {
+        guard let stpSession = checkout.session as? STPCheckoutSession else {
+            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.session))")
         }
         var config = configuration
         stpSession.applyAddressOverrides(to: &config)
@@ -117,6 +117,8 @@ public class PaymentSheet {
             mode: .checkoutSession(stpSession),
             configuration: config
         )
+        self.checkout = checkout
+        checkout.integrationDelegate = self
     }
 
     required init(mode: InitializationMode, configuration: Configuration) {
@@ -135,101 +137,109 @@ public class PaymentSheet {
         from presentingViewController: UIViewController,
         completion: @escaping (PaymentSheetResult) -> Void
     ) {
-        // Overwrite completion closure to retain self until called
-        let completion: (PaymentSheetResult) -> Void = { status in
-            // Dismiss if necessary
-            if let presentingViewController = self.bottomSheetViewController.presentingViewController {
-                // Calling `dismiss()` on the presenting view controller causes
-                // the bottom sheet and any presented view controller by
-                // bottom sheet (i.e. Link) to be dismissed all at the same time.
-                presentingViewController.dismiss(animated: true) {
-                    completion(status)
-                }
-            } else {
-                completion(status)
-            }
-            self.completion = nil
-        }
-        self.completion = completion
-
-        // Guard against basic user error
-        guard presentingViewController.presentedViewController == nil else {
-            assertionFailure(PaymentSheetError.alreadyPresented.debugDescription)
-            let error = PaymentSheetError.alreadyPresented
-            completion(.failed(error: error))
-            return
-        }
-
-        // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
-        PaymentSheetLoader.load(
-            mode: mode,
-            configuration: configuration,
-            analyticsHelper: analyticsHelper,
-            integrationShape: .paymentSheet
-        ) { result in
-            switch result {
-            case .success(let loadResult):
-                self.confirmationChallenge = ConfirmationChallenge(enablePassiveCaptcha: self.configuration.enablePassiveCaptcha, enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
-                let presentPaymentSheet: () -> Void = {
-                    // Set the PaymentSheetViewController as the content of our bottom sheet
-                    let paymentSheetVC: PaymentSheetViewControllerProtocol = {
-                        // Resolve automatic layout based on experiment
-                        var configuration = self.configuration
-                        let resolvedPaymentMethodLayout = configuration.resolveLayout(
-                            loadResult: loadResult,
-                            configuration: self.configuration,
-                            analyticsHelper: self.analyticsHelper
-                        )
-                        switch resolvedPaymentMethodLayout {
-                        case .horizontal:
-                            return PaymentSheetViewController(
-                                configuration: configuration,
-                                loadResult: loadResult,
-                                analyticsHelper: self.analyticsHelper,
-                                delegate: self
-                            )
-                        case .vertical:
-                            let verticalVC = PaymentSheetVerticalViewController(
-                                configuration: configuration,
-                                loadResult: loadResult,
-                                isFlowController: false,
-                                analyticsHelper: self.analyticsHelper
-                            )
-                            verticalVC.paymentSheetDelegate = self
-                            return verticalVC
-                        }
-                    }()
-                    self.bottomSheetViewController.setViewControllers([paymentSheetVC])
-                }
-                if let linkAccount = LinkAccountContext.shared.account, loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(for: linkAccount) {
-                    let verificationController = LinkVerificationController(
-                        mode: .inlineLogin,
-                        linkAccount: linkAccount,
-                        configuration: self.configuration
-                    )
-
-                    verificationController.present(from: self.bottomSheetViewController) { result in
-                        switch result {
-                        case .completed:
-                            self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false, onClose: {
-                                presentPaymentSheet()
-                            })
-                        case .canceled, .switchAccount:
-                            presentPaymentSheet()
-                        case .failed:
-                            // Error is logged within LinkVerificationViewController
-                            presentPaymentSheet()
-                        }
+        Task { @MainActor in
+            // Overwrite completion closure to retain self until called
+            let completion: (PaymentSheetResult) -> Void = { status in
+                // Dismiss if necessary
+                if let presentingViewController = self.bottomSheetViewController.presentingViewController {
+                    // Calling `dismiss()` on the presenting view controller causes
+                    // the bottom sheet and any presented view controller by
+                    // bottom sheet (i.e. Link) to be dismissed all at the same time.
+                    presentingViewController.dismiss(animated: true) {
+                        completion(status)
                     }
                 } else {
-                    presentPaymentSheet()
+                    completion(status)
                 }
-            case .failure(let error):
-                completion(.failed(error: error))
+                self.completion = nil
             }
+            self.completion = completion
+
+            // Guard against basic user error
+            guard presentingViewController.presentedViewController == nil else {
+                assertionFailure(PaymentSheetError.alreadyPresented.debugDescription)
+                let error = PaymentSheetError.alreadyPresented
+                completion(.failed(error: error))
+                return
+            }
+            if let checkout, checkout.isPerformingSessionUpdate {
+                let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.present(from:completion:)."
+                assertionFailure(message)
+                completion(.failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message)))
+                return
+            }
+
+            // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
+            PaymentSheetLoader.load(
+                mode: mode,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                integrationShape: .paymentSheet
+            ) { result in
+                switch result {
+                case .success(let loadResult):
+                    self.confirmationChallenge = ConfirmationChallenge(enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
+                    let presentPaymentSheet: () -> Void = {
+                        // Set the PaymentSheetViewController as the content of our bottom sheet
+                        let paymentSheetVC: PaymentSheetViewControllerProtocol = {
+                            // Resolve automatic layout based on experiment
+                            var configuration = self.configuration
+                            let resolvedPaymentMethodLayout = configuration.resolveLayout(
+                                loadResult: loadResult,
+                                configuration: self.configuration,
+                                analyticsHelper: self.analyticsHelper
+                            )
+                            switch resolvedPaymentMethodLayout {
+                            case .horizontal:
+                                return PaymentSheetViewController(
+                                    configuration: configuration,
+                                    loadResult: loadResult,
+                                    analyticsHelper: self.analyticsHelper,
+                                    delegate: self
+                                )
+                            case .vertical:
+                                let verticalVC = PaymentSheetVerticalViewController(
+                                    configuration: configuration,
+                                    loadResult: loadResult,
+                                    isFlowController: false,
+                                    analyticsHelper: self.analyticsHelper
+                                )
+                                verticalVC.paymentSheetDelegate = self
+                                return verticalVC
+                            }
+                        }()
+                        self.bottomSheetViewController.setViewControllers([paymentSheetVC])
+                    }
+                    if let linkAccount = LinkAccountContext.shared.account, loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(for: linkAccount) {
+                        let verificationController = LinkVerificationController(
+                            mode: .inlineLogin,
+                            linkAccount: linkAccount,
+                            configuration: self.configuration
+                        )
+
+                        verificationController.present(from: self.bottomSheetViewController) { result in
+                            switch result {
+                            case .completed:
+                                self.presentPayWithNativeLinkController(from: self.bottomSheetViewController, intent: loadResult.intent, elementsSession: loadResult.elementsSession, shouldOfferApplePay: self.configuration.isApplePayEnabled, shouldFinishOnClose: false, onClose: {
+                                    presentPaymentSheet()
+                                })
+                            case .canceled, .switchAccount:
+                                presentPaymentSheet()
+                            case .failed:
+                                // Error is logged within LinkVerificationViewController
+                                presentPaymentSheet()
+                            }
+                        }
+                    } else {
+                        presentPaymentSheet()
+                    }
+                case .failure(let error):
+                    completion(.failed(error: error))
+                }
+            }
+            self.bottomSheetViewController.setViewControllers([self.loadingViewController])
+            presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
         }
-        self.bottomSheetViewController.setViewControllers([self.loadingViewController])
-        presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: configuration.appearance)
     }
 
     /// Presents a sheet for a customer to complete their payment
@@ -260,6 +270,9 @@ public class PaymentSheet {
 
     /// The initialization mode this instance was initialized with
     let mode: InitializationMode
+
+    /// The Checkout that backs checkout-session mode integrations, if any.
+    private weak var checkout: Checkout?
 
     /// A user-supplied completion block. Nil until `present` is called.
     var completion: ((PaymentSheetResult) -> Void)?
@@ -380,6 +393,14 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
                 elementsSession: paymentSheetViewController.elementsSession
             )
         }
+    }
+}
+
+// MARK: - CheckoutIntegrationDelegate
+
+extension PaymentSheet: CheckoutIntegrationDelegate {
+    var isSheetPresented: Bool {
+        bottomSheetViewController.presentingViewController != nil
     }
 }
 

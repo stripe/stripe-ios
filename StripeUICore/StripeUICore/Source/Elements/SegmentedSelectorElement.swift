@@ -23,9 +23,13 @@ import UIKit
 
     private let selectorView: SegmentedSelectorView
 
+    public private(set) var hasBeenTapped = false
     public private(set) var selectedItem: SegmentedSelectorItem?
     public private(set) var items: [SegmentedSelectorItem]
     private var disabledItems: Set<SegmentedSelectorItem>
+    public var enabledItems: [SegmentedSelectorItem] {
+        return items.filter({ !disabledItems.contains($0) })
+    }
 
     /// When false, the user cannot deselect the currently selected item.
     private var allowDeselection: Bool
@@ -84,6 +88,7 @@ import UIKit
         if selectedItem == item && !allowDeselection {
             return
         }
+        hasBeenTapped = true
         // Toggle behavior: if already selected, deselect
         let newSelection: SegmentedSelectorItem? = (selectedItem == item) ? nil : item
         select(newSelection, animated: true)

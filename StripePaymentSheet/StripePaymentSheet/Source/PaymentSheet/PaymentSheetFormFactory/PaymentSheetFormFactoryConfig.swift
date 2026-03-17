@@ -78,15 +78,6 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
-    var enableCBCRedesign: Bool {
-        switch self {
-        case .paymentElement(let config, _):
-            return config.enableCBCRedesign
-        case .customerSheet(let config):
-            return config.enableCBCRedesign
-        }
-    }
-
     var isUsingBillingAddressCollection: Bool {
         switch self {
         case .paymentElement(let config, _):

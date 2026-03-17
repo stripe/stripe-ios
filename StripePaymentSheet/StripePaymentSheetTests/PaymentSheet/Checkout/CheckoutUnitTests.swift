@@ -180,6 +180,46 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(delegate.didUpdateCalled)
     }
 
+    // MARK: - Sheet Presented Guard Tests
+
+    func testLoadThrowsWhenSheetPresented() async {
+        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
+        let integrationDelegate = MockCheckoutIntegrationDelegate()
+        integrationDelegate.isSheetPresented = true
+        checkout.integrationDelegate = integrationDelegate
+
+        do {
+            try await checkout.load()
+            XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
+        } catch let error as CheckoutError {
+            guard case .sheetCurrentlyPresented = error else {
+                XCTFail("Expected .sheetCurrentlyPresented, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+    func testRequireOpenSessionThrowsWhenSheetPresented() async {
+        let checkout = makeCheckoutWithOpenSession()
+        let integrationDelegate = MockCheckoutIntegrationDelegate()
+        integrationDelegate.isSheetPresented = true
+        checkout.integrationDelegate = integrationDelegate
+
+        do {
+            try await checkout.applyPromotionCode("SAVE25")
+            XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
+        } catch let error as CheckoutError {
+            guard case .sheetCurrentlyPresented = error else {
+                XCTFail("Expected .sheetCurrentlyPresented, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
     // MARK: - Address Collection Decoding Tests
 
     func testRequiresBillingAddress_whenRequired() {
@@ -336,6 +376,73 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(session.totals?.total, 21000)
     }
 
+    // MARK: - onConfirmed Tests
+
+    func testOnConfirmedUpdatesSessionAndNotifiesDelegate() {
+        let checkout = makeCheckoutWithOpenSession()
+        let delegate = MockCheckoutDelegate()
+        checkout.delegate = delegate
+
+        // Simulate a confirm response with different data
+        var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
+        updatedJSON["status"] = "complete"
+        updatedJSON["payment_status"] = "paid"
+        let confirmResponse = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
+
+        // Invoke the onConfirmed closure as the confirm call sites do
+        let stpSession = checkout.session as! STPCheckoutSession
+        stpSession.onConfirmed?(confirmResponse)
+
+        // Verify session was updated with the confirm response data
+        XCTAssertEqual(checkout.session?.status, .complete)
+        XCTAssertEqual(checkout.session?.paymentStatus, .paid)
+        XCTAssertTrue(delegate.didUpdateCalled)
+    }
+
+    func testOnConfirmedCarriesOverAddressOverrides() {
+        let checkout = makeCheckoutWithOpenSession()
+
+        // Set address overrides on the initial session
+        let billingUpdate = Checkout.AddressUpdate(
+            name: "Jane Doe",
+            address: .init(country: "US")
+        )
+        (checkout.session as! STPCheckoutSession).billingAddressOverride = billingUpdate
+
+        // Simulate a confirm response
+        var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
+        updatedJSON["status"] = "complete"
+        updatedJSON["payment_status"] = "paid"
+        let confirmResponse = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
+
+        let stpSession = checkout.session as! STPCheckoutSession
+        stpSession.onConfirmed?(confirmResponse)
+
+        // Address overrides should be carried over to the new session
+        XCTAssertEqual(checkout.session?.billingAddress?.name, "Jane Doe")
+        XCTAssertEqual(checkout.session?.billingAddress?.address.country, "US")
+    }
+
+    func testOnConfirmedSetsNewClosureOnUpdatedSession() {
+        let checkout = makeCheckoutWithOpenSession()
+        let delegate = MockCheckoutDelegate()
+        checkout.delegate = delegate
+
+        // First confirm
+        var firstResponse = CheckoutTestHelpers.makeOpenSessionJSON()
+        firstResponse["status"] = "complete"
+        firstResponse["payment_status"] = "paid"
+        let firstConfirm = STPCheckoutSession.decodedObject(fromAPIResponse: firstResponse)!
+
+        (checkout.session as! STPCheckoutSession).onConfirmed?(firstConfirm)
+        XCTAssertEqual(checkout.session?.status, .complete)
+
+        // The new session should also have onConfirmed set,
+        // so a second invocation still works
+        let secondSession = checkout.session as! STPCheckoutSession
+        XCTAssertNotNil(secondSession.onConfirmed)
+    }
+
     // MARK: - Helpers
 
     private func makeCheckoutWithOpenSession() -> Checkout {
@@ -357,4 +464,9 @@ private class MockCheckoutDelegate: CheckoutDelegate {
         didUpdateCalled = true
         lastSession = session
     }
+}
+
+@MainActor
+private class MockCheckoutIntegrationDelegate: CheckoutIntegrationDelegate {
+    var isSheetPresented: Bool = false
 }

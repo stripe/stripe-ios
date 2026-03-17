@@ -8,7 +8,7 @@
 import StripeCore
 import SwiftUI
 
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
 @_spi(STP)

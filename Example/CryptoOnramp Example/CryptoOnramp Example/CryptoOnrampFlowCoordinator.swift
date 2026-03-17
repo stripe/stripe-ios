@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
 /// Helps to coordinate stepping through a multi-step flow to collect only necessary data based on known account information.

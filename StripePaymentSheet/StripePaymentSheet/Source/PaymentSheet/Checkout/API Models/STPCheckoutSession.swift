@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
 /// A CheckoutSession represents a session for a customer to complete a payment.
@@ -39,6 +40,14 @@ class STPCheckoutSession: NSObject {
 
     /// The ID of the SetupIntent for Checkout Sessions in setup mode.
     let setupIntentId: String?
+
+    /// The expanded PaymentIntent for this session, if in `payment` or `subscription` mode.
+    /// Only populated when the confirm endpoint returns expanded intent objects.
+    let paymentIntent: STPPaymentIntent?
+
+    /// The expanded SetupIntent for this session, if in `setup` mode.
+    /// Only populated when the confirm endpoint returns expanded intent objects.
+    let setupIntent: STPSetupIntent?
 
     /// The list of payment method types that this CheckoutSession is allowed to use.
     let paymentMethodTypes: [STPPaymentMethodType]
@@ -129,6 +138,11 @@ class STPCheckoutSession: NSObject {
     /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
     var shippingAddressOverride: Checkout.AddressUpdate?
 
+    /// Called by confirm handlers with the updated session after a successful confirm.
+    /// `Checkout.updateSession(_:)` sets this so the confirm response flows back
+    /// to `Checkout` without passing closures through the confirm call chain.
+    var onConfirmed: ((STPCheckoutSession) -> Void)?
+
     /// Returns `true` when the server needs a `tax_region` update for the given address type.
     ///
     /// - Parameter addressType: Either `"billing"` or `"shipping"`.
@@ -153,6 +167,29 @@ class STPCheckoutSession: NSObject {
         }
     }
 
+    /// Extracts the client secret from the expanded intent based on checkout session mode.
+    /// - Parameter mode: The checkout session mode (payment, setup, or subscription)
+    /// - Returns: The client secret string from the underlying intent
+    /// - Throws: PaymentSheetError if the expected intent is missing
+    func clientSecret(for mode: Checkout.Mode) throws -> String {
+        switch mode {
+        case .setup:
+            guard let setupIntent = setupIntent else {
+                throw PaymentSheetError.unknown(debugDescription: "Missing setup intent in confirm response")
+            }
+            return setupIntent.clientSecret
+        case .payment:
+            guard let paymentIntent = paymentIntent else {
+                throw PaymentSheetError.unknown(debugDescription: "Missing payment intent in confirm response")
+            }
+            return paymentIntent.clientSecret
+        case .subscription:
+            throw PaymentSheetError.unknown(debugDescription: "Subscriptions are not yet supported with checkout sessions")
+        case .unknown:
+            throw PaymentSheetError.unknown(debugDescription: "Unknown checkout session mode")
+        }
+    }
+
     /// :nodoc:
     override var description: String {
         let props: [String] = [
@@ -166,6 +203,8 @@ class STPCheckoutSession: NSObject {
             "paymentStatus = \(String(describing: allResponseFields["payment_status"]))",
             "paymentIntentId = \(String(describing: paymentIntentId))",
             "setupIntentId = \(String(describing: setupIntentId))",
+            "paymentIntent = \(String(describing: paymentIntent))",
+            "setupIntent = \(String(describing: setupIntent))",
             "paymentMethodTypes = \(String(describing: allResponseFields["payment_method_types"]))",
             "livemode = \(livemode)",
             "customerId = \(String(describing: customerId))",
@@ -189,6 +228,8 @@ class STPCheckoutSession: NSObject {
         paymentStatus: Checkout.PaymentStatus,
         paymentIntentId: String?,
         setupIntentId: String?,
+        paymentIntent: STPPaymentIntent?,
+        setupIntent: STPSetupIntent?,
         paymentMethodTypes: [STPPaymentMethodType],
         paymentMethodOptions: STPPaymentMethodOptions?,
         livemode: Bool,
@@ -218,6 +259,8 @@ class STPCheckoutSession: NSObject {
         self.paymentStatus = paymentStatus
         self.paymentIntentId = paymentIntentId
         self.setupIntentId = setupIntentId
+        self.paymentIntent = paymentIntent
+        self.setupIntent = setupIntent
         self.paymentMethodTypes = paymentMethodTypes
         self.paymentMethodOptions = paymentMethodOptions
         self.livemode = livemode
@@ -323,6 +366,28 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             return raw.hasPrefix("session.") ? String(raw.dropFirst("session.".count)) : raw
         }()
 
+        // Parse payment_intent: can be a string ID or an expanded dictionary
+        let paymentIntent: STPPaymentIntent?
+        let paymentIntentId: String?
+        if let piDict = dict["payment_intent"] as? [AnyHashable: Any] {
+            paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: piDict)
+            paymentIntentId = paymentIntent?.stripeId
+        } else {
+            paymentIntent = nil
+            paymentIntentId = dict["payment_intent"] as? String
+        }
+
+        // Parse setup_intent: can be a string ID or an expanded dictionary
+        let setupIntent: STPSetupIntent?
+        let setupIntentId: String?
+        if let siDict = dict["setup_intent"] as? [AnyHashable: Any] {
+            setupIntent = STPSetupIntent.decodedObject(fromAPIResponse: siDict)
+            setupIntentId = setupIntent?.stripeID
+        } else {
+            setupIntent = nil
+            setupIntentId = dict["setup_intent"] as? String
+        }
+
         return STPCheckoutSession(
             stripeId: stripeId,
             clientSecret: clientSecret,
@@ -331,8 +396,10 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             mode: Checkout.Mode.mode(from: rawMode),
             status: status,
             paymentStatus: Checkout.PaymentStatus.paymentStatus(from: rawPaymentStatus),
-            paymentIntentId: dict["payment_intent"] as? String,
-            setupIntentId: dict["setup_intent"] as? String,
+            paymentIntentId: paymentIntentId,
+            setupIntentId: setupIntentId,
+            paymentIntent: paymentIntent,
+            setupIntent: setupIntent,
             paymentMethodTypes: paymentMethodTypeStrings.map { STPPaymentMethod.type(from: $0) },
             paymentMethodOptions: STPPaymentMethodOptions.decodedObject(
                 fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]

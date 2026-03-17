@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "A folytatással felhatalmazza a(z) %@-t, hogy a vásárlási vagy előfizetési csomagjának megfelelően rendszeresen automatikusan megterhelje Satispay egyenlegét.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Ha folytatja, engedélyezi, hogy a(z) %@ automatikusan megterhelje Twint egyenlegét a vásárlása vagy előfizetése szerint.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ha folytatja, azzal engedélyezi, hogy a(z) %1$@ megterhelje a Cash App számláját ezzel a fizetéssel, és jövőbeli fizetésekkel a(z) %2$@ feltételeinek megfelelően, ameddig az engedélyt vissza nem vonja. Ezt bármikor megváltoztathatja a Cash App beállításaiban.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "A Linkhez történő csatlakozással Őn elfogadja a <terms>feltételeket</terms> és az <privacy>adatvédelmi szabályzatot</privacy>.";
@@ -89,6 +91,8 @@
 "Card details cannot be changed." = "A kártyai adatai nem módosíthatók.";
 
 "Change" = "Módosítás";
+
+"Choose a card brand" = "Válasszon kártyatípust";
 
 "Choose a payment method" = "Fizetési mód választása";
 

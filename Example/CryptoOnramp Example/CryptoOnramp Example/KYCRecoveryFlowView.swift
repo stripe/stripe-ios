@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
 /// A modal flow used when a greater KYC level is required to check out.

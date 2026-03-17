@@ -65,6 +65,9 @@ extension PaymentSheet {
                 clientAttributionMetadata: clientAttributionMetadata
             )
 
+            // Update the Checkout session with the latest response
+            checkoutSession.onConfirmed?(response)
+
             // 4. Handle response based on checkout session mode
             return try await handleCheckoutSessionConfirmResponse(
                 response: response,
@@ -80,7 +83,7 @@ extension PaymentSheet {
 
     @MainActor
     private static func handleCheckoutSessionConfirmResponse(
-        response: CheckoutSessionConfirmResponse,
+        response: STPCheckoutSession,
         checkoutSession: STPCheckoutSession,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
