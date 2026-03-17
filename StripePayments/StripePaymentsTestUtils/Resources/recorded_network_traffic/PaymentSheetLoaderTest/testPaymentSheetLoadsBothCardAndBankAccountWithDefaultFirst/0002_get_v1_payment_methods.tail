@@ -1,25 +1,55 @@
 GET
+<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
 https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_TZCcZWKC57HHmr&limit=100$
+|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0004_get_v1_payment_methods.tail
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_TZCcZWKC57HHmr&limit=100&type=us_bank_account$
+========
+https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_TqanA973bOrpoP&limit=100&type=us_bank_account$
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testLoaderLooksUpLinkEphemeralKey/0002_get_v1_payment_methods.tail
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
+<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
 content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Lzzu-7peTiyovETCk1walCkeWKPH8XQGCkXYiBDgxGfchUEZ3PZHH_fipg2wstl1GnU9Uw93COBnQymj
+|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0004_get_v1_payment_methods.tail
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=SarBF63phsBCjrmz9l520BQ317R4Nkoa08189vAN66y9gtOkTbaVSXbRF-vNaNB8P8cijnV9MYMb9MyP
+========
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=BgSCi2sHK-D0xoFJwBTrs7hXfmRa5B9FLXQPRS9JpjecTzixaZCy7fzxPj24pkzoAaQ-k5iT0YzFIG6y
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testLoaderLooksUpLinkEphemeralKey/0002_get_v1_payment_methods.tail
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
+<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
 Date: Tue, 10 Mar 2026 22:09:01 GMT
+|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0004_get_v1_payment_methods.tail
+Date: Tue, 09 Dec 2025 23:47:31 GMT
+========
+Date: Wed, 18 Feb 2026 22:04:29 GMT
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testLoaderLooksUpLinkEphemeralKey/0002_get_v1_payment_methods.tail
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
+<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
 Content-Length: 2527
+|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0004_get_v1_payment_methods.tail
+Content-Length: 1252
+========
+Content-Length: 1161
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testLoaderLooksUpLinkEphemeralKey/0002_get_v1_payment_methods.tail
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
+<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
 request-id: req_E3UTw80OsLLma0
+|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0004_get_v1_payment_methods.tail
+request-id: req_wlZ9rvH62BFBdM
+========
+request-id: req_ScFz8jaGwxbjiP
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testLoaderLooksUpLinkEphemeralKey/0002_get_v1_payment_methods.tail
 
 {
   "has_more" : false,
@@ -27,12 +57,12 @@ request-id: req_E3UTw80OsLLma0
   "data" : [
     {
       "object" : "payment_method",
-      "id" : "pm_1ScZifFY0qyl6XeWYG9pWAE3",
+      "id" : "pm_1SsuxnFY0qyl6XeWFtrIETmv",
       "billing_details" : {
-        "email" : "test@test.com",
+        "email" : null,
         "phone" : null,
         "tax_id" : null,
-        "name" : "test user",
+        "name" : "Jane Doe",
         "address" : {
           "state" : null,
           "country" : null,
@@ -44,10 +74,9 @@ request-id: req_E3UTw80OsLLma0
       },
       "livemode" : false,
       "us_bank_account" : {
-        "linked_account" : "fca_1ScZiSFY0qyl6XeWeknM6AMz",
         "bank_name" : "STRIPE TEST BANK",
         "fingerprint" : "ickfX9sbxIyAlbuh",
-        "financial_connections_account" : "fca_1ScZiSFY0qyl6XeWeknM6AMz",
+        "financial_connections_account" : null,
         "routing_number" : "110000000",
         "last4" : "6789",
         "account_holder_type" : "individual",
@@ -60,10 +89,10 @@ request-id: req_E3UTw80OsLLma0
         "status_details" : null,
         "account_type" : "checking"
       },
-      "created" : 1765320561,
-      "allow_redisplay" : "always",
+      "created" : 1769215471,
+      "allow_redisplay" : "unspecified",
       "type" : "us_bank_account",
-      "customer" : "cus_TZCcZWKC57HHmr",
+      "customer" : "cus_TqanA973bOrpoP",
       "customer_account" : null
     },
     {

@@ -329,7 +329,7 @@ import UIKit
         }
 
         if collectionMode == .autoCompletable {
-            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: handleAutocompleteButtonTap)
+            autoCompleteLine = autoCompleteLine ?? DummyAddressLine(theme: theme, didTap: { [weak self] in self?.didTapAutocompleteButton() })
         } else {
             autoCompleteLine = nil
         }
@@ -337,12 +337,12 @@ import UIKit
         if fieldOrdering.contains(.line) {
             if case .all(let autocompletableCountries) = collectionMode, autocompletableCountries.caseInsensitiveContains(countryCode) {
                 line1 = TextFieldElement.Address.LineConfiguration(
-                    lineType: .line1Autocompletable(didTapAutocomplete: handleAutocompleteButtonTap),
+                    lineType: .line1Autocompletable(didTapAutocomplete: { [weak self] in self?.didTapAutocompleteButton() }),
                     defaultValue: address.line1
                 ).makeElement(theme: theme)
             } else if case .allWithAutocomplete = collectionMode {
                 line1 = TextFieldElement.Address.LineConfiguration(
-                    lineType: .line1Autocompletable(didTapAutocomplete: handleAutocompleteButtonTap),
+                    lineType: .line1Autocompletable(didTapAutocomplete: { [weak self] in self?.didTapAutocompleteButton() }),
                     defaultValue: address.line1
                 ).makeElement(theme: theme)
             } else {
@@ -409,11 +409,6 @@ import UIKit
         return allDisplayedFieldsEqual
     }
 
-    /// Internal method that calls the current didTapAutocompleteButton
-    /// This ensures subcomponents always call the latest callback
-    private func handleAutocompleteButtonTap() {
-        didTapAutocompleteButton()
-    }
 }
 
 // MARK: - Element

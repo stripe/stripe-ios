@@ -21,13 +21,13 @@ actor ConfirmationChallenge {
 
     typealias ChallengeTokens = (hcaptchaToken: String?, assertion: StripeAttest.Assertion?)
 
-    // enablePassiveCaptcha and enableAttestation are determined by the playground switches and will be removed on release
-    public init(enablePassiveCaptcha: Bool, enableAttestation: Bool, elementsSession: STPElementsSession, stripeAttest: StripeAttest) {
-        self.init(enablePassiveCaptcha: enablePassiveCaptcha, enableAttestation: enableAttestation, elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: PassiveHCaptchaFactory())
+    // enableAttestation is determined by the playground switch and will be removed on release
+    public init(enableAttestation: Bool, elementsSession: STPElementsSession, stripeAttest: StripeAttest) {
+        self.init(enableAttestation: enableAttestation, elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: PassiveHCaptchaFactory())
     }
 
-    init(enablePassiveCaptcha: Bool, enableAttestation: Bool, elementsSession: STPElementsSession, stripeAttest: StripeAttest, hcaptchaFactory: HCaptchaFactory) {
-        if enablePassiveCaptcha, let passiveCaptchaData = elementsSession.passiveCaptchaData {
+    init(enableAttestation: Bool, elementsSession: STPElementsSession, stripeAttest: StripeAttest, hcaptchaFactory: HCaptchaFactory) {
+        if let passiveCaptchaData = elementsSession.passiveCaptchaData {
             self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: hcaptchaFactory)
         }
         if enableAttestation, elementsSession.shouldAttestOnConfirmation {

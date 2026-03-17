@@ -10,21 +10,21 @@ import Foundation
 @_spi(STP) import StripePayments
 
 /// Customer data from a CheckoutSession response.
-@_spi(STP) public struct STPCheckoutSessionCustomer {
+struct STPCheckoutSessionCustomer {
     /// The customer ID.
-    public let id: String
+    let id: String
 
     /// Saved payment methods for this customer.
-    public let paymentMethods: [STPPaymentMethod]
+    let paymentMethods: [STPPaymentMethod]
 
     /// Customer email address.
-    public let email: String?
+    let email: String?
 
     /// Customer name.
-    public let name: String?
+    let name: String?
 
     /// Customer phone number.
-    public let phone: String?
+    let phone: String?
 
     static func decodedObject(from dict: [AnyHashable: Any]?) -> STPCheckoutSessionCustomer? {
         guard let dict = dict,
@@ -33,14 +33,8 @@ import Foundation
         }
 
         // Parse payment methods array
-        var paymentMethods: [STPPaymentMethod] = []
-        if let pmArray = dict["payment_methods"] as? [[AnyHashable: Any]] {
-            for pmDict in pmArray {
-                if let pm = STPPaymentMethod.decodedObject(fromAPIResponse: pmDict) {
-                    paymentMethods.append(pm)
-                }
-            }
-        }
+        let paymentMethods: [STPPaymentMethod] = (dict["payment_methods"] as? [[AnyHashable: Any]])?
+            .compactMap { STPPaymentMethod.decodedObject(fromAPIResponse: $0) } ?? []
 
         return STPCheckoutSessionCustomer(
             id: id,

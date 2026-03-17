@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Bằng việc tiếp tục, bạn cho phép %@ tự động ghi nợ Số dư Satispay của bạn theo chu kỳ định kỳ dựa trên gói mua hoặc gói đăng ký của bạn.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Bằng việc tiếp tục, bạn cho phép %@ tự động ghi nợ Số dư Twint của bạn theo định kỳ theo gói mua hoặc gói đăng ký.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Bằng cách tiếp tục, quý vị ủy quyền cho %1$@ ghi nợ tài khoản Cash App của quý vị cho khoản thanh toán này và các khoản thanh toán trong tương lai theo các điều khoản của %2$@, cho đến khi ủy quyền này bị thu hồi. Quý vị có thể thay đổi điều này bất cứ lúc nào trong mục Cài đặt của Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Bằng việc tham gia Link, quý vị đồng ý với <terms>Điều khoản</terms> và <privacy>Chính sách Quyền riêng tư</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Không thể thay đổi thông tin thẻ.";
 
 "Change" = "Thay đổi";
+
+"Choose a card brand" = "Chọn thương hiệu thẻ";
 
 "Choose a payment method" = "Chọn phương thức thanh toán";
 

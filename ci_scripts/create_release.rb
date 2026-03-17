@@ -72,7 +72,13 @@ def create_pr
     - [ ] StripeAPIConfiguration+Version.swift
   - [ ] Verify changes to localized strings seem sane (e.g. No major removal of langauges or large removal of strings)
   - [ ] If new directories were added, verify they have been added to the appropriate `*.podspec` "files" section.
-  }
+}
+
+  # Add React Native compatibility check if versions match
+  if should_test_react_native?(@version)
+    rn_version = get_stripe_react_native_stripe_ios_version
+    pr_body += "  - [ ] stripe-react-native is pinned to #{rn_version}.x and will use the proposed SDK version #{@version}. A stripe-react-native CI run has been kicked off that uses this branch [here](https://app.bitrise.io/app/cf3f9f9d-0fa5-484a-a09b-5649a1512f6b). Ensure that it passes.\n"
+  end
 
   return if @is_dry_run
 

@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "続行すると、%@ が購入またはサブスクリプションプランに従って、定期的に Satispay Balance から自動的に引き落とすことを許可します。";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "継続することで、お客様は %@ に対し、購入プランまたはサブスクリプションプランに従って、Twint Balance から定期的に自動引き落としを行うことをオーソリします。";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "続行すると、%2$@ の利用規約に従って、この許可が取り消されない限り、お客様は今回の支払いおよび今後の支払いを、Cash App のアカウントから引き落とすことを %1$@ に許可したものとみなされます。これは、Cash App の設定でいつでも変更することができます。";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link に登録することで、お客様は<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "カードの詳細は変更できません。";
 
 "Change" = "変更する";
+
+"Choose a card brand" = "カードブランドを選択";
 
 "Choose a payment method" = "支払い方法を選択";
 
