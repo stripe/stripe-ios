@@ -18,16 +18,16 @@ final class TruncatedDecimalTest: XCTestCase {
     let jsonEncoder = JSONEncoder()
     let jsonDecoder = JSONDecoder()
 
-    func testTwoDigitDecimal() throws {
-        try verify(TwoDecimalFloat(11111.11111), isFormattedTo: "11111.11")
-        try verify(TwoDecimalFloat(0.11111), isFormattedTo: "0.11")
-        try verify(TwoDecimalFloat(0.10111), isFormattedTo: "0.10")
-        try verify(TwoDecimalFloat(999.99), isFormattedTo: "999.99")
-        try verify(TwoDecimalFloat(999.999), isFormattedTo: "1000.00")
-        try verify(TwoDecimalFloat(999), isFormattedTo: "999.00")
+    func testFourDigitDecimal() throws {
+        try verify(FourDecimalFloat(11111.11111), isFormattedTo: "11111.1113")
+        try verify(FourDecimalFloat(0.11111), isFormattedTo: "0.1111")
+        try verify(FourDecimalFloat(0.10111), isFormattedTo: "0.1011")
+        try verify(FourDecimalFloat(999.99), isFormattedTo: "999.9900")
+        try verify(FourDecimalFloat(999.999), isFormattedTo: "999.9990")
+        try verify(FourDecimalFloat(999), isFormattedTo: "999.0000")
 
         // Regression testing IDPROD-3304
-        try verify(TwoDecimalFloat(0.8090820312499999744), isFormattedTo: "0.81")
+        try verify(FourDecimalFloat(0.8090820312499999744), isFormattedTo: "0.8091")
     }
 }
 

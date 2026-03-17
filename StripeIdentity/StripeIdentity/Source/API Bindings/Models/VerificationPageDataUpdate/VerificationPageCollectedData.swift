@@ -101,7 +101,7 @@ extension StripeAPI.VerificationPageCollectedData {
     }
 
     /// Helper to determine the front document score for analytics purposes
-    var frontDocumentScore: TwoDecimalFloat? {
+    var frontDocumentScore: FourDecimalFloat? {
         // return the larger of the two
         guard let frontCardScore = idDocumentFront?.frontCardScore?.value, let passportScore = idDocumentFront?.passportScore?.value else
         {

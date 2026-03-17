@@ -44,7 +44,7 @@ extension StripeAPI.VerificationPageDataFace {
             faceScoreVariance: .init(capturedImages.faceScoreVariance),
             numFrames: capturedImages.numSamples,
             bestBrightnessValue: bestFrameExifMetadata?.brightnessValue.map {
-                TwoDecimalFloat(double: $0)
+                FourDecimalFloat(double: $0)
             },
             bestCameraLensModel: bestFrameExifMetadata?.lensModel,
             bestExposureDuration: capturedImages.bestMiddle.scannerOutput.cameraProperties.flatMap { properties in
@@ -57,10 +57,10 @@ extension StripeAPI.VerificationPageDataFace {
                 return nil
             },
             bestExposureIso: capturedImages.bestMiddle.scannerOutput.cameraProperties.map {
-                TwoDecimalFloat($0.exposureISO)
+                FourDecimalFloat($0.exposureISO)
             },
             bestFocalLength: bestFrameExifMetadata?.focalLength.map {
-                TwoDecimalFloat(double: $0)
+                FourDecimalFloat(double: $0)
             },
             bestIsVirtualCamera: capturedImages.bestMiddle.scannerOutput.cameraProperties?
                 .isVirtualDevice,

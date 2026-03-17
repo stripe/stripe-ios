@@ -21,18 +21,18 @@ extension StripeAPI {
         }
 
         /// If auto-captured, probability score of 'back' result from ML model.
-        let backScore: TwoDecimalFloat?
-        let brightnessValue: TwoDecimalFloat?
+        let backScore: FourDecimalFloat?
+        let brightnessValue: FourDecimalFloat?
         let cameraLensModel: String?
         let exposureDuration: Int?
-        let exposureIso: TwoDecimalFloat?
-        let focalLength: TwoDecimalFloat?
+        let exposureIso: FourDecimalFloat?
+        let focalLength: FourDecimalFloat?
         /// If auto-captured, probability score of 'front_id' result from ML model.
-        let frontCardScore: TwoDecimalFloat?
+        let frontCardScore: FourDecimalFloat?
         /// File ID of uploaded image. If user auto-captured, this will be cropped to the bounds of the document.
         let highResImage: String
         /// If auto-captured, probability score of 'invalid' result from ML model.
-        let invalidScore: TwoDecimalFloat?
+        let invalidScore: FourDecimalFloat?
         let iosBarcodeDecoded: Bool?
         let iosBarcodeSymbology: String?
         let iosTimeToFindBarcode: Int?
@@ -40,7 +40,7 @@ extension StripeAPI {
         /// If auto-captured, file ID of uploaded un-cropped image.
         let lowResImage: String?
         /// If auto-captured, probability score of 'passport' result from ML model.
-        let passportScore: TwoDecimalFloat?
+        let passportScore: FourDecimalFloat?
         /// Method of getting the document image
         let uploadMethod: FileUploadMethod
         /// If true, force confirm from backend without actually checking the uploaded image.

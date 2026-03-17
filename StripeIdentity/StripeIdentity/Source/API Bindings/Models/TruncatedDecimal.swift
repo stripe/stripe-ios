@@ -40,10 +40,10 @@ extension TruncatedDecimal {
     }
 }
 
-// MARK: - TwoDecimalFloat
-/// Truncates a float to 2 decimal places when encoding it
-struct TwoDecimalFloat: TruncatedDecimal {
-    static let numberOfDecimalDigits: UInt = 2
+// MARK: - FourDecimalFloat
+/// Truncates a float to 4 decimal places when encoding it
+struct FourDecimalFloat: TruncatedDecimal {
+    static let numberOfDecimalDigits: UInt = 4
 
     let value: Float
 

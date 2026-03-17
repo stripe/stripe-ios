@@ -37,8 +37,8 @@ extension StripeAPI.VerificationPageDataDocumentFileData {
         // TODO(mludowise|IDPROD-3269): Encode additional properties from scanner output
         let scores = documentScannerOutput?.idDetectorOutput.allClassificationScores
         self.init(
-            backScore: scores?[.idCardBack].map { TwoDecimalFloat($0) },
-            brightnessValue: exifMetadata?.brightnessValue.map { TwoDecimalFloat(double: $0) },
+            backScore: scores?[.idCardBack].map { FourDecimalFloat($0) },
+            brightnessValue: exifMetadata?.brightnessValue.map { FourDecimalFloat(double: $0) },
             cameraLensModel: exifMetadata?.lensModel,
             exposureDuration: documentScannerOutput?.cameraProperties.flatMap { properties in
                 let exposureDuration = properties.exposureDuration
@@ -48,12 +48,12 @@ extension StripeAPI.VerificationPageDataDocumentFileData {
                 return nil
             },
             exposureIso: documentScannerOutput?.cameraProperties.map {
-                TwoDecimalFloat($0.exposureISO)
+                FourDecimalFloat($0.exposureISO)
             },
-            focalLength: exifMetadata?.focalLength.map { TwoDecimalFloat(double: $0) },
-            frontCardScore: scores?[.idCardFront].map { TwoDecimalFloat($0) },
+            focalLength: exifMetadata?.focalLength.map { FourDecimalFloat(double: $0) },
+            frontCardScore: scores?[.idCardFront].map { FourDecimalFloat($0) },
             highResImage: highResImage,
-            invalidScore: scores?[.invalid].map { TwoDecimalFloat($0) },
+            invalidScore: scores?[.invalid].map { FourDecimalFloat($0) },
             iosBarcodeDecoded: documentScannerOutput?.barcode?.hasBarcode,
             iosBarcodeSymbology: documentScannerOutput?.barcode?.symbology.stringValue,
             iosTimeToFindBarcode: documentScannerOutput?.barcode.map {
@@ -61,7 +61,7 @@ extension StripeAPI.VerificationPageDataDocumentFileData {
             },
             isVirtualCamera: documentScannerOutput?.cameraProperties?.isVirtualDevice,
             lowResImage: lowResImage,
-            passportScore: scores?[.passport].map { TwoDecimalFloat($0) },
+            passportScore: scores?[.passport].map { FourDecimalFloat($0) },
             uploadMethod: uploadMethod,
             forceConfirm: forceConfirm
         )
