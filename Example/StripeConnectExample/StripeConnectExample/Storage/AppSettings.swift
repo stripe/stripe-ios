@@ -211,146 +211,42 @@ class AppSettings {
 
     // MARK: - Custom Theme Values
 
-    var formPlaceholderTextColor: String {
-        get { defaults.string(forKey: Constants.formPlaceholderTextColor) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.formPlaceholderTextColor) }
+    func customThemeValue(forKey key: String) -> String {
+        defaults.string(forKey: key) ?? ""
     }
 
-    var inputFieldPaddingX: String {
-        get { defaults.string(forKey: Constants.inputFieldPaddingX) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.inputFieldPaddingX) }
+    func setCustomThemeValue(_ value: String, forKey key: String) {
+        defaults.setValue(value, forKey: key)
     }
 
-    var inputFieldPaddingY: String {
-        get { defaults.string(forKey: Constants.inputFieldPaddingY) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.inputFieldPaddingY) }
-    }
-
-    var actionPrimaryTextTransform: String {
-        get { defaults.string(forKey: Constants.actionPrimaryTextTransform) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.actionPrimaryTextTransform) }
-    }
-
-    var actionSecondaryTextTransform: String {
-        get { defaults.string(forKey: Constants.actionSecondaryTextTransform) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.actionSecondaryTextTransform) }
-    }
-
-    var tableRowPaddingY: String {
-        get { defaults.string(forKey: Constants.tableRowPaddingY) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.tableRowPaddingY) }
-    }
-
-    var buttonDangerColorBackground: String {
-        get { defaults.string(forKey: Constants.buttonDangerColorBackground) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.buttonDangerColorBackground) }
-    }
-
-    var buttonDangerColorBorder: String {
-        get { defaults.string(forKey: Constants.buttonDangerColorBorder) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.buttonDangerColorBorder) }
-    }
-
-    var buttonDangerColorText: String {
-        get { defaults.string(forKey: Constants.buttonDangerColorText) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.buttonDangerColorText) }
-    }
-
-    var badgeWarningColorBackground: String {
-        get { defaults.string(forKey: Constants.badgeWarningColorBackground) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.badgeWarningColorBackground) }
-    }
-
-    var badgeWarningColorBorder: String {
-        get { defaults.string(forKey: Constants.badgeWarningColorBorder) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.badgeWarningColorBorder) }
-    }
-
-    var badgeWarningColorText: String {
-        get { defaults.string(forKey: Constants.badgeWarningColorText) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.badgeWarningColorText) }
-    }
-
-    var badgeLabelTextTransform: String {
-        get { defaults.string(forKey: Constants.badgeLabelTextTransform) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.badgeLabelTextTransform) }
-    }
-
-    var badgeLabelFontWeight: String {
-        get { defaults.string(forKey: Constants.badgeLabelFontWeight) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.badgeLabelFontWeight) }
-    }
-
-    var badgeLabelFontSize: String {
-        get { defaults.string(forKey: Constants.badgeLabelFontSize) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.badgeLabelFontSize) }
-    }
-
-    var badgePaddingY: String {
-        get { defaults.string(forKey: Constants.badgePaddingY) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.badgePaddingY) }
-    }
-
-    var badgePaddingX: String {
-        get { defaults.string(forKey: Constants.badgePaddingX) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.badgePaddingX) }
-    }
-
-    var buttonLabelTextTransform: String {
-        get { defaults.string(forKey: Constants.buttonLabelTextTransform) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.buttonLabelTextTransform) }
-    }
-
-    var buttonLabelFontWeight: String {
-        get { defaults.string(forKey: Constants.buttonLabelFontWeight) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.buttonLabelFontWeight) }
-    }
-
-    var buttonLabelFontSize: String {
-        get { defaults.string(forKey: Constants.buttonLabelFontSize) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.buttonLabelFontSize) }
-    }
-
-    var buttonPaddingY: String {
-        get { defaults.string(forKey: Constants.buttonPaddingY) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.buttonPaddingY) }
-    }
-
-    var buttonPaddingX: String {
-        get { defaults.string(forKey: Constants.buttonPaddingX) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.buttonPaddingX) }
-    }
-
-    var spacingUnit: String {
-        get { defaults.string(forKey: Constants.spacingUnit) ?? "" }
-        set { defaults.setValue(newValue, forKey: Constants.spacingUnit) }
-    }
-
-    /// Clears all custom theme values
+    // Clears all custom theme values
     func clearCustomThemeValues() {
-        formPlaceholderTextColor = ""
-        inputFieldPaddingX = ""
-        inputFieldPaddingY = ""
-        actionPrimaryTextTransform = ""
-        actionSecondaryTextTransform = ""
-        tableRowPaddingY = ""
-        buttonDangerColorBackground = ""
-        buttonDangerColorBorder = ""
-        buttonDangerColorText = ""
-        badgeWarningColorBackground = ""
-        badgeWarningColorBorder = ""
-        badgeWarningColorText = ""
-        badgeLabelTextTransform = ""
-        badgeLabelFontWeight = ""
-        badgeLabelFontSize = ""
-        badgePaddingY = ""
-        badgePaddingX = ""
-        buttonLabelTextTransform = ""
-        buttonLabelFontWeight = ""
-        buttonLabelFontSize = ""
-        buttonPaddingY = ""
-        buttonPaddingX = ""
-        spacingUnit = ""
+        let keys = [
+            Constants.formPlaceholderTextColor,
+            Constants.inputFieldPaddingX,
+            Constants.inputFieldPaddingY,
+            Constants.actionPrimaryTextTransform,
+            Constants.actionSecondaryTextTransform,
+            Constants.tableRowPaddingY,
+            Constants.buttonDangerColorBackground,
+            Constants.buttonDangerColorBorder,
+            Constants.buttonDangerColorText,
+            Constants.badgeWarningColorBackground,
+            Constants.badgeWarningColorBorder,
+            Constants.badgeWarningColorText,
+            Constants.badgeLabelTextTransform,
+            Constants.badgeLabelFontWeight,
+            Constants.badgeLabelFontSize,
+            Constants.badgePaddingY,
+            Constants.badgePaddingX,
+            Constants.buttonLabelTextTransform,
+            Constants.buttonLabelFontWeight,
+            Constants.buttonLabelFontSize,
+            Constants.buttonPaddingY,
+            Constants.buttonPaddingX,
+            Constants.spacingUnit,
+        ]
+        keys.forEach { defaults.removeObject(forKey: $0) }
     }
 }
 

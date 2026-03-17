@@ -69,7 +69,7 @@ extension EmbeddedComponentManager {
                 /// The text transform for this typography style.
                 public var textTransform: TextTransform?
 
-                /// Creates a `EmbeddedComponentManager.Appearance.Typography.Stylye` with default values
+                /// Creates a `EmbeddedComponentManager.Appearance.Typography.Style` with default values
                 public init() {}
             }
 

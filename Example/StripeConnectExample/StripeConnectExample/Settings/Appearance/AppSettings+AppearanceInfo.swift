@@ -380,6 +380,10 @@ extension AppSettings {
     // Private Helper Methods
 
     private func applyFormValues(to result: inout EmbeddedComponentManager.Appearance) {
+        let formPlaceholderTextColor = customThemeValue(forKey: Constants.formPlaceholderTextColor)
+        let inputFieldPaddingX = customThemeValue(forKey: Constants.inputFieldPaddingX)
+        let inputFieldPaddingY = customThemeValue(forKey: Constants.inputFieldPaddingY)
+
         if !formPlaceholderTextColor.isEmpty, let c = UIColor(hexString: formPlaceholderTextColor) {
             result.form.colorPlaceholder = c
         }
@@ -392,6 +396,9 @@ extension AppSettings {
     }
 
     private func applyActionValues(to result: inout EmbeddedComponentManager.Appearance) {
+        let actionPrimaryTextTransform = customThemeValue(forKey: Constants.actionPrimaryTextTransform)
+        let actionSecondaryTextTransform = customThemeValue(forKey: Constants.actionSecondaryTextTransform)
+
         let primaryTransform = actionPrimaryTextTransform.trimmingCharacters(in: .whitespaces).lowercased()
         let secondaryTransform = actionSecondaryTextTransform.trimmingCharacters(in: .whitespaces).lowercased()
 
@@ -404,12 +411,18 @@ extension AppSettings {
     }
 
     private func applyTableValues(to result: inout EmbeddedComponentManager.Appearance) {
+        let tableRowPaddingY = customThemeValue(forKey: Constants.tableRowPaddingY)
+
         if let y = Double(tableRowPaddingY).map({ CGFloat($0) }) {
             result.tableRowPaddingY = y
         }
     }
 
     private func applyButtonDangerValues(to result: inout EmbeddedComponentManager.Appearance) {
+        let buttonDangerColorBackground = customThemeValue(forKey: Constants.buttonDangerColorBackground)
+        let buttonDangerColorBorder = customThemeValue(forKey: Constants.buttonDangerColorBorder)
+        let buttonDangerColorText = customThemeValue(forKey: Constants.buttonDangerColorText)
+
         if !buttonDangerColorBackground.isEmpty, let c = UIColor(hexString: buttonDangerColorBackground) {
             result.buttonDanger.colorBackground = c
         }
@@ -422,6 +435,12 @@ extension AppSettings {
     }
 
     private func applyBadgeLabelValues(to result: inout EmbeddedComponentManager.Appearance) {
+        let badgeLabelTextTransform = customThemeValue(forKey: Constants.badgeLabelTextTransform)
+        let badgeLabelFontWeight = customThemeValue(forKey: Constants.badgeLabelFontWeight)
+        let badgeLabelFontSize = customThemeValue(forKey: Constants.badgeLabelFontSize)
+        let badgePaddingY = customThemeValue(forKey: Constants.badgePaddingY)
+        let badgePaddingX = customThemeValue(forKey: Constants.badgePaddingX)
+
         guard !badgeLabelTextTransform.isEmpty ||
               !badgeLabelFontWeight.isEmpty ||
               !badgeLabelFontSize.isEmpty ||
@@ -454,6 +473,12 @@ extension AppSettings {
     }
 
     private func applyButtonLabelValues(to result: inout EmbeddedComponentManager.Appearance) {
+        let buttonLabelTextTransform = customThemeValue(forKey: Constants.buttonLabelTextTransform)
+        let buttonLabelFontWeight = customThemeValue(forKey: Constants.buttonLabelFontWeight)
+        let buttonLabelFontSize = customThemeValue(forKey: Constants.buttonLabelFontSize)
+        let buttonPaddingY = customThemeValue(forKey: Constants.buttonPaddingY)
+        let buttonPaddingX = customThemeValue(forKey: Constants.buttonPaddingX)
+
         guard !buttonLabelTextTransform.isEmpty ||
               !buttonLabelFontWeight.isEmpty ||
               !buttonLabelFontSize.isEmpty ||
@@ -486,6 +511,8 @@ extension AppSettings {
     }
 
     private func applySpacingValues(to result: inout EmbeddedComponentManager.Appearance) {
+        let spacingUnit = customThemeValue(forKey: Constants.spacingUnit)
+
         if let spacing = Double(spacingUnit).map({ CGFloat($0) }) {
             result.spacingUnit = spacing
         }

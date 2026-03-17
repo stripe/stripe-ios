@@ -18,11 +18,11 @@ struct CustomThemeSettingsView: View {
     }
 
     // Binding to a custom theme field in UserDefaults. Updates theme when value changes.
-    private func customThemeBinding(_ keyPath: ReferenceWritableKeyPath<AppSettings, String>) -> Binding<String> {
+    private func customThemeBinding(_ key: String) -> Binding<String> {
         return Binding(
-            get: { AppSettings.shared[keyPath: keyPath] },
+            get: { AppSettings.shared.customThemeValue(forKey: key) },
             set: { newValue in
-                AppSettings.shared[keyPath: keyPath] = newValue
+                AppSettings.shared.setCustomThemeValue(newValue, forKey: key)
                 self.updateComponentManager()
             }
         )
@@ -39,44 +39,44 @@ struct CustomThemeSettingsView: View {
     var body: some View {
         List {
             Section {
-                UpdateTextInput(label: "formPlaceholderTextColor", placeholder: Self.colorPlaceholder, text: customThemeBinding(\.formPlaceholderTextColor))
-                UpdateTextInput(label: "inputFieldPaddingX", placeholder: "16", text: customThemeBinding(\.inputFieldPaddingX))
-                UpdateTextInput(label: "inputFieldPaddingY", placeholder: "12", text: customThemeBinding(\.inputFieldPaddingY))
+                UpdateTextInput(label: "formPlaceholderTextColor", placeholder: Self.colorPlaceholder, text: customThemeBinding(AppSettings.Constants.formPlaceholderTextColor))
+                UpdateTextInput(label: "inputFieldPaddingX", placeholder: "16", text: customThemeBinding(AppSettings.Constants.inputFieldPaddingX))
+                UpdateTextInput(label: "inputFieldPaddingY", placeholder: "12", text: customThemeBinding(AppSettings.Constants.inputFieldPaddingY))
             } header: { Text("Form") }
 
             Section {
-                UpdateTextInput(label: "actionPrimaryTextTransform", placeholder: Self.textTransformPlaceholder, text: customThemeBinding(\.actionPrimaryTextTransform))
-                UpdateTextInput(label: "actionSecondaryTextTransform", placeholder: Self.textTransformPlaceholder, text: customThemeBinding(\.actionSecondaryTextTransform))
+                UpdateTextInput(label: "actionPrimaryTextTransform", placeholder: Self.textTransformPlaceholder, text: customThemeBinding(AppSettings.Constants.actionPrimaryTextTransform))
+                UpdateTextInput(label: "actionSecondaryTextTransform", placeholder: Self.textTransformPlaceholder, text: customThemeBinding(AppSettings.Constants.actionSecondaryTextTransform))
             } header: { Text("Action") }
 
             Section {
-                UpdateTextInput(label: "tableRowPaddingY", placeholder: "8", text: customThemeBinding(\.tableRowPaddingY))
+                UpdateTextInput(label: "tableRowPaddingY", placeholder: "8", text: customThemeBinding(AppSettings.Constants.tableRowPaddingY))
             } header: { Text("Table") }
 
             Section {
-                UpdateTextInput(label: "buttonDangerColorBackground", placeholder: Self.colorPlaceholder, text: customThemeBinding(\.buttonDangerColorBackground))
-                UpdateTextInput(label: "buttonDangerColorBorder", placeholder: Self.colorPlaceholder, text: customThemeBinding(\.buttonDangerColorBorder))
-                UpdateTextInput(label: "buttonDangerColorText", placeholder: Self.colorPlaceholder, text: customThemeBinding(\.buttonDangerColorText))
+                UpdateTextInput(label: "buttonDangerColorBackground", placeholder: Self.colorPlaceholder, text: customThemeBinding(AppSettings.Constants.buttonDangerColorBackground))
+                UpdateTextInput(label: "buttonDangerColorBorder", placeholder: Self.colorPlaceholder, text: customThemeBinding(AppSettings.Constants.buttonDangerColorBorder))
+                UpdateTextInput(label: "buttonDangerColorText", placeholder: Self.colorPlaceholder, text: customThemeBinding(AppSettings.Constants.buttonDangerColorText))
             } header: { Text("Button danger") }
 
             Section {
-                UpdateTextInput(label: "badgeLabelTextTransform", placeholder: Self.textTransformPlaceholder, text: customThemeBinding(\.badgeLabelTextTransform))
-                UpdateTextInput(label: "badgeLabelFontWeight", placeholder: Self.fontWeightPlaceholder, text: customThemeBinding(\.badgeLabelFontWeight))
-                UpdateTextInput(label: "badgeLabelFontSize", placeholder: "14", text: customThemeBinding(\.badgeLabelFontSize))
-                UpdateTextInput(label: "badgePaddingY", placeholder: "2", text: customThemeBinding(\.badgePaddingY))
-                UpdateTextInput(label: "badgePaddingX", placeholder: "6", text: customThemeBinding(\.badgePaddingX))
+                UpdateTextInput(label: "badgeLabelTextTransform", placeholder: Self.textTransformPlaceholder, text: customThemeBinding(AppSettings.Constants.badgeLabelTextTransform))
+                UpdateTextInput(label: "badgeLabelFontWeight", placeholder: Self.fontWeightPlaceholder, text: customThemeBinding(AppSettings.Constants.badgeLabelFontWeight))
+                UpdateTextInput(label: "badgeLabelFontSize", placeholder: "14", text: customThemeBinding(AppSettings.Constants.badgeLabelFontSize))
+                UpdateTextInput(label: "badgePaddingY", placeholder: "2", text: customThemeBinding(AppSettings.Constants.badgePaddingY))
+                UpdateTextInput(label: "badgePaddingX", placeholder: "6", text: customThemeBinding(AppSettings.Constants.badgePaddingX))
             } header: { Text("Badge label") }
 
             Section {
-                UpdateTextInput(label: "buttonLabelTextTransform", placeholder: Self.textTransformPlaceholder, text: customThemeBinding(\.buttonLabelTextTransform))
-                UpdateTextInput(label: "buttonLabelFontWeight", placeholder: Self.fontWeightPlaceholder, text: customThemeBinding(\.buttonLabelFontWeight))
-                UpdateTextInput(label: "buttonLabelFontSize", placeholder: "16", text: customThemeBinding(\.buttonLabelFontSize))
-                UpdateTextInput(label: "buttonPaddingY", placeholder: "4", text: customThemeBinding(\.buttonPaddingY))
-                UpdateTextInput(label: "buttonPaddingX", placeholder: "8", text: customThemeBinding(\.buttonPaddingX))
+                UpdateTextInput(label: "buttonLabelTextTransform", placeholder: Self.textTransformPlaceholder, text: customThemeBinding(AppSettings.Constants.buttonLabelTextTransform))
+                UpdateTextInput(label: "buttonLabelFontWeight", placeholder: Self.fontWeightPlaceholder, text: customThemeBinding(AppSettings.Constants.buttonLabelFontWeight))
+                UpdateTextInput(label: "buttonLabelFontSize", placeholder: "16", text: customThemeBinding(AppSettings.Constants.buttonLabelFontSize))
+                UpdateTextInput(label: "buttonPaddingY", placeholder: "4", text: customThemeBinding(AppSettings.Constants.buttonPaddingY))
+                UpdateTextInput(label: "buttonPaddingX", placeholder: "8", text: customThemeBinding(AppSettings.Constants.buttonPaddingX))
             } header: { Text("Button label") }
 
             Section {
-                UpdateTextInput(label: "spacingUnit", placeholder: "4", text: customThemeBinding(\.spacingUnit))
+                UpdateTextInput(label: "spacingUnit", placeholder: "4", text: customThemeBinding(AppSettings.Constants.spacingUnit))
             } header: { Text("Spacing") }
         }
         .listStyle(.insetGrouped)
