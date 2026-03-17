@@ -57,9 +57,6 @@ struct KYCInfoView: View {
     /// Controls which variant of KYC data collection this form performs.
     let collectionMode: CollectionMode
 
-    /// Controls which variant of KYC data collection this form performs.
-    let collectionMode: CollectionMode
-
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var idNumber: String = ""
