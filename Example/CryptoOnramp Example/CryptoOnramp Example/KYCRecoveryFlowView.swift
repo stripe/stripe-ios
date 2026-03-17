@@ -11,9 +11,10 @@ import SwiftUI
 import StripeCryptoOnramp
 
 /// A modal flow used when a greater KYC level is required to check out.
-/// Supports either:
-/// - level 1: KYC collection only, including date of birth and id number (e.g. SSN).
-/// - level 2: KYC collection followed by identity verification
+/// Supports:
+/// - level 0 step-up to level 1: KYC collection only, including date of birth and id number (e.g. SSN).
+/// - level 1 step-up to level 2: Identity verification / document collection only.
+/// - level 0 step-up to level 2: KYC collection (DOB + id number) followed by identity verification / document collection.
 struct KYCRecoveryFlowView: View {
 
     /// The customer's current and required KYC levels for this recovery flow.
