@@ -49,6 +49,13 @@ public final class Checkout: ObservableObject {
     private let clientSecret: String
     private let apiClient: STPAPIClient
 
+    /// Number of session-mutating API calls currently in flight.
+    /// Access is kept on the MainActor so payment UI integrations can validate
+    /// checkout state without relying on cross-actor workarounds.
+    private var sessionUpdateCount = 0
+    /// Whether a session-mutating API call is currently in progress.
+    var isPerformingSessionUpdate: Bool { sessionUpdateCount > 0 }
+
     // MARK: - Initialization
 
     /// Creates a new instance.
@@ -74,12 +81,14 @@ public final class Checkout: ObservableObject {
             throw CheckoutError.sheetCurrentlyPresented
         }
 
-        do {
-            let sessionId = Self.extractSessionId(from: clientSecret)
-            let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
-            return updateSession(checkoutSession)
-        } catch {
-            throw CheckoutError.apiError(message: error.nonGenericDescription)
+        return try await withSessionUpdateGuard {
+            do {
+                let sessionId = Self.extractSessionId(from: clientSecret)
+                let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+                return updateSession(checkoutSession)
+            } catch {
+                throw CheckoutError.apiError(message: error.nonGenericDescription)
+            }
         }
     }
 
@@ -92,7 +101,9 @@ public final class Checkout: ObservableObject {
     @discardableResult
     public func applyPromotionCode(_ code: String) async throws -> Checkout.Session {
         try requireOpenSession()
-        return try await performAPIUpdate(.setPromotionCode(code))
+        return try await withSessionUpdateGuard {
+            try await performAPIUpdate(.setPromotionCode(code))
+        }
     }
 
     /// Removes the currently applied promotion code.
@@ -101,7 +112,9 @@ public final class Checkout: ObservableObject {
     @discardableResult
     public func removePromotionCode() async throws -> Checkout.Session {
         try requireOpenSession()
-        return try await performAPIUpdate(.setPromotionCode(""))
+        return try await withSessionUpdateGuard {
+            try await performAPIUpdate(.setPromotionCode(""))
+        }
     }
 
     // MARK: - Line Items
@@ -113,7 +126,9 @@ public final class Checkout: ObservableObject {
     @discardableResult
     public func updateQuantity(with params: LineItemUpdate) async throws -> Checkout.Session {
         try requireOpenSession()
-        return try await performAPIUpdate(.setLineItemQuantity(lineItemId: params.lineItemId, quantity: params.quantity))
+        return try await withSessionUpdateGuard {
+            try await performAPIUpdate(.setLineItemQuantity(lineItemId: params.lineItemId, quantity: params.quantity))
+        }
     }
 
     // MARK: - Shipping
@@ -125,7 +140,9 @@ public final class Checkout: ObservableObject {
     @discardableResult
     public func selectShippingOption(_ optionId: String) async throws -> Checkout.Session {
         try requireOpenSession()
-        return try await performAPIUpdate(.setShippingRate(optionId))
+        return try await withSessionUpdateGuard {
+            try await performAPIUpdate(.setShippingRate(optionId))
+        }
     }
 
     // MARK: - Addresses
@@ -146,9 +163,11 @@ public final class Checkout: ObservableObject {
     public func updateBillingAddress(_ params: AddressUpdate) async throws -> Checkout.Session {
         let currentSession = try requireOpenSession()
         if currentSession.shouldSendTaxRegion(for: "billing") {
-            let updatedSession = try await performAPIUpdate(.setTaxRegion(params.address))
-            stpSession?.billingAddressOverride = params
-            return updatedSession
+            return try await withSessionUpdateGuard {
+                let updatedSession = try await performAPIUpdate(.setTaxRegion(params.address))
+                stpSession?.billingAddressOverride = params
+                return updatedSession
+            }
         } else {
             currentSession.billingAddressOverride = params
             session = currentSession
@@ -173,9 +192,11 @@ public final class Checkout: ObservableObject {
     public func updateShippingAddress(_ params: AddressUpdate) async throws -> Checkout.Session {
         let currentSession = try requireOpenSession()
         if currentSession.shouldSendTaxRegion(for: "shipping") {
-            let updatedSession = try await performAPIUpdate(.setTaxRegion(params.address))
-            stpSession?.shippingAddressOverride = params
-            return updatedSession
+            return try await withSessionUpdateGuard {
+                let updatedSession = try await performAPIUpdate(.setTaxRegion(params.address))
+                stpSession?.shippingAddressOverride = params
+                return updatedSession
+            }
         } else {
             currentSession.shippingAddressOverride = params
             session = currentSession
@@ -193,7 +214,9 @@ public final class Checkout: ObservableObject {
     @discardableResult
     public func updateTaxId(with params: TaxIdUpdate) async throws -> Checkout.Session {
         try requireOpenSession()
-        return try await performAPIUpdate(.setTaxId(type: params.type, value: params.value))
+        return try await withSessionUpdateGuard {
+            try await performAPIUpdate(.setTaxId(type: params.type, value: params.value))
+        }
     }
 
     // MARK: - Internal Methods
@@ -216,6 +239,16 @@ public final class Checkout: ObservableObject {
     }
 
     // MARK: - Private Methods
+
+    /// Tracks that a session update is in progress for the duration of `body`.
+    /// Uses a counter so overlapping calls don't clear the flag early.
+    /// Note: an actor wouldn't help — actors are reentrant at suspension points,
+    /// so the same interleaving would occur.
+    private func withSessionUpdateGuard<T>(_ body: () async throws -> T) async rethrows -> T {
+        sessionUpdateCount += 1
+        defer { sessionUpdateCount -= 1 }
+        return try await body()
+    }
 
     /// Validates that the session is loaded, open, and no sheet is presented.
     @discardableResult

@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "การดำเนินการต่อแปลว่าคุณอนุญาตให้ %@ หักเงินจากยอดเงิน Satispay ของคุณโดยอัตโนมัติตามระยะเวลาที่กำหนดตามแผนการซื้อหรือการสมัครสมาชิกของคุณ";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "เมื่อดำเนินการต่อ จะถือว่าคุณอนุมัติให้ %@ หักเงินจากยอดคงเหลือ Twint ของคุณโดยอัตโนมัติเป็นประจำ ตามแผนการซื้อหรือการเรียกเก็บเงินตามรอบบิลของคุณ";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "การดำเนินการต่อ หมายความว่าคุณอนุญาตให้ %1$@ ฝากเงินเข้าบัญชี Cash App ของคุณสำหรับการชำระเงินรายการนี้ และการชำระเงินในอนาคตโดยสอดคล้องกับข้อกำหนดของ %2$@ จนกว่าจะมีการเพิกถอนการอนุญาต คุณสามารถเปลี่ยนแปลงการตั้งค่านี้ได้ทุกเมื่อในการตั้งค่า Cash App";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "การเข้าร่วม Link หมายถึงคุณยอมรับ<terms>ข้อกำหนด</terms>และ<privacy>นโยบายความเป็นส่วนตัว</privacy>";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "เปลี่ยนแปลงรายละเอียดบัตรไม่ได้";
 
 "Change" = "เปลี่ยน";
+
+"Choose a card brand" = "เลือกแบรนด์ของบัตร";
 
 "Choose a payment method" = "เลือกวิธีการชำระเงิน";
 
