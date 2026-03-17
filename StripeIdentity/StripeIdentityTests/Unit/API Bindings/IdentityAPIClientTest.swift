@@ -120,6 +120,98 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         wait(for: [exp], timeout: 1)
     }
 
+    func testUpdateVerificationPageDataEncodesMetricsToFourDecimalPlaces() throws {
+        let mockVerificationData = StripeAPI.VerificationPageDataUpdate(
+            clearData: nil,
+            collectedData: .init(
+                biometricConsent: false,
+                face: .init(
+                    bestHighResImage: "best_high_res_id",
+                    bestLowResImage: "best_low_res_id",
+                    firstHighResImage: "first_high_res_id",
+                    firstLowResImage: "first_low_res_id",
+                    lastHighResImage: "last_high_res_id",
+                    lastLowResImage: "last_low_res_id",
+                    bestFaceScore: .init(0.12341),
+                    faceScoreVariance: .init(0.8090820312499999744),
+                    numFrames: 8,
+                    bestBrightnessValue: .init(double: 4.266),
+                    bestCameraLensModel: nil,
+                    bestExposureDuration: nil,
+                    bestExposureIso: .init(320.12341),
+                    bestFocalLength: .init(double: 33.5),
+                    bestIsVirtualCamera: nil,
+                    trainingConsent: true
+                ),
+                idDocumentFront: .init(
+                    backScore: .init(0.12341),
+                    brightnessValue: .init(double: 1.23456),
+                    cameraLensModel: nil,
+                    exposureDuration: nil,
+                    exposureIso: .init(42.12341),
+                    focalLength: .init(double: 28.0),
+                    frontCardScore: .init(0.98761),
+                    highResImage: "front_user_upload_id",
+                    invalidScore: .init(0.10001),
+                    iosBarcodeDecoded: nil,
+                    iosBarcodeSymbology: nil,
+                    iosTimeToFindBarcode: nil,
+                    isVirtualCamera: nil,
+                    lowResImage: "front_full_frame_id",
+                    passportScore: .init(0.54321),
+                    uploadMethod: .autoCapture
+                )
+            )
+        )
+
+        let mockVerificationPageData = VerificationPageDataMock.response200
+        let mockResponseData = try mockVerificationPageData.data()
+        let mockResponse = try mockVerificationPageData.make()
+
+        stub { urlRequest in
+            verifyHeaders(urlRequest: urlRequest)
+
+            guard let httpBody = urlRequest.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody but found none")
+                return false
+            }
+
+            guard let httpBodyString = String(data: httpBody, encoding: .utf8) else {
+                XCTFail("Could not decode httpBody")
+                return false
+            }
+
+            XCTAssertQueryString(httpBodyString, containsField: "best_face_score", value: "0.1234")
+            XCTAssertQueryString(httpBodyString, containsField: "face_score_variance", value: "0.8091")
+            XCTAssertQueryString(httpBodyString, containsField: "best_brightness_value", value: "4.2660")
+            XCTAssertQueryString(httpBodyString, containsField: "best_exposure_iso", value: "320.1234")
+            XCTAssertQueryString(httpBodyString, containsField: "back_score", value: "0.1234")
+            XCTAssertQueryString(httpBodyString, containsField: "brightness_value", value: "1.2346")
+            XCTAssertQueryString(httpBodyString, containsField: "exposure_iso", value: "42.1234")
+            XCTAssertQueryString(httpBodyString, containsField: "front_card_score", value: "0.9876")
+            XCTAssertQueryString(httpBodyString, containsField: "invalid_score", value: "0.1000")
+            XCTAssertQueryString(httpBodyString, containsField: "passport_score", value: "0.5432")
+
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        apiClient.updateIdentityVerificationPageData(
+            updating: mockVerificationData
+        ).observe { result in
+            switch result {
+            case .success(let response):
+                XCTAssertEqual(response, mockResponse)
+            case .failure(let error):
+                XCTFail("Request returned error \(error)")
+            }
+            self.exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
+    }
+
     func testSubmitIdentityVerificationSession() throws {
         try verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/submit") {
             apiClient.submitIdentityVerificationPage()
@@ -304,5 +396,21 @@ private func verifyImageUploadOwnedBy(
     XCTAssertTrue(
         subDataString.contains(expectedContainsString),
         "'\(subDataString)' does not contain \(expectedContainsString)"
+    )
+}
+
+private func XCTAssertQueryString(
+    _ queryString: String,
+    containsField fieldName: String,
+    value: String,
+    file: StaticString = #filePath,
+    line: UInt = #line
+) {
+    let pattern = "\(NSRegularExpression.escapedPattern(for: fieldName))[^&]*=\(NSRegularExpression.escapedPattern(for: value))(?=&|$)"
+    XCTAssertNotNil(
+        queryString.range(of: pattern, options: .regularExpression),
+        "'\(queryString)' did not contain \(fieldName)=\(value)",
+        file: file,
+        line: line
     )
 }
