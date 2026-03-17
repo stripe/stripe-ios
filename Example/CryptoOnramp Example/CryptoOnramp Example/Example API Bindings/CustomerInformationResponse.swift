@@ -49,8 +49,12 @@ extension CustomerInformationResponse {
         verifications.contains { $0.name == "kyc_verified" && $0.status == "verified" }
     }
 
+    var isPhoneVerified: Bool {
+        verifications.contains { $0.name == "phone_verified" && $0.status == "verified" }
+    }
+
     /// The KYC level implied solely by the fields the customer has already provided.
-    var providedKYCLevel: KYCLevel {
+    var kycLevelFromFieldsCollected: KYCLevel {
         let providedFieldSet = Set(providedFields)
 
         guard providedFieldSet.isSuperset(of: Self.level0RequiredFields) else {
@@ -68,13 +72,22 @@ extension CustomerInformationResponse {
         return .level2
     }
 
-    /// The current effective KYC level, accounting for verification state where needed.
+    /// The current effective KYC level, accounting for verification state at each level.
     var kycLevel: KYCLevel {
-        switch providedKYCLevel {
-        case .none, .level0:
-            providedKYCLevel
-        case .level1, .level2:
-            isIdDocumentVerified ? .level2 : .level1
+        let providedKYCLevel = kycLevelFromFieldsCollected
+
+        guard providedKYCLevel.includesLevel0, isPhoneVerified /*, isKycVerified*/ else {
+            return .none
         }
+
+        guard providedKYCLevel.includesLevel1 else {
+            return .level0
+        }
+
+        guard providedKYCLevel.includesLevel2, isIdDocumentVerified else {
+            return .level1
+        }
+
+        return .level2
     }
 }

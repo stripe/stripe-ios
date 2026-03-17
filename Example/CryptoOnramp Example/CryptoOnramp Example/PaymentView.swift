@@ -814,7 +814,10 @@ struct PaymentView: View {
         forCreateOnrampSessionError errorDescription: String,
         customerInfo: CustomerInformationResponse
     ) -> KYCRecoveryFlowView.Levels? {
-        let currentLevel = customerInfo.providedKYCLevel
+        // Intentionally using only the collected fields for determining KYC level.
+        // Verifications (i.e. from `customerInfo.kycLevel`) can lag and take
+        // more time to change.
+        let currentLevel = customerInfo.kycLevelFromFieldsCollected
 
         guard currentLevel.includesLevel0 else {
             // The user attempted to create an onramp session having never completed Level 0 KYC.
