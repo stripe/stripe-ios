@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Billi tkompli, tawtorizza lil %@ biex awtomatikament tiddebita l-Bilanċ ta’ Satispay tiegħek fuq bażi rikorrenti skont il-pjan tax-xiri jew l-abbonament tiegħek.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Billi tkompli, tawtorizza %@ biex awtomatikament tħallas il-Bilanċ tiegħek ta' Twint b'mod ripetut skont il-pjan tax-xiri jew l-abbonament tiegħek.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Meta tkompli tkun qed tagħti permess lil %1$@ biex, sakemm dal-permess jitneħħa, tkun tista' tiġbor il-flus mill-kont Cash App tiegħek għal dal-pagament u għall-pagamenti tal-ġejjieni skont ir-regoli ta' %2$@. Tista' tibdel dil-ħaġa meta trid mill-Għażliet ta' Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Meta tingħaqad ma' Link tkun qed taqbel mar-<terms>Regoli</terms> u l-<privacy>Politika tal-Privatezza</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Id-dettalji tal-karta ma jistgħux jinbidlu.";
 
 "Change" = "Ibdel";
+
+"Choose a card brand" = "Agħżel marka tal-karta";
 
 "Choose a payment method" = "Agħżel metodu tal-ħlas";
 

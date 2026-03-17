@@ -3,7 +3,7 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=46JjyqOQab3Ozpf1dHqYL0JK4XJpzdGSoHQfIQKyAjIRbYG6xBrjeOv1vtx-y0eHhWBhX6j7kYwutTeD
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=l1ZGAl548soecO0TvDtYQfYwh5K-ioLhDNh9nuf50KQ7-hCCbiCMMmiwBjxQ3puNCNBeM9AZ_SNfo_zE
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -12,13 +12,13 @@ Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_V5vNi3ZBIPUw2Q
+request-id: req_5kWDZ3f5P3T7iX
 Content-Length: 513
 Vary: Origin
-Date: Thu, 05 Mar 2026 00:18:05 GMT
-original-request: req_V5vNi3ZBIPUw2Q
+Date: Mon, 16 Mar 2026 18:39:12 GMT
+original-request: req_5kWDZ3f5P3T7iX
 stripe-version: 2020-08-27
-idempotency-key: 6c98fecf-d404-4aec-82a3-77315509dfca
+idempotency-key: 2b787f6d-9fcc-41ef-97d9-72a8d67e82ed
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -27,7 +27,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Bemail%5D=fo
 
 {
   "object" : "payment_method",
-  "id" : "pm_1T7Pc9FY0qyl6XeWCH8eXiYt",
+  "id" : "pm_1TBg2mFY0qyl6XeWuPOXqH9w",
   "billing_details" : {
     "email" : "foo@bar.com",
     "phone" : null,
@@ -43,7 +43,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details%5Bemail%5D=fo
     }
   },
   "livemode" : false,
-  "created" : 1772669885,
+  "created" : 1773686352,
   "allow_redisplay" : "unspecified",
   "multibanco" : {
 

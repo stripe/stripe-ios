@@ -60,6 +60,11 @@ enum ExpectedFormHierarchy {
 
     enum Twint {
         static var paymentIntent: FormHierarchyNode { emptyForm }
+        static var settingUp: FormHierarchyNode {
+            FormHierarchyNode(type: "FormElement", children: [
+                FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By continuing, you authorize StripePaymentSheetTes..."])
+            ])
+        }
     }
 
     // MARK: - Zip
@@ -277,9 +282,6 @@ enum ExpectedFormHierarchy {
                 FormHierarchyNode(type: "SectionElement", children: [
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Full name"])
                 ]),
-                FormHierarchyNode(type: "SectionElement", children: [
-                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "14", "label": "iDEAL Bank"])
-                ]),
             ])
         }
 
@@ -288,9 +290,6 @@ enum ExpectedFormHierarchy {
                 FormHierarchyNode(type: "SectionElement", properties: ["title": "Contact information"], children: [
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Full name"]),
                     FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Email"]),
-                ]),
-                FormHierarchyNode(type: "SectionElement", children: [
-                    FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "14", "label": "iDEAL Bank"])
                 ]),
                 FormHierarchyNode(type: "SimpleMandateElement", properties: ["text": "By providing your payment information and confirmi..."]),
             ])

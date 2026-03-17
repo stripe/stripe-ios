@@ -10,7 +10,7 @@ import SafariServices
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CheckoutSessionsPreview) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import SwiftUI
@@ -380,24 +380,44 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                paymentMethodType: .twint,
                                merchantCountry: .GB,
                                expectedHierarchy: ExpectedFormHierarchy.Twint.paymentIntent) { _ in }
+        try await _testConfirm(intentKinds: [.paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
+                               currency: "CHF",
+                               paymentMethodType: .twint,
+                               merchantCountry: .GB,
+                               expectedHierarchy: ExpectedFormHierarchy.Twint.settingUp) { _ in }
     }
 
     func testSavedSEPA() async throws {
-        let customer = "cus_TUoUvtvPJvpHPA"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
-        let savedSepaPM = STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_1SXosgFY0qyl6XeWkScLWnUN", // A hardcoded SEPA PM for the ^ customer
-            "created": "12345",
-            "type": "sepa_debit",
-        ])!
-
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: MerchantCountry.US.publishableKey)
 
         // Create customer session for confirmation token support
         let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
-            customerID: customer,
+            customerID: nil,
             merchantCountry: "us",
             paymentMethodSave: true
+        )
+        let customer = customerAndCustomerSession.customer
+
+        // Create a SEPA payment method and attach it to the customer via a confirmed SetupIntent
+        let savedSepaPM = try await apiClient.createPaymentMethod(with: ._testSEPA())
+        _ = try await STPTestingAPIClient.shared.fetchSetupIntent(
+            types: ["sepa_debit"],
+            merchantCountry: "us",
+            paymentMethodID: savedSepaPM.stripeId,
+            customerID: customer,
+            confirm: true,
+            otherParams: [
+                "mandate_data": [
+                    "customer_acceptance": [
+                        "type": "online",
+                        "online": [
+                            "user_agent": "123",
+                            "ip_address": "172.18.117.125",
+                        ],
+                    ] as [String: Any],
+                ],
+            ]
         )
 
         let configuration: PaymentSheet.Configuration = {
@@ -672,11 +692,6 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 apiClient: apiClient
             )
             for (description, intent) in intents {
-                // CheckoutSession doesn't support Apple Pay in setup mode
-                // TODO(gbirch) remove once checkout sessions apple pay support is added
-                if case .checkoutSession(let checkoutSession) = intent, checkoutSession.mode == .setup {
-                    continue
-                }
                 let e = expectation(description: "Confirm Apple Pay (\(description))")
                 let elementsSession = STPElementsSession._testValue(intent: intent)
                 let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
@@ -1319,9 +1334,9 @@ extension PaymentSheetLPMConfirmFlowTests {
         _ = PaymentSheet(mode: .deferredIntent(intentConfiguration), configuration: PaymentSheet.Configuration())
 
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        let customer = "cus_TUoUvtvPJvpHPA"  // A hardcoded customer on acct_1G6m1pFY0qyl6XeW
+        // Create a fresh customer so we don't accumulate payment methods on a shared customer
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(
-            customerID: customer,
+            customerID: nil,
             merchantCountry: merchantCountry.rawValue.lowercased()
         )
 
@@ -1347,11 +1362,6 @@ extension PaymentSheetLPMConfirmFlowTests {
             )
 
             for (description, intent) in intents {
-                // TODO(gbirch): Uncomment these when adding CheckoutSessions Link support.
-                // CheckoutSession doesn't support a Link-only payment method type list.
-                if case .checkoutSession = intent {
-                    continue
-                }
                 let linkPaymentMethod = try await makeLinkPaymentMethod(apiClient)
 
                 let e = expectation(description: "Confirm Link (\(description))")

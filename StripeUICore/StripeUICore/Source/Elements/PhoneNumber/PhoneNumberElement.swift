@@ -16,7 +16,7 @@ import UIKit
     // MARK: - ContainerElement protocol
     public lazy var elements: [Element] = { [countryDropdownElement, textFieldElement] }()
     private(set) public var lastUpdatedElement: Element?
-    public var delegate: ElementDelegate?
+    public weak var delegate: ElementDelegate?
 
     private let theme: ElementsAppearance
 

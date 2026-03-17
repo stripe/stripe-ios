@@ -1,0 +1,222 @@
+{
+  "session_id": "cs_test_a1b2c3d4e5f6g7h8i9j0",
+  "object": "checkout.session",
+  "total_summary": {
+    "due": 2686,
+    "subtotal": 2000,
+    "total": 2686
+  },
+  "line_item_group": {
+    "line_items": [
+      {
+        "id": "li_1abc",
+        "name": "Widget",
+        "quantity": 2,
+        "price": {
+          "unit_amount": 750,
+          "currency": "usd"
+        }
+      },
+      {
+        "id": "li_2def",
+        "name": "Gadget",
+        "quantity": 1,
+        "price": {
+          "unit_amount": 500,
+          "currency": "usd"
+        }
+      }
+    ],
+    "shipping_rate": {
+      "id": "shr_standard",
+      "amount": 500
+    },
+    "tax_amounts": [
+      {
+        "amount": 186,
+        "inclusive": false,
+        "taxable_amount": 2500,
+        "tax_rate": {
+          "percentage": 7.45,
+          "display_name": "Sales Tax"
+        }
+      }
+    ],
+    "discount_amounts": [],
+    "subtotal": 2000,
+    "total": 2686,
+    "due": 2686,
+    "currency": "usd"
+  },
+  "shipping_options": [
+    {
+      "shipping_rate": {
+        "id": "shr_standard",
+        "display_name": "Standard Shipping",
+        "amount": 500,
+        "currency": "usd"
+      }
+    },
+    {
+      "shipping_rate": {
+        "id": "shr_express",
+        "display_name": "Express Shipping",
+        "amount": 1500,
+        "currency": "usd"
+      }
+    }
+  ],
+  "tax_context": {
+    "automatic_tax_enabled": true,
+    "automatic_tax_address_source": "session.billing"
+  },
+  "shipping_address_collection": {
+    "allowed_countries": ["US", "CA"]
+  },
+  "currency": "usd",
+  "mode": "payment",
+  "status": "complete",
+  "payment_status": "paid",
+  "client_secret": "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456",
+  "customer": {
+    "id": "cus_test123456",
+    "object": "customer",
+    "email": "customer@example.com",
+    "name": "Test Customer",
+    "phone": "+15555555555",
+    "payment_methods": [
+      {
+        "id": "pm_1Sxae3Lu5o3P18Zpt5YuRRoG",
+        "object": "payment_method",
+        "allow_redisplay": "always",
+        "billing_details": {
+          "address": {
+            "city": "South San Francisco",
+            "country": "US",
+            "line1": "354 Oyster Point Blvd",
+            "line2": null,
+            "postal_code": "94080",
+            "state": "CA"
+          },
+          "email": "jenny.rosen@example.com",
+          "name": "Jenny Rosen",
+          "phone": "+15555555555"
+        },
+        "card": {
+          "brand": "visa",
+          "checks": {
+            "address_line1_check": null,
+            "address_postal_code_check": null,
+            "cvc_check": null
+          },
+          "country": "US",
+          "display_brand": "visa",
+          "exp_month": 2,
+          "exp_year": 2027,
+          "funding": "credit",
+          "generated_from": null,
+          "last4": "4242",
+          "networks": {
+            "available": ["visa"],
+            "preferred": null
+          },
+          "three_d_secure_usage": {
+            "supported": true
+          },
+          "wallet": null
+        },
+        "created": 1770329007,
+        "customer": "cus_test123456",
+        "livemode": false,
+        "type": "card"
+      },
+      {
+        "id": "pm_1Sxae4Lu5o3P18ZplFiKexnM",
+        "object": "payment_method",
+        "allow_redisplay": "always",
+        "billing_details": {
+          "address": {
+            "city": "South San Francisco",
+            "country": "US",
+            "line1": "354 Oyster Point Blvd",
+            "line2": null,
+            "postal_code": "94080",
+            "state": "CA"
+          },
+          "email": "jenny.rosen@example.com",
+          "name": "Jenny Rosen",
+          "phone": "+15555555555"
+        },
+        "created": 1770329008,
+        "customer": "cus_test123456",
+        "livemode": false,
+        "type": "us_bank_account",
+        "us_bank_account": {
+          "account_holder_type": "individual",
+          "account_type": "checking",
+          "bank_name": "STRIPE TEST BANK",
+          "fingerprint": "FFDMA0xfhBjWSZLu",
+          "last4": "6789",
+          "networks": {
+            "preferred": "ach",
+            "supported": ["ach"]
+          },
+          "routing_number": "110000000"
+        }
+      }
+    ]
+  },
+  "customer_managed_saved_payment_methods_offer_save": {
+    "enabled": true,
+    "status": "not_accepted"
+  },
+  "customer_email": "test@example.com",
+  "payment_intent": {
+    "id": "pi_1Cl15wIl4IdHmuTbCWrpJXN6",
+    "object": "payment_intent",
+    "payment_method_types": ["card"],
+    "amount": 2345,
+    "capture_method": "manual",
+    "client_secret": "pi_1Cl15wIl4IdHmuTbCWrpJXN6_secret_EkKtQ7Sg75hLDFKqFG8DtWcaK",
+    "confirmation_method": "automatic",
+    "created": 1530911040,
+    "currency": "usd",
+    "description": "My Sample PaymentIntent",
+    "livemode": false,
+    "shipping": {
+      "address": {
+        "city": "San Francisco",
+        "country": "USA",
+        "line1": "123 Main St",
+        "line2": "Apt 456",
+        "postal_code": "94107",
+        "state": "CA"
+      },
+      "carrier": "USPS",
+      "name": "Dan",
+      "phone": "1-415-555-1234",
+      "tracking_number": "xyz123abc"
+    },
+    "status": "succeeded"
+  },
+  "setup_intent": null,
+  "livemode": false,
+  "created": 1609459200,
+  "expires_at": 1609545600,
+  "url": "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0",
+  "return_url": "https://example.com/return",
+  "success_url": "https://example.com/success",
+  "cancel_url": "https://example.com/cancel",
+  "payment_method_types": [
+    "card",
+    "us_bank_account"
+  ],
+  "payment_method_options": {
+    "card": {
+      "request_three_d_secure": "automatic"
+    },
+    "us_bank_account": {
+      "verification_method": "automatic"
+    }
+  }
+}

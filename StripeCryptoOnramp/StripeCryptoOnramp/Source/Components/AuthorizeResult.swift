@@ -7,7 +7,7 @@
 
 import Foundation
 
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 public enum AuthorizationResult {
 
     /// Authorization was consented by the user. The customer ID is attached.

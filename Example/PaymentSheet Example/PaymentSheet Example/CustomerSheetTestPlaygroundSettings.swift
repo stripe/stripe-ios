@@ -98,12 +98,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
             }
         }
     }
-    enum EnableCBCRedesign: String, PickerEnum {
-        static let enumName: String = "CBC Redesign"
-
-        case on
-        case off
-    }
     enum AllowsRemovalOfLastSavedPaymentMethod: String, PickerEnum {
         static let enumName: String = "AllowsRemovalOfLastSavedPaymentMethod"
 
@@ -161,13 +155,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
-    enum EnablePassiveCaptcha: String, PickerEnum {
-        static var enumName: String { "Enable passive captcha" }
-
-        case on
-        case off
-    }
-
     enum EnableAttestationOnConfirmation: String, PickerEnum {
         static var enumName: String { "Enable attestation on confirmation" }
 
@@ -188,7 +175,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var applePay: ApplePay
     var headerTextForSelectionScreen: String?
     var defaultBillingAddress: DefaultBillingAddress
-    var enablePassiveCaptcha: EnablePassiveCaptcha
     var enableAttestationOnConfirmation: EnableAttestationOnConfirmation
     var autoreload: Autoreload
 
@@ -199,7 +185,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var collectAddress: BillingDetailsAddress
     var merchantCountryCode: MerchantCountry
     var preferredNetworksEnabled: PreferredNetworksEnabled
-    var enableCBCRedesign: EnableCBCRedesign
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethod
     var paymentMethodRemove: PaymentMethodRemove
     var paymentMethodRemoveLast: PaymentMethodRemoveLast
@@ -216,7 +201,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    applePay: .on,
                                                    headerTextForSelectionScreen: nil,
                                                    defaultBillingAddress: .off,
-                                                   enablePassiveCaptcha: .on,
                                                    enableAttestationOnConfirmation: .on,
                                                    autoreload: .on,
                                                    attachDefaults: .off,
@@ -226,7 +210,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    collectAddress: .automatic,
                                                    merchantCountryCode: .US,
                                                    preferredNetworksEnabled: .off,
-                                                   enableCBCRedesign: .on,
                                                    allowsRemovalOfLastSavedPaymentMethod: .on,
                                                    paymentMethodRemove: .enabled,
                                                    paymentMethodRemoveLast: .enabled,

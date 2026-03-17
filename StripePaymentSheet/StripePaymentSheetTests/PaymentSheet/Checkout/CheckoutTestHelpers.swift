@@ -23,7 +23,9 @@ enum CheckoutTestHelpers {
         ]
     }
 
-    static func makeOpenSession() -> STPCheckoutSession {
-        STPCheckoutSession.decodedObject(fromAPIResponse: makeOpenSessionJSON())!
+    static func makeOpenSession(customerEmail: String? = nil) -> STPCheckoutSession {
+        var json = makeOpenSessionJSON()
+        json["customer_email"] = customerEmail
+        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
     }
 }

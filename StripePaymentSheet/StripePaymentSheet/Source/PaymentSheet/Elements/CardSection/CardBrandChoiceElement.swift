@@ -13,120 +13,71 @@ import Foundation
 import UIKit
 
 /// An Element wrapper that provides inline tappable brand icons for card brand choice (CBC).
-/// Can switch between the new inline selector and the old dropdown based on `enableCBCRedesign`.
-/// Will be collapsed when we ship and remove `enableCBCRedesign`, replacing the old dropdown
 final class CardBrandChoiceElement: Element {
     weak var delegate: ElementDelegate?
 
-    private enum Variant {
-        case selector(SegmentedSelectorElement)
-        case dropdown(DropdownFieldElement)
-    }
-
-    private let variant: Variant
+    let element: SegmentedSelectorElement
 
     var view: UIView {
-        switch variant {
-        case .selector(let element):
-            return element.view
-        case .dropdown(let element):
-            return element.view
-        }
+        return element.view
     }
 
     var collectsUserInput: Bool {
-        switch variant {
-        case .selector(let element):
-            return element.collectsUserInput
-        case .dropdown(let element):
-            return element.collectsUserInput
-        }
-    }
-
-    var enableCBCRedesign: Bool {
-        switch variant {
-        case .selector:
-            return true
-        case .dropdown:
-            return false
-        }
+        return element.collectsUserInput
     }
 
     // Expose selected brand for external access
     var selectedBrand: STPCardBrand? {
-        switch variant {
-        case .selector(let element):
-            guard let rawData = element.selectedItem?.rawData else { return nil }
-            return STPCard.brand(from: rawData)
-        case .dropdown(let element):
-            guard !element.selectedItem.isPlaceholder else { return nil }
-            return STPCard.brand(from: element.selectedItem.rawData)
-        }
+        guard let rawData = element.selectedItem?.rawData else { return nil }
+        return STPCard.brand(from: rawData)
+    }
+
+    // Expose whether the user has tapped the selector for determining if tooltip should be shown
+    var hasBeenTapped: Bool {
+        return element.hasBeenTapped
     }
 
     // Expose brand count for determining if selector should be shown
     var brandCount: Int {
-        switch variant {
-        case .selector(let element):
-            return element.items.count
-        case .dropdown(let element):
-            return element.nonPlacerholderItems.count
-        }
+        return element.items.count
     }
 
-    init(enableCBCRedesign: Bool,
-         cardBrands: Set<STPCardBrand> = [],
+    // Expose allowed brand count for determining if selector should be shown
+    var allowedBrandCount: Int {
+        return element.enabledItems.count
+    }
+
+    init(cardBrands: Set<STPCardBrand> = [],
          disallowedCardBrands: Set<STPCardBrand> = [],
          theme: ElementsAppearance = .default,
          allowDeselection: Bool = true) {
-        if enableCBCRedesign {
-            let element = SegmentedSelectorElement(
-                items: Self.makeItems(from: cardBrands),
-                disabledItems: Set(Self.makeItems(from: disallowedCardBrands)),
-                allowDeselection: allowDeselection,
-                theme: theme
-            )
-            self.variant = .selector(element)
-            element.delegate = self
-        } else {
-            let element = DropdownFieldElement.makeCardBrandDropdown(
-                cardBrands: cardBrands,
-                disallowedCardBrands: disallowedCardBrands,
-                theme: theme,
-                includePlaceholder: allowDeselection
-            )
-            self.variant = .dropdown(element)
-            element.delegate = self
-        }
+        element = SegmentedSelectorElement(
+            items: Self.makeItems(from: cardBrands),
+            disabledItems: Set(Self.makeItems(from: disallowedCardBrands)),
+            allowDeselection: allowDeselection,
+            theme: theme
+        )
+        element.delegate = self
     }
 
     func update(cardBrands: Set<STPCardBrand>, disallowedCardBrands: Set<STPCardBrand> = []) {
-        switch variant {
-        case .selector(let element):
-            element.update(
-                items: Self.makeItems(from: cardBrands),
-                disabledItems: Set(Self.makeItems(from: disallowedCardBrands))
-            )
-        case .dropdown(let element):
-            let items = DropdownFieldElement.items(
-                from: cardBrands,
-                disallowedCardBrands: disallowedCardBrands,
-                theme: element.theme,
-                includePlaceholder: element.items.contains { $0.isPlaceholder }
-            )
-            element.update(items: items)
+        let allowedBrands = cardBrands.subtracting(disallowedCardBrands)
+        element.update(
+            items: Self.makeItems(from: cardBrands),
+            disabledItems: Set(Self.makeItems(from: disallowedCardBrands))
+        )
+        // If we only fetched one card brand that is not disallowed, disable interaction and auto select it.
+        // This case typically only occurs when card brand filtering is used with CBC and one of the fetched brands is filtered out.
+        view.isUserInteractionEnabled = allowedBrands.count > 1
+        if allowedBrands.count == 1,
+           !disallowedCardBrands.isEmpty,
+           let brand = allowedBrands.first {
+            select(brand)
         }
     }
 
     func select(_ brand: STPCardBrand) {
-        switch variant {
-        case .selector(let element):
-            element.select(brand.makeCardBrandItem())
-        case .dropdown(let element):
-            if let index = element.items.firstIndex(where: { $0.rawData == STPCardBrandUtilities.apiValue(from: brand) }) {
-                element.select(index: index, shouldAutoAdvance: false)
-            }
-        }
+        element.select(brand.makeCardBrandItem())
     }
 
     // MARK: - Helper Methods
@@ -152,11 +103,11 @@ extension CardBrandChoiceElement: ElementDelegate {
     }
 }
 
-private extension STPCardBrand {
+extension STPCardBrand {
     func makeCardBrandItem() -> SegmentedSelectorItem {
         return SegmentedSelectorItem(
             rawData: STPCardBrandUtilities.apiValue(from: self),
-            image: STPImageLibrary.cardBrandImage(for: self),
+            image: STPImageLibrary.unpaddedCardBrandImage(for: self),
             accessibilityLabel: STPCardBrandUtilities.stringFrom(self) ?? ""
         )
     }

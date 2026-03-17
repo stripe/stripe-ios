@@ -16,13 +16,13 @@ public protocol CheckoutDelegate: AnyObject {
     /// - Parameters:
     ///   - checkout: The instance that loaded or refreshed the session.
     ///   - session: The updated session.
-    func checkout(_ checkout: Checkout, didUpdate session: STPCheckoutSession)
+    func checkout(_ checkout: Checkout, didUpdate session: Checkout.Session)
 }
 
 /// Default no-op implementations.
 @_spi(CheckoutSessionsPreview)
 public extension CheckoutDelegate {
-    func checkout(_ checkout: Checkout, didUpdate session: STPCheckoutSession) {
+    func checkout(_ checkout: Checkout, didUpdate session: Checkout.Session) {
         // Default empty implementation
     }
 }

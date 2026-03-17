@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Tęsdami jūs suteikiate leidimą %@ automatiškai nurašyti lėšas nuo jūsų „Satispay Balance“ likučio periodiškai, pagal jūsų pirkimo arba prenumeratos planą.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Tęsdami, autorizuojate %@ pagal jūsų pirkimo arba prenumeratos planą automatiškai ir periodiškai nurašyti lėšas nuo jūsų „Twint“ likučio.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Tęsdami įgaliojate \"%1$@\" nurašyti mokestį nuo jūsų \"Cash App\" sąskaitos už šį mokėjimą ir būsimuosius mokėjimus pagal \"%2$@\" sąlygas, kol šis įgaliojimas bus atšauktas. Galite bet kada tai pakeisti \"Cash App\" nuostatose.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Jungdamiesi prie Link sutinkate su <terms>Sąlygomis</terms> ir <privacy>Privatumo politika</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Kortelės duomenų keisti negalima.";
 
 "Change" = "Keisti";
+
+"Choose a card brand" = "Pasirinkite kortelės prekių ženklą";
 
 "Choose a payment method" = "Pasirinkite mokėjimo būdą";
 
