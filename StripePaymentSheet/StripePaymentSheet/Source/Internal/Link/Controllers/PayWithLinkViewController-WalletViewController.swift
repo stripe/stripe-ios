@@ -740,7 +740,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         let newPaymentVC = PayWithLinkViewController.NewPaymentViewController(
             linkAccount: linkAccount,
             context: context,
-            isAddingFirstPaymentMethod: false
+            isAddingFirstPaymentMethod: viewModel.paymentMethods.isEmpty
         )
 
         bottomSheetController?.pushContentViewController(newPaymentVC)
