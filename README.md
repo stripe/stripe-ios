@@ -1,3 +1,5 @@
+DO NOT COMMIT. TESTING CI STATUS
+
 # Stripe iOS SDK
 
 [![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
