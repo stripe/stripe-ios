@@ -18,7 +18,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     /// Represents the possible steps in the flow.
     enum Route: Hashable {
         case registration(email: String, oAuthScopes: [OAuthScopes])
-        case kycInfo
+        case kycInfo(collectionMode: KYCInfoView.CollectionMode)
         case identity
         case wallets
         case payment(wallet: CustomerWalletsResponse.Wallet)
@@ -33,8 +33,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     @Published var path: [Route] = []
 
     private(set) var selectedWallet: CustomerWalletsResponse.Wallet?
+    private var kycLevel: KYCLevel = .none
     private var isKycVerified = false
     private var isIdDocumentVerified = false
+    private var kycInfoCollectionMode: KYCInfoView.CollectionMode = .original
     private var createOnrampSessionResponse: CreateOnrampSessionResponse?
     private var selectedPaymentMethodDescription: String?
     private var settlementSpeed: CreateOnrampSessionRequest.SettlementSpeed?
@@ -46,8 +48,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     /// Begins the flow for an existing user.
-    func startForExistingUser() {
+    /// - Parameter kycInfoCollectionMode: The KYC info screen collection mode to use if KYC needs to be collected.
+    func startForExistingUser(kycInfoCollectionMode: KYCInfoView.CollectionMode = .original) {
         resetInternalState()
+        self.kycInfoCollectionMode = kycInfoCollectionMode
         Task {
             await refreshCustomerInfoAndPushNext()
         }
@@ -57,8 +61,14 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     /// - Parameters:
     ///   - email: The user’s email.
     ///   - selectedScopes: The OAuth scopes the user selected.
-    func startForNewUser(email: String, selectedScopes: [OAuthScopes]) {
+    ///   - kycInfoCollectionMode: The KYC info screen collection mode to use if KYC needs to be collected.
+    func startForNewUser(
+        email: String,
+        selectedScopes: [OAuthScopes],
+        kycInfoCollectionMode: KYCInfoView.CollectionMode = .original
+    ) {
         resetInternalState()
+        self.kycInfoCollectionMode = kycInfoCollectionMode
         path = [.registration(email: email, oAuthScopes: selectedScopes)]
     }
 
@@ -70,14 +80,19 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     /// Advances to the next step of the flow post-KYC info collection.
-    func advanceAfterKyc() {
-        isKycVerified = true
+    /// - Parameter collectedKYCLevel: The KYC level collected by the KYC info view.
+    func advanceAfterKyc(collectedKYCLevel: KYCLevel) {
+        kycLevel = collectedKYCLevel
+        if kycInfoCollectionMode == .original {
+            isKycVerified = true
+        }
         advanceToNextStep()
     }
 
     /// Advances to the next step in the flow post-identity verification.
     func advanceAfterIdentity() {
         isIdDocumentVerified = true
+        kycLevel = .level2
         advanceToNextStep()
     }
 
@@ -112,6 +127,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         defer { isLoading?.wrappedValue = false }
         do {
             let info = try await APIClient.shared.fetchCustomerInfo()
+            kycLevel = info.kycLevel
             isKycVerified = info.isKycVerified
             isIdDocumentVerified = info.isIdDocumentVerified
             advanceToNextStep()
@@ -124,9 +140,24 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     private func advanceToNextStep() {
-        if !isKycVerified {
-            path.append(.kycInfo)
-        } else if !isIdDocumentVerified {
+        // Auto-route to KYC info collection based on selected collection mode:
+        // - `.original` uses `kyc_verified` demo backend status.
+        // - Any non-original mode uses provided level-0 fields.
+        let shouldShowKYCInfo = if kycInfoCollectionMode == .original {
+            !isKycVerified
+        } else {
+            !kycLevel.includesLevel0
+        }
+
+        // For `.original`, identity verification also routes from this coordinator.
+        // Non-original modes skip identity routing here. Level 1 and identity collection for those modes
+        // will occur just-in-time when an error occurs during the onramp session / checkout process,
+        // not by this coordinator.
+        let shouldShowIdentity = kycInfoCollectionMode == .original && !isIdDocumentVerified
+
+        if shouldShowKYCInfo {
+            path.append(.kycInfo(collectionMode: kycInfoCollectionMode))
+        } else if shouldShowIdentity {
             path.append(.identity)
         } else if let successfulCheckoutMessage {
             path.append(.checkoutSuccess(message: successfulCheckoutMessage))
@@ -147,8 +178,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     private func resetInternalState() {
+        kycLevel = .none
         isKycVerified = false
         isIdDocumentVerified = false
+        kycInfoCollectionMode = .original
         selectedWallet = nil
         createOnrampSessionResponse = nil
         selectedPaymentMethodDescription = nil
@@ -157,13 +190,40 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 }
 
-private extension CustomerInformationResponse {
-    var isKycVerified: Bool {
+extension CustomerInformationResponse {
+
+    private static let level0Fields: Set<String> = [
+        "first_name",
+        "last_name",
+        "address_line_1",
+        "address_city",
+        "address_state",
+        "address_postal_code",
+        "address_country",
+    ]
+
+    private static let level1AdditionalFields: Set<String> = [
+        "id_number",
+        "dob",
+    ]
+
+    fileprivate var isIdDocumentVerified: Bool {
+        verifications.contains { $0.name == "id_document_verified" && $0.status == "verified" }
+    }
+
+    fileprivate var isKycVerified: Bool {
         verifications.contains { $0.name == "kyc_verified" && $0.status == "verified" }
     }
 
-    var isIdDocumentVerified: Bool {
-        verifications.contains { $0.name == "id_document_verified" && $0.status == "verified" }
+    fileprivate var kycLevel: KYCLevel {
+        let providedFieldSet = Set(providedFields)
+        let hasLevel0 = providedFieldSet.isSuperset(of: Self.level0Fields)
+        guard hasLevel0 else { return .none }
+
+        let hasLevel1 = providedFieldSet.isSuperset(of: Self.level1AdditionalFields)
+        guard hasLevel1 else { return .level0 }
+
+        return isIdDocumentVerified ? .level2 : .level1
     }
 }
 
