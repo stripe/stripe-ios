@@ -20,7 +20,6 @@ final class PaymentSheetAnalyticsHelper {
     // Vars set later as PaymentSheet successfully loads, etc.
     var intent: Intent?
     var elementsSession: STPElementsSession?
-    var loadingStartDate: Date?
     private var startTimes: [TimeMeasurement: Date] = [:]
 
     enum IntegrationShape {
@@ -99,35 +98,45 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
-    func logLoadStarted() {
-        loadingStartDate = Date()
-        printTimingLog("START logLoadStarted")
-        log(event: .paymentSheetLoadStarted, params: ["integration_shape": integrationShape.analyticsValue])
-        printTimingLog("END logLoadStarted")
+    @MainActor
+    func logLoadStarted(isUpdate: Bool) {
+        log(
+            event: .paymentSheetLoadStarted,
+            params: [
+                "integration_shape": integrationShape.analyticsValue,
+                "is_update": isUpdate,
+            ]
+        )
     }
 
-    func logLoadFailed(error: Error) {
-        stpAssert(loadingStartDate != nil)
-        let duration: TimeInterval = {
-            guard let loadingStartDate else { return 0 }
-            return Date().timeIntervalSince(loadingStartDate)
-        }()
+    @MainActor
+    func logLoadFailed(
+        error: Error,
+        loadTimings: PaymentSheetLoader.LoadTimings,
+        isUpdate: Bool
+    ) {
+        let duration = Date().timeIntervalSince(loadTimings.loadingStartDate)
         log(
             event: .paymentSheetLoadFailed,
             duration: duration,
             error: error,
-            params: ["integration_shape": integrationShape.analyticsValue]
+            params: [
+                "integration_shape": integrationShape.analyticsValue,
+                "load_timings": loadTimings.jsonObject,
+                "is_update": isUpdate,
+            ]
         )
     }
 
+    @MainActor
     func logLoadSucceeded(
         intent: Intent,
         elementsSession: STPElementsSession,
         defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
-        orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType]
+        orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        loadTimings: PaymentSheetLoader.LoadTimings,
+        isUpdate: Bool
     ) {
-        printTimingLog("START logLoadSucceeded")
-        stpAssert(loadingStartDate != nil)
         self.intent = intent
         self.elementsSession = elementsSession
         let defaultPaymentMethodAnalyticsValue: String = {
@@ -150,6 +159,8 @@ final class PaymentSheetAnalyticsHelper {
             "intent_type": intent.analyticsValue,
             "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
             "integration_shape": integrationShape.analyticsValue,
+            "load_timings": loadTimings.jsonObject,
+            "is_update": isUpdate,
         ]
         if let linkMode = elementsSession.linkSettings?.linkMode {
             params["link_mode"] = linkMode.rawValue
@@ -162,10 +173,7 @@ final class PaymentSheetAnalyticsHelper {
                 params["has_default_payment_method"] = elementsSession.customer?.defaultPaymentMethod != nil
             }
         }
-        let duration: TimeInterval = {
-            guard let loadingStartDate else { return 0 }
-            return Date().timeIntervalSince(loadingStartDate)
-        }()
+        let duration = Date().timeIntervalSince(loadTimings.loadingStartDate)
 
         params["link_disabled_reasons"] = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
         params["link_signup_disabled_reasons"] = PaymentSheet.linkSignupDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
@@ -176,7 +184,6 @@ final class PaymentSheetAnalyticsHelper {
             duration: duration,
             params: params
         )
-        printTimingLog("END logLoadSucceeded")
     }
 
     func logShow(showingSavedPMList: Bool) {
@@ -487,9 +494,7 @@ final class PaymentSheetAnalyticsHelper {
             additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
         }
 
-        for (param, param_value) in params {
-            additionalParams[param] = param_value
-        }
+        additionalParams.mergeAssertingOnOverwrites(params)
         let analytic = PaymentSheetAnalytic(event: event, additionalParams: additionalParams)
         analyticsClient.log(analytic: analytic, apiClient: configuration.apiClient)
     }

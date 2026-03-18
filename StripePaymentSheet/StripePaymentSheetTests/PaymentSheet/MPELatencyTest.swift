@@ -70,6 +70,7 @@ struct LatencyAnalytic: Analytic {
     }
 }
 
+@MainActor
 final class MPELatencyTest: XCTestCase {
     // The `RECORD_LATENCY_TESTS` env variable should only be set in the `latency-tests` CI job
     let isCILatencyTestRun = ProcessInfo.processInfo.environment["RECORD_LATENCY_TESTS"] == "true"
@@ -93,12 +94,12 @@ final class MPELatencyTest: XCTestCase {
     let customerIDWithoutEmail = "cus_TZCcZWKC57HHmr"
 
     override func setUp() async throws {
-        PaymentSheetLoader._enableGranularTimingLogs = true
+        PaymentSheetLoader.LoadTimings.shouldPrintLogs = true
         try await super.setUp()
     }
 
     override func tearDown() async throws {
-        PaymentSheetLoader._enableGranularTimingLogs = false
+        PaymentSheetLoader.LoadTimings.shouldPrintLogs = false
         try await super.tearDown()
     }
 
@@ -297,6 +298,14 @@ extension MPELatencyTest {
 
         // 2. Log load stats
         let duration = endDate.timeIntervalSince(startDate)
+        // This print statement is used by the `generate_loader_flamegraph` script
+        print("TOTAL_LOAD_TIME: \(startDate.timeIntervalSince1970) \(endDate.timeIntervalSince1970)")
+
+        // Sanity check that our recorded durations match the reported durations in analytics by no more than 10 ms
+        let mcLoadSucceededEvent = analyticsClient._testLogHistory.last(where: { $0["event"] as! String == "mc_load_succeeded" })!
+        let mcLoadDuration = mcLoadSucceededEvent["duration"] as! TimeInterval
+        XCTAssertEqual(mcLoadDuration, duration, accuracy: 0.01, "Difference in ms: \(1000 * (duration - mcLoadDuration))")
+
         // Only send analytics in the CI latency-tests job so that the environment is consistent.
         if isCILatencyTestRun {
             analyticsClient.forceAlwaysSendAnalytics = true
