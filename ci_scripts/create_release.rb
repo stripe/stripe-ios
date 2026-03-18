@@ -18,16 +18,22 @@ puts "Proposing version: #{@version}".red
 
 # Ensure there are no unstaged changes before starting
 unstaged_changes = `git diff --name-only`.strip
-abort('You have unstaged changes. Please commit or stash them before creating a release.') unless unstaged_changes.empty?
+unless @is_dry_run || unstaged_changes.empty?
+  abort('You have unstaged changes. Please commit or stash them before creating a release.')
+end
 
 # Create a new branch for the release, e.g. bg/release-9.0.0
 @branchname = "releases/#{@version}"
 
 def create_branch
+  return if @is_dry_run
+
   run_command("git checkout -b #{@branchname}")
 end
 
 def update_version
+  return if @is_dry_run
+
   # Overwrite the VERSION file with version
   File.open('VERSION', 'w') do |f|
     f.write(@version)
@@ -38,12 +44,16 @@ def update_version
 end
 
 def update_placeholders
+  return if @is_dry_run
+
   # Replace placeholder version in CHANGELOG.md with this version and date
   update_placeholder(@version, 'CHANGELOG.md')
   update_placeholder(@version, 'MIGRATING.md')
 end
 
 def commit_changes
+  return if @is_dry_run
+
   # Commit and push the changes
   run_command("git add -u &&
     git commit -m \"Update version to #{@version}\"")
@@ -51,6 +61,24 @@ end
 
 def push_changes
   run_command("git push origin #{@branchname}") unless @is_dry_run
+end
+
+def expected_bump_marker
+  return 'MAJOR' if @increment_major
+  return 'MINOR' if @increment_minor
+  return 'PATCH' if @increment_patch
+
+  ChangelogUtils.infer_bump_marker(version_from_file, @version)
+end
+
+def validate_changelog_bump
+  ChangelogUtils.validate_metadata!
+
+  actual_marker = ChangelogUtils.bump_marker
+  expected_marker = expected_bump_marker
+  return if actual_marker == expected_marker
+
+  raise "CHANGELOG.md line 2 must be #{expected_marker} before creating release #{@version}. Found #{actual_marker}."
 end
 
 def run_download_localized_strings
@@ -113,6 +141,7 @@ end
 
 steps = [
   method(:validate_version_number),
+  method(:validate_changelog_bump),
   method(:create_branch),
   method(:update_version),
   method(:update_placeholders),

@@ -1,3 +1,6 @@
+The next release's version bump will so far be:
+PATCH
+
 ## X.Y.Z - changes pending release 
 
 ## 25.8.0 2026-03-16
