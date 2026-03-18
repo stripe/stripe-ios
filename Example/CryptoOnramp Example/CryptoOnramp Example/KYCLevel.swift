@@ -8,7 +8,7 @@
 import Foundation
 
 /// Represents progressively stronger customer verification completeness.
-enum KYCLevel {
+enum KYCLevel: String, Identifiable {
 
     /// No information has been collected aside from email and phone, which are required for demo account creation.
     case none
@@ -40,5 +40,21 @@ enum KYCLevel {
         case .none, .level0:
             return false
         }
+    }
+
+    /// Whether the receiver is level 2 or higher.
+    var includesLevel2: Bool {
+        switch self {
+        case .level2:
+            return true
+        case .none, .level0, .level1:
+            return false
+        }
+    }
+
+    // MARK: - Identifiable
+
+    var id: String {
+        rawValue
     }
 }

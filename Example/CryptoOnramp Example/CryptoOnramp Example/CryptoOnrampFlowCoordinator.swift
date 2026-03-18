@@ -190,43 +190,6 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 }
 
-extension CustomerInformationResponse {
-
-    private static let level0Fields: Set<String> = [
-        "first_name",
-        "last_name",
-        "address_line_1",
-        "address_city",
-        "address_state",
-        "address_postal_code",
-        "address_country",
-    ]
-
-    private static let level1AdditionalFields: Set<String> = [
-        "id_number",
-        "dob",
-    ]
-
-    fileprivate var isIdDocumentVerified: Bool {
-        verifications.contains { $0.name == "id_document_verified" && $0.status == "verified" }
-    }
-
-    fileprivate var isKycVerified: Bool {
-        verifications.contains { $0.name == "kyc_verified" && $0.status == "verified" }
-    }
-
-    fileprivate var kycLevel: KYCLevel {
-        let providedFieldSet = Set(providedFields)
-        let hasLevel0 = providedFieldSet.isSuperset(of: Self.level0Fields)
-        guard hasLevel0 else { return .none }
-
-        let hasLevel1 = providedFieldSet.isSuperset(of: Self.level1AdditionalFields)
-        guard hasLevel1 else { return .level0 }
-
-        return isIdDocumentVerified ? .level2 : .level1
-    }
-}
-
 extension CryptoOnrampFlowCoordinator.Route {
 
     /// Whether the user should be able to advance backwards from this step.
