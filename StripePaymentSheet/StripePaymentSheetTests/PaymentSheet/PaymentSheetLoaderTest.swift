@@ -776,6 +776,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = customApiClient
+        configuration.defaultBillingDetails.email = "test@example.com"
 
         // Fetch the full STPCheckoutSession object (with allResponseFields containing elements_session)
         let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
@@ -816,6 +817,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = customApiClient
+        configuration.defaultBillingDetails.email = "test@example.com"
 
         // Fetch the full STPCheckoutSession object (with allResponseFields containing elements_session)
         let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
@@ -867,6 +869,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         }
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        configuration.defaultBillingDetails.email = "test@example.com"
 
         PaymentSheetLoader.load(
             mode: .checkoutSession(checkoutSession),

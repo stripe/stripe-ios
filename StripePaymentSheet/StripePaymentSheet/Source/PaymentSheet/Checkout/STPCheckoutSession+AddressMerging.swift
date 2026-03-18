@@ -21,7 +21,6 @@ extension STPCheckoutSession {
             let details = shippingAddressDetails(from: shipping)
             configuration.shippingDetails = { details }
         }
-        configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? customerEmail
     }
 
@@ -35,7 +34,6 @@ extension STPCheckoutSession {
             let details = shippingAddressDetails(from: shipping)
             configuration.shippingDetails = { details }
         }
-        configuration.billingDetailsCollectionConfiguration.email = .always
         configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? customerEmail
     }
 

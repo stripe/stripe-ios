@@ -86,26 +86,6 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     // MARK: - Email
 
-    func testApplyAddressOverrides_emailCollectionAlwaysForced() {
-        let session = CheckoutTestHelpers.makeOpenSession()
-
-        var config = PaymentSheet.Configuration()
-        XCTAssertEqual(config.billingDetailsCollectionConfiguration.email, .automatic)
-        session.applyAddressOverrides(to: &config)
-
-        XCTAssertEqual(config.billingDetailsCollectionConfiguration.email, .always)
-    }
-
-    func testApplyAddressOverrides_emailCollectionForcedEvenWhenNever() {
-        let session = CheckoutTestHelpers.makeOpenSession()
-
-        var config = PaymentSheet.Configuration()
-        config.billingDetailsCollectionConfiguration.email = .never
-        session.applyAddressOverrides(to: &config)
-
-        XCTAssertEqual(config.billingDetailsCollectionConfiguration.email, .always)
-    }
-
     func testApplyAddressOverrides_emailPopulatedFromSession() {
         let session = CheckoutTestHelpers.makeOpenSession(customerEmail: "session@example.com")
 
@@ -132,7 +112,6 @@ final class CheckoutAddressMergingTests: XCTestCase {
         session.applyAddressOverrides(to: &config)
 
         XCTAssertNil(config.defaultBillingDetails.email)
-        XCTAssertEqual(config.billingDetailsCollectionConfiguration.email, .always)
     }
 
     // MARK: - EmbeddedPaymentElement.Configuration
@@ -159,16 +138,6 @@ final class CheckoutAddressMergingTests: XCTestCase {
         XCTAssertNotNil(shipping)
         XCTAssertEqual(shipping?.name, "John Smith")
         XCTAssertEqual(shipping?.address.line1, "456 Oak Ave")
-    }
-
-    func testApplyAddressOverrides_embeddedEmailCollectionAlwaysForced() {
-        let session = CheckoutTestHelpers.makeOpenSession()
-
-        var config = EmbeddedPaymentElement.Configuration()
-        XCTAssertEqual(config.billingDetailsCollectionConfiguration.email, .automatic)
-        session.applyAddressOverrides(to: &config)
-
-        XCTAssertEqual(config.billingDetailsCollectionConfiguration.email, .always)
     }
 
     func testApplyAddressOverrides_embeddedEmailPopulatedFromSession() {
