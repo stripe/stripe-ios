@@ -5,21 +5,53 @@ application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
+<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testLoaderLooksUpLinkEphemeralKey/0003_get_v1_payment_methods.tail
 content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=WZn-ptnH9PlriHBB6p-YxuVRmo33UA3ZHj3s_aoqtLVCcC0Sylq-9_DZnzKOUmVr01fVNH2Brs2dYnNZ
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
+|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadFiltersSavedApplePayCards/0006_get_v1_payment_methods.tail
+report-to: {"group":"coop","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/coop-report"}],"include_subdomains":true}
+request-id: req_65hC1EZdEC4llI
+Content-Length: 2623
+Vary: Origin
+Date: Wed, 18 Dec 2024 02:35:54 GMT
+stripe-version: 2020-08-27
+========
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=EeEQMfTfIsEZn25fLdWkyKN0K6m8Vn5gO3m8out5mYoLGivsYa8AqfiEGKMQscSSFGh7Q0aYp4fyhK_g
+x-wc: ABGHIJ
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+Server: nginx
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testloaderdoesntfetchCustomerwhendefaultbillingemail/0002_get_v1_payment_methods.tail
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
+<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testLoaderLooksUpLinkEphemeralKey/0003_get_v1_payment_methods.tail
 Cache-Control: no-cache, no-store
 Date: Fri, 27 Feb 2026 21:42:41 GMT
 stripe-version: 2020-08-27
+|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadFiltersSavedApplePayCards/0006_get_v1_payment_methods.tail
+========
+Cache-Control: no-cache, no-store
+Date: Fri, 27 Feb 2026 21:16:02 GMT
+stripe-version: 2020-08-27
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testloaderdoesntfetchCustomerwhendefaultbillingemail/0002_get_v1_payment_methods.tail
 access-control-allow-credentials: true
+<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testLoaderLooksUpLinkEphemeralKey/0003_get_v1_payment_methods.tail
 Content-Length: 2463
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
 request-id: req_gxRdreMiuCS09B
+|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadFiltersSavedApplePayCards/0006_get_v1_payment_methods.tail
+Content-Type: application/json
+x-content-type-options: nosniff
+========
+Content-Length: 2463
+x-stripe-routing-context-priority-tier: api-testmode
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+request-id: req_Apse79QuW7DMmv
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testloaderdoesntfetchCustomerwhendefaultbillingemail/0002_get_v1_payment_methods.tail
 
 {
   "has_more" : false,

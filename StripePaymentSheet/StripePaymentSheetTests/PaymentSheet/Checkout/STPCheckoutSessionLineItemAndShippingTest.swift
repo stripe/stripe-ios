@@ -8,7 +8,7 @@
 
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 import StripePaymentsObjcTestUtils
 import XCTest
 
@@ -26,14 +26,14 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
         XCTAssertEqual(first.id, "li_1abc")
         XCTAssertEqual(first.name, "Widget")
         XCTAssertEqual(first.quantity, 2)
-        XCTAssertEqual(first.amount, 750)
+        XCTAssertEqual(first.unitAmount, 750)
         XCTAssertEqual(first.currency, "usd")
 
         let second = session.lineItems[1]
         XCTAssertEqual(second.id, "li_2def")
         XCTAssertEqual(second.name, "Gadget")
         XCTAssertEqual(second.quantity, 1)
-        XCTAssertEqual(second.amount, 500)
+        XCTAssertEqual(second.unitAmount, 500)
         XCTAssertEqual(second.currency, "usd")
     }
 
@@ -93,7 +93,43 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
 
         XCTAssertEqual(session.selectedShippingOptionId, "shr_standard")
-        XCTAssertEqual(session.totalShippingAmount, 500)
+        XCTAssertEqual(session.totals?.shipping, 500)
+    }
+
+    func testSelectedShippingOptionProtocolProperty() {
+        let json = STPTestUtils.jsonNamed("CheckoutSession")!
+        let session: Checkout.Session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+
+        let selected = session.selectedShippingOption
+        XCTAssertNotNil(selected)
+        XCTAssertEqual(selected?.id, "shr_standard")
+        XCTAssertEqual(selected?.displayName, "Standard Shipping")
+        XCTAssertEqual(selected?.amount, 500)
+        XCTAssertEqual(selected?.currency, "usd")
+    }
+
+    func testSelectedShippingOptionNilWhenNoSelection() {
+        let json: [String: Any] = [
+            "session_id": "cs_test_no_selection",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "shipping_options": [
+                [
+                    "shipping_rate": [
+                        "id": "shr_standard",
+                        "display_name": "Standard Shipping",
+                        "amount": 500,
+                        "currency": "usd",
+                    ],
+                ],
+            ],
+        ]
+
+        let session: Checkout.Session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        XCTAssertNil(session.selectedShippingOption)
     }
 
 }

@@ -8,6 +8,10 @@ require 'optparse'
 require 'colorize'
 require 'octokit'
 require 'erb'
+require 'net/http'
+require 'json'
+require 'uri'
+require 'pathname'
 
 SCRIPT_DIR = __dir__
 abort 'Unable to find SCRIPT_DIR' if SCRIPT_DIR.nil? || SCRIPT_DIR.empty?

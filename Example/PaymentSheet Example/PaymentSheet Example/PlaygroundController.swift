@@ -18,7 +18,7 @@ import PassKit
 import SwiftUI
 import UIKit
 
-class PlaygroundController: ObservableObject {
+@MainActor class PlaygroundController: ObservableObject {
     @Published var paymentSheetFlowController: PaymentSheet.FlowController?
     @Published var paymentSheet: PaymentSheet?
     @Published var embeddedPlaygroundViewController: EmbeddedPlaygroundViewController?
@@ -210,10 +210,6 @@ class PlaygroundController: ObservableObject {
             configuration.allowsDelayedPaymentMethods = true
         }
 
-        if settings.enablePassiveCaptcha == .on {
-            configuration.enablePassiveCaptcha = true
-        }
-
         if settings.enableAttestationOnConfirmation == .on {
             configuration.enableAttestationOnConfirmation = true
         }
@@ -244,7 +240,6 @@ class PlaygroundController: ObservableObject {
             configuration.paymentMethodLayout = .automatic
         }
 
-        configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
         switch settings.cardBrandAcceptance {
         case .all:
             configuration.cardBrandAcceptance = .all
@@ -344,10 +339,6 @@ class PlaygroundController: ObservableObject {
             configuration.allowsDelayedPaymentMethods = true
         }
 
-        if settings.enablePassiveCaptcha == .on {
-            configuration.enablePassiveCaptcha = true
-        }
-
         if settings.enableAttestationOnConfirmation == .on {
             configuration.enableAttestationOnConfirmation = true
         }
@@ -367,7 +358,6 @@ class PlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
         configuration.billingDetailsCollectionConfiguration.allowedCountries = settings.allowedCountries.countries
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
-        configuration.enableCBCRedesign = settings.enableCBCRedesign == .on
         configuration.allowsRemovalOfLastSavedPaymentMethod = settings.allowsRemovalOfLastSavedPaymentMethod == .on
 
         switch settings.cardBrandAcceptance {
@@ -595,7 +585,8 @@ class PlaygroundController: ObservableObject {
     }
 
     var clientSecret: String?
-    var checkoutSession: STPCheckoutSession?
+    var checkout: Checkout?
+    var checkoutSession: Checkout.Session? { checkout?.session }
     var customerId: String?
     var ephemeralKey: String?
     var customerSessionClientSecret: String?
@@ -709,7 +700,7 @@ class PlaygroundController: ObservableObject {
         case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc:
             mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
         case .checkoutSession:
-            mc = PaymentSheet(checkoutSession: self.checkoutSession!, configuration: configuration)
+            mc = PaymentSheet(checkout: self.checkout!, configuration: configuration)
         }
 
         self.paymentSheet = mc
@@ -921,13 +912,13 @@ extension PlaygroundController {
                     let checkout = Checkout(clientSecret: checkoutSessionClientSecret)
                     do {
                         try await checkout.load()
-                        self.checkoutSession = checkout.session
+                        self.checkout = checkout
                     } catch {
-                        self.checkoutSession = nil
+                        self.checkout = nil
                         print("Failed to load checkout session: \(error)")
                     }
                 } else {
-                    self.checkoutSession = nil
+                    self.checkout = nil
                 }
 
                 self.addressViewController = AddressViewController(configuration: self.addressConfiguration, delegate: self)
@@ -935,7 +926,7 @@ extension PlaygroundController {
                 // Persist customerId / customerMode
                 self.serializeSettingsToNSUserDefaults()
                 let idDescription: String = {
-                    if let checkoutSessionId = self.checkoutSession?.stripeId {
+                    if let checkoutSessionId = self.checkoutSession?.id {
                         return "checkout session id: \(checkoutSessionId)"
                     }
                     let intentID = STPPaymentIntent.id(fromClientSecret: self.clientSecret ?? "") ?? STPSetupIntent.id(fromClientSecret: self.clientSecret ?? "")
@@ -1000,7 +991,7 @@ extension PlaygroundController {
 
                     case .checkoutSession:
                         PaymentSheet.FlowController.create(
-                            checkoutSession: self.checkoutSession!,
+                            checkout: self.checkout!,
                             configuration: self.configuration,
                             completion: completion
                         )
@@ -1305,7 +1296,7 @@ extension PlaygroundController {
         UserDefaults.standard.set(appearanceData, forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey)
     }
 
-    static func settingsFromDefaults() -> PaymentSheetTestPlaygroundSettings? {
+    nonisolated static func settingsFromDefaults() -> PaymentSheetTestPlaygroundSettings? {
         if let data = UserDefaults.standard.value(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsKey) as? Data {
             do {
                 return try JSONDecoder().decode(PaymentSheetTestPlaygroundSettings.self, from: data)
@@ -1317,7 +1308,7 @@ extension PlaygroundController {
         return nil
     }
 
-    static func appearanceFromDefaults() -> PaymentSheet.Appearance? {
+    nonisolated static func appearanceFromDefaults() -> PaymentSheet.Appearance? {
         if let appearanceData = UserDefaults.standard.value(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsAppearanceKey) as? Data {
             do {
                 return try JSONDecoder().decode(PaymentSheet.Appearance.self, from: appearanceData)
@@ -1381,7 +1372,7 @@ extension PlaygroundController {
         embeddedPlaygroundViewController = EmbeddedPlaygroundViewController(
             configuration: embeddedConfiguration,
             intentConfig: settings.integrationType == .checkoutSession ? nil : intentConfig,
-            checkoutSession: settings.integrationType == .checkoutSession ? checkoutSession : nil,
+            checkout: settings.integrationType == .checkoutSession ? checkout : nil,
             playgroundController: self
         )
     }

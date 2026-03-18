@@ -41,7 +41,7 @@
 "GrabPay" = "GrabPay";
 
 /* Source type brand name */
-"iDEAL" = "iDEAL";
+"iDEAL | Wero" = "iDEAL | Wero";
 
 /* Payment Method type brand name */
 "Klarna" = "Klarna";

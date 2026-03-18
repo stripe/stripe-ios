@@ -1,11 +1,18 @@
 ## X.Y.Z - changes pending release 
+### PaymentSheet
+* [Fixed] Improved loading times for integrations that set `configuration.customer`.
+
+## 25.8.0 2026-03-16
 ### Payments
 * [Added] Adds support for [payments orchestration](https://docs.stripe.com/payments/orchestration) (private preview) by allowing `processing` as a PaymentIntent state for cards.
+
+### Identity
+* [Improved] Improved selfie capture best-frame selection by ranking samples with face score, centering, coverage, and stability (focus/motion blur).
 
 ### PaymentSheet
 * [Added] Added support for Wero payments (private preview).
 * [Fixed] Fixed a visual bug in PaymentSheet when the Link sign-in modal appears first where the Apple Pay button was not full width on > iOS 26.2
-* [Fixed] Improved loading times for integrations that set `configuration.customer`.
+* [Changed] Card brand choice selector UI from a dropdown to a segmented selector following Mastercard requirements.
 
 ## 25.7.1 2026-02-25
 ### All
@@ -15,6 +22,10 @@
 
 ### Payment Method Messaging Element
 * [Changed] Breaking change for `PaymentMethodMessagingElement.Appearance`. The info icon has been removed and replaced with a CTA to see available plans. The `infoIconColor` configuration has been removed, and the new link text color is customizable through `linkTextColor`.
+
+### PaymentSheet
+* [Changed] Rebranded iDEAL to iDEAL | Wero
+* [Changed] Removed bank selector from iDEAL | Wero form
 
 ## 25.6.4 2026-02-23
 

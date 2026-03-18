@@ -78,6 +78,10 @@ final class PaymentSheetLoader {
                let error = intentConfiguration.validate() {
                 throw error
             }
+            if case .checkoutSession = mode, configuration.customer != nil {
+                stpAssertionFailure("Configuration.customer must not be set when using a CheckoutSession. The CheckoutSession manages its own customer.")
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "PaymentSheet.Configuration.customer must not be set when using a CheckoutSession.")
+            }
 
             // Fetch ElementsSession
             async let _elementsSessionAndIntent: ElementSessionAndIntent = fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, loadTimings: loadTimings)

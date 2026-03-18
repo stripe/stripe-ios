@@ -9,6 +9,7 @@ import OHHTTPStubs
 import OHHTTPStubsSwift
 @_spi(STP) @testable import StripeCore
 @_spi(STP) import StripeCoreTestUtils
+import StripePaymentsObjcTestUtils
 import XCTest
 
 class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
@@ -495,6 +496,36 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             }
         }
         wait(for: [loaded2], timeout: 2)
+    }
+
+    func testCheckoutSessionWithCustomerConfigurationThrowsError() {
+        let json = STPTestUtils.jsonNamed("CheckoutSession")!
+        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = stubbedAPIClient()
+        configuration.customer = PaymentSheet.CustomerConfiguration(id: "cus_123", ephemeralKeySecret: "ek_456")
+
+        let loaded = expectation(description: "Loaded")
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        PaymentSheetLoader.load(
+            mode: .checkoutSession(checkoutSession),
+            configuration: configuration,
+            analyticsHelper: ._testValue(integrationShape: .complete),
+            integrationShape: .paymentSheet
+        ) { result in
+            switch result {
+            case .success:
+                XCTFail("Expected failure when customer is set with CheckoutSession mode")
+            case .failure(let error):
+                guard case PaymentSheetError.integrationError = error else {
+                    XCTFail("Expected PaymentSheetError.integrationError, got \(error)")
+                    return
+                }
+            }
+            loaded.fulfill()
+        }
+        wait(for: [loaded], timeout: 2)
     }
 
     func testSendsErrorAnalytic() {

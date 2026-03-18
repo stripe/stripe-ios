@@ -13,7 +13,7 @@ extension AddressSectionElement {
     @_spi(STP) public class DummyAddressLine: NSObject, Element, TextFieldViewDelegate, UIGestureRecognizerDelegate {
         public let collectsUserInput: Bool = false
 
-        public var delegate: ElementDelegate?
+        public weak var delegate: ElementDelegate?
         public lazy var view: UIView = {
             let configuration = TextFieldElement.Address.LineConfiguration(lineType: .autoComplete, defaultValue: nil)
             let text = ""

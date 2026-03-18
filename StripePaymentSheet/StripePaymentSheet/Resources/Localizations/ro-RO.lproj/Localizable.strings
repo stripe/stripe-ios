@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Continuând, autorizați %@ să vă debiteze automat soldul Satispay în mod recurent, în conformitate cu planul dvs. de achiziție sau de abonament.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Continuând, autorizați %@ să debiteze automat soldul dvs. Twint în mod recurent, în conformitate cu planul dvs. de achiziție sau abonament.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Continuând, autorizați %1$@ să debiteze contul dvs. Cash App pentru această plată și pentru plățile viitoare în conformitate cu termenii %2$@, până când această autorizație este revocată. Puteți schimba acest lucru oricând în setările Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prin accesarea link-ului de asociere, sunteți de acord cu <terms>Termenii</terms> și <privacy>Politica de confidențialitate</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Detaliile cardului nu pot fi modificate.";
 
 "Change" = "Modificare";
+
+"Choose a card brand" = "Alegeți o marcă de carduri";
 
 "Choose a payment method" = "Alege o metodă de plată";
 

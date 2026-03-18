@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
 /// The first screen in the example app flow, allowing a user to log in and sign up using the demo backend, and begin link authentication.
@@ -21,6 +21,9 @@ struct LogInSignUpView: View {
 
     /// Whether livemode is enabled, which can be toggled from this view.
     @Binding var livemode: Bool
+
+    /// Whether to use level 0 KYC collection mode from the KYC info screen.
+    @Binding var isL0KYCModeEnabled: Bool
 
     /// Specifies an alert originating from this view to display by the parent.
     @Binding var alert: Alert?
@@ -37,6 +40,10 @@ struct LogInSignUpView: View {
 
     private var shouldDisableButtons: Bool {
         isLoading.wrappedValue || email.isEmpty || password.isEmpty || coordinator == nil
+    }
+
+    private var kycInfoCollectionMode: KYCInfoView.CollectionMode {
+        livemode && isL0KYCModeEnabled ? .kycLevel0 : .original
     }
 
     private var isRunningOnSimulator: Bool {
@@ -88,6 +95,11 @@ struct LogInSignUpView: View {
                     // Livemode is disabled on the simulator.
                     .disabled(isRunningOnSimulator)
 
+                    Toggle(isOn: $isL0KYCModeEnabled) {
+                        Label("L0 KYC Mode", systemImage: "person.text.rectangle")
+                    }
+                    .disabled(!livemode)
+
                     Divider()
 
                     Button {
@@ -131,6 +143,11 @@ struct LogInSignUpView: View {
                 }
             )
             .presentationDetents([.medium])
+        }
+        .onChange(of: livemode) { isLivemodeEnabled in
+            if !isLivemodeEnabled {
+                isL0KYCModeEnabled = false
+            }
         }
     }
 
@@ -193,7 +210,7 @@ struct LogInSignUpView: View {
                     isLoading.wrappedValue = false
                     switch authorizationResult {
                     case .consented:
-                        flowCoordinator.startForExistingUser()
+                        flowCoordinator.startForExistingUser(kycInfoCollectionMode: kycInfoCollectionMode)
                     case .denied:
                         alert = Alert(title: "Authorization Denied", message: "Authorization was denied.")
                     case .canceled:
@@ -205,7 +222,11 @@ struct LogInSignUpView: View {
             } else {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    flowCoordinator.startForNewUser(email: email, selectedScopes: scopes)
+                    flowCoordinator.startForNewUser(
+                        email: email,
+                        selectedScopes: scopes,
+                        kycInfoCollectionMode: kycInfoCollectionMode
+                    )
                 }
             }
         } catch {
@@ -223,6 +244,7 @@ struct LogInSignUpView: View {
             coordinator: coordinator,
             flowCoordinator: .init(),
             livemode: .constant(false),
+            isL0KYCModeEnabled: .constant(false),
             alert: .constant(nil)
         )
     }

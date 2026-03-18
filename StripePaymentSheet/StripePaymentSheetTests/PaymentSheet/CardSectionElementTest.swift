@@ -24,13 +24,20 @@ class CardSectionElementTest: XCTestCase {
             defaultValues: .init(),
             preferredNetworks: preferredNetworks,
             cardBrandChoiceEligible: true,
-            enableCBCRedesign: true,
             hostedSurface: .paymentSheet,
             theme: .default,
             analyticsHelper: ._testValue(),
             cardBrandFilter: cardBrandFilter,
             opensCardScannerAutomatically: false
         )
+    }
+
+    /// Simulates a user tap on a brand
+    private func simulateTap(_ cardBrandChoiceElement: CardBrandChoiceElement?, brand: STPCardBrand?) {
+        guard let element = cardBrandChoiceElement?.element, let brand else {
+            return
+        }
+        element.didTap(brand.makeCardBrandItem())
     }
 
     // MARK: - Preferred networks
@@ -61,12 +68,29 @@ class CardSectionElementTest: XCTestCase {
         let cardSection = makeCardSectionElement(cardBrandFilter: filter)
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .cartesBancaires)
+        XCTAssertFalse(cardSection.cardBrandChoiceElement?.view.isUserInteractionEnabled ?? true)
+    }
+
+    func testFiltering_showsSingleBrandLogoWhenOnlyOneAllowed() {
+        let filter = CardBrandFilter(cardBrandAcceptance: .disallowed(brands: [.visa]))
+        let cardSection = makeCardSectionElement(cardBrandFilter: filter)
+        cardSection.panElement.setText(cbcVisaTestCard)
+        // allowedBrandCount should be 1 (only cartesBancaires), brandCount should be 2
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.allowedBrandCount, 1)
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.brandCount, 2)
+        // The PAN accessory view should be a RotatingCardBrandsView showing only the allowed brand
+        let panConfig = cardSection.panElement.configuration as! TextFieldElement.PANConfiguration
+        let accessoryView = panConfig.accessoryView(for: cardSection.panElement.text, theme: .default)
+        let rotatingView = accessoryView as? RotatingCardBrandsView
+        XCTAssertNotNil(rotatingView, "Should show single brand logo, not the brand selector")
+        XCTAssertEqual(rotatingView?.cardBrands, [.cartesBancaires])
     }
 
     func testFiltering_noSelectionWhenMultipleBrandsAllowed() {
         let cardSection = makeCardSectionElement()
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
+        XCTAssertTrue(cardSection.cardBrandChoiceElement?.view.isUserInteractionEnabled ?? false)
     }
 
     func testFiltering_noSelectionWhenAllDisallowed() {
@@ -74,6 +98,7 @@ class CardSectionElementTest: XCTestCase {
         let cardSection = makeCardSectionElement(cardBrandFilter: filter)
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertNil(cardSection.cardBrandChoiceElement?.selectedBrand)
+        XCTAssertFalse(cardSection.cardBrandChoiceElement?.view.isUserInteractionEnabled ?? true)
     }
 
     // MARK: - Preferred networks + card brand filtering combined
@@ -109,6 +134,19 @@ class CardSectionElementTest: XCTestCase {
 
         cardSection.panElement.setText(cbcVisaTestCard)
 
+        XCTAssertNotNil(cardSection.cbcTooltip.superview)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
+    }
+
+    func testTooltip_showsWhenPreselected() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let cardSection = makeCardSectionElement(preferredNetworks: [.cartesBancaires, .visa])
+        _ = beginEditingPAN(cardSection)
+
+        cardSection.panElement.setText(cbcVisaTestCard)
+        XCTAssertEqual(cardSection.cardBrandChoiceElement?.selectedBrand, .cartesBancaires)
         XCTAssertNotNil(cardSection.cbcTooltip.superview)
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
     }
@@ -150,13 +188,13 @@ class CardSectionElementTest: XCTestCase {
         cardSection.panElement.setText(cbcVisaTestCard)
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
 
-        cardSection.cardBrandChoiceElement?.select(.visa)
+        simulateTap(cardSection.cardBrandChoiceElement, brand: .visa)
         cardSection.didUpdate(element: cardSection.panElement)
 
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
     }
 
-    func testTooltip_reappearsAfterBrandsReset() {
+    func testTooltip_doesNotReappearAfterBrandsReset() {
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(true) }
 
@@ -164,15 +202,27 @@ class CardSectionElementTest: XCTestCase {
         _ = beginEditingPAN(cardSection)
 
         cardSection.panElement.setText(cbcVisaTestCard)
-        cardSection.cardBrandChoiceElement?.select(.visa)
+        simulateTap(cardSection.cardBrandChoiceElement, brand: .visa)
         cardSection.didUpdate(element: cardSection.panElement)
         XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
 
-        // Clear PAN to reset brands and the hasBrandBeenSelected latch
+        // Clear PAN to reset brands
         cardSection.panElement.setText("")
-        // Re-enter CBC card — tooltip should reappear
+        // Re-enter CBC card — tooltip should still not reappear
         cardSection.panElement.setText(cbcVisaTestCard)
 
-        XCTAssertEqual(cardSection.cbcTooltip.alpha, 1)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
+    }
+
+    func testTooltip_hiddenWhenAllDisabled() {
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(true) }
+
+        let filter = CardBrandFilter(cardBrandAcceptance: .allowed(brands: [.mastercard]))
+        let cardSection = makeCardSectionElement(cardBrandFilter: filter)
+        _ = beginEditingPAN(cardSection)
+
+        cardSection.panElement.setText(cbcVisaTestCard)
+        XCTAssertEqual(cardSection.cbcTooltip.alpha, 0)
     }
 }

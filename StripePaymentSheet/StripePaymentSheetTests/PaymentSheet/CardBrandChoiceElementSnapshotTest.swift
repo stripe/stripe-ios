@@ -12,17 +12,18 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 import UIKit
 
+// @iOS26
 final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
-    var appearance = PaymentSheet.Appearance()
+    var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
     var theme: ElementsAppearance {
         return appearance.asElementsTheme
     }
 
     // MARK: - CardBrandChoiceElement (CBC Redesign) Tests
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func testCardBrandChoiceElement() {
         let element = CardBrandChoiceElement(
-            enableCBCRedesign: true,
             cardBrands: [.visa, .cartesBancaires],
             disallowedCardBrands: [],
             theme: theme
@@ -30,9 +31,9 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         verify(element)
     }
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func testCardBrandChoiceElement_withDisallowedBrands() {
         let element = CardBrandChoiceElement(
-            enableCBCRedesign: true,
             cardBrands: [],
             disallowedCardBrands: [],
             theme: theme
@@ -42,9 +43,9 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         verify(element)
     }
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func testCardBrandChoiceElement_CB() {
         let element = CardBrandChoiceElement(
-            enableCBCRedesign: true,
             cardBrands: [.visa, .cartesBancaires],
             disallowedCardBrands: [],
             theme: theme
@@ -55,9 +56,9 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         verify(element)
     }
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func testCardBrandChoiceElement_Visa() {
         let element = CardBrandChoiceElement(
-            enableCBCRedesign: true,
             cardBrands: [.visa, .cartesBancaires],
             disallowedCardBrands: [],
             theme: theme
@@ -72,7 +73,6 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         appearance = ._testMSPaintTheme
 
         let element = CardBrandChoiceElement(
-            enableCBCRedesign: true,
             cardBrands: [.visa, .cartesBancaires],
             disallowedCardBrands: [],
             theme: theme
@@ -85,6 +85,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
 
     // MARK: - CBC Tooltip Tests
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func testCBCTooltipView() {
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(true) }
@@ -93,6 +94,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         STPSnapshotVerifyView(cardSection.view)
     }
 
+    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
     func testCBCTooltipView_darkMode() {
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(true) }
@@ -108,30 +110,6 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         appearance = ._testMSPaintTheme
         let cardSection = makeCardSectionWithTooltip(appearance: appearance)
         STPSnapshotVerifyView(cardSection.view)
-    }
-
-    // MARK: - DropdownElement (Legacy) Tests
-
-    func testDropdownElement() {
-        let element = CardBrandChoiceElement(
-            enableCBCRedesign: false,
-            cardBrands: [.visa, .cartesBancaires],
-            disallowedCardBrands: [],
-            theme: theme,
-            allowDeselection: true
-        )
-        verify(element)
-    }
-
-    func testDropdownElement_noPlaceholder() {
-        let element = CardBrandChoiceElement(
-            enableCBCRedesign: false,
-            cardBrands: [.visa, .cartesBancaires],
-            disallowedCardBrands: [],
-            theme: theme,
-            allowDeselection: false
-        )
-        verify(element)
     }
 }
 
@@ -152,7 +130,6 @@ private extension CardBrandChoiceElementSnapshotTest {
     func makeCardSectionWithTooltip(appearance: PaymentSheet.Appearance, darkMode: Bool = false) -> CardSectionElement {
         let cardSection = CardSectionElement(
             cardBrandChoiceEligible: true,
-            enableCBCRedesign: true,
             hostedSurface: .paymentSheet,
             theme: appearance.asElementsTheme,
             analyticsHelper: ._testValue(),

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
 typealias Wallet = CustomerWalletsResponse.Wallet
