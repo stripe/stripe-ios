@@ -196,6 +196,12 @@ extension STPAnalyticsClient {
         payload["plugin_type"] = PluginDetector.shared.pluginType?.rawValue
         payload["network_type"] = NetworkDetector.getConnectionType()
         payload["install"] = InstallMethod.current.rawValue
+        if let appInfo = apiClient.appInfo {
+            payload["library_name"] = appInfo.name
+            if let version = appInfo.version {
+                payload["library_version"] = version
+            }
+        }
         payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
         payload["session_id"] = AnalyticsHelper.shared.sessionID
         payload["timestamp"] = Date().timeIntervalSince1970
