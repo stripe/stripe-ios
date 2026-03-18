@@ -21,4 +21,5 @@ public enum CryptoNetwork: String, Codable, CaseIterable {
     case optimism = "optimism"
     case worldchain = "worldchain"
     case xrpl = "xrpl"
+    case sui = "sui"
 }
