@@ -767,14 +767,19 @@ struct PaymentView: View {
                     onContinue(response, selectPaymentMethodButtonTitle, settlementSpeed)
                 }
             } catch {
-                let errorDescription = error.localizedDescription
-                let fallbackAlert = Alert(title: "Failed to create onramp session", message: errorDescription)
+                let fallbackErrorTitle = "Failed to create onramp session"
+                var fallbackAlert = Alert(title: fallbackErrorTitle, message: error.localizedDescription)
 
-                if errorDescription.hasPrefix("HTTP 400"), shouldFetchCustomerInfoForRecovery(from: errorDescription) {
+                if case let .httpError(status, message, code) = error as? APIClient.APIError,
+                   status == 400,
+                   let code,
+                   shouldFetchCustomerInfoForRecovery(forErrorCode: code) {
+                    fallbackAlert = Alert(title: fallbackErrorTitle, message: message)
+
                     do {
                         let customerInfo = try await APIClient.shared.fetchCustomerInfo()
                         let recoveryLevels = recoveryLevels(
-                            forCreateOnrampSessionError: errorDescription,
+                            forErrorCode: code,
                             customerInfo: customerInfo
                         )
 
@@ -804,14 +809,15 @@ struct PaymentView: View {
         }
     }
 
-    private func shouldFetchCustomerInfoForRecovery(from errorDescription: String) -> Bool {
-        errorDescription.contains(KYCStepUpErrorCodes.missingMinimumIdentityVerification)
-            || errorDescription.contains(KYCStepUpErrorCodes.missingIdentityVerification)
-            || errorDescription.contains(KYCStepUpErrorCodes.missingDocumentVerification)
+    private func shouldFetchCustomerInfoForRecovery(forErrorCode code: String) -> Bool {
+        let code = code.lowercased()
+        return code == KYCStepUpErrorCodes.missingMinimumIdentityVerification
+        || code == KYCStepUpErrorCodes.missingIdentityVerification
+        || code == KYCStepUpErrorCodes.missingDocumentVerification
     }
 
     private func recoveryLevels(
-        forCreateOnrampSessionError errorDescription: String,
+        forErrorCode code: String,
         customerInfo: CustomerInformationResponse
     ) -> KYCRecoveryFlowView.Levels? {
         // Intentionally using only the collected fields for determining KYC level.
@@ -826,14 +832,15 @@ struct PaymentView: View {
             return nil
         }
 
-        if errorDescription.contains(KYCStepUpErrorCodes.missingMinimumIdentityVerification) {
+        let code = code.lowercased()
+        if code == KYCStepUpErrorCodes.missingMinimumIdentityVerification {
             // In this case, the user has L0 fields, but session creation failed, likely due to
             // a lag in verification status being updated. The user will need to try to check
             // out again after some time.
             return nil
         }
 
-        if errorDescription.contains(KYCStepUpErrorCodes.missingIdentityVerification) {
+        if code == KYCStepUpErrorCodes.missingIdentityVerification {
             guard !currentLevel.includesLevel1 else {
                 // We’re being told L1 fields are missing, but customer information
                 // includes L1 fields. This is an unexpected error scenario, and the user
@@ -845,7 +852,7 @@ struct PaymentView: View {
             return .init(currentLevel: currentLevel, requiredLevel: .level1)
         }
 
-        if errorDescription.contains(KYCStepUpErrorCodes.missingDocumentVerification) {
+        if code == KYCStepUpErrorCodes.missingDocumentVerification {
             guard !currentLevel.includesLevel2 else {
                 // We’re being told L2 is required, but identity document verification
                 // is already complete. This is an unexpected error scenario, and the
