@@ -10,8 +10,8 @@ content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0006_get_v1_payment_methods.tail
 content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=gTlIWuwazVR_cG-BGP8YzCZtGnwMu_BbjLToBDoN9ictE0F7VxSpOsHt1XnkuI935Xy0mIwoastkVKN_
 ========
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=mSf7DoQpGf3iKBXr0Padk8zndFuIirWvrD6WFh-1Eks3jf79C339VA04dXwMwpiD1QB_FulmPbUC7Hlk
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=HanNTfqTPgXuVZ65AQpDVLxLTNfqjhZYqw4wRctSzFDrX500YxWjJyhwGgAOSUJUH3Kf9Y5KpsFD5M42
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadFiltersOnlyPaymentMethodsAllowed/0005_get_v1_payment_methods.tail
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
@@ -23,8 +23,8 @@ Date: Thu, 26 Feb 2026 00:23:29 GMT
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0006_get_v1_payment_methods.tail
 Date: Tue, 09 Dec 2025 23:47:31 GMT
 ========
-Date: Tue, 17 Mar 2026 23:59:29 GMT
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
+Date: Thu, 26 Feb 2026 00:23:27 GMT
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadFiltersOnlyPaymentMethodsAllowed/0005_get_v1_payment_methods.tail
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 2527
@@ -36,8 +36,8 @@ request-id: req_CSxYuvCVfGZ2rE
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0006_get_v1_payment_methods.tail
 request-id: req_57GKtqUsCspucL
 ========
-request-id: req_OpTenk0m7OGAev
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
+request-id: req_Wt37srELfkkjNC
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadFiltersOnlyPaymentMethodsAllowed/0005_get_v1_payment_methods.tail
 
 {
   "has_more" : false,

@@ -1,55 +1,25 @@
 GET
-<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_TZCcZWKC57HHmr&limit=100$
-|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0004_get_v1_payment_methods.tail
-https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_TZCcZWKC57HHmr&limit=100&type=us_bank_account$
-========
 https:\/\/api\.stripe\.com\/v1\/payment_methods\?customer=cus_TqanA973bOrpoP&limit=100&type=us_bank_account$
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testloaderdoesntfetchCustomerwhendefaultbillingemail/0003_get_v1_payment_methods.tail
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Lzzu-7peTiyovETCk1walCkeWKPH8XQGCkXYiBDgxGfchUEZ3PZHH_fipg2wstl1GnU9Uw93COBnQymj
-|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0004_get_v1_payment_methods.tail
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=SarBF63phsBCjrmz9l520BQ317R4Nkoa08189vAN66y9gtOkTbaVSXbRF-vNaNB8P8cijnV9MYMb9MyP
-========
 content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=VjPv6AYjB6Y6aCxIHbrCpVAFYzjSM7hu5CDlKjynudDWZQwJg8J3ATHPNM5HWNfI0YWSKD5qKbpN8JNN
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testloaderdoesntfetchCustomerwhendefaultbillingemail/0003_get_v1_payment_methods.tail
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
-Date: Tue, 10 Mar 2026 22:09:01 GMT
-|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0004_get_v1_payment_methods.tail
-Date: Tue, 09 Dec 2025 23:47:31 GMT
-========
 Date: Fri, 27 Feb 2026 21:13:08 GMT
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testloaderdoesntfetchCustomerwhendefaultbillingemail/0003_get_v1_payment_methods.tail
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
-Content-Length: 2527
-|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0004_get_v1_payment_methods.tail
-Content-Length: 1252
-========
 Content-Length: 1161
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testloaderdoesntfetchCustomerwhendefaultbillingemail/0003_get_v1_payment_methods.tail
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccountWithDefaultFirst/0002_get_v1_payment_methods.tail
-request-id: req_E3UTw80OsLLma0
-|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadsBothCardAndBankAccount/0004_get_v1_payment_methods.tail
-request-id: req_wlZ9rvH62BFBdM
-========
 request-id: req_znB5YjBEXGAn2Z
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testloaderdoesntfetchCustomerwhendefaultbillingemail/0003_get_v1_payment_methods.tail
 
 {
   "has_more" : false,
@@ -93,57 +63,6 @@ request-id: req_znB5YjBEXGAn2Z
       "allow_redisplay" : "unspecified",
       "type" : "us_bank_account",
       "customer" : "cus_TqanA973bOrpoP",
-      "customer_account" : null
-    },
-    {
-      "object" : "payment_method",
-      "id" : "pm_1Sc4CpFY0qyl6XeWThu3QpWE",
-      "billing_details" : {
-        "email" : null,
-        "phone" : null,
-        "tax_id" : null,
-        "name" : null,
-        "address" : {
-          "state" : null,
-          "country" : null,
-          "line2" : null,
-          "city" : null,
-          "line1" : null,
-          "postal_code" : null
-        }
-      },
-      "card" : {
-        "regulated_status" : "unregulated",
-        "fingerprint" : "96sroMqLCHmUdUpL",
-        "last4" : "4242",
-        "funding" : "credit",
-        "generated_from" : null,
-        "networks" : {
-          "available" : [
-            "visa"
-          ],
-          "preferred" : null
-        },
-        "brand" : "visa",
-        "checks" : {
-          "address_postal_code_check" : null,
-          "cvc_check" : null,
-          "address_line1_check" : null
-        },
-        "three_d_secure_usage" : {
-          "supported" : true
-        },
-        "wallet" : null,
-        "display_brand" : "visa",
-        "exp_month" : 12,
-        "exp_year" : 2032,
-        "country" : "US"
-      },
-      "livemode" : false,
-      "created" : 1765199423,
-      "allow_redisplay" : "always",
-      "type" : "card",
-      "customer" : "cus_TZCcZWKC57HHmr",
       "customer_account" : null
     }
   ],

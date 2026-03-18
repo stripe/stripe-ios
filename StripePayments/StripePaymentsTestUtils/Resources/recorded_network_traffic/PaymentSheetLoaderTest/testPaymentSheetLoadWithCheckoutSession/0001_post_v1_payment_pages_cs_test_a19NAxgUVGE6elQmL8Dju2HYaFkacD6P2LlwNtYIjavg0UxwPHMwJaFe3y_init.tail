@@ -4,8 +4,8 @@ https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a19NAxgUVGE6elQmL8Dju2HYa
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
 https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ\/init$
 ========
-https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ\/init$
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv\/init$
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
@@ -14,8 +14,8 @@ content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
 content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=qLTwbUev2vHqxkIDuiIl-vwqwNyBuU1VlrKQIHZZWd5JOMSJY_Rb3TPGO9fGFdzk744CK05xC3onB6LP
 ========
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Hb2Q_0sAzbCrInDA3RDP01y_VxVXIlOaAmDN5ZDPiuPcxZQqD5emvjBwhhk2XB-j2mO5o435UByfJ_AY
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=ATs4PTUf696tERwgnvlr9NZLXmgxGGAYVxhMOnv_ib856cWNWGbFmM6UiBVVCbPRA_Z0nru6Hv3WUAbz
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
 Server: nginx
 Cache-Control: no-cache, no-store
 x-wc: ABGHIJ
@@ -31,9 +31,9 @@ Content-Length: 28702
 request-id: req_PdnOXPaTGYeAUN
 Content-Length: 36639
 ========
-request-id: req_m56pDHW10tlPNH
-Content-Length: 31681
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+request-id: req_K7MQ5IxWsccQme
+Content-Length: 31616
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
 Vary: Origin
 <<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a19NAxgUVGE6elQmL8Dju2HYaFkacD6P2LlwNtYIjavg0UxwPHMwJaFe3y_init.tail
 Date: Thu, 26 Feb 2026 00:23:30 GMT
@@ -42,17 +42,17 @@ original-request: req_wvmReZUyj8kZPd
 Date: Thu, 22 Jan 2026 22:04:33 GMT
 original-request: req_PdnOXPaTGYeAUN
 ========
-Date: Tue, 17 Mar 2026 23:55:37 GMT
-original-request: req_m56pDHW10tlPNH
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+Date: Mon, 16 Mar 2026 18:33:10 GMT
+original-request: req_K7MQ5IxWsccQme
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
 stripe-version: 2020-08-27
 <<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a19NAxgUVGE6elQmL8Dju2HYaFkacD6P2LlwNtYIjavg0UxwPHMwJaFe3y_init.tail
 idempotency-key: 0d83b32d-edfb-4785-8493-7d9eeaa36eca
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
 idempotency-key: c81d2f08-8810-4597-8fd0-0ea05304e589
 ========
-idempotency-key: ad0affdb-bc60-4947-b20f-92e1deb38d66
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+idempotency-key: bd163667-9ebd-469b-9b20-9586c42007b2
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -85,7 +85,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
     "crypto"
 ========
     "cashapp"
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
   ],
 <<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a19NAxgUVGE6elQmL8Dju2HYaFkacD6P2LlwNtYIjavg0UxwPHMwJaFe3y_init.tail
   "payment_method_options" : {
@@ -120,7 +120,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   },
 ========
   "payment_method_options" : null,
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
   "bnpl_in_link_ui_enabled" : false,
   "consent_collection" : null,
   "origin_context" : null,
@@ -134,8 +134,8 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
   "id" : "ppage_1SsVzQFY0qyl6XeWt2qo2mO1",
 ========
-  "id" : "ppage_1TC7SXFY0qyl6XeWjbIa0x16",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+  "id" : "ppage_1TBfwwFY0qyl6XeWsWKc4TMQ",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
   "subscription_settings" : null,
   "consent" : null,
   "application" : null,
@@ -154,8 +154,8 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
   "session_id" : "cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ",
 ========
-  "session_id" : "cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+  "session_id" : "cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
   "shipping_address_collection" : null,
   "konbini_confirmation_number" : null,
   "setup_future_usage" : null,
@@ -199,7 +199,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 ========
     "upi_intent_flow_on_mobile" : true,
     "upi_qrcode_for_mandate_setup" : true,
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
     "checkout_link_purchase_protections_rollout" : true,
     "checkout_link_enable_mfa" : true,
 <<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a19NAxgUVGE6elQmL8Dju2HYaFkacD6P2LlwNtYIjavg0UxwPHMwJaFe3y_init.tail
@@ -208,7 +208,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
 ========
     "adaptive_pricing_subscriptions_feature_available" : true,
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
     "checkout_hide_optional_klarna_fields" : true,
 <<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a19NAxgUVGE6elQmL8Dju2HYaFkacD6P2LlwNtYIjavg0UxwPHMwJaFe3y_init.tail
     "checkout_link_enable_web_authn_login" : true,
@@ -218,7 +218,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 ========
     "checkout_link_in_habanero_enabled" : true,
     "adaptive_pricing_use_ap_info_api_resource" : true,
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
     "checkout_optional_items" : true,
     "upi_qrcode_for_mandate_setup" : true,
     "checkout_passive_captcha" : true,
@@ -259,7 +259,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
         "disabled_reason" : "not_in_payment_method_types"
       },
 ========
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       "PAYPAL_ECS" : {
         "disabled_reason" : "not_in_payment_method_types"
       },
@@ -284,7 +284,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       },
       "GOOGLE_PAY" : {
         "disabled_reason" : "merchant_payment_methods_settings"
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       }
     },
     "adaptive_pricing" : {
@@ -299,8 +299,8 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
   "init_checksum" : "Z3lh1NLIJxfpxADH6DHw9X51cQ5qIh3i",
 ========
-  "init_checksum" : "Pr018uDYdaLLRtN6j7bQNquGpboijXf4",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+  "init_checksum" : "0eecDpm4XlaZiIKMmjcEU5aezzAPGtDD",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
   "bnpl_link_experiment_payment_method_type" : null,
   "tax_meta" : {
     "status" : "complete",
@@ -324,7 +324,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 ========
       "enabled" : false,
       "carousel_enabled" : false
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
     },
     {
       "id" : "GOOGLE_PAY",
@@ -575,7 +575,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
           }
         }
       }
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
     }
   ],
   "server_built_elements_session_params" : {
@@ -589,14 +589,14 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
     "checkout_session_id" : "cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ",
 ========
-    "checkout_session_id" : "cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+    "checkout_session_id" : "cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
     "merchant_support_shipping" : null,
     "mobile_app_id" : "com.stripe.StripeiOSTestHostApp",
     "currency" : null,
     "external_payment_methods" : null,
     "legacy_customer_ephemeral_key" : null,
-    "mobile_session_id" : "77a1b68d-f349-4d6e-bacd-687ed692509a",
+    "mobile_session_id" : "946234bc-39b9-444c-8df8-7b96b0e70b71",
     "app_info_partner_id" : null,
     "disable_link_passthrough" : null,
     "locale" : "en-US",
@@ -621,7 +621,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
         "crypto"
 ========
         "cashapp"
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       ],
       "mode" : "payment",
       "capture_method" : "automatic_async",
@@ -653,8 +653,8 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
     "event_id" : "5590a11c-f5f6-4901-a01b-cec33eb3f265",
 ========
-    "event_id" : "2c4b8a17-5ec8-44e1-b7b6-0211e5ea9885",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+    "event_id" : "548e1103-3362-49da-857a-281b292a30ba",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
     "experiment_metadata" : {
       "ocs_buyer_xp_cpl_lpm_holdback" : {
         "heldback_special_wallets" : [
@@ -663,14 +663,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       }
     },
     "experiment_assignments" : {
-<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a19NAxgUVGE6elQmL8Dju2HYaFkacD6P2LlwNtYIjavg0UxwPHMwJaFe3y_init.tail
       "emea_wallets_ideal_wero_rebranding" : "control",
-|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
-      "ocs_buyer_xp_cpl_apple_pay_and_link_exclusivity" : "control",
-      "checkout_link_instant_debits_rounded_percent_incentive" : "control",
-========
-      "emea_wallets_ideal_wero_rebranding" : "treatment",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
       "ocs_buyer_xp_cpl_embedded_pay_button" : "control",
       "connections_checkout_us_bank_account_picker_icons" : "control",
       "link_cpl_billing_details_recollection_prefill_aa" : "control",
@@ -690,7 +683,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       "ocs_buyer_xp_cpl_remove_link_sign_up_box_when_no_pm_selected" : "control",
       "ocs_buyer_xp_cpl_currency_symbol_optimization" : "control",
       "smor_checkout_ui_iteration" : "control",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       "checkout_link_instant_debits_accordion_logos" : "control",
       "checkout_enable_real_time_tax_id_verification_experiment" : "control",
       "ocs_buyer_xp_cpl_link_signup_in_form" : "control",
@@ -709,7 +702,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 ========
       "enable_link_checkout_ece_with_automatic_taxes_aa" : "control",
       "checkout_es_la_locale_fallback" : "treatment",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       "ocs_buyer_xp_checkout_clover_postal_code" : "control",
 <<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a19NAxgUVGE6elQmL8Dju2HYaFkacD6P2LlwNtYIjavg0UxwPHMwJaFe3y_init.tail
       "ocs_buyer_xp_cpl_iap_apple_pay_and_link_exclusivity" : "control",
@@ -721,7 +714,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 ========
       "cpl_guacamole" : "control",
       "ocs_buyer_xp_cpl_iap_apple_pay_and_link_exclusivity" : "control",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       "ocs_buyer_xp_cpl_lpm_content_simplification" : "control"
     }
   },
@@ -744,7 +737,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
         "crypto"
 ========
         "cashapp"
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       ]
     },
     "capability_enabled_card_networks" : [
@@ -781,7 +774,6 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       "elements_enable_nz_bank_account_spm" : true,
       "elements_easel_disable_appearance_api" : true,
       "elements_enable_remove_last_validation" : true,
-      "elements_use_checkout_app_id_for_human_security" : false,
       "elements_enable_save_for_future_payments_pre_check" : false,
       "elements_spm_set_as_default" : true,
       "payment_element_link_modal_preload_killswitch" : false,
@@ -795,7 +787,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
 ========
       "elements_enable_google_pay_webview_heuristics" : true,
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       "elements_allow_manual_payment_method_creation_with_spm" : false,
       "elements_mobile_force_setup_future_use_behavior_and_new_mandate_text" : false,
       "link_purchase_protections_rollout" : true,
@@ -814,7 +806,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 ========
       "elements_enable_bacs_debit_spm" : true,
       "elements_easel_disable_appearance_api_per_element_options" : true,
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       "elements_disable_sepa_debit_eea_address_requirement" : false,
       "elements_mobile_card_funding_filtering" : true,
       "elements_enable_ephemeral_key_for_confirmation_token_creation" : true,
@@ -852,19 +844,10 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       "distinctly_link_pe_backup_payment_method" : true,
       "linkglobalholdbackmanager_test_rollout" : true,
       "elements_easel_disable_session_summary" : false,
-<<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a19NAxgUVGE6elQmL8Dju2HYaFkacD6P2LlwNtYIjavg0UxwPHMwJaFe3y_init.tail
       "link_auth_partner_delay_android_fb_cookie_login" : false,
       "link_enable_payment_details_refresh" : true,
       "elements_apply_amex_icon_sorting" : false,
       "elements_enable_pay_by_bank_remember_bank_selection" : false,
-|||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
-      "elements_enable_pay_by_bank_remember_bank_selection" : false,
-========
-      "link_auth_partner_delay_android_fb_cookie_login" : false,
-      "link_enable_payment_details_refresh" : true,
-      "elements_apply_amex_icon_sorting" : false,
-      "elements_enable_pay_by_bank_remember_bank_selection" : true,
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
       "abstracted_adaptive_pricing_should_show_markup_disclosure_percentage" : false,
       "elements_extend_hcaptcha_refresh_time" : true,
       "enable_payment_method_api_shop_pay" : true,
@@ -903,7 +886,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
 ========
       "checkout_link_in_habanero_enabled" : true,
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       "elements_enable_link_spm" : true,
       "elements_spm_max_visible_payment_methods" : false,
       "elements_disable_link_email_otp" : false,
@@ -937,8 +920,8 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
     "session_id" : "elements_session_1AQRxewRRXY",
 ========
-    "session_id" : "elements_session_12lfRGvzBry",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+    "session_id" : "elements_session_1YapLuhmThe",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
     "card_installments_enabled" : false,
     "account_id" : "acct_1G6m1pFY0qyl6XeW",
 <<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a19NAxgUVGE6elQmL8Dju2HYaFkacD6P2LlwNtYIjavg0UxwPHMwJaFe3y_init.tail
@@ -946,8 +929,8 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
     "config_id" : "d2a2caaf-a118-4536-8b6c-45d273572f92",
 ========
-    "config_id" : "a22aa765-5e65-43f9-9fea-9c8e58855323",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+    "config_id" : "17dcc720-9ff0-4daa-a981-4bcd3896a7d6",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
     "merchant_currency" : "usd",
     "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
     "card_brand_choice" : {
@@ -980,16 +963,16 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
       "arb_id" : "b1019338-9c7a-4933-b5a6-daac2b2887b5",
 ========
-      "arb_id" : "ef56f893-0a7d-4424-8846-53e0d5d2138f",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+      "arb_id" : "490b6c14-bd75-4a09-8907-23b3caef5442",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       "experiment_metadata" : {
 <<<<<<<< HEAD:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a19NAxgUVGE6elQmL8Dju2HYaFkacD6P2LlwNtYIjavg0UxwPHMwJaFe3y_init.tail
         "seed" : "723b393413a5177d3783cbce421421270a07e697b94deaba6646cadff671c628",
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
         "seed" : "06427a030981fc46a8d70e3d6109deffd7afee17cf83cbe43e4173bc69c41a51",
 ========
-        "seed" : "aab5aeb06d2e0efd926c96215487e0dd5e8942a86dfb78661ceb993227f3b4d6",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+        "seed" : "eda9e5d17832933e3e98e440e7a2e9307542aafe8f269b76ba7e27f081f501cb",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
         "semi_dominant_payment_methods" : [
 
         ],
@@ -1010,7 +993,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
         "elements_hcaptcha_init_timeout" : "control",
         "link_blue_line_opt_in_aa" : "control",
         "ocs_buyer_xp_elements_clover_collect_postal_code" : "control",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
         "paypal_payment_handler" : "control",
         "link_in_ewcs_fixes_aa" : "control",
         "ocs_mobile_horizontal_mode" : "control",
@@ -1028,7 +1011,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
         "link_blue_line_opt_in" : "control",
         "link_in_prb_rtl_enablement_aa" : "control",
         "link_in_prb_rtl_enablement" : "control"
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       }
     },
     "legacy_customer" : null,
@@ -1194,7 +1177,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
           "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-cashapp@3x-a89c5d8d0651cae2a511bb49a6be1cfc.png",
           "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-cashapp-981164a833e417d28a8ac2684fda2324.svg"
         }
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
       }
     ],
     "prefill_selectors" : {
@@ -1215,7 +1198,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       "crypto"
 ========
       "cashapp"
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
     ],
     "unverified_payment_methods_on_domain" : [
 
@@ -1254,7 +1237,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
       "crypto"
 ========
       "cashapp"
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
     ],
     "customer_error" : null
   },
@@ -1263,8 +1246,8 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
   "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
 ========
-  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
   "prefilled" : null,
   "redirect_on_completion" : null,
   "blob" : null,
@@ -1295,7 +1278,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
     "crypto"
 ========
     "cashapp"
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
   ],
   "state" : "active",
   "currency" : "usd",
@@ -1317,8 +1300,8 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
   "rqdata" : "K6kbDw7ddRwdvtWbpL2da2vBqXbgHD+PZhxaIpzSeXiXxR0XF5GKlWBASpOP6nDis3awytM1PzVvUlUaO+3lB905ZxJ6+I74kV\/IJloz\/IcEJ8mZiV1b7BSNfa+6Z7zf\/YyWMuYCjkYDs9USRI3Y9s6k3sT1bZkQEHgKD1pY61BvisFzg6aosrYbOpUW2uIMW8PqkOJB+sOLMQjTGoM\/4egMvTcrzEfzgC6mfgp57hB9hDK59WleSpP6hhFiN+dc4rUFDbOu84wCVjiD2IoBAwgnPZYQNq11oURKQ0xeK2pi9k5EMDDP6a5AaA==Xt8lirs+EgSZ04vm",
 ========
-  "rqdata" : "wRawttFItJgSg+hkaZvofLyoK7ttaJbfwcP+nA2DwaYIpPgKDL\/T985HCrKw2E3cXpou5YHgwNgDXOdsNNpvriXjZc63ZVD3uavkseTM\/hjtWz0rj5iyw3P8WQ7qFAolcbb84OsMaBQOi3kGOVswT4TLaOsuCEp22idf5\/5v4ZmTbTWVLMjWbpOADCI1KtIyH3WnWOk9GjF3xMeIG6LtKPwkWMXaUsCpvmMU0d\/2utSLo8DokSAhUKvuO3\/hCeAl4gz6SoMjK8qojbBkhoyyioSG6T5MwyAxwBnIGPR\/p6dyYWMW4tbb2\/c4uQ==vzFCBygusxXRGuVY",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+  "rqdata" : "S5K5sMYOKFSjvyQwD3u6mf8mxM5L+tyit7Ee1a8GF+bx2H1+aB7\/OnsQhN845agVw1myEYGhjx2rD8vEBn\/dpTiH0sNe\/nE+\/vY\/KlehsmPu4rHB1zTcGaHI9+Z0RO+dHaHSrd1Zp3iYAN5eVIFwWF5n0LvVMwIUVAOs0jIAihdH5MMEY9QQ6WZzBEACAQR4xoeqsUVxI4ysfkLs07Wz2CcASv52Yc0IWwLTQLrMGlMvA8dVaHyOzGJE+5VutIfJYqjjD8cf5HGRAp0LxlbvxXvzzNIoSyqjduV3SwleePnn3qeJNkkyQB1feQ==SaYgahWuIknyO0XQ",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
   "total_summary" : {
     "due" : 2000,
     "subtotal" : 2000,
@@ -1333,8 +1316,8 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
   "eid" : "4F47E5E1-32E5-45FD-BE19-DB07BE505D35",
 ========
   "checkout_multistep_ui" : false,
-  "eid" : "65090F1B-5B06-4787-A86E-8E61D7393322",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+  "eid" : "F9938BDD-355D-4AB1-B0FA-B9C5226E134C",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
   "line_item_group" : {
     "tax_amounts" : [
 
@@ -1348,8 +1331,8 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
         "id" : "li_1SsVzQFY0qyl6XeWvkj1JWCT",
 ========
-        "id" : "li_1TC7SXFY0qyl6XeWKyG9cDy0",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+        "id" : "li_1TBfwwFY0qyl6XeWycAMAgi4",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
         "description" : null,
         "discount_amounts" : [
 
@@ -1369,8 +1352,8 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
           "id" : "price_1SsVzQFY0qyl6XeWJS58jQ7R",
 ========
-          "id" : "price_1TC7SXFY0qyl6XeWrJtMy8qh",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+          "id" : "price_1TBfwwFY0qyl6XeWzUyl8Clp",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
           "livemode" : false,
           "active" : false,
           "product" : {
@@ -1430,7 +1413,7 @@ X-Stripe-Mock-Request: browser_locale=.*&browser_timezone=.*&eid=.*&elements_ses
 |||||||| 0e8b149e333:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLoaderTest/testPaymentSheetLoadWithCheckoutSession/0001_post_v1_payment_pages_cs_test_a1AHjdRG8TfBUSTf9Wg8ZpYu5BNLNFs0m1Mk41C9sxGuJ9o05C77gb2teZ_init.tail
   "config_id" : "92263109-b605-4ae7-a226-ce9a95df6024",
 ========
-  "config_id" : "76715997-b4f1-4444-8c22-da56c28e8f44",
->>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1SfAzzRlKhKUyvq1gxmbrB2HKc63D2tbpfVde5QqPqVmgWNcSxRV7DYEZ_init.tail
+  "config_id" : "f9f30b1e-a400-444d-94dc-276b7730001c",
+>>>>>>>> origin/master:StripePayments/StripePaymentsTestUtils/Resources/recorded_network_traffic/PaymentSheetLPMConfirmFlowTests/testCashAppConfirmFlows/0003_post_v1_payment_pages_cs_test_a1mzRLmoBaDdq4xYCl61gn3qvWKhGgfJ3cAlpB8HIDSgbCKtJiWYhBp6Vv_init.tail
   "is_sandbox_merchant" : false
 }
