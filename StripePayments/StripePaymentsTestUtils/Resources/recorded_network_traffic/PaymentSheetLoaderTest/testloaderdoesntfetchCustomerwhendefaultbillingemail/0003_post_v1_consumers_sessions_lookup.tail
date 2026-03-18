@@ -1,0 +1,43 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/consumers\/sessions\/lookup$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=HIdecb54uK0k2thOUSD7BfW09_88rw9YhvMQM_fcOv191OOHIMI1-EHsF1bdsDNrBbwzWRZp3XvwySPB
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_cSGWFqlkHEMjh7
+Content-Length: 317
+Vary: Origin
+Date: Fri, 27 Feb 2026 21:16:02 GMT
+original-request: req_cSGWFqlkHEMjh7
+stripe-version: 2020-08-27
+idempotency-key: bbc5cdaa-8243-4cdb-a909-e087f13c6405
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: do_not_log_consumer_funnel_event=true&email_address=davidestes%40stripe\.com&email_source=customer_email&request_surface=ios_payment_element&session_id=elements_session_1Zt1SifXIQS
+
+{
+  "exists" : false,
+  "experiments" : [
+
+  ],
+  "available_partner_accounts" : [
+
+  ],
+  "error_message" : "No consumer found for the given email address.",
+  "link_auth_intent" : null,
+  "consumer_session" : null,
+  "publishable_key" : null,
+  "suggested_email" : null,
+  "auth_session_client_secret" : null,
+  "account_id" : null
+}

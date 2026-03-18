@@ -1455,6 +1455,25 @@ extension STPAPIClient {
 }
 
 extension STPAPIClient {
+    /// Returns the 100 most recently created PMs attached to the given Customer
+    @_spi(STP) public func listPaymentMethods(
+        customerID: String,
+        ephemeralKeySecret: String
+    ) async throws -> [STPPaymentMethod] {
+        let header = authorizationHeader(using: ephemeralKeySecret)
+        let params: [String: Any] = [
+            "customer": customerID,
+            "limit": 100, // the maximum allowed by the API
+        ]
+        let response = try await APIRequest<STPPaymentMethodListDeserializer>.getWith(
+            self,
+            endpoint: APIEndpointPaymentMethods,
+            additionalHeaders: header,
+            parameters: params as [String: Any]
+        )
+        return response.paymentMethods ?? []
+    }
+
     @_spi(STP) public func listPaymentMethods(
         forCustomer customerID: String,
         using ephemeralKeySecret: String,

@@ -12,6 +12,7 @@
 @_spi(STP)@testable import StripePaymentsTestUtils
 import XCTest
 
+@MainActor
 final class PaymentSheetAnalyticsHelperTest: XCTestCase {
     let analyticsClient = STPTestingAnalyticsClient()
 
@@ -128,8 +129,8 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             analyticsClient._testLogHistory.removeAll()
 
             // Load started -> failed
-            sut.logLoadStarted()
-            sut.logLoadFailed(error: NSError(domain: "domain", code: 1))
+            sut.logLoadStarted(isUpdate: false)
+            sut.logLoadFailed(error: NSError(domain: "domain", code: 1), loadTimings: .init(), isUpdate: false)
 
             XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
             XCTAssertEqual(analyticsClient._testLogHistory[0]["integration_shape"] as? String, shapeString)
@@ -188,12 +189,14 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ] as [AnyHashable: Any]
             let elementsSession: STPElementsSession = ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON])
             // Load started -> succeeded
-            sut.logLoadStarted()
+            sut.logLoadStarted(isUpdate: false)
             sut.logLoadSucceeded(
                 intent: ._testValue(),
                 elementsSession: elementsSession,
                 defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-                orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+                orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)],
+                loadTimings: .init(),
+                isUpdate: false
             )
 
             XCTAssertEqual(analyticsClient._testLogHistory[0]["event"] as? String, "mc_load_started")
@@ -210,6 +213,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(loadSucceededPayload["has_default_payment_method"] as? Bool, true)
             XCTAssertEqual(loadSucceededPayload["fc_sdk_availability"] as? String, "LITE")
             XCTAssertEqual(loadSucceededPayload["elements_session_config_id"] as? String, elementsSession.configID)
+            XCTAssertEqual(loadSucceededPayload["is_update"] as? Bool, false)
         }
     }
 
@@ -254,7 +258,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ] as [String: Any],
         ] as [AnyHashable: Any]
         // Load started -> succeeded
-        sut.logLoadStarted()
+        sut.logLoadStarted(isUpdate: false)
         sut.logLoadSucceeded(
             intent: ._testPaymentIntent(
                 paymentMethodTypes: [.card],
@@ -263,7 +267,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init(), isUpdate: false
         )
         // PI with SFU and PMO SFU
         var loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -273,7 +277,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         analyticsClient._testLogHistory.removeAll()
 
         // Load started -> succeeded
-        sut.logLoadStarted()
+        sut.logLoadStarted(isUpdate: false)
         sut.logLoadSucceeded(
             intent: ._testPaymentIntent(
                 paymentMethodTypes: [.card],
@@ -281,7 +285,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init(), isUpdate: false
         )
         // PI with SFU and no PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -291,7 +295,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         analyticsClient._testLogHistory.removeAll()
 
         // Load started -> succeeded
-        sut.logLoadStarted()
+        sut.logLoadStarted(isUpdate: false)
         sut.logLoadSucceeded(
             intent: ._testDeferredIntent(
                 paymentMethodTypes: [.card],
@@ -300,7 +304,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init(), isUpdate: false
         )
         // Deferred PI with SFU and PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -310,7 +314,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         analyticsClient._testLogHistory.removeAll()
 
         // Load started -> succeeded
-        sut.logLoadStarted()
+        sut.logLoadStarted(isUpdate: false)
         sut.logLoadSucceeded(
             intent: ._testDeferredIntent(
                 paymentMethodTypes: [.card],
@@ -318,7 +322,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init(), isUpdate: false
         )
         // Deferred PI with SFU and no PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -328,12 +332,12 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         analyticsClient._testLogHistory.removeAll()
 
         // Load started -> succeeded
-        sut.logLoadStarted()
+        sut.logLoadStarted(isUpdate: false)
         sut.logLoadSucceeded(
             intent: ._testSetupIntent(),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init(), isUpdate: false
         )
         // SI
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -512,12 +516,12 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             configuration: PaymentSheet.Configuration(),
             analyticsClient: analyticsClient
         )
-        sut.logLoadStarted()
+        sut.logLoadStarted(isUpdate: false)
         sut.logLoadSucceeded(
             intent: ._testDeferredIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)]
+            orderedPaymentMethodTypes: [.stripe(.card)], loadTimings: .init(), isUpdate: false
         )
         sut.logPayment(
             paymentOption: .applePay,
@@ -635,7 +639,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             configuration: PaymentSheet.Configuration(),
             analyticsClient: analyticsClient
         )
-        sut.logLoadStarted() // To get the load timer working
+        sut.logLoadStarted(isUpdate: false) // To get the load timer working
 
         // Test case 1: Regular PaymentIntent (no intentConfig)
         // Should set is_decoupled = false, is_spt = false
@@ -645,7 +649,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: regularIntent,
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)]
+            orderedPaymentMethodTypes: [.stripe(.card)], loadTimings: .init(), isUpdate: false
         )
 
         let regularEvent = analyticsClient._testLogHistory.last!
@@ -661,7 +665,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: deferredIntent,
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)]
+            orderedPaymentMethodTypes: [.stripe(.card)], loadTimings: .init(), isUpdate: false
         )
 
         let deferredEvent = analyticsClient._testLogHistory.last!
@@ -684,7 +688,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: sptIntent,
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)]
+            orderedPaymentMethodTypes: [.stripe(.card)], loadTimings: .init(), isUpdate: false
         )
 
         let sptEvent = analyticsClient._testLogHistory.last!
