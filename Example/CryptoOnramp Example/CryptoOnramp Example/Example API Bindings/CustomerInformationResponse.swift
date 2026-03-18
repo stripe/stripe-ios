@@ -37,7 +37,7 @@ extension CustomerInformationResponse.Verification: CustomStringConvertible {
 extension CustomerInformationResponse: CustomStringConvertible {
 
     // MARK: - CustomStringConvertible
-    
+
     var description: String {
         let providedFields = providedFields
             .map { "- \($0)" }
