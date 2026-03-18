@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&legacy_customer_ephemeral_key=ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLHlaNkhyUE80bmNTWnM2cTFVNnRWZGJ6YUh0U042Ujc_00rVPLC3RX&locale=.*&mobile_app_id=.*&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?deferred_intent%5Bamount%5D=1000&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=USD&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_types%5D%5B0%5D=card&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&legacy_customer_ephemeral_key=ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLExZMFY0SWxBTXh1dXVzb1l2d0RIcmtQMEpQS1VxTjg_00AqK3uIB9&locale=.*&mobile_app_id=.*&type=deferred_intent$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=l1ZGAl548soecO0TvDtYQfYwh5K-ioLhDNh9nuf50KQ7-hCCbiCMMmiwBjxQ3puNCNBeM9AZ_SNfo_zE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=qXR7fMX0mjC3phAu1GcxP5EzLfqmZA1Rh1ROfOMe37x2E_RD3CTr2O7biyMKtvRiMGDebKFEfciszAy7
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Tue, 17 Mar 2026 23:58:31 GMT
+Date: Wed, 18 Mar 2026 00:35:59 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 14756
+Content-Length: 14757
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_xEwvzXwmNJlntd
+request-id: req_qZ5kV2RCkexQoA
 
 {
   "payment_method_preference" : {
@@ -127,7 +127,7 @@ request-id: req_xEwvzXwmNJlntd
     "link_auth_partner_delay_android_fb_cookie_login" : false,
     "link_enable_payment_details_refresh" : true,
     "elements_apply_amex_icon_sorting" : false,
-    "elements_enable_pay_by_bank_remember_bank_selection" : true,
+    "elements_enable_pay_by_bank_remember_bank_selection" : false,
     "abstracted_adaptive_pricing_should_show_markup_disclosure_percentage" : false,
     "elements_extend_hcaptcha_refresh_time" : true,
     "enable_payment_method_api_shop_pay" : true,
@@ -190,10 +190,10 @@ request-id: req_xEwvzXwmNJlntd
     "link_forest_enable_ece_bank_use_shipping_as_billing" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_1gsG0pzzqCx",
+  "session_id" : "elements_session_1duKQ4Yriqi",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "7024960b-1642-4a6e-8c90-688220020ea9",
+  "config_id" : "16bef99f-fa88-4b65-88c1-d04c18f4e55a",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
   "card_brand_choice" : {
@@ -221,9 +221,9 @@ request-id: req_xEwvzXwmNJlntd
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "521b7813-25e0-416d-b5ef-6dbd4b3a2d57",
+    "arb_id" : "4589fa49-8d8e-410b-b45f-3e1af2c47ea9",
     "experiment_metadata" : {
-      "seed" : "aab5aeb06d2e0efd926c96215487e0dd5e8942a86dfb78661ceb993227f3b4d6",
+      "seed" : "ea21f2855009fb05f5e68620b34a72fd33e10423ffc6786bc4a18fa3921c2ccc",
       "semi_dominant_payment_methods" : [
 
       ],
