@@ -76,10 +76,7 @@ extension CustomerInformationResponse {
     var kycLevel: KYCLevel {
         let providedKYCLevel = kycLevelFromFieldsCollected
 
-        // Note that the `isKycVerified` check is currently disabled.
-        // We're waiting on a backend change that properly reports `verified` when a user
-        // has collected at least L0. Instead, right now it reports `not_started`.
-        guard providedKYCLevel.includesLevel0, isPhoneVerified /*, isKycVerified*/ else {
+        guard providedKYCLevel.includesLevel0, isPhoneVerified, isKycVerified else {
             return .none
         }
 
