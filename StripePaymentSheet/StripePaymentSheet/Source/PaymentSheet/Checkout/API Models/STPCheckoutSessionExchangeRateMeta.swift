@@ -9,7 +9,7 @@
 import Foundation
 
 /// Exchange rate metadata for adaptive pricing in a CheckoutSession.
-@_spi(STP) public struct STPCheckoutSessionExchangeRateMeta: Equatable {
+struct STPCheckoutSessionExchangeRateMeta: Equatable {
     /// The identifier for this exchange rate.
     public let id: String
     /// The currency being purchased (e.g. "gbp").

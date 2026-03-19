@@ -9,7 +9,7 @@
 import Foundation
 
 /// A localized price option for adaptive pricing in a CheckoutSession.
-@_spi(STP) public struct STPCheckoutSessionLocalizedPriceMeta: Equatable {
+struct STPCheckoutSessionLocalizedPriceMeta: Equatable {
     /// The identifier for this localized price (e.g. "usd").
     public let id: String
     /// The three-letter ISO currency code (e.g. "usd").
