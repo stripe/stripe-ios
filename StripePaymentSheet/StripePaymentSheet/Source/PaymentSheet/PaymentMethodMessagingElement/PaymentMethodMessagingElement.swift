@@ -70,8 +70,6 @@ public class PaymentMethodMessagingElement {
     /// Describes the configuration of the PaymentMethodMessagingElement.
     public struct Configuration: Equatable {
 
-        public let newProperty: String = "asdfoj"
-
         /// The amount intended to be collected in the smallest currency unit (for example, 100 cents to charge $1.00 USD).
         public let amount: Int
 

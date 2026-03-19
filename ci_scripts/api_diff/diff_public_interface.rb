@@ -52,7 +52,7 @@ def render_module_diff(framework_name, public_lines, spi_lines)
     sections << "#### Public API\n```diff\n#{public_lines.join("\n")}\n```\n"
   end
   unless spi_lines.empty?
-    sections << "#### SPI API (excluding @_spi(STP)-only declarations)\n```diff\n#{spi_lines.join("\n")}\n```\n"
+    sections << "#### SPI API\n```diff\n#{spi_lines.join("\n")}\n```\n"
   end
   sections.join
 end
