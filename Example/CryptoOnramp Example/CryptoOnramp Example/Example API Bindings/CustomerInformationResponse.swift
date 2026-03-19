@@ -20,6 +20,43 @@ struct CustomerInformationResponse: Decodable {
     let verifications: [Verification]
 }
 
+extension CustomerInformationResponse.Verification: CustomStringConvertible {
+
+    // MARK: - CustomStringConvertible
+
+    var description: String {
+        let errors = errors.joined(separator: ", ")
+        if errors.isEmpty {
+            return "- \(name): \(status)"
+        } else {
+            return "- \(name): \(status) [errors: \(errors)]"
+        }
+    }
+}
+
+extension CustomerInformationResponse: CustomStringConvertible {
+
+    // MARK: - CustomStringConvertible
+
+    var description: String {
+        let providedFields = providedFields
+            .map { "- \($0)" }
+            .joined(separator: "\n")
+        let verifications = verifications
+            .map(\.description)
+            .joined(separator: "\n")
+
+        return """
+        id: \(id)
+        object: \(object)
+        providedFields:
+        \(providedFields)
+        verifications:
+        \(verifications)
+        """
+    }
+}
+
 extension CustomerInformationResponse {
     private static let level0RequiredFields: Set<String> = [
         "first_name",

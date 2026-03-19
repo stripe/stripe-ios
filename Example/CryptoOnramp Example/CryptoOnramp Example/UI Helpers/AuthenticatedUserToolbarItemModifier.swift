@@ -32,12 +32,16 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
     @Environment(\.isLoading) private var isLoading
     @State private var isPresentingUpdateAddress = false
     @State private var alert: Alert?
+    @State private var customerInformationTextToCopy: String?
 
     private var isPresentingAlert: Binding<Bool> {
         Binding(get: {
             alert != nil
         }, set: { newValue in
-            if !newValue { alert = nil }
+            if !newValue {
+                alert = nil
+                customerInformationTextToCopy = nil
+            }
         })
     }
 
@@ -57,6 +61,12 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
             isPresented: isPresentingAlert,
             presenting: alert,
             actions: { _ in
+                if let customerInformationTextToCopy {
+                    Button("Copy") {
+                        UIPasteboard.general.string = customerInformationTextToCopy
+                    }
+                }
+
                 Button("OK") {}
             }, message: { alert in
                 Text(alert.message)
@@ -70,6 +80,12 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
                             verifyKYC()
                         } label: {
                             Label("Verify KYC Info…", systemImage: "doc.text.magnifyingglass")
+                        }
+
+                        Button {
+                            checkCustomerInformation()
+                        } label: {
+                            Label("Check Customer Information…", systemImage: "person.text.rectangle")
                         }
 
                         Divider()
@@ -90,6 +106,35 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
             }
         }
      }
+
+    private func checkCustomerInformation() {
+        isLoading.wrappedValue = true
+
+        Task {
+            do {
+                let customerInformation = try await APIClient.shared.fetchCustomerInfo()
+                let formattedCustomerInformation = String(describing: customerInformation)
+
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    customerInformationTextToCopy = formattedCustomerInformation
+                    alert = Alert(
+                        title: "Customer Information",
+                        message: formattedCustomerInformation
+                    )
+                }
+            } catch {
+                await MainActor.run {
+                    isLoading.wrappedValue = false
+                    customerInformationTextToCopy = nil
+                    alert = Alert(
+                        title: "Failed to fetch customer information",
+                        message: error.localizedDescription
+                    )
+                }
+            }
+        }
+    }
 
     private func logOut() {
         isLoading.wrappedValue = true

@@ -82,6 +82,11 @@ final class PaymentSheetLoader {
                 stpAssertionFailure("Configuration.customer must not be set when using a CheckoutSession. The CheckoutSession manages its own customer.")
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "PaymentSheet.Configuration.customer must not be set when using a CheckoutSession.")
             }
+            // defaultBillingDetails.email is populated from the CheckoutSession's customerEmail (if not already set) by applyAddressOverrides, which runs before the loader.
+            if case .checkoutSession = mode, configuration.defaultBillingDetails.email == nil {
+                stpAssertionFailure("An email address is required when using a CheckoutSession. Set configuration.defaultBillingDetails.email or ensure the CheckoutSession has a customer_email.")
+                throw PaymentSheetError.integrationError(nonPIIDebugDescription: "An email address is required when using a CheckoutSession. Set PaymentSheet.Configuration.defaultBillingDetails.email or ensure the CheckoutSession has a customer_email.")
+            }
 
             // Fetch ElementsSession
             async let _elementsSessionAndIntent: ElementSessionAndIntent = fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
