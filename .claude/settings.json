@@ -6,7 +6,16 @@
         "hooks": [
           {
             "type": "command",
-            "command": "COMMAND=$(jq -r '.tool_input.command'); if echo \"$COMMAND\" | grep -E 'git\\s+commit' > /dev/null 2>&1; then echo '🔍 Running format and lint checks...' && cd \"$CLAUDE_PROJECT_DIR\" && ci_scripts/format_modified_files.sh && ci_scripts/lint_modified_files.sh && if ! git diff --exit-code > /dev/null 2>&1; then echo '📝 Format made changes, auto-staging them...' && git add -u && echo '✅ Formatted files staged and ready to commit!'; else echo '✅ Format and lint checks passed!'; fi || (echo '❌ Format or lint check failed. Please fix the issues before committing.' && exit 2); fi"
+            "command": "npx block-no-verify@1.1.2"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "COMMAND=$(jq -r '.tool_input.command'); if echo \"$COMMAND\" | grep -E 'git\\s+commit' > /dev/null 2>&1; then echo '\U0001F50D Running format and lint checks...' && cd \"$CLAUDE_PROJECT_DIR\" && ci_scripts/format_modified_files.sh && ci_scripts/lint_modified_files.sh && if ! git diff --exit-code > /dev/null 2>&1; then echo '\U0001F4DD Format made changes, auto-staging them...' && git add -u && echo '\U00002705 Formatted files staged and ready to commit!'; else echo '\U00002705 Format and lint checks passed!'; fi || (echo '\U0000274C Format or lint check failed. Please fix the issues before committing.' && exit 2); fi"
           }
         ]
       }
