@@ -89,3 +89,14 @@ public struct Address: Equatable, Decodable {
         state = address.state
     }
 }
+
+extension Address {
+    var isEmpty: Bool {
+        city == nil
+            && country == nil
+            && line1 == nil
+            && line2 == nil
+            && postalCode == nil
+            && state == nil
+    }
+}
