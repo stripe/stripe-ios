@@ -726,16 +726,23 @@ struct PaymentView: View {
 
         Task {
             do {
-                if try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController) != nil {
+                let result = try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController)
+                switch result {
+                case .canceled:
+                    await MainActor.run {
+                        isLoading.wrappedValue = false
+                    }
+                case .completed, .completedWithKycInfo:
                     let token = try await coordinator.createCryptoPaymentToken()
 
                     await MainActor.run {
                         // intentionally not flipping `isLoading`, since `createOnrampSession` will set it back.
                         createOnrampSession(withCryptoPaymentTokenId: token)
                     }
-                } else { // cancelled
+                @unknown default:
                     await MainActor.run {
                         isLoading.wrappedValue = false
+                        alert = Alert(title: "Payment method selection failed", message: "Received an unexpected result while collecting payment method.")
                     }
                 }
             } catch {
