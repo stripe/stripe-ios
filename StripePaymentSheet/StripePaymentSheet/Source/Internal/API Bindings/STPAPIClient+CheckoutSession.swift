@@ -13,8 +13,12 @@ extension STPAPIClient {
 
     /// Initializes a CheckoutSession, fetching payment configuration data.
     /// - Parameter checkoutSessionId: The ID of the checkout session (e.g., "cs_test_xxx")
+    /// - Parameter adaptivePricingActive: Whether adaptive pricing should be allowed for this init request.
     /// - Returns: STPCheckoutSession object representing the checkout session.
-    func initCheckoutSession(checkoutSessionId: String) async throws -> STPCheckoutSession {
+    func initCheckoutSession(
+        checkoutSessionId: String,
+        adaptivePricingActive: Bool = false
+    ) async throws -> STPCheckoutSession {
         var elementsSessionParameters: [String: Any] = [
             "is_aggregation_expected": true,
             "locale": Locale.current.toLanguageTag(),
@@ -32,7 +36,7 @@ extension STPAPIClient {
             "redirect_type": "embedded",
             "elements_session_client": elementsSessionParameters,
             "adaptive_pricing": [
-                "allowed": true,
+                "allowed": adaptivePricingActive,
             ],
         ]
 

@@ -287,7 +287,10 @@ public final class Checkout: ObservableObject {
                 checkoutSessionId: sessionId,
                 parameters: update.parameters
             )
-            let refreshedCheckoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+            let refreshedCheckoutSession = try await apiClient.initCheckoutSession(
+                checkoutSessionId: sessionId,
+                adaptivePricingActive: stpSession?.adaptivePricingActive ?? false
+            )
             return updateSession(refreshedCheckoutSession)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
