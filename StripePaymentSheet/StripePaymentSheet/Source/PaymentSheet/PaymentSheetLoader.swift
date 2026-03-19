@@ -89,19 +89,26 @@ final class PaymentSheetLoader {
             }
 
             // Fetch ElementsSession
-            async let _elementsSessionAndIntent: ElementSessionAndIntent = fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
+            // ⚠️ Note using `async let` instead of Tasks here triggered a crash when compiling with Xcode 26.4 / Swift 6.3
+            let elementsSessionAndIntentTask = Task {
+                try await fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
+            }
 
             // Fetch Customer email if using EK for Link and it wasn't provided in `configuration`. If using CS, Customer will be in v1/e/s response.
-            async let prefetchedLinkEmailAndSource: (email: String, source: EmailSource)? = try? getCustomerEmailForLinkWithEphemeralKey(configuration: configuration, loadTimings: loadTimings)
+            let prefetchedLinkEmailAndSourceTask = Task {
+                try? await getCustomerEmailForLinkWithEphemeralKey(configuration: configuration, loadTimings: loadTimings)
+            }
             // Fetch Customer SPMs if using EK b/c they're not in the v1/e/s response.
-            async let _prefetchedSavedPaymentMethods: [STPPaymentMethod]? = fetchSavedPaymentMethodsWithEphemeralKey(configuration: configuration, loadTimings: loadTimings)
+            let prefetchedSavedPaymentMethodsTask = Task {
+                try await fetchSavedPaymentMethodsWithEphemeralKey(configuration: configuration, loadTimings: loadTimings)
+            }
 
             // Load misc singletons
             loadTimings.logStart("loadMiscellaneousSingletons")
             await loadMiscellaneousSingletons()
             loadTimings.logEnd("loadMiscellaneousSingletons")
 
-            let elementsSessionAndIntent = try await _elementsSessionAndIntent
+            let elementsSessionAndIntent = try await elementsSessionAndIntentTask.value
             let intent = elementsSessionAndIntent.intent
             let elementsSession = elementsSessionAndIntent.elementsSession
             // Overwrite the form specs that were already loaded from disk
@@ -120,7 +127,7 @@ final class PaymentSheetLoader {
             let linkAccount = try? await lookupLinkAccount(
                 elementsSession: elementsSession,
                 configuration: configuration,
-                prefetchedEmailAndSource: prefetchedLinkEmailAndSource,
+                prefetchedEmailAndSource: prefetchedLinkEmailAndSourceTask.value,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate
             )
@@ -189,7 +196,7 @@ final class PaymentSheetLoader {
             STPTelemetryClient.shared.sendTelemetryData()
 
             // Filter out saved payment methods that the PI/SI or PaymentSheet doesn't support
-            let prefetchedSavedPaymentMethods = try await _prefetchedSavedPaymentMethods
+            let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
             let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
             let loadResult = LoadResult(
