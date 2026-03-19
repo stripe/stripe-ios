@@ -44,6 +44,10 @@ def non_stp_spi_line?(line)
   spi_names.any? { |spi_name| spi_name != 'STP' }
 end
 
+def has_non_additive_changes?(lines)
+  lines.any? { |line| line.start_with?('-') }
+end
+
 def render_module_diff(framework_name, public_lines, spi_lines)
   return '' if public_lines.empty? && spi_lines.empty?
 
@@ -79,9 +83,9 @@ GetFrameworks.framework_names('./modules.yaml').each do |framework_name|
     line.include?('@_spi(') && non_stp_spi_line?(line)
   end
 
-  if public_diff_lines.any?
+  if has_non_additive_changes?(public_diff_lines)
     severity = PUBLIC_SEVERITY
-  elsif spi_diff_lines.any? && severity == NO_SEVERITY
+  elsif has_non_additive_changes?(spi_diff_lines) && severity == NO_SEVERITY
     severity = SPI_SEVERITY
   end
 
