@@ -43,9 +43,7 @@ struct LogInSignUpView: View {
     }
 
     private var kycInfoCollectionMode: KYCInfoView.CollectionMode {
-        // Temporarily disable requirement of livemode to test apple pay KYC collection flow
-        // livemode && isL0KYCModeEnabled ? .kycLevel0 : .original
-        isL0KYCModeEnabled ? .kycLevel0 : .original
+        livemode && isL0KYCModeEnabled ? .kycLevel0 : .original
     }
 
     private var isRunningOnSimulator: Bool {
@@ -100,8 +98,7 @@ struct LogInSignUpView: View {
                     Toggle(isOn: $isL0KYCModeEnabled) {
                         Label("L0 KYC Mode", systemImage: "person.text.rectangle")
                     }
-                    // Temporarily disable requirement of livemode to test apple pay KYC collection flow
-                    // .disabled(!livemode)
+                    .disabled(!livemode)
 
                     Divider()
 
@@ -147,12 +144,11 @@ struct LogInSignUpView: View {
             )
             .presentationDetents([.medium])
         }
-        // Temporarily disable requirement of livemode to test apple pay KYC collection flow
-        // .onChange(of: livemode) { isLivemodeEnabled in
-        //     if !isLivemodeEnabled {
-        //         isL0KYCModeEnabled = false
-        //     }
-        // }
+        .onChange(of: livemode) { isLivemodeEnabled in
+            if !isLivemodeEnabled {
+                isL0KYCModeEnabled = false
+            }
+        }
     }
 
     // MARK: - Actions

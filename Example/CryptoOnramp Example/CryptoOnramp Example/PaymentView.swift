@@ -718,7 +718,6 @@ struct PaymentView: View {
         }
 
         let request = StripeAPI.paymentRequest(withMerchantIdentifier: "merchant.com.stripe.umbrella.test", country: "US", currency: "USD")
-        request.requiredBillingContactFields = [.name, .postalAddress]
         request.paymentSummaryItems = [
             PKPaymentSummaryItem(label: "$\(amountText) usd + fees", amount: .zero, type: .pending)
         ]
@@ -728,23 +727,23 @@ struct PaymentView: View {
         Task {
             do {
                 let result = try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController)
-                if case .canceled = result {
+                switch result {
+                case .canceled:
                     await MainActor.run {
                         isLoading.wrappedValue = false
                     }
-                    return
-                }
+                case .completed, .completedWithKycInfo:
+                    let token = try await coordinator.createCryptoPaymentToken()
 
-                // For this demo test, we're just unconditionally trying to attach KYC info.
-                // In a real flow, we should consider checking /v1/customer_information first
-                // before we try to attach FN/LN + Address unconditionally, as this call will
-                // fail the entire payment operation when kyc attachment fails (bc info is already collected)
-                try await attachKycInfoIfNeeded(for: result)
-                let token = try await coordinator.createCryptoPaymentToken()
-
-                await MainActor.run {
-                    // intentionally not flipping `isLoading`, since `createOnrampSession` will set it back.
-                    createOnrampSession(withCryptoPaymentTokenId: token)
+                    await MainActor.run {
+                        // intentionally not flipping `isLoading`, since `createOnrampSession` will set it back.
+                        createOnrampSession(withCryptoPaymentTokenId: token)
+                    }
+                @unknown default:
+                    await MainActor.run {
+                        isLoading.wrappedValue = false
+                        alert = Alert(title: "Payment method selection failed", message: "Received an unexpected result while collecting payment method.")
+                    }
                 }
             } catch {
                 await MainActor.run {
@@ -753,14 +752,6 @@ struct PaymentView: View {
                 }
             }
         }
-    }
-
-    private func attachKycInfoIfNeeded(for result: CollectPaymentMethodResult) async throws {
-        guard case let .completedWithKycInfo(_, kycInfo) = result else {
-            return
-        }
-
-        try await coordinator.attachKYCInfo(info: kycInfo)
     }
 
     private func createOnrampSession(withCryptoPaymentTokenId cryptoPaymentTokenId: String) {

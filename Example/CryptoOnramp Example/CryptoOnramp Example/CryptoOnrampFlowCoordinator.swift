@@ -146,9 +146,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         let shouldShowKYCInfo = if kycInfoCollectionMode == .original {
             !isKycVerified
         } else {
-            // Temporarily disable KYC collection in the normal post-auth flow to test apple pay KYC collection flow
-            // !kycLevel.includesLevel0
-            false
+            !kycLevel.includesLevel0
         }
 
         // For `.original`, identity verification also routes from this coordinator.

@@ -20,8 +20,7 @@ struct CryptoOnrampExampleView: View {
 
     @State private var coordinator: CryptoOnrampCoordinator?
     @State private var livemode: Bool = false
-    // Temporarily enabled by default to test apple pay KYC collection flow
-    @State private var isL0KYCModeEnabled: Bool = true
+    @State private var isL0KYCModeEnabled: Bool = false
     @State private var alert: Alert?
     @State private var seamlessSignInEmail: String? = APIClient.shared.seamlessSignInEmail
 
@@ -158,10 +157,9 @@ struct CryptoOnrampExampleView: View {
             initializeCoordinator()
         }
         .onChange(of: livemode) { _ in
-            // Temporarily disable requirement of livemode to test apple pay KYC collection flow
-            // if !livemode {
-            //     isL0KYCModeEnabled = false
-            // }
+            if !livemode {
+                isL0KYCModeEnabled = false
+            }
             coordinator = nil
             APIClient.shared.clearAuthState()
             initializeCoordinator()
