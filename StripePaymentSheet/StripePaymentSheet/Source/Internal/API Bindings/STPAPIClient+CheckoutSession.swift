@@ -31,6 +31,9 @@ extension STPAPIClient {
             "eid": UUID().uuidString,
             "redirect_type": "embedded",
             "elements_session_client": elementsSessionParameters,
+            "adaptive_pricing": [
+                "allowed": true,
+            ],
         ]
 
         let checkoutSession: STPCheckoutSession = try await APIRequest<STPCheckoutSession>.post(
