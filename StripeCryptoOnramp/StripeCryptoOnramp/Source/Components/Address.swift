@@ -91,6 +91,8 @@ public struct Address: Equatable, Decodable {
 }
 
 extension Address {
+
+    /// Returns `true` when the address has no populated fields.
     var isEmpty: Bool {
         city == nil
             && country == nil
