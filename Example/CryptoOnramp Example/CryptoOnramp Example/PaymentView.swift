@@ -679,8 +679,13 @@ struct PaymentView: View {
 
         Task {
             do {
-                if let displayData = try await coordinator.collectPaymentMethod(type: type, from: viewController) {
-
+                let result = try await coordinator.collectPaymentMethod(type: type, from: viewController)
+                switch result {
+                case .canceled:
+                    await MainActor.run {
+                        isLoading.wrappedValue = false
+                    }
+                case let .completed(displayData), let .completedWithKycInfo(displayData, _):
                     await MainActor.run {
                         shouldShowPaymentMethodSheet = false
                     }
@@ -691,9 +696,10 @@ struct PaymentView: View {
                         isLoading.wrappedValue = false
                         selectedPaymentMethod = .newPaymentMethod(tokenId: token, displayData: displayData)
                     }
-                } else { // cancelled
+                @unknown default:
                     await MainActor.run {
                         isLoading.wrappedValue = false
+                        alert = Alert(title: "Payment method selection failed", message: "Received an unexpected result while collecting payment method.")
                     }
                 }
             } catch {
