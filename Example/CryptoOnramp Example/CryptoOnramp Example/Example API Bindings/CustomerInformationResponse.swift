@@ -86,10 +86,6 @@ extension CustomerInformationResponse {
         verifications.contains { $0.name == "kyc_verified" && $0.status == "verified" }
     }
 
-    var isPhoneVerified: Bool {
-        verifications.contains { $0.name == "phone_verified" && $0.status == "verified" }
-    }
-
     /// The KYC level implied solely by the fields the customer has already provided.
     var kycLevelFromFieldsCollected: KYCLevel {
         let providedFieldSet = Set(providedFields)
@@ -113,7 +109,7 @@ extension CustomerInformationResponse {
     var kycLevel: KYCLevel {
         let providedKYCLevel = kycLevelFromFieldsCollected
 
-        guard providedKYCLevel.includesLevel0, isPhoneVerified, isKycVerified else {
+        guard providedKYCLevel.includesLevel0, isKycVerified else {
             return .none
         }
 

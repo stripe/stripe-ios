@@ -157,9 +157,6 @@ struct CryptoOnrampExampleView: View {
             initializeCoordinator()
         }
         .onChange(of: livemode) { _ in
-            if !livemode {
-                isL0KYCModeEnabled = false
-            }
             coordinator = nil
             APIClient.shared.clearAuthState()
             initializeCoordinator()
