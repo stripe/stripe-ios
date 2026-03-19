@@ -73,6 +73,24 @@
   "shipping_address_collection": {
     "allowed_countries": ["US", "CA"]
   },
+  "adaptive_pricing_info": {
+    "active_presentment_currency": "eur",
+    "integration_amount": 12000,
+    "integration_currency": "usd",
+    "local_currency_options": [
+      {
+        "amount": 10839,
+        "conversion_markup_bps": 400,
+        "currency": "eur",
+        "presentment_exchange_rate": "0.90325"
+      }
+    ]
+  },
+  "developer_tool_context": {
+    "adaptive_pricing": {
+      "active": true
+    }
+  },
   "currency": "usd",
   "mode": "payment",
   "status": "open",

@@ -205,6 +205,18 @@ public final class Checkout: ObservableObject {
         }
     }
 
+    // MARK: - Currency
+
+    /// Selects a currency for the session (adaptive pricing).
+    /// - Parameter currency: The three-letter ISO currency code to switch to (e.g. "gbp").
+    /// - Throws: ``CheckoutError`` if the update fails.
+    @discardableResult
+    func selectCurrency(_ currency: String) async throws -> Checkout {
+        try requireOpenSession()
+        _ = try await performAPIUpdate(.setCurrency(currency))
+        return self
+    }
+
     // MARK: - Tax ID
 
     /// Sets the customer's tax ID on the session.
