@@ -596,4 +596,103 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         }
         wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
+
+    // MARK: - Link Lookup Holdback Tests
+
+    @MainActor
+    private func assertLinkLookup(
+        experimentAssignments: [String: ExperimentGroup]?,
+        flags: [String: Bool] = [:],
+        shouldCallLookup: Bool,
+        message: String
+    ) async throws {
+        var didCallLookup = false
+        stub { urlRequest in
+            if urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true {
+                didCallLookup = true
+                return true
+            }
+            return false
+        } response: { _ in
+            return HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+        }
+
+        let experimentsData = experimentAssignments.map {
+            ExperimentsData(arbId: "test_arb", experimentAssignments: $0, allResponseFields: [:])
+        }
+        let elementsSession = STPElementsSession._testValue(
+            experimentsData: experimentsData,
+            flags: flags
+        )
+
+        var config = PaymentSheet.Configuration()
+        config.apiClient = stubbedAPIClient()
+        config.defaultBillingDetails.email = "test@example.com"
+
+        _ = try await PaymentSheetLoader.lookupLinkAccount(
+            elementsSession: elementsSession,
+            configuration: config,
+            prefetchedEmailAndSource: nil,
+            loadTimings: .init(),
+            isUpdate: false
+        )
+
+        if shouldCallLookup {
+            XCTAssertTrue(didCallLookup, message)
+        } else {
+            XCTAssertFalse(didCallLookup, message)
+        }
+    }
+
+    func testLookupLink_linkDisabled_holdbackGlobal_shouldLookup() async throws {
+        try await assertLinkLookup(
+            experimentAssignments: ["link_global_holdback": .holdback],
+            shouldCallLookup: true,
+            message: "Expected Link lookup when link_global_holdback is 'holdback'"
+        )
+    }
+
+    func testLookupLink_linkDisabled_holdbackABTest_shouldLookup() async throws {
+        try await assertLinkLookup(
+            experimentAssignments: ["link_ab_test": .holdback],
+            shouldCallLookup: true,
+            message: "Expected Link lookup when link_ab_test is 'holdback'"
+        )
+    }
+
+    func testLookupLink_linkDisabled_bothExperimentsHoldback_shouldLookup() async throws {
+        try await assertLinkLookup(
+            experimentAssignments: [
+                "link_global_holdback": .holdback,
+                "link_ab_test": .holdback,
+            ],
+            shouldCallLookup: true,
+            message: "Expected Link lookup when both experiments are 'holdback'"
+        )
+    }
+
+    func testLookupLink_linkDisabled_holdbackWithKillswitch_shouldNotLookup() async throws {
+        try await assertLinkLookup(
+            experimentAssignments: ["link_global_holdback": .holdback],
+            flags: ["elements_disable_link_global_holdback_lookup": true],
+            shouldCallLookup: false,
+            message: "Link lookup should not happen when killswitch is enabled"
+        )
+    }
+
+    func testLookupLink_linkDisabled_noExperimentsData_shouldNotLookup() async throws {
+        try await assertLinkLookup(
+            experimentAssignments: nil,
+            shouldCallLookup: false,
+            message: "Link lookup should not happen when there is no experiments data"
+        )
+    }
+
+    func testLookupLink_linkDisabled_controlGroup_shouldNotLookup() async throws {
+        try await assertLinkLookup(
+            experimentAssignments: ["link_global_holdback": .control],
+            shouldCallLookup: false,
+            message: "Link lookup should not happen when experiment is 'control' (not holdback)"
+        )
+    }
 }
