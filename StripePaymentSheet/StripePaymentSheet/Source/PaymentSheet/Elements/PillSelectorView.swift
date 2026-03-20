@@ -1,0 +1,180 @@
+//
+//  PillSelectorView.swift
+//  StripePaymentSheet
+//
+//  Created by Nick Porter on 3/20/26.
+
+import UIKit
+
+/// A single item in a `PillSelectorView`.
+struct PillSelectorItem: Equatable {
+    let id: String
+    let displayText: String
+    /// Defaults to `"pill_option_\(id)"` when nil.
+    let accessibilityIdentifier: String?
+
+    init(id: String, displayText: String, accessibilityIdentifier: String? = nil) {
+        self.id = id
+        self.displayText = displayText
+        self.accessibilityIdentifier = accessibilityIdentifier
+    }
+
+    var resolvedAccessibilityIdentifier: String {
+        accessibilityIdentifier ?? "pill_option_\(id)"
+    }
+}
+
+// MARK: - PillSelectorViewDelegate
+
+protocol PillSelectorViewDelegate: AnyObject {
+    func pillSelectorView(_ view: PillSelectorView, didSelectItemWithId id: String)
+}
+
+// MARK: - PillSelectorView
+
+/// A two-option pill selector with an optional caption label below.
+final class PillSelectorView: UIView {
+
+    // MARK: - Properties
+
+    weak var delegate: PillSelectorViewDelegate?
+
+    private let appearance: PaymentSheet.Appearance
+
+    private var leftItem: PillSelectorItem
+    private var rightItem: PillSelectorItem
+    private(set) var selectedItemId: String
+
+    private let mainStackView = UIStackView()
+    private let buttonsStackView = UIStackView()
+    private let captionLabel = UILabel()
+    private var leftButton = UIButton(type: .system)
+    private var rightButton = UIButton(type: .system)
+
+    // MARK: - Init
+
+    init(
+        leftItem: PillSelectorItem,
+        rightItem: PillSelectorItem,
+        selectedItemId: String,
+        caption: String? = nil,
+        appearance: PaymentSheet.Appearance
+    ) {
+        self.appearance = appearance
+        self.leftItem = leftItem
+        self.rightItem = rightItem
+        self.selectedItemId = selectedItemId
+
+        super.init(frame: .zero)
+        setupViews()
+        updateCaption(caption)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Setup
+
+    private func setupViews() {
+        mainStackView.axis = .vertical
+        mainStackView.spacing = 8
+        mainStackView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(mainStackView)
+
+        buttonsStackView.axis = .horizontal
+        buttonsStackView.spacing = 8
+        buttonsStackView.distribution = .fillEqually
+        mainStackView.addArrangedSubview(buttonsStackView)
+
+        captionLabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
+        captionLabel.textColor = appearance.colors.textSecondary
+        captionLabel.numberOfLines = 0
+        captionLabel.isHidden = true
+        mainStackView.addArrangedSubview(captionLabel)
+
+        NSLayoutConstraint.activate([
+            mainStackView.topAnchor.constraint(equalTo: topAnchor),
+            mainStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            mainStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
+
+        configurePillButton(leftButton, item: leftItem)
+        configurePillButton(rightButton, item: rightItem)
+        buttonsStackView.addArrangedSubview(leftButton)
+        buttonsStackView.addArrangedSubview(rightButton)
+
+        updateButtonStyles()
+    }
+
+    private func configurePillButton(_ button: UIButton, item: PillSelectorItem) {
+        button.setTitle(item.displayText, for: .normal)
+        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 20)
+        button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
+        button.layer.cornerRadius = appearance.cornerRadius ?? 6.0
+        button.addTarget(self, action: #selector(pillButtonTapped(_:)), for: .touchUpInside)
+        button.accessibilityIdentifier = item.resolvedAccessibilityIdentifier
+    }
+
+    private func updateButtonStyles() {
+        styleButton(leftButton, isSelected: leftItem.id == selectedItemId)
+        styleButton(rightButton, isSelected: rightItem.id == selectedItemId)
+    }
+
+    private func styleButton(_ button: UIButton, isSelected: Bool) {
+        button.backgroundColor = appearance.colors.componentBackground
+        button.setTitleColor(appearance.colors.componentText, for: .normal)
+        if isSelected {
+            button.layer.borderColor = appearance.colors.primary.cgColor
+            button.layer.borderWidth = 2
+        } else {
+            button.layer.borderColor = appearance.colors.componentBorder.cgColor
+            button.layer.borderWidth = appearance.borderWidth
+        }
+    }
+
+    // MARK: - Caption
+
+    func updateCaption(_ caption: String?) {
+        if let caption, !caption.isEmpty {
+            captionLabel.text = caption
+            captionLabel.isHidden = false
+        } else {
+            captionLabel.text = nil
+            captionLabel.isHidden = true
+        }
+    }
+
+    // MARK: - Selection
+
+    @objc private func pillButtonTapped(_ sender: UIButton) {
+        let tappedId = sender === leftButton ? leftItem.id : rightItem.id
+        select(tappedId, notifyDelegate: true)
+    }
+
+    func select(_ itemId: String, notifyDelegate: Bool = false) {
+        guard itemId == leftItem.id || itemId == rightItem.id else { return }
+        guard itemId != selectedItemId else { return }
+        selectedItemId = itemId
+        updateButtonStyles()
+        if notifyDelegate {
+            delegate?.pillSelectorView(self, didSelectItemWithId: itemId)
+        }
+    }
+
+#if !os(visionOS)
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateButtonStyles()
+    }
+#endif
+
+    // MARK: - Enabled / Disabled
+
+    func setEnabled(_ enabled: Bool) {
+        leftButton.isEnabled = enabled
+        rightButton.isEnabled = enabled
+        alpha = enabled ? 1.0 : 0.6
+    }
+}
