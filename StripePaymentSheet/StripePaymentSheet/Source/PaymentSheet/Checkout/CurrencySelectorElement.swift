@@ -120,12 +120,8 @@ final class CurrencySelectorElement: Element {
 
     // MARK: - Flag emoji
 
-    // "ang" -> "NL" because the Netherlands Antilles was dissolved in 2010.
-    private static let regionCodeOverrides: [String: String] = ["ang": "NL"]
-
     private static func flagEmoji(for currencyCode: String) -> String {
-        let lower = currencyCode.lowercased()
-        let regionCode = regionCodeOverrides[lower] ?? String(lower.prefix(2)).uppercased()
+        let regionCode = String(currencyCode.lowercased().prefix(2)).uppercased()
         return String.regionFlagEmoji(for: regionCode) ?? ""
     }
 }
