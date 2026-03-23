@@ -147,10 +147,12 @@ extension STPPaymentMethod {
                 let cardBrandImage = STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
                 if cardArtEnabled,
                    let cardArt = card?.cardArt?.artImage.stripeCDNURL(height: 20) {
-                    return DownloadManager.sharedManager.downloadImage(url: cardArt,
-                                                                       placeholder: nil,
-                                                                       imageOnFailure: cardBrandImage,
-                                                                       updateHandler: updateHandler)
+                    return DownloadManager.sharedManager
+                        .downloadImage(url: cardArt,
+                                       placeholder: nil,
+                                       imageOnFailure: cardBrandImage,
+                                       updateHandler: updateHandler)
+                        .rounded(radius: 3)
                 } else {
                     return cardBrandImage
                 }
