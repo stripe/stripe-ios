@@ -138,7 +138,9 @@ final class PaymentSheetLoader {
             // Only block on link lookup if it's enabled.
             let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
             if isLinkEnabled {
-                await lookupLinkAccountTask.value
+                await withTimeout(5.0) {
+                    await lookupLinkAccountTask.value
+                }
             }
 
             loadTimings.logStart("computePaymentMethodTypes")
