@@ -10,8 +10,8 @@ import UIKit
 class PaymentMethodImageView: UIImageView {
     enum ImageType {
         case collectionView(STPPaymentMethod, UIUserInterfaceStyle, PaymentSheet.Appearance.IconStyle)
-        case collectionViewApplePay(UIUserInterfaceStyle, PaymentSheet.Appearance.IconStyle)
-        case collectionViewLink(UIUserInterfaceStyle, PaymentSheet.Appearance.IconStyle)
+        case collectionViewApplePay(UIUserInterfaceStyle)
+        case collectionViewLink(UIUserInterfaceStyle)
         case rowButton(STPPaymentMethod, PaymentSheet.Appearance.IconStyle)
     }
     var imageType: ImageType?
@@ -50,11 +50,11 @@ class PaymentMethodImageView: UIImageView {
                 }
             }
             setImage(image)
-        case .collectionViewApplePay(let overrideUserInterfaceStyle, let iconStyle):
-            let image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle)
+        case .collectionViewApplePay(let overrideUserInterfaceStyle):
+            let image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
             setImage(image)
-        case .collectionViewLink(let overrideUserInterfaceStyle, let iconStyle):
-            let image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle)
+        case .collectionViewLink(let overrideUserInterfaceStyle):
+            let image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
             setImage(image)
         case .rowButton(let paymentMethod, let iconStyle):
             let image = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: iconStyle, cardArtEnabled: cardArtEnabled) { [weak self] image in

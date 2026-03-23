@@ -43,7 +43,7 @@ import Foundation
         return cardArt
     }
 
-    public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?, hack: String?) -> Self? {
+    public class func decodedObject(hack: String?) -> Self? {
         var url: String
         switch hack {
         case "4242": // visa

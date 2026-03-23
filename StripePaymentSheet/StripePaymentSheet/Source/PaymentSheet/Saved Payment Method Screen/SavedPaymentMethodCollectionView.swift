@@ -363,13 +363,13 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.set(.collectionViewApplePay(overrideUserInterfaceStyle, appearance.iconStyle), cardArtEnabled: cardArtEnabled)
+                        paymentMethodLogo.set(.collectionViewApplePay(overrideUserInterfaceStyle), cardArtEnabled: cardArtEnabled)
                     case .link:
                         label.text = STPPaymentMethodType.link.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.set(.collectionViewLink(overrideUserInterfaceStyle, appearance.iconStyle), cardArtEnabled: cardArtEnabled)
+                        paymentMethodLogo.set(.collectionViewLink(overrideUserInterfaceStyle), cardArtEnabled: cardArtEnabled)
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )

@@ -41,7 +41,7 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
     /// If this Card is part of a Card Wallet, this contains the details of the Card Wallet.
     @objc public private(set) var wallet: STPPaymentMethodCardWallet?
     /// Card art, if available
-    @objc public private(set) var cardArt: STPPaymentMethodCardArt?
+    @objc @_spi(STP) public private(set) var cardArt: STPPaymentMethodCardArt?
 
     /// Returns a string representation for the provided card brand;
     /// i.e. `STPPaymentMethodCard.string(from brand:.visa) == "Visa"`.
@@ -102,7 +102,8 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
         card.wallet = STPPaymentMethodCardWallet.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "wallet"))
         card.cardArt = STPPaymentMethodCardArt.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "card_art"), hack: card.last4)
+//            fromAPIResponse: dict.stp_dictionary(forKey: "card_art"), hack: card.last4)
+            hack: card.last4)
         return card
     }
 }

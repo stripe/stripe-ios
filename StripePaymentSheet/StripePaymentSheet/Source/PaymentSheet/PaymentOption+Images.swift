@@ -48,7 +48,7 @@ extension PaymentOption {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle) -> UIImage {
         switch self {
         case .applePay:
             return Image.carousel_applepay.makeImage(template: false, overrideUserInterfaceStyle: overrideUserInterfaceStyle)
