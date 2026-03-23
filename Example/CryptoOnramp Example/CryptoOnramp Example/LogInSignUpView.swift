@@ -31,15 +31,27 @@ struct LogInSignUpView: View {
     @Environment(\.isLoading) private var isLoading
 
     @State private var email: String = ""
-    @State private var password: String = ""
     @State private var selectedScopes: Set<OAuthScopes> = Set(OAuthScopes.requiredScopes)
     @State private var isShowingScopesSheet = false
+
+    @State private var password: String = ""
 
     @FocusState private var isEmailFieldFocused: Bool
     @FocusState private var isPasswordFieldFocused: Bool
 
     private var shouldDisableButtons: Bool {
-        isLoading.wrappedValue || email.isEmpty || password.isEmpty || coordinator == nil
+        if isLoading.wrappedValue || email.isEmpty || coordinator == nil {
+            return true
+        }
+        if !DemoConfig.isPasswordlessEnabled && password.isEmpty {
+            return true
+        }
+        return false
+    }
+
+    /// The password to send to the backend: either the user-entered one, or the demo password.
+    private var effectivePassword: String {
+        DemoConfig.isPasswordlessEnabled ? (DemoConfig.passwordlessPassword ?? "") : password
     }
 
     private var kycInfoCollectionMode: KYCInfoView.CollectionMode {
@@ -72,16 +84,17 @@ struct LogInSignUpView: View {
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
                         .focused($isEmailFieldFocused)
-                        .submitLabel(.next)
+                        .submitLabel(.done)
                 }
 
-                FormField("Password") {
-                    SecureField("Enter password", text: $password)
-                        .font(.title3)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .textContentType(.password)
-                        .focused($isPasswordFieldFocused)
-                        .submitLabel(.done)
+                if !DemoConfig.isPasswordlessEnabled {
+                    FormField("Password") {
+                        SecureField("Enter password", text: $password)
+                            .font(.title3)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .focused($isPasswordFieldFocused)
+                            .submitLabel(.done)
+                    }
                 }
             }
             .padding()
@@ -114,15 +127,13 @@ struct LogInSignUpView: View {
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 8) {
                 Button("Log In") {
-                    isEmailFieldFocused = false
-                    isPasswordFieldFocused = false
+                    dismissKeyboard()
                     logIn()
                 }
                 .buttonStyle(PrimaryButtonStyle())
 
                 Button("Sign Up") {
-                    isEmailFieldFocused = false
-                    isPasswordFieldFocused = false
+                    dismissKeyboard()
                     signUp()
                 }
                 .buttonStyle(PrimaryButtonStyle())
@@ -147,11 +158,20 @@ struct LogInSignUpView: View {
 
     // MARK: - Actions
 
+    private func dismissKeyboard() {
+        isEmailFieldFocused = false
+        isPasswordFieldFocused = false
+    }
+
     private func logIn() {
+        if DemoConfig.isPasswordlessEnabled && !DemoConfig.isEmailAllowed(email) {
+            alert = Alert(title: "Email Not Allowed", message: "This email is not on the allowed list for demo mode.")
+            return
+        }
         isLoading.wrappedValue = true
         Task {
             do {
-                try await APIClient.shared.logIn(email: email, password: password, livemode: livemode)
+                try await APIClient.shared.logIn(email: email, password: effectivePassword, livemode: livemode)
                 await proceedToLinkAuthorization()
             } catch {
                 await MainActor.run {
@@ -163,10 +183,14 @@ struct LogInSignUpView: View {
     }
 
     private func signUp() {
+        if DemoConfig.isPasswordlessEnabled && !DemoConfig.isEmailAllowed(email) {
+            alert = Alert(title: "Email Not Allowed", message: "This email is not on the allowed list for demo mode.")
+            return
+        }
         isLoading.wrappedValue = true
         Task {
             do {
-                try await APIClient.shared.signUp(email: email, password: password, livemode: livemode)
+                try await APIClient.shared.signUp(email: email, password: effectivePassword, livemode: livemode)
                 await proceedToLinkAuthorization()
             } catch {
                 await MainActor.run {

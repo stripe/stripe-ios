@@ -48,3 +48,6 @@ Stripe.xcworkspace/xcuserdata/*
 
 # Simulator configuration cache
 .stripe-ios-config
+
+# Local CryptoOnramp example config (may contain secrets)
+CryptoOnrampExample.local.xcconfig

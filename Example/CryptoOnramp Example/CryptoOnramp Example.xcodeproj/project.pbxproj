@@ -72,6 +72,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0B0DC0012F907A0000000001 /* CryptoOnrampExample.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = CryptoOnrampExample.xcconfig; sourceTree = "<group>"; };
 		0B44B3F02E576ECD00B58655 /* StripePaymentSheet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripePaymentSheet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B44B3F32E576F1500B58655 /* Stripe3DS2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe3DS2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B44B3F62E576F4100B58655 /* StripeApplePay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeApplePay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -125,9 +126,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0B0DC0012F907A0000000002 /* BuildConfigurations */ = {
+			isa = PBXGroup;
+			children = (
+				0B0DC0012F907A0000000001 /* CryptoOnrampExample.xcconfig */,
+			);
+			path = BuildConfigurations;
+			sourceTree = "<group>";
+		};
 		0BA5FE292E32A11600D44BFE = {
 			isa = PBXGroup;
 			children = (
+				0B0DC0012F907A0000000002 /* BuildConfigurations */,
 				0BA5FE342E32A11600D44BFE /* CryptoOnramp Example */,
 				0BD66FCC2EDE0E800044DB52 /* CryptoOnrampExampleUITests */,
 				0BA5FE402E32AB9E00D44BFE /* Frameworks */,
@@ -416,6 +426,7 @@
 		};
 		0BA5FE3E2E32A11600D44BFE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0B0DC0012F907A0000000001 /* CryptoOnrampExample.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -425,6 +436,7 @@
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "CryptoOnramp-Example-Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "To verify your identity.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -447,6 +459,7 @@
 		};
 		0BA5FE3F2E32A11600D44BFE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0B0DC0012F907A0000000001 /* CryptoOnrampExample.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -456,6 +469,7 @@
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "CryptoOnramp-Example-Info.plist";
 				INFOPLIST_KEY_NSCameraUsageDescription = "To verify your identity.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
