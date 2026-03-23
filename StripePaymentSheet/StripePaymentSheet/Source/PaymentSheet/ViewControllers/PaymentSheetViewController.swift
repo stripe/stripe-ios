@@ -26,11 +26,11 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
-    private(set) var isApplePayEnabled: Bool
+    private var isApplePayEnabled: Bool
     let configuration: PaymentSheet.Configuration
 
-    private(set) var isLinkEnabled: Bool
-    private(set) var isCVCRecollectionEnabled: Bool
+    private var isLinkEnabled: Bool
+    private var isCVCRecollectionEnabled: Bool
 
     var isWalletEnabled: Bool {
         return isApplePayEnabled || isLinkEnabled
@@ -59,14 +59,16 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private var mode: Mode
     private(set) var error: Error?
     private var isPaymentInFlight: Bool = false
+    private var isRefreshing: Bool = false
+    private var latestRefreshID: UUID?
     private(set) var isDismissable: Bool = true
 
     private var savedPaymentMethodManager: SavedPaymentMethodManager!
 
     // MARK: - Views
 
-    private(set) var addPaymentMethodViewController: AddPaymentMethodViewController!
-    private(set) var savedPaymentOptionsViewController: SavedPaymentOptionsViewController!
+    private var addPaymentMethodViewController: AddPaymentMethodViewController!
+    private var savedPaymentOptionsViewController: SavedPaymentOptionsViewController!
     internal lazy var navigationBar: SheetNavigationBar = {
         let navBar = SheetNavigationBar(
             isTestMode: configuration.apiClient.isTestmode,
@@ -293,7 +295,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             )
         }
         view.isUserInteractionEnabled = shouldEnableUserInteraction
-        isDismissable = !isPaymentInFlight
+        isDismissable = !isPaymentInFlight && !isRefreshing
         navigationBar.isUserInteractionEnabled = !isPaymentInFlight
 
         // Update our views (starting from the top of the screen):
@@ -548,7 +550,11 @@ extension PaymentSheetViewController {
     }
 
     @MainActor
-    func performRefresh(mode: PaymentSheet.InitializationMode) async throws {
+    func performRefresh(mode: PaymentSheet.InitializationMode) async {
+        let refreshID = UUID()
+        latestRefreshID = refreshID
+
+        isRefreshing = true
         view.isUserInteractionEnabled = false
         buyButton.update(status: .processing, animated: true)
         set(error: nil)
@@ -561,13 +567,17 @@ extension PaymentSheetViewController {
                 integrationShape: .paymentSheet,
                 isUpdate: true
             )
+            guard refreshID == latestRefreshID else { return }
+            isRefreshing = false
+            view.isUserInteractionEnabled = true
             update(with: newLoadResult)
         } catch {
+            guard refreshID == latestRefreshID else { return }
+            isRefreshing = false
+            view.isUserInteractionEnabled = true
             set(error: error)
+            updateUI()
         }
-
-        view.isUserInteractionEnabled = true
-        updateUI()
     }
 }
 

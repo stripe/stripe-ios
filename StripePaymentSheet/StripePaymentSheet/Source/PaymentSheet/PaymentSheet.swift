@@ -426,6 +426,7 @@ internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSh
     func pay(with paymentOption: PaymentOption)
     func clearTextFields()
     func update(with loadResult: PaymentSheetLoader.LoadResult)
+    @MainActor func performRefresh(mode: PaymentSheet.InitializationMode) async
 }
 
 protocol PaymentSheetViewControllerDelegate: AnyObject {

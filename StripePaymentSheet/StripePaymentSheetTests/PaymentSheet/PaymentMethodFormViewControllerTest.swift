@@ -109,6 +109,29 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         )
         XCTAssertEqual(secondSUT.form.getTextFieldElement("ZIP").text, "12345")
     }
+
+    func testFormCacheRemoveAll() {
+        let formCache = PaymentMethodFormCache()
+
+        let cardForm = PaymentMethodFormViewController(
+            type: .stripe(.card),
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            previousCustomerInput: nil,
+            formCache: formCache,
+            configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
+            headerView: nil,
+            analyticsHelper: ._testValue(),
+            delegate: self
+        )
+        _ = cardForm
+
+        XCTAssertNotNil(formCache[.stripe(.card)], "Cache should have an entry after creating a form VC")
+
+        formCache.removeAll()
+
+        XCTAssertNil(formCache[.stripe(.card)], "Cache should be empty after removeAll()")
+    }
 }
 
 extension PaymentMethodFormViewControllerTest: PaymentMethodFormViewControllerDelegate {

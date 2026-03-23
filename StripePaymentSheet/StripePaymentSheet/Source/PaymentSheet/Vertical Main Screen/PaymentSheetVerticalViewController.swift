@@ -73,7 +73,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         }
     }
     private(set) var loadResult: PaymentSheetLoader.LoadResult
-    private(set) var paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+    private var paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let configuration: PaymentSheet.Configuration
     private(set) var intent: Intent
     private(set) var elementsSession: STPElementsSession
@@ -83,14 +83,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var walletButtonsShownExternally: Bool { walletButtonsViewState.isVisible }
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
+    private var isRefreshing: Bool = false
+    private var latestRefreshID: UUID?
     private(set) var savedPaymentMethods: [STPPaymentMethod]
     let isFlowController: Bool
     /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
     private var previousPaymentOption: PaymentOption?
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
-    private(set) var shouldShowApplePayInList: Bool
-    private(set) var shouldShowLinkInList: Bool
+    private var shouldShowApplePayInList: Bool
+    private var shouldShowLinkInList: Bool
     /// Whether or not we are in the special case where we don't show the list and show the form directly
     var shouldDisplayFormOnly: Bool {
         return paymentMethodTypes.count == 1
@@ -834,7 +836,11 @@ extension PaymentSheetVerticalViewController {
     }
 
     @MainActor
-    func performRefresh(mode: PaymentSheet.InitializationMode) async throws {
+    func performRefresh(mode: PaymentSheet.InitializationMode) async {
+        let refreshID = UUID()
+        latestRefreshID = refreshID
+
+        isRefreshing = true
         isUserInteractionEnabled = false
         primaryButton.update(status: .processing, animated: true)
         error = nil
@@ -848,25 +854,28 @@ extension PaymentSheetVerticalViewController {
                 integrationShape: isFlowController ? .flowController : .paymentSheet,
                 isUpdate: true
             )
+            guard refreshID == latestRefreshID else { return }
+            isRefreshing = false
+            isUserInteractionEnabled = true
             update(with: newLoadResult)
         } catch {
+            guard refreshID == latestRefreshID else { return }
+            isRefreshing = false
+            isUserInteractionEnabled = true
             self.error = error
-            updateError()
+            updateUI()
         }
-
-        isUserInteractionEnabled = true
-        updatePrimaryButton()
     }
 }
 
 // MARK: - BottomSheetContentViewController
 extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
     var allowsDragToDismiss: Bool {
-        return isPaymentInFlight
+        return isPaymentInFlight || isRefreshing
     }
 
     func didTapOrSwipeToDismiss() {
-        guard !isPaymentInFlight else {
+        guard !isPaymentInFlight, !isRefreshing else {
            return
         }
         didCancel()
