@@ -844,8 +844,8 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Test successful load with valid payment method options
         let all_payment_methods_pmo_sfu_values: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage] = STPPaymentMethodType.allCases.reduce([:]) { partialResult, type in
-            // Skip unknown, wero and payByBank (private preview, not yet recognized by /v1/elements/sessions)
-            guard type != .unknown, type != .wero, type != .payByBank else { return partialResult }
+            // Skip unknown and wero (private preview, not yet recognized by /v1/elements/sessions)
+            guard type != .unknown, type != .wero else { return partialResult }
             return partialResult.merging([type: .offSession]) { a, _ in a }
         }
         let intentConfig = PaymentSheet.IntentConfiguration(

@@ -2,6 +2,8 @@
 //  STPPaymentMethodPayByBankTests.swift
 //  StripeiOSTests
 //
+//  Created by Joyce Qin on 3/16/26
+//
 
 @testable import Stripe
 import StripeCoreTestUtils

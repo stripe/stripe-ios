@@ -113,10 +113,10 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var payPay: STPPaymentMethodPayPayParams?
     /// If this is a TWINT PaymentMethod, this contains additional details.
     @objc public var twint: STPPaymentMethodTwintParams?
-    /// If this is a Pay by Bank PaymentMethod, this contains additional details.
-    @objc public var payByBank: STPPaymentMethodPayByBankParams?
     /// If this is a Wero PaymentMethod, this contains additional details.
     @objc public var wero: STPPaymentMethodWeroParams?
+    /// If this is a Pay by Bank PaymentMethod, this contains additional details.
+    @objc public var payByBank: STPPaymentMethodPayByBankParams?
 
     /// Radar options that may contain HCaptcha token
     @objc @_spi(STP) public var radarOptions: STPRadarOptions?
@@ -851,8 +851,8 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: multibanco)): "multibanco",
             NSStringFromSelector(#selector(getter: payPay)): "paypay",
             NSStringFromSelector(#selector(getter: twint)): "twint",
-            NSStringFromSelector(#selector(getter: payByBank)): "pay_by_bank",
             NSStringFromSelector(#selector(getter: wero)): "wero",
+            NSStringFromSelector(#selector(getter: payByBank)): "pay_by_bank",
             NSStringFromSelector(#selector(getter: link)): "link",
             NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
             NSStringFromSelector(#selector(getter: metadata)): "metadata",
@@ -1318,10 +1318,10 @@ extension STPPaymentMethodParams {
             payPay = STPPaymentMethodPayPayParams()
         case .twint:
             twint = STPPaymentMethodTwintParams()
-        case .payByBank:
-            payByBank = STPPaymentMethodPayByBankParams()
         case .wero:
             wero = STPPaymentMethodWeroParams()
+        case .payByBank:
+            payByBank = STPPaymentMethodPayByBankParams()
         case .cardPresent, .paynow, .zip, .konbini, .promptPay:
             // These payment methods don't have any params
             break

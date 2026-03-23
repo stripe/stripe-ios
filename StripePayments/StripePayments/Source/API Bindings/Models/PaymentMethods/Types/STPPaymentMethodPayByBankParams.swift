@@ -2,6 +2,8 @@
 //  STPPaymentMethodPayByBankParams.swift
 //  StripePayments
 //
+//  Created by Joyce Qin on 3/16/26
+//
 
 import Foundation
 

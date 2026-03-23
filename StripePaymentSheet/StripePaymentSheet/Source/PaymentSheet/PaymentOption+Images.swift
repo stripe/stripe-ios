@@ -167,7 +167,7 @@ extension STPPaymentMethodType {
     /// light/dark agnostic icons
     var iconRequiresTinting: Bool {
         switch self {
-        case .card, .AUBECSDebit, .USBankAccount, .konbini, .boleto, .bacsDebit, .payByBank:
+        case .card, .AUBECSDebit, .USBankAccount, .konbini, .boleto, .bacsDebit:
             return true
         default:
             return false
@@ -256,6 +256,8 @@ extension STPPaymentMethodType {
                 return .pm_type_multibanco
             case .OXXO:
                 return .pm_type_oxxo
+            case .payByBank:
+                return .pm_type_paybybank
             case .paynow:
                 return .pm_type_paynow
             case .payPay:
@@ -264,8 +266,6 @@ extension STPPaymentMethodType {
                 return .pm_type_promptpay
             case .satispay:
                 return .pm_type_satispay
-            case .payByBank:
-                return .pm_type_paybybank
             case .wero:
                 return .pm_type_wero
             case .sunbit:

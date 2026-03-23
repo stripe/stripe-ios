@@ -96,10 +96,10 @@ import Foundation
     @_spi(STP) case shopPay
     /// A PayPay payment method
     case payPay
-    /// A Pay by Bank payment method
-    case payByBank
     /// A Wero payment method
     case wero
+    /// A Pay by Bank payment method
+    case payByBank
     /// An unknown type.
     case unknown
 
@@ -194,10 +194,10 @@ import Foundation
             return "ShopPay"
         case .payPay:
             return "PayPay"
-        case .payByBank:
-            return "Pay by Bank"
         case .wero:
             return "Wero"
+        case .payByBank:
+            return "Pay by Bank"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -295,10 +295,10 @@ import Foundation
             return "shop_pay"
         case .payPay:
             return "paypay"
-        case .payByBank:
-            return "pay_by_bank"
         case .wero:
             return "wero"
+        case .payByBank:
+            return "pay_by_bank"
         }
     }
 
