@@ -1055,6 +1055,7 @@ extension PlaygroundController {
             "automatic_payment_methods": settings.apmsEnabled == .on,
             "use_link": settings.linkPassthroughMode == .pm,
             "link_mode": settings.linkEnabledMode.rawValue,
+            "use_manual_capture": true,
             "use_manual_confirmation": settings.integrationType == .deferred_mc,
             "require_cvc_recollection": settings.requireCVCRecollection == .on,
             "is_confirmation_token": settings.confirmationMode == .confirmationToken && !settings.integrationType.isIntentFirst,
