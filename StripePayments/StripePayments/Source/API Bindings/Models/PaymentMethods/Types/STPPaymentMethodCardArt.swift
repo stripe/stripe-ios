@@ -5,9 +5,7 @@
 import Foundation
 
 public class STPPaymentMethodCardArt: NSObject, STPAPIResponseDecodable {
-    // TODO: ADD DOCS
     @objc public private(set) var artImage: URL
-    // TODO: ADD DOCS
     @objc public private(set) var programName: String
     @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
@@ -44,6 +42,7 @@ public class STPPaymentMethodCardArt: NSObject, STPAPIResponseDecodable {
         cardArt.allResponseFields = response
         return cardArt
     }
+
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?, hack: String?) -> Self? {
         var url: String
         switch hack {

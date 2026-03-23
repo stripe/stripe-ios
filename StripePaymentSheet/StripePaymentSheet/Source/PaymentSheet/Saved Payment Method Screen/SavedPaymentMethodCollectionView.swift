@@ -147,6 +147,7 @@ extension SavedPaymentMethodCollectionView {
         var allowsSetAsDefaultPM: Bool = false
         var needsVerticalPaddingForBadge: Bool = false
         var showDefaultPMBadge: Bool = false
+        var cardArtEnabled: Bool = false
 
         /// Indicates whether the cell for a saved payment method should display the edit icon.
         /// True if payment methods can be removed or edited
@@ -263,7 +264,7 @@ extension SavedPaymentMethodCollectionView {
         }()
 
         // MARK: - Internal Methods
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false, cardArtEnabled: Bool = false) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             selectableRectangle.isHidden = false
@@ -274,6 +275,7 @@ extension SavedPaymentMethodCollectionView {
             self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
             self.needsVerticalPaddingForBadge = needsVerticalPaddingForBadge
             self.showDefaultPMBadge = showDefaultPMBadge
+            self.cardArtEnabled = cardArtEnabled
             update()
         }
 
@@ -354,20 +356,20 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
-                        paymentMethodLogo.set(.collectionView(paymentMethod, overrideUserInterfaceStyle, appearance.iconStyle))
+                        paymentMethodLogo.set(.collectionView(paymentMethod, overrideUserInterfaceStyle, appearance.iconStyle), cardArtEnabled: cardArtEnabled)
                     case .applePay:
                         // TODO (cleanup) - get this from PaymentOptionDisplayData?
                         label.text = String.Localized.apple_pay
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.set(.collectionViewApplePay(overrideUserInterfaceStyle, appearance.iconStyle))
+                        paymentMethodLogo.set(.collectionViewApplePay(overrideUserInterfaceStyle, appearance.iconStyle), cardArtEnabled: cardArtEnabled)
                     case .link:
                         label.text = STPPaymentMethodType.link.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.set(.collectionViewLink(overrideUserInterfaceStyle, appearance.iconStyle))
+                        paymentMethodLogo.set(.collectionViewLink(overrideUserInterfaceStyle, appearance.iconStyle), cardArtEnabled: cardArtEnabled)
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )

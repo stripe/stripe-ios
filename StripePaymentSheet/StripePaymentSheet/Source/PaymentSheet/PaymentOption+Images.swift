@@ -53,7 +53,7 @@ extension PaymentOption {
         case .applePay:
             return Image.carousel_applepay.makeImage(template: false, overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .saved:
-            assertionFailure("This shouldn't be called - We call makeSavedPaymentMethodCellImage directly on STPPaymentMethod")
+            assertionFailure("This shouldn't be called - makeSavedPaymentMethodCellImage is called on instances of STPPaymentMethod")
             return UIImage()
         case .new:
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
@@ -106,14 +106,15 @@ extension STPPaymentMethod {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle, cardArtEnabled: Bool, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch type {
         case .card:
             if isLinkPaymentMethod || isLinkPassthroughMode {
                 return Image.link_logo.makeImage()
             } else {
                 let cardBrandImage = calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
-                if let cardArt = card?.cardArt?.artImage {
+                if cardArtEnabled,
+                   let cardArt = card?.cardArt?.artImage {
                     return DownloadManager.sharedManager.downloadImage(url: cardArt,
                                                                        placeholder: nil,
                                                                        imageOnFailure: cardBrandImage,
@@ -137,14 +138,15 @@ extension STPPaymentMethod {
     }
 
     /// Returns an image to display inside a row representing the given payment option in the saved PM row view
-    func makeSavedPaymentMethodRowImage(iconStyle: PaymentSheet.Appearance.IconStyle, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+    func makeSavedPaymentMethodRowImage(iconStyle: PaymentSheet.Appearance.IconStyle, cardArtEnabled: Bool, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch type {
         case .card:
             if isLinkPaymentMethod || isLinkPassthroughMode {
                 return Image.link_icon.makeImage()
             } else {
                 let cardBrandImage = STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
-                if let cardArt = card?.cardArt?.artImage {
+                if cardArtEnabled,
+                   let cardArt = card?.cardArt?.artImage {
                     return DownloadManager.sharedManager.downloadImage(url: cardArt,
                                                                        placeholder: nil,
                                                                        imageOnFailure: cardBrandImage,

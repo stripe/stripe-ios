@@ -15,7 +15,7 @@ class PaymentMethodImageView: UIImageView {
         case rowButton(STPPaymentMethod, PaymentSheet.Appearance.IconStyle)
     }
     var imageType: ImageType?
-
+    var cardArtEnabled: Bool = false
     init() {
         super.init(image: nil)
         self.contentMode = .scaleAspectFit
@@ -32,7 +32,8 @@ class PaymentMethodImageView: UIImageView {
     }
 #endif
 
-    func set(_ imageType: ImageType) {
+    func set(_ imageType: ImageType, cardArtEnabled: Bool) {
+        self.cardArtEnabled = cardArtEnabled
         self.imageType = imageType
         updateImage()
     }
@@ -43,7 +44,7 @@ class PaymentMethodImageView: UIImageView {
         }
         switch imageType {
         case .collectionView(let paymentMethod, let overrideUserInterfaceStyle, let iconStyle):
-            let image = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle) { [weak self] image in
+            let image = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle, cardArtEnabled: cardArtEnabled) { [weak self] image in
                 DispatchQueue.main.async {
                     self?.setImage(image)
                 }
@@ -56,7 +57,7 @@ class PaymentMethodImageView: UIImageView {
             let image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle)
             setImage(image)
         case .rowButton(let paymentMethod, let iconStyle):
-            let image = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: iconStyle) { [weak self] image in
+            let image = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: iconStyle, cardArtEnabled: cardArtEnabled) { [weak self] image in
                 DispatchQueue.main.async {
                     self?.setImage(image)
                 }

@@ -6,7 +6,7 @@
 //  Copyright © 2022 stripe-ios. All rights reserved.
 //
 
-@_spi(AppearanceAPIAdditionsPreview)@_spi(STP) import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview)@_spi(CardArtPreview)@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 14.0, *)
@@ -352,6 +352,7 @@ struct AppearancePlaygroundView: View {
                             Text(String(describing: $0))
                         }
                     }
+                    Toggle("Card Art Enabled", isOn: $appearance.cardArtEnabled)
                     VStack {
                         Text("componentShadow")
                         ColorPicker("color", selection: componentShadowColorBinding)
