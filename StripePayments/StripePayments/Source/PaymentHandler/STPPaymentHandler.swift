@@ -1982,12 +1982,17 @@ public class STPPaymentHandler: NSObject {
                             self._retrieveAndCheckIntentForCurrentAction()
 
                         case .failure(let error):
-                            // Handle user cancellation separately - don't show error message
-                            if case ChallengeError.userCanceled = error {
-                                // We don't forward cancelation errors
-                                currentAction.complete(with: .canceled, error: nil)
-                            } else {
-                                currentAction.complete(with: .failed, error: error as NSError)
+                            // Re-fetch the intent before completing — the server may have already processed the challenge even though the client reported an error or cancel.
+                            self._retrieveIntentForChallengeResult(currentAction: currentAction) { succeeded in
+                                if succeeded {
+                                    // The intent succeeded server-side; report success regardless of the client error.
+                                    currentAction.complete(with: .succeeded, error: nil)
+                                } else if case ChallengeError.userCanceled = error {
+                                    // We don't forward cancelation errors
+                                    currentAction.complete(with: .canceled, error: nil)
+                                } else {
+                                    currentAction.complete(with: .failed, error: error as NSError)
+                                }
                             }
                         }
                     }
@@ -2014,6 +2019,42 @@ public class STPPaymentHandler: NSObject {
                     loggingSafeErrorMessage: unsupportedVersionErrorMessage
                 )
             )
+        }
+    }
+
+    /// Re-fetches the intent for `currentAction` and calls `completion` with whether the intent has reached a success state on the server.
+    /// Always updates `currentAction` with the latest intent data.
+    func _retrieveIntentForChallengeResult(
+        currentAction: STPPaymentHandlerActionParams,
+        completion: @escaping (Bool) -> Void
+    ) {
+        if let piAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
+            retrieveOrRefreshPaymentIntent(currentAction: piAction, timeout: nil) { paymentIntent, _ in
+                if let paymentIntent {
+                    piAction.paymentIntent = paymentIntent
+                    let isSuccess = paymentIntent.status == .succeeded
+                        || paymentIntent.status == .requiresCapture
+                        || paymentIntent.status == .requiresConfirmation
+                        || (paymentIntent.status == .processing
+                            && STPPaymentHandler._isProcessingIntentSuccess(for: paymentIntent.paymentMethod?.type ?? .unknown))
+                    completion(isSuccess)
+                } else {
+                    completion(false)
+                }
+            }
+        } else if let siAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
+            retrieveOrRefreshSetupIntent(currentAction: siAction, timeout: nil) { setupIntent, _ in
+                if let setupIntent {
+                    siAction.setupIntent = setupIntent
+                    let isSuccess = setupIntent.status == .succeeded
+                        || setupIntent.status == .requiresConfirmation
+                    completion(isSuccess)
+                } else {
+                    completion(false)
+                }
+            }
+        } else {
+            completion(false)
         }
     }
 
