@@ -109,11 +109,9 @@ extension STPPaymentMethod {
     func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch type {
         case .card:
-            if isLinkPaymentMethod || isLinkPassthroughMode {
-                return Image.link_logo.makeImage()
-            } else {
-                return calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
-            }
+            return (isLinkPaymentMethod || isLinkPassthroughMode)
+                ? Image.link_logo.makeImage()
+                : calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .USBankAccount:
             return isLinkPassthroughMode
                 ? Image.link_logo.makeImage()
@@ -132,11 +130,9 @@ extension STPPaymentMethod {
     func makeSavedPaymentMethodRowImage(iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch type {
         case .card:
-            if isLinkPaymentMethod || isLinkPassthroughMode {
-                return Image.link_icon.makeImage()
-            } else {
-                return STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
-            }
+            return (isLinkPaymentMethod || isLinkPassthroughMode)
+                ? Image.link_icon.makeImage()
+                : STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
         case .USBankAccount:
             return isLinkPassthroughMode
                 ? Image.link_icon.makeImage()
