@@ -22,6 +22,13 @@ class FormSpecProvider {
     }
     static var shared: FormSpecProvider = FormSpecProvider()
     fileprivate var formSpecs: [String: FormSpec] = [:]
+    /// Disk-loaded defaults, preserved so `loadFrom` can reset volatile specs.
+    private var diskFormSpecs: [String: FormSpec] = [:]
+    /// Payment method types whose server-provided form specs should be reset to
+    /// disk defaults before each `loadFrom` call. This prevents stale server
+    /// overrides from persisting when the server stops sending them (e.g. Pay by
+    /// Bank form specs change based on merchant country).
+    private static let volatileFormSpecTypes: Set<String> = ["pay_by_bank"]
 
     /// Loading from disk should take place on this serial queue.
     private let formSpecsUpdateQueue = DispatchQueue(label: "com.stripe.Form.FormSpecProvider", qos: .userInitiated)
@@ -44,7 +51,9 @@ class FormSpecProvider {
             do {
                 let data = try Data(contentsOf: formSpecsURL)
                 let decodedFormSpecs = try decoder.decode([FormSpec].self, from: data)
-                self?.formSpecs = Dictionary(uniqueKeysWithValues: decodedFormSpecs.map { ($0.type, $0) })
+                let specs = Dictionary(uniqueKeysWithValues: decodedFormSpecs.map { ($0.type, $0) })
+                self?.formSpecs = specs
+                self?.diskFormSpecs = specs
                 self?.hasLoadedFromDisk = true
                 completion?(true)
             } catch {
@@ -71,6 +80,13 @@ class FormSpecProvider {
         guard let formSpecs = formSpecsAny as? [NSDictionary] else {
             STPAnalyticsClient.sharedClient.logLUXESerializeFailure()
             return false
+        }
+
+        // Reset volatile specs to disk defaults before merging server overrides.
+        // This prevents stale overrides from persisting when the server stops
+        // sending them (e.g. Pay by Bank fields change by merchant country).
+        for type in Self.volatileFormSpecTypes {
+            self.formSpecs[type] = diskFormSpecs[type]
         }
 
         var decodedSuccessfully = true
