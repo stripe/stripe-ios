@@ -4,7 +4,7 @@
 //
 import Foundation
 
-public class STPPaymentMethodCardArt: NSObject, STPAPIResponseDecodable {
+@_spi(STP) public class STPPaymentMethodCardArt: NSObject, STPAPIResponseDecodable {
     @objc public private(set) var artImage: URL
     @objc public private(set) var programName: String
     @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
