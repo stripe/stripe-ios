@@ -31,6 +31,22 @@ protocol VerificationFlowWebViewDelegate: AnyObject {
     ///   - view: The view who's opening a URL.
     ///   - url: The new URL that should be opened in a new target.
     func verificationFlowWebView(_ view: VerificationFlowWebView, didOpenURLInNewTarget url: URL)
+
+    /// The view failed to load web content.
+    /// - Parameters:
+    ///   - view: The view that failed to load content.
+    ///   - error: The loading error.
+    func verificationFlowWebView(_ view: VerificationFlowWebView, didFailLoadingWith error: Error)
+}
+
+@available(iOS 14.3, *)
+extension VerificationFlowWebViewDelegate {
+    func verificationFlowWebView(_ view: VerificationFlowWebView, didFailLoadingWith error: Error) {}
+}
+
+@available(iOS 14.3, *)
+private enum VerificationFlowWebViewError: String, AnalyticLoggableStringErrorV2 {
+    case webContentProcessTerminated
 }
 
 /// Basic WebView that displays a spinner while the page is loading or an error message with a "Try Again" button
@@ -225,6 +241,29 @@ extension VerificationFlowWebView {
     fileprivate func didTapTryAgainButton() {
         load()
     }
+
+    fileprivate func handleLoadError(_ error: Error) {
+        guard !shouldIgnoreLoadError(error) else {
+            return
+        }
+        delegate?.verificationFlowWebView(self, didFailLoadingWith: error)
+        displayRetryMessage()
+    }
+
+    fileprivate func shouldIgnoreLoadError(_ error: Error) -> Bool {
+        let nsError = error as NSError
+        if nsError.domain == NSURLErrorDomain,
+            nsError.code == NSURLErrorCancelled
+        {
+            return true
+        }
+        if nsError.domain == WKErrorDomain,
+            nsError.code == WKError.Code.frameLoadInterruptedByPolicyChange.rawValue
+        {
+            return true
+        }
+        return false
+    }
 }
 
 // MARK: - WKNavigationDelegate
@@ -240,7 +279,7 @@ extension VerificationFlowWebView: WKNavigationDelegate {
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        displayRetryMessage()
+        handleLoadError(error)
     }
 
     func webView(
@@ -248,6 +287,12 @@ extension VerificationFlowWebView: WKNavigationDelegate {
         didFailProvisionalNavigation navigation: WKNavigation!,
         withError error: Error
     ) {
+        handleLoadError(error)
+    }
+
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        let error = VerificationFlowWebViewError.webContentProcessTerminated
+        delegate?.verificationFlowWebView(self, didFailLoadingWith: error)
         displayRetryMessage()
     }
 }

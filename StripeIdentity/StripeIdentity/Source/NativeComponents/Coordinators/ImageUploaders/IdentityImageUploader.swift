@@ -139,6 +139,7 @@ final class IdentityImageUploader {
                 )
             )
         } catch {
+            logUploadError(error, stage: .highResCrop)
             return Promise(error: error)
         }
     }
@@ -174,6 +175,7 @@ final class IdentityImageUploader {
                 jpegCompressionQuality: jpegCompressionQuality
             )
         } catch {
+            logUploadError(error, stage: .imageResize)
             return Promise(error: error)
         }
     }
@@ -208,9 +210,42 @@ final class IdentityImageUploader {
                         fileSizeBytes: metrics.fileSizeBytes,
                         sheetController: self.sheetController
                     )
+                } else if let self = self,
+                    case .failure(let error) = result
+                {
+                    self.logUploadError(error, stage: .imageUpload)
                 }
             }
         }
         return promise
+    }
+}
+
+private extension IdentityImageUploader {
+    enum UploadErrorStage: String {
+        case highResCrop
+        case imageResize
+        case imageUpload
+    }
+    func logUploadError(
+        _ error: Error,
+        stage: UploadErrorStage,
+        filePath: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        IdentityAnalyticsClient.sharedAnalyticsClient.log(
+            eventName: IdentityAnalyticsClient.EventName.genericError.rawValue,
+            parameters: [
+                "event_metadata": [
+                    "error_context": "image_upload",
+                    "image_upload_stage": stage.rawValue,
+                    "error_details": AnalyticsClientV2.serialize(
+                        error: error,
+                        filePath: filePath,
+                        line: line
+                    ),
+                ],
+            ]
+        )
     }
 }
