@@ -53,6 +53,10 @@ final class MLModelLoader {
             try fileManager.moveItem(at: compiledModel, to: destinationURL)
             return destinationURL
         } catch {
+            Self.logModelLoadingError(
+                error,
+                stage: "cache_compiled_model"
+            )
             return nil
         }
     }
@@ -139,5 +143,24 @@ final class MLModelLoader {
             }
             return promise
         }
+    }
+}
+
+private extension MLModelLoader {
+    static func logModelLoadingError(
+        _ error: Error,
+        stage: String,
+        filePath: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        IdentityAnalyticsClient.logUnscopedGenericError(
+            error,
+            context: "ml_model_load",
+            additionalMetadata: [
+                "ml_model_stage": stage,
+            ],
+            filePath: filePath,
+            line: line
+        )
     }
 }

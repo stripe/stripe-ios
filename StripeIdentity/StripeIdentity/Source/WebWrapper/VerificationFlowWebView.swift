@@ -243,26 +243,8 @@ extension VerificationFlowWebView {
     }
 
     fileprivate func handleLoadError(_ error: Error) {
-        guard !shouldIgnoreLoadError(error) else {
-            return
-        }
         delegate?.verificationFlowWebView(self, didFailLoadingWith: error)
         displayRetryMessage()
-    }
-
-    fileprivate func shouldIgnoreLoadError(_ error: Error) -> Bool {
-        let nsError = error as NSError
-        if nsError.domain == NSURLErrorDomain,
-            nsError.code == NSURLErrorCancelled
-        {
-            return true
-        }
-        if nsError.domain == WKErrorDomain,
-            nsError.code == WKError.Code.frameLoadInterruptedByPolicyChange.rawValue
-        {
-            return true
-        }
-        return false
     }
 }
 

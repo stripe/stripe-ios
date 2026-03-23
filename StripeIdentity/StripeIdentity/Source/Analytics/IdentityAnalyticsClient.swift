@@ -531,4 +531,27 @@ final class IdentityAnalyticsClient {
             verificationPage: try? sheetController.verificationPageResponse?.get()
         )
     }
+
+    static func logUnscopedGenericError(
+        _ error: Error,
+        context: String,
+        additionalMetadata: [String: Any] = [:],
+        filePath: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        var eventMetadata = additionalMetadata
+        eventMetadata["error_context"] = context
+        eventMetadata["error_details"] = AnalyticsClientV2.serialize(
+            error: error,
+            filePath: filePath,
+            line: line
+        )
+
+        sharedAnalyticsClient.log(
+            eventName: EventName.genericError.rawValue,
+            parameters: [
+                "event_metadata": eventMetadata,
+            ]
+        )
+    }
 }
