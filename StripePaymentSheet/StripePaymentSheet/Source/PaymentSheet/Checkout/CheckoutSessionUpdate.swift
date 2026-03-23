@@ -16,6 +16,7 @@ extension Checkout {
         case setShippingRate(String)
         case setTaxRegion(Address)
         case setTaxId(type: String, value: String)
+        case setCurrency(String)
 
         var parameters: [String: Any] {
             switch self {
@@ -42,6 +43,8 @@ extension Checkout {
                     "tax_id_collection[tax_id][type]": type,
                     "tax_id_collection[tax_id][value]": value,
                 ]
+            case .setCurrency(let currency):
+                return ["updated_currency": currency]
             }
         }
     }

@@ -233,6 +233,16 @@ extension XCUIApplication {
         let searchedCell = tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", expectedResult)).element
         XCTAssertTrue(searchedCell.waitForExistence(timeout: 5), "Autocomplete result '\(expectedResult)' should appear")
         searchedCell.tap()
+
+        let autocompleteDismissed = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == false"),
+            object: staticTexts["Enter address manually"]
+        )
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [autocompleteDismissed], timeout: 5),
+            .completed,
+            "Autocomplete sheet should dismiss before the test taps Save"
+        )
     }
 
     // In CI, we often have fresh emulators that encounter this "Tip" that prevents our tests from moving forward:

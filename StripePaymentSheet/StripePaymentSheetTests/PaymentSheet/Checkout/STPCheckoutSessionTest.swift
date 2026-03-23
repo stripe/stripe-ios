@@ -137,6 +137,18 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.selectedShippingOptionId, "shr_standard")
         XCTAssertEqual(session.totals?.shipping, 500)
 
+        // Adaptive pricing
+        XCTAssertTrue(session.adaptivePricingActive)
+        XCTAssertEqual(session.localizedPricesMetas.count, 2)
+        XCTAssertEqual(session.localizedPricesMetas[0].currency, "eur")
+        XCTAssertEqual(session.localizedPricesMetas[0].total, 10839)
+        XCTAssertEqual(session.localizedPricesMetas[1].currency, "usd")
+        XCTAssertEqual(session.localizedPricesMetas[1].total, 12000)
+        XCTAssertNotNil(session.exchangeRateMeta)
+        XCTAssertEqual(session.exchangeRateMeta?.buyCurrency, "eur")
+        XCTAssertEqual(session.exchangeRateMeta?.sellCurrency, "usd")
+        XCTAssertEqual(session.exchangeRateMeta?.exchangeRate, "0.90325")
+
         XCTAssertEqual(
             session.allResponseFields as NSDictionary,
             json as NSDictionary
