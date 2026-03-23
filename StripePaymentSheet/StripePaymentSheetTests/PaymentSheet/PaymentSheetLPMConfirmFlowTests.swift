@@ -402,7 +402,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: MerchantCountry.US.publishableKey)
 
-        // Create a fresh customer so we don't accumulate payment methods on a shared customer
+        // Create customer session for confirmation token support
         let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
             customerID: nil,
             merchantCountry: "us",
@@ -1345,7 +1345,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         _ = PaymentSheet(mode: .deferredIntent(intentConfiguration), configuration: PaymentSheet.Configuration())
 
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        // Create customer session for confirmation token support
+        // Create a fresh customer so we don't accumulate payment methods on a shared customer
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(
             customerID: nil,
             merchantCountry: merchantCountry.rawValue.lowercased()
