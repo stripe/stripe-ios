@@ -1,5 +1,5 @@
 //
-//  PillSelectorElementSnapshotTests.swift
+//  TwoOptionSelectorElementSnapshotTests.swift
 //  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 3/20/26.
@@ -9,7 +9,7 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 import UIKit
 
-final class PillSelectorElementSnapshotTests: STPSnapshotTestCase {
+final class TwoOptionSelectorElementSnapshotTests: STPSnapshotTestCase {
     var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
 
     func testLeftSelected() {
@@ -23,7 +23,7 @@ final class PillSelectorElementSnapshotTests: STPSnapshotTestCase {
     }
 
     func testWithCaption() {
-        let element = makeElement(left: ("a", "Option A"), right: ("b", "Option B"), selectedId: "a", caption: "Helpful context below the pills")
+        let element = makeElement(left: ("a", "Option A"), right: ("b", "Option B"), selectedId: "a", caption: "Helpful context below the selector")
         verify(element)
     }
 
@@ -46,16 +46,16 @@ final class PillSelectorElementSnapshotTests: STPSnapshotTestCase {
 
 }
 
-private extension PillSelectorElementSnapshotTests {
+private extension TwoOptionSelectorElementSnapshotTests {
     func makeElement(
         left: (String, String),
         right: (String, String),
         selectedId: String,
         caption: String? = nil
-    ) -> PillSelectorElement {
-        PillSelectorElement(
-            leftItem: PillSelectorItem(id: left.0, displayText: left.1),
-            rightItem: PillSelectorItem(id: right.0, displayText: right.1),
+    ) -> TwoOptionSelectorElement {
+        TwoOptionSelectorElement(
+            leftItem: TwoOptionSelectorItem(id: left.0, displayText: left.1, accessibilityIdentifier: "option_\(left.0)"),
+            rightItem: TwoOptionSelectorItem(id: right.0, displayText: right.1, accessibilityIdentifier: "option_\(right.0)"),
             selectedItemId: selectedId,
             caption: caption,
             appearance: appearance
@@ -63,7 +63,7 @@ private extension PillSelectorElementSnapshotTests {
     }
 
     func verify(
-        _ element: PillSelectorElement,
+        _ element: TwoOptionSelectorElement,
         darkMode: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line

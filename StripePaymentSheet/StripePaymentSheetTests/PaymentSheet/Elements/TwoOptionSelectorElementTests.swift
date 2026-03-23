@@ -1,5 +1,5 @@
 //
-//  PillSelectorElementTests.swift
+//  TwoOptionSelectorElementTests.swift
 //  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 3/20/26.
@@ -10,35 +10,27 @@ import UIKit
 import XCTest
 
 @MainActor
-final class PillSelectorElementTests: XCTestCase {
+final class TwoOptionSelectorElementTests: XCTestCase {
 
     // MARK: - Initialization
 
     func testInitialSelectionAndIdentifiers() {
-        let element = makeElement(left: ("a", "Alpha"), right: ("b", "Beta"), selectedId: "a")
+        let element = makeElement(left: ("a", "Alpha", "option_a"), right: ("b", "Beta", "option_b"), selectedId: "a")
 
         XCTAssertEqual(element.selectedItemId, "a")
-        XCTAssertEqual(buttonIdentifiers(in: element.view), ["pill_option_a", "pill_option_b"])
+        XCTAssertEqual(buttonIdentifiers(in: element.view), ["option_a", "option_b"])
         XCTAssertTrue(element.collectsUserInput)
         XCTAssertTrue(element.validationState.isValid)
-    }
-
-    func testCustomAccessibilityIdentifier() {
-        let left = PillSelectorItem(id: "a", displayText: "A", accessibilityIdentifier: "custom_a")
-        let right = PillSelectorItem(id: "b", displayText: "B")
-        let element = PillSelectorElement(leftItem: left, rightItem: right, selectedItemId: "a", appearance: .default)
-
-        XCTAssertEqual(buttonIdentifiers(in: element.view), ["custom_a", "pill_option_b"])
     }
 
     // MARK: - User tap
 
     func testTapSelectsNewItemAndNotifiesDelegate() throws {
-        let delegate = MockPillDelegate()
-        let element = makeElement(left: ("a", "A"), right: ("b", "B"), selectedId: "a")
+        let delegate = MockTwoOptionDelegate()
+        let element = makeElement(left: ("a", "A", "option_a"), right: ("b", "B", "option_b"), selectedId: "a")
         element.delegate = delegate
 
-        let bButton = try XCTUnwrap(button(in: element.view, id: "pill_option_b"))
+        let bButton = try XCTUnwrap(button(in: element.view, id: "option_b"))
         bButton.sendActions(for: .touchUpInside)
 
         XCTAssertEqual(element.selectedItemId, "b")
@@ -46,11 +38,11 @@ final class PillSelectorElementTests: XCTestCase {
     }
 
     func testTapOnAlreadySelectedItemIsNoOp() throws {
-        let delegate = MockPillDelegate()
-        let element = makeElement(left: ("a", "A"), right: ("b", "B"), selectedId: "a")
+        let delegate = MockTwoOptionDelegate()
+        let element = makeElement(left: ("a", "A", "option_a"), right: ("b", "B", "option_b"), selectedId: "a")
         element.delegate = delegate
 
-        let aButton = try XCTUnwrap(button(in: element.view, id: "pill_option_a"))
+        let aButton = try XCTUnwrap(button(in: element.view, id: "option_a"))
         aButton.sendActions(for: .touchUpInside)
 
         XCTAssertEqual(element.selectedItemId, "a")
@@ -60,8 +52,8 @@ final class PillSelectorElementTests: XCTestCase {
     // MARK: - Programmatic selection
 
     func testProgrammaticSelectNotifiesDelegate() {
-        let delegate = MockPillDelegate()
-        let element = makeElement(left: ("a", "A"), right: ("b", "B"), selectedId: "a")
+        let delegate = MockTwoOptionDelegate()
+        let element = makeElement(left: ("a", "A", "option_a"), right: ("b", "B", "option_b"), selectedId: "a")
         element.delegate = delegate
 
         element.select("b")
@@ -71,8 +63,8 @@ final class PillSelectorElementTests: XCTestCase {
     }
 
     func testProgrammaticSelectWithInvalidIdIsNoOp() {
-        let delegate = MockPillDelegate()
-        let element = makeElement(left: ("a", "A"), right: ("b", "B"), selectedId: "a")
+        let delegate = MockTwoOptionDelegate()
+        let element = makeElement(left: ("a", "A", "option_a"), right: ("b", "B", "option_b"), selectedId: "a")
         element.delegate = delegate
 
         element.select("nonexistent")
@@ -84,7 +76,7 @@ final class PillSelectorElementTests: XCTestCase {
     // MARK: - Caption
 
     func testCaptionShownWhenProvided() {
-        let element = makeElement(left: ("a", "A"), right: ("b", "B"), selectedId: "a", caption: "Some info")
+        let element = makeElement(left: ("a", "A", "option_a"), right: ("b", "B", "option_b"), selectedId: "a", caption: "Some info")
 
         let label = captionLabel(in: element.view)
         XCTAssertEqual(label?.text, "Some info")
@@ -92,7 +84,7 @@ final class PillSelectorElementTests: XCTestCase {
     }
 
     func testCaptionHiddenWhenNil() {
-        let element = makeElement(left: ("a", "A"), right: ("b", "B"), selectedId: "a", caption: nil)
+        let element = makeElement(left: ("a", "A", "option_a"), right: ("b", "B", "option_b"), selectedId: "a", caption: nil)
 
         let label = captionLabel(in: element.view)
         XCTAssertEqual(label?.isHidden, true)
@@ -101,7 +93,7 @@ final class PillSelectorElementTests: XCTestCase {
     // MARK: - Enabled / Disabled
 
     func testSetEnabledTogglesButtonsAndAlpha() {
-        let element = makeElement(left: ("a", "A"), right: ("b", "B"), selectedId: "a")
+        let element = makeElement(left: ("a", "A", "option_a"), right: ("b", "B", "option_b"), selectedId: "a")
 
         element.setEnabled(false)
         XCTAssertTrue(allButtons(in: element.view).allSatisfy { !$0.isEnabled })
@@ -115,14 +107,14 @@ final class PillSelectorElementTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeElement(
-        left: (String, String),
-        right: (String, String),
+        left: (String, String, String),
+        right: (String, String, String),
         selectedId: String,
         caption: String? = nil
-    ) -> PillSelectorElement {
-        PillSelectorElement(
-            leftItem: PillSelectorItem(id: left.0, displayText: left.1),
-            rightItem: PillSelectorItem(id: right.0, displayText: right.1),
+    ) -> TwoOptionSelectorElement {
+        TwoOptionSelectorElement(
+            leftItem: TwoOptionSelectorItem(id: left.0, displayText: left.1, accessibilityIdentifier: left.2),
+            rightItem: TwoOptionSelectorItem(id: right.0, displayText: right.1, accessibilityIdentifier: right.2),
             selectedItemId: selectedId,
             caption: caption,
             appearance: .default
@@ -150,7 +142,7 @@ final class PillSelectorElementTests: XCTestCase {
     }
 }
 
-private final class MockPillDelegate: ElementDelegate {
+private final class MockTwoOptionDelegate: ElementDelegate {
     var didUpdateCalled = false
 
     func didUpdate(element: Element) {

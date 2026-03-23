@@ -1,48 +1,37 @@
 //
-//  PillSelectorView.swift
+//  TwoOptionSelectorView.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/20/26.
 
 import UIKit
 
-/// A single item in a `PillSelectorView`.
-struct PillSelectorItem: Equatable {
+/// A single item in a `TwoOptionSelectorView`.
+struct TwoOptionSelectorItem: Equatable {
     let id: String
     let displayText: String
-    /// Defaults to `"pill_option_\(id)"` when nil.
-    let accessibilityIdentifier: String?
-
-    init(id: String, displayText: String, accessibilityIdentifier: String? = nil) {
-        self.id = id
-        self.displayText = displayText
-        self.accessibilityIdentifier = accessibilityIdentifier
-    }
-
-    var resolvedAccessibilityIdentifier: String {
-        accessibilityIdentifier ?? "pill_option_\(id)"
-    }
+    let accessibilityIdentifier: String
 }
 
-// MARK: - PillSelectorViewDelegate
+// MARK: - TwoOptionSelectorViewDelegate
 
-protocol PillSelectorViewDelegate: AnyObject {
-    func pillSelectorView(_ view: PillSelectorView, didSelectItemWithId id: String)
+protocol TwoOptionSelectorViewDelegate: AnyObject {
+    func twoOptionSelectorView(_ view: TwoOptionSelectorView, didSelectItemWithId id: String)
 }
 
-// MARK: - PillSelectorView
+// MARK: - TwoOptionSelectorView
 
-/// A two-option pill selector with an optional caption label below.
-final class PillSelectorView: UIView {
+/// A two-option selector with an optional caption label below.
+final class TwoOptionSelectorView: UIView {
 
     // MARK: - Properties
 
-    weak var delegate: PillSelectorViewDelegate?
+    weak var delegate: TwoOptionSelectorViewDelegate?
 
     private let appearance: PaymentSheet.Appearance
 
-    private var leftItem: PillSelectorItem
-    private var rightItem: PillSelectorItem
+    private var leftItem: TwoOptionSelectorItem
+    private var rightItem: TwoOptionSelectorItem
     private(set) var selectedItemId: String
 
     private let mainStackView = UIStackView()
@@ -54,8 +43,8 @@ final class PillSelectorView: UIView {
     // MARK: - Init
 
     init(
-        leftItem: PillSelectorItem,
-        rightItem: PillSelectorItem,
+        leftItem: TwoOptionSelectorItem,
+        rightItem: TwoOptionSelectorItem,
         selectedItemId: String,
         caption: String? = nil,
         appearance: PaymentSheet.Appearance
@@ -100,21 +89,21 @@ final class PillSelectorView: UIView {
             mainStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
 
-        configurePillButton(leftButton, item: leftItem)
-        configurePillButton(rightButton, item: rightItem)
+        configureButton(leftButton, item: leftItem)
+        configureButton(rightButton, item: rightItem)
         buttonsStackView.addArrangedSubview(leftButton)
         buttonsStackView.addArrangedSubview(rightButton)
 
         updateButtonStyles()
     }
 
-    private func configurePillButton(_ button: UIButton, item: PillSelectorItem) {
+    private func configureButton(_ button: UIButton, item: TwoOptionSelectorItem) {
         button.setTitle(item.displayText, for: .normal)
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 20)
         button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
         button.layer.cornerRadius = appearance.cornerRadius ?? 6.0
-        button.addTarget(self, action: #selector(pillButtonTapped(_:)), for: .touchUpInside)
-        button.accessibilityIdentifier = item.resolvedAccessibilityIdentifier
+        button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        button.accessibilityIdentifier = item.accessibilityIdentifier
     }
 
     private func updateButtonStyles() {
@@ -148,7 +137,7 @@ final class PillSelectorView: UIView {
 
     // MARK: - Selection
 
-    @objc private func pillButtonTapped(_ sender: UIButton) {
+    @objc private func buttonTapped(_ sender: UIButton) {
         let tappedId = sender === leftButton ? leftItem.id : rightItem.id
         select(tappedId, notifyDelegate: true)
     }
@@ -159,7 +148,7 @@ final class PillSelectorView: UIView {
         selectedItemId = itemId
         updateButtonStyles()
         if notifyDelegate {
-            delegate?.pillSelectorView(self, didSelectItemWithId: itemId)
+            delegate?.twoOptionSelectorView(self, didSelectItemWithId: itemId)
         }
     }
 

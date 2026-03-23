@@ -9,74 +9,74 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// Adaptive pricing currency selector built on `PillSelectorElement`.
+/// Adaptive pricing currency selector built on `TwoOptionSelectorElement`.
 /// Shows two currencies with flag emoji and formatted amounts.
 final class CurrencySelectorElement: Element {
     weak var delegate: ElementDelegate?
 
     let collectsUserInput: Bool = true
 
-    var view: UIView { pillElement.view }
+    var view: UIView { selectorElement.view }
 
-    private let pillElement: PillSelectorElement
-    private var exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
+    private let selectorElement: TwoOptionSelectorElement
+    private let exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
 
     /// The selected currency code (lowercased).
-    var selectedCurrency: String { pillElement.selectedItemId }
+    var selectedCurrency: String { selectorElement.selectedItemId }
 
     init(
         currentCurrency: String,
         currentTotal: Int,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
-        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?,
+        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
         appearance: PaymentSheet.Appearance
     ) {
         self.exchangeRateMeta = exchangeRateMeta
-        let (left, right) = Self.buildPillItems(
+        let (left, right) = Self.buildSelectorItems(
             currentCurrency: currentCurrency,
             currentTotal: currentTotal,
             localizedPricesMetas: localizedPricesMetas
         )
-        pillElement = PillSelectorElement(
+        selectorElement = TwoOptionSelectorElement(
             leftItem: left,
             rightItem: right,
             selectedItemId: currentCurrency.lowercased(),
             caption: Self.caption(forSelectedCurrency: currentCurrency.lowercased(), exchangeRateMeta: exchangeRateMeta),
             appearance: appearance
         )
-        pillElement.delegate = self
+        selectorElement.delegate = self
     }
 
     // MARK: - Public API
 
     func selectCurrency(_ currency: String) {
-        pillElement.select(currency.lowercased())
+        selectorElement.select(currency.lowercased())
     }
 
     func setEnabled(_ enabled: Bool) {
-        pillElement.setEnabled(enabled)
+        selectorElement.setEnabled(enabled)
     }
 
     // MARK: - Two-option builder
 
     /// Current currency on the left, the other available currency on the right.
-    private static func buildPillItems(
+    private static func buildSelectorItems(
         currentCurrency: String,
         currentTotal: Int,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
-    ) -> (left: PillSelectorItem, right: PillSelectorItem) {
+    ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
         let other = localizedPricesMetas.first { $0.currency.lowercased() != currentCurrency.lowercased() }
 
-        let left = makePillItem(currency: currentCurrency, total: currentTotal)
-        let right = other.map { makePillItem(currency: $0.currency, total: $0.total) } ?? left
+        let left = makeSelectorItem(currency: currentCurrency, total: currentTotal)
+        let right = other.map { makeSelectorItem(currency: $0.currency, total: $0.total) } ?? left
 
         return (left: left, right: right)
     }
 
-    private static func makePillItem(currency: String, total: Int) -> PillSelectorItem {
+    private static func makeSelectorItem(currency: String, total: Int) -> TwoOptionSelectorItem {
         let flag = flagEmoji(for: currency)
         let amount = String.localizedAmountDisplayString(for: total, currency: currency.uppercased())
-        return PillSelectorItem(
+        return TwoOptionSelectorItem(
             id: currency.lowercased(),
             displayText: "\(flag) \(amount)",
             accessibilityIdentifier: "currency_option_\(currency.lowercased())"
@@ -89,10 +89,8 @@ final class CurrencySelectorElement: Element {
     /// or a bank-fees disclaimer when the merchant's currency is selected.
     private static func caption(
         forSelectedCurrency selectedCurrency: String,
-        exchangeRateMeta meta: STPCheckoutSessionExchangeRateMeta?
-    ) -> String? {
-        guard let meta else { return nil }
-
+        exchangeRateMeta meta: STPCheckoutSessionExchangeRateMeta
+    ) -> String {
         let isIntegrationCurrencySelected = selectedCurrency == meta.integrationCurrency.lowercased()
         if isIntegrationCurrencySelected {
             return String.Localized.bankExchangeRateDisclaimer
@@ -130,7 +128,7 @@ final class CurrencySelectorElement: Element {
 
 extension CurrencySelectorElement: ElementDelegate {
     func didUpdate(element: Element) {
-        pillElement.updateCaption(
+        selectorElement.updateCaption(
             Self.caption(forSelectedCurrency: selectedCurrency, exchangeRateMeta: exchangeRateMeta)
         )
         delegate?.didUpdate(element: self)

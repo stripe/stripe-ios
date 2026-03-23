@@ -133,21 +133,6 @@ final class CurrencySelectorElementTests: XCTestCase {
         XCTAssertEqual(label.text, "1 USD = 0.7769 GBP")
     }
 
-    func testHidesCaptionWhenNoExchangeRateMeta() throws {
-        let element = makeCurrencySelectorElement(
-            currentCurrency: "usd",
-            currentTotal: 1200,
-            localizedPricesMetas: [
-                localizedPriceMeta(currency: "usd", total: 1200),
-                localizedPriceMeta(currency: "eur", total: 1100),
-            ],
-            exchangeRateMeta: nil
-        )
-
-        let label = try XCTUnwrap(captionLabel(in: element.view))
-        XCTAssertTrue(label.isHidden)
-    }
-
     // MARK: - Helpers
 
     private func makeCurrencySelectorElement(
@@ -160,7 +145,11 @@ final class CurrencySelectorElementTests: XCTestCase {
             currentCurrency: currentCurrency,
             currentTotal: currentTotal,
             localizedPricesMetas: localizedPricesMetas,
-            exchangeRateMeta: exchangeRateMeta,
+            exchangeRateMeta: exchangeRateMeta ?? self.exchangeRateMeta(
+                buyCurrency: localizedPricesMetas.first?.currency ?? "eur",
+                sellCurrency: "usd",
+                exchangeRate: "1.0"
+            ),
             appearance: .default
         )
     }

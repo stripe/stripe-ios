@@ -122,7 +122,15 @@ private extension CurrencySelectorElementSnapshotTests {
             currentCurrency: currentCurrency,
             currentTotal: currentTotal,
             localizedPricesMetas: metas,
-            exchangeRateMeta: exchangeRateMeta,
+            exchangeRateMeta: exchangeRateMeta ?? STPCheckoutSessionExchangeRateMeta(
+                id: "default",
+                buyCurrency: metas.first?.currency ?? "eur",
+                sellCurrency: "usd",
+                exchangeRate: "1.0",
+                integrationCurrency: "usd",
+                localizedCurrency: metas.first?.currency ?? "eur",
+                conversionMarkupBps: 400
+            ),
             appearance: appearance
         )
     }
