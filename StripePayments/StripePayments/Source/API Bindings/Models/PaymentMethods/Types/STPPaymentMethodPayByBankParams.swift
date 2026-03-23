@@ -11,6 +11,9 @@ import Foundation
 public class STPPaymentMethodPayByBankParams: NSObject, STPFormEncodable {
     @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
 
+    /// The bank identifier (e.g. "uk_hsbc"). This is included in the params if bank selection happens prior to tokenization. If not provided, the bank can be selected later in the flow.
+    @objc public var bank: String?
+
     // MARK: - STPFormEncodable
     @objc
     public class func rootObjectName() -> String? {
@@ -19,6 +22,8 @@ public class STPPaymentMethodPayByBankParams: NSObject, STPFormEncodable {
 
     @objc
     public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
-        return [:]
+        return [
+            NSStringFromSelector(#selector(getter: bank)): "bank",
+        ]
     }
 }
