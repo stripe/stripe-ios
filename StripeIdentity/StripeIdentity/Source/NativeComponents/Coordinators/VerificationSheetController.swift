@@ -119,6 +119,16 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     func transitionToDocumentCapture()
 }
 
+private enum VerificationSheetControllerError: String, AnalyticLoggableStringErrorV2 {
+    case missingVerificationPageResponseForFallbackUpdate
+    case missingVerificationPageResponseForCountryNotListedTransition
+    case missingVerificationPageResponseForIndividualTransition
+    case missingVerificationPageResponseForSelfieCaptureTransition
+    case missingVerificationPageResponseForDocumentCaptureTransition
+    case missingVerificationPageResponseForPageDataTransition
+    case missingVerificationPageResponseForClearDataCalculation
+}
+
 final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     weak var delegate: VerificationSheetControllerDelegate?
@@ -282,8 +292,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
                 if resultData.needsFallback() {
                     // Checking the buffered VerificationPageResponse, update its missings with the new missings
-                    guard let verificationPageResponse = try? self.verificationPageResponse?.get() else {
-                        assertionFailure("Fail to get VerificationPageResponse is nil")
+                    guard let verificationPageResponse = self.verificationPageOrLogError(
+                        missingError: .missingVerificationPageResponseForFallbackUpdate,
+                        assertionMessage: "Fail to get VerificationPageResponse is nil"
+                    ) else {
                         return
                     }
                     self.verificationPageResponse = .success(verificationPageResponse.copyWithNewMissings(newMissings: resultData.requirements.missing))
@@ -464,7 +476,7 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     func sendCannotVerifyPhoneOtpAndTransition(
-        completion: @escaping() -> Void
+        completion: @escaping () -> Void
     ) {
         apiClient.cannotPhoneVerifyOtp().observe(on: .main) { [weak self] updatedDataResult in
             self?.transitionWithUpdatedDataResult(result: updatedDataResult)
@@ -481,9 +493,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
     // MARK: - Transition without save
     func transitionToCountryNotListed(missingType: IndividualFormElement.MissingType) {
-
-        guard let verificationPageResponse = verificationPageResponse else {
-            assertionFailure("verificationPageResponse is nil")
+        guard let verificationPageResponse = verificationPageResponseOrLogMissing(
+            .missingVerificationPageResponseForCountryNotListedTransition,
+            assertionMessage: "verificationPageResponse is nil"
+        ) else {
             return
         }
 
@@ -495,8 +508,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     func transitionToIndividual() {
-        guard let verificationPageResponse = verificationPageResponse else {
-            assertionFailure("verificationPageResponse is nil")
+        guard let verificationPageResponse = verificationPageResponseOrLogMissing(
+            .missingVerificationPageResponseForIndividualTransition,
+            assertionMessage: "verificationPageResponse is nil"
+        ) else {
             return
         }
 
@@ -507,8 +522,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     func transitionToSelfieCapture() {
-        guard let verificationPageResponse = verificationPageResponse else {
-            assertionFailure("verificationPageResponse is nil")
+        guard let verificationPageResponse = verificationPageResponseOrLogMissing(
+            .missingVerificationPageResponseForSelfieCaptureTransition,
+            assertionMessage: "verificationPageResponse is nil"
+        ) else {
             return
         }
 
@@ -519,8 +536,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     }
 
     func transitionToDocumentCapture() {
-        guard let verificationPageResponse = verificationPageResponse else {
-            assertionFailure("verificationPageResponse is nil")
+        guard let verificationPageResponse = verificationPageResponseOrLogMissing(
+            .missingVerificationPageResponseForDocumentCaptureTransition,
+            assertionMessage: "verificationPageResponse is nil"
+        ) else {
             return
         }
 
@@ -537,9 +556,10 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     ) {
         // Only mutate properties on the main thread
         assert(Thread.isMainThread)
-
-        guard let verificationPageResponse = verificationPageResponse else {
-            assertionFailure("verificationPageResponse is nil")
+        guard let verificationPageResponse = verificationPageResponseOrLogMissing(
+            .missingVerificationPageResponseForPageDataTransition,
+            assertionMessage: "verificationPageResponse is nil"
+        ) else {
             return
         }
 
@@ -666,10 +686,20 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
     ) -> StripeAPI.VerificationPageClearData {
 
         let initialMissings: Set<StripeAPI.VerificationPageFieldType>
-        do {
-            initialMissings = try verificationPageResponse?.get().requirements.missing ?? Set()
-        } catch {
+        if let verificationPageResponse = verificationPageResponse {
+            do {
+                initialMissings = try verificationPageResponse.get().requirements.missing
+            } catch {
+                assertionFailure("verificationPageResponse could not be read, using StripeAPI.VerificationPageFieldType.allCases as initialMissings")
+                analyticsClient.logGenericError(error: error, sheetController: self)
+                initialMissings = Set(StripeAPI.VerificationPageFieldType.allCases)
+            }
+        } else {
             assertionFailure("verificationPageResponse is nil, using StripeAPI.VerificationPageFieldType.allCases as initialMissings")
+            analyticsClient.logGenericError(
+                error: VerificationSheetControllerError.missingVerificationPageResponseForClearDataCalculation,
+                sheetController: self
+            )
             initialMissings = Set(StripeAPI.VerificationPageFieldType.allCases)
         }
         let ret = StripeAPI.VerificationPageClearData.init(
@@ -679,7 +709,55 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         )
         return ret
     }
+}
 
+private extension VerificationSheetController {
+    func verificationPageResponseOrLogMissing(
+        _ error: VerificationSheetControllerError,
+        assertionMessage: String,
+        filePath: StaticString = #filePath,
+        line: UInt = #line
+    ) -> Result<StripeAPI.VerificationPage, Error>? {
+        guard let verificationPageResponse = verificationPageResponse else {
+            assertionFailure(assertionMessage)
+            analyticsClient.logGenericError(
+                error: error,
+                filePath: filePath,
+                line: line,
+                sheetController: self
+            )
+            return nil
+        }
+        return verificationPageResponse
+    }
+
+    func verificationPageOrLogError(
+        missingError: VerificationSheetControllerError,
+        assertionMessage: String,
+        filePath: StaticString = #filePath,
+        line: UInt = #line
+    ) -> StripeAPI.VerificationPage? {
+        guard let verificationPageResponse = verificationPageResponseOrLogMissing(
+            missingError,
+            assertionMessage: assertionMessage,
+            filePath: filePath,
+            line: line
+        ) else {
+            return nil
+        }
+        do {
+            return try verificationPageResponse.get()
+        } catch {
+            assertionFailure(assertionMessage)
+            analyticsClient.logGenericError(
+                error: error,
+                filePath: filePath,
+                line: line,
+                sheetController: self
+            )
+            return nil
+        }
+    }
 }
 
 // MARK: - VerificationSheetFlowControllerDelegate
