@@ -539,9 +539,8 @@ extension RowButton {
     }
 
     static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
-        let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle))
-        imageView.contentMode = .scaleAspectFit
-
+        let imageView = PaymentMethodImageView()
+        imageView.set(.rowButton(paymentMethod, appearance.iconStyle))
         let text = paymentMethod.isLinkPassthroughMode
             ? STPPaymentMethodType.link.displayName
             : paymentMethod.paymentSheetLabel

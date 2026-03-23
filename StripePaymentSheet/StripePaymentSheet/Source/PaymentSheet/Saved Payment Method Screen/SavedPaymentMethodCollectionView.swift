@@ -86,7 +86,9 @@ extension SavedPaymentMethodCollectionView {
             label.adjustsFontForContentSizeCategory = true
             return label
         }()
-        let paymentMethodLogo: UIImageView = UIImageView()
+        lazy var paymentMethodLogo: PaymentMethodImageView = {
+            return PaymentMethodImageView()
+        }()
         let plus: CircleIconView = CircleIconView(icon: .icon_plus,
                                                   fillColor: UIColor.dynamic(
             light: .systemGray5, dark: .tertiaryLabel))
@@ -352,20 +354,20 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
-                        paymentMethodLogo.image = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
+                        paymentMethodLogo.set(.collectionView(paymentMethod, overrideUserInterfaceStyle, appearance.iconStyle))
                     case .applePay:
                         // TODO (cleanup) - get this from PaymentOptionDisplayData?
                         label.text = String.Localized.apple_pay
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
+                        paymentMethodLogo.set(.collectionViewApplePay(overrideUserInterfaceStyle, appearance.iconStyle))
                     case .link:
                         label.text = STPPaymentMethodType.link.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
+                        paymentMethodLogo.set(.collectionViewLink(overrideUserInterfaceStyle, appearance.iconStyle))
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )

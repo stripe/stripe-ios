@@ -52,8 +52,9 @@ extension PaymentOption {
         switch self {
         case .applePay:
             return Image.carousel_applepay.makeImage(template: false, overrideUserInterfaceStyle: overrideUserInterfaceStyle)
-        case .saved(let paymentMethod, _):
-            return paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle)
+        case .saved:
+            assertionFailure("This shouldn't be called - We call makeSavedPaymentMethodCellImage directly on STPPaymentMethod")
+            return UIImage()
         case .new:
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
             return UIImage()
@@ -105,12 +106,22 @@ extension STPPaymentMethod {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch type {
         case .card:
-            return (isLinkPaymentMethod || isLinkPassthroughMode)
-                ? Image.link_logo.makeImage()
-                : calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+            if isLinkPaymentMethod || isLinkPassthroughMode {
+                return Image.link_logo.makeImage()
+            } else {
+                let cardBrandImage = calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                if let cardArt = card?.cardArt?.artImage {
+                    return DownloadManager.sharedManager.downloadImage(url: cardArt,
+                                                                       placeholder: nil,
+                                                                       imageOnFailure: cardBrandImage,
+                                                                       updateHandler: updateHandler)
+                } else {
+                    return cardBrandImage
+                }
+            }
         case .USBankAccount:
             return isLinkPassthroughMode
                 ? Image.link_logo.makeImage()
@@ -126,12 +137,22 @@ extension STPPaymentMethod {
     }
 
     /// Returns an image to display inside a row representing the given payment option in the saved PM row view
-    func makeSavedPaymentMethodRowImage(iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
+    func makeSavedPaymentMethodRowImage(iconStyle: PaymentSheet.Appearance.IconStyle, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
         switch type {
         case .card:
-            return (isLinkPaymentMethod || isLinkPassthroughMode)
-                ? Image.link_icon.makeImage()
-                : STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
+            if isLinkPaymentMethod || isLinkPassthroughMode {
+                return Image.link_icon.makeImage()
+            } else {
+                let cardBrandImage = STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
+                if let cardArt = card?.cardArt?.artImage {
+                    return DownloadManager.sharedManager.downloadImage(url: cardArt,
+                                                                       placeholder: nil,
+                                                                       imageOnFailure: cardBrandImage,
+                                                                       updateHandler: updateHandler)
+                } else {
+                    return cardBrandImage
+                }
+            }
         case .USBankAccount:
             return isLinkPassthroughMode
                 ? Image.link_icon.makeImage()

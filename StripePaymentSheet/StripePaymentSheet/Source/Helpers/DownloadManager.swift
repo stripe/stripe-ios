@@ -61,7 +61,7 @@ extension DownloadManager {
     ///   - updateHandler: An optional closure that's called when the image finishes downloading. The downloaded image is passed as a parameter to this closure.
     ///
     /// - Returns: A `UIImage` instance. If `updateHandler` is `nil`, this would be the downloaded image, otherwise, this would be the placeholder image.
-    public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
+    public func downloadImage(url: URL, placeholder: UIImage?, imageOnFailure: UIImage? = nil, updateHandler: UpdateImageHandler?) -> UIImage {
         let placeholder = placeholder ?? imagePlaceHolder()
         imageCacheLock.lock()
         let cachedImage = imageCache[url]
@@ -71,6 +71,8 @@ extension DownloadManager {
             Task {
                 if let image = try? await downloadImageSkippingCacheRead(url: url) {
                     updateHandler(image)
+                } else if let imageOnFailure {
+                    updateHandler(imageOnFailure)
                 }
             }
         }
