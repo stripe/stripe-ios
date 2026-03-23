@@ -87,8 +87,14 @@ final class MLModelLoader {
 
             // Check if model is already cached to file system
             let cachedModel = self.getCachedLocation(forRemoteURL: remoteURL)
-            if let mlModel = try? MLModel(contentsOf: cachedModel) {
+            do {
+                let mlModel = try MLModel(contentsOf: cachedModel)
                 return returnedPromise.resolve(with: mlModel)
+            } catch {
+                Self.logModelLoadingError(
+                    error,
+                    stage: "load_cached_model"
+                )
             }
 
             // If the model failed to load because it was corrupted, delete the artifact
