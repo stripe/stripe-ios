@@ -270,6 +270,10 @@ class PaymentMethodFormCache {
             cache[paymentMethodType] = newValue
         }
     }
+
+    func removeAll() {
+        cache.removeAll()
+    }
 }
 
 // MARK: - US Bank Account and Link Instant Debits

@@ -72,14 +72,15 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return paymentMethodFormViewController?.paymentMethodType
         }
     }
-    let loadResult: PaymentSheetLoader.LoadResult
-    let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+    private(set) var loadResult: PaymentSheetLoader.LoadResult
+    private(set) var paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let configuration: PaymentSheet.Configuration
-    let intent: Intent
-    let elementsSession: STPElementsSession
+    private(set) var intent: Intent
+    private(set) var elementsSession: STPElementsSession
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
-    let walletButtonsShownExternally: Bool
+    private let walletButtonsViewState: PaymentSheet.WalletButtonsViewState
+    var walletButtonsShownExternally: Bool { walletButtonsViewState.isVisible }
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
     private(set) var savedPaymentMethods: [STPPaymentMethod]
@@ -88,8 +89,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     private var previousPaymentOption: PaymentOption?
     weak var flowControllerDelegate: FlowControllerViewControllerDelegate?
     weak var paymentSheetDelegate: PaymentSheetViewControllerDelegate?
-    let shouldShowApplePayInList: Bool
-    let shouldShowLinkInList: Bool
+    private(set) var shouldShowApplePayInList: Bool
+    private(set) var shouldShowLinkInList: Bool
     /// Whether or not we are in the special case where we don't show the list and show the form directly
     var shouldDisplayFormOnly: Bool {
         return paymentMethodTypes.count == 1
@@ -107,9 +108,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     var defaultPaymentMethod: STPPaymentMethod?
 
-    private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
-    }()
+    private var savedPaymentMethodManager: SavedPaymentMethodManager!
 
     var confirmationChallenge: ConfirmationChallenge?
 
@@ -173,11 +172,12 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.isFlowController = isFlowController
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.paymentMethodTypes = loadResult.paymentMethodTypes
-        self.walletButtonsShownExternally = walletButtonsViewState.isVisible
+        self.walletButtonsViewState = walletButtonsViewState
         self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && Self.walletButtonsViewAllowsExpressType(.applePay, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
         self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         self.analyticsHelper = analyticsHelper
+        self.savedPaymentMethodManager = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
         super.init(nibName: nil, bundle: nil)
 
         regenerateUI()
@@ -802,6 +802,60 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         )
         vc.delegate = self
         bottomSheetController?.pushContentViewController(vc)
+    }
+}
+
+// MARK: - Refresh
+
+extension PaymentSheetVerticalViewController {
+    func update(with loadResult: PaymentSheetLoader.LoadResult) {
+        let currentSelection = paymentMethodListViewController?.currentSelection
+
+        self.loadResult = loadResult
+        self.intent = loadResult.intent
+        self.elementsSession = loadResult.elementsSession
+        self.savedPaymentMethods = loadResult.savedPaymentMethods
+        self.paymentMethodTypes = loadResult.paymentMethodTypes
+        self.isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
+        self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
+
+        self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
+            && isFlowController
+            && Self.walletButtonsViewAllowsExpressType(.applePay, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
+        self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+            && isFlowController
+            && (shouldShowApplePayInList || walletButtonsViewState.showApplePay)
+            && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
+
+        formCache.removeAll()
+        savedPaymentMethodManager = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+
+        regenerateUI(updatedListSelection: currentSelection)
+    }
+
+    @MainActor
+    func performRefresh(mode: PaymentSheet.InitializationMode) async throws {
+        isUserInteractionEnabled = false
+        primaryButton.update(status: .processing, animated: true)
+        error = nil
+        updateError()
+
+        do {
+            let newLoadResult = try await PaymentSheetLoader.load(
+                mode: mode,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                integrationShape: isFlowController ? .flowController : .paymentSheet,
+                isUpdate: true
+            )
+            update(with: newLoadResult)
+        } catch {
+            self.error = error
+            updateError()
+        }
+
+        isUserInteractionEnabled = true
+        updatePrimaryButton()
     }
 }
 
