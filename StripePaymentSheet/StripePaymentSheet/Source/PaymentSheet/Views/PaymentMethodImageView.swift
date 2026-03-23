@@ -16,6 +16,8 @@ class PaymentMethodImageView: UIImageView {
     }
     var imageType: ImageType?
     var cardArtEnabled: Bool = false
+    private var currentDownloadTask: Task<Void, Never>?
+
     init() {
         super.init(image: nil)
         self.contentMode = .scaleAspectFit
@@ -39,17 +41,20 @@ class PaymentMethodImageView: UIImageView {
     }
 
     func updateImage() {
+        currentDownloadTask?.cancel()
+        currentDownloadTask = nil
+
         guard let imageType else {
             return
         }
         switch imageType {
         case .collectionView(let paymentMethod, let overrideUserInterfaceStyle, let iconStyle):
-            let image = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle, cardArtEnabled: cardArtEnabled) { [weak self] image in
-                DispatchQueue.main.async {
-                    self?.setImage(image)
-                }
+            let image = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle)
+            if cardArtEnabled, let cardArtURL = paymentMethod.cardArtURL(height: 40) {
+                downloadCardArt(url: cardArtURL, fallback: image)
+            } else {
+                setImage(image)
             }
-            setImage(image)
         case .collectionViewApplePay(let overrideUserInterfaceStyle):
             let image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
             setImage(image)
@@ -57,13 +62,27 @@ class PaymentMethodImageView: UIImageView {
             let image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
             setImage(image)
         case .rowButton(let paymentMethod, let iconStyle):
-            let image = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: iconStyle, cardArtEnabled: cardArtEnabled) { [weak self] image in
-                DispatchQueue.main.async {
-                    let roundedImage = image.roundedWithBorder(radius: 3)
-                    self?.setImage(roundedImage)
-                }
+            let image = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: iconStyle)
+            if cardArtEnabled, let cardArtURL = paymentMethod.cardArtURL(height: 20) {
+                downloadCardArt(url: cardArtURL, fallback: image, postProcess: { $0.roundedWithBorder(radius: 3) })
+            } else {
+                setImage(image)
             }
-            setImage(image)
+        }
+    }
+
+    private func downloadCardArt(url: URL, fallback: UIImage, postProcess: ((UIImage) -> UIImage)? = nil) {
+        currentDownloadTask = Task { [weak self] in
+            do {
+                let image = try await DownloadManager.sharedManager.downloadImage(url: url)
+                guard !Task.isCancelled else { return }
+                let finalImage = postProcess?(image) ?? image
+                self?.setImage(finalImage)
+            } catch {
+                guard !Task.isCancelled else { return }
+                let finalFallback = postProcess?(fallback) ?? fallback
+                self?.setImage(finalFallback)
+            }
         }
     }
 

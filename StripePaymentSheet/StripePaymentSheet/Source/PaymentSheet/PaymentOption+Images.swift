@@ -106,22 +106,13 @@ extension STPPaymentMethod {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle, cardArtEnabled: Bool, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch type {
         case .card:
             if isLinkPaymentMethod || isLinkPassthroughMode {
                 return Image.link_logo.makeImage()
             } else {
-                let cardBrandImage = calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
-                if cardArtEnabled,
-                   let cardArt = card?.cardArt?.artImage.stripeCDNURL(height: 40) {
-                    return DownloadManager.sharedManager.downloadImage(url: cardArt,
-                                                                       placeholder: nil,
-                                                                       imageOnFailure: cardBrandImage,
-                                                                       updateHandler: updateHandler)
-                } else {
-                    return cardBrandImage
-                }
+                return calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
             }
         case .USBankAccount:
             return isLinkPassthroughMode
@@ -138,24 +129,13 @@ extension STPPaymentMethod {
     }
 
     /// Returns an image to display inside a row representing the given payment option in the saved PM row view
-    func makeSavedPaymentMethodRowImage(iconStyle: PaymentSheet.Appearance.IconStyle, cardArtEnabled: Bool, updateHandler: DownloadManager.UpdateImageHandler?) -> UIImage {
+    func makeSavedPaymentMethodRowImage(iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch type {
         case .card:
             if isLinkPaymentMethod || isLinkPassthroughMode {
                 return Image.link_icon.makeImage()
             } else {
-                let cardBrandImage = STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
-                if cardArtEnabled,
-                   let cardArt = card?.cardArt?.artImage.stripeCDNURL(height: 20) {
-                    return DownloadManager.sharedManager
-                        .downloadImage(url: cardArt,
-                                       placeholder: nil,
-                                       imageOnFailure: cardBrandImage,
-                                       updateHandler: updateHandler)
-                        .roundedWithBorder(radius: 3)
-                } else {
-                    return cardBrandImage
-                }
+                return STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
             }
         case .USBankAccount:
             return isLinkPassthroughMode
@@ -184,7 +164,15 @@ extension STPPaymentMethod {
             return PaymentSheet.PaymentMethodType.stripe(type).makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle, updateHandler: updateHandler)
         }
     }
- }
+}
+
+extension STPPaymentMethod {
+    /// Returns the card art CDN URL if this is a card payment method with card art available.
+    func cardArtURL(height: Int) -> URL? {
+        guard type == .card, !isLinkPaymentMethod, !isLinkPassthroughMode else { return nil }
+        return card?.cardArt?.artImage.stripeCDNURL(height: height)
+    }
+}
 
 extension STPPaymentMethodType {
 
