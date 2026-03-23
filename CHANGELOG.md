@@ -1,6 +1,7 @@
 ## X.Y.Z - changes pending release 
 ### PaymentSheet
 * [Fixed] Improved loading times for integrations that set `configuration.customer`.
+* [Fixed] Improved loading times for integrations that have Link disabled.
 
 ## 25.8.0 2026-03-16
 ### Payments
