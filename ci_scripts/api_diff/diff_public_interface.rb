@@ -62,7 +62,6 @@ def render_module_diff(framework_name, public_lines, spi_lines)
 end
 
 def write_output(path, content)
-  File.delete(path) if File.exist?(path)
   File.write(path, content)
 end
 
