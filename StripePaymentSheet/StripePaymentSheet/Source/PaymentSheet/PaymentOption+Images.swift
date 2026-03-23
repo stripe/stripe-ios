@@ -48,12 +48,13 @@ extension PaymentOption {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle) -> UIImage {
         switch self {
         case .applePay:
             return Image.carousel_applepay.makeImage(template: false, overrideUserInterfaceStyle: overrideUserInterfaceStyle)
-        case .saved(let paymentMethod, _):
-            return paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle)
+        case .saved:
+            assertionFailure("This shouldn't be called - makeSavedPaymentMethodCellImage is called on instances of STPPaymentMethod")
+            return UIImage()
         case .new:
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
             return UIImage()
@@ -159,7 +160,14 @@ extension STPPaymentMethod {
             return PaymentSheet.PaymentMethodType.stripe(type).makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle, updateHandler: updateHandler)
         }
     }
- }
+}
+
+extension STPPaymentMethod {
+    /// Returns the card art CDN URL if this is a card payment method with card art available.
+    func cardArtURL(height: Int) -> URL? {
+        return card?.cardArt?.url?.stripeCDNURL(height: height)
+    }
+}
 
 extension STPPaymentMethodType {
 
@@ -301,5 +309,25 @@ extension UIImage {
         UIBezierPath(roundedRect: rect, cornerRadius: radius).addClip()
         draw(in: rect)
         return UIGraphicsGetImageFromCurrentImageContext()!
+    }
+
+    func roundedWithBorder(radius: CGFloat, borderWidth: CGFloat = 1, borderColor: UIColor = UIColor.black.withAlphaComponent(0.2)) -> UIImage {
+        let rect = CGRect(origin: .zero, size: size)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let path = UIBezierPath(roundedRect: rect, cornerRadius: radius)
+        path.addClip()
+        draw(in: rect)
+        let borderRect = rect.insetBy(dx: borderWidth / 2, dy: borderWidth / 2)
+        let borderPath = UIBezierPath(roundedRect: borderRect, cornerRadius: radius - borderWidth / 2)
+        borderColor.setStroke()
+        borderPath.lineWidth = borderWidth
+        borderPath.stroke()
+        return UIGraphicsGetImageFromCurrentImageContext()!
+    }
+}
+
+extension URL {
+    func stripeCDNURL(height: Int, dpr: Int = 3) -> URL? {
+        return URL(string: "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=\(height),dpr=\(dpr)/\(self.absoluteString)")
     }
 }
