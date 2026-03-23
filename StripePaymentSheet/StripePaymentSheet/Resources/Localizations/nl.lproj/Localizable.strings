@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Door verder te gaan, machtigt u %@ om automatisch uw Satispay-saldo op terugkerende basis af te schrijven in overeenstemming met uw aankoop- of abonnementsplan.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Als je doorgaat, autoriseer je %@ om periodiek automatisch bedragen van je Twint-saldo af te schrijven in overeenstemming met je aankoop of abonnement.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Als je doorgaat, geef je %1$@ toestemming om deze betaling en toekomstige betalingen in rekening te brengen op je Cash App-account, in overeenstemming met de voorwaarden van %2$@, totdat je deze toestemming intrekt. Je kunt dit op elk moment wijzigen via je Cash App-instellingen.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door Link te gebruiken ga je akkoord met de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Betaalkaartgegevens kunnen niet worden gewijzigd.";
 
 "Change" = "Wijzigen";
+
+"Choose a card brand" = "Kies een merk betaalkaart";
 
 "Choose a payment method" = "Een betaalmethode kiezen";
 

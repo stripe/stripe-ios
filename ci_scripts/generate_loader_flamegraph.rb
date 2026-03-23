@@ -4,6 +4,7 @@
 # Expected log format:
 #   [LOADER_TIMING] START operationName 1771353097.525703
 #   [LOADER_TIMING] END operationName 1771353097.926410
+#   TOTAL_LOAD_TIME: 1773255902.873811 1773255903.547418
 #
 # The script calculates milliseconds elapsed from the first START timestamp.
 # This is purely to help debugging load latency; feel free to delete if it's out of date / no longer useful.
@@ -29,10 +30,10 @@ end
 class Operation
   attr_accessor :name, :start_time, :end_time
 
-  def initialize(name)
+  def initialize(name, start_time = nil, end_time = nil)
     @name = name
-    @start_time = nil
-    @end_time = nil
+    @start_time = start_time
+    @end_time = end_time
   end
 
   def duration_ms
@@ -53,12 +54,13 @@ class Operation
 end
 
 class TestCase
-  attr_accessor :name, :events, :latency_result
+  attr_accessor :name, :events, :latency_result, :total_load_time
 
   def initialize(name)
     @name = name
     @events = []
     @latency_result = nil
+    @total_load_time = nil
   end
 end
 
@@ -81,11 +83,16 @@ ARGF.each_line do |line|
       in_test = false
     end
   # LOADER_TIMING event
-  elsif in_test && current_test && line =~ /\[LOADER_TIMING\]\s+(\w+)\s+(\w+)\s+([\d.]+)/
+  elsif in_test && current_test && line =~ /\[LOADER_TIMING\]\s+(\w+)\s+(\S+)\s+([\d.]+)/
     phase = $1
     name = $2
     timestamp = $3.to_f
     current_test.events << TimingEvent.new(name, phase, timestamp)
+  # TOTAL_LOAD_TIME - extract start and end timestamps
+  elsif in_test && current_test && line =~ /TOTAL_LOAD_TIME:\s+([\d.]+)\s+([\d.]+)/
+    start_time = $1.to_f
+    end_time = $2.to_f
+    current_test.total_load_time = Operation.new("Total Load Time", start_time, end_time)
   # SYNTHETIC_LATENCY_RESULT - extract test name and latency
   elsif in_test && current_test && line =~ /SYNTHETIC_LATENCY_RESULT:\s+(test_\w+):\s+([\d.]+)/
     result_test_name = $1
@@ -109,10 +116,14 @@ end
 earliest_timestamp = test_cases.flat_map(&:events).map(&:timestamp).min
 run_date = earliest_timestamp ? Time.at(earliest_timestamp).strftime('%Y-%m-%d %H:%M:%S') : 'Unknown'
 
+# Get current git branch name
+branch_name = `git rev-parse --abbrev-ref HEAD`.strip rescue 'unknown-branch'
+
 # Generate Mermaid Gantt chart
 diagram_lines = []
+diagram_lines << "%%{init: {'gantt': {'titleTopMargin': 50, 'topPadding': 100, 'leftPadding': 200}}}%%"
 diagram_lines << "gantt"
-diagram_lines << "    title PaymentSheetLoader Order of Operations - #{run_date}"
+diagram_lines << "    title PaymentSheetLoader Order of Operations - #{branch_name} - #{run_date}"
 diagram_lines << "    dateFormat x"
 diagram_lines << ""
 
@@ -150,8 +161,16 @@ test_cases.each do |test_case|
 
   # Output section for this test case
   section_name = test_case.name.gsub('_', ' ').split.map(&:capitalize).join(' ')
-  latency_info = test_case.latency_result ? " (Latency: #{(test_case.latency_result * 1000).round(2)}ms)" : ""
-  diagram_lines << "    section #{section_name}#{latency_info}"
+  diagram_lines << "    section #{section_name}"
+
+  # Output Total Load Time as the first task if available
+  if test_case.total_load_time && test_case.total_load_time.complete?
+    start_ms, end_ms = test_case.total_load_time.ms_from(min_timestamp)
+    duration_ms = test_case.total_load_time.duration_ms
+    task_id = "t#{task_counter}"
+    task_counter += 1
+    diagram_lines << "    Total Load Time (#{duration_ms.round(2)}ms) :#{task_id}, #{start_ms}, #{end_ms}"
+  end
 
   # Output all operations sorted by start time with milliseconds elapsed from start
   complete_ops.each do |op|

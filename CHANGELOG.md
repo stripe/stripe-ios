@@ -1,4 +1,8 @@
 ## X.Y.Z - changes pending release 
+### PaymentSheet
+* [Fixed] Improved loading times for integrations that set `configuration.customer`.
+
+## 25.8.0 2026-03-16
 ### Payments
 * [Added] Adds support for [payments orchestration](https://docs.stripe.com/payments/orchestration) (private preview) by allowing `processing` as a PaymentIntent state for cards.
 

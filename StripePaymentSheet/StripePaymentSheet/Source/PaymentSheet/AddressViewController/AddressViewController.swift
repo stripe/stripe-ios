@@ -82,6 +82,7 @@ public class AddressViewController: UIViewController {
     private lazy var headerLabel: UILabel = {
         let header = PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
         header.text = configuration.title
+        header.isHidden = configuration.useNavigationBarTitle
         return header
     }()
     lazy var scrollView: UIScrollView = {
@@ -230,6 +231,9 @@ public class AddressViewController: UIViewController {
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeButton)
+        if configuration.useNavigationBarTitle {
+            title = configuration.title
+        }
     }
 
     required init?(coder: NSCoder) {

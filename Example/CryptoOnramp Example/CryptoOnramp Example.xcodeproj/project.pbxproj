@@ -27,6 +27,8 @@
 		0B44B40A2E57700600B58655 /* Stripe.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B4082E57700600B58655 /* Stripe.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0B44B40C2E57702B00B58655 /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B40B2E57702B00B58655 /* StripeCameraCore.framework */; };
 		0B44B40D2E57702B00B58655 /* StripeCameraCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B44B40B2E57702B00B58655 /* StripeCameraCore.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0B8EB14A2F68947200D3C114 /* StripeIssuing.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8EB1492F68947200D3C114 /* StripeIssuing.framework */; };
+		0B8EB14B2F68947200D3C114 /* StripeIssuing.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0B8EB1492F68947200D3C114 /* StripeIssuing.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0BA5FE422E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */; };
 		0BA5FE432E32AB9E00D44BFE /* StripeCryptoOnramp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0BA5FE462E32AD5100D44BFE /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0BA5FE452E32AD5100D44BFE /* StripeCore.framework */; };
@@ -53,6 +55,7 @@
 				0B44B4042E576FC700B58655 /* StripeFinancialConnections.framework in Embed Frameworks */,
 				0B44B4072E576FEC00B58655 /* StripeIdentity.framework in Embed Frameworks */,
 				0B44B4012E576FAD00B58655 /* StripeUICore.framework in Embed Frameworks */,
+				0B8EB14B2F68947200D3C114 /* StripeIssuing.framework in Embed Frameworks */,
 				0B44B40D2E57702B00B58655 /* StripeCameraCore.framework in Embed Frameworks */,
 				0B44B3FE2E576F9500B58655 /* StripePaymentsUI.framework in Embed Frameworks */,
 				0B44B3FB2E576F6C00B58655 /* StripePayments.framework in Embed Frameworks */,
@@ -79,6 +82,7 @@
 		0B44B4052E576FEC00B58655 /* StripeIdentity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeIdentity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B44B4082E57700600B58655 /* Stripe.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Stripe.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B44B40B2E57702B00B58655 /* StripeCameraCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCameraCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0B8EB1492F68947200D3C114 /* StripeIssuing.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeIssuing.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA5FE322E32A11600D44BFE /* CryptoOnramp Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CryptoOnramp Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA5FE412E32AB9E00D44BFE /* StripeCryptoOnramp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCryptoOnramp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0BA5FE452E32AD5100D44BFE /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,6 +102,7 @@
 				0B44B4032E576FC700B58655 /* StripeFinancialConnections.framework in Frameworks */,
 				0B44B4062E576FEC00B58655 /* StripeIdentity.framework in Frameworks */,
 				0B44B4002E576FAD00B58655 /* StripeUICore.framework in Frameworks */,
+				0B8EB14A2F68947200D3C114 /* StripeIssuing.framework in Frameworks */,
 				0B44B40C2E57702B00B58655 /* StripeCameraCore.framework in Frameworks */,
 				0B44B3FD2E576F9500B58655 /* StripePaymentsUI.framework in Frameworks */,
 				0B44B3FA2E576F6C00B58655 /* StripePayments.framework in Frameworks */,
@@ -142,6 +147,7 @@
 		0BA5FE402E32AB9E00D44BFE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0B8EB1492F68947200D3C114 /* StripeIssuing.framework */,
 				0B44B40B2E57702B00B58655 /* StripeCameraCore.framework */,
 				0B44B4082E57700600B58655 /* Stripe.framework */,
 				0B44B4052E576FEC00B58655 /* StripeIdentity.framework */,

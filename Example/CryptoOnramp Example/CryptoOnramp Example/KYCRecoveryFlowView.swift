@@ -1,0 +1,126 @@
+//
+//  KYCRecoveryFlowView.swift
+//  CryptoOnramp Example
+//
+//  Created by Michael Liberatore on 3/9/26.
+//
+
+import SwiftUI
+
+@_spi(CryptoOnrampAlpha)
+import StripeCryptoOnramp
+
+/// A modal flow used when a greater KYC level is required to check out.
+/// Supports:
+/// - level 0 step-up to level 1: KYC collection only, including date of birth and id number (e.g. SSN).
+/// - level 1 step-up to level 2: Identity verification / document collection only.
+/// - level 0 step-up to level 2: KYC collection (DOB + id number) followed by identity verification / document collection.
+struct KYCRecoveryFlowView: View {
+
+    /// The customer's current and required KYC levels for this recovery flow.
+    struct Levels: Identifiable {
+
+        /// The customer's current KYC level when entering this flow.
+        let currentLevel: KYCLevel
+
+        /// The KYC level required to continue checkout.
+        let requiredLevel: KYCLevel
+
+        // MARK: - Identifiable
+
+        var id: String {
+            "\(currentLevel.id)-\(requiredLevel.id)"
+        }
+    }
+
+    private enum Route: Hashable {
+        case identity
+    }
+
+    /// The coordinator used for KYC and identity collection.
+    let coordinator: CryptoOnrampCoordinator
+
+    /// The customer's current and required KYC levels for this recovery flow.
+    let levels: Levels
+
+    /// Closure called after the recovery flow succeeds.
+    let onSuccess: () -> Void
+
+    @Environment(\.isLoading) private var isLoading
+    @Environment(\.dismiss) private var dismiss
+    @State private var path: [Route] = []
+
+    // MARK: - View
+
+    var body: some View {
+        NavigationStack(path: $path) {
+            rootContent
+                .toolbar {
+                    cancelToolbarItem
+                }
+                .navigationDestination(for: Route.self) { route in
+                    switch route {
+                    case .identity:
+                        identityVerificationView
+                    }
+                }
+        }
+        .loadingOverlay(isVisible: isLoading.wrappedValue)
+    }
+
+    @ViewBuilder
+    private var rootContent: some View {
+        if shouldCollectLevel1 {
+            KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel1StepUp) { _ in
+                handleKYCSuccess()
+            }
+        } else if shouldCollectIdentity {
+            identityVerificationView
+        } else {
+            Color.clear
+                .onAppear {
+                    finish()
+                }
+        }
+    }
+
+    private var identityVerificationView: some View {
+        IdentityVerificationView(coordinator: coordinator) {
+            handleIdentitySuccess()
+        }
+    }
+
+    private var shouldCollectLevel1: Bool {
+        levels.requiredLevel.includesLevel1 && !levels.currentLevel.includesLevel1
+    }
+
+    private var shouldCollectIdentity: Bool {
+        levels.requiredLevel.includesLevel2 && !levels.currentLevel.includesLevel2
+    }
+
+    @ToolbarContentBuilder
+    private var cancelToolbarItem: some ToolbarContent {
+        ToolbarItem(placement: .cancellationAction) {
+            Button("Cancel") {
+                dismiss()
+            }
+        }
+    }
+
+    private func handleKYCSuccess() {
+        if shouldCollectIdentity {
+            path.append(.identity)
+        } else {
+            finish()
+        }
+    }
+
+    private func handleIdentitySuccess() {
+        finish()
+    }
+
+    private func finish() {
+        dismiss()
+        onSuccess()
+    }
+}
