@@ -245,10 +245,13 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testPayByBankConfirmFlows() async throws {
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "example-app-scheme://unused"
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "GBP",
                                paymentMethodType: .payByBank,
                                merchantCountry: .GB,
+                               configuration: configuration,
                                expectedHierarchy: ExpectedFormHierarchy.PayByBank.paymentIntent) { _ in }
     }
 
@@ -1342,7 +1345,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         _ = PaymentSheet(mode: .deferredIntent(intentConfiguration), configuration: PaymentSheet.Configuration())
 
         let apiClient = STPAPIClient(publishableKey: merchantCountry.publishableKey)
-        // Create a fresh customer so we don't accumulate payment methods on a shared customer
+        // Create customer session for confirmation token support
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(
             customerID: nil,
             merchantCountry: merchantCountry.rawValue.lowercased()
