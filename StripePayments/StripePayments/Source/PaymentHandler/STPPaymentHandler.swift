@@ -2029,12 +2029,11 @@ public class STPPaymentHandler: NSObject {
         completion: @escaping (Bool) -> Void
     ) {
         if let piAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
-            retrieveOrRefreshPaymentIntent(currentAction: piAction, timeout: nil) { paymentIntent, _ in
+            piAction.apiClient.retrievePaymentIntent(withClientSecret: piAction.paymentIntent.clientSecret, expand: ["payment_method"], timeout: nil) { paymentIntent, _ in
                 if let paymentIntent {
                     piAction.paymentIntent = paymentIntent
                     let isSuccess = paymentIntent.status == .succeeded
                         || paymentIntent.status == .requiresCapture
-                        || paymentIntent.status == .requiresConfirmation
                         || (paymentIntent.status == .processing
                             && STPPaymentHandler._isProcessingIntentSuccess(for: paymentIntent.paymentMethod?.type ?? .unknown))
                     completion(isSuccess)
@@ -2043,11 +2042,10 @@ public class STPPaymentHandler: NSObject {
                 }
             }
         } else if let siAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
-            retrieveOrRefreshSetupIntent(currentAction: siAction, timeout: nil) { setupIntent, _ in
+            siAction.apiClient.retrieveSetupIntent(withClientSecret: siAction.setupIntent.clientSecret, expand: ["payment_method"], timeout: nil) { setupIntent, _ in
                 if let setupIntent {
                     siAction.setupIntent = setupIntent
                     let isSuccess = setupIntent.status == .succeeded
-                        || setupIntent.status == .requiresConfirmation
                     completion(isSuccess)
                 } else {
                     completion(false)
