@@ -152,7 +152,7 @@ extension STPPaymentMethod {
                                        placeholder: nil,
                                        imageOnFailure: cardBrandImage,
                                        updateHandler: updateHandler)
-                        .rounded(radius: 3)
+                        .roundedWithBorder(radius: 3)
                 } else {
                     return cardBrandImage
                 }
@@ -325,6 +325,20 @@ extension UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         UIBezierPath(roundedRect: rect, cornerRadius: radius).addClip()
         draw(in: rect)
+        return UIGraphicsGetImageFromCurrentImageContext()!
+    }
+
+    func roundedWithBorder(radius: CGFloat, borderWidth: CGFloat = 1, borderColor: UIColor = UIColor.black.withAlphaComponent(0.2)) -> UIImage {
+        let rect = CGRect(origin: .zero, size: size)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let path = UIBezierPath(roundedRect: rect, cornerRadius: radius)
+        path.addClip()
+        draw(in: rect)
+        let borderRect = rect.insetBy(dx: borderWidth / 2, dy: borderWidth / 2)
+        let borderPath = UIBezierPath(roundedRect: borderRect, cornerRadius: radius - borderWidth / 2)
+        borderColor.setStroke()
+        borderPath.lineWidth = borderWidth
+        borderPath.stroke()
         return UIGraphicsGetImageFromCurrentImageContext()!
     }
 }

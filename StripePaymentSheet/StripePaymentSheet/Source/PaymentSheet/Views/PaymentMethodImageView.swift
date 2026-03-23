@@ -59,7 +59,7 @@ class PaymentMethodImageView: UIImageView {
         case .rowButton(let paymentMethod, let iconStyle):
             let image = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: iconStyle, cardArtEnabled: cardArtEnabled) { [weak self] image in
                 DispatchQueue.main.async {
-                    let roundedImage = image.rounded(radius: 3)
+                    let roundedImage = image.roundedWithBorder(radius: 3)
                     self?.setImage(roundedImage)
                 }
             }
