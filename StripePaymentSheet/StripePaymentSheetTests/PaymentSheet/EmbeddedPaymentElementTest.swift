@@ -817,6 +817,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
+        config.defaultBillingDetails.email = "test@example.com"
 
         let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: config)
         sut.delegate = self
@@ -835,6 +836,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
+        config.defaultBillingDetails.email = "test@example.com"
 
         let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: config)
         sut.delegate = self
@@ -857,6 +859,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
+        config.defaultBillingDetails.email = "test@example.com"
 
         let sut = try await EmbeddedPaymentElement.create(checkout: checkout, configuration: config)
         sut.delegate = self

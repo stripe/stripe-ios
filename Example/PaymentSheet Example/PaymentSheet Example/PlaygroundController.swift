@@ -1064,6 +1064,7 @@ extension PlaygroundController {
         // Add CheckoutSession flag if using CheckoutSession integration type
         if settings.integrationType == .checkoutSession {
             body["use_checkout_session"] = true
+            body["customer_email"] = "moblie-test-user@stripe.com"
         }
 
         // Send custom keys to backend if provided

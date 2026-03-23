@@ -293,6 +293,53 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session?.status, .open)
     }
 
+    // TODO(porter) re-enable testSelectCurrency()
+//    func testSelectCurrency() async throws {
+//        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
+//            adaptivePricingEnabled: true,
+//            customerEmailLocation: "DE"
+//        )
+//        let checkout = Checkout(
+//            clientSecret: checkoutSessionResponse.clientSecret,
+//            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+//        )
+//
+//        try await checkout.load()
+//        let initialSession = try XCTUnwrap(checkout.session as? STPCheckoutSession)
+//        XCTAssertEqual(initialSession.currency, "eur")
+//        XCTAssertEqual(initialSession.totals?.total, 1799)
+//        XCTAssertTrue(initialSession.adaptivePricingActive)
+//        XCTAssertEqual(initialSession.exchangeRateMeta?.buyCurrency, "eur")
+//        XCTAssertEqual(initialSession.exchangeRateMeta?.sellCurrency, "usd")
+//        XCTAssertEqual(initialSession.exchangeRateMeta?.integrationCurrency, "usd")
+//        XCTAssertEqual(initialSession.exchangeRateMeta?.localizedCurrency, "eur")
+//        XCTAssertEqual(initialSession.exchangeRateMeta?.exchangeRate, "0.8995")
+//        XCTAssertEqual(initialSession.exchangeRateMeta?.conversionMarkupBps, 400)
+//        XCTAssertEqual(initialSession.localizedPricesMetas.count, 2)
+//        XCTAssertEqual(initialSession.localizedPricesMetas[0].currency, "eur")
+//        XCTAssertEqual(initialSession.localizedPricesMetas[0].total, 1799)
+//        XCTAssertEqual(initialSession.localizedPricesMetas[1].currency, "usd")
+//        XCTAssertEqual(initialSession.localizedPricesMetas[1].total, 2000)
+//
+//        try await checkout.selectCurrency("usd")
+//
+//        let updatedSession = try XCTUnwrap(checkout.session as? STPCheckoutSession)
+//        XCTAssertEqual(updatedSession.currency, "usd")
+//        XCTAssertEqual(updatedSession.totals?.total, 2000)
+//        XCTAssertTrue(updatedSession.adaptivePricingActive)
+//        XCTAssertEqual(updatedSession.exchangeRateMeta?.buyCurrency, "eur")
+//        XCTAssertEqual(updatedSession.exchangeRateMeta?.sellCurrency, "usd")
+//        XCTAssertEqual(updatedSession.exchangeRateMeta?.integrationCurrency, "usd")
+//        XCTAssertEqual(updatedSession.exchangeRateMeta?.localizedCurrency, "eur")
+//        XCTAssertEqual(updatedSession.exchangeRateMeta?.exchangeRate, "0.8995")
+//        XCTAssertEqual(updatedSession.exchangeRateMeta?.conversionMarkupBps, 400)
+//        XCTAssertEqual(updatedSession.localizedPricesMetas.count, 2)
+//        XCTAssertEqual(updatedSession.localizedPricesMetas[0].currency, "eur")
+//        XCTAssertEqual(updatedSession.localizedPricesMetas[0].total, 1799)
+//        XCTAssertEqual(updatedSession.localizedPricesMetas[1].currency, "usd")
+//        XCTAssertEqual(updatedSession.localizedPricesMetas[1].total, 2000)
+//    }
+
     func testDelegateCalledOnPromotionCodeApply() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true

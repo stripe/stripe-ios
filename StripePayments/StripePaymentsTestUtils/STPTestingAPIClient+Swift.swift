@@ -207,7 +207,9 @@ extension STPTestingAPIClient {
         collectShippingAddress: Bool = false,
         collectBillingAddress: Bool = false,
         automaticTax: Bool = false,
-        enableTaxIdCollection: Bool = false
+        enableTaxIdCollection: Bool = false,
+        adaptivePricingEnabled: Bool = false,
+        customerEmailLocation: String? = nil
     ) async throws -> CreateCheckoutSessionResponse {
         var additionalParameters: [String: Any] = [:]
         if allowPromotionCodes {
@@ -266,6 +268,12 @@ extension STPTestingAPIClient {
         }
         if enableTaxIdCollection {
             additionalParameters["tax_id_collection"] = ["enabled": true]
+        }
+        if adaptivePricingEnabled {
+            additionalParameters["adaptive_pricing"] = ["enabled": true]
+        }
+        if let customerEmailLocation {
+            additionalParameters["customer_email"] = "test+location_\(customerEmailLocation)@example.com"
         }
         let params: [String: Any?] = [
             "account": merchantCountry,

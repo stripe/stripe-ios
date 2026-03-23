@@ -75,6 +75,21 @@ class AddressViewControllerSnapshotTests: STPSnapshotTestCase {
         verify(navVC.view)
     }
 
+    func testShippingAddressViewController_navigationTitle() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        var configuration = configuration
+        configuration.useNavigationBarTitle = true
+        let vc = AddressViewController(
+            addressSpecProvider: addressSpecProvider,
+            configuration: configuration,
+            delegate: self
+        )
+        let navVC = UINavigationController(rootViewController: vc)
+        testWindow.rootViewController = navVC
+        verify(navVC.view)
+    }
+
     func testShippingAddressViewController_customText() {
         let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
         testWindow.isHidden = false

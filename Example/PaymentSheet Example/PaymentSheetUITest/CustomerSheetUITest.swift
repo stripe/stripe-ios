@@ -1008,7 +1008,17 @@ class CustomerSheetUITest: XCTestCase {
 
         try! fillSepaData(app)
 
-        app.buttons["Save"].tap()
+        let saveButton = app.buttons["Save"]
+        let saveButtonEnabled = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == true AND enabled == true"),
+            object: saveButton
+        )
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [saveButtonEnabled], timeout: timeout),
+            .completed,
+            "Save button should be enabled before continuing from the SEPA form"
+        )
+        saveButton.tap()
 
         let confirmButton = app.buttons["Confirm"]
         XCTAssertTrue(confirmButton.waitForExistence(timeout: timeout))

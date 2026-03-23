@@ -414,7 +414,18 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             merchantCountry: "us",
             paymentMethodID: savedSepaPM.stripeId,
             customerID: customer,
-            confirm: true
+            confirm: true,
+            otherParams: [
+                "mandate_data": [
+                    "customer_acceptance": [
+                        "type": "online",
+                        "online": [
+                            "user_agent": "123",
+                            "ip_address": "172.18.117.125",
+                        ],
+                    ] as [String: Any],
+                ],
+            ]
         )
 
         let configuration: PaymentSheet.Configuration = {
@@ -1359,11 +1370,6 @@ extension PaymentSheetLPMConfirmFlowTests {
             )
 
             for (description, intent) in intents {
-                // TODO(gbirch): Uncomment these when adding CheckoutSessions Link support.
-                // CheckoutSession doesn't support a Link-only payment method type list.
-                if case .checkoutSession = intent {
-                    continue
-                }
                 let linkPaymentMethod = try await makeLinkPaymentMethod(apiClient)
 
                 let e = expectation(description: "Confirm Link (\(description))")

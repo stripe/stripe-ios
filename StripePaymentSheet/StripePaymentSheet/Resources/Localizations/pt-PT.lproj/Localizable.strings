@@ -62,6 +62,8 @@
 
 "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Ao continuar, autoriza %@ a debitar automaticamente o seu Saldo Satispay de forma recorrente, de acordo com o seu plano de compra ou subscrição.";
 
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Ao continuar, Autoriza %@ a debitar automaticamente o seu Saldo Twint de forma recorrente, de acordo com o seu plano de compra ou Subscrição.";
+
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ao continuar, autoriza %1$@ a debitar a sua conta Cash App para este pagamento e pagamentos futuros de acordo com as condições de %2$@, até que esta autorização seja revogada. Pode alterar isto a qualquer altura nas definições da sua Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao juntar-se ao Link, concorda com as <terms>Condições</terms> e com a <privacy>Política de Privacidade</privacy>.";
@@ -91,6 +93,8 @@
 "Card details cannot be changed." = "Os detalhes do cartão não podem ser alterados.";
 
 "Change" = "Alterar";
+
+"Choose a card brand" = "Escolha uma marca de Cartão";
 
 "Choose a payment method" = "Selecione um método de pagamento";
 

@@ -379,6 +379,12 @@ extension PaymentSheet {
                 completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
                 return
             }
+            if checkout.isPerformingSessionUpdate {
+                let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.FlowController.create(checkout:configuration:completion:)."
+                assertionFailure(message)
+                completion(.failure(PaymentSheetError.integrationError(nonPIIDebugDescription: message)))
+                return
+            }
             var config = configuration
             stpSession.applyAddressOverrides(to: &config)
             create(mode: .checkoutSession(stpSession),
@@ -651,6 +657,12 @@ extension PaymentSheet {
             guard let stpSession = checkout.session as? STPCheckoutSession else {
                 stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
                 completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
+                return
+            }
+            if checkout.isPerformingSessionUpdate {
+                let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.FlowController.update(checkout:completion:)."
+                assertionFailure(message)
+                completion(PaymentSheetError.integrationError(nonPIIDebugDescription: message))
                 return
             }
             stpSession.applyAddressOverrides(to: &configuration)

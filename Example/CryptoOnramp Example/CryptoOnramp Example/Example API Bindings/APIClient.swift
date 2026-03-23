@@ -62,14 +62,14 @@ final class APIClient {
     }
 
     enum APIError: Error, LocalizedError {
-        case httpError(status: Int, message: String)
+        case httpError(status: Int, message: String, code: String?)
         case missingAuthToken
         case missingAuthTokenWithLAI
 
         var errorDescription: String? {
             switch self {
-            case .httpError(let status, let message):
-                return "HTTP \(status): \(message)"
+            case .httpError(let status, let message, let code):
+                return "HTTP \(status), code: \(code ?? "unknown"), message: \(message)"
             case .missingAuthToken:
                 return "Missing Authorization token"
             case .missingAuthTokenWithLAI:
@@ -187,10 +187,35 @@ final class APIClient {
         }
 
         guard (200...299).contains(httpResponse.statusCode) else {
-            let message = String(data: data, encoding: .utf8) ?? "Unknown error"
-            throw APIError.httpError(status: httpResponse.statusCode, message: message)
+            if let apiErrorBody = try? jsonDecoder.decode(APIErrorBody.self, from: data) {
+                throw APIError.httpError(
+                    status: httpResponse.statusCode,
+                    message: apiErrorBody.details.error.message ?? apiErrorBody.error,
+                    code: apiErrorBody.details.error.code
+                )
+            } else {
+                let message = String(data: data, encoding: .utf8) ?? "Unknown error"
+                throw APIError.httpError(status: httpResponse.statusCode, message: message, code: nil)
+            }
         }
 
         return try jsonDecoder.decode(T.self, from: data)
     }
+}
+
+/// Decodable structure for parsing demo-backend errors in their expected format.
+private struct APIErrorBody: Decodable {
+    struct Details: Decodable {
+        struct StripeError: Decodable {
+            let code: String?
+            let message: String?
+            let requestLogURL: URL?
+            let type: String?
+        }
+
+        let error: StripeError
+    }
+
+    let error: String
+    let details: Details
 }

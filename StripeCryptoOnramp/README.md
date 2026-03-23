@@ -71,6 +71,7 @@ If you link the StripeCryptoOnramp library manually, use a version from our [rel
 - `StripeCryptoOnramp.xcframework`
 - `StripeFinancialConnections.xcframework`
 - `StripeIdentity.xcframework`
+- `StripeIssuing.xcframework`
 - `StripePayments.xcframework`
 - `StripePaymentSheet.xcframework`
 - `StripePaymentsUI.xcframework`

@@ -25,9 +25,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     }
 
     func testReturningCustomerWithNoSavedCards() throws {
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
@@ -69,9 +67,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     }
 
     func testReturningCustomerWithSingleSavedCard() throws {
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
@@ -112,9 +108,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     }
 
     func testReturningCustomerWithCardAndUSBankAccount_onlyCards() throws {
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card, .USBankAccount])
         StubbedBackend.stubSessions(paymentMethods: "\"card\"")
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
@@ -146,9 +140,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     }
 
     func testReturningCustomerWithCardAndUSBankAccount() throws {
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withUSBank_200, pmType: "us_bank_account")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card, .USBankAccount])
         StubbedBackend.stubSessions(paymentMethods: "\"card\", \"us_bank_account\"")
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
@@ -194,9 +186,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: try! FileMock.payment_intents_200.data(), statusCode: 200, headers: nil)
         }
         // ...and the customer has payment methods...
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
 
@@ -257,9 +247,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         } response: { _ in
             return HTTPStubsResponse(data: try! FileMock.payment_intents_misordered_pms_200.data(), statusCode: 200, headers: nil)
         }
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
 
@@ -310,9 +298,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         } response: { _ in
             return HTTPStubsResponse(data: try! FileMock.payment_intents_no_card_200.data(), statusCode: 200, headers: nil)
         }
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "card")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
 
@@ -361,9 +347,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             return HTTPStubsResponse(data: try! FileMock.setup_intents_200.data(), statusCode: 200, headers: nil)
         }
         // ...and the customer has payment methods...
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
 
@@ -423,9 +407,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         var intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "usd"), confirmHandler: { _, _ in return "" })
 
         // ...and the customer has payment methods...
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_withCard_200, pmType: "card")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "us_bank_account")
-        StubbedBackend.stubPaymentMethods(fileMock: .saved_payment_methods_200, pmType: "sepa_debit")
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [.card])
         StubbedBackend.stubCustomers()
         StubbedBackend.stubLookup()
 
@@ -535,6 +517,36 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             switch result {
             case .success:
                 XCTFail("Expected failure when customer is set with CheckoutSession mode")
+            case .failure(let error):
+                guard case PaymentSheetError.integrationError = error else {
+                    XCTFail("Expected PaymentSheetError.integrationError, got \(error)")
+                    return
+                }
+            }
+            loaded.fulfill()
+        }
+        wait(for: [loaded], timeout: 2)
+    }
+
+    func testCheckoutSessionWithoutEmailThrowsError() {
+        var json = STPTestUtils.jsonNamed("CheckoutSession")!
+        json["customer_email"] = NSNull()
+        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.apiClient = stubbedAPIClient()
+
+        let loaded = expectation(description: "Loaded")
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        PaymentSheetLoader.load(
+            mode: .checkoutSession(checkoutSession),
+            configuration: configuration,
+            analyticsHelper: ._testValue(integrationShape: .complete),
+            integrationShape: .paymentSheet
+        ) { result in
+            switch result {
+            case .success:
+                XCTFail("Expected failure when email is not set with CheckoutSession mode")
             case .failure(let error):
                 guard case PaymentSheetError.integrationError = error else {
                     XCTFail("Expected PaymentSheetError.integrationError, got \(error)")
