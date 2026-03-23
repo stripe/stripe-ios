@@ -25,6 +25,8 @@ extension CheckoutPlayground {
         @Published var shippingAddressCollection = true
         @Published var billingAddressCollection = false
         @Published var automaticTax = true
+        @Published var adaptivePricing = false
+        @Published var adaptivePricingCountry: AdaptivePricingCountry = .none
         @Published var paymentMethodTypes: Set<String> = ["card"]
         @Published var checkoutEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout_session"
 
@@ -87,7 +89,7 @@ extension CheckoutPlayground {
             let phoneNumberCollectionForRequest = supportsAdvancedCollection ? phoneNumberCollection : false
             let automaticTaxForRequest = supportsAdvancedCollection ? automaticTax : false
 
-            let body: [String: Any] = [
+            var body: [String: Any] = [
                 "merchant_country_code": "us_tax",
                 "mode": mode.rawValue,
                 "currency": currency.rawValue,
@@ -99,7 +101,12 @@ extension CheckoutPlayground {
                 "include_shipping_options": enableShipping,
                 "automatic_tax": automaticTaxForRequest,
                 "payment_method_types": Array(paymentMethodTypes),
+                "adaptive_pricing": adaptivePricing,
             ]
+            if adaptivePricing, adaptivePricingCountry != .none {
+                let countryCode = adaptivePricingCountry.rawValue.uppercased()
+                body["customer_email"] = "test+location_\(countryCode)@example.com"
+            }
 
             return body
         }
