@@ -114,7 +114,7 @@ extension STPPaymentMethod {
             } else {
                 let cardBrandImage = calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
                 if cardArtEnabled,
-                   let cardArt = card?.cardArt?.artImage {
+                   let cardArt = card?.cardArt?.artImage.stripeCDNURL(height: 40) {
                     return DownloadManager.sharedManager.downloadImage(url: cardArt,
                                                                        placeholder: nil,
                                                                        imageOnFailure: cardBrandImage,
@@ -146,7 +146,7 @@ extension STPPaymentMethod {
             } else {
                 let cardBrandImage = STPImageLibrary.unpaddedCardBrandImage(for: calculateCardBrandToDisplay())
                 if cardArtEnabled,
-                   let cardArt = card?.cardArt?.artImage {
+                   let cardArt = card?.cardArt?.artImage.stripeCDNURL(height: 20) {
                     return DownloadManager.sharedManager.downloadImage(url: cardArt,
                                                                        placeholder: nil,
                                                                        imageOnFailure: cardBrandImage,
@@ -324,5 +324,11 @@ extension UIImage {
         UIBezierPath(roundedRect: rect, cornerRadius: radius).addClip()
         draw(in: rect)
         return UIGraphicsGetImageFromCurrentImageContext()!
+    }
+}
+
+extension URL {
+    func stripeCDNURL(height: Int, dpr: Int = 4) -> URL? {
+        return URL(string: "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=\(height),dpr=\(dpr)/\(self.absoluteString)")
     }
 }

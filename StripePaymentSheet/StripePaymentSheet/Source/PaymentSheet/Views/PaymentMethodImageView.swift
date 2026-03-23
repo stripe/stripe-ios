@@ -1,5 +1,5 @@
 //
-//  SavedPaymentMethodTypeImageView.swift
+//  PaymentMethodImageView.swift
 //  StripePaymentSheet
 //
 
