@@ -245,10 +245,14 @@ class PaymentSheetFormFactory {
             case .twint, .grabPay, .alipay, .paynow, .payPay, .mobilePay, .zip, .crypto, .billie, .sunbit, .alma, .swish:
                 return makeBillingDetailsForm(emailRequired: false)
             // Payment methods that require email and optionally collect other billing details
+            case .affirm:
+                return makeAffirm()
             case .promptPay, .multibanco:
                 return makeBillingDetailsForm(emailRequired: true)
+            case .klarna:
+                return makeKlarna()
             // Payment methods using form specs (possibly with mandates)
-            case .FPX, .AUBECSDebit, .przelewy24, .EPS, .netBanking, .payPal, .weChatPay, .link, .klarna, .affirm, .cashApp, .revolutPay, .amazonPay, .satispay, .shopPay, .cardPresent, .unknown:
+            case .FPX, .AUBECSDebit, .przelewy24, .EPS, .netBanking, .payPal, .weChatPay, .link, .cashApp, .revolutPay, .amazonPay, .satispay, .shopPay, .cardPresent, .unknown:
                 return makeFormSpecBasedForm(paymentMethod)
             @unknown default:
                 return makeFormSpecBasedForm(paymentMethod)

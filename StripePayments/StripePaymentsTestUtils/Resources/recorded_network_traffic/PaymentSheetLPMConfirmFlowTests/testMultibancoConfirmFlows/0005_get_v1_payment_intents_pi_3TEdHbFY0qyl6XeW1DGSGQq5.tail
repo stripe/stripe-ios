@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TBg4qBgCYKNuUnn1zkPvNSK\?client_secret=pi_3TBg4qBgCYKNuUnn1zkPvNSK_secret_rQM74UIAJKumJpo9ACasn27rb&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TEdHbFY0qyl6XeW1DGSGQq5\?client_secret=pi_3TEdHbFY0qyl6XeW1DGSGQq5_secret_ZYcPOYDUNbk54sKAmadIV3UxC&expand%5B0%5D=payment_method$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=6cWRcPPLPx55RKD-UooUpQHUtLkpJCiWzL4gnBE7h6FupAq5E5gD1eR9WC_6D0olJt2Wnf9_PX_p9gaV
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=6TS7imXfJ7098ght07MZj734TJHc_izvnRvcBBOsoaw7dCAAjB4BB77yNWNIRu35fBlg478-1EAZHc4k
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Mon, 16 Mar 2026 18:41:20 GMT
+Date: Tue, 24 Mar 2026 22:18:49 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 2079
+Content-Length: 1850
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_tNAqdgwEXUNWmE
+request-id: req_U0eBb8ntneYEGz
 
 {
   "payment_method_configuration_details" : null,
@@ -31,25 +31,28 @@ request-id: req_tNAqdgwEXUNWmE
   "shipping" : null,
   "status" : "requires_action",
   "object" : "payment_intent",
-  "currency" : "thb",
+  "currency" : "eur",
   "last_payment_error" : null,
+  "amount_subtotal" : 5050,
   "automatic_payment_methods" : null,
   "cancellation_reason" : null,
   "next_action" : {
-    "type" : "promptpay_display_qr_code",
-    "promptpay_display_qr_code" : {
-      "image_url_svg" : "https:\/\/qr.stripe.com\/test_YWNjdF8xTnBFQVdCZ0NZS051VW5uLF9VQTA1cUtWbGNlZGFUUWxlOWRlZ1IybVZNbGdoRjNy0100rCKBtc1B.svg",
-      "data" : "https:\/\/payments.stripe.com\/payment_methods\/test_payment?payment_attempt=payatt_3TBg4qBgCYKNuUnn1vPkm4JA",
-      "hosted_instructions_url" : "https:\/\/payments.stripe.com\/promptpay\/instructions\/CBoaFwoVYWNjdF8xTnBFQVdCZ0NZS051VW5uKNCd4c0GMgYMZBUHyck6L1Prtjems1zE2ROoMcJg7MN-jQvYpVLnCtFFBY9oCBr4g8eWUG8-cx7AJCdt1r5n",
-      "image_url_png" : "https:\/\/qr.stripe.com\/test_YWNjdF8xTnBFQVdCZ0NZS051VW5uLF9VQTA1cUtWbGNlZGFUUWxlOWRlZ1IybVZNbGdoRjNy0100rCKBtc1B.png"
+    "type" : "multibanco_display_details",
+    "multibanco_display_details" : {
+      "expires_at" : 1774995528,
+      "reference" : "123456789",
+      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/multibanco\/voucher\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9VRDNPYTN4ckM2SndQZGxNOXUwVnk2UzVkOU1pNXM30100ZMfzOE63",
+      "entity" : "12345"
     }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
   },
   "payment_method" : {
     "object" : "payment_method",
-    "promptpay" : {
-
-    },
-    "id" : "pm_1TBg4pBgCYKNuUnnu5hNGKVg",
+    "id" : "pm_1TEdHgFY0qyl6XeWGWXSH0TB",
     "billing_details" : {
       "email" : "foo@bar.com",
       "phone" : null,
@@ -65,14 +68,17 @@ request-id: req_tNAqdgwEXUNWmE
       }
     },
     "livemode" : false,
-    "created" : 1773686479,
+    "created" : 1774390728,
     "allow_redisplay" : "unspecified",
-    "type" : "promptpay",
+    "multibanco" : {
+
+    },
     "customer" : null,
+    "type" : "multibanco",
     "customer_account" : null
   },
-  "client_secret" : "pi_3TBg4qBgCYKNuUnn1zkPvNSK_secret_rQM74UIAJKumJpo9ACasn27rb",
-  "id" : "pi_3TBg4qBgCYKNuUnn1zkPvNSK",
+  "client_secret" : "pi_3TEdHbFY0qyl6XeW1DGSGQq5_secret_ZYcPOYDUNbk54sKAmadIV3UxC",
+  "id" : "pi_3TEdHbFY0qyl6XeW1DGSGQq5",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -83,9 +89,9 @@ request-id: req_tNAqdgwEXUNWmE
   "processing" : null,
   "receipt_email" : null,
   "payment_method_types" : [
-    "promptpay"
+    "multibanco"
   ],
   "setup_future_usage" : null,
-  "created" : 1773686480,
+  "created" : 1774390723,
   "description" : null
 }
