@@ -52,6 +52,30 @@ enum CheckoutPlayground {
         var id: String { rawValue }
     }
 
+    enum AdaptivePricingCountry: String, CaseIterable, Identifiable {
+        case none
+        case us
+        case fr
+        case de
+        case jp
+        case gb
+        case br
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .none: return "None"
+            case .us: return "US"
+            case .fr: return "FR"
+            case .de: return "DE"
+            case .jp: return "JP"
+            case .gb: return "GB"
+            case .br: return "BR"
+            }
+        }
+    }
+
     struct LineItemConfig: Identifiable {
         let id = UUID()
         var name: String
