@@ -71,14 +71,17 @@ private extension TwoOptionSelectorElementSnapshotTests {
     ) {
         let view = element.view
         view.backgroundColor = appearance.colors.background
+        view.autosizeHeight(width: 320)
 
         if darkMode {
-            let container = UIView()
-            container.overrideUserInterfaceStyle = .dark
-            container.addSubview(view)
+            let window = UIWindow(frame: view.bounds)
+            window.overrideUserInterfaceStyle = .dark
+            window.isHidden = false
+            view.translatesAutoresizingMaskIntoConstraints = true
+            window.addSubview(view)
+            window.layoutIfNeeded()
         }
 
-        view.autosizeHeight(width: 320)
         STPSnapshotVerifyView(view, file: file, line: line)
     }
 }
