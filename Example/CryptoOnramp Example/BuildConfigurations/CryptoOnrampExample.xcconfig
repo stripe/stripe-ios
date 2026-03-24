@@ -1,0 +1,9 @@
+// Passwordless demo mode — define these in the local override to enable.
+// DEMO_PASSWORDLESS_PASSWORD = <password>
+// DEMO_PASSWORDLESS_EMAILS = <comma-separated emails>
+// DEMO_SOLANA_WALLET_ADDRESSES = <comma-separated email:walletAddress pairs>
+
+// Optional local overrides (gitignored)
+#include? "CryptoOnrampExample.local.xcconfig"
+
+// See Info.plist where these build settings are used
