@@ -646,7 +646,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
     func testLookupLink_linkDisabled_holdbackGlobal_shouldLookup() async throws {
         try await assertLinkLookup(
-            experimentAssignments: ["link_global_holdback": .holdback],
+            experimentAssignments: [LinkGlobalHoldback.experimentName: .holdback],
             shouldCallLookup: true,
             message: "Expected Link lookup when link_global_holdback is 'holdback'"
         )
@@ -663,7 +663,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     func testLookupLink_linkDisabled_bothExperimentsHoldback_shouldLookup() async throws {
         try await assertLinkLookup(
             experimentAssignments: [
-                "link_global_holdback": .holdback,
+                LinkGlobalHoldback.experimentName: .holdback,
                 "link_ab_test": .holdback,
             ],
             shouldCallLookup: true,
@@ -673,7 +673,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
     func testLookupLink_linkDisabled_holdbackWithKillswitch_shouldNotLookup() async throws {
         try await assertLinkLookup(
-            experimentAssignments: ["link_global_holdback": .holdback],
+            experimentAssignments: [LinkGlobalHoldback.experimentName: .holdback],
             flags: ["elements_disable_link_global_holdback_lookup": true],
             shouldCallLookup: false,
             message: "Link lookup should not happen when killswitch is enabled"
@@ -690,7 +690,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
     func testLookupLink_linkDisabled_controlGroup_shouldNotLookup() async throws {
         try await assertLinkLookup(
-            experimentAssignments: ["link_global_holdback": .control],
+            experimentAssignments: [LinkGlobalHoldback.experimentName: .control],
             shouldCallLookup: false,
             message: "Link lookup should not happen when experiment is 'control' (not holdback)"
         )
