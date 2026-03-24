@@ -189,8 +189,15 @@ struct CryptoOnrampExampleView: View {
                     blue: 242/255.0,
                     alpha: 1.0
                 )
+                let indigoColor = UIColor(
+                    red: 29/255.0,
+                    green: 18/255.0,
+                    blue: 56/255.0,
+                    alpha: 1.0
+                )
+                
                 let appearance = LinkAppearance(
-                    colors: .init(primary: lavenderColor, selectedBorder: .label),
+                    colors: .init(primary: lavenderColor, contentOnPrimary: .red, selectedBorder: .label),
                     primaryButton: .init(cornerRadius: 16, height: 56),
                     style: .automatic,
                     reduceLinkBranding: true
