@@ -23,15 +23,36 @@ public extension StripeAPI {
             public let data: [StripeAPI.FinancialConnectionsAccount]
             /** True if this list has another page of items after this one that can be fetched. */
             public let hasMore: Bool
+        }
 
-            // MARK: - Internal Init
+        /// Options describing the authorization being relinked in this session.
+        public struct RelinkOptions {
+            /// The authorization to relink in the session.
+            public let authorization: String
+            /// The specific account that must be relinked, if one was targeted.
+            public let account: String?
+        }
 
-            internal init(
-                data: [StripeAPI.FinancialConnectionsAccount],
-                hasMore: Bool
-            ) {
-                self.data = data
-                self.hasMore = hasMore
+        /// The result of a relink attempt in this session.
+        public struct RelinkResult {
+            @frozen public enum FailureReason: String, SafeEnumCodable, Equatable {
+                case noAccount = "no_account"
+                case noAuthorization = "no_authorization"
+                case other = "other"
+                case unparsable
+            }
+
+            /// The authorization relinked in the session, if relink succeeded.
+            public let authorization: String?
+            /// The account relinked in the session, if relink succeeded for a targeted account.
+            public let account: String?
+            /// The reason the relink failed, when the relink flow did not succeed.
+            public let failureReason: FailureReason?
+
+            enum CodingKeys: String, CodingKey {
+                case authorization
+                case account
+                case failureReason = "failure_reason"
             }
         }
 
@@ -44,11 +65,11 @@ public extension StripeAPI {
                 public let id: String
                 public let last4: String
                 public let routingNumber: String?
-                
+
                 /// Whether the account should be considered instantly verified. This field isn't part of the API response 
                 /// and is being set later on.
                 public var instantlyVerified: Bool = false
-                
+
                 private enum CodingKeys: String, CodingKey {
                     case bankName, id, last4, routingNumber
                 }
@@ -104,6 +125,10 @@ public extension StripeAPI {
         public let id: String
         public let accounts: FinancialConnectionsSession.AccountList
         public let livemode: Bool
+        /// Relink configuration associated with this session when a relink result is available.
+        public let relinkOptions: RelinkOptions?
+        /// The relink result associated with this session, when available.
+        public let relinkResult: RelinkResult?
         @_spi(STP) public let paymentAccount: PaymentAccount?
         @_spi(STP) public let bankAccountToken: BankAccountToken?
         let status: Status?
@@ -116,15 +141,30 @@ public extension StripeAPI {
             id: String,
             accounts: FinancialConnectionsSession.AccountList,
             livemode: Bool,
+            relinkOptions: RelinkOptions?,
+            relinkResult: RelinkResult?,
             paymentAccount: PaymentAccount?,
             bankAccountToken: BankAccountToken?,
             status: Status?,
             statusDetails: StatusDetails?
         ) {
+            let normalizedRelinkOptions: RelinkOptions?
+            let normalizedRelinkResult: RelinkResult?
+
+            if let relinkResult {
+                normalizedRelinkOptions = relinkOptions
+                normalizedRelinkResult = relinkResult
+            } else {
+                normalizedRelinkOptions = nil
+                normalizedRelinkResult = nil
+            }
+
             self.clientSecret = clientSecret
             self.id = id
             self.accounts = accounts
             self.livemode = livemode
+            self.relinkOptions = normalizedRelinkOptions
+            self.relinkResult = normalizedRelinkResult
             self.paymentAccount = paymentAccount
             self.bankAccountToken = bankAccountToken
             self.status = status
@@ -139,6 +179,8 @@ public extension StripeAPI {
             case accounts = "accounts"
             case linkedAccounts = "linked_accounts"
             case livemode = "livemode"
+            case relinkOptions = "relink_options"
+            case relinkResult = "relink_result"
             case paymentAccount = "payment_account"
             case bankAccountToken = "bank_account_token"
             case status = "status"
@@ -158,6 +200,8 @@ public extension StripeAPI {
                 id: try container.decode(String.self, forKey: .id),
                 accounts: accounts,
                 livemode: try container.decode(Bool.self, forKey: .livemode),
+                relinkOptions: try? container.decode(RelinkOptions.self, forKey: .relinkOptions),
+                relinkResult: try? container.decode(RelinkResult.self, forKey: .relinkResult),
                 paymentAccount: try? container.decode(PaymentAccount.self, forKey: .paymentAccount),
                 bankAccountToken: try? container.decode(BankAccountToken.self, forKey: .bankAccountToken),
                 status: try? container.decode(Status.self, forKey: .status),
@@ -171,3 +215,5 @@ public extension StripeAPI {
 
 @_spi(STP) extension StripeAPI.FinancialConnectionsSession: Decodable {}
 @_spi(STP) extension StripeAPI.FinancialConnectionsSession.AccountList: Decodable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsSession.RelinkOptions: Codable, Equatable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsSession.RelinkResult: Codable, Equatable {}

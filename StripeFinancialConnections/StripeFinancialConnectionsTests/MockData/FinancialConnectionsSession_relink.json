@@ -1,0 +1,21 @@
+{
+  "id": "fcsess_relink",
+  "object": "link_account_session",
+  "client_secret": "las_client_secrettest_tests",
+  "accounts": {
+    "object": "list",
+    "data": [],
+    "has_more": false,
+    "total_count": 0,
+    "url": "/v1/linked_accounts"
+  },
+  "livemode": true,
+  "relink_options": {
+    "authorization": "fcauth_123",
+    "account": "fca_1KtwJsdsdfdsf"
+  },
+  "relink_result": {
+    "authorization": "fcauth_123",
+    "account": "fca_1KtwJsdsdfdsf"
+  }
+}

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable import StripeFinancialConnections
 import XCTest
@@ -18,6 +19,8 @@ enum FinancialConnectionsSessionMock: String, MockData {
     case onlyAccountsPresent = "FinancialConnectionsSession_only_accounts"
     case bothAccountsAndLinkedAccountsMissing = "FinancialConnectionsSession_only_both_missing"
     case onlyLinkedAccountsPresent = "FinancialConnectionsSession_only_la"
+    case relink = "FinancialConnectionsSession_relink"
+    case relinkOptionsOnly = "FinancialConnectionsSession_relink_options_only"
 }
 
 enum FinancialConnectionsSynchronizeMock: String, MockData {
@@ -57,4 +60,67 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         XCTAssertThrowsError(try FinancialConnectionsSessionMock.bothAccountsAndLinkedAccountsMissing.make())
     }
 
+    func testRelinkFieldsParseWhenRelinkResultPresent() throws {
+        let session = try FinancialConnectionsSessionMock.relink.make()
+
+        XCTAssertEqual(session.relinkOptions?.authorization, "fcauth_123")
+        XCTAssertEqual(session.relinkOptions?.account, "fca_1KtwJsdsdfdsf")
+        XCTAssertEqual(session.relinkResult?.authorization, "fcauth_123")
+        XCTAssertEqual(session.relinkResult?.account, "fca_1KtwJsdsdfdsf")
+        XCTAssertNil(session.relinkResult?.failureReason)
+    }
+
+    func testRelinkFieldsAreNilWhenOnlyRelinkOptionsPresent() throws {
+        let session = try FinancialConnectionsSessionMock.relinkOptionsOnly.make()
+
+        XCTAssertNil(session.relinkOptions)
+        XCTAssertNil(session.relinkResult)
+    }
+
+    func testRelinkFailureReasonParsesKnownValues() throws {
+        XCTAssertEqual(
+            try makeSession(withFailureReason: "no_account").relinkResult?.failureReason,
+            .noAccount
+        )
+        XCTAssertEqual(
+            try makeSession(withFailureReason: "no_authorization").relinkResult?.failureReason,
+            .noAuthorization
+        )
+        XCTAssertEqual(
+            try makeSession(withFailureReason: "other").relinkResult?.failureReason,
+            .other
+        )
+    }
+
+    private func makeSession(withFailureReason failureReason: String) throws -> StripeAPI.FinancialConnectionsSession {
+        let json = """
+        {
+          "id": "fcsess_relink",
+          "object": "link_account_session",
+          "client_secret": "las_client_secrettest_tests",
+          "accounts": {
+            "object": "list",
+            "data": [],
+            "has_more": false,
+            "total_count": 0,
+            "url": "/v1/linked_accounts"
+          },
+          "livemode": false,
+          "relink_options": {
+            "authorization": "fcauth_123",
+            "account": "fca_1KtwJsdsdfdsf"
+          },
+          "relink_result": {
+            "authorization": null,
+            "account": null,
+            "failure_reason": "\(failureReason)"
+          }
+        }
+        """
+
+        return try StripeJSONDecoder().decode(
+            StripeAPI.FinancialConnectionsSession.self,
+            from: Data(json.utf8)
+        )
+    }
 }

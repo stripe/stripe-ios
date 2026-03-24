@@ -449,6 +449,8 @@ extension FinancialConnectionsAsyncAPIClient {
                     hasMore: false
                 ),
                 livemode: session.livemode,
+                relinkOptions: session.relinkOptions,
+                relinkResult: session.relinkResult,
                 paymentAccount: session.paymentAccount,
                 bankAccountToken: session.bankAccountToken,
                 status: session.status,

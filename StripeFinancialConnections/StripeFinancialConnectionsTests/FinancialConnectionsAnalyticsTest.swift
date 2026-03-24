@@ -32,6 +32,8 @@ final class FinancialConnectionsSheetAnalyticsTest: XCTestCase {
             id: "",
             accounts: accountList,
             livemode: false,
+            relinkOptions: nil,
+            relinkResult: nil,
             paymentAccount: nil,
             bankAccountToken: nil,
             status: nil,

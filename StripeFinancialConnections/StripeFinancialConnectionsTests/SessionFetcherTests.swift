@@ -58,6 +58,8 @@ class NoMoreAccountSessionAPIClient: EmptyFinancialConnectionsAPIClient {
             id: "1234",
             accounts: fullList,
             livemode: false,
+            relinkOptions: nil,
+            relinkResult: nil,
             paymentAccount: nil,
             bankAccountToken: nil,
             status: nil,

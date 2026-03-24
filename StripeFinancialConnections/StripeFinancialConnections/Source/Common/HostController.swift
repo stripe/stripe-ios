@@ -50,6 +50,8 @@ extension HostControllerResult {
             id: session.id,
             accounts: session.accounts,
             livemode: session.livemode,
+            relinkOptions: session.relinkOptions,
+            relinkResult: session.relinkResult,
             paymentAccount: session.paymentAccount?.setInstantlyVerifiedIfNeeded(instantlyVerified),
             bankAccountToken: session.bankAccountToken,
             status: session.status,
