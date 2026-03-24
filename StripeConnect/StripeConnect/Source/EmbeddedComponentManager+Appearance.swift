@@ -310,7 +310,7 @@ extension EmbeddedComponentManager {
         @_spi(PreviewConnect)
         @_documentation(visibility: public)
         public var buttonDanger: Button  = .init()
-        /// Describes the padding and label typography shared by all button types
+        /// Describes the padding and label typography shared by all button variants
         @_spi(PreviewConnect)
         @_documentation(visibility: public)
         public var buttonDefaults: ButtonDefaults = .init()
@@ -327,7 +327,7 @@ extension EmbeddedComponentManager {
         /// critical situations that the user must address immediately, and to
         /// indicate failed or unsuccessful outcomes.
         public var badgeDanger: Badge  = .init()
-        /// Describes the padding and label typography shared by all badge types
+        /// Describes the padding and label typography shared by all badge variants
         @_spi(PreviewConnect)
         @_documentation(visibility: public)
         public var badgeDefaults: BadgeDefaults = .init()
