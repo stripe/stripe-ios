@@ -1,3 +1,6 @@
+The next release's version bump will so far be:
+MINOR
+
 ## X.Y.Z - changes pending release 
 ### PaymentSheet
 * [Fixed] Fixed a crash when loading PaymentSheet, FlowController, and EmbeddedPaymentElement when compiling with XCode 26.4 / Swift 6.3 due to [a compiler bug](https://github.com/swiftlang/swift/issues/87481)
