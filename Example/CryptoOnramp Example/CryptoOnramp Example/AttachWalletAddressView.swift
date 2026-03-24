@@ -87,6 +87,11 @@ struct AttachWalletAddressView: View {
             }
         }
         .onAppear {
+            if walletAddress.isEmpty,
+               let email = APIClient.shared.email,
+               let prefill = DemoConfig.solanaWalletAddress(for: email) {
+                walletAddress = prefill
+            }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
                 walletFieldFocused = true
             }

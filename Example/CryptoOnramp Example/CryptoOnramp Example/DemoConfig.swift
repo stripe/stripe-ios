@@ -36,6 +36,34 @@ enum DemoConfig {
         return allowedEmails.contains(normalizeEmail(normalized))
     }
 
+    /// Parsed mapping of lowercased email → Solana wallet address from the
+    /// `DemoSolanaWalletAddresses` Info.plist key (comma-separated `email:address` pairs).
+    private static var solanaWalletAddresses: [String: String] {
+        guard let raw = Bundle.main.infoDictionary?["DemoSolanaWalletAddresses"] as? String else {
+            return [:]
+        }
+        var mapping: [String: String] = [:]
+        for pair in raw.split(separator: ",") {
+            let parts = pair.split(separator: ":", maxSplits: 1)
+            guard parts.count == 2 else { continue }
+            let email = parts[0].trimmingCharacters(in: .whitespaces).lowercased()
+            let address = parts[1].trimmingCharacters(in: .whitespaces)
+            guard !email.isEmpty, !address.isEmpty else { continue }
+            mapping[email] = address
+        }
+        return mapping
+    }
+
+    /// Returns the configured Solana wallet address for the given email, if any.
+    /// Supports plus-addressing: e.g. `alice+test@stripe.com` matches `alice@stripe.com`.
+    static func solanaWalletAddress(for email: String) -> String? {
+        let lowered = email.lowercased()
+        if let address = solanaWalletAddresses[lowered] {
+            return address
+        }
+        return solanaWalletAddresses[normalizeEmail(lowered)]
+    }
+
     /// Strips the `+…` suffix from the local part of an email address.
     /// e.g. `alice+test@stripe.com` → `alice@stripe.com`
     private static func normalizeEmail(_ email: String) -> String {

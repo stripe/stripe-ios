@@ -6,5 +6,7 @@
 	<string>$(DEMO_PASSWORDLESS_PASSWORD)</string>
 	<key>DemoPasswordlessEmails</key>
 	<string>$(DEMO_PASSWORDLESS_EMAILS)</string>
+	<key>DemoSolanaWalletAddresses</key>
+	<string>$(DEMO_SOLANA_WALLET_ADDRESSES)</string>
 </dict>
 </plist>
