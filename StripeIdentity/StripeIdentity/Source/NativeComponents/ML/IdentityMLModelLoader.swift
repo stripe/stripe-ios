@@ -147,8 +147,8 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
         mlModelLoader.loadVisionModel(
             fromRemote: idDetectorURL
         ).chained { idDetectorModel in
-            return Promise(
-                value: .init(
+            return Promise<AnyDocumentScanner>(
+                value: AnyDocumentScanner(
                     DocumentScanner(
                         idDetectorModel: idDetectorModel,
                         configuration: .init(from: capturePageConfig),
@@ -191,8 +191,8 @@ final class IdentityMLModelLoader: IdentityMLModelLoaderProtocol {
         mlModelLoader.loadVisionModel(
             fromRemote: faceDetectorURL
         ).chained { faceDetectorModel in
-            return Promise(
-                value: .init(
+            return Promise<AnyFaceScanner>(
+                value: AnyFaceScanner(
                     FaceScanner(
                         faceDetectorModel: faceDetectorModel,
                         configuration: .init(from: selfiePageConfig)
