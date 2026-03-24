@@ -183,7 +183,9 @@ final class CurrencySelectorElementTests: XCTestCase {
     }
 
     private func selectedButton(in view: UIView) -> UIButton? {
-        allButtons(in: view).first(where: { $0.layer.borderWidth == 2 })
+        let buttons = allButtons(in: view)
+        let defaultBorderWidth = PaymentSheet.Appearance.default.borderWidth
+        return buttons.first(where: { $0.layer.borderWidth > defaultBorderWidth })
     }
 
     private func captionLabel(in view: UIView) -> UILabel? {
