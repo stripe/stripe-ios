@@ -85,6 +85,15 @@ final class IdentityAnalyticsClient {
         case selfie
     }
 
+    enum CameraSource: String {
+        case cameraSession = "camera_session"
+        case imagePicker = "image_picker"
+    }
+    enum CameraEventKind: String {
+        case permission = "permission"
+        case runtimeError = "runtime_error"
+    }
+
     static let sharedAnalyticsClient = AnalyticsClientV2(
         clientId: "mobile-identity-sdk",
         origin: "stripe-identity-ios"
@@ -140,6 +149,29 @@ final class IdentityAnalyticsClient {
             blurScoreFront = blurScore
         } else {
             blurScoreBack = blurScore
+        }
+    }
+
+    private func cameraMetadata(
+        screenName: ScreenName,
+        cameraSource: CameraSource,
+        cameraEventKind: CameraEventKind
+    ) -> [String: Any] {
+        return [
+            "screen_name": screenName.rawValue,
+            "camera_source": cameraSource.rawValue,
+            "camera_event_kind": cameraEventKind.rawValue,
+        ]
+    }
+
+    private func cameraAccessState(isGranted: Bool?) -> String {
+        switch isGranted {
+        case true:
+            return "granted"
+        case false:
+            return "denied"
+        case nil:
+            return "unknown"
         }
     }
 
@@ -330,10 +362,16 @@ final class IdentityAnalyticsClient {
     func logCameraError(
         sheetController: VerificationSheetControllerProtocol,
         error: Error,
+        screenName: ScreenName,
+        cameraSource: CameraSource,
         filePath: StaticString = #filePath,
         line: UInt = #line
     ) {
-        var metadata: [String: Any] = [:]
+        var metadata = cameraMetadata(
+            screenName: screenName,
+            cameraSource: cameraSource,
+            cameraEventKind: .runtimeError
+        )
         metadata["error"] = AnalyticsClientV2.serialize(
             error: error,
             filePath: filePath,
@@ -342,15 +380,51 @@ final class IdentityAnalyticsClient {
         logAnalytic(.cameraError, metadata: metadata, verificationPage: try? sheetController.verificationPageResponse?.get())
     }
 
-    /// Logs either a permission denied or granted event when the camera permissions are checked prior to starting a camera session
+    /// Logs a permission analytic when camera access is checked prior to starting a camera session
     func logCameraPermissionsChecked(
         sheetController: VerificationSheetControllerProtocol,
-        isGranted: Bool?
+        isGranted: Bool?,
+        screenName: ScreenName,
+        cameraSource: CameraSource
     ) {
-        let eventName: EventName =
-            (isGranted == true) ? .cameraPermissionGranted : .cameraPermissionDenied
+        guard isGranted != true else {
+            logAnalytic(
+                .cameraPermissionGranted,
+                metadata: [:],
+                verificationPage: try? sheetController.verificationPageResponse?.get()
+            )
+            return
+        }
+        logCameraPermissionDeniedOrUnknown(
+            sheetController: sheetController,
+            isGranted: isGranted,
+            screenName: screenName,
+            cameraSource: cameraSource
+        )
+    }
 
-        logAnalytic(eventName, metadata: [:], verificationPage: try? sheetController.verificationPageResponse?.get())
+    /// Logs a permission analytic only when camera access is denied or unknown
+    func logCameraPermissionDeniedOrUnknown(
+        sheetController: VerificationSheetControllerProtocol,
+        isGranted: Bool?,
+        screenName: ScreenName,
+        cameraSource: CameraSource
+    ) {
+        guard isGranted != true else {
+            return
+        }
+        var metadata = cameraMetadata(
+            screenName: screenName,
+            cameraSource: cameraSource,
+            cameraEventKind: .permission
+        )
+        metadata["camera_access_state"] = cameraAccessState(isGranted: isGranted)
+
+        logAnalytic(
+            .cameraPermissionDenied,
+            metadata: metadata,
+            verificationPage: try? sheetController.verificationPageResponse?.get()
+        )
     }
 
     /// Logs an event when document capture times out

@@ -342,7 +342,9 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         }
         sheetController.analyticsClient.logCameraError(
             sheetController: sheetController,
-            error: error
+            error: error,
+            screenName: analyticsScreenName,
+            cameraSource: .cameraSession
         )
     }
 
@@ -355,7 +357,9 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         }
         sheetController.analyticsClient.logCameraPermissionsChecked(
             sheetController: sheetController,
-            isGranted: isGranted
+            isGranted: isGranted,
+            screenName: analyticsScreenName,
+            cameraSource: .cameraSession
         )
     }
 

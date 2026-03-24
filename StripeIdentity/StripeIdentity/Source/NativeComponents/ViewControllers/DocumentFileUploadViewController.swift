@@ -360,18 +360,16 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         cameraPermissionsManager.requestCameraAccess(completeOnQueue: .main) {
             [weak self] granted in
             guard let self = self else { return }
+            self.logDeniedCameraPermissionIfNeeded(granted)
             guard granted == true else {
                 self.showCameraPermissionsAlert()
                 return
             }
 
             guard UIImagePickerController.isSourceTypeAvailable(.camera) else {
-                if let sheetController {
-                    sheetController.analyticsClient.logGenericError(
-                        error: DocumentFileUploadViewControllerError.imagePickerSourceCameraUnavailable,
-                        sheetController: sheetController
-                    )
-                }
+                self.logCameraError(
+                    DocumentFileUploadViewControllerError.imagePickerSourceCameraUnavailable
+                )
                 return
             }
 
@@ -462,6 +460,37 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         )
 
         present(alert, animated: true, completion: nil)
+    }
+
+    private func logDeniedCameraPermissionIfNeeded(_ isGranted: Bool?) {
+        guard let sheetController else {
+            return
+        }
+        sheetController.analyticsClient.logCameraPermissionDeniedOrUnknown(
+            sheetController: sheetController,
+            isGranted: isGranted,
+            screenName: analyticsScreenName,
+            cameraSource: .imagePicker
+        )
+    }
+
+    private func logCameraError(
+        _ error: Error,
+        filePath: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        guard let sheetController else {
+            return
+        }
+
+        sheetController.analyticsClient.logCameraError(
+            sheetController: sheetController,
+            error: error,
+            screenName: analyticsScreenName,
+            cameraSource: .imagePicker,
+            filePath: filePath,
+            line: line
+        )
     }
 
     // MARK: - Continue button

@@ -428,6 +428,17 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             expectedState: .noCameraAccess,
             expectedButtonState: .enabled
         )
+        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "camera_permission_denied"
+        ).first
+        XCTAssert(analytic: analytic, hasMetadata: "screen_name", withValue: "live_capture")
+        XCTAssert(
+            analytic: analytic,
+            hasMetadata: "camera_source",
+            withValue: "camera_session"
+        )
+        XCTAssert(analytic: analytic, hasMetadata: "camera_event_kind", withValue: "permission")
+        XCTAssert(analytic: analytic, hasMetadata: "camera_access_state", withValue: "denied")
         XCTAssertEqual(
             mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_granted")
                 .count,
@@ -464,9 +475,16 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             code: 100,
             fileName: "DocumentCaptureViewController.swift"
         )
+        XCTAssert(analytic: analytic, hasMetadata: "screen_name", withValue: "live_capture")
+        XCTAssert(
+            analytic: analytic,
+            hasMetadata: "camera_source",
+            withValue: "camera_session"
+        )
+        XCTAssert(analytic: analytic, hasMetadata: "camera_event_kind", withValue: "runtime_error")
     }
 
-    func testCameraAccessGrantedAnalytic() {
+    func testCameraAccessGrantedLogsExistingAnalytic() {
         // Mock collected data for analytics
         mockSheetController.collectedData = VerificationPageDataUpdateMock.default.collectedData!
 
@@ -477,6 +495,11 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         grantCameraAccess(granted: true)
 
         // Verify analytics
+        XCTAssertEqual(
+            mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_granted")
+                .count,
+            1
+        )
         XCTAssertEqual(
             mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_denied")
                 .count,
