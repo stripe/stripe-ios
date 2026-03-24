@@ -50,7 +50,7 @@ struct LinkURLParams: Encodable {
     var intentMode: IntentMode
     var setupFutureUsage: Bool
     var cardBrandChoice: CardBrandChoiceInfo?
-    var linkFundingSources: [LinkSettings.FundingSource]
+    var linkFundingSources: [ParsedEnum<LinkSettings.FundingSource>]
     var clientAttributionMetadata: STPClientAttributionMetadata
 }
 
@@ -133,8 +133,8 @@ class LinkURLGenerator {
 }
 
 // Used to get deterministic ordering for FundingSource tests
-extension Set where Element == LinkSettings.FundingSource {
-    func toSortedArray() -> [LinkSettings.FundingSource] {
+extension Set where Element == ParsedEnum<LinkSettings.FundingSource> {
+    func toSortedArray() -> [ParsedEnum<LinkSettings.FundingSource>] {
         return self.sorted { a, b in
             a.rawValue.localizedCaseInsensitiveCompare(b.rawValue) == .orderedAscending
         }

@@ -5,6 +5,7 @@
 //  Created by Mat Schmid on 6/4/25.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import SwiftUI
 
@@ -149,7 +150,7 @@ enum Stubs {
         unredactedPhoneNumber: "+17070707070",
         phoneNumberCountry: "US",
         verificationSessions: [],
-        supportedPaymentDetailsTypes: [.card],
+        supportedPaymentDetailsTypes: [ParsedEnum(.card)],
         mobileFallbackWebviewParams: nil
     )
 

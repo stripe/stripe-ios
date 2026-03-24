@@ -1430,7 +1430,7 @@ extension PaymentSheetLinkAccount {
                 verificationSessions: [
                     .init(type: .sms, state: .verified)
                 ],
-                supportedPaymentDetailsTypes: [.card],
+                supportedPaymentDetailsTypes: [ParsedEnum(.card)],
                 mobileFallbackWebviewParams: nil
             )
         }

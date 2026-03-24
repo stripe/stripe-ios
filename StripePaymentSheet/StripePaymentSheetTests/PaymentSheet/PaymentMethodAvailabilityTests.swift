@@ -174,7 +174,7 @@ extension LinkSettings {
         linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> LinkSettings {
         return .init(
-            fundingSources: [.card, .bankAccount],
+            fundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             popupWebviewOption: nil,
             passthroughModeEnabled: true,
             disableSignup: disableSignup,

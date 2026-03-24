@@ -964,10 +964,10 @@ private extension ConsumerPaymentDetails {
     func expectedPaymentMethodTypeForPassthroughMode(
         _ elementsSession: STPElementsSession
     ) -> String? {
-        switch type {
+        switch type.value {
         case .card:
             return "card"
-        case .unparsable:
+        case nil:
             return nil
         case .bankAccount:
             return elementsSession.useCardPaymentMethodTypeForIBP ? "card" : "bank_account"
