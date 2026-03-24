@@ -153,9 +153,10 @@ struct RegistrationView: View {
                 )
 
                 await MainActor.run {
-                    isLoading.wrappedValue = false
                     isRegistrationComplete = true
                 }
+                // Continue directly into authentication
+                try await verify()
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
