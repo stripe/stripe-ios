@@ -356,20 +356,20 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
-                        paymentMethodLogo.set(.collectionView(paymentMethod, overrideUserInterfaceStyle, appearance.iconStyle), cardArtEnabled: cardArtEnabled)
+                        paymentMethodLogo.set(.savedPaymentMethodCell(paymentMethod, userInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle, cardArtEnabled: cardArtEnabled))
                     case .applePay:
                         // TODO (cleanup) - get this from PaymentOptionDisplayData?
                         label.text = String.Localized.apple_pay
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.set(.collectionViewApplePay(overrideUserInterfaceStyle), cardArtEnabled: cardArtEnabled)
+                        paymentMethodLogo.set(.applePay(userInterfaceStyle: overrideUserInterfaceStyle))
                     case .link:
                         label.text = STPPaymentMethodType.link.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.set(.collectionViewLink(overrideUserInterfaceStyle), cardArtEnabled: cardArtEnabled)
+                        paymentMethodLogo.set(.link(userInterfaceStyle: overrideUserInterfaceStyle))
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )

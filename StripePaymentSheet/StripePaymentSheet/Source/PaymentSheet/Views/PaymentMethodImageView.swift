@@ -8,14 +8,54 @@ import UIKit
 
 /// A convenience UIImageView that displays the payment method image, handles the download if needed
 class PaymentMethodImageView: UIImageView {
-    enum ImageType {
-        case collectionView(STPPaymentMethod, UIUserInterfaceStyle, PaymentSheet.Appearance.IconStyle)
-        case collectionViewApplePay(UIUserInterfaceStyle)
-        case collectionViewLink(UIUserInterfaceStyle)
-        case rowButton(STPPaymentMethod, PaymentSheet.Appearance.IconStyle)
+    struct Configuration {
+        let cardArtURL: URL?
+        let imageFromBundle: UIImage
+        let postProcess: ((UIImage) -> UIImage)?
+
+        static func savedPaymentMethodCell(
+            _ paymentMethod: STPPaymentMethod,
+            userInterfaceStyle: UIUserInterfaceStyle,
+            iconStyle: PaymentSheet.Appearance.IconStyle,
+            cardArtEnabled: Bool
+        ) -> Configuration {
+            Configuration(
+                cardArtURL: cardArtEnabled ? paymentMethod.cardArtURL(height: 40) : nil,
+                imageFromBundle: paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: userInterfaceStyle, iconStyle: iconStyle),
+                postProcess: nil
+            )
+        }
+
+        static func savedPaymentMethodRow(
+            _ paymentMethod: STPPaymentMethod,
+            iconStyle: PaymentSheet.Appearance.IconStyle,
+            cardArtEnabled: Bool
+        ) -> Configuration {
+            Configuration(
+                cardArtURL: cardArtEnabled ? paymentMethod.cardArtURL(height: 20) : nil,
+                imageFromBundle: paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: iconStyle),
+                postProcess: { $0.roundedWithBorder(radius: 3) }
+            )
+        }
+
+        static func applePay(userInterfaceStyle: UIUserInterfaceStyle) -> Configuration {
+            Configuration(
+                cardArtURL: nil,
+                imageFromBundle: PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: userInterfaceStyle),
+                postProcess: nil
+            )
+        }
+
+        static func link(userInterfaceStyle: UIUserInterfaceStyle) -> Configuration {
+            Configuration(
+                cardArtURL: nil,
+                imageFromBundle: PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: userInterfaceStyle),
+                postProcess: nil
+            )
+        }
     }
-    var imageType: ImageType?
-    var cardArtEnabled: Bool = false
+
+    private var configuration: Configuration?
     private var currentDownloadTask: Task<Void, Never>?
 
     init() {
@@ -34,54 +74,36 @@ class PaymentMethodImageView: UIImageView {
     }
 #endif
 
-    func set(_ imageType: ImageType, cardArtEnabled: Bool) {
-        self.cardArtEnabled = cardArtEnabled
-        self.imageType = imageType
+    func set(_ configuration: Configuration) {
+        self.configuration = configuration
         updateImage()
     }
 
-    func updateImage() {
+    private func updateImage() {
         currentDownloadTask?.cancel()
         currentDownloadTask = nil
 
-        guard let imageType else {
+        guard let configuration else {
             return
         }
-        switch imageType {
-        case .collectionView(let paymentMethod, let overrideUserInterfaceStyle, let iconStyle):
-            let image = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle)
-            if cardArtEnabled, let cardArtURL = paymentMethod.cardArtURL(height: 40) {
-                downloadCardArt(url: cardArtURL, fallback: image)
-            } else {
-                setImage(image)
-            }
-        case .collectionViewApplePay(let overrideUserInterfaceStyle):
-            let image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
-            setImage(image)
-        case .collectionViewLink(let overrideUserInterfaceStyle):
-            let image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
-            setImage(image)
-        case .rowButton(let paymentMethod, let iconStyle):
-            let image = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: iconStyle)
-            if cardArtEnabled, let cardArtURL = paymentMethod.cardArtURL(height: 20) {
-                downloadCardArt(url: cardArtURL, fallback: image, postProcess: { $0.roundedWithBorder(radius: 3) })
-            } else {
-                setImage(image)
-            }
+
+        if let url = configuration.cardArtURL {
+            downloadCardArt(url: url, fallback: configuration.imageFromBundle, postProcess: configuration.postProcess)
+        } else {
+            setImage(configuration.imageFromBundle)
         }
     }
 
-    private func downloadCardArt(url: URL, fallback: UIImage, postProcess: ((UIImage) -> UIImage)? = nil) {
+    private func downloadCardArt(url: URL, fallback: UIImage, postProcess: ((UIImage) -> UIImage)?) {
         currentDownloadTask = Task { [weak self] in
             do {
                 let image = try await DownloadManager.sharedManager.downloadImage(url: url)
                 guard !Task.isCancelled else { return }
-                let finalImage = postProcess?(image) ?? image
-                self?.setImage(finalImage)
+                let postProcessedImage = postProcess?(image) ?? image
+                self?.setImage(postProcessedImage)
             } catch {
                 guard !Task.isCancelled else { return }
-                let finalFallback = postProcess?(fallback) ?? fallback
-                self?.setImage(finalFallback)
+                self?.setImage(fallback)
             }
         }
     }
