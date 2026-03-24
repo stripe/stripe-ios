@@ -17,7 +17,7 @@ final class APIClient {
     private let jsonEncoder: JSONEncoder
     private(set) var authToken: String?
     private(set) var authTokenWithLAI: String?
-    private var email: String?
+    private(set) var email: String?
 
     private var persistedSeamlessSignInDetails: SeamlessSignInDetails? {
         // Note that `UserDefaults` are used here in this example app for simplicity.
