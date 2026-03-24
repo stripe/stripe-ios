@@ -4,6 +4,7 @@
 //
 //  Created by Nick Porter on 3/20/26.
 
+@_spi(STP) import StripeUICore
 import UIKit
 
 /// A single item in a `TwoOptionSelectorView`.
@@ -101,7 +102,7 @@ final class TwoOptionSelectorView: UIView {
         button.setTitle(item.displayText, for: .normal)
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 20)
         button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
-        button.layer.cornerRadius = appearance.cornerRadius ?? 6.0
+        button.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
         button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
         button.accessibilityIdentifier = item.accessibilityIdentifier
     }
@@ -115,8 +116,13 @@ final class TwoOptionSelectorView: UIView {
         button.backgroundColor = appearance.colors.componentBackground
         button.setTitleColor(appearance.colors.componentText, for: .normal)
         if isSelected {
-            button.layer.borderColor = appearance.colors.primary.cgColor
-            button.layer.borderWidth = 2
+            let selectedBorderWidth = appearance.selectedBorderWidth ?? appearance.borderWidth
+            if selectedBorderWidth > 0 {
+                button.layer.borderWidth = selectedBorderWidth * 1.5
+            } else {
+                button.layer.borderWidth = 1.5
+            }
+            button.layer.borderColor = appearance.colors.selectedComponentBorder?.cgColor ?? appearance.colors.primary.cgColor
         } else {
             button.layer.borderColor = appearance.colors.componentBorder.cgColor
             button.layer.borderWidth = appearance.borderWidth
