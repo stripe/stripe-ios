@@ -27,7 +27,7 @@ extension ConfirmButton {
                 appearance.primaryButton.backgroundColor = primaryColor
                 appearance.primaryButton.successBackgroundColor = primaryColor
             }
-            
+
             if let contentOnPrimaryColor = linkAppearance.colors?.contentOnPrimary {
                 appearance.primaryButton.textColor = contentOnPrimaryColor
             }

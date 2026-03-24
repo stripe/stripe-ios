@@ -195,7 +195,7 @@ struct CryptoOnrampExampleView: View {
                     blue: 56/255.0,
                     alpha: 1.0
                 )
-                
+
                 let appearance = LinkAppearance(
                     colors: .init(primary: lavenderColor, contentOnPrimary: .red, selectedBorder: .label),
                     primaryButton: .init(cornerRadius: 16, height: 56),
