@@ -21,9 +21,9 @@ extension Appearance {
         dict.mergeAssertingOnOverwrites(buttonPrimary.asDictionary(keyPrefix: "buttonPrimary"))
         dict.mergeAssertingOnOverwrites(buttonSecondary.asDictionary(keyPrefix: "buttonSecondary"))
         dict.mergeAssertingOnOverwrites(buttonDanger.asDictionary(keyPrefix: "buttonDanger"))
-        dict["buttonPaddingX"] = buttonPrimary.horizontalPadding?.pxString
-        dict["buttonPaddingY"] = buttonPrimary.verticalPadding?.pxString
-        if let buttonLabelTypography = buttonPrimary.labelTypography {
+        dict["buttonPaddingX"] = buttonDefaults.paddingHorizontal?.pxString
+        dict["buttonPaddingY"] = buttonDefaults.paddingVertical?.pxString
+        if let buttonLabelTypography = buttonDefaults.labelTypography {
             dict.mergeAssertingOnOverwrites(buttonLabelTypography.asDictionary(keyPrefix: "buttonLabel", using: traitCollection))
         }
 
@@ -31,9 +31,9 @@ extension Appearance {
         dict.mergeAssertingOnOverwrites(badgeSuccess.asDictionary(keyPrefix: "badgeSuccess"))
         dict.mergeAssertingOnOverwrites(badgeWarning.asDictionary(keyPrefix: "badgeWarning"))
         dict.mergeAssertingOnOverwrites(badgeDanger.asDictionary(keyPrefix: "badgeDanger"))
-        dict["badgePaddingX"] = badgeNeutral.horizontalPadding?.pxString
-        dict["badgePaddingY"] = badgeNeutral.verticalPadding?.pxString
-        if let labelTypography = badgeNeutral.labelTypography {
+        dict["badgePaddingX"] = badgeDefaults.paddingHorizontal?.pxString
+        dict["badgePaddingY"] = badgeDefaults.paddingVertical?.pxString
+        if let labelTypography = badgeDefaults.labelTypography {
             dict.mergeAssertingOnOverwrites(labelTypography.asDictionary(keyPrefix: "badgeLabel", using: traitCollection))
         }
 

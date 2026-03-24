@@ -70,9 +70,9 @@ class AppearanceTests: XCTestCase {
         buttonLabelStyle.fontSize = 12
         buttonLabelStyle.weight = .regular
         buttonLabelStyle.textTransform = .uppercase
-        appearance.buttonPrimary.labelTypography = buttonLabelStyle
-        appearance.buttonPrimary.verticalPadding = 6
-        appearance.buttonPrimary.horizontalPadding = 10
+        appearance.buttonDefaults.labelTypography = buttonLabelStyle
+        appearance.buttonDefaults.paddingVertical = 6
+        appearance.buttonDefaults.paddingHorizontal = 10
 
         appearance.badgeNeutral.colorBackground = UIColor(red: 0.9, green: 1.0, blue: 0.1, alpha: 1.0)
         appearance.badgeNeutral.colorText = UIColor(red: 1.0, green: 0.1, blue: 0.2, alpha: 1.0)
@@ -94,9 +94,9 @@ class AppearanceTests: XCTestCase {
         badgeLabelStyle.fontSize = 12
         badgeLabelStyle.weight = .regular
         badgeLabelStyle.textTransform = .lowercase
-        appearance.badgeNeutral.labelTypography = badgeLabelStyle
-        appearance.badgeNeutral.verticalPadding = 6
-        appearance.badgeNeutral.horizontalPadding = 10
+        appearance.badgeDefaults.labelTypography = badgeLabelStyle
+        appearance.badgeDefaults.paddingVertical = 6
+        appearance.badgeDefaults.paddingHorizontal = 10
 
         appearance.cornerRadius.base = 4
         appearance.cornerRadius.form = 6

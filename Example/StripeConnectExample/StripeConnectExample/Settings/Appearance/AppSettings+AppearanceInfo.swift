@@ -449,7 +449,7 @@ extension AppSettings {
             return
         }
 
-        var badgeLabel = result.badgeNeutral.labelTypography ?? EmbeddedComponentManager.Appearance.Typography.Style()
+        var badgeLabel = result.badgeDefaults.labelTypography ?? EmbeddedComponentManager.Appearance.Typography.Style()
         let transform = badgeLabelTextTransform.trimmingCharacters(in: .whitespaces).lowercased()
 
         if !transform.isEmpty {
@@ -462,13 +462,13 @@ extension AppSettings {
             badgeLabel.fontSize = size
         }
 
-        result.badgeNeutral.labelTypography = badgeLabel
+        result.badgeDefaults.labelTypography = badgeLabel
 
         if let y = Double(badgePaddingY).map({ CGFloat($0) }) {
-            result.badgeNeutral.verticalPadding = y
+            result.badgeDefaults.paddingVertical = y
         }
         if let x = Double(badgePaddingX).map({ CGFloat($0) }) {
-            result.badgeNeutral.horizontalPadding = x
+            result.badgeDefaults.paddingHorizontal = x
         }
     }
 
@@ -487,7 +487,7 @@ extension AppSettings {
             return
         }
 
-        var buttonLabel = result.buttonPrimary.labelTypography ?? EmbeddedComponentManager.Appearance.Typography.Style()
+        var buttonLabel = result.buttonDefaults.labelTypography ?? EmbeddedComponentManager.Appearance.Typography.Style()
         let transform = buttonLabelTextTransform.trimmingCharacters(in: .whitespaces).lowercased()
 
         if !transform.isEmpty {
@@ -500,13 +500,13 @@ extension AppSettings {
             buttonLabel.fontSize = size
         }
 
-        result.buttonPrimary.labelTypography = buttonLabel
+        result.buttonDefaults.labelTypography = buttonLabel
 
         if let y = Double(buttonPaddingY).map({ CGFloat($0) }) {
-            result.buttonPrimary.verticalPadding = y
+            result.buttonDefaults.paddingVertical = y
         }
         if let x = Double(buttonPaddingX).map({ CGFloat($0) }) {
-            result.buttonPrimary.horizontalPadding = x
+            result.buttonDefaults.paddingHorizontal = x
         }
     }
 

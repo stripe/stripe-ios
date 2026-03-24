@@ -189,23 +189,26 @@ extension EmbeddedComponentManager {
             /// The text color used for this button type.
             /// The alpha component is ignored.
             public var colorText: UIColor?
-            /// The horiztonal padding for this button type
-            /// The default is calculated based on the spacingUnit
-            @_spi(PreviewConnect)
-            @_documentation(visibility: public)
-            public var horizontalPadding: CGFloat?
-            /// The vertical padding for this button type
-            /// Default is calculated based on the spacingUnit
-            @_spi(PreviewConnect)
-            @_documentation(visibility: public)
-            public var verticalPadding: CGFloat?
-            /// Describes the font size, weight, and text transform for this button type
-            /// The labelMd style is used as the default if no style is provided
-            @_spi(PreviewConnect)
-            @_documentation(visibility: public)
-            public var labelTypography: Typography.Style?
 
             /// Creates a `EmbeddedComponentManager.Appearance.Button` with default values
+            public init() { }
+        }
+
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        /// Describes the appearance of all button types used in embedded components
+        public struct ButtonDefaults {
+            /// The horizontal padding for all buttons
+            /// The default is calculated based on the spacingUnit
+            public var paddingHorizontal: CGFloat?
+            /// The vertical padding for all buttons
+            /// The default is calculated based on the spacingUnit
+            public var paddingVertical: CGFloat?
+            /// Describes the font size, weight, and text transform for all buttons
+            /// The labelMd style is used as the default if no style is provided
+            public var labelTypography: Typography.Style?
+
+            /// Creates a `EmbeddedComponentManager.Appearance.ButtonDefaults` with default values
             public init() { }
         }
 
@@ -218,23 +221,26 @@ extension EmbeddedComponentManager {
             public var colorBorder: UIColor?
             /// The text color for this badge type. The alpha component is ignored.
             public var colorText: UIColor?
-            /// The horizontal padding for this badge type
-            /// The default is calculated based on the spacingUnit
-            @_spi(PreviewConnect)
-            @_documentation(visibility: public)
-            public var horizontalPadding: CGFloat?
-            /// The vertical padding for this badge type
-            /// The default is calculated based on the spacingUnit
-            @_spi(PreviewConnect)
-            @_documentation(visibility: public)
-            public var verticalPadding: CGFloat?
-            /// Describes the font size, weight, and text transform for this badge type
-            /// The labelSm style is used as the default if no style is provided
-            @_spi(PreviewConnect)
-            @_documentation(visibility: public)
-            public var labelTypography: Typography.Style?
 
             /// Creates a `EmbeddedComponentManager.Appearance.Badge` with default values
+            public init() {}
+        }
+
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        /// Describes the appearance of all badge types used in embedded components.
+        public struct BadgeDefaults {
+            /// The horizontal padding for all badges
+            /// The default is calculated based on the spacingUnit
+            public var paddingHorizontal: CGFloat?
+            /// The vertical padding for all badges
+            /// The default is calculated based on the spacingUnit
+            public var paddingVertical: CGFloat?
+            /// Describes the font size, weight, and text transform for all badges
+            /// The labelSm style is used as the default if no style is provided
+            public var labelTypography: Typography.Style?
+
+            /// Creates a `EmbeddedComponentManager.Appearance.BadgeDefaults` with default values
             public init() {}
         }
 
@@ -304,6 +310,10 @@ extension EmbeddedComponentManager {
         @_spi(PreviewConnect)
         @_documentation(visibility: public)
         public var buttonDanger: Button  = .init()
+        /// Describes the padding and label typography shared by all button types
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        public var buttonDefaults: ButtonDefaults = .init()
         /// Describes the appearance used to represent neutral
         /// state or lack of state in status badges.
         public var badgeNeutral: Badge  = .init()
@@ -317,6 +327,10 @@ extension EmbeddedComponentManager {
         /// critical situations that the user must address immediately, and to
         /// indicate failed or unsuccessful outcomes.
         public var badgeDanger: Badge  = .init()
+        /// Describes the padding and label typography shared by all badge types
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        public var badgeDefaults: BadgeDefaults = .init()
         /// Describes the corner radius used in embedded components.
         public var cornerRadius: CornerRadius = .init()
         /// Describes the appearance of a form used in embedded components.
