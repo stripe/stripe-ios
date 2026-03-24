@@ -23,6 +23,7 @@ extension PaymentSheet {
         isFromLink: Bool = false
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
+            let customerProvider = CustomerProvider.make(mode: .deferredIntent(intentConfig), configuration: configuration)
             // 1. Create the confirmation token params
             let confirmationTokenParams = createConfirmationTokenParams(confirmType: confirmType,
                                                                         configuration: configuration,
@@ -36,7 +37,7 @@ extension PaymentSheet {
                 // Link saved payment methods don't require ephemeral keys, API will error if provided
                 guard !isFromLink && !isSavedFromLink(from: confirmType) else { return nil }
 
-                return configuration.customer?.ephemeralKeySecret(basedOn: elementsSession)
+                return customerProvider.ephemeralKeySecret(basedOn: elementsSession)
             }()
 
             // 2. Create the ConfirmationToken

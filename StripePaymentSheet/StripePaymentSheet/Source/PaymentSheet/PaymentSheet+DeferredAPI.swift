@@ -72,6 +72,7 @@ extension PaymentSheet {
         confirmHandler: @escaping IntentConfiguration.ConfirmHandler
     ) async -> (result: PaymentSheetResult, deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType?) {
         do {
+            let customerProvider = CustomerProvider.make(mode: .deferredIntent(intentConfig), configuration: configuration)
             var confirmType = confirmType
             // 1. Create PM if necessary
             let paymentMethod: STPPaymentMethod
@@ -147,7 +148,8 @@ extension PaymentSheet {
                     let paymentIntentParams = makePaymentIntentParams(
                         confirmPaymentMethodType: confirmType,
                         paymentIntent: paymentIntent,
-                        configuration: configuration
+                        configuration: configuration,
+                        customerProvider: customerProvider
                     )
                     // Set top-level SFU and PMO SFU to match the intent config
                     setSetupFutureUsage(for: paymentMethod.type, intentConfiguration: intentConfig, on: paymentIntentParams)

@@ -204,6 +204,23 @@ final class IntentConfirmParams {
 }
 
 extension STPConfirmPaymentMethodOptions {
+    func setSetupFutureUsageIfNecessary(
+        _ shouldSave: Bool,
+        currentSetupFutureUsage: String? = nil,
+        paymentMethodType: STPPaymentMethodType,
+        customer: PaymentSheet.CustomerConfiguration?
+    ) {
+        setSetupFutureUsageIfNecessary(
+            shouldSave,
+            currentSetupFutureUsage: currentSetupFutureUsage,
+            paymentMethodType: paymentMethodType,
+            customerProvider: CustomerProvider.make(
+                customerAccessProvider: customer?.customerAccessProvider,
+                customerID: customer?.id
+            )
+        )
+    }
+
     func setMoto() {
         let cardOptions = self.cardOptions ?? STPConfirmCardOptions()
         cardOptions.additionalAPIParameters["moto"] = true
@@ -227,18 +244,18 @@ extension STPConfirmPaymentMethodOptions {
         _ shouldSave: Bool,
         currentSetupFutureUsage: String? = nil,
         paymentMethodType: STPPaymentMethodType,
-        customer: PaymentSheet.CustomerConfiguration?
+        customerProvider: CustomerProvider = .none()
     ) {
         // Something went wrong if we're trying to save and there's no Customer!
-        assert(!(shouldSave && customer == nil))
+        assert(!(shouldSave && !customerProvider.hasCustomer))
 
         var allowedPaymentMethodTypes: [STPPaymentMethodType] = [.card, .USBankAccount]
 
-        if let customer, case .customerSession = customer.customerAccessProvider {
+        if customerProvider.supportsLinkSetupFutureUsage {
             allowedPaymentMethodTypes.append(.link)
         }
 
-        guard customer != nil && allowedPaymentMethodTypes.contains(paymentMethodType) else {
+        guard customerProvider.hasCustomer && allowedPaymentMethodTypes.contains(paymentMethodType) else {
             return
         }
 

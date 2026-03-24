@@ -108,7 +108,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var defaultPaymentMethod: STPPaymentMethod?
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, customerProvider: loadResult.customerProvider)
     }()
 
     var confirmationChallenge: ConfirmationChallenge?
@@ -797,6 +797,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
+            customerProvider: loadResult.customerProvider,
             analyticsHelper: analyticsHelper,
             defaultPaymentMethod: defaultPaymentMethod
         )

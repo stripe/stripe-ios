@@ -69,6 +69,7 @@ public class PaymentSheet {
 
     /// This contains all configurable properties of PaymentSheet
     public let configuration: Configuration
+    let customerProvider: CustomerProvider
 
     /// The most recent error encountered by the customer, if any.
     public internal(set) var mostRecentError: Error?
@@ -126,6 +127,7 @@ public class PaymentSheet {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.self)
         self.mode = mode
         self.configuration = configuration
+        self.customerProvider = CustomerProvider.make(mode: mode, configuration: configuration)
         self.analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: configuration)
         analyticsHelper.logInitialized()
     }
@@ -173,6 +175,7 @@ public class PaymentSheet {
             PaymentSheetLoader.load(
                 mode: mode,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .paymentSheet
             ) { result in

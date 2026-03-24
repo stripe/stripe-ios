@@ -26,6 +26,7 @@ public final class EmbeddedPaymentElement {
     /// This contains the `configuration` you passed in to `create`.
     /// - Note: `internal(set)` because checkout session updates may apply address overrides to the configuration.
     public internal(set) var configuration: Configuration
+    var customerProvider: CustomerProvider
 
     /// See `EmbeddedPaymentElementDelegate`.
     public weak var delegate: EmbeddedPaymentElementDelegate?
@@ -73,10 +74,12 @@ public final class EmbeddedPaymentElement {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
+        let customerProvider = CustomerProvider.make(mode: .deferredIntent(intentConfiguration), configuration: configuration)
 
         let loadResult = try await PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfiguration),
             configuration: configuration,
+            customerProvider: customerProvider,
             analyticsHelper: analyticsHelper,
             integrationShape: .embedded
         )
@@ -116,10 +119,12 @@ public final class EmbeddedPaymentElement {
         AnalyticsHelper.shared.generateSessionID()
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: config)
+        let customerProvider = CustomerProvider.make(mode: .checkoutSession(stpSession), configuration: config)
 
         let loadResult = try await PaymentSheetLoader.load(
             mode: .checkoutSession(stpSession),
             configuration: config,
+            customerProvider: customerProvider,
             analyticsHelper: analyticsHelper,
             integrationShape: .embedded
         )
@@ -207,10 +212,12 @@ public final class EmbeddedPaymentElement {
             // 1. Reload v1/elements/session.
             let loadResult: PaymentSheetLoader.LoadResult
             do {
+                let customerProvider = CustomerProvider.make(mode: mode, configuration: configuration)
                 // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-3079): Make `load` respect task cancellation to reduce network consumption
                 loadResult = try await PaymentSheetLoader.load(
                     mode: mode,
                     configuration: configuration,
+                    customerProvider: customerProvider,
                     analyticsHelper: analyticsHelper,
                     integrationShape: .embedded,
                     isUpdate: true
@@ -225,6 +232,7 @@ public final class EmbeddedPaymentElement {
             // 2. At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
             let previousPaymentOption = self._paymentOption
             self.loadResult = loadResult
+            self.customerProvider = loadResult.customerProvider
             self.savedPaymentMethods = loadResult.savedPaymentMethods
             self.formCache = .init() // Clear the cache because the form may have changed e.g. different mandate or different fields.
             let isPreviousPaymentOptionStillDisplayed: Bool = {
@@ -422,9 +430,9 @@ public final class EmbeddedPaymentElement {
             return nil
         }
     }
-    internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
-    }()
+    internal var savedPaymentMethodManager: SavedPaymentMethodManager {
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, customerProvider: customerProvider)
+    }
 
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
@@ -437,6 +445,7 @@ public final class EmbeddedPaymentElement {
     ) {
         self.configuration = configuration
         self.loadResult = loadResult
+        self.customerProvider = loadResult.customerProvider
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
         self.analyticsHelper = analyticsHelper
