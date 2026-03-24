@@ -28,6 +28,10 @@ extension ConfirmButton {
                 appearance.primaryButton.successBackgroundColor = primaryColor
             }
 
+            if let contentOnPrimaryColor = linkAppearance.colors?.contentOnPrimary {
+                appearance.primaryButton.textColor = contentOnPrimaryColor
+            }
+
             if let buttonConfiguration = linkAppearance.primaryButton {
                 appearance.primaryButton.cornerRadius = buttonConfiguration.cornerRadius
 
