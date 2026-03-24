@@ -36,7 +36,6 @@ public struct LinkAppearance {
         public var primary: UIColor?
 
         /// The color used in the Link UI for content displayed on the primary color.
-        /// Defaults to `.white` or `.black` depending on the color of the button.
         public var contentOnPrimary: UIColor?
 
         /// The border color used for selected elements, such as text fields.
@@ -45,7 +44,7 @@ public struct LinkAppearance {
         /// Creates a new instance of `Colors`.
         /// - Parameters:
         ///   - primary: The primary color used in the Link UI. Defaults to the Link brand color.
-        ///   - contentOnPrimary: The color used in the Link UI for content displayed on the primary color. Defaults to `.white` or `.black` depending on the color of the button.
+        ///   - contentOnPrimary: The color used in the Link UI for content displayed on the primary color.
         ///   - selectedBorder: The border color used for selected elements, such as text fields.
         public init(primary: UIColor? = nil, contentOnPrimary: UIColor? = nil, selectedBorder: UIColor? = nil) {
             self.primary = primary
