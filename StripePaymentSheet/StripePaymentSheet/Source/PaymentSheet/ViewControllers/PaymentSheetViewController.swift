@@ -226,10 +226,9 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.view.backgroundColor = configuration.appearance.colors.background
 
         // One stack view contains all our subviews
-        let arrangedSubviews: [UIView] = [
+        let stackView = UIStackView(arrangedSubviews: [
             headerLabel, walletHeader, paymentContainerView, errorLabel, buyButton, bottomNoticeTextField,
-        ]
-        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
+        ])
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding

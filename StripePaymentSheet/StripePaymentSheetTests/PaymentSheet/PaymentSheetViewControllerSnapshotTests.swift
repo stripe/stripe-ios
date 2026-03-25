@@ -82,5 +82,4 @@ extension PaymentSheetViewControllerSnapshotTests: PaymentSheetViewControllerDel
 
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewControllerProtocol) {
     }
-
 }
