@@ -5,6 +5,9 @@ PATCH
 ### Payments
 * [Fixed] Fixed an issue introduced in 25.8.0 where manually closing a webview 3ds2 challenge after failing the challenge and before it's automatically dismissed could result in a succeeded result.
 
+### Identity
+* [Improved] Improved StripeIdentity analytics with richer error details and screen/camera context to help debug verification flows.
+
 ## 25.9.0 2026-03-24
 ### PaymentSheet
 * [Fixed] Fixed a crash when loading PaymentSheet, FlowController, and EmbeddedPaymentElement when compiling with XCode 26.4 / Swift 6.3 due to [a compiler bug](https://github.com/swiftlang/swift/issues/87481)
