@@ -297,6 +297,7 @@ public class PaymentSheet {
             analyticsHelper: self.analyticsHelper,
             shouldLogExperimentExposure: shouldLogExperimentExposure
         )
+        let intentConfig = mode.intentConfig
         switch layout {
         case .horizontal:
             let vc = PaymentSheetViewController(
@@ -305,6 +306,7 @@ public class PaymentSheet {
                 analyticsHelper: analyticsHelper,
                 delegate: self
             )
+            vc.intentConfiguration = intentConfig
             return vc
         case .vertical:
             let vc = PaymentSheetVerticalViewController(
@@ -315,6 +317,7 @@ public class PaymentSheet {
                 previousPaymentOption: previousPaymentOption
             )
             vc.paymentSheetDelegate = self
+            vc.intentConfiguration = intentConfig
             return vc
         }
     }
@@ -476,6 +479,8 @@ internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSh
     var intent: Intent { get }
     var elementsSession: STPElementsSession { get }
     var selectedPaymentOption: PaymentSheet.PaymentOption? { get }
+    /// The IntentConfiguration used to initialize this VC, if using deferred intents. Used for test mode switching.
+    var intentConfiguration: PaymentSheet.IntentConfiguration? { get set }
 
     func pay(with paymentOption: PaymentOption)
     func clearTextFields()

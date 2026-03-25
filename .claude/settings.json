@@ -1,9 +1,4 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(ci_scripts/*)"
-    ]
-  },
   "hooks": {
     "PreToolUse": [
       {
