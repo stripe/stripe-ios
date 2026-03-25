@@ -516,42 +516,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     }
 }
 
-// MARK: - Debug Mode Switcher
-
-#if DEBUG
-extension PaymentSheetViewController {
-    func makeModeSwitcher() -> UIView? {
-        guard intentConfiguration != nil else { return nil }
-        let segmented = UISegmentedControl(items: ["Payment", "Payment+Setup", "Setup"])
-        switch intentConfiguration?.mode {
-        case .payment(_, _, let sfu, _, _):
-            segmented.selectedSegmentIndex = sfu != nil ? 1 : 0
-        case .setup:
-            segmented.selectedSegmentIndex = 2
-        case .none:
-            break
-        }
-        segmented.addTarget(self, action: #selector(modeSwitcherChanged(_:)), for: .valueChanged)
-        return segmented
-    }
-
-    @objc func modeSwitcherChanged(_ sender: UISegmentedControl) {
-        guard let intentConfiguration, let confirmHandler = intentConfiguration.confirmHandler else { return }
-        let newMode: PaymentSheet.IntentConfiguration.Mode = {
-            switch sender.selectedSegmentIndex {
-            case 0: return .payment(amount: 5099, currency: "usd")
-            case 1: return .payment(amount: 5099, currency: "usd", setupFutureUsage: .offSession)
-            case 2: return .setup(currency: "usd")
-            default: return .payment(amount: 5099, currency: "usd")
-            }
-        }()
-        var newConfig = PaymentSheet.IntentConfiguration(mode: newMode, confirmHandler: confirmHandler)
-        newConfig.paymentMethodTypes = intentConfiguration.paymentMethodTypes
-        delegate?.paymentSheetViewControllerDidRequestReload(self, mode: .deferredIntent(newConfig))
-    }
-}
-#endif
-
 // MARK: - Wallet Header Delegate
 
 extension PaymentSheetViewController: WalletHeaderViewDelegate {
