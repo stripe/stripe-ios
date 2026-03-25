@@ -16,6 +16,7 @@ class IdentityFlowViewController: UIViewController {
     private let flowView = IdentityFlowView()
 
     private var navBarBackgroundColor: UIColor?
+    private var previousScreenNameForScreenAppearedAnalytic: IdentityAnalyticsClient.ScreenName?
 
     let analyticsScreenName: IdentityAnalyticsClient.ScreenName
 
@@ -71,6 +72,9 @@ class IdentityFlowViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        previousScreenNameForScreenAppearedAnalytic = (
+            transitionCoordinator?.viewController(forKey: .from) as? IdentityFlowViewController
+        )?.analyticsScreenName
         navigationController?.setNavigationBarBackgroundColor(with: navBarBackgroundColor)
     }
 
@@ -79,12 +83,15 @@ class IdentityFlowViewController: UIViewController {
         guard let sheetController = sheetController else {
             return
         }
+        let previousScreenName = previousScreenNameForScreenAppearedAnalytic
+        previousScreenNameForScreenAppearedAnalytic = nil
         sheetController.analyticsClient.stopTrackingTimeToScreenAndLogIfNeeded(
             to: analyticsScreenName,
             sheetController: sheetController
         )
         sheetController.analyticsClient.logScreenAppeared(
             screenName: analyticsScreenName,
+            previousScreenName: previousScreenName,
             sheetController: sheetController
         )
     }

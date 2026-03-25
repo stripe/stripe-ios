@@ -365,11 +365,15 @@ final class IdentityAnalyticsClient {
     /// Logs an event when a screen is presented
     func logScreenAppeared(
         screenName: ScreenName,
+        previousScreenName: ScreenName? = nil,
         sheetController: VerificationSheetControllerProtocol
     ) {
-        let metadata: [String: Any] = [
+        var metadata: [String: Any] = [
             "screen_name": screenName.rawValue,
         ]
+        if let previousScreenName = previousScreenName {
+            metadata["previous_screen_name"] = previousScreenName.rawValue
+        }
 
         logAnalytic(.screenAppeared, metadata: metadata, verificationPage: try? sheetController.verificationPageResponse?.get())
     }
