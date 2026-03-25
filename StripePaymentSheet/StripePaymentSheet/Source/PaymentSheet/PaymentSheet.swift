@@ -297,7 +297,6 @@ public class PaymentSheet {
             analyticsHelper: self.analyticsHelper,
             shouldLogExperimentExposure: shouldLogExperimentExposure
         )
-        let intentConfig = mode.intentConfig
         switch layout {
         case .horizontal:
             let vc = PaymentSheetViewController(
