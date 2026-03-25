@@ -160,7 +160,8 @@ struct KYCInfoView: View {
                             "Enter your first name",
                             text: $firstName,
                             field: .firstName,
-                            autocapitalization: .words
+                            autocapitalization: .words,
+                            textContentType: .givenName
                         )
                     }
 
@@ -169,7 +170,8 @@ struct KYCInfoView: View {
                             "Enter your last name",
                             text: $lastName,
                             field: .lastName,
-                            autocapitalization: .words
+                            autocapitalization: .words,
+                            textContentType: .familyName
                         )
                     }
                 }
@@ -198,7 +200,8 @@ struct KYCInfoView: View {
                             "Enter your street address",
                             text: $addressLine1,
                             field: .addressLine1,
-                            autocapitalization: .words
+                            autocapitalization: .words,
+                            textContentType: .streetAddressLine1
                         )
                     }
 
@@ -207,7 +210,8 @@ struct KYCInfoView: View {
                             "Apartment, suite, etc.",
                             text: $addressLine2,
                             field: .addressLine2,
-                            autocapitalization: .words
+                            autocapitalization: .words,
+                            textContentType: .streetAddressLine2
                         )
                     }
 
@@ -216,7 +220,8 @@ struct KYCInfoView: View {
                             "Enter your city",
                             text: $city,
                             field: .city,
-                            autocapitalization: .words
+                            autocapitalization: .words,
+                            textContentType: .addressCity
                         )
                     }
 
@@ -233,7 +238,8 @@ struct KYCInfoView: View {
                         makeTextField(
                             "Enter your postal code",
                             text: $postalCode,
-                            field: .postalCode
+                            field: .postalCode,
+                            textContentType: .postalCode
                         )
                     }
 
@@ -322,10 +328,12 @@ struct KYCInfoView: View {
         text: Binding<String>,
         field: Field,
         autocapitalization: UITextAutocapitalizationType = .none,
-        keyboardType: UIKeyboardType = .default
+        keyboardType: UIKeyboardType = .default,
+        textContentType: UITextContentType? = nil
     ) -> some View {
         TextField(titleKey, text: text)
             .textFieldStyle(RoundedBorderTextFieldStyle())
+            .textContentType(textContentType)
             .autocapitalization(autocapitalization)
             .keyboardType(keyboardType)
             .focused($focusedField, equals: field)
