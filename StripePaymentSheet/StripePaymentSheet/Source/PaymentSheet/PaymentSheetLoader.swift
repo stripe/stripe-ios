@@ -133,6 +133,8 @@ final class PaymentSheetLoader {
                     isUpdate: isUpdate
                 )
 
+                // We don't want to set the global singleton if we timed out, because that means setting it after MPE has finished loading, which the code is not necessarily expecting.
+                guard !Task.isCancelled else { return }
                 LinkAccountContext.shared.account = linkAccount
                 Self.logLinkExperimentExposures(
                     elementsSession: elementsSession,
@@ -143,9 +145,20 @@ final class PaymentSheetLoader {
             }
             // Only block on link lookup if it's enabled.
             let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+            var didLinkLookupTimeOut: Bool?
             if isLinkEnabled {
-                await withTimeout(5.0) {
+                let result = await withTimeout(5.0) {
                     await lookupLinkAccountTask.value
+                }
+                switch result {
+                case .success:
+                    didLinkLookupTimeOut = false
+                case .failure(let error):
+                    if error is TimeoutError {
+                        didLinkLookupTimeOut = true
+                        // Since we're using unstructured Tasks, we have to manually cancel it.
+                        lookupLinkAccountTask.cancel()
+                    }
                 }
             }
 
@@ -209,7 +222,8 @@ final class PaymentSheetLoader {
                 defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                 orderedPaymentMethodTypes: paymentMethodTypes,
                 loadTimings: loadTimings,
-                isUpdate: isUpdate
+                isUpdate: isUpdate,
+                didLinkLookupTimeOut: didLinkLookupTimeOut
             )
             return loadResult
         } catch {
