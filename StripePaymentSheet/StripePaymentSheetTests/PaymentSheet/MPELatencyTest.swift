@@ -162,13 +162,14 @@ final class MPELatencyTest: XCTestCase {
 
     /// Link: enabled
     /// Customer API: Ephemeral Key
-    /// Customer email: Available via Customer object
+    /// Customer email: Available via default billing details
     func test_link_on_with_no_customer() async throws {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.apiClient = apiClient
+        configuration.defaultBillingDetails.email = "yuki@stripe.com"
 
         try await _measureLoadLatency(configuration: configuration)
-        XCTAssertFalse(didCallLinkLookupEndpoint, "Did not expect Link lookup endpoint to be called because there is no customer email to look up")
+        XCTAssertTrue(didCallLinkLookupEndpoint, "Did not expect Link lookup endpoint to be called because there is no customer email to look up")
     }
 
     /// Link: enabled

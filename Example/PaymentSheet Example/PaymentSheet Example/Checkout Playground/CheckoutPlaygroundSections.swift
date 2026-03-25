@@ -142,6 +142,8 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var phoneNumberCollection: Bool
     @Binding var allowPromotionCodes: Bool
     @Binding var automaticTax: Bool
+    @Binding var adaptivePricing: Bool
+    @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry
 
     private var supportsSetupRestrictedFeatures: Bool {
         return mode != .setup
@@ -186,6 +188,20 @@ struct CheckoutPlaygroundFeaturesSection: View {
                             title: "Automatic Tax",
                             isOn: $automaticTax,
                             tooltip: "Sets `automatic_tax: { enabled: true }`. Enables Stripe Tax for automatic tax calculation based on shipping/billing address. Prices must use `tax_behavior: 'exclusive'` or `'inclusive'`."
+                        )
+                    }
+                    CheckoutPlayground.ToggleRow(
+                        title: "Adaptive Pricing",
+                        isOn: $adaptivePricing,
+                        tooltip: "Sets `adaptive_pricing: { enabled: true }`. Displays prices in the customer's local currency."
+                    )
+                    if adaptivePricing {
+                        CheckoutPlayground.PickerRow(
+                            title: "Country",
+                            icon: "globe",
+                            selection: $adaptivePricingCountry,
+                            tooltip: "Simulates the customer's country for adaptive pricing by sending a location-formatted customer_email. 'None' skips the email override.",
+                            displayText: { $0.displayName }
                         )
                     }
                 }

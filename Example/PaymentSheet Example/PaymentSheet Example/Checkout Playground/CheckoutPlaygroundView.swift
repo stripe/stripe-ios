@@ -47,7 +47,9 @@ struct CheckoutPlaygroundView: View {
                             billingAddressCollection: $viewModel.billingAddressCollection,
                             phoneNumberCollection: $viewModel.phoneNumberCollection,
                             allowPromotionCodes: $viewModel.allowPromotionCodes,
-                            automaticTax: $viewModel.automaticTax
+                            automaticTax: $viewModel.automaticTax,
+                            adaptivePricing: $viewModel.adaptivePricing,
+                            adaptivePricingCountry: $viewModel.adaptivePricingCountry
                         )
 
                         CheckoutPlaygroundPaymentMethodSection(

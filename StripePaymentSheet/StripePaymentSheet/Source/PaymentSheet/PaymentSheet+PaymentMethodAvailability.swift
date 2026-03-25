@@ -71,8 +71,8 @@ extension PaymentSheet {
         guard let experimentsData = elementsSession.experimentsData else {
             return false
         }
-        let linkGlobalHoldback = experimentsData.experimentAssignments["link_global_holdback"]
-        let linkABTest = experimentsData.experimentAssignments["link_ab_test"]
+        let linkGlobalHoldback = experimentsData.experimentAssignments[LinkGlobalHoldback.experimentName]
+        let linkABTest = experimentsData.experimentAssignments[LinkABTest.experimentName]
         return linkGlobalHoldback == .holdback || linkABTest == .holdback
     }
 
