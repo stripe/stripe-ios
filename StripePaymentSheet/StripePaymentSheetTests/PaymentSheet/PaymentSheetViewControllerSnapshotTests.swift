@@ -83,6 +83,4 @@ extension PaymentSheetViewControllerSnapshotTests: PaymentSheetViewControllerDel
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewControllerProtocol) {
     }
 
-    func paymentSheetViewControllerDidRequestReload(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewControllerProtocol, mode: PaymentSheet.InitializationMode) {
-    }
 }

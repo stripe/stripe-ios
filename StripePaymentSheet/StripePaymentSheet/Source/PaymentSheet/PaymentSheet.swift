@@ -428,14 +428,6 @@ extension PaymentSheet: @MainActor PaymentSheetViewControllerDelegate {
         }
     }
 
-    @MainActor
-    func paymentSheetViewControllerDidRequestReload(
-        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
-        mode: PaymentSheet.InitializationMode
-    ) {
-        performReload(mode: mode)
-    }
-
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         let useNativeLink = deviceCanUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
         if useNativeLink {
@@ -496,8 +488,4 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     )
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
-    func paymentSheetViewControllerDidRequestReload(
-        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
-        mode: PaymentSheet.InitializationMode
-    )
 }

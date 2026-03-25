@@ -138,8 +138,4 @@ private class MockPaymentSheetViewControllerDelegate: PaymentSheetViewController
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol
     ) {}
 
-    func paymentSheetViewControllerDidRequestReload(
-        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
-        mode: PaymentSheet.InitializationMode
-    ) {}
 }
