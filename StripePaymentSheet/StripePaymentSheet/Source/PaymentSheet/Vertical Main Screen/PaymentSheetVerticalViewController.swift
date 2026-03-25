@@ -527,12 +527,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         paymentContainerView.directionalLayoutMargins = .zero
 
         // One stack view contains all our subviews
-        var views: [UIView] = [paymentContainerView, mandateView, errorLabel].compactMap { $0 }
-        #if DEBUG
-        if let modeSwitcher = makeModeSwitcher() {
-            views.insert(modeSwitcher, at: 0)
-        }
-        #endif
+        let views: [UIView] = [paymentContainerView, mandateView, errorLabel].compactMap { $0 }
         for view in views {
             stackView.addArrangedSubview(view)
         }
@@ -558,38 +553,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             primaryButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -configuration.appearance.formInsets.bottom),
         ])
     }
-
-    #if DEBUG
-    private func makeModeSwitcher() -> UIView? {
-        guard intentConfiguration != nil else { return nil }
-        let segmented = UISegmentedControl(items: ["Payment", "Payment+Setup", "Setup"])
-        switch intentConfiguration?.mode {
-        case .payment(_, _, let sfu, _, _):
-            segmented.selectedSegmentIndex = sfu != nil ? 1 : 0
-        case .setup:
-            segmented.selectedSegmentIndex = 2
-        case .none:
-            break
-        }
-        segmented.addTarget(self, action: #selector(modeSwitcherChanged(_:)), for: .valueChanged)
-        return segmented
-    }
-
-    @objc private func modeSwitcherChanged(_ sender: UISegmentedControl) {
-        guard let intentConfiguration, let confirmHandler = intentConfiguration.confirmHandler else { return }
-        let newMode: PaymentSheet.IntentConfiguration.Mode = {
-            switch sender.selectedSegmentIndex {
-            case 0: return .payment(amount: 5099, currency: "usd")
-            case 1: return .payment(amount: 5099, currency: "usd", setupFutureUsage: .offSession)
-            case 2: return .setup(currency: "usd")
-            default: return .payment(amount: 5099, currency: "usd")
-            }
-        }()
-        var newConfig = PaymentSheet.IntentConfiguration(mode: newMode, confirmHandler: confirmHandler)
-        newConfig.paymentMethodTypes = intentConfiguration.paymentMethodTypes
-        paymentSheetDelegate?.paymentSheetViewControllerDidRequestReload(self, mode: .deferredIntent(newConfig))
-    }
-    #endif
 
     private var canPresentLinkOnPrimaryButton: Bool {
         // Presenting Link as the primary action should only happen when selecting Link
