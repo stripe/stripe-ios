@@ -13,7 +13,7 @@ import Foundation
     /// The server returned an API error.
     case apiError(StripeAPIError)
 
-    /// The request was invalid.
+    /// The request was invalid and not sent to the API.
     case invalidRequest
 
     /// Localized description of the error.
@@ -82,5 +82,21 @@ extension StripeError: LocalizedError {
         case .invalidRequest:
             return nil
         }
+    }
+}
+
+extension Error {
+    /// Returns the Stripe error code, if available. Works with modern and legacy Stripe API errors.
+    @_spi(STP) public var _stp_error_code: String? {
+        if let stripeError = self as? StripeError,
+              case let .apiError(stripeAPIError) = stripeError {
+            return stripeAPIError.code
+        }
+
+        if let errorCodeString = (self as NSError).userInfo[STPError.stripeErrorCodeKey] as? String {
+            return errorCodeString
+        }
+
+        return nil
     }
 }

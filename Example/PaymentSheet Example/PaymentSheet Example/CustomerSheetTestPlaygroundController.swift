@@ -4,7 +4,8 @@
 //
 
 import Combine
-@_spi(STP) @_spi(CustomerSessionBetaAccess) import StripePaymentSheet
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -16,6 +17,18 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     @Published var paymentOptionSelection: CustomerSheet.PaymentOptionSelection?
 
     private var subscribers: Set<AnyCancellable> = []
+
+    convenience init() {
+        self.init(settings: .defaultValues())
+        Task.detached {
+            let settings = Self.settingsFromDefaults() ?? .defaultValues()
+
+            await MainActor.run {
+                self.settings = settings
+            }
+        }
+    }
+
     init(settings: CustomerSheetTestPlaygroundSettings) {
         // Hack to ensure we don't force the native flow unless we're in a UI test
         if ProcessInfo.processInfo.environment["UITesting"] == nil {
@@ -27,9 +40,11 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         self.settings = settings
         self.currentlyRenderedSettings = .defaultValues()
         $settings
-            .sink { newValue in
-            if !self.isLoading && newValue.autoreload == .on {
-                self.load()
+            .sink { [weak self] newValue in
+                if let isLoading = self?.isLoading,
+                   !isLoading,
+                   newValue.autoreload == .on {
+                self?.load()
             }
         }.store(in: &subscribers)
     }
@@ -61,22 +76,16 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         load()
     }
     func didTapSetToUnsupported() {
-        Task {
-            do {
-                try await _customerAdapter?.setSelectedPaymentOption(paymentOption: .link)
-                self.load()
-            } catch {
-                // no-op
-            }
-        }
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: settings.customerId)
+        self.load()
     }
 
     func appearanceButtonTapped() {
         if #available(iOS 14.0, *) {
-            let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { updatedAppearance in
-                self.appearance = updatedAppearance
-                self.rootViewController.dismiss(animated: true, completion: nil)
-                self.load()
+            let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { [weak self] updatedAppearance in
+                self?.appearance = updatedAppearance
+                self?.rootViewController.dismiss(animated: true, completion: nil)
+                self?.load()
             }))
             rootViewController.present(vc, animated: true, completion: nil)
         } else {
@@ -87,7 +96,9 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     }
 
     func presentCustomerSheet() {
-        customerSheet?.present(from: rootViewController, completion: { result in
+        customerSheet?.present(from: rootViewController, completion: { [weak self] result in
+            guard let self else { return }
+
             switch result {
             case .selected(let paymentOptionSelection), .canceled(let paymentOptionSelection):
                 self.paymentOptionSelection = paymentOptionSelection
@@ -139,6 +150,17 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.billingDetailsCollectionConfiguration.attachDefaultsToPaymentMethod = settings.attachDefaults == .on
         configuration.preferredNetworks = settings.preferredNetworksEnabled == .on ? [.visa, .cartesBancaires] : nil
         configuration.applePayEnabled = self.applePayEnabled()
+        switch settings.cardBrandAcceptance {
+        case .all:
+            configuration.cardBrandAcceptance = .all
+        case .blockAmEx:
+            configuration.cardBrandAcceptance = .disallowed(brands: [.amex])
+        case .allowVisa:
+            configuration.cardBrandAcceptance = .allowed(brands: [.visa])
+        }
+        configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
+        configuration.enableAttestationOnConfirmation = settings.enableAttestationOnConfirmation == .on
+
         return configuration
     }
 
@@ -151,7 +173,8 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     func createCustomerSheet(configuration: CustomerSheet.Configuration,
                              customerId: String,
                              customerSessionClientSecret: String?) -> CustomerSheet {
-        let intentConfiguration = CustomerSheet.IntentConfiguration(setupIntentClientSecretProvider: {
+        let intentConfiguration = CustomerSheet.IntentConfiguration(setupIntentClientSecretProvider: { [weak self] in
+            guard let self else { throw NSError(domain: "", code: 0) }
             return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
         })
         return CustomerSheet(configuration: configuration,
@@ -247,6 +270,12 @@ extension CustomerSheetTestPlaygroundController {
 
             STPAPIClient.shared.publishableKey = publishableKey
 
+            // Clear analytics log and set up delegate for UI tests
+            DispatchQueue.main.async {
+                AnalyticsLogObserver.shared.analyticsLog.removeAll()
+            }
+            STPAnalyticsClient.sharedClient.delegate = self
+
             let configuration = self.customerSheetConfiguration()
             if let ephemeralKey {
                 // Create Customer Sheet using CustomerAdapter w/ legacy ephemeral key
@@ -279,6 +308,13 @@ extension CustomerSheetTestPlaygroundController {
                 self.isLoading = false
             }
         }
+    }
+    func customerSessionSettingsTapped() {
+        let vc = UIHostingController(rootView: CustomerSheetCustomerSessionPlaygroundView(viewModel: settings, doneAction: { updatedSettings in
+            self.settings = updatedSettings
+            self.rootViewController.dismiss(animated: true, completion: nil)
+        }))
+        rootViewController.present(vc, animated: true, completion: nil)
     }
 }
 
@@ -318,6 +354,8 @@ class CustomerSheetBackend {
                      "customer_key_type": settings.customerKeyType.rawValue,
                      "merchant_country_code": settings.merchantCountryCode.rawValue,
                      "customer_session_payment_method_remove": settings.paymentMethodRemove.rawValue,
+                     "customer_session_payment_method_remove_last": settings.paymentMethodRemoveLast.rawValue,
+                     "customer_session_payment_method_sync_default": settings.paymentMethodSyncDefault.rawValue,
         ] as [String: Any]
 
         if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
@@ -364,5 +402,14 @@ class CustomerSheetBackend {
             throw NSError(domain: "test", code: 0, userInfo: nil) // Throw more specific error
         }
         return secret
+    }
+}
+
+// MARK: - STPAnalyticsClientDelegate
+extension CustomerSheetTestPlaygroundController: STPAnalyticsClientDelegate {
+    func analyticsClientDidLog(analyticsClient: StripeCore.STPAnalyticsClient, payload: [String: Any]) {
+        DispatchQueue.main.async {
+            AnalyticsLogObserver.shared.analyticsLog.append(payload)
+        }
     }
 }

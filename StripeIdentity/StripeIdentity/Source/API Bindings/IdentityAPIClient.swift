@@ -12,7 +12,6 @@ import UIKit
 
 protocol IdentityAPIClient: AnyObject {
     var verificationSessionId: String { get }
-    var apiVersion: Int { get set }
 
     func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage>
 
@@ -47,7 +46,7 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     /// SDK is capable of using.
     ///
     /// - Note: Update this value when a new API version is ready for use in production.
-    static let productionApiVersion: Int = 6
+    static let productionApiVersion: Int = 7
 
     var betas: Set<String> {
         return ["identity_client_api=v\(apiVersion)"]

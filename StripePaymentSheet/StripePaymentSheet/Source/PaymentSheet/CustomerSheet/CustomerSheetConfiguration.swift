@@ -74,6 +74,20 @@ extension CustomerSheet {
         /// If false, the customer can't delete if they only have one saved payment method remaining.
         @_spi(STP) public var allowsRemovalOfLastSavedPaymentMethod = true
 
+        /// By default, CustomerSheet will accept all supported cards by Stripe.
+        /// You can specify card brands CustomerSheet should block disallow or allow payment for by providing an array of those card brands.
+        /// Note: For Apple Pay, the list of supported card brands is determined by combining `StripeAPI.supportedPKPaymentNetworks()` with `StripeAPI.additionalEnabledApplePayNetworks` and then applying the `cardBrandAcceptance` filter. This filtered list is then assigned to `PKPaymentRequest.supportedNetworks`, ensuring that only the allowed card brands are available for Apple Pay transactions. Any `PKPaymentNetwork` that does not correspond to a `BrandCategory` will be blocked if you have specified an allow list, or will not be blocked if you have specified a disallow list.
+        /// Note: This is only a client-side solution.
+        /// Note: Card brand filtering is not currently supported by Link.
+        public var cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all
+
+        /// By default, the card form will provide a button to open the card scanner.
+        /// If true, the card form will instead initialize with the card scanner already open.
+        public var opensCardScannerAutomatically: Bool = false
+
+        /// If true, device will attest and assert on confirmation requests
+        @_spi(STP) public var enableAttestationOnConfirmation: Bool = false
+
         public init () {
         }
     }

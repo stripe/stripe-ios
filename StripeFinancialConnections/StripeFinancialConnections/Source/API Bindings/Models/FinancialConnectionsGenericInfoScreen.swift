@@ -40,36 +40,28 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
             case unparasable
 
             public init(from decoder: Decoder) throws {
-                let type = try? decoder
-                    .container(keyedBy: TypeDecodingContainer.CodingKeys.self)
-                    .decode(TypeDecodingContainer.self, forKey: .type)
-                    .type
-                let container = try decoder.singleValueContainer()
-                if type == .text, let value = try? container.decode(TextBodyEntry.self) {
-                    self = .text(value)
-                } else if type == .image, let value = try? container.decode(ImageBodyEntry.self) {
-                    self = .image(value)
-                } else if type == .bullets, let value = try? container.decode(BulletsBodyEntry.self) {
-                    self = .bullets(value)
-                } else {
+                let container = try decoder.container(keyedBy: CodingKeys.self)
+                let typeString = try container.decode(String.self, forKey: .type)
+
+                switch typeString {
+                case "text":
+                    let textEntry = try TextBodyEntry(from: decoder)
+                    self = .text(textEntry)
+                case "image":
+                    let imageEntry = try ImageBodyEntry(from: decoder)
+                    self = .image(imageEntry)
+                case "bullets":
+                    let bulletsEntry = try BulletsBodyEntry(from: decoder)
+                    self = .bullets(bulletsEntry)
+                default:
                     self = .unparasable
                 }
             }
 
-            // this struct is here
-            private struct TypeDecodingContainer: Codable {
-                let type: BodyEntryType
-
-                enum BodyEntryType: String, Codable {
-                    case text = "text"
-                    case image = "image"
-                    case bullets = "bullets"
-                }
-
-                enum CodingKeys: String, CodingKey {
-                    case type
-                }
+            private enum CodingKeys: String, CodingKey {
+                case type
             }
+
         }
 
         struct TextBodyEntry: Decodable {
@@ -100,7 +92,7 @@ struct FinancialConnectionsGenericInfoScreen: Decodable {
             let alt: String
         }
 
-        struct BulletsBodyEntry: Decodable { // TODO(kgaidis): implement the bullets body entry as a type
+        struct BulletsBodyEntry: Decodable {
             let id: String
             let bullets: [GenericBulletPoint]
 

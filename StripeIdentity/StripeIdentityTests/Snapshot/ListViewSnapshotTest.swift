@@ -49,7 +49,7 @@ final class ListViewSnapshotTest: STPSnapshotTestCase {
             accessibilityLabel: nil,
             accessory: .button(
                 title: buttonText,
-                onTap: {}
+                onTap: { _ in }
             ),
             onTap: nil
         ),

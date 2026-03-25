@@ -15,15 +15,23 @@ extension STPAnalyticsClient {
     }
 
     // PM selection & Confirmation
-    func logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: String?) {
+    func logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: String?, syncDefaultEnabled: Bool? = nil) {
         let paymentMethodType = type ?? "unknown"
+        var params: [String: Any] = ["payment_method_type": paymentMethodType]
+        if let syncDefaultEnabled {
+            params["sync_default_enabled"] = syncDefaultEnabled
+        }
         self.logPaymentSheetEvent(event: .cs_select_payment_method_screen_confirmed_savedpm_success,
-                                  params: ["payment_method_type": paymentMethodType])
+                                  params: params)
     }
-    func logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: String?) {
+    func logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: String?, syncDefaultEnabled: Bool? = nil) {
         let paymentMethodType = type ?? "unknown"
+        var params: [String: Any] = ["payment_method_type": paymentMethodType]
+        if let syncDefaultEnabled {
+            params["sync_default_enabled"] = syncDefaultEnabled
+        }
         self.logPaymentSheetEvent(event: .cs_select_payment_method_screen_confirmed_savedpm_failure,
-                                  params: ["payment_method_type": paymentMethodType])
+                                  params: params)
     }
 
     // Remove pm success/failure

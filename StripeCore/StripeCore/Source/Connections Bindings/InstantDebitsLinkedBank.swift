@@ -7,8 +7,30 @@
 
 import Foundation
 
-@_spi(STP) public protocol InstantDebitsLinkedBank {
-    var paymentMethodId: String { get }
-    var bankName: String? { get }
-    var last4: String? { get }
+@_spi(STP) public struct InstantDebitsLinkedBank: Equatable {
+    public let paymentMethod: LinkBankPaymentMethod
+    public let bankName: String?
+    public let last4: String?
+    public let linkMode: LinkMode?
+    public let incentiveEligible: Bool
+    public let linkAccountId: String?
+    public let linkAccountSessionId: String?
+
+    public init(
+        paymentMethod: LinkBankPaymentMethod,
+        bankName: String?,
+        last4: String?,
+        linkMode: LinkMode?,
+        incentiveEligible: Bool,
+        linkAccountId: String? = nil,
+        linkAccountSessionId: String?
+    ) {
+        self.paymentMethod = paymentMethod
+        self.bankName = bankName
+        self.last4 = last4
+        self.linkMode = linkMode
+        self.incentiveEligible = incentiveEligible
+        self.linkAccountId = linkAccountId
+        self.linkAccountSessionId = linkAccountSessionId
+    }
 }

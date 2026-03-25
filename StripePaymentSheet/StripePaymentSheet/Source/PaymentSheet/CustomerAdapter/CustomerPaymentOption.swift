@@ -51,10 +51,7 @@ public enum CustomerPaymentOption: Equatable {
         UserDefaults.standard.customerToLastSelectedPaymentMethod = customerToDefaultPaymentMethodID
     }
 
-    /// Returns the identifier of the default payment method for a customer.
-    /// - Parameter customerID: ID of the customer. Pass `nil` for anonymous users.
-    /// - Returns: Default payment method.
-    @_spi(STP) public static func defaultPaymentMethod(for customerID: String?) -> CustomerPaymentOption? {
+    @_spi(STP) public static func localDefaultPaymentMethod(for customerID: String?) -> CustomerPaymentOption? {
         let key = customerID ?? ""
 
         guard let value = UserDefaults.standard.customerToLastSelectedPaymentMethod?[key] else {
@@ -62,5 +59,35 @@ public enum CustomerPaymentOption: Equatable {
         }
 
         return CustomerPaymentOption(value: value)
+    }
+
+    /// Returns the identifier of the selected by default payment method for a customer.
+    /// - Parameter customerID: ID of the customer. Pass `nil` for anonymous users.
+    /// - Parameter elementsSession: the ElementsSession.
+    /// - Parameter surface: `.paymentSheet` or `.customerSheet`
+    /// - Returns: Selected payment method.
+    @_spi(STP) public static func selectedPaymentMethod(for customerID: String?, elementsSession: STPElementsSession, surface: HostedSurface) -> CustomerPaymentOption? {
+        switch surface {
+        case .paymentSheet:
+            // if opted in to the "set as default" feature, read from elementsSession
+            if elementsSession.paymentMethodSetAsDefaultForPaymentSheet {
+                if let defaultPaymentMethod = elementsSession.customer?.getDefaultOrFirstPaymentMethod() {
+                    return CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+                }
+            }
+            // otherwise, get default payment method from local storage
+            else {
+                return localDefaultPaymentMethod(for: customerID)
+            }
+        case .customerSheet:
+            if elementsSession.paymentMethodSyncDefaultForCustomerSheet {
+                if let defaultPaymentMethod = elementsSession.customer?.getDefaultPaymentMethod() {
+                    return CustomerPaymentOption.stripeId(defaultPaymentMethod.stripeId)
+                }
+            } else {
+                return localDefaultPaymentMethod(for: customerID)
+            }
+        }
+        return nil
     }
 }

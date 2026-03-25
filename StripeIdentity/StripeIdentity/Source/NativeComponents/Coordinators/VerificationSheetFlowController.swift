@@ -434,6 +434,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
         // Show success screen if submitted and closed
         if updateDataResponse?.submittedAndClosed() == true {
+            if staticContent.skipSuccessPage {
+                navigationController.dismiss(animated: true)
+                return
+            }
             return completion(
                 SuccessViewController(
                     successContent: staticContent.success,
@@ -498,6 +502,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 )
             )
         case .confirmationDestination:
+            if staticContent.skipSuccessPage {
+                navigationController.dismiss(animated: true)
+                return
+            }
             return completion(
                 SuccessViewController(
                     successContent: staticContent.success,
@@ -590,6 +598,7 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         do {
             return try BiometricConsentViewController(
                 brandLogo: brandLogo,
+                showsStripeLogo: !staticContent.isStripe,
                 consentContent: staticContent.biometricConsent,
                 sheetController: sheetController
             )
@@ -636,6 +645,8 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         )
         self.documentUploader = documentUploader
 
+        let availableTypes = staticContent.documentSelect.idDocumentTypeAllowlistKeys
+
         switch documentScannerResult {
         case .failure(let error):
             sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
@@ -644,16 +655,19 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             return DocumentFileUploadViewController(
                 requireLiveCapture: staticContent.documentCapture.requireLiveCapture,
                 sheetController: sheetController,
-                documentUploader: documentUploader
+                documentUploader: documentUploader,
+                availableIDTypes: availableTypes
             )
 
         case .success(let anyDocumentScanner):
+
             return DocumentCaptureViewController(
                 apiConfig: staticContent.documentCapture,
                 sheetController: sheetController,
                 cameraSession: makeDocumentCaptureCameraSession(),
                 documentUploader: documentUploader,
-                anyDocumentScanner: anyDocumentScanner
+                anyDocumentScanner: anyDocumentScanner,
+                avaialableIDTypes: availableTypes
             )
         }
     }

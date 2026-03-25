@@ -15,28 +15,7 @@ internal class HCaptchaWebViewManager: NSObject {
 
     typealias Log = HCaptchaLogger
 
-    fileprivate struct Constants {
-        static let BotUserAgent = "bot/2.1"
-    }
-
     fileprivate let webViewInitSize = CGSize(width: 1, height: 1)
-
-#if DEBUG
-    /// Forces the challenge to be explicitly displayed.
-    var forceVisibleChallenge = false {
-        didSet {
-            // Also works on iOS < 9
-            webView.performSelector(
-                onMainThread: Selector(("_setCustomUserAgent:")),
-                with: forceVisibleChallenge ? Constants.BotUserAgent : nil,
-                waitUntilDone: true
-            )
-        }
-    }
-
-    /// Allows validation stubbing for testing
-    var shouldSkipForTests = false
-#endif
 
     /// True if validation  token was dematerialized
     internal var resultHandled: Bool = false
@@ -89,6 +68,9 @@ internal class HCaptchaWebViewManager: NSObject {
     /// Actual HTML
     fileprivate var formattedHTML: String!
 
+    /// Passive apiKey
+    fileprivate var passiveApiKey: Bool
+
     /// Keep error If it happens before validate call
     fileprivate var lastError: HCaptchaError?
 
@@ -118,49 +100,38 @@ internal class HCaptchaWebViewManager: NSObject {
     /// Responsible for external link handling
     internal let urlOpener: HCaptchaURLOpener
 
+    /// A test-only flag that delays dematerialization by 30s
+    var shouldDelayToken: Bool = false
+
     /**
      - parameters:
-         - html: The HTML string to be loaded onto the webview
-         - apiKey: The hCaptcha sitekey
-         - baseURL: The URL configured with the sitekey
-         - endpoint: The JS API endpoint to be loaded onto the HTML file.
-         - size: Size of visible area
-         - orientation: Of the widget
-         - rqdata: Custom supplied challenge data
-         - theme: Widget theme, value must be valid JS Object or String with brackets
+         - `config`: HCaptcha config
+         - `urlOpener`:  class
      */
-    init(html: String,
-         apiKey: String,
-         baseURL: URL,
-         endpoint: URL,
-         size: HCaptchaSize,
-         orientation: HCaptchaOrientation,
-         rqdata: String?,
-         theme: String,
-         urlOpener: HCaptchaURLOpener = HCapchaAppURLOpener()) {
+    init(config: HCaptchaConfig, urlOpener: HCaptchaURLOpener = HCapchaAppURLOpener()) {
         Log.debug("WebViewManager.init")
         self.urlOpener = urlOpener
+        self.baseURL = config.baseURL
+        self.passiveApiKey = config.passiveApiKey
         super.init()
-        self.baseURL = baseURL
         self.decoder = HCaptchaDecoder { [weak self] result in
             self?.handle(result: result)
         }
         DispatchQueue.global(qos: .userInitiated).async {
-            let debugInfo = HCaptchaDebugInfo.json
-            Log.debug("WebViewManager.init after debug")
-            self.formattedHTML = String(format: html, arguments: ["apiKey": apiKey,
-                                                                  "endpoint": endpoint.absoluteString,
-                                                                  "size": size.rawValue,
-                                                                  "orientation": orientation.rawValue,
-                                                                  "rqdata": rqdata ?? "",
-                                                                  "theme": theme,
-                                                                  "debugInfo": debugInfo,
-                                                                 ])
+            let arguments = ["apiKey": config.apiKey,
+                             "endpoint": config.actualEndpoint.absoluteString,
+                             "size": config.size.rawValue,
+                             "orientation": config.orientation.rawValue,
+                             "rqdata": config.rqdata ?? "",
+                             "theme": config.actualTheme,
+                             "debugInfo": HCaptchaDebugInfo.json, ]
+            self.formattedHTML = String(format: config.html, arguments: arguments)
+            Log.debug("WebViewManager.init formattedHTML built")
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 guard !self.stopInitWebViewConfiguration else { return }
 
-                self.setupWebview(html: self.formattedHTML, url: baseURL)
+                self.setupWebview(html: self.formattedHTML, url: self.baseURL)
             }
         }
     }
@@ -170,19 +141,20 @@ internal class HCaptchaWebViewManager: NSObject {
 
      Starts the challenge validation
      */
-    func validate(on view: UIView) {
-        Log.debug("WebViewManager.validate on: \(view)")
+    func validate(on view: UIView?) {
+        Log.debug("WebViewManager.validate on: \(String(describing: view))")
         resultHandled = false
 
-#if DEBUG
-        guard !shouldSkipForTests else {
-            completion?(HCaptchaResult(self, token: ""))
-            return
-        }
-#endif
-        view.addSubview(webView)
-        if self.didFinishLoading && (webView.bounds.size == CGSize.zero || webView.bounds.size == webViewInitSize) {
-            self.doConfigureWebView()
+        if !passiveApiKey {
+            guard let view = view else {
+                completion?(HCaptchaResult(self, error: .failedSetup))
+                return
+            }
+
+            view.addSubview(webView)
+            if self.didFinishLoading && (webView.bounds.size == CGSize.zero || webView.bounds.size == webViewInitSize) {
+                self.doConfigureWebView()
+            }
         }
 
         executeJS(command: .execute)
@@ -194,6 +166,7 @@ internal class HCaptchaWebViewManager: NSObject {
         stopInitWebViewConfiguration = true
         webView.stopLoading()
         resultHandled = true
+        completion?(HCaptchaResult(self, error: .challengeStopped))
     }
 
     /**
@@ -250,7 +223,14 @@ fileprivate extension HCaptchaWebViewManager {
 
         switch result {
         case .token(let token):
-            completion?(HCaptchaResult(self, token: token))
+            if shouldDelayToken {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 30) { [weak self] in
+                    guard let self else { return }
+                    completion?(HCaptchaResult(self, token: token))
+                }
+            } else {
+                completion?(HCaptchaResult(self, token: token))
+            }
         case .error(let error):
             handle(error: error)
             onEvent?(.error, error)
@@ -292,7 +272,7 @@ fileprivate extension HCaptchaWebViewManager {
 
     private func doConfigureWebView() {
         Log.debug("WebViewManager.doConfigureWebView")
-        if configureWebView != nil {
+        if configureWebView != nil && !passiveApiKey {
             DispatchQueue.once(token: configureWebViewDispatchToken) { [weak self] in
                 guard let `self` = self else { return }
                 self.configureWebView?(self.webView)

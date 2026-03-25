@@ -1,4 +1,8 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (nem kötelező)";
+
+"(not accepted)" = "(nem elfogadott)";
 
 "Account number" = "Számlaszám";
 
@@ -36,7 +40,7 @@
 
 "County" = "Ország";
 
-"Date is empty." = "A dátum nincs kitöltve.";
+"Date of Birth" = "Születési dátum";
 
 "Department" = "Megye";
 
@@ -84,8 +88,6 @@
 
 "Parish" = "Egyházközség";
 
-"Phone" = "Telefon";
-
 "Phone number" = "Telefonszám";
 
 "Postal code" = "Irányítószám";
@@ -103,6 +105,8 @@
 "Search" = "Keresés";
 
 "Select card brand (optional)" = "Válassza ki a kártya márkáját (nem kötelező)";
+
+"Selection is empty." = "A kiválasztás üres.";
 
 "Sort code" = "Bankazonosító";
 
@@ -132,12 +136,16 @@
 
 "Your BLIK code is invalid." = "BLIK kódja érvénytelen.";
 
-"Your ZIP is incomplete." = "A ZIP hiányos.";
+"Your ZIP code is incomplete." = "Az irányítószám hiányos.";
+
+"Your ZIP code is invalid." = "Az irányítószáma érvénytelen.";
 
 "Your email is invalid." = "Érvénytelen e-mail-cím.";
 
 "Your payment information will not be saved." = "Fizetési adatai nem lesznek mentve.";
 
 "Your postal code is incomplete." = "Az irányítószám hiányos.";
+
+"Your postal code is invalid." = "Az irányítószám érvénytelen.";
 
 "ZIP" = "Irányítószám";

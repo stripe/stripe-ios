@@ -29,6 +29,11 @@ def checkout_build_generate(branch, archive_name)
 
 end
 
-# Run function for master and head_ref
-checkout_build_generate("master", "master")
-checkout_build_generate(ENV['GITHUB_HEAD_REF'], "new")
+# Find the merge-base (where this branch diverged from master)
+merge_base = `git merge-base origin/master HEAD`.strip
+
+# Get current HEAD commit before any checkouts
+current_commit = `git rev-parse HEAD`.strip
+
+checkout_build_generate(merge_base, "master")
+checkout_build_generate(current_commit, "new")

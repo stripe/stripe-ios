@@ -44,6 +44,14 @@ public extension StripeAPI {
                 public let id: String
                 public let last4: String
                 public let routingNumber: String?
+                
+                /// Whether the account should be considered instantly verified. This field isn't part of the API response 
+                /// and is being set later on.
+                public var instantlyVerified: Bool = false
+                
+                private enum CodingKeys: String, CodingKey {
+                    case bankName, id, last4, routingNumber
+                }
             }
 
             case linkedAccount(StripeAPI.FinancialConnectionsAccount)
@@ -60,8 +68,7 @@ public extension StripeAPI {
                 let container = try decoder.singleValueContainer()
                 if let value = try? container.decode(FinancialConnectionsAccount.self) {
                     self = .linkedAccount(value)
-                } else if let value = try? container.decode(FinancialConnectionsSession.PaymentAccount.BankAccount.self)
-                {
+                } else if let value = try? container.decode(FinancialConnectionsSession.PaymentAccount.BankAccount.self) {
                     self = .bankAccount(value)
                 } else {
                     self = .unparsable

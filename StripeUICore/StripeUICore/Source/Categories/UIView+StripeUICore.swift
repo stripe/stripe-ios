@@ -60,7 +60,8 @@ import UIKit
         guard let userInfo = notification.userInfo,
               let animationCurveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int,
               let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
-              let animationCurve = UIView.AnimationCurve(rawValue: animationCurveValue) else {
+              let animationCurve = UIView.AnimationCurve(rawValue: animationCurveValue),
+              animationDuration > 0 else {
             // Just run the animation block as a fallback
             animations()
             return
@@ -111,5 +112,11 @@ import UIKit
             spacerView.heightAnchor.constraint(equalToConstant: height).isActive = true
         }
         return spacerView
+    }
+
+    var isFullyVisibleOnScreen: Bool {
+        guard let window = window, !isHidden, alpha > 0 else { return false }
+        let viewFrameInWindow = convert(bounds, to: window)
+        return window.bounds.contains(viewFrameInWindow)
     }
 }

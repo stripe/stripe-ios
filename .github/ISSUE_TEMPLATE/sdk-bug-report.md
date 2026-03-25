@@ -1,8 +1,8 @@
 ---
-name: "🐛 SDK Bug report"
+name: "\U0001F41B SDK Bug report"
 about: Create a report to help us improve
 title: "[BUG] "
-labels: 'kind:bug'
+labels: kind:bug
 assignees: ''
 
 ---
@@ -21,7 +21,7 @@ assignees: ''
 
 ## SDK version
 <!--
-What version of our SDK are you using? You can find this by either looking at your `Podfile.lock` (if you're using Cocoapods), your `Cartfile.resolved` (if you're using Carthage), or by looking at the value of `STPSDKVersion` in `STPAPIClient.h`.
+What version of our SDK are you using? You can find this by either looking at your `Podfile.lock` (if you're using Cocoapods) or by looking at the value of `STPSDKVersion` in `STPAPIClient.h`.
  -->
 
 ## Other information

@@ -14,9 +14,10 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
+// @iOS26
 class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 
-    // MARK: Normal mode
+    // MARK: Checkbox mode
 
     func testDefaultState() {
         let sut = makeSUT()
@@ -50,7 +51,67 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
-    // MARK: Textfield only mode
+    // MARK: Default opt-in (checkboxWithDefaultOptIn mode)
+
+    func testDefaultOptIn_unchecked() {
+        let sut = makeSUT(
+            saveCheckboxChecked: false,
+            linkAccountEmailAddress: "user@example.com",
+            preFillPhone: "+13105551234",
+            allowsDefaultOptIn: true
+        )
+        verify(sut)
+    }
+
+    func testDefaultOptIn_fully_preFilled() {
+        let sut = makeSUT(
+            saveCheckboxChecked: true,
+            linkAccountEmailAddress: "user@example.com",
+            preFillPhone: "+13105551234",
+            allowsDefaultOptIn: true
+        )
+        verify(sut)
+    }
+
+    func testDefaultOptIn_fully_preFilled_longEmail() {
+        let sut = makeSUT(
+            saveCheckboxChecked: true,
+            linkAccountEmailAddress: "user_with_a_super_long_email_address@example.com",
+            preFillPhone: "+13105551234",
+            allowsDefaultOptIn: true
+        )
+        verify(sut)
+    }
+
+    func testDefaultOptIn_partially_preFilled() {
+        let sut = makeSUT(
+            saveCheckboxChecked: true,
+            preFillPhone: "+13105551234",
+            allowsDefaultOptIn: true
+        )
+        verify(sut)
+    }
+
+    // MARK: SignupOptIn mode
+
+    func testSignupOptInFeatureEnabled_unchecked() {
+        let sut = makeSUT(
+            linkAccountEmailAddress: "unknown@stripe.com",
+            signupOptInFeatureEnabled: true
+        )
+        verify(sut)
+    }
+
+    func testSignupOptInFeatureEnabled_checked() {
+        let sut = makeSUT(
+            linkAccountEmailAddress: "unknown@stripe.com",
+            signupOptInFeatureEnabled: true,
+            signupOptInInitialValue: true
+        )
+        verify(sut)
+    }
+
+    // MARK: TextFieldsOnlyEmailFirst mode
 
     func testDefaultState_textFieldsOnly() {
         let sut = makeSUT(showCheckbox: false)
@@ -88,6 +149,17 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    // MARK: TextFieldsOnlyPhoneFirst mode
+
+    func testDefaultState_textFieldsOnlyPhoneFirst() {
+        // Phone first mode is triggered when showCheckbox is false and email is prefilled
+        let sut = makeSUT(
+            linkAccountEmailAddress: "user@example.com",
+            showCheckbox: false
+        )
+        verify(sut)
+    }
+
     func verify(
         _ element: LinkInlineSignupElement,
         identifier: String? = nil,
@@ -105,6 +177,9 @@ extension LinkInlineSignupElementSnapshotTests {
     struct MockAccountService: LinkAccountServiceProtocol {
         func lookupAccount(
             withEmail email: String?,
+            emailSource: StripePaymentSheet.EmailSource,
+            doNotLogConsumerFunnelEvent: Bool,
+            requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
             completion: @escaping (Result<PaymentSheetLinkAccount?, Error>) -> Void
         ) {
             completion(
@@ -112,15 +187,55 @@ extension LinkInlineSignupElementSnapshotTests {
                     PaymentSheetLinkAccount(
                         email: "user@example.com",
                         session: nil,
-                        publishableKey: nil
+                        publishableKey: nil,
+                        displayablePaymentDetails: nil,
+                        useMobileEndpoints: false,
+                        canSyncAttestationState: false,
+                        requestSurface: requestSurface
                     )
                 )
             )
         }
 
-        func hasEmailLoggedOut(email: String) -> Bool {
-            // TODO(porter): Determine if we want to implement this in tests
-            return false
+        func lookupLinkAuthToken(
+            _ linkAuthTokenClientSecret: String,
+            requestSurface: StripePaymentSheet.LinkRequestSurface,
+            completion: @escaping (Result<StripePaymentSheet.PaymentSheetLinkAccount?, any Error>) -> Void
+        ) {
+            completion(
+                .success(
+                    PaymentSheetLinkAccount(
+                        email: "user@example.com",
+                        session: nil,
+                        publishableKey: nil,
+                        displayablePaymentDetails: nil,
+                        useMobileEndpoints: false,
+                        canSyncAttestationState: false,
+                        requestSurface: requestSurface
+                    )
+                )
+            )
+        }
+
+        func lookupLinkAuthIntent(
+            linkAuthIntentID: String,
+            requestSurface: StripePaymentSheet.LinkRequestSurface = .default,
+            completion: @escaping (Result<StripePaymentSheet.LookupLinkAuthIntentResponse?, Error>) -> Void
+        ) {
+            let linkAccount = PaymentSheetLinkAccount(
+                email: "user@example.com",
+                session: nil,
+                publishableKey: nil,
+                displayablePaymentDetails: nil,
+                useMobileEndpoints: false,
+                canSyncAttestationState: false,
+                requestSurface: requestSurface
+            )
+            let response = StripePaymentSheet.LookupLinkAuthIntentResponse(
+                linkAccount: linkAccount,
+                consentViewModel: nil
+            )
+            completion(.success(response))
         }
     }
 
@@ -131,23 +246,37 @@ extension LinkInlineSignupElementSnapshotTests {
         country: String = "US",
         preFillName: String? = nil,
         preFillPhone: String? = nil,
-        showCheckbox: Bool = true
+        showCheckbox: Bool = true,
+        allowsDefaultOptIn: Bool = false,
+        signupOptInFeatureEnabled: Bool = false,
+        signupOptInInitialValue: Bool = false
     ) -> LinkInlineSignupElement {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "[Merchant]"
         configuration.defaultBillingDetails.name = preFillName
         configuration.defaultBillingDetails.phone = preFillPhone
+        configuration.appearance.applyLiquidGlassIfPossible()
 
         var linkAccount: PaymentSheetLinkAccount?
 
         if let linkAccountEmailAddress {
-            linkAccount = PaymentSheetLinkAccount(email: linkAccountEmailAddress, session: nil, publishableKey: nil)
+            linkAccount = PaymentSheetLinkAccount(
+                email: linkAccountEmailAddress,
+                session: nil,
+                publishableKey: nil,
+                displayablePaymentDetails: nil,
+                useMobileEndpoints: false,
+                canSyncAttestationState: false
+            )
         }
 
         let viewModel = LinkInlineSignupViewModel(
             configuration: configuration,
             showCheckbox: showCheckbox,
             accountService: MockAccountService(),
+            allowsDefaultOptIn: allowsDefaultOptIn,
+            signupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            signupOptInInitialValue: signupOptInInitialValue,
             linkAccount: linkAccount,
             country: country
         )

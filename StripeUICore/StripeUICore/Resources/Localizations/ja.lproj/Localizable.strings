@@ -1,4 +1,8 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (オプション)";
+
+"(not accepted)" = "(受け付けられません)";
 
 "Account number" = "アカウント番号";
 
@@ -36,7 +40,7 @@
 
 "County" = "群";
 
-"Date is empty." = "カートは空です。";
+"Date of Birth" = "生年月日";
 
 "Department" = "県";
 
@@ -84,8 +88,6 @@
 
 "Parish" = "郡";
 
-"Phone" = "電話番号";
-
 "Phone number" = "電話番号";
 
 "Postal code" = "郵便番号";
@@ -103,6 +105,8 @@
 "Search" = "検索";
 
 "Select card brand (optional)" = "カードブランドを選択 (任意)";
+
+"Selection is empty." = "項目が選択されていません。";
 
 "Sort code" = "銀行コード";
 
@@ -132,12 +136,16 @@
 
 "Your BLIK code is invalid." = "BLIK コードが無効です。";
 
-"Your ZIP is incomplete." = "郵便番号の入力に不備があります。";
+"Your ZIP code is incomplete." = "郵便番号が不完全です。";
+
+"Your ZIP code is invalid." = "あなたの郵便番号は無効です。";
 
 "Your email is invalid." = "メールアドレスが無効です。";
 
 "Your payment information will not be saved." = "支払い情報は保存されません。";
 
 "Your postal code is incomplete." = "郵便番号の入力に不備があります。";
+
+"Your postal code is invalid." = "郵便番号が無効です";
 
 "ZIP" = "郵便番号";

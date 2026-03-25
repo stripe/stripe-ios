@@ -1,4 +1,8 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (tùy chọn)";
+
+"(not accepted)" = "(không được chấp nhận)";
 
 "Account number" = "Số tài khoản";
 
@@ -36,7 +40,7 @@
 
 "County" = "Quận";
 
-"Date is empty." = "Ngày trống.";
+"Date of Birth" = "Ngày sinh";
 
 "Department" = "Sở ngành";
 
@@ -84,8 +88,6 @@
 
 "Parish" = "Giáo xứ";
 
-"Phone" = "Điện thoại";
-
 "Phone number" = "Số điện thoại";
 
 "Postal code" = "Mã bưu điện";
@@ -103,6 +105,8 @@
 "Search" = "Tìm kiếm";
 
 "Select card brand (optional)" = "Chọn thương hiệu thẻ (tùy chọn)";
+
+"Selection is empty." = "Lựa chọn đang để trống.";
 
 "Sort code" = "Mã sắp xếp";
 
@@ -132,12 +136,16 @@
 
 "Your BLIK code is invalid." = "Mã BLIK của quý vị không hợp lệ.";
 
-"Your ZIP is incomplete." = "Mã ZIP chưa đầy đủ.";
+"Your ZIP code is incomplete." = "Mã ZIP của bạn không đầy đủ.";
+
+"Your ZIP code is invalid." = "Mã bưu điện của bạn không hợp lệ.";
 
 "Your email is invalid." = "Email của quý vị không hợp lệ.";
 
 "Your payment information will not be saved." = "Thông tin thanh toán của bạn sẽ không lưu lại.";
 
 "Your postal code is incomplete." = "Mã bưu điện chưa đầy đủ.";
+
+"Your postal code is invalid." = "Mã bưu điện không hợp lệ.";
 
 "ZIP" = "ZIP";

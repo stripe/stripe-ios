@@ -19,9 +19,9 @@ import UIKit
     public static let textFieldFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 14))
     public static let sectionTitleFont: UIFont = UIFontMetrics(forTextStyle: .body).scaledFont(for: .systemFont(ofSize: 13, weight: .semibold))
     /// The spacing between elements of a SectionElement
-    public static let sectionSpacing: CGFloat = 4
+    public static let sectionElementInternalSpacing: CGFloat = 8
     /// The spacing between elements of a FormElement
-    public static let formSpacing: CGFloat = 12
+    public static let formSpacing: CGFloat = 16
     public static let defaultCornerRadius: CGFloat = 6
     public static let backgroundColor: UIColor = {
         // systemBackground has a 'base' and 'elevated' state; we don't want this behavior.
@@ -35,16 +35,28 @@ import UIKit
         )
     }()
 
-    public static func makeErrorLabel(theme: ElementsUITheme) -> UILabel {
+    public static func makeErrorLabel(theme: ElementsAppearance) -> UILabel {
         let label = UILabel()
-        label.font = theme.fonts.footnote
+        label.font = theme.fonts.error
         label.textColor = theme.colors.danger
         label.numberOfLines = 0
         label.setContentHuggingPriority(.required, for: .vertical)
         return label
     }
 
-    public static func makeNoticeTextField(theme: ElementsUITheme) -> UITextView {
+    public static func makeSmallFootnote(theme: ElementsAppearance) -> UITextView {
+        let textView = UITextView()
+        textView.isScrollEnabled = false
+        textView.isEditable = false
+        textView.font = theme.fonts.smallFootnote
+        textView.backgroundColor = .clear
+        textView.textColor = theme.colors.secondaryText
+        textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
+        textView.isUserInteractionEnabled = false
+        return textView
+    }
+
+    public static func makeNoticeTextField(theme: ElementsAppearance) -> UITextView {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
@@ -55,7 +67,7 @@ import UIKit
         return textView
     }
 
-    public static func makeSectionTitleLabel(theme: ElementsUITheme) -> UILabel {
+    public static func makeSectionTitleLabel(theme: ElementsAppearance) -> UILabel {
         let label = UILabel()
         label.font = theme.fonts.sectionHeader
         label.textColor = theme.colors.secondaryText
@@ -65,23 +77,27 @@ import UIKit
 }
 
 /// Describes the appearance of an Element
-@_spi(STP) public struct ElementsUITheme {
+/// A superset of `StripePaymentSheet.PaymentSheetAppearance`. This exists b/c we can't see that type from `StripeUICore`, and we don't want to the public StripePaymentSheet API to be a typealias of this.
+@_spi(STP) public struct ElementsAppearance {
 
     /// The default appearance used for Elements
-    public static let `default` = ElementsUITheme()
+    public static let `default` = ElementsAppearance()
 
     public var fonts = Font()
     public var colors = Color()
 
+    /// The thickness of divider lines between elements in a section uses `borderWidth` for consistency, with a minimum thickness of 0.5.
+    public var separatorWidth: CGFloat {
+        borderWidth > 0 ? borderWidth : 0.5
+    }
     public var borderWidth = ElementsUI.fieldBorderWidth
-    public var cornerRadius = ElementsUI.defaultCornerRadius
+    public var cornerRadius: CGFloat? = ElementsUI.defaultCornerRadius
     public var shadow: Shadow? = Shadow()
+    public var textFieldInsets = ElementsUI.contentViewInsets
+    public var iconStyle: IconStyle = .filled
 
-    /// Checks if the theme is bright.
-    public var isBright: Bool { colors.background.isBright }
-
-    /// Checks if the theme is dark.
-    public var isDark: Bool { !isBright }
+    /// The spacing between sections in forms
+    public var sectionSpacing = ElementsUI.formSpacing
 
     public struct Font {
         public init() {}
@@ -93,6 +109,8 @@ import UIKit
                                             withTextStyle: .caption1,
                                             maximumPointSize: 20)
         public var footnote = UIFont.preferredFont(forTextStyle: .footnote, weight: .regular, maximumPointSize: 20)
+        public var error = UIFont.preferredFont(forTextStyle: .caption2, weight: .regular)
+        public var smallFootnote = UIFont.preferredFont(forTextStyle: .caption2, weight: .medium)
         public var footnoteEmphasis = UIFont.preferredFont(forTextStyle: .footnote, weight: .medium, maximumPointSize: 20)
     }
 
@@ -101,7 +119,7 @@ import UIKit
 
         public var primary = UIColor.systemBlue
         public var parentBackground = UIColor.systemBackground
-        public var background = ElementsUI.backgroundColor
+        public var componentBackground = ElementsUI.backgroundColor
         public var disabledBackground = ElementsUI.disabledBackgroundColor
         public var border = ElementsUI.fieldBorderColor
         public var divider = ElementsUI.fieldBorderColor
@@ -110,6 +128,25 @@ import UIKit
         public var secondaryText = UIColor.secondaryLabel
         public var placeholderText = UIColor.secondaryLabel
         public var danger = UIColor.systemRed
+
+        public var readonlyComponentBackground: UIColor {
+            let backgroundColor = parentBackground
+            return UIColor(dynamicProvider: { traitCollection in
+                let resolvedColor = componentBackground.resolvedColor(with: traitCollection)
+                if resolvedColor.isBright {
+                    // The brighter the background color, the less we need to darken the color in order to ensure it looks disabled _and_ has enough contrast.
+                    // There's undoubtedly a better formula, but I just want:
+                    // 0.04 when brightness is 1
+                    // 0.09 when brightness is 0.96
+                    // and some linear interpolation between:
+                    let darkenFactor = -1.25 * backgroundColor.brightness + 1.29
+                    return resolvedColor.darken(by: darkenFactor)
+                } else {
+                    return resolvedColor.lighten(by: 0.01)
+                }
+            })
+        }
+
     }
 
     public struct Shadow {
@@ -127,5 +164,10 @@ import UIKit
             self.offset = offset
             self.radius = radius
         }
+    }
+
+    @frozen public enum IconStyle {
+        case filled
+        case outlined
     }
 }

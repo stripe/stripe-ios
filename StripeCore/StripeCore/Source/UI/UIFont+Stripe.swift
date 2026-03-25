@@ -16,6 +16,7 @@ import UIKit
     /// https://developer.apple.com/documentation/uikit/uifont/scaling_fonts_automatically
     private static let defaultSizeCategory: UIContentSizeCategory = .large
 
+    /// - Note: for Payment Sheet/Element contexts, use PaymentSheet.Appearance.scaledFont instead. This method uses the system font instead of a user's custom font.
     public static func preferredFont(
         forTextStyle style: TextStyle,
         weight: Weight,
@@ -36,6 +37,7 @@ import UIKit
     /// - Parameters:
     ///   - style: The style used to determine the font's size.
     ///   - weight: The weight to apply to the font.
+    /// - Note: for Payment Sheet/Element contexts, use PaymentSheet.Appearance.scaledFont instead. This method uses the system font instead of a user's custom font.
     public func withPreferredSize(
         forTextStyle style: TextStyle,
         weight: Weight? = nil
@@ -69,11 +71,9 @@ import UIKit
         }
 
         // Create a descriptor that set's the font to the specified weight
-        let descriptor = fontDescriptor.addingAttributes([
-            .traits: [
-                UIFontDescriptor.TraitKey.weight: useWeight,
-            ],
-        ])
+        let descriptor = useWeight.map {
+            fontDescriptor.addingAttributes([.traits: [UIFontDescriptor.TraitKey.weight: $0]])
+        } ?? fontDescriptor
 
         // Get the point size used by the system font for this style
         let pointSize = systemDefaultFontDescriptor.pointSize

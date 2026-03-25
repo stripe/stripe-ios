@@ -6,27 +6,32 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
 /// An object that manages a view that displays payment methods and completes a checkout.
-@_spi(EmbeddedPaymentElementPrivateBeta)
-public class EmbeddedPaymentElement {
+@MainActor
+public final class EmbeddedPaymentElement {
 
     /// A view that displays payment methods. It can present a sheet to collect more details or display saved payment methods.
-    public let view: UIView
+    public var view: UIView {
+        return containerView
+    }
 
     /// A view controller to present on.
     public var presentingViewController: UIViewController?
 
     /// This contains the `configuration` you passed in to `create`.
-    public let configuration: Configuration
+    /// - Note: `internal(set)` because checkout session updates may apply address overrides to the configuration.
+    public internal(set) var configuration: Configuration
 
     /// See `EmbeddedPaymentElementDelegate`.
     public weak var delegate: EmbeddedPaymentElementDelegate?
 
-    public struct PaymentOptionDisplayData {
+    /// Contains details about a payment method that can be displayed to the customer
+    public struct PaymentOptionDisplayData: Equatable {
         /// An image representing a payment method; e.g. the Apple Pay logo or a VISA logo
         public let image: UIImage
         /// A user facing string representing the payment method; e.g. "Apple Pay" or "····4242" for a card
@@ -38,16 +43,24 @@ public class EmbeddedPaymentElement {
         /// - If this is an external payment method, see https://stripe.com/docs/payments/external-payment-methods?platform=ios#available-external-payment-methods for possible values.
         /// - If this is Apple Pay, the value is "apple_pay"
         public let paymentMethodType: String
-        /// If you set `configuration.hidesMandateText = true`, this text must be displayed to the customer near your “Buy” button to comply with regulations.
-        public let mandateText: NSAttributedString
+        /// If you set `configuration.embeddedViewDisplaysMandateText = false`, this text must be displayed in a `UITextView` (so that URLs in the text are handled) to the customer near your “Buy” button to comply with regulations.
+        public let mandateText: NSAttributedString?
+        /// The shipping details associated with the current customer.
+        @_spi(STP) public let shippingDetails: AddressViewController.Configuration.DefaultAddressDetails?
     }
 
-    /// The customer's currently selected payment option.
-    public var paymentOption: PaymentOptionDisplayData? { return nil /* computed */ }
+    /// Contains information about the customer's selected payment option.
+    /// Use this to display the payment option in your own UI
+    public var paymentOption: PaymentOptionDisplayData? {
+        guard let _paymentOption else {
+            return nil
+        }
+        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText, currency: intent.currency, iconStyle: configuration.appearance.iconStyle)
+    }
 
     /// An asynchronous failable initializer
-    /// This loads the Customer's payment methods, their default payment method, etc.
-    /// - Parameter intentConfiguration: Information about the PaymentIntent or SetupIntent you will create later to complete the checkout.
+    /// Loads the Customer's payment methods, their default payment method, etc.
+    /// - Parameter intentConfiguration: Information about the PaymentIntent or SetupIntent you will create later to complete the confirmation.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
@@ -55,19 +68,74 @@ public class EmbeddedPaymentElement {
         intentConfiguration: IntentConfiguration,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2525)
-        let dummyView = await EmbeddedPaymentMethodsView(
-            savedPaymentMethod: nil,
-            appearance: .default,
-            shouldShowApplePay: true,
-            shouldShowLink: true
+        try validateRowSelectionConfiguration(configuration: configuration)
+
+        AnalyticsHelper.shared.generateSessionID()
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
+
+        let loadResult = try await PaymentSheetLoader.load(
+            mode: .deferredIntent(intentConfiguration),
+            configuration: configuration,
+            analyticsHelper: analyticsHelper,
+            integrationShape: .embedded
         )
-        return .init(view: dummyView, configuration: configuration)
+        let embeddedPaymentElement: EmbeddedPaymentElement = .init(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
+        )
+        embeddedPaymentElement.clearPaymentOptionIfNeeded()
+        return embeddedPaymentElement
+    }
+
+    /// An asynchronous failable initializer for CheckoutSession mode
+    /// Loads payment methods and configuration from a fully loaded Checkout instance.
+    /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
+    /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
+    /// - Returns: A valid EmbeddedPaymentElement instance
+    /// - Throws: An error if loading failed.
+    @_spi(CheckoutSessionsPreview) public static func create(
+        checkout: Checkout,
+        configuration: Configuration
+    ) async throws -> EmbeddedPaymentElement {
+        guard let stpSession = checkout.session as? STPCheckoutSession else {
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
+            throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
+        }
+        if checkout.isPerformingSessionUpdate {
+            let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.create(checkout:configuration:)."
+            assertionFailure(message)
+            throw PaymentSheetError.integrationError(nonPIIDebugDescription: message)
+        }
+        var config = configuration
+        stpSession.applyAddressOverrides(to: &config)
+
+        try validateRowSelectionConfiguration(configuration: config)
+
+        AnalyticsHelper.shared.generateSessionID()
+        STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: config)
+
+        let loadResult = try await PaymentSheetLoader.load(
+            mode: .checkoutSession(stpSession),
+            configuration: config,
+            analyticsHelper: analyticsHelper,
+            integrationShape: .embedded
+        )
+        let embeddedPaymentElement: EmbeddedPaymentElement = .init(
+            configuration: config,
+            loadResult: loadResult,
+            analyticsHelper: analyticsHelper
+        )
+        embeddedPaymentElement.clearPaymentOptionIfNeeded()
+        checkout.integrationDelegate = embeddedPaymentElement
+        return embeddedPaymentElement
     }
 
     /// The result of an `update` call
     @frozen public enum UpdateResult {
-        /// The update succeded
+        /// The update succeeded
         case succeeded
         /// The update was canceled. This is only returned when a subsequent `update` call cancels previous ones.
         case canceled
@@ -78,30 +146,324 @@ public class EmbeddedPaymentElement {
     /// Call this method when the IntentConfiguration values you used to initialize `EmbeddedPaymentElement` (amount, currency, etc.) change.
     /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
     /// - Parameter intentConfiguration: An updated IntentConfiguration.
-    /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
+    /// - Returns: The result of the update.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
+    /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
     public func update(
         intentConfiguration: IntentConfiguration
     ) async -> UpdateResult {
-        // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2524)
-        return .succeeded
+        return await performUpdate(mode: .deferredIntent(intentConfiguration))
+    }
+
+    /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
+    /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
+    /// - Parameter checkout: The Checkout instance whose session has been updated.
+    /// - Returns: The result of the update.
+    /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
+    /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
+    @_spi(CheckoutSessionsPreview) public func update(
+        checkout: Checkout
+    ) async -> UpdateResult {
+        guard let stpSession = checkout.session as? STPCheckoutSession else {
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
+            return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
+        }
+        if checkout.isPerformingSessionUpdate {
+            let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.update(checkout:)."
+            assertionFailure(message)
+            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message))
+        }
+        stpSession.applyAddressOverrides(to: &configuration)
+        return await performUpdate(mode: .checkoutSession(stpSession))
+    }
+
+    private func performUpdate(mode: PaymentSheet.InitializationMode) async -> UpdateResult {
+        let newUpdateContext = EmbeddedUpdateContext(status: .inProgress)
+        self.latestUpdateContext = newUpdateContext
+
+        let startTime = Date()
+        analyticsHelper.logEmbeddedUpdateStarted()
+        // Do not process any update calls if we have already successfully confirmed an intent
+        guard !hasConfirmedIntent else {
+            let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementAlreadyConfirmedIntent)
+            analyticsHelper.logEmbeddedUpdateFinished(result: result, duration: Date().timeIntervalSince(startTime))
+            return result
+        }
+
+        // If we currently have a sheet presented fail the update
+        guard !(presentingViewController?.presentedViewController is StripePaymentSheet.BottomSheetViewController) else {
+            let result: EmbeddedPaymentElement.UpdateResult = .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented)
+            analyticsHelper.logEmbeddedUpdateFinished(result: result, duration: Date().timeIntervalSince(startTime))
+            return result
+        }
+
+        embeddedPaymentMethodsView.isUserInteractionEnabled = false
+        // Cancel the old task and let it finish so that merchants receive update results in order
+        latestUpdateTask?.cancel()
+        _ = await latestUpdateTask?.value
+        // Start the new update task
+        let currentUpdateTask: Task<UpdateResult, Never> = Task { @MainActor [weak self, configuration, analyticsHelper] in
+            // ⚠️ Don't modify `self` until after all `awaits` to avoid being canceled halfway through and leaving self in a partially updated state.
+            // 1. Reload v1/elements/session.
+            let loadResult: PaymentSheetLoader.LoadResult
+            do {
+                // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-3079): Make `load` respect task cancellation to reduce network consumption
+                loadResult = try await PaymentSheetLoader.load(
+                    mode: mode,
+                    configuration: configuration,
+                    analyticsHelper: analyticsHelper,
+                    integrationShape: .embedded,
+                    isUpdate: true
+                )
+            } catch {
+                return UpdateResult.failed(error: error)
+            }
+            guard let self, !Task.isCancelled else {
+                return UpdateResult.canceled
+            }
+
+            // 2. At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
+            let previousPaymentOption = self._paymentOption
+            self.loadResult = loadResult
+            self.savedPaymentMethods = loadResult.savedPaymentMethods
+            self.formCache = .init() // Clear the cache because the form may have changed e.g. different mandate or different fields.
+            let isPreviousPaymentOptionStillDisplayed: Bool = {
+                switch previousPaymentOption {
+                case .none:
+                    return true
+                case .applePay:
+                    return PaymentSheet.isApplePayEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+                case .link:
+                    return PaymentSheet.isLinkEnabled(elementsSession: loadResult.elementsSession, configuration: configuration)
+                case .saved(paymentMethod: let paymentMethod, confirmParams: _):
+                    return loadResult.savedPaymentMethods.contains(paymentMethod)
+                case .new(confirmParams: let confirmParams):
+                    return loadResult.paymentMethodTypes.contains(confirmParams.paymentMethodType)
+                case .external(paymentMethod: let paymentMethod, billingDetails: _):
+                    return loadResult.paymentMethodTypes.contains(.external(paymentMethod))
+                }
+            }()
+            let previousSelectedRowType = self.embeddedPaymentMethodsView.selectedRowButton?.type
+            let previousSelectedRowChangeButtonState = self.embeddedPaymentMethodsView.selectedRowChangeButtonState
+            // Make the new form VC for the previously selected row type if it's still in the list
+            let selectedFormViewController = Self.makeFormViewControllerIfNecessary(
+                selection: isPreviousPaymentOptionStillDisplayed ? previousSelectedRowType : nil,
+                previousPaymentOption: previousPaymentOption,
+                configuration: self.configuration,
+                intent: loadResult.intent,
+                elementsSession: loadResult.elementsSession,
+                savedPaymentMethods: loadResult.savedPaymentMethods,
+                analyticsHelper: self.analyticsHelper,
+                formCache: self.formCache,
+                delegate: self
+            )
+            self.selectedFormViewController = selectedFormViewController
+            // Make the new list view, selecting the previous row if it's still in the list and it doesn't have a form or it's form is valid
+            let shouldSelectPreviousRow: Bool = {
+                guard isPreviousPaymentOptionStillDisplayed else { return false }
+                if let selectedFormViewController {
+                    return selectedFormViewController.selectedPaymentOption != nil
+                } else {
+                    return true
+                }
+            }()
+            self.embeddedPaymentMethodsView = Self.makeView(
+                configuration: configuration,
+                loadResult: loadResult,
+                analyticsHelper: analyticsHelper,
+                previousSelection: shouldSelectPreviousRow ? previousSelectedRowType : nil,
+                previousSelectedRowChangeButtonState: shouldSelectPreviousRow ? previousSelectedRowChangeButtonState : nil,
+                delegate: self
+            )
+            self.containerView.updateEmbeddedPaymentMethodsView(embeddedPaymentMethodsView)
+            informDelegateIfPaymentOptionUpdated()
+            return .succeeded
+        }
+        self.latestUpdateTask = currentUpdateTask
+        let updateResult = await currentUpdateTask.value
+        if latestUpdateContext?.id == newUpdateContext.id {
+            switch updateResult {
+            case .succeeded:
+                self.latestUpdateContext?.status = .succeeded
+            case .failed(let error):
+                self.latestUpdateContext?.status = .failed(error: error)
+            case .canceled:
+                self.latestUpdateContext?.status = .canceled
+            }
+        }
+        if case .succeeded = updateResult {
+            clearPaymentOptionIfNeeded()
+        }
+        embeddedPaymentMethodsView.isUserInteractionEnabled = true
+        analyticsHelper.logEmbeddedUpdateFinished(result: updateResult, duration: Date().timeIntervalSince(startTime))
+        return updateResult
     }
 
     /// Completes the payment or setup.
     /// - Returns: The result of the payment after any presented view controllers are dismissed.
     /// - Note: This method presents authentication screens on the instance's  `presentingViewController` property.
+    /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm() async -> EmbeddedPaymentElementResult {
-        // TODO
-        return .canceled
+        analyticsHelper.log(event: .mcConfirmEmbedded)
+        guard let presentingViewController else {
+            let errorMessage = "Presenting view controller is nil. Please set EmbeddedPaymentElement.presentingViewController."
+            assertionFailure(errorMessage)
+            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: errorMessage))
+        }
+        guard let paymentOption = _paymentOption else {
+            assertionFailure("`confirm` should only be called when `paymentOption` is not nil")
+            return .failed(error: PaymentSheetError.confirmingWithInvalidPaymentOption)
+        }
+        let authContext = PaymentSheetAuthenticationContextViewController(presentingViewController: presentingViewController, appearance: configuration.appearance)
+        let confirmResult = await _confirm(paymentOption: paymentOption, authContext: authContext).result
+        if confirmResult.isCanceledOrFailed {
+            clearPaymentOptionIfNeeded()
+        }
+        return confirmResult
     }
 
+    /// Sets the currently selected payment option to `nil`.
+    public func clearPaymentOption() {
+        // If a payment has been successfully completed, we don't allow clearing the payment option.
+        guard !hasConfirmedIntent else { return }
+
+        // Early exit for a nil payment option, don't notify delegate since no change in payment option can occur
+        guard paymentOption != nil else { return }
+
+        // Clear out the form controller to clear any payment option
+        selectedFormViewController = nil
+
+        // Reset the selection on the `embeddedPaymentMethodsView`
+        embeddedPaymentMethodsView.resetSelection()
+
+#if DEBUG
+        // Clear the testable payment option (only populated during unit testing)
+        _test_paymentOption = nil
+#endif
+
+        // Notify the delegate that the payment option has changed
+        informDelegateIfPaymentOptionUpdated()
+    }
+
+    #if DEBUG
+    public func testHeightChange() {
+        assert(configuration.embeddedViewDisplaysMandateText, "Before using this testing feature, ensure that embeddedViewDisplaysMandateText is set to true")
+        self.embeddedPaymentMethodsView.testHeightChange()
+    }
+    #endif
     // MARK: - Internal
 
-    private init(view: UIView, configuration: Configuration, delegate: EmbeddedPaymentElementDelegate? = nil) {
-        self.view = view
-        self.delegate = delegate
-        self.configuration = configuration
+    internal private(set) lazy var containerView: EmbeddedPaymentElementContainerView = {
+        return EmbeddedPaymentElementContainerView(
+            embeddedPaymentMethodsView: embeddedPaymentMethodsView
+        )
+    }()
+    internal private(set) lazy var embeddedPaymentMethodsView: EmbeddedPaymentMethodsView = {
+       return Self.makeView(
+        configuration: configuration,
+        loadResult: loadResult,
+        analyticsHelper: analyticsHelper,
+        delegate: self
+       )
+    }()
+    internal var loadResult: PaymentSheetLoader.LoadResult
+    internal var elementsSession: STPElementsSession { loadResult.elementsSession }
+    internal var intent: Intent { loadResult.intent }
+    internal var savedPaymentMethods: [STPPaymentMethod]
+    internal var defaultPaymentMethod: STPPaymentMethod?
+    internal private(set) var latestUpdateTask: Task<UpdateResult, Never>?
+    internal private(set) var analyticsHelper: PaymentSheetAnalyticsHelper
+    internal private(set) var formCache: PaymentMethodFormCache = .init()
+    /// The form view controller for the currently selected payment method.
+    internal var selectedFormViewController: EmbeddedFormViewController?
+    /// Indicates if a payment has been successfully completed.
+    internal var hasConfirmedIntent = false
+    /// Tracks info about the currently in-flight or most recent update attempt.
+    internal var latestUpdateContext: EmbeddedUpdateContext?
+#if DEBUG
+    internal var _test_paymentOption: PaymentOption? // for testing only
+#endif
+
+    /// The value of `paymentOption` when we last called `embeddedPaymentElementDidUpdatePaymentOption`
+    internal var lastUpdatedPaymentOption: PaymentOptionDisplayData?
+    internal var _paymentOption: PaymentOption? {
+    #if DEBUG
+        if let testPaymentOption = _test_paymentOption {
+            return testPaymentOption
+        }
+    #endif
+        // If we have a form use it's payment option
+        if let selectedFormViewController {
+            return selectedFormViewController.selectedPaymentOption
+        }
+
+        switch embeddedPaymentMethodsView.selectedRowButton?.type {
+        case .applePay:
+            return .applePay
+        case .link:
+            return .link(option: .wallet)
+        case let .new(paymentMethodType: paymentMethodType):
+            let params = IntentConfirmParams(type: paymentMethodType)
+            params.setDefaultBillingDetailsIfNecessary(for: configuration)
+            switch paymentMethodType {
+            case .stripe:
+                return .new(confirmParams: params)
+            case .external(let type):
+                return .external(paymentMethod: type, billingDetails: params.paymentMethodParams.nonnil_billingDetails)
+            case .instantDebits, .linkCardBrand:
+                guard let paymentMethod = params.instantDebitsLinkedBank?.paymentMethod.decode() else {
+                    return nil
+                }
+                return .saved(paymentMethod: paymentMethod, confirmParams: params)
+            }
+        case .saved(paymentMethod: let paymentMethod):
+            return .saved(paymentMethod: paymentMethod, confirmParams: nil)
+        case .none:
+            return nil
+        }
     }
+    internal private(set) lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+    }()
+
+    internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+
+    internal var confirmationChallenge: ConfirmationChallenge?
+
+    internal init(
+        configuration: Configuration,
+        loadResult: PaymentSheetLoader.LoadResult,
+        analyticsHelper: PaymentSheetAnalyticsHelper
+    ) {
+        self.configuration = configuration
+        self.loadResult = loadResult
+        self.savedPaymentMethods = loadResult.savedPaymentMethods
+        self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
+        self.analyticsHelper = analyticsHelper
+
+        analyticsHelper.logInitialized()
+        analyticsHelper.startTimeMeasurement(.checkout)
+        self.containerView.needsUpdateSuperviewHeight = { [weak self] in
+            guard let self else { return }
+            self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+        }
+        self.lastUpdatedPaymentOption = paymentOption
+        self.confirmationChallenge = ConfirmationChallenge(enableAttestation: configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: configuration.apiClient.stripeAttest)
+    }
+}
+
+// MARK: - CheckoutIntegrationDelegate
+
+extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
+    var isSheetPresented: Bool {
+        presentingViewController?.presentedViewController is BottomSheetViewController
+    }
+}
+
+// MARK: - STPAnalyticsProtocol
+/// :nodoc:
+@_spi(STP) extension EmbeddedPaymentElement: STPAnalyticsProtocol {
+    @_spi(STP) public nonisolated static let stp_analyticsIdentifier: String = "EmbeddedPaymentElement"
 }
 
 // MARK: - Completion-block based APIs
@@ -153,9 +515,28 @@ extension EmbeddedPaymentElement {
         }
     }
 
+    /// Call this method when the CheckoutSession you used to initialize `EmbeddedPaymentElement` changes.
+    /// This ensures the appropriate payment methods are displayed, collect the right fields, etc.
+    /// - Parameter checkout: The Checkout instance whose session has been updated.
+    /// - Parameter completion: A completion block containing the result of the update. Called on the main thread.
+    /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
+    /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
+    @_spi(CheckoutSessionsPreview) public func update(
+        checkout: Checkout,
+        completion: @escaping (UpdateResult) -> Void
+    ) {
+        Task {
+            let result = await update(checkout: checkout)
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
+    }
+
     /// Completes the payment or setup.
     /// - Parameter completion: Called with the result of the payment after any presented view controllers are dismissed. Called on the mai thread.
     /// - Note: This method presents authentication screens on the instance's  `presentingViewController` property.
+    /// - Note: This method requires that the last call to `update` succeeded. If the last `update` call failed, this call will fail. If this method is called while a call to `update` is in progress, it waits until the `update` call completes.
     public func confirm(completion: @escaping (EmbeddedPaymentElementResult) -> Void) {
         Task {
             let result = await confirm()
@@ -168,15 +549,29 @@ extension EmbeddedPaymentElement {
 
 // MARK: - Typealiases
 
-@_spi(EmbeddedPaymentElementPrivateBeta) public typealias EmbeddedPaymentElementResult = PaymentSheetResult
+public typealias EmbeddedPaymentElementResult = PaymentSheetResult
 extension EmbeddedPaymentElement {
     public typealias IntentConfiguration = PaymentSheet.IntentConfiguration
     public typealias UserInterfaceStyle = PaymentSheet.UserInterfaceStyle
     public typealias SavePaymentMethodOptInBehavior = PaymentSheet.SavePaymentMethodOptInBehavior
     public typealias ApplePayConfiguration = PaymentSheet.ApplePayConfiguration
+    public typealias LinkConfiguration = PaymentSheet.LinkConfiguration
     public typealias CustomerConfiguration = PaymentSheet.CustomerConfiguration
     public typealias BillingDetails = PaymentSheet.BillingDetails
     public typealias Address = PaymentSheet.Address
     public typealias BillingDetailsCollectionConfiguration = PaymentSheet.BillingDetailsCollectionConfiguration
     public typealias ExternalPaymentMethodConfiguration = PaymentSheet.ExternalPaymentMethodConfiguration
+    public typealias CustomPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration
+    @_spi(CardFundingFilteringPrivatePreview) public typealias CardFundingType = PaymentSheet.CardFundingType
+    public typealias CardBrandAcceptance = PaymentSheet.CardBrandAcceptance
+    public typealias BrandCategory = PaymentSheet.CardBrandAcceptance.BrandCategory
+}
+
+// MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData
+
+extension EmbeddedPaymentElement.PaymentOptionDisplayData {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        // Unfortunately, we need to manually define this because the implementation of Equatable on UIImage does not work
+        return lhs.image.pngData() == rhs.image.pngData() && rhs.label == lhs.label && lhs.billingDetails == rhs.billingDetails && lhs.paymentMethodType == rhs.paymentMethodType && lhs.mandateText == rhs.mandateText
+    }
 }

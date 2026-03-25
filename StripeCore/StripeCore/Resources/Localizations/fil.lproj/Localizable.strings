@@ -1,4 +1,18 @@
+"An error occurred. Please try again." = "May nangyaring error. Pakisubukan muli.";
+
+"Card brand was not updated. Please try again." = "Hindi na-update ang brand ng kard. Pakisubukan muli.";
+
 "Close" = "Isara";
+
+"Confirm it's you" = "Kumpirmahin na ikaw ito";
+
+"Default payment method was not updated. Please try again." = "Hindi na-update ang default na paraan ng pagbabayad. Pakisubukan muli.";
+
+"Enter the code sent to %@." = "Ilagay ang code na ipinadala sa %@.";
+
+"Failed to connect" = "Nabigong kumonekta";
+
+"Resend code" = "Ipadala ulit ang code";
 
 "Scan Card" = "I-scan ang kard";
 

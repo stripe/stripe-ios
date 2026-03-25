@@ -8,6 +8,11 @@ require 'optparse'
 require 'colorize'
 require 'octokit'
 require 'erb'
+require 'net/http'
+require 'json'
+require 'uri'
+require 'pathname'
+require_relative 'changelog_utils'
 
 SCRIPT_DIR = __dir__
 abort 'Unable to find SCRIPT_DIR' if SCRIPT_DIR.nil? || SCRIPT_DIR.empty?
@@ -28,6 +33,18 @@ OptionParser.new do |opts|
     @specified_version = t
   end
 
+  opts.on('--major', 'Auto-increment major version (e.g. 24.24.1 → 25.0.0)') do
+    @increment_major = true
+  end
+
+  opts.on('--minor', 'Auto-increment minor version (e.g. 24.24.1 → 24.25.0)') do
+    @increment_minor = true
+  end
+
+  opts.on('--patch', 'Auto-increment patch version (e.g. 24.24.1 → 24.24.2)') do
+    @increment_patch = true
+  end
+
   opts.on('--dry-run', "Don't do any real deployment, just build") do |s|
     @is_dry_run = s
   end
@@ -37,6 +54,33 @@ OptionParser.new do |opts|
     @step_index = t.to_i
   end
 end.parse!
+
+# Handle version increment flags
+if @increment_major || @increment_minor || @increment_patch
+  # Check that only one increment flag is set
+  increment_flags = [@increment_major, @increment_minor, @increment_patch].compact.count
+  if increment_flags > 1
+    abort('Error: Only one of --major, --minor, or --patch can be specified.')
+  end
+
+  # Check that --version is not also specified
+  if @specified_version
+    abort('Error: Cannot specify both --version and an increment flag (--major, --minor, or --patch).')
+  end
+
+  # Read current version from VERSION file
+  current_version = File.read('VERSION').strip
+  major, minor, patch = current_version.split('.').map(&:to_i)
+
+  # Compute new version based on increment flag
+  if @increment_major
+    @specified_version = "#{major + 1}.0.0"
+  elsif @increment_minor
+    @specified_version = "#{major}.#{minor + 1}.0"
+  elsif @increment_patch
+    @specified_version = "#{major}.#{minor}.#{patch + 1}"
+  end
+end
 
 # Joins the given strings. If one or more arguments is nil or empty, an exception is raised.
 def File.join_if_safe(arg1, *otherArgs)
@@ -71,35 +115,24 @@ rescue StandardError
 end
 
 def changelog(version)
-  changelog = ''
-  reading = false
-  # Get changelog for version from CHANGELOG
-  File.foreach('CHANGELOG.md') do |line|
-    # If the line starts with ##, we've reached the end of the entry
-    break if reading && line.start_with?('## ')
-
-    # If the line starts with ## and the version, start reading the entry
-    reading = true if line.start_with?('## ') && line.include?(version)
-
-    changelog += line if reading
-  end
-  changelog
+  ChangelogUtils.release_notes_for_version(version)
 end
 
 def update_placeholder(version, filename)
-  changelog = IO.readlines(filename).map do |line|
-    if line.upcase.start_with?('## X')
-      "## #{version} #{Time.now.strftime('%Y-%m-%d')}\n"
-    elsif line.start_with?('### Migrating from versions < X')
+  if filename == 'CHANGELOG.md'
+    ChangelogUtils.update_changelog_for_release!(version, filename)
+    return
+  end
+
+  updated_content = File.readlines(filename).map do |line|
+    if line.start_with?('### Migrating from versions < X')
       "### Migrating from versions < #{version}\n"
     else
       line
     end
   end
 
-  File.open(filename, 'w') do |file|
-    file.puts changelog
-  end
+  File.write(filename, updated_content.join)
 end
 
 def version_from_file

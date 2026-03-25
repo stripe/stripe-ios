@@ -1,6 +1,7 @@
 {
   "apple_pay_preference": "enabled",
   "business_name": "Mobile Example Account",
+  "config_id": "123",
   "experiments": {
     "miui_payment_element_aa_experiment": "control"
   },
@@ -18,7 +19,8 @@
     "link_funding_sources": [
         "CARD"
     ],
-    "link_local_storage_login_enabled": true
+    "link_local_storage_login_enabled": true,
+    "link_mobile_disable_default_opt_in": true
   },
   "merchant_country": "US",
   "merchant_currency": "usd",

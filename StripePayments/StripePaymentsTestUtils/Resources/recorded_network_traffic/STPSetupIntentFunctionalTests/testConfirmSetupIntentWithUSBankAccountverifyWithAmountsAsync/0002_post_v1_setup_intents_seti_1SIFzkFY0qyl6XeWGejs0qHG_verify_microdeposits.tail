@@ -1,0 +1,52 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1SIFzkFY0qyl6XeWGejs0qHG\/verify_microdeposits$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=38ypop0kUyKxYDK6bh0ZzDwHyUSMeqQlQ0JKKqJ23HSEU4c_ZBpMsrP3z3NLmYs92hOz9Ee-sbBR2A2E
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_DmA70LavT6BRH6
+Content-Length: 703
+Vary: Origin
+Date: Tue, 14 Oct 2025 21:43:02 GMT
+original-request: req_DmA70LavT6BRH6
+stripe-version: 2020-08-27
+idempotency-key: f49c74d2-1748-431e-b5d3-29e88bbf8df7
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: amounts\[0]=32&amounts\[1]=45&client_secret=seti_1SIFzkFY0qyl6XeWGejs0qHG_secret_TEjSJ7r3GBIHiIaRDOKDH4WjnDw5iD9
+
+{
+  "id" : "seti_1SIFzkFY0qyl6XeWGejs0qHG",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : null,
+  "livemode" : false,
+  "payment_method" : "pm_1SIFzlFY0qyl6XeWnoaGICxf",
+  "payment_method_configuration_details" : null,
+  "status" : "succeeded",
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "us_bank_account"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1760478180,
+  "client_secret" : "seti_1SIFzkFY0qyl6XeWGejs0qHG_secret_TEjSJ7r3GBIHiIaRDOKDH4WjnDw5iD9",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "payment_method_options" : {
+    "us_bank_account" : {
+      "verification_method" : "automatic"
+    }
+  }
+}

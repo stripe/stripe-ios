@@ -125,14 +125,21 @@ public extension StripeAPI {
         public let subcategory: Subcategory
         /** The [PaymentMethod type](https://stripe.com/docs/api/payment_methods/object#payment_method_object-type)(s) that can be created from this FinancialConnectionsAccount. */
         public let supportedPaymentMethodTypes: [SupportedPaymentMethodTypes]
+
+        // MARK: Internal
+
+        // StripeConnect needs to retain these API properties so they
+        // can be re-encoded and forwarded to Javascript
+
+        let object: String
     }
 
 }
 
-// MARK: - Decodable
+// MARK: - Codable & Equatable
 
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount: Decodable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.BalanceRefresh: Decodable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CashBalance: Decodable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CreditBalance: Decodable {}
-@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.Balance: Decodable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount: Codable, Equatable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.BalanceRefresh: Codable, Equatable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CashBalance: Codable, Equatable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.CreditBalance: Codable, Equatable {}
+@_spi(STP) extension StripeAPI.FinancialConnectionsAccount.Balance: Codable, Equatable {}

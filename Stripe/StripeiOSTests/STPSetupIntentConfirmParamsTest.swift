@@ -24,8 +24,10 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
             XCTAssertEqual(params.additionalAPIParameters.count, 0)
             XCTAssertNil(params.paymentMethodID)
             XCTAssertNil(params.returnURL)
+            XCTAssertNil(params.setAsDefaultPM)
             XCTAssertNil(params.useStripeSDK)
             XCTAssertNil(params.mandateData)
+            XCTAssertNil(params.confirmationToken)
         }
     }
 
@@ -46,7 +48,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         // card type should have no default mandateData
         XCTAssertNil(params.mandateData)
 
-        for type in ["sepa_debit", "au_becs_debit", "bacs_debit", "bancontact", "ideal", "eps", "sofort", "link", "us_bank_account", "cashapp", "paypal", "revolut_pay", "klarna"] {
+        for type in ["sepa_debit", "au_becs_debit", "bacs_debit", "bancontact", "ideal", "eps", "link", "us_bank_account", "cashapp", "paypal", "revolut_pay", "klarna"] {
             params.mandateData = nil
             params.paymentMethodParams?.rawTypeString = type
             // Mandate-required type should have mandateData
@@ -94,7 +96,8 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         params.paymentMethodParams = STPPaymentMethodParams()
         params.paymentMethodID = "test_payment_method_id"
         params.returnURL = "fake://testing_only"
-        params.useStripeSDK = NSNumber(value: true)
+        params.setAsDefaultPM = true
+        params.useStripeSDK = true
         params.mandateData = STPMandateDataParams(
             customerAcceptance: STPMandateCustomerAcceptanceParams(
                 type: .offline,
@@ -104,6 +107,7 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         params.additionalAPIParameters = [
             "other_param": "other_value"
         ]
+        params.confirmationToken = "ctoken_test_123"
 
         let paramsCopy = params.copy() as! STPSetupIntentConfirmParams
         XCTAssertEqual(params.clientSecret, paramsCopy.clientSecret)
@@ -114,12 +118,34 @@ class STPSetupIntentConfirmParamsTest: XCTestCase {
         XCTAssertEqual(params.mandateData, paramsCopy.mandateData)
 
         XCTAssertEqual(params.returnURL, paramsCopy.returnURL)
+        XCTAssertEqual(params.setAsDefaultPM, paramsCopy.setAsDefaultPM)
         XCTAssertEqual(params.useStripeSDK, paramsCopy.useStripeSDK)
         XCTAssertEqual(
             params.additionalAPIParameters as NSDictionary,
             paramsCopy.additionalAPIParameters as NSDictionary
         )
+        XCTAssertEqual(params.confirmationToken, paramsCopy.confirmationToken)
 
+    }
+
+    func testConfirmationTokenProperty() {
+        let params = STPSetupIntentConfirmParams()
+
+        XCTAssertNil(params.confirmationToken)
+
+        params.confirmationToken = "ctoken_test_123"
+        XCTAssertEqual(params.confirmationToken, "ctoken_test_123")
+
+        params.confirmationToken = ""
+        XCTAssertEqual(params.confirmationToken, "")
+
+        params.confirmationToken = nil
+        XCTAssertNil(params.confirmationToken)
+    }
+
+    func testFormFieldMappingIncludesConfirmationToken() {
+        let mapping = STPSetupIntentConfirmParams.propertyNamesToFormFieldNamesMapping()
+        XCTAssertEqual(mapping[NSStringFromSelector(#selector(getter: STPSetupIntentConfirmParams.confirmationToken))], "confirmation_token")
     }
 
     func testClientSecretValidation() {

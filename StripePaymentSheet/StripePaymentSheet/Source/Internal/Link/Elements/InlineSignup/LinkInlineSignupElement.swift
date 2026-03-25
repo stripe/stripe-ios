@@ -36,17 +36,26 @@ final class LinkInlineSignupElement: Element {
     }
 
     convenience init(
-        configuration: PaymentSheet.Configuration,
+        configuration: PaymentElementConfiguration,
         linkAccount: PaymentSheetLinkAccount?,
         country: String?,
-        showCheckbox: Bool
+        showCheckbox: Bool,
+        accountService: LinkAccountServiceProtocol,
+        allowsDefaultOptIn: Bool,
+        signupOptInFeatureEnabled: Bool,
+        signupOptInInitialValue: Bool,
+        analyticsHelper: PaymentSheetAnalyticsHelper? = nil
     ) {
         self.init(viewModel: LinkInlineSignupViewModel(
             configuration: configuration,
             showCheckbox: showCheckbox,
-            accountService: LinkAccountService(apiClient: configuration.apiClient),
+            accountService: accountService,
+            allowsDefaultOptIn: allowsDefaultOptIn,
+            signupOptInFeatureEnabled: signupOptInFeatureEnabled,
+            signupOptInInitialValue: signupOptInInitialValue,
             linkAccount: linkAccount,
-            country: country
+            country: country,
+            analyticsHelper: analyticsHelper
         ))
     }
 

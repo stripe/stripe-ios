@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Dodaj";
 
 "Add US bank account" = "Dodaj bančni račun v ZDA";
@@ -7,6 +5,8 @@
 "Add a card" = "Dodajte kartico";
 
 "Add a payment method" = "Dodaj način plačila";
+
+"Add bank account" = "Dodaj bančni račun";
 
 "Add card" = "Dodaj kartico";
 
@@ -18,15 +18,23 @@
 
 "Approve payment" = "Odobrite plačilo";
 
+"Are you sure you want to remove this card?" = "Ali res želite odstraniti to kartico?";
+
+"Are you sure you want to remove this linked account?" = "Ali res želite odstraniti ta povezan račun?";
+
 "Back" = "Nazaj";
 
 "Bank" = "Banka";
 
 "Bank account" = "Bančni račun";
 
-"Buy now or pay later with <img/>" = "Kupite zdaj ali pa plačajte pozneje s storitvijo <img/>";
+"Bank account details cannot be changed." = "Podatkov o bančnem računu ni mogoče spremeniti.";
+
+"Buy now or pay later with  <img/>" = "Kupite zdaj ali pa plačajte pozneje s storitvijo <img/>";
 
 "Buy now or pay later with Afterpay" = "Kupite zdaj ali pa plačajte pozneje s storitvijo Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Kupite zdaj ali pa plačajte pozneje s storitvijo Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Kupite zdaj ali pa plačajte pozneje s storitvijo Clearpay";
 
@@ -44,13 +52,25 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Če potrdite preusmeritev v storitev Revolut Pay, pooblaščate podjetje %@, da bremeni vaš račun za Revolut Pay s prihodnjimi plačili v skladu s pogoji podjetja.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Če nadaljujete postopek, se strinjate s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy>.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če nadaljujete postopek, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
+
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Z nadaljevanjem se strinjate, da se vaši podatki shranijo za prihodnje nakupe pri %@ in <link>Link</link> glede na povezavo <terms>pogoji</terms> in <privacy>zasebnost</privacy>.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Z nadaljevanjem se strinjate, da se vaši podatki shranijo za prihodnje nakupe pri %@.";
+
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Z nadaljevanjem pooblaščate podjetje %@, da samodejno bremeni vaše stanje Satispay na ponavljajoči se osnovi v skladu z vašim nakupom ali naročnino.";
+
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Z nadaljevanjem pooblaščate podjetje %@, da samodejno bremeni vaše stanje Twint na ponavljajoči se osnovi v skladu z vašim nakupom ali naročnino.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Če nadaljujete, pooblaščate podjetje %1$@, da bremeni vaš račun za Cash App s tem plačilom in prihodnjimi plačili v skladu s pogoji podjetja %2$@ do preklica tega pooblastila. To lahko kadar koli spremenite v nastavitvah aplikacije Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Če se pridružite storitvi Link, se strinjate s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy>.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Če navedete podatke svojega bančnega računa in potrdite to plačilo, se strinjate s to zahtevo za direktno obremenitev in <terms>pogodbo o storitvah za zahteve direktne obremenitve</terms> ter pooblaščate Stripe Payments Australia Pty Ltd ACN s številko direktne obremenitve 160 180 343 in identifikacijsko številko uporabnika 507156 (»Stripe«), da obremeni vaš račun prek množičnega elektronskega klirinškega sistema (BECS) v imenu podjetja %@ (»trgovec«) za katere koli zneske, o katerih vas ločeno obvesti trgovec. Potrjujete, da ste imetnik računa ali pooblaščeni podpisnik za zgoraj navedeni račun.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Z navedbo telefonske številke in e-poštnega naslova se strinjate z ustvarjanjem računa v storitvi Link v skladu s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy> storitve Link.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Če vnesete podatke svojega bančnega računa in potrdite to plačilo, se strinjate s to zahtevo za direktno bremenitev in <terms>Pogodba o storitvi direktne obremenitve</terms> ter pooblaščate podjetje Stripe Payments Australia Pty Ltd ACN s številko direktne obremenitve 160 180 343 in identifikacijsko številko uporabnika 507156 (»Stripe«), da prek Sistema za elektronski paketni kliring (BECS) bremeni vaš račun v imenu podjetja %@ (»trgovec«) za zneske, o katerih vas je trgovec ločeno obvestil. Potrjujete, da ste imetnik računa ali pooblaščeni podpisnik za zgoraj navedeni račun.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "S posredovanjem podatkov o svoji kartici dovoljujete, da %@ bremeni vašo kartico za prihodnja plačila v skladu z njihovimi pogoji.";
 
@@ -62,15 +82,29 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če shranite bančni račun za %@, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Z oddajo naročila %1$@ in %2$@ se strinjate, da bodo vaši podatki shranjeni pri %3$@ za prihodnje nakupe, in se strinjate, da boste odobrili plačila v skladu s <terms>temi pogoji</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Z oddajo naročila podjetju %@ se strinjate, da boste odobrili plačila v skladu s <terms>temi pogoji</terms>.";
+
 "CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "Prekliči ali plačaj na drugačen način";
+
+"Card details cannot be changed." = "Podrobnosti kartice ni mogoče spremeniti.";
+
+"Change" = "Spremeni";
+
+"Choose a card brand" = "Izberite znamko kartice";
 
 "Choose a payment method" = "Izberite način plačila";
 
 "Close card scanner" = "Zapri optični bralnik kartic";
 
+"Code sent" = "Koda je bila poslana";
+
 "Confirm" = "Potrdi";
+
+"Confirm payment details" = "Potrdite podatke o plačilu";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Potrdite plačilo v aplikaciji banke ali aplikaciji za plačilo v %@, da zaključite nakup.";
 
@@ -78,7 +112,21 @@
 
 "Confirm your CVC" = "Potrdite svojo kodo CVC";
 
+"Confirm your information" = "Potrdite svoje podatke";
+
 "Contact information" = "Podatki za stik";
+
+"Continue another way" = "Nadaljuj na drug način";
+
+"Create an account with Link for faster checkout across the web" = "Ustvarite račun v storitvi Link za hitrejšo izvedbo plačila na spletu";
+
+"Debit or credit card" = "Debetna ali kreditna kartica";
+
+"Default" = "Privzeto";
+
+"Default payment method" = "Privzeti način plačila";
+
+"Did you mean %@? %@." = "Ali ste mislili %1$@? %2$@.";
 
 "EPS Bank" = "Banka EPS";
 
@@ -86,9 +134,31 @@
 
 "FPX Bank" = "Banka FPX";
 
+"Fast, secure checkout" = "Hitra in varna izvedba plačil";
+
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Pridobite %@ povračila za prvo plačilo prek svojega bančnega računa. <terms>Oglejte si pogoje</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Plačajte pri svoji banki in prejmite %@ vračila. <terms>Oglejte si pogoje</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Potrjujem, da bo družba Stripe zbirala direktne obremenitve v imenu podjetja %@ ter da sem lastnik računa in edina oseba, ki lahko odobri bremenitve s tega računa.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Zadnje 4 števke SSN";
+
+"Log in or sign up" = "Vpis ali prijava";
+
+"Log out of Link" = "Odjava iz storitve Link";
+
+"Manage SEPA debit" = "Upravljanje obremenitve SEPA";
+
+"Manage US bank account" = "Upravljanje bančnega računa v ZDA";
+
+"Manage bank account" = "Upravljanje bančnega računa";
+
+"Manage card" = "Uredite kartico";
+
+"Manage cards" = "Upravljanje kartic";
 
 "Manage payment method" = "Uredi način plačila";
 
@@ -101,6 +171,14 @@
 "New card" = "Nova kartica";
 
 "New payment method" = "Nov način plačila";
+
+"No %@ promo" = "Brez promocije v višini %@";
+
+"Not you?" = "To niste vi?";
+
+"Only card brand can be changed." = "Spremenite lahko samo blagovno znamko kartice.";
+
+"Open to see more information." = "Odprite za več informacij.";
 
 "Open your UPI app to approve your payment within %@" = "Odprite aplikacijo UPI in odobrite plačilo v %@";
 
@@ -120,6 +198,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "Plačajte hitreje pri podjetju %@ in več tisoč podjetjih.";
 
+"Pay faster everywhere Link is accepted." = "Plačujte hitreje povsod, kjer je sprejeta storitev Link.";
+
 "Pay over time with %@" = "Uporabite %@ za poznejše plačilo";
 
 "Pay over time with Affirm" = "Uporabite Affirm za poznejše plačilo";
@@ -128,7 +208,13 @@
 
 "Pay with your bank account in just a few steps." = "Z bančnim računom lahko plačate v le nekaj korakih.";
 
+"Payment" = "Plačilo";
+
 "Payment failed" = "Plačilo ni uspelo";
+
+"Payment methods" = "Načini plačila";
+
+"Please choose a valid payment method." = "Izberite veljaven način plačila.";
 
 "Please go back and select another payment method" = "Vrnite se in izberite drug način plačila";
 
@@ -140,7 +226,9 @@
 
 "Remove card?" = "Ali želite odstranit kartico?";
 
-"Remove payment method" = "Odstranite način plačila";
+"Remove linked account" = "Odstrani povezan račun";
+
+"SEPA debit details cannot be changed." = "Podrobnosti obremenitve SEPA ni mogoče spremeniti.";
 
 "Save" = "Shrani";
 
@@ -149,6 +237,8 @@
 "Save address" = "Shrani naslov";
 
 "Save for future payments" = "Shrani za prihodnja plačila";
+
+"Save my info for faster checkout with Link" = "Shrani moje podatke za hitrejšo izvedbo plačila s storitvijo Link";
 
 "Save payment details to %@ for future purchases" = "Shranite podatke o plačilu podjetju %@ za prihodnja plačila";
 
@@ -166,6 +256,10 @@
 
 "Select your payment method" = "Izberite način plačila";
 
+"Set as default" = "Nastavi kot privzeti";
+
+"Set as default payment method" = "Nastavi kot privzeti način plačila";
+
 "Set up" = "Nastavi";
 
 "Shipping to %@ is not supported." = "Dostava v državo %@ ni podprta.";
@@ -180,15 +274,35 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe bo v 1–2 delovnih dneh na vaš račun nakazal znesek v višini 0,01 USD. Nato boste prejeli e-poštno sporočilo z navodili za dokončanje plačila podjetju %@.";
 
+"Tap to close" = "Tapnite, da zaprete";
+
+"Tap to expand" = "Tapnite, da razširite";
+
 "The IBAN you entered is incomplete." = "Vnesena koda IBAN ni popolna.";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Vnesena koda IBAN ni veljavna. \"%@\" ni podprta koda države.";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Vnesena koda IBAN ni veljavna. »%@« ni podprta koda države.";
 
-"Update" = "Posodobi";
+"The provided verification code has expired." = "Navedena potrditvena koda je potekla.";
 
-"Update card brand" = "Posodobite blagovno znamko kartico";
+"The provided verification code is incorrect." = "Navedena potrditvena koda ni pravilna.";
+
+"This is your default" = "To je vaš privzeti način plačila";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Ta način plačila bo odstranjen, vendar bo še naprej na voljo za naročnine %@.";
+
+"Too many attempts. Please try again in a few minutes." = "Preveč poskusov. Poskusite znova čez nekaj minut.";
+
+"Unavailable for this purchase" = "Ni na voljo za ta nakup";
+
+"Update card" = "Posodobi kartico";
+
+"Update payment method" = "Posodobite način plačila";
+
+"Use billing address for shipping" = "Naslov za račun uporabi kot naslov za pošiljanje";
 
 "View more" = "Prikaži več";
+
+"Yes, update" = "Da, posodobi";
 
 "Your IBAN should start with a two-letter country code." = "Vaša koda IBAN se mora začeti z dvomestno kodo države.";
 

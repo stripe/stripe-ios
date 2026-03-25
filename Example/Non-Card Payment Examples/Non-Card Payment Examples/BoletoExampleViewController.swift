@@ -240,7 +240,7 @@ extension BoletoExampleViewController {
                     return
                 }
 
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = paymentMethodParams
 
                 STPPaymentHandler.shared().confirmPayment(paymentIntentParams, with: self) { (status, _, error) in

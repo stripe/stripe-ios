@@ -1,5 +1,7 @@
 {
   "id": "vs_1MOrKBEGkPhabJTjBA2ohFAW",
+  "is_stripe": false,
+  "skip_success_page": false,
   "object": "identity.verification_page",
   "biometric_consent": {
     "accept_button_text": "Agree and continue",

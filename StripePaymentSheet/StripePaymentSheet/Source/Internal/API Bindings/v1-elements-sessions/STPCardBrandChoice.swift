@@ -36,7 +36,7 @@ class STPCardBrandChoice: NSObject {
         return "<\(props.joined(separator: "; "))>"
     }
 
-    private init(
+   required init(
         eligible: Bool,
         preferredNetworks: [String],
         supportedCobrandedNetworks: [String: Bool],

@@ -1,0 +1,444 @@
+
+/* Class = "UILabel"; text = "€8.99"; ObjectID = "08A-tJ-bVq"; */
+"08A-tJ-bVq.text" = "€8.99";
+
+/* Class = "UIButton"; accessibilityLabel = "Payment method"; ObjectID = "0ak-EM-HPh"; */
+"0ak-EM-HPh.accessibilityLabel" = "Payment method";
+
+/* Class = "UIButton"; disabledTitle = "Loading..."; ObjectID = "0ak-EM-HPh"; */
+"0ak-EM-HPh.disabledTitle" = "Loading...";
+
+/* Class = "UIButton"; normalTitle = "Add"; ObjectID = "0ak-EM-HPh"; */
+"0ak-EM-HPh.normalTitle" = "Add";
+
+/* Class = "UILabel"; text = "Sales tax (8.25%)"; ObjectID = "1HX-iF-l3U"; */
+"1HX-iF-l3U.text" = "Sales tax (8.25%)";
+
+/* Class = "UIButton"; normalTitle = "PaymentSheet"; ObjectID = "1tV-qm-auM"; */
+"1tV-qm-auM.normalTitle" = "PaymentSheet";
+
+/* Class = "UIButton"; disabledTitle = "Loading"; ObjectID = "2L4-Af-OWD"; */
+"2L4-Af-OWD.disabledTitle" = "Loading";
+
+/* Class = "UIButton"; normalTitle = "Buy"; ObjectID = "2L4-Af-OWD"; */
+"2L4-Af-OWD.normalTitle" = "Buy";
+
+/* Class = "UILabel"; text = "Test Playgrounds"; ObjectID = "5HP-ay-2IP"; */
+"5HP-ay-2IP.text" = "Test Playgrounds";
+
+/* Class = "UILabel"; text = "1"; ObjectID = "5J3-N0-Zkw"; */
+"5J3-N0-Zkw.text" = "1";
+
+/* Class = "UILabel"; text = "🌭"; ObjectID = "5SL-cU-m8A"; */
+"5SL-cU-m8A.text" = "🌭";
+
+/* Class = "UILabel"; text = "1 x Regular Salad"; ObjectID = "61U-BG-5w1"; */
+"61U-BG-5w1.text" = "1 x Regular Salad";
+
+/* Class = "UILabel"; text = "Your cart"; ObjectID = "7AO-8y-orQ"; */
+"7AO-8y-orQ.text" = "Your cart";
+
+/* Class = "UILabel"; text = "€0.99"; ObjectID = "7YG-1V-Wx4"; */
+"7YG-1V-Wx4.text" = "€0.99";
+
+/* Class = "UILabel"; text = "$9.73"; ObjectID = "93b-mU-2rN"; */
+"93b-mU-2rN.text" = "$9.73";
+
+/* Class = "UILabel"; text = "🥗"; ObjectID = "94d-cS-50T"; */
+"94d-cS-50T.text" = "🥗";
+
+/* Class = "UIButton"; disabledTitle = "Buy"; ObjectID = "9bN-BK-U2p"; */
+"9bN-BK-U2p.disabledTitle" = "Buy";
+
+/* Class = "UIButton"; normalTitle = "Buy"; ObjectID = "9bN-BK-U2p"; */
+"9bN-BK-U2p.normalTitle" = "Buy";
+
+/* Class = "UILabel"; text = "Salad"; ObjectID = "ABy-hm-NxW"; */
+"ABy-hm-NxW.text" = "Salad";
+
+/* Class = "UILabel"; text = "$9.73"; ObjectID = "AOr-Ri-KdF"; */
+"AOr-Ri-KdF.text" = "$9.73";
+
+/* Class = "UILabel"; text = "Subtotal"; ObjectID = "C4X-FO-t7l"; */
+"C4X-FO-t7l.text" = "Subtotal";
+
+/* Class = "UILabel"; text = "Total"; ObjectID = "CJy-Ak-rYF"; */
+"CJy-Ak-rYF.text" = "Total";
+
+/* Class = "UILabel"; text = "€0.99"; ObjectID = "CK0-oC-sPY"; */
+"CK0-oC-sPY.text" = "€0.99";
+
+/* Class = "UILabel"; text = "$8.99"; ObjectID = "CNa-jo-py2"; */
+"CNa-jo-py2.text" = "$8.99";
+
+/* Class = "UILabel"; text = "Hotdog"; ObjectID = "CWM-8B-wAZ"; */
+"CWM-8B-wAZ.text" = "Hotdog";
+
+/* Class = "UILabel"; text = "🥗"; ObjectID = "DLf-3K-i6d"; */
+"DLf-3K-i6d.text" = "🥗";
+
+/* Class = "UILabel"; text = "Your cart"; ObjectID = "DgE-aS-jOe"; */
+"DgE-aS-jOe.text" = "Your cart";
+
+/* Class = "UINavigationItem"; title = "Checkout"; ObjectID = "Dx4-DE-XXb"; */
+"Dx4-DE-XXb.title" = "Checkout";
+
+/* Class = "UILabel"; text = "Sales tax (8.25%)"; ObjectID = "EGZ-Ju-48g"; */
+"EGZ-Ju-48g.text" = "Sales tax (8.25%)";
+
+/* Class = "UIButton"; normalTitle = "EmbeddedPaymentElement (SwiftUI)"; ObjectID = "ExN-w7-ZQf"; */
+"ExN-w7-ZQf.normalTitle" = "EmbeddedPaymentElement (SwiftUI)";
+
+/* Class = "UIButton"; disabledTitle = "Loading..."; ObjectID = "F2j-W8-K8e"; */
+"F2j-W8-K8e.disabledTitle" = "Loading...";
+
+/* Class = "UIButton"; normalTitle = "Add"; ObjectID = "F2j-W8-K8e"; */
+"F2j-W8-K8e.normalTitle" = "Add";
+
+/* Class = "UILabel"; text = "Subtotal"; ObjectID = "FUI-T2-8Lk"; */
+"FUI-T2-8Lk.text" = "Subtotal";
+
+/* Class = "UILabel"; text = "Payment method"; ObjectID = "FmQ-m2-UMG"; */
+"FmQ-m2-UMG.text" = "Payment method";
+
+/* Class = "UILabel"; text = "Hotdog"; ObjectID = "GgD-QK-0Rw"; */
+"GgD-QK-0Rw.text" = "Hotdog";
+
+/* Class = "UILabel"; text = "Subtotal"; ObjectID = "Gy1-OI-RRg"; */
+"Gy1-OI-RRg.text" = "Subtotal";
+
+/* Class = "UILabel"; text = "1"; ObjectID = "HHg-Bp-BgD"; */
+"HHg-Bp-BgD.text" = "1";
+
+/* Class = "UILabel"; text = "€9.73"; ObjectID = "HW0-gp-nn1"; */
+"HW0-gp-nn1.text" = "€9.73";
+
+/* Class = "UILabel"; text = "1"; ObjectID = "HdA-fh-Rhc"; */
+"HdA-fh-Rhc.text" = "1";
+
+/* Class = "UILabel"; text = "1 x Regular Hotdog"; ObjectID = "IFb-Qa-y4Y"; */
+"IFb-Qa-y4Y.text" = "1 x Regular Hotdog";
+
+/* Class = "UILabel"; text = "🌭"; ObjectID = "IVI-MJ-lgd"; */
+"IVI-MJ-lgd.text" = "🌭";
+
+/* Class = "UILabel"; text = "€8.00"; ObjectID = "KCI-rB-srr"; */
+"KCI-rB-srr.text" = "€8.00";
+
+/* Class = "UILabel"; text = "$9.73"; ObjectID = "KKN-nY-SrT"; */
+"KKN-nY-SrT.text" = "$9.73";
+
+/* Class = "UILabel"; text = "Salad"; ObjectID = "KTC-bk-xZf"; */
+"KTC-bk-xZf.text" = "Salad";
+
+/* Class = "UILabel"; text = "🌭"; ObjectID = "Ku2-dY-YG1"; */
+"Ku2-dY-YG1.text" = "🌭";
+
+/* Class = "UILabel"; text = "🥗"; ObjectID = "LJa-ig-7VT"; */
+"LJa-ig-7VT.text" = "🥗";
+
+/* Class = "UILabel"; text = "Your cart"; ObjectID = "LZU-vS-7aP"; */
+"LZU-vS-7aP.text" = "Your cart";
+
+/* Class = "UILabel"; text = "Hotdog"; ObjectID = "MJG-Bn-HJv"; */
+"MJG-Bn-HJv.text" = "Hotdog";
+
+/* Class = "UIButton"; normalTitle = "PaymentSheet.FlowController"; ObjectID = "MKK-aF-Sf3"; */
+"MKK-aF-Sf3.normalTitle" = "PaymentSheet.FlowController";
+
+/* Class = "UILabel"; text = "Total"; ObjectID = "Md8-TQ-wXh"; */
+"Md8-TQ-wXh.text" = "Total";
+
+/* Class = "UILabel"; text = "1 x Regular Hotdog"; ObjectID = "NKG-dv-Edd"; */
+"NKG-dv-Edd.text" = "1 x Regular Hotdog";
+
+/* Class = "UILabel"; text = "Total"; ObjectID = "NPq-sr-8O1"; */
+"NPq-sr-8O1.text" = "Total";
+
+/* Class = "UILabel"; text = "Your cart"; ObjectID = "NfY-Xy-iNT"; */
+"NfY-Xy-iNT.text" = "Your cart";
+
+/* Class = "UILabel"; text = "1 x Regular Salad"; ObjectID = "NkA-Fb-BzM"; */
+"NkA-Fb-BzM.text" = "1 x Regular Salad";
+
+/* Class = "UILabel"; text = "$0.74"; ObjectID = "OGa-qM-bWk"; */
+"OGa-qM-bWk.text" = "$0.74";
+
+/* Class = "UILabel"; text = "Payment method"; ObjectID = "ObS-3R-5N2"; */
+"ObS-3R-5N2.text" = "Payment method";
+
+/* Class = "UILabel"; text = "€0.74"; ObjectID = "Oun-mc-vjQ"; */
+"Oun-mc-vjQ.text" = "€0.74";
+
+/* Class = "UILabel"; text = "Total"; ObjectID = "P2L-Z6-55H"; */
+"P2L-Z6-55H.text" = "Total";
+
+/* Class = "UILabel"; text = "$0.99"; ObjectID = "QYr-6l-CsF"; */
+"QYr-6l-CsF.text" = "$0.99";
+
+/* Class = "UILabel"; text = "$0.74"; ObjectID = "Sgy-pN-mcI"; */
+"Sgy-pN-mcI.text" = "$0.74";
+
+/* Class = "UILabel"; text = "Payment method"; ObjectID = "Su0-dK-MUu"; */
+"Su0-dK-MUu.text" = "Payment method";
+
+/* Class = "UILabel"; text = "Subscribe for 5% discount"; ObjectID = "TP7-AP-s3P"; */
+"TP7-AP-s3P.text" = "Subscribe for 5% discount";
+
+/* Class = "UILabel"; text = "€9.73"; ObjectID = "Tnm-xZ-6oi"; */
+"Tnm-xZ-6oi.text" = "€9.73";
+
+/* Class = "UIButton"; normalTitle = "PaymentSheet.FlowController (SwiftUI)"; ObjectID = "UMG-Qh-vSf"; */
+"UMG-Qh-vSf.normalTitle" = "PaymentSheet.FlowController (SwiftUI)";
+
+/* Class = "UILabel"; text = "Sales tax (8.25%)"; ObjectID = "UOM-av-ta1"; */
+"UOM-av-ta1.text" = "Sales tax (8.25%)";
+
+/* Class = "UILabel"; text = "€0.99"; ObjectID = "UU7-bF-EuA"; */
+"UU7-bF-EuA.text" = "€0.99";
+
+/* Class = "UIButton"; disabledTitle = "Buy"; ObjectID = "Uji-cN-Xui"; */
+"Uji-cN-Xui.disabledTitle" = "Buy";
+
+/* Class = "UIButton"; normalTitle = "Buy"; ObjectID = "Uji-cN-Xui"; */
+"Uji-cN-Xui.normalTitle" = "Buy";
+
+/* Class = "UIButton"; accessibilityLabel = "Payment method"; ObjectID = "UtV-Mz-3gj"; */
+"UtV-Mz-3gj.accessibilityLabel" = "Payment method";
+
+/* Class = "UIButton"; disabledTitle = "Loading..."; ObjectID = "UtV-Mz-3gj"; */
+"UtV-Mz-3gj.disabledTitle" = "Loading...";
+
+/* Class = "UIButton"; normalTitle = "Add"; ObjectID = "UtV-Mz-3gj"; */
+"UtV-Mz-3gj.normalTitle" = "Add";
+
+/* Class = "UILabel"; text = "Salad"; ObjectID = "VHX-WM-FdG"; */
+"VHX-WM-FdG.text" = "Salad";
+
+/* Class = "UILabel"; text = "Your cart"; ObjectID = "VHc-Kk-xan"; */
+"VHc-Kk-xan.text" = "Your cart";
+
+/* Class = "UILabel"; text = "Salad"; ObjectID = "VWh-h3-mf1"; */
+"VWh-h3-mf1.text" = "Salad";
+
+/* Class = "UILabel"; text = "€8.00"; ObjectID = "VbQ-J2-QEV"; */
+"VbQ-J2-QEV.text" = "€8.00";
+
+/* Class = "UILabel"; text = "Subtotal"; ObjectID = "Voy-Rz-7iP"; */
+"Voy-Rz-7iP.text" = "Subtotal";
+
+/* Class = "UILabel"; text = "Hotdog"; ObjectID = "War-yw-5dE"; */
+"War-yw-5dE.text" = "Hotdog";
+
+/* Class = "UILabel"; text = "€8.00"; ObjectID = "XPt-VI-o95"; */
+"XPt-VI-o95.text" = "€8.00";
+
+/* Class = "UILabel"; text = "Subtotal"; ObjectID = "XT0-Xr-w6e"; */
+"XT0-Xr-w6e.text" = "Subtotal";
+
+/* Class = "UILabel"; text = "$8.00"; ObjectID = "XVC-Cz-qRo"; */
+"XVC-Cz-qRo.text" = "$8.00";
+
+/* Class = "UILabel"; text = "1"; ObjectID = "Xpa-aB-4LK"; */
+"Xpa-aB-4LK.text" = "1";
+
+/* Class = "UILabel"; text = "€8.99"; ObjectID = "Xxx-yh-jB6"; */
+"Xxx-yh-jB6.text" = "€8.99";
+
+/* Class = "UIButton"; normalTitle = "LinkPaymentController"; ObjectID = "Ysb-4K-dUG"; */
+"Ysb-4K-dUG.normalTitle" = "LinkPaymentController";
+
+/* Class = "UIButton"; normalTitle = "EmbeddedPaymentElement"; ObjectID = "ZXq-dE-S2O"; */
+"ZXq-dE-S2O.normalTitle" = "EmbeddedPaymentElement";
+
+/* Class = "UILabel"; text = "$8.99"; ObjectID = "Zez-ZP-rw9"; */
+"Zez-ZP-rw9.text" = "$8.99";
+
+/* Class = "UIButton"; disabledTitle = "Buy"; ObjectID = "Zuz-2b-zIK"; */
+"Zuz-2b-zIK.disabledTitle" = "Buy";
+
+/* Class = "UIButton"; normalTitle = "Buy"; ObjectID = "Zuz-2b-zIK"; */
+"Zuz-2b-zIK.normalTitle" = "Buy";
+
+/* Class = "UILabel"; text = "Hotdog"; ObjectID = "a8b-EL-hH5"; */
+"a8b-EL-hH5.text" = "Hotdog";
+
+/* Class = "UILabel"; text = "1 x Regular Salad"; ObjectID = "aOb-43-veL"; */
+"aOb-43-veL.text" = "1 x Regular Salad";
+
+/* Class = "UILabel"; text = "€0.74"; ObjectID = "aWi-9s-Xwj"; */
+"aWi-9s-Xwj.text" = "€0.74";
+
+/* Class = "UILabel"; text = "Examples"; ObjectID = "b2f-ni-mEr"; */
+"b2f-ni-mEr.text" = "Examples";
+
+/* Class = "UIButton"; normalTitle = "PaymentSheet (Deferred)"; ObjectID = "c3T-pG-kA8"; */
+"c3T-pG-kA8.normalTitle" = "PaymentSheet (Deferred)";
+
+/* Class = "UINavigationItem"; title = "Checkout"; ObjectID = "cGQ-kJ-cW9"; */
+"cGQ-kJ-cW9.title" = "Checkout";
+
+/* Class = "UILabel"; text = "€9.73"; ObjectID = "cac-8a-qDx"; */
+"cac-8a-qDx.text" = "€9.73";
+
+/* Class = "UILabel"; text = "Payment method"; ObjectID = "ccH-jp-h8U"; */
+"ccH-jp-h8U.text" = "Payment method";
+
+/* Class = "UILabel"; text = "🌭"; ObjectID = "cgK-OI-DMD"; */
+"cgK-OI-DMD.text" = "🌭";
+
+/* Class = "UIButton"; normalTitle = "PaymentSheet.FlowController (Deferred)"; ObjectID = "d2G-Rh-LKq"; */
+"d2G-Rh-LKq.normalTitle" = "PaymentSheet.FlowController (Deferred)";
+
+/* Class = "UILabel"; text = "🥗"; ObjectID = "dEN-JD-KP0"; */
+"dEN-JD-KP0.text" = "🥗";
+
+/* Class = "UIButton"; disabledTitle = "Buy"; ObjectID = "dR6-E2-Ycx"; */
+"dR6-E2-Ycx.disabledTitle" = "Buy";
+
+/* Class = "UIButton"; normalTitle = "Buy"; ObjectID = "dR6-E2-Ycx"; */
+"dR6-E2-Ycx.normalTitle" = "Buy";
+
+/* Class = "UILabel"; text = "Sales tax (8.25%)"; ObjectID = "dp4-pi-Agq"; */
+"dp4-pi-Agq.text" = "Sales tax (8.25%)";
+
+/* Class = "UINavigationItem"; title = "Checkout"; ObjectID = "eDU-cW-pD2"; */
+"eDU-cW-pD2.title" = "Checkout";
+
+/* Class = "UILabel"; text = "Sales tax (8.25%)"; ObjectID = "eU8-To-Ezl"; */
+"eU8-To-Ezl.text" = "Sales tax (8.25%)";
+
+/* Class = "UIButton"; disabledTitle = "Loading..."; ObjectID = "f6W-Pf-7aG"; */
+"f6W-Pf-7aG.disabledTitle" = "Loading...";
+
+/* Class = "UIButton"; normalTitle = "Add"; ObjectID = "f6W-Pf-7aG"; */
+"f6W-Pf-7aG.normalTitle" = "Add";
+
+/* Class = "UILabel"; text = "Salad"; ObjectID = "f7X-ps-8VL"; */
+"f7X-ps-8VL.text" = "Salad";
+
+/* Class = "UILabel"; text = "Subtotal"; ObjectID = "fLu-6L-0w1"; */
+"fLu-6L-0w1.text" = "Subtotal";
+
+/* Class = "UILabel"; text = "Your cart"; ObjectID = "fbM-40-zo9"; */
+"fbM-40-zo9.text" = "Your cart";
+
+/* Class = "UILabel"; text = "Sales tax (8.25%)"; ObjectID = "feb-uc-0LE"; */
+"feb-uc-0LE.text" = "Sales tax (8.25%)";
+
+/* Class = "UINavigationItem"; title = "Checkout"; ObjectID = "flE-aD-pVb"; */
+"flE-aD-pVb.title" = "Checkout";
+
+/* Class = "UILabel"; text = "Payment method"; ObjectID = "h5C-dG-ALd"; */
+"h5C-dG-ALd.text" = "Payment method";
+
+/* Class = "UIButton"; normalTitle = "CustomerSheet (SwiftUI)"; ObjectID = "hIk-Ur-mhf"; */
+"hIk-Ur-mhf.normalTitle" = "CustomerSheet (SwiftUI)";
+
+/* Class = "UILabel"; text = "$0.99"; ObjectID = "hVF-L3-8Em"; */
+"hVF-L3-8Em.text" = "$0.99";
+
+/* Class = "UILabel"; text = "1"; ObjectID = "iOI-dl-OSA"; */
+"iOI-dl-OSA.text" = "1";
+
+/* Class = "UILabel"; text = "Total"; ObjectID = "inS-1I-GOZ"; */
+"inS-1I-GOZ.text" = "Total";
+
+/* Class = "UIButton"; normalTitle = "PaymentSheet (SwiftUI)"; ObjectID = "jAV-Cf-o6R"; */
+"jAV-Cf-o6R.normalTitle" = "PaymentSheet (SwiftUI)";
+
+/* Class = "UILabel"; text = "€8.99"; ObjectID = "jVe-N9-tUa"; */
+"jVe-N9-tUa.text" = "€8.99";
+
+/* Class = "UILabel"; text = "1 x Regular Hotdog"; ObjectID = "jsa-fz-S0H"; */
+"jsa-fz-S0H.text" = "1 x Regular Hotdog";
+
+/* Class = "UIButton"; disabledTitle = "Buy"; ObjectID = "kTk-4z-jfw"; */
+"kTk-4z-jfw.disabledTitle" = "Buy";
+
+/* Class = "UIButton"; normalTitle = "Buy"; ObjectID = "kTk-4z-jfw"; */
+"kTk-4z-jfw.normalTitle" = "Buy";
+
+/* Class = "UILabel"; text = "Salad"; ObjectID = "ksR-RQ-jju"; */
+"ksR-RQ-jju.text" = "Salad";
+
+/* Class = "UILabel"; text = "🌭"; ObjectID = "ndk-j5-JIN"; */
+"ndk-j5-JIN.text" = "🌭";
+
+/* Class = "UIButton"; accessibilityLabel = "Payment method"; ObjectID = "nlp-85-U0M"; */
+"nlp-85-U0M.accessibilityLabel" = "Payment method";
+
+/* Class = "UIButton"; disabledTitle = "Loading..."; ObjectID = "nlp-85-U0M"; */
+"nlp-85-U0M.disabledTitle" = "Loading...";
+
+/* Class = "UIButton"; normalTitle = "Add"; ObjectID = "nlp-85-U0M"; */
+"nlp-85-U0M.normalTitle" = "Add";
+
+/* Class = "UINavigationItem"; title = "Checkout"; ObjectID = "nqb-WL-zAW"; */
+"nqb-WL-zAW.title" = "Checkout";
+
+/* Class = "UILabel"; text = "Total"; ObjectID = "o9y-BF-Gb9"; */
+"o9y-BF-Gb9.text" = "Total";
+
+/* Class = "UIButton"; normalTitle = "CustomerSheet (test playground)"; ObjectID = "or6-aq-0to"; */
+"or6-aq-0to.normalTitle" = "CustomerSheet (test playground)";
+
+/* Class = "UILabel"; text = "🌭"; ObjectID = "ppB-9V-Cdm"; */
+"ppB-9V-Cdm.text" = "🌭";
+
+/* Class = "UILabel"; text = "🥗"; ObjectID = "q0c-Ax-gEx"; */
+"q0c-Ax-gEx.text" = "🥗";
+
+/* Class = "UILabel"; text = "$0.74"; ObjectID = "rEZ-p5-Ais"; */
+"rEZ-p5-Ais.text" = "$0.74";
+
+/* Class = "UILabel"; text = "Hotdog"; ObjectID = "rF8-SA-SrK"; */
+"rF8-SA-SrK.text" = "Hotdog";
+
+/* Class = "UILabel"; text = "$8.00"; ObjectID = "rOp-Sc-wdK"; */
+"rOp-Sc-wdK.text" = "$8.00";
+
+/* Class = "UILabel"; text = "$0.99"; ObjectID = "sC9-Mz-9fu"; */
+"sC9-Mz-9fu.text" = "$0.99";
+
+/* Class = "UILabel"; text = "Subscribe for 5% discount"; ObjectID = "t4l-9m-Mch"; */
+"t4l-9m-Mch.text" = "Subscribe for 5% discount";
+
+/* Class = "UILabel"; text = "🥗"; ObjectID = "tUo-xb-bYx"; */
+"tUo-xb-bYx.text" = "🥗";
+
+/* Class = "UILabel"; text = "Subscribe for 5% discount"; ObjectID = "tV0-EN-0Pl"; */
+"tV0-EN-0Pl.text" = "Subscribe for 5% discount";
+
+/* Class = "UILabel"; text = "Payment method"; ObjectID = "tj2-CN-PvL"; */
+"tj2-CN-PvL.text" = "Payment method";
+
+/* Class = "UILabel"; text = "€0.74"; ObjectID = "uNe-mW-qar"; */
+"uNe-mW-qar.text" = "€0.74";
+
+/* Class = "UILabel"; text = "$8.00"; ObjectID = "uks-SZ-sfO"; */
+"uks-SZ-sfO.text" = "$8.00";
+
+/* Class = "UINavigationItem"; title = "Checkout"; ObjectID = "un6-9S-QPk"; */
+"un6-9S-QPk.title" = "Checkout";
+
+/* Class = "UILabel"; text = "1"; ObjectID = "uqy-nk-Dz2"; */
+"uqy-nk-Dz2.text" = "1";
+
+/* Class = "UILabel"; text = "Deferred"; ObjectID = "v7V-ES-DAx"; */
+"v7V-ES-DAx.text" = "Deferred";
+
+/* Class = "UIButton"; accessibilityLabel = "Payment method"; ObjectID = "xM3-8R-ZP4"; */
+"xM3-8R-ZP4.accessibilityLabel" = "Payment method";
+
+/* Class = "UIButton"; disabledTitle = "Loading..."; ObjectID = "xM3-8R-ZP4"; */
+"xM3-8R-ZP4.disabledTitle" = "Loading...";
+
+/* Class = "UIButton"; normalTitle = "Add"; ObjectID = "xM3-8R-ZP4"; */
+"xM3-8R-ZP4.normalTitle" = "Add";
+
+/* Class = "UIButton"; normalTitle = "PaymentSheet (test playground)"; ObjectID = "ynH-6g-uwR"; */
+"ynH-6g-uwR.normalTitle" = "PaymentSheet (test playground)";
+
+/* Class = "UILabel"; text = "$8.99"; ObjectID = "zbP-7B-tLs"; */
+"zbP-7B-tLs.text" = "$8.99";

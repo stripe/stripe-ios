@@ -7,9 +7,9 @@
 
 import XCTest
 
-extension XCTestCase {
+public extension XCTestCase {
 
-    public func expectation<Object, Value: Equatable>(
+    func expectation<Object, Value: Equatable>(
         for object: Object,
         keyPath: KeyPath<Object, Value>,
         equalsToValue value: Value,
@@ -23,7 +23,7 @@ extension XCTestCase {
         )
     }
 
-    public func expectation<Object, Value: Equatable>(
+    func expectation<Object, Value: Equatable>(
         for object: Object,
         keyPath: KeyPath<Object, Value>,
         notEqualsToValue value: Value,
@@ -37,7 +37,7 @@ extension XCTestCase {
         )
     }
 
-    public func notNullExpectation<Object, Value>(
+    func notNullExpectation<Object, Value>(
         for object: Object,
         keyPath: KeyPath<Object, Value?>,
         description: String? = nil
@@ -53,12 +53,28 @@ extension XCTestCase {
         )
     }
 
-    public func wait(seconds: TimeInterval) {
+    func wait(seconds: TimeInterval) {
         let e = expectation(description: "Wait for \(seconds) seconds")
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
             e.fulfill()
         }
         waitForExpectations(timeout: seconds)
+    }
+
+}
+
+/// Helper to await an async throwing call and assert it throws an error.
+public func XCTAssertThrowsErrorAsync(
+    _ expression: @autoclosure @escaping () async throws -> Void,
+    _ message: @autoclosure () -> String = "",
+    file: StaticString = #filePath,
+    line: UInt = #line
+) async {
+    do {
+        try await expression()
+        XCTFail("Expected error to be thrown. " + message(), file: file, line: line)
+    } catch {
+        // Pass
     }
 }
 

@@ -12,7 +12,8 @@ import UIKit
 class ExampleVerificationViewController: UIViewController {
 
     // Constants
-    let baseURL = "https://stripe-mobile-identity-verification-example.glitch.me"
+    // View and fork the backend code here: https://codesandbox.io/p/devbox/dsx4vq
+    let baseURL = "https://stripe-mobile-identity-verification-example.stripedemos.com"
     let verifyEndpoint = "/create-verification-session"
 
     // Outlets

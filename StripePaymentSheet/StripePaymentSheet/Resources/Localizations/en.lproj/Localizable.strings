@@ -1,6 +1,3 @@
-/* Content for alert popup prompting to confirm removing a saved card. {card brand} •••• {last 4} e.g. 'Visa •••• 3155' */
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Add";
 
@@ -9,6 +6,9 @@
 
 /* Text for a button that, when tapped, displays another screen where the customer can add a new payment method */
 "Add a payment method" = "Add a payment method";
+
+/* Button prompt to add a bank account as a payment method. */
+"Add bank account" = "Add bank account";
 
 /* Title shown above a view allowing the customer to save their first card. */
 "Add card" = "Add card";
@@ -28,20 +28,33 @@
 /* Text on a screen asking the user to approve a payment */
 "Approve payment" = "Approve payment";
 
+/* Title of confirmation prompt when removing a saved card. */
+"Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
+
+/* Title of confirmation prompt when removing a linked bank account. */
+"Are you sure you want to remove this linked account?" = "Are you sure you want to remove this linked account?";
+
 /* Text for back button */
 "Back" = "Back";
 
-/* A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card. */
+/* A label used in various UIs, including a button that represents a payment method type 'Bank' - where a user can pay with their bank account instead of, say, a credit card.
+   Label shown in the payment type picker describing a bank payment */
 "Bank" = "Bank";
 
 /* Title for collected bank account information */
 "Bank account" = "Bank account";
 
+/* Text on a screen that indicates bank account details cannot be changed. */
+"Bank account details cannot be changed." = "Bank account details cannot be changed.";
+
 /* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with <img/>" = "Buy now or pay later with <img/>";
+"Buy now or pay later with  <img/>" = "Buy now or pay later with  <img/>";
 
 /* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
 "Buy now or pay later with Afterpay" = "Buy now or pay later with Afterpay";
+
+/* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
+"Buy now or pay later with Cash App Afterpay" = "Buy now or pay later with Cash App Afterpay";
 
 /* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
 "Buy now or pay later with Clearpay" = "Buy now or pay later with Clearpay";
@@ -67,14 +80,32 @@
 /* Revolut Pay mandate text */
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms.";
 
+/* Legal text shown when creating a Link account. */
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
+
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
+
+/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.";
+
+/* Text displayed below a credit card entry form when the card will be saved with the merchant. */
+"By continuing, you agree to save your information for future purchases with %@." = "By continuing, you agree to save your information for future purchases with %@.";
+
+/* Satispay mandate text */
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan.";
+
+/* Twint mandate text */
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan.";
 
 /* Cash App mandate text */
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "By continuing, you authorize %1$@ to debit your Cash App account for this payment and future payments in accordance with %2$@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.";
 
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
+
+/* Legal text shown when creating a Link account. */
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above.";
@@ -94,8 +125,23 @@
 /* Mandate text with link to terms when saving a bank account payment method to a merchant (merchant name replaces %@). */
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
+/* Text providing link to terms for bank payments when seller information is provided */
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "By submitting your order to %1$@ and %2$@, you agree to save your information with %3$@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>.";
+
+/* Text providing link to terms for bank payments */
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>.";
+
 /* Button text on a screen asking the user to approve a payment */
 "Cancel and pay another way" = "Cancel and pay another way";
+
+/* Text on a screen that indicates card details cannot be changed. */
+"Card details cannot be changed." = "Card details cannot be changed.";
+
+/* Label for a button that lets you change the details of a payment method */
+"Change" = "Change";
+
+/* Tooltip prompting user to select their card brand when a co-branded card is detected */
+"Choose a card brand" = "Choose a card brand";
 
 /* TODO */
 "Choose a payment method" = "Choose a payment method";
@@ -103,8 +149,15 @@
 /* Accessibility label for the button to close the card scanner. */
 "Close card scanner" = "Close card scanner";
 
+/* Text of a notification shown to the user when a login code is successfully sent via SMS. */
+"Code sent" = "Code sent";
+
 /* Title used for various UIs, including a button that confirms entered payment details or the selection of a payment method. */
 "Confirm" = "Confirm";
+
+/* Title of a screen where the user can update their payment method before continuing
+with the transaction. */
+"Confirm payment details" = "Confirm payment details";
 
 /* Text for alert message when user needs to confirm payment in their banking app */
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirm the payment in your bank or payment app within %@ to complete the purchase.";
@@ -115,11 +168,33 @@
 /* Title for prompting for a card's CVC on confirming the payment */
 "Confirm your CVC" = "Confirm your CVC";
 
+/* Title label for a know-your-customer (KYC) verification screen */
+"Confirm your information" = "Confirm your information";
+
 /* Title for the contact information section */
 "Contact information" = "Contact information";
 
+/* Label of a button that when tapped allows the user to select a different form of payment. */
+"Continue another way" = "Continue another way";
+
 /* Label for CPF/CPNJ (Brazil tax ID) field */
 "CPF/CPNJ" = "CPF/CPNJ";
+
+/* Label for a checkbox that when checked allows the payment information
+to be saved and used in future checkout sessions. */
+"Create an account with Link for faster checkout across the web" = "Create an account with Link for faster checkout across the web";
+
+/* Label shown in the payment type picker describing a card payment */
+"Debit or credit card" = "Debit or credit card";
+
+/* Label for identifying the default payment method. */
+"Default" = "Default";
+
+/* Label for a disabled checked checkbox identifying the default payment method. */
+"Default payment method" = "Default payment method";
+
+/* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
+"Did you mean %@? %@." = "Did you mean %1$@? %2$@.";
 
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
@@ -127,8 +202,20 @@
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
 
+/* Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion */
+"Exchange rate and fees of your bank may apply." = "Exchange rate and fees of your bank may apply.";
+
+/* Title for the Link signup screen */
+"Fast, secure checkout" = "Fast, secure checkout";
+
 /* Select a bank dropdown for FPX */
 "FPX Bank" = "FPX Bank";
+
+/* Disclaimer for when a promotion is available for setting up a bank account. e.g. 'Get $5 back when […]' */
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>";
+
+/* Disclaimer for when a promotion is available for paying with a bank account. e.g. 'Get $5 back when […]' */
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Get %@ back when you pay with your bank. <terms>See terms</terms>";
 
 /* Bacs Debit mandate text */
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account.";
@@ -139,11 +226,35 @@
 /* iDEAL bank section title for iDEAL form entry. */
 "iDEAL Bank" = "iDEAL Bank";
 
+/* Label for displaying the last 4 digits of the user's social security number */
+"Last 4 digits of SSN" = "Last 4 digits of SSN";
+
+/* Title for a button that indicates a user can log in or sign up. */
+"Log in or sign up" = "Log in or sign up";
+
+/* Title of the logout action. */
+"Log out of Link" = "Log out of Link";
+
+/* Title shown above a view containing the customer's bank account that they can delete */
+"Manage bank account" = "Manage bank account";
+
+/* Title shown above a view containing the customer's card that they can delete or update */
+"Manage card" = "Manage card";
+
+/* Title shown above a view containing a list of the customer's cards that they can delete or update */
+"Manage cards" = "Manage cards";
+
 /* Title shown above a view containing the customer's payment method that they can delete or update */
 "Manage payment method" = "Manage payment method";
 
 /* Title shown above a view containing the customer's payment methods that they can delete or update */
 "Manage payment methods" = "Manage payment methods";
+
+/* Title shown above a view containing the customer's SEPA debit that they can delete or update */
+"Manage SEPA debit" = "Manage SEPA debit";
+
+/* Title shown above a view containing the customer's bank account that they can delete or update */
+"Manage US bank account" = "Manage US bank account";
 
 /* Title shown above a carousel containing the customer's payment methods */
 "Manage your payment methods" = "Manage your payment methods";
@@ -156,6 +267,18 @@
 
 /* Title shown above a section containing payment methods that a customer can choose to pay with e.g. card, bank account, etc. */
 "New payment method" = "New payment method";
+
+/* Label for when the user is not eligible for a promo. */
+"No %@ promo" = "No %@ promo";
+
+/* Title for a button that allows the user to use a different email in the signup flow. */
+"Not you?" = "Not you?";
+
+/* Text on a screen for updating a cobranded card that indicates only card brand can be changed. */
+"Only card brand can be changed." = "Only card brand can be changed.";
+
+/* Accessibility hint to tell the user that they can open a form sheet with more information. */
+"Open to see more information." = "Open to see more information.";
 
 /* Countdown timer text on a screen asking the user to approve a payment */
 "Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
@@ -186,6 +309,9 @@ Pay faster at {Merchant Name} and thousands of businesses
 e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 "Pay faster at %@ and thousands of businesses." = "Pay faster at %@ and thousands of businesses.";
 
+/* Subtitle for the Link signup screen */
+"Pay faster everywhere Link is accepted." = "Pay faster everywhere Link is accepted.";
+
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";
 
@@ -198,8 +324,17 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* US Bank Account copy title for Mobile payment element form */
 "Pay with your bank account in just a few steps." = "Pay with your bank account in just a few steps.";
 
+/* Label for a section displaying payment details. */
+"Payment" = "Payment";
+
 /* Text on a screen that indicates a payment has failed */
 "Payment failed" = "Payment failed";
+
+/* Title for a section listing one or more payment methods. */
+"Payment methods" = "Payment methods";
+
+/* Error message that's displayed when you try to confirm a payment without a valid payment method */
+"Please choose a valid payment method." = "Please choose a valid payment method.";
 
 /* Text on a screen that indicates a payment has failed informing the user we are asking the user to try a different payment method */
 "Please go back and select another payment method" = "Please go back and select another payment method";
@@ -216,10 +351,11 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Title for confirmation alert to remove a card */
 "Remove card?" = "Remove card?";
 
-/* Title shown above a view containing a customer's payment method that they can delete */
-"Remove payment method" = "Remove payment method";
+/* Title for a button that when tapped removes a linked bank account. */
+"Remove linked account" = "Remove linked account";
 
-/* A button used for saving a new payment method */
+/* A button used for saving a new payment method
+   Label on a button that when tapped, updates a card brand. */
 "Save" = "Save";
 
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
@@ -230,6 +366,10 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* The label of a switch indicating whether to save the payment method for future payments. */
 "Save for future payments" = "Save for future payments";
+
+/* Label for a checkbox that when checked allows the payment information
+to be saved and used in future checkout sessions. */
+"Save my info for faster checkout with Link" = "Save my info for faster checkout with Link";
 
 /* The label of a switch indicating whether to save the user's payment details for future payment */
 "Save payment details to %@ for future purchases" = "Save payment details to %@ for future purchases";
@@ -256,6 +396,15 @@ to be saved and used in future checkout sessions. */
 /* Title shown above a carousel containing the customer's payment methods */
 "Select your payment method" = "Select your payment method";
 
+/* Text on a screen that indicates SEPA debit details cannot be changed. */
+"SEPA debit details cannot be changed." = "SEPA debit details cannot be changed.";
+
+/* Label for a button or menu item that sets a payment method as default when tapped. */
+"Set as default" = "Set as default";
+
+/* Label of a checkbox that when checked makes a payment method as the default one. */
+"Set as default payment method" = "Set as default payment method";
+
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 "Set up" = "Set up";
 
@@ -278,20 +427,51 @@ is not supported by the merchant */
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
 
+/* Accessibility hint to tell the user that they can tap to hide additional content. */
+"Tap to close" = "Tap to close";
+
+/* Accessibility hint to tell the user that they can tap to reveal additional content. */
+"Tap to expand" = "Tap to expand";
+
 /* An error message. */
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
 
 /* An error message. */
 "The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid, \"%@\" is not a supported country code.";
 
-/* Title for a button that when tapped, updates a card brand. */
-"Update" = "Update";
+/* Error message shown when the user enters an expired verification code. */
+"The provided verification code has expired." = "The provided verification code has expired.";
 
-/* Title for a screen for updating a card brand. */
-"Update card brand" = "Update card brand";
+/* Error message shown when the user enters an incorrect verification code. */
+"The provided verification code is incorrect." = "The provided verification code is incorrect.";
+
+/* Text of a label indicating that a payment method is the default. */
+"This is your default" = "This is your default";
+
+/* Content for alert popup prompting if they want to remove a payment method when using payment_method_remove == .partial. %@ is replaced by the merchant name */
+"This payment method will be removed but will remain available for %@ subscriptions." = "This payment method will be removed but will remain available for %@ subscriptions.";
+
+/* Error message shown when the user enters an incorrect verification code too many times. */
+"Too many attempts. Please try again in a few minutes." = "Too many attempts. Please try again in a few minutes.";
+
+/* Label shown when a payment method cannot be used for the current transaction. */
+"Unavailable for this purchase" = "Unavailable for this purchase";
+
+/* Title for a button that when tapped, presents a screen for updating a card. Also
+the heading the screen itself. */
+"Update card" = "Update card";
+
+/* Accessibility label for a button that leads to a screen for updating a payment method. */
+"Update payment method" = "Update payment method";
+
+/* Label for checkbox in address form allowing user to use billing address */
+"Use billing address for shipping" = "Use billing address for shipping";
 
 /* Text shown on a button that displays a customer's default saved payment method. When tapped, it opens a screen that shows all of the customer's saved payment methods. */
 "View more" = "View more";
+
+/* Text for a tappable link that will update the email field with a suggested email address. */
+"Yes, update" = "Yes, update";
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";

@@ -20,6 +20,7 @@ public enum PaymentSheetError: Error, LocalizedError {
     case unknown(debugDescription: String)
 
     // MARK: Generic errors
+    case integrationError(nonPIIDebugDescription: String)
     case missingClientSecret
     case invalidClientSecret
     case unexpectedResponseFromStripeAPI
@@ -32,11 +33,11 @@ public enum PaymentSheetError: Error, LocalizedError {
     case setupIntentClientSecretProviderNil
     /// No payment method types available error.
     case noPaymentMethodTypesAvailable(intentPaymentMethods: [STPPaymentMethodType])
+    case embeddedPaymentElementUpdateWithFormPresented
 
     // MARK: Loading errors
     case paymentIntentInTerminalState(status: STPPaymentIntentStatus)
     case setupIntentInTerminalState(status: STPSetupIntentStatus)
-    case fetchPaymentMethodsFailure
 
     // MARK: Deferred intent errors
     case intentConfigurationValidationFailed(message: String)
@@ -56,9 +57,16 @@ public enum PaymentSheetError: Error, LocalizedError {
 
     // MARK: - Confirmation errors
     case unexpectedNewPaymentMethod
+    case confirmingWithInvalidPaymentOption
+    case embeddedPaymentElementAlreadyConfirmedIntent
 
     public var errorDescription: String? {
-        return NSError.stp_unexpectedErrorMessage()
+        switch self {
+        case .confirmingWithInvalidPaymentOption:
+            return String.Localized.please_choose_a_valid_payment_method
+        default:
+            return NSError.stp_unexpectedErrorMessage()
+        }
     }
 }
 
@@ -98,8 +106,6 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "PaymentSheet received a PaymentIntent in a terminal state: \(status)"
             case .setupIntentInTerminalState(status: let status):
                 return "PaymentSheet received a SetupIntent in a terminal state: \(status)"
-            case .fetchPaymentMethodsFailure:
-                return "Failed to retrieve PaymentMethods for the customer"
             case .linkSignUpNotRequired:
                 return "Don't call sign up if not needed"
             case .noPaymentMethodTypesAvailable(intentPaymentMethods: let intentPaymentMethods):
@@ -126,6 +132,14 @@ extension PaymentSheetError: CustomDebugStringConvertible {
                 return "New payment method should not have been created yet"
             case .intentConfigurationValidationFailed(message: let message):
                 return message
+            case .embeddedPaymentElementAlreadyConfirmedIntent:
+                return "This instance of EmbeddedPaymentElement has already confirmed an intent successfully. Create a new instance of EmbeddedPaymentElement to confirm a new intent."
+            case .integrationError(nonPIIDebugDescription: let nonPIIDebugDescription):
+                return "There's a problem with your integration. \(nonPIIDebugDescription)"
+            case .confirmingWithInvalidPaymentOption:
+                return "`confirm` should only be called when `paymentOption` is not nil"
+            case .embeddedPaymentElementUpdateWithFormPresented:
+                return "`update` called while a form is already presented, this is not supported. `update` should only be called while a form is not presented."
             }
         }()
 

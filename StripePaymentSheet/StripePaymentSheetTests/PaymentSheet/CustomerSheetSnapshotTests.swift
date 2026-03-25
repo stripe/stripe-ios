@@ -11,7 +11,7 @@ import XCTest
 
 @_spi(STP)@testable import StripeCore
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripePaymentsUI
 @_spi(STP)@testable import StripeUICore
 
@@ -87,6 +87,15 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     func testNoSavedPMsCustomAppearance() {
         stubSessions(paymentMethods: "\"card\"")
         prepareCS(configuration: configuration(appearance: .snapshotTestTheme))
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testNoSavedPMsCustomSectionSpacing() {
+        stubSessions(paymentMethods: "\"card\"")
+        var appearance = PaymentSheet.Appearance()
+        appearance.sectionSpacing = 40.0
+        prepareCS(configuration: configuration(appearance: appearance))
         presentCS(darkMode: false)
         verify(cs.bottomSheetViewController.view!)
     }
@@ -460,6 +469,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         return STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_123card",
             "type": "card",
+            "created": "12345",
             "card": [
                 "last4": "4242",
                 "brand": "visa",
@@ -503,6 +513,41 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         verify(cs.bottomSheetViewController.view!)
     }
 
+    func testCustomSheetCornerRadius() {
+        stubSessions(paymentMethods: "\"card\"")
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = [stubbedPaymentMethod()]
+        var appearance = PaymentSheet.Appearance()
+        appearance.sheetCornerRadius = 0.0
+        prepareCS(configuration: configuration(applePayEnabled: true, appearance: appearance), customerAdapter: customerAdapter)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testCustomSheetCornerRadiusLarge() {
+        stubSessions(paymentMethods: "\"card\"")
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = [stubbedPaymentMethod()]
+        var appearance = PaymentSheet.Appearance()
+        appearance.sheetCornerRadius = 24.0
+        prepareCS(configuration: configuration(applePayEnabled: true, appearance: appearance), customerAdapter: customerAdapter)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
+    func testCustomerSheetIconStyleOutlined() {
+        stubSessions(paymentMethods: "\"us_bank_account\"")
+        let customerAdapter = StubCustomerAdapter()
+        customerAdapter.paymentMethods = [STPPaymentMethod._testUSBankAccount()]
+
+        var configuration = configuration(applePayEnabled: false)
+        configuration.appearance.iconStyle = .outlined
+
+        prepareCS(configuration: configuration, customerAdapter: customerAdapter)
+        presentCS(darkMode: false)
+        verify(cs.bottomSheetViewController.view!)
+    }
+
     private func billingDetails() -> PaymentSheet.BillingDetails {
         return .init(
             address: .init(
@@ -536,6 +581,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         config.applePayEnabled = applePayEnabled
         config.appearance = appearance
         config.apiClient = stubbedAPIClient()
+        config.apiClient.publishableKey = "pk_test_123456789"
         config.defaultBillingDetails = defaultBillingDetails
         config.billingDetailsCollectionConfiguration = billingDetailsCollectionConfiguration
 
@@ -545,7 +591,6 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         configuration: CustomerSheet.Configuration,
         customerAdapter: CustomerAdapter = StubCustomerAdapter()
     ) {
-        StripeAPI.defaultPublishableKey = "pk_test_123456789"
         self.cs = CustomerSheet(configuration: configuration, customer: customerAdapter)
     }
 
@@ -600,7 +645,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
     }
 
     private func updatePaymentMethodDetail(data: Data, variables: [String: String]) -> Data {
-        var template = String(decoding: data, as: UTF8.self)
+        var template = String(data: data, encoding: .utf8)!
         for (templateKey, templateValue) in variables {
             let translated = template.replacingOccurrences(of: templateKey, with: templateValue)
             template = translated
@@ -644,12 +689,14 @@ fileprivate extension PaymentSheet.Appearance {
 
         appearance.cornerRadius = 0.0
         appearance.borderWidth = 2.0
+        appearance.sheetCornerRadius = 20.0
         appearance.shadow = PaymentSheet.Appearance.Shadow(
             color: .orange,
             opacity: 0.5,
             offset: CGSize(width: 0, height: 2),
             radius: 4
         )
+        appearance.formInsets = NSDirectionalEdgeInsets(top: 30, leading: 50, bottom: 70, trailing: 10)
 
         // Customize the colors
         var colors = PaymentSheet.Appearance.Colors()

@@ -228,7 +228,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         }
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     private var _inputAccessoryView: UIView?
     /// This behaves identically to setting the inputAccessoryView for each child text field.
     @objc open override var inputAccessoryView: UIView? {
@@ -609,17 +609,16 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
         onChange()
         updateImage(for: .number)
         updateCVCPlaceholder()
-        weak var weakSelf = self
         layoutViews(
             toFocus: NSNumber(value: STPCardFieldType.postalCode.rawValue),
             becomeFirstResponder: true,
             animated: true
-        ) { _ in
-            guard let strongSelf = weakSelf else {
+        ) { [weak self] _ in
+            guard let self else {
                 return
             }
-            if strongSelf.isFirstResponder {
-                strongSelf.numberField.becomeFirstResponder()
+            if self.isFirstResponder {
+                self.numberField.becomeFirstResponder()
             }
         }
     }
@@ -971,7 +970,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 
     static let placeholderGrayColor: UIColor = .systemGray2
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         if previousTraitCollection?.preferredContentSizeCategory
@@ -2418,6 +2417,7 @@ open class STPPaymentCardTextField: UIControl, UIKeyInput, STPFormTextFieldDeleg
 /// This protocol allows a delegate to be notified when a payment text field's
 /// contents change, which can in turn be used to take further actions depending
 /// on the validity of its contents.
+@MainActor @preconcurrency
 @objc public protocol STPPaymentCardTextFieldDelegate: NSObjectProtocol {
     /// Called when either the card number, expiration, or CVC changes. At this point,
     /// one can call `isValid` on the text field to determine, for example,

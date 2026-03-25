@@ -180,7 +180,7 @@ extension STPAPIClient {
     ///   - ownedBy: A Stripe-internal property that sets the owner of the file.
     ///   - ephemeralKeySecret: Authorization key, if applicable.
     ///
-    /// - Returns: A promise that resolves to a Stripe file, if successful, or an
+    /// - Returns: A promise that resolves to a Stripe file and upload metrics, if successful, or an
     ///   error that may have occurred.
     ///
     /// - Note:
@@ -189,24 +189,6 @@ extension STPAPIClient {
     ///   `StripeFile.Purpose`, but can be specified by any string for instances
     ///   where a Stripe endpoint needs to specify a newer purpose that the client
     ///   SDK does not recognize.
-    @_spi(STP) public func uploadImage(
-        _ image: UIImage,
-        compressionQuality: CGFloat = UIImage.defaultCompressionQuality,
-        purpose: String,
-        fileName: String = defaultImageFileName,
-        ownedBy: String? = nil,
-        ephemeralKeySecret: String? = nil
-    ) -> Future<StripeFile> {
-        return uploadImageAndGetMetrics(
-            image,
-            compressionQuality: compressionQuality,
-            purpose: purpose,
-            fileName: fileName,
-            ownedBy: ownedBy,
-            ephemeralKeySecret: ephemeralKeySecret
-        ).chained { Promise(value: $0.file) }
-    }
-
     @_spi(STP) public func uploadImageAndGetMetrics(
         _ image: UIImage,
         compressionQuality: CGFloat = UIImage.defaultCompressionQuality,

@@ -1,6 +1,16 @@
+"%1$@ Card" = "%1$@ カード";
+
+"%1$@ Credit" = "%1$@ クレジット";
+
+"%1$@ Debit" = "%1$@ デビット";
+
+"%1$@ Prepaid" = "%1$@ プリペイド";
+
 "%1$@ account ending in %2$@" = "末尾が %2$@ の %1$@ 口座";
 
 "%1$@ ending in %2$@" = "末尾が %2$@ の %1$@";
+
+"%1$@ is not accepted" = "%1$@ は受け付けられていません";
 
 "Address line 2 (optional)" = "住所 (2 行目、省略可)";
 
@@ -9,8 +19,6 @@
 "BSB" = "BSB";
 
 "Bank Account" = "銀行口座";
-
-"Billing Address" = "請求先住所";
 
 "Billing address" = "請求先住所";
 
@@ -28,6 +36,18 @@
 
 "MM/YY" = "MM/YY";
 
+"Only credit and prepaid cards are accepted" = "クレジットカードとプリペイドカードのみ利用できます";
+
+"Only credit cards are accepted" = "クレジットカードのみ利用できます";
+
+"Only debit and credit cards are accepted" = "デビットカードとクレジットカードのみ利用できます";
+
+"Only debit and prepaid cards are accepted" = "デビットカードとプリペイドカードのみ利用できます";
+
+"Only debit cards are accepted" = "デビットカードのみ利用できます";
+
+"Only prepaid cards are accepted" = "プリペイドカードのみ利用できます";
+
 "Postal Code" = "郵便番号";
 
 "Shipping Address" = "配送先住所";
@@ -36,9 +56,11 @@
 
 "The BSB you entered is invalid." = "入力した BSB コードが無効です。";
 
+"The selected brand is not allowed" = "選択したブランドは許可されていません";
+
 "To scan your card, allow camera access in Settings." = "カードをスキャンするには、設定でカメラへのアクセスを許可してください。";
 
-"Your ZIP is invalid." = "郵便番号が無効です。";
+"Your card has expired." = "カードの有効期限が切れています。";
 
 "Your card number is incomplete." = "カード番号に不備があります。";
 
@@ -55,8 +77,6 @@
 "Your card's security code is incomplete." = "カードのセキュリティコードに不備があります。";
 
 "Your card's security code is invalid." = "カードのセキュリティコードが無効です。";
-
-"Your postal code is invalid." = "郵便番号が無効です";
 
 "card number" = "カード番号";
 

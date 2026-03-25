@@ -13,35 +13,33 @@ import UIKit
 @_spi(DashboardOnly)
 @available(iOS 15, *)
 public class PaymentDetailsViewController: UIViewController {
-    let webView: ConnectComponentWebView
+    private(set) var webVC: ConnectComponentWebViewController!
 
     public weak var delegate: PaymentDetailsViewControllerDelegate?
 
-    init(componentManager: EmbeddedComponentManager) {
-        webView = ConnectComponentWebView(
-            componentManager: componentManager,
-            componentType: .paymentDetails
-        )
+    init(componentManager: EmbeddedComponentManager,
+         loadContent: Bool,
+         analyticsClientFactory: ComponentAnalyticsClientFactory) {
         super.init(nibName: nil, bundle: nil)
-        webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
+        webVC = ConnectComponentWebViewController(
+            componentManager: componentManager,
+            componentType: .paymentDetails,
+            loadContent: loadContent,
+            analyticsClientFactory: analyticsClientFactory
+        ) { [weak self] error in
             guard let self else { return }
-            self.delegate?.paymentDetailsLoadDidFail(self, withError: value.error.connectEmbedError)
-        })
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
+            delegate?.paymentDetails(self, didFailLoadWithError: error)
         }
+
+        addChildAndPinView(webVC)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override func loadView() {
-        view = webView
-    }
-
     public func setPayment(id: String) {
-        webView.sendMessage(CallSetterWithSerializableValueSender(payload: .init(
+        webVC.sendMessage(CallSetterWithSerializableValueSender(payload: .init(
             setter: "setPayment",
             value: id
         )))
@@ -59,14 +57,14 @@ public protocol PaymentDetailsViewControllerDelegate: AnyObject {
        - paymentDetails: The payment details component that errored when loading
        - error: The error that occurred when loading the component
      */
-    func paymentDetailsLoadDidFail(_ paymentDetails: PaymentDetailsViewController,
-                                   withError error: Error)
+    func paymentDetails(_ paymentDetails: PaymentDetailsViewController,
+                        didFailLoadWithError error: Error)
 
 }
 
 @available(iOS 15, *)
 public extension PaymentDetailsViewControllerDelegate {
     // Default implementation to make optional
-    func paymentDetailsLoadDidFail(_ paymentDetails: PaymentDetailsViewController,
-                                   withError error: Error) { }
+    func paymentDetails(_ paymentDetails: PaymentDetailsViewController,
+                        didFailLoadWithError error: Error) { }
 }

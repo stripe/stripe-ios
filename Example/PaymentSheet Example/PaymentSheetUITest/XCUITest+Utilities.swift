@@ -24,6 +24,13 @@ extension XCUIElement {
         }
     }
 
+    func scrollToAndTap(in app: XCUIApplication) {
+        while !self.exists {
+            app.swipeUp()
+        }
+        self.tap()
+    }
+
     func forceTapWhenHittableInTestCase(_ testCase: XCTestCase) {
         let predicate = NSPredicate(format: "hittable == true")
         testCase.expectation(for: predicate, evaluatedWith: self, handler: nil)
@@ -92,18 +99,30 @@ extension XCUIApplication {
         }
     }
 
-    func waitForButtonOrStaticText(_ identifier: String, timeout: TimeInterval = 10.0) -> XCUIElement {
-        if buttons[identifier].waitForExistence(timeout: timeout) {
-            return buttons[identifier]
-        }
-        return staticTexts[identifier]
-    }
-
     func tapCoordinate(at point: CGPoint) {
         let normalized = coordinate(withNormalizedOffset: .zero)
         let offset = CGVector(dx: point.x, dy: point.y)
         let coordinate = normalized.withOffset(offset)
         coordinate.tap()
+    }
+
+    /// Dismisses the keyboard by tapping the Done button on the toolbar, or tapping outside the keyboard.
+    func fc_dismissKeyboard() {
+        // Try the toolbar Done button first (iOS 18 and earlier)
+        let doneButtonByLabel = toolbars.buttons["Done"]
+        if doneButtonByLabel.waitForExistence(timeout: 1) {
+            doneButtonByLabel.tap()
+            return
+        }
+        // iOS 26 fallback: tap on the title label to dismiss the keyboard
+        // This works for FinancialConnections flows
+        let fcTitleLabel = otherElements["fc_pane_title_label"]
+        if fcTitleLabel.exists {
+            fcTitleLabel.tap()
+            return
+        }
+        // Last resort: tap near the top of the screen
+        coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
     }
 }
 
@@ -179,20 +198,95 @@ func scrollDown(scrollView: XCUIElement, toFindElement element: XCUIElement, max
     return nil
 }
 
+// MARK: - Address Autocomplete Extension
+extension XCUIApplication {
+    /// Fills an address field using autocomplete flow only
+    /// - Parameters:
+    ///   - addressFieldIdentifier: The identifier for the address field (e.g., "Address", "Address line 1")
+    ///   - searchTerm: The search term to type for autocomplete (e.g., "354 Oyster Point")
+    ///   - expectedResult: The expected autocomplete result to look for (e.g., "354 Oyster Point Blvd")
+    ///   - context: The context element to search within (defaults to self)
+    ///   - needsDoneButton: Whether to tap Done button after autocomplete selection
+    func fillAddressWithAutocomplete(
+        addressFieldIdentifier: String = "Address",
+        searchTerm: String = "354 Oyster Point",
+        expectedResult: String = "354 Oyster Point Blvd",
+        context: XCUIElement? = nil
+    ) {
+        let contextElement = context ?? self
+        let addressField = contextElement.textFields[addressFieldIdentifier]
+
+        // Tap the address field
+        addressField.tap()
+
+        // Wait for autocomplete view to appear
+        XCTAssertTrue(staticTexts["Enter address manually"].waitForExistence(timeout: 2), "Autocomplete view should appear")
+
+        handleiOSKeyboardTipIfNeeded()
+
+        // Proceed with autocomplete flow
+        let autocompleteTextField = textFields["Address"].firstMatch
+        autocompleteTextField.waitForExistenceAndTap()
+        typeText(searchTerm)
+
+        // Wait for and tap the matching autocomplete result
+        let searchedCell = tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", expectedResult)).element
+        XCTAssertTrue(searchedCell.waitForExistence(timeout: 5), "Autocomplete result '\(expectedResult)' should appear")
+        searchedCell.tap()
+
+        let autocompleteDismissed = XCTNSPredicateExpectation(
+            predicate: NSPredicate(format: "exists == false"),
+            object: staticTexts["Enter address manually"]
+        )
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [autocompleteDismissed], timeout: 5),
+            .completed,
+            "Autocomplete sheet should dismiss before the test taps Save"
+        )
+    }
+
+    // In CI, we often have fresh emulators that encounter this "Tip" that prevents our tests from moving forward:
+    // "Speed up your typing by sliding your finger across the letters to compose a word" / Continue
+    func handleiOSKeyboardTipIfNeeded() {
+        let optionalTipLabel = staticTexts["Speed up your typing by sliding your finger across the letters to compose a word."]
+        if optionalTipLabel.waitForExistence(timeout: 2.0) {
+            let continueButton = buttons["Continue"].firstMatch
+            if continueButton.waitForExistence(timeout: 2.0) {
+                continueButton.forceTapElement()
+            }
+        }
+    }
+}
+
 extension XCTestCase {
     func fillCardData(_ app: XCUIApplication,
                       container: XCUIElement? = nil,
                       cardNumber: String? = nil,
-                      postalEnabled: Bool = true) throws {
+                      cvc: String = "123",
+                      postalEnabled: Bool = true,
+                      tapCheckboxWithText checkboxText: String? = nil,
+                      disableDefaultOptInIfNeeded: Bool = false) throws {
         let context = container ?? app
 
         let numberField = context.textFields["Card number"]
         numberField.forceTapWhenHittableInTestCase(self)
         app.typeText(cardNumber ?? "4242424242424242")
         app.typeText("1228") // Expiry
-        app.typeText("123") // CVC
+        app.typeText(cvc) // CVC
         if postalEnabled {
             app.typeText("12345") // Postal
+        }
+        if let checkboxText {
+            let saveThisAccountToggle = app.switches[checkboxText]
+            XCTAssertFalse(saveThisAccountToggle.isSelected)
+            saveThisAccountToggle.tap()
+            XCTAssertTrue(saveThisAccountToggle.isSelected)
+        }
+        if disableDefaultOptInIfNeeded {
+            let saveSwitch = app.switches.containing(NSPredicate(format: "label CONTAINS[c] 'Save'")).firstMatch
+            if saveSwitch.exists && saveSwitch.isSelected {
+                saveSwitch.tap()
+            }
         }
     }
 
@@ -210,31 +304,11 @@ extension XCTestCase {
     func fillUSBankData_microdeposits(_ app: XCUIApplication,
                                       container: XCUIElement? = nil) throws {
         let context = container ?? app
-        let routingField = context.textFields["manual_entry_routing_number_text_field"]
-        routingField.forceTapWhenHittableInTestCase(self)
-        app.typeText("110000000")
-
-        // Dismiss keyboard, otherwise we can not see the next field
-        // This is only an artifact in the (test) native version of the flow
-        app.tapCoordinate(at: .init(x: 150, y: 150))
-
-        let acctField = context.textFields["manual_entry_account_number_text_field"]
-        acctField.forceTapWhenHittableInTestCase(self)
-        app.typeText("000123456789")
-
-        // Dismiss keyboard, otherwise we can not see the next field
-        // This is only an artifact in the (test) native version of the flow
-        app.tapCoordinate(at: .init(x: 150, y: 150))
-
-        let acctConfirmField = context.textFields["manual_entry_account_number_confirmation_text_field"]
-        acctConfirmField.forceTapWhenHittableInTestCase(self)
-        app.typeText("000123456789")
-
-        // Dismiss keyboard again otherwise we can not see the continue button
-        // This is only an artifact in the (test) native version of the flow
-        app.tapCoordinate(at: .init(x: 150, y: 150))
+        context.buttons["test_mode_autofill_button"].tap()
     }
     func fillSepaData(_ app: XCUIApplication,
+                      iban: String = "DE89370400440532013000",
+                      tapCheckboxWithText checkboxText: String? = nil,
                       container: XCUIElement? = nil) throws {
         let context = container ?? app
         let nameField = context.textFields["Full name"]
@@ -247,24 +321,26 @@ extension XCTestCase {
 
         let ibanField = context.textFields["IBAN"]
         ibanField.forceTapWhenHittableInTestCase(self)
-        app.typeText("DE89370400440532013000")
+        app.typeText(iban)
 
-        let addressLine1 = context.textFields["Address line 1"]
-        addressLine1.forceTapWhenHittableInTestCase(self)
-        app.typeText("123 Main")
-        context.buttons["Return"].tap()
+        app.fillAddressWithAutocomplete(context: context)
 
-        // Skip address 2
-        context.buttons["Return"].tap()
+        if let checkboxText {
+            let saveThisAccountToggle = app.switches[checkboxText]
+            XCTAssertFalse(saveThisAccountToggle.isSelected)
+            sleep(1)
+            saveThisAccountToggle.waitForExistenceAndTap()
+            XCTAssertTrue(saveThisAccountToggle.isSelected)
+        }
+    }
 
-        app.typeText("San Francisco")
-        context.buttons["Return"].tap()
-
-        context.pickerWheels.element.adjust(toPickerWheelValue: "California")
-        context.buttons["Done"].tap()
-
-        app.typeText("94016")
-        context.buttons["Done"].tap()
+    func skipLinkSignup(_ app: XCUIApplication) {
+        // This handles the FinancialConnections networking Link signup screen
+        let notNowButton = app.buttons["networking_link_signup_footer_view.not_now_button"]
+        if notNowButton.waitForExistence(timeout: 10.0) {
+            app.fc_dismissKeyboard()
+            notNowButton.tap()
+        }
     }
 
     func waitToDisappear(_ target: Any?) {
@@ -277,64 +353,5 @@ extension XCTestCase {
         let elementExistsPredicate = NSPredicate(format: "count == %d", count)
         expectation(for: elementExistsPredicate, evaluatedWith: target, handler: nil)
         waitForExpectations(timeout: 10.0, handler: nil)
-    }
-
-    func reload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
-        app.buttons["Reload"].waitForExistenceAndTap(timeout: 10)
-        waitForReload(app, settings: settings)
-    }
-
-    func waitForReload(_ app: XCUIApplication, settings: PaymentSheetTestPlaygroundSettings) {
-        if settings.uiStyle == .paymentSheet {
-            let presentButton = app.buttons["Present PaymentSheet"]
-            expectation(
-                for: NSPredicate(format: "enabled == true"),
-                evaluatedWith: presentButton,
-                handler: nil
-            )
-            waitForExpectations(timeout: 10, handler: nil)
-        } else {
-            let confirm = app.buttons["Confirm"]
-            expectation(
-                for: NSPredicate(format: "enabled == true"),
-                evaluatedWith: confirm,
-                handler: nil
-            )
-            waitForExpectations(timeout: 10, handler: nil)
-        }
-    }
-    func loadPlayground(_ app: XCUIApplication, _ settings: PaymentSheetTestPlaygroundSettings) {
-        if #available(iOS 15.0, *) {
-            // Doesn't work on 16.4. Seems like a bug, can't see any confirmation that this works online.
-            //   var urlComponents = URLComponents(string: "stripe-paymentsheet-example://playground")!
-            //   urlComponents.query = settings.base64Data
-            //   app.open(urlComponents.url!)
-            // This should work, but we get an "Open in 'PaymentSheet Example'" consent dialog the first time we run it.
-            // And while the dialog is appearing, `open()` doesn't return, so we can't install an interruption handler or anything to handle it.
-            //   XCUIDevice.shared.system.open(urlComponents.url!)
-            app.launchEnvironment = app.launchEnvironment.merging(["STP_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
-            app.launch()
-        } else {
-            XCTFail("This test is only supported on iOS 15.0 or later.")
-        }
-        waitForReload(app, settings: settings)
-    }
-    func waitForReload(_ app: XCUIApplication, settings: CustomerSheetTestPlaygroundSettings) {
-        let paymentMethodButton = app.buttons["Payment method"]
-        expectation(
-            for: NSPredicate(format: "enabled == true"),
-            evaluatedWith: paymentMethodButton,
-            handler: nil
-        )
-        waitForExpectations(timeout: 10, handler: nil)
-    }
-    func loadPlayground(_ app: XCUIApplication, _ settings: CustomerSheetTestPlaygroundSettings) {
-        if #available(iOS 15.0, *) {
-            app.launchEnvironment = app.launchEnvironment.merging(["STP_CUSTOMERSHEET_PLAYGROUND_DATA": settings.base64Data]) { (_, new) in new }
-            app.launch()
-        } else {
-            XCTFail("This test is only supported on iOS 15.0 or later.")
-        }
-        waitForReload(app, settings: settings)
     }
 }

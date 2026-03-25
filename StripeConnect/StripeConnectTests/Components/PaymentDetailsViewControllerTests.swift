@@ -6,7 +6,7 @@
 //
 
 import SafariServices
-@_spi(PrivateBetaConnect) @_spi(DashboardOnly) @testable import StripeConnect
+@_spi(DashboardOnly) @testable import StripeConnect
 @_spi(STP) import StripeCore
 import WebKit
 import XCTest
@@ -14,7 +14,6 @@ import XCTest
 class PaymentDetailsViewControllerTests: XCTestCase {
     @MainActor
     func testDelegate() async throws {
-        STPAPIClient.shared.publishableKey = "pk_test"
         let componentManager = EmbeddedComponentManager(fetchClientSecret: {
             return nil
         })
@@ -29,18 +28,17 @@ class PaymentDetailsViewControllerTests: XCTestCase {
         }
         vc.delegate = paymentDetailsDelegate
 
-        try await vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
+        try await vc.webVC.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
 
         await fulfillment(of: [expectationDidFail], timeout: TestHelpers.defaultTimeout)
     }
 
     func testSetPayment() throws {
-        STPAPIClient.shared.publishableKey = "pk_test"
         let componentManager = EmbeddedComponentManager(fetchClientSecret: {
             return nil
         })
         let vc = componentManager.createPaymentDetailsViewController()
-        let expectation = try vc.webView.expectationForMessageReceived(sender: CallSetterWithSerializableValueSender(payload: .init(
+        let expectation = try vc.webVC.webView.expectationForMessageReceived(sender: CallSetterWithSerializableValueSender(payload: .init(
             setter: "setPayment",
             value: "pi_123"
         )))
@@ -52,13 +50,13 @@ class PaymentDetailsViewControllerTests: XCTestCase {
 
 private class PaymentDetailsViewControllerDelegatePassThrough: PaymentDetailsViewControllerDelegate {
 
-    var loadDidFail: ((_ paymentDetails: PaymentDetailsViewController, _ error: any Error) -> Void)?
+    var didFailLoad: ((_ paymentDetails: PaymentDetailsViewController, _ error: any Error) -> Void)?
 
-    init(loadDidFail: ((PaymentDetailsViewController, any Error) -> Void)? = nil) {
-        self.loadDidFail = loadDidFail
+    init(didFailLoad: ((PaymentDetailsViewController, any Error) -> Void)? = nil) {
+        self.didFailLoad = didFailLoad
     }
 
-    func paymentDetailsLoadDidFail(_ paymentDetails: PaymentDetailsViewController, withError error: any Error) {
-        loadDidFail?(paymentDetails, error)
+    func paymentDetails(_ paymentDetails: PaymentDetailsViewController, didFailLoadWithError error: any Error) {
+        didFailLoad?(paymentDetails, error)
     }
 }

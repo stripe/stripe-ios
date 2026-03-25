@@ -33,18 +33,26 @@ let package = Package(
             targets: ["StripeIdentity"]
         ),
         .library(
+            name: "StripeIssuing",
+            targets: ["StripeIssuing"]
+        ),
+        .library(
             name: "StripeCardScan",
             targets: ["StripeCardScan"]
         ),
         .library(
             name: "StripeFinancialConnections",
             targets: ["StripeFinancialConnections"]
+        ),
+        .library(
+            name: "StripeConnect",
+            targets: ["StripeConnect"]
         )
     ],
     targets: [
         .target(
             name: "Stripe",
-            dependencies: ["Stripe3DS2", "StripeCore", "StripeApplePay", "StripeUICore", "StripePayments", "StripePaymentsUI"],
+            dependencies: ["Stripe3DS2", "StripeCore", "StripeApplePay", "StripeUICore", "StripePayments", "StripePaymentsUI", "StripeIssuing"],
             path: "Stripe/StripeiOS",
             exclude: ["Info.plist"],
             resources: [
@@ -91,6 +99,14 @@ let package = Package(
             exclude: ["Info.plist"],
             resources: [
                 .process("Resources/Images")
+            ]
+        ),
+        .target(
+            name: "StripeIssuing",
+            dependencies: ["StripeCore", "StripePayments", "StripePaymentsUI"],
+            path: "StripeIssuing/StripeIssuing",
+            resources: [
+                .process("Resources")
             ]
         ),
         .target(
@@ -152,6 +168,11 @@ let package = Package(
                 .process("Resources/Images"),
                 .process("PrivacyInfo.xcprivacy")
             ]
+        ),
+        .target(
+            name: "StripeConnect",
+            dependencies: ["StripeCore", "StripeUICore", "StripeFinancialConnections"],
+            path: "StripeConnect/StripeConnect"
         )
     ]
 )

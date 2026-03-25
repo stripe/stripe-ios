@@ -24,6 +24,7 @@ protocol TextFieldViewDelegate: AnyObject {
 class TextFieldView: UIView {
     weak var delegate: TextFieldViewDelegate?
     private lazy var toolbar = DoneButtonToolbar(delegate: self, theme: viewModel.theme)
+
     var text: String {
         return textField.text ?? ""
     }
@@ -41,8 +42,27 @@ class TextFieldView: UIView {
 
     // MARK: - Views
 
-    private(set) lazy var textField: UITextField = {
-        let textField = UITextField()
+    // A text field that remembers if it wanted to become the first responder, but failed to do so.
+    // We'll track this for the very specific situation where we're trying to swap out a text field for a replacement
+    // immediately after the user tapped this one.
+    class STPTextFieldThatRemembersWantingToBecomeFirstResponder: UITextField {
+        private(set) var wantedToBecomeFirstResponder = false
+
+        override func becomeFirstResponder() -> Bool {
+            if canBecomeFirstResponder {
+                wantedToBecomeFirstResponder = true
+            }
+            let didBecomeFirstResponder = super.becomeFirstResponder()
+            if didBecomeFirstResponder {
+                // It succeeded, so now it can forget!
+                wantedToBecomeFirstResponder = false
+            }
+            return didBecomeFirstResponder
+        }
+    }
+
+    private(set) lazy var textField: STPTextFieldThatRemembersWantingToBecomeFirstResponder = {
+        let textField = STPTextFieldThatRemembersWantingToBecomeFirstResponder()
         textField.delegate = self
         textField.addTarget(self, action: #selector(textDidChange), for: .editingChanged)
         textField.autocorrectionType = .no
@@ -81,7 +101,7 @@ class TextFieldView: UIView {
             } else if let accessoryView = accessoryView {
                 accessoryContainerView.addAndPinSubview(accessoryView)
                 accessoryView.setContentHuggingPriority(.required, for: .horizontal)
-                hStack.updateTrailingAnchor(constant: -ElementsUI.contentViewInsets.trailing)
+                hStack.updateTrailingAnchor(constant: -viewModel.theme.textFieldInsets.trailing)
             }
         }
     }
@@ -140,19 +160,22 @@ class TextFieldView: UIView {
     // MARK: - Private methods
 
     fileprivate func installConstraints() {
+        if viewModel.editConfiguration == .readOnly {
+            backgroundColor = viewModel.theme.colors.readonlyComponentBackground
+        }
         hStack = UIStackView(arrangedSubviews: [textFieldView, errorIconView, clearButton, accessoryContainerView])
         clearButton.setContentHuggingPriority(.required, for: .horizontal)
         clearButton.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
-                                                      for: .horizontal)
+                                                            for: .horizontal)
         errorIconView.setContentHuggingPriority(.required, for: .horizontal)
         errorIconView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
-                                                      for: .horizontal)
+                                                              for: .horizontal)
         accessoryContainerView.setContentHuggingPriority(.required, for: .horizontal)
         accessoryContainerView.setContentCompressionResistancePriority(textField.contentCompressionResistancePriority(for: .horizontal) + 1,
-                                                      for: .horizontal)
+                                                                       for: .horizontal)
         hStack.alignment = .center
         hStack.spacing = 6
-        addAndPinSubview(hStack, insets: ElementsUI.contentViewInsets)
+        addAndPinSubview(hStack, insets: viewModel.theme.textFieldInsets)
     }
 
     @objc private func clearText() {
@@ -183,7 +206,14 @@ class TextFieldView: UIView {
         // the same relative position in case attributedText adds more characters
         let cursorOffsetFromEnd = textField.selectedTextRange.map { textField.offset(from: textField.endOfDocument, to: $0.end) }
 
-        textField.attributedText = viewModel.attributedText
+        // Don't mess with attributed text if the IME is currently in progress (Japanese/Chinese/Hindi characters)
+        // Note: Setting textField.attributedText cancels the IME
+        if textField.markedTextRange != nil {
+            textField.text = viewModel.attributedText.string
+        } else {
+            textField.attributedText = viewModel.attributedText
+        }
+
         if let cursorOffsetFromEnd = cursorOffsetFromEnd,
            let cursor = textField.position(from: textField.endOfDocument, offset: cursorOffsetFromEnd) {
             // Re-set the cursor back to where it was
@@ -196,7 +226,7 @@ class TextFieldView: UIView {
         textField.textContentType = viewModel.keyboardProperties.textContentType
         if viewModel.keyboardProperties.type != textField.keyboardType {
             textField.keyboardType = viewModel.keyboardProperties.type
-#if !canImport(CompositorServices)
+#if !os(visionOS)
             textField.inputAccessoryView = textField.keyboardType.hasReturnKey ? nil : toolbar
 #endif
             textField.reloadInputViews()
@@ -204,14 +234,14 @@ class TextFieldView: UIView {
 
         // Update text and border color
         if case .invalid(let error) = viewModel.validationState,
-           error.shouldDisplay(isUserEditing: textField.isEditing) {
+           error.shouldDisplay(isUserEditing: textField.isEditing, displayEmptyFields: viewModel.displayEmptyFields) {
             layer.borderColor = viewModel.theme.colors.danger.cgColor
             textField.textColor = viewModel.theme.colors.danger
             errorIconView.alpha = 1
             textField.accessibilityValue = viewModel.attributedText.string + ", " + error.localizedDescription
         } else {
             layer.borderColor = viewModel.theme.colors.border.cgColor
-            textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled || !viewModel.isEditable)
+            textField.textColor = viewModel.theme.colors.textFieldText.disabled(!isUserInteractionEnabled || !viewModel.editConfiguration.isEditable)
             errorIconView.alpha = 0
             textField.accessibilityValue = viewModel.attributedText.string
         }
@@ -228,7 +258,7 @@ class TextFieldView: UIView {
         layoutIfNeeded()
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateUI(with: viewModel)
@@ -241,7 +271,7 @@ class TextFieldView: UIView {
 extension TextFieldView: UITextFieldDelegate {
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        return viewModel.isEditable
+        return viewModel.editConfiguration.isEditable
     }
 
     @objc func textDidChange() {

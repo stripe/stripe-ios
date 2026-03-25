@@ -19,7 +19,11 @@ protocol ConsentViewControllerDelegate: AnyObject {
     )
     func consentViewController(
         _ viewController: ConsentViewController,
-        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+        didConsentWithResult result: ConsentAcquiredResult
+    )
+    func consentViewControllerDidFailAttestationVerdict(
+        _ viewController: ConsentViewController,
+        prefillDetails: WebPrefillDetails
     )
 }
 
@@ -33,7 +37,7 @@ class ConsentViewController: UIViewController {
             font: .heading(.extraLarge),
             boldFont: .heading(.extraLarge),
             linkFont: .heading(.extraLarge),
-            textColor: .textDefault,
+            textColor: FinancialConnectionsAppearance.Colors.textDefault,
             alignment: .center
         )
         titleLabel.setText(
@@ -52,7 +56,7 @@ class ConsentViewController: UIViewController {
             aboveCtaText: dataSource.consent.aboveCta,
             ctaText: dataSource.consent.cta,
             belowCtaText: dataSource.consent.belowCta,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectAgree: { [weak self] in
                 self?.didSelectAgree()
             },
@@ -74,7 +78,7 @@ class ConsentViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         let paneLayoutView = PaneLayoutView(
             contentView: {
@@ -146,9 +150,19 @@ class ConsentViewController: UIViewController {
             .observe(on: .main) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success(let manifest):
-                    self.delegate?.consentViewController(self, didConsentWithManifest: manifest)
+                case .success(let result):
+                    self.delegate?.consentViewController(self, didConsentWithResult: result)
                 case .failure(let error):
+                    let attestationError = self.dataSource.completeAssertionIfNeeded(
+                        possibleError: error,
+                        api: .consumerSessionLookup
+                    )
+
+                    if attestationError != nil {
+                        let prefillDetails = WebPrefillDetails(email: dataSource.email)
+                        self.delegate?.consentViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
+                    }
+
                     // we display no errors on failure
                     self.dataSource
                         .analyticsClient
@@ -192,7 +206,7 @@ class ConsentViewController: UIViewController {
                     if let dataAccessNotice = dataSource.consent.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
                             dataAccessNotice: dataAccessNotice,
-                            theme: dataSource.manifest.theme,
+                            appearance: dataSource.manifest.appearance,
                             didSelectUrl: { [weak self] url in
                                 self?.didSelectURLInTextFromBackend(url)
                             }
@@ -203,7 +217,7 @@ class ConsentViewController: UIViewController {
                     let legalDetailsNoticeModel = dataSource.consent.legalDetailsNotice
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNoticeModel,
-                        theme: dataSource.manifest.theme,
+                        appearance: dataSource.manifest.appearance,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(url)
                         }

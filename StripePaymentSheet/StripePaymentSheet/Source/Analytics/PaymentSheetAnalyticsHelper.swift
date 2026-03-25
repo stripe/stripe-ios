@@ -11,66 +11,132 @@ import Foundation
 
 final class PaymentSheetAnalyticsHelper {
     let analyticsClient: STPAnalyticsClient
-    let isCustom: Bool
-    let configuration: PaymentSheet.Configuration
+    let integrationShape: IntegrationShape
+    let configuration: PaymentElementConfiguration
+
+    /// Logs analytics to `r.stripe.com`.
+    let analyticsClientV2: AnalyticsClientV2Protocol
 
     // Vars set later as PaymentSheet successfully loads, etc.
     var intent: Intent?
     var elementsSession: STPElementsSession?
-    var loadingStartDate: Date?
     private var startTimes: [TimeMeasurement: Date] = [:]
 
+    enum IntegrationShape {
+        case flowController
+        case complete
+        case embedded
+        case linkController
+
+        var analyticsValue: String {
+            switch self {
+            case .flowController:
+                return "flowcontroller"
+            case .complete:
+                return "paymentsheet"
+            case .embedded:
+                return "embedded"
+            case .linkController:
+                return "linkcontroller"
+            }
+        }
+
+        var isMPE: Bool {
+            switch self {
+            case .complete, .flowController, .embedded:
+                return true
+            case .linkController:
+                return false
+            }
+        }
+    }
+
     init(
-        isCustom: Bool,
-        configuration: PaymentSheet.Configuration,
-        analyticsClient: STPAnalyticsClient = .sharedClient
+        integrationShape: IntegrationShape,
+        configuration: PaymentElementConfiguration,
+        analyticsClient: STPAnalyticsClient = .sharedClient,
+        analyticsClientV2: AnalyticsClientV2Protocol = AnalyticsClientV2(
+            clientId: "stripe-mobile-sdk",
+            origin: "stripe-mobile-sdk-ios"
+        )
     ) {
-        self.isCustom = isCustom
+        self.integrationShape = integrationShape
         self.configuration = configuration
         self.analyticsClient = analyticsClient
+        self.analyticsClientV2 = analyticsClientV2
     }
 
     func logInitialized() {
         let event: STPAnalyticEvent = {
-            switch (configuration.customer != nil, configuration.applePay != nil) {
-            case (false, false):
-                return isCustom ? .mcInitCustomDefault : .mcInitCompleteDefault
-            case (true, false):
-                return isCustom ? .mcInitCustomCustomer : .mcInitCompleteCustomer
-            case (false, true):
-                return isCustom ? .mcInitCustomApplePay : .mcInitCompleteApplePay
-            case (true, true):
-                return isCustom ? .mcInitCustomCustomerApplePay : .mcInitCompleteCustomerApplePay
+            switch integrationShape {
+            case .flowController:
+                switch (configuration.customer != nil, configuration.applePay != nil) {
+                case (false, false):
+                    return .mcInitCustomDefault
+                case (true, false):
+                    return .mcInitCustomCustomer
+                case (false, true):
+                    return .mcInitCustomApplePay
+                case (true, true):
+                    return .mcInitCustomCustomerApplePay
+                }
+            case .complete, .linkController:
+                switch (configuration.customer != nil, configuration.applePay != nil) {
+                case (false, false):
+                    return .mcInitCompleteDefault
+                case (true, false):
+                    return .mcInitCompleteCustomer
+                case (false, true):
+                    return .mcInitCompleteApplePay
+                case (true, true):
+                    return .mcInitCompleteCustomerApplePay
+                }
+            case .embedded:
+                return .mcInitEmbedded
             }
         }()
         log(event: event)
     }
 
-    func logLoadStarted() {
-        loadingStartDate = Date()
-        log(event: .paymentSheetLoadStarted)
-    }
-
-    func logLoadFailed(error: Error) {
-        stpAssert(loadingStartDate != nil)
-        let duration: TimeInterval = {
-            guard let loadingStartDate else { return 0 }
-            return Date().timeIntervalSince(loadingStartDate)
-        }()
+    @MainActor
+    func logLoadStarted(isUpdate: Bool) {
         log(
-            event: .paymentSheetLoadFailed,
-            duration: duration,
-            error: error
+            event: .paymentSheetLoadStarted,
+            params: [
+                "integration_shape": integrationShape.analyticsValue,
+                "is_update": isUpdate,
+            ]
         )
     }
 
+    @MainActor
+    func logLoadFailed(
+        error: Error,
+        loadTimings: PaymentSheetLoader.LoadTimings,
+        isUpdate: Bool
+    ) {
+        let duration = Date().timeIntervalSince(loadTimings.loadingStartDate)
+        log(
+            event: .paymentSheetLoadFailed,
+            duration: duration,
+            error: error,
+            params: [
+                "integration_shape": integrationShape.analyticsValue,
+                "load_timings": loadTimings.jsonObject,
+                "is_update": isUpdate,
+            ]
+        )
+    }
+
+    @MainActor
     func logLoadSucceeded(
         intent: Intent,
         elementsSession: STPElementsSession,
         defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
-        orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType]
+        orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        loadTimings: PaymentSheetLoader.LoadTimings,
+        isUpdate: Bool
     ) {
-        stpAssert(loadingStartDate != nil)
         self.intent = intent
         self.elementsSession = elementsSession
         let defaultPaymentMethodAnalyticsValue: String = {
@@ -92,16 +158,27 @@ final class PaymentSheetAnalyticsHelper {
             "selected_lpm": defaultPaymentMethodAnalyticsValue,
             "intent_type": intent.analyticsValue,
             "ordered_lpms": orderedPaymentMethodTypes.map({ $0.identifier }).joined(separator: ","),
+            "integration_shape": integrationShape.analyticsValue,
+            "load_timings": loadTimings.jsonObject,
+            "is_update": isUpdate,
         ]
-        let linkEnabled: Bool = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-        if linkEnabled {
-            let linkMode: String = elementsSession.linkPassthroughModeEnabled ? "passthrough" : "payment_method_mode"
-            params["link_mode"] = linkMode
+        if let linkMode = elementsSession.linkSettings?.linkMode {
+            params["link_mode"] = linkMode.rawValue
         }
-        let duration: TimeInterval = {
-            guard let loadingStartDate else { return 0 }
-            return Date().timeIntervalSince(loadingStartDate)
-        }()
+        params["link_display"] = configuration.link.display.rawValue
+        if elementsSession.customer?.customerSession != nil {
+            let setAsDefaultEnabled = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
+            params["set_as_default_enabled"] = setAsDefaultEnabled
+            if setAsDefaultEnabled {
+                params["has_default_payment_method"] = elementsSession.customer?.defaultPaymentMethod != nil
+            }
+        }
+        let duration = Date().timeIntervalSince(loadTimings.loadingStartDate)
+
+        params["link_disabled_reasons"] = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
+        params["link_signup_disabled_reasons"] = PaymentSheet.linkSignupDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
+        params["link_native_available"] = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+
         log(
             event: .paymentSheetLoadSucceeded,
             duration: duration,
@@ -110,23 +187,45 @@ final class PaymentSheetAnalyticsHelper {
     }
 
     func logShow(showingSavedPMList: Bool) {
-        if !isCustom {
+        if case .embedded = integrationShape {
+            stpAssertionFailure("logShow() is not supported for embedded integration")
+            return
+        }
+        let isFlowController = integrationShape == .flowController
+        if !isFlowController {
             startTimeMeasurement(.checkout)
         }
         let event: STPAnalyticEvent = {
             switch showingSavedPMList {
             case true:
-                return isCustom ? .mcShowCustomSavedPM : .mcShowCompleteSavedPM
+                return isFlowController ? .mcShowCustomSavedPM : .mcShowCompleteSavedPM
             case false:
-                return isCustom ? .mcShowCustomNewPM : .mcShowCompleteNewPM
+                return isFlowController ? .mcShowCustomNewPM : .mcShowCompleteNewPM
             }
         }()
         log(event: event)
     }
 
+    enum PaymentMethodLayout: String {
+        case horizontal
+        case vertical
+    }
+
+    func logInitialDisplayedPaymentMethods(visiblePaymentMethods: [String], hiddenPaymentMethods: [String], paymentMethodLayout: PaymentMethodLayout) {
+        var params: [String: Any] = ["payment_method_layout": paymentMethodLayout.rawValue]
+        if !visiblePaymentMethods.isEmpty {
+            params["visible_payment_methods"] = visiblePaymentMethods
+        }
+        if !hiddenPaymentMethods.isEmpty {
+            params["hidden_payment_methods"] = hiddenPaymentMethods
+        }
+        log(event: .mcInitialDisplayedPaymentMethods, params: params)
+    }
+
     func logSavedPMScreenOptionSelected(option: SavedPaymentOptionsViewController.Selection) {
-        let (event, selectedLPM): (STPAnalyticEvent, String?) = {
-            if isCustom {
+        let (event, selectedLPM): (STPAnalyticEvent?, String?) = {
+            switch integrationShape {
+            case .flowController:
                 switch option {
                 case .add:
                     return (.mcOptionSelectCustomNewPM, nil)
@@ -137,7 +236,7 @@ final class PaymentSheetAnalyticsHelper {
                 case .link:
                     return (.mcOptionSelectCustomLink, nil)
                 }
-            } else {
+            case .complete, .linkController:
                 switch option {
                 case .add:
                     return (.mcOptionSelectCompleteNewPM, nil)
@@ -148,16 +247,50 @@ final class PaymentSheetAnalyticsHelper {
                 case .link:
                     return (.mcOptionSelectCompleteLink, nil)
                 }
+            case .embedded:
+                if case .saved(let paymentMethod) = option {
+                    return (.mcOptionSelectEmbeddedSavedPM, paymentMethod.type.identifier)
+                } else {
+                    stpAssertionFailure("Embedded should only use this function to record tapped saved payment methods")
+                    return (nil, nil)
+                }
             }
         }()
+        guard let event else {
+            return
+        }
         log(event: event, selectedLPM: selectedLPM)
     }
 
     func logNewPaymentMethodSelected(paymentMethodTypeIdentifier: String) {
         log(event: .paymentSheetCarouselPaymentMethodTapped, selectedLPM: paymentMethodTypeIdentifier)
     }
+
+    func logWalletButtonTapped(walletType: PaymentSheet.WalletButtonsVisibility.ExpressType) {
+        let selectedLPM: String = {
+            switch walletType {
+            case .applePay:
+                return "apple_pay"
+            case .link:
+                return "link"
+            case .shopPay:
+                return "shop_pay"
+            }
+        }()
+        log(event: .mcWalletButtonTapped, selectedLPM: selectedLPM)
+    }
+
     func logSavedPaymentMethodRemoved(paymentMethod: STPPaymentMethod) {
-        let event: STPAnalyticEvent = isCustom ? .mcOptionRemoveCustomSavedPM : .mcOptionRemoveCompleteSavedPM
+        let event: STPAnalyticEvent = {
+            switch integrationShape {
+            case .flowController:
+                return .mcOptionRemoveCustomSavedPM
+            case .complete, .linkController:
+                return .mcOptionRemoveCompleteSavedPM
+            case .embedded:
+                return .mcOptionRemoveEmbeddedSavedPM
+            }
+        }()
         log(event: event, selectedLPM: paymentMethod.type.identifier)
     }
 
@@ -183,7 +316,14 @@ final class PaymentSheetAnalyticsHelper {
             )
         }
     }
-
+    var lastCardBrandSelected: STPCardBrand?
+    func logCardBrandSelected(hostedSurface: HostedSurface, cardBrand: STPCardBrand) {
+        if lastCardBrandSelected != cardBrand {
+            lastCardBrandSelected = cardBrand
+            let params = ["selected_card_brand": STPCardBrandUtilities.apiValue(from: cardBrand), "cbc_event_source": "add"]
+            log(event: hostedSurface.analyticEvent(for: .cardBrandSelected), params: params)
+        }
+    }
     /// Used to ensure we only send one `mc_form_completed` event per `mc_form_shown` to avoid spamming.
     var didSendPaymentSheetFormCompletedEvent: Bool = false
     /// Used because it is possible for logFormCompleted to be called before logFormShown when switching payment methods
@@ -204,7 +344,8 @@ final class PaymentSheetAnalyticsHelper {
             event: .paymentSheetConfirmButtonTapped,
             duration: duration,
             selectedLPM: paymentOption.paymentMethodTypeAnalyticsValue,
-            linkContext: paymentOption.linkContextAnalyticsValue
+            linkContext: paymentOption.linkContextAnalyticsValue,
+            linkUI: paymentOption.linkUIAnalyticsValue
         )
     }
 
@@ -226,14 +367,17 @@ final class PaymentSheetAnalyticsHelper {
         case .completed:
             success = true
             if intent?.isDeferredIntent ?? true {
-                stpAssert(deferredIntentConfirmationType != nil, "Successful deferred intent payments should always know the deferred intent confirm type")
+                if !paymentOption.isExternal {
+                    stpAssert(deferredIntentConfirmationType != nil, "Successful deferred intent payments should always know the deferred intent confirm type")
+                }
             } else {
                 stpAssert(deferredIntentConfirmationType == nil, "Non-deferred intent should not send deferred intent confirm type")
             }
         }
 
         let event: STPAnalyticEvent = {
-            if isCustom {
+            switch integrationShape {
+            case .flowController:
                 switch paymentOption {
                 case .new, .external:
                     return success ? .mcPaymentCustomNewPMSuccess : .mcPaymentCustomNewPMFailure
@@ -244,7 +388,7 @@ final class PaymentSheetAnalyticsHelper {
                 case .link:
                     return success ? .mcPaymentCustomLinkSuccess : .mcPaymentCustomLinkFailure
                 }
-            } else {
+            case .complete, .linkController:
                 switch paymentOption {
                 case .new, .external:
                     return success ? .mcPaymentCompleteNewPMSuccess : .mcPaymentCompleteNewPMFailure
@@ -255,16 +399,56 @@ final class PaymentSheetAnalyticsHelper {
                 case .link:
                     return success ? .mcPaymentCompleteLinkSuccess : .mcPaymentCompleteLinkFailure
                 }
+            case .embedded:
+                return success ? .mcPaymentEmbeddedSuccess : .mcPaymentEmbeddedFailure
             }
         }()
-
+        var params: [String: Any] = [:]
+        if case let .new(confirmParams) = paymentOption {
+            if let setAsDefault = confirmParams.setAsDefaultPM {
+                params["set_as_default"] = setAsDefault
+            }
+        }
         log(event: event,
             duration: getDuration(for: .checkout),
             error: result.error,
             deferredIntentConfirmationType: deferredIntentConfirmationType,
             selectedLPM: paymentOption.paymentMethodTypeAnalyticsValue,
-            linkContext: paymentOption.linkContextAnalyticsValue
+            linkContext: paymentOption.linkContextAnalyticsValue,
+            linkUI: paymentOption.linkUIAnalyticsValue,
+            params: params
         )
+    }
+
+    func logEmbeddedUpdateStarted() {
+        stpAssert(integrationShape == .embedded, "This function should only be used with embedded integration")
+        log(event: .mcUpdateStartedEmbedded)
+    }
+
+    func logEmbeddedUpdateFinished(result: EmbeddedPaymentElement.UpdateResult, duration: TimeInterval) {
+        stpAssert(integrationShape == .embedded, "This function should only be used with embedded integration")
+
+        let error: Error? = {
+            switch result {
+            case .failed(let error):
+                return error
+            default:
+                return nil
+            }
+        }()
+        log(event: .mcUpdateFinishedEmbedded, duration: duration, error: error, params: ["status": result.analyticValue])
+    }
+
+    func logShopPayWebviewLoadAttempt() {
+        log(event: .shopPayWebviewLoadAttempt)
+    }
+
+    func logShopPayWebviewConfirmSuccess() {
+        log(event: .shopPayWebviewConfirmSuccess)
+    }
+
+    func logShopPayWebviewCancelled(didReceiveECEClick: Bool) {
+        log(event: .shopPayWebviewCancelled, params: ["did_receive_ece_click": didReceiveECEClick])
     }
 
     func log(
@@ -274,6 +458,7 @@ final class PaymentSheetAnalyticsHelper {
         deferredIntentConfirmationType: STPAnalyticsClient.DeferredIntentConfirmationType? = nil,
         selectedLPM: String? = nil,
         linkContext: String? = nil,
+        linkUI: String? = nil,
         params: [String: Any] = [:]
     ) {
         let linkEnabled: Bool? = {
@@ -286,21 +471,30 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["link_enabled"] = linkEnabled
         additionalParams["active_link_session"] = LinkAccountContext.shared.account?.sessionState == .verified
         additionalParams["link_session_type"] = elementsSession?.linkPopupWebviewOption.rawValue
+        additionalParams["link_use_attestation"] = elementsSession?.linkSettings?.useAttestationEndpoints
+        additionalParams["link_mobile_suppress_2fa_modal"] = elementsSession?.linkSettings?.suppress2FAModal
         additionalParams["mpe_config"] = configuration.analyticPayload
         additionalParams["currency"] = intent?.currency
         additionalParams["is_decoupled"] = intent?.intentConfig != nil
+        additionalParams["is_spt"] = intent?.intentConfig?.preparePaymentMethodHandler != nil
         additionalParams["deferred_intent_confirmation_type"] = deferredIntentConfirmationType?.rawValue
         additionalParams["require_cvc_recollection"] = intent?.cvcRecollectionEnabled
         additionalParams["selected_lpm"] = selectedLPM
         additionalParams["link_context"] = linkContext
+        additionalParams["link_ui"] = linkUI
+        additionalParams["setup_future_usage"] = intent?.setupFutureUsageString
+        additionalParams["payment_method_options_setup_future_usage"] = intent?.isPaymentMethodOptionsSetupFutureUsageSet
+        additionalParams["elements_session_config_id"] = elementsSession?.configID
+        additionalParams["is_confirmation_tokens"] = intent?.intentConfig?.confirmationTokenConfirmHandler != nil
+        if event.shouldLogFcSdkAvailability {
+            additionalParams["fc_sdk_availability"] = FinancialConnectionsSDKAvailability.analyticsValue
+        }
 
         if let error {
             additionalParams.mergeAssertingOnOverwrites(error.serializeForV1Analytics())
         }
 
-        for (param, param_value) in params {
-            additionalParams[param] = param_value
-        }
+        additionalParams.mergeAssertingOnOverwrites(params)
         let analytic = PaymentSheetAnalytic(event: event, additionalParams: additionalParams)
         analyticsClient.log(analytic: analytic, apiClient: configuration.apiClient)
     }
@@ -331,13 +525,32 @@ extension STPAnalyticsClient {
     enum DeferredIntentConfirmationType: String {
         case server = "server"
         case client = "client"
-        case none = "none"
+        /// The merchant backend used `COMPLETE_WITHOUT_CONFIRMING_INTENT` instead of a intent client secret, so we completed the payment without confirming an intent.
+        case completeWithoutConfirmingIntent = "none"
     }
 }
 
 extension PaymentSheet.Configuration {
     /// Serializes the configuration into a safe dictionary containing no PII for analytics logging
     var analyticPayload: [String: Any] {
+        var payload = commonAnalyticPayload
+        payload["payment_method_layout"] = paymentMethodLayout.description
+        return payload
+    }
+}
+
+extension EmbeddedPaymentElement.Configuration {
+    /// Serializes the configuration into a safe dictionary containing no PII for analytics logging
+    var analyticPayload: [String: Any] {
+        var payload = commonAnalyticPayload
+        payload["form_sheet_action"] = formSheetAction.analyticValue
+        payload["embedded_view_displays_mandate_text"] = embeddedViewDisplaysMandateText
+        return payload
+    }
+}
+
+extension PaymentElementConfiguration {
+    var commonAnalyticPayload: [String: Any] {
         var payload = [String: Any]()
         payload["allows_delayed_payment_methods"] = allowsDelayedPaymentMethods
         payload["apple_pay_config"] = applePay != nil
@@ -350,7 +563,40 @@ extension PaymentSheet.Configuration {
         payload["appearance"] = appearance.analyticPayload
         payload["billing_details_collection_configuration"] = billingDetailsCollectionConfiguration.analyticPayload
         payload["preferred_networks"] = preferredNetworks?.map({ STPCardBrandUtilities.apiValue(from: $0) }).joined(separator: ", ")
-        payload["payment_method_layout"] = paymentMethodLayout.description
+        payload["card_brand_acceptance"] = cardBrandAcceptance != .all
+        payload["card_funding_acceptance"] = allowedCardFundingTypes != .all
+        if let cpms = customPaymentMethodConfiguration?.customPaymentMethods {
+            payload["custom_payment_methods"] = cpms.map { $0.id }
+        }
+        payload["opens_card_scanner_automatically"] = opensCardScannerAutomatically
+        payload["terms_display"] = termsDisplay.analyticValue
+
         return payload
+    }
+}
+
+extension EmbeddedPaymentElement.UpdateResult {
+    var analyticValue: String {
+        switch self {
+        case .succeeded:
+            return "succeeded"
+        case .canceled:
+            return "canceled"
+        case .failed:
+            return "failed"
+        }
+    }
+}
+
+extension STPAnalyticEvent {
+    var shouldLogFcSdkAvailability: Bool {
+        let allowlist: Set<STPAnalyticEvent> = [
+            .paymentSheetLoadSucceeded,
+            .paymentSheetCarouselPaymentMethodTapped,
+            .bankAccountCollectorStarted,
+            .bankAccountCollectorFinished,
+            .paymentSheetConfirmButtonTapped,
+        ]
+        return allowlist.contains(self)
     }
 }

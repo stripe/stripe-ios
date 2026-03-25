@@ -42,7 +42,12 @@ class PaymentCardTextFieldBlockDelegate: NSObject, STPPaymentCardTextFieldDelega
 class STPPaymentCardTextFieldTest: XCTestCase {
     override class func setUp() {
         super.setUp()
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+    }
+
+    override class func tearDown() {
+        STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        super.tearDown()
     }
 
     func testIntrinsicContentSize() {
@@ -920,7 +925,6 @@ class STPPaymentCardTextFieldTest: XCTestCase {
     }
 
     func testUsesPreferredNetworks() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let sut = STPPaymentCardTextField()
         sut.cbcEnabledOverride = true
         sut.preferredNetworks = [.visa]
@@ -940,14 +944,12 @@ class STPPaymentCardTextFieldTest: XCTestCase {
     }
 
     func testOBOCBC() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let sut = STPPaymentCardTextField()
         sut.onBehalfOf = "acct_abc123"
         XCTAssertEqual(sut.viewModel.cbcController.onBehalfOf, "acct_abc123")
     }
 
     func testFourDigitCVCNotAllowedUnknownCBCCard() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
         let sut = STPPaymentCardTextField()
         sut.cbcEnabledOverride = true
         sut.preferredNetworks = [.visa]
@@ -970,7 +972,12 @@ class STPPaymentCardTextFieldUITests: XCTestCase {
 
     override class func setUp() {
         super.setUp()
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+    }
+
+    override class func tearDown() {
+        STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        super.tearDown()
     }
 
     override func setUp() {

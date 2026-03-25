@@ -63,11 +63,17 @@ extension PaymentSheetViewController {
 
         private lazy var payWithLinkButton: PayWithLinkButton = {
             let button = PayWithLinkButton()
-            button.cornerRadius = appearance.cornerRadius
+            if appearance.cornerRadius == nil, LiquidGlassDetector.isEnabledInMerchantApp {
+                button.ios26_applyCapsuleCornerConfiguration()
+            } else {
+                button.cornerRadius = appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
+            }
             button.accessibilityIdentifier = "pay_with_link_button"
             button.addTarget(self, action: #selector(handleTapPayWithLink), for: .touchUpInside)
             return button
         }()
+
+        private var isApplePayLastButton: Bool = false
 
         private lazy var separatorLabel = SeparatorLabel()
 
@@ -101,7 +107,7 @@ extension PaymentSheetViewController {
         }
 
         init(options: WalletOptions,
-             appearance: PaymentSheet.Appearance = PaymentSheet.Appearance.default,
+             appearance: PaymentSheet.Appearance,
              applePayButtonType: PKPaymentButtonType = .plain,
              isPaymentIntent: Bool = true,
              delegate: WalletHeaderViewDelegate?) {
@@ -130,12 +136,11 @@ extension PaymentSheetViewController {
         }
 
         private func buildAndPinStackView() {
-            stackView.removeFromSuperview()
-
             var buttons: [UIView] = []
 
+            let applePayButton = createApplePayButton()
             if supportsApplePay {
-                buttons.append(buildApplePayButton())
+                buttons.append(applePayButton)
             }
 
             if supportsPayWithLink {
@@ -148,24 +153,59 @@ extension PaymentSheetViewController {
 
             if let lastButton = buttons.last {
                 stackView.setCustomSpacing(Constants.labelSpacing, after: lastButton)
+                isApplePayLastButton = lastButton == applePayButton
             }
 
             addAndPinSubview(stackView)
         }
+        private func regenerateApplePayButton() {
 
-        private func buildApplePayButton() -> PKPaymentButton {
-            let buttonStyle: PKPaymentButtonStyle = appearance.colors.background.contrastingColor == .black ? .black : .white
-            let button = PKPaymentButton(paymentButtonType: applePayButtonType, paymentButtonStyle: buttonStyle)
+            // Find the Apple Pay button currently in the stackview
+            guard let existingButtonIndex = stackView.arrangedSubviews.firstIndex(where: { view in
+                view is PKPaymentButton
+            }) else {
+                return
+            }
+            let existingButton = stackView.arrangedSubviews[existingButtonIndex]
+
+            // Remove old button
+            existingButton.removeFromSuperview()
+            stackView.removeArrangedSubview(existingButton)
+
+            // Create fresh button with correct style
+            let newButton = createApplePayButton()
+            stackView.insertArrangedSubview(newButton, at: existingButtonIndex)
+            if isApplePayLastButton {
+                stackView.setCustomSpacing(Constants.labelSpacing, after: newButton)
+            }
+        }
+
+        private func createApplePayButton() -> UIView {
+            let isBlackApplePayButton = appearance.colors.background.contrastingColor == .black
+            let button = PKPaymentButton(paymentButtonType: applePayButtonType, paymentButtonStyle: isBlackApplePayButton ? .black : .white)
+            // The corner configuration API that powers ios26_applyDefaultCornerConfiguration doesn't work on PKPaymentButton
+            // Instead, we set the cornerRadius directly to half the button height to emulate the behavior
+            // TODO(gbirch): align Apple Pay button liquid glass styling with other elements
+            if appearance.cornerRadius == nil, LiquidGlassDetector.isEnabledInMerchantApp {
+                button.cornerRadius = Constants.applePayButtonHeight / 2
+            } else {
+                button.cornerRadius = appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
+            }
+
             button.accessibilityIdentifier = "apple_pay_button"
             button.addTarget(self, action: #selector(handleTapApplePay), for: .touchUpInside)
 
             NSLayoutConstraint.activate([
-                button.heightAnchor.constraint(equalToConstant: Constants.applePayButtonHeight)
+                button.heightAnchor.constraint(equalToConstant: Constants.applePayButtonHeight),
             ])
-
-            button.cornerRadius = appearance.cornerRadius
-
             return button
+        }
+
+        override func didMoveToWindow() {
+            super.didMoveToWindow()
+            guard window != nil, supportsApplePay else { return }
+            // Recreate the currently visible button to fix iOS 26.2 rendering bug where the Apple Pay button, despite its frame width being correct, renders less wide than it should, *only* reproducible when the Link modal is shown first :|
+            regenerateApplePayButton()
         }
 
         private func updateSeparatorLabel() {
@@ -176,9 +216,8 @@ extension PaymentSheetViewController {
         }
 
         override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-            buildAndPinStackView()
+            regenerateApplePayButton()
             updateSeparatorLabel()
-
         }
     }
 }

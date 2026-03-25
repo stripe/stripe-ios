@@ -66,7 +66,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             }
         )
 
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.returnURL = "payments-example://stripe-redirect"
         paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
             afterpayClearpay: STPPaymentMethodAfterpayClearpayParams(),
@@ -86,7 +86,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             didRedirect.fulfill()
         }
         let expectConfirmWasCanceled = expectation(description: "didCancel")
-        paymentHandler.confirmPayment(paymentIntentParams, with: self) {
+        paymentHandler.confirmPaymentIntent(params: paymentIntentParams, authenticationContext: self) {
             status,
             _,
             _ in
@@ -166,7 +166,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             }
         )
 
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.returnURL = "payments-example://stripe-redirect"
         paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
             afterpayClearpay: STPPaymentMethodAfterpayClearpayParams(),
@@ -198,7 +198,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
 
         // Override it with a spec that doesn't define a next action so that we force the SDK to default behavior
         let updatedSpecJson =
-            """
+            Data("""
             [{
                 "type": "affirm",
                 "async": false,
@@ -208,7 +208,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                     }
                 ]
             }]
-            """.data(using: .utf8)!
+            """.utf8)
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson) as! [NSDictionary]
         XCTAssert(formSpecProvider.loadFrom(formSpec))
         guard formSpecProvider.formSpec(for: "affirm") != nil else {
@@ -263,7 +263,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             }
         )
 
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.returnURL = "payments-example://stripe-redirect"
         paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
             afterpayClearpay: STPPaymentMethodAfterpayClearpayParams(),
@@ -320,7 +320,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
               }
             """
         let paymentHandler = stubbedPaymentHandler(formSpecProvider: formSpecProvider())
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: "pi_123456_secret_654321")
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
         paymentIntentParams.returnURL = "payments-example://stripe-redirect"
         paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
             blik: STPPaymentMethodBLIKParams(),
@@ -343,9 +343,9 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         )
 
         let expectConfirmSucceeded = expectation(description: "didSucceed")
-        paymentHandler.confirmPayment(
-            paymentIntentParams,
-            with: self) { status, _, _ in
+        paymentHandler.confirmPaymentIntent(
+            params: paymentIntentParams,
+            authenticationContext: self) { status, _, _ in
                 if case .succeeded = status {
                     expectConfirmSucceeded.fulfill()
                 }
@@ -353,15 +353,132 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         waitForExpectations(timeout: 2.0)
     }
 
+    /// When the user manually closes the Safari VC during 3DS2 and the card PI is still
+    /// `.processing`, we should poll instead of immediately reporting success.
+    func testCardProcessing_safariViewControllerDismissedManually_polls() {
+        let nextActionData = """
+              {
+                "redirect_to_url": {
+                  "return_url": "payments-example://stripe-redirect",
+                  "url": "https://hooks.stripe.com/3d_secure_2/acct_123/pa_nonce_321/redirect"
+                },
+                "type": "redirect_to_url"
+              }
+            """
+        let cardPaymentMethod = """
+              {
+                "id": "pm_123123123123123",
+                "object": "payment_method",
+                "card": {
+                  "brand": "visa",
+                  "last4": "4242"
+                },
+                "billing_details": {
+                  "address": {
+                    "city": null,
+                    "country": null,
+                    "line1": null,
+                    "line2": null,
+                    "postal_code": null,
+                    "state": null
+                  },
+                  "email": null,
+                  "name": null,
+                  "phone": null
+                },
+                "created": 1658187899,
+                "customer": null,
+                "livemode": false,
+                "type": "card"
+              }
+            """
+        let paymentHandler = stubbedPaymentHandler(formSpecProvider: formSpecProvider())
+        stubConfirm(
+            fileMock: .paymentIntentResponse,
+            responseCallback: { data in
+                self.replaceData(
+                    data: data,
+                    variables: [
+                        "<next_action>": nextActionData,
+                        "<payment_method>": cardPaymentMethod,
+                        "<status>": "\"requires_action\"",
+                    ]
+                )
+            }
+        )
+
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
+        paymentIntentParams.returnURL = "payments-example://stripe-redirect"
+        paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
+            card: STPPaymentMethodCardParams(),
+            billingDetails: nil,
+            metadata: nil
+        )
+        let didRedirect = expectation(description: "didRedirect")
+        paymentHandler._redirectShim = { _, _, _ in
+            didRedirect.fulfill()
+        }
+
+        var retrieveCount = 0
+        let expectConfirmFailed = expectation(description: "didFail")
+        paymentHandler.confirmPaymentIntent(params: paymentIntentParams, authenticationContext: self) {
+            status,
+            _,
+            _ in
+            if case .failed = status {
+                expectConfirmFailed.fulfill()
+            }
+        }
+        guard XCTWaiter.wait(for: [didRedirect], timeout: 2.0) != .timedOut else {
+            XCTFail("Unable to redirect")
+            return
+        }
+
+        // Simulate the user manually closing the Safari VC.
+        // First retrieve returns `.processing` (should trigger polling), second returns failure.
+        paymentHandler.safariViewControllerDismissedManually = true
+        stubRetrievePaymentIntent(
+            fileMock: .paymentIntentResponse,
+            responseCallback: { data in
+                retrieveCount += 1
+                if retrieveCount <= 1 {
+                    // First retrieve: still processing → should trigger polling
+                    return self.replaceData(
+                        data: data,
+                        variables: [
+                            "<next_action>": "null",
+                            "<payment_method>": cardPaymentMethod,
+                            "<status>": "\"processing\"",
+                        ]
+                    )
+                } else {
+                    // Subsequent retrieves: server has processed the failure
+                    return self.replaceData(
+                        data: data,
+                        variables: [
+                            "<next_action>": "null",
+                            "<payment_method>": cardPaymentMethod,
+                            "<status>": "\"requires_payment_method\"",
+                        ]
+                    )
+                }
+            }
+        )
+        paymentHandler._retrieveAndCheckIntentForCurrentAction()
+        wait(for: [expectConfirmFailed], timeout: 40.0)
+        // Verify that polling occurred (at least 2 retrieves: the initial + at least one poll)
+        XCTAssertGreaterThanOrEqual(retrieveCount, 2, "Should have polled at least once after initial processing status")
+    }
+
     private func confirmPaymentWithSucceed(
         nextActionData: String,
         paymentMethodData: String,
         didRedirect: XCTestExpectation,
         paymentHandler: STPPaymentHandler,
-        paymentIntentParams: STPPaymentIntentParams
+        paymentIntentParams: STPPaymentIntentConfirmParams
     ) {
         let expectConfirmSucceeded = expectation(description: "didSucceed")
-        paymentHandler.confirmPayment(paymentIntentParams, with: self) {
+        paymentHandler.confirmPaymentIntent(params: paymentIntentParams, authenticationContext: self) {
             status,
             _,
             _ in

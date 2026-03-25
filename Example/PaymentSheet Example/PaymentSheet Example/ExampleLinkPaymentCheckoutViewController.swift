@@ -27,7 +27,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
     let billingDetails: PaymentSheet.BillingDetails = {
         var billingDetails = PaymentSheet.BillingDetails()
         // uncomment to test prefilled email
-        // billingDetails.email = "test@example.com"
+        // billingDetails.email = "email_\(UUID().uuidString)@email.com"
         // billingDetails.phone = "+15551232414567"
         return billingDetails
     }()
@@ -56,11 +56,14 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                     let intentConfiguration = PaymentSheet
                         .IntentConfiguration(
                             mode: .payment(amount: 100, currency: "usd"),
-                            paymentMethodTypes: ["link"]) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-                                self?.handleDeferredIntent(clientSecret: paymentIntentClientSecret,
-                                                           paymentMethod: paymentMethod,
-                                                           shouldSavePaymentMethod: shouldSavePaymentMethod,
-                                                           intentCreationCallback: intentCreationCallback)
+                            paymentMethodTypes: ["link"]) { [weak self] paymentMethod, shouldSavePaymentMethod in
+                                try await withCheckedThrowingContinuation { continuation in
+                                    self?.handleDeferredIntent(clientSecret: paymentIntentClientSecret,
+                                                               paymentMethod: paymentMethod,
+                                                               shouldSavePaymentMethod: shouldSavePaymentMethod) { result in
+                                        continuation.resume(with: result)
+                                    }
+                                }
                             }
 
                     self.linkPaymentController = LinkPaymentController(intentConfiguration: intentConfiguration, returnURL: returnURL, billingDetails: self.billingDetails)
@@ -126,7 +129,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
         // MARK: Update the payment method and buy buttons
         if let paymentOption = linkPaymentController.paymentOption {
             paymentMethodButton.setTitle(paymentOption.label, for: .normal)
-            paymentMethodButton.setTitleColor(.black, for: .normal)
+            paymentMethodButton.setTitleColor(.label, for: .normal)
             paymentMethodImage.image = paymentOption.image
             buyButton.isEnabled = true
         } else {
@@ -181,9 +184,9 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
             else {
                 if let data = data,
-                   (response as? HTTPURLResponse)?.statusCode == 400,
-                   let errorMessage = String(data: data, encoding: .utf8){
+                   (response as? HTTPURLResponse)?.statusCode == 400 {
                     // read the error message
+                    let errorMessage = String(data: data, encoding: .utf8) ?? "unknown error"
                     intentCreationCallback(.failure(ConfirmHandlerError.confirmError(errorMessage)))
                 } else {
                     intentCreationCallback(.failure(error ?? ConfirmHandlerError.unknown))

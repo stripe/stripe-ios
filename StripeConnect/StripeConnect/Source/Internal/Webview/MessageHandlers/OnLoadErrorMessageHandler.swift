@@ -8,10 +8,13 @@
 import Foundation
 
 extension OnLoadErrorMessageHandler.Values.ErrorValue {
-    var connectEmbedError: EmbeddedComponentError {
+    func connectEmbedError(analyticsClient: ComponentAnalyticsClient) -> EmbeddedComponentError {
         // API Error is a catch all so defer to that if we get an unknown type.
-        // TODO(MXMOBILE-2491): Log error analytic if `type` is unrecognized
-        .init(type: .init(rawValue: type) ?? .apiError, description: message)
+        let errorType = EmbeddedComponentError.ErrorType(rawValue: type)
+        if errorType == nil {
+            analyticsClient.logUnexpectedLoadErrorType(type: type)
+        }
+        return .init(type: .init(rawValue: type) ?? .apiError, description: message)
     }
 }
 

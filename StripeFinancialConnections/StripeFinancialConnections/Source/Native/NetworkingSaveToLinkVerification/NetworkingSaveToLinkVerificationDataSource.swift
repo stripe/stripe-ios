@@ -14,7 +14,6 @@ protocol NetworkingSaveToLinkVerificationDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var networkingOTPDataSource: NetworkingOTPDataSource { get }
 
-    func startVerificationSession() -> Future<ConsumerSessionResponse>
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest>
     func saveToLink() -> Future<String?>
 }
@@ -24,7 +23,7 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
     let manifest: FinancialConnectionsSessionManifest
     private(set) var consumerSession: ConsumerSessionData
     private let selectedAccounts: [FinancialConnectionsPartnerAccount]?
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
     let networkingOTPDataSource: NetworkingOTPDataSource
@@ -33,7 +32,7 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
         manifest: FinancialConnectionsSessionManifest,
         consumerSession: ConsumerSessionData,
         selectedAccounts: [FinancialConnectionsPartnerAccount]?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
@@ -45,43 +44,16 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
         self.analyticsClient = analyticsClient
         let networkingOTPDataSource = NetworkingOTPDataSourceImplementation(
             otpType: "SMS",
-            emailAddress: consumerSession.emailAddress,
+            manifest: manifest,
             customEmailType: nil,
             connectionsMerchantName: nil,
             pane: .networkingSaveToLinkVerification,
             consumerSession: consumerSession,
             apiClient: apiClient,
-            clientSecret: clientSecret,
-            analyticsClient: analyticsClient,
-            isTestMode: manifest.isTestMode,
-            theme: manifest.theme
+            analyticsClient: analyticsClient
         )
         self.networkingOTPDataSource = networkingOTPDataSource
         networkingOTPDataSource.delegate = self
-    }
-
-    func startVerificationSession() -> Future<ConsumerSessionResponse> {
-        apiClient
-            .consumerSessionLookup(
-                emailAddress: consumerSession.emailAddress,
-                clientSecret: clientSecret
-            )
-            .chained { [weak self] (lookupConsumerSessionResponse: LookupConsumerSessionResponse) in
-                guard let self = self else {
-                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "data source deallocated"))
-                }
-                if let consumerSession = lookupConsumerSessionResponse.consumerSession {
-                    self.consumerSession = consumerSession
-                    return self.apiClient.consumerSessionStartVerification(
-                        otpType: "SMS",
-                        customEmailType: nil,
-                        connectionsMerchantName: nil,
-                        consumerSessionClientSecret: consumerSession.clientSecret
-                    )
-                } else {
-                    return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid consumerSessionLookup response: no consumerSession.clientSecret"))
-                }
-            }
     }
 
     func markLinkVerified() -> Future<FinancialConnectionsSessionManifest> {
@@ -96,7 +68,8 @@ final class NetworkingSaveToLinkVerificationDataSourceImplementation: Networking
             phoneNumber: nil,
             country: nil,
             consumerSessionClientSecret: consumerSession.clientSecret,
-            clientSecret: clientSecret
+            clientSecret: clientSecret,
+            isRelink: false
         )
         .chained { (_, customSuccessPaneMessage) in
             return Promise(value: customSuccessPaneMessage)

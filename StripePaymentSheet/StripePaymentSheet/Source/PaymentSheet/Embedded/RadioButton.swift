@@ -31,8 +31,6 @@ class RadioButton: UIView {
         appearance.embeddedPaymentElement.row.flat.radio.unselectedColor?.cgColor ?? appearance.colors.componentBorder.cgColor
     }
 
-    private let didTap: () -> Void
-
     private lazy var outerCircle: CALayer = {
         let layer = CALayer()
         layer.bounds = CGRect(x: 0, y: 0, width: Constants.diameter, height: Constants.diameter)
@@ -56,14 +54,12 @@ class RadioButton: UIView {
         return CGSize(width: Constants.diameter, height: Constants.diameter)
     }
 
-    init(appearance: PaymentSheet.Appearance = .default, didTap: @escaping () -> Void) {
+    init(appearance: PaymentSheet.Appearance = .default) {
         self.appearance = appearance
-        self.didTap = didTap
         super.init(frame: .zero)
         layer.addSublayer(outerCircle)
         layer.addSublayer(innerCircle)
         update()
-        self.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
     }
 
     required init?(coder: NSCoder) {
@@ -74,7 +70,7 @@ class RadioButton: UIView {
         outerCircle.position = CGPoint(x: bounds.midX, y: bounds.midY)
         innerCircle.position = CGPoint(x: bounds.midX, y: bounds.midY)
     }
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         update()
@@ -89,10 +85,6 @@ class RadioButton: UIView {
         outerCircle.borderColor = isOn ? selectedColor : unselectedColor
         innerCircle.isHidden = !isOn
         CATransaction.commit()
-    }
-
-    @objc private func handleTap() {
-        didTap()
     }
 
 }

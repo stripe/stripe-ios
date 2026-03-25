@@ -1,6 +1,16 @@
+"%1$@ Card" = "%1$@ 银行卡";
+
+"%1$@ Credit" = "%1$@ 信用卡";
+
+"%1$@ Debit" = "%1$@ 借记卡";
+
+"%1$@ Prepaid" = "%1$@ 预付卡";
+
 "%1$@ account ending in %2$@" = "尾号为 %2$@ 的 %1$@ 账户";
 
 "%1$@ ending in %2$@" = "%1$@ - 尾号：%2$@";
+
+"%1$@ is not accepted" = "不接受 %1$@";
 
 "Address line 2 (optional)" = "地址第 2 行（可选）";
 
@@ -9,8 +19,6 @@
 "BSB" = "BSB";
 
 "Bank Account" = "银行账户";
-
-"Billing Address" = "账单地址";
 
 "Billing address" = "账单地址";
 
@@ -28,6 +36,18 @@
 
 "MM/YY" = "月份/年份";
 
+"Only credit and prepaid cards are accepted" = "仅接受信用卡和预付卡";
+
+"Only credit cards are accepted" = "仅接受信用卡";
+
+"Only debit and credit cards are accepted" = "仅接受借记卡和信用卡";
+
+"Only debit and prepaid cards are accepted" = "仅接受借记卡和预付卡";
+
+"Only debit cards are accepted" = "仅接受借记卡";
+
+"Only prepaid cards are accepted" = "仅接受预付卡";
+
 "Postal Code" = "邮编";
 
 "Shipping Address" = "收货地址";
@@ -36,9 +56,11 @@
 
 "The BSB you entered is invalid." = "您输入的 BSB 无效。";
 
+"The selected brand is not allowed" = "不允许使用选定的品牌";
+
 "To scan your card, allow camera access in Settings." = "要扫描您的银行卡，在“设置”中启用照相机。";
 
-"Your ZIP is invalid." = "您的邮编无效。";
+"Your card has expired." = "您的银行卡已过期。";
 
 "Your card number is incomplete." = "您的银行卡号不完整。";
 
@@ -55,8 +77,6 @@
 "Your card's security code is incomplete." = "您的银行卡的安全码不完整。";
 
 "Your card's security code is invalid." = "您的银行卡的安全码无效。";
-
-"Your postal code is invalid." = "您的邮编无效。";
 
 "card number" = "卡号";
 

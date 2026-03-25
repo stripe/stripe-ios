@@ -7,10 +7,9 @@ import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
 @_spi(STP) @testable import StripeCore
-@_spi(STP) @testable import StripeCore
 @testable import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
-@_spi(STP) @_spi(CustomerSessionBetaAccess) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripePaymentsTestUtils
 import XCTest
 
@@ -93,6 +92,7 @@ class CustomerAdapterTests: APIStubbedTestCase {
                                                },
                   "ordered_payment_method_types" : ["card"],
                   "session_id": "123",
+                  "config_id": "123",
                   "apple_pay_preference": "enabled",
                   "customer": {"payment_methods": [
                                ],
@@ -160,10 +160,10 @@ class CustomerAdapterTests: APIStubbedTestCase {
     }
 
     func testFetchPM_CardAndUSBankAccount() async throws {
-        let expectedPaymentMethods_card = [STPFixtures.paymentMethod()]
+        let expectedPaymentMethods_card = STPFixtures.paymentMethod()
         let expectedPaymentMethods_cardJSON = [STPFixtures.paymentMethodJSON()]
 
-        let expectedPaymentMethods_usbank = [STPFixtures.bankAccountPaymentMethod()]
+        let expectedPaymentMethods_usbank = STPFixtures.bankAccountPaymentMethod()
         let expectedPaymentMethods_usbankJSON = [STPFixtures.bankAccountPaymentMethodJSON()]
 
         let apiClient = stubbedAPIClient()
@@ -177,8 +177,8 @@ class CustomerAdapterTests: APIStubbedTestCase {
                                         apiClient: apiClient)
         let pms = try await sut.fetchPaymentMethods()
         XCTAssertEqual(pms.count, 2)
-        XCTAssertEqual(pms[0].stripeId, expectedPaymentMethods_card[0].stripeId)
-        XCTAssertEqual(pms[1].stripeId, expectedPaymentMethods_usbank[0].stripeId)
+        XCTAssertEqual(pms[0].stripeId, expectedPaymentMethods_usbank.stripeId)
+        XCTAssertEqual(pms[1].stripeId, expectedPaymentMethods_card.stripeId)
     }
 
     func testAttachPM() async throws {

@@ -16,7 +16,7 @@ class UpdateConnectInstanceSenderTests: ScriptWebTestBase {
 
     func testSenderSignature() {
         XCTAssertEqual(
-            UpdateConnectInstanceSender(payload: .init(locale: "en", appearance: .default)).javascriptMessage,
+            try UpdateConnectInstanceSender(payload: .init(locale: "en", appearance: .default)).javascriptMessage(),
             """
             window.updateConnectInstance({"appearance":{"variables":{"fontFamily":"-apple-system","fontSizeBase":"16px"}},"locale":"en"});
             """

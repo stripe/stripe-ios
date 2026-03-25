@@ -1,6 +1,16 @@
+"%1$@ Card" = "%1$@ Card";
+
+"%1$@ Credit" = "%1$@ Credit";
+
+"%1$@ Debit" = "%1$@ Debit";
+
+"%1$@ Prepaid" = "%1$@ Prepaid";
+
 "%1$@ account ending in %2$@" = "%1$@ account ending in %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ ending in %2$@";
+
+"%1$@ is not accepted" = "%1$@ is not accepted";
 
 "Address line 2 (optional)" = "Address line 2 (optional)";
 
@@ -9,8 +19,6 @@
 "BSB" = "BSB";
 
 "Bank Account" = "Bank Account";
-
-"Billing Address" = "Billing Address";
 
 "Billing address" = "Billing address";
 
@@ -28,6 +36,18 @@
 
 "MM/YY" = "MM/YY";
 
+"Only credit and prepaid cards are accepted" = "Only credit and prepaid cards are accepted";
+
+"Only credit cards are accepted" = "Only credit cards are accepted";
+
+"Only debit and credit cards are accepted" = "Only debit and credit cards are accepted";
+
+"Only debit and prepaid cards are accepted" = "Only debit and prepaid cards are accepted";
+
+"Only debit cards are accepted" = "Only debit cards are accepted";
+
+"Only prepaid cards are accepted" = "Only prepaid cards are accepted";
+
 "Postal Code" = "Postcode";
 
 "Shipping Address" = "Shipping Address";
@@ -36,9 +56,11 @@
 
 "The BSB you entered is invalid." = "The BSB you entered is invalid.";
 
+"The selected brand is not allowed" = "The selected brand is not allowed";
+
 "To scan your card, allow camera access in Settings." = "To scan your card, allow camera access in Settings.";
 
-"Your ZIP is invalid." = "Your ZIP is invalid.";
+"Your card has expired." = "Your card has expired.";
 
 "Your card number is incomplete." = "Your card number is incomplete.";
 
@@ -55,8 +77,6 @@
 "Your card's security code is incomplete." = "Your card's security code is incomplete.";
 
 "Your card's security code is invalid." = "Your card's security code is invalid.";
-
-"Your postal code is invalid." = "Your postcode is invalid.";
 
 "card number" = "card number";
 

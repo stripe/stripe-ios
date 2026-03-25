@@ -6,9 +6,15 @@
 
 "App Settings" = "Paramètres de l'application";
 
-"Back identity card photo successfully uploaded" = "Photo du verso de la carte d'identité chargée";
+"Back %@ photo successfully uploaded" = "Photo verso %@ chargée";
 
-"Back of identity card" = "Verso de la carte d'identité";
+"Back identity document photo successfully uploaded" = "Photo verso de la carte d'identité chargée";
+
+"Back of %@" = "Verso de %@";
+
+"Back of ID not detected" = "Verso de la pièce d’identité non détecté";
+
+"Back of driver's license or government-issued photo ID" = "Verso de votre permis de conduire ou de toute autre pièce d'identité officielle avec photo.";
 
 "Back of identity document" = "Verso de la pièce d'identité";
 
@@ -18,25 +24,41 @@
 
 "Capturing…" = "Capture en cours...";
 
+"Center ID in view" = "Placez la pièce d'identité au centre du champ";
+
 "Choose File" = "Choisir un fichier";
 
 "Consent" = "Consentement";
 
 "Could not capture image" = "Impossible de prendre une photo";
 
-"Date of Birth" = "Date de naissance";
-
 "Date of birth does not look valid" = "La date de naissance ne semble pas valide";
 
 "Details not visible" = "Détails non visibles";
 
+"Flip your %@ over to the other side" = "Retournez votre %@ de l'autre côté";
+
+"Flip your driver's license or government-issued photo ID over to the other side" = "Retournez votre permis de conduire ou votre pièce d'identité officielle avec photo de l'autre côté";
+
 "Flip your identity card over to the other side" = "Retournez votre carte d'identité";
 
-"Front identity card photo successfully uploaded" = "Photo du recto de la carte d'identité chargée";
+"Front %@ photo successfully uploaded" = "Photo du recto %@ chargée";
 
-"Front of identity card" = "Recto de la carte d'identité";
+"Front identity document photo successfully uploaded" = "Photo du recto de la carte d'identité chargée";
+
+"Front of %@" = "Recto de %@";
+
+"Front of ID not detected" = "Recto de la pièce d’identité non détecté";
+
+"Front of driver's license or government-issued photo ID" = "Recto du permis de conduire ou de toute autre pièce d'identité officielle avec photo.";
+
+"Front of driver's license or passport" = "Recto du permis de conduire ou du passeport";
+
+"Front of driver's license, passport, or government-issued photo ID" = "Recto du permis de conduire, passeport ou pièce d'identité officielle avec photo";
 
 "Front of identity document" = "Recto de la pièce d'identité";
+
+"Front of passport or government-issued photo ID" = "Recto du passeport ou pièce d'identité officielle avec photo";
 
 "Get ready to scan your photo ID" = "Préparez-vous à scanner votre pièce d'identité";
 
@@ -50,15 +72,17 @@
 
 "ID Number" = "Numéro d'identification";
 
+"Image is blurry. Hold your phone steady and try again." = "Image floue. Gardez votre téléphone bien immobile et réessayez.";
+
 "Individual CPF" = "Numéro CPF";
+
+"Invalid document" = "Document non valide";
 
 "Keep ID level" = "Maintenez votre pièce d'identité horizontale";
 
 "Last 4 of Social Security number" = "4 derniers chiffres du numéro de sécurité sociale";
 
 "Loading" = "Chargement en cours";
-
-"Make sure all details are visible and focus" = "Assurez-vous que tous les détails sont nets et visibles";
 
 "Make sure you're in a well lit space." = "Installez-vous dans un endroit bien éclairé.";
 
@@ -84,11 +108,23 @@
 
 "Photo Library" = "Bibliothèque de photos";
 
-"Please upload images of the front and back of your identity card" = "Veuillez charger une photo du recto et du verso de votre carte d'identité";
+"Please upload images of the front and back of your %@" = "Veuillez charger une photo recto et verso de votre %@";
+
+"Please upload images of the front and back of your identity document" = "Veuillez télécharger des images du recto et du verso de votre pièce d’identité";
+
+"Position your %@ in the center of the frame" = "Placez votre %@ au centre du cadre.";
+
+"Position your driver's license or government-issued photo ID in the center of the frame" = "Placez votre permis de conduire ou votre pièce d'identité officielle avec photo au centre du cadre";
+
+"Position your driver's license or passport in the center of the frame" = "Placez votre permis de conduire ou passeport au centre du cadre";
+
+"Position your driver's license, passport, or government-issued photo ID in the center of the frame" = "Placez votre permis de conduire, passeport ou pièce d'identité officielle avec photo au centre du cadre";
 
 "Position your face in the center of the frame." = "Placez votre visage au centre du cadre.";
 
-"Position your identity card in the center of the frame" = "Placez votre carte d'identité au centre du cadre";
+"Position your identity document in the center of the frame" = "Positionnez votre pièce d’identité au centre du cadre";
+
+"Position your passport or government-issued photo ID in the center of the frame" = "Placez votre passeport ou votre pièce d'identité officielle avec photo au centre du cadre";
 
 "Retake Photos" = "Reprendre des photos";
 
@@ -102,9 +138,13 @@
 
 "Select a location to upload the front of your identity document from" = "Sélectionnez l'emplacement à partir duquel vous souhaitez charger le recto de votre pièce d'identité";
 
-"Select back identity card photo" = "Sélectionner la photo du verso de la carte d'identité";
+"Select back %@ photo" = "Sélectionner une photo verso %@";
 
-"Select front identity card photo" = "Sélectionner la photo du recto de la carte d'identité";
+"Select back identity document photo" = "Sélectionner la photo verso de la pièce d'identité";
+
+"Select front %@ photo" = "Sélectionner une photo recto %@";
+
+"Select front identity document photo" = "Sélectionner la photo de la pièce d'identité recto";
 
 "Selfie" = "Selfie";
 
@@ -130,11 +170,17 @@
 
 "Upload a Photo" = "Charger une photo";
 
+"Upload your %@" = "Charger votre %@";
+
 "Upload your photo ID" = "Charger votre document d'identité avec photo";
 
-"Uploading back identity card photo" = "Chargement de la photo du verso de la carte d'identité";
+"Uploading back %@ photo" = "Chargement de la photo %@";
 
-"Uploading front identity card photo" = "Chargement de la photo du recto de la carte d'identité";
+"Uploading back identity document photo" = "Chargement de la photo de la pièce d'identité";
+
+"Uploading front %@ photo" = "Chargement de la photo recto %@";
+
+"Uploading front identity document photo" = "Chargement de la photo de la pièce d'identité recto";
 
 "Verify your identity" = "Vérifier votre identité";
 

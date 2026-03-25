@@ -9,7 +9,7 @@ It contains:
 * [STPAUBECSDebitFormView](https://stripe.dev/stripe-ios/stripepaymentsui/documentation/stripepaymentsui/stpaubecsdebitformview), a UIControl that contains all of the necessary fields and legal text for collecting AU BECS Debit payments.
 
 ## Table of contents
-
+<!-- NOTE: Use case-sensitive anchor links for docc compatibility -->
 <!--ts-->
 * [Requirements](#Requirements)
 * [Getting started](#Getting-started)

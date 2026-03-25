@@ -32,9 +32,9 @@ final class PrepaneViews {
 
     init(
         prepaneModel: FinancialConnectionsOAuthPrepane,
-        isRepairSession: Bool,
+        hideSecondaryButton: Bool,
         panePresentationStyle: PanePresentationStyle,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         didSelectURL: @escaping (URL) -> Void,
         didSelectContinue: @escaping () -> Void,
         didSelectCancel: @escaping () -> Void
@@ -71,7 +71,7 @@ final class PrepaneViews {
                 action: didSelectContinue
             ),
             secondaryButtonConfiguration: {
-                if isRepairSession {
+                if hideSecondaryButton {
                     return nil
                 } else {
                     return PaneLayoutView.ButtonConfiguration(
@@ -83,7 +83,7 @@ final class PrepaneViews {
                                    "Title of a button. It acts as a back button to go back to choosing a different bank instead of the currently selected one."
                                )
                             case .sheet:
-                                return "Cancel" // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
+                                return String.Localized.cancel
                             }
                         }(),
                         accessibilityIdentifier: "prepane_cancel_button",
@@ -91,7 +91,7 @@ final class PrepaneViews {
                     )
                 }
             }(),
-            theme: theme
+            appearance: appearance
         )
         self.footerView = footerViewTuple.footerView
         self.primaryButton = footerViewTuple.primaryButton
@@ -141,7 +141,7 @@ private func CreateContentView(
                 font: .label(.large),
                 boldFont: .label(.largeEmphasized),
                 linkFont: .label(.largeEmphasized),
-                textColor: .textDefault
+                textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
             label.setText(text, action: didSelectURL)
             verticalStackView.addArrangedSubview(label)
@@ -207,9 +207,9 @@ private class PrepanePreviewView: UIView {
                 cta: "OK"
             )
         ),
-        isRepairSession: false,
+        hideSecondaryButton: false,
         panePresentationStyle: .sheet,
-        theme: .light,
+        appearance: .stripe,
         didSelectURL: { _ in },
         didSelectContinue: {},
         didSelectCancel: {}
@@ -222,7 +222,7 @@ private class PrepanePreviewView: UIView {
             footerView: prepaneViews.footerView
         )
         paneLayoutView.addTo(view: self)
-        backgroundColor = .customBackgroundColor
+        backgroundColor = FinancialConnectionsAppearance.Colors.background
     }
 
     required init?(coder: NSCoder) {

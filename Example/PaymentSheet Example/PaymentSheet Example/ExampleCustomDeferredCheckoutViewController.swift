@@ -9,8 +9,8 @@
 @_spi(STP) import StripePaymentSheet
 import UIKit
 
-// View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred
-private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.glitch.me"
+// View and fork the backend code  here: https://codesandbox.io/p/devbox/dr4lkg
+private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.stripedemos.com"
 
 class ExampleCustomDeferredCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
@@ -44,8 +44,12 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
-        ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-            self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod, intentCreationCallback)
+        ) { [weak self] paymentMethod, shouldSavePaymentMethod in
+            try await withCheckedThrowingContinuation { continuation in
+                self?.serverSideConfirmHandler(paymentMethod.stripeId, shouldSavePaymentMethod) { result in
+                    continuation.resume(with: result)
+                }
+            }
         }
     }
 
@@ -145,7 +149,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
         // MARK: Update the payment method and buy buttons
         if let paymentOption = paymentSheetFlowController.paymentOption {
             paymentMethodButton.setTitle(paymentOption.label, for: .normal)
-            paymentMethodButton.setTitleColor(.black, for: .normal)
+            paymentMethodButton.setTitleColor(.label, for: .normal)
             paymentMethodImage.image = paymentOption.image
             buyButton.isEnabled = true
         } else {
@@ -273,7 +277,7 @@ class ExampleCustomDeferredCheckoutViewController: UIViewController {
                 configuration.customer = .init(
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
-                // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
+                // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit.
                 configuration.allowsDelayedPaymentMethods = true
                 DispatchQueue.main.async {
                     PaymentSheet.FlowController.create(

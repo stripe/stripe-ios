@@ -25,6 +25,10 @@ protocol PartnerAuthViewControllerDelegate: AnyObject {
         _ viewController: PartnerAuthViewController,
         didReceiveError error: Error
     )
+    func partnerAuthViewController(
+        _ viewController: PartnerAuthViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane
+    )
 }
 
 final class PartnerAuthViewController: SheetViewController {
@@ -50,6 +54,10 @@ final class PartnerAuthViewController: SheetViewController {
     private var loadingView: UIView?
     private var legacyLoadingView: UIView?
     private var showLegacyBrowserOnViewDidAppear = false
+
+    var pane: FinancialConnectionsSessionManifest.NextPane {
+        return dataSource.isNetworkingRelinkSession ? .bankAuthRepair : .partnerAuth
+    }
 
     init(
         dataSource: PartnerAuthDataSource,
@@ -133,9 +141,9 @@ final class PartnerAuthViewController: SheetViewController {
             prepaneViews = nil // the `deinit` of prepane views will remove views
             let prepaneViews = PrepaneViews(
                 prepaneModel: prepaneModel,
-                isRepairSession: false, // TODO(kgaidis): change this for repair sessions
+                hideSecondaryButton: dataSource.isNetworkingRelinkSession,
                 panePresentationStyle: panePresentationStyle,
-                theme: dataSource.manifest.theme,
+                appearance: dataSource.manifest.appearance,
                 didSelectURL: { [weak self] url in
                     self?.didSelectURLInTextFromBackend(url)
                 },
@@ -157,7 +165,20 @@ final class PartnerAuthViewController: SheetViewController {
                 },
                 didSelectCancel: { [weak self] in
                     guard let self = self else { return }
-                    self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
+                    let isModal = panePresentationStyle == .sheet
+
+                    self.dataSource.analyticsClient.log(
+                        eventName: isModal ? "click.prepane.cancel" : "click.prepane.choose_another_bank",
+                        pane: .partnerAuth
+                    )
+
+                    self.dataSource.cancelPendingAuthSessionIfNeeded()
+
+                    if isModal {
+                        self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
+                    } else {
+                        self.delegate?.partnerAuthViewController(self, didRequestNextPane: .institutionPicker)
+                    }
                 }
             )
             self.prepaneViews = prepaneViews
@@ -189,7 +210,7 @@ final class PartnerAuthViewController: SheetViewController {
         // note that this is purposefully separate from `showLoadingView`
         // function because it avoids animation glitches where
         // `showLoadingView(false)` can remove the loading view
-        let loadingView = SpinnerView(theme: dataSource.manifest.theme)
+        let loadingView = SpinnerView(appearance: dataSource.manifest.appearance)
         self.legacyLoadingView = loadingView
         view.addAndPinSubviewToSafeArea(loadingView)
     }
@@ -208,7 +229,9 @@ final class PartnerAuthViewController: SheetViewController {
                 authSessionId: authSession.id
             )
 
-            if authSession.isOauthNonOptional {
+            if dataSource.isNetworkingRelinkSession {
+                self.pollAuthSession(authSession)
+            } else if authSession.isOauthNonOptional {
                 // for OAuth flows, we need to fetch OAuth results
                 self.authorizeAuthSession(authSession)
             } else {
@@ -290,7 +313,7 @@ final class PartnerAuthViewController: SheetViewController {
         }
         let continueStateViews = ContinueStateViews(
             institutionImageUrl: institution.icon?.default,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectContinue: { [weak self] in
                 guard let self else { return }
                 self.dataSource.analyticsClient.log(
@@ -494,28 +517,40 @@ final class PartnerAuthViewController: SheetViewController {
         dataSource
             .authorizeAuthSession(authSession)
             .observe(on: .main) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let authSession):
-                    self.didComplete(withAuthSession: authSession)
-
-                    // hide the loading view after a delay to prevent
-                    // the screen from flashing _while_ the transition
-                    // to the next screen takes place
-                    //
-                    // note that it should be impossible to view this screen
-                    // after a successful `authorizeAuthSession`, so
-                    // calling `showEstablishingConnectionLoadingView(false)` is
-                    // defensive programming anyway
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-                        self?.showLoadingView(false)
-                    }
-                case .failure(let error):
-                    self.showLoadingView(false)  // important to come BEFORE showing error view so we avoid showing back button
-                    self.showErrorView(error)
-                    assert(self.navigationItem.hidesBackButton)
-                }
+                self?.handleAuthSessionRetrieved(result)
             }
+    }
+
+    private func pollAuthSession(_ authSession: FinancialConnectionsAuthSession) {
+        showLoadingView(true)
+        dataSource
+            .pollAuthSession(authSession)
+            .observe(on: .main) { [weak self] result in
+                self?.handleAuthSessionRetrieved(result)
+            }
+    }
+
+    private func handleAuthSessionRetrieved(_ result: Result<FinancialConnectionsAuthSession, any Error>) {
+        switch result {
+        case .success(let authSession):
+            self.didComplete(withAuthSession: authSession)
+
+            // hide the loading view after a delay to prevent
+            // the screen from flashing _while_ the transition
+            // to the next screen takes place
+            //
+            // note that it should be impossible to view this screen
+            // after a successful `authorizeAuthSession`, so
+            // calling `showEstablishingConnectionLoadingView(false)` is
+            // defensive programming anyway
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+                self?.showLoadingView(false)
+            }
+        case .failure(let error):
+            self.showLoadingView(false)  // important to come BEFORE showing error view so we avoid showing back button
+            self.showErrorView(error)
+            assert(self.navigationItem.hidesBackButton)
+        }
     }
 
     private func navigateBack() {
@@ -534,7 +569,7 @@ final class PartnerAuthViewController: SheetViewController {
             continueStateViews?.showLoadingView(show)
         } else {
             if show {
-                let loadingView = SpinnerView(theme: dataSource.manifest.theme)
+                let loadingView = SpinnerView(appearance: dataSource.manifest.appearance)
                 self.loadingView = loadingView
                 view.addAndPinSubviewToSafeArea(loadingView)
             }
@@ -552,7 +587,7 @@ final class PartnerAuthViewController: SheetViewController {
                     if let dataAccessNoticeModel = dataSource.pendingAuthSession?.display?.text?.oauthPrepane?.dataAccessNotice {
                         let dataAccessNoticeViewController = DataAccessNoticeViewController(
                             dataAccessNotice: dataAccessNoticeModel,
-                            theme: dataSource.manifest.theme,
+                            appearance: dataSource.manifest.appearance,
                             didSelectUrl: { [weak self] url in
                                 self?.didSelectURLInTextFromBackend(url)
                             }

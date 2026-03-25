@@ -64,30 +64,11 @@ extension StripeAPI {
             case unknown
             /// This PaymentIntent requires a PaymentMethod or Source
             case requiresPaymentMethod = "requires_payment_method"
-            /// This PaymentIntent requires a Source
-            /// Deprecated: Use STPPaymentIntentStatusRequiresPaymentMethod instead.
-            @available(
-                *,
-                deprecated,
-                message: "Use STPPaymentIntentStatus.requiresPaymentMethod instead",
-                renamed: "STPPaymentIntentStatus.requiresPaymentMethod"
-            )
-            case requiresSource = "requires_source"
             /// This PaymentIntent needs to be confirmed
             case requiresConfirmation = "requires_confirmation"
             /// The selected PaymentMethod or Source requires additional authentication steps.
             /// Additional actions found via `next_action`
             case requiresAction = "requires_action"
-            /// The selected Source requires additional authentication steps.
-            /// Additional actions found via `next_source_action`
-            /// Deprecated: Use STPPaymentIntentStatusRequiresAction instead.
-            @available(
-                *,
-                deprecated,
-                message: "Use STPPaymentIntentStatus.requiresAction instead",
-                renamed: "STPPaymentIntentStatus.requiresAction"
-            )
-            case requiresSourceAction = "requires_source_action"
             /// Stripe is processing this PaymentIntent
             case processing
             /// The payment has succeeded
@@ -139,11 +120,22 @@ extension StripeAPI.PaymentIntent {
     /// - Parameter clientSecret: The `client_secret` from the PaymentIntent
     internal static func id(fromClientSecret clientSecret: String) -> String? {
         // see parseClientSecret from stripe-js-v3
-        let components = clientSecret.components(separatedBy: "_secret_")
-        if components.count >= 2 && components[0].hasPrefix("pi_") {
-            return components[0]
-        } else {
-            return nil
+        // Handle both regular secrets (pi_xxx_secret_yyy) and scoped secrets (pi_xxx_scoped_secret_yyy)
+        let secretComponents = clientSecret.components(separatedBy: "_secret_")
+        if secretComponents.count >= 2 && secretComponents[0].hasPrefix("pi_") && !secretComponents[1].isEmpty {
+            // Check if it's a scoped secret
+            if secretComponents[0].hasSuffix("_scoped") {
+                // Remove the "_scoped" suffix to get the actual PaymentIntent ID
+                let idWithScoped = secretComponents[0]
+                let idComponents = idWithScoped.components(separatedBy: "_scoped")
+                if idComponents.count >= 1 {
+                    return idComponents[0]
+                }
+            } else {
+                // Regular secret format
+                return secretComponents[0]
+            }
         }
+        return nil
     }
 }

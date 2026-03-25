@@ -4,6 +4,7 @@
   "experiments": {
     "miui_payment_element_aa_experiment": "control"
   },
+  "config_id": "123",
   "flags": {
     "elements_include_payment_intent_id_in_analytics_events": true,
     "elements_enable_mx_card_installments": false,
@@ -15,7 +16,21 @@
     "instant_debits_inline_institution": true,
     "link_bank_onboarding_enabled": false,
     "link_financial_incentives_experiment_enabled": false,
-    "link_local_storage_login_enabled": true
+    "link_local_storage_login_enabled": true,
+    "link_funding_sources": [
+        "CARD",
+        "BANK_ACCOUNT",
+    ],
+    "link_consumer_incentive": {
+        "incentive_params": {
+            "payment_method": "link_instant_debits",
+        },
+        "incentive_display_text": "$5",
+    },
+    "link_supported_payment_methods_onboarding_enabled": [
+        "CARD",
+        "INSTANT_DEBITS",
+    ]
   },
   "merchant_country": "US",
   "merchant_currency": "usd",

@@ -19,7 +19,7 @@ final class AUBECSLegalTermsView: UIView {
     ]
     private let configuration: PaymentSheetFormFactoryConfig
 
-    private var theme: ElementsUITheme {
+    private var theme: ElementsAppearance {
         return configuration.appearance.asElementsTheme
     }
 
@@ -27,10 +27,8 @@ final class AUBECSLegalTermsView: UIView {
         let textView = UITextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
-        textView.font = theme.fonts.caption
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
-        textView.textColor = theme.colors.secondaryText
         textView.linkTextAttributes = [.foregroundColor: theme.colors.primary]
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
@@ -49,10 +47,10 @@ final class AUBECSLegalTermsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        textView.font = .preferredFont(forTextStyle: .caption1)
+        textView.font = theme.fonts.caption
     }
 #endif
 
@@ -62,7 +60,15 @@ final class AUBECSLegalTermsView: UIView {
             "Legal text shown when using AUBECS."
         )
         let string = String(format: template, configuration.merchantDisplayName)
-        return STPStringUtils.applyLinksToString(template: string, links: links)
+        let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)
+        formattedString.addAttributes(
+            [
+                .font: theme.fonts.caption,
+                .foregroundColor: theme.colors.secondaryText,
+            ],
+            range: formattedString.extent
+        )
+        return formattedString
     }
 
 }

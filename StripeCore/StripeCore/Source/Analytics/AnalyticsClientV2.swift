@@ -90,7 +90,8 @@ import UIKit
         let payload = payload(withEventName: eventName, parameters: parameters)
 
         #if DEBUG
-            NSLog("LOG ANALYTICS: \(payload)")
+        NSLog("V2 LOG ANALYTICS: \(eventName)")
+        STPAnalyticsClient.debugPrintPayload(payload)
         #endif
 
         guard AnalyticsClientV2.shouldCollectAnalytics else {
@@ -129,11 +130,15 @@ extension AnalyticsClientV2Protocol {
         }
         payload["app_name"] = Bundle.stp_applicationName() ?? ""
         payload["app_version"] = Bundle.stp_applicationVersion() ?? ""
+        payload["app_min_os_version"] = Bundle.stp_minimumOSVersion() ?? ""
         payload["plugin_type"] = PluginDetector.shared.pluginType?.rawValue
         payload["platform_info"] = [
             "install": InstallMethod.current.rawValue,
             "app_bundle_id": Bundle.stp_applicationBundleId() ?? "",
         ]
+        if let deviceId = UIDevice.current.identifierForVendor?.uuidString {
+            payload["device_id"] = deviceId
+        }
 
         return payload
     }

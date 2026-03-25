@@ -11,13 +11,8 @@ import Foundation
 import UIKit
 
 protocol NetworkingOTPViewDelegate: AnyObject {
-    func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView)
-    func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView)
-    func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error)
-
     func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView)
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData)
-    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String)
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error)
 
     func networkingOTPViewWillConfirmVerification(_ view: NetworkingOTPView)
@@ -44,7 +39,7 @@ final class NetworkingOTPView: UIView {
         if dataSource.isTestMode {
             let testModeBanner = TestModeAutofillBannerView(
                 context: .otp,
-                theme: dataSource.theme,
+                appearance: dataSource.appearance,
                 didTapAutofill: applyTestModeValue
             )
             otpVerticalStackView.addArrangedSubview(testModeBanner)
@@ -67,18 +62,18 @@ final class NetworkingOTPView: UIView {
             ),
             theme: theme
         )
-        otpTextField.tintColor = dataSource.theme.primaryColor
+        otpTextField.tintColor = dataSource.appearance.colors.primary
         otpTextField.addTarget(self, action: #selector(otpTextFieldDidChange), for: .valueChanged)
         return otpTextField
     }()
-    private lazy var theme: ElementsUITheme = {
-        var theme: ElementsUITheme = .default
+    private lazy var theme: ElementsAppearance = {
+        var theme: ElementsAppearance = .default
         theme.colors = {
-            var colors = ElementsUITheme.Color()
-            colors.border = .borderDefault
-            colors.background = .customBackgroundColor
-            colors.textFieldText = .textDefault
-            colors.danger = .textFeedbackCritical
+            var colors = ElementsAppearance.Color()
+            colors.border = FinancialConnectionsAppearance.Colors.borderNeutral
+            colors.componentBackground = FinancialConnectionsAppearance.Colors.background
+            colors.textFieldText = FinancialConnectionsAppearance.Colors.textDefault
+            colors.danger = FinancialConnectionsAppearance.Colors.textCritical
             return colors
         }()
         return theme
@@ -109,7 +104,7 @@ final class NetworkingOTPView: UIView {
 
         if show {
             let activityIndicator = ActivityIndicator(size: .medium)
-            activityIndicator.color = dataSource.theme.primaryColor
+            activityIndicator.color = dataSource.appearance.colors.spinner
             activityIndicator.startAnimating()
             let loadingView = UIStackView(
                 arrangedSubviews: [activityIndicator]
@@ -135,8 +130,8 @@ final class NetworkingOTPView: UIView {
                 font: .label(.medium),
                 boldFont: .label(.mediumEmphasized),
                 linkFont: .label(.medium),
-                textColor: .textFeedbackCritical,
-                linkColor: .textFeedbackCritical,
+                textColor: FinancialConnectionsAppearance.Colors.textCritical,
+                linkColor: FinancialConnectionsAppearance.Colors.textCritical,
                 alignment: .center
             )
             errorLabel.setText(errorText)
@@ -153,27 +148,6 @@ final class NetworkingOTPView: UIView {
             self.lastFooterView = errorView
             verticalStackView.addArrangedSubview(errorView)
         }
-    }
-
-    func lookupConsumerAndStartVerification() {
-        delegate?.networkingOTPViewWillStartConsumerLookup(self)
-        dataSource.lookupConsumerSession()
-            .observe { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let lookupConsumerSessionResponse):
-                    if lookupConsumerSessionResponse.exists {
-                        if let consumerPublishableKey = lookupConsumerSessionResponse.publishableKey {
-                            self.delegate?.networkingOTPView(self, didGetConsumerPublishableKey: consumerPublishableKey)
-                        }
-                        self.startVerification()
-                    } else {
-                        self.delegate?.networkingOTPViewConsumerNotFound(self)
-                    }
-                case .failure(let error):
-                    self.delegate?.networkingOTPView(self, didFailConsumerLookup: error)
-                }
-            }
     }
 
     func startVerification() {
@@ -251,21 +225,39 @@ final class NetworkingOTPView: UIView {
 import SwiftUI
 
 private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
-    let theme: FinancialConnectionsTheme
+    let theme: FinancialConnectionsSessionManifest.Theme
 
     func makeUIView(context: Context) -> NetworkingOTPView {
         NetworkingOTPView(dataSource: NetworkingOTPDataSourceImplementation(
             otpType: "",
-            emailAddress: "",
+            manifest: FinancialConnectionsSessionManifest(
+                allowManualEntry: false,
+                consentRequired: false,
+                customManualEntryHandling: false,
+                disableLinkMoreAccounts: false,
+                id: "id",
+                instantVerificationDisabled: false,
+                institutionSearchDisabled: false,
+                livemode: true,
+                manualEntryMode: .automatic,
+                manualEntryUsesMicrodeposits: false,
+                nextPane: .success,
+                permissions: [],
+                product: "product",
+                singleAccount: true,
+                theme: theme
+            ),
             customEmailType: nil,
             connectionsMerchantName: nil,
             pane: .networkingLinkVerification,
-            consumerSession: nil,
-            apiClient: FinancialConnectionsAPIClient(apiClient: .shared),
-            clientSecret: "",
-            analyticsClient: FinancialConnectionsAnalyticsClient(),
-            isTestMode: false,
-            theme: theme
+            consumerSession: .init(
+                clientSecret: "cs_123",
+                emailAddress: "email@email.com",
+                redactedFormattedPhoneNumber: "(•••) ••• ••55",
+                verificationSessions: []
+            ),
+            apiClient: FinancialConnectionsAsyncAPIClient(apiClient: .shared),
+            analyticsClient: FinancialConnectionsAnalyticsClient()
         ))
     }
 

@@ -181,38 +181,10 @@ extension STPIntentActionUseStripeSDKType: CustomStringConvertible {
             return "threeDS2Fingerprint"
         case .threeDS2Redirect:
             return "threeDS2Redirect"
+        case .intentConfirmationChallenge:
+            return "intentConfirmationChallenge"
         case .unknown:
             return "unknown"
-        }
-    }
-}
-
-/// :nodoc:
-extension STPKlarnaLineItemType: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .SKU:
-            return "SKU"
-        case .shipping:
-            return "shipping"
-        case .tax:
-            return "tax"
-        }
-    }
-}
-
-/// :nodoc:
-extension STPKlarnaPaymentMethods: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .installments:
-            return "installments"
-        case .none:
-            return "none"
-        case .payIn4:
-            return "payIn4"
-        case .payIn4OrInstallments:
-            return "payIn4OrInstallments"
         }
     }
 }
@@ -313,6 +285,8 @@ extension STPPaymentIntentCaptureMethod: CustomStringConvertible {
             return "manual"
         case .unknown:
             return "unknown"
+        case .automaticAsync:
+            return "automaticAsync"
         }
     }
 }
@@ -372,24 +346,6 @@ extension STPPaymentIntentSetupFutureUsage: CustomStringConvertible {
 }
 
 /// :nodoc:
-@available(
-    *,
-    deprecated,
-    message: "Use STPIntentActionType instead",
-    renamed: "STPIntentActionType"
-)
-extension STPPaymentIntentSourceActionType: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .authorizeWithURL:
-            return "authorizeWithURL"
-        case .unknown:
-            return "unknown"
-        }
-    }
-}
-
-/// :nodoc:
 extension STPPaymentIntentStatus: CustomStringConvertible {
     public var description: String {
         switch self {
@@ -405,10 +361,6 @@ extension STPPaymentIntentStatus: CustomStringConvertible {
             return "requiresConfirmation"
         case .requiresPaymentMethod:
             return "requiresPaymentMethod"
-        case .requiresSource:
-            return "requiresSource"
-        case .requiresSourceAction:
-            return "requiresSourceAction"
         case .succeeded:
             return "succeeded"
         case .unknown:
@@ -462,73 +414,7 @@ extension STPPaymentMethodCardWalletType: CustomStringConvertible {
 /// :nodoc:
 extension STPPaymentMethodType: CustomStringConvertible {
     public var description: String {
-        switch self {
-        case .AUBECSDebit:
-            return "AUBECSDebit"
-        case .EPS:
-            return "EPS"
-        case .FPX:
-            return "FPX"
-        case .OXXO:
-            return "OXXO"
-        case .SEPADebit:
-            return "SEPADebit"
-        case .UPI:
-            return "UPI"
-        case .USBankAccount:
-            return "USBankAccount"
-        case .affirm:
-            return "affirm"
-        case .afterpayClearpay:
-            return "afterpayClearpay"
-        case .alipay:
-            return "alipay"
-        case .bacsDebit:
-            return "bacsDebit"
-        case .bancontact:
-            return "bancontact"
-        case .blik:
-            return "blik"
-        case .boleto:
-            return "boleto"
-        case .card:
-            return "card"
-        case .cardPresent:
-            return "cardPresent"
-        case .giropay:
-            return "giropay"
-        case .grabPay:
-            return "grabPay"
-        case .iDEAL:
-            return "iDEAL"
-        case .klarna:
-            return "klarna"
-        case .link:
-            return "link"
-        case .netBanking:
-            return "netBanking"
-        case .payPal:
-            return "payPal"
-        case .przelewy24:
-            return "przelewy24"
-        case .sofort:
-            return "sofort"
-        case .unknown:
-            return "unknown"
-        case .weChatPay:
-            return "weChatPay"
-        case .cashApp:
-            return "cashApp"
-        case .swish:
-            return "swish"
-        case .twint:
-            return "TWINT"
-        case .paynow, .zip, .revolutPay, .mobilePay, .amazonPay, .alma, .konbini, .promptPay, .sunbit, .billie, .satispay:
-            // `description` is the value used when this type is converted to a string for debugging purposes, just use the display name.
-            return displayName
-        case .multibanco:
-            return "multibanco"
-        }
+        return identifier
     }
 }
 
@@ -592,32 +478,6 @@ extension STPPinStatus: CustomStringConvertible {
             return "success"
         case .unknownError:
             return "unknownError"
-        }
-    }
-}
-
-/// :nodoc:
-extension STPRedirectContextError: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .appRedirectError:
-            return "appRedirectError"
-        }
-    }
-}
-
-/// :nodoc:
-extension STPRedirectContextState: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .cancelled:
-            return "cancelled"
-        case .completed:
-            return "completed"
-        case .inProgress:
-            return "inProgress"
-        case .notStarted:
-            return "notStarted"
         }
     }
 }
@@ -703,42 +563,6 @@ extension STPSourceCard3DSecureStatus: CustomStringConvertible {
 }
 
 /// :nodoc:
-extension STPSourceFlow: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .codeVerification:
-            return "codeVerification"
-        case .none:
-            return "none"
-        case .receiver:
-            return "receiver"
-        case .redirect:
-            return "redirect"
-        case .unknown:
-            return "unknown"
-        }
-    }
-}
-
-/// :nodoc:
-extension STPSourceRedirectStatus: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .failed:
-            return "failed"
-        case .notRequired:
-            return "notRequired"
-        case .pending:
-            return "pending"
-        case .succeeded:
-            return "succeeded"
-        case .unknown:
-            return "unknown"
-        }
-    }
-}
-
-/// :nodoc:
 extension STPSourceStatus: CustomStringConvertible {
     public var description: String {
         switch self {
@@ -762,34 +586,10 @@ extension STPSourceStatus: CustomStringConvertible {
 extension STPSourceType: CustomStringConvertible {
     public var description: String {
         switch self {
-        case .EPS:
-            return "EPS"
-        case .P24:
-            return "P24"
-        case .SEPADebit:
-            return "SEPADebit"
-        case .alipay:
-            return "alipay"
-        case .bancontact:
-            return "bancontact"
         case .card:
             return "card"
-        case .giropay:
-            return "giropay"
-        case .iDEAL:
-            return "iDEAL"
-        case .klarna:
-            return "klarna"
-        case .multibanco:
-            return "multibanco"
-        case .sofort:
-            return "sofort"
-        case .threeDSecure:
-            return "threeDSecure"
         case .unknown:
             return "unknown"
-        case .weChatPay:
-            return "weChatPay"
         }
     }
 }
@@ -802,22 +602,6 @@ extension STPSourceUsage: CustomStringConvertible {
             return "reusable"
         case .singleUse:
             return "singleUse"
-        case .unknown:
-            return "unknown"
-        }
-    }
-}
-
-/// :nodoc:
-extension STPSourceVerificationStatus: CustomStringConvertible {
-    public var description: String {
-        switch self {
-        case .failed:
-            return "failed"
-        case .pending:
-            return "pending"
-        case .succeeded:
-            return "succeeded"
         case .unknown:
             return "unknown"
         }

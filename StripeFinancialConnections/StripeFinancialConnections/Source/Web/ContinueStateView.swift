@@ -18,7 +18,7 @@ final class ContinueStateViews {
 
     init(
         institutionImageUrl: String?,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         didSelectContinue: @escaping () -> Void,
         didSelectCancel: (() -> Void)? = nil
     ) {
@@ -44,20 +44,20 @@ final class ContinueStateViews {
         )
         let footerViewTuple = PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                title: "Continue", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.continue`,
+                title: String.Localized.continue,
                 action: didSelectContinue
             ),
             secondaryButtonConfiguration: {
                 if let didSelectCancel {
                     return PaneLayoutView.ButtonConfiguration(
-                        title: "Cancel", // TODO: when Financial Connections starts supporting localization, change this to `String.Localized.cancel`
+                        title: String.Localized.cancel,
                         action: didSelectCancel
                     )
                 } else {
                     return nil
                 }
             }(),
-            theme: theme
+            appearance: appearance
         )
         self.footerView = footerViewTuple.footerView
         self.primaryButton = footerViewTuple.primaryButton

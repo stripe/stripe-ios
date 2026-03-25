@@ -8,7 +8,8 @@
 import Foundation
 import UIKit
 
-// Prefer `AttributedLabel` over `AttributedTextView` for single-line text.
+// `AttributedLabel` is a UILabel wrapper that supports custom fonts and text colors.
+// It defaults to multi-line text wrapping for better localization support.
 final class AttributedLabel: UILabel {
 
     private let customFont: FinancialConnectionsFont
@@ -33,6 +34,9 @@ final class AttributedLabel: UILabel {
         self.customFont = font
         self.customTextColor = textColor
         super.init(frame: .zero)
+        // Enable multi-line text wrapping by default for better localization support
+        self.numberOfLines = 0
+        self.lineBreakMode = .byWordWrapping
     }
 
     required init?(coder: NSCoder) {

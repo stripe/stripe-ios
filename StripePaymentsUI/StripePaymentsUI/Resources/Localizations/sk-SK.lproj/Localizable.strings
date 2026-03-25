@@ -1,6 +1,16 @@
+"%1$@ Card" = "Karta %1$@";
+
+"%1$@ Credit" = "Kreditná karta %1$@";
+
+"%1$@ Debit" = "Debetná karta %1$@";
+
+"%1$@ Prepaid" = "Predplatená platba %1$@";
+
 "%1$@ account ending in %2$@" = "%1$@ účet končiaci na %2$@";
 
 "%1$@ ending in %2$@" = "Karta %1$@ s poslednými štyrmi číslami %2$@";
+
+"%1$@ is not accepted" = "%1$@ sa neakceptuje";
 
 "Address line 2 (optional)" = "Riadok adresy 2 (voliteľne)";
 
@@ -9,8 +19,6 @@
 "BSB" = "BSB";
 
 "Bank Account" = "Bankový účet";
-
-"Billing Address" = "Fakturačná adresa";
 
 "Billing address" = "Fakturačná adresa";
 
@@ -28,6 +36,18 @@
 
 "MM/YY" = "MM/RR";
 
+"Only credit and prepaid cards are accepted" = "Akceptujú sa len kreditné a predplatené karty";
+
+"Only credit cards are accepted" = "Akceptujú sa iba kreditné karty";
+
+"Only debit and credit cards are accepted" = "Akceptujú sa iba debetné a kreditné karty";
+
+"Only debit and prepaid cards are accepted" = "Akceptujú sa iba debetné a predplatené karty";
+
+"Only debit cards are accepted" = "Akceptujú sa iba debetné karty";
+
+"Only prepaid cards are accepted" = "Akceptujú sa iba predplatené karty";
+
 "Postal Code" = "PSČ";
 
 "Shipping Address" = "Dodacia adresa";
@@ -36,9 +56,11 @@
 
 "The BSB you entered is invalid." = "Zadané BSB je neplatné.";
 
+"The selected brand is not allowed" = "Vybraná značka nie je povolená";
+
 "To scan your card, allow camera access in Settings." = "Na nasnímanie vašej karty umožnite prístup ku kamere pod položkou Nastavenia.";
 
-"Your ZIP is invalid." = "Vaše PSČ je neplatné.";
+"Your card has expired." = "Platnosť vašej karty vypršala.";
 
 "Your card number is incomplete." = "Číslo vašej karty je neúplné.";
 
@@ -55,8 +77,6 @@
 "Your card's security code is incomplete." = "Bezpečnostný kód vašej karty je neúplný.";
 
 "Your card's security code is invalid." = "Bezpečnostný kód vašej karty je neplatný.";
-
-"Your postal code is invalid." = "Vaše PSČ je neplatné.";
 
 "card number" = "číslo karty";
 

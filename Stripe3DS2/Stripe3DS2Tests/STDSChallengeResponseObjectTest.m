@@ -39,7 +39,7 @@
     XCTAssertEqualObjects(cr.issuerImage.highDensityURL, [NSURL URLWithString:@"https://acs.com/high_image.svg"]);
     XCTAssertEqualObjects(cr.issuerImage.extraHighDensityURL, [NSURL URLWithString:@"https://acs.com/extraHigh_image.svg"]);
     XCTAssertEqualObjects(cr.messageType, @"CRes");
-    XCTAssertEqualObjects(cr.messageVersion, @"2.1.0");
+    XCTAssertEqualObjects(cr.messageVersion, @"2.2.0");
     XCTAssertEqualObjects(cr.paymentSystemImage.mediumDensityURL, [NSURL URLWithString:@"https://ds.com/medium_image.svg"]);
     XCTAssertEqualObjects(cr.paymentSystemImage.highDensityURL, [NSURL URLWithString:@"https://ds.com/high_image.svg"]);
     XCTAssertEqualObjects(cr.paymentSystemImage.extraHighDensityURL, [NSURL URLWithString:@"https://ds.com/extraHigh_image.svg"]);
@@ -49,6 +49,16 @@
     XCTAssertEqualObjects(cr.whyInfoLabel, @"Why using 3-D Secure?");
     XCTAssertEqualObjects(cr.whyInfoText, @"Some explanation about why using 3-D Secure is an excellent idea as part of an online payment transaction");
     XCTAssertEqualObjects(cr.acsCounterACStoSDK, @"001");
+}
+
+// Make sure that despite unrelated fields existing, the HTML response is successfully decoded.
+- (void)testHTMLResponseRequirements {
+    NSDictionary *json = [STDSTestJSONUtils jsonNamed:@"HTMLCRes"];
+    NSError *error;
+    STDSChallengeResponseObject *cr = [STDSChallengeResponseObject decodedObjectFromJSON:json error:&error];
+
+    XCTAssertEqual(cr.acsUIType, STDSACSUITypeHTML);
+    XCTAssertNil(error);
 }
 
 - (void)testMissingFields {

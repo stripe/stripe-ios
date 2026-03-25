@@ -8,157 +8,284 @@
 import StripePaymentSheet
 import SwiftUI
 
+// MARK: - PaymentSheetTestPlayground
 @available(iOS 15.0, *)
 struct PaymentSheetTestPlayground: View {
     @StateObject var playgroundController: PlaygroundController
     @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
     @State var showingQRSheet = false
+    @State private var isViewReady = false
+    @State private var searchText: String = ""
+    @State private var visibleSettingsCount: Int = 0
 
-    init(settings: PaymentSheetTestPlaygroundSettings) {
-        _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings))
+    init() {
+        _playgroundController = StateObject(wrappedValue: PlaygroundController())
+    }
+
+    init(settings: PaymentSheetTestPlaygroundSettings, appearance: PaymentSheet.Appearance) {
+        _playgroundController = StateObject(wrappedValue: PlaygroundController(settings: settings, appearance: appearance))
     }
 
     @ViewBuilder
-    var clientSettings: some View {
-        // Note: Use group to work around XCode 14: "Extra Argument in Call" issue
-        //  (each view can hold 10 direct subviews)
-        Group {
-            SettingView(setting: uiStyleBinding)
-            SettingView(setting: $playgroundController.settings.layout).disabled(playgroundController.settings.uiStyle == .embedded)
-            SettingView(setting: $playgroundController.settings.shippingInfo)
-            SettingView(setting: $playgroundController.settings.applePayEnabled)
-            SettingView(setting: $playgroundController.settings.applePayButtonType)
-            SettingView(setting: $playgroundController.settings.allowsDelayedPMs)
+    func clientSettings(searchText: Binding<String>) -> some View {
+        SearchableSettingView(setting: uiStyleBinding, searchText: searchText)
+        if playgroundController.settings.uiStyle != .embedded {
+            SearchableSettingView(setting: $playgroundController.settings.layout, searchText: searchText)
         }
-        Group {
-            SettingPickerView(setting: $playgroundController.settings.defaultBillingAddress)
-            if playgroundController.settings.defaultBillingAddress == .customEmail {
+        SearchableSettingView(setting: $playgroundController.settings.style, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.shippingInfo, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.applePayEnabled, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.applePayButtonType, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.allowsDelayedPMs, searchText: searchText)
+        SearchableSettingPickerView(setting: $playgroundController.settings.defaultBillingAddress, searchText: searchText)
+        if playgroundController.settings.defaultBillingAddress == .customEmail {
+            SearchableView(searchableName: "Default billing address", searchText: searchText) {
                 TextField("Default email", text: customEmailBinding)
                     .keyboardType(.emailAddress)
                     .autocorrectionDisabled()
                     .textInputAutocapitalization(.never)
             }
         }
+        SearchableSettingView(setting: $playgroundController.settings.enableAttestationOnConfirmation, searchText: searchText)
         Group {
-            SettingView(setting: $playgroundController.settings.linkMode)
-            SettingView(setting: $playgroundController.settings.userOverrideCountry)
-            SettingView(setting: $playgroundController.settings.externalPaymentMethods)
-            SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
-            SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
+            if playgroundController.settings.merchantCountryCode == .US {
+                SearchableSettingView(setting: linkEnabledModeBinding, searchText: searchText)
+            }
+            SearchableSettingView(setting: $playgroundController.settings.linkPassthroughMode, searchText: searchText)
+            SearchableSettingView(setting: $playgroundController.settings.linkDisplay, searchText: searchText)
         }
-        Group {
-            SettingView(setting: $playgroundController.settings.requireCVCRecollection)
+        SearchableSettingView(setting: $playgroundController.settings.userOverrideCountry, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.externalPaymentMethods, searchText: searchText)
+        // The hardcoded CPM id is only available on our US merchant
+        if playgroundController.settings.merchantCountryCode == .US {
+            SearchableSettingView(setting: $playgroundController.settings.customPaymentMethods, searchText: searchText)
         }
-        Group {
-            SettingView(setting: $playgroundController.settings.autoreload)
-            SettingView(setting: $playgroundController.settings.shakeAmbiguousViews)
+        SearchableSettingView(setting: $playgroundController.settings.preferredNetworksEnabled, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.cardBrandAcceptance, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.cardFundingAcceptance, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.requireCVCRecollection, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.autoreload, searchText: searchText)
+        SearchableView(searchableName: "Reset attestation", searchText: searchText) {
+            AttestationResetButtonView()
         }
+        SearchableSettingView(setting: $playgroundController.settings.shakeAmbiguousViews, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.instantDebitsIncentives, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.fcLiteEnabled, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.opensCardScannerAutomatically, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.termsDisplay, searchText: searchText)
     }
 
     var body: some View {
-        VStack {
-            ScrollView {
+        if !isViewReady {
+            return AnyView(
                 VStack {
-                    Group {
-                        HStack {
-                            if ProcessInfo.processInfo.environment["UITesting"] != nil {
-                                AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
-                            }
-                            Text("Backend")
-                                .font(.headline)
-                            Spacer()
-                            Button {
-                                playgroundController.didTapResetConfig()
-                            } label: {
-                                Text("Reset")
-                                    .font(.callout.smallCaps())
-                            }.buttonStyle(.bordered)
-                            Button {
-                                playgroundController.didTapEndpointConfiguration()
-                            } label: {
-                                Text("Endpoints")
-                                    .font(.callout.smallCaps())
-                            }.buttonStyle(.bordered)
-                            Button {
-                                showingQRSheet.toggle()
-                            } label: {
-                                Text("QR")
-                                    .font(.callout.smallCaps())
-                            }.buttonStyle(.bordered)
-                                .sheet(isPresented: $showingQRSheet, content: {
-                                    QRView(url: playgroundController.settings.base64URL)
-                                })
-                        }
-                        SettingView(setting: $playgroundController.settings.mode)
-                        SettingPickerView(setting: integrationTypeBinding).disabled(playgroundController.settings.uiStyle == .embedded)
-                        SettingView(setting: $playgroundController.settings.customerKeyType)
-                        SettingView(setting: customerModeBinding)
-                        SettingPickerView(setting: $playgroundController.settings.amount)
-                        SettingPickerView(setting: $playgroundController.settings.currency)
-                        SettingPickerView(setting: merchantCountryBinding)
-                        SettingView(setting: $playgroundController.settings.apmsEnabled)
-                        TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
-                            .autocapitalization(.none)
+                    ProgressView()
+                    Text("Loading playground...")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear {
+                    DispatchQueue.main.async {
+                        isViewReady = true
                     }
+                }
+            )
+        }
+
+        return AnyView(VStack {
+            ScrollView {
+                LazyVStack {
+                    // Hide search bar during UI tests to avoid TextField focus interference
+                    if ProcessInfo.processInfo.environment["UITesting"] == nil {
+                        SettingsSearchBar(text: $searchText)
+                            .padding(.bottom, 8)
+                    }
+
                     Group {
-                        if playgroundController.settings.customerKeyType == .customerSession {
+                        SearchableSection(
+                            title: "Backend",
+                            searchText: $searchText,
+                            headerButtons: {
+                                if ProcessInfo.processInfo.environment["UITesting"] != nil {
+                                    AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
+                                }
+                                Button {
+                                    playgroundController.didTapResetConfig()
+                                    searchText = ""
+                                } label: {
+                                    Text("Reset")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                                Button {
+                                    playgroundController.didTapEndpointConfiguration()
+                                } label: {
+                                    Text("Endpoints")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                                Button {
+                                    showingQRSheet.toggle()
+                                } label: {
+                                    Text("QR")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                                    .sheet(isPresented: $showingQRSheet, content: {
+                                        QRView(url: playgroundController.settings.base64URL)
+                                    })
+                            }
+                        ) {
+                                SearchableSettingView(setting: $playgroundController.settings.mode, searchText: $searchText)
+                                SearchableSettingPickerView(
+                                    setting: integrationTypeBinding,
+                                    disabledSettings: playgroundController.settings.uiStyle == .embedded ? [.normal] : [],
+                                    searchText: $searchText
+                                )
+                                // Only show confirmation mode for deferred integration types
+                                if playgroundController.settings.integrationType != .normal {
+                                    SearchableSettingView(setting: confirmationModeBinding, searchText: $searchText)
+                                }
+                                SearchableSettingView(setting: customerKeyTypeBinding, searchText: $searchText)
+                                SearchableSettingView(setting: customerModeBinding, searchText: $searchText)
+                                SearchableView(searchableName: "Amount Currency", searchText: $searchText) {
+                                    HStack {
+                                        SettingPickerView(setting: $playgroundController.settings.amount, customDisplayName: { amount in
+                                            return amount.customDisplayName(currency: playgroundController.settings.currency)
+                                        })
+                                        SettingPickerView(setting: $playgroundController.settings.currency)
+                                    }
+                                }
+                                SearchableSettingPickerView(setting: merchantCountryBinding, searchText: $searchText)
+                                if playgroundController.settings.merchantCountryCode == .custom {
+                                    SearchableView(searchableName: "Merchant", searchText: $searchText) {
+                                        TextField("sk_(test/live)_...", text: customSecretKeyBinding)
+                                            .autocapitalization(.none)
+                                            .autocorrectionDisabled()
+                                        TextField("pk_(test/live)_...", text: customPublishableKeyBinding)
+                                            .autocapitalization(.none)
+                                            .autocorrectionDisabled()
+                                    }
+                                }
+                                SearchableSettingView(setting: $playgroundController.settings.apmsEnabled, searchText: $searchText)
+                                if playgroundController.settings.apmsEnabled == .off {
+                                    SearchableView(searchableName: "Automatic PMs", searchText: $searchText) {
+                                        TextField("Supported Payment Methods (comma separated)", text: supportedPaymentMethodsBinding)
+                                            .autocapitalization(.none)
+                                            .autocorrectionDisabled()
+                                    }
+                                }
+                            }
+                        }
+                        SearchableView(searchableName: "Payment Method Options", searchText: $searchText) {
                             VStack {
                                 HStack {
-                                    Text("Customer Session Settings")
+                                    Text("Payment Method Options")
                                         .font(.subheadline)
-                                        .bold()
                                     Spacer()
-                                }
-                                SettingPickerView(setting: paymentMethodSaveBinding)
-                                if playgroundController.settings.paymentMethodSave == .disabled {
-                                    SettingPickerView(setting: $playgroundController.settings.allowRedisplayOverride)
-                                }
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
-                                SettingPickerView(setting: paymentMethodRedisplayBinding)
-                                if playgroundController.settings.paymentMethodRedisplay == .enabled {
-                                    SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
+                                    Button {
+                                        playgroundController.paymentMethodOptionsSetupFutureUsageSettingsTapped()
+                                    } label: {
+                                        Text("SetupFutureUsage")
+                                            .font(.callout.smallCaps())
+                                    }.buttonStyle(.bordered)
                                 }
                             }
                         }
-                    }
-                    Divider()
-                    Group {
-                        HStack {
-                            Text("Client")
-                                .font(.headline)
-                            Spacer()
-                            Button {
-                                playgroundController.appearanceButtonTapped()
-                            } label: {
-                                Text("Appearance")
-                                    .font(.callout.smallCaps())
-                            }.buttonStyle(.bordered)
+                        if playgroundController.settings.customerKeyType == .customerSession {
+                            SearchableView(searchableName: "Customer Session", searchText: $searchText) {
+                                VStack {
+                                    HStack {
+                                        Text("Customer Session")
+                                            .font(.subheadline)
+                                        Spacer()
+                                        Button {
+                                            playgroundController.customerSessionSettingsTapped()
+                                        } label: {
+                                            Text("CSSettings")
+                                                .font(.callout.smallCaps())
+                                        }.buttonStyle(.bordered)
+                                    }
+                                }
+                            }
                         }
-                        clientSettings
-                        TextField("Custom CTA", text: customCTABinding)
-                        TextField("Payment Method Settings ID", text: paymentMethodSettingsBinding)
-                    }
-                    Divider()
-                    Group {
-                        HStack {
-                            Text("Billing Details Collection")
-                                .font(.headline)
-                            Spacer()
+
+                        if searchText.isEmpty {
+                            Divider()
                         }
-                        SettingView(setting: $playgroundController.settings.attachDefaults)
-                        SettingView(setting: $playgroundController.settings.collectName)
-                        SettingView(setting: $playgroundController.settings.collectEmail)
-                        SettingView(setting: $playgroundController.settings.collectPhone)
-                        SettingView(setting: $playgroundController.settings.collectAddress)
+                    Group {
+                        SearchableSection(
+                            title: "Client",
+                            searchText: $searchText,
+                            headerButtons: {
+                                Button {
+                                    playgroundController.appearanceButtonTapped()
+                                } label: {
+                                    Text("Appearance")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
+                            }
+                        ) {
+                                clientSettings(searchText: $searchText)
+                                SearchableView(searchableName: "Custom CTA", searchText: $searchText) {
+                                    TextField("Custom CTA", text: customCTABinding)
+                                }
+                                SearchableView(searchableName: "Payment Method Settings ID", searchText: $searchText) {
+                                    TextField("Payment Method Settings ID", text: paymentMethodSettingsBinding)
+                                        .autocorrectionDisabled()
+                                }
+                            }
+                        }
+
+                        if searchText.isEmpty {
+                            Divider()
+                        }
+                    Group {
+                        SearchableSection(
+                            title: "Billing Details Collection",
+                            searchText: $searchText
+                        ) {
+                                SearchableSettingView(setting: $playgroundController.settings.attachDefaults, searchText: $searchText)
+                                SearchableSettingView(setting: $playgroundController.settings.collectName, searchText: $searchText)
+                                SearchableSettingView(setting: $playgroundController.settings.collectEmail, searchText: $searchText)
+                                SearchableSettingView(setting: $playgroundController.settings.collectPhone, searchText: $searchText)
+                                SearchableSettingView(setting: $playgroundController.settings.collectAddress, searchText: $searchText)
+                                SearchableSettingPickerView(setting: $playgroundController.settings.allowedCountries, searchText: $searchText)
+                            }
+                        }
+
+                        if playgroundController.settings.uiStyle == .embedded {
+                            if searchText.isEmpty {
+                                Divider()
+                            }
+                        Group {
+                            SearchableSection(
+                                title: "Embedded only configuration",
+                                searchText: $searchText
+                            ) {
+                                    SearchableSettingView(setting: $playgroundController.settings.formSheetAction, searchText: $searchText)
+                                    SearchableSettingView(setting: $playgroundController.settings.embeddedViewDisplaysMandateText, searchText: $searchText)
+                                    SearchableSettingView(setting: $playgroundController.settings.rowSelectionBehavior, searchText: $searchText)
+                                }
+                            }
+                        }
+
+                    if !searchText.isEmpty && visibleSettingsCount == 0 {
+                        EmptySearchResultsView(searchText: searchText)
                     }
-                }.padding()
+                }
+                .onPreferenceChange(VisibleSettingsCountKey.self) { count in
+                    visibleSettingsCount = count
+                }
+                .padding()
             }
             Spacer()
             Divider()
             PaymentSheetButtons()
-                .environmentObject(playgroundController)
         }
+        .environmentObject(playgroundController)
+        .animationUnlessTesting())
     }
+
     var paymentMethodSaveBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
         Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodSave> {
             return playgroundController.settings.paymentMethodSave
@@ -200,16 +327,7 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.customerMode = newMode
         }
     }
-    var paymentMethodRedisplayBinding: Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodRedisplay> {
-        Binding<PaymentSheetTestPlaygroundSettings.PaymentMethodRedisplay> {
-            return playgroundController.settings.paymentMethodRedisplay
-        } set: { newPaymentMethodRedisplay in
-            if playgroundController.settings.paymentMethodRedisplay.rawValue != newPaymentMethodRedisplay.rawValue {
-                playgroundController.settings.paymentMethodAllowRedisplayFilters = .notSet
-            }
-            playgroundController.settings.paymentMethodRedisplay = newPaymentMethodRedisplay
-        }
-    }
+
     var merchantCountryBinding: Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
         Binding<PaymentSheetTestPlaygroundSettings.MerchantCountry> {
             return playgroundController.settings.merchantCountryCode
@@ -218,7 +336,44 @@ struct PaymentSheetTestPlayground: View {
             if playgroundController.settings.merchantCountryCode.rawValue != newCountry.rawValue {
                 playgroundController.settings.customerMode = .guest
             }
+            // Disable CPMs if we switch to non-US merchant
+            if newCountry != .US {
+                playgroundController.settings.customPaymentMethods = .off
+            }
+            // Clear custom keys if we switch to non-custom merchant
+            if newCountry != .custom {
+                playgroundController.settings.customSecretKey = nil
+                playgroundController.settings.customPublishableKey = nil
+            }
             playgroundController.settings.merchantCountryCode = newCountry
+        }
+    }
+
+    var customSecretKeyBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customSecretKey ?? ""
+        } set: { newString in
+            playgroundController.settings.customSecretKey = newString
+        }
+    }
+
+    var customPublishableKeyBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customPublishableKey ?? ""
+        } set: { newString in
+            playgroundController.settings.customPublishableKey = newString
+        }
+    }
+
+    var linkEnabledModeBinding: Binding<PaymentSheetTestPlaygroundSettings.LinkEnabledMode> {
+        Binding<PaymentSheetTestPlaygroundSettings.LinkEnabledMode> {
+            return playgroundController.settings.linkEnabledMode
+        } set: { newMode in
+            // Reset customer id if Link enabled mode changes, as we change the underlying account ID
+            if playgroundController.settings.linkEnabledMode.rawValue != newMode.rawValue {
+                playgroundController.settings.customerMode = .guest
+            }
+            playgroundController.settings.linkEnabledMode = newMode
         }
     }
 
@@ -226,12 +381,7 @@ struct PaymentSheetTestPlayground: View {
         Binding<String> {
             return playgroundController.settings.supportedPaymentMethods ?? ""
         } set: { newString in
-            playgroundController.settings.supportedPaymentMethods = (newString != "") ? newString : nil
-
-            // for supported payment methods to work, apms must be off
-            if playgroundController.settings.supportedPaymentMethods != nil {
-                playgroundController.settings.apmsEnabled = .off
-            }
+            playgroundController.settings.supportedPaymentMethods = newString
         }
     }
 
@@ -259,44 +409,98 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.integrationType = newIntegrationType
         }
     }
+
+    var confirmationModeBinding: Binding<PaymentSheetTestPlaygroundSettings.ConfirmationMode> {
+        Binding<PaymentSheetTestPlaygroundSettings.ConfirmationMode> {
+            return playgroundController.settings.confirmationMode
+        } set: { newMode in
+            // If switching to confirmation token mode and legacy (ephemeral key) is selected,
+            // automatically switch to customer session
+            if newMode == .confirmationToken && playgroundController.settings.customerKeyType == .legacy {
+                playgroundController.settings.customerKeyType = .customerSession
+            }
+            playgroundController.settings.confirmationMode = newMode
+        }
+    }
+
+    var customerKeyTypeBinding: Binding<PaymentSheetTestPlaygroundSettings.CustomerKeyType> {
+        Binding<PaymentSheetTestPlaygroundSettings.CustomerKeyType> {
+            return playgroundController.settings.customerKeyType
+        } set: { newType in
+            // If switching to legacy (ephemeral key) and confirmation token is selected,
+            // automatically switch to payment method mode
+            if newType == .legacy && playgroundController.settings.confirmationMode == .confirmationToken {
+                playgroundController.settings.confirmationMode = .paymentMethod
+            }
+            playgroundController.settings.customerKeyType = newType
+        }
+    }
+}
+
+extension View {
+    func animationUnlessTesting() -> some View {
+        if ProcessInfo.processInfo.environment["UITesting"] != nil {
+            return AnyView(animation(.bouncy).transition(.opacity))
+        }
+        return AnyView(self)
+    }
+}
+
+struct EmbeddedSettingsView: View {
+    @EnvironmentObject var playgroundController: PlaygroundController
+
+    var body: some View {
+        SettingView(setting: $playgroundController.settings.mode)
+    }
 }
 
 @available(iOS 14.0, *)
 struct PaymentSheetButtons: View {
     @EnvironmentObject var playgroundController: PlaygroundController
-    @State var psIsPresented: Bool = false
-    @State var embeddedIsPresented: Bool = false
-    @State var psFCOptionsIsPresented: Bool = false
-    @State var psFCIsConfirming: Bool = false
+    @State private var psIsPresented: Bool = false
+    @State private var embeddedIsPresented: Bool = false
+    @State private var psFCOptionsIsPresented: Bool = false
+    @State private var psFCIsConfirming: Bool = false
 
     func reloadPlaygroundController() {
-        playgroundController.load()
+        playgroundController.load(reinitializeControllers: true)
+    }
+
+    // This exists so that the embedded playground vc (EPVC) can call the `EmbeddedPaymentElement.update` API
+    // We build the settings view here, rather than in EPVC, so that it can easily update the PI/SI like all other settings and ensure the PI/SI is up to date when it's eventually used at confirm-time
+    @ViewBuilder
+    var embeddedSettingsView: some View {
+        EmbeddedSettingsView()
+    }
+
+    var titleAndReloadView: some View {
+        HStack {
+            Text(playgroundController.settings.uiStyle.rawValue)
+                .font(.subheadline.smallCaps())
+            Spacer()
+            if playgroundController.isLoading {
+                ProgressView()
+            } else {
+                if playgroundController.settings != playgroundController.currentlyRenderedSettings {
+                    StaleView()
+                }
+                Button {
+                    reloadPlaygroundController()
+                } label: {
+                    Image(systemName: "arrow.clockwise.circle")
+                }
+                .accessibility(identifier: "Reload")
+                .frame(alignment: .topLeading)
+            }
+        }.padding(.horizontal)
     }
 
     var body: some View {
         VStack {
-            if playgroundController.settings.uiStyle == .paymentSheet {
+            switch playgroundController.settings.uiStyle {
+            case .paymentSheet:
                 VStack {
-                    HStack {
-                        Text("PaymentSheet")
-                            .font(.subheadline.smallCaps())
-                        Spacer()
-                        if playgroundController.isLoading {
-                            ProgressView()
-                        } else {
-                            if playgroundController.settings != playgroundController.currentlyRenderedSettings {
-                                StaleView()
-                            }
-                            Button {
-                                reloadPlaygroundController()
-                            } label: {
-                                Image(systemName: "arrow.clockwise.circle")
-                            }
-                            .accessibility(identifier: "Reload")
-                            .frame(alignment: .topLeading)
-                        }
-                    }.padding(.horizontal)
-
+                    titleAndReloadView
                     if let ps = playgroundController.paymentSheet,
                        playgroundController.lastPaymentResult == nil || playgroundController.lastPaymentResult?.shouldAllowPresentingPaymentSheet() ?? false {
                         HStack {
@@ -324,27 +528,9 @@ struct PaymentSheetButtons: View {
                         ExamplePaymentStatusView(result: result)
                     }
                 }
-            } else if playgroundController.settings.uiStyle == .flowController {
+            case .flowController:
                 VStack {
-                    HStack {
-                        Text("PaymentSheet.FlowController")
-                            .font(.subheadline.smallCaps())
-                        Spacer()
-                        if playgroundController.isLoading {
-                            ProgressView()
-                        } else {
-                            if playgroundController.settings != playgroundController.currentlyRenderedSettings {
-                                StaleView()
-                            }
-                            Button {
-                                reloadPlaygroundController()
-                            } label: {
-                                Image(systemName: "arrow.clockwise.circle")
-                            }
-                            .accessibility(identifier: "Reload")
-                            .frame(alignment: .topLeading)
-                        }
-                    }.padding(.horizontal)
+                    titleAndReloadView
                     HStack {
                         if let psfc = playgroundController.paymentSheetFlowController,
                            playgroundController.lastPaymentResult == nil || playgroundController.lastPaymentResult?.shouldAllowPresentingPaymentSheet() ?? false {
@@ -381,34 +567,17 @@ struct PaymentSheetButtons: View {
                         ExamplePaymentStatusView(result: result)
                     }
                 }
-            } else if playgroundController.settings.uiStyle == .embedded {
+            case .embedded:
                 VStack {
-                    HStack {
-                        Text("Embedded mobile payment element")
-                            .font(.subheadline.smallCaps())
-                        Spacer()
-                        if playgroundController.isLoading {
-                            ProgressView()
-                        } else {
-                            if playgroundController.settings != playgroundController.currentlyRenderedSettings {
-                                StaleView()
-                            }
-                            Button {
-                                reloadPlaygroundController()
-                            } label: {
-                                Image(systemName: "arrow.clockwise.circle")
-                            }
-                            .accessibility(identifier: "Reload")
-                            .frame(alignment: .topLeading)
-                        }
-                    }.padding(.horizontal)
-
-                    if playgroundController.embeddedPlaygroundController != nil,
+                    titleAndReloadView
+                    if playgroundController.embeddedPlaygroundViewController != nil,
                        playgroundController.lastPaymentResult == nil || playgroundController.lastPaymentResult?.shouldAllowPresentingPaymentSheet() ?? false {
                         HStack {
                             Button {
                                 embeddedIsPresented = true
-                                playgroundController.presentEmbedded()
+                                playgroundController.presentEmbedded(settingsView: {
+                                    embeddedSettingsView.environmentObject(playgroundController)
+                                })
                             } label: {
                                 Text("Present embedded payment element")
                             }
@@ -455,8 +624,10 @@ struct AnalyticsLogForTesting: View {
     var body: some View {
         Text(analyticsLogString)
             .frame(width: 0, height: 0)
+            .opacity(0)
             .accessibility(identifier: "_testAnalyticsLog")
             .accessibility(label: Text(analyticsLogString))
+            .accessibility(hidden: false)
     }
 }
 
@@ -540,6 +711,23 @@ struct BillingDetailsView: View {
     }
 }
 
+struct AttestationResetButtonView: View {
+    @State private var presentingAlert = false
+    @EnvironmentObject var playgroundController: PlaygroundController
+
+    var body: some View {
+        if #available(iOS 15.0, *) {
+            Button {
+                playgroundController.didTapResetAttestation()
+                presentingAlert = true
+            } label: {
+                Text("Reset attestation")
+            }.buttonStyle(.bordered)
+                .alert("Attestation key has been reset", isPresented: $presentingAlert, actions: {})
+        }
+    }
+}
+
 struct SettingView<S: PickerEnum>: View {
     var setting: Binding<S>
 
@@ -557,16 +745,23 @@ struct SettingView<S: PickerEnum>: View {
 
 struct SettingPickerView<S: PickerEnum>: View {
     var setting: Binding<S>
+    var disabledSettings: [S] = []
+    var customDisplayLabel: String?
+    var customDisplayName: ((S) -> String)?
 
     var body: some View {
         HStack {
-            Text(S.enumName).font(.subheadline)
+            Text(customDisplayLabel ?? S.enumName).font(.subheadline)
             Spacer()
             Picker(S.enumName, selection: setting) {
-                ForEach(S.allCases, id: \.self) { t in
-                    Text(t.displayName)
+                ForEach(S.allCases.filter({ !disabledSettings.contains($0) }), id: \.self) { t in
+                    if let customDisplayName {
+                        Text(customDisplayName(t))
+                    } else {
+                        Text(t.displayName)
+                    }
                 }
-            }
+            }.layoutPriority(0.8)
         }
     }
 }
@@ -574,6 +769,6 @@ struct SettingPickerView<S: PickerEnum>: View {
 @available(iOS 15.0, *)
 struct PaymentSheetTestPlayground_Previews: PreviewProvider {
     static var previews: some View {
-        PaymentSheetTestPlayground(settings: .defaultValues())
+        PaymentSheetTestPlayground()
     }
 }

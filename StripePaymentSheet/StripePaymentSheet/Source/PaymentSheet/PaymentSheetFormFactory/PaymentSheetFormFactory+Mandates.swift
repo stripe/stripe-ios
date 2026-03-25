@@ -6,6 +6,7 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -14,6 +15,31 @@ extension PaymentSheetFormFactory {
         // If there was previous customer input, check if it displayed the mandate for this payment method
         let customerAlreadySawMandate = previousCustomerInput?.didDisplayMandate ?? false
         return SimpleMandateElement(mandateText: mandateText, customerAlreadySawMandate: customerAlreadySawMandate, theme: theme)
+    }
+
+    func makeMandate(mandateText: NSAttributedString) -> SimpleMandateElement {
+        // If there was previous customer input, check if it displayed the mandate for this payment method
+        let customerAlreadySawMandate = previousCustomerInput?.didDisplayMandate ?? false
+
+        let updatedMandateText = {
+            guard isLinkUI else {
+                return mandateText
+            }
+
+            let mutableString = NSMutableAttributedString(attributedString: mandateText)
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.alignment = .center
+            paragraphStyle.lineSpacing = LinkUI.mandateLineSpacing
+            mutableString.addAttributes([.paragraphStyle: paragraphStyle], range: mutableString.extent)
+            return mutableString
+        }()
+
+        return SimpleMandateElement(
+            mandateText: updatedMandateText,
+            customerAlreadySawMandate: customerAlreadySawMandate,
+            textAlignment: isLinkUI ? .center : .natural,
+            theme: theme
+        )
     }
 
     func makeAUBECSMandate() -> StaticElement {
@@ -25,10 +51,11 @@ extension PaymentSheetFormFactory {
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
             label: mandateText,
-            isSelectedByDefault: false
+            // If the previous customer input is non-nil, it means the customer checked the box (see 🍞)
+            isSelectedByDefault: previousCustomerInput != nil
         )
         return PaymentMethodElementWrapper(element) { checkbox, params in
-            // Only return params if the mandate has been accepted
+            // 🍞 Only return params if the mandate has been accepted
             return checkbox.isSelected ? params : nil
         }
     }
@@ -48,13 +75,6 @@ extension PaymentSheetFormFactory {
         return makeMandate(mandateText: mandateText)
     }
 
-    func makeKlarnaMandate() -> SimpleMandateElement {
-        let mandateText = String(format: String.Localized.klarna_mandate_text,
-                                 configuration.merchantDisplayName,
-                                 configuration.merchantDisplayName)
-        return makeMandate(mandateText: mandateText)
-    }
-
     func makeAmazonPayMandate() -> SimpleMandateElement {
         let mandateText = String(format: String.Localized.amazon_pay_mandate_text, configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
@@ -68,6 +88,16 @@ extension PaymentSheetFormFactory {
                 return String(format: String.Localized.paypal_mandate_text_setup, configuration.merchantDisplayName)
             }
         }()
+        return makeMandate(mandateText: mandateText)
+    }
+
+    func makeSatispayMandate() -> SimpleMandateElement {
+        let mandateText: String = String(format: String.Localized.satispay_mandate_text, configuration.merchantDisplayName)
+        return makeMandate(mandateText: mandateText)
+    }
+
+    func makeTwintMandate() -> SimpleMandateElement {
+        let mandateText: String = String(format: String.Localized.twint_mandate_text, configuration.merchantDisplayName)
         return makeMandate(mandateText: mandateText)
     }
 }

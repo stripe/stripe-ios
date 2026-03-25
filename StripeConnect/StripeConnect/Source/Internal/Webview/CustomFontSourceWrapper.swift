@@ -14,7 +14,7 @@ struct CustomFontSourceWrapper: Encodable {
         case family, style, weight, src
     }
 
-    public func encode(to encoder: Encoder) throws {
+    func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
 
         try container.encode(customFontSource.family, forKey: .family)

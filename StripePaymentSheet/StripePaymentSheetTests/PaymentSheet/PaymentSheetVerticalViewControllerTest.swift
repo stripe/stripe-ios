@@ -31,14 +31,14 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
                 analyticsHelper: ._testValue(),
                 previousPaymentOption: nil
             )
-
         }
         // TODO: Test other things like `selectedPaymentOption`
         // If there are saved PMs, always show the list, even if there's only one other PM
         let savedPMsLoadResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: [._testCard()]
+            savedPaymentMethods: [._testCard()],
+            paymentMethodTypes: [.stripe(.card)]
         )
         XCTAssertTrue(makeViewController(loadResult: savedPMsLoadResult).children.first is VerticalPaymentMethodListViewController)
 
@@ -46,7 +46,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let formDirectlyResult = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: []
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)]
         )
         XCTAssertTrue(makeViewController(loadResult: formDirectlyResult).children.first is PaymentMethodFormViewController)
 
@@ -54,7 +55,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let onlyOnePM = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: [._testCard()]
+            savedPaymentMethods: [._testCard()],
+            paymentMethodTypes: [.stripe(.card)]
         )
         XCTAssertTrue(makeViewController(loadResult: onlyOnePM).children.first is VerticalPaymentMethodListViewController)
 
@@ -62,7 +64,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let multiplePMs = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: [._testCard()]
+            savedPaymentMethods: [._testCard()],
+            paymentMethodTypes: [.stripe(.card)]
         )
         XCTAssertTrue(makeViewController(loadResult: multiplePMs).children.first is VerticalPaymentMethodListViewController)
 
@@ -70,7 +73,8 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let onePMAndLink = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: [._testCard()]
+            savedPaymentMethods: [._testCard()],
+            paymentMethodTypes: [.stripe(.card)]
         )
         XCTAssertTrue(makeViewController(loadResult: onePMAndLink).children.first is VerticalPaymentMethodListViewController)
 
@@ -78,8 +82,104 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let onePMAndApplePay = PaymentSheetLoader.LoadResult(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
-            savedPaymentMethods: [._testCard()]
+            savedPaymentMethods: [._testCard()],
+            paymentMethodTypes: [.stripe(.card)]
         )
         XCTAssertTrue(makeViewController(loadResult: onePMAndApplePay).children.first is VerticalPaymentMethodListViewController)
+    }
+
+    func testFlowControllerDefaults() {
+        func makeVC(configuration: PaymentSheet.Configuration, hasSavedPM: Bool = true) -> PaymentSheetVerticalViewController {
+            let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+            let loadResult = PaymentSheetLoader.LoadResult(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
+                savedPaymentMethods: hasSavedPM ? [._testCard()] : [],
+                paymentMethodTypes: [.stripe(.card)]
+            )
+            return PaymentSheetVerticalViewController(
+                configuration: configuration,
+                loadResult: loadResult,
+                isFlowController: true,
+                analyticsHelper: ._testValue(),
+                previousPaymentOption: nil
+            )
+        }
+
+        // If there's a customer default...
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: "cus_test")
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "cus_test", ephemeralKeySecret: "")
+        configuration.applePay = .init(merchantId: "merch_test", merchantCountryCode: "US")
+        // ...it should default to that...
+        var vc = makeVC(configuration: configuration)
+        XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .link)
+
+        // If the customer default won't appear in the list...
+        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId("non_existent"), forCustomer: "cus_test")
+        // ...it should default to Apple Pay
+        vc = makeVC(configuration: configuration)
+        XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .applePay)
+
+        // If there's no customer default...
+        CustomerPaymentOption.setDefaultPaymentMethod(nil, forCustomer: "cus_test")
+        // ...it should default to Apple Pay
+        vc = makeVC(configuration: configuration)
+        XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .applePay)
+
+        // And if Apple Pay is disabled...
+        configuration.applePay = nil
+        // ...it should default to the saved PM
+        vc = makeVC(configuration: configuration)
+        XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .saved(paymentMethod: ._testCard()))
+
+        // And if there is no saved PM...
+        vc = makeVC(configuration: configuration, hasSavedPM: false)
+        // ...it should default to nothing
+        XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, nil)
+    }
+
+    func testPaymentSheetDefaults() {
+        let savedPM = STPPaymentMethod._testCard()
+        func makeVC(configuration: PaymentSheet.Configuration, hasSavedPM: Bool = true) -> PaymentSheetVerticalViewController {
+            let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+            let loadResult = PaymentSheetLoader.LoadResult(
+                intent: intent,
+                elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
+                savedPaymentMethods: hasSavedPM ? [savedPM] : [],
+                paymentMethodTypes: [.stripe(.card)]
+            )
+            return PaymentSheetVerticalViewController(
+                configuration: configuration,
+                loadResult: loadResult,
+                isFlowController: false,
+                analyticsHelper: ._testValue(),
+                previousPaymentOption: nil
+            )
+        }
+
+        var configuration = PaymentSheet.Configuration()
+        configuration.customer = .init(id: "cus_test", ephemeralKeySecret: "")
+        configuration.applePay = .init(merchantId: "merch_test", merchantCountryCode: "US")
+
+        // If the customer default is a saved PM...
+        CustomerPaymentOption.setDefaultPaymentMethod(.stripeId(savedPM.stripeId), forCustomer: "cus_test")
+        // ...it should default to that...
+        var vc = makeVC(configuration: configuration)
+        XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .saved(paymentMethod: savedPM))
+
+        // If the customer default doesn't appear in the list (Apple Pay / Link)
+        CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: "cus_test")
+        vc = makeVC(configuration: configuration)
+        // ...it should default to the saved PM
+        XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .saved(paymentMethod: savedPM))
+        CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: "cus_test")
+        vc = makeVC(configuration: configuration)
+        XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, .saved(paymentMethod: savedPM))
+
+        // If there is no saved PM...
+        vc = makeVC(configuration: configuration, hasSavedPM: false)
+        // ...it should default to nothing
+        XCTAssertEqual(vc.paymentMethodListViewController?.currentSelection, nil)
     }
 }

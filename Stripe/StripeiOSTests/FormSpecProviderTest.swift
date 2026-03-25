@@ -34,16 +34,15 @@ class FormSpecProviderTest: XCTestCase {
             .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
 
-        // ...and iDEAL has the correct dropdown spec
-        guard let ideal = sut.formSpec(for: "ideal"),
-              case .name = ideal.fields[0],
-              case .selector(let selector) = ideal.fields[3]
+        // ...and FPX has the correct dropdown spec
+        guard let fpx = sut.formSpec(for: "fpx"),
+              case .selector(let selector) = fpx.fields[0]
         else {
             XCTFail()
             return
         }
-        XCTAssertEqual(selector.apiPath?["v1"], "ideal[bank]")
-        XCTAssertEqual(selector.items.count, 13)
+        XCTAssertEqual(selector.apiPath?["v1"], "fpx[bank]")
+        XCTAssertEqual(selector.items.count, 18)
     }
 
     func testLoadJsonCanOverwriteLoadedSpecs() throws {
@@ -61,8 +60,7 @@ class FormSpecProviderTest: XCTestCase {
             eps.fields.first,
             .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
-        let updatedSpecJson =
-            """
+        let updatedSpecJson = Data("""
             [{
                 "type": "eps",
                 "async": false,
@@ -75,7 +73,7 @@ class FormSpecProviderTest: XCTestCase {
                     }
                 ]
             }]
-            """.data(using: .utf8)!
+            """.utf8)
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson)
 
         let result = sut.loadFrom(formSpec)
@@ -126,8 +124,7 @@ class FormSpecProviderTest: XCTestCase {
             eps.fields.first,
             .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
-        let updatedSpecJson =
-            """
+        let updatedSpecJson = Data("""
             [{
                 "INVALID_type": "eps",
                 "async": false,
@@ -140,7 +137,7 @@ class FormSpecProviderTest: XCTestCase {
                     }
                 ]
             }]
-            """.data(using: .utf8)!
+            """.utf8)
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson)
 
         let result = sut.loadFrom(formSpec)
@@ -170,10 +167,9 @@ class FormSpecProviderTest: XCTestCase {
             .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
 
-        let updatedSpecJson =
-            """
+        let updatedSpecJson = Data("""
             NOT VALID JSON
-            """.data(using: .utf8)!
+            """.utf8)
 
         let result = sut.loadFrom(updatedSpecJson)
         XCTAssertFalse(result)
@@ -201,8 +197,7 @@ class FormSpecProviderTest: XCTestCase {
             .name(FormSpec.NameFieldSpec(apiPath: ["v1": "billing_details[name]"], translationId: nil))
         )
 
-        let updatedSpecJson =
-            """
+        let updatedSpecJson = Data("""
             [{
                 "type": "eps",
                 "async": false,
@@ -230,7 +225,7 @@ class FormSpecProviderTest: XCTestCase {
                     }
                 }
             }]
-            """.data(using: .utf8)!
+            """.utf8)
         let formSpec = try! JSONSerialization.jsonObject(with: updatedSpecJson)
 
         let result = sut.loadFrom(formSpec)

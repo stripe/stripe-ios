@@ -20,13 +20,22 @@ class FlowControllerStateTests: XCTestCase {
         let exp = expectation(description: "No delegate methods should be called during init but before viewDidLoad")
         exp.isInverted = true
         let config = PaymentSheet.Configuration()
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _, _ in
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 100, currency: "USD")) { _, _ in
             // Nothing
+            return ""
         }
         config.apiClient.publishableKey = "pk_123"
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let apmvcDelegate = StubAPMVCDelegate(expectation: exp)
-        _ = AddPaymentMethodViewController(intent: intent, elementsSession: .emptyElementsSession, configuration: config, formCache: .init(), analyticsHelper: ._testValue(), delegate: apmvcDelegate)
+        _ = AddPaymentMethodViewController(
+            intent: intent,
+            elementsSession: .emptyElementsSession,
+            configuration: config,
+            paymentMethodTypes: [.stripe(.card)],
+            formCache: .init(),
+            analyticsHelper: ._testValue(),
+            delegate: apmvcDelegate
+        )
         waitForExpectations(timeout: 0.1)
     }
 }
@@ -35,6 +44,10 @@ class StubAPMVCDelegate: AddPaymentMethodViewControllerDelegate {
     let expectation: XCTestExpectation
     init(expectation: XCTestExpectation) {
         self.expectation = expectation
+    }
+
+    func getWalletHeaders() -> [String] {
+        return []
     }
 
     func didUpdate(_ viewController: StripePaymentSheet.AddPaymentMethodViewController) {

@@ -1,4 +1,8 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (необязательно)";
+
+"(not accepted)" = "(не принимается)";
 
 "Account number" = "Номер счета";
 
@@ -36,7 +40,7 @@
 
 "County" = "Графство";
 
-"Date is empty." = "Дата не указана.";
+"Date of Birth" = "Дата рождения";
 
 "Department" = "Департамент";
 
@@ -84,8 +88,6 @@
 
 "Parish" = "Приход";
 
-"Phone" = "Телефон";
-
 "Phone number" = "Номер телефона";
 
 "Postal code" = "Почтовый индекс";
@@ -103,6 +105,8 @@
 "Search" = "Поиск";
 
 "Select card brand (optional)" = "Выберите бренд карты (необязательно)";
+
+"Selection is empty." = "Ничего не выбрано.";
 
 "Sort code" = "Код банка";
 
@@ -132,12 +136,16 @@
 
 "Your BLIK code is invalid." = "Ваш код BLIK недействителен.";
 
-"Your ZIP is incomplete." = "Почтовый индекс введен не полностью.";
+"Your ZIP code is incomplete." = "Ваш почтовый индекс неполный.";
+
+"Your ZIP code is invalid." = "Ваш почтовый индекс недействителен.";
 
 "Your email is invalid." = "Недействительный адрес эл. почты.";
 
 "Your payment information will not be saved." = "Ваши платежные реквизиты не будут сохранены.";
 
 "Your postal code is incomplete." = "Введенный почтовый индекс неполон.";
+
+"Your postal code is invalid." = "Введенный почтовый индекс недействителен.";
 
 "ZIP" = "Почтовый индекс";

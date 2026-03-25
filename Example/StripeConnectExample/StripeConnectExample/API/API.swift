@@ -26,7 +26,7 @@ struct API {
         guard let baseUrl = URL(string: baseURL) else {
             return .failure(.invalidURL)
         }
-        let url = baseUrl.appending(path: path)
+        let url = baseUrl.appendingPathComponent(path)
         var request = URLRequest(url: url)
         request.httpMethod = method
         request.allHTTPHeaderFields = headers

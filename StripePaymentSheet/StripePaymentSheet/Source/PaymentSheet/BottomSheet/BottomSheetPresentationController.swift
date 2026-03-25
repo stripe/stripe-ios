@@ -23,7 +23,7 @@ class BottomSheetPresentationController: UIPresentationController {
         return presentedViewController as? BottomSheetPresentable
     }
     private lazy var fullHeightConstraint: NSLayoutConstraint = {
-        guard let containerView = containerView else {
+        guard let containerView else {
             assertionFailure()
             return NSLayoutConstraint()
         }
@@ -78,7 +78,7 @@ class BottomSheetPresentationController: UIPresentationController {
 
         coordinator.animate(alongsideTransition: { [weak self] _ in
             self?.backgroundView.alpha = 1
-            #if !canImport(CompositorServices)
+            #if !os(visionOS)
             self?.presentedViewController.setNeedsStatusBarAppearanceUpdate()
             #endif
         })
@@ -98,7 +98,7 @@ class BottomSheetPresentationController: UIPresentationController {
 
         coordinator.animate(alongsideTransition: { [weak self] _ in
             self?.backgroundView.alpha = 0
-            #if !canImport(CompositorServices)
+            #if !os(visionOS)
             self?.presentingViewController.setNeedsStatusBarAppearanceUpdate()
             #endif
         })
@@ -135,7 +135,7 @@ class BottomSheetPresentationController: UIPresentationController {
 extension BottomSheetPresentationController {
 
     fileprivate func installConstraints() {
-        guard let containerView = containerView else { return }
+        guard let containerView else { return }
 
         // Add a dimmed view behind the view controller
         containerView.addAndPinSubview(backgroundView)
@@ -165,7 +165,7 @@ extension BottomSheetPresentationController {
 
     private func addRoundedCorners(to view: UIView) {
         view.layer.maskedCorners =  [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-        view.layer.cornerRadius = 12
+        view.layer.cornerRadius = presentable?.sheetCornerRadius ?? BottomSheetTransitioningDelegate.appearance.sheetCornerRadius
         view.layer.masksToBounds = true
     }
 }

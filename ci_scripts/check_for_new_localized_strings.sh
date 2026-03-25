@@ -18,23 +18,25 @@ do
       rm "${directory}/Resources/Localizations/en.lproj/Localizable.strings"
       mv "${directory}/Resources/Localizations/en.lproj/Localizable.strings.utf8" "${directory}/Resources/Localizations/en.lproj/Localizable.strings"
     else
-      echo "Error recoding into utf8"
+      echo "Error recoding into utf8 for ${directory}"
       EXIT_CODE=1
     fi
   else
-    echo "Error occurred generating english strings file."
+    echo "Error occurred generating english strings file for ${directory}"
     EXIT_CODE=1
   fi
 
   sh ci_scripts/check_for_invalid_formatting_strings.sh "${directory}"
   if [[ $? -ne 0 ]]; then
-      echo "check_for_invalid_formatting_strings.sh detected strings with invalid formatting characters."
+      echo "check_for_invalid_formatting_strings.sh detected strings with invalid formatting characters in ${directory}"
       EXIT_CODE=1
   fi
 
   git diff --quiet --exit-code -- "${directory}/Resources/Localizations/en.lproj/Localizable.strings"
   if [[ $? -ne 0 ]]; then
-      echo -e "\t\033[0;31mNew strings detected\033[0m"
+      echo -e "\t\033[0;31mAdded or deleted strings detected in ${directory}:\033[0m"
+      git diff -U0 --color=always -- "${directory}/Resources/Localizations/en.lproj/Localizable.strings" | grep --color=always -E '^(\x1b\[[0-9;]*m)*[+-]' | tail -n +3
+      echo -e "\t\033[0;31mIf you removed a string, run ci_scripts/l10n/lint.rb to clean up other languages.\033[0m"
       EXIT_CODE=1
   fi
 done

@@ -40,7 +40,7 @@ class AnalyticLoggableErrorTest: XCTestCase {
             ],
         ]
         let stripeAPIErrorHTTPResponse = HTTPURLResponse(url: URL(string: "https://api.stripe.com/v1/some_endpoint")!, statusCode: 402, httpVersion: nil, headerFields: ["request-id": "req_123"])
-        let stripeAPIError = NSError.stp_error(fromStripeResponse: stripeAPIErrorJSON, httpResponse: stripeAPIErrorHTTPResponse)!
+        let stripeAPIError = NSError.stp_error(fromStripeResponse: stripeAPIErrorJSON, httpResponse: stripeAPIErrorHTTPResponse)
         XCTAssertEqual(
             stripeAPIError.serializeForV1Analytics() as? [String: String],
             [

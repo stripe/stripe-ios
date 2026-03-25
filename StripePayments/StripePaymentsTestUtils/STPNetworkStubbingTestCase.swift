@@ -10,12 +10,10 @@ import OHHTTPStubs
 @testable@_spi(STP) import StripeCore
 import XCTest
 
-/// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run with `recordingMode = YES` and save it to disk. When run with `recordingMode = NO`, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
+/// Test cases that subclass `STPNetworkStubbingTestCase` will automatically capture all network traffic when run using the `AllStripeFrameworks-NetworkRecordMode` scheme and save it to disk. Otherwise, they will use the persisted request/response pairs, and raise an exception if an unexpected HTTP request is made.
 /// ⚠️ Warning: `STPAPIClient`s created before `setUp` is called are not recorded!
 /// To write manual requests, try APIStubbedTestCase instead.
 @objc(STPNetworkStubbingTestCase) open class STPNetworkStubbingTestCase: XCTestCase {
-    /// Set this to YES to record all traffic during this test. The test will then fail, to remind you to set this back to NO before pushing.
-    open var recordingMode = false
 
     /// Set this to YES to disable network mocking entirely (e.g. in a nightly test)
     open var disableMocking = false
@@ -29,10 +27,15 @@ import XCTest
     /// Disable this when testing the STPPaymentHandler "UnredirectableSessionDelegate" behavior.
     open var followRedirects = true
 
+    /// Tracks the current request number for better error reporting
+    private var requestCount = 0
+
     open override func setUp() {
         super.setUp()
 
-        recordingMode = ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] != nil
+        AnalyticsHelper.shared.clearSessionID()
+
+        let recordingMode = ProcessInfo.processInfo.environment["STP_RECORD_NETWORK"] != nil
         disableMocking = ProcessInfo.processInfo.environment["STP_NO_NETWORK_MOCKS"] != nil
 
         if disableMocking {
@@ -84,16 +87,39 @@ import XCTest
             // Creates filenames like `post_v1_tokens_0.tail`.
             var count = 0
             if strictParamsEnforcement {
-                // Just record the full URL, don't try to strip out params
                 recorder?.urlRegexPatternBlock = { request, _ in
                     // Need to escape this to fit in a regex (e.g. \? instead of ? before the query)
-                    return NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
+                    let escapedRequest = NSRegularExpression.escapedPattern(for: request?.url?.absoluteString ?? "")
+                    // Then remove any params that may contain UUIDs or other random data
+                    return replaceNondeterministicParams(escapedRequest, componentsToFilter: ["mobile_session_id", "locale", "mobile_app_id"])
                 }
                 recorder?.postBodyTransformBlock = { _, postBody in
                     // Regex filter these:
                     let escapedBody = NSRegularExpression.escapedPattern(for: postBody ?? "")
                     // Then remove any params that may contain UUIDs or other random data
-                    return replaceNondeterministicParams(escapedBody)
+                    let componentsToFilter = [
+                        "guid=", // Fraud detection data
+                        "muid=",
+                        "sid=",
+                        "[guid]=",
+                        "[muid]=",
+                        "[sid]=",
+                        "app_version_key", // Current version of Xcode, for Alipay
+
+                        "payment_user_agent", // Contains the SDK version number
+                        "pk_token_transaction_id", // Random string,
+                        "client_session_id", // Random string
+                        "merchant_integration_version", // Contains the SDK version number
+                        "elements_session_config_id", // Random string
+                        "hcaptcha_token", // Random string
+                        "eid=", // Ephemeral ID, random UUID
+                        "browser_locale", // Locale varies by machine
+                        "browser_timezone", // Timezone varies by machine
+                        "\\[locale]", // Nested locale param varies by machine
+                        "\\[mobile_app_id]", // App bundle ID varies by test target
+                        "\\[mobile_session_id]", // Session ID varies by run
+                    ]
+                    return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
                 }
             } else {
                 recorder?.urlRegexPatternBlock = nil
@@ -139,15 +165,8 @@ import XCTest
                     for: config
                 )) != nil
             else {
-                assert(false, "Error recording requests")
+                assert(false, "❌ Error recording requests")
                 return
-            }
-
-            // Make sure to fail, to remind ourselves to turn this off
-            addTeardownBlock {
-                XCTFail(
-                    "Network traffic has been recorded - re-run with self.recordingMode = NO for this test to succeed"
-                )
             }
         } else {
             // Stubs are evaluated in the reverse order that they are added, so if the network is hit and no other stub is matched, raise an exception
@@ -156,7 +175,7 @@ import XCTest
                     return true
                 },
                 withStubResponse: { request in
-                    XCTFail("Attempted to hit the live network at \(request.url?.path ?? "")")
+                    XCTFail("❌ Attempted to hit the live network at \(request.url?.path ?? "")")
                     return HTTPStubsResponse()
                 }
             )
@@ -173,7 +192,7 @@ import XCTest
                     removeAfterUse: true
                 )
                 if let stubError = stubError {
-                    XCTFail("Error stubbing requests: \(stubError)")
+                    XCTFail("❌ Error stubbing requests: \(stubError)")
                 }
             } else {
                 print("No stubs found - all network access will raise an exception.")
@@ -198,19 +217,7 @@ import XCTest
 }
 
 // Function to filter out some common UUIDs or other request parameters that may change
-private func replaceNondeterministicParams(_ input: String) -> String {
-    let componentsToFilter = [
-        "guid=", // Fraud detection data
-        "muid=",
-        "sid=",
-        "[guid]=",
-        "[muid]=",
-        "[sid]=",
-        "app_version_key", // Current version of Xcode, for Alipay
-
-        "payment_user_agent", // Contains the SDK version number
-        "pk_token_transaction_id", // Random string
-    ]
+private func replaceNondeterministicParams(_ input: String, componentsToFilter: [String]) -> String {
     var components = input.components(separatedBy: "&")
 
     for (index, component) in components.enumerated() {

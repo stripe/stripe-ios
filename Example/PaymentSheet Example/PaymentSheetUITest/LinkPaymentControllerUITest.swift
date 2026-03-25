@@ -20,7 +20,13 @@ class LinkPaymentControllerUITest: XCTestCase {
         app.launchEnvironment = ["UITesting": "true"]
     }
 
-    func testInstantDebitsOnlyLinkPaymentController() {
+    override func tearDownWithError() throws {
+        try super.tearDownWithError()
+        app.launchEnvironment = [:]
+    }
+
+    func testWebInstantDebitsOnlyLinkPaymentController() {
+        app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "false"
         app.launch()
 
         // PaymentSheet Example
@@ -34,6 +40,9 @@ class LinkPaymentControllerUITest: XCTestCase {
         )
         wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
         paymentMethodButton.tap()
+
+        // "Institution Picker" pane
+        tapTestNonOAuthInstituition(app)
 
         // "Consent" pane
         app.buttons["Agree and continue"].waitForExistenceAndTap(timeout: timeout)
@@ -51,30 +60,6 @@ class LinkPaymentControllerUITest: XCTestCase {
         // screen
         app.typeText("4015006000" + XCUIKeyboardKey.return.rawValue)
 
-        // "Institution Picker" pane
-        let searchTextField = app.textFields
-            .matching(NSPredicate(format: "label CONTAINS 'Search'"))
-            .firstMatch
-        searchTextField.waitForExistenceAndTap(timeout: 10)
-        app.typeText("Test Institution" + XCUIKeyboardKey.return.rawValue)
-        searchTextField
-            .coordinate(
-                withNormalizedOffset: CGVector(
-                    dx: 0.5,
-                    // bottom of search text field
-                    dy: 1.0
-                )
-            )
-        // at this point, we searched "Test Institution"
-        // and the only search result is "Test Institution,"
-        // so here we guess that 80 pixels below search bar
-        // there will be a "Test Institution"
-        //
-        // we do this "guess" because every other method of
-        // selecting the institution did not work on iOS 17
-            .withOffset(CGVector(dx: 0, dy: 80))
-            .tap()
-
         // "Account Picker" pane
         _ = app.staticTexts["Select account"].waitForExistence(timeout: 10)
         app.buttons["Connect account"].tap()
@@ -88,8 +73,34 @@ class LinkPaymentControllerUITest: XCTestCase {
             withNormalizedOffset: CGVector(dx: 0.5, dy: 1.0)
         )
         // we then navigate from the bottom to the "Done" button
-            .withOffset(CGVector(dx: 0, dy: -130))
-            .tap()
+        .withOffset(CGVector(dx: 0, dy: -130))
+        .tap()
+
+        sleep(3) // wait for modal to disappear before pressing Buy
+
+        // Back to "LinkPaymentController"
+        app.buttons["Buy"].waitForExistenceAndTap(timeout: timeout)
+        XCTAssert(app.alerts.staticTexts["Your order is confirmed!"].waitForExistence(timeout: timeout))
+    }
+
+    func testNativeInstantDebitsOnlyLinkPaymentController() {
+        app.launchArguments += ["-FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE", "YES"]
+        app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "true"
+        app.launch()
+
+        // PaymentSheet Example
+        app.staticTexts["LinkPaymentController"].tap()
+
+        // LinkPaymentController
+        let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
+        let paymentMethodButtonEnabledExpectation = expectation(
+            for: NSPredicate(format: "enabled == true"),
+            evaluatedWith: paymentMethodButton
+        )
+        wait(for: [paymentMethodButtonEnabledExpectation], timeout: 60, enforceOrder: true)
+        paymentMethodButton.tap()
+
+        PaymentSheetUITestCase.stepThroughNativeInstantDebitsFlow(app: app, emailPrefilled: false)
 
         sleep(3) // wait for modal to disappear before pressing Buy
 

@@ -1,4 +1,8 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (valikuline)";
+
+"(not accepted)" = "(pole aktsepteeritud)";
 
 "Account number" = "Kontonumber";
 
@@ -36,7 +40,7 @@
 
 "County" = "Maakond";
 
-"Date is empty." = "Kuupäev on tühi.";
+"Date of Birth" = "Sünnikuupäev";
 
 "Department" = "Departemang";
 
@@ -84,8 +88,6 @@
 
 "Parish" = "Vald";
 
-"Phone" = "Telefon";
-
 "Phone number" = "Telefoninumber";
 
 "Postal code" = "Sihtnumber";
@@ -103,6 +105,8 @@
 "Search" = "Otsing";
 
 "Select card brand (optional)" = "Valige kaardi kaubamärk (valikuline)";
+
+"Selection is empty." = "Valik on tühi.";
 
 "Sort code" = "Sorteerimiskood";
 
@@ -132,12 +136,16 @@
 
 "Your BLIK code is invalid." = "Teie BLIK-kood on kehtetu.";
 
-"Your ZIP is incomplete." = "Teie sihtnumber on puudulik.";
+"Your ZIP code is incomplete." = "Teie postiindeks on puudulik.";
+
+"Your ZIP code is invalid." = "Teie postiindeks on vigane.";
 
 "Your email is invalid." = "Teie meiliaadress on kehtetu.";
 
 "Your payment information will not be saved." = "Teie makseteavet ei salvestata.";
 
 "Your postal code is incomplete." = "Sihtnumber on puudulik.";
+
+"Your postal code is invalid." = "Teie sihtnumber on kehtetu.";
 
 "ZIP" = "Sihtnr";

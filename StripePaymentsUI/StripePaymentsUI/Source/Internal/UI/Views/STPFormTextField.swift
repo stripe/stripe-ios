@@ -122,39 +122,37 @@ import UIKit
                     return attributedString
                 }
             case .phoneNumbers:
-                weak var weakSelf = self
-                textFormattingBlock = { inputString in
+                textFormattingBlock = { [weak self] inputString in
                     if !STPCardValidator.stringIsNumeric(inputString?.string ?? "") {
                         return inputString!
                     }
-                    guard let strongSelf = weakSelf else {
+                    guard let self else {
                         return inputString!
                     }
                     let phoneNumber = STPPhoneNumberValidator.formattedSanitizedPhoneNumber(
                         for: inputString?.string ?? ""
                     )
-                    let attributes = type(of: strongSelf).attributes(for: inputString)
+                    let attributes = type(of: self).attributes(for: inputString)
                     return NSAttributedString(
                         string: phoneNumber,
                         attributes: attributes as? [NSAttributedString.Key: Any]
                     )
                 }
             case .bsbNumber:
-                weak var weakSelf = self
-                textFormattingBlock = { inputString in
+                textFormattingBlock = { [weak self] inputString in
                     guard let inputString = inputString else {
                         return NSAttributedString()
                     }
                     if !STPBSBNumberValidator.isStringNumeric(inputString.string) {
                         return inputString
                     }
-                    guard let strongSelf = weakSelf else {
+                    guard let self else {
                         return NSAttributedString()
                     }
                     let bsbNumber = STPBSBNumberValidator.formattedSanitizedText(
                         from: inputString.string
                     )
-                    let attributes = type(of: strongSelf).attributes(for: inputString)
+                    let attributes = type(of: self).attributes(for: inputString)
                     return NSAttributedString(
                         string: bsbNumber ?? "",
                         attributes: attributes as? [NSAttributedString.Key: Any]

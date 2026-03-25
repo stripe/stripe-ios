@@ -17,12 +17,11 @@ import XCTest
 // swift-format-ignore
 @_spi(STP) @testable import StripePaymentsUI
 
-class STPAnalyticsClientPaymentsUITest: XCTestCase {
+class STPAnalyticsClientPaymentsUITests: XCTestCase {
     func testPaymentsUISDKVariantPayload() throws {
         // setup
         let analytic = GenericPaymentAnalytic(
             event: .paymentMethodCreation,
-            paymentConfiguration: nil,
             additionalParams: [:]
         )
         let client = STPAnalyticsClient()

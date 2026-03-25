@@ -57,17 +57,17 @@ private func TextBodyEntryView(
     case .xsmall:
         font = .body(.extraSmall)
         boldFont = .body(.extraSmallEmphasized)
-        textColor = .textSubdued
+        textColor = FinancialConnectionsAppearance.Colors.textSubdued
     case .small:
         font = .body(.small)
         boldFont = .body(.smallEmphasized)
-        textColor = .textSubdued
+        textColor = FinancialConnectionsAppearance.Colors.textSubdued
     case .medium: fallthrough
     case .unparsable: fallthrough
     case .none:
         font = .body(.medium)
         boldFont = .body(.mediumEmphasized)
-        textColor = .textDefault
+        textColor = FinancialConnectionsAppearance.Colors.textDefault
     }
     let textView = AttributedTextView(
         font: font,

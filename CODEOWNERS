@@ -1,2 +1,10 @@
-# Automatically request reviews from @ios-reviewers by default, allow reviews from @ios-non-core-reviewers
+# By default, allow reviews from all reviewers
 * @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
+
+# For payments, automatically request reviews from @ios-payments-reviewers, allow reviews from other reviewers
+*/StripePaymentSheet @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
+*/StripePayments @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
+*/StripePaymentsUI @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
+*/StripeApplePay @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
+*/Stripe3DS2 @stripe/ios-payments-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers
+*/StripeConnect @stripe/ios-connect-reviewers @stripe/ios-sdk-reviewers @stripe/ios-sdk-non-core-reviewers

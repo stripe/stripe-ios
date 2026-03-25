@@ -63,7 +63,6 @@ import UIKit
         let stackView = UIStackView(arrangedSubviews: [textView, descriptionLabel])
         stackView.spacing = 4
         stackView.axis = .vertical
-        stackView.distribution = .equalSpacing
         stackView.alignment = .leading
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -104,17 +103,24 @@ import UIKit
         }
     }
 
-    public var theme: ElementsUITheme {
+    public var theme: ElementsAppearance {
         didSet {
             checkbox.theme = theme
             updateLabels()
         }
     }
 
+    private let alwaysEmphasizeText: Bool
+
     // MARK: - Initializers
 
-    public init(description: String? = nil, theme: ElementsUITheme = .default) {
+    public init(
+        description: String? = nil,
+        theme: ElementsAppearance = .default,
+        alwaysEmphasizeText: Bool = false
+    ) {
         self.theme = theme
+        self.alwaysEmphasizeText = alwaysEmphasizeText
         super.init(frame: .zero)
 
         isAccessibilityElement = true
@@ -130,13 +136,23 @@ import UIKit
         addGestureRecognizer(didTapGestureRecognizer)
     }
 
-    public convenience init(text: String, description: String? = nil, theme: ElementsUITheme = .default) {
-        self.init(description: description, theme: theme)
+    public convenience init(
+        text: String,
+        description: String? = nil,
+        theme: ElementsAppearance = .default,
+        alwaysEmphasizeText: Bool = false
+    ) {
+        self.init(description: description, theme: theme, alwaysEmphasizeText: alwaysEmphasizeText)
         setText(text)
     }
 
-    public convenience init(attributedText: NSAttributedString, description: String? = nil, theme: ElementsUITheme = .default) {
-        self.init(description: description, theme: theme)
+    public convenience init(
+        attributedText: NSAttributedString,
+        description: String? = nil,
+        theme: ElementsAppearance = .default,
+        alwaysEmphasizeText: Bool = false
+    ) {
+        self.init(description: description, theme: theme, alwaysEmphasizeText: alwaysEmphasizeText)
         setAttributedText(attributedText)
     }
 
@@ -152,7 +168,7 @@ import UIKit
         textView.invalidateIntrinsicContentSize()
     }
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         updateLabels()
@@ -202,10 +218,11 @@ import UIKit
 
     private func updateLabels() {
         let hasDescription = descriptionLabel.text != nil
+        let emphasizeText = hasDescription || alwaysEmphasizeText
 
-        let textFont =  hasDescription ? emphasisFont : font
+        let textFont = emphasizeText ? emphasisFont : font
         textView.font = textFont
-        textView.textColor = hasDescription ? theme.colors.bodyText : theme.colors.secondaryText
+        textView.textColor = emphasizeText ? theme.colors.bodyText : theme.colors.secondaryText
 
         descriptionLabel.font = font
         descriptionLabel.isHidden = !hasDescription
@@ -238,11 +255,32 @@ import UIKit
             accessibilityHint = hints.compactMap { $0 }.joined(separator: ", ")
         }
     }
+
+    func setUserInteraction(isUserInteractionEnabled: Bool) {
+        isEnabled = isUserInteractionEnabled
+        alpha = isUserInteractionEnabled ? 1.0 : 0.6
+
+    }
+}
+
+extension CheckboxButton: EventHandler {
+    public func handleEvent(_ event: STPEvent) {
+        UIView.animate(withDuration: 0.2) {
+            switch event {
+            case .shouldDisableUserInteraction:
+                self.setUserInteraction(isUserInteractionEnabled: false)
+            case .shouldEnableUserInteraction:
+                self.setUserInteraction(isUserInteractionEnabled: true)
+            default:
+                break
+            }
+        }
+    }
 }
 
 // MARK: - UITextViewDelegate
 extension CheckboxButton: UITextViewDelegate {
-    #if !canImport(CompositorServices)
+    #if !os(visionOS)
     // This is only used by StripeIdentity, which does not support visionOS.
     public func textView(_ textView: UITextView, shouldInteractWith url: URL, in characterRange: NSRange) -> Bool {
         return delegate?.checkboxButton(self, shouldOpen: url) ?? true
@@ -268,7 +306,7 @@ class CheckBox: UIView {
         return theme.colors.parentBackground
     }
 
-    var theme: ElementsUITheme {
+    var theme: ElementsAppearance {
         didSet {
             layer.applyShadow(shadow: theme.shadow)
             setNeedsDisplay()
@@ -279,7 +317,7 @@ class CheckBox: UIView {
         return CGSize(width: 20, height: 20)
     }
 
-    init(theme: ElementsUITheme = .default) {
+    init(theme: ElementsAppearance = .default) {
         self.theme = theme
         super.init(frame: .zero)
 

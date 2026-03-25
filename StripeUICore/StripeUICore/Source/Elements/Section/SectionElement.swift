@@ -19,6 +19,7 @@ import UIKit
         isViewInitialized = true
         return SectionView(viewModel: viewModel)
     }()
+    private let selectionBehavior: SelectionBehavior
     var isViewInitialized: Bool = false
     var errorText: String? {
         // Find the first element that's 1. invalid and 2. has a displayable error
@@ -35,6 +36,8 @@ import UIKit
             title: title,
             errorText: errorText,
             subLabel: subLabel,
+            warningLabel: warningLabel,
+            selectionBehavior: selectionBehavior,
             theme: theme
         )
     }
@@ -55,7 +58,11 @@ import UIKit
         elements.compactMap({ $0.subLabelText }).first
     }
 
-    let theme: ElementsUITheme
+    var warningLabel: String? {
+        elements.compactMap({ $0.warningLabelText }).first
+    }
+
+    let theme: ElementsAppearance
 
     // MARK: - ViewModel
 
@@ -64,21 +71,29 @@ import UIKit
         let title: String?
         let errorText: String?
         var subLabel: String?
-        let theme: ElementsUITheme
+        var warningLabel: String?
+        let selectionBehavior: SelectionBehavior
+        let theme: ElementsAppearance
     }
 
     // MARK: - Initializers
 
-    public init(title: String? = nil, elements: [Element], theme: ElementsUITheme = .default) {
+    public init(
+        title: String? = nil,
+        elements: [Element],
+        selectionBehavior: SelectionBehavior = .default,
+        theme: ElementsAppearance = .default
+    ) {
         self.title = title
         self.elements = elements
+        self.selectionBehavior = selectionBehavior
         self.theme = theme
         elements.forEach {
             $0.delegate = self
         }
     }
 
-    public convenience init(_ element: Element, theme: ElementsUITheme = .default) {
+    public convenience init(_ element: Element, theme: ElementsAppearance = .default) {
         self.init(title: nil, elements: [element], theme: theme)
     }
 }
@@ -98,6 +113,7 @@ extension SectionElement: ElementDelegate {
         // Glue: Update the view and our delegate
         if isViewInitialized {
             sectionView.update(with: viewModel)
+            sectionView.updateBorder(for: element)
         }
         delegate?.didUpdate(element: self)
     }

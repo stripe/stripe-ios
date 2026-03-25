@@ -26,7 +26,7 @@ final class LinkAccountPickerBodyView: UIView {
     init(
         accountTuples: [FinancialConnectionsAccountTuple],
         addNewAccount: FinancialConnectionsNetworkingAccountPicker.AddNewAccount,
-        theme: FinancialConnectionsTheme
+        appearance: FinancialConnectionsAppearance
     ) {
         super.init(frame: .zero)
 
@@ -39,7 +39,7 @@ final class LinkAccountPickerBodyView: UIView {
             let accountRowView = AccountPickerRowView(
                 isDisabled: !accountTuple.accountPickerAccount.allowSelection && accountTuple.accountPickerAccount.drawerOnSelection == nil,
                 isFaded: !accountTuple.accountPickerAccount.allowSelection,
-                theme: theme,
+                appearance: appearance,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.linkAccountPickerBodyView(
@@ -74,7 +74,7 @@ final class LinkAccountPickerBodyView: UIView {
         let newAccountRowView = LinkAccountPickerNewAccountRowView(
             title: addNewAccount.body,
             imageUrl: addNewAccount.icon?.default,
-            theme: theme,
+            appearance: appearance,
             didSelect: { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.linkAccountPickerBodyViewSelectedNewBankAccount(self)
@@ -142,7 +142,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                             ),
                             logo: nil
                         ),
-                        nextPaneOnSelection: .success
+                        nextPaneOnSelection: .success,
+                        authorization: nil
                     )
                 ),
                 (
@@ -171,7 +172,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         allowSelectionMessage: nil,
                         status: "disabled",
                         institution: nil,
-                        nextPaneOnSelection: .success
+                        nextPaneOnSelection: .success,
+                        authorization: nil
                     )
                 ),
                 (
@@ -198,7 +200,8 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                         allowSelectionMessage: nil,
                         status: "disabled",
                         institution: nil,
-                        nextPaneOnSelection: .success
+                        nextPaneOnSelection: .success,
+                        authorization: nil
                     )
                 ),
             ],
@@ -208,7 +211,7 @@ private struct LinkAccountPickerBodyViewUIViewRepresentable: UIViewRepresentable
                     default: "https://b.stripecdn.com/connections-statics-srv/assets/SailIcon--add-purple-3x.png"
                 )
             ),
-            theme: .light
+            appearance: .stripe
         )
     }
 

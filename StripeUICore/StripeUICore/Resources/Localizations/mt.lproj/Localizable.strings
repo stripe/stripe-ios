@@ -1,4 +1,8 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (mhux obbligatorja)";
+
+"(not accepted)" = "(ma tistax tintuża)";
 
 "Account number" = "In-numru tal-kont";
 
@@ -36,7 +40,7 @@
 
 "County" = "Kontea";
 
-"Date is empty." = "Id-data hija battala.";
+"Date of Birth" = "Data tat-Twelid";
 
 "Department" = "Dipartiment";
 
@@ -84,8 +88,6 @@
 
 "Parish" = "Parroċċa";
 
-"Phone" = "Telefon";
-
 "Phone number" = "In-numru tal-mowbajl";
 
 "Postal code" = "Kodiċi postali";
@@ -103,6 +105,8 @@
 "Search" = "Fittex";
 
 "Select card brand (optional)" = "Agħżel id-ditta tal-karta (mhux obbligatorja)";
+
+"Selection is empty." = "L-għażla hija vojta.";
 
 "Sort code" = "Il-kodiċi Sort";
 
@@ -132,12 +136,16 @@
 
 "Your BLIK code is invalid." = "Il-kodiċi BLIK li ktibt mhux tajjeb.";
 
-"Your ZIP is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
+"Your ZIP code is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
+
+"Your ZIP code is invalid." = "Il-kodiċi ZIP tiegħek huwa invalidu.";
 
 "Your email is invalid." = "L-indirizz tal-email li daħħalt mhux tajjeb.";
 
 "Your payment information will not be saved." = "L-informazzjoni tal-pagament tiegħek mhux se tiġi merfugħa.";
 
 "Your postal code is incomplete." = "Il-kodiċi postali tiegħek mhux komplut.";
+
+"Your postal code is invalid." = "Il-kodiċi postali tiegħek mhux validu.";
 
 "ZIP" = "Kodiċi Postali";

@@ -9,60 +9,66 @@ import Foundation
 @_spi(STP) import StripeCore
 
 // Used to indicate if this card section is being used by either PaymentSheet or CustomerSheet
-enum HostedSurface {
+@_spi(STP) public enum HostedSurface {
     case paymentSheet
     case customerSheet
 
     init(config: PaymentSheetFormFactoryConfig) {
         switch config {
-        case .paymentSheet:
+        case .paymentElement:
             self = .paymentSheet
         case .customerSheet:
             self = .customerSheet
         }
     }
 
-    func analyticEvent(for event: CardBrandChoiceEvents) -> STPAnalyticEvent {
+    func analyticEvent(for event: CardUpdateEvents) -> STPAnalyticEvent {
         switch (event, self) {
-        case (.displayCardBrandDropdownIndicator, .paymentSheet):
-            return .paymentSheetDisplayCardBrandDropdownIndicator
-        case (.openCardBrandDropdown, .paymentSheet):
-            return .paymentSheetOpenCardBrandDropdown
-        case (.closeCardBrandDropDown, .paymentSheet):
-            return .paymentSheetCloseCardBrandDropDown
-        case (.openCardBrandEditScreen, .paymentSheet):
-            return .paymentSheetOpenCardBrandEditScreen
-        case (.updateCardBrand, .paymentSheet):
-            return .paymentSheetUpdateCardBrand
-        case (.updateCardBrandFailed, .paymentSheet):
-            return .paymentSheetUpdateCardBrandFailed
+        case (.displayCardBrandChoiceIndicator, .paymentSheet):
+            return .paymentSheetDisplayCardBrandChoiceIndicator
+        case (.cardBrandSelected, .paymentSheet):
+            return .paymentSheetCardBrandSelected
+        case (.openEditScreen, .paymentSheet):
+            return .paymentSheetOpenEditScreen
+        case (.updateCard, .paymentSheet):
+            return .paymentSheetUpdateCard
+        case (.updateCardFailed, .paymentSheet):
+            return .paymentSheetUpdateCardFailed
+        case (.setDefaultPaymentMethod, .paymentSheet):
+            return .paymentSheetSetDefaultPaymentMethod
+        case (.setDefaultPaymentMethodFailed, .paymentSheet):
+            return .paymentSheetSetDefaultPaymentMethodFailed
         case (.closeEditScreen, .paymentSheet):
             return .paymentSheetClosesEditScreen
-        case (.displayCardBrandDropdownIndicator, .customerSheet):
-            return .customerSheetDisplayCardBrandDropdownIndicator
-        case (.openCardBrandDropdown, .customerSheet):
-            return .customerSheetOpenCardBrandDropdown
-        case (.closeCardBrandDropDown, .customerSheet):
-            return .customerSheetCloseCardBrandDropDown
-        case (.openCardBrandEditScreen, .customerSheet):
-            return .customerSheetOpenCardBrandEditScreen
-        case (.updateCardBrand, .customerSheet):
-            return .customerSheetUpdateCardBrand
-        case (.updateCardBrandFailed, .customerSheet):
-            return .customerSheetUpdateCardBrandFailed
+        case (.displayCardBrandChoiceIndicator, .customerSheet):
+            return .customerSheetDisplayCardBrandChoiceIndicator
+        case (.cardBrandSelected, .customerSheet):
+            return .customerSheetCardBrandSelected
+        case (.openEditScreen, .customerSheet):
+            return .customerSheetOpenEditScreen
+        case (.updateCard, .customerSheet):
+            return .customerSheetUpdateCard
+        case (.updateCardFailed, .customerSheet):
+            return .customerSheetUpdateCardFailed
         case (.closeEditScreen, .customerSheet):
             return .customerSheetClosesEditScreen
+        // These events never actually happen— this data is sent in CustomerSheet on its confirm call
+        case (.setDefaultPaymentMethod, .customerSheet):
+            return STPAnalyticEvent.unexpectedCustomerSheetError
+        case (.setDefaultPaymentMethodFailed, .customerSheet):
+            return STPAnalyticEvent.unexpectedCustomerSheetError
         }
     }
 
     // Helper for mapping between PaymentSheet and CustomerSheet CBC events
-    enum CardBrandChoiceEvents {
-        case displayCardBrandDropdownIndicator
-        case openCardBrandDropdown
-        case closeCardBrandDropDown
-        case openCardBrandEditScreen
-        case updateCardBrand
-        case updateCardBrandFailed
+    enum CardUpdateEvents {
+        case displayCardBrandChoiceIndicator
+        case cardBrandSelected
+        case openEditScreen
+        case updateCard
+        case updateCardFailed
+        case setDefaultPaymentMethod
+        case setDefaultPaymentMethodFailed
         case closeEditScreen
     }
 }

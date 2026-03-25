@@ -10,18 +10,21 @@ import Foundation
 
 protocol NativeFlowDataManager: AnyObject {
     var manifest: FinancialConnectionsSessionManifest { get set }
+    var configuration: FinancialConnectionsSheet.Configuration { get }
     var reducedBranding: Bool { get }
     var merchantLogo: [String]? { get }
     var returnURL: String? { get }
     var consentPaneModel: FinancialConnectionsConsent? { get }
     var accountPickerPane: FinancialConnectionsAccountPickerPane? { get }
-    var apiClient: FinancialConnectionsAPIClient { get }
+    var apiClient: any FinancialConnectionsAPI { get }
     var clientSecret: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
+    var elementsSessionContext: ElementsSessionContext? { get }
     var reduceManualEntryProminenceInErrors: Bool { get }
 
     var institution: FinancialConnectionsInstitution? { get set }
     var authSession: FinancialConnectionsAuthSession? { get set }
+    var idConsentContent: FinancialConnectionsIDConsentContent? { get set }
     var linkedAccounts: [FinancialConnectionsPartnerAccount]? { get set }
     var terminalError: Error? { get set }
     var errorPaneError: Error? { get set }
@@ -34,15 +37,15 @@ protocol NativeFlowDataManager: AnyObject {
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
     var customSuccessPaneCaption: String? { get set }
     var customSuccessPaneSubCaption: String? { get set }
+    var pendingRelinkAuthorization: String? { get set }
 
     func createPaymentDetails(
         consumerSessionClientSecret: String,
-        bankAccountId: String
+        bankAccountId: String,
+        billingAddress: BillingAddress?,
+        billingEmail: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<FinancialConnectionsPaymentDetails>
-    func createPaymentMethod(
-        consumerSessionClientSecret: String,
-        paymentDetailsId: String
-    ) -> Future<FinancialConnectionsPaymentMethod>
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession>
 }
@@ -77,12 +80,15 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var reduceManualEntryProminenceInErrors: Bool {
         return visualUpdate.reduceManualEntryProminenceInErrors
     }
+    let configuration: FinancialConnectionsSheet.Configuration
     let returnURL: String?
     let consentPaneModel: FinancialConnectionsConsent?
+    var idConsentContent: FinancialConnectionsIDConsentContent?
     let accountPickerPane: FinancialConnectionsAccountPickerPane?
-    let apiClient: FinancialConnectionsAPIClient
+    var apiClient: any FinancialConnectionsAPI
     let clientSecret: String
     let analyticsClient: FinancialConnectionsAnalyticsClient
+    let elementsSessionContext: ElementsSessionContext?
 
     var institution: FinancialConnectionsInstitution?
     var authSession: FinancialConnectionsAuthSession?
@@ -96,30 +102,42 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane?
     var customSuccessPaneCaption: String?
     var customSuccessPaneSubCaption: String?
+    var pendingRelinkAuthorization: String?
 
+    // Note: These properties maintain their last non-nil value. Once set to a value,
+    // these properties can only be changed to another non-nil value.
+    // They also propagate their new values to the API client.
     var consumerSession: ConsumerSessionData? {
         didSet {
+            if consumerSession == nil && oldValue != nil {
+                consumerSession = oldValue
+            }
             apiClient.consumerSession = consumerSession
         }
     }
-
     var consumerPublishableKey: String? {
         didSet {
+            if consumerPublishableKey == nil && oldValue != nil {
+                consumerPublishableKey = oldValue
+            }
             apiClient.consumerPublishableKey = consumerPublishableKey
         }
     }
 
     init(
         manifest: FinancialConnectionsSessionManifest,
+        configuration: FinancialConnectionsSheet.Configuration,
         visualUpdate: FinancialConnectionsSynchronize.VisualUpdate,
         returnURL: String?,
         consentPaneModel: FinancialConnectionsConsent?,
         accountPickerPane: FinancialConnectionsAccountPickerPane?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient
+        analyticsClient: FinancialConnectionsAnalyticsClient,
+        elementsSessionContext: ElementsSessionContext?
     ) {
         self.manifest = manifest
+        self.configuration = configuration
         self.visualUpdate = visualUpdate
         self.returnURL = returnURL
         self.consentPaneModel = consentPaneModel
@@ -127,30 +145,30 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
+        self.elementsSessionContext = elementsSessionContext
         // Use server provided active AuthSession.
         self.authSession = manifest.activeAuthSession
         // If the server returns active institution use that, otherwise resort to initial institution.
         self.institution = manifest.activeInstitution ?? manifest.initialInstitution
+        // Use consumer properties from the API client, if available.
+        self.consumerSession = apiClient.consumerSession
+        self.consumerPublishableKey = apiClient.consumerPublishableKey
         didUpdateManifest()
     }
 
     func createPaymentDetails(
         consumerSessionClientSecret: String,
-        bankAccountId: String
+        bankAccountId: String,
+        billingAddress: BillingAddress?,
+        billingEmail: String?,
+        clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<FinancialConnectionsPaymentDetails> {
         apiClient.paymentDetails(
             consumerSessionClientSecret: consumerSessionClientSecret,
-            bankAccountId: bankAccountId
-        )
-    }
-
-    func createPaymentMethod(
-        consumerSessionClientSecret: String,
-        paymentDetailsId: String
-    ) -> Future<FinancialConnectionsPaymentMethod> {
-        apiClient.paymentMethods(
-            consumerSessionClientSecret: consumerSessionClientSecret,
-            paymentDetailsId: paymentDetailsId
+            bankAccountId: bankAccountId,
+            billingAddress: billingAddress,
+            billingEmail: billingEmail,
+            clientAttributionMetadata: clientAttributionMetadata
         )
     }
 

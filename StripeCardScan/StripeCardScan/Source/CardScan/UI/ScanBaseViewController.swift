@@ -356,9 +356,9 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         ScanBaseViewController.isAppearing = true
-        /// Set beginning of scan session
+        // Set beginning of scan session
         ScanAnalyticsManager.shared.setScanSessionStartTime(time: Date())
-        /// Check and log torch availability
+        // Check and log torch availability
         ScanAnalyticsManager.shared.logTorchSupportTask(
             supported: videoFeed.hasTorchAndIsAvailable()
         )
@@ -413,22 +413,20 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
         from connection: AVCaptureConnection
     ) {
         if self.machineLearningSemaphore.wait(timeout: .now()) == .success {
-            ScanBaseViewController.machineLearningQueue.async {
-                self.captureOutputWork(sampleBuffer: sampleBuffer)
+            guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer),
+                  let fullCameraImage = pixelBuffer.cgImage() else {
                 self.machineLearningSemaphore.signal()
+                return
+            }
+
+            ScanBaseViewController.machineLearningQueue.async { [weak self] in
+                self?.captureOutputWork(fullCameraImage: fullCameraImage)
+                self?.machineLearningSemaphore.signal()
             }
         }
     }
 
-    func captureOutputWork(sampleBuffer: CMSampleBuffer) {
-        guard let pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            return
-        }
-
-        guard let fullCameraImage = pixelBuffer.cgImage() else {
-            return
-        }
-
+    func captureOutputWork(fullCameraImage: CGImage) {
         // confirm videoGravity settings in previewView. Calculations based on .resizeAspectFill
         DispatchQueue.main.async {
             assert(self.previewView?.videoPreviewLayer.videoGravity == .resizeAspectFill)
@@ -472,9 +470,9 @@ class ScanBaseViewController: UIViewController, AVCaptureVideoDataOutputSampleBu
     // MARK: - OcrMainLoopComplete logic
     func complete(creditCardOcrResult: CreditCardOcrResult) {
         ocrMainLoop()?.mainLoopDelegate = nil
-        /// Stop the previewing when we are done
+        // Stop the previewing when we are done
         self.previewView?.videoPreviewLayer.session?.stopRunning()
-        /// Log total frames processed
+        // Log total frames processed
         ScanAnalyticsManager.shared.logMainLoopImageProcessedRepeatingTask(
             .init(executions: self.getScanStats().scans)
         )

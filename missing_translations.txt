@@ -1,0 +1,1 @@
+We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href

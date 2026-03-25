@@ -9,7 +9,6 @@
 @_spi(STP) import StripeCore
 
 @testable@_spi(STP) import Stripe
-@testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
@@ -17,7 +16,6 @@
 class STPBSBNumberValidatorTests: XCTestCase {
     func testValidationStateForText() {
         // Don't use the special test key behavior of treating 00 as a valid BSB.
-        STPAPIClient.shared.publishableKey = "pk_live_not_a_real_key"
         let tests: [(String, STPTextValidationState)] = [
             ("", .empty),
             ("1", .incomplete),
@@ -77,7 +75,6 @@ class STPBSBNumberValidatorTests: XCTestCase {
 
     func testIconForText() {
         // Don't use the special test key behavior of treating 00 as a valid BSB.
-        STPAPIClient.shared.publishableKey = "pk_live_not_a_real_key"
         let defaultIcon = STPBSBNumberValidator.icon(forText: nil)
         XCTAssertNotNil(defaultIcon, "Nil default icon")
 

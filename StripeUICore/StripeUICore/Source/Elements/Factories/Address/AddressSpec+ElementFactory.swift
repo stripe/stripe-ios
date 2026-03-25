@@ -10,7 +10,7 @@ import Foundation
 
 /// Convenience methods to create address fields that are localized according to the AddressSpec
 extension AddressSpec {
-    func makeCityElement(defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
+    func makeCityElement(defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
         return TextFieldElement.Address.CityConfiguration(
             label: cityNameType.localizedLabel,
             defaultValue: defaultValue,
@@ -18,7 +18,7 @@ extension AddressSpec {
         ).makeElement(theme: theme)
     }
 
-    func makeStateElement(defaultValue: String?, stateDict: [String: String], theme: ElementsUITheme = .default) -> TextOrDropdownElement {
+    func makeStateElement(defaultValue: String?, stateDict: [String: String], theme: ElementsAppearance = .default) -> TextOrDropdownElement {
         // If no state dict just use a textfield for state
         if stateDict.isEmpty {
             return TextFieldElement.Address.StateConfiguration(
@@ -35,16 +35,16 @@ extension AddressSpec {
                                                                      rawData: $0.key)}).sorted { $0.pickerDisplayName.string < $1.pickerDisplayName.string }
 
         let defaultIndex = items.firstIndex(where: {$0.rawData.lowercased() == defaultValue?.lowercased()
-            || $0.pickerDisplayName.string.lowercased() == defaultValue?.lowercased()}) ?? 0
+            || $0.pickerDisplayName.string.lowercased() == defaultValue?.lowercased()})
 
         return DropdownFieldElement(items: items,
                                     defaultIndex: defaultIndex,
                                     label: stateNameType.localizedLabel,
                                     theme: theme,
-                                    didUpdate: nil)
+                                    startsEmpty: true)
     }
 
-    func makePostalElement(countryCode: String, defaultValue: String?, theme: ElementsUITheme = .default) -> TextFieldElement {
+    func makePostalElement(countryCode: String, defaultValue: String?, theme: ElementsAppearance = .default) -> TextFieldElement {
         return TextFieldElement.Address.PostalCodeConfiguration(
             countryCode: countryCode,
             label: zipNameType.localizedLabel,

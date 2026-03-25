@@ -140,7 +140,10 @@ class STPCardFormViewTests: XCTestCase {
     }
 
     func testCBCWithPreferredNetwork() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        defer {
+            STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        }
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "5555552500001001"
@@ -162,14 +165,20 @@ class STPCardFormViewTests: XCTestCase {
     }
 
     func testCBCOBO() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        defer {
+            STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        }
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         cardFormView.onBehalfOf = "acct_abc123"
         XCTAssertEqual((cardFormView.numberField.validator as! STPCardNumberInputTextFieldValidator).cbcController.onBehalfOf, "acct_abc123")
     }
 
     func testCBCFourDigitCVCIsInvalid() {
-        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey
+        STPAPIClient.shared.publishableKey = STPTestingDefaultPublishableKey // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        defer {
+            STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
+        }
         let cardFormView = STPCardFormView(billingAddressCollection: .automatic, cbcEnabledOverride: true)
         let cardParams = STPPaymentMethodCardParams()
         cardParams.number = "5555552500001001"
@@ -205,8 +214,7 @@ class STPCardFormViewTests: XCTestCase {
             }
         }
         wait(for: [createPaymentIntentExpectation], timeout: 8)  // STPTestingNetworkRequestTimeout
-        guard let clientSecret = retrievedClientSecret,
-            let currentYear = Calendar.current.dateComponents([.year], from: Date()).year
+        guard let clientSecret = retrievedClientSecret
         else {
             XCTFail()
             return
@@ -215,7 +223,7 @@ class STPCardFormViewTests: XCTestCase {
         // STPTestingDefaultPublishableKey
         let client = STPAPIClient(publishableKey: "pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6")
 
-        let expiryYear = NSNumber(value: currentYear + 2)
+        let expiryYear = NSNumber(value: 2040)
         let expiryMonth = NSNumber(1)
 
         let cardParams = STPPaymentMethodCardParams()
@@ -235,7 +243,7 @@ class STPCardFormViewTests: XCTestCase {
             metadata: nil
         )
 
-        let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+        let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
         paymentIntentParams.paymentMethodParams = paymentMethodParams
 
         let confirmExpectation = expectation(description: "confirmExpectation")

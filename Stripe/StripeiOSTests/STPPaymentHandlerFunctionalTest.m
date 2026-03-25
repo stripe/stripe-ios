@@ -32,14 +32,14 @@
     OCMStub([self.applicationMock openURL:[OCMArg any]
                              options:[OCMArg any]
                    completionHandler:([OCMArg invokeBlockWithArgs:@NO, nil])]);
-    [STPAPIClient sharedClient].publishableKey = STPTestingDefaultPublishableKey;
 }
 
 // N.B. Test mode alipay PaymentIntent's never have a native redirect so we can't test that here
 - (void)testAlipayOpensWebviewAfterNativeURLUnavailable {
     __block NSString *clientSecret = @"pi_123_secret_456";
 
-    id apiClient = OCMPartialMock(STPAPIClient.sharedClient);
+    STPAPIClient *_apiClient = [[STPAPIClient alloc] initWithPublishableKey: STPTestingDefaultPublishableKey];
+    id apiClient = OCMPartialMock(_apiClient);
     NSMutableDictionary *paymentIntentJSON = [[STPTestUtils jsonNamed:@"PaymentIntent"] mutableCopy];
     paymentIntentJSON[@"payment_method"] = [STPTestUtils jsonNamed:STPTestJSONPaymentMethodCard];
     STPPaymentIntent *paymentIntent = [STPPaymentIntent decodedObjectFromAPIResponse:paymentIntentJSON];
@@ -50,12 +50,13 @@
         handler(paymentIntent, nil);
     });
 
-    OCMStub([apiClient retrievePaymentIntentWithClientSecret:[OCMArg any] expand:[OCMArg any] completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
+    OCMStub([apiClient retrievePaymentIntentWithClientSecret:[OCMArg any] expand:[OCMArg any] timeout:[OCMArg any] completion:[OCMArg any]]).andDo(^(NSInvocation *invocation) {
         void (^handler)(STPPaymentIntent *paymentIntent, __unused NSError * _Nullable error);
-        [invocation getArgument:&handler atIndex:4];
+        [invocation getArgument:&handler atIndex:5];
         handler(paymentIntent, nil);
     });
 
+    STPPaymentHandler.sharedHandler.apiClient = _apiClient;
     id paymentHandler = OCMPartialMock(STPPaymentHandler.sharedHandler);
     OCMStub([paymentHandler apiClient]).andReturn(apiClient);
     
@@ -64,14 +65,14 @@
         [paymentHandler safariViewControllerDidFinish:self.presentingViewController];
     });
     
-    STPPaymentIntentParams *confirmParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+    STPPaymentIntentConfirmParams *confirmParams = [[STPPaymentIntentConfirmParams alloc] initWithClientSecret:clientSecret];
     confirmParams.paymentMethodOptions = [STPConfirmPaymentMethodOptions new];
     confirmParams.paymentMethodOptions.alipayOptions = [STPConfirmAlipayOptions new];
     confirmParams.paymentMethodParams = [STPPaymentMethodParams paramsWithAlipay:[STPPaymentMethodAlipayParams new] billingDetails:nil metadata:nil];
     confirmParams.returnURL = @"foo://bar";
 
     XCTestExpectation *e = [self expectationWithDescription:@""];
-    [paymentHandler confirmPayment:confirmParams withAuthenticationContext:self completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * __unused _, __unused NSError * _Nullable error) {
+    [paymentHandler confirmPaymentIntentWithParams:confirmParams authenticationContext:self completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * __unused _, __unused NSError * _Nullable error) {
         // ...shouldn't attempt to open the native URL (ie the alipay app)
         OCMReject([self.applicationMock openURL:[OCMArg any]
                                    options:[OCMArg any]
@@ -97,8 +98,8 @@
     });
     
     STPAPIClient *apiClient = [[STPAPIClient alloc] initWithPublishableKey: STPTestingMEXPublishableKey];
-    [STPAPIClient sharedClient].publishableKey = STPTestingMEXPublishableKey;
-    
+    STPPaymentHandler.sharedHandler.apiClient = apiClient;
+
     STPPaymentMethodBillingDetails *billingDetails = [STPPaymentMethodBillingDetails new];
     billingDetails.name = @"Test Customer";
     billingDetails.email = @"test@example.com";
@@ -117,7 +118,7 @@
         };
         [[STPTestingAPIClient new] createPaymentIntentWithParams:pi_params account:@"mex" apiVersion:nil completion:^(NSString * clientSecret, NSError * error2) {
             XCTAssertNil(error2);
-            [paymentHandler handleNextActionForPayment:clientSecret withAuthenticationContext:self returnURL:@"foo://z" completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * paymentIntent, NSError * error3) {
+            [paymentHandler handleNextActionForPaymentIntent:clientSecret authenticationContext:self returnURL:@"foo://z" completion:^(STPPaymentHandlerActionStatus status, STPPaymentIntent * paymentIntent, NSError * error3) {
                 XCTAssertNil(error3);
                 XCTAssertEqual(paymentIntent.status, STPPaymentIntentStatusRequiresAction);
                 XCTAssertEqual(status, STPPaymentHandlerActionStatusSucceeded);

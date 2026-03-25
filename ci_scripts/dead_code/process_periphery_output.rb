@@ -15,23 +15,45 @@ unused_code = {}
 File.foreach(periphery_output_file) do |line|
   line.chomp!
 
-  # Remove full file path and extract relevant information
-  # Example line:
-  # /path/to/file/SimpleMandateTextView.swift:29:17: warning: Initializer 'init(mandateText:theme:)' is unused
+  # Process lines that contain ".swift" and either "unused" or "warning" (case-insensitive)
+  if line.include?('.swift') && line.downcase.include?('warning')
+    # Split the line into up to 4 parts based on colon
+    # Example line:
+    # /path/to/file/SimpleMandateTextView.swift:29:17: warning: Initializer 'init(mandateText:theme:)' is unused
 
-  if line =~ %r{^(?:.*/)?(.+?)(?::\d+:\d+)?\s*:?\s*warning:\s*(?:.+?)\s+'(.+?)'\s+is unused$}
-    filename = $1
-    identifier = $2
+    parts = line.split(':', 4) # Split into 4 parts at most
 
-    key = "#{filename}_#{identifier}"
+    if parts.length >= 4
+      file_path = parts[0].strip
+      line_num = parts[1].strip # Not needed
+      # col_num = parts[2].strip  # Not needed
+      warning_message = parts[3].strip
 
-    unused_code[key] = "#{filename}: warning: #{identifier} is unused"
+      # Extract the filename from the file path
+      filename = File.basename(file_path)
+
+      # Remove 'warning:' from the warning_message if present (case-insensitive)
+      warning_text = warning_message.sub(/^warning:\s*/i, '')
+
+      # Construct the full warning message without line and column numbers
+      # Format: Filename.swift: warning: Message
+      full_warning_key = "#{filename}: warning: #{warning_text}"
+      full_warning_value = "#{filename}:#{line_num} warning: #{warning_text}"
+
+      # Assign the same string as both key and value
+      unused_code[full_warning_key] = full_warning_value
+
+    else
+      puts "Skipping improperly formatted line: #{line}"
+    end
   else
-    # Handle lines that don't match the expected pattern
-    puts "Skipping unrecognized line: #{line}"
+    # Handle lines that don't match criteria
   end
 end
 
+
+# Write the unused_code hash to the output JSON file with a newline at the end
 File.open(output_json_file, 'w') do |f|
-  f.write(JSON.pretty_generate(unused_code))
+  puts unused_code
+  f.write(JSON.pretty_generate(unused_code) + "\n")
 end

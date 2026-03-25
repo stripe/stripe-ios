@@ -7,80 +7,95 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 extension DocumentFileUploadViewController {
-    func listItemText(for side: DocumentSide) -> String {
-        switch side {
-        case .front:
-            return STPLocalizedString(
-                "Front of identity card",
-                "Description of front of identity card image"
-            )
-        case .back:
-            return STPLocalizedString(
-                "Back of identity card",
-                "Description of back of identity card image"
-            )
-        }
+    func listItemText(for side: DocumentSide, availableIDTypes: [String]) -> String {
+        return side.instruction(availableIDTypes: availableIDTypes)
     }
 
     func accessibilityLabel(
         for side: DocumentSide,
-        uploadStatus: DocumentUploader.UploadStatus
+        uploadStatus: DocumentUploader.UploadStatus,
+        availableIDTypes: [String]
     ) -> String {
         switch uploadStatus {
         case .notStarted,
             .error:
-            return selectAccessibilityLabel(for: side)
+            return selectAccessibilityLabel(for: side, availableIDTypes: availableIDTypes)
         case .inProgress:
-            return uploadingAccessibilityLabel(for: side)
+            return uploadingAccessibilityLabel(for: side, availableIDTypes: availableIDTypes)
         case .complete:
-            return uploadCompleteAccessibilityLabel(for: side)
+            return uploadCompleteAccessibilityLabel(for: side, availableIDTypes: availableIDTypes)
         }
     }
 
-    func selectAccessibilityLabel(for side: DocumentSide) -> String {
-        switch side {
-        case .front:
-            return STPLocalizedString(
-                "Select front identity card photo",
-                "Accessibility label to select a photo of front of identity card"
-            )
-        case .back:
-            return STPLocalizedString(
-                "Select back identity card photo",
-                "Accessibility label to select a photo of back of identity card"
-            )
+    func selectAccessibilityLabel(for side: DocumentSide, availableIDTypes: [String]) -> String {
+
+        func baseCase() -> String {
+            switch side {
+            case .front:
+                return String.Localized.selectFrontIdentityDocumentPhoto
+            case .back:
+                return String.Localized.selectBackIdentityDocumentPhoto
+            }
         }
+
+        if availableIDTypes.count == 1, let idType = availableIDTypes[0].uiIDType() {
+            switch side {
+            case .front:
+                return String(format: String.Localized.selectFrontSpecificDocumentPhoto, idType)
+            case .back:
+                return String(format: String.Localized.selectBackSpecificDocumentPhoto, idType)
+            }
+        }
+
+        return baseCase()
     }
 
-    func uploadingAccessibilityLabel(for side: DocumentSide) -> String {
-        switch side {
-        case .front:
-            return STPLocalizedString(
-                "Uploading front identity card photo",
-                "Accessibility label while photo of front of identity card is uploading"
-            )
-        case .back:
-            return STPLocalizedString(
-                "Uploading back identity card photo",
-                "Accessibility label while photo of back of identity card is uploading"
-            )
+    func uploadingAccessibilityLabel(for side: DocumentSide, availableIDTypes: [String]) -> String {
+
+        func baseCase() -> String {
+            switch side {
+            case .front:
+                return String.Localized.uploadingFrontIdentityDocumentPhoto
+            case .back:
+                return String.Localized.uploadingBackIdentityDocumentPhoto
+            }
         }
+
+        if availableIDTypes.count == 1, let idType = availableIDTypes[0].uiIDType() {
+            switch side {
+            case .front:
+                return String(format: String.Localized.uploadingFrontSpecificDocumentPhoto, idType)
+            case .back:
+                return String(format: String.Localized.uploadingBackSpecificDocumentPhoto, idType)
+            }
+        }
+
+        return baseCase()
     }
 
-    func uploadCompleteAccessibilityLabel(for side: DocumentSide) -> String {
-        switch side {
-        case .front:
-            return STPLocalizedString(
-                "Front identity card photo successfully uploaded",
-                "Accessibility label when front identity card photo has successfully uploaded"
-            )
-        case .back:
-            return STPLocalizedString(
-                "Back identity card photo successfully uploaded",
-                "Accessibility label when back identity card photo has successfully uploaded"
-            )
+    func uploadCompleteAccessibilityLabel(for side: DocumentSide, availableIDTypes: [String]) -> String {
+
+        func baseCase() -> String {
+            switch side {
+            case .front:
+                return String.Localized.frontIdentityDocumentPhotoUploadedSuccessfully
+            case .back:
+                return String.Localized.backIdentityDocumentPhotoUploadedSuccessfully
+            }
         }
+
+        if availableIDTypes.count == 1, let idType = availableIDTypes[0].uiIDType() {
+            switch side {
+            case .front:
+                return String(format: String.Localized.frontSpecificDocumentPhotoUploadedSuccessfully, idType)
+            case .back:
+                return String(format: String.Localized.backSpecificDocumentPhotoUploadedSuccessfully, idType)
+            }
+        }
+
+        return baseCase()
     }
 }

@@ -1,0 +1,45 @@
+"An error occurred. Please try again." = "เกิดข้อผิดพลาด โปรดลองอีกครั้ง";
+
+"Card brand was not updated. Please try again." = "ระบบไม่ได้อัปเดตแบรนด์ของบัตร โปรดลองอีกครั้ง";
+
+"Close" = "ปิด";
+
+"Confirm it's you" = "ยืนยันว่าเป็นคุณจริงๆ";
+
+"Default payment method was not updated. Please try again." = "ระบบไม่ได้อัปเดตวิธีการชำระเงินเริ่มต้น โปรดลองอีกครั้ง";
+
+"Enter the code sent to %@." = "ป้อนรหัสที่ส่งไปยัง %@";
+
+"Failed to connect" = "เชื่อมต่อไม่สำเร็จ";
+
+"Resend code" = "ส่งรหัสอีกครั้ง";
+
+"Scan Card" = "สแกนบัตร";
+
+"Scan card" = "สแกนบัตร";
+
+"The IBAN you entered is invalid." = "IBAN ที่คุณป้อนไม่ถูกต้อง";
+
+"There was an error processing your card -- try again in a few seconds" = "เกิดข้อผิดพลาดขณะประมวลผลบัตร โปรดลองอีกครั้งในอีกสักครู่";
+
+"There was an unexpected error -- try again in a few seconds" = "เกิดข้อผิดพลาดที่ไม่คาดคิด โปรดลองอีกครั้งในอีกสักครู่";
+
+"Try again" = "โปรดลองอีกครั้ง";
+
+"We use Stripe to verify your card details. Stripe may use and store your data according its privacy policy. <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>Learn more</u></a>" = "เราใช้ Stripe เพื่อยืนยันรายละเอียดบัตรของคุณ ดังนั้น Stripe อาจจะใช้และจัดเก็บข้อมูลของคุณไว้ตามนโยบายความเป็นส่วนตัวของบริษัท <a href='https://support.stripe.com/questions/stripes-card-image-verification'><u>ดูข้อมูลเพิ่มเติม</u></a>";
+
+"Your card has expired" = "บัตรของคุณหมดอายุแล้ว";
+
+"Your card was declined" = "บัตรของคุณถูกปฏิเสธ";
+
+"Your card's expiration month is invalid" = "เดือนที่หมดอายุของบัตรไม่ถูกต้อง";
+
+"Your card's expiration year is invalid" = "ปีที่หมดอายุของบัตรไม่ถูกต้อง";
+
+"Your card's number is invalid" = "หมายเลขบัตรไม่ถูกต้อง";
+
+"Your card's security code is invalid" = "รหัสความปลอดภัยของบัตรไม่ถูกต้อง";
+
+"Your name is invalid." = "ชื่อไม่ถูกต้อง";
+
+"Your payment method was declined." = "การชำระเงินของคุณถูกปฏิเสธ";

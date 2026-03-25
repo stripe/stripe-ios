@@ -15,7 +15,10 @@ class OpenAuthenticatedWebViewMessageHandler: ScriptMessageHandler<OpenAuthentic
         /// Unique identifier logged in analytics when the `ASWebAuthenticationSession` is opened or closed.
         let id: String
     }
-    init(didReceiveMessage: @escaping (Payload) -> Void) {
-        super.init(name: "openAuthenticatedWebView", didReceiveMessage: didReceiveMessage)
+    init(analyticsClient: ComponentAnalyticsClient,
+         didReceiveMessage: @escaping (Payload) -> Void) {
+        super.init(name: "openAuthenticatedWebView",
+                   analyticsClient: analyticsClient,
+                   didReceiveMessage: didReceiveMessage)
     }
 }

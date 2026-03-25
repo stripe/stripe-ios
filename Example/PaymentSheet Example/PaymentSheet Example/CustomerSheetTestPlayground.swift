@@ -17,17 +17,43 @@ import UIKit
 @available(iOS 15.0, *)
 struct CustomerSheetTestPlayground: View {
     @StateObject var playgroundController: CustomerSheetTestPlaygroundController
+    @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
+    @State private var isViewReady = false
 
     init(settings: CustomerSheetTestPlaygroundSettings) {
         _playgroundController = StateObject(wrappedValue: CustomerSheetTestPlaygroundController(settings: settings))
     }
 
+    init() {
+        _playgroundController = StateObject(wrappedValue: CustomerSheetTestPlaygroundController())
+    }
+
     var body: some View {
-        VStack {
-            ScrollView {
+        if !isViewReady {
+            return AnyView(
                 VStack {
+                    ProgressView()
+                    Text("Loading playground...")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .onAppear {
+                    DispatchQueue.main.async {
+                        isViewReady = true
+                    }
+                }
+            )
+        }
+
+        return AnyView(VStack {
+            ScrollView {
+                LazyVStack {
                     Group {
                         HStack {
+                            if ProcessInfo.processInfo.environment["UITesting"] != nil {
+                                AnalyticsLogForTesting(analyticsLog: $analyticsLogObserver.analyticsLog)
+                            }
                             Text("Backend").font(.headline)
                             Spacer()
                             Button {
@@ -39,19 +65,17 @@ struct CustomerSheetTestPlayground: View {
                         }
                         SettingView(setting: $playgroundController.settings.customerMode)
                         SettingView(setting: customerKeyTypeBinding)
-                        TextField("CustomerId", text: customerIdBinding)
-                    }
-                    Group {
-                        if playgroundController.settings.customerKeyType == .customerSession {
-                            VStack {
-                                HStack {
-                                    Text("Customer Session Settings")
-                                        .font(.subheadline)
-                                        .bold()
-                                    Spacer()
-                                }
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodRemove)
-                                SettingPickerView(setting: $playgroundController.settings.paymentMethodAllowRedisplayFilters)
+                        HStack {
+                            TextField("CustomerId", text: customerIdBinding)
+                                .autocorrectionDisabled()
+                            if playgroundController.settings.customerKeyType == .customerSession {
+                                Spacer()
+                                Button {
+                                    playgroundController.customerSessionSettingsTapped()
+                                } label: {
+                                    Text("CSSettings")
+                                        .font(.callout.smallCaps())
+                                }.buttonStyle(.bordered)
                             }
                         }
                     }
@@ -70,9 +94,12 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.applePay)
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
                         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
+                        SettingView(setting: $playgroundController.settings.cardBrandAcceptance)
+                        SettingView(setting: $playgroundController.settings.enableAttestationOnConfirmation)
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
+                        SettingView(setting: $playgroundController.settings.opensCardScannerAutomatically)
                         HStack {
                             Text("Macros").font(.headline)
                             Spacer()
@@ -103,8 +130,9 @@ struct CustomerSheetTestPlayground: View {
             Divider()
             CustomerSheetButtons()
                 .environmentObject(playgroundController)
-        }
+        })
     }
+
     var customerKeyTypeBinding: Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
         Binding<CustomerSheetTestPlaygroundSettings.CustomerKeyType> {
             return playgroundController.settings.customerKeyType

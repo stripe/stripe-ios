@@ -26,7 +26,7 @@ protocol RoundedTextFieldDelegate: AnyObject {
 final class RoundedTextField: UIView {
 
     private let showDoneToolbar: Bool
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
 
     // Used to optionally add an error message
     // at the bottom of the text field
@@ -46,7 +46,7 @@ final class RoundedTextField: UIView {
                 textFieldContainerView
             ]
         )
-        containerStackView.backgroundColor = .customBackgroundColor
+        containerStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         containerStackView.axis = .horizontal
         containerStackView.spacing = 12
         containerStackView.isLayoutMarginsRelativeArrangement = true
@@ -57,7 +57,7 @@ final class RoundedTextField: UIView {
             trailing: 16
         )
         containerStackView.layer.cornerRadius = 12
-        containerStackView.layer.shadowColor = UIColor.black.cgColor
+        containerStackView.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
         containerStackView.layer.shadowRadius = 2 / UIScreen.main.nativeScale
         containerStackView.layer.shadowOpacity = 0.1
         containerStackView.layer.shadowOffset = CGSize(
@@ -77,9 +77,9 @@ final class RoundedTextField: UIView {
     private(set) lazy var textField: UITextField = {
         let textField = IncreasedHitTestTextField()
         textField.font = FinancialConnectionsFont.label(.large).uiFont
-        textField.textColor = .textDefault
-        textField.defaultPlaceholderColor = .textSubdued
-        textField.floatingPlaceholderColor = .textSubdued
+        textField.textColor = FinancialConnectionsAppearance.Colors.textDefault
+        textField.defaultPlaceholderColor = FinancialConnectionsAppearance.Colors.textSubdued
+        textField.floatingPlaceholderColor = FinancialConnectionsAppearance.Colors.textSubdued
         textField.placeholderLabel.font = textField.font
         textField.tintColor = textField.textColor
         textField.delegate = self
@@ -98,11 +98,11 @@ final class RoundedTextField: UIView {
     }()
     private var currentFooterView: UIView?
     private lazy var keyboardToolbar: DoneButtonToolbar = {
-        var theme: ElementsUITheme = .default
+        var theme: ElementsAppearance = .default
         theme.colors = {
-            var colors = ElementsUITheme.Color()
-            colors.primary = self.theme.primaryColor
-            colors.secondaryText = .textSubdued
+            var colors = ElementsAppearance.Color()
+            colors.primary = self.appearance.colors.primary
+            colors.secondaryText = FinancialConnectionsAppearance.Colors.textSubdued
             return colors
         }()
         let keyboardToolbar = DoneButtonToolbar(
@@ -137,10 +137,10 @@ final class RoundedTextField: UIView {
         placeholder: String,
         footerText: String? = nil,
         showDoneToolbar: Bool = false,
-        theme: FinancialConnectionsTheme
+        appearance: FinancialConnectionsAppearance
     ) {
         self.showDoneToolbar = showDoneToolbar
-        self.theme = theme
+        self.appearance = appearance
         super.init(frame: .zero)
         addAndPinSubview(verticalStackView)
         textField.placeholder = placeholder
@@ -174,7 +174,7 @@ final class RoundedTextField: UIView {
         } else if let footerText = footerText {
             let footerLabel = AttributedLabel(
                 font: .label(.large),
-                textColor: .textDefault
+                textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
             footerLabel.text = footerText
             footerTextLabel = footerLabel
@@ -190,17 +190,15 @@ final class RoundedTextField: UIView {
     }
 
     private func updateBorder(highlighted: Bool) {
-        let highlighted = textField.isFirstResponder
-
         if errorText != nil && !highlighted {
-            containerHorizontalStackView.layer.borderColor = UIColor.textFeedbackCritical.cgColor
+            containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.textCritical.cgColor
             containerHorizontalStackView.layer.borderWidth = 2.0
         } else {
             if highlighted {
-                containerHorizontalStackView.layer.borderColor = theme.textFieldFocusedColor.cgColor
+                containerHorizontalStackView.layer.borderColor = appearance.colors.textFieldFocused.cgColor
                 containerHorizontalStackView.layer.borderWidth = 2.0
             } else {
-                containerHorizontalStackView.layer.borderColor = UIColor.borderNeutral.cgColor
+                containerHorizontalStackView.layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
                 containerHorizontalStackView.layer.borderWidth = 1.0
             }
         }
@@ -208,6 +206,15 @@ final class RoundedTextField: UIView {
 
     @IBAction private func textFieldDidChange() {
         delegate?.roundedTextField(self, textDidChange: text)
+    }
+
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        updateBorder(highlighted: textField.isFirstResponder)
+        containerHorizontalStackView.layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
     }
 }
 
@@ -258,8 +265,8 @@ private func CreateErrorLabel(text: String) -> UIView {
         font: .label(.small),
         boldFont: .label(.smallEmphasized),
         linkFont: .label(.small),
-        textColor: .textFeedbackCritical,
-        linkColor: .textFeedbackCritical
+        textColor: FinancialConnectionsAppearance.Colors.textCritical,
+        linkColor: FinancialConnectionsAppearance.Colors.textCritical
     )
     errorLabel.setText(text)
     return errorLabel
@@ -292,8 +299,8 @@ private class FloatingPlaceholderTextField: UITextField {
     }()
     private var lastAnimator: UIViewPropertyAnimator?
     private var changingFirstResponderStatus = false
-    var defaultPlaceholderColor: UIColor = .textSubdued
-    var floatingPlaceholderColor: UIColor = .textSubdued
+    var defaultPlaceholderColor: UIColor = FinancialConnectionsAppearance.Colors.textSubdued
+    var floatingPlaceholderColor: UIColor = FinancialConnectionsAppearance.Colors.textSubdued
     private var placeholderColor: UIColor {
         get {
             return placeholderLabel.textColor
@@ -659,13 +666,13 @@ private struct RoundedTextFieldUIViewRepresentable: UIViewRepresentable {
     let footerText: String?
     let errorText: String?
     let isFocused: Bool
-    let theme: FinancialConnectionsTheme
+    let appearance: FinancialConnectionsAppearance
 
     func makeUIView(context: Context) -> RoundedTextField {
         RoundedTextField(
             placeholder: placeholder,
             footerText: footerText,
-            theme: theme
+            appearance: appearance
         )
     }
 
@@ -687,7 +694,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                     footerText: nil,
                     errorText: nil,
                     isFocused: false,
-                    theme: .light
+                    appearance: .stripe
                 )
                 .frame(height: 56)
                 RoundedTextFieldUIViewRepresentable(
@@ -695,7 +702,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                     footerText: "Your account can be checkings or savings.",
                     errorText: nil,
                     isFocused: false,
-                    theme: .light
+                    appearance: .stripe
                 )
                 .frame(height: 80)
                 RoundedTextFieldUIViewRepresentable(
@@ -703,7 +710,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                     footerText: nil,
                     errorText: nil,
                     isFocused: false,
-                    theme: .light
+                    appearance: .stripe
                 )
                 .frame(height: 56)
                 RoundedTextFieldUIViewRepresentable(
@@ -711,7 +718,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                     footerText: nil,
                     errorText: "Routing number is required.",
                     isFocused: false,
-                    theme: .light
+                    appearance: .stripe
                 )
                 .frame(height: 80)
                 RoundedTextFieldUIViewRepresentable(
@@ -719,13 +726,13 @@ struct RoundedTextField_Previews: PreviewProvider {
                     footerText: "Your account can be checkings or savings.",
                     errorText: "Account number is required.",
                     isFocused: false,
-                    theme: .light
+                    appearance: .stripe
                 )
                 .frame(height: 80)
                 Spacer()
             }
             .padding()
-            .background(Color(UIColor.customBackgroundColor))
+            .background(Color(FinancialConnectionsAppearance.Colors.background))
 
             // Use separate devices to showcase highlighted state
             RoundedTextFieldUIViewRepresentable(
@@ -733,7 +740,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                 footerText: nil,
                 errorText: nil,
                 isFocused: true,
-                theme: .light
+                appearance: .stripe
             )
             .frame(height: 56)
             .padding()
@@ -744,7 +751,7 @@ struct RoundedTextField_Previews: PreviewProvider {
                 footerText: nil,
                 errorText: nil,
                 isFocused: true,
-                theme: .linkLight
+                appearance: .link
             )
             .frame(height: 56)
             .padding()

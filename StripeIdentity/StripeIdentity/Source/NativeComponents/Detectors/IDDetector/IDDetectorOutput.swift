@@ -237,4 +237,14 @@ extension IDDetectorOutput: OptionalVisionBasedDetectorOutput {
             return .ok
         }
     }
+
+    /// Returns true when the detected document is roughly centered in the frame.
+    /// - Parameter threshold: Allowed distance from frame center (in normalized coordinates).
+    ///                         If either axis deviates more than `threshold` from 0.5,
+    ///                         the document is considered off-center.
+    func isCentered(threshold: CGFloat = 0.08) -> Bool {
+        let cx = documentBounds.midX
+        let cy = documentBounds.midY
+        return abs(cx - 0.5) <= threshold && abs(cy - 0.5) <= threshold
+    }
 }

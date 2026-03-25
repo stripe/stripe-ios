@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
 require 'fileutils'
-require 'zip'
 require 'yaml'
 
 # MARK: - Helpers
@@ -55,6 +54,7 @@ Dir.chdir(root_dir) do
       -scheme "AllStripeFrameworks" \
       -configuration "Release" \
       -archivePath "#{build_dir}/StripeFrameworks-iOS.xcarchive" \
+      -derivedDataPath "#{build_dir}/DerivedData" \
       -sdk iphoneos \
       -destination 'generic/platform=iOS' \
       SUPPORTS_MACCATALYST=NO \
@@ -75,6 +75,7 @@ Dir.chdir(root_dir) do
     -destination 'generic/platform=iOS Simulator' \
     -configuration "Release" \
     -archivePath "#{build_dir}/StripeFrameworks-sim.xcarchive" \
+    -derivedDataPath "#{build_dir}/DerivedData" \
     -sdk iphonesimulator \
     SUPPORTS_MACCATALYST=NO \
     BUILD_LIBRARIES_FOR_DISTRIBUTION=YES \
@@ -93,6 +94,7 @@ Dir.chdir(root_dir) do
       -scheme "AllStripeFrameworksCatalyst" \
       -configuration "Release" \
       -archivePath "#{build_dir}/StripeFrameworks-mac.xcarchive" \
+      -derivedDataPath "#{build_dir}/DerivedData" \
       -sdk macosx \
       -destination 'generic/platform=macOS,variant=Mac Catalyst' \
       SUPPORTS_MACCATALYST=YES \
@@ -125,13 +127,14 @@ Dir.chdir(root_dir) do
   end # modules.each
 end # Dir.chdir
 
-Zip::File.open(File.join_if_safe(build_dir, 'Stripe.xcframework.zip'), create: true) do |zipfile|
-  # Add module framework directories to zip
-  modules.each do |m|
-    framework_name = m['framework_name']
-    Dir.glob("#{build_dir}/#{framework_name}.xcframework/**/*").each do |file|
-      file_name = Pathname.new(file).relative_path_from(Pathname.new(build_dir))
-      zipfile.add(file_name, file)
-    end
-  end
+# Verify no xcframework contains an embedded Frameworks folder
+info 'Checking for embedded Frameworks folders in xcframeworks...'
+embedded_frameworks = Dir.glob(File.join(build_dir, '*.xcframework', '**', 'Frameworks'))
+unless embedded_frameworks.empty?
+  embedded_frameworks.each { |path| info "Found: #{path}" }
+  die 'One or more xcframeworks contain an embedded Frameworks folder. This indicates a dependency was incorrectly embedded.'
+end
+
+Dir.chdir(build_dir) do
+  `zip -r Stripe.xcframework.zip *.xcframework`
 end

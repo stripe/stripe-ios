@@ -1,6 +1,16 @@
+"%1$@ Card" = "Cartão %1$@";
+
+"%1$@ Credit" = "Crédito %1$@";
+
+"%1$@ Debit" = "Débito %1$@";
+
+"%1$@ Prepaid" = "Pré-pago %1$@";
+
 "%1$@ account ending in %2$@" = "Conta %1$@ que termina em %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ a terminar em %2$@";
+
+"%1$@ is not accepted" = "%1$@ não é aceite";
 
 "Address line 2 (optional)" = "Linha de endereço 2 (opcional)";
 
@@ -9,8 +19,6 @@
 "BSB" = "BSB";
 
 "Bank Account" = "Conta bancária";
-
-"Billing Address" = "Endereço de Faturação";
 
 "Billing address" = "Endereço de faturação";
 
@@ -28,6 +36,18 @@
 
 "MM/YY" = "MM/AA";
 
+"Only credit and prepaid cards are accepted" = "Apenas são aceites cartões de crédito e pré-pagos";
+
+"Only credit cards are accepted" = "Apenas são aceites cartões de crédito";
+
+"Only debit and credit cards are accepted" = "Apenas são aceites cartões de débito e crédito";
+
+"Only debit and prepaid cards are accepted" = "Apenas são aceites cartões de débito e pré-pagos";
+
+"Only debit cards are accepted" = "Só são aceites cartões de débito";
+
+"Only prepaid cards are accepted" = "Só são aceites cartões pré-pagos";
+
 "Postal Code" = "C.P.";
 
 "Shipping Address" = "Endereço de envio";
@@ -36,9 +56,11 @@
 
 "The BSB you entered is invalid." = "O BSB que introduziu é inválido.";
 
+"The selected brand is not allowed" = "A marca selecionada não é permitida";
+
 "To scan your card, allow camera access in Settings." = "Para ler o seu cartão, permita o acesso à câmara nas Definições.";
 
-"Your ZIP is invalid." = "O seu código ZIP é inválido.";
+"Your card has expired." = "O seu cartão expirou.";
 
 "Your card number is incomplete." = "O número do seu cartão está incompleto.";
 
@@ -55,8 +77,6 @@
 "Your card's security code is incomplete." = "O código de segurança do seu cartão está incompleto.";
 
 "Your card's security code is invalid." = "O código de segurança do seu cartão é inválido.";
-
-"Your postal code is invalid." = "O seu código postal é inválido.";
 
 "card number" = "número do cartão";
 

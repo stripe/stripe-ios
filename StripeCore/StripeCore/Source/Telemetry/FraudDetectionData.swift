@@ -50,11 +50,6 @@ private let SIDLifetime: TimeInterval = 30 * 60  // 30 minutes
         }
     }
 
-    deinit {
-        // Write latest value to disk
-        UserDefaults.standard.fraudDetectionData = self
-    }
-
     func reset() {
         self.sid = nil
         self.muid = nil

@@ -1,4 +1,18 @@
+"An error occurred. Please try again." = "A apărut o eroare. Încercați din nou.";
+
+"Card brand was not updated. Please try again." = "Marca de card nu a fost actualizată. Încercați din nou.";
+
 "Close" = "Închidere";
+
+"Confirm it's you" = "Confirmați că sunteți dvs.";
+
+"Default payment method was not updated. Please try again." = "Metoda de plată implicită nu a fost actualizată. Încercați din nou.";
+
+"Enter the code sent to %@." = "Introduceți codul trimis la %@.";
+
+"Failed to connect" = "Nu s-a reușit conectarea";
+
+"Resend code" = "Retrimitere cod";
 
 "Scan Card" = "Scanare card";
 
@@ -18,7 +32,7 @@
 
 "Your card was declined" = "Cardul dvs. a fost respins";
 
-"Your card's expiration month is invalid" = "Luna de expirare a cardului dvs. nu este validă";
+"Your card's expiration month is invalid" = "Luna de expirare a cardului nu este validă";
 
 "Your card's expiration year is invalid" = "Anul de expirare al cardului dvs. nu este valid";
 

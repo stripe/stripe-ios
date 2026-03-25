@@ -13,7 +13,13 @@ final class STPAPIClient_LinkAccountSessionTest: XCTestCase {
     func testCreateLinkAccountSessionForDeferredIntent() {
         let e = expectation(description: "create link account session")
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
-        apiClient.createLinkAccountSessionForDeferredIntent(sessionId: "mobile_test_\(UUID().uuidString)", amount: nil, currency: nil, onBehalfOf: nil) { linkAccountSession, error in
+        apiClient.createLinkAccountSessionForDeferredIntent(
+            sessionId: "mobile_test_\(UUID().uuidString)",
+            amount: nil,
+            currency: nil,
+            onBehalfOf: nil,
+            linkMode: nil
+        ) { linkAccountSession, error in
             XCTAssertNil(error)
             XCTAssertNotNil(linkAccountSession)
             e.fulfill()

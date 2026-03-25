@@ -75,7 +75,7 @@ extension SunbitExampleViewController {
                 }
 
                 // 2. Confirm the payment and redirect the user to Sunbit
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
                 paymentIntentParams.paymentMethodParams = STPPaymentMethodParams(
                     sunbit: STPPaymentMethodSunbitParams(),
                     billingDetails: nil,

@@ -11,7 +11,7 @@ import UIKit
 final class GenericInfoViewController: SheetViewController {
 
     private let genericInfoScreen: FinancialConnectionsGenericInfoScreen
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     private let iconView: UIView?
     private let didSelectPrimaryButton: (_ genericInfoViewController: GenericInfoViewController) -> Void
     private let didSelectSecondaryButton: ((_ genericInfoViewController: GenericInfoViewController) -> Void)?
@@ -20,7 +20,7 @@ final class GenericInfoViewController: SheetViewController {
 
     init(
         genericInfoScreen: FinancialConnectionsGenericInfoScreen,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         panePresentationStyle: PanePresentationStyle,
         iconView: UIView? = nil,
         didSelectPrimaryButton: @escaping (_ genericInfoViewController: GenericInfoViewController) -> Void,
@@ -29,7 +29,7 @@ final class GenericInfoViewController: SheetViewController {
         willDismissSheet: (() -> Void)? = nil
     ) {
         self.genericInfoScreen = genericInfoScreen
-        self.theme = theme
+        self.appearance = appearance
         self.iconView = iconView
         self.didSelectPrimaryButton = didSelectPrimaryButton
         self.didSelectSecondaryButton = didSelectSecondaryButton
@@ -51,7 +51,7 @@ final class GenericInfoViewController: SheetViewController {
                         return RoundedIconView(
                             image: .imageUrl(imageUrl),
                             style: .circle,
-                            theme: theme
+                            appearance: appearance
                         )
                     } else {
                         return nil
@@ -80,7 +80,7 @@ final class GenericInfoViewController: SheetViewController {
             ),
             footerView: GenericInfoFooterView(
                 footer: genericInfoScreen.footer,
-                theme: theme,
+                appearance: appearance,
                 didSelectPrimaryButton: { [weak self] in
                     guard let self else { return }
                     didSelectPrimaryButton(self)

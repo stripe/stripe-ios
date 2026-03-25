@@ -343,7 +343,6 @@ import UIKit
             Metadata(prefix: "+509", regionCode: "HT", pattern: "## ## ####"),
             Metadata(prefix: "+51", regionCode: "PE", pattern: "### ### ###"),
             Metadata(prefix: "+52", regionCode: "MX", pattern: "### ### ####"),
-            Metadata(prefix: "+537", regionCode: "CY", pattern: ""),
             Metadata(prefix: "+54", regionCode: "AR", pattern: "## ##-####-####"),
             Metadata(prefix: "+55", regionCode: "BR", pattern: "## #####-####"),
             Metadata(prefix: "+56", regionCode: "CL", pattern: "# #### ####"),

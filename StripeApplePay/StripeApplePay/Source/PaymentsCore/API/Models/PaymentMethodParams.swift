@@ -28,6 +28,9 @@ extension StripeAPI {
             return PaymentsSDKVariant.paymentUserAgent
         }()
 
+        /// Contains metadata with identifiers for the session and information about the integration
+        @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+
         /// :nodoc:
         @_spi(STP) public struct Card: UnknownFieldsEncodable {
             /// The card number, as a string without any separators. Ex. "4242424242424242"

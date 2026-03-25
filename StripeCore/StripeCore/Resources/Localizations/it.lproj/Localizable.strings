@@ -1,4 +1,18 @@
+"An error occurred. Please try again." = "Si è verificato un errore. Riprova.";
+
+"Card brand was not updated. Please try again." = "Il circuito della carta non è stato aggiornato. Riprova.";
+
 "Close" = "Chiudi";
+
+"Confirm it's you" = "Verifica la tua identità";
+
+"Default payment method was not updated. Please try again." = "Il metodo di pagamento predefinito non è stato aggiornato. Riprova.";
+
+"Enter the code sent to %@." = "Inserisci il codice inviato a %@.";
+
+"Failed to connect" = "Connessione non riuscita";
+
+"Resend code" = "Invia nuovamente il codice";
 
 "Scan Card" = "Scansiona carta";
 
@@ -28,4 +42,4 @@
 
 "Your name is invalid." = "Nome non valido.";
 
-"Your payment method was declined." = "La tua modalità di pagamento è stata rifiutata.";
+"Your payment method was declined." = "Il tuo metodo di pagamento è stato rifiutato.";

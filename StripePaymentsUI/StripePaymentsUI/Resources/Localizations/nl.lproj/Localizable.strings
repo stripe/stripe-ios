@@ -1,6 +1,16 @@
+"%1$@ Card" = "%1$@ betaalkaart";
+
+"%1$@ Credit" = "%1$@ creditcard";
+
+"%1$@ Debit" = "%1$@ debitcard";
+
+"%1$@ Prepaid" = "%1$@ prepaid";
+
 "%1$@ account ending in %2$@" = "%1$@-rekening die eindigt op %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ eindigend op %2$@";
+
+"%1$@ is not accepted" = "%1$@ wordt niet geaccepteerd";
 
 "Address line 2 (optional)" = "Adresregel 2 (optioneel)";
 
@@ -9,8 +19,6 @@
 "BSB" = "BSB";
 
 "Bank Account" = "Bankrekening";
-
-"Billing Address" = "Factuuradres";
 
 "Billing address" = "Factuuradres";
 
@@ -28,6 +36,18 @@
 
 "MM/YY" = "MM/JJ";
 
+"Only credit and prepaid cards are accepted" = "Alleen creditcards en prepaidkaarten worden geaccepteerd";
+
+"Only credit cards are accepted" = "Alleen creditcards worden geaccepteerd";
+
+"Only debit and credit cards are accepted" = "Alleen debit- en creditcards worden geaccepteerd";
+
+"Only debit and prepaid cards are accepted" = "Alleen debitcards en prepaidkaarten worden geaccepteerd";
+
+"Only debit cards are accepted" = "Alleen debitcards worden geaccepteerd";
+
+"Only prepaid cards are accepted" = "Alleen prepaidkaarten worden geaccepteerd";
+
 "Postal Code" = "Postcode";
 
 "Shipping Address" = "Verzendadres";
@@ -36,9 +56,11 @@
 
 "The BSB you entered is invalid." = "Het ingevoerde BSB-nummer is ongeldig.";
 
+"The selected brand is not allowed" = "Het geselecteerde merk is niet toegestaan";
+
 "To scan your card, allow camera access in Settings." = "Sta toegang tot je camera toe in Instellingen om je kaart te scannen.";
 
-"Your ZIP is invalid." = "Je ZIP is ongeldig.";
+"Your card has expired." = "Je betaalkaart is verlopen.";
 
 "Your card number is incomplete." = "Je kaartnummer is onvolledig.";
 
@@ -55,8 +77,6 @@
 "Your card's security code is incomplete." = "De beveiligingscode van je kaart is onvolledig.";
 
 "Your card's security code is invalid." = "De beveiligingscode van je kaart is ongeldig.";
-
-"Your postal code is invalid." = "Je postcode is ongeldig.";
 
 "card number" = "kaartnummer";
 

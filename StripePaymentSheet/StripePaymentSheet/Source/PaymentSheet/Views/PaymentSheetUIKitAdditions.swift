@@ -19,16 +19,16 @@ enum PaymentSheetUI {
     /// The padding between views in the sheet e.g., between the bottom of the form and the Pay button
     static let defaultPadding: CGFloat = 20
 
-#if canImport(CompositorServices)
-    static let navBarPadding: CGFloat = 30
+#if os(visionOS)
+    static func navBarPadding(appearance: PaymentSheet.Appearance) -> CGFloat {
+        return 30
+    }
 #else
-    static let navBarPadding = defaultPadding
+    static func navBarPadding(appearance: PaymentSheet.Appearance) -> CGFloat {
+        return appearance.navigationBarStyle.isGlass ? glassPadding : defaultPadding
+    }
 #endif
 
-    static let defaultMargins: NSDirectionalEdgeInsets = .insets(
-        leading: defaultPadding, trailing: defaultPadding)
-    static let defaultSheetMargins: NSDirectionalEdgeInsets = .insets(
-        leading: defaultPadding, bottom: 40, trailing: defaultPadding)
     static let minimumTapSize: CGSize = CGSize(width: 44, height: 44)
     static let defaultAnimationDuration: TimeInterval = 0.2
     static let quickAnimationDuration: TimeInterval = 0.1
@@ -36,15 +36,24 @@ enum PaymentSheetUI {
     static let minimumFlightTime: TimeInterval = 1
     static let delayBetweenSuccessAndDismissal: TimeInterval = 1.5
     static let minimumHitArea = CGSize(width: 44, height: 44)
+    static let glassPadding: CGFloat = 16
 
     static func makeHeaderLabel(title: String? = nil, appearance: PaymentSheet.Appearance) -> UILabel {
         let header = UILabel()
         header.textColor = appearance.colors.text
         header.numberOfLines = 2
-        header.font = appearance.scaledFont(for: appearance.font.base.bold, style: .title3, maximumPointSize: 35)
+
+        // Use custom headline font if set, otherwise use the default calculation
+        if let customHeadlineFont = appearance.font.custom.headline {
+            header.font = customHeadlineFont
+            header.adjustsFontForContentSizeCategory = false // Custom fonts don't auto-scale
+        } else {
+            header.font = appearance.scaledFont(for: appearance.font.base.bold, style: .title3, maximumPointSize: 35)
+            header.adjustsFontForContentSizeCategory = true
+        }
+
         header.accessibilityTraits = [.header]
         header.adjustsFontSizeToFitWidth = true
-        header.adjustsFontForContentSizeCategory = true
         header.text = title
         return header
     }
@@ -156,19 +165,5 @@ extension UIFont {
         let descriptor = UIFontDescriptor(fontAttributes: attributes)
 
         return UIFont(descriptor: descriptor, size: pointSize)
-    }
-}
-
-extension UIStackView {
-    /// Convenience DRY method that creates a stackview for use in horizontal "row button" content
-    static func makeRowButtonContentStackView(arrangedSubviews: [UIView]) -> UIStackView {
-        let margin = 12.0
-        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
-        stackView.axis = .horizontal
-        stackView.alignment = .center
-        stackView.directionalLayoutMargins = .init(top: margin, leading: margin, bottom: margin, trailing: margin)
-        stackView.spacing = margin
-        stackView.isLayoutMarginsRelativeArrangement = true
-        return stackView
     }
 }

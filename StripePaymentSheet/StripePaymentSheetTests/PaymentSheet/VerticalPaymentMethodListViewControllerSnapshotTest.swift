@@ -10,12 +10,14 @@ import StripeCoreTestUtils
 @_spi(STP) import StripeUICore
 import XCTest
 
+// ☠️ WARNING: These snapshots are missing selected borders at the corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
+// @iOS26
 final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTestCase, VerticalPaymentMethodListViewControllerDelegate {
-    func shouldSelectPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) -> Bool {
+    func shouldSelectPaymentMethod(_ selection: StripePaymentSheet.RowButtonType) -> Bool {
         return true
     }
 
-    func didTapPaymentMethod(_ selection: StripePaymentSheet.VerticalPaymentMethodListSelection) {
+    func didTapPaymentMethod(_ selection: StripePaymentSheet.RowButtonType) {
 
     }
 
@@ -35,7 +37,6 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
         .cashApp,
         .card,
         .EPS,
-        .giropay,
         .iDEAL,
         .klarna,
         .konbini,
@@ -48,35 +49,51 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
         .UPI,
     ]
 
+    override func setUp() {
+        super.setUp()
+        DownloadManager.sharedManager.resetCache()
+    }
+
     func testNoSavedPM_noApplePayLink() {
-        let sut = VerticalPaymentMethodListViewController(initialSelection: nil, savedPaymentMethod: nil, paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: false, shouldShowLink: false, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099, delegate: self)
+        let sut = VerticalPaymentMethodListViewController(initialSelection: nil, savedPaymentMethods: [], paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: false, shouldShowLink: false, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default.applyingLiquidGlassIfPossible(), currency: "USD", amount: 1099, incentive: nil, delegate: self)
         STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375)
     }
 
     func testSavedCard_noApplePayLink() {
-        let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: false, shouldShowLink: false, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099, delegate: self)
+        let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethods: [._testCard()], paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: false, shouldShowLink: false, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default.applyingLiquidGlassIfPossible(), currency: "USD", amount: 1099, incentive: nil, delegate: self)
         STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375)
     }
 
     func testSavedCard_ApplePayLink() {
-        let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099, delegate: self)
+        let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethods: [._testCard()], paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default.applyingLiquidGlassIfPossible(), currency: "USD", amount: 1099, incentive: nil, delegate: self)
         STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375)
     }
 
-    func testDarkMode() {
-        let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default, currency: "USD", amount: 1099, delegate: self)
+    func testAppearance() {
+        let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethods: [._testCard()], paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: ._testMSPaintTheme, currency: "USD", amount: 1099, incentive: nil, delegate: self)
         let window = UIWindow()
         window.isHidden = false
         window.addAndPinSubview(sut.view, insets: .zero)
-        window.overrideUserInterfaceStyle = .dark
         STPSnapshotVerifyView(window, autoSizingHeightForWidth: 375)
     }
 
-    func testAppearance() {
-        let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethod: ._testCard(), paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: ._testMSPaintTheme, currency: "USD", amount: 1099, delegate: self)
+    func testReturningLinkConsumer() {
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount._testValue(email: "foo@bar.com")
+        let sut = VerticalPaymentMethodListViewController(initialSelection: .new(paymentMethodType: .stripe(.link)), savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)], shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default.applyingLiquidGlassIfPossible(), currency: "USD", amount: 1099, incentive: nil, delegate: self)
         let window = UIWindow()
         window.isHidden = false
         window.addAndPinSubview(sut.view, insets: .zero)
         STPSnapshotVerifyView(window, autoSizingHeightForWidth: 375)
+        LinkAccountContext.shared.account = nil
+    }
+
+    func testUnknownLinkConsumer() {
+        LinkAccountContext.shared.account = PaymentSheetLinkAccount._testValue(email: "foo@bar.com", isRegistered: false)
+        let sut = VerticalPaymentMethodListViewController(initialSelection: .new(paymentMethodType: .stripe(.link)), savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)], shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: .default.applyingLiquidGlassIfPossible(), currency: "USD", amount: 1099, incentive: nil, delegate: self)
+        let window = UIWindow()
+        window.isHidden = false
+        window.addAndPinSubview(sut.view, insets: .zero)
+        STPSnapshotVerifyView(window, autoSizingHeightForWidth: 375)
+        LinkAccountContext.shared.account = nil
     }
 }

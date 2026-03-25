@@ -1,0 +1,7 @@
+{
+    "code": "invalid_number",
+    "doc_url": "https://docs.stripe.com/error-codes#invalid-number",
+    "message": "Your card number is incorrect.",
+    "param": "card[number]",
+    "type": "card_error"
+}

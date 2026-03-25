@@ -20,7 +20,7 @@ extension UIButton {
         withEdgeInsets edgeInsets: NSDirectionalEdgeInsets
     ) {
 // TODO: Rewrite this for visionOS & iOS 17.
-        #if canImport(CompositorServices)
+        #if os(visionOS)
         #else
         // UIButton doesn't have support for directional edge insets. We should
         // apply insets depending on the layout direction.

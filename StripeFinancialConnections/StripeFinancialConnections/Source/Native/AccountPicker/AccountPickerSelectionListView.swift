@@ -21,7 +21,7 @@ final class AccountPickerSelectionListView: UIView {
     private let selectionType: AccountPickerSelectionType
     private let enabledAccounts: [FinancialConnectionsPartnerAccount]
     private let disabledAccounts: [FinancialConnectionsPartnerAccount]
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     weak var delegate: AccountPickerSelectionListViewDelegate?
 
     private lazy var verticalStackView: UIStackView = {
@@ -35,12 +35,12 @@ final class AccountPickerSelectionListView: UIView {
         selectionType: AccountPickerSelectionType,
         enabledAccounts: [FinancialConnectionsPartnerAccount],
         disabledAccounts: [FinancialConnectionsPartnerAccount],
-        theme: FinancialConnectionsTheme
+        appearance: FinancialConnectionsAppearance
     ) {
         self.selectionType = selectionType
         self.enabledAccounts = enabledAccounts
         self.disabledAccounts = disabledAccounts
-        self.theme = theme
+        self.appearance = appearance
         super.init(frame: .zero)
         addAndPinSubviewToSafeArea(verticalStackView)
     }
@@ -60,7 +60,7 @@ final class AccountPickerSelectionListView: UIView {
             let accountRowView = AccountPickerRowView(
                 isDisabled: false,
                 isFaded: false,
-                theme: theme,
+                appearance: appearance,
                 didSelect: { [weak self] in
                     guard let self = self else { return }
                     var selectedAccounts = selectedAccounts
@@ -91,7 +91,7 @@ final class AccountPickerSelectionListView: UIView {
             let accountRowView = AccountPickerRowView(
                 isDisabled: true,
                 isFaded: true,
-                theme: theme,
+                appearance: appearance,
                 didSelect: {
                     // can't select disabled accounts
                 }

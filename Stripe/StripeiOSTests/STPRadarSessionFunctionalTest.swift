@@ -54,4 +54,52 @@ class STPRadarSessionFunctionalTest: XCTestCase {
 
         waitForExpectations(timeout: 10, handler: nil)
     }
+
+    func testCreateSavedPaymentMethodRadarSession() {
+        // Create a payment method first
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        cardParams.expMonth = 12
+        cardParams.expYear = 2035
+        cardParams.cvc = "123"
+
+        let billingDetails = STPPaymentMethodBillingDetails()
+        billingDetails.email = "test@example.com"
+
+        let paymentMethodParams = STPPaymentMethodParams(card: cardParams, billingDetails: billingDetails, metadata: nil)
+
+        let exp1 = expectation(description: "Create PaymentMethod")
+        var paymentMethodId: String?
+        client.createPaymentMethod(with: paymentMethodParams) { paymentMethod, error in
+            XCTAssertNil(error)
+            guard let paymentMethod = paymentMethod else {
+                XCTFail()
+                return
+            }
+            paymentMethodId = paymentMethod.stripeId
+            exp1.fulfill()
+        }
+
+        waitForExpectations(timeout: 10, handler: nil)
+
+        // Now create a saved payment method radar session
+        guard let pmId = paymentMethodId else {
+            XCTFail("Payment method ID is nil")
+            return
+        }
+
+        let exp2 = expectation(description: "Create Saved PaymentMethod RadarSession")
+        client.createSavedPaymentMethodRadarSession(paymentMethodId: pmId) { session, error in
+            XCTAssertNil(error)
+            guard let session = session else {
+                XCTFail()
+                return
+            }
+            XCTAssertTrue(session.id.count > 0)
+            exp2.fulfill()
+        }
+
+        waitForExpectations(timeout: 10, handler: nil)
+    }
 }

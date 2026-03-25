@@ -6,7 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
 import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
@@ -21,30 +21,46 @@ import UIKit
 @available(macCatalyst 14.0, *)
 @objc(STP_Internal_CardSectionWithScannerView)
 final class CardSectionWithScannerView: UIView {
+
     let cardSectionView: UIView
-    let analyticsHelper: PaymentSheetAnalyticsHelper
+    let analyticsHelper: PaymentSheetAnalyticsHelper?
     lazy var cardScanButton: UIButton = {
-        let button = UIButton.makeCardScanButton(theme: theme)
+        let button = UIButton.makeCardScanButton(theme: theme, linkAppearance: linkAppearance)
         button.addTarget(self, action: #selector(didTapCardScanButton), for: .touchUpInside)
         return button
     }()
     lazy var cardScanningView: CardScanningView = {
-        let scanningView = CardScanningView()
-        scanningView.alpha = 0
-        scanningView.isHidden = true
+        let scanningView = CardScanningView(theme: theme)
         scanningView.delegate = self
         return scanningView
     }()
+    private let opensCardScannerAutomatically: Bool
     weak var delegate: CardSectionWithScannerViewDelegate?
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
+    private let linkAppearance: LinkAppearance?
 
-    init(cardSectionView: UIView, delegate: CardSectionWithScannerViewDelegate, theme: ElementsUITheme = .default, analyticsHelper: PaymentSheetAnalyticsHelper) {
+    init(
+        cardSectionView: UIView,
+        opensCardScannerAutomatically: Bool,
+        delegate: CardSectionWithScannerViewDelegate,
+        theme: ElementsAppearance = .default,
+        analyticsHelper: PaymentSheetAnalyticsHelper?,
+        linkAppearance: LinkAppearance? = nil
+    ) {
         self.cardSectionView = cardSectionView
+        self.opensCardScannerAutomatically = opensCardScannerAutomatically
         self.delegate = delegate
         self.theme = theme
         self.analyticsHelper = analyticsHelper
+        self.linkAppearance = linkAppearance
         super.init(frame: .zero)
         installConstraints()
+
+        if opensCardScannerAutomatically {
+            cardScanButton.alpha = 0
+        } else {
+            cardScanningView.setHiddenIfNecessary(true)
+        }
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -56,23 +72,36 @@ final class CardSectionWithScannerView: UIView {
 
         let stack = UIStackView(arrangedSubviews: [cardSectionTitleAndButton, cardSectionView, cardScanningView])
         stack.axis = .vertical
-        stack.spacing = ElementsUI.sectionSpacing
+        stack.spacing = ElementsUI.sectionElementInternalSpacing
         stack.setCustomSpacing(ElementsUI.formSpacing, after: cardSectionView)
         addAndPinSubview(stack)
     }
 
     @objc func didTapCardScanButton() {
-        analyticsHelper.logFormInteracted(paymentMethodTypeIdentifier: "card")
-        setCardScanVisible(true)
-        cardScanningView.start()
+        analyticsHelper?.logFormInteracted(paymentMethodTypeIdentifier: "card")
+        showCardScanner()
+        cardScanningView.startScanner()
         becomeFirstResponder()
     }
 
-    private func setCardScanVisible(_ isCardScanVisible: Bool) {
-        UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
-            self.cardScanButton.alpha = isCardScanVisible ? 0 : 1
-            self.cardScanningView.setHiddenIfNecessary(!isCardScanVisible)
-            self.cardScanningView.alpha = isCardScanVisible ? 1 : 0
+    private func hideCardScanner() {
+        self.cardScanningView.prepDismissAnimation()
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
+            self.cardScanButton.alpha = 1
+            self.cardScanningView.alpha = 0
+            self.cardScanningView.setHiddenIfNecessary(true)
+            self.layoutIfNeeded()
+        } completion: { _ in
+            self.cardScanningView.completeDismissAnimation()
+        }
+    }
+
+    private func showCardScanner() {
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.3, options: [.curveEaseInOut]) {
+            self.cardScanButton.alpha = 0
+            self.cardScanningView.alpha = 1
+            self.cardScanningView.setHiddenIfNecessary(false)
+            self.layoutIfNeeded()
         }
     }
 
@@ -81,16 +110,30 @@ final class CardSectionWithScannerView: UIView {
     }
 
     override func resignFirstResponder() -> Bool {
-        cardScanningView.stop()
+        // If we leave the screen or an input field is focused, we close the scanner
+        cardScanningView.stopScanner()
+        hideCardScanner()
         return super.resignFirstResponder()
+    }
+
+    override func willMove(toWindow newWindow: UIWindow?) {
+        // We wait until we are added to the screen to start the scanner instead of at initialization
+        // If cardScanningView.start() is called when it is already started, nothing will happen
+        // The opensCardScannerAutomatically check is redudant since this should only apply in that case,
+        //    but it adds a bit of extra safety. This can be removed in the future.
+        if newWindow != nil && !cardScanningView.isHidden && opensCardScannerAutomatically {
+            cardScanningView.startScanner()
+            becomeFirstResponder()
+        }
+        super.willMove(toWindow: newWindow)
     }
 }
 
 @available(macCatalyst 14.0, *)
 extension CardSectionWithScannerView: STP_Internal_CardScanningViewDelegate {
-    func cardScanningView(_ cardScanningView: CardScanningView, didFinishWith cardParams: STPPaymentMethodCardParams?) {
-        setCardScanVisible(false)
-        if let cardParams = cardParams {
+    func cardScanningViewShouldClose(_ cardScanningView: CardScanningView, cardParams: StripePayments.STPPaymentMethodCardParams?) {
+        hideCardScanner()
+        if let cardParams {
             self.delegate?.didScanCard(cardParams: cardParams)
         }
     }

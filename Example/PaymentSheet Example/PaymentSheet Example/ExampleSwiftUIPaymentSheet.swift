@@ -33,7 +33,7 @@ struct ExampleSwiftUIPaymentSheet: View {
 }
 
 class MyBackendModel: ObservableObject {
-    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.glitch.me/checkout")!  // An example backend endpoint
+    let backendCheckoutUrl = URL(string: "https://stripe-mobile-payment-sheet.stripedemos.com/checkout")!  // An example backend endpoint
     @Published var paymentSheet: PaymentSheet?
     @Published var paymentResult: PaymentSheetResult?
 
@@ -68,7 +68,7 @@ class MyBackendModel: ObservableObject {
                 configuration.customer = .init(
                     id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
-                // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
+                // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit.
                 configuration.allowsDelayedPaymentMethods = true
                 DispatchQueue.main.async {
                     self.paymentSheet = PaymentSheet(

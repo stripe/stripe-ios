@@ -15,17 +15,6 @@ class HCaptcha__Config__Tests: XCTestCase {
         + "&assethost=https%3A%2F%2Fnewassets.hcaptcha.com&imghost=https%3A%2F%2Fimgs.hcaptcha.com"
         + "&reportapi=https%3A%2F%2Faccounts.hcaptcha.com"
 
-    func createConfig(apiKey: String = "some-api-key",
-                      host: String? = nil,
-                      customTheme: String? = nil) -> HCaptchaConfig? {
-        return try? HCaptchaConfig(apiKey: apiKey,
-                                   infoPlistKey: nil,
-                                   baseURL: URL(string: "https://localhost")!,
-                                   infoPlistURL: nil,
-                                   host: host,
-                                   customTheme: customTheme)
-    }
-
     func test__Base_URL() {
         // Ensures baseURL failure when nil
         do {
@@ -95,22 +84,22 @@ class HCaptcha__Config__Tests: XCTestCase {
     }
 
     func test__Locale__Nil() {
-        let config = createConfig()
-        let actual = config?.getEndpointURL().absoluteString
+        let config = try? HCaptchaConfig()
+        let actual = config?.actualEndpoint.absoluteString
         XCTAssertEqual(actual, expected)
     }
 
     func test__Locale__Valid() {
-        let locale = "pt-BR"
-        let config = createConfig()
-        let actual = config?.getEndpointURL(locale: Locale(identifier: locale)).absoluteString
-        XCTAssertEqual(actual, "\(expected)&hl=\(locale)")
+        let locale = Locale(identifier: "pt-BR")
+        let config = try? HCaptchaConfig(locale: locale)
+        let actual = config?.actualEndpoint.absoluteString
+        XCTAssertEqual(actual, "\(expected)&hl=\(locale.identifier)")
     }
 
     func test__Custom__Host() {
         let host = "custom-host"
-        let config = createConfig(host: host)
-        let actual = config?.getEndpointURL().absoluteString
+        let config = try? HCaptchaConfig(host: host)
+        let actual = config?.actualEndpoint.absoluteString
         XCTAssertEqual(actual, expected.replacingOccurrences(
             of: "some-api-key.ios-sdk.hcaptcha.com",
             with: host))
@@ -128,8 +117,21 @@ class HCaptcha__Config__Tests: XCTestCase {
             }
           }
         """
-        let config = createConfig(customTheme: customTheme)
-        let actual = config?.getEndpointURL().absoluteString
+        let config = try? HCaptchaConfig(customTheme: customTheme)
+        let actual = config?.actualEndpoint.absoluteString
         XCTAssertEqual(actual, expected + "&custom=true")
     }
+
+    func test__Invalid_Theme() {
+        do {
+            _ = try HCaptchaConfig(customTheme: "[Object object]")
+            XCTFail("Should have failed")
+        } catch let e as HCaptchaError {
+            print(e)
+            XCTAssertEqual(e, HCaptchaError.invalidCustomTheme)
+        } catch let e {
+            XCTFail("Unexpected error: \(e)")
+        }
+    }
+
 }

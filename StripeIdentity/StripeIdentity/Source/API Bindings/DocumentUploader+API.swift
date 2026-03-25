@@ -40,8 +40,12 @@ extension StripeAPI.VerificationPageDataDocumentFileData {
             backScore: scores?[.idCardBack].map { TwoDecimalFloat($0) },
             brightnessValue: exifMetadata?.brightnessValue.map { TwoDecimalFloat(double: $0) },
             cameraLensModel: exifMetadata?.lensModel,
-            exposureDuration: documentScannerOutput?.cameraProperties.map {
-                Int($0.exposureDuration.seconds * 1000)
+            exposureDuration: documentScannerOutput?.cameraProperties.flatMap { properties in
+                let exposureDuration = properties.exposureDuration
+                if exposureDuration.isNumeric {
+                    return Int(exposureDuration.seconds * 1000)
+                }
+                return nil
             },
             exposureIso: documentScannerOutput?.cameraProperties.map {
                 TwoDecimalFloat($0.exposureISO)

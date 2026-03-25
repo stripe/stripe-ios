@@ -1,0 +1,325 @@
+//
+//  STPPaymentIntentConfirmParams.swift
+//  StripePayments
+//
+//  Created by Daniel Jackson on 7/3/18.
+//  Copyright © 2018 Stripe, Inc. All rights reserved.
+//
+
+import Foundation
+@_spi(STP) import StripeCore
+
+/// An object representing parameters used to confirm a PaymentIntent object.
+/// A PaymentIntent must have a PaymentMethod or Source associated in order to successfully confirm it.
+/// That PaymentMethod or Source can either be:
+/// - created during confirmation, by passing in a `STPPaymentMethodParams` or `STPSourceParams` object in the `paymentMethodParams` or `sourceParams` field
+/// - a pre-existing PaymentMethod or Source can be associated by passing its id in the `paymentMethodId` or `sourceId` field
+/// - or already set via your backend, either when creating or updating the PaymentIntent
+/// - seealso: https://stripe.com/docs/api#confirm_payment_intent
+public class STPPaymentIntentConfirmParams: NSObject {
+
+    /// Initialize this `STPPaymentIntentConfirmParams` with a `clientSecret`, which is the only required
+    /// field.
+    /// - Parameter clientSecret: the client secret for this PaymentIntent
+    @objc
+    public init(
+        clientSecret: String
+    ) {
+        self.clientSecret = clientSecret
+        super.init()
+    }
+
+    /// Initializes this `STPPaymentIntentConfirmParams` with a `clientSecret` and `paymentMethodType`.
+    /// Use this initializer for PaymentIntents that already have a PaymentMethod attached.
+    /// - Parameter clientSecret: the client secret for this PaymentIntent
+    /// - Parameter paymentMethodType: the known type of the PaymentIntent's attached PaymentMethod
+    @objc
+    public init(
+        clientSecret: String,
+        paymentMethodType: STPPaymentMethodType
+    ) {
+        self.clientSecret = clientSecret
+        self._paymentMethodType = paymentMethodType
+        super.init()
+    }
+
+    @objc convenience override init() {
+        self.init(clientSecret: "")
+    }
+
+    /// The Stripe id of the PaymentIntent, extracted from the clientSecret.
+    @objc public var stripeId: String? {
+        return STPPaymentIntent.id(fromClientSecret: clientSecret)
+    }
+
+    /// The client secret of the PaymentIntent. Required
+    @objc public var clientSecret: String
+
+    /// Provide a supported `STPPaymentMethodParams` object, and Stripe will create a
+    /// PaymentMethod during PaymentIntent confirmation.
+    /// @note alternative to `paymentMethodId`
+    @objc public var paymentMethodParams: STPPaymentMethodParams?
+
+    /// Provide an already created PaymentMethod's id, and it will be used to confirm the PaymentIntent.
+    /// @note alternative to `paymentMethodParams`
+    @objc public var paymentMethodId: String?
+
+    /// Provide a supported `STPSourceParams` object into here, and Stripe will create a Source
+    /// during PaymentIntent confirmation.
+    /// @note alternative to `sourceId`
+    @objc public var sourceParams: STPSourceParams?
+
+    /// Provide an already created Source's id, and it will be used to confirm the PaymentIntent.
+    /// @note alternative to `sourceParams`
+    @objc public var sourceId: String?
+
+    /// Email address that the receipt for the resulting payment will be sent to.
+    @objc public var receiptEmail: String?
+
+    /// `@YES` to save this PaymentIntent’s PaymentMethod or Source to the associated Customer,
+    /// if the PaymentMethod/Source is not already attached.
+    /// This should be a boolean NSNumber, so that it can be `nil`
+    @objc public var savePaymentMethod: NSNumber?
+
+    /// `@YES` to set this PaymentIntent’s PaymentMethod as the associated Customer's default
+    /// This should be a boolean NSNumber, so that it can be `nil`
+    @objc @_spi(STP) public var setAsDefaultPM: NSNumber?
+
+    /// The URL to redirect your customer back to after they authenticate or cancel
+    /// their payment on the payment method’s app or site.
+    /// This should probably be a URL that opens your iOS app.
+    @objc public var returnURL: String?
+
+    /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes.
+    /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
+    public var setupFutureUsage: STPPaymentIntentSetupFutureUsage?
+
+    /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes.
+    /// If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
+    /// This property should only be used in Objective-C. In Swift, use `setupFutureUsage`.
+    /// - seealso: STPPaymentIntentSetupFutureUsage for more details on what values you can provide.
+    @available(swift, obsoleted: 1.0, renamed: "setupFutureUsage")
+    @objc(setupFutureUsage) public var setupFutureUsage_objc: NSNumber? {
+        get {
+            setupFutureUsage?.rawValue as NSNumber?
+        }
+        set {
+            if let newValue = newValue {
+                setupFutureUsage = STPPaymentIntentSetupFutureUsage(
+                    rawValue: Int(truncating: newValue)
+                )
+            } else {
+                setupFutureUsage = nil
+            }
+        }
+    }
+
+    /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any PaymentIntent next actions.
+    /// If set to false, STPPaymentIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
+    /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
+    /// app.
+    @objc(useStripeSDK)
+    @available(swift, obsoleted: 1.0, renamed: "useStripeSDK")
+    public var useStripeSDK_objc: NSNumber? {
+        get { return useStripeSDK.map { NSNumber(value: $0) } }
+        set { useStripeSDK = newValue?.boolValue }
+    }
+
+    /// A boolean number to indicate whether you intend to use the Stripe SDK's functionality to handle any PaymentIntent next actions.
+    /// If set to false, STPPaymentIntent.nextAction will only ever contain a redirect url that can be opened in a webview or mobile browser.
+    /// When set to true, the nextAction may contain information that the Stripe SDK can use to perform native authentication within your
+    public var useStripeSDK: Bool?
+
+    internal var _paymentMethodType: STPPaymentMethodType?
+    @_spi(STP) public var paymentMethodType: STPPaymentMethodType? {
+        if let type = _paymentMethodType {
+            return type
+        }
+        return paymentMethodParams?.type
+    }
+
+    internal var _mandateData: STPMandateDataParams?
+    /// Details about the Mandate to create.
+    /// @note If this value is null, the SDK will set this to an internal value indicating that the mandate data should be inferred from the current context if it's required for `self.paymentMethodType`
+    @objc public var mandateData: STPMandateDataParams? {
+        get {
+            if let _mandateData = _mandateData {
+                return _mandateData
+            }
+            guard let paymentMethodType = paymentMethodType else {
+                return nil
+            }
+            return Self.mandateDataIfRequired(for: paymentMethodType)
+        }
+        set {
+            _mandateData = newValue
+        }
+    }
+
+    /// Options to update the associated PaymentMethod during confirmation.
+    /// - seealso: STPConfirmPaymentMethodOptions
+    @objc public var paymentMethodOptions: STPConfirmPaymentMethodOptions?
+
+    /// Radar options that may contain HCaptcha token
+    @objc @_spi(STP) public var radarOptions: STPRadarOptions?
+
+    /// Shipping information.
+    @objc public var shipping: STPPaymentIntentShippingDetailsParams?
+
+    /// Contains metadata with identifiers for the session and information about the integration
+    @objc @_spi(STP) public var clientAttributionMetadata: STPClientAttributionMetadata?
+
+    /// ID of an existing ConfirmationToken to use for this PaymentIntent confirmation.
+    @objc @_spi(STP) public var confirmationToken: String?
+
+    /// The URL to redirect your customer back to after they authenticate or cancel
+    /// their payment on the payment method’s app or site.
+    /// This property has been renamed to `returnURL` and deprecated.
+    @available(*, deprecated, renamed: "returnURL")
+    @objc public var returnUrl: String? {
+        get {
+            return returnURL
+        }
+        set(returnUrl) {
+            returnURL = returnUrl
+        }
+    }
+
+    /// :nodoc:
+    @objc public var additionalAPIParameters: [AnyHashable: Any] = [:]
+
+    /// :nodoc:
+    @objc public override var description: String {
+        let props: [String] = [
+            // Object
+            String(format: "%@: %p", NSStringFromClass(STPPaymentIntentConfirmParams.self), self),
+            // Identifier
+            "stripeId = \(String(describing: stripeId))",
+            // PaymentIntentParams details (alphabetical)
+            "clientSecret = \(!clientSecret.isEmpty ? "<redacted>" : "")",
+            "receiptEmail = \(String(describing: receiptEmail))",
+            "returnURL = \(String(describing: returnURL))",
+            "savePaymentMethod = \(String(describing: savePaymentMethod))",
+            "setupFutureUsage = \(String(describing: setupFutureUsage))",
+            "shipping = \(String(describing: shipping))",
+            "useStripeSDK = \(String(describing: useStripeSDK))",
+            // Source
+            "sourceId = \(String(describing: sourceId))",
+            "sourceParams = \(String(describing: sourceParams))",
+            // PaymentMethod
+            "paymentMethodId = \(String(describing: paymentMethodId))",
+            "paymentMethodParams = \(String(describing: paymentMethodParams))",
+            // Set as default payment method
+            "setAsDefaultPM = \(String(describing: setAsDefaultPM))",
+            // Mandate
+            "mandateData = \(String(describing: mandateData))",
+            // PaymentMethodOptions
+            "paymentMethodOptions = @\(String(describing: paymentMethodOptions))",
+            // RadarOptions
+            "radarOptions = @\(String(describing: radarOptions))",
+            // ClientAttributionMetadata
+            "clientAttributionMetadata = @\(String(describing: clientAttributionMetadata))",
+            // ConfirmationToken
+            "confirmationToken = \(String(describing: confirmationToken))",
+            // Additional params set by app
+            "additionalAPIParameters = \(additionalAPIParameters)",
+        ]
+
+        return "<\(props.joined(separator: "; "))>"
+    }
+
+    static internal let isClientSecretValidRegex: NSRegularExpression? = try? NSRegularExpression(
+        pattern: "^pi_[^_]+_(scoped_)?secret_[^_]+$",
+        options: []
+    )
+
+    @_spi(STP) public class func isClientSecretValid(_ clientSecret: String) -> Bool {
+
+        return
+            (isClientSecretValidRegex?.numberOfMatches(
+                in: clientSecret,
+                options: .anchored,
+                range: NSRange(location: 0, length: clientSecret.count)
+            )) == 1
+    }
+}
+
+// MARK: - STPFormEncodable
+extension STPPaymentIntentConfirmParams: STPFormEncodable {
+    @objc private var useStripeSDK_apiValue: NSNumber? { useStripeSDK.map { NSNumber(value: $0) } }
+    @objc internal var setupFutureUsageRawString: String? { setupFutureUsage?.stringValue }
+
+    @objc
+    public class func rootObjectName() -> String? {
+        return nil
+    }
+
+    @objc
+    public class func propertyNamesToFormFieldNamesMapping() -> [String: String] {
+        return [
+            NSStringFromSelector(#selector(getter: clientSecret)): "client_secret",
+            NSStringFromSelector(#selector(getter: paymentMethodParams)): "payment_method_data",
+            NSStringFromSelector(#selector(getter: paymentMethodId)): "payment_method",
+            NSStringFromSelector(#selector(getter: setupFutureUsageRawString)): "setup_future_usage",
+            NSStringFromSelector(#selector(getter: sourceParams)): "source_data",
+            NSStringFromSelector(#selector(getter: sourceId)): "source",
+            NSStringFromSelector(#selector(getter: receiptEmail)): "receipt_email",
+            NSStringFromSelector(#selector(getter: savePaymentMethod)): "save_payment_method",
+            NSStringFromSelector(#selector(getter: setAsDefaultPM)): "set_as_default_payment_method",
+            NSStringFromSelector(#selector(getter: returnURL)): "return_url",
+            NSStringFromSelector(#selector(getter: useStripeSDK_apiValue)): "use_stripe_sdk",
+            NSStringFromSelector(#selector(getter: mandateData)): "mandate_data",
+            NSStringFromSelector(#selector(getter: paymentMethodOptions)): "payment_method_options",
+            NSStringFromSelector(#selector(getter: shipping)): "shipping",
+            NSStringFromSelector(#selector(getter: radarOptions)): "radar_options",
+            NSStringFromSelector(#selector(getter: clientAttributionMetadata)): "client_attribution_metadata",
+            NSStringFromSelector(#selector(getter: confirmationToken)): "confirmation_token",
+        ]
+    }
+}
+
+// MARK: - NSCopying
+extension STPPaymentIntentConfirmParams: NSCopying {
+
+    /// :nodoc:
+    @objc
+    public func copy(with zone: NSZone? = nil) -> Any {
+        let copy = STPPaymentIntentConfirmParams(clientSecret: clientSecret)
+
+        copy.paymentMethodParams = paymentMethodParams
+        copy._paymentMethodType = _paymentMethodType
+        copy.paymentMethodId = paymentMethodId
+        copy.sourceParams = sourceParams
+        copy.sourceId = sourceId
+        copy.receiptEmail = receiptEmail
+        copy.savePaymentMethod = savePaymentMethod
+        copy.setAsDefaultPM = setAsDefaultPM
+        copy.returnURL = returnURL
+        copy.setupFutureUsage = setupFutureUsage
+        copy.useStripeSDK = useStripeSDK
+        copy.mandateData = mandateData
+        copy.paymentMethodOptions = paymentMethodOptions
+        copy.shipping = shipping
+        copy.radarOptions = radarOptions
+        copy.clientAttributionMetadata = clientAttributionMetadata
+        copy.confirmationToken = confirmationToken
+        copy.additionalAPIParameters = additionalAPIParameters
+
+        return copy
+    }
+
+    /// Returns mandate data for the specified payment method type, if required.
+    /// - Parameter paymentMethodType: The payment method type to check
+    /// - Returns: STPMandateDataParams with inferred values if mandate is required for the payment method type, nil otherwise
+    @_spi(STP) public static func mandateDataIfRequired(for paymentMethodType: STPPaymentMethodType) -> STPMandateDataParams? {
+        switch paymentMethodType {
+        case .AUBECSDebit, .bacsDebit, .bancontact, .iDEAL, .SEPADebit, .EPS, .link, .USBankAccount:
+            return .makeWithInferredValues()
+        default:
+            return nil
+        }
+    }
+
+}
+
+public typealias STPPaymentIntentParams = STPPaymentIntentConfirmParams

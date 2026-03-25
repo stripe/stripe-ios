@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "E22C9D92-BEB8-4FEC-A40E-2CDBBDD0519F",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:CryptoOnramp Example.xcodeproj",
+        "identifier" : "0BD66FCA2EDE0E800044DB52",
+        "name" : "CryptoOnrampExampleUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

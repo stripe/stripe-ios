@@ -40,7 +40,7 @@ final class ErrorViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.hidesBackButton = true
 
         let error = dataSource.error
@@ -135,7 +135,7 @@ final class ErrorViewController: UIViewController {
                                 self.delegate?.errorViewControllerDidSelectManualEntry(self)
                             }
                         ) : nil,
-                        theme: dataSource.manifest.theme
+                        appearance: dataSource.manifest.appearance
                     ).footerView
                 ).createView()
                 dataSource.analyticsClient.logExpectedError(
@@ -179,7 +179,7 @@ final class ErrorViewController: UIViewController {
                                 self.delegate?.errorViewControllerDidSelectManualEntry(self)
                             }
                         ) : nil,
-                        theme: dataSource.manifest.theme
+                        appearance: dataSource.manifest.appearance
                     ).footerView
                 ).createView()
                 dataSource.analyticsClient.logExpectedError(
@@ -201,7 +201,7 @@ final class ErrorViewController: UIViewController {
             // what's wrong, so show a generic error
             errorView = TerminalErrorView(
                 allowManualEntry: dataSource.manifest.allowManualEntry,
-                theme: dataSource.manifest.theme,
+                appearance: dataSource.manifest.appearance,
                 didSelectManualEntry: { [weak self] in
                     guard let self else { return }
                     self.delegate?.errorViewControllerDidSelectManualEntry(self)

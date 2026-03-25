@@ -10,36 +10,48 @@ on:
 
 jobs:
   public-api-check:
-    runs-on: macos-14
+    runs-on: macos-15
     permissions:
       pull-requests: write
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-            fetch-depth: 0
+          fetch-depth: 100
+
+      - name: Fetch master branch
+        run: git fetch origin master
+
+      - name: Setup Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
 
       - name: Build frameworks and compare interfaces
         id: build-frameworks-compare-interface
         run: |
           ruby ci_scripts/api_diff/build_xcframeworks.rb
           ruby ci_scripts/api_diff/diff_public_interface.rb
+          severity="none"
+          if [ -f api_change_severity.txt ]; then
+            severity="$(cat api_change_severity.txt)"
+          fi
+          echo "api_change_severity=${severity}" >> $GITHUB_ENV
           if [ -f diff_result.txt ]; then
             echo "diff<<EOF" >> $GITHUB_ENV
             cat diff_result.txt >> $GITHUB_ENV
             echo "EOF" >> $GITHUB_ENV
           else 
+            echo "diff=" >> $GITHUB_ENV
             echo "diff_result.txt not found, skipping." 
           fi
-          
-      - uses: peter-evans/find-comment@v1
+
+      - uses: davidme-stripe/find-comment@v1
         id: find_comment
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: Public API changes detected
 
-      - uses: peter-evans/create-or-update-comment@v1
+      - uses: davidme-stripe/create-or-update-comment@v1
         id: create-update-comment
         if: env.diff != ''
         with:
@@ -56,13 +68,18 @@ jobs:
             - Does this require a breaking version change?
             - Do these changes require API review?
 
-            If you confirm these APIs need to be added/updated and have undergone necessary review, add the label `modifies public API` to this PR to acknowledge and bypass this check.
+            If you confirm these APIs need to be added/updated and have undergone necessary review, add the label `modifies public API` to this PR to acknowledge the interface change.
+            Additionally, if you modified or removed an existing API, ensure you update the changelog to reflect the necessary version bump for your changes. Regular public API changes require a MAJOR version bump, and SPI API changes (other than `@_spi(STP)`-only declarations) require a MINOR or MAJOR version bump.
 
             ℹ️ If this comment appears to be left in error, make sure your branch is up-to-date with `master`.
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Validate changelog version bump
+        if: env.api_change_severity != 'none'
+        run: ruby ci_scripts/check_public_interface_changelog.rb "${{ env.api_change_severity }}"
 
       - name: Fail if not acknowledged
         if: "env.diff != '' && !contains(github.event.pull_request.labels.*.name, 'modifies public API')"

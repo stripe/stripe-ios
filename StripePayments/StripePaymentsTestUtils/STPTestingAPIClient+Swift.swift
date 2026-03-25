@@ -23,6 +23,7 @@ extension STPTestingAPIClient {
         shouldSavePM: Bool = false,
         customerID: String? = nil,
         confirm: Bool = false,
+        paymentMethodOptions: [String: Any]? = nil,
         otherParams: [String: Any] = [:],
         completion: @escaping (Result<(String), Error>) -> Void
     ) {
@@ -34,8 +35,15 @@ extension STPTestingAPIClient {
         if let paymentMethodID {
             params["payment_method"] = paymentMethodID
         }
+        if let paymentMethodOptions {
+            params["payment_method_options"] = paymentMethodOptions
+        }
         if shouldSavePM {
-            params["payment_method_options"] = ["card": ["setup_future_usage": "off_session"]]
+            var existingPaymentMethodOptions: [String: Any] = params["payment_method_options"] as? [String: Any] ?? [:]
+            var cardPaymentMethodOptions: [String: Any] = existingPaymentMethodOptions["card"] as? [String: Any] ?? [:]
+            cardPaymentMethodOptions["setup_future_usage"] = "off_session"
+            existingPaymentMethodOptions["card"] = cardPaymentMethodOptions
+            params["payment_method_options"] = existingPaymentMethodOptions
         }
         if let customerID {
             params["customer"] = customerID
@@ -66,6 +74,7 @@ extension STPTestingAPIClient {
         shouldSavePM: Bool = false,
         customerID: String? = nil,
         confirm: Bool = false,
+        paymentMethodOptions: [String: Any]? = nil,
         otherParams: [String: Any] = [:]
     ) async throws -> String {
         try await withCheckedThrowingContinuation { continuation in
@@ -78,6 +87,7 @@ extension STPTestingAPIClient {
                 shouldSavePM: shouldSavePM,
                 customerID: customerID,
                 confirm: confirm,
+                paymentMethodOptions: paymentMethodOptions,
                 otherParams: otherParams
             ) { result in
                 continuation.resume(with: result)
@@ -142,21 +152,160 @@ extension STPTestingAPIClient {
 
     func fetchCustomerAndCustomerSessionClientSecret(
         customerID: String? = nil,
-        merchantCountry: String? = "us"
+        merchantCountry: String? = "us",
+        paymentMethodSave: Bool = true,
+        paymentMethodRemove: Bool = true,
+        paymentMethodSetAsDefault: Bool = false
     ) async throws -> CreateCustomerSessionResponse {
-        let params = [
+        let params: [String: Any?] = [
             "component_name": "mobile_payment_element",
             "customer_id": customerID,
             "account": merchantCountry,
+            "features": [
+                "payment_method_save": paymentMethodSave ? "enabled" : "disabled",
+                "payment_method_remove": paymentMethodRemove ? "enabled" : "disabled",
+                "payment_method_set_as_default": paymentMethodSetAsDefault ? "enabled" : "disabled",
+            ],
         ]
         return try await makeRequest(endpoint: "create_customer_session_cs", params: params)
+    }
+    func fetchCustomerAndCustomerSessionClientSecretCustomerSheet(
+        customerID: String? = nil,
+        merchantCountry: String? = "us",
+        paymentMethodSave: Bool = true,
+        paymentMethodRemove: Bool = true,
+        paymentMethodSetAsDefault: Bool = false
+    ) async throws -> CreateCustomerSessionResponse {
+        let params: [String: Any?] = [
+            "component_name": "customer_sheet",
+            "customer_id": customerID,
+            "account": merchantCountry,
+            "features": [
+                "payment_method_remove": paymentMethodRemove ? "enabled" : "disabled",
+                "payment_method_sync_default": paymentMethodSetAsDefault ? "enabled" : "disabled",
+            ],
+        ]
+        return try await makeRequest(endpoint: "create_customer_session_cs", params: params)
+    }
+    // MARK: - /create_checkout_session
+
+    struct CreateCheckoutSessionResponse: Decodable {
+        let id: String
+        let clientSecret: String
+        let publishableKey: String
+    }
+
+    func fetchCheckoutSessionPaymentMode(
+        types: [String] = ["card"],
+        currency: String = "usd",
+        amount: Int? = nil,
+        merchantCountry: String? = "us",
+        customerID: String? = nil,
+        allowPromotionCodes: Bool = false,
+        allowAdjustableLineItemQuantity: Bool = false,
+        includeShippingOptions: Bool = false,
+        collectShippingAddress: Bool = false,
+        collectBillingAddress: Bool = false,
+        automaticTax: Bool = false,
+        enableTaxIdCollection: Bool = false,
+        adaptivePricingEnabled: Bool = false,
+        customerEmailLocation: String? = nil
+    ) async throws -> CreateCheckoutSessionResponse {
+        var additionalParameters: [String: Any] = [:]
+        if allowPromotionCodes {
+            additionalParameters["allow_promotion_codes"] = true
+        }
+        if allowAdjustableLineItemQuantity {
+            additionalParameters["line_items"] = [
+                [
+                    "price_data": [
+                        "currency": currency,
+                        "product_data": ["name": "Test Product", "tax_code": "txcd_99999999", ],
+                        "unit_amount": amount ?? 5050,
+                        "tax_behavior": "exclusive",
+                    ] as [String: Any],
+                    "quantity": 1,
+                    "adjustable_quantity": [
+                        "enabled": true,
+                        "minimum": 1,
+                        "maximum": 10,
+                    ] as [String: Any],
+                ] as [String: Any],
+            ]
+        }
+        if includeShippingOptions {
+            additionalParameters["shipping_options"] = [
+                [
+                    "shipping_rate_data": [
+                        "display_name": "Standard Shipping",
+                        "type": "fixed_amount",
+                        "fixed_amount": [
+                            "amount": 500,
+                            "currency": currency,
+                        ] as [String: Any],
+                    ] as [String: Any],
+                ] as [String: Any],
+                [
+                    "shipping_rate_data": [
+                        "display_name": "Express Shipping",
+                        "type": "fixed_amount",
+                        "fixed_amount": [
+                            "amount": 1000,
+                            "currency": currency,
+                        ] as [String: Any],
+                    ] as [String: Any],
+                ] as [String: Any],
+            ]
+        }
+        if collectShippingAddress {
+            additionalParameters["shipping_address_collection"] = ["allowed_countries": ["US", "CA"]]
+        }
+        if collectBillingAddress {
+            additionalParameters["billing_address_collection"] = "required"
+        }
+        if automaticTax {
+            additionalParameters["automatic_tax"] = ["enabled": true]
+        }
+        if enableTaxIdCollection {
+            additionalParameters["tax_id_collection"] = ["enabled": true]
+        }
+        if adaptivePricingEnabled {
+            additionalParameters["adaptive_pricing"] = ["enabled": true]
+        }
+        if let customerEmailLocation {
+            additionalParameters["customer_email"] = "test+location_\(customerEmailLocation)@example.com"
+        }
+        let params: [String: Any?] = [
+            "account": merchantCountry,
+            "payment_method_types": types,
+            "currency": currency,
+            "amount": amount,
+            "customer": customerID,
+            "additional_parameters": additionalParameters.isEmpty ? nil : additionalParameters,
+        ]
+        return try await makeRequest(endpoint: "create_checkout_session", params: params)
+    }
+
+    func fetchCheckoutSessionSetupMode(
+        types: [String] = ["card"],
+        currency: String = "usd",
+        merchantCountry: String? = "us",
+        customerID: String? = nil
+    ) async throws -> CreateCheckoutSessionResponse {
+        let params: [String: Any?] = [
+            "account": merchantCountry,
+            "payment_method_types": types,
+            "currency": currency,
+            "customer": customerID,
+        ]
+        return try await makeRequest(endpoint: "create_checkout_session_setup", params: params)
     }
 
     // MARK: - Helpers
 
     fileprivate func makeRequest<ResponseType: Decodable>(
         endpoint: String,
-        params: [String: String?]
+        params: [String: Any?]
     ) async throws -> ResponseType {
         let session = URLSession(configuration: sessionConfig)
         let url = URL(string: STPTestingAPIClient.STPTestingBackendURL + endpoint)!
@@ -167,6 +316,12 @@ extension STPTestingAPIClient {
         let (data, _) = try await session.data(for: request)
         let jsonDecoder = JSONDecoder()
         jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try jsonDecoder.decode(ResponseType.self, from: data)
+        do {
+            return try jsonDecoder.decode(ResponseType.self, from: data)
+        } catch {
+            let rawDataString = String(data: data, encoding: .utf8)
+            print("Error decoding to \(ResponseType.self). Raw data: \(rawDataString ?? "nil")")
+            throw error
+        }
     }
 }

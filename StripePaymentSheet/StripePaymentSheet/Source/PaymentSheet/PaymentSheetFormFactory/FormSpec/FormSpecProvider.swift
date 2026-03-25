@@ -24,9 +24,7 @@ class FormSpecProvider {
     fileprivate var formSpecs: [String: FormSpec] = [:]
 
     /// Loading from disk should take place on this serial queue.
-    private lazy var formSpecsUpdateQueue: DispatchQueue = {
-        DispatchQueue(label: "com.stripe.Form.FormSpecProvider", qos: .userInitiated)
-    }()
+    private let formSpecsUpdateQueue = DispatchQueue(label: "com.stripe.Form.FormSpecProvider", qos: .userInitiated)
 
     var isLoaded: Bool {
         return !formSpecs.isEmpty
@@ -55,6 +53,14 @@ class FormSpecProvider {
                 STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
                 completion?(false)
                 return
+            }
+        }
+    }
+    
+    func load() async {
+        await withCheckedContinuation { continuation in
+            load { _ in
+                continuation.resume()
             }
         }
     }

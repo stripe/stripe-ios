@@ -5,11 +5,11 @@
 //  Created by Yuki Tokuhiro on 9/25/24.
 //
 
-@_spi(EmbeddedPaymentElementPrivateBeta) import StripePaymentSheet
+import StripePaymentSheet
 import UIKit
 
-// View the backend code here: https://glitch.com/edit/#!/stripe-mobile-payment-sheet-custom-deferred
-private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.glitch.me"
+// View and fork the backend code  here: https://codesandbox.io/p/devbox/dr4lkg
+private let baseUrl = "https://stripe-mobile-payment-sheet-custom-deferred.stripedemos.com"
 
 class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     @IBOutlet weak var buyButton: UIButton!
@@ -24,8 +24,10 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     @IBOutlet weak var salesTaxLabel: UILabel!
     @IBOutlet weak var totalLabel: UILabel!
     @IBOutlet weak var subscribeSwitch: UISwitch!
+    @IBOutlet weak var mandateTextView: UITextView!
 
     var embeddedPaymentElement: EmbeddedPaymentElement!
+    private var paymentMethodsViewController: EmbeddedPaymentElementWrapperViewController?
 
     private let backendCheckoutUrl = URL(string: baseUrl + "/checkout")!
     private let confirmIntentUrl = URL(string: baseUrl + "/confirm_intent")!
@@ -44,21 +46,13 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         return .init(mode: .payment(amount: Int(computedTotals.total),
                                     currency: "USD",
                                     setupFutureUsage: subscribeSwitch.isOn ? .offSession : nil)
-        ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
-            Task {
-                do {
-                    // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret or an error.
-                    // TODO(yuki): Show client-side confirm, not server-side confirm.
-                    guard let self else {
-                        intentCreationCallback(.failure(ExampleError()))
-                        return
-                    }
-                    let clientSecret = try await self.confirmIntent(paymentMethodID: paymentMethod.stripeId, shouldSavePaymentMethod: shouldSavePaymentMethod)
-                    intentCreationCallback(.success(clientSecret))
-                } catch {
-                    intentCreationCallback(.failure(error))
-                }
+        ) { [weak self] paymentMethod, shouldSavePaymentMethod in
+            // Create and confirm an intent on your server and invoke `intentCreationCallback` with the client secret or an error.
+            // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-2577) Show client-side confirm, not server-side confirm.
+            guard let self else {
+                throw ExampleError()
             }
+            return try await self.createIntent(paymentMethodID: paymentMethod.stripeId, shouldSavePaymentMethod: shouldSavePaymentMethod)
         }
     }
 
@@ -81,7 +75,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         hotDogStepper.isEnabled = false
         saladStepper.isEnabled = false
         subscribeSwitch.isEnabled = false
-
+        self.view.backgroundColor = .systemBackground
         Task {
             await self.loadCheckout()
         }
@@ -89,16 +83,27 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
 
     @objc
     func didTapPaymentMethodButton() {
-        let paymentMethodsViewController = PaymentMethodsViewController(embeddedPaymentElement: embeddedPaymentElement)
+        let paymentMethodsViewController = EmbeddedPaymentElementWrapperViewController(embeddedPaymentElement: embeddedPaymentElement, needsDismissal: { [weak self] in
+            self?.embeddedPaymentElement.presentingViewController = self
+            self?.dismiss(animated: true)
+            self?.updateLabels()
+            self?.updateButtons()
+        })
+        self.paymentMethodsViewController = paymentMethodsViewController
         let navController = UINavigationController(rootViewController: paymentMethodsViewController)
         present(navController, animated: true)
     }
 
     @objc
-    func didTapCheckoutButton() async {
-        // MARK: - Confirm the payment
-        let result = await embeddedPaymentElement.confirm()
-        handlePaymentResult(result)
+    func didTapCheckoutButton() {
+        Task {
+            // MARK: - Confirm the payment
+            // Disable interaction so that customers can't e.g. update their cart or tap the buy button again while we complete payment
+            view.isUserInteractionEnabled = false
+            let result = await embeddedPaymentElement.confirm()
+            handlePaymentResult(result)
+            view.isUserInteractionEnabled = true
+        }
     }
 
     @IBAction func hotDogStepperDidChange() {
@@ -144,6 +149,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
                         present(alertController, animated: true, completion: nil)
                     case .succeeded:
                         self.updateButtons()
+                        self.updateLabels()
                     }
                 }
             }
@@ -154,7 +160,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         // MARK: Update the payment method and buy buttons using `paymentOption`
         if let paymentOption = embeddedPaymentElement.paymentOption {
             paymentMethodButton.setTitle(paymentOption.label, for: .normal)
-            paymentMethodButton.setTitleColor(.black, for: .normal)
+            paymentMethodButton.setTitleColor(.label, for: .normal)
             paymentMethodImage.image = paymentOption.image
             buyButton.isEnabled = true
         } else {
@@ -168,10 +174,11 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     func updateLabels() {
         hotDogQuantityLabel.text = "\(Int(hotDogStepper.value))"
         saladQuantityLabel.text = "\(Int(saladStepper.value))"
-
         subtotalLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.subtotal / 100)) ?? "")"
         salesTaxLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.tax / 100)) ?? "")"
         totalLabel.text = "\(currencyFormatter.string(from: NSNumber(value: computedTotals.total / 100)) ?? "")"
+        // MARK: Display mandate text ourselves, since we set `embeddedViewDisplaysMandateText` to false
+        mandateTextView.attributedText = embeddedPaymentElement.paymentOption?.mandateText
     }
 
     func displayAlert(_ message: String, shouldDismiss: Bool) {
@@ -227,10 +234,9 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             "salad_count": saladStepper.value,
             "is_subscribing": subscribeSwitch.isOn,
         ]
-        
+
         do {
             request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
-            weak var weakSelf = self
             let (data, _) = try await URLSession.shared.data(for: request)
             guard
                 let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
@@ -239,20 +245,18 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
                 let publishableKey = json["publishableKey"] as? String,
                 let subtotal = json["subtotal"] as? Double,
                 let tax = json["tax"] as? Double,
-                let total = json["total"] as? Double,
-                let self = weakSelf
+                let total = json["total"] as? Double
             else {
-                weakSelf?.displayAlert("Bad network response", shouldDismiss: true)
+                self.displayAlert("Bad network response", shouldDismiss: true)
                 return
             }
             self.computedTotals = ComputedTotals(subtotal: subtotal, tax: tax, total: total)
 
             // MARK: - Create a EmbeddedPaymentElement instance
-            var configuration = EmbeddedPaymentElement.Configuration(
-                formSheetAction: .confirm(completion: { [weak self] result in
-                    self?.handlePaymentResult(result)
-                })
-            )
+            var configuration = EmbeddedPaymentElement.Configuration()
+            configuration.formSheetAction = .continue
+            // This example displays the buy button in a screen that is separate from screen that displays the embedded view, so we disable the mandate text in the embedded view and show it near our buy button.
+            configuration.embeddedViewDisplaysMandateText = false
             configuration.merchantDisplayName = "Example, Inc."
             // Set your Stripe publishable key - this allows the SDK to make requests to Stripe for your account
             configuration.apiClient.publishableKey = publishableKey
@@ -263,12 +267,15 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
             configuration.customer = .init(
                 id: customerId, ephemeralKeySecret: customerEphemeralKeySecret)
             configuration.returnURL = "payments-example://stripe-redirect"
-            // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit and Sofort.
+            // Set allowsDelayedPaymentMethods to true if your business can handle payment methods that complete payment after a delay, like SEPA Debit.
             configuration.allowsDelayedPaymentMethods = true
+            configuration.appearance.embeddedPaymentElement.row.flat.bottomSeparatorEnabled = false
+            configuration.appearance.embeddedPaymentElement.row.flat.topSeparatorEnabled = false
             let embeddedPaymentElement = try await EmbeddedPaymentElement.create(
                 intentConfiguration: self.intentConfig,
                 configuration: configuration
             )
+            embeddedPaymentElement.presentingViewController = self
             self.embeddedPaymentElement = embeddedPaymentElement
             self.paymentMethodButton.isEnabled = true
             self.hotDogStepper.isEnabled = true
@@ -295,7 +302,7 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
         }
     }
 
-    func confirmIntent(paymentMethodID: String, shouldSavePaymentMethod: Bool) async throws -> String {
+    func createIntent(paymentMethodID: String, shouldSavePaymentMethod: Bool) async throws -> String {
         var request = URLRequest(url: confirmIntentUrl)
         request.httpMethod = "POST"
 
@@ -326,66 +333,4 @@ class ExampleEmbeddedElementCheckoutViewController: UIViewController {
     struct ExampleError: LocalizedError {
        var errorDescription: String?
     }
-}
-
-private class PaymentMethodsViewController: UIViewController {
-    let embeddedPaymentElement: EmbeddedPaymentElement
-    lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-       return UIScrollView()
-    }()
-
-    init(embeddedPaymentElement: EmbeddedPaymentElement) {
-        self.embeddedPaymentElement = embeddedPaymentElement
-        super.init(nibName: nil, bundle: nil)
-        // MARK: - Set Embedded Payment Element properties
-        self.embeddedPaymentElement.presentingViewController = self
-        self.embeddedPaymentElement.delegate = self
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func loadView() {
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .white
-        view.addSubview(scrollView)
-        NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ])
-
-        embeddedPaymentElement.view.translatesAutoresizingMaskIntoConstraints = false
-        let embeddedPaymentElementView = embeddedPaymentElement.view
-        scrollView.addSubview(embeddedPaymentElementView)
-        NSLayoutConstraint.activate([
-            scrollView.contentLayoutGuide.topAnchor.constraint(equalTo: embeddedPaymentElementView.topAnchor),
-            scrollView.contentLayoutGuide.bottomAnchor.constraint(equalTo: embeddedPaymentElementView.bottomAnchor),
-            scrollView.contentLayoutGuide.leadingAnchor.constraint(equalTo: embeddedPaymentElementView.leadingAnchor),
-            scrollView.contentLayoutGuide.trailingAnchor.constraint(equalTo: embeddedPaymentElementView.trailingAnchor),
-            scrollView.frameLayoutGuide.leadingAnchor.constraint(equalTo: embeddedPaymentElementView.leadingAnchor),
-            scrollView.frameLayoutGuide.trailingAnchor.constraint(equalTo: embeddedPaymentElementView.trailingAnchor),
-        ])
-
-        // Nav bar
-        title = "Choose your payment method"
-        let closeButton = UIBarButtonItem(title: "Close", style: .plain, target: self, action: #selector(closeButtonTapped))
-        navigationItem.leftBarButtonItem = closeButton
-    }
-
-    @objc private func closeButtonTapped() {
-        dismiss(animated: true, completion: nil)
-    }
-}
-
-// MARK: - EmbeddedPaymentElementDelegate
-extension PaymentMethodsViewController: EmbeddedPaymentElementDelegate {
-  func embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: EmbeddedPaymentElement) {
-    // Lay out the scroll view that contains the Embedded Payment Element view
-    scrollView.setNeedsLayout()
-    scrollView.layoutIfNeeded()
-  }
 }

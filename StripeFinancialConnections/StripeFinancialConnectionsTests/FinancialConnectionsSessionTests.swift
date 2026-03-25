@@ -20,6 +20,13 @@ enum FinancialConnectionsSessionMock: String, MockData {
     case onlyLinkedAccountsPresent = "FinancialConnectionsSession_only_la"
 }
 
+enum FinancialConnectionsSynchronizeMock: String, MockData {
+    typealias ResponseType = FinancialConnectionsSynchronize
+    var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
+
+    case synchronize = "FinancialConnectionsSynchronize"
+}
+
 // Dummy class to determine this bundle
 private class ClassForBundle {}
 

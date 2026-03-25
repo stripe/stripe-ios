@@ -13,7 +13,7 @@ extension StripeAPI {
     @_spi(STP) public struct SetupIntent: UnknownFieldsDecodable {
         @_spi(STP) public let id: String
         // TODO: (MOBILESDK-467) Add modern bindings for more SetupIntent fields
-        @_spi(STP) public let status: SetupIntentStatus?
+        @_spi(STP) public let status: SetupIntentStatus
 
         /// Status types for an STPSetupIntent
         @frozen @_spi(STP) public enum SetupIntentStatus: String, SafeEnumCodable {

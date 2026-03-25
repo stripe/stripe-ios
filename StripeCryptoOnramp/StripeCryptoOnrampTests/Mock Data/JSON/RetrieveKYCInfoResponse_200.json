@@ -1,0 +1,19 @@
+{
+  "first_name": "John",
+  "last_name": "Smith",
+  "dob": {
+    "day": 31,
+    "month": 3,
+    "year": 1975
+  },
+  "address": {
+    "line1": "123 Fake Street",
+    "line2": "APT 2",
+    "city": "Brooklyn",
+    "state": "New York",
+    "postal_code": "11201",
+    "country": "US"
+  },
+  "id_number_last4": "6789",
+  "id_type": "social_security_number"
+}

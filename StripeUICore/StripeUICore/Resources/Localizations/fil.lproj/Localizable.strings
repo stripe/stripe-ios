@@ -1,4 +1,8 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@(opsyonal)";
+
+"(not accepted)" = "(hindi tinatanggap)";
 
 "Account number" = "Numero ng account";
 
@@ -36,7 +40,7 @@
 
 "County" = "County";
 
-"Date is empty." = "Walang laman ang petsa.";
+"Date of Birth" = "Petsa ng Kapanganakan";
 
 "Department" = "Departamento";
 
@@ -84,8 +88,6 @@
 
 "Parish" = "Parokya";
 
-"Phone" = "Telepono";
-
 "Phone number" = "Numero ng telepono";
 
 "Postal code" = "Postal code";
@@ -103,6 +105,8 @@
 "Search" = "Maghanap";
 
 "Select card brand (optional)" = "Pumili ng brand ng kard (opsyonal)";
+
+"Selection is empty." = "Walang laman ang seleksyon.";
 
 "Sort code" = "Sort code";
 
@@ -132,12 +136,16 @@
 
 "Your BLIK code is invalid." = "Ang iyong BLIK code ay hindi valid.";
 
-"Your ZIP is incomplete." = "Ang iyong ZIP ay di kumpleto.";
+"Your ZIP code is incomplete." = "Hindi kumpleto ang iyong zip code.";
+
+"Your ZIP code is invalid." = "Ang iyong ZIP code ay hindi wasto.";
 
 "Your email is invalid." = "Ang iyong email ay imbalido.";
 
 "Your payment information will not be saved." = "Hindi mase-save ang iyong impormasyon ng pagbabayad.";
 
 "Your postal code is incomplete." = "Ang iyong postal code ay di kumpleto.";
+
+"Your postal code is invalid." = "Ang iyong postal code ay di balido.";
 
 "ZIP" = "ZIP";

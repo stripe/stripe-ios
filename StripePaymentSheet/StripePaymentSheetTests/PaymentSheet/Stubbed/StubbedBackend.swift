@@ -58,6 +58,78 @@ class StubbedBackend {
             return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
         }
     }
+
+    static func stubPaymentMethods(paymentMethodTypes: [STPPaymentMethodType]) {
+        stub { urlRequest in
+            return urlRequest.url?.absoluteString.contains("/v1/payment_methods") ?? false
+        } response: { _ in
+            // Map payment method types to their corresponding file mocks
+            let fileMocks: [FileMock] = paymentMethodTypes.compactMap { type in
+                switch type {
+                case .card:
+                    return .saved_payment_methods_withCard_200
+                case .USBankAccount:
+                    return .saved_payment_methods_withUSBank_200
+                case .SEPADebit:
+                    return .saved_payment_methods_withSepa_200
+                default:
+                    assertionFailure()
+                    return nil
+                }
+            }
+
+            // If no valid types, return empty list
+            guard !fileMocks.isEmpty else {
+                return HTTPStubsResponse(data: try! FileMock.saved_payment_methods_200.data(), statusCode: 200, headers: nil)
+            }
+
+            // Combine all payment methods from the file mocks
+            var allPaymentMethods: [[String: Any]] = []
+
+            for fileMock in fileMocks {
+                let mockData = try! fileMock.data()
+                let json = try! JSONSerialization.jsonObject(with: mockData) as! [String: Any]
+                let paymentMethods = json["data"] as! [[String: Any]]
+                allPaymentMethods.append(contentsOf: paymentMethods)
+            }
+
+            // Sort by created date (most recent first)
+            allPaymentMethods.sort { pm1, pm2 in
+                let created1 = pm1["created"] as? Int ?? 0
+                let created2 = pm2["created"] as? Int ?? 0
+                return created1 > created2
+            }
+
+            // Create combined response
+            let combinedResponse: [String: Any] = [
+                "object": "list",
+                "data": allPaymentMethods,
+                "has_more": false,
+                "url": "/v1/payment_methods",
+            ]
+
+            let responseData = try! JSONSerialization.data(withJSONObject: combinedResponse, options: [])
+            return HTTPStubsResponse(data: responseData, statusCode: 200, headers: nil)
+        }
+    }
+
+    static func stubCustomers(fileMock: FileMock = .customers_200) {
+        stub { urlRequest in
+            urlRequest.url?.absoluteString.contains("/v1/customers") ?? false
+        } response: { _ in
+            let mockResponseData = try! fileMock.data()
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
+
+    static func stubLookup(fileMock: FileMock = .consumers_lookup_200) {
+        stub { urlRequest in
+            urlRequest.url?.absoluteString.contains("/v1/consumers/sessions/lookup") ?? false
+        } response: { _ in
+            let mockResponseData = try! fileMock.data()
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+    }
 }
 
 public class ClassForBundle {}
@@ -71,15 +143,24 @@ public class ClassForBundle {}
     case saved_payment_methods_withSepa_200 = "MockFiles/saved_payment_methods_withSepa_200"
 
     case elementsSessionsPaymentMethod_200 = "MockFiles/elements_sessions_paymentMethod_200"
+    case elementsSessionsPaymentMethod_GB_200 = "MockFiles/elements_sessions_paymentMethod_GB_200"
+    case elementsSessionsPaymentMethod_IT_200 = "MockFiles/elements_sessions_paymentMethod_IT_200"
+    case elementsSessions_customerSessionsMobilePaymentElement_200 = "MockFiles/elements_sessions_customerSessionMobilePaymentElement_200"
+    case elementsSessions_customerSessionsMobilePaymentElement_setupIntent_200 = "MockFiles/elements_sessions_customerSessionMobilePaymentElement_setupIntent_200"
     case elementsSessions_customerSessionsCustomerSheet_200 = "MockFiles/elements_sessions_customerSessionCustomerSheet_200"
     case elementsSessions_customerSessionsCustomerSheetWithSavedPM_200 = "MockFiles/elements_sessions_customerSessionCustomerSheetWithSavedPM_200"
+    case elementsSessions_customerSessionsCustomerSheet_DefaultEnabled_200 = "MockFiles/elements_sessions_customerSessionCustomerSheet_DefaultEnabled_200"
+    case elementsSessions_customerSessionsCustomerSheetWithSavedPM_DefaultEnabled_200 = "MockFiles/elements_sessions_customerSessionCustomerSheetWithSavedPM_DefaultEnabled_200"
 
     case elementsSessionsPaymentMethod_savedPM_200 = "MockFiles/elements_sessions_paymentMethod_savedPM_200"
+    case elements_sessions_paymentMethod_savedPM_horizontalExperiment_200 = "MockFiles/elements_sessions_paymentMethod_savedPM_horizontalExperiment_200"
     case elementsSessionsPaymentMethod_link_200 = "MockFiles/elements_sessions_paymentMethod_link_200"
     case elementsSessions_link_signup_disabled_200 = "MockFiles/elements_sessions_link_signup_disabled_200"
 
     case customers_200 = "MockFiles/customers_200"
     case consumers_lookup_200 = "MockFiles/consumers_lookup_200"
     case payment_intents_200 = "MockFiles/payment_intents_200"
+    case payment_intents_misordered_pms_200 = "MockFiles/payment_intents_misordered_pms_200"
+    case payment_intents_no_card_200 = "MockFiles/payment_intents_no_card_200"
     case setup_intents_200 = "MockFiles/setup_intents_200"
 }

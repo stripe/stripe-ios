@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="20.00" height="20.00" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="blik-bg" x1="15.999" y1="31.772" x2="15.999" y2="0.123" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#5A5A5A"/>
+      <stop offset="0.146" stop-color="#494949"/>
+      <stop offset="0.52" stop-color="#212121"/>
+      <stop offset="0.817" stop-color="#090909"/>
+      <stop offset="1" stop-color="#000000"/>
+    </linearGradient>
+    <linearGradient id="blik-circle" x1="17.497" y1="6.835" x2="21.686" y2="11.097" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E52F08"/>
+      <stop offset="1" stop-color="#E94F96"/>
+    </linearGradient>
+  </defs>
+  <path d="M0,0h32v32H0z" fill="url(#blik-bg)"/>
+  <path d="M16.276,13.305a6.269,6.269 0,0 0,-2.968 0.745L13.308,6.95L10,6.95v12.629a6.277,6.277 0,0 0,12.553 0,6.275 6.275,0 0,0 -6.277,-6.274ZM16.276,22.6a3.021,3.021 0,1 1,0 -6.042,3.021 3.021,0 0,1 0,6.042Z" fill="#FFF"/>
+  <path d="M19.592,8.961m-2.961,0a2.961,2.961 0,1 1,5.922 0a2.961,2.961 0,1 1,-5.922 0" fill="url(#blik-circle)"/>
+</svg>

@@ -5,14 +5,14 @@ The Stripe Identity iOS SDK makes it quick and easy to verify your user's identi
 > To get access to the Identity iOS SDK, visit the [Identity Settings](https://dashboard.stripe.com/settings/identity) page and click **Enable**.
 
 ## Table of contents
-
+<!-- NOTE: Use case-sensitive anchor links for docc compatibility -->
 <!--ts-->
-* [Features](#features)
-* [Requirements](#requirements)
-* [Getting started](#getting-started)
-   * [Integration](#integration)
-   * [Example](#example)
-* [Manual linking](#manual-linking)
+* [Features](#Features)
+* [Requirements](#Requirements)
+* [Getting started](#Getting-started)
+   * [Integration](#Integration)
+   * [Example](#Example)
+* [Manual linking](#Manual-linking)
 
 <!--te-->
 

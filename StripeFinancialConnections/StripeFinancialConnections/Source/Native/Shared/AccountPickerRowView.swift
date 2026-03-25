@@ -11,33 +11,11 @@ import UIKit
 
 final class AccountPickerRowView: UIView {
 
-    private let theme: FinancialConnectionsTheme
+    private let appearance: FinancialConnectionsAppearance
     private let didSelect: () -> Void
     private var isSelected: Bool = false {
         didSet {
-            layer.cornerRadius = 12
-            if isSelected {
-                layer.borderColor = theme.borderColor.cgColor
-                layer.borderWidth = 2
-                let shadowWidthOffset: CGFloat = 0
-                layer.shadowPath = CGPath(
-                    roundedRect: CGRect(x: shadowWidthOffset / 2, y: 0, width: bounds.width - shadowWidthOffset, height: bounds.height),
-                    cornerWidth: layer.cornerRadius,
-                    cornerHeight: layer.cornerRadius,
-                    transform: nil
-                )
-                layer.shadowColor = UIColor.black.cgColor
-                layer.shadowRadius = 1.5 / UIScreen.main.nativeScale
-                layer.shadowOpacity = 0.23
-                layer.shadowOffset = CGSize(
-                    width: 0,
-                    height: 1 / UIScreen.main.nativeScale
-                )
-            } else {
-                layer.borderColor = UIColor.borderDefault.cgColor
-                layer.borderWidth = 1
-                layer.shadowOpacity = 0
-            }
+            updateLayer()
             checkboxView.isSelected = isSelected
         }
     }
@@ -53,7 +31,7 @@ final class AccountPickerRowView: UIView {
         return InstitutionIconView()
     }()
     private lazy var checkboxView: CheckboxView = {
-        let selectionView = CheckboxView(theme: theme)
+        let selectionView = CheckboxView(appearance: appearance)
         selectionView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             selectionView.widthAnchor.constraint(equalToConstant: 16),
@@ -68,15 +46,15 @@ final class AccountPickerRowView: UIView {
     init(
         isDisabled: Bool,
         isFaded: Bool,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         didSelect: @escaping () -> Void
     ) {
-        self.theme = theme
+        self.appearance = appearance
         self.didSelect = didSelect
         super.init(frame: .zero)
 
         // necessary so the shadow does not appear under text
-        backgroundColor = .customBackgroundColor
+        backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         if isFaded {
             horizontalStackView.alpha = 0.25
@@ -142,6 +120,40 @@ final class AccountPickerRowView: UIView {
     @objc private func didTapView() {
         self.didSelect()
     }
+
+    private func updateLayer() {
+        layer.cornerRadius = 12
+        if isSelected {
+            layer.borderColor = appearance.colors.border.cgColor
+            layer.borderWidth = 2
+            let shadowWidthOffset: CGFloat = 0
+            layer.shadowPath = CGPath(
+                roundedRect: CGRect(x: shadowWidthOffset / 2, y: 0, width: bounds.width - shadowWidthOffset, height: bounds.height),
+                cornerWidth: layer.cornerRadius,
+                cornerHeight: layer.cornerRadius,
+                transform: nil
+            )
+            layer.shadowColor = FinancialConnectionsAppearance.Colors.shadow.cgColor
+            layer.shadowRadius = 1.5 / UIScreen.main.nativeScale
+            layer.shadowOpacity = 0.23
+            layer.shadowOffset = CGSize(
+                width: 0,
+                height: 1 / UIScreen.main.nativeScale
+            )
+        } else {
+            layer.borderColor = FinancialConnectionsAppearance.Colors.borderNeutral.cgColor
+            layer.borderWidth = 1
+            layer.shadowOpacity = 0
+        }
+    }
+
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        updateLayer()
+    }
 }
 
 private func CreateHorizontalStackView(arrangedSubviews: [UIView]) -> UIStackView {
@@ -172,7 +184,7 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
     let isSelected: Bool
     let isDisabled: Bool
     let isFaded: Bool
-    let theme: FinancialConnectionsTheme
+    let appearance: FinancialConnectionsAppearance
 
     init(
         institutionIconUrl: String? = nil,
@@ -182,7 +194,7 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
         isSelected: Bool,
         isDisabled: Bool,
         isFaded: Bool,
-        theme: FinancialConnectionsTheme = .light
+        appearance: FinancialConnectionsAppearance = .stripe
     ) {
         self.institutionIconUrl = institutionIconUrl
         self.title = title
@@ -191,14 +203,14 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
         self.isSelected = isSelected
         self.isDisabled = isDisabled
         self.isFaded = isFaded
-        self.theme = theme
+        self.appearance = appearance
     }
 
     func makeUIView(context: Context) -> AccountPickerRowView {
         let view = AccountPickerRowView(
             isDisabled: isDisabled,
             isFaded: isFaded,
-            theme: theme,
+            appearance: appearance,
             didSelect: {}
         )
         view.set(
@@ -254,7 +266,7 @@ struct AccountPickerRowView_Previews: PreviewProvider {
                         isSelected: true,
                         isDisabled: false,
                         isFaded: false,
-                        theme: .linkLight
+                        appearance: .link
                     ).frame(height: 76)
                     AccountPickerRowViewUIViewRepresentable(
                         title: "Joint Checking Very Long Name To Truncate",

@@ -1,4 +1,18 @@
+"An error occurred. Please try again." = "Ilmnes tõrge. Palun proovige uuesti.";
+
+"Card brand was not updated. Please try again." = "Kaardi kaubamärki ei värskendatud. Palun proovige uuesti.";
+
 "Close" = "Sule";
+
+"Confirm it's you" = "Kinnitage, et see olete teie";
+
+"Default payment method was not updated. Please try again." = "Vaikemakseviisi ei värskendatud. Palun proovige uuesti.";
+
+"Enter the code sent to %@." = "Sisestage numbrile %@ saadetud kood.";
+
+"Failed to connect" = "Ühenduse loomine ebaõnnestus";
+
+"Resend code" = "Saada kood uuesti";
 
 "Scan Card" = "Skanni kaart";
 

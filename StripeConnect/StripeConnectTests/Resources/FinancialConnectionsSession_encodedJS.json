@@ -1,0 +1,116 @@
+{
+    "id": "e3c91a09-994a-4d4d-a480-89c6b079d851",
+    "financialConnectionsSession": {
+        "accounts": [
+            {
+                "id": "fca_1KtwJsdsdfdsf",
+                "object": "financial_connections.account",
+                "balance": {
+                    "as_of": 1651248322,
+                    "current": {
+                        "usd": 10000,
+                        "cad": -10000,
+                        "jyp": 2000
+                    },
+                    "type": "cash",
+                    "cash": {
+                        "available": {
+                            "usd": 10000,
+                            "cad": -10000,
+                            "jyp": 2000
+                        }
+                    }
+                },
+                "balance_refresh": {
+                    "status": "pending",
+                    "last_attempted_at": 1651248322,
+                },
+                "category": "cash",
+                "created": 1651248322,
+                "display_name": "Bank Savings",
+                "institution_name": "Bank of Testing",
+                "last4": "7777",
+                "livemode": true,
+                "ownership": "1234",
+                "ownership_refresh":  {
+                    "status": "pending",
+                    "last_attempted_at": 1651248322,
+                },
+                "permissions": [
+                    "payment_method"
+                ],
+                "status": "active",
+                "subcategory": "savings",
+                "supported_payment_method_types": [
+                    "us_bank_account"
+                ]
+            },
+            {
+                "id": "fca_1KtwJsdfadfsdf",
+                "object": "linked_account",
+                "balance": {
+                    "as_of": 1651248322,
+                    "current": {
+                        "usd": 10000,
+                        "cad": -10000,
+                        "jyp": 2000
+                    },
+                    "type": "credit",
+                    "credit": {
+                        "used": {
+                            "usd": 10000,
+                            "cad": -10000,
+                            "jyp": 2000
+                        }
+                    }
+                },
+                "balance_refresh": {
+                    "status": "succeeded",
+                    "last_attempted_at": 1651248322,
+                },
+                "category": "cash",
+                "created": 1651248322,
+                "display_name": "Test Bank",
+                "institution_name": "Bank of Testing",
+                "last4": "3333",
+                "livemode": true,
+                "ownership": "1234",
+                "ownership_refresh":  {
+                    "status": "failed",
+                    "last_attempted_at": 1651248322,
+                },
+                "permissions": [
+                    "payment_method"
+                ],
+                "status": "active",
+                "subcategory": "checking",
+                "supported_payment_method_types": [
+                    "us_bank_account",
+                    "link"
+                ]
+            }
+        ]
+    },
+    "token": {
+        "id": "btok_1N3T00LkdIwHu7ixt44h1F8k",
+        "object": "token",
+        "bank_account": {
+            "id": "ba_1MvoIJ2eZvKYlo2CO9f0MabO",
+            "object": "bank_account",
+            "account_holder_name": "Jane Austen",
+            "account_holder_type": "company",
+            "bank_name": "STRIPE TEST BANK",
+            "country": "US",
+            "currency": "usd",
+            "fingerprint": "1JWtPxqbdX5Gamtc",
+            "last4": "6789",
+            "routing_number": "110000000",
+            "status": "new"
+        },
+        "client_ip": "52.35.78.6",
+        "created": 1683071568,
+        "livemode": false,
+        "type": "bank_account",
+        "used": false
+    }
+}

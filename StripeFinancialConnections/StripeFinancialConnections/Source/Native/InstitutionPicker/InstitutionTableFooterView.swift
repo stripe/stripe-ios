@@ -17,18 +17,18 @@ final class InstitutionTableFooterView: UIView {
         title: String,
         subtitle: String?,
         image: Image,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         didSelect: @escaping () -> Void
     ) {
         self.didSelect = didSelect
         super.init(frame: .zero)
 
-        let institutionCellView = InstitutionCellView(theme: theme)
+        let institutionCellView = InstitutionCellView(appearance: appearance)
         institutionCellView.customize(
             iconView: RoundedIconView(
                 image: .image(image),
                 style: .rounded,
-                theme: theme
+                appearance: appearance
             ),
             title: title,
             subtitle: subtitle
@@ -77,14 +77,14 @@ private struct InstitutionTableFooterViewUIViewRepresentable: UIViewRepresentabl
     let title: String
     let subtitle: String
     let image: Image
-    let theme: FinancialConnectionsTheme
+    let appearance: FinancialConnectionsAppearance
 
     func makeUIView(context: Context) -> InstitutionTableFooterView {
         InstitutionTableFooterView(
             title: title,
             subtitle: subtitle,
             image: image,
-            theme: theme,
+            appearance: appearance,
             didSelect: {}
         )
     }
@@ -101,7 +101,7 @@ struct InstitutionTableFooterView_Previews: PreviewProvider {
                 title: "Don't see your bank?",
                 subtitle: "Enter your bank account and routing numbers",
                 image: .search,
-                theme: .light
+                appearance: .stripe
             )
             .frame(maxHeight: 100)
 
@@ -109,7 +109,7 @@ struct InstitutionTableFooterView_Previews: PreviewProvider {
                 title: "No results",
                 subtitle: "Double check your spelling and search terms",
                 image: .cancel_circle,
-                theme: .light
+                appearance: .stripe
             )
             .frame(maxHeight: 100)
 
@@ -117,7 +117,7 @@ struct InstitutionTableFooterView_Previews: PreviewProvider {
                 title: "No results",
                 subtitle: "Double check your spelling and search terms",
                 image: .cancel_circle,
-                theme: .linkLight
+                appearance: .link
             )
             .frame(maxHeight: 100)
 

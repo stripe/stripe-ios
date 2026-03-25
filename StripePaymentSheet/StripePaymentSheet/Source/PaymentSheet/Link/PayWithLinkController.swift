@@ -24,13 +24,17 @@ final class PayWithLinkController {
 
     let intent: Intent
     let elementsSession: STPElementsSession
-    let configuration: PaymentSheet.Configuration
+    let configuration: PaymentElementConfiguration
+    let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let confirmationChallenge: ConfirmationChallenge?
 
-    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentSheet.Configuration) {
+    init(intent: Intent, elementsSession: STPElementsSession, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper, confirmationChallenge: ConfirmationChallenge?) {
         self.intent = intent
         self.elementsSession = elementsSession
         self.configuration = configuration
         self.paymentHandler = .init(apiClient: configuration.apiClient)
+        self.analyticsHelper = analyticsHelper
+        self.confirmationChallenge = confirmationChallenge
     }
 
     func present(
@@ -64,14 +68,16 @@ extension PayWithLinkController: PayWithLinkWebControllerDelegate {
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
-            isFlowController: false
+            integrationShape: .complete,
+            confirmationChallenge: confirmationChallenge,
+            analyticsHelper: analyticsHelper
         ) { result, deferredIntentConfirmationType in
             self.completion?(result, deferredIntentConfirmationType)
             self.selfRetainer = nil
         }
     }
 
-    func payWithLinkWebControllerDidCancel(_ payWithLinkWebController: PayWithLinkWebController) {
+    func payWithLinkWebControllerDidCancel() {
         completion?(.canceled, nil)
         selfRetainer = nil
     }

@@ -1,4 +1,8 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (valgfritt)";
+
+"(not accepted)" = "(ikke godtatt)";
 
 "Account number" = "Kontonummer";
 
@@ -36,7 +40,7 @@
 
 "County" = "Fylke";
 
-"Date is empty." = "Dato er tom.";
+"Date of Birth" = "Fødselsdato";
 
 "Department" = "Avdeling";
 
@@ -84,8 +88,6 @@
 
 "Parish" = "Sogn";
 
-"Phone" = "Telefon";
-
 "Phone number" = "Telefonnummer";
 
 "Postal code" = "Postnummer";
@@ -103,6 +105,8 @@
 "Search" = "Søk";
 
 "Select card brand (optional)" = "Velg merkevare for kort (valgfritt)";
+
+"Selection is empty." = "Markeringen er tom.";
 
 "Sort code" = "Sorteringskode";
 
@@ -132,12 +136,16 @@
 
 "Your BLIK code is invalid." = "BLIK-koden er ugyldig.";
 
-"Your ZIP is incomplete." = "ZIP er ufullstendig.";
+"Your ZIP code is incomplete." = "Postnummeret ditt er ufullstendig.";
+
+"Your ZIP code is invalid." = "Postnummeret ditt er ugyldig.";
 
 "Your email is invalid." = "E-posten din er ugyldig.";
 
 "Your payment information will not be saved." = "Betalingsinformasjonen din lagres ikke.";
 
 "Your postal code is incomplete." = "Postnummeret er ufullstendig.";
+
+"Your postal code is invalid." = "Postnummeret er ugyldig.";
 
 "ZIP" = "ZIP";

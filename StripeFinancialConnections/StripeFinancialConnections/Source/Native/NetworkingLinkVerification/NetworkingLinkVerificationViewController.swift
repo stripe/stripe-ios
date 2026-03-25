@@ -13,10 +13,6 @@ import UIKit
 protocol NetworkingLinkVerificationViewControllerDelegate: AnyObject {
     func networkingLinkVerificationViewController(
         _ viewController: NetworkingLinkVerificationViewController,
-        didReceiveConsumerPublishableKey consumerPublishableKey: String
-    )
-    func networkingLinkVerificationViewController(
-        _ viewController: NetworkingLinkVerificationViewController,
         didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
         consumerSession: ConsumerSessionData?,
         preventBackNavigation: Bool
@@ -33,7 +29,7 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     weak var delegate: NetworkingLinkVerificationViewControllerDelegate?
 
     private lazy var loadingView: UIView = {
-        return SpinnerView(theme: dataSource.manifest.theme)
+        return SpinnerView(appearance: dataSource.manifest.appearance)
     }()
     private lazy var otpView: NetworkingOTPView = {
         let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
@@ -52,18 +48,15 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
-        otpView.lookupConsumerAndStartVerification()
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
+        otpView.startVerification()
     }
 
     private func showContent(redactedPhoneNumber: String) {
         let paneLayoutView = PaneLayoutView(
             contentView: PaneLayoutView.createContentView(
                 iconView: nil,
-                title: STPLocalizedString(
-                    "Confirm it's you",
-                    "The title of a screen where users are informed that they can sign-in-to Link."
-                ),
+                title: String.Localized.confirm_its_you,
                 subtitle: String(format: STPLocalizedString(
                     "Enter the code sent to %@",
                     "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
@@ -86,17 +79,12 @@ final class NetworkingLinkVerificationViewController: UIViewController {
     }
 
     private func requestNextPane(_ pane: FinancialConnectionsSessionManifest.NextPane, preventBackNavigation: Bool) {
-        if let consumerSession = dataSource.consumerSession {
-            delegate?.networkingLinkVerificationViewController(
-                self,
-                didRequestNextPane: pane,
-                consumerSession: consumerSession,
-                preventBackNavigation: preventBackNavigation
-            )
-        } else {
-            assertionFailure("logic error: did not have consumerSession")
-            delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: FinancialConnectionsSheetError.unknown(debugDescription: "logic error: did not have consumerSession"))
-        }
+        delegate?.networkingLinkVerificationViewController(
+            self,
+            didRequestNextPane: pane,
+            consumerSession: dataSource.consumerSession,
+            preventBackNavigation: preventBackNavigation
+        )
     }
 
     private func attachConsumerToLinkAccountAndSynchronize(from view: NetworkingOTPView) {
@@ -129,47 +117,6 @@ final class NetworkingLinkVerificationViewController: UIViewController {
 // MARK: - NetworkingOTPViewDelegate
 
 extension NetworkingLinkVerificationViewController: NetworkingOTPViewDelegate {
-    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String) {
-        delegate?.networkingLinkVerificationViewController(self, didReceiveConsumerPublishableKey: consumerPublishableKey)
-    }
-
-    func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
-        showLoadingView(true)
-    }
-
-    func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView) {
-        dataSource.analyticsClient.log(
-            eventName: "networking.verification.error",
-            parameters: [
-                "error": "ConsumerNotFoundError"
-            ],
-            pane: .networkingLinkVerification
-        )
-        delegate?.networkingLinkVerificationViewController(
-            self,
-            didRequestNextPane: .institutionPicker,
-            consumerSession: nil,
-            preventBackNavigation: false
-        )
-        showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
-    }
-
-    func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error) {
-        dataSource.analyticsClient.logUnexpectedError(
-            error,
-            errorName: "LookupConsumerSessionError",
-            pane: .networkingLinkVerification
-        )
-        dataSource.analyticsClient.log(
-            eventName: "networking.verification.error",
-            parameters: [
-                "error": "LookupConsumerSession"
-            ],
-            pane: .networkingLinkVerification
-        )
-        delegate?.networkingLinkVerificationViewController(self, didReceiveTerminalError: error)
-        showLoadingView(false) // started in networkingOTPViewWillStartConsumerLookup
-    }
 
     func networkingOTPViewWillStartVerification(_ view: NetworkingOTPView) {
         // no-op

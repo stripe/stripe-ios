@@ -183,13 +183,9 @@ def build_index_page(modules, release_version, docs_root_directory)
   temp_docc_dir = Dir.mktmpdir('stripe-docs-index-build')
   `rsync -av "#{$SCRIPT_DIR}/docs/Stripe.docc" "#{temp_docc_dir}/"`
   index_path = "#{temp_docc_dir}/Stripe.docc/Stripe.md"
-  # Add the `@TechnologyRoot` attribute, which instructs docc to make this the landing page.
+  index_2_path = "#{temp_docc_dir}/Stripe.docc/Stripe-module-index.md" # Need a second index, or DocC will show a sidebar that says "No content found".
   index_content = ''"
   # Stripe iOS SDKs
-
-  @Metadata {
-    @TechnologyRoot
-  }
 
   Version #{release_version}
 
@@ -197,13 +193,16 @@ def build_index_page(modules, release_version, docs_root_directory)
 
   "''
   # Add the modules to the docc template
-  modules.each do |m|
-    # Load podspec to get module name and summary
-    podspec = Pod::Specification.from_file(File.join_if_safe($ROOT_DIR, m['podspec']))
-    index_content += "**[#{podspec.name}](../../#{m['framework_name'].downcase}/documentation/#{m['framework_name'].downcase})**\n\n#{podspec.summary}\n\n"
+  modules
+    .sort_by { |m| m['framework_name'] }
+    .each do |m|
+      # Load podspec to get module name and summary
+      podspec = Pod::Specification.from_file(File.join_if_safe($ROOT_DIR, m['podspec']))
+      index_content += "**[#{podspec.name}](../../#{m['framework_name'].downcase}/documentation/#{m['framework_name'].downcase})**\n\n#{podspec.summary}\n\n"
   end
 
   File.write(index_path, index_content)
+  File.write(index_2_path, index_content)
   # Build it
   `$(xcrun --find docc) \
    convert "#{temp_docc_dir}/Stripe.docc" \
@@ -214,15 +213,6 @@ def build_index_page(modules, release_version, docs_root_directory)
   `rsync -av "#{temp_docc_dir}/build/"* "#{docs_root_directory}/docs/"`
   # Copy 404 redirect page
   `cp "#{$SCRIPT_DIR}/docs/404.html" "#{docs_root_directory}/docs/404.html"`
-
-  # HACK: Remove all deprecation warnings.
-  # Remove this once DocC is fixed: https://github.com/apple/swift-docc/issues/450
-  js_files = Dir.glob("#{docs_root_directory}/docs/**/*.json")
-  js_files.each do |jsf|
-    content = File.read(jsf)
-    content = content.gsub(/"deprecated":true/, '"deprecated":false')
-    File.open(jsf, 'w') { |file| file.puts content }
-  end
 
   # Clean up the bogus index.html file created by DocC
   File.delete("#{docs_root_directory}/docs/index.html")

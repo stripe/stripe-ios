@@ -36,9 +36,9 @@ import UIKit
     var defaultValue: String? { get }
 
     /**
-      - Note: If false, this textfield is disabled, defaults to true.
+      - Configuration for whether or not the field is editable
      */
-    var isEditable: Bool { get }
+    var editConfiguration: EditConfiguration { get }
 
     /**
      Validate the text.
@@ -51,6 +51,11 @@ import UIKit
      A string to display under the field
      */
     func subLabel(text: String) -> String?
+
+    /**
+     A warning string to display under the field in danger color
+     */
+    func warningLabel(text: String) -> String?
 
     /**
      - Parameter text: The user's sanitized input (i.e., removing `disallowedCharacters` and clipping to `maxLength(for:)`)
@@ -75,12 +80,12 @@ import UIKit
      This could be the logo of a network, a bank, etc.
      - Returns: a view.
      */
-    func accessoryView(for text: String, theme: ElementsUITheme) -> UIView?
+    func accessoryView(for text: String, theme: ElementsAppearance) -> UIView?
 
     /**
      Convenience method that creates a TextFieldElement using this Configuration
     */
-    func makeElement(theme: ElementsUITheme) -> TextFieldElement
+    func makeElement(theme: ElementsAppearance) -> TextFieldElement
 }
 
 // MARK: - Default implementation
@@ -107,8 +112,8 @@ public extension TextFieldElementConfiguration {
         return false
     }
 
-    var isEditable: Bool {
-        return true
+    var editConfiguration: EditConfiguration {
+        return .editable
     }
 
     func makeDisplayText(for text: String) -> NSAttributedString {
@@ -121,7 +126,7 @@ public extension TextFieldElementConfiguration {
 
     func validate(text: String, isOptional: Bool) -> TextFieldElement.ValidationState {
         if text.stp_stringByRemovingCharacters(from: .whitespacesAndNewlines).isEmpty {
-            return isOptional ? .valid : .invalid(TextFieldElement.Error.empty)
+            return isOptional ? .valid : .invalid(TextFieldElement.Error.empty(localizedDescription: ""))
         }
         return .valid
     }
@@ -130,15 +135,34 @@ public extension TextFieldElementConfiguration {
         return nil
     }
 
+    func warningLabel(text: String) -> String? {
+        return nil
+    }
+
     func maxLength(for text: String) -> Int {
         return .max
     }
 
-    func accessoryView(for text: String, theme: ElementsUITheme) -> UIView? {
+    func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
         return nil
     }
 
-    func makeElement(theme: ElementsUITheme) -> TextFieldElement {
+    func makeElement(theme: ElementsAppearance) -> TextFieldElement {
         return TextFieldElement(configuration: self, theme: theme)
+    }
+}
+
+@_spi(STP) public enum EditConfiguration {
+    // Text can be modified
+    case editable
+
+    // Text can not be modified, with disabled appearance
+    case readOnly
+
+    // Text can not be modified, without disabled appearance
+    case readOnlyWithoutDisabledAppearance
+
+    @_spi(STP) public var isEditable: Bool {
+        return self == .editable
     }
 }

@@ -39,7 +39,8 @@ class PaginatedAPIClient: EmptyFinancialConnectionsAPIClient {
             permissions: nil,
             status: .active,
             subcategory: .checking,
-            supportedPaymentMethodTypes: [.usBankAccount]
+            supportedPaymentMethodTypes: [.usBankAccount],
+            object: "financial_connections.account"
         )
     }
 

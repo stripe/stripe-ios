@@ -1,4 +1,8 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (campo facoltativo)";
+
+"(not accepted)" = "(non accettata)";
 
 "Account number" = "Numero conto";
 
@@ -36,7 +40,7 @@
 
 "County" = "Contea";
 
-"Date is empty." = "Il campo della data è vuoto.";
+"Date of Birth" = "Data di nascita";
 
 "Department" = "Dipartimento";
 
@@ -84,8 +88,6 @@
 
 "Parish" = "Contea";
 
-"Phone" = "Telefono";
-
 "Phone number" = "Numero di telefono";
 
 "Postal code" = "Codice postale";
@@ -103,6 +105,8 @@
 "Search" = "Cerca";
 
 "Select card brand (optional)" = "Seleziona il circuito della carta (facoltativo)";
+
+"Selection is empty." = "La selezione è vuota.";
 
 "Sort code" = "Sort code";
 
@@ -132,12 +136,16 @@
 
 "Your BLIK code is invalid." = "Il codice BLIK non è valido.";
 
-"Your ZIP is incomplete." = "Il CAP è incompleto.";
+"Your ZIP code is incomplete." = "Il tuo codice postale è incompleto.";
+
+"Your ZIP code is invalid." = "Il tuo CAP non è valido.";
 
 "Your email is invalid." = "Indirizzo email non valido.";
 
 "Your payment information will not be saved." = "I dati di pagamento non verranno salvati.";
 
 "Your postal code is incomplete." = "Il codice postale è incompleto.";
+
+"Your postal code is invalid." = "Il codice postale non è valido.";
 
 "ZIP" = "ZIP";

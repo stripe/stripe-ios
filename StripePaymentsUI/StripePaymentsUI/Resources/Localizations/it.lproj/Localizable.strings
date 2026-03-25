@@ -1,6 +1,16 @@
+"%1$@ Card" = "Carta %1$@";
+
+"%1$@ Credit" = "Carta di credito %1$@";
+
+"%1$@ Debit" = "Carta di debito %1$@";
+
+"%1$@ Prepaid" = "Carta prepagata %1$@";
+
 "%1$@ account ending in %2$@" = "Conto %1$@ che termina con %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ che termina con %2$@";
+
+"%1$@ is not accepted" = "Il brand %1$@ non è stato accettato";
 
 "Address line 2 (optional)" = "Indirizzo riga 2 (facoltativo)";
 
@@ -9,8 +19,6 @@
 "BSB" = "BSB";
 
 "Bank Account" = "Conto bancario";
-
-"Billing Address" = "Indirizzo di fatturazione";
 
 "Billing address" = "Indirizzo di fatturazione";
 
@@ -28,6 +36,18 @@
 
 "MM/YY" = "MM/AA";
 
+"Only credit and prepaid cards are accepted" = "Sono accettate solo carte di credito e prepagate";
+
+"Only credit cards are accepted" = "Sono accettate solo carte di credito";
+
+"Only debit and credit cards are accepted" = "Sono accettate solo carte di debito e di credito";
+
+"Only debit and prepaid cards are accepted" = "Sono accettate solo carte di debito e prepagate";
+
+"Only debit cards are accepted" = "Sono accettate solo carte di debito";
+
+"Only prepaid cards are accepted" = "Sono accettate solo carte prepagate";
+
 "Postal Code" = "Codice postale";
 
 "Shipping Address" = "Indirizzo di spedizione";
@@ -36,9 +56,11 @@
 
 "The BSB you entered is invalid." = "Il numero BSB inserito non è valido";
 
+"The selected brand is not allowed" = "Il brand selezionato non è disponibile.";
+
 "To scan your card, allow camera access in Settings." = "Per scansionare la carta, concedi l'accesso alla fotocamera in Impostazioni.";
 
-"Your ZIP is invalid." = "Il CAP non è valido.";
+"Your card has expired." = "La tua carta è scaduta.";
 
 "Your card number is incomplete." = "Il numero della carta è incompleto.";
 
@@ -55,8 +77,6 @@
 "Your card's security code is incomplete." = "Il codice di sicurezza della carta è incompleto.";
 
 "Your card's security code is invalid." = "Il codice di sicurezza della carta non è valido.";
-
-"Your postal code is invalid." = "Il codice postale non è valido.";
 
 "card number" = "numero carta";
 

@@ -31,11 +31,14 @@ final class PayWithLinkButton: UIControl {
 
     fileprivate struct LinkAccountStub: PaymentSheetLinkAccountInfoProtocol {
         let email: String
+        let redactedPhoneNumber: String?
         let isRegistered: Bool
+        let sessionState: PaymentSheetLinkAccount.SessionState
+        let consumerSessionClientSecret: String?
     }
 
     /// Link account of the current user.
-    var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountStub(email: "", isRegistered: false) {
+    var linkAccount: PaymentSheetLinkAccountInfoProtocol? = LinkAccountContext.shared.account {
         didSet {
             updateUI()
         }
@@ -333,6 +336,7 @@ private extension PayWithLinkButton {
             emailStackView.isHidden = true
             cardStackView.isHidden = true
             payWithStackView.isHidden = false
+            payWithLinkView.isHidden = false
         }
         updateAccessibilityContent()
     }
@@ -383,31 +387,31 @@ private extension PayWithLinkButton {
     func foregroundColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
-            return UIColor.linkPrimaryButtonForeground.withAlphaComponent(0.8)
+            return UIColor.linkContentOnPrimaryButton.withAlphaComponent(0.8)
         default:
-            return UIColor.linkPrimaryButtonForeground
+            return UIColor.linkContentOnPrimaryButton
         }
     }
 
     func backgroundColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
-            return UIColor.linkBrand.darken(by: 0.2)
+            return UIColor.linkIconBrand.darken(by: 0.2)
         case .disabled:
-            return UIColor.linkBrand.withAlphaComponent(0.5)
+            return UIColor.linkIconBrand.withAlphaComponent(0.5)
         default:
-            return UIColor.linkBrand
+            return UIColor.linkIconBrand
         }
     }
 
     func separatorColor(for state: State) -> UIColor {
         switch state {
         case .highlighted:
-            return UIColor.linkBrand400.darken(by: 0.2)
+            return UIColor.linkSeparatorOnPrimaryButton.darken(by: 0.2)
         case .disabled:
-            return UIColor.linkBrand400.withAlphaComponent(0.5)
+            return UIColor.linkSeparatorOnPrimaryButton.withAlphaComponent(0.5)
         default:
-            return UIColor.linkBrand400
+            return UIColor.linkSeparatorOnPrimaryButton
         }
     }
 
@@ -464,7 +468,10 @@ struct UIViewPreview<View: UIView>: UIViewRepresentable {
 private func makeAccountStub(email: String, isRegistered: Bool, lastPM: LinkPMDisplayDetails?) -> PayWithLinkButton.LinkAccountStub {
     return PayWithLinkButton.LinkAccountStub(
         email: email,
-        isRegistered: isRegistered
+        redactedPhoneNumber: nil,
+        isRegistered: isRegistered,
+        sessionState: .verified,
+        consumerSessionClientSecret: nil
     )
 }
 

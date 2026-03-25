@@ -2,26 +2,45 @@
 
 # frozen_string_literal: true
 
+require_relative 'changelog_utils'
+
+begin
+  ChangelogUtils.validate_metadata!
+rescue StandardError => e
+  abort("ERR: #{e.message}")
+end
+
 current_version = File.open('VERSION', &:readline).strip
+expected_latest_release_heading = Regexp.new("^## #{Regexp.escape(current_version)} \\d{4}-\\d{2}-\\d{2}$")
+first_version_heading = File.readlines('CHANGELOG.md').find { |line| line.match?(ChangelogUtils::VERSION_HEADING_PATTERN) }
 
-LATEST_RELEASE_HEADING_PATTERN = Regexp.new(
-  "^## #{current_version} \\d{4}-\\d{2}-\\d{2}"
-)
-
-PLACEHOLDER_HEADING_PATTERN = /^## (X.Y.Z|X.X.X)/i.freeze
-
-first_line = File.open('CHANGELOG.md', &:readline)
-unless first_line.match(LATEST_RELEASE_HEADING_PATTERN) ||
-       first_line.match(PLACEHOLDER_HEADING_PATTERN)
+unless first_version_heading&.match?(expected_latest_release_heading)
   abort(
     <<~MESSAGE
-      ERR: First line of CHANGELOG.md must be in the following format:
+      ERR: The first released version entry in CHANGELOG.md must match VERSION:
 
-      ## [CURRENT VERSION] [ISO 8601 DATE]
+      ## #{current_version} [ISO 8601 DATE]
+    MESSAGE
+  )
+end
 
-      For unreleased versions use the following placeholder:
+File.readlines('CHANGELOG.md').each_with_index do |line, index|
+  line_number = index + 1
+  next unless line.start_with?('## ')
 
-      ## X.Y.Z
+  next if line.match?(ChangelogUtils::VERSION_HEADING_PATTERN) || line.match?(ChangelogUtils::PLACEHOLDER_HEADING_PATTERN)
+
+  abort(
+    <<~MESSAGE
+      ERR: Line #{line_number} uses ## header but is not a version/date format:
+
+      #{line.strip}
+
+      ## headers should only be used for version entries like:
+      ## 1.2.3 2024-01-15
+      ## X.Y.Z - changes pending release
+
+      Use ### for module names instead.
     MESSAGE
   )
 end

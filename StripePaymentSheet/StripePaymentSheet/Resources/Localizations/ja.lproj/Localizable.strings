@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ 追加";
 
 "Add US bank account" = "アメリカの銀行口座を追加";
@@ -7,6 +5,8 @@
 "Add a card" = "カードを追加";
 
 "Add a payment method" = "決済手段を追加";
+
+"Add bank account" = "銀行口座を追加する";
 
 "Add card" = "カードを追加";
 
@@ -18,15 +18,23 @@
 
 "Approve payment" = "支払いを承認する";
 
+"Are you sure you want to remove this card?" = "このカードを削除しますか？";
+
+"Are you sure you want to remove this linked account?" = "この関連付けられた口座を削除しますか？";
+
 "Back" = "戻る";
 
 "Bank" = "銀行";
 
 "Bank account" = "銀行口座";
 
-"Buy now or pay later with <img/>" = "<img/> で後払い";
+"Bank account details cannot be changed." = "銀行口座の詳細は変更できません。";
+
+"Buy now or pay later with  <img/>" = "<img/> で後払い";
 
 "Buy now or pay later with Afterpay" = "Afterpay で後払い";
+
+"Buy now or pay later with Cash App Afterpay" = "Cash App Afterpay で後払い";
 
 "Buy now or pay later with Clearpay" = "Clearpay で後払い";
 
@@ -44,13 +52,25 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Revolut Pay への処理を続行すると、%@ が規約に従って今後の支払いをお客様の Revolut Pay アカウントに請求することを許可することになります。";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "続行すると、<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に同意したことになります。";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
+
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "続行することで、今後の購入のために情報を保存することに同意したことになります <link>Link</link> リンク<terms>規約</terms>および<privacy>プライバシー</privacy>に従うことになります。";
+
+"By continuing, you agree to save your information for future purchases with %@." = "続行することで、あなたは、%@ での今後の購入のために情報を保存することに同意したことになります。";
+
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "続行すると、%@ が購入またはサブスクリプションプランに従って、定期的に Satispay Balance から自動的に引き落とすことを許可します。";
+
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "継続することで、お客様は %@ に対し、購入プランまたはサブスクリプションプランに従って、Twint Balance から定期的に自動引き落としを行うことをオーソリします。";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "続行すると、%2$@ の利用規約に従って、この許可が取り消されない限り、お客様は今回の支払いおよび今後の支払いを、Cash App のアカウントから引き落とすことを %1$@ に許可したものとみなされます。これは、Cash App の設定でいつでも変更することができます。";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link に登録することで、お客様は<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "銀行口座情報を提供し、この支払いを確定すると、お客様はこの口座引き落とし依頼および<terms>ダイレクトデビットリクエスト利用規約</terms>に同意し、Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (「Stripe」) が %@ (「加盟店」) に代わって、加盟店から別途連絡された金額をバルク電子決済システム (BECS) 経由で口座から引き落とすことを承認することになります。お客様が上記の口座の口座名義人または承認された署名者であることを保証したものとみなされます。";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "電話番号とメールアドレスを入力することにより、Link の<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成することに同意したとみなされます。";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "お客様は、銀行口座の詳細を提供し、この支払いを確認することにより、この ダイレクトデビットリクエストおよび <terms>ダイレクトデビットリクエストサービス契約 </terms> に同意し、Stripe Payments Australia Pty Ltd ACN 160 180 343 ダイレクトデビッドユーザー ID 番号507156 (以下「Stripe」)が、%@ (以下「マーチャント」) に代わってバルク電子決済システム (BECS) を通じてお客様のアカウントに、マーチャントから別途通知された金額を引き落とすことを承認したことになります。お客様は、上記のアカウントの保有者または正式な署名者であることを証明します。";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "カード情報を提供すると、%@ がその規約に従って今後の支払いをお客様のカードに請求することを許可することになります。";
 
@@ -62,15 +82,29 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ の銀行口座を保存すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものと見なされます。";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "ご注文を %1$@ および %2$@ に送信することにより、お客様は今後の購入のためにお客様の情報を %3$@ に保存することに同意し、<terms>本規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ に注文を送信することにより、<terms>これらの規約</terms> に従って決済を承認することに同意したものとみなされます。";
+
 "CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "キャンセルして別の方法で支払う";
+
+"Card details cannot be changed." = "カードの詳細は変更できません。";
+
+"Change" = "変更する";
+
+"Choose a card brand" = "カードブランドを選択";
 
 "Choose a payment method" = "支払い方法を選択";
 
 "Close card scanner" = "カードスキャナを閉じる";
 
+"Code sent" = "コードが送信されました";
+
 "Confirm" = "確定する";
+
+"Confirm payment details" = "支払い情報を確定する";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "%@ 内で銀行または決済アプリで支払いを確定して、購入を完了します。";
 
@@ -78,7 +112,21 @@
 
 "Confirm your CVC" = "セキュリティコードを確定";
 
+"Confirm your information" = "情報を確認する";
+
 "Contact information" = "連絡先情報";
+
+"Continue another way" = "別の方法で続行";
+
+"Create an account with Link for faster checkout across the web" = "Link でアカウントを作成すると、ウェブ上で決済を迅速化できます";
+
+"Debit or credit card" = "デビットカードまたはクレジットカード";
+
+"Default" = "デフォルト";
+
+"Default payment method" = "デフォルトの決済手段";
+
+"Did you mean %@? %@." = "%1$@ のことですか？ %2$@。";
 
 "EPS Bank" = "EPS 銀行";
 
@@ -86,9 +134,31 @@
 
 "FPX Bank" = "FPX 銀行";
 
+"Fast, secure checkout" = "迅速で安全な決済";
+
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "ご利用の銀行での初回支払い時に %@ を受け取れます。<terms>規約を表示</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "ご利用の銀行での支払い時に %@ を受け取れます。<terms>規約を表示</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "私は、Stripe が %@ の代理として口座引き落としによる回収を行うことを理解しています。また、私が当該口座を保有しており、この口座からの引き落としを承認すべき唯一の人間であることを認めます。";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "SSN の末尾 4 桁";
+
+"Log in or sign up" = "ログイン / 登録";
+
+"Log out of Link" = "Link からログアウト";
+
+"Manage SEPA debit" = "SEPA デビットの管理";
+
+"Manage US bank account" = "アメリカの銀行口座の管理";
+
+"Manage bank account" = "銀行口座の管理";
+
+"Manage card" = "カードの管理";
+
+"Manage cards" = "カードを管理する";
 
 "Manage payment method" = "支払い方法の管理";
 
@@ -101,6 +171,14 @@
 "New card" = "新しいカード";
 
 "New payment method" = "新しい決済手段";
+
+"No %@ promo" = "%@ のプロモーションはありません";
+
+"Not you?" = "ご本人ではありませんか？";
+
+"Only card brand can be changed." = "カードブランドのみ変更できます。";
+
+"Open to see more information." = "詳細情報を表示するにはこちらを開いてください。";
 
 "Open your UPI app to approve your payment within %@" = "UPI アプリを開いて %@ 以内に支払いを承認してください";
 
@@ -120,6 +198,8 @@
 
 "Pay faster at %@ and thousands of businesses." = "%@ やその他多数のサイトで、すばやく支払うことができます。";
 
+"Pay faster everywhere Link is accepted." = "Link に対応している店舗でスピーディーに支払うことができます。";
+
 "Pay over time with %@" = "%@ で時間をかけて支払う";
 
 "Pay over time with Affirm" = "Affirm で分割払い";
@@ -128,7 +208,13 @@
 
 "Pay with your bank account in just a few steps." = "銀行口座を使用して簡単に支払えます。";
 
+"Payment" = "決済";
+
 "Payment failed" = "支払いに失敗しました";
+
+"Payment methods" = "決済手段";
+
+"Please choose a valid payment method." = "有効な支払い方法を選択してください。";
 
 "Please go back and select another payment method" = "前に戻って別の決済手段を選択してください";
 
@@ -140,7 +226,9 @@
 
 "Remove card?" = "カードを削除しますか？";
 
-"Remove payment method" = "決済手段の削除";
+"Remove linked account" = "関連付けられた口座を削除";
+
+"SEPA debit details cannot be changed." = "SEPA デビットの詳細は変更できません。";
 
 "Save" = "保存";
 
@@ -149,6 +237,8 @@
 "Save address" = "住所を保存する";
 
 "Save for future payments" = "今後の支払いのために保存する";
+
+"Save my info for faster checkout with Link" = "Link で支払い情報を保存して決済をスピードアップ";
 
 "Save payment details to %@ for future purchases" = "今後の購入のために %@ に決済情報を保存する";
 
@@ -166,6 +256,10 @@
 
 "Select your payment method" = "支払い方法を選択してください";
 
+"Set as default" = "デフォルトとして設定";
+
+"Set as default payment method" = "デフォルトの決済手段として設定する";
+
 "Set up" = "設定";
 
 "Shipping to %@ is not supported." = "%@ への配送には対応していません。";
@@ -174,21 +268,41 @@
 
 "Simple, secure one-click payments" = "シンプルで安全なワンクリック決済";
 
-"Something went wrong when linking your account.\nPlease try again later." = "口座を関連付けるときに問題が発生しました。\n後でもう一度お試しください。";
+"Something went wrong when linking your account.\nPlease try again later." = "アカウントの連携中に問題が発生しました。\n 後でもう一度お試しください。";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe は 1 ～ 2 営業日後に口座に $0.01 を入金します。その後、%@ で銀行口座の保存を完了させるための手順が記載されたメールが送信されます。";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "1 ～ 2 営業日以内に Stripe は口座に $0.01 を入金します。その後、%@ への支払いを完了するための手順が記載されたメールが送信されます。";
 
+"Tap to close" = "タップして閉じます";
+
+"Tap to expand" = "タップして展開します";
+
 "The IBAN you entered is incomplete." = "入力した IBAN に不備があります。";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "入力した IBAN が無効です。「%@」はサポートされている国コードではありません。";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "入力した IBAN は無効です。\"%@\" がサポートされている国コードではありません。";
 
-"Update" = "更新する";
+"The provided verification code has expired." = "入力された確認コードは期限が切れています。";
 
-"Update card brand" = "カードブランドを更新する";
+"The provided verification code is incorrect." = "入力された確認コードは正しくありません。";
+
+"This is your default" = "これはデフォルトです";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "この決済手段は削除されますが、%@ のサブスクリプションでは引き続き使用できます。";
+
+"Too many attempts. Please try again in a few minutes." = "試行回数が多すぎます。数分後に再度お試しください。";
+
+"Unavailable for this purchase" = "この購入には利用できません";
+
+"Update card" = "カードを更新";
+
+"Update payment method" = "決済手段の更新";
+
+"Use billing address for shipping" = "請求先住所を配送先として使用";
 
 "View more" = "さらに表示";
+
+"Yes, update" = "はい、更新します";
 
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 

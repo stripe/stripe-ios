@@ -28,53 +28,72 @@ extension WKWebView {
                         """)
     }
 
-    func evaluateOnLoaderStart(elementTagName: String) {
-        evaluateMessage(name: "onSetterFunctionCalled",
+    func evaluateOnLoaderStart(elementTagName: String) async throws {
+        try await evaluateMessage(name: "onSetterFunctionCalled",
                                 json: """
-                        {
-                            "setter": "setOnLoaderStart",
-                            "value": {
-                                "elementTagName": "\(elementTagName)"
-                            }
-                        }
-                        """)
+                                {
+                                    "setter": "setOnLoaderStart",
+                                    "value": {
+                                        "elementTagName": "\(elementTagName)"
+                                    }
+                                }
+                                """)
     }
 
-    func evaluatePageDidLoad(pageViewId: String) {
-        evaluateMessage(name: "pageDidLoad",
-                        json: """
-                        {"pageViewId": "\(pageViewId)"}
-                        """)
+    func evaluatePageDidLoad(pageViewId: String) async throws {
+        try await evaluateMessage(name: "pageDidLoad",
+                                  json: """
+                                  {"pageViewId": "\(pageViewId)"}
+                                  """)
     }
 
-    func evaluateAccountSessionClaimed(merchantId: String) {
-        evaluateMessage(name: "accountSessionClaimed",
-                        json: """
-                        {"merchantId": "\(merchantId)"}
-                        """)
+    func evaluateAccountSessionClaimed(merchantId: String) async throws {
+        try await evaluateMessage(name: "accountSessionClaimed",
+                                  json: """
+                                  {"merchantId": "\(merchantId)"}
+                                  """)
     }
 
-    func evaluateOpenAuthenticatedWebView(url: String, id: String) {
-        evaluateMessage(name: "openAuthenticatedWebView",
+    func evaluateOpenAuthenticatedWebView(url: String, id: String) async throws {
+        try await evaluateMessage(name: "openAuthenticatedWebView",
+                                  json: """
+                                  {"url": "\(url)", "id": "\(id)" }
+                                  """)
+    }
+
+    func evaluateOpenFinancialConnectionsWebView(clientSecret: String, id: String, connectedAccountId: String) {
+        evaluateMessage(name: "openFinancialConnections",
                         json: """
-                        {"url": "\(url)", "id": "\(id)" }
+                        {"clientSecret": "\(clientSecret)", "id": "\(id)",  "connectedAccountId": "\(connectedAccountId)", }
                         """)
     }
 
     func evaluateOnLoadError(type: String, message: String) async throws {
         try await evaluateMessage(name: "onSetterFunctionCalled",
-                        json:
-                        """
-                        {
-                            "setter": "setOnLoadError",
-                            "value": {
-                                "error": {
-                                    "type": "\(type)",
-                                    "message": "\(message)"
-                                }
-                            }
-                        }
-                        """)
+                                  json:
+                                  """
+                                  {
+                                      "setter": "setOnLoadError",
+                                      "value": {
+                                          "error": {
+                                              "type": "\(type)",
+                                              "message": "\(message)"
+                                          }
+                                      }
+                                  }
+                                  """)
+    }
+
+    func evaluateCallSupplementalFunction(functionName: SupplementalFunctionName, invocationId: String, args: String) async throws {
+        try await evaluateMessage(name: "callSupplementalFunction",
+                                  json:
+                                  """
+                                  {
+                                      "functionName": "\(functionName)",
+                                      "invocationId": "\(invocationId)",
+                                      "args": \(args)
+                                  }
+                                  """)
     }
 }
 
@@ -87,19 +106,23 @@ extension WKWebView {
         }
     }
 
-    func expectationForMessageReceived<Sender: MessageSender>(sender: Sender) throws -> XCTestExpectation {
+    func expectationForMessageReceived<Sender: MessageSender>(
+        sender: Sender,
+        file: StaticString = #file,
+        line: UInt = #line
+    ) throws -> XCTestExpectation {
         let expectation = XCTestExpectation(description: "JavaScript execution")
         let messageHandler = MessageHandler()
         messageHandler.messageReceived = { (payload: Any) in
             guard let payloadData = try? JSONSerialization.connectData(withJSONObject: payload) else {
-                XCTFail("Failed to encode payload")
+                XCTFail("Failed to encode payload", file: file, line: line)
                 return
             }
-            guard let responseData = try? JSONEncoder.connectEncoder.encode(sender.payload) else {
-                XCTFail("Failed to encode response data")
+            guard let responseData = try? sender.jsonData() else {
+                XCTFail("Failed to encode response data", file: file, line: line)
                 return
             }
-            XCTAssertEqual(String(data: responseData, encoding: .utf8), String(data: payloadData, encoding: .utf8))
+            XCTAssertEqual(String(data: responseData, encoding: .utf8), String(data: payloadData, encoding: .utf8), file: file, line: line)
             expectation.fulfill()
         }
 
@@ -115,7 +138,7 @@ extension WKWebView {
     }
 
     func sendMessage<Sender: MessageSender>(sender: Sender) throws {
-        evaluateJavaScript(try XCTUnwrap(sender.javascriptMessage)) { (_, error) in
+        evaluateJavaScript(try sender.javascriptMessage()) { (_, error) in
             if let error {
                 XCTFail("JavaScript execution failed: \(error)")
             }

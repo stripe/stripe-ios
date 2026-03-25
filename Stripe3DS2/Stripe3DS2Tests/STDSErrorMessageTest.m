@@ -32,7 +32,7 @@
     XCTAssertEqualObjects(errorMessage.errorDescription, @"Data element not in the required format. Not numeric or wrong length.");
     XCTAssertEqualObjects(errorMessage.errorDetails, @"billAddrCountry,billAddrPostCode,dsURL");
     XCTAssertEqualObjects(errorMessage.errorMessageType, @"AReq");
-    XCTAssertEqualObjects(errorMessage.messageVersion, @"2.1.0");
+    XCTAssertEqualObjects(errorMessage.messageVersion, @"2.2.0");
 
 }
 

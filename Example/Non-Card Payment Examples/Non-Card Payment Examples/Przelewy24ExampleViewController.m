@@ -52,7 +52,7 @@ NS_ASSUME_NONNULL_BEGIN
             return;
         }
 
-        STPPaymentIntentParams *paymentIntentParams = [[STPPaymentIntentParams alloc] initWithClientSecret:clientSecret];
+        STPPaymentIntentConfirmParams *paymentIntentParams = [[STPPaymentIntentConfirmParams alloc] initWithClientSecret:clientSecret];
 
         STPPaymentMethodBillingDetails *billingDetails = [[STPPaymentMethodBillingDetails alloc] init];
         billingDetails.email = self->_emailField.text;

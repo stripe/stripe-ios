@@ -22,16 +22,35 @@ class SimpleMandateElement: PaymentMethodElement {
             return nil
         }
     }
+    var validationState: ElementValidationState {
+        if customerAlreadySawMandate || mandateTextView.viewDidAppear {
+            return .valid
+        } else {
+            return .invalid(error: MandateNotDisplayedError(), shouldDisplay: false)
+        }
+    }
 
-    var delegate: StripeUICore.ElementDelegate?
+    weak var delegate: StripeUICore.ElementDelegate?
     var view: UIView {
         return mandateTextView
     }
     let mandateTextView: SimpleMandateTextView
     let customerAlreadySawMandate: Bool
 
-    init(mandateText: String, customerAlreadySawMandate: Bool = false, theme: ElementsUITheme = .default) {
+    init(mandateText: String, customerAlreadySawMandate: Bool, theme: ElementsAppearance = .default) {
         mandateTextView = SimpleMandateTextView(mandateText: mandateText, theme: theme)
         self.customerAlreadySawMandate = customerAlreadySawMandate
     }
+
+    init(
+        mandateText: NSAttributedString,
+        customerAlreadySawMandate: Bool,
+        textAlignment: NSTextAlignment,
+        theme: ElementsAppearance = .default
+    ) {
+        mandateTextView = SimpleMandateTextView(mandateText: mandateText, textAlignment: textAlignment, theme: theme)
+        self.customerAlreadySawMandate = customerAlreadySawMandate
+    }
+
+    struct MandateNotDisplayedError: ElementValidationError { }
 }

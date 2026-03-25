@@ -42,6 +42,20 @@ import UIKit
         ) as? Self
     }
 
+    @_spi(STP) public var isSetupFutureUsageSet: Bool {
+        return allResponseFields.values.contains { value in
+            if let dictionary = value as? [String: Any] {
+                return dictionary.keys.contains("setup_future_usage")
+            }
+            return false
+        }
+    }
+
+    @_spi(STP) public func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
+        let paymentMethodOptionsForPaymentMethodType: [String: Any]? = allResponseFields[paymentMethodType.identifier] as? [String: Any]
+        return paymentMethodOptionsForPaymentMethodType?["setup_future_usage"] as? String
+    }
+
 }
 // MARK: - card
 
@@ -49,27 +63,27 @@ extension STPPaymentMethodOptions {
     @_spi(STP) public class Card: NSObject, STPAPIResponseDecodable {
 
         @_spi(STP) public let requireCvcRecollection: Bool?
+        @_spi(STP) public let cvcToken: String?
         @_spi(STP) public let allResponseFields: [AnyHashable: Any]
 
         @_spi(STP) public init(
             requireCvcRecollection: Bool?,
+            cvcToken: String?,
             allResponseFields: [AnyHashable: Any]
         ) {
             self.requireCvcRecollection = requireCvcRecollection
+            self.cvcToken = cvcToken
             self.allResponseFields = allResponseFields
         }
 
         @_spi(STP) public static func decodedObject(
             fromAPIResponse response: [AnyHashable: Any]?
         ) -> Self? {
-            guard let response = response,
-                let requireCvcRecollection = response["require_cvc_recollection"] as? Bool
-            else {
-                return nil
-            }
+            guard let response else { return nil }
 
             return Card(
-                requireCvcRecollection: requireCvcRecollection,
+                requireCvcRecollection: response["require_cvc_recollection"] as? Bool,
+                cvcToken: response["cvc_token"] as? String,
                 allResponseFields: response
             ) as? Self
         }

@@ -10,6 +10,8 @@ import StripeCoreTestUtils
 @testable import StripePaymentsTestUtils
 import XCTest
 
+// ☠️ WARNING: These snapshots have selected borders that don't follow the correct curvature on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
+// @iOS26
 final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotTestCase {
 
     func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDarkMode() {
@@ -24,21 +26,49 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
         _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, appearance: ._testMSPaintTheme)
     }
 
-    func test_VerticalSavedPaymentMethodsViewControllerSnapshotTestsRemoveOnlyMode() {
-        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, isRemoveOnlyMode: true)
+    func test_Embedded_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDarkMode() {
+        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: true, isEmbedded: true)
     }
 
-    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default, isRemoveOnlyMode: Bool = false) {
+    func test_Embedded_VerticalSavedPaymentMethodsViewControllerSnapshotTestsLightMode() {
+        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, isEmbedded: true)
+    }
+
+    func test_Embedded_VerticalSavedPaymentMethodsViewControllerSnapshotTestsAppearance() {
+        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, appearance: ._testMSPaintTheme, isEmbedded: true)
+    }
+
+    func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDefaultBadge() {
+        _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: false, showDefaultPMBadge: true)
+    }
+
+    func _test_VerticalSavedPaymentMethodsViewControllerSnapshotTests(darkMode: Bool, appearance: PaymentSheet.Appearance = .default.applyingLiquidGlassIfPossible(), isEmbedded: Bool = false, showDefaultPMBadge: Bool = false) {
         var configuration = PaymentSheet.Configuration()
         configuration.appearance = appearance
-        let paymentMethods = isRemoveOnlyMode ? [STPPaymentMethod._testCardAmex()] : generatePaymentMethods()
+        var paymentMethods = generatePaymentMethods()
+        if showDefaultPMBadge {
+            let card = STPPaymentMethod._testCard()
+            paymentMethods.insert(card, at: 0)
+        }
+
         let sut = VerticalSavedPaymentMethodsViewController(configuration: configuration,
                                                             selectedPaymentMethod: paymentMethods.first,
                                                             paymentMethods: paymentMethods,
-                                                            elementsSession: ._testCardValue(), 
-                                                            analyticsHelper: ._testValue()
+                                                            elementsSession: showDefaultPMBadge ? ._testDefaultCardValue(defaultPaymentMethod: paymentMethods.first?.stripeId ?? STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON]) : ._testCardValue(),
+                                                            analyticsHelper: ._testValue(),
+                                                            defaultPaymentMethod: showDefaultPMBadge ? paymentMethods.first : nil
         )
-        let bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+        let bottomSheet: BottomSheetViewController
+        if isEmbedded {
+            // In embedded, VerticalSavedPaymentMethodsViewController is the only contentViewController
+            bottomSheet = BottomSheetViewController(contentViewController: sut, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+        } else {
+            // In vertical mode, VerticalSavedPaymentMethodsViewController pushed onto the contentStack after PaymentSheetVerticalViewController
+            // Use StubBottomSheetContentViewController as a convenience to rather than instantiating PaymentSheetVerticalViewController
+            let stubViewController = StubBottomSheetContentViewController()
+            bottomSheet = BottomSheetViewController(contentViewController: stubViewController, appearance: appearance, isTestMode: true, didCancelNative3DS2: {})
+            bottomSheet.pushContentViewController(sut)
+        }
         bottomSheet.view.autosizeHeight(width: 375)
 
         let testWindow = UIWindow(frame: CGRect(x: 0,
@@ -54,10 +84,40 @@ final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotT
     }
 
     private func generatePaymentMethods() -> [STPPaymentMethod] {
-        return [STPFixtures.paymentMethod(),
+        return [
+                STPFixtures.paymentMethod(),
                 STPFixtures.usBankAccountPaymentMethod(),
                 STPFixtures.usBankAccountPaymentMethod(bankName: "BANK OF AMERICA"),
                 STPFixtures.usBankAccountPaymentMethod(bankName: "STRIPE"),
                 STPFixtures.sepaDebitPaymentMethod(), ]
+    }
+
+    private let testCardJSON = [
+        "id": "pm_123card",
+        "type": "card",
+        "card": [
+            "last4": "4242",
+            "brand": "visa",
+            "fingerprint": "B8XXs2y2JsVBtB9f",
+            "networks": ["available": ["visa"]],
+            "exp_month": "01",
+            "exp_year": "2040",
+        ],
+    ] as [AnyHashable: Any]
+}
+
+final class StubBottomSheetContentViewController: UIViewController, BottomSheetContentViewController {
+    lazy var navigationBar: SheetNavigationBar = {
+        let navBar = SheetNavigationBar(isTestMode: false, appearance: .default)
+        navBar.setStyle(.close(showAdditionalButton: false))
+        return navBar
+    }()
+
+    var requiresFullScreen: Bool {
+        return false
+    }
+
+    func didTapOrSwipeToDismiss() {
+        // noop
     }
 }

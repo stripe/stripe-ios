@@ -12,7 +12,7 @@ import Foundation
 import UIKit
 
 extension TextFieldElement {
-    static func makeIBAN(defaultValue: String? = nil, theme: ElementsUITheme = .default) -> TextFieldElement {
+    static func makeIBAN(defaultValue: String? = nil, theme: ElementsAppearance = .default) -> TextFieldElement {
         return TextFieldElement(configuration: IBANConfiguration(defaultValue: defaultValue), theme: theme)
     }
 
@@ -39,10 +39,10 @@ extension TextFieldElement {
             }
         }
 
-        func shouldDisplay(isUserEditing: Bool) -> Bool {
+        func shouldDisplay(isUserEditing: Bool, displayEmptyFields: Bool) -> Bool {
             switch self {
             case .incomplete, .invalidFormat:
-                return !isUserEditing
+                return !isUserEditing || displayEmptyFields
             case .shouldStartWithCountryCode, .invalidCountryCode:
                 return true
             }
@@ -89,7 +89,7 @@ extension TextFieldElement {
         func validate(text: String, isOptional: Bool) -> ValidationState {
             let iBAN = text.uppercased()
             guard !iBAN.isEmpty else {
-                return isOptional ? .valid : .invalid(Error.empty)
+                return isOptional ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.incompleteAccountNumber))
             }
 
             // Validate starts with a two-letter country code
@@ -177,6 +177,29 @@ extension TextFieldElement {
                     return ""
                 }
             }
+        }
+    }
+
+    struct LastFourIBANConfiguration: TextFieldElementConfiguration {
+        let label: String = "IBAN"
+        let lastFour: String
+        let editConfiguration: EditConfiguration = .readOnly
+
+        private var lastFourFormatted: String {
+            "•••• \(lastFour)"
+        }
+
+        init(lastFour: String) {
+            self.lastFour = lastFour
+        }
+
+        func makeDisplayText(for text: String) -> NSAttributedString {
+            return NSAttributedString(string: lastFourFormatted)
+        }
+
+        func validate(text: String, isOptional: Bool) -> ValidationState {
+            stpAssert(!editConfiguration.isEditable, "Validation assumes that the field is read-only")
+            return !lastFour.isEmpty ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.incompleteAccountNumber))
         }
     }
 }

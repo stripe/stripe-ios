@@ -22,7 +22,7 @@ final class LinkMoreInfoView: UIView {
     }
     private lazy var logoView: UIImageView = {
         let imageView: UIImageView
-        imageView = DynamicImageView(dynamicImage: Image.link_logo_knockout.makeImage(template: false), pairedColor: theme.colors.background)
+        imageView = DynamicImageView(dynamicImage: Image.link_logo_knockout.makeImage(template: false), pairedColor: theme.colors.componentBackground)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.isAccessibilityElement = true
@@ -30,9 +30,9 @@ final class LinkMoreInfoView: UIView {
         return imageView
     }()
 
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
 
-    init(theme: ElementsUITheme = .default) {
+    init(theme: ElementsAppearance = .default) {
         self.theme = theme
         super.init(frame: .zero)
         let stackView = UIStackView(arrangedSubviews: [logoView])

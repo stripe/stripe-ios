@@ -6,7 +6,7 @@
 //
 
 import SafariServices
-@_spi(PrivateBetaConnect) @testable import StripeConnect
+@_spi(PreviewConnect) @testable import StripeConnect
 @_spi(STP) import StripeCore
 import WebKit
 import XCTest
@@ -21,7 +21,7 @@ class PayoutsViewControllerTests: XCTestCase {
 
         var payoutDidFail: ((_ payouts: PayoutsViewController, _ error: any Error) -> Void)?
 
-        func payoutsLoadDidFail(_ payouts: PayoutsViewController, withError error: any Error) {
+        func payouts(_ payouts: PayoutsViewController, didFailLoadWithError error: any Error) {
             payoutDidFail?(payouts, error)
         }
     }
@@ -32,8 +32,8 @@ class PayoutsViewControllerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        STPAPIClient.shared.publishableKey = "pk_test"
         componentManager.shouldLoadContent = false
+        componentManager.analyticsClientFactory = MockComponentAnalyticsClient.init
     }
 
     @MainActor
@@ -50,7 +50,7 @@ class PayoutsViewControllerTests: XCTestCase {
             XCTAssertEqual((error as? EmbeddedComponentError)?.description, "Error message")
         }
 
-        try await vc.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
+        try await vc.webVC.webView.evaluateOnLoadError(type: "rate_limit_error", message: "Error message")
 
         await fulfillment(of: [expectation], timeout: TestHelpers.defaultTimeout)
     }

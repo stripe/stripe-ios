@@ -1,0 +1,38 @@
+GET
+https:\/\/api\.stripe\.com\/edge-internal\/card-metadata\?bin_prefix=400005$
+200
+application/json
+Content-Type: application/json
+Access-Control-Allow-Origin: *
+x-wc: ABCEFGHIJ
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=8yaFxbsNbue8W2R-z3OZEpfCtPsORyOO5BOUz9uNi6389qe1a6_mmJ7ORucs-Xzv2uHkmTY%3D
+Content-Encoding: gzip
+access-control-allow-methods: DELETE, GET, HEAD, PATCH, POST, PUT
+Server: nginx
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+Date: Thu, 04 Dec 2025 17:28:36 GMT
+access-control-allow-credentials: true
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Vary: Origin
+
+{
+  "data" : [
+    {
+      "pan_length" : 16,
+      "brand" : "VISA",
+      "country" : "US",
+      "account_range_high" : "4000059999999999",
+      "account_range_low" : "4000050000000000",
+      "funding" : "DEBIT"
+    },
+    {
+      "pan_length" : 16,
+      "brand" : "PULSE",
+      "country" : "US",
+      "account_range_high" : "4000059999999999",
+      "account_range_low" : "4000050000000000",
+      "funding" : "DEBIT"
+    }
+  ]
+}

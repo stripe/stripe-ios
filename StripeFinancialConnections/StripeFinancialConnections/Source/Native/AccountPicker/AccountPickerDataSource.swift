@@ -39,7 +39,7 @@ protocol AccountPickerDataSource: AnyObject {
 
 final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
 
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let clientSecret: String
     let accountPickerPane: FinancialConnectionsAccountPickerPane?
     let authSession: FinancialConnectionsAuthSession
@@ -49,6 +49,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     let reduceManualEntryProminenceInErrors: Bool
     let dataAccessNotice: FinancialConnectionsDataAccessNotice?
     let consumerSessionClientSecret: String?
+    private let isRelink: Bool
 
     private(set) var selectedAccounts: [FinancialConnectionsPartnerAccount] = [] {
         didSet {
@@ -58,7 +59,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
     weak var delegate: AccountPickerDataSourceDelegate?
 
     init(
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         clientSecret: String,
         accountPickerPane: FinancialConnectionsAccountPickerPane?,
         authSession: FinancialConnectionsAuthSession,
@@ -67,7 +68,8 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         analyticsClient: FinancialConnectionsAnalyticsClient,
         reduceManualEntryProminenceInErrors: Bool,
         dataAccessNotice: FinancialConnectionsDataAccessNotice?,
-        consumerSessionClientSecret: String?
+        consumerSessionClientSecret: String?,
+        isRelink: Bool
     ) {
         self.apiClient = apiClient
         self.clientSecret = clientSecret
@@ -79,6 +81,7 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
         self.reduceManualEntryProminenceInErrors = reduceManualEntryProminenceInErrors
         self.dataAccessNotice = dataAccessNotice
         self.consumerSessionClientSecret = consumerSessionClientSecret
+        self.isRelink = isRelink
     }
 
     func pollAuthSessionAccounts() -> Future<FinancialConnectionsAuthSessionAccounts> {
@@ -117,7 +120,8 @@ final class AccountPickerDataSourceImplementation: AccountPickerDataSource {
             phoneNumber: nil,
             country: nil,
             consumerSessionClientSecret: consumerSessionClientSecret,
-            clientSecret: clientSecret
+            clientSecret: clientSecret,
+            isRelink: isRelink
         )
         .chained { (_, customSuccessPaneMessage) in
             return Promise(value: customSuccessPaneMessage)

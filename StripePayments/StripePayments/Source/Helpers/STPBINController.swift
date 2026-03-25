@@ -15,6 +15,7 @@ import Foundation
     @_spi(STP) public let accountRangeLow: String
     @_spi(STP) public let accountRangeHigh: String
     @_spi(STP) public let country: String?
+    @_spi(STP) public let funding: STPCardFundingType
 
     private enum CodingKeys: String, CodingKey {
         case panLength = "pan_length"
@@ -22,6 +23,7 @@ import Foundation
         case accountRangeLow = "account_range_low"
         case accountRangeHigh = "account_range_high"
         case country = "country"
+        case funding = "funding"
     }
 
     @_spi(STP) public init(
@@ -34,6 +36,12 @@ import Foundation
         self.accountRangeLow = try container.decode(String.self, forKey: .accountRangeLow)
         self.accountRangeHigh = try container.decode(String.self, forKey: .accountRangeHigh)
         self.country = try? container.decode(String.self, forKey: .country)
+        if let fundingString = try container.decodeIfPresent(String.self, forKey: .funding) {
+            self.funding = STPCard.funding(from: fundingString)
+        } else {
+            // Fallback to other for funding type if decoding fails
+            self.funding = .other
+        }
         self.isHardcoded = false
     }
 
@@ -42,13 +50,15 @@ import Foundation
         brand: STPCardBrand,
         accountRangeLow: String,
         accountRangeHigh: String,
-        country: String?
+        country: String?,
+        funding: STPCardFundingType = .other
     ) {
         self.panLength = panLength
         self.brand = brand
         self.accountRangeLow = accountRangeLow
         self.accountRangeHigh = accountRangeHigh
         self.country = country
+        self.funding = funding
         self.isHardcoded = true
     }
 
@@ -126,7 +136,7 @@ extension STPBINRange {
     ///   - payment:     The user's encrypted payment information as returned from a PKPaymentAuthorizationController. Cannot be nil.
     ///   - completion:  The callback to run with the returned Stripe token (and any errors that may have occurred).
     static func retrieve(
-        apiClient: STPAPIClient = .shared,
+        apiClient: STPAPIClient,
         forPrefix binPrefix: String,
         completion: @escaping BINRangeCompletionBlock
     ) {
@@ -145,6 +155,8 @@ extension STPBINRange {
 
 @_spi(STP) public class STPBINController {
     @_spi(STP) public static let shared = STPBINController()
+
+    @_spi(STP) public init() {}
 
     /// For testing
     @_spi(STP) public func reset() {
@@ -221,10 +233,6 @@ extension STPBINRange {
         }
     }
 
-    @_spi(STP) public func minLengthForFullBINRange() -> Int {
-        return kPrefixLengthForMetadataRequest
-    }
-
     /// This is basically a wrapper around:
     ///
     /// 1. Does BIN have variable length pans, i.e. do we need to call the metadata service
@@ -260,6 +268,7 @@ extension STPBINRange {
     /// Use caution when disabling this: The BIN length information coming from the service may not be correct, which will
     /// cause issues when validating PAN length.
     @_spi(STP) public func retrieveBINRanges(
+        apiClient: STPAPIClient, // TODO: BIN retrieval is broken if you don't use STPAPIClient.shared (https://jira.corp.stripe.com/browse/MOBILESDK-4322)
         forPrefix binPrefix: String,
         recordErrorsAsSuccess: Bool = true,
         onlyFetchForVariableLengthBINs: Bool = true,
@@ -289,6 +298,7 @@ extension STPBINRange {
                 self.sPendingRequests[binPrefixKey] = [completion]
 
                 STPBINRange.retrieve(
+                    apiClient: apiClient,
                     forPrefix: binPrefixKey,
                     completion: { result in
                         self._retrievalQueue.async(execute: {

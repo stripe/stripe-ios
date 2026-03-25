@@ -79,9 +79,8 @@ x-content-type-options: nosniff
     "ideal",
     "sepa_debit",
     "bancontact",
-    "sofort",
+    
     "eps",
-    "giropay",
     "p24",
     "multibanco",
     "satispay"

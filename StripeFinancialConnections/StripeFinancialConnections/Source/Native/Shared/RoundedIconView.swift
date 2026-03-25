@@ -24,7 +24,7 @@ final class RoundedIconView: UIView {
         case circle
     }
 
-    init(image: ImageType, style: Style, theme: FinancialConnectionsTheme) {
+    init(image: ImageType, style: Style, appearance: FinancialConnectionsAppearance) {
         super.init(frame: .zero)
         let diameter: CGFloat = 56
         let cornerRadius: CGFloat
@@ -35,7 +35,7 @@ final class RoundedIconView: UIView {
             cornerRadius = diameter / 2
         }
 
-        backgroundColor = theme.iconBackgroundColor
+        backgroundColor = appearance.colors.iconBackground
         layer.cornerRadius = cornerRadius
 
         translatesAutoresizingMaskIntoConstraints = false
@@ -45,7 +45,7 @@ final class RoundedIconView: UIView {
         ])
 
         let iconImageView = UIImageView()
-        iconImageView.tintColor = theme.iconTintColor
+        iconImageView.tintColor = appearance.colors.iconTint
         switch image {
         case .image(let image):
             iconImageView.image = image.makeImage(template: true)
@@ -79,13 +79,13 @@ private struct RoundedIconViewUIViewRepresentable: UIViewRepresentable {
 
     let image: Image
     let style: RoundedIconView.Style
-    let theme: FinancialConnectionsTheme
+    let appearance: FinancialConnectionsAppearance
 
     func makeUIView(context: Context) -> RoundedIconView {
         RoundedIconView(
             image: .image(image),
             style: style,
-            theme: theme
+            appearance: appearance
         )
     }
 
@@ -101,28 +101,28 @@ struct RoundedIconView_Previews: PreviewProvider {
                 RoundedIconViewUIViewRepresentable(
                     image: .search,
                     style: .rounded,
-                    theme: .light
+                    appearance: .stripe
                 )
                 .frame(width: 56, height: 56)
 
                 RoundedIconViewUIViewRepresentable(
                     image: .search,
                     style: .rounded,
-                    theme: .linkLight
+                    appearance: .link
                 )
                 .frame(width: 56, height: 56)
 
                 RoundedIconViewUIViewRepresentable(
                     image: .cancel_circle,
                     style: .circle,
-                    theme: .light
+                    appearance: .stripe
                 )
                 .frame(width: 56, height: 56)
 
                 RoundedIconViewUIViewRepresentable(
                     image: .cancel_circle,
                     style: .circle,
-                    theme: .linkLight
+                    appearance: .link
                 )
                 .frame(width: 56, height: 56)
 

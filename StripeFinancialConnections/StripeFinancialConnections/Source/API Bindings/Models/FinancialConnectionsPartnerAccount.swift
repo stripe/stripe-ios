@@ -21,6 +21,7 @@ struct FinancialConnectionsPartnerAccount: Decodable {
     let status: String?
     let institution: FinancialConnectionsInstitution?
     let nextPaneOnSelection: FinancialConnectionsSessionManifest.NextPane?
+    let authorization: String?
 
     var allowSelectionNonOptional: Bool {
         return allowSelection ?? true

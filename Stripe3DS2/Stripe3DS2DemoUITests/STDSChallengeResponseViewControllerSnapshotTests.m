@@ -25,6 +25,12 @@ FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDef
 
 @end
 
+@interface STDSChallengeResponseViewController (Testing)
+
+- (nullable id<STDSChallengeResponseSelectionInfo>)whitelistResponse;
+
+@end
+
 @implementation STDSChallengeResponseViewControllerSnapshotTests
 
 - (void)setUp {
@@ -40,7 +46,20 @@ FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDef
     
     [self waitForChallengeResponseTimer];
 
+    XCTAssertNil([challengeResponseViewController whitelistResponse]);
+
     STPSnapshotVerifyView(challengeResponseViewController.view, @"TextChallengeResponse");
+}
+
+- (void)testWhitelistResponseExists {
+    id<STDSChallengeResponse> object = [STDSChallengeResponseObject textChallengeResponseWithWhitelist:YES resendCode:NO];
+    
+    STDSChallengeResponseViewController *challengeResponseViewController = [self challengeResponseViewControllerForResponse:object directoryServer:STDSDirectoryServerVisa];
+    [challengeResponseViewController view];
+
+    [self waitForChallengeResponseTimer];
+    
+    XCTAssertNotNil([challengeResponseViewController whitelistResponse]);
 }
 
 - (void)testVerifySingleSelectDesign {
@@ -105,7 +124,7 @@ FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDef
 - (STDSChallengeResponseViewController *)challengeResponseViewControllerForResponse:(id<STDSChallengeResponse>)response directoryServer:(STDSDirectoryServer)directoryServer {
     STDSImageLoader *imageLoader = [[STDSImageLoader alloc] initWithURLSession:NSURLSession.sharedSession];
 
-    STDSChallengeResponseViewController *vc = [[STDSChallengeResponseViewController alloc] initWithUICustomization:[STDSUICustomization defaultSettings] imageLoader:imageLoader directoryServer:directoryServer];
+    STDSChallengeResponseViewController *vc = [[STDSChallengeResponseViewController alloc] initWithUICustomization:[STDSUICustomization defaultSettings] imageLoader:imageLoader directoryServer:directoryServer analyticsDelegate:nil];
     [vc setChallengeResponse:response animated:NO];
     return vc;
 }

@@ -58,9 +58,13 @@ final class AnalyticsClientV2Test: XCTestCase {
         XCTAssertNotNil(commonPayload["app_name"] as? String)
         XCTAssertNotNil(commonPayload["app_version"] as? String)
 
+        // Verify this is a valid UUID
+        XCTAssertNotNil((commonPayload["device_id"] as? String).map(UUID.init))
+
         let platformInfo = commonPayload["platform_info"] as? [String: Any]
         XCTAssertNotNil(platformInfo?["install"] as? String)
         XCTAssertNotNil(platformInfo?["app_bundle_id"] as? String)
+
     }
 
     func testPayloadFromAnalytic() {

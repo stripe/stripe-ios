@@ -10,6 +10,7 @@ gem "octokit", "~> 4.25.1"
 gem "mime-types"
 gem "CFPropertyList"
 gem "terminal-table"
+gem "httparty"
 
 gem "xcode-install", "~> 2.6"
 gem "plist"

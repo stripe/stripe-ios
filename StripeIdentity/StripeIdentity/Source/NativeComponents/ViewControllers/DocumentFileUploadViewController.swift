@@ -43,6 +43,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     /// If the image must come from a live camera feed
     let requireLiveCapture: Bool
 
+    let availableIDTypes: [String]
+
     private(set) var currentlySelectingSide: DocumentSide?
 
     /// If the front image file is loading from the file system
@@ -80,10 +82,11 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     var viewModel: InstructionListView.ViewModel {
         var items: [ListItemView.ViewModel] = [
             .init(
-                text: listItemText(for: .front),
+                text: listItemText(for: .front, availableIDTypes: availableIDTypes),
                 accessibilityLabel: accessibilityLabel(
                     for: .front,
-                    uploadStatus: documentUploader.frontUploadStatus
+                    uploadStatus: documentUploader.frontUploadStatus,
+                    availableIDTypes: availableIDTypes
                 ),
                 accessory: listItemAccessory(
                     for: .front,
@@ -96,10 +99,11 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         if sheetController?.collectedData.idDocumentFront != nil {
             items.append(
                 .init(
-                    text: listItemText(for: .back),
+                    text: listItemText(for: .back, availableIDTypes: availableIDTypes),
                     accessibilityLabel: accessibilityLabel(
                         for: .back,
-                        uploadStatus: documentUploader.backUploadStatus
+                        uploadStatus: documentUploader.backUploadStatus,
+                        availableIDTypes: availableIDTypes
                     ),
                     accessory: listItemAccessory(
                         for: .back,
@@ -111,7 +115,15 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             )
         }
 
-        return .init(instructionText: String.Localized.fileUploadInstructionText, listViewModel: .init(items: items))
+        let instructionText: String
+
+        if let idType = (availableIDTypes.count == 1 ? availableIDTypes[0] : nil)?.uiIDType() {
+            instructionText = String(format: .Localized.fileUploadInstructionTextSpecific, idType)
+        } else {
+            instructionText = .Localized.fileUploadInstructionText
+        }
+
+        return .init(instructionText: instructionText, listViewModel: .init(items: items))
     }
 
     var buttonState: IdentityFlowView.ViewModel.Button.State {
@@ -133,12 +145,14 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
         documentUploader: DocumentUploaderProtocol,
         cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager
             .shared,
-        appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared
+        appSettingsHelper: AppSettingsHelperProtocol = AppSettingsHelper.shared,
+        availableIDTypes: [String]
     ) {
         self.requireLiveCapture = requireLiveCapture
         self.documentUploader = documentUploader
         self.cameraPermissionsManager = cameraPermissionsManager
         self.appSettingsHelper = appSettingsHelper
+        self.availableIDTypes = availableIDTypes
         super.init(sheetController: sheetController, analyticsScreenName: .documentFileUpload)
 
         documentUploader.delegate = self
@@ -156,6 +170,15 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     func updateUI() {
         instructionListView.configure(with: viewModel)
+
+        let titleText: String
+
+        if let idType = (availableIDTypes.count == 1 ? availableIDTypes[0] : nil)?.uiIDType() {
+            titleText = String(format: String.Localized.uploadYourSpecificDocument, idType)
+        } else {
+            titleText = .Localized.upload_your_photo_id
+        }
+
         configure(
             backButtonTitle: STPLocalizedString(
                 "Upload",
@@ -165,7 +188,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
                 headerViewModel: .init(
                     backgroundColor: .systemBackground,
                     headerType: .plain,
-                    titleText: .Localized.upload_your_photo_id
+                    titleText: titleText
                 ),
                 contentViewModel: .init(
                     view: instructionListView,
@@ -202,8 +225,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             .error:
             return .button(
                 title: String.Localized.select,
-                onTap: { [weak self] in
-                    self?.didTapSelect(for: side)
+                onTap: { [weak self] button in
+                    self?.didTapSelect(for: side, from: button)
                 }
             )
         case .inProgress:
@@ -231,7 +254,7 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
 
     // MARK: - File selection
 
-    func didTapSelect(for side: DocumentSide) {
+    func didTapSelect(for side: DocumentSide, from button: UIButton) {
         currentlySelectingSide = side
 
         let message: String?
@@ -255,6 +278,8 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
             message: message,
             preferredStyle: .actionSheet
         )
+        alert.popoverPresentationController?.sourceView = button
+        alert.popoverPresentationController?.sourceRect = button.bounds
 
         if !requireLiveCapture && UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
             alert.addAction(

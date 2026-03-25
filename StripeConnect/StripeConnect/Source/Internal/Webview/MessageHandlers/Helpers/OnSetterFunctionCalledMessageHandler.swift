@@ -64,9 +64,11 @@ class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctio
 
     private var handlerMap: [String: Handler] = [:]
 
-    init() {
+    init(analyticsClient: ComponentAnalyticsClient) {
         weak var weakSelf: OnSetterFunctionCalledMessageHandler?
-        super.init(name: "onSetterFunctionCalled", didReceiveMessage: { payload in
+        super.init(name: "onSetterFunctionCalled",
+                   analyticsClient: analyticsClient,
+                   didReceiveMessage: { payload in
             weakSelf?.didReceivePayload(payload: payload)
         })
 
@@ -78,11 +80,14 @@ class OnSetterFunctionCalledMessageHandler: ScriptMessageHandler<OnSetterFunctio
     }
 
     func didReceivePayload(payload: Payload) {
+        guard let handler = handlerMap[payload.setter] else {
+            analyticsClient.logUnexpectedSetterEvent(setter: payload.setter)
+            return
+        }
         do {
-            try handlerMap[payload.setter]?.didReceiveMessage(payload)
+            try handler.didReceiveMessage(payload)
         } catch {
-            // TODO: MXMOBILE-2491 Log as analytics
-            debugPrint("Received unexpected setter function message for setter: \(payload.setter) \(error.localizedDescription)")
+            analyticsClient.logDeserializeMessageErrorEvent(message: "\(name).\(payload.setter)", error: error)
         }
     }
 }

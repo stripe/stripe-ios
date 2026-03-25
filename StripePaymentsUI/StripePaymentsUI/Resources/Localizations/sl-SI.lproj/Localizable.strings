@@ -1,6 +1,16 @@
+"%1$@ Card" = "Kartica %1$@";
+
+"%1$@ Credit" = "Kreditna kartica %1$@";
+
+"%1$@ Debit" = "Debetna kartica %1$@";
+
+"%1$@ Prepaid" = "Predplačniška kartica %1$@";
+
 "%1$@ account ending in %2$@" = "Račun za %1$@, ki se konča s števkami %2$@";
 
 "%1$@ ending in %2$@" = "%1$@, ki se konča s/z %2$@";
+
+"%1$@ is not accepted" = "Kartica %1$@ ni sprejeta";
 
 "Address line 2 (optional)" = "Naslov 2 (izbirno)";
 
@@ -9,8 +19,6 @@
 "BSB" = "BSB";
 
 "Bank Account" = "Bančni račun";
-
-"Billing Address" = "Naslov plačnika računa";
 
 "Billing address" = "Naslov plačnika računa";
 
@@ -28,6 +36,18 @@
 
 "MM/YY" = "MM/LL";
 
+"Only credit and prepaid cards are accepted" = "Sprejemajo se le kreditne in predplačniške kartice";
+
+"Only credit cards are accepted" = "Sprejemane so samo kreditne kartice";
+
+"Only debit and credit cards are accepted" = "Sprejemane so le debetne in kreditne kartice";
+
+"Only debit and prepaid cards are accepted" = "Sprejemajo se le debetne in predplačniške kartice";
+
+"Only debit cards are accepted" = "Sprejemane so le debetne kartice";
+
+"Only prepaid cards are accepted" = "Sprejemajo se le predplačniške kartice";
+
 "Postal Code" = "Poštna številka";
 
 "Shipping Address" = "Dostavni naslov";
@@ -36,9 +56,11 @@
 
 "The BSB you entered is invalid." = "Vneseni BSB ni veljaven.";
 
+"The selected brand is not allowed" = "Izbrana blagovna znamka ni dovoljena";
+
 "To scan your card, allow camera access in Settings." = "Če želite optično prebrati kartico, dovolite dostop kameri v nastavitvah.";
 
-"Your ZIP is invalid." = "Vaša poštna številka ni veljavna.";
+"Your card has expired." = "Vaša kartica je potekla.";
 
 "Your card number is incomplete." = "Številka vaše kartice ni popolna.";
 
@@ -55,8 +77,6 @@
 "Your card's security code is incomplete." = "Varnostna koda vaše kartice ni popolna.";
 
 "Your card's security code is invalid." = "Varnostna koda vaše kartice ni veljavna.";
-
-"Your postal code is invalid." = "Vaša poštna številka ni veljavna.";
 
 "card number" = "številka kartice";
 

@@ -249,8 +249,11 @@ NS_ASSUME_NONNULL_BEGIN
     NSString *challengeInfoHeader = [json _stds_stringForKey:@"challengeInfoHeader" required: (oobContinueLabel != nil) || headerRequired error:&error]; // TC_SDK_10292_001
     NSString *challengeInfoText =  [json _stds_stringForKey:@"challengeInfoText" required:(oobContinueLabel != nil) || infoTextRequired error:&error]; // TC_SDK_10292_001
     NSString *challengeAdditionalInfoText =  [json _stds_stringForKey:@"challengeAddInfo" required:NO error:&error];
-    if (!error && submitAuthenticationLabel && (!challengeInfoLabel || !challengeInfoHeader || !challengeInfoText)) {
-        error = [NSError _stds_missingJSONFieldError:@"challengeInfoLabel or challengeInfoText"];
+    
+    if (acsUIType != STDSACSUITypeHTML) {
+        if (!error && submitAuthenticationLabel && (!challengeInfoLabel && !challengeInfoHeader && !challengeInfoText)) {
+            error = [NSError _stds_missingJSONFieldError:@"challengeInfoLabel or challengeInfoText or challengeInfoHeader"];
+        }
     }
     
     NSString *showChallengeInfoTextIndicatorRawString;

@@ -7,44 +7,37 @@
 
 import UIKit
 
-/**
- The balance summary, the payout schedule, and a list of payouts for the connected account. It can also allow the user to perform instant or manual payouts.
- */
-@_spi(PrivateBetaConnect)
+@_spi(PreviewConnect)
 @available(iOS 15, *)
 public class PayoutsViewController: UIViewController {
-    let webView: ConnectComponentWebView
+    private(set) var webVC: ConnectComponentWebViewController!
 
     public weak var delegate: PayoutsViewControllerDelegate?
 
     init(componentManager: EmbeddedComponentManager,
-         loadContent: Bool = true) {
-        webView = ConnectComponentWebView(
+         loadContent: Bool,
+         analyticsClientFactory: ComponentAnalyticsClientFactory) {
+        super.init(nibName: nil, bundle: nil)
+        webVC = ConnectComponentWebViewController(
             componentManager: componentManager,
             componentType: .payouts,
-            loadContent: loadContent
-        )
-        super.init(nibName: nil, bundle: nil)
-        webView.addMessageHandler(OnLoadErrorMessageHandler { [weak self] value in
+            loadContent: loadContent,
+            analyticsClientFactory: analyticsClientFactory
+        ) { [weak self] error in
             guard let self else { return }
-            self.delegate?.payoutsLoadDidFail(self, withError: value.error.connectEmbedError)
-        })
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
+            delegate?.payouts(self, didFailLoadWithError: error)
         }
+
+        addChildAndPinView(webVC)
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    public override func loadView() {
-        view = webView
-    }
 }
 
 /// Delegate of an `PayoutsViewController`
-@_spi(PrivateBetaConnect)
+@_spi(PreviewConnect)
 @available(iOS 15, *)
 public protocol PayoutsViewControllerDelegate: AnyObject {
 
@@ -54,14 +47,14 @@ public protocol PayoutsViewControllerDelegate: AnyObject {
        - payouts: The payouts component that errored when loading
        - error: The error that occurred when loading the component
      */
-    func payoutsLoadDidFail(_ payouts: PayoutsViewController,
-                            withError error: Error)
+    func payouts(_ payouts: PayoutsViewController,
+                 didFailLoadWithError error: Error)
 
 }
 
 @available(iOS 15, *)
 public extension PayoutsViewControllerDelegate {
     // Default implementation to make optional
-    func payoutsLoadDidFail(_ payouts: PayoutsViewController,
-                            withError error: Error) { }
+    func payouts(_ payouts: PayoutsViewController,
+                 didFailLoadWithError error: Error) { }
 }

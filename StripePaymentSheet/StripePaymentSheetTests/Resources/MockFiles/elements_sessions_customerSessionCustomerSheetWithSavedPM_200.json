@@ -1,6 +1,7 @@
 {
   "apple_pay_preference": "enabled",
   "business_name": "Mobile Example Account",
+  "config_id": "123",
   "customer": {
     "customer_session": {
       "id": "cuss_1PK3MvL654321654",
@@ -35,55 +36,106 @@
     },
     "default_payment_method": null,
     "payment_methods": [
-    {
-      "id": "pm_1PK61111111",
-      "object": "payment_method",
-      "allow_redisplay": "unspecified",
-      "billing_details": {
-        "address": {
-          "city": null,
+      {
+        "id": "pm_1PK61111111",
+        "object": "payment_method",
+        "allow_redisplay": "unspecified",
+        "billing_details": {
+          "address": {
+            "city": null,
+            "country": "US",
+            "line1": null,
+            "line2": null,
+            "postal_code": "24242",
+            "state": null
+          },
+          "email": null,
+          "name": null,
+          "phone": null
+        },
+        "card": {
+          "brand": "visa",
+          "checks": {
+            "address_line1_check": null,
+            "address_postal_code_check": null,
+            "cvc_check": null
+          },
           "country": "US",
-          "line1": null,
-          "line2": null,
-          "postal_code": "24242",
-          "state": null
+          "display_brand": "visa",
+          "exp_month": 4,
+          "exp_year": 2025,
+          "funding": "credit",
+          "generated_from": null,
+          "last4": "4242",
+          "networks": {
+            "available": [
+              "visa"
+            ],
+            "preferred": null
+          },
+          "three_d_secure_usage": {
+            "supported": true
+          },
+          "wallet": null
         },
-        "email": null,
-        "name": null,
-        "phone": null
-      },
-      "card": {
-        "brand": "visa",
-        "checks": {
-          "address_line1_check": null,
-          "address_postal_code_check": null,
-          "cvc_check": null
-        },
-        "country": "US",
-        "display_brand": "visa",
-        "exp_month": 4,
-        "exp_year": 2025,
-        "funding": "credit",
-        "generated_from": null,
-        "last4": "4242",
-        "networks": {
-          "available": [
-            "visa"
-          ],
-          "preferred": null
-        },
-        "three_d_secure_usage": {
-          "supported": true
-        },
-        "wallet": null
-      },
-      "created": 1716588986,
-      "customer": "cus_QAO9BBR6lFUSRq",
-      "livemode": false,
-      "type": "card"
-    }
+        "created": 1716588986,
+        "customer": "cus_QAO9BBR6lFUSRq",
+        "livemode": false,
+        "type": "card"
+      }
     ],
-    "payment_methods_with_link_details": []
+    "payment_methods_with_link_details": [
+        {
+          "payment_method": {
+            "id": "pm_1PK61111111",
+            "object": "payment_method",
+            "allow_redisplay": "unspecified",
+            "billing_details": {
+              "address": {
+                "city": null,
+                "country": "US",
+                "line1": null,
+                "line2": null,
+                "postal_code": "24242",
+                "state": null
+              },
+              "email": null,
+              "name": null,
+              "phone": null
+            },
+            "card": {
+              "brand": "visa",
+              "checks": {
+                "address_line1_check": null,
+                "address_postal_code_check": null,
+                "cvc_check": null
+              },
+              "country": "US",
+              "display_brand": "visa",
+              "exp_month": 4,
+              "exp_year": 2025,
+              "funding": "credit",
+              "generated_from": null,
+              "last4": "4242",
+              "networks": {
+                "available": [
+                  "visa"
+                ],
+                "preferred": null
+              },
+              "three_d_secure_usage": {
+                "supported": true
+              },
+              "wallet": null
+            },
+            "created": 1716588986,
+            "customer": "cus_QAO9BBR6lFUSRq",
+            "livemode": false,
+            "type": "card"
+          },
+          "link_details": null
+        }
+    ]
   },
   "experiments": {
     "miui_payment_element_aa_experiment": "control"
@@ -91,7 +143,8 @@
   "flags": {
     "elements_include_payment_intent_id_in_analytics_events": true,
     "elements_enable_mx_card_installments": false,
-    "elements_enable_br_card_installments": false
+    "elements_enable_br_card_installments": false,
+    "elements_enable_link_spm": true
   },
   "google_pay_preference": "disabled",
   "link_consumer_info": null,

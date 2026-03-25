@@ -53,7 +53,7 @@ class SheetViewController: UIViewController {
     // The sheet/drawer handle at the top of the sheet
     private lazy var handleView: UIView = {
         let handleView = CreateCustomSheetHandleView()
-        handleView.backgroundColor = .customBackgroundColor
+        handleView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         return handleView
     }()
 
@@ -85,7 +85,7 @@ class SheetViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = panePresentationStyle == .sheet ? .clear : .customBackgroundColor
+        view.backgroundColor = panePresentationStyle == .sheet ? .clear : FinancialConnectionsAppearance.Colors.background
 
         if panePresentationStyle == .sheet {
             view.addSubview(contentView)
@@ -192,7 +192,7 @@ class SheetViewController: UIViewController {
 
         let paneLayoutView = PaneLayoutView(contentView: contentView, footerView: footerView)
         let paneContainerView = UIView()
-        paneContainerView.backgroundColor = .customBackgroundColor
+        paneContainerView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         paneLayoutView.addTo(view: paneContainerView)
         contentStackView.addArrangedSubview(paneContainerView)
 
@@ -357,7 +357,7 @@ class SheetViewController: UIViewController {
     private static func addBottomExtensionView(toView view: UIView) {
         view.clipsToBounds = false
         let extensionBottomView = UIView()
-        extensionBottomView.backgroundColor = .customBackgroundColor
+        extensionBottomView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         view.insertSubview(extensionBottomView, at: 0)
         extensionBottomView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -386,7 +386,7 @@ class SheetViewController: UIViewController {
     func present(on viewController: UIViewController) {
         modalPresentationStyle = .custom
         transitioningDelegate = transitionDelegate
-        viewController.present(self, animated: true)
+        PresentationManager.shared.present(self, from: viewController)
     }
 }
 
@@ -415,14 +415,14 @@ private func CreateCustomSheetHandleView() -> UIView {
     let handleHeight: CGFloat = 4
 
     let containerView = UIView()
-    containerView.backgroundColor = .customBackgroundColor
+    containerView.backgroundColor = FinancialConnectionsAppearance.Colors.background
     containerView.translatesAutoresizingMaskIntoConstraints = false
     NSLayoutConstraint.activate([
         containerView.heightAnchor.constraint(equalToConstant: topPadding + handleHeight + bottomPadding),
     ])
 
     let handleView = UIView()
-    handleView.backgroundColor = UIColor.neutral200
+    handleView.backgroundColor = FinancialConnectionsAppearance.Colors.spinnerNeutral
     handleView.layer.cornerRadius = 2
     containerView.addSubview(handleView)
     handleView.translatesAutoresizingMaskIntoConstraints = false

@@ -1,4 +1,18 @@
+"An error occurred. Please try again." = "Une erreur s'est produite. Veuillez réessayer.";
+
+"Card brand was not updated. Please try again." = "La marque de la carte n'a pas été modifiée. Veuillez réessayer.";
+
 "Close" = "Fermer";
+
+"Confirm it's you" = "Confirmez votre identité";
+
+"Default payment method was not updated. Please try again." = "Le moyen de paiement par défaut n'a pas été modifié. Veuillez réessayer.";
+
+"Enter the code sent to %@." = "Saisissez le code envoyé à %@.";
+
+"Failed to connect" = "Échec de la connexion";
+
+"Resend code" = "Renvoyer le code";
 
 "Scan Card" = "Scanner la carte";
 

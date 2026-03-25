@@ -66,4 +66,28 @@ import Foundation
         ).first
         return result != nil && (result?.numberOfRanges ?? 0) > 0
     }
+
+    static let slashFormattedExpirationDateRegex: NSRegularExpression? = {
+        return try? NSRegularExpression(pattern: #"\b(\d{2})/(\d{2,4})\b"#)
+    }()
+
+    /// Returns a sanitized expiration date (in "0101" format) from a string.
+    /// This differs from the existing expiration date parser, as it only looks for dates formatted by slashes.
+    /// This is only intended for OCR use, as we'll often get messy strings like "Exp 01/20 Verification Code 123"
+    @_spi(STP) public class func sanitizedExpirationDateFromOCRString(_ string: String) -> String? {
+        guard let regex = slashFormattedExpirationDateRegex,
+              let match = regex.firstMatch(in: string, range: NSRange(string.startIndex..., in: string)),
+              match.numberOfRanges >= 3,
+              let monthRange = Range(match.range(at: 1), in: string),
+              let yearRange = Range(match.range(at: 2), in: string) else {
+            return nil
+        }
+
+        let monthStr = String(string[monthRange])
+        let yearStr = String(string[yearRange])
+
+        // Combine month and year into MMYY format
+        let sanitizedExpiration = monthStr + yearStr.suffix(2)
+        return sanitizedExpiration
+    }
 }

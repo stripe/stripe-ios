@@ -1,6 +1,16 @@
+"%1$@ Card" = "%1$@ карта";
+
+"%1$@ Credit" = "%1$@ Кредитна";
+
+"%1$@ Debit" = "%1$@ Дебитна";
+
+"%1$@ Prepaid" = "%1$@ Предплатена";
+
 "%1$@ account ending in %2$@" = "%1$@ сметка, завършваща на %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ завършващо на %2$@";
+
+"%1$@ is not accepted" = "%1$@ не се приема";
 
 "Address line 2 (optional)" = "Ред 2 на адреса (по желание)";
 
@@ -9,8 +19,6 @@
 "BSB" = "BSB";
 
 "Bank Account" = "Банкова сметка";
-
-"Billing Address" = "Адрес за фактуриране";
 
 "Billing address" = "Адрес за фактуриране";
 
@@ -28,6 +36,18 @@
 
 "MM/YY" = "ММ/ГГ";
 
+"Only credit and prepaid cards are accepted" = "Приемат се само кредитни и предплатени банкови карти";
+
+"Only credit cards are accepted" = "Приемат се само кредитни банкови карти";
+
+"Only debit and credit cards are accepted" = "Приемат се само дебитни и кредитни банкови карти";
+
+"Only debit and prepaid cards are accepted" = "Приемат се само дебитни и предплатени банкови карти";
+
+"Only debit cards are accepted" = "Приемат се само дебитни банкови карти";
+
+"Only prepaid cards are accepted" = "Приемат се само предплатени банкови карти";
+
 "Postal Code" = "Пощенски код";
 
 "Shipping Address" = "Адрес за доставка";
@@ -36,9 +56,11 @@
 
 "The BSB you entered is invalid." = "BSB, който сте въвели, е невалиден.";
 
+"The selected brand is not allowed" = "Избраната марка не е разрешена";
+
 "To scan your card, allow camera access in Settings." = "За да сканирате картата си, разрешете достъп до камерата в Настройки.";
 
-"Your ZIP is invalid." = "Вашият ZIP код е невалиден.";
+"Your card has expired." = "Вашата карта е изтекла.";
 
 "Your card number is incomplete." = "Номерът на Вашата карта е непълен.";
 
@@ -55,8 +77,6 @@
 "Your card's security code is incomplete." = "Кодът за сигурност на Вашата карта е непълен.";
 
 "Your card's security code is invalid." = "Кодът за сигурност на Вашата карта е невалиден.";
-
-"Your postal code is invalid." = "Вашият пощенски код е невалиден.";
 
 "card number" = "номер на картата";
 

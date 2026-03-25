@@ -16,10 +16,9 @@ protocol NetworkingOTPDataSource: AnyObject {
     var otpType: String { get }
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var isTestMode: Bool { get }
-    var theme: FinancialConnectionsTheme { get }
+    var appearance: FinancialConnectionsAppearance { get }
     var pane: FinancialConnectionsSessionManifest.NextPane { get }
 
-    func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
     func startVerificationSession() -> Future<ConsumerSessionResponse>
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
 }
@@ -27,71 +26,54 @@ protocol NetworkingOTPDataSource: AnyObject {
 final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
 
     let otpType: String
-    private let emailAddress: String
+    let pane: FinancialConnectionsSessionManifest.NextPane
+    let analyticsClient: FinancialConnectionsAnalyticsClient
     private let customEmailType: String?
     private let connectionsMerchantName: String?
-    private var consumerSession: ConsumerSessionData? {
+    private let apiClient: any FinancialConnectionsAPI
+    private let manifest: FinancialConnectionsSessionManifest
+    weak var delegate: NetworkingOTPDataSourceDelegate?
+
+    private var consumerSession: ConsumerSessionData {
         didSet {
-            if let consumerSession = consumerSession {
-                delegate?.networkingOTPDataSource(self, didUpdateConsumerSession: consumerSession)
-            }
+            delegate?.networkingOTPDataSource(self, didUpdateConsumerSession: consumerSession)
         }
     }
-    let pane: FinancialConnectionsSessionManifest.NextPane
-    private let apiClient: FinancialConnectionsAPIClient
-    private let clientSecret: String
-    let analyticsClient: FinancialConnectionsAnalyticsClient
-    let isTestMode: Bool
-    let theme: FinancialConnectionsTheme
-    weak var delegate: NetworkingOTPDataSourceDelegate?
+
+    var isTestMode: Bool {
+        manifest.isTestMode
+    }
+
+    var appearance: FinancialConnectionsAppearance {
+        manifest.appearance
+    }
 
     init(
         otpType: String,
-        emailAddress: String,
+        manifest: FinancialConnectionsSessionManifest,
         customEmailType: String?,
         connectionsMerchantName: String?,
         pane: FinancialConnectionsSessionManifest.NextPane,
-        consumerSession: ConsumerSessionData?,
-        apiClient: FinancialConnectionsAPIClient,
-        clientSecret: String,
-        analyticsClient: FinancialConnectionsAnalyticsClient,
-        isTestMode: Bool,
-        theme: FinancialConnectionsTheme
+        consumerSession: ConsumerSessionData,
+        apiClient: any FinancialConnectionsAPI,
+        analyticsClient: FinancialConnectionsAnalyticsClient
     ) {
         self.otpType = otpType
-        self.emailAddress = emailAddress
+        self.manifest = manifest
         self.customEmailType = customEmailType
         self.connectionsMerchantName = connectionsMerchantName
         self.pane = pane
         self.consumerSession = consumerSession
         self.apiClient = apiClient
-        self.clientSecret = clientSecret
         self.analyticsClient = analyticsClient
-        self.isTestMode = isTestMode
-        self.theme = theme
-    }
-
-    func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {
-        apiClient
-            .consumerSessionLookup(
-                emailAddress: emailAddress,
-                clientSecret: clientSecret
-            )
-            .chained { [weak self] lookupConsumerSessionResponse in
-                self?.consumerSession = lookupConsumerSessionResponse.consumerSession
-                return Promise(value: lookupConsumerSessionResponse)
-            }
     }
 
     func startVerificationSession() -> Future<ConsumerSessionResponse> {
-        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
-            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid startVerificationSession call: no consumerSession.clientSecret"))
-        }
         return apiClient.consumerSessionStartVerification(
             otpType: otpType,
             customEmailType: customEmailType,
             connectionsMerchantName: connectionsMerchantName,
-            consumerSessionClientSecret: consumerSessionClientSecret
+            consumerSessionClientSecret: consumerSession.clientSecret
         ).chained { [weak self] consumerSessionResponse in
             self?.consumerSession = consumerSessionResponse.consumerSession
             return Promise(value: consumerSessionResponse)
@@ -99,13 +81,10 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     }
 
     func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
-        guard let consumerSessionClientSecret = consumerSession?.clientSecret else {
-            return Promise(error: FinancialConnectionsSheetError.unknown(debugDescription: "invalid confirmVerificationSession state: no consumerSessionClientSecret"))
-        }
         return apiClient.consumerSessionConfirmVerification(
             otpCode: otpCode,
             otpType: otpType,
-            consumerSessionClientSecret: consumerSessionClientSecret
+            consumerSessionClientSecret: consumerSession.clientSecret
         ).chained { [weak self] consumerSessionResponse in
             self?.consumerSession = consumerSessionResponse.consumerSession
             return Promise(value: consumerSessionResponse)

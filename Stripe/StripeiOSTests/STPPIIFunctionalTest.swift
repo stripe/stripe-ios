@@ -43,4 +43,12 @@ class STPPIIFunctionalTest: STPNetworkStubbingTestCase {
 
         waitForExpectations(timeout: STPTestingNetworkRequestTimeout, handler: nil)
     }
+
+    func testSSNLast4TokenAsync() async throws {
+        let client = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
+
+        let token = try await client.createToken(withSSNLast4: "1234")
+        XCTAssertNotNil(token.tokenId)
+        XCTAssertEqual(token.type, .PII)
+    }
 }

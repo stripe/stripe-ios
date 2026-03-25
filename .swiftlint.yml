@@ -69,7 +69,6 @@ opt_in_rules:
 excluded:
   - Package.swift
   - Pods
-  - Carthage
   - Tests/installation_tests
   - vendor
   - build*
@@ -104,3 +103,20 @@ trailing_comma:
 
 generic_type_name:
   max_length: 30          # Maybe remove after initial cleanup.
+
+custom_rules:
+  enum_safe_decodable:
+    name: "Use SafeEnumDecodable for enums"
+    message: "Enums in API Bindings should conform to SafeEnumDecodable or SafeEnumCodable instead of Decodable or Codable to handle unknown values gracefully."
+    regex: 'enum\s+(?!CodingKeys)\w+\s*(<[^>]*>)?\s*:\s*[^{]*(?<!SafeEnum)(Decodable|Codable)\b(?!Key)'
+    severity: error
+    included:
+      - "StripePaymentSheet/StripePaymentSheet/Source/Internal/API Bindings/"
+  no_shared_api_client_mutation_in_tests:
+    name: "Don't use STPAPIClient.shared in tests"
+    message: "Avoid setting STPAPIClient.shared.publishableKey in tests. Create a dedicated STPAPIClient instance instead to prevent test pollution. Note also that it's valid for merchants to pass their own instance of STPAPIClient and *not* use STPAPIClient.shared."
+    regex: 'STPAPIClient\.shared\.publishableKey\s*='
+    severity: warning
+    included:
+      - ".*Tests\\.swift$"
+      - ".*Tests/"

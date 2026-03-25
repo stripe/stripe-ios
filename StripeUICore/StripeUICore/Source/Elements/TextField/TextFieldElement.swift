@@ -30,18 +30,25 @@ import UIKit
     public private(set) lazy var text: String = {
         sanitize(text: configuration.defaultValue ?? "")
     }()
-    public private(set) var isEditing: Bool = false
+    public private(set) var isEditing: Bool = false {
+        didSet {
+            delegate?.didUpdate(element: self)
+        }
+    }
     private(set) var didReceiveAutofill: Bool = false
+    /// When true, indicates the user tapped confirm button requesting validation feedback
+    var displayEmptyFields: Bool = false
     public var validationState: ElementValidationState {
         return .init(
             from: configuration.validate(text: text, isOptional: configuration.isOptional),
-            isUserEditing: isEditing
+            isUserEditing: isEditing,
+            displayEmptyFields: displayEmptyFields
         )
     }
 
-    private let theme: ElementsUITheme
+    private let theme: ElementsAppearance
 
-#if !canImport(CompositorServices)
+#if !os(visionOS)
     public var inputAccessoryView: UIView? {
         get {
             return textFieldView.textField.inputAccessoryView
@@ -74,8 +81,9 @@ import UIKit
         let validationState: ValidationState
         let accessoryView: UIView?
         let shouldShowClearButton: Bool
-        let isEditable: Bool
-        let theme: ElementsUITheme
+        let editConfiguration: EditConfiguration
+        let theme: ElementsAppearance
+        let displayEmptyFields: Bool
     }
 
     var viewModel: ViewModel {
@@ -95,14 +103,15 @@ import UIKit
             validationState: configuration.validate(text: text, isOptional: configuration.isOptional),
             accessoryView: configuration.accessoryView(for: text, theme: theme),
             shouldShowClearButton: configuration.shouldShowClearButton,
-            isEditable: configuration.isEditable,
-            theme: theme
+            editConfiguration: configuration.editConfiguration,
+            theme: theme,
+            displayEmptyFields: displayEmptyFields
         )
     }
 
     // MARK: - Initializer
 
-    public required init(configuration: TextFieldElementConfiguration, theme: ElementsUITheme = .default) {
+    public required init(configuration: TextFieldElementConfiguration, theme: ElementsAppearance = .default) {
         self.configuration = configuration
         self.theme = theme
     }
@@ -122,7 +131,9 @@ import UIKit
     // MARK: - Helpers
 
     func sanitize(text: String) -> String {
-        let sanitizedText = text.stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
+        let sanitizedText = text
+            .stp_stringByRemovingCharacters(from: configuration.disallowedCharacters)
+            .stp_stringByRemovingEmoji()
         return String(sanitizedText.prefix(configuration.maxLength(for: sanitizedText)))
     }
 }
@@ -140,6 +151,13 @@ extension TextFieldElement: Element {
         return textFieldView.textField.becomeFirstResponder()
     }
 
+    /// Forces validation errors to be displayed, even if the user is currently editing
+    public func showValidationErrors() {
+        displayEmptyFields = true
+        textFieldView.updateUI(with: viewModel)
+        delegate?.didUpdate(element: self)
+    }
+
     @discardableResult
     public func endEditing(_ force: Bool = false, continueToNextField: Bool = true) -> Bool {
         let didResign = textFieldView.endEditing(force)
@@ -152,6 +170,10 @@ extension TextFieldElement: Element {
 
     public var subLabelText: String? {
         return configuration.subLabel(text: text)
+    }
+
+    public var warningLabelText: String? {
+        return configuration.warningLabel(text: text)
     }
 }
 

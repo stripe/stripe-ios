@@ -102,9 +102,6 @@ CLANG_ENABLE_OBJC_WEAK = YES
 // 
 // The compiler to use for C, C++, and Objective-C.
 
-GCC_VERSION = com.apple.compilers.llvm.clang.1_0
-
-
 GCC_WARN_64_TO_32_BIT_CONVERSION = YES
 
 
@@ -176,5 +173,6 @@ IPHONEOS_DEPLOYMENT_TARGET = 13.0
 APPLICATION_EXTENSION_API_ONLY = NO
 
 SWIFT_VERSION = 5.0
+SWIFT_STRICT_CONCURRENCY = minimal
 MTL_FAST_MATH = YES
 

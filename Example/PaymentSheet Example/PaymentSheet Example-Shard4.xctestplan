@@ -33,6 +33,8 @@
       "skippedTests" : [
         "CustomerSheetSnapshotTests",
         "CustomerSheetUITest",
+        "FCLiteUITests",
+        "FCLiteUITests\/testFCLiteInitialPaneAndDismiss()",
         "LinkPaymentControllerUITest",
         "PaymentSheetBillingCollectionBankTests",
         "PaymentSheetBillingCollectionLPMUITests",

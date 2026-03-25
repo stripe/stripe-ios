@@ -1,6 +1,16 @@
+"%1$@ Card" = "Karta %1$@";
+
+"%1$@ Credit" = "Karta kredytowa %1$@";
+
+"%1$@ Debit" = "Karta debetowa %1$@";
+
+"%1$@ Prepaid" = "Karta przedpłacona %1$@";
+
 "%1$@ account ending in %2$@" = "%1$@ konto kończące się %2$@";
 
 "%1$@ ending in %2$@" = "%1$@ kończy się %2$@";
+
+"%1$@ is not accepted" = "Marka %1$@ nie jest akceptowana";
 
 "Address line 2 (optional)" = "Linia adresu 2 (opcja)";
 
@@ -9,8 +19,6 @@
 "BSB" = "BSB";
 
 "Bank Account" = "Konto bankowe";
-
-"Billing Address" = "Adres płatności";
 
 "Billing address" = "Adres rozliczeniowy";
 
@@ -28,6 +36,18 @@
 
 "MM/YY" = "MM/RR";
 
+"Only credit and prepaid cards are accepted" = "Akceptowane są tylko karty kredytowe i przedpłacone";
+
+"Only credit cards are accepted" = "Akceptowane są tylko karty kredytowe";
+
+"Only debit and credit cards are accepted" = "Akceptowane są tylko karty debetowe i kredytowe";
+
+"Only debit and prepaid cards are accepted" = "Akceptowane są tylko karty debetowe i przedpłacone";
+
+"Only debit cards are accepted" = "Akceptowane są tylko karty debetowe";
+
+"Only prepaid cards are accepted" = "Akceptowane są tylko karty przedpłacone";
+
 "Postal Code" = "Kod pocztowy";
 
 "Shipping Address" = "Adres dostawy";
@@ -36,9 +56,11 @@
 
 "The BSB you entered is invalid." = "Wprowadzony numer BSB jest nieprawidłowy.";
 
+"The selected brand is not allowed" = "Wybrana marka jest niedozwolona";
+
 "To scan your card, allow camera access in Settings." = "Aby zeskanować kartę, zezwól na dostęp do aparatu w Ustawieniach.";
 
-"Your ZIP is invalid." = "Nieprawidłowy kod pocztowy (ZIP).";
+"Your card has expired." = "Ważność Twojej karty wygasła.";
 
 "Your card number is incomplete." = "Numer karty jest niekompletny.";
 
@@ -55,8 +77,6 @@
 "Your card's security code is incomplete." = "Kod zabezpieczający karty jest niekompletny.";
 
 "Your card's security code is invalid." = "Kod bezpieczeństwa karty jest nieprawidłowy.";
-
-"Your postal code is invalid." = "Nieprawidłowy kod pocztowy.";
 
 "card number" = "nr karty";
 

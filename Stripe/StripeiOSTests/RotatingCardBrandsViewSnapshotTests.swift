@@ -22,6 +22,14 @@ class RotatingCardBrandsViewSnapshotTests: STPSnapshotTestCase {
         STPSnapshotVerifyView(rotatingCardBrandsView)
     }
 
+    func testCardBrands_CBCDisabled() {
+        let rotatingCardBrandsView = RotatingCardBrandsView()
+        rotatingCardBrandsView.cardBrands = RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases)
+        rotatingCardBrandsView.cardBrands.remove(.cartesBancaires)
+        rotatingCardBrandsView.autosizeHeight(width: 140)
+        STPSnapshotVerifyView(rotatingCardBrandsView)
+    }
+
     func testSingleCardBrand() {
         let rotatingCardBrandsView = RotatingCardBrandsView()
         rotatingCardBrandsView.cardBrands = [.visa]

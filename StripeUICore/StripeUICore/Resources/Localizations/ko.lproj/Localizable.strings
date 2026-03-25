@@ -1,4 +1,8 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@(선택 사항)";
+
+"(not accepted)" = "(허용되지 않음)";
 
 "Account number" = "계좌 번호";
 
@@ -36,7 +40,7 @@
 
 "County" = "구/군";
 
-"Date is empty." = "날짜가 비어 있습니다.";
+"Date of Birth" = "생년월일";
 
 "Department" = "행정구/현";
 
@@ -84,8 +88,6 @@
 
 "Parish" = "교구";
 
-"Phone" = "전화번호";
-
 "Phone number" = "전화번호";
 
 "Postal code" = "우편번호";
@@ -103,6 +105,8 @@
 "Search" = "검색";
 
 "Select card brand (optional)" = "카드 브랜드 선택(선택 사항)";
+
+"Selection is empty." = "선택 항목이 비어 있습니다.";
 
 "Sort code" = "코드 정렬";
 
@@ -132,12 +136,16 @@
 
 "Your BLIK code is invalid." = "BLIK 코드가 유효하지 않습니다.";
 
-"Your ZIP is incomplete." = "우편번호가 불완전합니다.";
+"Your ZIP code is incomplete." = "우편 번호가 완전하지 않습니다.";
+
+"Your ZIP code is invalid." = "우편번호가 유효하지 않습니다.";
 
 "Your email is invalid." = "이메일이 잘못되었습니다.";
 
 "Your payment information will not be saved." = "귀하의 결제 정보가 저장되지 않습니다.";
 
 "Your postal code is incomplete." = "우편번호가 불완전합니다.";
+
+"Your postal code is invalid." = "우편번호가 유효하지 않습니다.";
 
 "ZIP" = "우편번호";

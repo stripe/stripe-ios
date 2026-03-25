@@ -61,7 +61,7 @@ class PaymentMethodElementWrapper<WrappedElementType: Element> {
     }
     convenience init(
         _ textFieldElementConfiguration: TextFieldElementConfiguration,
-        theme: ElementsUITheme,
+        theme: ElementsAppearance,
         defaultsApplier: DefaultsApplier? = nil,
         paramsUpdater: @escaping ParamsUpdater
     ) where WrappedElementType == TextFieldElement {
@@ -105,6 +105,10 @@ extension PaymentMethodElementWrapper: Element {
     var subLabelText: String? {
         return element.subLabelText
     }
+
+    var warningLabelText: String? {
+        return element.warningLabelText
+    }
 }
 
 // MARK: - ElementDelegate
@@ -129,6 +133,15 @@ extension Element {
             return [container] + container.elements.flatMap { $0.getAllUnwrappedSubElements() }
         default:
             return [self]
+        }
+    }
+
+    /// Forces validation errors to be displayed on all TextFieldElements in this element's hierarchy
+    public func showAllValidationErrors() {
+        for element in getAllUnwrappedSubElements() {
+            if let textFieldElement = element as? TextFieldElement {
+                textFieldElement.showValidationErrors()
+            }
         }
     }
 }

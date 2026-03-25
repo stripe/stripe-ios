@@ -156,11 +156,19 @@ public extension AddressViewController {
         /// The title of the view controller. Defaults to "Shipping address".
         public var title: String = .Localized.shipping_address
 
+        /// Optionally hide the title label and set a title on the view controller instead.
+        @_spi(STP) public var useNavigationBarTitle: Bool = false
+
         /// The APIClient instance used to make requests to Stripe
         public var apiClient: STPAPIClient = .shared
 
         /// A list of two-letter country codes that support autocomplete
         /// Defaults to a list of countries that Stripe has audited to ensure a good autocomplete experience.
         public var autocompleteCountries: [String] = ["AU", "BE", "BR", "CA", "CH", "DE", "ES", "FR", "GB", "IE", "IT", "MX", "NO", "NL", "PL", "RU", "SE", "TR", "US", "ZA"]
+
+        /// The billing address to use for the "Use billing address for shipping" checkbox.
+        /// When provided, shows a checkbox that allows customers to populate shipping fields with billing address data.
+        @_spi(STP) public var billingAddress: DefaultAddressDetails?
+
     }
 }

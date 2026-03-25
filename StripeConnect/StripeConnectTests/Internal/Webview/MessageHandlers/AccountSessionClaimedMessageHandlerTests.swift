@@ -9,16 +9,17 @@
 import XCTest
 
 class AccountSessionClaimedMessageHandlerTests: ScriptWebTestBase {
-    func testMessageSend() {
-        let expectation = self.expectation(description: "Message received")
+    @MainActor
+    func testMessageSend() async throws {
         let merchantId = "acct_1234"
 
-        webView.addMessageHandler(messageHandler: AccountSessionClaimedMessageHandler(didReceiveMessage: { payload in
-            expectation.fulfill()
-            XCTAssertEqual(payload, .init(merchantId: merchantId))
-        }))
+        webView.addMessageHandler(messageHandler: AccountSessionClaimedMessageHandler(
+            analyticsClient: MockComponentAnalyticsClient(commonFields: .mock),
+            didReceiveMessage: { payload in
+                XCTAssertEqual(payload, .init(merchantId: merchantId))
+            }
+        ))
 
-        webView.evaluateAccountSessionClaimed(merchantId: merchantId)
-        waitForExpectations(timeout: TestHelpers.defaultTimeout, handler: nil)
+        try await webView.evaluateAccountSessionClaimed(merchantId: merchantId)
     }
 }

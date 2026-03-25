@@ -25,6 +25,7 @@ import PassKit
     /// @warning Make sure not to ship your test API keys to the App Store! This will log a warning if you use your test key in a release build.
     @objc public func setDefaultPublishableKey(_ publishableKey: String) {
         StripeAPI.defaultPublishableKey = publishableKey
+        STPAPIClient.shared.publishableKey = publishableKey
     }
 
     /// A Boolean value that determines whether additional device data is sent to Stripe for fraud prevention.
@@ -71,8 +72,9 @@ import PassKit
 
     /// The SDK accepts Amex, Mastercard, Visa, and Discover for Apple Pay.
     ///
-    /// Set this property to enable other card networks in addition to these, such as .JCB or .cartesBancaires.
-    /// For example, `additionalEnabledApplePayNetworks = [.JCB]` enables JCB (note this requires onboarding from JCB and Stripe).
+    /// Set this property to enable other card networks in addition to these, such as .JCB, .cartesBancaires, or .eftpos (for eftpos Australia).
+    /// For example, `additionalEnabledApplePayNetworks = [.eftpos]` enables eftpos Australia.
+    /// Note: These networks require the merchant to support the respective payment network before enabling.
     @objc public static var additionalEnabledApplePayNetworks: [PKPaymentNetwork] = [] {
         didSet {
             // Reset deviceSupportsApplePay for the updated network list:
@@ -119,6 +121,7 @@ import PassKit
     /// after they have been approved by JCB.
     /// Users that have the Payment Method Cartes Bancaires set to Active, can enable it
     /// by adding `.cartesBancaires` to the `additionalEnabledApplePayNetworks` list.
+    /// Australian users can enable eftpos Australia by adding `.eftpos` to the `additionalEnabledApplePayNetworks` list.
     /// - Returns: YES if the device is currently able to make Apple Pay payments via one
     /// of the supported networks. NO if the user does not have a saved card of a
     /// supported type, or other restrictions prevent payment (such as parental controls).
@@ -163,7 +166,7 @@ import PassKit
         let paymentRequest = PKPaymentRequest()
         paymentRequest.merchantIdentifier = merchantIdentifier
         paymentRequest.supportedNetworks = self.supportedPKPaymentNetworks()
-        #if canImport(CompositorServices)
+        #if os(visionOS)
         paymentRequest.merchantCapabilities = .threeDSecure
         #else
         paymentRequest.merchantCapabilities = .capability3DS

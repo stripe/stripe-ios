@@ -1,4 +1,18 @@
+"An error occurred. Please try again." = "Došlo je do pogreške. Molimo pokušajte ponovo.";
+
+"Card brand was not updated. Please try again." = "Marka kartice nije ažurirana. Molimo pokušajte ponovo.";
+
 "Close" = "Zatvori";
+
+"Confirm it's you" = "Potvrdite da ste to vi";
+
+"Default payment method was not updated. Please try again." = "Zadani način plaćanja nije ažuriran. Molimo pokušajte ponovo.";
+
+"Enter the code sent to %@." = "Upišite kôd poslan na %@.";
+
+"Failed to connect" = "Neuspješno povezivanje";
+
+"Resend code" = "Ponovno pošaljite kôd";
 
 "Scan Card" = "Skeniraj karticu";
 

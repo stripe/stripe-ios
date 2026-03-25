@@ -15,4 +15,8 @@ import Foundation
     @_spi(STP) public var isPantherPayment: Bool {
         self == .linkCardBrand
     }
+
+    @_spi(STP) public var expectedPaymentMethodType: String {
+        isPantherPayment ? "card" : "bank_account"
+    }
 }

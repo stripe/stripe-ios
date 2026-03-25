@@ -51,13 +51,6 @@ extension Dictionary {
             return a
         }
     }
-
-    @_spi(STP) public func mergingAssertingOnOverwrites<S>(_ other: S) -> [Key: Value] where S: Sequence, S.Element == (Key, Value) {
-        merging(other) { a, b in
-            stpAssertionFailure("Dictionary merge is overwriting a key with values: \(a) and \(b)!")
-            return a
-        }
-    }
 }
 
 extension Dictionary where Value == Any {

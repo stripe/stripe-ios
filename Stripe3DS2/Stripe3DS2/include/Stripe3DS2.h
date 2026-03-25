@@ -18,6 +18,7 @@ FOUNDATION_EXPORT const unsigned char Stripe3DS2VersionString[];
 #import "STDSThreeDS2Service.h"
 #import "STDSUICustomization.h"
 #import "STDSWarning.h"
+#import "STDSAnalyticsDelegate.h"
 
 #import "STDSAlreadyInitializedException.h"
 #import "STDSInvalidInputException.h"

@@ -38,13 +38,13 @@ final class HostViewController: UIViewController {
             target: self,
             action: #selector(didTapClose)
         )
-        item.tintColor = .iconDefault
-        item.imageInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 5)
+        item.tintColor = FinancialConnectionsAppearance.Colors.icon
+        item.applyFinancialConnectionsCloseButtonEdgeInsets()
         return item
     }()
 
     // We haven't loaded the manifest yet, so we use a nil theme to show a neutral-colored spinner.
-    private let loadingView = LoadingView(frame: .zero, theme: nil)
+    private let loadingView = LoadingView(frame: .zero, appearance: nil)
 
     // MARK: - Properties
 
@@ -52,7 +52,7 @@ final class HostViewController: UIViewController {
 
     private let analyticsClientV1: STPAnalyticsClientProtocol
     private let clientSecret: String
-    private let apiClient: FinancialConnectionsAPIClient
+    private let apiClient: any FinancialConnectionsAPI
     private let returnURL: String?
 
     private var lastError: Error?
@@ -63,7 +63,7 @@ final class HostViewController: UIViewController {
         analyticsClientV1: STPAnalyticsClientProtocol,
         clientSecret: String,
         returnURL: String?,
-        apiClient: FinancialConnectionsAPIClient,
+        apiClient: any FinancialConnectionsAPI,
         delegate: HostViewControllerDelegate?
     ) {
         self.analyticsClientV1 = analyticsClientV1
@@ -84,7 +84,7 @@ final class HostViewController: UIViewController {
         super.viewDidLoad()
 
         view.addSubview(loadingView)
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.rightBarButtonItem = closeItem
         loadingView.tryAgainButton.addTarget(self, action: #selector(didTapTryAgainButton), for: .touchUpInside)
         getManifest()
@@ -105,21 +105,30 @@ extension HostViewController {
         loadingView.showLoading(true)
 
         analyticsClientV1.log(
-            analytic: FinancialConnectionsSheetInitialSynchronizeStarted(clientSecret: clientSecret),
+            analytic: FinancialConnectionsSheetInitialSynchronizeStarted(
+                linkAccountSessionId: nil // We don't have the session ID yet.
+            ),
             apiClient: apiClient.backingAPIClient
         )
 
         apiClient
             .synchronize(
                 clientSecret: clientSecret,
-                returnURL: returnURL
+                returnURL: returnURL,
+                initialSynchronize: true
             )
             .observe { [weak self] result in
                 guard let self = self else { return }
 
+                let linkAccountSessionId: String? = {
+                    guard case .success(let synchronizePayload) = result else {
+                        return nil
+                    }
+                    return synchronizePayload.manifest.id
+                }()
                 analyticsClientV1.log(
                     analytic: FinancialConnectionsSheetInitialSynchronizeCompleted(
-                        clientSecret: clientSecret,
+                        linkAccountSessionId: linkAccountSessionId,
                         success: result.success,
                         possibleError: result.error
                     ),

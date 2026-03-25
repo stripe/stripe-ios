@@ -1,16 +1,24 @@
+"%1$@ Card" = "„%1$@“ kortelė";
+
+"%1$@ Credit" = "„%1$@“ kredito";
+
+"%1$@ Debit" = "„%1$@“ debeto";
+
+"%1$@ Prepaid" = "„%1$@“ išankstinio mokėjimo";
+
 "%1$@ account ending in %2$@" = "%1$@ sąskaita, kurios paskutiniai skaičiai %2$@";
 
 "%1$@ ending in %2$@" = "%1$@, kuri baigiasi %2$@";
 
+"%1$@ is not accepted" = "\"%1$@\" nepriimamas";
+
 "Address line 2 (optional)" = "2 adreso eilutė (pasirenkama)";
 
-"Apple Pay" = "„Apple Pay“";
+"Apple Pay" = "\"Apple Pay\"";
 
 "BSB" = "BSB";
 
 "Bank Account" = "Banko sąskaita";
-
-"Billing Address" = "Sąskaitų siuntimo adresas";
 
 "Billing address" = "Atsiskaitymo adresas";
 
@@ -28,6 +36,18 @@
 
 "MM/YY" = "mm / MM";
 
+"Only credit and prepaid cards are accepted" = "Priimamos tik kredito ir išankstinio mokėjimo kortelės";
+
+"Only credit cards are accepted" = "Priimamos tik kredito kortelės";
+
+"Only debit and credit cards are accepted" = "Priimamos tik debeto ir kredito kortelės";
+
+"Only debit and prepaid cards are accepted" = "Priimamos tik debeto ir išankstinio mokėjimo kortelės";
+
+"Only debit cards are accepted" = "Priimamos tik debeto kortelės";
+
+"Only prepaid cards are accepted" = "Priimamos tik išankstinio mokėjimo kortelės";
+
 "Postal Code" = "Pašto kodas";
 
 "Shipping Address" = "Siuntimo adresas";
@@ -36,9 +56,11 @@
 
 "The BSB you entered is invalid." = "Įvestas netinkamas BSB numeris.";
 
+"The selected brand is not allowed" = "Pasirinktas prekės ženklas neleidžiamas";
+
 "To scan your card, allow camera access in Settings." = "Kad nuskaitytumėte kortelę, nustatymuose suteikite prieigą fotoaparatui.";
 
-"Your ZIP is invalid." = "Jūsų pašto kodas yra netinkamas.";
+"Your card has expired." = "Jūsų kortelė baigė galioti.";
 
 "Your card number is incomplete." = "Neišsamus kortelės numeris.";
 
@@ -55,8 +77,6 @@
 "Your card's security code is incomplete." = "Neišsamus kortelės saugos kodas.";
 
 "Your card's security code is invalid." = "Kortelės saugos kodas negalioja.";
-
-"Your postal code is invalid." = "Jūsų pašto kodas yra netinkamas.";
 
 "card number" = "kortelės numeris";
 

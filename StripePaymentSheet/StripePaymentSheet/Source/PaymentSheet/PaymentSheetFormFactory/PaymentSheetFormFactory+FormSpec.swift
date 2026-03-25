@@ -123,9 +123,9 @@ extension PaymentSheetFormFactory {
         case .country(let spec):
             return makeCountry(countryCodes: spec.allowedCountryCodes, apiPath: spec.apiPath?["v1"])
         case .affirm_header:
-            return StaticElement(view: AffirmCopyLabel(theme: theme))
+            return SubtitleElement(view: AffirmCopyLabel(theme: theme), isHorizontalMode: configuration.isHorizontalMode)
         case .klarna_header:
-            return makeKlarnaCopyLabel()
+            return makeCopyLabel(text: .Localized.buy_now_or_pay_later_with_klarna)
         case .klarna_country(let spec):
             return makeKlarnaCountry(apiPath: spec.apiPath?["v1"])!
         case .au_becs_bsb_number(let spec):
@@ -135,7 +135,7 @@ extension PaymentSheetFormFactory {
         case .au_becs_mandate:
             return makeAUBECSMandate()
         case .afterpay_header:
-            return makeAfterpayClearpayHeader()!
+            return makeAfterpayClearpayHeader()
         case .iban(let spec):
             return makeIban(apiPath: spec.apiPath?["v1"])
         case .sepa_mandate:
@@ -163,11 +163,11 @@ extension PaymentSheetFormFactory {
             return configuration.billingDetailsCollectionConfiguration.phone == .always ? makePhone() : nil
         case .billingAddress:
             return configuration.billingDetailsCollectionConfiguration.address == .full
-                ? makeBillingAddressSection(countries: nil)
+                ? makeBillingAddressSection(countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
                 : nil
         case .billingAddressWithoutCountry:
             return configuration.billingDetailsCollectionConfiguration.address == .full
-                ? makeBillingAddressSection(collectionMode: .noCountry, countries: nil)
+                ? makeBillingAddressSection(collectionMode: .noCountry, countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
                 : nil
         case .unknown: return nil
         }
@@ -178,7 +178,7 @@ extension PaymentSheetFormFactory {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetFormFactoryError,
                                               error: Error.missingV1FromSelectorSpec,
                                               additionalNonPIIParams: ["payment_method": paymentMethod.identifier])
-            analyticsHelper.analyticsClient.log(analytic: errorAnalytic)
+            analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
         }
         stpAssert(selectorSpec.apiPath?["v1"] != nil) // If there's no api path, the dropdown selection is unused!
         let dropdownItems: [DropdownFieldElement.DropdownItem] = selectorSpec.items.map {

@@ -1,0 +1,12 @@
+POST
+http:\/\/0\.0\.0\.0:4567\/create_checkout_session$
+200
+text/html
+X-Content-Type-Options: nosniff
+Set-Cookie: rack.session=%2FFV7kE3en6k2hjA%2Bsy0RBUMT%2BrGvEA938XMwtjLWjwa7i46ArTQAsDq5F6dhii7TZZAa724vthlCmQ7Kq9bq9dsgQmbktYYfD%2Bn6oEMsgNgtJwq8eWcyZLVHyK9FKLQVjFD8s%2BS6StRfbt39Eyi4YZoDEv6csuGU6bd9mYIHXZgwHYjESC0jVAj0zuerRhs8; path=/
+Content-Length: 293
+Content-Type: text/html;charset=utf-8
+X-Frame-Options: SAMEORIGIN
+X-XSS-Protection: 1; mode=block
+
+{"id":"cs_test_a1uO22QQKo1LvudVwMAlqDp57pD3Hde23v9hZlGZzCJYe5e6PEYflZbbRX","client_secret":"cs_test_a1uO22QQKo1LvudVwMAlqDp57pD3Hde23v9hZlGZzCJYe5e6PEYflZbbRX_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}

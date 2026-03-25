@@ -30,8 +30,7 @@ import UIKit
         let loadingViewController = LoadingViewController(
             delegate: self,
             appearance: PaymentSheet.Appearance.default,
-            isTestMode: configuration.apiClient.isTestmode,
-            loadingViewHeight: 244
+            isTestMode: configuration.apiClient.isTestmode
         )
         return loadingViewController
     }()
@@ -126,6 +125,35 @@ import UIKit
     /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
+        guard FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable else {
+            return try await presentWebFlow(from: presentingViewController)
+        }
+
+        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
+            payWithLinkContinuation = continuation
+
+            let completionHandler: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = { [weak self] result, _, error in
+                guard let self else {
+                    return
+                }
+
+                guard let result else {
+                    self.continueWithFailure(error ?? Error.canceled)
+                    return
+                }
+
+                self.handleSDKResult(result)
+            }
+
+            presentWithSDK(
+                from: presentingViewController,
+                completionHandler: completionHandler
+            )
+        }
+    }
+
+    @MainActor
+    private func presentWebFlow(from presentingViewController: UIViewController) async throws {
         presentingViewController.presentAsBottomSheet(bottomSheetViewController, appearance: PaymentSheet.Appearance.default)
         defer {
             bottomSheetViewController.dismiss(animated: true)
@@ -147,7 +175,8 @@ import UIKit
                                                    paymentMethodType: .link,
                                                    customerName: configuration.defaultBillingDetails.name,
                                                    customerEmailAddress: configuration.defaultBillingDetails.email,
-                                                   additionalParameteres: parameters) { [weak self] linkAccountSession, error in
+                                                   linkMode: nil,
+                                                   additionalParameters: parameters) { [weak self] linkAccountSession, error in
                     self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                 }
             case .setupIntentClientSecret(let clientSecret):
@@ -160,30 +189,24 @@ import UIKit
                                                    paymentMethodType: .link,
                                                    customerName: configuration.defaultBillingDetails.name,
                                                    customerEmailAddress: configuration.defaultBillingDetails.email,
-                                                   additionalParameteres: parameters) { [weak self] linkAccountSession, error in
+                                                   linkMode: nil,
+                                                   additionalParameters: parameters) { [weak self] linkAccountSession, error in
                     self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                 }
             case .deferredIntent(let intentConfiguration):
-                let amount: Int?
-                let currency: String?
-                switch intentConfiguration.mode {
-                case let .payment(amount: _amount, currency: _currency, _, _):
-                    amount = _amount
-                    currency = _currency
-                case let .setup(currency: _currency, _):
-                    amount = nil
-                    currency = _currency
-                }
                 apiClient
                     .createLinkAccountSessionForDeferredIntent(
                         sessionId: "ios_instant_debits_only_\(UUID().uuidString)",
-                        amount: amount,
-                        currency: currency,
+                        amount: mode.amount,
+                        currency: mode.currency,
                         onBehalfOf: intentConfiguration.onBehalfOf,
+                        linkMode: nil,
                         additionalParameters: ["product": "instant_debits"]
                     ) { [weak self] linkAccountSession, error in
                         self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                     }
+            case .checkoutSession:
+                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Link payment controller is not yet supported by CheckoutSession"))
             }
         }
 
@@ -198,19 +221,169 @@ import UIKit
                     case .success(let successResult):
                         switch successResult {
                         case .success(let details):
-                            self.paymentMethodId = details.paymentMethodID
-                            self.payWithLinkContinuation?.resume(returning: ())
+                            self.continueWithPaymentMethod(details.paymentMethodID)
                         case.canceled:
-                            self.paymentMethodId = nil
-                            self.payWithLinkContinuation?.resume(throwing: Error.canceled)
+                            self.continueWithFailure(Error.canceled)
                         }
                     case .failure(let error):
-                        self.paymentMethodId = nil
-                        self.payWithLinkContinuation?.resume(throwing: error)
+                        self.continueWithFailure(error)
                     }
                     self.payWithLinkContinuation = nil
                 }
         }
+    }
+
+    private func presentWithSDK(
+        from presentingViewController: UIViewController,
+        completionHandler: @escaping (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void
+    ) {
+        let bankAccountCollectorStyle = makeBankAccountCollectorStyle()
+        let bankAccountCollector = STPBankAccountCollector(style: bankAccountCollectorStyle)
+
+        let additionalParameters: [String: Any] = [
+            "product": "instant_debits",
+        ]
+
+        let params = STPCollectBankAccountParams.collectInstantDebitsParams(
+            email: configuration.defaultBillingDetails.email
+        )
+
+        let elementsSessionContext = makeElementsSessionContext()
+
+        switch mode {
+        case .paymentIntentClientSecret(let string):
+            bankAccountCollector.collectBankAccountForPayment(
+                clientSecret: string,
+                returnURL: configuration.returnURL,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                onEvent: nil,
+                params: params,
+                from: presentingViewController,
+                financialConnectionsCompletion: completionHandler
+            )
+        case .setupIntentClientSecret(let string):
+            bankAccountCollector.collectBankAccountForSetup(
+                clientSecret: string,
+                returnURL: configuration.returnURL,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                onEvent: nil,
+                params: params,
+                from: presentingViewController,
+                financialConnectionsCompletion: completionHandler
+            )
+        case .deferredIntent(let intentConfiguration):
+            let amount: Int?
+            let currency: String?
+            switch intentConfiguration.mode {
+            case let .payment(amount: _amount, currency: _currency, _, _, _):
+                amount = _amount
+                currency = _currency
+            case let .setup(currency: _currency, _):
+                amount = nil
+                currency = _currency
+            }
+            bankAccountCollector.collectBankAccountForDeferredIntent(
+                sessionId: "ios_instant_debits_only_\(UUID().uuidString)",
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: amount,
+                currency: currency,
+                onBehalfOf: nil,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                from: presentingViewController,
+                financialConnectionsCompletion: completionHandler
+            )
+        case .checkoutSession:
+            completionHandler(nil, nil, PaymentSheetError.unknown(debugDescription: "Link payment controller is not yet supported by CheckoutSession") as NSError)
+        }
+    }
+
+    private func makeElementsSessionContext() -> ElementsSessionContext {
+        let defaultBillingDetails = configuration.defaultBillingDetails
+
+        let billingDetails = ElementsSessionContext.BillingDetails(
+            name: defaultBillingDetails.name,
+            email: defaultBillingDetails.email,
+            phone: defaultBillingDetails.phone,
+            address: .init(
+                city: defaultBillingDetails.address.city,
+                country: defaultBillingDetails.address.country,
+                line1: defaultBillingDetails.address.line1,
+                line2: defaultBillingDetails.address.line2,
+                postalCode: defaultBillingDetails.address.postalCode,
+                state: defaultBillingDetails.address.state
+            )
+        )
+
+        return ElementsSessionContext(
+            amount: mode.amount,
+            currency: mode.currency,
+            prefillDetails: makePrefillDetails(),
+            intentId: nil,
+            linkMode: nil,
+            billingDetails: billingDetails,
+            eligibleForIncentive: false,
+            clientAttributionMetadata: nil
+        )
+    }
+
+    private func makeBankAccountCollectorStyle() -> STPBankAccountCollectorUserInterfaceStyle {
+        switch configuration.style {
+        case .automatic: return .automatic
+        case .alwaysLight: return .alwaysLight
+        case .alwaysDark: return .alwaysDark
+        }
+    }
+
+    private func makePrefillDetails() -> ElementsSessionContext.PrefillDetails {
+        var billingPhone: PhoneNumber?
+
+        if let phone = configuration.defaultBillingDetails.phone {
+            billingPhone = PhoneNumber.fromE164(phone)
+
+            if billingPhone == nil {
+                billingPhone = PhoneNumber(number: phone, countryCode: "US")
+            }
+        }
+
+        let formattedPhoneNumber = billingPhone?.string(as: .e164)
+        let unformattedPhoneNumber = billingPhone?.number
+        let countryCode = billingPhone?.countryCode
+
+        return .init(
+            email: configuration.defaultBillingDetails.email,
+            formattedPhoneNumber: formattedPhoneNumber,
+            unformattedPhoneNumber: unformattedPhoneNumber,
+            countryCode: countryCode
+        )
+    }
+
+    private func handleSDKResult(_ result: FinancialConnectionsSDKResult) {
+        switch result {
+        case .completed(let result):
+            if case let .instantDebits(linkedBank) = result {
+                continueWithPaymentMethod(linkedBank.paymentMethod.id)
+            } else {
+                continueWithFailure(Error.canceled)
+            }
+        case .failed(let error):
+            continueWithFailure(error)
+        case .cancelled:
+            continueWithFailure(Error.canceled)
+        }
+    }
+
+    private func continueWithPaymentMethod(_ paymentMethodId: String) {
+        self.paymentMethodId = paymentMethodId
+        payWithLinkContinuation?.resume(returning: ())
+    }
+
+    private func continueWithFailure(_ error: Swift.Error) {
+        paymentMethodId = nil
+        payWithLinkContinuation?.resume(throwing: error)
     }
 
     private func generateManifest(continuation: CheckedContinuation<Manifest, Swift.Error>,
@@ -274,11 +447,11 @@ import UIKit
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Swift.Error>) in
             switch mode {
             case .paymentIntentClientSecret(let clientSecret):
-                let paymentIntentParams = STPPaymentIntentParams(clientSecret: clientSecret, paymentMethodType: .link)
+                let paymentIntentParams = STPPaymentIntentConfirmParams(clientSecret: clientSecret, paymentMethodType: .link)
                 paymentIntentParams.paymentMethodId = paymentMethodId
                 paymentIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
-                STPPaymentHandler.shared().confirmPayment(
-                    paymentIntentParams, with: authenticationContext
+                STPPaymentHandler.shared().confirmPaymentIntent(
+                    params: paymentIntentParams, authenticationContext: authenticationContext
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:
@@ -296,7 +469,7 @@ import UIKit
                 setupIntentParams.paymentMethodID = paymentMethodId
                 setupIntentParams.mandateData = STPMandateDataParams.makeWithInferredValues()
                 STPPaymentHandler.shared().confirmSetupIntent(
-                    setupIntentParams, with: authenticationContext
+                    params: setupIntentParams, authenticationContext: authenticationContext
                 ) { (status, _, error) in
                     switch status {
                     case .canceled:
@@ -310,26 +483,29 @@ import UIKit
                     }
                 }
             case .deferredIntent(let intentConfiguration):
-                let paymentMethod = STPPaymentMethod(stripeId: paymentMethodId, type: .link)
-                PaymentSheet
-                    .handleDeferredIntentConfirmation(
-                        confirmType: .saved(paymentMethod, paymentOptions: nil),
-                        configuration: configuration,
-                        intentConfig: intentConfiguration,
-                        authenticationContext: authenticationContext,
-                        paymentHandler: STPPaymentHandler.shared(),
-                        isFlowController: true,
-                        mandateData: STPMandateDataParams.makeWithInferredValues()) { result, _ in
-                    switch result {
+                let paymentMethod = STPPaymentMethod(stripeId: paymentMethodId, created: Date(), type: .link)
+                Task { @MainActor in
+                    let result = await PaymentSheet
+                        .routeDeferredIntentConfirmation(
+                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil), // LinkPaymentController is standalone and isn't a part of MPE, so it doesn't generate a client_session_id and doesn't have an elements session object so we don't want to send CAM here
+                            configuration: configuration,
+                            intentConfig: intentConfiguration,
+                            authenticationContext: authenticationContext,
+                            paymentHandler: STPPaymentHandler.shared(),
+                            isFlowController: true,
+                            elementsSession: nil // Headless link does not have an elements session object
+                        )
+                    switch result.result {
                     case .canceled:
                         continuation.resume(throwing: Error.canceled)
                     case .failed(let error):
                         continuation.resume(throwing: error)
                     case .completed:
                         continuation.resume()
-
                     }
                 }
+            case .checkoutSession:
+                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Link payment controller is not yet supported by CheckoutSession"))
             }
         }
     }
@@ -360,5 +536,44 @@ extension LinkPaymentController: LoadingViewControllerDelegate {
         paymentMethodId = nil
         payWithLinkContinuation?.resume(throwing: Error.canceled)
         payWithLinkContinuation = nil
+    }
+}
+
+private extension PaymentSheet.InitializationMode {
+
+    var amount: Int? {
+        switch self {
+        case .paymentIntentClientSecret:
+            return nil
+        case .setupIntentClientSecret:
+            return nil
+        case .deferredIntent(let intentConfiguration):
+            switch intentConfiguration.mode {
+            case .payment(let amount, _, _, _, _):
+                return amount
+            case .setup:
+                return nil
+            }
+        case .checkoutSession:
+            return nil
+        }
+    }
+
+    var currency: String? {
+        switch self {
+        case .paymentIntentClientSecret:
+            return nil
+        case .setupIntentClientSecret:
+            return nil
+        case .deferredIntent(let intentConfiguration):
+            switch intentConfiguration.mode {
+            case .payment(_, let currency, _, _, _):
+                return currency
+            case .setup(let currency, _):
+                return currency
+            }
+        case .checkoutSession:
+            return nil
+        }
     }
 }

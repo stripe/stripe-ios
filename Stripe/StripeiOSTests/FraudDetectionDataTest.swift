@@ -28,4 +28,15 @@ class FraudDetectionDataTest: XCTestCase {
         FraudDetectionData.shared.resetSIDIfExpired()
         XCTAssertNotNil(FraudDetectionData.shared.sid)
     }
+
+    func testSettingUserDefaults() {
+        FraudDetectionData.shared.sid = "123"
+        FraudDetectionData.shared.sidCreationDate = Date()
+        FraudDetectionData.shared.muid = "123"
+        FraudDetectionData.shared.guid = "123"
+        UserDefaults.standard.fraudDetectionData = .shared
+        XCTAssertEqual(UserDefaults.standard.fraudDetectionData, .shared)
+        UserDefaults.standard.fraudDetectionData = nil
+        XCTAssertEqual(UserDefaults.standard.fraudDetectionData, nil)
+    }
 }

@@ -14,7 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)init {
     WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
+#if !TARGET_OS_VISION
     configuration.preferences.javaScriptEnabled = NO;
+#endif
     return [super initWithFrame:CGRectZero configuration:configuration];
 }
 

@@ -1,0 +1,151 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
+"%@ (optional)" = "%@ (ระบุหรือไม่ก็ได้)";
+
+"(not accepted)" = "(ไม่รองรับ)";
+
+"Account number" = "หมายเลขบัญชี";
+
+"Address" = "ที่อยู่";
+
+"Address line 1" = "ที่อยู่บรรทัดที่ 1";
+
+"Address line 2" = "ที่อยู่บรรทัดที่ 2";
+
+"Area" = "พื้นที่";
+
+"BLIK code" = "รหัส BLIK";
+
+"BSB number" = "หมายเลข BSB";
+
+"Bank account •••• %@" = "บัญชีธนาคาร •••• %@";
+
+"Billing address is same as shipping" = "ที่อยู่ในการเรียกเก็บเงินเหมือนกันกับที่อยู่ในการจัดส่ง";
+
+"Cancel" = "ยกเลิก";
+
+"Card brand" = "แบรนด์ของบัตร";
+
+"City" = "เมือง";
+
+"Code field" = "ช่องข้อมูลรหัส";
+
+"Company" = "บริษัท";
+
+"Continue" = "ดำเนินการต่อ";
+
+"Country" = "ประเทศ";
+
+"Country or region" = "ประเทศหรือภูมิภาค";
+
+"County" = "เคาน์ตี";
+
+"Date of Birth" = "วันเกิด";
+
+"Department" = "แผนก";
+
+"District" = "เขต";
+
+"Do Si" = "เมือง";
+
+"Do you want to close this form?" = "แน่ใจไหมว่าต้องการปิดแบบฟอร์มนี้";
+
+"Done" = "เสร็จสิ้น";
+
+"Double tap to edit" = "แตะสองครั้งเพื่อแก้ไข";
+
+"Edit" = "แก้ไข";
+
+"Eircode" = "รหัสไปรษณีย์";
+
+"Email" = "อีเมล";
+
+"Emirate" = "เอมิเรต";
+
+"Error" = "ข้อผิดพลาด";
+
+"First" = "ชื่อ";
+
+"Full name" = "ชื่อ-นามสกุล";
+
+"Incomplete phone number" = "หมายเลขโทรศัพท์ไม่ครบถ้วน";
+
+"Invalid UPI ID" = "UPI ID ไม่ถูกต้อง";
+
+"Island" = "เกาะ";
+
+"Last" = "นามสกุล";
+
+"Name" = "ชื่อ";
+
+"Name on account" = "ชื่อในบัญชี";
+
+"OK" = "ตกลง";
+
+"Oblast" = "ภูมิภาค";
+
+"Other" = "อื่นๆ";
+
+"Parish" = "ตำบล";
+
+"Phone number" = "หมายเลขโทรศัพท์";
+
+"Postal code" = "รหัสไปรษณีย์";
+
+"Prefecture" = "อำเภอ";
+
+"Province" = "จังหวัด";
+
+"Remove" = "นำออก";
+
+"Remove bank account?" = "นำบัญชีธนาคารออกหรือไม่";
+
+"Remove card" = "นำบัตรออก";
+
+"Search" = "ค้นหา";
+
+"Select card brand (optional)" = "เลือกแบรนด์บัตร (ไม่บังคับ)";
+
+"Selection is empty." = "การเลือกว่างเปล่า";
+
+"Sort code" = "Sort Code";
+
+"State" = "รัฐ";
+
+"Suburb" = "ชานเมือง";
+
+"Suburb or city" = "ชานเมืองหรือเมือง";
+
+"The BSB you entered is incomplete." = "BSB ที่คุณป้อนไม่ครบถ้วน";
+
+"The ID number you entered is incomplete." = "หมายเลขประจำตัวประชาชนที่คุณป้อนไม่ครบถ้วน";
+
+"The account number you entered is incomplete." = "หมายเลขบัญชีที่คุณป้อนไม่ครบถ้วน";
+
+"The sort code you entered is invalid." = "Sort Code ที่คุณป้อนไม่ถูกต้อง";
+
+"Town or city" = "เมืองหรือจังหวัด";
+
+"UPI ID" = "UPI ID";
+
+"Unable to parse phone number" = "ไม่สามารถแยกวิเคราะห์หมายเลขโทรศัพท์ได้";
+
+"Use rotor to access links" = "ใช้ตัวหมุนเพื่อเข้าถึงลิงก์";
+
+"Your BLIK code is incomplete." = "รหัส BLIK ไม่ครบถ้วน";
+
+"Your BLIK code is invalid." = "รหัส BLIK ไม่ถูกต้อง";
+
+"Your ZIP code is incomplete." = "รหัสไปรษณีย์ของคุณไม่สมบูรณ์";
+
+"Your ZIP code is invalid." = "รหัสไปรษณีย์ของคุณไม่ถูกต้อง";
+
+"Your email is invalid." = "อีเมลไม่ถูกต้อง";
+
+"Your payment information will not be saved." = "ข้อมูลการชำระเงินของคุณจะไม่ได้รับการบันทึก";
+
+"Your postal code is incomplete." = "รหัสไปรษณีย์ไม่ครบถ้วน";
+
+"Your postal code is invalid." = "รหัสไปรษณีย์ไม่ถูกต้อง";
+
+"ZIP" = "รหัสไปรษณีย์";

@@ -9,6 +9,7 @@
 import AuthenticationServices
 import Foundation
 @_spi(STP) import StripeCore
+import UIKit
 
 #if canImport(Stripe3DS2)
     import Stripe3DS2
@@ -105,7 +106,7 @@ public class STPPaymentHandlerPaymentIntentActionParams: NSObject, STPPaymentHan
 
     // Translate the STPAuthenticationContext to an ASPresentationAnchor if possible
     public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return authenticationContext.authenticationPresentingViewController().view.window ?? ASPresentationAnchor()
+        return authenticationContext.authenticationPresentingViewController().view.window ?? stp_makeFallbackPresentationAnchor()
     }
 }
 
@@ -185,6 +186,22 @@ internal class STPPaymentHandlerSetupIntentActionParams: NSObject, STPPaymentHan
 
     // Translate the STPAuthenticationContext to an ASPresentationAnchor if possible
     public func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        return authenticationContext.authenticationPresentingViewController().view.window ?? ASPresentationAnchor()
+        return authenticationContext.authenticationPresentingViewController().view.window ?? stp_makeFallbackPresentationAnchor()
     }
+}
+
+/// Creates a fallback ASPresentationAnchor when no window is available.
+/// On visionOS, UIWindow() without a scene is deprecated, so we find a scene first.
+private func stp_makeFallbackPresentationAnchor() -> ASPresentationAnchor {
+    #if !os(visionOS)
+    return ASPresentationAnchor()
+    #else
+    if let windowScene = UIApplication.shared.connectedScenes
+        .compactMap({ $0 as? UIWindowScene })
+        .first {
+        return UIWindow(windowScene: windowScene)
+    }
+    // No windowScene was available on visionOS, so we need to bail.
+    fatalError()
+    #endif
 }

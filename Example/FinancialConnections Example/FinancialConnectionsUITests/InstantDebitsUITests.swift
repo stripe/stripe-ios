@@ -45,11 +45,10 @@ final class InstantDebitsUITests: XCTestCase {
         XCTAssertTrue(linkLoginCtaButton.waitForExistence(timeout: 10.0))
         linkLoginCtaButton.tap()
 
-        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Test OAuth Institution"]
+        let featuredLegacyTestInstitution = app.tables.cells.staticTexts["Success"]
         XCTAssertTrue(featuredLegacyTestInstitution.waitForExistence(timeout: 60.0))
         featuredLegacyTestInstitution.tap()
 
-        app.fc_nativePrepaneContinueButton.tap()
         app.fc_nativeConnectAccountsButton.tap()
         app.fc_nativeSuccessDoneButton.tap()
     }
@@ -86,6 +85,34 @@ final class InstantDebitsUITests: XCTestCase {
         let app = XCUIApplication.fc_launch(playgroundConfigurationString:
             """
             {"use_case":"payment_intent","experience":"instant_debits","sdk_type":"native","test_mode":true,"merchant":"default","payment_method_permission":true,"email":"test@test.com"}
+            """
+        )
+
+        app.fc_playgroundCell.tap()
+        app.fc_playgroundShowAuthFlowButton.tap()
+
+        app.fc_nativeConsentAgreeButton.tap()
+
+        let linkContinueButton = app.buttons["link_continue_button"]
+        XCTAssertTrue(linkContinueButton.waitForExistence(timeout: 60.0))
+        linkContinueButton.tap()
+
+        let testModeAutofillButton = app.buttons["test_mode_autofill_button"]
+        XCTAssertTrue(testModeAutofillButton.waitForExistence(timeout: 10.0))
+        testModeAutofillButton.tap()
+
+        let successBankAccountRow = app.staticTexts["Success"]
+        XCTAssertTrue(successBankAccountRow.waitForExistence(timeout: 60.0))
+        successBankAccountRow.tap()
+
+        app.fc_nativeConnectAccountsButton.tap()
+        app.fc_nativeSuccessDoneButton.tap()
+    }
+
+    func test_connect() {
+        let app = XCUIApplication.fc_launch(playgroundConfigurationString:
+            """
+            {"use_case":"payment_intent","experience":"instant_debits","sdk_type":"native","test_mode":true,"merchant":"connect","payment_method_permission":true,"email":"email@email.com"}
             """
         )
 

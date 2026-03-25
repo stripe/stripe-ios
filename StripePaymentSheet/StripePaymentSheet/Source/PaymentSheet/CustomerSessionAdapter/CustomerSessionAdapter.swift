@@ -93,6 +93,7 @@ class CustomerSessionAdapter {
                                                                                                   customerSessionClientSecret: customerSessionClientSecret)
         } else {
             return try await self.configuration.apiClient.retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: intentConfiguration.paymentMethodTypes,
+                                                                                                          onBehalfOf: intentConfiguration.onBehalfOf,
                                                                                                           clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                                                                                                           customerSessionClientSecret: customerSessionClientSecret)
         }
@@ -100,28 +101,44 @@ class CustomerSessionAdapter {
 }
 extension CustomerSessionAdapter {
     func fetchClientDefaultPaymentMethod(for customerId: String) -> String? {
-        guard let defaultPaymentMethod = fetchSelectedPaymentOption(for: customerId),
+        guard let defaultPaymentMethod = CustomerPaymentOption.localDefaultPaymentMethod(for: customerId),
            case .stripeId(let stripePaymentMethodId) = defaultPaymentMethod else {
             return nil
         }
         return stripePaymentMethodId
     }
 
-    func fetchSelectedPaymentOption(for customerId: String) -> CustomerPaymentOption? {
-        return CustomerPaymentOption.defaultPaymentMethod(for: customerId)
+    func fetchSelectedPaymentOption(for customerId: String, elementsSession: STPElementsSession) -> CustomerPaymentOption? {
+        return CustomerPaymentOption.selectedPaymentMethod(for: customerId, elementsSession: elementsSession, surface: .customerSheet)
     }
 
-    func detachPaymentMethod(paymentMethodId: String) async throws {
+    func detachPaymentMethod(paymentMethod: STPPaymentMethod) async throws {
+
         let cachedCustomerSessionClientSecret = try await cachedCustomerSessionClientSecret()
         return try await withCheckedThrowingContinuation({ continuation in
-            self.configuration.apiClient.detachPaymentMethodRemoveDuplicates(paymentMethodId,
-                                                                             customerId: cachedCustomerSessionClientSecret.customerId,
-                                                                             fromCustomerUsing: cachedCustomerSessionClientSecret.apiKey) { error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                    return
+            if paymentMethod.type == .card {
+                self.configuration.apiClient.detachPaymentMethodRemoveDuplicates(
+                    paymentMethod.stripeId,
+                    customerId: cachedCustomerSessionClientSecret.customerId,
+                    fromCustomerUsing: cachedCustomerSessionClientSecret.apiKey,
+                    withCustomerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret.clientSecret) { error in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                            return
+                        }
+                        continuation.resume()
                 }
-                continuation.resume()
+            } else {
+                configuration.apiClient.detachPaymentMethod(
+                    paymentMethod.stripeId,
+                    fromCustomerUsing: cachedCustomerSessionClientSecret.apiKey,
+                    withCustomerSessionClientSecret: cachedCustomerSessionClientSecret.customerSessionClientSecret.clientSecret) { error in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                            return
+                        }
+                        continuation.resume()
+                    }
             }
         })
     }
@@ -131,5 +148,10 @@ extension CustomerSessionAdapter {
         return try await self.configuration.apiClient.updatePaymentMethod(with: paymentMethodId,
                                                                           paymentMethodUpdateParams: paymentMethodUpdateParams,
                                                                           ephemeralKeySecret: cachedCustomerSessionClientSecret.apiKey)
+    }
+
+    func setAsDefaultPaymentMethod(paymentMethodId: String) async throws -> STPCustomer {
+        let cachedCustomerSessionClientSecret = try await cachedCustomerSessionClientSecret()
+        return try await self.configuration.apiClient.setAsDefaultPaymentMethod(paymentMethodId, for: cachedCustomerSessionClientSecret.customerId, using: cachedCustomerSessionClientSecret.apiKey)
     }
 }

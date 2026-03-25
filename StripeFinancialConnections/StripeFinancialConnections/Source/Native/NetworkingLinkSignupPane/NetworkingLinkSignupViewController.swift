@@ -26,6 +26,10 @@ protocol NetworkingLinkSignupViewControllerDelegate: AnyObject {
         _ viewController: NetworkingLinkSignupViewController,
         didReceiveTerminalError error: Error
     )
+    func networkingLinkSignupViewControllerDidFailAttestationVerdict(
+        _ viewController: NetworkingLinkSignupViewController,
+        prefillDetails: WebPrefillDetails
+    )
 }
 
 final class NetworkingLinkSignupViewController: UIViewController {
@@ -34,12 +38,12 @@ final class NetworkingLinkSignupViewController: UIViewController {
     weak var delegate: NetworkingLinkSignupViewControllerDelegate?
 
     private lazy var loadingView: SpinnerView = {
-        return SpinnerView(theme: dataSource.manifest.theme)
+        return SpinnerView(appearance: dataSource.manifest.appearance)
     }()
     private lazy var formView: LinkSignupFormView = {
         let formView = LinkSignupFormView(
             accountholderPhoneNumber: dataSource.manifest.accountholderPhoneNumber,
-            theme: dataSource.manifest.theme
+            appearance: dataSource.manifest.appearance
         )
         formView.delegate = self
         return formView
@@ -47,6 +51,10 @@ final class NetworkingLinkSignupViewController: UIViewController {
     private var footerView: NetworkingLinkSignupFooterView?
     private var viewDidAppear: Bool = false
     private var willNavigateToReturningConsumer = false
+    private var prefillEmailAddress: String? {
+        let email = dataSource.manifest.accountholderCustomerEmailAddress ?? dataSource.elementsSessionContext?.prefillDetails?.email
+        return email?.isEmpty == false ? email : nil
+    }
 
     init(dataSource: NetworkingLinkSignupDataSource) {
         self.dataSource = dataSource
@@ -60,7 +68,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         showLoadingView(true)
     }
@@ -112,7 +120,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             aboveCtaText: networkingLinkSignup.aboveCta,
             saveToLinkButtonText: networkingLinkSignup.cta,
             notNowButtonText: networkingLinkSignup.skipCta,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectSaveToLink: { [weak self] in
                 self?.didSelectSaveToLink()
             },
@@ -160,16 +168,21 @@ final class NetworkingLinkSignupViewController: UIViewController {
         )
         paneLayoutView.addTo(view: view)
 
-        #if !canImport(CompositorServices)
+        #if !os(visionOS)
         // if user drags, dismiss keyboard so the CTA buttons can be shown
         paneLayoutView.scrollView.keyboardDismissMode = .onDrag
         #endif
 
-        let emailAddress = dataSource.manifest.accountholderCustomerEmailAddress
-        if let emailAddress, !emailAddress.isEmpty {
-            formView.prefillEmailAddress(emailAddress)
+        if let prefillEmailAddress {
+            formView.prefillEmailAddress(prefillEmailAddress)
+
+            let phoneNumber = dataSource.manifest.accountholderPhoneNumber ?? dataSource.elementsSessionContext?.prefillDetails?.formattedPhoneNumber
+            formView.prefillPhoneNumber(phoneNumber)
         } else {
-            formView.beginEditingEmailAddressField()
+            // Slightly delay opening the keyboard to avoid a janky animation.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+                self?.formView.beginEditingEmailAddressField()
+            }
         }
 
         assert(self.footerView != nil, "footer view should be initialized as part of displaying content")
@@ -204,6 +217,23 @@ final class NetworkingLinkSignupViewController: UIViewController {
         )
         .observe { [weak self] result in
             guard let self = self else { return }
+            let attestationError = self.dataSource.completeAssertionIfNeeded(
+                possibleError: result.error,
+                api: .linkSignUp
+            )
+            if attestationError != nil {
+                let prefillDetails = WebPrefillDetails(
+                    email: self.formView.email,
+                    phone: self.formView.phoneNumber,
+                    countryCode: self.formView.countryCode
+                )
+                self.delegate?.networkingLinkSignupViewControllerDidFailAttestationVerdict(
+                    self,
+                    prefillDetails: prefillDetails
+                )
+                return
+            }
+
             switch result {
             case .success(let customSuccessPaneMessage):
                 self.delegate?.networkingLinkSignupViewControllerDidFinish(
@@ -243,7 +273,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
                 if urlHost == "legal-details-notice", let legalDetailsNotice {
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(
                         legalDetailsNotice: legalDetailsNotice,
-                        theme: dataSource.manifest.theme,
+                        appearance: dataSource.manifest.appearance,
                         didSelectUrl: { [weak self] url in
                             self?.didSelectURLInTextFromBackend(
                                 url,
@@ -279,10 +309,24 @@ extension NetworkingLinkSignupViewController: LinkSignupFormViewDelegate {
         didEnterValidEmailAddress emailAddress: String
     ) {
         bodyFormView.emailTextField.showLoadingView(true)
+        let manuallyEnteredEmail = emailAddress != prefillEmailAddress
         dataSource
-            .lookup(emailAddress: emailAddress)
+            .lookup(
+                emailAddress: emailAddress,
+                manuallyEntered: manuallyEnteredEmail
+            )
             .observe { [weak self, weak bodyFormView] result in
                 guard let self = self else { return }
+                let attestationError = self.dataSource.completeAssertionIfNeeded(
+                    possibleError: result.error,
+                    api: .consumerSessionLookup
+                )
+                if attestationError != nil {
+                    let prefillDetails = WebPrefillDetails(email: emailAddress)
+                    self.delegate?.networkingLinkSignupViewControllerDidFailAttestationVerdict(self, prefillDetails: prefillDetails)
+                    return
+                }
+
                 switch result {
                 case .success(let response):
                     if response.exists {

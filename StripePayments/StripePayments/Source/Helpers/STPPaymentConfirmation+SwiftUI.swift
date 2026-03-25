@@ -56,23 +56,27 @@ struct ConfirmPaymentPresenter<ParamsType, CompletionBlockType>: UIViewControlle
         }
 
         private func presentConfirmationSheet() {
-            if let params = self.parent.intentParams as? STPPaymentIntentParams,
+            if let params = self.parent.intentParams as? STPPaymentIntentConfirmParams,
                 let completion = self.parent.onCompletion
                     as? STPPaymentHandlerActionPaymentIntentCompletionBlock
             {
-                STPPaymentHandler.sharedHandler.confirmPayment(params, with: self) {
+                STPPaymentHandler.sharedHandler.confirmPaymentIntent(params: params, authenticationContext: self) {
                     (status, pi, error) in
-                    self.parent.presented = false
-                    completion(status, pi, error)
+                    Task { @MainActor in
+                        self.parent.presented = false
+                        completion(status, pi, error)
+                    }
                 }
             } else if let params = self.parent.intentParams as? STPSetupIntentConfirmParams,
                 let completion = self.parent.onCompletion
                     as? STPPaymentHandlerActionSetupIntentCompletionBlock
             {
-                STPPaymentHandler.sharedHandler.confirmSetupIntent(params, with: self) {
+                STPPaymentHandler.sharedHandler.confirmSetupIntent(params: params, authenticationContext: self) {
                     (status, si, error) in
-                    self.parent.presented = false
-                    completion(status, si, error)
+                    Task { @MainActor in
+                        self.parent.presented = false
+                        completion(status, si, error)
+                    }
                 }
             } else {
                 assert(false, "ConfirmPaymentPresenter was passed an invalid type.")
@@ -98,7 +102,7 @@ extension View {
     /// - Parameter onCompletion: Called with the result of the payment after the payment confirmation is done and the sheet (if any) is dismissed.
     public func paymentConfirmationSheet(
         isConfirmingPayment: Binding<Bool>,
-        paymentIntentParams: STPPaymentIntentParams,
+        paymentIntentParams: STPPaymentIntentConfirmParams,
         onCompletion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) -> some View {
         self.modifier(

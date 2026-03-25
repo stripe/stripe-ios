@@ -31,9 +31,15 @@ class PickerTextField: UITextField {
     }
 
     override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
-        if action == #selector(UIResponderStandardEditActions.paste(_:)) {
-            return false
+        // Disallow context menu items
+        false
+    }
+
+    override func buildMenu(with builder: any UIMenuBuilder) {
+        // autoFill bypasses the canPerformAction check, so we have to directly remove it from the UIMenuBuilder
+        // enumerating every possible menu to remove them would be too tedious and require too much updating with newer iOS versions, so the others are left to the canPerformAction check
+        if #available(iOS 17.0, *) {
+            builder.remove(menu: .autoFill)
         }
-        return super.canPerformAction(action, withSender: sender)
     }
 }

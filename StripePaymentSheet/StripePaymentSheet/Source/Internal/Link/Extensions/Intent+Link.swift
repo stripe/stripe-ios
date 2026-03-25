@@ -18,6 +18,10 @@ extension STPElementsSession {
         linkSettings?.passthroughModeEnabled ?? false
     }
 
+    var linkCardBrandFilteringEnabled: Bool {
+        linkPassthroughModeEnabled
+    }
+
     var supportsLinkCard: Bool {
         supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
     }
@@ -34,34 +38,20 @@ extension STPElementsSession {
         linkSettings?.popupWebviewOption ?? .shared
     }
 
-    func countryCode(overrideCountry: String?) -> String? {
-#if DEBUG
-        if let overrideCountry {
-            return overrideCountry
-        }
-#endif
-        return countryCode
+    func shouldShowLink2FABeforePaymentSheet(for linkAccount: PaymentSheetLinkAccount) -> Bool {
+        return self.supportsLink &&
+        linkAccount.sessionState == .requiresVerification &&
+        !linkAccount.hasStartedSMSVerification &&
+        linkAccount.useMobileEndpoints &&
+        self.linkSettings?.suppress2FAModal != true &&
+        linkAccount.currentSession?.mobileFallbackWebviewParams?.webviewRequirementType != .required
     }
 
     var linkFlags: [String: Bool] {
         linkSettings?.linkFlags ?? [:]
     }
-}
 
-extension Intent {
-    var callToAction: ConfirmButton.CallToActionType {
-        switch self {
-        case .paymentIntent(let paymentIntent):
-            return .pay(amount: paymentIntent.amount, currency: paymentIntent.currency)
-        case .setupIntent:
-            return .setup
-        case .deferredIntent(let intentConfig):
-            switch intentConfig.mode {
-            case .payment(let amount, let currency, _, _):
-                return .pay(amount: amount, currency: currency)
-            case .setup:
-                return .setup
-            }
-        }
+    var shouldShowPreferDebitCardHint: Bool {
+        linkSettings?.linkShowPreferDebitCardHint ?? false
     }
 }

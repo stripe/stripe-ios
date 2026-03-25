@@ -41,8 +41,57 @@ class STPAnalyticsClientTest: XCTestCase {
         XCTAssertEqual("pk_foo", payload["publishable_key"] as? String)
     }
 
+    func testCommonPayloadIncludesTimestamp() {
+        let analyticsClient = STPAnalyticsClient()
+        let beforeTimestamp = Date().timeIntervalSince1970
+        let payload = analyticsClient.commonPayload(STPAPIClient(publishableKey: "pk_test_foo"))
+        let afterTimestamp = Date().timeIntervalSince1970
+
+        // Verify timestamp is a valid TimeInterval (Double)
+        guard let timestamp = payload["timestamp"] as? TimeInterval else {
+            XCTFail("timestamp should be a TimeInterval")
+            return
+        }
+
+        // Verify timestamp is reasonable (within the test execution window)
+        XCTAssertGreaterThanOrEqual(timestamp, beforeTimestamp)
+        XCTAssertLessThanOrEqual(timestamp, afterTimestamp)
+    }
+
+    func testCommonPayloadIncludesLibraryInfoFromAppInfo() {
+        let analyticsClient = STPAnalyticsClient()
+        let apiClient = STPAPIClient(publishableKey: "pk_test_foo")
+        apiClient.appInfo = STPAppInfo(
+            name: "MyAwesomeLibrary",
+            partnerId: "pp_partner_1234",
+            version: "1.2.34",
+            url: "https://example.com"
+        )
+
+        let payload = analyticsClient.commonPayload(apiClient)
+
+        XCTAssertEqual(payload["library_name"] as? String, "MyAwesomeLibrary")
+        XCTAssertEqual(payload["library_version"] as? String, "1.2.34")
+    }
+
+    func testCommonPayloadOmitsLibraryVersionWhenAppInfoVersionIsNil() {
+        let analyticsClient = STPAnalyticsClient()
+        let apiClient = STPAPIClient(publishableKey: "pk_test_foo")
+        apiClient.appInfo = STPAppInfo(
+            name: "MyAwesomeLibrary",
+            partnerId: nil,
+            version: nil,
+            url: nil
+        )
+
+        let payload = analyticsClient.commonPayload(apiClient)
+
+        XCTAssertEqual(payload["library_name"] as? String, "MyAwesomeLibrary")
+        XCTAssertNil(payload["library_version"])
+    }
+
     func testLogShouldRespectAPIClient() {
-        STPAPIClient.shared.publishableKey = "pk_shared"
+        STPAPIClient.shared.publishableKey = "pk_shared" // swiftlint:disable:this no_shared_api_client_mutation_in_tests
         let apiClient = STPAPIClient(publishableKey: "pk_not_shared")
         let analyticsClient = STPAnalyticsClient()
         // ...logging an arbitrary analytic and passing apiClient...
@@ -50,6 +99,7 @@ class STPAnalyticsClientTest: XCTestCase {
         // ...should use the passed in apiClient publishable key and not the shared apiClient
         let payload = analyticsClient._testLogHistory.first!
         XCTAssertEqual("pk_not_shared", payload["publishable_key"] as? String)
+        STPAPIClient.shared.publishableKey = nil // swiftlint:disable:this no_shared_api_client_mutation_in_tests
     }
     func testmcShowCustomNewPM() {
         let e = expectation(description: "")
@@ -204,6 +254,20 @@ class STPAnalyticsClientTest: XCTestCase {
                       params: ["selected_lpm": "card"], observer: observer)
         wait(for: [e], timeout: 1)
     }
+    func testMcOptionSelectEmbeddedSavedPM() {
+        let e = expectation(description: "")
+        let observer = TestObserver { eventName in
+            guard case .selectedSavedPaymentMethod(let data) = eventName else {
+                XCTFail("Failed to convert eventName")
+                return
+            }
+            XCTAssertEqual(data.paymentMethodType, "card")
+            e.fulfill()
+        }
+        _testLogEvent(event: .mcOptionSelectEmbeddedSavedPM,
+                      params: ["selected_lpm": "card"], observer: observer)
+        wait(for: [e], timeout: 1)
+    }
     func testMcOptionRemoveCustomSavedPM() {
         let e = expectation(description: "")
         let observer = TestObserver { eventName in
@@ -229,6 +293,20 @@ class STPAnalyticsClientTest: XCTestCase {
             e.fulfill()
         }
         _testLogEvent(event: .mcOptionRemoveCompleteSavedPM,
+                      params: ["selected_lpm": "card"], observer: observer)
+        wait(for: [e], timeout: 1)
+    }
+    func testMcOptionRemoveEmbeddedSavedPM(){
+        let e = expectation(description: "")
+        let observer = TestObserver { eventName in
+            guard case .removedSavedPaymentMethod(let data) = eventName else {
+                XCTFail("Failed to convert eventName")
+                return
+            }
+            XCTAssertEqual(data.paymentMethodType, "card")
+            e.fulfill()
+        }
+        _testLogEvent(event: .mcOptionRemoveEmbeddedSavedPM,
                       params: ["selected_lpm": "card"], observer: observer)
         wait(for: [e], timeout: 1)
     }

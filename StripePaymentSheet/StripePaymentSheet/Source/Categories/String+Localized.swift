@@ -26,6 +26,13 @@ extension String.Localized {
         )
     }
 
+    static var continue_another_way: String {
+        STPLocalizedString(
+            "Continue another way",
+            "Label of a button that when tapped allows the user to select a different form of payment."
+        )
+    }
+
     static func pay_faster_at_$merchant_and_thousands_of_merchants(merchantDisplayName: String) -> String {
         String(
             format: STPLocalizedString(
@@ -69,21 +76,121 @@ extension String.Localized {
         STPLocalizedString("Pay with Link", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
     }
 
+    static var bank_continue_mandate_text: String {
+        STPLocalizedString("By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for ACH payments")
+    }
+
+    static var bank_continue_mandate_text_with_seller: String {
+        STPLocalizedString("By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>.", "Text providing link to terms for bank payments")
+    }
+
+    static var bank_continue_mandate_and_reuse_text_with_seller: String {
+        STPLocalizedString(
+            "By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>.",
+            "Text providing link to terms for bank payments when seller information is provided"
+        )
+    }
+
     static var back: String {
         STPLocalizedString("Back", "Text for back button")
     }
 
-    static var update_card_brand: String {
+    static var manage_bank_account: String {
         STPLocalizedString(
-            "Update card brand",
-            "Title for a screen for updating a card brand."
+            "Manage bank account",
+            "Title shown above a view containing the customer's bank account that they can delete"
         )
     }
 
-    static var update: String {
+    static var manage_us_bank_account: String {
         STPLocalizedString(
-            "Update",
-            "Title for a button that when tapped, updates a card brand."
+            "Manage US bank account",
+            "Title shown above a view containing the customer's bank account that they can delete or update"
+        )
+    }
+
+    static var manage_sepa_debit: String {
+        STPLocalizedString(
+            "Manage SEPA debit",
+            "Title shown above a view containing the customer's SEPA debit that they can delete or update"
+        )
+    }
+
+    static var manage_card: String {
+        STPLocalizedString(
+            "Manage card",
+            "Title shown above a view containing the customer's card that they can delete or update"
+        )
+    }
+
+    static var manage_cards: String {
+        STPLocalizedString(
+            "Manage cards",
+            "Title shown above a view containing a list of the customer's cards that they can delete or update"
+        )
+    }
+
+    static var bank_account_details_cannot_be_changed: String {
+        STPLocalizedString(
+            "Bank account details cannot be changed.",
+            "Text on a screen that indicates bank account details cannot be changed."
+        )
+    }
+
+    static var sepa_debit_details_cannot_be_changed: String {
+        STPLocalizedString(
+            "SEPA debit details cannot be changed.",
+            "Text on a screen that indicates SEPA debit details cannot be changed."
+        )
+    }
+
+    static var card_details_cannot_be_changed: String {
+        STPLocalizedString(
+            "Card details cannot be changed.",
+            "Text on a screen that indicates card details cannot be changed."
+        )
+    }
+
+    static var only_card_brand_can_be_changed: String {
+        STPLocalizedString(
+            "Only card brand can be changed.",
+            "Text on a screen for updating a cobranded card that indicates only card brand can be changed."
+        )
+    }
+
+    static var save: String {
+       STPLocalizedString(
+           "Save",
+           "Label on a button that when tapped, updates a card brand."
+       )
+    }
+
+    static var update_card: String {
+        STPLocalizedString(
+            "Update card",
+            """
+            Title for a button that when tapped, presents a screen for updating a card. Also
+            the heading the screen itself.
+            """
+        )
+    }
+
+    static var confirm_payment_details: String {
+        STPLocalizedString(
+            "Confirm payment details",
+            """
+            Title of a screen where the user can update their payment method before continuing
+            with the transaction.
+            """
+        )
+    }
+
+    static var update_payment_method: String {
+        STPLocalizedString(
+            "Update payment method",
+            """
+            Accessibility label for a button that leads to a screen for updating a payment method.
+            """
         )
     }
 
@@ -207,6 +314,20 @@ extension String.Localized {
         )
     }
 
+    static var satispay_mandate_text: String {
+        STPLocalizedString(
+            "By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan.",
+            "Satispay mandate text"
+        )
+    }
+
+    static var twint_mandate_text: String {
+        STPLocalizedString(
+            "By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan.",
+            "Twint mandate text"
+        )
+    }
+
     static var blik_confirm_payment: String {
         STPLocalizedString("Confirm the payment in your bank's app within %@ to complete the purchase.",
                            "Text for alert message when user needs to confirm payment in their banking app")
@@ -291,13 +412,6 @@ extension String.Localized {
         )
     }
 
-    static var remove_payment_method: String {
-        STPLocalizedString(
-            "Remove payment method",
-            "Title shown above a view containing a customer's payment method that they can delete"
-        )
-    }
-
     static var view_more: String {
         STPLocalizedString(
             "View more",
@@ -323,6 +437,13 @@ extension String.Localized {
         STPLocalizedString(
             "Add US bank account",
             "Title shown above a view allowing the customer to add a US bank account."
+        )
+    }
+
+    static var buy_now_or_pay_later_with_cash_app_afterpay: String {
+        STPLocalizedString(
+            "Buy now or pay later with Cash App Afterpay",
+            "Subtitle shown on a button allowing a user to select to pay with Afterpay."
         )
     }
 
@@ -354,10 +475,31 @@ extension String.Localized {
         )
     }
 
+    static var save_this_account_for_future_payments: String {
+        STPLocalizedString(
+            "Save this account for future %@ payments",
+            "Prompt next to checkbox to save bank account."
+        )
+    }
+
     static var by_providing_your_card_information_text: String {
         STPLocalizedString(
             "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.",
             "Text displayed below a credit card entry form when the card will be saved to make future payments."
+        )
+    }
+
+    static var by_continuing_you_agree_to_save_your_information_to_merchant: String {
+        STPLocalizedString(
+            "By continuing, you agree to save your information for future purchases with %@.",
+            "Text displayed below a credit card entry form when the card will be saved with the merchant."
+        )
+    }
+
+    static var by_continuing_you_agree_to_save_your_information_to_merchant_and_link: String {
+        STPLocalizedString(
+            "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.",
+            "Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link."
         )
     }
 
@@ -377,6 +519,60 @@ extension String.Localized {
         STPLocalizedString(
             "Pay over time with Affirm",
             "Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm"
+        )
+    }
+
+    static var default_text: String {
+        STPLocalizedString(
+            "Default",
+            "Label for identifying the default payment method."
+       )
+    }
+
+    static var default_payment_method: String {
+        STPLocalizedString(
+            "Default payment method",
+            "Label for a disabled checked checkbox identifying the default payment method."
+       )
+    }
+
+    static var set_as_default_payment_method: String {
+        STPLocalizedString(
+            "Set as default payment method",
+            "Label of a checkbox that when checked makes a payment method as the default one."
+        )
+    }
+
+    static var change: String {
+        STPLocalizedString(
+            "Change",
+            "Label for a button that lets you change the details of a payment method"
+       )
+    }
+
+    static var please_choose_a_valid_payment_method: String {
+        STPLocalizedString(
+            "Please choose a valid payment method.",
+            "Error message that's displayed when you try to confirm a payment without a valid payment method"
+       )
+    }
+
+    static var use_billing_address_for_shipping: String {
+        STPLocalizedString("Use billing address for shipping", "Label for checkbox in address form allowing user to use billing address")
+    }
+
+    static var confirm_your_information: String {
+        STPLocalizedString("Confirm your information", "Title label for a know-your-customer (KYC) verification screen")
+    }
+
+    static var last_4_digits_of_ssn: String {
+        STPLocalizedString("Last 4 digits of SSN", "Label for displaying the last 4 digits of the user's social security number")
+    }
+
+    static var bankExchangeRateDisclaimer: String {
+        STPLocalizedString(
+            "Exchange rate and fees of your bank may apply.",
+            "Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion"
         )
     }
 }

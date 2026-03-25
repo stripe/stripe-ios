@@ -1,5 +1,3 @@
-"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
-
 "+ Add" = "+ Adăugare";
 
 "Add US bank account" = "Adăugați un cont bancar din SUA";
@@ -8,15 +6,21 @@
 
 "Add a payment method" = "Adăugați o metodă de plată";
 
+"Add bank account" = "Adăugare cont bancar";
+
 "Add card" = "Adăugare card";
 
 "Add new card" = "Adăugare card nou";
 
-"Add new payment method" = "Adăugare metodă de plată nouă";
+"Add new payment method" = "Adăuga o nouă metodă de plată";
 
-"Add your payment information" = "Adăugați informațiile dvs. privind plata";
+"Add your payment information" = "Adăuga informațiile privind plata";
 
 "Approve payment" = "Aprobare plată";
+
+"Are you sure you want to remove this card?" = "Sigur doriți să eliminați acest card?";
+
+"Are you sure you want to remove this linked account?" = "Sigur doriți să eliminați acest cont asociat?";
 
 "Back" = "Înapoi";
 
@@ -24,9 +28,13 @@
 
 "Bank account" = "Cont bancar";
 
-"Buy now or pay later with <img/>" = "Cumpărați acum sau plătiți mai târziu folosind <img/>";
+"Bank account details cannot be changed." = "Detaliile contului bancar nu pot fi modificate.";
+
+"Buy now or pay later with  <img/>" = "Cumpărați acum sau plătiți mai târziu folosind <img/>";
 
 "Buy now or pay later with Afterpay" = "Cumpărați acum sau plătiți mai târziu folosind Afterpay";
+
+"Buy now or pay later with Cash App Afterpay" = "Cumpărați acum sau plătiți mai târziu folosind Cash App Afterpay";
 
 "Buy now or pay later with Clearpay" = "Cumpărați acum sau plătiți mai târziu folosind Clearpay";
 
@@ -44,13 +52,25 @@
 
 "By continuing to Revolut Pay, you allow %@ to charge your Revolut Pay account for future payments in accordance with their terms." = "Prin continuarea cu Revolut Pay, permiteți %@ să vă taxeze contul Revolut Pay pentru plățile viitoare în conformitate cu termenii acesteia.";
 
+"By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Continuând, sunteți de acord cu <terms>Termenii</terms> și <privacy>Politica de confidențialitate</privacy>.";
+
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Continuând, sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
+
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Continuând, sunteți de acord să vă salvați informațiile pentru achiziții viitoare cu %@ și <link>Link</link> în conformitate cu <terms>Termenii</terms> și <privacy>confidențialitatea</privacy> Link.";
+
+"By continuing, you agree to save your information for future purchases with %@." = "Continuând, sunteți de acord să vă salvați informațiile pentru achiziții viitoare cu %@.";
+
+"By continuing, you authorize %@ to automatically debit your Satispay Balance on a recurring basis in accordance with your purchase or subscription plan." = "Continuând, autorizați %@ să vă debiteze automat soldul Satispay în mod recurent, în conformitate cu planul dvs. de achiziție sau de abonament.";
+
+"By continuing, you authorize %@ to automatically debit your Twint Balance on a recurring basis in accordance with your purchase or subscription plan." = "Continuând, autorizați %@ să debiteze automat soldul dvs. Twint în mod recurent, în conformitate cu planul dvs. de achiziție sau abonament.";
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Continuând, autorizați %1$@ să debiteze contul dvs. Cash App pentru această plată și pentru plățile viitoare în conformitate cu termenii %2$@, până când această autorizație este revocată. Puteți schimba acest lucru oricând în setările Cash App.";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prin accesarea link-ului de asociere, sunteți de acord cu <terms>Termenii</terms> și <privacy>Politica de confidențialitate</privacy>.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Prin furnizarea detaliilor contului dvs. bancar și confirmarea acestei plăți, sunteți de acord cu această Solicitare Direct Debit și cu <terms>Acordul de serviciu privind Solicitarea Direct Debit</terms> și autorizați Plățile Stripe Australia Pty Ltd ACN 160 180 343 număr ID utilizator Direct Debit 507156 („Stripe”) să vă debiteze contul prin intermediul Sistemului electronic de compensare colectivă (BECS) în numele %@ („Comerciantul”) pentru orice sume comunicate separat către dvs. de către Comerciant. Certificați faptul că sunteți fie un titular de cont, fie un semnatar autorizat în contul specificat mai sus.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Prin furnizarea numărului de telefon și a adresei de e-mail, sunteți de acord să creați un cont Link supus <terms>Termenilor</terms> și <privacy>politicii de confidențialitate</privacy> Link.";
+
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Prin furnizarea detaliilor contului dvs. bancar și confirmarea acestei plăți, sunteți de acord cu această solicitare de debit direct și cu <terms>Contractul de servicii privind solicitarea debitului direct</terms> și autorizați Stripe Payments Australia Pty Ltd ACN 160 180 343, cu ID-ul de utilizator Direct Debit cu numărul 507156 („Stripe”) să vă debiteze contul prin intermediul Bulk Electronic Clearing System (BECS) în numele %@ („Comerciantul”) pentru orice sume care vă sunt comunicate separat de către Comerciant. Certificați că sunteți fie titular de cont, fie semnatar autorizat al contului menționat mai sus.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Prin furnizarea informațiilor despre cardul dvs., permiteți %@ să vă taxeze cardul pentru plățile viitoare în conformitate cu termenii acesteia.";
 
@@ -62,23 +82,51 @@
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Prin salvarea contului dvs. bancar pentru %@ sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
 
+"By submitting your order to %@ and %@, you agree to save your information with %@ for future purchases, and agree to authorize payments pursuant to <terms>these terms</terms>." = "Prin trimiterea comenzii dvs. către %1$@ și %2$@, sunteți de acord să salvați informațiile dvs. în %3$@ pentru achiziții viitoare și sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
+
+"By submitting your order to %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Prin trimiterea comenzii dvs. către %@, sunteți de acord să autorizați plățile în conformitate cu <terms>acești termeni</terms>.";
+
 "CPF/CPNJ" = "CPF/CPNJ";
 
 "Cancel and pay another way" = "Anulați și folosiți altă metodă de plată";
 
-"Choose a payment method" = "Alegeți o metodă de plată";
+"Card details cannot be changed." = "Detaliile cardului nu pot fi modificate.";
+
+"Change" = "Modificare";
+
+"Choose a card brand" = "Alegeți o marcă de carduri";
+
+"Choose a payment method" = "Alege o metodă de plată";
 
 "Close card scanner" = "Închidere scaner card";
 
+"Code sent" = "Codul a fost trimis";
+
 "Confirm" = "Confirmare";
+
+"Confirm payment details" = "Confirmare detalii de plată";
 
 "Confirm the payment in your bank or payment app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. sau în aplicația de plăți în termen de %@ pentru a finaliza achiziția.";
 
 "Confirm the payment in your bank's app within %@ to complete the purchase." = "Confirmați plata în aplicația băncii dvs. în termen de %@ pentru a finaliza achiziția.";
 
-"Confirm your CVC" = "Confirmați-vă CVC-ul";
+"Confirm your CVC" = "Confirmă CVC-ul";
+
+"Confirm your information" = "Confirmați-vă informațiile";
 
 "Contact information" = "Informații de contact";
+
+"Continue another way" = "Continuați într-un alt mod";
+
+"Create an account with Link for faster checkout across the web" = "Creați un cont cu Link pentru o finalizare mai rapidă a comenzii online";
+
+"Debit or credit card" = "Card de debit sau de credit";
+
+"Default" = "Implicit";
+
+"Default payment method" = "Metodă de plată implicită";
+
+"Did you mean %@? %@." = "Ați vrut să spuneți %1$@? %2$@.";
 
 "EPS Bank" = "Banca EPS";
 
@@ -86,9 +134,31 @@
 
 "FPX Bank" = "FPX Bank";
 
+"Fast, secure checkout" = "Finalizare comandă rapidă și sigură";
+
+"Get %@ back when you pay for the first time with your bank. <terms>See terms</terms>" = "Primiți %@ înapoi atunci când plătiți pentru prima dată cu banca dvs. <terms>Consultați termenii</terms>";
+
+"Get %@ back when you pay with your bank. <terms>See terms</terms>" = "Primiți %@ înapoi atunci când plătiți cu banca dvs. <terms>Consultați termenii</terms>";
+
 "I understand that Stripe will be collecting Direct Debits on behalf of %@ and confirm that I am the account holder and the only person required to authorise debits from this account." = "Înțeleg că Stripe va colecta debite directe în numele %@ și confirm că sunt titularul contului și singura persoană necesară pentru a autoriza debite din acest cont.";
 
 "IBAN" = "IBAN";
+
+"Last 4 digits of SSN" = "Ultimele 4 cifre de la SSN";
+
+"Log in or sign up" = "Conectați-vă sau înregistrați-vă";
+
+"Log out of Link" = "Deconectare de la Link";
+
+"Manage SEPA debit" = "Gestionare debit SEPA";
+
+"Manage US bank account" = "Gestionare cont bancar din SUA";
+
+"Manage bank account" = "Administrați contul bancar";
+
+"Manage card" = "Gestionare card";
+
+"Manage cards" = "Gestionare carduri";
 
 "Manage payment method" = "Gestionare metodă de plată";
 
@@ -102,23 +172,33 @@
 
 "New payment method" = "Metodă de plată nouă";
 
+"No %@ promo" = "Fără promoție %@";
+
+"Not you?" = "Nu sunteți dvs.?";
+
+"Only card brand can be changed." = "Doar marca cardului poate fi modificată.";
+
+"Open to see more information." = "Deschideți pentru a vedea mai multe informații.";
+
 "Open your UPI app to approve your payment within %@" = "Deschideți aplicația UPI pentru a aproba plata în termen de %@";
 
 "Or" = "Sau";
 
-"Or pay using" = "Sau folosiți ca metodă de plată";
+"Or pay using" = "Sau poti alege ca metodă de plată";
 
-"Or pay with a card" = "Sau folosiți ca metodă de plată un card";
+"Or pay with a card" = "Sau poti alege ca metodă de plată un card";
 
-"Or use" = "Sau utilizați";
+"Or use" = "Sau utilizează";
 
-"Or use a card" = "Sau utilizați un card";
+"Or use a card" = "Sau utilizează un card";
 
-"Pay %@" = "Plătiți %@";
+"Pay %@" = "Adaugă %@";
 
 "Pay another way" = "Folosiți altă metodă de plată";
 
 "Pay faster at %@ and thousands of businesses." = "Plătiți mai rapid la %@ și la alte mii de întreprinderi.";
+
+"Pay faster everywhere Link is accepted." = "Plătiți mai repede oriunde este acceptat Link.";
 
 "Pay over time with %@" = "Folosiți ca metodă de plată de-a lungul timpului %@";
 
@@ -128,7 +208,13 @@
 
 "Pay with your bank account in just a few steps." = "Plătiți cu contul dvs. bancar în doar câțiva pași.";
 
+"Payment" = "Plată";
+
 "Payment failed" = "Plata nu a reușit";
+
+"Payment methods" = "Metode de plată";
+
+"Please choose a valid payment method." = "Vă rugăm să selectați o metodă de plată validă.";
 
 "Please go back and select another payment method" = "Vă rugăm să reveniți și să selectați o altă metodă de plată";
 
@@ -138,33 +224,41 @@
 
 "Przelewy24 Bank" = "Banca Przelewy24";
 
-"Remove card?" = "Eliminați cardul?";
+"Remove card?" = "Doresti sa elimini cardul?";
 
-"Remove payment method" = "Eliminare metodă de plată";
+"Remove linked account" = "Eliminare cont asociat";
+
+"SEPA debit details cannot be changed." = "Detaliile debitului SEPA nu pot fi modificate.";
 
 "Save" = "Salvare";
 
-"Save a new payment method" = "Salvați o metodă de plată nouă";
+"Save a new payment method" = "Salvează o metodă de plată nouă";
 
 "Save address" = "Salvare adresă";
 
-"Save for future payments" = "Salvați pentru plăți viitoare";
+"Save for future payments" = "Salvează pentru plăți viitoare";
 
-"Save payment details to %@ for future purchases" = "Salvați detaliile de plată pe %@ pentru achiziții viitoare";
+"Save my info for faster checkout with Link" = "Salvează informațiile mele pentru finalizarea mai rapidă a comenzii cu Link";
 
-"Save this account for future %@ payments" = "Salvați acest cont pentru plăți viitoare către %@";
+"Save payment details to %@ for future purchases" = "Salvează detaliile de plată în %@ pentru achiziții viitoare";
+
+"Save this account for future %@ payments" = "Salvează acest cont pentru plăți viitoare către %@";
 
 "Save your bank account in just a few steps." = "Salvați-vă contul bancar în doar câțiva pași.";
 
 "Save your info for secure 1-click checkout with Link" = "Salvați-vă informațiile pentru o finalizare securizată a comenzii cu un singur clic cu Link";
 
-"Saved" = "Salvare efectuată";
+"Saved" = "Carduri salvate";
 
 "Select card" = "Selectare card";
 
 "Select payment method" = "Selectare metodă de plată";
 
-"Select your payment method" = "Selectați metoda de plată";
+"Select your payment method" = "Selectează metoda de plată";
+
+"Set as default" = "Setați ca implicită";
+
+"Set as default payment method" = "Setează ca metodă de plată implicită";
 
 "Set up" = "Configurare";
 
@@ -180,15 +274,35 @@
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe va depune 0,01 USD în contul dvs. în decurs de 1-2 zile lucrătoare. Apoi veți primi un e-mail cu instrucțiuni pentru a finaliza plata către %@.";
 
+"Tap to close" = "Atingeți pentru a închide";
+
+"Tap to expand" = "Atingeți pentru a extinde";
+
 "The IBAN you entered is incomplete." = "Codul IBAN pe care l-ați introdus nu este complet.";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Codul IBAN pe care l-ați introdus nu este valid, „%@” nu este un cod de țară acceptat.";
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN-ul introdus este nevalid, „%@” nu este un cod de țară acceptat.";
 
-"Update" = "Actualizare";
+"The provided verification code has expired." = "Codul de verificare furnizat a expirat.";
 
-"Update card brand" = "Actualizarea mărcii de card";
+"The provided verification code is incorrect." = "Codul de verificare furnizat este incorect.";
+
+"This is your default" = "Aceasta este setarea dvs. implicită";
+
+"This payment method will be removed but will remain available for %@ subscriptions." = "Această metodă de plată va fi eliminată, dar va rămâne disponibilă pentru abonamentele %@.";
+
+"Too many attempts. Please try again in a few minutes." = "Prea multe încercări. Vă rugăm să încercați din nou în câteva minute.";
+
+"Unavailable for this purchase" = "Nu este disponibilă pentru această achiziție";
+
+"Update card" = "Actualizare card";
+
+"Update payment method" = "Actualizare metodă de plată";
+
+"Use billing address for shipping" = "Utilizați adresa de facturare pentru expediere";
 
 "View more" = "Vizualizați mai multe";
+
+"Yes, update" = "Da, actualizare";
 
 "Your IBAN should start with a two-letter country code." = "Codul dvs. IBAN trebuie să înceapă cu un cod de țară format din două litere.";
 

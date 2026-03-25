@@ -36,6 +36,12 @@ protocol LinkAccountPickerViewControllerDelegate: AnyObject {
 
     func linkAccountPickerViewController(
         _ viewController: LinkAccountPickerViewController,
+        requestedBankAuthRepairWithInstitution institution: FinancialConnectionsInstitution,
+        forAuthorization authorization: String
+    )
+
+    func linkAccountPickerViewController(
+        _ viewController: LinkAccountPickerViewController,
         didReceiveTerminalError error: Error
     )
 
@@ -105,7 +111,7 @@ final class LinkAccountPickerViewController: UIViewController {
         super.viewDidLoad()
         // link account picker ALWAYS hides the back button
         navigationItem.hidesBackButton = true
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         let paneLayoutView =  PaneLayoutView(
             contentView: contentStackView,
@@ -173,7 +179,7 @@ final class LinkAccountPickerViewController: UIViewController {
         let bodyView = LinkAccountPickerBodyView(
             accountTuples: accountTuples,
             addNewAccount: networkingAccountPicker.addNewAccount,
-            theme: dataSource.manifest.theme
+            appearance: dataSource.manifest.appearance
         )
         bodyView.delegate = self
         self.bodyView = bodyView
@@ -199,14 +205,14 @@ final class LinkAccountPickerViewController: UIViewController {
             defaultCta: networkingAccountPicker.defaultCta,
             aboveCta: networkingAccountPicker.aboveCta,
             singleAccount: dataSource.manifest.singleAccount,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             didSelectConnectAccount: { [weak self] in
                 guard let self = self else {
                     return
                 }
                 self.didSelectConnectAccounts()
             },
-            didSelectMerchantDataAccessLearnMore: { [weak self] _ in
+            didSelectMerchantDataAccessLearnMore: { [weak self] url in
                 guard let self = self else { return }
                 self.dataSource
                     .analyticsClient
@@ -215,13 +221,15 @@ final class LinkAccountPickerViewController: UIViewController {
                 if let dataAccessNotice = self.dataSource.dataAccessNotice {
                     let dataAccessNoticeViewController = DataAccessNoticeViewController(
                         dataAccessNotice: dataAccessNotice,
-                        theme: dataSource.manifest.theme,
+                        appearance: dataSource.manifest.appearance,
                         didSelectUrl: { [weak self] url in
                             guard let self = self else { return }
                             self.didSelectURLInTextFromBackend(url)
                         }
                     )
                     dataAccessNoticeViewController.present(on: self)
+                } else {
+                    self.didSelectURLInTextFromBackend(url)
                 }
             }
         )
@@ -311,9 +319,13 @@ final class LinkAccountPickerViewController: UIViewController {
                     footerView?.showLoadingView(false)
                     switch result {
                     case .success:
+                        let coreAuthorization = selectedAccount.partnerAccount.authorization.flatMap {
+                            self.dataSource.partnerToCoreAuths?[$0]
+                        }
                         self.presentAccountUpdateRequiredDrawer(
                             drawerOnSelection: drawerOnSelection,
-                            partnerAccount: selectedAccount.partnerAccount
+                            partnerAccount: selectedAccount.partnerAccount,
+                            coreAuthorization: coreAuthorization
                         )
                     case .failure(let error):
                         self.dataSource.analyticsClient.logUnexpectedError(
@@ -403,7 +415,7 @@ final class LinkAccountPickerViewController: UIViewController {
                         hideBackButtonOnNextPane: false
                     )
                 } else {
-                    // non-sheet next pane -- likely step up
+                    // non-sheet next pane
                     delegate?.linkAccountPickerViewController(
                         self,
                         didRequestNextPane: nextPane,
@@ -443,7 +455,8 @@ final class LinkAccountPickerViewController: UIViewController {
     // 2. repair the bank account (bank_auth_repair)
     private func presentAccountUpdateRequiredDrawer(
         drawerOnSelection: FinancialConnectionsGenericInfoScreen,
-        partnerAccount: FinancialConnectionsPartnerAccount
+        partnerAccount: FinancialConnectionsPartnerAccount,
+        coreAuthorization: String?
     ) {
         let deselectPreviouslySelectedAccount = { [weak self] in
             guard let self = self else { return }
@@ -480,30 +493,27 @@ final class LinkAccountPickerViewController: UIViewController {
                         hideBackButtonOnNextPane: false
                     )
                 }
-            }
-            // nextPaneOnSelection == bankAuthRepair
-            else {
-                dataSource
-                    .analyticsClient
-                    .logUnexpectedError(
-                        FinancialConnectionsSheetError
-                            .unknown(
-                                debugDescription: "Updating a repair account, but repairs are not supported in Mobile."
-                            ),
-                        errorName: "UpdateRepairAccountError",
-                        pane: .linkAccountPicker
+            } else {
+                // nextPaneOnSelection == bankAuthRepair
+                if let institution = partnerAccount.institution, let coreAuthorization {
+                    self.delegate?.linkAccountPickerViewController(
+                        self,
+                        requestedBankAuthRepairWithInstitution: institution,
+                        forAuthorization: coreAuthorization
                     )
-                delegate?.linkAccountPickerViewController(
-                    self,
-                    didRequestNextPane: .institutionPicker,
-                    hideBackButtonOnNextPane: false
-                )
+                } else {
+                    self.delegate?.linkAccountPickerViewController(
+                        self,
+                        didRequestNextPane: .institutionPicker,
+                        hideBackButtonOnNextPane: false
+                    )
+                }
             }
         }
 
         let genericInfoViewController = GenericInfoViewController(
             genericInfoScreen: drawerOnSelection,
-            theme: dataSource.manifest.theme,
+            appearance: dataSource.manifest.appearance,
             panePresentationStyle: .sheet,
             iconView: {
                 if let institutionIconUrl = partnerAccount.institution?.icon?.default {
@@ -577,7 +587,7 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                 // why they can't use this bank account
                 let accountSelectionDrawerViewController = GenericInfoViewController(
                     genericInfoScreen: drawerOnSelection,
-                    theme: dataSource.manifest.theme,
+                    appearance: dataSource.manifest.appearance,
                     panePresentationStyle: .sheet,
                     didSelectPrimaryButton: { genericInfoViewController in
                         genericInfoViewController.dismiss(animated: true)
@@ -673,9 +683,13 @@ extension LinkAccountPickerViewController: LinkAccountPickerBodyViewDelegate {
                     // we will show the drawer when user presses the CTA where
                     // pressing the CTA will make a call to `markConsentAcquired`
                     if !dataSource.acquireConsentOnPrimaryCtaClick {
+                        let coreAuthorization = selectedPartnerAccount.authorization.flatMap {
+                            dataSource.partnerToCoreAuths?[$0]
+                        }
                         presentAccountUpdateRequiredDrawer(
                             drawerOnSelection: drawerOnSelection,
-                            partnerAccount: selectedPartnerAccount
+                            partnerAccount: selectedPartnerAccount,
+                            coreAuthorization: coreAuthorization
                         )
                     }
                 } else {

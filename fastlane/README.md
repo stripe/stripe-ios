@@ -55,6 +55,14 @@ Generate new localized screenshots
 
 
 
+### ios stripeissuing_tests
+
+```sh
+[bundle exec] fastlane ios stripeissuing_tests
+```
+
+
+
 ### ios stripeconnect_tests
 
 ```sh
@@ -155,14 +163,6 @@ Generate new localized screenshots
 
 ```sh
 [bundle exec] fastlane ios installation_cocoapods_frameworks_swift
-```
-
-
-
-### ios installation_carthage
-
-```sh
-[bundle exec] fastlane ios installation_carthage
 ```
 
 

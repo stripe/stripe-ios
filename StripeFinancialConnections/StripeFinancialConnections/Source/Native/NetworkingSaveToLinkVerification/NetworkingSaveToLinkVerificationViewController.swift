@@ -11,10 +11,6 @@ import Foundation
 import UIKit
 
 protocol NetworkingSaveToLinkVerificationViewControllerDelegate: AnyObject {
-    func networkingSaveToLinkVerificationViewController(
-        _ viewController: NetworkingSaveToLinkVerificationViewController,
-        didReceiveConsumerPublishableKey consumerPublishableKey: String
-    )
     func networkingSaveToLinkVerificationViewControllerDidFinish(
         _ viewController: NetworkingSaveToLinkVerificationViewController,
         saveToLinkWithStripeSucceeded: Bool?,
@@ -32,7 +28,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
     weak var delegate: NetworkingSaveToLinkVerificationViewControllerDelegate?
 
     private lazy var loadingView: SpinnerView = {
-        return SpinnerView(theme: dataSource.manifest.theme)
+        return SpinnerView(appearance: dataSource.manifest.appearance)
     }()
     private lazy var otpView: NetworkingOTPView = {
         let otpView = NetworkingOTPView(dataSource: dataSource.networkingOTPDataSource)
@@ -51,7 +47,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         otpView.startVerification()
     }
@@ -63,14 +59,8 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
         let paneLayoutView = PaneLayoutView(
             contentView: PaneLayoutView.createContentView(
                 iconView: nil,
-                title: STPLocalizedString(
-                    "Confirm it's you",
-                    "The title of a screen where users are informed that they can sign-in-to Link."
-                ),
-                subtitle: String(format: STPLocalizedString(
-                    "Enter the code sent to %@.",
-                    "The subtitle/description of a screen where users are informed that they have received a One-Type-Password (OTP) to their phone. '%@' gets replaced by a redacted phone number."
-                ), AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
+                title: String.Localized.confirm_its_you,
+                subtitle: String(format: String.Localized.enter_code_sent_to, AuthFlowHelpers.formatRedactedPhoneNumber(redactedPhoneNumber)),
                 contentView: otpView
             ),
             footerView: PaneLayoutView.createFooterView(
@@ -89,7 +79,7 @@ final class NetworkingSaveToLinkVerificationViewController: UIViewController {
                         )
                     }
                 ) : nil,
-                theme: dataSource.manifest.theme
+                appearance: dataSource.manifest.appearance
             ).footerView
         )
         paneLayoutView.addTo(view: view)
@@ -148,10 +138,6 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
     func networkingOTPView(_ view: NetworkingOTPView, didStartVerification consumerSession: ConsumerSessionData) {
         showLoadingView(false)
         showContent(redactedPhoneNumber: consumerSession.redactedFormattedPhoneNumber)
-    }
-
-    func networkingOTPView(_ view: NetworkingOTPView, didGetConsumerPublishableKey consumerPublishableKey: String) {
-        delegate?.networkingSaveToLinkVerificationViewController(self, didReceiveConsumerPublishableKey: consumerPublishableKey)
     }
 
     func networkingOTPView(_ view: NetworkingOTPView, didFailToStartVerification error: Error) {
@@ -228,17 +214,5 @@ extension NetworkingSaveToLinkVerificationViewController: NetworkingOTPViewDeleg
                 didReceiveTerminalError: error
             )
         }
-    }
-
-    func networkingOTPViewWillStartConsumerLookup(_ view: NetworkingOTPView) {
-        assertionFailure("we shouldn't call `lookup` for NetworkingSaveToLink")
-    }
-
-    func networkingOTPViewConsumerNotFound(_ view: NetworkingOTPView) {
-        assertionFailure("we shouldn't call `lookup` for NetworkingSaveToLink")
-    }
-
-    func networkingOTPView(_ view: NetworkingOTPView, didFailConsumerLookup error: Error) {
-        assertionFailure("we shouldn't call `lookup` for NetworkingSaveToLink")
     }
 }

@@ -17,14 +17,19 @@ public extension SectionElement {
             return SectionContainerView.MultiElementRowView(views: elements.map { $0.view }, theme: theme)
         }()
         public let elements: [Element]
-        public let theme: ElementsUITheme
+        public let theme: ElementsAppearance
 
-        public init(_ elements: [Element], theme: ElementsUITheme = .default) {
+        public init(_ elements: [Element], theme: ElementsAppearance) {
             self.elements = elements
             self.theme = theme
             elements.forEach {
                 $0.delegate = self
             }
+        }
+
+        /// Updates the visibility of dividers based on neighboring view visibility.
+        public func updateDividerVisibility() {
+            (view as? SectionContainerView.MultiElementRowView)?.updateDividerVisibility()
         }
     }
 }

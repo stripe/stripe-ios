@@ -30,7 +30,7 @@ class STPApplePayContextFunctionalTestAPIClient: STPAPIClient {
             {
                 if self.shouldSimulateCancelAfterConfirmBegins {
                     self.applePayContext!.paymentAuthorizationControllerDidFinish(
-                        self.applePayContext!.authorizationController!
+                        self.applePayContext!.authorizationController
                     )
                 }
             }

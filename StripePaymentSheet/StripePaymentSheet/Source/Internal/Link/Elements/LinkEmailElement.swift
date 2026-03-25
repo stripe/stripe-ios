@@ -12,9 +12,10 @@ import UIKit
 class LinkEmailElement: Element {
     let collectsUserInput: Bool = true
 
+    private let theme: ElementsAppearance
     weak var delegate: ElementDelegate?
 
-    private let emailAddressElement: TextFieldElement
+    let emailAddressElement: TextFieldElement
 
     private let activityIndicator: ActivityIndicator = {
         // TODO: Consider adding the activity indicator to TextFieldView
@@ -38,11 +39,12 @@ class LinkEmailElement: Element {
             top: 0,
             leading: 0,
             bottom: 0,
-            trailing: ElementsUI.contentViewInsets.trailing
+            trailing: theme.textFieldInsets.trailing
         )
         if let infoView = infoView {
+            // Use stack view's custom spacing instead of manual constraints to avoid conflicts
+            stackView.setCustomSpacing(ElementsUI.contentViewInsets.trailing, after: activityIndicator)
             NSLayoutConstraint.activate([
-                activityIndicator.trailingAnchor.constraint(equalTo: infoView.leadingAnchor, constant: -ElementsUI.contentViewInsets.trailing),
                 infoView.widthAnchor.constraint(equalToConstant: LinkMoreInfoView.Constants.logoWidth),
             ])
         }
@@ -87,7 +89,9 @@ class LinkEmailElement: Element {
         }
     }
 
-    public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsUITheme = .default) {
+    public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsAppearance = .default) {
+        self.theme = theme
+
         if showLogo {
             self.infoView = LinkMoreInfoView(theme: theme)
         }

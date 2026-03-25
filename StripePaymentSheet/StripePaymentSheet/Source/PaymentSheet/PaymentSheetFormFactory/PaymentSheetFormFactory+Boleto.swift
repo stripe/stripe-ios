@@ -20,7 +20,8 @@ extension PaymentSheetFormFactory {
         let taxIdElement = TextFieldElement(
             configuration: IDNumberTextFieldConfiguration(
                 type: .BR_CPF_CNPJ,
-                label: String.Localized.cpf_cpnj
+                label: String.Localized.cpf_cpnj,
+                defaultValue: previousCustomerInput?.paymentMethodParams.boleto?.taxID
             ),
             theme: theme
         )

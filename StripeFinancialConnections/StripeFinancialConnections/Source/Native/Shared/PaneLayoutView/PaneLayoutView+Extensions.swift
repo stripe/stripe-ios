@@ -18,6 +18,7 @@ extension PaneLayoutView {
         title: String?,
         subtitle: String?,
         headerAlignment: UIStackView.Alignment = .leading,
+        horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         contentView: UIView?,
         isSheet: Bool = false
     ) -> UIView {
@@ -29,6 +30,7 @@ extension PaneLayoutView {
                 iconView: iconView,
                 title: title,
                 alignment: headerAlignment,
+                horizontalPadding: horizontalPadding,
                 isSheet: isSheet
             )
             verticalStackView.addArrangedSubview(headerView)
@@ -48,6 +50,7 @@ extension PaneLayoutView {
         iconView: UIView?,
         title: String?,
         alignment: UIStackView.Alignment = .leading,
+        horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         isSheet: Bool = false
     ) -> UIView {
         let headerStackView = HitTestStackView()
@@ -59,14 +62,24 @@ extension PaneLayoutView {
         }
 
         if let title = title {
+            let textAlignment: NSTextAlignment? = {
+                switch alignment {
+                case .leading: return .left
+                case .center: return .center
+                case .trailing: return .right
+                default: return nil
+                }
+            }()
             let titleFont: FinancialConnectionsFont = isSheet ? .heading(.large) : .heading(.extraLarge)
             let titleLabel = AttributedTextView(
                 font: titleFont,
                 boldFont: titleFont,
                 linkFont: titleFont,
-                textColor: .textDefault
+                textColor: FinancialConnectionsAppearance.Colors.textDefault,
+                alignment: textAlignment
             )
             titleLabel.setText(title)
+            titleLabel.accessibilityIdentifier = "fc_pane_title_label"
             headerStackView.addArrangedSubview(titleLabel)
         }
 
@@ -78,11 +91,11 @@ extension PaneLayoutView {
         paddingStackView.isLayoutMarginsRelativeArrangement = true
         paddingStackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: isSheet ? 0 : 16, // the sheet handle adds some padding
-            leading: Constants.Layout.defaultHorizontalMargin,
+            leading: horizontalPadding,
             // if there is a subtitle in the "body/content view,"
             // we will add extra "8" padding
             bottom: 16,
-            trailing: Constants.Layout.defaultHorizontalMargin
+            trailing: horizontalPadding
         )
         return paddingStackView
     }
@@ -114,7 +127,7 @@ extension PaneLayoutView {
                 font: .body(.medium),
                 boldFont: .body(.mediumEmphasized),
                 linkFont: .body(.mediumEmphasized),
-                textColor: .textDefault
+                textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
             textLabel.setText(text)
             paddingStackView.addArrangedSubview(textLabel)
@@ -148,7 +161,7 @@ extension PaneLayoutView {
         primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?,
         secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration? = nil,
         topText: String? = nil,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         bottomText: String? = nil,
         didSelectURL: ((URL) -> Void)? = nil
     ) -> (footerView: UIView?, primaryButton: StripeUICore.Button?, secondaryButton: StripeUICore.Button?) {
@@ -169,7 +182,7 @@ extension PaneLayoutView {
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
-                textColor: .textDefault,
+                textColor: FinancialConnectionsAppearance.Colors.textDefault,
                 alignment: .center
             )
             topTextLabel.setText(
@@ -182,7 +195,7 @@ extension PaneLayoutView {
 
         var primaryButtonReference: StripeUICore.Button?
         if let primaryButtonConfiguration = primaryButtonConfiguration {
-            let primaryButton = Button.primary(theme: theme)
+            let primaryButton = Button.primary(appearance: appearance)
             primaryButtonReference = primaryButton
             primaryButton.title = primaryButtonConfiguration.title
             primaryButton.accessibilityIdentifier = primaryButtonConfiguration.accessibilityIdentifier
@@ -221,7 +234,7 @@ extension PaneLayoutView {
                 font: .label(.small),
                 boldFont: .label(.smallEmphasized),
                 linkFont: .label(.small),
-                textColor: .textDefault,
+                textColor: FinancialConnectionsAppearance.Colors.textDefault,
                 alignment: .center
             )
             bottomTextLabel.setText(

@@ -1,0 +1,15 @@
+GET
+https:\/\/stripe-mobile-luxurious-alpine-devourer\.stripedemos\.com\/status\/429\?$
+429
+text/html
+access-control-allow-credentials: true
+x-cloud-trace-context: a07a2731a50ffbe58a752d8bc6b76d72;o=1
+Content-Type: text/html; charset=utf-8
+Server: Google Frontend
+Via: 1.1 google
+Date: Thu, 21 Aug 2025 18:57:07 GMT
+x-robots-tag: noindex, nofollow
+Content-Length: 0
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Access-Control-Allow-Origin: *
+

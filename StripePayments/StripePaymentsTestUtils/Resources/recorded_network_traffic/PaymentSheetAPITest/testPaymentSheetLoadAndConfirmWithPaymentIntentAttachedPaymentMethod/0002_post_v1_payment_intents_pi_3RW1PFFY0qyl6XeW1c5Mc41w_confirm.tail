@@ -1,0 +1,127 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3RW1PFFY0qyl6XeW1c5Mc41w\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=xhmp290mre0qFHGex5NZQT5FHjPVxKPaF99LA3jTtrmbxbXliwDmWnglthzBep07UEHvfzGOW7YN6SHM
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHI
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_hOssWlKcmASzCm
+Content-Length: 2242
+Vary: Origin
+Date: Tue, 03 Jun 2025 20:25:58 GMT
+original-request: req_hOssWlKcmASzCm
+stripe-version: 2020-08-27
+idempotency-key: e2ebbbc7-0131-43f0-9068-d163b24427f3
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3RW1PFFY0qyl6XeW1c5Mc41w_secret_OR98dn5lF5lsgLbODzTsZsQ55&expand\[0]=payment_method&payment_method=pm_card_visa&shipping\[address]\[country]=US&shipping\[address]\[line1]=Line%201&shipping\[name]=Jane%20Doe&shipping\[phone]=5551234567&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 1050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : {
+    "tracking_number" : null,
+    "phone" : "5551234567",
+    "carrier" : null,
+    "name" : "Jane Doe",
+    "address" : {
+      "state" : null,
+      "country" : "US",
+      "line2" : null,
+      "city" : null,
+      "line1" : "Line 1",
+      "postal_code" : null
+    }
+  },
+  "status" : "succeeded",
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 1050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1RW1PFFY0qyl6XeW2TNBFFMo",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "card" : {
+      "regulated_status" : "unregulated",
+      "last4" : "4242",
+      "funding" : "credit",
+      "generated_from" : null,
+      "networks" : {
+        "available" : [
+          "visa"
+        ],
+        "preferred" : null
+      },
+      "brand" : "visa",
+      "checks" : {
+        "address_postal_code_check" : null,
+        "cvc_check" : null,
+        "address_line1_check" : null
+      },
+      "three_d_secure_usage" : {
+        "supported" : true
+      },
+      "wallet" : null,
+      "display_brand" : "visa",
+      "exp_month" : 6,
+      "exp_year" : 2026,
+      "country" : "US"
+    },
+    "livemode" : false,
+    "created" : 1748982357,
+    "allow_redisplay" : "unspecified",
+    "type" : "card",
+    "customer" : null
+  },
+  "client_secret" : "pi_3RW1PFFY0qyl6XeW1c5Mc41w_secret_OR98dn5lF5lsgLbODzTsZsQ55",
+  "id" : "pi_3RW1PFFY0qyl6XeW1c5Mc41w",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "card"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1748982357,
+  "description" : null
+}

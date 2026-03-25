@@ -6,13 +6,13 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import UIKit
 
-@_spi(PrivateBetaConnect)
 @available(iOS 15, *)
 extension EmbeddedComponentManager {
     /// Describes the appearance of embedded components.
-    /// - seealso: https://docs.stripe.com/connect/embedded-appearance-options
+    /// - seealso: [Appearance option documentation](https://docs.stripe.com/connect/embedded-appearance-options)
     public struct Appearance {
         public enum TextTransform {
             /// The text doesn’t have a transform.
@@ -70,7 +70,6 @@ extension EmbeddedComponentManager {
 
                 /// Creates a `EmbeddedComponentManager.Appearance.Typography.Stylye` with default values
                 public init() {}
-
             }
 
             /// Determines the font family value used throughout embedded components.
@@ -114,7 +113,7 @@ extension EmbeddedComponentManager {
         /// Describes the colors used in embedded components.
         /// - Note: If UIColors using dynamicProviders are specified, the appearance will automatically
         ///   update when the component's UITraitCollection is updated (e.g. dark mode)
-        /// - Seealso: https://developer.apple.com/documentation/uikit/appearance_customization/supporting_dark_mode_in_your_interface
+        /// - Seealso: [Supporting Dark Mode in your app](https://developer.apple.com/documentation/uikit/appearance_customization/supporting_dark_mode_in_your_interface)
         public struct Colors {
             /// The primary color used throughout embedded components.
             /// Set this to your primary brand color.
@@ -153,6 +152,29 @@ extension EmbeddedComponentManager {
 
             /// Creates a `EmbeddedComponentManager.Appearance.Colors` with default values
             public init() {}
+
+            /// The computed background color
+            var resolvedBackground: UIColor {
+                // Defaults to white if none is set
+                background ?? .white
+            }
+
+            /// The computed loading indicator color
+            var loadingIndicatorColor: UIColor {
+                .init { traitCollection in
+                    let background = resolvedBackground.resolvedColor(with: traitCollection)
+
+                    // Use the secondary text color if it was set
+                    if let secondaryText {
+                        return secondaryText
+                            .resolvedColor(with: traitCollection)
+                            .adjustedForContrast(with: background)
+                    }
+
+                    // Lighten or darken the background to get enough contrast
+                    return background.adjustedForContrast(with: background)
+                }
+            }
         }
 
         /// Describes the appearance of a button type used in embedded components

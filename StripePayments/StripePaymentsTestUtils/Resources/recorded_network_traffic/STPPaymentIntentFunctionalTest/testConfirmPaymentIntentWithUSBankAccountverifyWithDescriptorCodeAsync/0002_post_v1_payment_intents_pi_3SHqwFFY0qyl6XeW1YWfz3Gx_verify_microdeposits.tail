@@ -1,0 +1,72 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3SHqwFFY0qyl6XeW1YWfz3Gx\/verify_microdeposits$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QO0_miQIYqr6ZZVcdYVZtLsYop6cfS3Jq7q4CLyA_KXKr3bCgaAjdckoxip4NEYvlUWI-yeNk73oT1wI
+Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_8UtKSzpVt2EGDt
+Content-Length: 1084
+Vary: Origin
+Date: Mon, 13 Oct 2025 18:57:45 GMT
+original-request: req_8UtKSzpVt2EGDt
+stripe-version: 2020-08-27
+idempotency-key: fae21d42-4c06-460d-98e5-75f3dd33c2fe
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_secret=pi_3SHqwFFY0qyl6XeW1YWfz3Gx_secret_LFelB7tGsLyu8ej2Z4k01EklF&descriptor_code=SM11AA
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 1000,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "payment_method_options" : {
+    "us_bank_account" : {
+      "verification_method" : "automatic"
+    }
+  },
+  "object" : "payment_intent",
+  "currency" : "usd",
+  "last_payment_error" : null,
+  "amount_subtotal" : 1000,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "status" : "processing",
+  "payment_method" : "pm_1SHqwFFY0qyl6XeW28biXhqM",
+  "client_secret" : "pi_3SHqwFFY0qyl6XeW1YWfz3Gx_secret_LFelB7tGsLyu8ej2Z4k01EklF",
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "id" : "pi_3SHqwFFY0qyl6XeW1YWfz3Gx",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "us_bank_account"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1760381863,
+  "description" : null
+}

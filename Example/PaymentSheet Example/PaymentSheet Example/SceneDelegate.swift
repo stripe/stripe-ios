@@ -18,6 +18,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         _ scene: UIScene,
         openURLContexts URLContexts: Set<UIOpenURLContext>
     ) {
+        guard let windowScene = scene as? UIWindowScene else {
+            return
+        }
+
         if let urlContext = URLContexts.first {
 
             let url = urlContext.url
@@ -30,7 +34,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 if #available(iOS 15.0, *) {
                     // In this case, we'll pass it to the playground for test configuration.
                     if url.scheme == "stp-paymentsheet-playground" {
-                        launchWith(base64String: url.query!)
+                        launchWith(base64String: url.query!, windowScene: windowScene)
                     }
                 }
             }
@@ -39,18 +43,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     @available(iOS 15.0, *)
-    func launchWith(base64String: String) {
+    func launchWith(base64String: String, windowScene: UIWindowScene) {
         let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String, className: PaymentSheetTestPlaygroundSettings.self)!
-        let hvc = UIHostingController(rootView: PaymentSheetTestPlayground(settings: settings))
+        let paymentSheetPlayground = PaymentSheetTestPlayground(settings: settings, appearance: .default)
+        let hvc = UIHostingController(rootView: paymentSheetPlayground)
         let navController = UINavigationController(rootViewController: hvc)
-        self.window!.rootViewController = navController
+        windowScene.windows.first!.rootViewController = navController
     }
+
     @available(iOS 15.0, *)
-    func launchCustomerSheetWith(base64String: String) {
+    func launchCustomerSheetWith(base64String: String, windowScene: UIWindowScene) {
         let settings = PaymentSheetTestPlaygroundSettings.fromBase64(base64: base64String, className: CustomerSheetTestPlaygroundSettings.self)!
-        let hvc = UIHostingController(rootView: CustomerSheetTestPlayground(settings: settings))
+        let customerSheetPlayground = CustomerSheetTestPlayground(settings: settings)
+        let hvc = UIHostingController(rootView: customerSheetPlayground)
         let navController = UINavigationController(rootViewController: hvc)
-        self.window!.rootViewController = navController
+        windowScene.windows.first!.rootViewController = navController
     }
 
     func scene(
@@ -58,6 +65,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         willConnectTo session: UISceneSession,
         options connectionOptions: UIScene.ConnectionOptions
     ) {
+        guard let windowScene = scene as? UIWindowScene else {
+            return
+        }
+
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
@@ -74,19 +85,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let playgroundData = ProcessInfo.processInfo.environment["STP_PLAYGROUND_DATA"] {
             if #available(iOS 15.0, *) {
-                launchWith(base64String: playgroundData)
+                launchWith(base64String: playgroundData, windowScene: windowScene)
             } else {
                 assertionFailure("Not supported on < iOS 15")
             }
         } else if let playgroundData = ProcessInfo.processInfo.environment["STP_CUSTOMERSHEET_PLAYGROUND_DATA"] {
             if #available(iOS 15.0, *) {
-                launchCustomerSheetWith(base64String: playgroundData)
+                launchCustomerSheetWith(base64String: playgroundData, windowScene: windowScene)
             } else {
                 assertionFailure("Not supported on < iOS 15")
             }
         }
-
-        guard (scene as? UIWindowScene) != nil else { return }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

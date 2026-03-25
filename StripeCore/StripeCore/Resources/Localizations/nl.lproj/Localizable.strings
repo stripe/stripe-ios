@@ -1,4 +1,18 @@
+"An error occurred. Please try again." = "Er is iets misgegaan. Probeer het opnieuw.";
+
+"Card brand was not updated. Please try again." = "Het merk van de betaalkaart is niet bijgewerkt. Probeer het opnieuw.";
+
 "Close" = "Sluiten";
+
+"Confirm it's you" = "Bevestig dat jij het bent";
+
+"Default payment method was not updated. Please try again." = "De standaardbetaalmethode is niet bijgewerkt. Probeer het opnieuw.";
+
+"Enter the code sent to %@." = "Voer de code in die is verstuurd naar %@.";
+
+"Failed to connect" = "Kan geen verbinding maken";
+
+"Resend code" = "Code opnieuw verzenden";
 
 "Scan Card" = "Kaart scannen";
 

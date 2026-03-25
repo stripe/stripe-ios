@@ -17,7 +17,7 @@ extension PaymentSheetFormFactory {
     func makeUPI() -> FormElement {
         let contactInformationElement = makeContactInformationSection(nameRequiredByPaymentMethod: false, emailRequiredByPaymentMethod: false, phoneRequiredByPaymentMethod: false)
         let billingAddressElement = configuration.billingDetailsCollectionConfiguration.address == .full
-            ? makeBillingAddressSection(countries: nil)
+            ? makeBillingAddressSection(countries: configuration.billingDetailsCollectionConfiguration.allowedCountriesArray)
             : nil
         let phoneElement = contactInformationElement?.elements.compactMap {
             $0 as? PaymentMethodElementWrapper<PhoneNumberElement>
@@ -37,7 +37,7 @@ extension PaymentSheetFormFactory {
         return FormElement(autoSectioningElements: autoSectioningElements, theme: theme)
     }
 
-    private func makeUPIHeader() -> StaticElement {
+    private func makeUPIHeader() -> SubtitleElement {
         return makeSectionTitleLabelWith(text: STPLocalizedString("Buy using a UPI ID",
                                                                   "Header text shown above a UPI ID text field"))
     }

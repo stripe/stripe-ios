@@ -10,6 +10,7 @@
 
 @class STDSDeviceInformation;
 @class STDSDirectoryServerCertificate;
+@protocol STDSAnalyticsDelegate;
 
 #import "STDSDirectoryServer.h"
 #import "STDSThreeDSProtocolVersion+Private.h"
@@ -22,7 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithDeviceInformation:(STDSDeviceInformation *)deviceInformation
                           directoryServer:(STDSDirectoryServer)directoryServer
                           protocolVersion:(STDSThreeDSProtocolVersion)protocolVersion
-                          uiCustomization:(STDSUICustomization *)uiCustomization;
+                          uiCustomization:(STDSUICustomization *)uiCustomization
+                        analyticsDelegate:(nullable id<STDSAnalyticsDelegate>)analyticsDelegate;
 
 - (instancetype)initWithDeviceInformation:(STDSDeviceInformation *)deviceInformation
                         directoryServerID:(NSString *)directoryServerID
@@ -30,7 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
                directoryServerCertificate:(STDSDirectoryServerCertificate *)directoryServerCertificate
                    rootCertificateStrings:(NSArray<NSString *> *)rootCertificateStrings
                           protocolVersion:(STDSThreeDSProtocolVersion)protocolVersion
-                          uiCustomization:(STDSUICustomization *)uiCustomization;
+                          uiCustomization:(STDSUICustomization *)uiCustomization
+                        analyticsDelegate:(nullable id<STDSAnalyticsDelegate>)analyticsDelegate;
 
 @property (nonatomic, strong) NSTimer *timeoutTimer;
 @property (nonatomic) BOOL bypassTestModeVerification; // Should be used during internal testing ONLY

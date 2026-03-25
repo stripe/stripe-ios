@@ -1,4 +1,8 @@
+"%1$@ •••• %2$@" = "%1$@ •••• %2$@";
+
 "%@ (optional)" = "%@ (isteğe bağlı)";
+
+"(not accepted)" = "(kabul edilmedi)";
 
 "Account number" = "Hesap numarası";
 
@@ -36,7 +40,7 @@
 
 "County" = "Ülke";
 
-"Date is empty." = "Tarih boş.";
+"Date of Birth" = "Doğum Tarihi";
 
 "Department" = "İdari Bölüm";
 
@@ -84,8 +88,6 @@
 
 "Parish" = "Dini bölge";
 
-"Phone" = "Telefon";
-
 "Phone number" = "Telefon numarası";
 
 "Postal code" = "Posta kodu";
@@ -103,6 +105,8 @@
 "Search" = "Ara";
 
 "Select card brand (optional)" = "Kart markasını seçin (isteğe bağlı)";
+
+"Selection is empty." = "Seçim boş.";
 
 "Sort code" = "Şube kodu";
 
@@ -132,12 +136,16 @@
 
 "Your BLIK code is invalid." = "BLIK kodunuz geçersiz.";
 
-"Your ZIP is incomplete." = "Posta kodunuz eksik.";
+"Your ZIP code is incomplete." = "Posta kodunuz eksik.";
+
+"Your ZIP code is invalid." = "Posta kodunuz geçersiz.";
 
 "Your email is invalid." = "E-postanız geçersiz.";
 
 "Your payment information will not be saved." = "Ödeme bilgileriniz kaydedilmeyecek.";
 
 "Your postal code is incomplete." = "Posta kodunuz eksik.";
+
+"Your postal code is invalid." = "Posta kodunuz geçersiz.";
 
 "ZIP" = "Posta Kodu";

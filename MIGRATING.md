@@ -1,4 +1,105 @@
 ## Migration Guides
+### Migrating from versions < 25.5.0
+* StripeIssuing is now a separate component for Carthage and manual binary users. If you use the legacy `Stripe` framework, you must also embed `StripeIssuing.xcframework` in your app, which will be included in `Stripe.xcframework.zip` in the [release assets](https://github.com/stripe/stripe-ios/releases/). No action is required for Cocoapods and Swift Package Manager users, or users of the individual `StripePayments`, `StripePaymentsUI`, and `StripePaymentSheet` modules.
+
+### Migrating from versions < 25.0.0 
+#### PaymentSheet
+`PaymentSheet.IntentConfiguration.confirmHandler` has been replaced by an async equivalent. You can use the following example to quickly migrate completion-block based code:
+
+```diff
+PaymentSheet.IntentConfiguration(
+  mode: .payment(amount: 1000),
+  currency: "USD"
+- ) { [weak self] paymentMethod, shouldSavePaymentMethod, intentCreationCallback in
++ ) { [weak self] paymentMethod, shouldSavePaymentMethod in
++   try await withCheckedThrowingContinuation() { continuation in
+    MyExampleNetworkManager.fetchIntentClientSecret() { result in
+-       switch result {
+-       case .success(let clientSecret):
+-           intentCreationCallback(.success(clientSecret))
+-       case .failure(let error):
+-  	        intentCreationCallback(.failure(error))
+-       }
++       continuation.resume(with: result)
+    }
+  }
+}
+```
+
+
+`PaymentSheet.ExternalPaymentMethodConfiguration` completion-block based confirm handler has been replaced by an async equivalent. You can use the following example to quickly migrate completion-block based code:
+
+```diff
+externalPaymentMethodConfiguration = .init(
+  externalPaymentMethods: externalPaymentMethods
+- ) { [weak self] externalPaymentMethodType, billingDetails, completion in
++ ) { [weak self] externalPaymentMethodType, billingDetails in
++   return await withCheckedContinuation() { continuation in
+      ...
+-     completion(result)
++     continuation.resume(returning: result)
+    }
+  }
+}
+```
+
+`PaymentSheet.ApplePayConfiguration.Handlers` completion-block based `authorizationResultHandler` has been replaced by an async equivalent. You can use the following example to quickly migrate completion-block based code:
+
+```diff
+- authorizationResultHandler: { result, completion in
++ authorizationResultHandler: { result in
+      let result = ... // modify result (details omitted)
+-     completion(result)
++     return result
++   }
+  }
+}
+```
+
+#### STPApplePayContext
+ApplePayContextDelegate's `applePayContext:didCreatePaymentMethod:paymentInformation:completion:` has been replaced by an async equivalent. You can use the following example to quickly migrate completion-block based code:
+
+```diff
+func applePayContext(
+    _ context: STPApplePayContext,
+    didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
+-     paymentInformation: PKPayment,
+-     completion: @escaping STPIntentClientSecretCompletionBlock
++     paymentInformation: PKPayment
+- ) {
+-   MyExampleNetworkManager.getPaymentIntent() { result in
+-       switch result {
+-       case .success(let clientSecret):
+-           completion(clietSecret, nil)
+-       case .failure(let error):
+-           completion(nil, error)
+-       }
++ ) async throws -> String {
++   return try await withCheckedThrowingContinuation { continuation in
++     MyExampleNetworkManager.getPaymentIntent() { result in
++         continuation.resume(with: result)
++     }
+    }
+  }
+}
+```
+
+### Migrating from versions < 24.0.0 
+
+#### Basic integration
+- Basic Integration has been removed. [Please use Mobile Payment Element instead](https://docs.stripe.com/payments/mobile/migrating-to-mobile-payment-element-from-basic-integration).
+
+#### PaymentSheet
+PaymentSheet displays payment methods in either a vertical or horizontal layout. Prior to this major version, PaymentSheet defaulted to a horizontal layout. Now, Stripe optimizes the layout automatically. To set a specific layout instead, set the `PaymentSheet.Configuration.paymentMethodLayout` property to either `.horizontal` or `.vertical`.
+
+```
+var configuration = PaymentSheet.Configuration()
+configuration.paymentMethodLayout = .horizontal, .vertical, or .automatic
+```
+
+![image](https://github.com/user-attachments/assets/d4592a2b-9af7-4fb5-813f-6a3afdb4ec28)
+
+
 ### Migrating from versions < 23.0.0
 * The `Stripe` module is now split between `StripePaymentSheet`, `StripePayments`, and `StripePaymentsUI`. Some manual changes may be required. Migration instructions are available at [https://stripe.com/docs/mobile/ios/sdk-23-migration](https://stripe.com/docs/mobile/ios/sdk-23-migration).
 * [Changed] If you use PaymentSheet, you must now `import StripePaymentSheet`. PaymentSheet users no longer need to import the `Stripe` module.

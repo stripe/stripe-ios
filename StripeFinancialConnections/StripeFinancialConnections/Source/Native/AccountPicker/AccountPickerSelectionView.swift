@@ -26,7 +26,7 @@ final class AccountPickerSelectionView: UIView {
         enabledAccounts: [FinancialConnectionsPartnerAccount],
         disabledAccounts: [FinancialConnectionsPartnerAccount],
         institution: FinancialConnectionsInstitution,
-        theme: FinancialConnectionsTheme,
+        appearance: FinancialConnectionsAppearance,
         delegate: AccountPickerSelectionViewDelegate
     ) {
         self.delegate = delegate
@@ -34,7 +34,7 @@ final class AccountPickerSelectionView: UIView {
             selectionType: selectionType,
             enabledAccounts: enabledAccounts,
             disabledAccounts: disabledAccounts,
-            theme: theme
+            appearance: appearance
         )
         super.init(frame: .zero)
         listView.delegate = self

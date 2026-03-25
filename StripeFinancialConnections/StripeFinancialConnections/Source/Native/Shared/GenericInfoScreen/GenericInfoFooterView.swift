@@ -6,47 +6,66 @@
 //
 
 import Foundation
+@_spi(STP) import StripeUICore
 import UIKit
 
 func GenericInfoFooterView(
     footer: FinancialConnectionsGenericInfoScreen.Footer?,
-    theme: FinancialConnectionsTheme,
+    appearance: FinancialConnectionsAppearance,
     didSelectPrimaryButton: (() -> Void)?,
     didSelectSecondaryButton: (() -> Void)?,
     didSelectURL: @escaping (URL) -> Void
 ) -> UIView? {
-    guard let footer else {
-        return nil
-    }
-    let primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
-    if let primaryCta = footer.primaryCta, let didSelectPrimaryButton {
-        primaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
-            title: primaryCta.label,
-            accessibilityIdentifier: "generic_info_primary_button",
-            action: didSelectPrimaryButton
-        )
-    } else {
-        primaryButtonConfiguration = nil
-    }
-    let secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
-    if let secondaryCta = footer.secondaryCta, let didSelectSecondaryButton {
-        secondaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
-            title: secondaryCta.label,
-            accessibilityIdentifier: "generic_info_secondary_button",
-            action: didSelectSecondaryButton
-        )
-    } else {
-        secondaryButtonConfiguration = nil
-    }
-    return PaneLayoutView.createFooterView(
-        primaryButtonConfiguration: primaryButtonConfiguration,
-        secondaryButtonConfiguration: secondaryButtonConfiguration,
-        topText: footer.disclaimer,
-        theme: theme,
-        bottomText: footer.belowCta,
+    let (footerView, _) = GenericInfoFooterViewAndPrimaryButton(
+        footer: footer,
+        appearance: appearance,
+        didSelectPrimaryButton: didSelectPrimaryButton,
+        didSelectSecondaryButton: didSelectSecondaryButton,
         didSelectURL: didSelectURL
-    ).footerView
+    )
+    return footerView
 }
+
+func GenericInfoFooterViewAndPrimaryButton(
+     footer: FinancialConnectionsGenericInfoScreen.Footer?,
+     appearance: FinancialConnectionsAppearance,
+     didSelectPrimaryButton: (() -> Void)?,
+     didSelectSecondaryButton: (() -> Void)?,
+     didSelectURL: @escaping (URL) -> Void
+ ) -> (footerView: UIView?, primaryButton: StripeUICore.Button?) {
+     guard let footer else {
+         return (nil, nil)
+     }
+     let primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
+     if let primaryCta = footer.primaryCta, let didSelectPrimaryButton {
+         primaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
+             title: primaryCta.label,
+             accessibilityIdentifier: "generic_info_primary_button",
+             action: didSelectPrimaryButton
+         )
+     } else {
+         primaryButtonConfiguration = nil
+     }
+     let secondaryButtonConfiguration: PaneLayoutView.ButtonConfiguration?
+     if let secondaryCta = footer.secondaryCta, let didSelectSecondaryButton {
+         secondaryButtonConfiguration = PaneLayoutView.ButtonConfiguration(
+             title: secondaryCta.label,
+             accessibilityIdentifier: "generic_info_secondary_button",
+             action: didSelectSecondaryButton
+         )
+     } else {
+         secondaryButtonConfiguration = nil
+     }
+     let footerView = PaneLayoutView.createFooterView(
+         primaryButtonConfiguration: primaryButtonConfiguration,
+         secondaryButtonConfiguration: secondaryButtonConfiguration,
+         topText: footer.disclaimer,
+         appearance: appearance,
+         bottomText: footer.belowCta,
+         didSelectURL: didSelectURL
+     )
+     return (footerView.footerView, footerView.primaryButton)
+ }
 
 #if DEBUG
 
@@ -60,7 +79,7 @@ private struct GenericInfoFooterViewUIViewRepresentable: UIViewRepresentable {
     func makeUIView(context: Context) -> UIView {
         GenericInfoFooterView(
             footer: footer,
-            theme: .light,
+            appearance: .stripe,
             didSelectPrimaryButton: {},
             didSelectSecondaryButton: {},
             didSelectURL: { _ in }

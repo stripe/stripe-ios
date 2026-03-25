@@ -11,33 +11,26 @@ import WebKit
 
 /// Presented when a new target is opened from `StripeConnectWebView`
 @available(iOS 15, *)
-class PopupWebViewController: UIViewController {
-    let webView: ConnectWebView
+class PopupWebViewController: ConnectWebViewController {
 
     private var titleObserver: NSKeyValueObservation?
 
     init(configuration: WKWebViewConfiguration,
+         analyticsClient: ComponentAnalyticsClient,
          navigationAction: WKNavigationAction,
+         allowedHosts: [String],
          urlOpener: ApplicationURLOpener = UIApplication.shared,
          sdkVersion: String? = StripeAPIConfiguration.STPSDKVersion) {
-        webView = .init(frame: .zero,
-                        configuration: configuration,
-                        urlOpener: urlOpener,
-                        sdkVersion: sdkVersion)
+        super.init(configuration: configuration,
+                   analyticsClient: analyticsClient,
+                   allowedHosts: allowedHosts,
+                   urlOpener: urlOpener,
+                   sdkVersion: sdkVersion)
         webView.load(navigationAction.request)
-        super.init(nibName: nil, bundle: nil)
 
         // Keep navbar title in sync with web view
         titleObserver = webView.observe(\.title) { [weak self] webView, _ in
             self?.title = webView.title
-        }
-
-        // Dismiss the view controller when `window.close()` is called from JS
-        webView.didClose = { [weak self] _ in
-            self?.dismiss(animated: true)
-        }
-        webView.presentPopup = { [weak self] vc in
-            self?.present(vc, animated: true)
         }
 
         // Add "Done" button to dismiss the view
@@ -55,5 +48,10 @@ class PopupWebViewController: UIViewController {
         webView.frame = view.frame
         view = webView
         title = webView.title
+    }
+
+    override func webViewDidClose(_ webView: WKWebView) {
+        super.webViewDidClose(webView)
+        dismiss(animated: true)
     }
 }

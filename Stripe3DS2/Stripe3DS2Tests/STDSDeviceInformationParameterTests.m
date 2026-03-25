@@ -89,7 +89,7 @@
 
 - (void)testAllParameters {
     NSArray<STDSDeviceInformationParameter *> *allParams = [STDSDeviceInformationParameter allParameters];
-    XCTAssertEqual(allParams.count, 29, @"iOS should collect 29 separate parameters.");
+    XCTAssertEqual(allParams.count, 30, @"iOS should collect 30 separate parameters.");
     NSMutableSet<NSString *> *allParamIdentifiers = [[NSMutableSet alloc] init];
     for (STDSDeviceInformationParameter *param in allParams) {
         [param collectIgnoringRestrictions:YES withHandler:^(BOOL collected, NSString * _Nonnull identifier, id _Nonnull value) {
@@ -104,7 +104,6 @@
                                                  @"C004",
                                                  @"C005",
                                                  @"C006",
-                                                 @"C007",
                                                  @"C008",
                                                  @"C009",
                                                  @"C010",
@@ -113,6 +112,7 @@
                                                  @"C013",
                                                  @"C014",
                                                  @"C015",
+                                                 @"C017",
                                                  @"I001",
                                                  @"I002",
                                                  @"I003",
@@ -127,6 +127,7 @@
                                                  @"I012",
                                                  @"I013",
                                                  @"I014",
+                                                 @"I015"
                                                  ];
     for (NSString *identifier in expectedIdentifiers) {
         XCTAssertTrue([allParamIdentifiers containsObject:identifier], @"Missing identifier %@", identifier);
@@ -151,7 +152,6 @@
                                                  @"C004",
                                                  @"C005",
                                                  @"C006",
-                                                 @"C007",
                                                  @"C008",
                                                  ];
     XCTAssertEqual(collectedParameterIdentifiers.count, expectedIdentifiers.count, @"Should only have collected the expected amount.");
@@ -169,7 +169,6 @@
                                                                                         @"C004": [STDSDeviceInformationParameter OSVersion],
                                                                                         @"C005": [STDSDeviceInformationParameter locale],
                                                                                         @"C006": [STDSDeviceInformationParameter timeZone],
-                                                                                        @"C007": [STDSDeviceInformationParameter advertisingID],
                                                                                         @"C008": [STDSDeviceInformationParameter screenResolution],
                                                                                         @"C009": [STDSDeviceInformationParameter deviceName],
                                                                                         @"C010": [STDSDeviceInformationParameter IPAddress],

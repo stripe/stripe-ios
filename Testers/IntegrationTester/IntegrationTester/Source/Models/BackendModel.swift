@@ -11,21 +11,21 @@ import Stripe
 
 class BackendModel {
     // You can replace this with your own backend URL.
-    // Visit https://glitch.com/edit/#!/stripe-integration-tester and click "remix".
-    static let backendAPIURL = URL(string: "https://stripe-integration-tester.glitch.me")!
+    // If you want to edit our backend, visit https://codesandbox.io/p/devbox/3c3ymr, login, and fork.
+    static let backendAPIURL = URL(string: "https://stp-integration-tester-v3.stripedemos.com/")!
 
     static let returnURL = "stp-integration-tester://stripe-redirect"
 
     public static let shared = BackendModel()
 
-    func fetchPaymentIntent(integrationMethod: IntegrationMethod = .card, completion: @escaping (STPPaymentIntentParams?) -> Void) {
+    func fetchPaymentIntent(integrationMethod: IntegrationMethod = .card, completion: @escaping (STPPaymentIntentConfirmParams?) -> Void) {
         let params = ["integration_method": integrationMethod.rawValue]
         getAPI(method: "create_pi", params: params) { (json) in
             guard let paymentIntentClientSecret = json["paymentIntent"] as? String else {
                 completion(nil)
                 return
             }
-            completion(STPPaymentIntentParams(clientSecret: paymentIntentClientSecret))
+            completion(STPPaymentIntentConfirmParams(clientSecret: paymentIntentClientSecret))
         }
     }
 
@@ -63,7 +63,7 @@ class BackendModel {
                 let json = try? JSONSerialization.jsonObject(with: unwrappedData, options: []) as? [String: Any],
                 let publishableKey = json["publishableKey"] as? String else {
             if let data = data {
-                print("\(String(decoding: data, as: UTF8.self))")
+                print("\(String(data: data, encoding: .utf8) ?? "")")
             } else {
                 print("\(error ?? NSError())")  // swiftlint:disable:this discouraged_direct_init
             }

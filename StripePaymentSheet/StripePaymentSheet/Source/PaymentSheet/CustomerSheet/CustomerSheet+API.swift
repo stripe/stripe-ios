@@ -15,6 +15,7 @@ extension CustomerSheet {
         intent: Intent,
         elementsSession: STPElementsSession,
         paymentOption: PaymentOption,
+        confirmationChallenge: ConfirmationChallenge? = nil,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
         CustomerSheet.confirm(intent: intent,
@@ -23,6 +24,7 @@ extension CustomerSheet {
                               configuration: configuration,
                               paymentHandler: self.paymentHandler,
                               authenticationContext: self.bottomSheetViewController,
+                              confirmationChallenge: confirmationChallenge,
                               completion: completion)
     }
     static func confirm(
@@ -32,6 +34,7 @@ extension CustomerSheet {
         configuration: CustomerSheet.Configuration,
         paymentHandler: STPPaymentHandler,
         authenticationContext: STPAuthenticationContext,
+        confirmationChallenge: ConfirmationChallenge? = nil,
         completion: @escaping (InternalCustomerSheetResult) -> Void
     ) {
         let paymentHandlerCompletion: (STPPaymentHandlerActionStatus, NSObject?, NSError?) -> Void =
@@ -54,15 +57,25 @@ extension CustomerSheet {
             }
         if case .new(let confirmParams) = paymentOption,
            case .setupIntent(let setupIntent) = intent {
-            confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
-            let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
-            setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
-            setupIntentParams.returnURL = configuration.returnURL
-            setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
-            paymentHandler.confirmSetupIntent(
-                setupIntentParams,
-                with: authenticationContext,
-                completion: paymentHandlerCompletion)
+            Task {
+                confirmParams.setAllowRedisplayForCustomerSheet(elementsSession.savePaymentMethodConsentBehaviorForCustomerSheet())
+                confirmParams.paymentMethodParams.radarOptions = await confirmationChallenge?.makeRadarOptions(for: confirmParams.paymentMethodParams.type)
+                confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata(elementsSessionConfigId: elementsSession.configID)
+                let setupIntentParams = STPSetupIntentConfirmParams(clientSecret: setupIntent.clientSecret)
+                setupIntentParams.paymentMethodParams = confirmParams.paymentMethodParams
+                // Send CAM at the top-level of all requests in scope for consistency
+                // Also send under payment_method_data because there are existing dependencies
+                setupIntentParams.clientAttributionMetadata = confirmParams.paymentMethodParams.clientAttributionMetadata
+                setupIntentParams.returnURL = configuration.returnURL
+                setupIntentParams.additionalAPIParameters = [ "expand": ["payment_method"]]
+                paymentHandler.confirmSetupIntent(
+                    params: setupIntentParams,
+                    authenticationContext: authenticationContext,
+                    completion: { status, intent, error in
+                        Task { await confirmationChallenge?.complete() }
+                        paymentHandlerCompletion(status, intent, error)
+                    })
+            }
         } else {
             let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
                                               error: InternalError.invalidStateOnConfirmation)

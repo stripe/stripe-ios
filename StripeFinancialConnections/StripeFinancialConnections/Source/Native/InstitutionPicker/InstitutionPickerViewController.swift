@@ -20,6 +20,11 @@ protocol InstitutionPickerViewControllerDelegate: AnyObject {
         didFinishSelecting institution: FinancialConnectionsInstitution,
         authSession: FinancialConnectionsAuthSession
     )
+    func institutionPickerViewController(
+        _ viewController: InstitutionPickerViewController,
+        didFinishSelecting institution: FinancialConnectionsInstitution,
+        payload: FinancialConnectionsSelectInstitution
+    )
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
         _ viewController: InstitutionPickerViewController
     )
@@ -41,6 +46,8 @@ class InstitutionPickerViewController: UIViewController {
     private let dataSource: InstitutionDataSource
     weak var delegate: InstitutionPickerViewControllerDelegate?
 
+    private var shadowLayer: CALayer?
+
     private lazy var headerView: UIView = {
         let verticalStackView = UIStackView(
             arrangedSubviews: [
@@ -55,7 +62,7 @@ class InstitutionPickerViewController: UIViewController {
             bottom: Self.headerAndSearchBarSpacing,
             trailing: Constants.Layout.defaultHorizontalMargin
         )
-        verticalStackView.backgroundColor = .customBackgroundColor
+        verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         return verticalStackView
     }()
     private lazy var searchBarContainerView: UIView = {
@@ -72,7 +79,7 @@ class InstitutionPickerViewController: UIViewController {
             bottom: 16,
             trailing: Constants.Layout.defaultHorizontalMargin
         )
-        verticalStackView.backgroundColor = .customBackgroundColor
+        verticalStackView.backgroundColor = FinancialConnectionsAppearance.Colors.background
         // the "shadow" fixes an issue where the "search bar sticky header"
         // has a visible 1 pixel gap. the shadow is not actually a shadow,
         // but rather a "top border"
@@ -88,10 +95,11 @@ class InstitutionPickerViewController: UIViewController {
             // appear IF the user scrolls up very quickly
             height: -Self.headerAndSearchBarSpacing
         )
+        self.shadowLayer = verticalStackView.layer
         return verticalStackView
     }()
     private lazy var searchBar: InstitutionSearchBar = {
-        let searchBar = InstitutionSearchBar(theme: dataSource.manifest.theme)
+        let searchBar = InstitutionSearchBar(appearance: dataSource.manifest.appearance)
         searchBar.delegate = self
         return searchBar
     }()
@@ -100,7 +108,7 @@ class InstitutionPickerViewController: UIViewController {
             frame: view.bounds,
             allowManualEntry: dataSource.manifest.allowManualEntry,
             institutionSearchDisabled: dataSource.manifest.institutionSearchDisabled,
-            theme: dataSource.manifest.theme
+            appearance: dataSource.manifest.appearance
         )
         institutionTableView.delegate = self
         return institutionTableView
@@ -138,7 +146,7 @@ class InstitutionPickerViewController: UIViewController {
     }
 
     private func setupView() {
-        view.backgroundColor = UIColor.customBackgroundColor
+        view.backgroundColor = FinancialConnectionsAppearance.Colors.background
 
         view.addAndPinSubview(institutionTableView)
         institutionTableView.setTableHeaderView(headerView)
@@ -177,6 +185,23 @@ class InstitutionPickerViewController: UIViewController {
             exceptForInstitution: institution
         )
 
+        // If consent is already acquired, create an auth session.
+        // Otherwise, select the institution and update the manifest.
+        if dataSource.manifest.consentAcquired {
+            createAuthSession(institution) {
+                showLoadingView(false)
+            }
+        } else {
+            selectInstitution(institution) {
+                showLoadingView(false)
+            }
+        }
+    }
+
+    private func createAuthSession(
+        _ institution: FinancialConnectionsInstitution,
+        completion: @escaping () -> Void
+    ) {
         dataSource.createAuthSession(institutionId: institution.id)
             .observe { [weak self] result in
                 guard let self else { return }
@@ -201,7 +226,32 @@ class InstitutionPickerViewController: UIViewController {
                         didReceiveError: error
                     )
                 }
-                showLoadingView(false)
+                completion()
+            }
+    }
+
+    private func selectInstitution(
+        _ institution: FinancialConnectionsInstitution,
+        completion: @escaping () -> Void
+    ) {
+        dataSource.selectInstitution(institutionId: institution.id)
+            .observe { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .success(let selectInstitutionPayload):
+                    self.delegate?.institutionPickerViewController(
+                        self,
+                        didFinishSelecting: institution,
+                        payload: selectInstitutionPayload
+                    )
+                    self.hideOverlayView()
+                case .failure(let error):
+                    self.delegate?.institutionPickerViewController(
+                        self,
+                        didReceiveError: error
+                    )
+                }
+                completion()
             }
     }
 
@@ -240,6 +290,14 @@ class InstitutionPickerViewController: UIViewController {
             searchBarContainerFrame,
             animated: true
         )
+    }
+
+    // CGColor's need to be manually updated when the system theme changes.
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else { return }
+
+        shadowLayer?.shadowColor = FinancialConnectionsAppearance.Colors.background.cgColor
     }
 }
 
@@ -497,7 +555,7 @@ extension InstitutionPickerViewController: InstitutionTableViewDelegate {
 private func CreateHeaderTitleLabel() -> UIView {
     let headerTitleLabel = AttributedLabel(
         font: .heading(.extraLarge),
-        textColor: .textDefault
+        textColor: FinancialConnectionsAppearance.Colors.textDefault
     )
     headerTitleLabel.setText(
         STPLocalizedString(

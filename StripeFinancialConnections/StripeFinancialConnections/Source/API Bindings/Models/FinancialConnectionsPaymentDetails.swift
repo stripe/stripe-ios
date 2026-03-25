@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 
 struct FinancialConnectionsPaymentDetails: Decodable {
     let redactedPaymentDetails: RedactedPaymentDetails
@@ -21,6 +22,6 @@ struct BankAccountDetails: Decodable {
     let last4: String?
 }
 
-struct FinancialConnectionsPaymentMethod: Decodable {
-    let id: String
+struct FinancialConnectionsSharePaymentDetails: Decodable {
+    let paymentMethod: LinkBankPaymentMethod
 }

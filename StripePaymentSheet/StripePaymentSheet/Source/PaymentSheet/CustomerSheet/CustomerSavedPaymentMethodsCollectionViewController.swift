@@ -28,6 +28,7 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
         viewController: CustomerSavedPaymentMethodsCollectionViewController,
         paymentMethodSelection: CustomerSavedPaymentMethodsCollectionViewController.Selection,
         updateParams: STPPaymentMethodUpdateParams) async throws -> STPPaymentMethod
+    func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController)
 }
 /*
  This class is largely a copy of SavedPaymentOptionsViewController, however a couple of exceptions
@@ -40,7 +41,6 @@ protocol CustomerSavedPaymentMethodsCollectionViewControllerDelegate: AnyObject 
 @objc(STP_Internal_SavedPaymentMethodsCollectionViewController)
 class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     enum Error: Swift.Error {
-        case didSelectRemoveOnInvalidItem
         case didSelectEditOnInvalidItem
         case removedInvalidItemWithUpdateCardFlow
         case unableToDequeueReusableCell
@@ -78,9 +78,13 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     }
 
     struct Configuration {
+        let billingDetailsCollectionConfiguration: PaymentSheet.BillingDetailsCollectionConfiguration
         let showApplePay: Bool
         let allowsRemovalOfLastSavedPaymentMethod: Bool
         let paymentMethodRemove: Bool
+        let paymentMethodRemoveIsPartial: Bool
+        let paymentMethodUpdate: Bool
+        let paymentMethodSyncDefault: Bool
         let isTestMode: Bool
     }
 
@@ -92,11 +96,11 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
             return false
         case 1:
             // If there's exactly one PM, customer can only edit if configuration allows removal or if that single PM is editable
-            return (configuration.paymentMethodRemove && configuration.allowsRemovalOfLastSavedPaymentMethod) || viewModels.contains(where: {
+            return (configuration.paymentMethodRemove && configuration.allowsRemovalOfLastSavedPaymentMethod) || configuration.paymentMethodUpdate || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
             })
         default:
-            return configuration.paymentMethodRemove || viewModels.contains(where: {
+            return configuration.paymentMethodRemove || configuration.paymentMethodUpdate || viewModels.contains(where: {
                 $0.isCoBrandedCard && cbcEligible
             })
         }
@@ -222,9 +226,9 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         let mandateView = SimpleMandateTextView(mandateText: mandateText, theme: appearance.asElementsTheme)
         let margins = NSDirectionalEdgeInsets.insets(
             top: 8,
-            leading: PaymentSheetUI.defaultMargins.leading,
+            leading: appearance.formInsets.leading,
             bottom: 0,
-            trailing: PaymentSheetUI.defaultMargins.trailing
+            trailing: appearance.formInsets.trailing
         )
         view.addAndPinSubview(mandateView, directionalLayoutMargins: margins)
         return view
@@ -241,7 +245,14 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
         cbcEligible: Bool,
         delegate: CustomerSavedPaymentMethodsCollectionViewControllerDelegate? = nil
     ) {
-        self.savedPaymentMethods = savedPaymentMethods
+        // when opted into the set as default feature, only show payment methods that can be set as default (card, US bank account)
+        if configuration.paymentMethodSyncDefault {
+            self.savedPaymentMethods = savedPaymentMethods.filter{ savedPaymentMethod in CustomerSheet.supportedDefaultPaymentMethods.contains{paymentMethodType in
+                savedPaymentMethod.type == paymentMethodType}
+            }
+        } else {
+            self.savedPaymentMethods = savedPaymentMethods
+        }
         self.originalSelectedSavedPaymentMethod = selectedPaymentMethodOption
         self.savedPaymentMethodsConfiguration = savedPaymentMethodsConfiguration
         self.configuration = configuration
@@ -320,7 +331,7 @@ class CustomerSavedPaymentMethodsCollectionViewController: UIViewController {
     }
 
     override func viewWillAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        super.viewWillAppear(animated)
         STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenPresented()
 
         guard let selectedIndexPath = collectionView.indexPathsForSelectedItems?.first else {
@@ -386,7 +397,8 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
 
         cell.setViewModel(viewModel.toSavedPaymentOptionsViewControllerSelection(),
                           cbcEligible: cbcEligible,
-                          allowsPaymentMethodRemoval: configuration.paymentMethodRemove)
+                          allowsPaymentMethodRemoval: configuration.paymentMethodRemove,
+                          allowsPaymentMethodUpdate: configuration.paymentMethodUpdate)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
@@ -398,6 +410,9 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
         -> Bool
     {
         guard !self.collectionView.isRemovingPaymentMethods else {
+            if let cell = collectionView.cellForItem(at: indexPath) as? SavedPaymentMethodCollectionView.PaymentOptionCell, cell.isEditable {
+                paymentOptionCellDidSelectEdit(cell)
+            }
             return false
         }
         let viewModel = viewModels[indexPath.item]
@@ -430,117 +445,116 @@ extension CustomerSavedPaymentMethodsCollectionViewController: PaymentOptionCell
             stpAssertionFailure()
             return
         }
-
-        let editVc = UpdateCardViewController(paymentMethod: paymentMethod,
-                                              removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
-                                              appearance: appearance,
-                                              hostedSurface: .customerSheet,
-                                              canRemoveCard: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
-                                              isTestMode: configuration.isTestMode)
+        let updateConfig = UpdatePaymentMethodViewController.Configuration(paymentMethod: paymentMethod,
+                                                                           appearance: appearance,
+                                                                           billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
+                                                                           hostedSurface: .customerSheet,
+                                                                           cardBrandFilter: savedPaymentMethodsConfiguration.cardBrandFilter,
+                                                                           canRemove: configuration.paymentMethodRemove && (savedPaymentMethods.count > 1 || configuration.allowsRemovalOfLastSavedPaymentMethod),
+                                                                           canUpdate: configuration.paymentMethodUpdate,
+                                                                           isCBCEligible: paymentMethod.isCoBrandedCard && cbcEligible)
+        let removeSavedPaymentMethodMessage = UpdatePaymentMethodViewController.resolveRemoveMessage(
+            removeSavedPaymentMethodMessage: savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage,
+            paymentMethodRemoveIsPartial: configuration.paymentMethodRemoveIsPartial,
+            merchantName: savedPaymentMethodsConfiguration.merchantDisplayName)
+        let editVc = UpdatePaymentMethodViewController(removeSavedPaymentMethodMessage: removeSavedPaymentMethodMessage,
+                                                       isTestMode: configuration.isTestMode,
+                                                       configuration: updateConfig)
         editVc.delegate = self
         self.bottomSheetController?.pushContentViewController(editVc)
     }
 
-    func paymentOptionCellDidSelectRemove(
-        _ paymentOptionCell: SavedPaymentMethodCollectionView.PaymentOptionCell
-    ) {
-        guard let indexPath = collectionView.indexPath(for: paymentOptionCell),
-              case .saved(let paymentMethod) = viewModels[indexPath.row]
-        else {
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedCustomerSheetError,
-                                              error: Error.didSelectRemoveOnInvalidItem)
-            STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
-            stpAssertionFailure()
+    private func removePaymentMethod(indexPath: IndexPath, paymentMethod: STPPaymentMethod, completion: @escaping () -> Void) {
+        guard let delegate = self.delegate else {
+            completion()
             return
         }
-        let alert = UIAlertAction(
-            title: String.Localized.remove, style: .destructive
-        ) { (_) in
-            self.removePaymentMethod(indexPath: indexPath, paymentMethod: paymentMethod)
-        }
-        let cancel = UIAlertAction(
-            title: String.Localized.cancel,
-            style: .cancel, handler: nil
-        )
-
-        let alertController = UIAlertController(
-            title: paymentMethod.removalMessage.title,
-            message: self.savedPaymentMethodsConfiguration.removeSavedPaymentMethodMessage ?? paymentMethod.removalMessage.message,
-            preferredStyle: .alert
-        )
-
-        alertController.addAction(cancel)
-        alertController.addAction(alert)
-        present(alertController, animated: true, completion: nil)
-    }
-
-    private func removePaymentMethod(indexPath: IndexPath, paymentMethod: STPPaymentMethod) {
+        let viewModel = self.viewModels[indexPath.row]
         Task {
-            guard let delegate = self.delegate else {
-                return
-            }
-            let viewModel = self.viewModels[indexPath.row]
-            let didRemove = await delegate.attemptRemove(viewController: self,
-                                                         paymentMethodSelection: viewModel,
-                                                         originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod)
-            guard didRemove else {
-                return
-            }
+            // Optimistically remove card
+            _ = await delegate.attemptRemove(viewController: self,
+                                            paymentMethodSelection: viewModel,
+                                            originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod)
+        }
+        self.viewModels.remove(at: indexPath.row)
 
-            self.viewModels.remove(at: indexPath.row)
-            // the deletion needs to be in a performBatchUpdates so we make sure it is completed
-            // before potentially leaving edit mode (which triggers a reload that may collide with
-            // this deletion)
-            self.collectionView.performBatchUpdates {
-                self.collectionView.deleteItems(at: [indexPath])
-            } completion: { _ in
-                self.savedPaymentMethods.removeAll(where: {
-                    $0.stripeId == paymentMethod.stripeId
-                })
+        // the deletion needs to be in a performBatchUpdates so we make sure it is completed
+        // before potentially leaving edit mode (which triggers a reload that may collide with
+        // this deletion)
+        self.collectionView.performBatchUpdates {
+            self.collectionView.deleteItems(at: [indexPath])
+        } completion: { _ in
+            self.savedPaymentMethods.removeAll(where: {
+                $0.stripeId == paymentMethod.stripeId
+            })
 
-                if let index = self.selectedViewModelIndex {
-                    if indexPath.row == index {
-                        self.selectedViewModelIndex = nil
-                    } else if indexPath.row < index {
-                        self.selectedViewModelIndex = index - 1
-                    }
+            if let index = self.selectedViewModelIndex {
+                if indexPath.row == index {
+                    self.selectedViewModelIndex = nil
+                } else if indexPath.row < index {
+                    self.selectedViewModelIndex = index - 1
                 }
-
-                self.delegate?.didRemove(
-                    viewController: self,
-                    paymentMethodSelection: viewModel,
-                    originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod
-                )
             }
+            completion()
+            self.delegate?.didRemove(
+                viewController: self,
+                paymentMethodSelection: viewModel,
+                originalPaymentMethodSelection: self.originalSelectedSavedPaymentMethod
+            )
         }
     }
 }
 
-// MARK: - UpdateCardViewControllerDelegate
+// MARK: - UpdatePaymentMethodViewControllerDelegate
 /// :nodoc:
-extension CustomerSavedPaymentMethodsCollectionViewController: UpdateCardViewControllerDelegate {
-    func didUpdate(viewController: UpdateCardViewController,
-                   paymentMethod: STPPaymentMethod,
-                   updateParams: StripePayments.STPPaymentMethodUpdateParams) async throws {
+extension CustomerSavedPaymentMethodsCollectionViewController: UpdatePaymentMethodViewControllerDelegate {
+    func didUpdate(viewController: UpdatePaymentMethodViewController,
+                   paymentMethod: STPPaymentMethod) async -> UpdatePaymentMethodResult {
+        guard let updateParams = viewController.updateParams, case .card(let paymentMethodCardParams, let billingDetails) = updateParams else {
+            return .failure([CustomerSheetError.unknown(debugDescription: "Failed to read payment method update params")])
+        }
+        let updateParamsAndBilling = STPPaymentMethodUpdateParams(card: paymentMethodCardParams, billingDetails: billingDetails)
+        let hasOnlyChangedCardBrand = viewController.hasOnlyChangedCardBrand(originalPaymentMethod: paymentMethod,
+                                                                             updatedPaymentMethodCardParams: paymentMethodCardParams,
+                                                                             updatedBillingDetailsParams: billingDetails)
+        if case .failure(let error) = await updateCard(paymentMethod: paymentMethod,
+                                                       updateParams: updateParamsAndBilling,
+                                                       hasOnlyChangedCardBrand: hasOnlyChangedCardBrand) {
+            return .failure([error])
+        }
+
+        _ = viewController.bottomSheetController?.popContentViewController()
+        return .success
+    }
+
+    private func updateCard(paymentMethod: STPPaymentMethod, updateParams: StripePayments.STPPaymentMethodUpdateParams, hasOnlyChangedCardBrand: Bool) async -> Result<Void, Swift.Error> {
         guard let row = viewModels.firstIndex(where: { $0.toSavedPaymentOptionsViewControllerSelection().savedPaymentMethod?.stripeId == paymentMethod.stripeId }),
               let delegate = delegate
         else {
             stpAssertionFailure()
-            throw CustomerSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage())
+            return .failure(CustomerSheetError.unknown(debugDescription: NSError.stp_unexpectedErrorMessage()))
         }
 
-        let viewModel = viewModels[row]
-        let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
-                                                    paymentMethodSelection: viewModel,
-                                                    updateParams: updateParams)
+        do {
+            let viewModel = viewModels[row]
+            let updatedPaymentMethod = try await delegate.didSelectUpdate(viewController: self,
+                                                                          paymentMethodSelection: viewModel,
+                                                                          updateParams: updateParams)
 
-        let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
-        viewModels[row] = updatedViewModel
-        collectionView.reloadData()
-        _ = viewController.bottomSheetController?.popContentViewController()
+            let updatedViewModel: Selection = .saved(paymentMethod: updatedPaymentMethod)
+            viewModels[row] = updatedViewModel
+            // Update savedPaymentMethods
+            if let row = self.savedPaymentMethods.firstIndex(where: { $0.stripeId == updatedPaymentMethod.stripeId }) {
+                self.savedPaymentMethods[row] = updatedPaymentMethod
+            }
+            collectionView.reloadData()
+            return .success(())
+        } catch {
+            return hasOnlyChangedCardBrand ? .failure(NSError.stp_cardBrandNotUpdatedError()) : .failure(NSError.stp_genericErrorOccurredError())
+        }
     }
 
-    func didRemove(viewController: UpdateCardViewController,
+    func didRemove(viewController: UpdatePaymentMethodViewController,
                    paymentMethod: STPPaymentMethod) {
         guard let row = viewModels.firstIndex(where: { $0.toSavedPaymentOptionsViewControllerSelection().savedPaymentMethod?.stripeId == paymentMethod.stripeId })
         else {
@@ -551,8 +565,12 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UpdateCardViewCon
             return
         }
 
-        removePaymentMethod(indexPath: IndexPath(row: row, section: 0), paymentMethod: paymentMethod)
-        _ = viewController.bottomSheetController?.popContentViewController()
+        self.removePaymentMethod(indexPath: IndexPath(row: row, section: 0), paymentMethod: paymentMethod) {
+            _ = viewController.bottomSheetController?.popContentViewController()
+        }
     }
 
+    func shouldCloseSheet(_: UpdatePaymentMethodViewController) {
+        delegate?.shouldCloseSheet(viewController: self)
+    }
 }

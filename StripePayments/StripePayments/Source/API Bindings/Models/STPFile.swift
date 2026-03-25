@@ -26,16 +26,16 @@ public enum STPFilePurpose: Int {
 }
 
 /// Representation of a file upload object in the Stripe API.
-/// - seealso: https://stripe.com/docs/api#file_uploads
+/// - seealso: https://stripe.com/docs/api/files/object
 public class STPFile: NSObject, STPAPIResponseDecodable {
 
     // NOTE: If adding properties here, also add to `StripeFile` or they will
     // not be decoded from the API response.
 
     /// The token for this file.
-    @objc public private(set) var fileId: String?
+    @objc public private(set) var fileId: String
     /// The date this file was created.
-    @objc public private(set) var created: Date?
+    @objc public private(set) var created: Date
     /// The purpose of this file. This can be either an identifing document or an evidence dispute.
     /// - seealso: https://stripe.com/docs/file-upload
     @objc public private(set) var purpose: STPFilePurpose = .unknown
@@ -57,18 +57,13 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
     }
     @objc private(set) public var allResponseFields: [AnyHashable: Any] = [:]
 
-    required internal override init() {
-        super.init()
-    }
-
-    convenience init(
-        fileId: String?,
-        created: Date?,
+    required init(
+        fileId: String,
+        created: Date,
         purpose: STPFilePurpose,
         size: NSNumber?,
         type: String?
     ) {
-        self.init()
         self.fileId = fileId
         self.created = created
         self.purpose = purpose
@@ -104,7 +99,7 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
 
     /// :nodoc:
     @objc public override var hash: Int {
-        return fileId?.hash ?? 0
+        return fileId.hash
     }
 
     // MARK: - STPAPIResponseDecodable
@@ -116,24 +111,24 @@ public class STPFile: NSObject, STPAPIResponseDecodable {
         let dict = response.stp_dictionaryByRemovingNulls()
 
         // required fields
-        let stripeId = dict.stp_string(forKey: "id")
-        let created = dict.stp_date(forKey: "created")
-        let size = dict.stp_number(forKey: "size")
-        let type = dict.stp_string(forKey: "type")
-        let rawPurpose = dict.stp_string(forKey: "purpose")
-        if stripeId == nil || created == nil || size == nil || type == nil || rawPurpose == nil {
+        guard
+            let stripeId = dict.stp_string(forKey: "id"),
+            let created = dict.stp_date(forKey: "created"),
+            let size = dict.stp_number(forKey: "size"),
+            let type = dict.stp_string(forKey: "type"),
+            let rawPurpose = dict.stp_string(forKey: "purpose")
+        else {
             return nil
         }
 
-        let file = self.init()
-        file.fileId = stripeId
-        file.created = created
-        file.size = size
-        file.type = type
-
-        file.purpose = self.purpose(from: rawPurpose ?? "")
+        let file = self.init(
+            fileId: stripeId,
+            created: created,
+            purpose: purpose(from: rawPurpose),
+            size: size,
+            type: type
+        )
         file.allResponseFields = response
-
         return file
     }
 }

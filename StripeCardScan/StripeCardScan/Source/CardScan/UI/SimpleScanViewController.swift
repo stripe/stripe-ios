@@ -314,6 +314,7 @@ class SimpleScanViewController: ScanBaseViewController {
             .foregroundColor: UIColor.white
         ]
         privacyLinkText.accessibilityIdentifier = "Privacy Link Text"
+        privacyLinkText.clipsToBounds = true
     }
 
     func setupDebugViewUi() {

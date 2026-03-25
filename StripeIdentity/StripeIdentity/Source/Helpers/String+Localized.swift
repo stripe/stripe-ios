@@ -18,13 +18,6 @@ extension String.Localized {
 
     // MARK: - Additional Info fields
 
-    static var date_of_birth: String {
-        STPLocalizedString(
-            "Date of Birth",
-            "Label for Date of birth field"
-        )
-    }
-
     static var date_of_birth_invalid: String {
         STPLocalizedString(
             "Date of birth does not look valid",
@@ -71,12 +64,38 @@ extension String.Localized {
 
     static var position_in_center: String {
         return STPLocalizedString(
-            "Position your identity card in the center of the frame",
-            "Instructional text for scanning front of a identity card"
-        )
+            "Position your %@ in the center of the frame",
+            "Instructional text for scanning front of a driver's license, passport, or government issued photo id")
     }
 
     static var flip_to_other_side: String {
+        return STPLocalizedString(
+            "Flip your %@ over to the other side",
+            "Instructional text for scanning back of a driver's license, passport, or government issued photo id"
+        )
+    }
+
+    static var back_of_id_not_detected: String {
+        return STPLocalizedString(
+            "Back of ID not detected",
+            "Instructional text when the user is expected to scan the back of their ID but the camera is seeing the front or a passport instead"
+        )
+    }
+
+    static var front_of_id_not_detected: String {
+        return STPLocalizedString(
+            "Front of ID not detected",
+            "Instructional text when the user is expected to scan the front of their ID but the camera is seeing the back instead"
+        )
+    }
+
+    static var position_in_center_identity_card: String {
+        return STPLocalizedString(
+            "Position your identity document in the center of the frame",
+            "Instructional text for scanning front of a identity document")
+    }
+
+    static var flip_to_other_side_identity_card: String {
         return STPLocalizedString(
             "Flip your identity card over to the other side",
             "Instructional text for scanning back of a identity card"
@@ -162,8 +181,22 @@ extension String.Localized {
 
     static var reduce_blur: String {
         return STPLocalizedString(
-            "Make sure all details are visible and focus",
+            "Image is blurry. Hold your phone steady and try again.",
             "Instructional text when the document is too blurry"
+        )
+    }
+
+    static var invalid_document: String {
+        return STPLocalizedString(
+            "Invalid document",
+            "Instructional text when the scanned document appears not to be a valid ID document"
+        )
+    }
+
+    static var center_id_in_view: String {
+        return STPLocalizedString(
+            "Center ID in view",
+            "Instructional text when the document is not centered in the frame"
         )
     }
 
@@ -288,8 +321,124 @@ extension String.Localized {
     // MARK: - DocumentFileUpload
     static var fileUploadInstructionText: String {
         STPLocalizedString(
-            "Please upload images of the front and back of your identity card",
-            "Instructions for uploading images of identity card"
+            "Please upload images of the front and back of your identity document",
+            "Instructions for uploading images of identity document"
+        )
+    }
+
+    static var fileUploadInstructionTextSpecific: String {
+        STPLocalizedString(
+            "Please upload images of the front and back of your %@",
+            "Instructions for uploading images of a driver's license, government issued photo id, or passport"
+        )
+    }
+
+    static var uploadYourSpecificDocument: String {
+        STPLocalizedString(
+            "Upload your %@",
+            "Title of document upload screen"
+        )
+    }
+
+    // MARK: - Document Selection Accessibility Labels
+    static var selectFrontSpecificDocumentPhoto: String {
+        STPLocalizedString(
+            "Select front %@ photo",
+            "Accessibility label to select a photo of front of driver's license, passport, or government issued photo id"
+        )
+    }
+
+    static var selectBackSpecificDocumentPhoto: String {
+        STPLocalizedString(
+            "Select back %@ photo",
+            "Accessibility label to select a photo of back of driver's license, passport, or government issued photo id"
+        )
+    }
+
+    static var selectFrontIdentityDocumentPhoto: String {
+        STPLocalizedString(
+            "Select front identity document photo",
+            "Accessibility label to select a photo of front of identity document"
+        )
+    }
+
+    static var selectBackIdentityDocumentPhoto: String {
+        STPLocalizedString(
+            "Select back identity document photo",
+            "Accessibility label to select a photo of back of identity document"
+        )
+    }
+
+    // MARK: - Document Upload Accessibility Labels
+    static var uploadingFrontSpecificDocumentPhoto: String {
+        STPLocalizedString(
+            "Uploading front %@ photo",
+            "Accessibility label while photo of front of driver's license, passport, or government issued photo id is uploading"
+        )
+    }
+
+    static var uploadingBackSpecificDocumentPhoto: String {
+        STPLocalizedString(
+            "Uploading back %@ photo",
+            "Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading"
+        )
+    }
+
+    static var uploadingFrontIdentityDocumentPhoto: String {
+        STPLocalizedString(
+            "Uploading front identity document photo",
+            "Accessibility label while photo of front of identity document is uploading"
+        )
+    }
+
+    static var uploadingBackIdentityDocumentPhoto: String {
+        STPLocalizedString(
+            "Uploading back identity document photo",
+            "Accessibility label while photo of back of identity document is uploading"
+        )
+    }
+
+    // MARK: - Document Upload Success Accessibility Labels
+    static var frontSpecificDocumentPhotoUploadedSuccessfully: String {
+        STPLocalizedString(
+            "Front %@ photo successfully uploaded",
+            "Accessibility label when front driver's license, passport, or government issued photo id photo has successfully uploaded"
+        )
+    }
+
+    static var backSpecificDocumentPhotoUploadedSuccessfully: String {
+        STPLocalizedString(
+            "Back %@ photo successfully uploaded",
+            "Accessibility label when back driver's license, passport, or government issued photo id photo has successfully uploaded"
+        )
+    }
+
+    static var frontIdentityDocumentPhotoUploadedSuccessfully: String {
+        STPLocalizedString(
+            "Front identity document photo successfully uploaded",
+            "Accessibility label when front identity document photo has successfully uploaded"
+        )
+    }
+
+    static var backIdentityDocumentPhotoUploadedSuccessfully: String {
+        STPLocalizedString(
+            "Back identity document photo successfully uploaded",
+            "Accessibility label when back identity document photo has successfully uploaded"
+        )
+    }
+
+    // MARK: - Document Side Titles 
+    static var frontOfSpecificDocument: String {
+        STPLocalizedString(
+            "Front of %@",
+            "Title of ID document scanning screen when scanning the front of either a driver's license, passport, or government issued photo id "
+        )
+    }
+
+    static var backOfSpecificDocument: String {
+        STPLocalizedString(
+            "Back of %@",
+            "Title of ID document scanning screen when scanning the back of either a driver's license, passport, or government issued photo id"
         )
     }
 
@@ -340,6 +489,78 @@ extension String.Localized {
         STPLocalizedString(
             "driver's license",
             "driver's license"
+        )
+    }
+
+    // MARK: - Document Type Combinations for DocumentSide titles
+    static var frontOfDriverLicenseOrPassport: String {
+        STPLocalizedString(
+            "Front of driver's license or passport",
+            "Front of driver's license or passport"
+        )
+    }
+
+    static var frontOfDriverLicenseOrGovernmentId: String {
+        STPLocalizedString(
+            "Front of driver's license or government-issued photo ID",
+            "Front of driver's license or government-issued photo ID"
+        )
+    }
+
+    static var backOfDriverLicenseOrGovernmentId: String {
+        STPLocalizedString(
+            "Back of driver's license or government-issued photo ID",
+            "Back of driver's license or government-issued photo ID"
+        )
+    }
+
+    static var frontOfPassportOrGovernmentId: String {
+        STPLocalizedString(
+            "Front of passport or government-issued photo ID",
+            "Front of passport or government-issued photo ID"
+        )
+    }
+
+    static var frontOfAllIdTypes: String {
+        STPLocalizedString(
+            "Front of driver's license, passport, or government-issued photo ID",
+            "Front of driver's license, passport, or government-issued photo ID"
+        )
+    }
+
+    // MARK: - Document Type Combinations for scanning instructions
+    static var positionDriverLicenseOrPassport: String {
+        STPLocalizedString(
+            "Position your driver's license or passport in the center of the frame",
+            "Position your driver's license or passport in the center of the frame"
+        )
+    }
+
+    static var positionDriverLicenseOrGovernmentId: String {
+        STPLocalizedString(
+            "Position your driver's license or government-issued photo ID in the center of the frame",
+            "Position your driver's license or government-issued photo ID in the center of the frame"
+        )
+    }
+
+    static var flipDriverLicenseOrGovernmentId: String {
+        STPLocalizedString(
+            "Flip your driver's license or government-issued photo ID over to the other side",
+            "Flip your driver's license or government-issued photo ID over to the other side"
+        )
+    }
+
+    static var positionPassportOrGovernmentId: String {
+        STPLocalizedString(
+            "Position your passport or government-issued photo ID in the center of the frame",
+            "Position your passport or government-issued photo ID in the center of the frame"
+        )
+    }
+
+    static var positionAllIdTypes: String {
+        STPLocalizedString(
+            "Position your driver's license, passport, or government-issued photo ID in the center of the frame",
+            "Position your driver's license, passport, or government-issued photo ID in the center of the frame"
         )
     }
 

@@ -45,7 +45,7 @@ extension StripeAPI {
         // Not yet implemented.
         //    var bankAccount: BankAccount?
         /// When the token was created.
-        var created: Date?
+        var created: Date
 
         struct Card: UnknownFieldsDecodable {
             var _allResponseFieldsStorage: NonEncodableParameters?

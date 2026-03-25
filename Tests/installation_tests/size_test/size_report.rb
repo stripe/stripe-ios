@@ -241,9 +241,11 @@ def check_size(modules, measure_branch, base_branch)
 
   modules.each do |m|
     sdk = m['framework_name']
-    max_compressed_size = m['size_report']['max_compressed_size']
-    max_uncompressed_size = m['size_report']['max_uncompressed_size']
-    max_incremental_uncompressed_size = m['size_report']['max_incremental_uncompressed_size']
+    if m['size_report'].is_a?(Hash)
+      max_compressed_size = m['size_report']['max_compressed_size'] 
+      max_uncompressed_size = m['size_report']['max_uncompressed_size']
+      max_incremental_uncompressed_size = m['size_report']['max_incremental_uncompressed_size']
+    end
 
     begin
       # Setup project to include SDK
@@ -343,7 +345,7 @@ end
 measure_branch = ARGV[0]
 base_branch = ARGV[1]
 
-modules = YAML.load_file(File.join_if_safe(@project_dir, 'modules.yaml'))['modules'].select { |m| !m['size_report'].nil? }
+modules = YAML.load_file(File.join_if_safe(@project_dir, 'modules.yaml'))['modules'].select { |m| m.key?('size_report') }
 sdks_exceeding_max_size, sdks_exceeding_incremental_size = check_size(modules, measure_branch, base_branch)
 
 # Clean up temp directory

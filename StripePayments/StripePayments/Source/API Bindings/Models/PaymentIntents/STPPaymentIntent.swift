@@ -9,6 +9,7 @@
 import Foundation
 
 /// Capture methods for a STPPaymentIntent
+/// - seealso: https://docs.stripe.com/api/payment_intents/object#payment_intent_object-capture_method
 @objc public enum STPPaymentIntentCaptureMethod: Int {
     /// Unknown capture method
     case unknown
@@ -17,6 +18,10 @@ import Foundation
     /// The PaymentIntent must be manually captured once it has the status
     /// `STPPaymentIntentStatusRequiresCapture`
     case manual
+    /// Asynchronously capture funds when the customer authorizes the payment.
+    /// - Note: Recommended over `CaptureMethod.automatic` due to improved latency, but may require additional integration changes.
+    /// - Seealso: https://stripe.com/docs/payments/payment-intents/asynchronous-capture-automatic-async
+    case automaticAsync
 
     /// Parse the string and return the correct `STPPaymentIntentCaptureMethod`,
     /// or `STPPaymentIntentCaptureMethodUnknown` if it's unrecognized by this version of the SDK.
@@ -25,6 +30,7 @@ import Foundation
         let map: [String: STPPaymentIntentCaptureMethod] = [
             "manual": .manual,
             "automatic": .automatic,
+            "automatic_async": .automaticAsync,
         ]
 
         let key = string.lowercased()
@@ -112,7 +118,14 @@ public class STPPaymentIntent: NSObject {
     @objc public let status: STPPaymentIntentStatus
 
     /// The list of payment method types (e.g. `[NSNumber(value: STPPaymentMethodType.card.rawValue)]`) that this PaymentIntent is allowed to use.
-    @objc public let paymentMethodTypes: [NSNumber]
+    @objc(paymentMethodTypes)
+    @available(swift, obsoleted: 1.0, renamed: "paymentMethodTypes")
+    public var paymentMethodTypes_objc: [NSNumber] {
+        return paymentMethodTypes.map { NSNumber(value: $0.rawValue) }
+    }
+
+    /// The list of payment method types that this PaymentIntent is allowed to use.
+    public let paymentMethodTypes: [STPPaymentMethodType]
 
     /// When provided, this property indicates how you intend to use the payment method that your customer provides after the current payment completes. If applicable, additional authentication may be performed to comply with regional legislation or network rules required to enable the usage of the same payment method for additional payments.
     /// Use on_session if you intend to only reuse the payment method when the customer is in your checkout flow. Use off_session if your customer may or may not be in your checkout flow.
@@ -132,17 +145,22 @@ public class STPPaymentIntent: NSObject {
     /// Payment-method-specific configuration for this PaymentIntent.
     @_spi(STP) public let paymentMethodOptions: STPPaymentMethodOptions?
 
-    /// Whether the payment intent has setup for future usage set.
-    @_spi(STP) public var isSetupFutureUsageSet: Bool {
-        let setupFutureUsageInResponse = (paymentMethodOptions?.allResponseFields.values.contains(where: {
-            if let value = $0 as? [String: Any] {
-                return value["setup_future_usage"] != nil
-            }
-            return false
-        }) ?? false)
-
-        return setupFutureUsage != .none || setupFutureUsageInResponse
+    /// Whether the payment intent has setup for future usage set for a payment method type.
+    @_spi(STP) public func isSetupFutureUsageSet(for paymentMethodType: STPPaymentMethodType) -> Bool {
+        let setupFutureUsageForPaymentMethodType: String? = setupFutureUsage(for: paymentMethodType)
+        return setupFutureUsageForPaymentMethodType != nil && setupFutureUsageForPaymentMethodType != "none"
     }
+
+    @_spi(STP) public func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
+        let paymentMethodOptionsSetupFutureUsage = paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
+        // if pmo sfu is non-nil, it overrides the top level sfu
+        if let paymentMethodOptionsSetupFutureUsage {
+            return paymentMethodOptionsSetupFutureUsage
+        }
+        return setupFutureUsage.stringValue
+    }
+
+    @_spi(STP) public let automaticPaymentMethods: STPIntentAutomaticPaymentMethods?
 
     /// :nodoc:
     @objc public override var description: String {
@@ -153,6 +171,7 @@ public class STPPaymentIntent: NSObject {
             "stripeId = \(stripeId)",
             // PaymentIntent details (alphabetical)
             "amount = \(amount)",
+            "automaticPaymentMethods = \(String(describing: automaticPaymentMethods))",
             "canceledAt = \(String(describing: canceledAt))",
             "captureMethod = \(String(describing: allResponseFields["capture_method"] as? String))",
             "clientSecret = <redacted>",
@@ -180,6 +199,7 @@ public class STPPaymentIntent: NSObject {
     private init(
         allResponseFields: [AnyHashable: Any],
         amount: Int,
+        automaticPaymentMethods: STPIntentAutomaticPaymentMethods?,
         canceledAt: Date?,
         captureMethod: STPPaymentIntentCaptureMethod,
         clientSecret: String,
@@ -192,7 +212,7 @@ public class STPPaymentIntent: NSObject {
         paymentMethod: STPPaymentMethod?,
         paymentMethodId: String?,
         paymentMethodOptions: STPPaymentMethodOptions?,
-        paymentMethodTypes: [NSNumber],
+        paymentMethodTypes: [STPPaymentMethodType],
         receiptEmail: String?,
         setupFutureUsage: STPPaymentIntentSetupFutureUsage,
         shipping: STPPaymentIntentShippingDetails?,
@@ -203,6 +223,7 @@ public class STPPaymentIntent: NSObject {
     ) {
         self.allResponseFields = allResponseFields
         self.amount = amount
+        self.automaticPaymentMethods = automaticPaymentMethods
         self.canceledAt = canceledAt
         self.captureMethod = captureMethod
         self.clientSecret = clientSecret
@@ -234,17 +255,34 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
             let stripeId = dict["id"] as? String,
-            let clientSecret = dict["client_secret"] as? String,
-            let amount = dict["amount"] as? Int,
-            let currency = dict["currency"] as? String,
-            let rawStatus = dict["status"] as? String,
-            let livemode = dict["livemode"] as? Bool,
-            let createdUnixTime = dict["created"] as? TimeInterval,
-            let paymentMethodTypeStrings = dict["payment_method_types"] as? [String]
+            let rawStatus = dict["status"] as? String
         else {
             return nil
         }
 
+        // Check if this is a redacted PaymentIntent by looking for nil required fields
+        let isRedacted = dict["amount"] == nil || dict["currency"] == nil || dict["payment_method_types"] == nil || dict["client_secret"] == nil
+
+        // For redacted PaymentIntents, use placeholder values for required fields
+        let amount = dict["amount"] as? Int ?? (isRedacted ? -1 : nil)
+        let currency = dict["currency"] as? String ?? (isRedacted ? "unknown" : nil)
+        let paymentMethodTypeStrings = dict["payment_method_types"] as? [String] ?? (isRedacted ? [] : nil)
+        let livemode = dict["livemode"] as? Bool ?? false
+        let createdUnixTime = dict["created"] as? TimeInterval ?? Date().timeIntervalSince1970
+        let clientSecret = dict["client_secret"] as? String ?? (isRedacted ? Self.RedactedClientSecret : nil)
+
+        // Ensure we have all required values (either real or placeholders)
+        guard let finalAmount = amount,
+              let finalCurrency = currency,
+              let finalPaymentMethodTypes = paymentMethodTypeStrings,
+              let finalClientSecret = clientSecret
+        else {
+            return nil
+        }
+
+        let automaticPaymentMethods = STPIntentAutomaticPaymentMethods.decodedObject(
+            fromAPIResponse: dict["automatic_payment_methods"] as? [AnyHashable: Any]
+        )
         let paymentMethod = STPPaymentMethod.decodedObject(
             fromAPIResponse: dict["payment_method"] as? [AnyHashable: Any]
         )
@@ -252,18 +290,19 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
         let canceledAtUnixTime = dict["canceled_at"] as? TimeInterval
         return STPPaymentIntent(
             allResponseFields: dict,
-            amount: amount,
+            amount: finalAmount,
+            automaticPaymentMethods: automaticPaymentMethods,
             canceledAt: canceledAtUnixTime != nil
                 ? Date(timeIntervalSince1970: canceledAtUnixTime!) : nil,
             captureMethod: STPPaymentIntentCaptureMethod.captureMethod(
                 from: dict["capture_method"] as? String ?? ""
             ),
-            clientSecret: clientSecret,
+            clientSecret: finalClientSecret,
             confirmationMethod: STPPaymentIntentConfirmationMethod.confirmationMethod(
                 from: dict["confirmation_method"] as? String ?? ""
             ),
             created: Date(timeIntervalSince1970: createdUnixTime),
-            currency: currency,
+            currency: finalCurrency,
             lastPaymentError: STPPaymentIntentLastPaymentError.decodedObject(
                 fromAPIResponse: dict["last_payment_error"] as? [AnyHashable: Any]
             ),
@@ -276,7 +315,7 @@ extension STPPaymentIntent: STPAPIResponseDecodable {
             paymentMethodOptions: STPPaymentMethodOptions.decodedObject(
                 fromAPIResponse: dict["payment_method_options"] as? [AnyHashable: Any]
             ),
-            paymentMethodTypes: STPPaymentMethod.types(from: paymentMethodTypeStrings),
+            paymentMethodTypes: STPPaymentMethod.types(from: finalPaymentMethodTypes),
             receiptEmail: dict["receipt_email"] as? String,
             setupFutureUsage: setupFutureUsageString != nil
                 ? STPPaymentIntentSetupFutureUsage(string: setupFutureUsageString!) : .none,
@@ -311,13 +350,35 @@ extension STPPaymentIntent {
     /// - Parameter clientSecret: The `client_secret` from the PaymentIntent
     @_spi(STP) public class func id(fromClientSecret clientSecret: String) -> String? {
         // see parseClientSecret from stripe-js-v3
-        let components = clientSecret.components(separatedBy: "_secret_")
-        if components.count >= 2 && components[0].hasPrefix("pi_") {
-            return components[0]
-        } else {
-            return nil
+        // Handle both regular secrets (pi_xxx_secret_yyy) and scoped secrets (pi_xxx_scoped_secret_yyy)
+        let secretComponents = clientSecret.components(separatedBy: "_secret_")
+        if secretComponents.count >= 2 && secretComponents[0].hasPrefix("pi_") && !secretComponents[1].isEmpty {
+            // Check if it's a scoped secret
+            if secretComponents[0].hasSuffix("_scoped") {
+                // Remove the "_scoped" suffix to get the actual PaymentIntent ID
+                let idWithScoped = secretComponents[0]
+                let idComponents = idWithScoped.components(separatedBy: "_scoped")
+                if idComponents.count >= 1 {
+                    return idComponents[0]
+                }
+            } else {
+                // Regular secret format
+                return secretComponents[0]
+            }
         }
+        return nil
     }
+
+    /// Indicates whether this PaymentIntent was created from a redacted API response
+    /// when using a scoped client secret.
+    /// 
+    /// When true, some fields like `amount`, `currency`, and `clientSecret` contain placeholder values
+    /// and should not be used for display or business logic.
+    @_spi(STP) public var isRedacted: Bool {
+        return amount == -1 || currency == "unknown" || clientSecret == Self.RedactedClientSecret || paymentMethodTypes.isEmpty
+    }
+
+    private static let RedactedClientSecret = "redacted_client_secret"
 }
 
 // MARK: - STPPaymentIntentEnum support
