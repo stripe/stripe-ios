@@ -68,17 +68,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
     // MARK: - Views
 
-    private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
-        return AddPaymentMethodViewController(
-            intent: intent,
-            elementsSession: elementsSession,
-            configuration: configuration,
-            paymentMethodTypes: loadResult.paymentMethodTypes,
-            formCache: formCache,
-            analyticsHelper: analyticsHelper,
-            delegate: self
-        )
-    }()
+    private let addPaymentMethodViewController: AddPaymentMethodViewController
 
     private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     internal lazy var navigationBar: SheetNavigationBar = {
@@ -150,7 +140,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         configuration: PaymentSheet.Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        delegate: PaymentSheetViewControllerDelegate
+        delegate: PaymentSheetViewControllerDelegate,
+        previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
         let isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
@@ -186,16 +177,44 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             analyticsHelper: analyticsHelper
         )
 
-        if loadResult.savedPaymentMethods.isEmpty {
+        // Restore the customer's previous payment method.
+        // For saved PMs, this happens naturally, so we just need to handle new payment methods.
+        let previousConfirmParams: IntentConfirmParams? = {
+            switch previousPaymentOption {
+            case .applePay, .saved, .link, nil:
+                return nil
+            case .new(confirmParams: let params):
+                return params
+            case let .external(paymentMethod, billingDetails):
+                let params = IntentConfirmParams(type: .external(paymentMethod))
+                params.paymentMethodParams.billingDetails = billingDetails
+                return params
+            }
+        }()
+
+        if previousConfirmParams != nil {
+            self.mode = .addingNew
+        } else if loadResult.savedPaymentMethods.isEmpty {
             self.mode = .addingNew
         } else {
             self.mode = .selectingSaved
         }
+
+        self.addPaymentMethodViewController = AddPaymentMethodViewController(
+            intent: loadResult.intent,
+            elementsSession: loadResult.elementsSession,
+            configuration: configuration,
+            previousCustomerInput: previousConfirmParams,
+            paymentMethodTypes: loadResult.paymentMethodTypes,
+            formCache: formCache,
+            analyticsHelper: analyticsHelper
+        )
         self.analyticsHelper = analyticsHelper
 
         super.init(nibName: nil, bundle: nil)
         self.configuration.style.configure(self)
         self.savedPaymentOptionsViewController.delegate = self
+        self.addPaymentMethodViewController.delegate = self
         // TODO: This self.view call should be moved to viewDidLoad
         self.view.backgroundColor = configuration.appearance.colors.background
     }

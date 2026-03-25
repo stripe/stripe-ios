@@ -303,7 +303,8 @@ public class PaymentSheet {
                 configuration: configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
-                delegate: self
+                delegate: self,
+                previousPaymentOption: previousPaymentOption
             )
             return vc
         case .vertical:
