@@ -67,6 +67,17 @@ import UIKit
         }
     }
 
+    /// Replaces an arranged subview with a new view at the same position.
+    ///
+    /// - Parameters:
+    ///   - oldView: The arranged subview to replace. Must be a current arranged subview.
+    ///   - newView: The view to insert in its place.
+    func replaceArrangedSubview(_ oldView: UIView, with newView: UIView) {
+        guard let index = arrangedSubviews.firstIndex(of: oldView) else { return }
+        oldView.removeFromSuperview()
+        insertArrangedSubview(newView, at: index)
+    }
+
     // MARK: - Helpers
 
     /// Toggles the visibility of arranged subviews with animation.

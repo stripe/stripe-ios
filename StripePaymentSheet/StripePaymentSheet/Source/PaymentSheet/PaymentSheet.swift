@@ -425,7 +425,9 @@ internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSh
 
     func pay(with paymentOption: PaymentOption)
     func clearTextFields()
+    /// Applies a refreshed load result to the currently presented PaymentSheet UI.
     func update(with loadResult: PaymentSheetLoader.LoadResult)
+    /// Reloads PaymentSheet while it is already presented.
     @MainActor func performRefresh(mode: PaymentSheet.InitializationMode) async
 }
 

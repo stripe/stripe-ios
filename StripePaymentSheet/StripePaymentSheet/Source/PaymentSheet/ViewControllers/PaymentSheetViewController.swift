@@ -77,26 +77,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         navBar.delegate = self
         return navBar
     }()
-    private lazy var walletHeader: WalletHeaderView = {
-        var walletOptions: WalletHeaderView.WalletOptions = []
-
-        if isApplePayEnabled {
-            walletOptions.insert(.applePay)
-        }
-
-        if isLinkEnabled {
-            walletOptions.insert(.link)
-        }
-
-        let header = WalletHeaderView(
-            options: walletOptions,
-            appearance: configuration.appearance,
-            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
-            isPaymentIntent: intent.isPaymentIntent,
-            delegate: self
-        )
-        return header
-    }()
+    private var walletHeader: WalletHeaderView!
     private lazy var headerLabel: UILabel = {
         return PaymentSheetUI.makeHeaderLabel(appearance: configuration.appearance)
     }()
@@ -127,6 +108,24 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         )
         return button
     }()
+
+    private func makeWalletHeader() -> WalletHeaderView {
+        var walletOptions: WalletHeaderView.WalletOptions = []
+        if isApplePayEnabled {
+            walletOptions.insert(.applePay)
+        }
+        if isLinkEnabled {
+            walletOptions.insert(.link)
+        }
+        let header = WalletHeaderView(
+            options: walletOptions,
+            appearance: configuration.appearance,
+            applePayButtonType: configuration.applePay?.buttonType ?? .plain,
+            isPaymentIntent: intent.isPaymentIntent,
+            delegate: self
+        )
+        return header
+    }
 
     // MARK: - Init
 
@@ -203,6 +202,9 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = configuration.appearance.colors.background
+
+        // Initialize wallet header before building the stack view
+        walletHeader = makeWalletHeader()
 
         // One stack view contains all our subviews
         let stackView = UIStackView(arrangedSubviews: [
@@ -497,6 +499,11 @@ extension PaymentSheetViewController {
         self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
         self.isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         self.isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
+
+        // Recreate wallet header with updated wallet options
+        let newWalletHeader = makeWalletHeader()
+        (walletHeader.superview as? UIStackView)?.replaceArrangedSubview(walletHeader, with: newWalletHeader)
+        self.walletHeader = newWalletHeader
 
         formCache.removeAll()
         savedPaymentMethodManager = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
