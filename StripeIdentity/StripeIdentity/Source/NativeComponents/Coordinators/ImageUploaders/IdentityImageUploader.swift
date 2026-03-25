@@ -139,7 +139,7 @@ final class IdentityImageUploader {
                 )
             )
         } catch {
-            logUploadError(error, stage: .highResCrop)
+            logUploadError(error, stage: .highResCrop, fileName: fileName)
             return Promise(error: error)
         }
     }
@@ -175,7 +175,7 @@ final class IdentityImageUploader {
                 jpegCompressionQuality: jpegCompressionQuality
             )
         } catch {
-            logUploadError(error, stage: .imageResize)
+            logUploadError(error, stage: .imageResize, fileName: fileName)
             return Promise(error: error)
         }
     }
@@ -213,7 +213,7 @@ final class IdentityImageUploader {
                 } else if let self = self,
                     case .failure(let error) = result
                 {
-                    self.logUploadError(error, stage: .imageUpload)
+                    self.logUploadError(error, stage: .imageUpload, fileName: fileName)
                 }
             }
         }
@@ -230,22 +230,21 @@ private extension IdentityImageUploader {
     func logUploadError(
         _ error: Error,
         stage: UploadErrorStage,
+        fileName: String,
         filePath: StaticString = #filePath,
         line: UInt = #line
     ) {
-        IdentityAnalyticsClient.sharedAnalyticsClient.log(
-            eventName: IdentityAnalyticsClient.EventName.genericError.rawValue,
-            parameters: [
-                "event_metadata": [
-                    "error_context": "image_upload",
-                    "image_upload_stage": stage.rawValue,
-                    "error_details": AnalyticsClientV2.serialize(
-                        error: error,
-                        filePath: filePath,
-                        line: line
-                    ),
-                ],
-            ]
+        analyticsClient.logGenericError(
+            error: error,
+            additionalMetadata: [
+                "error_context": "image_upload",
+                "image_upload_stage": stage.rawValue,
+                "file_name": fileName,
+                "file_purpose": configuration.filePurpose,
+            ],
+            filePath: filePath,
+            line: line,
+            sheetController: sheetController
         )
     }
 }

@@ -177,6 +177,10 @@ extension ErrorViewController {
         if let sheetController = sheetController {
             sheetController.analyticsClient.logGenericError(
                 error: error,
+                additionalMetadata: [
+                    "error_context": "error_screen",
+                    "screen_name": analyticsScreenName.rawValue,
+                ],
                 filePath: filePath,
                 line: line,
                 sheetController: sheetController

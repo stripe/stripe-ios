@@ -649,7 +649,16 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
 
         switch documentScannerResult {
         case .failure(let error):
-            sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
+            sheetController.analyticsClient.logGenericError(
+                error: error,
+                additionalMetadata: [
+                    "error_context": "document_scanner_load",
+                    "fallback_screen": IdentityAnalyticsClient.ScreenName.documentFileUpload.rawValue,
+                    "require_live_capture": staticContent.documentCapture.requireLiveCapture,
+                    "screen_name": IdentityAnalyticsClient.ScreenName.documentCapture.rawValue,
+                ],
+                sheetController: sheetController
+            )
 
             // Return document upload screen if we can't load models for auto-capture
             return DocumentFileUploadViewController(

@@ -691,13 +691,24 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
                 initialMissings = try verificationPageResponse.get().requirements.missing
             } catch {
                 assertionFailure("verificationPageResponse could not be read, using StripeAPI.VerificationPageFieldType.allCases as initialMissings")
-                analyticsClient.logGenericError(error: error, sheetController: self)
+                analyticsClient.logGenericError(
+                    error: error,
+                    additionalMetadata: [
+                        "error_context": "clear_data_calculation",
+                        "screen_name": flowController.analyticsLastScreen?.analyticsScreenName.rawValue ?? "unknown",
+                    ],
+                    sheetController: self
+                )
                 initialMissings = Set(StripeAPI.VerificationPageFieldType.allCases)
             }
         } else {
             assertionFailure("verificationPageResponse is nil, using StripeAPI.VerificationPageFieldType.allCases as initialMissings")
             analyticsClient.logGenericError(
                 error: VerificationSheetControllerError.missingVerificationPageResponseForClearDataCalculation,
+                additionalMetadata: [
+                    "error_context": "clear_data_calculation",
+                    "screen_name": flowController.analyticsLastScreen?.analyticsScreenName.rawValue ?? "unknown",
+                ],
                 sheetController: self
             )
             initialMissings = Set(StripeAPI.VerificationPageFieldType.allCases)
@@ -722,6 +733,10 @@ private extension VerificationSheetController {
             assertionFailure(assertionMessage)
             analyticsClient.logGenericError(
                 error: error,
+                additionalMetadata: [
+                    "error_context": "verification_page_response_missing",
+                    "screen_name": flowController.analyticsLastScreen?.analyticsScreenName.rawValue ?? "unknown",
+                ],
                 filePath: filePath,
                 line: line,
                 sheetController: self
@@ -751,6 +766,10 @@ private extension VerificationSheetController {
             assertionFailure(assertionMessage)
             analyticsClient.logGenericError(
                 error: error,
+                additionalMetadata: [
+                    "error_context": "verification_page_response_read",
+                    "screen_name": flowController.analyticsLastScreen?.analyticsScreenName.rawValue ?? "unknown",
+                ],
                 filePath: filePath,
                 line: line,
                 sheetController: self

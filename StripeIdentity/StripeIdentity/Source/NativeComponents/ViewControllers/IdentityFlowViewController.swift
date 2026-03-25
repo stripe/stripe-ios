@@ -100,7 +100,14 @@ class IdentityFlowViewController: UIViewController {
             try flowView.configure(with: viewModel)
         } catch {
             if let sheetController = sheetController {
-                sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
+                sheetController.analyticsClient.logGenericError(
+                    error: error,
+                    additionalMetadata: [
+                        "error_context": "flow_view_configure",
+                        "screen_name": analyticsScreenName.rawValue,
+                    ],
+                    sheetController: sheetController
+                )
             }
         }
         navBarBackgroundColor = viewModel.headerViewModel?.backgroundColor
@@ -169,6 +176,10 @@ extension IdentityFlowViewController {
         if let sheetController = self.sheetController {
             sheetController.analyticsClient.logGenericError(
                 error: BottomSheetError(loggableType: errorContent),
+                additionalMetadata: [
+                    "error_context": "bottomsheet",
+                    "screen_name": analyticsScreenName.rawValue,
+                ],
                 sheetController: sheetController
             )
         }

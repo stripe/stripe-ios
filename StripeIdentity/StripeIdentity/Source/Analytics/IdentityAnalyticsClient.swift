@@ -589,19 +589,20 @@ final class IdentityAnalyticsClient {
     /// Logs when an error occurs.
     func logGenericError(
         error: Error,
+        additionalMetadata: [String: Any] = [:],
         filePath: StaticString = #filePath,
         line: UInt = #line,
         sheetController: VerificationSheetControllerProtocol
     ) {
+        var metadata = additionalMetadata
+        metadata["error_details"] = AnalyticsClientV2.serialize(
+            error: error,
+            filePath: filePath,
+            line: line
+        )
         logAnalytic(
             .genericError,
-            metadata: [
-                "error_details": AnalyticsClientV2.serialize(
-                    error: error,
-                    filePath: filePath,
-                    line: line
-                ),
-            ],
+            metadata: metadata,
             verificationPage: try? sheetController.verificationPageResponse?.get()
         )
     }
