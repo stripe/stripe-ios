@@ -1982,7 +1982,7 @@ public class STPPaymentHandler: NSObject {
                             self._retrieveAndCheckIntentForCurrentAction()
 
                         case .failure(let error):
-                            // Re-fetch the intent before completing — the server may have already processed the challenge even though the client reported an error or cancel.
+                            // Re-fetch the intent before completing — the server may have already processed the challenge even though the client reported an error or cancel (like if the user taps the captcha checkmark and then taps the X to cancel).
                             self._retrieveIntentForChallengeResult(currentAction: currentAction) { succeeded in
                                 if succeeded {
                                     // The intent succeeded server-side; report success regardless of the client error.
