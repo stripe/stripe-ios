@@ -123,6 +123,7 @@ final class PaymentSheetLoader {
             }
             loadTimings.logEnd("loadFormSpecs")
 
+            let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
             let lookupLinkAccountTask = Task { @MainActor in
                 let prefetchedLinkEmailAndSource = await prefetchedLinkEmailAndSourceTask.value
                 let linkAccount = try? await Self.lookupLinkAccount(
@@ -135,7 +136,9 @@ final class PaymentSheetLoader {
 
                 // We don't want to set the global singleton if we timed out, because that means setting it after MPE has finished loading, which the code is not necessarily expecting.
                 guard !Task.isCancelled else { return }
-                LinkAccountContext.shared.account = linkAccount
+                if isLinkEnabled {
+                    LinkAccountContext.shared.account = linkAccount
+                }
                 Self.logLinkExperimentExposures(
                     elementsSession: elementsSession,
                     configuration: configuration,
@@ -144,7 +147,6 @@ final class PaymentSheetLoader {
                 )
             }
             // Only block on link lookup if it's enabled.
-            let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
             var didLinkLookupTimeOut: Bool?
             if isLinkEnabled {
                 let result = await withTimeout(5.0) {
