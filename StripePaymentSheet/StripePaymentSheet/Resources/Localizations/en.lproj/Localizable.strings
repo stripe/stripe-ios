@@ -202,6 +202,9 @@ to be saved and used in future checkout sessions. */
 /* Label title for EPS Bank */
 "EPS Bank" = "EPS Bank";
 
+/* Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion */
+"Exchange rate and fees of your bank may apply." = "Exchange rate and fees of your bank may apply.";
+
 /* Title for the Link signup screen */
 "Fast, secure checkout" = "Fast, secure checkout";
 

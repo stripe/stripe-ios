@@ -58,6 +58,38 @@ class STPAnalyticsClientTest: XCTestCase {
         XCTAssertLessThanOrEqual(timestamp, afterTimestamp)
     }
 
+    func testCommonPayloadIncludesLibraryInfoFromAppInfo() {
+        let analyticsClient = STPAnalyticsClient()
+        let apiClient = STPAPIClient(publishableKey: "pk_test_foo")
+        apiClient.appInfo = STPAppInfo(
+            name: "MyAwesomeLibrary",
+            partnerId: "pp_partner_1234",
+            version: "1.2.34",
+            url: "https://example.com"
+        )
+
+        let payload = analyticsClient.commonPayload(apiClient)
+
+        XCTAssertEqual(payload["library_name"] as? String, "MyAwesomeLibrary")
+        XCTAssertEqual(payload["library_version"] as? String, "1.2.34")
+    }
+
+    func testCommonPayloadOmitsLibraryVersionWhenAppInfoVersionIsNil() {
+        let analyticsClient = STPAnalyticsClient()
+        let apiClient = STPAPIClient(publishableKey: "pk_test_foo")
+        apiClient.appInfo = STPAppInfo(
+            name: "MyAwesomeLibrary",
+            partnerId: nil,
+            version: nil,
+            url: nil
+        )
+
+        let payload = analyticsClient.commonPayload(apiClient)
+
+        XCTAssertEqual(payload["library_name"] as? String, "MyAwesomeLibrary")
+        XCTAssertNil(payload["library_version"])
+    }
+
     func testLogShouldRespectAPIClient() {
         STPAPIClient.shared.publishableKey = "pk_shared" // swiftlint:disable:this no_shared_api_client_mutation_in_tests
         let apiClient = STPAPIClient(publishableKey: "pk_not_shared")
