@@ -115,7 +115,6 @@ extension WalletViewControllerSnapshotTests {
                 configuration: configuration,
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: false,
-                canSkipWalletAfterVerification: false,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
                 callToAction: callToAction,
                 analyticsHelper: ._testValue()

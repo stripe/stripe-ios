@@ -12,6 +12,7 @@ require 'net/http'
 require 'json'
 require 'uri'
 require 'pathname'
+require_relative 'changelog_utils'
 
 SCRIPT_DIR = __dir__
 abort 'Unable to find SCRIPT_DIR' if SCRIPT_DIR.nil? || SCRIPT_DIR.empty?
@@ -114,35 +115,24 @@ rescue StandardError
 end
 
 def changelog(version)
-  changelog = ''
-  reading = false
-  # Get changelog for version from CHANGELOG
-  File.foreach('CHANGELOG.md') do |line|
-    # If the line starts with ##, we've reached the end of the entry
-    break if reading && line.start_with?('## ')
-
-    # If the line starts with ## and the version, start reading the entry
-    reading = true if line.start_with?('## ') && line.include?(version)
-
-    changelog += line if reading
-  end
-  changelog
+  ChangelogUtils.release_notes_for_version(version)
 end
 
 def update_placeholder(version, filename)
-  changelog = File.readlines(filename).map do |line|
-    if line.upcase.start_with?('## X')
-      "## X.Y.Z - changes pending release \n\n" + "## #{version} #{Time.now.strftime('%Y-%m-%d')}\n"
-    elsif line.start_with?('### Migrating from versions < X')
+  if filename == 'CHANGELOG.md'
+    ChangelogUtils.update_changelog_for_release!(version, filename)
+    return
+  end
+
+  updated_content = File.readlines(filename).map do |line|
+    if line.start_with?('### Migrating from versions < X')
       "### Migrating from versions < #{version}\n"
     else
       line
     end
   end
 
-  File.open(filename, 'w') do |file|
-    file.puts changelog
-  end
+  File.write(filename, updated_content.join)
 end
 
 def version_from_file
