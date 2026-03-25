@@ -293,6 +293,34 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.session?.status, .open)
     }
 
+    func testSelectCurrency() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
+            adaptivePricingEnabled: true,
+            customerEmailLocation: "DE"
+        )
+        let checkout = Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        )
+
+        try await checkout.load()
+        let initialSession = try XCTUnwrap(checkout.session as? STPCheckoutSession)
+
+        // Session loads with the localized currency (EUR for DE)
+        XCTAssertEqual(initialSession.currency, "eur")
+        XCTAssertTrue(initialSession.adaptivePricingActive)
+        XCTAssertNotNil(initialSession.exchangeRateMeta)
+        let eurTotal = try XCTUnwrap(initialSession.totals?.total)
+
+        // Switch to USD
+        try await checkout.selectCurrency("usd")
+
+        let updatedSession = try XCTUnwrap(checkout.session as? STPCheckoutSession)
+        XCTAssertEqual(updatedSession.currency, "usd")
+        XCTAssertEqual(updatedSession.totals?.total, 2000)
+        XCTAssertNotEqual(updatedSession.totals?.total, eurTotal, "USD total should differ from EUR total")
+    }
+
     func testDelegateCalledOnPromotionCodeApply() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true

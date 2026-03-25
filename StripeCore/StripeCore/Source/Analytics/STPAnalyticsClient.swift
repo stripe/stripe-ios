@@ -193,6 +193,12 @@ extension STPAnalyticsClient {
         payload["app_name"] = Bundle.stp_applicationName() ?? ""
         payload["app_version"] = Bundle.stp_applicationVersion() ?? ""
         payload["app_min_os_version"] = Bundle.stp_minimumOSVersion() ?? ""
+        if let appInfo = apiClient.appInfo {
+            payload["library_name"] = appInfo.name
+            if let version = appInfo.version {
+                payload["library_version"] = version
+            }
+        }
         payload["plugin_type"] = PluginDetector.shared.pluginType?.rawValue
         payload["network_type"] = NetworkDetector.getConnectionType()
         payload["install"] = InstallMethod.current.rawValue

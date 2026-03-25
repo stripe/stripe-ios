@@ -122,6 +122,15 @@ class STPCheckoutSession: NSObject {
         allowedShippingCountries != nil
     }
 
+    /// The localized price options for adaptive pricing.
+    let localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
+
+    /// Exchange rate metadata for adaptive pricing, if available.
+    let exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
+
+    /// Whether adaptive pricing is active for this session.
+    let adaptivePricingActive: Bool
+
     /// Whether automatic tax calculation is enabled for this session.
     let automaticTaxEnabled: Bool
 
@@ -246,6 +255,9 @@ class STPCheckoutSession: NSObject {
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
         requiresBillingAddress: Bool,
         allowedShippingCountries: [String]?,
+        localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
+        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?,
+        adaptivePricingActive: Bool,
         automaticTaxEnabled: Bool,
         automaticTaxAddressSource: String?,
         allResponseFields: [AnyHashable: Any]
@@ -277,6 +289,9 @@ class STPCheckoutSession: NSObject {
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
         self.requiresBillingAddress = requiresBillingAddress
         self.allowedShippingCountries = allowedShippingCountries
+        self.localizedPricesMetas = localizedPricesMetas
+        self.exchangeRateMeta = exchangeRateMeta
+        self.adaptivePricingActive = adaptivePricingActive
         self.automaticTaxEnabled = automaticTaxEnabled
         self.automaticTaxAddressSource = automaticTaxAddressSource
         self.allResponseFields = allResponseFields
@@ -356,6 +371,18 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             return countries
         }()
 
+        // Parse adaptive pricing data
+        let localizedPricesMetas = STPCheckoutSessionLocalizedPriceMeta.localizedPricesMetas(from: dict)
+        let exchangeRateMeta = STPCheckoutSessionExchangeRateMeta.decodedObject(from: dict)
+        let adaptivePricingActive: Bool = {
+            guard let devToolContext = dict["developer_tool_context"] as? [String: Any],
+                  let adaptivePricing = devToolContext["adaptive_pricing"] as? [String: Any],
+                  let active = adaptivePricing["active"] as? Bool else {
+                return false
+            }
+            return active
+        }()
+
         // Parse tax context for automatic tax settings.
         // The server returns the address source as e.g. "session.billing"; strip
         // the "session." prefix so callers can compare against plain "billing"/"shipping".
@@ -418,6 +445,9 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
             requiresBillingAddress: requiresBillingAddress,
             allowedShippingCountries: allowedShippingCountries,
+            localizedPricesMetas: localizedPricesMetas,
+            exchangeRateMeta: exchangeRateMeta,
+            adaptivePricingActive: adaptivePricingActive,
             automaticTaxEnabled: automaticTaxEnabled,
             automaticTaxAddressSource: automaticTaxAddressSource,
             allResponseFields: dict
