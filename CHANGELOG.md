@@ -1,7 +1,10 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release 
+### PaymentSheet
+* [Added] Added support for Pay by Bank payments (GA in GB, private preview in EU).
+
 ### Payments
 * [Fixed] Fixed an issue introduced in 25.8.0 where manually closing a webview 3ds2 challenge after failing the challenge and before it's automatically dismissed could result in a succeeded result.
 
@@ -9,7 +12,6 @@ PATCH
 ### PaymentSheet
 * [Fixed] Fixed a crash when loading PaymentSheet, FlowController, and EmbeddedPaymentElement when compiling with XCode 26.4 / Swift 6.3 due to [a compiler bug](https://github.com/swiftlang/swift/issues/87481)
 * [Fixed] Improved loading times for integrations that set `configuration.customer`.
-* [Added] Added support for Pay by Bank payments (GA in GB, private preview in EU).
 
 ## 25.8.0 2026-03-16
 ### Payments
