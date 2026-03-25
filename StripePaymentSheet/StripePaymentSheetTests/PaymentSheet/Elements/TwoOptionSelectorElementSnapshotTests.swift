@@ -47,6 +47,46 @@ final class TwoOptionSelectorElementSnapshotTests: STPSnapshotTestCase {
 
 }
 
+extension STPSnapshotTestCase {
+    func verifySelectorSnapshotView(
+        _ view: UIView,
+        darkMode: Bool,
+        width: CGFloat = 320,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let size = selectorSnapshotSize(for: view, width: width)
+        let window = UIWindow(frame: CGRect(origin: .zero, size: size))
+        window.overrideUserInterfaceStyle = darkMode ? .dark : .light
+        window.isHidden = false
+
+        view.translatesAutoresizingMaskIntoConstraints = true
+        view.frame = CGRect(origin: .zero, size: size)
+        window.addSubview(view)
+        window.layoutIfNeeded()
+        view.layoutIfNeeded()
+
+        STPSnapshotVerifyView(view, file: file, line: line)
+    }
+
+    private func selectorSnapshotSize(for view: UIView, width: CGFloat) -> CGSize {
+        view.translatesAutoresizingMaskIntoConstraints = false
+        let widthConstraint = view.widthAnchor.constraint(equalToConstant: width)
+        widthConstraint.isActive = true
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+
+        let fittingSize = view.systemLayoutSizeFitting(
+            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
+
+        widthConstraint.isActive = false
+        return CGSize(width: width, height: fittingSize.height)
+    }
+}
+
 private extension TwoOptionSelectorElementSnapshotTests {
     func makeElement(
         left: (String, String),
@@ -69,19 +109,6 @@ private extension TwoOptionSelectorElementSnapshotTests {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let view = element.view
-        view.autosizeHeight(width: 320)
-
-        if darkMode {
-            let window = UIWindow(frame: view.bounds)
-            window.overrideUserInterfaceStyle = .dark
-            window.isHidden = false
-            window.addSubview(view)
-            window.layoutIfNeeded()
-            STPSnapshotVerifyView(view)
-        } else {
-            view.layoutIfNeeded()
-            STPSnapshotVerifyView(view)
-        }
+        verifySelectorSnapshotView(element.view, darkMode: darkMode, file: file, line: line)
     }
 }

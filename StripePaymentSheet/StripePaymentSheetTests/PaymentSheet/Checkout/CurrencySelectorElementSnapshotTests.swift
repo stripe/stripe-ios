@@ -142,19 +142,6 @@ private extension CurrencySelectorElementSnapshotTests {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let view = element.view
-        view.autosizeHeight(width: 320)
-
-        if darkMode {
-            let window = UIWindow(frame: view.bounds)
-            window.overrideUserInterfaceStyle = .dark
-            window.isHidden = false
-            window.addSubview(view)
-            window.layoutIfNeeded()
-            STPSnapshotVerifyView(view)
-        } else {
-            view.layoutIfNeeded()
-            STPSnapshotVerifyView(view)
-        }
+        verifySelectorSnapshotView(element.view, darkMode: darkMode, file: file, line: line)
     }
 }
