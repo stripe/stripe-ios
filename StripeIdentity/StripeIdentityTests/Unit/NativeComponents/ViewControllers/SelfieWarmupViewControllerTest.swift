@@ -84,6 +84,21 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
         )
         XCTAssert(analytic: analytic, hasMetadata: "camera_event_kind", withValue: "permission")
         XCTAssert(analytic: analytic, hasMetadata: "camera_access_state", withValue: "denied")
+
+        let errorAnalytic = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "camera_error"
+        ).first
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "screen_name", withValue: "selfie")
+        XCTAssert(
+            analytic: errorAnalytic,
+            hasMetadata: "camera_source",
+            withValue: "camera_session"
+        )
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "camera_event_kind", withValue: "permission")
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "camera_access_state", withValue: "denied")
+        let error = (errorAnalytic?["event_metadata"] as? [String: Any])?["error"] as? [String: Any]
+        XCTAssertEqual(error?["type"] as? String, "cameraPermissionDenied")
+        XCTAssertEqual(error?["file"] as? String, "SelfieCaptureViewController.swift")
     }
 
     func testRequestCameraAccessGrantedLogsExistingAnalytic() {
@@ -101,6 +116,10 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(
             mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_denied")
                 .count,
+            0
+        )
+        XCTAssertEqual(
+            mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_error").count,
             0
         )
     }

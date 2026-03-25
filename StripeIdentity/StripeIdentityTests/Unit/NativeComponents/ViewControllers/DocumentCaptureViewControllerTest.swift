@@ -444,6 +444,20 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
                 .count,
             0
         )
+
+        let errorAnalytic = mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_error")
+            .first
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "screen_name", withValue: "live_capture")
+        XCTAssert(
+            analytic: errorAnalytic,
+            hasMetadata: "camera_source",
+            withValue: "camera_session"
+        )
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "camera_event_kind", withValue: "permission")
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "camera_access_state", withValue: "denied")
+        let error = (errorAnalytic?["event_metadata"] as? [String: Any])?["error"] as? [String: Any]
+        XCTAssertEqual(error?["type"] as? String, "cameraPermissionDenied")
+        XCTAssertEqual(error?["file"] as? String, "DocumentCaptureViewController.swift")
     }
 
     func testCameraSessionFailedConfigure() {
@@ -503,6 +517,10 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(
             mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_denied")
                 .count,
+            0
+        )
+        XCTAssertEqual(
+            mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_error").count,
             0
         )
     }

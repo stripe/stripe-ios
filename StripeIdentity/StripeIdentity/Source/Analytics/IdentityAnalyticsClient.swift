@@ -36,6 +36,11 @@ enum IdentityAnalyticsClientError: AnalyticLoggableErrorV2 {
     }
 }
 
+private enum CameraPermissionError: String, AnalyticLoggableStringErrorV2 {
+    case denied = "cameraPermissionDenied"
+    case unknown = "cameraPermissionUnknown"
+}
+
 /// Wrapper for AnalyticsClient that formats Identity-specific analytics
 final class IdentityAnalyticsClient {
 
@@ -169,6 +174,18 @@ final class IdentityAnalyticsClient {
             return "unknown"
         }
         return isGranted ? "granted" : "denied"
+    }
+
+    private func cameraPermissionError(isGranted: Bool?) -> CameraPermissionError {
+        switch isGranted {
+        case false:
+            return .denied
+        case nil:
+            return .unknown
+        case true:
+            assertionFailure("cameraPermissionError should not be created for granted camera access")
+            return .unknown
+        }
     }
 
     private func logAnalytic(
@@ -405,7 +422,9 @@ final class IdentityAnalyticsClient {
         sheetController: VerificationSheetControllerProtocol,
         isGranted: Bool?,
         screenName: ScreenName,
-        cameraSource: CameraSource
+        cameraSource: CameraSource,
+        filePath: StaticString = #filePath,
+        line: UInt = #line
     ) {
         guard isGranted != true else {
             var metadata = cameraMetadata(
@@ -425,7 +444,9 @@ final class IdentityAnalyticsClient {
             sheetController: sheetController,
             isGranted: isGranted,
             screenName: screenName,
-            cameraSource: cameraSource
+            cameraSource: cameraSource,
+            filePath: filePath,
+            line: line
         )
     }
 
@@ -434,7 +455,9 @@ final class IdentityAnalyticsClient {
         sheetController: VerificationSheetControllerProtocol,
         isGranted: Bool?,
         screenName: ScreenName,
-        cameraSource: CameraSource
+        cameraSource: CameraSource,
+        filePath: StaticString = #filePath,
+        line: UInt = #line
     ) {
         guard isGranted != true else {
             return
@@ -448,6 +471,17 @@ final class IdentityAnalyticsClient {
 
         logAnalytic(
             .cameraPermissionDenied,
+            metadata: metadata,
+            verificationPage: try? sheetController.verificationPageResponse?.get()
+        )
+
+        metadata["error"] = AnalyticsClientV2.serialize(
+            error: cameraPermissionError(isGranted: isGranted),
+            filePath: filePath,
+            line: line
+        )
+        logAnalytic(
+            .cameraError,
             metadata: metadata,
             verificationPage: try? sheetController.verificationPageResponse?.get()
         )

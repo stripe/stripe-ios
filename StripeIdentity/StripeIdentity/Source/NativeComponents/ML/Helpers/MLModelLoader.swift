@@ -91,14 +91,16 @@ final class MLModelLoader {
                 let mlModel = try MLModel(contentsOf: cachedModel)
                 return returnedPromise.resolve(with: mlModel)
             } catch {
-                Self.logModelLoadingError(
-                    error,
-                    stage: "load_cached_model"
-                )
-            }
+                if FileManager.default.fileExists(atPath: cachedModel.path) {
+                    Self.logModelLoadingError(
+                        error,
+                        stage: "load_cached_model"
+                    )
 
-            // If the model failed to load because it was corrupted, delete the artifact
-            try? FileManager.default.removeItem(at: cachedModel)
+                    // If the model failed to load because it was corrupted, delete the artifact
+                    try? FileManager.default.removeItem(at: cachedModel)
+                }
+            }
 
             self.fileDownloader.downloadFileTemporarily(from: remoteURL).chained(on: loadPromiseCacheQueue) {
                 [weak self] tmpFileURL -> Promise<MLModel> in
