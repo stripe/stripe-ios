@@ -568,4 +568,11 @@ extension String.Localized {
     static var last_4_digits_of_ssn: String {
         STPLocalizedString("Last 4 digits of SSN", "Label for displaying the last 4 digits of the user's social security number")
     }
+
+    static var bankExchangeRateDisclaimer: String {
+        STPLocalizedString(
+            "Exchange rate and fees of your bank may apply.",
+            "Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion"
+        )
+    }
 }
