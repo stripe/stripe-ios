@@ -165,14 +165,10 @@ final class IdentityAnalyticsClient {
     }
 
     private func cameraAccessState(isGranted: Bool?) -> String {
-        switch isGranted {
-        case true:
-            return "granted"
-        case false:
-            return "denied"
-        case nil:
+        guard let isGranted = isGranted else {
             return "unknown"
         }
+        return isGranted ? "granted" : "denied"
     }
 
     private func logAnalytic(
