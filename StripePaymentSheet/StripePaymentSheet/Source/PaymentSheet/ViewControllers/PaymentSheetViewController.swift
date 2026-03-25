@@ -60,7 +60,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private(set) var error: Error?
     private var isPaymentInFlight: Bool = false
     private var isReloading: Bool = false
-    var intentConfiguration: PaymentSheet.IntentConfiguration?
     private(set) var isDismissable: Bool = true
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
@@ -208,14 +207,9 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.view.backgroundColor = configuration.appearance.colors.background
 
         // One stack view contains all our subviews
-        var arrangedSubviews: [UIView] = [
+        let arrangedSubviews: [UIView] = [
             headerLabel, walletHeader, paymentContainerView, errorLabel, buyButton, bottomNoticeTextField,
         ]
-        #if DEBUG
-        if let modeSwitcher = makeModeSwitcher() {
-            arrangedSubviews.insert(modeSwitcher, at: 0)
-        }
-        #endif
         let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true

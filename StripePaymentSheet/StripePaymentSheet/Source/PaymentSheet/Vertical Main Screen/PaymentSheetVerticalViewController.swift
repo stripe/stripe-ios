@@ -83,7 +83,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
     private var isReloading: Bool = false
-    var intentConfiguration: PaymentSheet.IntentConfiguration?
     private(set) var savedPaymentMethods: [STPPaymentMethod]
     let isFlowController: Bool
     /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
