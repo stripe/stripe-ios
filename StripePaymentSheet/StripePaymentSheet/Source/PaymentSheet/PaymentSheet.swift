@@ -354,7 +354,7 @@ public class PaymentSheet {
     }
 }
 
-extension PaymentSheet: @MainActor PaymentSheetViewControllerDelegate {
+extension PaymentSheet: PaymentSheetViewControllerDelegate {
 
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
