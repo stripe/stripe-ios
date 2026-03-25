@@ -52,7 +52,7 @@ extension PaymentSheet {
 
             // 2. Get expected amount from checkout session
             let expectedAmount = try checkoutSession.expectedAmount()
-            let setupFutureUsage: String? = {
+            let savePaymentMethod: Bool? = {
                 guard checkoutSession.mode != .setup,
                       checkoutSession.customerId != nil
                 else {
@@ -66,11 +66,7 @@ extension PaymentSheet {
                     return nil
                 }
 
-                if confirmType.shouldSave {
-                    return "off_session"
-                }
-
-                return checkoutSession.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
+                return confirmType.shouldSave
             }()
 
             // 3. Call confirm API
@@ -79,7 +75,7 @@ extension PaymentSheet {
                 paymentMethod: paymentMethod.stripeId,
                 expectedAmount: expectedAmount,
                 expectedPaymentMethodType: paymentMethodType.identifier,
-                setupFutureUsage: setupFutureUsage,
+                savePaymentMethod: savePaymentMethod,
                 returnURL: configuration.returnURL,
                 shipping: makeCheckoutSessionShippingParams(configuration: configuration),
                 paymentMethodOptions: paymentMethodOptions,

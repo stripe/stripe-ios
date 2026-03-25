@@ -375,7 +375,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         stubCreatePaymentMethodExpecting(allowRedisplay: "always")
         stubCheckoutSessionConfirm(
             sessionId: checkoutSession.stripeId,
-            setupFutureUsage: "off_session"
+            savePaymentMethod: true
         )
 
         let configuration = MockParams.configuration(pk: MockParams.publicKey)
@@ -408,7 +408,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         stubCreatePaymentMethodExpecting(allowRedisplay: "unspecified")
         stubCheckoutSessionConfirm(
             sessionId: checkoutSession.stripeId,
-            setupFutureUsage: nil
+            savePaymentMethod: false
         )
 
         let configuration = MockParams.configuration(pk: MockParams.publicKey)
@@ -587,7 +587,7 @@ private extension PaymentSheetAPIMockTest {
 
     func stubCheckoutSessionConfirm(
         sessionId: String,
-        setupFutureUsage: String? = nil,
+        savePaymentMethod: Bool? = nil,
         shouldSucceed: Bool = true,
         line: UInt = #line
     ) {
@@ -597,7 +597,7 @@ private extension PaymentSheetAPIMockTest {
             urlRequest.url?.absoluteString.contains("payment_pages/\(sessionId)/confirm") ?? false
         } response: { [self] request in
             let params = bodyParams(from: request, line: line)
-            assertParam(params, named: "setup_future_usage", is: setupFutureUsage, line: line)
+            assertParam(params, named: "save_payment_method", is: savePaymentMethod.map(String.init), line: line)
             defer { exp.fulfill() }
 
             if shouldSucceed {
