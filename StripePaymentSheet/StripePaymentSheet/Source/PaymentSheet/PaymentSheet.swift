@@ -180,34 +180,9 @@ public class PaymentSheet {
                 case .success(let loadResult):
                     self.confirmationChallenge = ConfirmationChallenge(enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
                     let presentPaymentSheet: () -> Void = {
-                        // Set the PaymentSheetViewController as the content of our bottom sheet
-                        let paymentSheetVC: PaymentSheetViewControllerProtocol = {
-                            // Resolve automatic layout based on experiment
-                            var configuration = self.configuration
-                            let resolvedPaymentMethodLayout = configuration.resolveLayout(
-                                loadResult: loadResult,
-                                configuration: self.configuration,
-                                analyticsHelper: self.analyticsHelper
-                            )
-                            switch resolvedPaymentMethodLayout {
-                            case .horizontal:
-                                return PaymentSheetViewController(
-                                    configuration: configuration,
-                                    loadResult: loadResult,
-                                    analyticsHelper: self.analyticsHelper,
-                                    delegate: self
-                                )
-                            case .vertical:
-                                let verticalVC = PaymentSheetVerticalViewController(
-                                    configuration: configuration,
-                                    loadResult: loadResult,
-                                    isFlowController: false,
-                                    analyticsHelper: self.analyticsHelper
-                                )
-                                verticalVC.paymentSheetDelegate = self
-                                return verticalVC
-                            }
-                        }()
+                        let paymentSheetVC = self.makePaymentSheetVC(
+                            loadResult: loadResult
+                        )
                         self.bottomSheetViewController.setViewControllers([paymentSheetVC])
                     }
                     if let linkAccount = LinkAccountContext.shared.account, loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(for: linkAccount) {
@@ -307,9 +282,79 @@ public class PaymentSheet {
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
     var confirmationChallenge: ConfirmationChallenge?
+
+    // MARK: - Factory & Reload
+    @MainActor
+    func makePaymentSheetVC(
+        loadResult: PaymentSheetLoader.LoadResult,
+        previousPaymentOption: PaymentOption? = nil,
+        shouldLogExperimentExposure: Bool = true
+    ) -> PaymentSheetViewControllerProtocol {
+        var configuration = self.configuration
+        let layout = configuration.resolveLayout(
+            loadResult: loadResult,
+            configuration: self.configuration,
+            analyticsHelper: self.analyticsHelper,
+            shouldLogExperimentExposure: shouldLogExperimentExposure
+        )
+        switch layout {
+        case .horizontal:
+            let vc = PaymentSheetViewController(
+                configuration: configuration,
+                loadResult: loadResult,
+                analyticsHelper: analyticsHelper,
+                delegate: self
+            )
+            return vc
+        case .vertical:
+            let vc = PaymentSheetVerticalViewController(
+                configuration: configuration,
+                loadResult: loadResult,
+                isFlowController: false,
+                analyticsHelper: analyticsHelper,
+                previousPaymentOption: previousPaymentOption
+            )
+            vc.paymentSheetDelegate = self
+            return vc
+        }
+    }
+
+    @MainActor
+    private func performReload(mode: InitializationMode) {
+        guard let currentVC = bottomSheetViewController.contentStack.first
+                as? PaymentSheetViewControllerProtocol else { return }
+
+        currentVC.setReloading(true)
+
+        Task {
+            do {
+                let loadResult = try await PaymentSheetLoader.load(
+                    mode: mode,
+                    configuration: configuration,
+                    analyticsHelper: analyticsHelper,
+                    integrationShape: .paymentSheet,
+                    isUpdate: true
+                )
+                self.confirmationChallenge = ConfirmationChallenge(
+                    enableAttestation: configuration.enableAttestationOnConfirmation,
+                    elementsSession: loadResult.elementsSession,
+                    stripeAttest: configuration.apiClient.stripeAttest
+                )
+                let newVC = makePaymentSheetVC(
+                    loadResult: loadResult,
+                    previousPaymentOption: currentVC.selectedPaymentOption,
+                    shouldLogExperimentExposure: false
+                )
+                bottomSheetViewController.setViewControllers([newVC])
+            } catch {
+                currentVC.setReloading(false)
+                currentVC.setReloadError(error)
+            }
+        }
+    }
 }
 
-extension PaymentSheet: PaymentSheetViewControllerDelegate {
+extension PaymentSheet: @MainActor PaymentSheetViewControllerDelegate {
 
     func paymentSheetViewControllerShouldConfirm(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
@@ -382,6 +427,14 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         }
     }
 
+    @MainActor
+    func paymentSheetViewControllerDidRequestReload(
+        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
+        mode: PaymentSheet.InitializationMode
+    ) {
+        performReload(mode: mode)
+    }
+
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol) {
         let useNativeLink = deviceCanUseNativeLink(elementsSession: paymentSheetViewController.elementsSession, configuration: configuration)
         if useNativeLink {
@@ -422,9 +475,12 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
     var intent: Intent { get }
     var elementsSession: STPElementsSession { get }
+    var selectedPaymentOption: PaymentSheet.PaymentOption? { get }
 
     func pay(with paymentOption: PaymentOption)
     func clearTextFields()
+    func setReloading(_ isReloading: Bool)
+    func setReloadError(_ error: Error)
 }
 
 protocol PaymentSheetViewControllerDelegate: AnyObject {
@@ -439,4 +495,8 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     )
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
+    func paymentSheetViewControllerDidRequestReload(
+        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
+        mode: PaymentSheet.InitializationMode
+    )
 }

@@ -59,6 +59,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private var mode: Mode
     private(set) var error: Error?
     private var isPaymentInFlight: Bool = false
+    private var isReloading: Bool = false
     private(set) var isDismissable: Bool = true
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
@@ -288,7 +289,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     // state -> view
     private func updateUI(animated: Bool = true) {
         // Disable interaction if necessary
-        let shouldEnableUserInteraction = !isPaymentInFlight
+        let shouldEnableUserInteraction = !isPaymentInFlight && !isReloading
         if shouldEnableUserInteraction != view.isUserInteractionEnabled {
             sendEventToSubviews(
                 shouldEnableUserInteraction ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
@@ -296,8 +297,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             )
         }
         view.isUserInteractionEnabled = shouldEnableUserInteraction
-        isDismissable = !isPaymentInFlight
-        navigationBar.isUserInteractionEnabled = !isPaymentInFlight
+        isDismissable = !isPaymentInFlight && !isReloading
+        navigationBar.isUserInteractionEnabled = !isPaymentInFlight && !isReloading
 
         // Update our views (starting from the top of the screen):
         configureNavBar()
@@ -355,7 +356,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         // Notice
         updateBottomNotice()
 
-        if isPaymentInFlight {
+        if isPaymentInFlight || isReloading {
             buyButtonStatus = .processing
         }
         if case .selectingSaved = mode, case .applePay = savedPaymentOptionsViewController.selectedPaymentOption {
@@ -485,6 +486,26 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 }
             }
         }
+    }
+
+    // MARK: - PaymentSheetViewControllerProtocol
+
+    var selectedPaymentOption: PaymentSheet.PaymentOption? {
+        switch mode {
+        case .selectingSaved:
+            return savedPaymentOptionsViewController.selectedPaymentOption
+        case .addingNew:
+            return addPaymentMethodViewController.paymentOption
+        }
+    }
+
+    func setReloading(_ isReloading: Bool) {
+        self.isReloading = isReloading
+        updateUI()
+    }
+
+    func setReloadError(_ error: Error) {
+        set(error: error)
     }
 }
 

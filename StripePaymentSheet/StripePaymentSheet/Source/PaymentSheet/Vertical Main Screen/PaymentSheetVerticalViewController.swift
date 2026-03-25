@@ -82,6 +82,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let walletButtonsShownExternally: Bool
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
+    private var isReloading: Bool = false
     private(set) var savedPaymentMethods: [STPPaymentMethod]
     let isFlowController: Bool
     /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
@@ -295,7 +296,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return .makeDefaultType(intent: intent)
         }()
         let status: ConfirmButton.Status = {
-            if isPaymentInFlight {
+            if isPaymentInFlight || isReloading {
                 return .processing
             }
             if let cvcRecollectionViewController, isRecollectingCVC {
@@ -351,6 +352,19 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 self.bottomSheetController?.contentOffsetPercentage = 1
             }
         })
+    }
+
+    // MARK: - PaymentSheetViewControllerProtocol
+
+    func setReloading(_ isReloading: Bool) {
+        self.isReloading = isReloading
+        isUserInteractionEnabled = !isReloading
+        updatePrimaryButton()
+    }
+
+    func setReloadError(_ error: Swift.Error) {
+        self.error = error
+        updateError()
     }
 
     /// Returns the default selected row in the vertical list - the previous payment option, the last VC's selection, or the customer's default.
@@ -504,6 +518,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     var primaryButtonTopAnchorConstraint: NSLayoutConstraint!
     // MARK: - UIViewController Methods
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
@@ -808,11 +823,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 // MARK: - BottomSheetContentViewController
 extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
     var allowsDragToDismiss: Bool {
-        return isPaymentInFlight
+        return isPaymentInFlight || isReloading
     }
 
     func didTapOrSwipeToDismiss() {
-        guard !isPaymentInFlight else {
+        guard !isPaymentInFlight, !isReloading else {
            return
         }
         didCancel()
