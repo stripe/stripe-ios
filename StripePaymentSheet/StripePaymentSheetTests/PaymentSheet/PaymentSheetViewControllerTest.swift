@@ -99,12 +99,15 @@ final class PaymentSheetViewControllerTest: XCTestCase {
         let sut = makeSUT(loadResult: makeLoadResult(savedPaymentMethods: []))
 
         // The card form is populated during init; verify it exists
-        XCTAssertNotNil(sut.formCache[.stripe(.card)])
+        let originalCachedForm = sut.formCache[.stripe(.card)]
+        XCTAssertNotNil(originalCachedForm)
 
         sut.update(with: makeLoadResult(savedPaymentMethods: []))
 
-        // After update, cache was cleared; a PM type not in the new result should be nil
-        XCTAssertNil(sut.formCache[.stripe(.SEPADebit)], "Form cache should be cleared after update")
+        // After update, the cache was cleared and re-populated with a new form instance
+        let newCachedForm = sut.formCache[.stripe(.card)]
+        XCTAssertNotNil(newCachedForm)
+        XCTAssertFalse(originalCachedForm === newCachedForm, "Form cache should contain a new instance after update")
     }
 }
 

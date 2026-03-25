@@ -297,12 +297,14 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
         let sut = makeVerticalVC(loadResult: loadResult)
 
         // The form VC writes into the cache during init; verify the cache has an entry
-        XCTAssertNotNil(sut.formCache[.stripe(.card)])
+        let originalCachedForm = sut.formCache[.stripe(.card)]
+        XCTAssertNotNil(originalCachedForm)
 
         sut.update(with: loadResult)
 
-        // After update, the old cache entries should be cleared (new form VC creates a fresh entry)
-        // We verify the cache was cleared by checking a type that won't be re-populated
-        XCTAssertNil(sut.formCache[.stripe(.SEPADebit)])
+        // After update, the cache was cleared and re-populated with a new form instance
+        let newCachedForm = sut.formCache[.stripe(.card)]
+        XCTAssertNotNil(newCachedForm)
+        XCTAssertFalse(originalCachedForm === newCachedForm, "Form cache should contain a new instance after update")
     }
 }
