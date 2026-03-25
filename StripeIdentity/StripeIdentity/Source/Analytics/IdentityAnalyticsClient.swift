@@ -177,15 +177,14 @@ final class IdentityAnalyticsClient {
     }
 
     private func cameraPermissionError(isGranted: Bool?) -> CameraPermissionError {
-        switch isGranted {
-        case false:
-            return .denied
-        case nil:
+        guard let isGranted = isGranted else {
             return .unknown
-        case true:
+        }
+        if isGranted {
             assertionFailure("cameraPermissionError should not be created for granted camera access")
             return .unknown
         }
+        return .denied
     }
 
     private func logAnalytic(
