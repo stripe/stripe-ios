@@ -10,7 +10,9 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 import XCTest
-@testable@_spi(STP) import StripeCameraCore
+
+// swift-format-ignore
+@testable @_spi(STP) import StripeCameraCore
 
 @testable import StripeIdentity
 

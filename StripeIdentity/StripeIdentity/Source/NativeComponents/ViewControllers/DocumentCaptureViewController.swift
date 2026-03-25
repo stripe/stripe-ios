@@ -321,7 +321,9 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 scanner: anyDocumentScanner,
                 concurrencyManager: concurrencyManager
                     ?? ImageScanningConcurrencyManager(
-                        sheetController: sheetController
+                        sheetController: sheetController,
+                        scannerName: .document,
+                        screenName: .documentCapture
                     ),
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper

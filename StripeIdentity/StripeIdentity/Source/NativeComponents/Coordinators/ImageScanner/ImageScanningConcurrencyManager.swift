@@ -61,13 +61,19 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
     private var futureQueue: DispatchQueue = DispatchQueue(label: "com.stripe.identity.concurrent-image-scanner.futures")
 
     private let analyticsClient: IdentityAnalyticsClient
+    private let scannerName: IdentityAnalyticsClient.ScannerName
+    private let screenName: IdentityAnalyticsClient.ScreenName
     private let sheetController: VerificationSheetControllerProtocol
 
     init(
         sheetController: VerificationSheetControllerProtocol,
+        scannerName: IdentityAnalyticsClient.ScannerName,
+        screenName: IdentityAnalyticsClient.ScreenName,
         maxConcurrentScans: Int = kConcurrentImageScannerDefaultMaxConcurrentScans
     ) {
         self.analyticsClient = sheetController.analyticsClient
+        self.scannerName = scannerName
+        self.screenName = screenName
         self.sheetController = sheetController
         self.semaphore = DispatchSemaphore(value: maxConcurrentScans)
     }
@@ -142,7 +148,15 @@ final class ImageScanningConcurrencyManager: ImageScanningConcurrencyManagerProt
             case .success(let scannerOutput):
                 wrappedCompletion(scannerOutput)
             case .failure(let error):
-                self.analyticsClient.logGenericError(error: error, sheetController: self.sheetController)
+                self.analyticsClient.logGenericError(
+                    error: error,
+                    additionalMetadata: [
+                        "error_context": "image_scan",
+                        "scanner_name": self.scannerName.rawValue,
+                        "screen_name": self.screenName.rawValue,
+                    ],
+                    sheetController: self.sheetController
+                )
             }
 
             // Track when the scan ended

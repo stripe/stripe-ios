@@ -182,6 +182,7 @@ extension VerificationFlowWebViewController {
 
     fileprivate func logLoadingFailure(
         _ error: Error,
+        stage: VerificationFlowWebViewFailureStage,
         filePath: StaticString = #filePath,
         line: UInt = #line
     ) {
@@ -190,6 +191,7 @@ extension VerificationFlowWebViewController {
             parameters: [
                 "event_metadata": [
                     "error_context": "verification_webview",
+                    "webview_failure_stage": stage.rawValue,
                     "error_details": AnalyticsClientV2.serialize(
                         error: error,
                         filePath: filePath,
@@ -222,7 +224,11 @@ extension VerificationFlowWebViewController: VerificationFlowWebViewDelegate {
         UIApplication.shared.open(url)
     }
 
-    func verificationFlowWebView(_ view: VerificationFlowWebView, didFailLoadingWith error: Error) {
-        logLoadingFailure(error)
+    func verificationFlowWebView(
+        _ view: VerificationFlowWebView,
+        didFailLoadingWith error: Error,
+        stage: VerificationFlowWebViewFailureStage
+    ) {
+        logLoadingFailure(error, stage: stage)
     }
 }

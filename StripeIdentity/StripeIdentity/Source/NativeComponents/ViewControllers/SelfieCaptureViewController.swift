@@ -237,7 +237,9 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                 scanner: anyFaceScanner,
                 concurrencyManager: concurrencyManager
                     ?? ImageScanningConcurrencyManager(
-                        sheetController: sheetController
+                        sheetController: sheetController,
+                        scannerName: .selfie,
+                        screenName: .selfieCapture
                     ),
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper

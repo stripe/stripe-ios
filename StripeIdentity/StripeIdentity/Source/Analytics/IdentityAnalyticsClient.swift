@@ -251,8 +251,8 @@ final class IdentityAnalyticsClient {
         }
     }
 
-    /// Helper to create metadata common to both failed, canceled, and succeed analytic events
-    private func failedCanceledSucceededCommonMetadataPayload(
+    /// Helper to create metadata common to flow outcome analytic events
+    private func flowOutcomeCommonMetadataPayload(
         sheetController: VerificationSheetControllerProtocol
     ) -> [String: Any] {
         var metadata: [String: Any] = [:]
@@ -271,13 +271,28 @@ final class IdentityAnalyticsClient {
         return metadata
     }
 
+    private func addLastScreenNameIfAvailable(
+        to metadata: inout [String: Any],
+        sheetController: VerificationSheetControllerProtocol
+    ) {
+        if let lastScreenName = sheetController.flowController.analyticsLastScreen?.analyticsScreenName.rawValue {
+            metadata["last_screen_name"] = lastScreenName
+        }
+    }
+
     /// Logs an event when the verification sheet is closed
     private func logSheetClosed(sessionResult: String, sheetController: VerificationSheetControllerProtocol) {
+        var metadata = flowOutcomeCommonMetadataPayload(
+            sheetController: sheetController
+        )
+        metadata["session_result"] = sessionResult
+        addLastScreenNameIfAvailable(
+            to: &metadata,
+            sheetController: sheetController
+        )
         logAnalytic(
             .sheetClosed,
-            metadata: [
-                "session_result": sessionResult
-            ],
+            metadata: metadata,
             verificationPage: try? sheetController.verificationPageResponse?.get()
         )
     }
@@ -289,7 +304,11 @@ final class IdentityAnalyticsClient {
         filePath: StaticString,
         line: UInt
     ) {
-        var metadata = failedCanceledSucceededCommonMetadataPayload(
+        var metadata = flowOutcomeCommonMetadataPayload(
+            sheetController: sheetController
+        )
+        addLastScreenNameIfAvailable(
+            to: &metadata,
             sheetController: sheetController
         )
         metadata["error"] = AnalyticsClientV2.serialize(
@@ -305,12 +324,13 @@ final class IdentityAnalyticsClient {
     private func logVerificationCanceled(
         sheetController: VerificationSheetControllerProtocol
     ) {
-        var metadata = failedCanceledSucceededCommonMetadataPayload(
+        var metadata = flowOutcomeCommonMetadataPayload(
             sheetController: sheetController
         )
-        if let lastScreen = sheetController.flowController.analyticsLastScreen {
-            metadata["last_screen_name"] = lastScreen.analyticsScreenName.rawValue
-        }
+        addLastScreenNameIfAvailable(
+            to: &metadata,
+            sheetController: sheetController
+        )
 
         logAnalytic(.verificationCanceled, metadata: metadata, verificationPage: try? sheetController.verificationPageResponse?.get())
     }
@@ -319,7 +339,7 @@ final class IdentityAnalyticsClient {
     func logVerificationSucceeded(
         sheetController: VerificationSheetControllerProtocol
     ) {
-        var metadata = failedCanceledSucceededCommonMetadataPayload(
+        var metadata = flowOutcomeCommonMetadataPayload(
             sheetController: sheetController
         )
 
@@ -388,9 +408,15 @@ final class IdentityAnalyticsClient {
         cameraSource: CameraSource
     ) {
         guard isGranted != true else {
+            var metadata = cameraMetadata(
+                screenName: screenName,
+                cameraSource: cameraSource,
+                cameraEventKind: .permission
+            )
+            metadata["camera_access_state"] = cameraAccessState(isGranted: isGranted)
             logAnalytic(
                 .cameraPermissionGranted,
-                metadata: [:],
+                metadata: metadata,
                 verificationPage: try? sheetController.verificationPageResponse?.get()
             )
             return
