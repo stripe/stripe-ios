@@ -259,7 +259,6 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         XCTAssertLessThan(finalCallDelay, 1.3, "Final call should happen after polling budget expires but within a reasonable time")
     }
 
-    
     // MARK: - PaymentIntent challengeClientOutcome tests
 
     // The key scenario: user taps the captcha checkmark then taps X to dismiss.
