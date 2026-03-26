@@ -106,6 +106,13 @@ public class STPPaymentHandler: NSObject {
         case invalidState
     }
 
+    /// The client-side outcome to use when the server intent is not in a success state,
+    /// as determined by the challenge screen before the intent is re-fetched.
+    enum ChallengeClientOutcome {
+        case canceled
+        case failed(Error)
+    }
+
     internal var currentAction: STPPaymentHandlerActionParams?
     /// YES from when a public method is first called until its associated completion handler is called.
     /// This property guards against simultaneous usage of this class; only one "next action" can be handled at a time.
@@ -1524,13 +1531,6 @@ public class STPPaymentHandler: NSObject {
     }
 
     /// Retrieves and checks the payment intent status for the current action.
-    /// The client-side outcome to use when the server intent is not in a success state,
-    /// as determined by the challenge screen before the intent is re-fetched.
-    enum ChallengeClientOutcome {
-        case canceled
-        case failed(Error)
-    }
-
     /// If pollingBudget is nil, this is the first attempt and a new budget is created.
     /// - Parameters:
     ///   - currentAction: Action parameters to process, defaults to self.currentAction
