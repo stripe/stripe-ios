@@ -8,6 +8,46 @@ import Foundation
 
 @available(iOS 15.0, *)
 enum CheckoutPlayground {
+    enum EndpointOption: String, CaseIterable, Identifiable {
+        case hosted
+        case localhost
+        case manual
+
+        var id: String { rawValue }
+
+        var displayName: String {
+            switch self {
+            case .hosted:
+                return "Hosted"
+            case .localhost:
+                return "Localhost"
+            case .manual:
+                return "Manual"
+            }
+        }
+
+        var endpoint: String? {
+            switch self {
+            case .hosted:
+                return "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout_session"
+            case .localhost:
+                return "http://127.0.0.1:8081/checkout_session"
+            case .manual:
+                return nil
+            }
+        }
+
+        static func from(endpoint: String) -> Self {
+            if endpoint == Self.hosted.endpoint {
+                return .hosted
+            }
+            if endpoint == Self.localhost.endpoint {
+                return .localhost
+            }
+            return .manual
+        }
+    }
+
     enum SessionMode: String, CaseIterable, Identifiable {
         case payment
         case subscription
