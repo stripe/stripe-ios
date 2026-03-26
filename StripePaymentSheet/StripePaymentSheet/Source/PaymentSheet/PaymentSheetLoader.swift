@@ -123,7 +123,7 @@ final class PaymentSheetLoader {
             }
             loadTimings.logEnd("loadFormSpecs")
 
-            // Load link account session. Continue without Link if it errors.
+            // Load link account session if necessary. Continue without Link if it errors.
             let linkAccount = try? await lookupLinkAccount(
                 elementsSession: elementsSession,
                 configuration: configuration,
@@ -267,12 +267,12 @@ final class PaymentSheetLoader {
             return currentLinkAccount
         }
 
-        // Lookup Link account if Link is enabled or the holdback killswitch is not enabled.
-        // Note: When the holdback experiment is over, we can ignore the killswitch and only lookup when Link is enabled.
+        // Lookup Link account if Link is enabled, or if Link is disabled due to the holdback experiment (to collect experiment dimensions).
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+        let isLinkInHoldbackExperiment = PaymentSheet.isLinkInHoldbackExperiment(elementsSession: elementsSession)
         let isLookupForHoldbackEnabled = elementsSession.flags["elements_disable_link_global_holdback_lookup"] != true
 
-        guard isLinkEnabled || isLookupForHoldbackEnabled else {
+        guard isLinkEnabled || (isLinkInHoldbackExperiment && isLookupForHoldbackEnabled) else {
             return nil
         }
         loadTimings.logStart("lookUpLinkAccount")

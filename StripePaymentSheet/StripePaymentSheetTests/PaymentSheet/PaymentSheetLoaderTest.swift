@@ -656,6 +656,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         await fulfillment(of: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
+    let pmcWithLinkEnabled = "pmc_1TDCXsFY0qyl6XeWiCXTY4if"
     func testLoaderLooksUpLink_EphemeralKey() async throws {
         var configuration = self.configuration
         // A hardcoded test Customer w/ email and attached card, us bank account
@@ -669,7 +670,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Loading w/ ^ customer...
         let loadResult = try await PaymentSheetLoader.load(
-            mode: .deferredIntent(._testValue()),
+            mode: .deferredIntent(.init(mode: .payment(amount: 100, currency: "USD"), paymentMethodConfigurationId: pmcWithLinkEnabled) { _, _ in return "" }),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
             integrationShape: .flowController
@@ -702,7 +703,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Loading w/ ^ customer...
         _ = try await PaymentSheetLoader.load(
-            mode: .deferredIntent(._testValue()),
+            mode: .deferredIntent(.init(mode: .payment(amount: 100, currency: "USD"), paymentMethodConfigurationId: pmcWithLinkEnabled) { _, _ in return "" }),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
             integrationShape: .flowController
@@ -725,7 +726,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Loading w/ ^ customer...
         let loadResult = try await PaymentSheetLoader.load(
-            mode: .deferredIntent(._testValue()),
+            mode: .deferredIntent(.init(mode: .payment(amount: 100, currency: "USD"), paymentMethodConfigurationId: pmcWithLinkEnabled) { _, _ in return "" }),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
             integrationShape: .flowController
