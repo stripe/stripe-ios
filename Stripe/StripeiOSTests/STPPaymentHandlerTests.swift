@@ -201,7 +201,66 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         XCTAssertLessThan(retryCallDelay, 1.2, "Retry call should happen within reasonable time (<=1.2 seconds)")
     }
 
-    // MARK: - challengeClientOutcome tests
+    func testSetupIntentPollingBehaviorWithFinalCall() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let pollingBudget = PollingBudget(startDate: Date(), duration: 1.0)
+        let expectation = self.expectation(description: "SetupIntent polling completes with final call")
+
+        var callTimes: [Date] = []
+        let startTime = Date()
+
+        let setupIntent = STPFixtures.setupIntent(
+            paymentMethodTypes: ["amazon_pay"],
+            status: .processing,
+            paymentMethod: ["id": "pm_test", "type": "amazon_pay", "created": 12345]
+        )
+
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            callTimes.append(Date())
+            let status: STPSetupIntentStatus = callTimes.count >= 2 ? .succeeded : .processing
+
+            let responseDict = setupIntent.allResponseFields.merging([
+                "status": STPSetupIntentStatus.string(from: status)
+            ]) { _, new in new }
+
+            let updatedSI = STPSetupIntent.decodedObject(fromAPIResponse: responseDict)
+
+            // Simulate 1.1-second network request time for first request
+            DispatchQueue.main.asyncAfter(deadline: .now() + (callTimes.count == 1 ? 1.1 : 0.0)) {
+                completion(updatedSI, nil)
+
+                if callTimes.count >= 2 {
+                    expectation.fulfill()
+                }
+            }
+        }
+
+        let currentAction = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            setupIntent: setupIntent,
+            returnURL: nil
+        ) { _, _, _ in }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(currentAction: currentAction, pollingBudget: pollingBudget)
+
+        wait(for: [expectation], timeout: 30.0)
+
+        XCTAssertEqual(callTimes.count, 2, "Expected exactly 2 network calls: initial + final")
+
+        let firstCallDelay = callTimes[0].timeIntervalSince(startTime)
+        let finalCallDelay = callTimes[1].timeIntervalSince(startTime)
+
+        XCTAssertLessThan(firstCallDelay, 1.0, "First call should happen immediately")
+        XCTAssertGreaterThan(finalCallDelay, 1.1, "Final call should happen after polling budget expires")
+        XCTAssertLessThan(finalCallDelay, 1.3, "Final call should happen after polling budget expires but within a reasonable time")
+    }
+
+    
+    // MARK: - PaymentIntent challengeClientOutcome tests
 
     // The key scenario: user taps the captcha checkmark then taps X to dismiss.
     // The webview reports failure, but the server may have already processed the challenge.
@@ -512,6 +571,43 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
+    func testSI_challengeCanceled_serverSucceeded_completesSucceeded() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as succeeded")
+
+        let setupIntent = STPFixtures.setupIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            let responseDict = setupIntent.allResponseFields.merging([
+                "status": STPSetupIntentStatus.string(from: .succeeded),
+            ]) { _, new in new }
+            completion(STPSetupIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            setupIntent: setupIntent,
+            returnURL: nil
+        ) { status, _, _ in
+            XCTAssertEqual(status, .succeeded)
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            challengeClientOutcome: .canceled
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
     func testSI_challengeCanceled_serverNotSucceeded_completesCanceledWithNoError() {
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
@@ -550,43 +646,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
-    func testSI_challengeCanceled_serverSucceeded_completesSucceeded() {
-        let mockAPIClient = STPAPIClientPollingMock()
-        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
-        let expectation = self.expectation(description: "Completes as succeeded")
-
-        let setupIntent = STPFixtures.setupIntent(
-            paymentMethodTypes: ["card"],
-            status: .requiresAction,
-            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
-        )
-        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
-            let responseDict = setupIntent.allResponseFields.merging([
-                "status": STPSetupIntentStatus.string(from: .succeeded),
-            ]) { _, new in new }
-            completion(STPSetupIntent.decodedObject(fromAPIResponse: responseDict), nil)
-        }
-
-        let currentAction = STPPaymentHandlerSetupIntentActionParams(
-            apiClient: mockAPIClient,
-            authenticationContext: self,
-            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
-            setupIntent: setupIntent,
-            returnURL: nil
-        ) { status, _, _ in
-            XCTAssertEqual(status, .succeeded)
-            expectation.fulfill()
-        }
-
-        paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
-            challengeClientOutcome: .canceled
-        )
-
-        wait(for: [expectation], timeout: 5.0)
-    }
-
+    // MARK: - challengeClientOutcome polling tests
     func testPI_challengeCanceled_budgetExhausted_completesCanceledWithNoError() {
         // When the polling budget runs out while the intent is still in requiresAction,
         // we should complete with the challengeClientOutcome rather than polling forever.
@@ -751,64 +811,6 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
 
         wait(for: [expectation], timeout: 10.0)
         XCTAssertEqual(callCount, 2)
-    }
-
-    func testSetupIntentPollingBehaviorWithFinalCall() {
-        let mockAPIClient = STPAPIClientPollingMock()
-        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
-        let pollingBudget = PollingBudget(startDate: Date(), duration: 1.0)
-        let expectation = self.expectation(description: "SetupIntent polling completes with final call")
-
-        var callTimes: [Date] = []
-        let startTime = Date()
-
-        let setupIntent = STPFixtures.setupIntent(
-            paymentMethodTypes: ["amazon_pay"],
-            status: .processing,
-            paymentMethod: ["id": "pm_test", "type": "amazon_pay", "created": 12345]
-        )
-
-        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
-            callTimes.append(Date())
-            let status: STPSetupIntentStatus = callTimes.count >= 2 ? .succeeded : .processing
-
-            let responseDict = setupIntent.allResponseFields.merging([
-                "status": STPSetupIntentStatus.string(from: status)
-            ]) { _, new in new }
-
-            let updatedSI = STPSetupIntent.decodedObject(fromAPIResponse: responseDict)
-
-            // Simulate 1.1-second network request time for first request
-            DispatchQueue.main.asyncAfter(deadline: .now() + (callTimes.count == 1 ? 1.1 : 0.0)) {
-                completion(updatedSI, nil)
-
-                if callTimes.count >= 2 {
-                    expectation.fulfill()
-                }
-            }
-        }
-
-        let currentAction = STPPaymentHandlerSetupIntentActionParams(
-            apiClient: mockAPIClient,
-            authenticationContext: self,
-            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
-            setupIntent: setupIntent,
-            returnURL: nil
-        ) { _, _, _ in }
-
-        paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(currentAction: currentAction, pollingBudget: pollingBudget)
-
-        wait(for: [expectation], timeout: 30.0)
-
-        XCTAssertEqual(callTimes.count, 2, "Expected exactly 2 network calls: initial + final")
-
-        let firstCallDelay = callTimes[0].timeIntervalSince(startTime)
-        let finalCallDelay = callTimes[1].timeIntervalSince(startTime)
-
-        XCTAssertLessThan(firstCallDelay, 1.0, "First call should happen immediately")
-        XCTAssertGreaterThan(finalCallDelay, 1.1, "Final call should happen after polling budget expires")
-        XCTAssertLessThan(finalCallDelay, 1.3, "Final call should happen after polling budget expires but within a reasonable time")
     }
 }
 
