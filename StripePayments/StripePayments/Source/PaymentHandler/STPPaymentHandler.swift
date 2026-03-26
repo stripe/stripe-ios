@@ -111,6 +111,19 @@ public class STPPaymentHandler: NSObject {
     enum ChallengeClientOutcome {
         case canceled
         case failed(Error)
+
+        var actionStatus: STPPaymentHandlerActionStatus {
+            switch self {
+            case .canceled: return .canceled
+            case .failed: return .failed
+            }
+        }
+        var nsError: NSError? {
+            switch self {
+            case .canceled: return nil
+            case .failed(let error): return error as NSError
+            }
+        }
     }
 
     internal var currentAction: STPPaymentHandlerActionParams?
@@ -1598,21 +1611,18 @@ public class STPPaymentHandler: NSObject {
                         }
                         currentAction.paymentIntent = paymentIntent
                         if let challengeClientOutcome {
-                            let isSuccessState = paymentIntent.status == .succeeded
-                                || paymentIntent.status == .requiresCapture
-                                || (paymentIntent.status == .processing
-                                    && STPPaymentHandler._isProcessingIntentSuccess(for: paymentIntent.paymentMethod?.type ?? .unknown))
-                            if isSuccessState {
-                                _ = self._handlePaymentIntentStatus(forAction: currentAction)
-                            } else {
-                                switch challengeClientOutcome {
-                                case .canceled:
-                                    // We don't forward cancelation errors
-                                    currentAction.complete(with: .canceled, error: nil)
-                                case .failed(let error):
-                                    currentAction.complete(with: .failed, error: error as NSError)
-                                }
-                            }
+                            let pmType = paymentIntent.paymentMethod?.type ?? .unknown
+                            _resolveAfterChallengeDismissed(
+                                requiresAction: paymentIntent.status == .requiresAction,
+                                isSuccess: paymentIntent.status == .succeeded
+                                    || paymentIntent.status == .requiresCapture
+                                    || (paymentIntent.status == .processing
+                                        && STPPaymentHandler._isProcessingIntentSuccess(for: pmType)),
+                                challengeClientOutcome: challengeClientOutcome,
+                                pollingBudget: pollingBudget,
+                                startDate: startDate,
+                                currentAction: currentAction
+                            )
                             return
                         }
                         // If the transaction is still unexpectedly processing, refresh the PaymentIntent
@@ -1708,17 +1718,14 @@ public class STPPaymentHandler: NSObject {
                 }
                 currentAction.setupIntent = setupIntent
                 if let challengeClientOutcome {
-                    if setupIntent.status == .succeeded {
-                        _ = self._handleSetupIntentStatus(forAction: currentAction)
-                    } else {
-                        switch challengeClientOutcome {
-                        case .canceled:
-                            // We don't forward cancelation errors
-                            currentAction.complete(with: .canceled, error: nil)
-                        case .failed(let error):
-                            currentAction.complete(with: .failed, error: error as NSError)
-                        }
-                    }
+                    _resolveAfterChallengeDismissed(
+                        requiresAction: setupIntent.status == .requiresAction,
+                        isSuccess: setupIntent.status == .succeeded,
+                        challengeClientOutcome: challengeClientOutcome,
+                        pollingBudget: pollingBudget,
+                        startDate: startDate,
+                        currentAction: currentAction
+                    )
                     return
                 }
                 if let type = setupIntent.paymentMethod?.type,
@@ -1778,6 +1785,35 @@ public class STPPaymentHandler: NSObject {
                 with: .failed,
                 error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "currentAction is an unknown type or nil intent.")
             )
+        }
+    }
+
+    private func _resolveAfterChallengeDismissed(
+        requiresAction: Bool,
+        isSuccess: Bool,
+        challengeClientOutcome: ChallengeClientOutcome,
+        pollingBudget: PollingBudget?,
+        startDate: Date,
+        currentAction: STPPaymentHandlerActionParams
+    ) {
+        if requiresAction {
+            let budget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 15)
+            if budget.canPoll {
+                budget.pollAfter {
+                    self._retrieveAndCheckIntentForCurrentAction(
+                        pollingBudget: budget,
+                        challengeClientOutcome: challengeClientOutcome
+                    )
+                }
+            } else {
+                currentAction.complete(with: challengeClientOutcome.actionStatus,
+                                       error: challengeClientOutcome.nsError)
+            }
+        } else if isSuccess {
+            currentAction.complete(with: .succeeded, error: nil)
+        } else {
+            currentAction.complete(with: challengeClientOutcome.actionStatus,
+                                   error: challengeClientOutcome.nsError)
         }
     }
 
