@@ -111,6 +111,7 @@ public class STPPaymentHandler: NSObject {
     /// This property guards against simultaneous usage of this class; only one "next action" can be handled at a time.
     private static var inProgress = false
     private var safariViewController: SFSafariViewController?
+    var safariViewControllerDismissedManually = false
     private var asWebAuthenticationSession: ASWebAuthenticationSession?
 
     /// The globally shared instance of `STPPaymentHandler`.
@@ -1610,7 +1611,7 @@ public class STPPaymentHandler: NSObject {
                         // This could happen if, for example, a payment is approved in an SFSafariViewController, the user closes the sheet, and the approval races with this fetch.
                         if
                             let paymentMethod = paymentIntent.paymentMethod,
-                            !STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod.type),
+                            !STPPaymentHandler._isProcessingIntentSuccess(for: paymentMethod.type) || (paymentMethod.type == .card && safariViewControllerDismissedManually),
                             paymentIntent.status == .processing,
                             pollingBudget?.canPoll ?? true
                         {
@@ -1677,7 +1678,7 @@ public class STPPaymentHandler: NSObject {
             retrieveOrRefreshSetupIntent(
                 currentAction: currentAction,
                 timeout: pollingBudget?.networkTimeout
-            ) { setupIntent, error in
+            ) { [self] setupIntent, error in
                 guard let setupIntent, error == nil else {
                     // Retry if polling budget allows. For the first call (no polling budget), create a minimal
                     // budget to allow one retry. This handles transient network errors.
@@ -1711,7 +1712,7 @@ public class STPPaymentHandler: NSObject {
                     return
                 }
                 if let type = setupIntent.paymentMethod?.type,
-                   !STPPaymentHandler._isProcessingIntentSuccess(for: type),
+                   !STPPaymentHandler._isProcessingIntentSuccess(for: type) || (type == .card && safariViewControllerDismissedManually),
                    setupIntent.status == .processing,
                    pollingBudget?.canPoll ?? true
                 {
@@ -1882,6 +1883,7 @@ public class STPPaymentHandler: NSObject {
                             context.configureSafariViewController?(safariViewController)
                         }
                         self.safariViewController = safariViewController
+                        self.safariViewControllerDismissedManually = false
                         presentingViewController.present(safariViewController, animated: true, completion: {
                             completion?(safariViewController)
                         })
@@ -2450,6 +2452,7 @@ extension STPPaymentHandler: SFSafariViewControllerDelegate {
     /// :nodoc:
     @objc
     public func safariViewControllerDidFinish(_ controller: SFSafariViewController) {
+        self.safariViewControllerDismissedManually = true
         let context = currentAction?.authenticationContext
         if context?.responds(
             to: #selector(STPAuthenticationContext.authenticationContextWillDismiss(_:))

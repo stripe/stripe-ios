@@ -96,8 +96,7 @@ final class PayWithNativeLinkController {
             from: presentingController,
             shouldOfferApplePay: shouldOfferApplePay,
             hidingUnderlyingBottomSheet: hidingUnderlyingBottomSheet,
-            shouldFinishOnClose: shouldFinishOnClose,
-            canSkipWalletAfterVerification: false // Only available for payment method selection,
+            shouldFinishOnClose: shouldFinishOnClose
         ) { completionResult in
             guard case .full(let result, let deferredIntentConfirmationType, let didFinish) = completionResult else {
                 return
@@ -111,7 +110,6 @@ final class PayWithNativeLinkController {
         from presentingController: UIViewController,
         initiallySelectedPaymentDetailsID: String?,
         shouldShowSecondaryCta: Bool = true,
-        canSkipWalletAfterVerification: Bool,
         completion: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         presentAsBottomSheetInternal(
@@ -122,8 +120,7 @@ final class PayWithNativeLinkController {
             initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
             callToAction: .continue,
             shouldFinishOnClose: false,
-            shouldShowSecondaryCta: shouldShowSecondaryCta,
-            canSkipWalletAfterVerification: canSkipWalletAfterVerification
+            shouldShowSecondaryCta: shouldShowSecondaryCta
         ) { completionResult in
             guard case .paymentMethodSelection(let confirmOption, let shouldReturnToPaymentSheet) = completionResult else {
                 return
@@ -142,7 +139,6 @@ final class PayWithNativeLinkController {
         callToAction: ConfirmButton.CallToActionType? = nil,
         shouldFinishOnClose: Bool,
         shouldShowSecondaryCta: Bool = true,
-        canSkipWalletAfterVerification: Bool,
         completion: @escaping (CompletionResult) -> Void
     ) {
         self.selfRetainer = self
@@ -161,7 +157,6 @@ final class PayWithNativeLinkController {
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
                 launchedFromFlowController: launchedFromFlowController,
                 initiallySelectedPaymentDetailsID: initiallySelectedPaymentDetailsID,
-                canSkipWalletAfterVerification: canSkipWalletAfterVerification,
                 callToAction: callToAction,
                 analyticsHelper: self.analyticsHelper,
                 supportedPaymentMethodTypes: self.supportedPaymentMethodTypes,

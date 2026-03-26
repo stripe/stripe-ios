@@ -93,6 +93,9 @@ final class MPELatencyTest: XCTestCase {
     /// - 2 PMs attached, card and US Bank Account.
     let customerIDWithoutEmail = "cus_TZCcZWKC57HHmr"
 
+    /// The default PMC on our CI merchant doesn't have Link enabled
+    let pmcWithLinkEnabled = "pmc_1TDCXsFY0qyl6XeWiCXTY4if"
+
     override func setUp() async throws {
         PaymentSheetLoader.LoadTimings.shouldPrintLogs = true
         try await super.setUp()
@@ -159,13 +162,14 @@ final class MPELatencyTest: XCTestCase {
 
     /// Link: enabled
     /// Customer API: Ephemeral Key
-    /// Customer email: Available via Customer object
+    /// Customer email: Available via default billing details
     func test_link_on_with_no_customer() async throws {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.apiClient = apiClient
+        configuration.defaultBillingDetails.email = "yuki@stripe.com"
 
         try await _measureLoadLatency(configuration: configuration)
-        XCTAssertFalse(didCallLinkLookupEndpoint, "Did not expect Link lookup endpoint to be called because there is no customer email to look up")
+        XCTAssertTrue(didCallLinkLookupEndpoint, "Did not expect Link lookup endpoint to be called because there is no customer email to look up")
     }
 
     /// Link: enabled
@@ -174,9 +178,6 @@ final class MPELatencyTest: XCTestCase {
     func test_link_on_with_ek() async throws {
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.apiClient = apiClient
-
-        // Use a customer w/ an email
-        // Why email? It's very specific to the current link lookup logic. The slowest codepath is when there is (1) no defaultBillingDetails.email (2) customer has email because it retrieves the Customer before doing the link lookup
         let customerAndEphemeralKey = try await STPTestingAPIClient.shared().fetchCustomerAndEphemeralKey(customerID: customerIDWithEmail, merchantCountry: "us")
         configuration.customer = .init(id: customerIDWithEmail, ephemeralKeySecret: customerAndEphemeralKey.ephemeralKeySecret)
 
@@ -284,7 +285,8 @@ extension MPELatencyTest {
             analyticsClient: analyticsClient
             // TODO: AnalyticsClientV2
         )
-        let mode = PaymentSheet.InitializationMode.deferredIntent(._testValue())
+        let deferredIntent = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodConfigurationId: pmcWithLinkEnabled, confirmationTokenConfirmHandler: { _ in return "" })
+        let mode = PaymentSheet.InitializationMode.deferredIntent(deferredIntent)
 
         // 1. Load
         let startDate = Date()

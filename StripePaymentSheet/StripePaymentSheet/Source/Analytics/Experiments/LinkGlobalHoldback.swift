@@ -8,7 +8,7 @@
 import Foundation
 
 struct LinkGlobalHoldback: LoggableExperiment {
-    private static let experimentName = "link_global_holdback"
+    static let experimentName = "link_global_holdback"
     private let baseExperiment: BaseLinkHoldbackExperiment
 
     let name: String = experimentName

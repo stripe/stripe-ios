@@ -62,6 +62,20 @@ extension PaymentSheet {
             && elementsSession.isApplePayEnabled
     }
 
+    // MARK: - Link
+
+    /// Determines if Link is disabled due to a holdback experiment, either `link_global_holdback` or `link_ab_test`
+    /// - Parameter elementsSession: The elements session containing experiment data
+    /// - Returns: true if Link is disabled due to holdback experiment, false otherwise
+    static func isLinkInHoldbackExperiment(elementsSession: STPElementsSession) -> Bool {
+        guard let experimentsData = elementsSession.experimentsData else {
+            return false
+        }
+        let linkGlobalHoldback = experimentsData.experimentAssignments[LinkGlobalHoldback.experimentName]
+        let linkABTest = experimentsData.experimentAssignments["link_ab_test"]
+        return linkGlobalHoldback == .holdback || linkABTest == .holdback
+    }
+
     /// Canonical source of truth for whether Link is enabled
     static func isLinkEnabled(elementsSession: STPElementsSession, configuration: PaymentElementConfiguration) -> Bool {
         return linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).isEmpty
