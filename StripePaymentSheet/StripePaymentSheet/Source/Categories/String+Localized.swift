@@ -468,6 +468,27 @@ extension String.Localized {
         )
     }
 
+    static var credit_card: String {
+        STPLocalizedString(
+            "Credit card",
+            "Label for a payment method type that only accepts credit cards."
+        )
+    }
+
+    static var debit_card: String {
+        STPLocalizedString(
+            "Debit card",
+            "Label for a payment method type that only accepts debit cards."
+        )
+    }
+
+    static var prepaid_card: String {
+        STPLocalizedString(
+            "Prepaid card",
+            "Label for a payment method type that only accepts prepaid cards."
+        )
+    }
+
     static var new_card: String {
         STPLocalizedString(
             "New card",

@@ -41,6 +41,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
     private let currency: String?
+    private let cardFundingFilter: CardFundingFilter
     private(set) var previousSelectedRowButton: RowButton? {
         didSet {
             guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
@@ -121,6 +122,7 @@ class EmbeddedPaymentMethodsView: UIView {
         customer: PaymentSheet.CustomerConfiguration? = nil,
         currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
+        cardFundingFilter: CardFundingFilter = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
@@ -131,6 +133,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.currency = currency
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
+        self.cardFundingFilter = cardFundingFilter
         self.delegate = delegate
         self.rowButtons = []
         super.init(frame: .zero)
@@ -512,6 +515,7 @@ class EmbeddedPaymentMethodsView: UIView {
             originalCornerRadius: appearance.cornerRadius,
             shouldAnimateOnPress: delegate?.shouldAnimateOnPress(paymentMethodType) == true,
             isEmbedded: true,
+            cardFundingFilter: cardFundingFilter,
             didTap: { [weak self] rowButton in
                 self?.didTap(rowButton: rowButton)
             }

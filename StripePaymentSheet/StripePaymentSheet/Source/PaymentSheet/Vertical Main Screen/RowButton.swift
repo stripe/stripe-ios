@@ -460,6 +460,7 @@ extension RowButton {
         originalCornerRadius: CGFloat? = nil,
         shouldAnimateOnPress: Bool,
         isEmbedded: Bool = false,
+        cardFundingFilter: CardFundingFilter = .default,
         didTap: @escaping DidTapClosure
     ) -> RowButton {
         let imageView = PaymentMethodTypeImageView(paymentMethodType: paymentMethodType,
@@ -468,10 +469,13 @@ extension RowButton {
                                                    iconStyle: appearance.iconStyle)
         imageView.contentMode = .scaleAspectFit
 
-        // Special case "New card" vs "Card" title
+        // Special case "New card" vs "Card" title, and card funding filter display name
         let text: String = {
             if hasSavedCard && paymentMethodType == .stripe(.card) {
                 return .Localized.new_card
+            }
+            if paymentMethodType == .stripe(.card), let displayName = cardFundingFilter.cardDisplayName() {
+                return displayName
             }
             return paymentMethodType.displayName
         }()

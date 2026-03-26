@@ -270,6 +270,48 @@ class CardFundingFilterTests: XCTestCase {
         let filter = CardFundingFilter(allowedFundingTypes: .unknown, filteringEnabled: true)
         XCTAssertNil(filter.allowedFundingTypesDisplayString())
     }
+
+    // MARK: - Card Display Name Tests
+
+    func testCardDisplayName_filteringDisabled() {
+        let filter = CardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: false)
+        XCTAssertNil(filter.cardDisplayName(), "When filtering is disabled, card display name should be nil.")
+    }
+
+    func testCardDisplayName_allTypes() {
+        let filter = CardFundingFilter.default
+        XCTAssertNil(filter.cardDisplayName(), "When all funding types are allowed, card display name should be nil.")
+    }
+
+    func testCardDisplayName_debitOnly() {
+        let filter = CardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: true)
+        XCTAssertEqual(filter.cardDisplayName(), "Debit card")
+    }
+
+    func testCardDisplayName_creditOnly() {
+        let filter = CardFundingFilter(allowedFundingTypes: .credit, filteringEnabled: true)
+        XCTAssertEqual(filter.cardDisplayName(), "Credit card")
+    }
+
+    func testCardDisplayName_prepaidOnly() {
+        let filter = CardFundingFilter(allowedFundingTypes: .prepaid, filteringEnabled: true)
+        XCTAssertEqual(filter.cardDisplayName(), "Prepaid card")
+    }
+
+    func testCardDisplayName_multipleTypes() {
+        let filter = CardFundingFilter(allowedFundingTypes: [.debit, .credit], filteringEnabled: true)
+        XCTAssertNil(filter.cardDisplayName(), "When multiple funding types are allowed, card display name should be nil.")
+    }
+
+    func testCardDisplayName_allThreeTypes() {
+        let filter = CardFundingFilter(allowedFundingTypes: [.debit, .credit, .prepaid], filteringEnabled: true)
+        XCTAssertNil(filter.cardDisplayName(), "When all three types are allowed, card display name should be nil.")
+    }
+
+    func testCardDisplayName_unknownOnly() {
+        let filter = CardFundingFilter(allowedFundingTypes: .unknown, filteringEnabled: true)
+        XCTAssertNil(filter.cardDisplayName(), "Unknown type should not produce a display name.")
+    }
 }
 
 extension STPCardFundingType: @retroactive CaseIterable {

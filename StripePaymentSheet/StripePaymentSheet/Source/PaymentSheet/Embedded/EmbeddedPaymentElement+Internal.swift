@@ -75,6 +75,7 @@ extension EmbeddedPaymentElement {
             customer: configuration.customer,
             currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
+            cardFundingFilter: configuration.cardFundingFilter(for: loadResult.elementsSession),
             analyticsHelper: analyticsHelper,
             delegate: delegate
         )

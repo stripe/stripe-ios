@@ -38,6 +38,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private var shouldShowApplePay: Bool
     private var shouldShowLink: Bool
     private var paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+    private var cardFundingFilter: CardFundingFilter
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -61,6 +62,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         currency: String?,
         amount: Int?,
         incentive: PaymentMethodIncentive?,
+        cardFundingFilter: CardFundingFilter = .default,
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
         self.appearance = appearance
@@ -74,6 +76,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         self.shouldShowApplePay = shouldShowApplePay
         self.shouldShowLink = shouldShowLink
         self.paymentMethodTypes = paymentMethodTypes
+        self.cardFundingFilter = cardFundingFilter
 
         super.init(nibName: nil, bundle: nil)
         self.renderContent()
@@ -163,7 +166,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
-                shouldAnimateOnPress: delegate?.shouldSelectPaymentMethod(selection) == false
+                shouldAnimateOnPress: delegate?.shouldSelectPaymentMethod(selection) == false,
+                cardFundingFilter: cardFundingFilter
             ) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }

@@ -85,6 +85,28 @@ struct CardFundingFilter: Equatable {
         return capabilities
     }
 
+    /// Returns the specific card display name when exactly one funding type is specified.
+    /// For example, returns "Credit card" when only credit is allowed.
+    /// - Returns: A localized card type name, or `nil` if multiple types are allowed or filtering is disabled.
+    func cardDisplayName() -> String? {
+        guard filteringEnabled, allowedFundingTypes != .all else { return nil }
+
+        let hasDebit = allowedFundingTypes.contains(.debit)
+        let hasCredit = allowedFundingTypes.contains(.credit)
+        let hasPrepaid = allowedFundingTypes.contains(.prepaid)
+
+        switch (hasDebit, hasCredit, hasPrepaid) {
+        case (true, false, false):
+            return String.Localized.debit_card
+        case (false, true, false):
+            return String.Localized.credit_card
+        case (false, false, true):
+            return String.Localized.prepaid_card
+        default:
+            return nil
+        }
+    }
+
     /// Returns a user-friendly display string indicating which funding types are accepted.
     /// - Returns: A complete localized message (e.g. "Only debit cards are accepted"), or nil if all types are allowed.
     ///            Always returns `nil` when filtering is disabled.

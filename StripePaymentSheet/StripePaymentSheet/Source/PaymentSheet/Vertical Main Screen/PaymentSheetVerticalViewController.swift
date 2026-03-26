@@ -474,6 +474,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             currency: loadResult.intent.currency,
             amount: loadResult.intent.amount,
             incentive: loadResult.elementsSession.incentive,
+            cardFundingFilter: configuration.cardFundingFilter(for: loadResult.elementsSession),
             delegate: self
         )
     }

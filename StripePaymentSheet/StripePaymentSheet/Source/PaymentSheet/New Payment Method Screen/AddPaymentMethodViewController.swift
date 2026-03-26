@@ -77,6 +77,7 @@ class AddPaymentMethodViewController: UIViewController {
             appearance: configuration.appearance,
             currency: intent.currency,
             incentive: elementsSession.incentive,
+            cardFundingFilter: configuration.cardFundingFilter(for: elementsSession),
             delegate: self
         )
         return view

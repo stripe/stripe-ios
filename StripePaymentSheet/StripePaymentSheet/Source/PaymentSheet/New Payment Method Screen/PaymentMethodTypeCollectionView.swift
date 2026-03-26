@@ -49,6 +49,7 @@ class PaymentMethodTypeCollectionView: UICollectionView {
     weak var _delegate: PaymentMethodTypeCollectionViewDelegate?
 
     private var incentive: PaymentMethodIncentive?
+    private let cardFundingFilter: CardFundingFilter
 
     init(
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
@@ -56,12 +57,14 @@ class PaymentMethodTypeCollectionView: UICollectionView {
         appearance: PaymentSheet.Appearance,
         currency: String? = nil,
         incentive: PaymentMethodIncentive?,
+        cardFundingFilter: CardFundingFilter = .default,
         delegate: PaymentMethodTypeCollectionViewDelegate
     ) {
         stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be provided.")
 
         self.paymentMethodTypes = paymentMethodTypes
         self.incentive = incentive
+        self.cardFundingFilter = cardFundingFilter
         self._delegate = delegate
         let selectedItemIndex: Int = {
             if let initialPaymentMethodType = initialPaymentMethodType {
@@ -162,6 +165,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
         let paymentMethodType = paymentMethodTypes[indexPath.item]
         cell.paymentMethodType = paymentMethodType
         cell.currency = currency
+        cell.cardFundingFilter = cardFundingFilter
         cell.promoBadgeText = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText
         cell.appearance = appearance
         return cell
@@ -205,6 +209,7 @@ extension PaymentMethodTypeCollectionView {
     class PaymentTypeCell: UICollectionViewCell, EventHandler {
         static let reuseIdentifier = "PaymentTypeCell"
         var currency: String?
+        var cardFundingFilter: CardFundingFilter = .default
         var paymentMethodType: PaymentSheet.PaymentMethodType = .stripe(.card) {
             didSet {
                 update()
@@ -325,7 +330,11 @@ extension PaymentMethodTypeCollectionView {
         var paymentMethodTypeOfCurrentImage: PaymentSheet.PaymentMethodType = .stripe(.unknown)
         private func update() {
             selectableRectangle.appearance = appearance
-            label.text = paymentMethodType.displayName
+            if paymentMethodType == .stripe(.card), let displayName = cardFundingFilter.cardDisplayName() {
+                label.text = displayName
+            } else {
+                label.text = paymentMethodType.displayName
+            }
 
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
             let currPaymentMethodType = self.paymentMethodType
