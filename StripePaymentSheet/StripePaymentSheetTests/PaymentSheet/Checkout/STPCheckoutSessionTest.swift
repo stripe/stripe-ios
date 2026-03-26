@@ -268,4 +268,126 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(Checkout.PaymentStatus.paymentStatus(from: "unknown_value"), .unknown)
     }
 
+    func testMerchantWillSavePaymentMethod_paymentModeWithoutSetupFutureUsage() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_payment",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer": ["id": "cus_123"],
+        ])!
+
+        XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
+    }
+
+    func testMerchantWillSavePaymentMethod_paymentModeWithTopLevelSetupFutureUsage() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_payment_sfu",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer": ["id": "cus_123"],
+            "setup_future_usage": "off_session",
+        ])!
+
+        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+    }
+
+    func testMerchantWillSavePaymentMethod_paymentModeWithPerPaymentMethodSetupFutureUsage() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_payment_per_pm_sfu",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card", "us_bank_account"],
+            "customer": ["id": "cus_123"],
+            "setup_future_usage_for_payment_method_type": [
+                "card": "off_session",
+                "us_bank_account": "none",
+            ],
+        ])!
+
+        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+        XCTAssertFalse(session.merchantWillSavePaymentMethod(.USBankAccount))
+    }
+
+    func testMerchantWillSavePaymentMethod_paymentModeWithPaymentMethodOptionsSetupFutureUsage() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_payment_pmo_sfu",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer": ["id": "cus_123"],
+            "payment_method_options": [
+                "card": [
+                    "setup_future_usage": "off_session",
+                ],
+            ],
+        ])!
+
+        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+    }
+
+    func testMerchantWillSavePaymentMethod_paymentModeWithoutCustomer() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_payment_no_customer",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "setup_future_usage": "off_session",
+        ])!
+
+        XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
+    }
+
+    func testMerchantWillSavePaymentMethod_setupModeWithCustomer() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_setup_customer",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "setup",
+            "payment_status": "no_payment_required",
+            "payment_method_types": ["card"],
+            "customer": ["id": "cus_123"],
+        ])!
+
+        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+    }
+
+    func testMerchantWillSavePaymentMethod_setupModeWithoutCustomer() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_setup_no_customer",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "setup",
+            "payment_status": "no_payment_required",
+            "payment_method_types": ["card"],
+        ])!
+
+        XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
+    }
+
+    func testMerchantWillSavePaymentMethod_subscriptionModeWithCustomer() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_subscription",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "subscription",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer": ["id": "cus_123"],
+        ])!
+
+        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+    }
+
 }

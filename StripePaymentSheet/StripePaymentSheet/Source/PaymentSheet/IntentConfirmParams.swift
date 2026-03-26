@@ -194,14 +194,12 @@ final class IntentConfirmParams {
         }
     }
 
-    func setAllowRedisplayForCheckoutSession(isSettingUp: Bool) {
+    func setAllowRedisplayForCheckoutSession(merchantWillSavePaymentMethod: Bool) {
         switch saveForFutureUseCheckboxState {
         case .selected:
             paymentMethodParams.allowRedisplay = .always
-        case .deselected:
-            paymentMethodParams.allowRedisplay = isSettingUp ? .limited : .unspecified
-        case .hidden:
-            paymentMethodParams.allowRedisplay = .unspecified
+        case .deselected, .hidden:
+            paymentMethodParams.allowRedisplay = merchantWillSavePaymentMethod ? .limited : .unspecified
         }
     }
 

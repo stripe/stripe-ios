@@ -144,20 +144,45 @@ class IntentConfirmParamsTest: XCTestCase {
     }
 
     // MARK: CheckoutSession
-    func testSetAllowRedisplayForCheckoutSession_SI_deselected() {
+    func testSetAllowRedisplayForCheckoutSession_merchantWillSave_deselected() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
         intentConfirmParams.saveForFutureUseCheckboxState = .deselected
 
-        intentConfirmParams.setAllowRedisplayForCheckoutSession(isSettingUp: true)
+        intentConfirmParams.setAllowRedisplayForCheckoutSession(merchantWillSavePaymentMethod: true)
 
         XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }
 
-    func testSetAllowRedisplayForCheckoutSession_PI_selected() {
+    func testSetAllowRedisplayForCheckoutSession_merchantWillNotSave_deselected() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+        intentConfirmParams.saveForFutureUseCheckboxState = .deselected
+
+        intentConfirmParams.setAllowRedisplayForCheckoutSession(merchantWillSavePaymentMethod: false)
+
+        XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+
+    func testSetAllowRedisplayForCheckoutSession_merchantWillSave_hidden() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+
+        intentConfirmParams.setAllowRedisplayForCheckoutSession(merchantWillSavePaymentMethod: true)
+
+        XCTAssertEqual(.limited, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+
+    func testSetAllowRedisplayForCheckoutSession_merchantWillNotSave_hidden() {
+        let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
+
+        intentConfirmParams.setAllowRedisplayForCheckoutSession(merchantWillSavePaymentMethod: false)
+
+        XCTAssertEqual(.unspecified, intentConfirmParams.paymentMethodParams.allowRedisplay)
+    }
+
+    func testSetAllowRedisplayForCheckoutSession_selected() {
         let intentConfirmParams = IntentConfirmParams(type: .stripe(.card))
         intentConfirmParams.saveForFutureUseCheckboxState = .selected
 
-        intentConfirmParams.setAllowRedisplayForCheckoutSession(isSettingUp: false)
+        intentConfirmParams.setAllowRedisplayForCheckoutSession(merchantWillSavePaymentMethod: false)
 
         XCTAssertEqual(.always, intentConfirmParams.paymentMethodParams.allowRedisplay)
     }

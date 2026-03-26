@@ -170,9 +170,9 @@ extension PaymentSheet {
             intent.isSetupFutureUsageSet(for: paymentMethodType) || elementsSession.forceSaveFutureUseBehaviorAndNewMandateText
         }
         let setAllowRedisplay: (IntentConfirmParams, STPPaymentMethodType) -> Void = { confirmParams, paymentMethodType in
-            if case .checkoutSession = intent {
+            if case .checkoutSession(let checkoutSession) = intent {
                 confirmParams.setAllowRedisplayForCheckoutSession(
-                    isSettingUp: isSettingUp(paymentMethodType)
+                    merchantWillSavePaymentMethod: checkoutSession.merchantWillSavePaymentMethod(paymentMethodType)
                 )
             } else {
                 confirmParams.setAllowRedisplay(
