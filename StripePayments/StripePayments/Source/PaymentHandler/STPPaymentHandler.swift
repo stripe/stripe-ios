@@ -1524,13 +1524,19 @@ public class STPPaymentHandler: NSObject {
     }
 
     /// Retrieves and checks the payment intent status for the current action.
+    /// The client-side outcome to use when the server intent is not in a success state,
+    /// as determined by the challenge screen before the intent is re-fetched.
+    enum ChallengeClientOutcome {
+        case canceled
+        case failed(Error)
+    }
+
     /// If pollingBudget is nil, this is the first attempt and a new budget is created.
     /// - Parameters:
     ///   - currentAction: Action parameters to process, defaults to self.currentAction
     ///   - pollingBudget: Existing polling budget, or nil for first attempt
-    ///   - cancelIfNotSucceeded: If true and the intent is not in a success state, completes with `.canceled` instead of normal status handling. Takes precedence over `errorIfNotSucceeded`.
-    ///   - errorIfNotSucceeded: If provided and the intent is not in a success state, completes with `.failed` using this error instead of normal status handling.
-    func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams? = nil, pollingBudget: PollingBudget? = nil, cancelIfNotSucceeded: Bool = false, errorIfNotSucceeded: Error? = nil) {
+    ///   - challengeClientOutcome: If provided and the intent is not in a success state, completes with this outcome instead of normal status handling.
+    func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams? = nil, pollingBudget: PollingBudget? = nil, challengeClientOutcome: ChallengeClientOutcome? = nil) {
         // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
         let pingMarlinIfNecessary: ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
             currentAction,
@@ -1591,19 +1597,21 @@ public class STPPaymentHandler: NSObject {
                             return
                         }
                         currentAction.paymentIntent = paymentIntent
-                        if cancelIfNotSucceeded || errorIfNotSucceeded != nil {
+                        if let challengeClientOutcome {
                             let isSuccessState = paymentIntent.status == .succeeded
                                 || paymentIntent.status == .requiresCapture
                                 || (paymentIntent.status == .processing
                                     && STPPaymentHandler._isProcessingIntentSuccess(for: paymentIntent.paymentMethod?.type ?? .unknown))
                             if isSuccessState {
                                 _ = self._handlePaymentIntentStatus(forAction: currentAction)
-                            } else if cancelIfNotSucceeded {
-                                // We don't forward cancelation errors
-                                currentAction.complete(with: .canceled, error: nil)
-                            } else if let error = errorIfNotSucceeded {
-                                // Forward the provided error
-                                currentAction.complete(with: .failed, error: error as NSError)
+                            } else {
+                                switch challengeClientOutcome {
+                                case .canceled:
+                                    // We don't forward cancelation errors
+                                    currentAction.complete(with: .canceled, error: nil)
+                                case .failed(let error):
+                                    currentAction.complete(with: .failed, error: error as NSError)
+                                }
                             }
                             return
                         }
@@ -1699,15 +1707,17 @@ public class STPPaymentHandler: NSObject {
                     return
                 }
                 currentAction.setupIntent = setupIntent
-                if cancelIfNotSucceeded || errorIfNotSucceeded != nil {
+                if let challengeClientOutcome {
                     if setupIntent.status == .succeeded {
                         _ = self._handleSetupIntentStatus(forAction: currentAction)
-                    } else if cancelIfNotSucceeded {
-                        // We don't forward cancelation errors
-                        currentAction.complete(with: .canceled, error: nil)
-                    } else if let error = errorIfNotSucceeded {
-                        // Forward the provided error
-                        currentAction.complete(with: .failed, error: error as NSError)
+                    } else {
+                        switch challengeClientOutcome {
+                        case .canceled:
+                            // We don't forward cancelation errors
+                            currentAction.complete(with: .canceled, error: nil)
+                        case .failed(let error):
+                            currentAction.complete(with: .failed, error: error as NSError)
+                        }
                     }
                     return
                 }
@@ -2015,11 +2025,13 @@ public class STPPaymentHandler: NSObject {
 
                         case .failure(let error):
                             // Re-fetch the intent before completing — the server may have already processed the challenge even though the client reported an error or cancel (like if the user taps the captcha checkmark and then taps the X to cancel).
+                            let outcome: ChallengeClientOutcome
                             if case ChallengeError.userCanceled = error {
-                                self._retrieveAndCheckIntentForCurrentAction(cancelIfNotSucceeded: true)
+                                outcome = .canceled
                             } else {
-                                self._retrieveAndCheckIntentForCurrentAction(errorIfNotSucceeded: error)
+                                outcome = .failed(error)
                             }
+                            self._retrieveAndCheckIntentForCurrentAction(challengeClientOutcome: outcome)
                         }
                     }
                 }
