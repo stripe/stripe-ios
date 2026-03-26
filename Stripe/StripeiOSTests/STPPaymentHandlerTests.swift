@@ -201,6 +201,558 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         XCTAssertLessThan(retryCallDelay, 1.2, "Retry call should happen within reasonable time (<=1.2 seconds)")
     }
 
+    // MARK: - challengeClientOutcome tests
+
+    // The key scenario: user taps the captcha checkmark then taps X to dismiss.
+    // The webview reports failure, but the server may have already processed the challenge.
+
+    func testPI_challengeFailed_serverSucceeded_completesSucceeded() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as succeeded")
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: .succeeded),
+            ]) { _, new in new }
+            completion(STPPaymentIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, _ in
+            XCTAssertEqual(status, .succeeded)
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testPI_challengeFailed_serverRequiresCapture_completesSucceeded() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as succeeded")
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: .requiresCapture),
+            ]) { _, new in new }
+            completion(STPPaymentIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, _ in
+            XCTAssertEqual(status, .succeeded)
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testPI_challengeFailed_serverNotSucceeded_completesFailed() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as failed")
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: .requiresPaymentMethod),
+            ]) { _, new in new }
+            completion(STPPaymentIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, error in
+            XCTAssertEqual(status, .failed)
+            XCTAssertNotNil(error)
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "Captcha failed", type: "captcha_error", code: "123"))
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testPI_challengeCanceled_serverSucceeded_completesSucceeded() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as succeeded")
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: .succeeded),
+            ]) { _, new in new }
+            completion(STPPaymentIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, _ in
+            XCTAssertEqual(status, .succeeded)
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            challengeClientOutcome: .canceled
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testPI_challengeCanceled_serverNotSucceeded_completesCanceledWithNoError() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as canceled with no error")
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: .requiresPaymentMethod),
+            ]) { _, new in new }
+            completion(STPPaymentIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, error in
+            XCTAssertEqual(status, .canceled)
+            XCTAssertNil(error, "Cancel errors should not be forwarded")
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            challengeClientOutcome: .canceled
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testPI_challengeFailed_serverRequiresAction_pollsUntilSucceeded() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as succeeded after polling")
+
+        var callCount = 0
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callCount += 1
+            let status: STPPaymentIntentStatus = callCount >= 2 ? .succeeded : .requiresAction
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: status),
+            ]) { _, new in new }
+            completion(STPPaymentIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, _ in
+            XCTAssertEqual(status, .succeeded)
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            pollingBudget: PollingBudget(startDate: Date(), duration: 5.0),
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+        )
+
+        wait(for: [expectation], timeout: 10.0)
+        XCTAssertEqual(callCount, 2)
+    }
+
+    // MARK: - SetupIntent challengeClientOutcome tests
+
+    func testSI_challengeFailed_serverSucceeded_completesSucceeded() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as succeeded")
+
+        let setupIntent = STPFixtures.setupIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            let responseDict = setupIntent.allResponseFields.merging([
+                "status": STPSetupIntentStatus.string(from: .succeeded),
+            ]) { _, new in new }
+            completion(STPSetupIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            setupIntent: setupIntent,
+            returnURL: nil
+        ) { status, _, _ in
+            XCTAssertEqual(status, .succeeded)
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testSI_challengeFailed_serverNotSucceeded_completesFailed() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as failed")
+
+        let setupIntent = STPFixtures.setupIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            let responseDict = setupIntent.allResponseFields.merging([
+                "status": STPSetupIntentStatus.string(from: .requiresPaymentMethod),
+            ]) { _, new in new }
+            completion(STPSetupIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            setupIntent: setupIntent,
+            returnURL: nil
+        ) { status, _, error in
+            XCTAssertEqual(status, .failed)
+            XCTAssertNotNil(error)
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "Captcha failed", type: "captcha_error", code: nil))
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testSI_challengeCanceled_serverNotSucceeded_completesCanceledWithNoError() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as canceled with no error")
+
+        let setupIntent = STPFixtures.setupIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            let responseDict = setupIntent.allResponseFields.merging([
+                "status": STPSetupIntentStatus.string(from: .requiresPaymentMethod),
+            ]) { _, new in new }
+            completion(STPSetupIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            setupIntent: setupIntent,
+            returnURL: nil
+        ) { status, _, error in
+            XCTAssertEqual(status, .canceled)
+            XCTAssertNil(error, "Cancel errors should not be forwarded")
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            challengeClientOutcome: .canceled
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testSI_challengeCanceled_serverSucceeded_completesSucceeded() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as succeeded")
+
+        let setupIntent = STPFixtures.setupIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            let responseDict = setupIntent.allResponseFields.merging([
+                "status": STPSetupIntentStatus.string(from: .succeeded),
+            ]) { _, new in new }
+            completion(STPSetupIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            setupIntent: setupIntent,
+            returnURL: nil
+        ) { status, _, _ in
+            XCTAssertEqual(status, .succeeded)
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            challengeClientOutcome: .canceled
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testPI_challengeCanceled_budgetExhausted_completesCanceledWithNoError() {
+        // When the polling budget runs out while the intent is still in requiresAction,
+        // we should complete with the challengeClientOutcome rather than polling forever.
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as canceled after budget exhausted")
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            // Always return requiresAction so the budget will exhaust
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: .requiresAction),
+            ]) { _, new in new }
+            completion(STPPaymentIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, error in
+            XCTAssertEqual(status, .canceled)
+            XCTAssertNil(error, "Cancel errors should not be forwarded")
+            expectation.fulfill()
+        }
+
+        // Start with an already-exhausted budget
+        let exhaustedBudget = PollingBudget(startDate: Date().addingTimeInterval(-10), duration: 1.0)
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            pollingBudget: exhaustedBudget,
+            challengeClientOutcome: .canceled
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testPI_challengeFailed_budgetExhausted_completesFailedWithError() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as failed after budget exhausted")
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: .requiresAction),
+            ]) { _, new in new }
+            completion(STPPaymentIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, error in
+            XCTAssertEqual(status, .failed)
+            XCTAssertNotNil(error)
+            expectation.fulfill()
+        }
+
+        let exhaustedBudget = PollingBudget(startDate: Date().addingTimeInterval(-10), duration: 1.0)
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            pollingBudget: exhaustedBudget,
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testSI_challengeCanceled_budgetExhausted_completesCanceledWithNoError() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as canceled after budget exhausted")
+
+        let setupIntent = STPFixtures.setupIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            let responseDict = setupIntent.allResponseFields.merging([
+                "status": STPSetupIntentStatus.string(from: .requiresAction),
+            ]) { _, new in new }
+            completion(STPSetupIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            setupIntent: setupIntent,
+            returnURL: nil
+        ) { status, _, error in
+            XCTAssertEqual(status, .canceled)
+            XCTAssertNil(error, "Cancel errors should not be forwarded")
+            expectation.fulfill()
+        }
+
+        let exhaustedBudget = PollingBudget(startDate: Date().addingTimeInterval(-10), duration: 1.0)
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            pollingBudget: exhaustedBudget,
+            challengeClientOutcome: .canceled
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testSI_challengeFailed_serverRequiresAction_pollsUntilSucceeded() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as succeeded after polling")
+
+        var callCount = 0
+        let setupIntent = STPFixtures.setupIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            callCount += 1
+            let status: STPSetupIntentStatus = callCount >= 2 ? .succeeded : .requiresAction
+            let responseDict = setupIntent.allResponseFields.merging([
+                "status": STPSetupIntentStatus.string(from: status),
+            ]) { _, new in new }
+            completion(STPSetupIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            setupIntent: setupIntent,
+            returnURL: nil
+        ) { status, _, _ in
+            XCTAssertEqual(status, .succeeded)
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            pollingBudget: PollingBudget(startDate: Date(), duration: 5.0),
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+        )
+
+        wait(for: [expectation], timeout: 10.0)
+        XCTAssertEqual(callCount, 2)
+    }
+
     func testSetupIntentPollingBehaviorWithFinalCall() {
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)

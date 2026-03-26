@@ -2061,13 +2061,11 @@ public class STPPaymentHandler: NSObject {
 
                         case .failure(let error):
                             // Re-fetch the intent before completing — the server may have already processed the challenge even though the client reported an error or cancel (like if the user taps the captcha checkmark and then taps the X to cancel).
-                            let outcome: ChallengeClientOutcome
                             if case ChallengeError.userCanceled = error {
-                                outcome = .canceled
+                                self._retrieveAndCheckIntentForCurrentAction(challengeClientOutcome: .canceled)
                             } else {
-                                outcome = .failed(error)
+                                self._retrieveAndCheckIntentForCurrentAction(challengeClientOutcome: .failed(error))
                             }
-                            self._retrieveAndCheckIntentForCurrentAction(challengeClientOutcome: outcome)
                         }
                     }
                 }
