@@ -604,7 +604,94 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
     }
 
     // MARK: - challengeClientOutcome polling tests
-    func testPI_challengeFailed_serverRequiresAction_pollsUntilSucceeded() {
+
+    func testPI_challengeFailed_serverRequiresAction_completesFailedImmediately() {
+        // Webview errors do not poll — the server won't make further progress after an error,
+        // so we complete immediately rather than waiting 15s.
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as failed without polling")
+
+        var callCount = 0
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            callCount += 1
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: .requiresAction),
+            ]) { _, new in new }
+            completion(STPPaymentIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, error in
+            XCTAssertEqual(status, .failed)
+            XCTAssertNotNil(error)
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+        XCTAssertEqual(callCount, 1, "Should fetch exactly once — no polling on webview error")
+    }
+
+    func testSI_challengeFailed_serverRequiresAction_completesFailedImmediately() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as failed without polling")
+
+        var callCount = 0
+        let setupIntent = STPFixtures.setupIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            callCount += 1
+            let responseDict = setupIntent.allResponseFields.merging([
+                "status": STPSetupIntentStatus.string(from: .requiresAction),
+            ]) { _, new in new }
+            completion(STPSetupIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            setupIntent: setupIntent,
+            returnURL: nil
+        ) { status, _, error in
+            XCTAssertEqual(status, .failed)
+            XCTAssertNotNil(error)
+            expectation.fulfill()
+        }
+
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+        XCTAssertEqual(callCount, 1, "Should fetch exactly once — no polling on webview error")
+    }
+
+    func testPI_challengeCanceled_serverRequiresAction_polls() {
+        // User cancel does poll — the server may still be processing the challenge
+        // (e.g. user tapped the captcha checkmark then immediately tapped X).
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
         let expectation = self.expectation(description: "Completes as succeeded after polling")
@@ -639,14 +726,14 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         paymentHandler._retrieveAndCheckIntentForCurrentAction(
             currentAction: currentAction,
             pollingBudget: PollingBudget(startDate: Date(), duration: 5.0),
-            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+            challengeClientOutcome: .canceled
         )
 
         wait(for: [expectation], timeout: 10.0)
         XCTAssertEqual(callCount, 2)
     }
 
-    func testSI_challengeFailed_serverRequiresAction_pollsUntilSucceeded() {
+    func testSI_challengeCanceled_serverRequiresAction_polls() {
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
         let expectation = self.expectation(description: "Completes as succeeded after polling")
@@ -681,7 +768,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         paymentHandler._retrieveAndCheckIntentForCurrentAction(
             currentAction: currentAction,
             pollingBudget: PollingBudget(startDate: Date(), duration: 5.0),
-            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+            challengeClientOutcome: .canceled
         )
 
         wait(for: [expectation], timeout: 10.0)

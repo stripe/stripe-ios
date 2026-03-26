@@ -1796,7 +1796,10 @@ public class STPPaymentHandler: NSObject {
         startDate: Date,
         currentAction: STPPaymentHandlerActionParams
     ) {
-        if requiresAction {
+        if requiresAction, case .canceled = challengeClientOutcome {
+            // Only poll when the user canceled — the server may still be processing the challenge
+            // (e.g. user tapped the captcha checkmark then immediately tapped X).
+            // For webview errors (.failed), the server won't make further progress, so complete immediately.
             let budget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 15)
             if budget.canPoll {
                 budget.pollAfter {
