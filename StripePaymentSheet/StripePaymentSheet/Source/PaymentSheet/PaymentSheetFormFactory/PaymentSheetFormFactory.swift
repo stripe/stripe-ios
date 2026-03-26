@@ -411,15 +411,9 @@ extension PaymentSheetFormFactory {
             if let previousCustomerInput = previousCustomerInput, previousCustomerInput.saveForFutureUseCheckboxState != .hidden {
                 // Use the previous customer input checkbox state if it was shown
                 return previousCustomerInput.saveForFutureUseCheckboxState == .selected
-            } else {
-                switch savePaymentMethodConsentBehavior {
-                case .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled(let isSelectedByDefault):
-                    return isSelectedByDefault
-                default:
-                    // Otherwise, use the default selected state
-                    return configuration.savePaymentMethodOptInBehavior.isSelectedByDefault
-                }
             }
+            // Otherwise, use the default selected state
+            return configuration.savePaymentMethodOptInBehavior.isSelectedByDefault
         }()
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
@@ -1043,7 +1037,7 @@ extension PaymentSheetFormFactory {
         case paymentSheetWithCustomerSessionPaymentMethodSaveDisabled
         case paymentSheetWithCustomerSessionPaymentMethodSaveEnabled
         case paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
-        case paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled(isSelectedByDefault: Bool)
+        case paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled
         case customerSheetWithCustomerSession
     }
 
@@ -1059,9 +1053,7 @@ extension PaymentSheetFormFactory {
             return .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
         }
 
-        return .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled(
-            isSelectedByDefault: offerSave.status == .accepted
-        )
+        return .paymentSheetWithCheckoutSessionPaymentMethodSaveEnabled
     }
 }
 
