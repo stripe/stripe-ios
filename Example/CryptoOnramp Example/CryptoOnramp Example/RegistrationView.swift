@@ -41,6 +41,13 @@ struct RegistrationView: View {
     @FocusState private var isPhoneNumberFieldFocused: Bool
     @FocusState private var isCountryFieldFocused: Bool
 
+    /// Strips spaces, dashes, and parentheses from a phone number for E.164 compatibility.
+    /// Sanitization is done on submit rather than on input so the field preserves readable
+    /// formatting (e.g. from autofill) while the user verifies the number.
+    private static func sanitizePhoneNumber(_ value: String) -> String {
+        value.filter { $0.isNumber || $0 == "+" }
+    }
+
     private var isRegisterButtonDisabled: Bool {
         isLoading.wrappedValue || phoneNumber.isEmpty
     }
@@ -148,14 +155,15 @@ struct RegistrationView: View {
                 try await coordinator.registerLinkUser(
                     email: email,
                     fullName: nil,
-                    phone: phoneNumber,
+                    phone: Self.sanitizePhoneNumber(phoneNumber),
                     country: country
                 )
 
                 await MainActor.run {
-                    isLoading.wrappedValue = false
                     isRegistrationComplete = true
                 }
+                // Continue directly into authentication
+                try await verify()
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
@@ -228,11 +236,12 @@ struct RegistrationView: View {
         isLoading.wrappedValue = true
         Task {
             do {
-                try await coordinator.updatePhoneNumber(to: phoneNumber)
+                let sanitized = Self.sanitizePhoneNumber(phoneNumber)
+                try await coordinator.updatePhoneNumber(to: sanitized)
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     updatePhoneNumberInput = ""
-                    self.phoneNumber = phoneNumber
+                    self.phoneNumber = sanitized
                 }
             } catch {
                 await MainActor.run {

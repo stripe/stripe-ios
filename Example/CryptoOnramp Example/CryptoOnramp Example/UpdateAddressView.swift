@@ -46,7 +46,8 @@ struct UpdateAddressView: View {
                             "Enter your street address",
                             text: $addressLine1,
                             field: .addressLine1,
-                            autocapitalization: .words
+                            autocapitalization: .words,
+                            textContentType: .streetAddressLine1
                         )
                     }
 
@@ -55,7 +56,8 @@ struct UpdateAddressView: View {
                             "Apartment, suite, etc.",
                             text: $addressLine2,
                             field: .addressLine2,
-                            autocapitalization: .words
+                            autocapitalization: .words,
+                            textContentType: .streetAddressLine2
                         )
                     }
 
@@ -64,7 +66,8 @@ struct UpdateAddressView: View {
                             "Enter your city",
                             text: $city,
                             field: .city,
-                            autocapitalization: .words
+                            autocapitalization: .words,
+                            textContentType: .addressCity
                         )
                     }
 
@@ -81,7 +84,8 @@ struct UpdateAddressView: View {
                         makeTextField(
                             "Enter your postal code",
                             text: $postalCode,
-                            field: .postalCode
+                            field: .postalCode,
+                            textContentType: .postalCode
                         )
                     }
 
@@ -144,10 +148,12 @@ struct UpdateAddressView: View {
         _ titleKey: LocalizedStringKey,
         text: Binding<String>,
         field: Field,
-        autocapitalization: UITextAutocapitalizationType = .none
+        autocapitalization: UITextAutocapitalizationType = .none,
+        textContentType: UITextContentType? = nil
     ) -> some View {
         TextField(titleKey, text: text)
             .textFieldStyle(RoundedBorderTextFieldStyle())
+            .textContentType(textContentType)
             .autocapitalization(autocapitalization)
             .focused($focusedField, equals: field)
     }
