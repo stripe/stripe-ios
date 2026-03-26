@@ -2046,7 +2046,6 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-
     /// Checks if authenticationContext.authenticationPresentingViewController can be presented on.
     /// @note Call this method after `prepareAuthenticationContextForPresentation:`
     func _canPresent(
