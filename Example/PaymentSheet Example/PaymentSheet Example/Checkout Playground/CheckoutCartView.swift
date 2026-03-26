@@ -8,6 +8,7 @@
 @_spi(STP) import StripePayments
 @_spi(CheckoutSessionsPreview) @_spi(STP) import StripePaymentSheet
 import SwiftUI
+import UIKit
 
 @available(iOS 15.0, *)
 struct CheckoutCartView: View {
@@ -16,6 +17,7 @@ struct CheckoutCartView: View {
 
     @State private var isLoading = false
     @State private var errorMessage: String?
+    @State private var copiedSessionID = false
 
     init(clientSecret: String) {
         _checkout = StateObject(wrappedValue: Checkout(clientSecret: clientSecret))
@@ -66,6 +68,27 @@ struct CheckoutCartView: View {
                     Button(action: { dismiss() }) {
                         Image(systemName: "xmark")
                             .foregroundColor(.primary)
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    if let session = checkout.session {
+                        Button {
+                            UIPasteboard.general.string = session.id
+                            Task { @MainActor in
+                                withAnimation {
+                                    copiedSessionID = true
+                                }
+                                try? await Task.sleep(nanoseconds: 1_000_000_000)
+                                withAnimation {
+                                    copiedSessionID = false
+                                }
+                            }
+                        } label: {
+                            Image(systemName: copiedSessionID ? "checkmark" : "doc.on.doc")
+                                .foregroundColor(.blue)
+                        }
+                        .accessibilityLabel("Copy Checkout Session ID")
+                        .accessibilityIdentifier("checkout-playground-copy-session-id")
                     }
                 }
             }
