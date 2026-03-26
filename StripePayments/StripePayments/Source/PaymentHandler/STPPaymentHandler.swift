@@ -1527,7 +1527,9 @@ public class STPPaymentHandler: NSObject {
     /// - Parameters:
     ///   - currentAction: Action parameters to process, defaults to self.currentAction
     ///   - pollingBudget: Existing polling budget, or nil for first attempt
-    func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams? = nil, pollingBudget: PollingBudget? = nil) {
+    ///   - cancelIfNotSucceeded: If true and the intent is not in a success state, completes with `.canceled` instead of normal status handling. Takes precedence over `errorIfNotSucceeded`.
+    ///   - errorIfNotSucceeded: If provided and the intent is not in a success state, completes with `.failed` using this error instead of normal status handling.
+    func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams? = nil, pollingBudget: PollingBudget? = nil, cancelIfNotSucceeded: Bool = false, errorIfNotSucceeded: Error? = nil) {
         // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
         let pingMarlinIfNecessary: ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {
             currentAction,
@@ -1588,6 +1590,22 @@ public class STPPaymentHandler: NSObject {
                             return
                         }
                         currentAction.paymentIntent = paymentIntent
+                        if cancelIfNotSucceeded || errorIfNotSucceeded != nil {
+                            let isSuccessState = paymentIntent.status == .succeeded
+                                || paymentIntent.status == .requiresCapture
+                                || (paymentIntent.status == .processing
+                                    && STPPaymentHandler._isProcessingIntentSuccess(for: paymentIntent.paymentMethod?.type ?? .unknown))
+                            if isSuccessState {
+                                _ = self._handlePaymentIntentStatus(forAction: currentAction)
+                            } else if cancelIfNotSucceeded {
+                                // We don't forward cancelation errors
+                                currentAction.complete(with: .canceled, error: nil)
+                            } else if let error = errorIfNotSucceeded {
+                                // Forward the provided error
+                                currentAction.complete(with: .failed, error: error as NSError)
+                            }
+                            return
+                        }
                         // If the transaction is still unexpectedly processing, refresh the PaymentIntent
                         // This could happen if, for example, a payment is approved in an SFSafariViewController, the user closes the sheet, and the approval races with this fetch.
                         if
@@ -1680,6 +1698,18 @@ public class STPPaymentHandler: NSObject {
                     return
                 }
                 currentAction.setupIntent = setupIntent
+                if cancelIfNotSucceeded || errorIfNotSucceeded != nil {
+                    if setupIntent.status == .succeeded {
+                        _ = self._handleSetupIntentStatus(forAction: currentAction)
+                    } else if cancelIfNotSucceeded {
+                        // We don't forward cancelation errors
+                        currentAction.complete(with: .canceled, error: nil)
+                    } else if let error = errorIfNotSucceeded {
+                        // Forward the provided error
+                        currentAction.complete(with: .failed, error: error as NSError)
+                    }
+                    return
+                }
                 if let type = setupIntent.paymentMethod?.type,
                    !STPPaymentHandler._isProcessingIntentSuccess(for: type),
                    setupIntent.status == .processing,
@@ -1983,16 +2013,10 @@ public class STPPaymentHandler: NSObject {
 
                         case .failure(let error):
                             // Re-fetch the intent before completing — the server may have already processed the challenge even though the client reported an error or cancel (like if the user taps the captcha checkmark and then taps the X to cancel).
-                            self._retrieveIntentForChallengeResult(currentAction: currentAction) { succeeded in
-                                if succeeded {
-                                    // The intent succeeded server-side; report success regardless of the client error.
-                                    currentAction.complete(with: .succeeded, error: nil)
-                                } else if case ChallengeError.userCanceled = error {
-                                    // We don't forward cancelation errors
-                                    currentAction.complete(with: .canceled, error: nil)
-                                } else {
-                                    currentAction.complete(with: .failed, error: error as NSError)
-                                }
+                            if case ChallengeError.userCanceled = error {
+                                self._retrieveAndCheckIntentForCurrentAction(cancelIfNotSucceeded: true)
+                            } else {
+                                self._retrieveAndCheckIntentForCurrentAction(errorIfNotSucceeded: error)
                             }
                         }
                     }
@@ -2022,39 +2046,6 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    /// Re-fetches the intent for `currentAction` and calls `completion` with whether the intent has reached a success state on the server.
-    /// Always updates `currentAction` with the latest intent data.
-    func _retrieveIntentForChallengeResult(
-        currentAction: STPPaymentHandlerActionParams,
-        completion: @escaping (Bool) -> Void
-    ) {
-        if let piAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
-            piAction.apiClient.retrievePaymentIntent(withClientSecret: piAction.paymentIntent.clientSecret, expand: ["payment_method"], timeout: nil) { paymentIntent, _ in
-                if let paymentIntent {
-                    piAction.paymentIntent = paymentIntent
-                    let isSuccess = paymentIntent.status == .succeeded
-                        || paymentIntent.status == .requiresCapture
-                        || (paymentIntent.status == .processing
-                            && STPPaymentHandler._isProcessingIntentSuccess(for: paymentIntent.paymentMethod?.type ?? .unknown))
-                    completion(isSuccess)
-                } else {
-                    completion(false)
-                }
-            }
-        } else if let siAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
-            siAction.apiClient.retrieveSetupIntent(withClientSecret: siAction.setupIntent.clientSecret, expand: ["payment_method"], timeout: nil) { setupIntent, _ in
-                if let setupIntent {
-                    siAction.setupIntent = setupIntent
-                    let isSuccess = setupIntent.status == .succeeded
-                    completion(isSuccess)
-                } else {
-                    completion(false)
-                }
-            }
-        } else {
-            completion(false)
-        }
-    }
 
     /// Checks if authenticationContext.authenticationPresentingViewController can be presented on.
     /// @note Call this method after `prepareAuthenticationContextForPresentation:`
