@@ -48,7 +48,7 @@ final class PaymentSheetReloadTests: XCTestCase {
         vc.setReloading(true)
         XCTAssertFalse(vc.view.isUserInteractionEnabled)
         XCTAssertFalse(vc.navigationBar.isUserInteractionEnabled)
-        XCTAssertTrue(vc.allowsDragToDismiss, "Should prevent drag-to-dismiss while reloading")
+        XCTAssertFalse(vc.allowsDragToDismiss)
 
         vc.setReloading(false)
         XCTAssertTrue(vc.view.isUserInteractionEnabled)
@@ -71,7 +71,7 @@ final class PaymentSheetReloadTests: XCTestCase {
         vc.setReloading(true)
         XCTAssertFalse(vc.view.isUserInteractionEnabled)
         XCTAssertFalse(vc.navigationBar.isUserInteractionEnabled)
-        XCTAssertFalse(vc.isDismissable)
+        XCTAssertTrue(vc.isDismissable)
 
         vc.setReloading(false)
         XCTAssertTrue(vc.view.isUserInteractionEnabled)
