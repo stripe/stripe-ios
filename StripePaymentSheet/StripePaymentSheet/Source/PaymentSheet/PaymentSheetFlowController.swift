@@ -41,6 +41,19 @@ extension PaymentSheet {
             }
         }
 
+        var newConfirmParams: IntentConfirmParams? {
+            switch self {
+            case .applePay, .saved, .link:
+                return nil
+            case .new(confirmParams: let params):
+                return params
+            case let .external(paymentMethod, billingDetails):
+                let params = IntentConfirmParams(type: .external(paymentMethod))
+                params.paymentMethodParams.billingDetails = billingDetails
+                return params
+            }
+        }
+
         var savedPaymentMethod: STPPaymentMethod? {
             switch self {
             case .applePay, .link, .new, .external:

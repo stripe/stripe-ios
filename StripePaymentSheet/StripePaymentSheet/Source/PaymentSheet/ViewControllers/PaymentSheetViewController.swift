@@ -180,18 +180,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
         // Restore the customer's previous payment method.
         // For saved PMs, this happens naturally, so we just need to handle new payment methods.
-        let previousConfirmParams: IntentConfirmParams? = {
-            switch previousPaymentOption {
-            case .applePay, .saved, .link, nil:
-                return nil
-            case .new(confirmParams: let params):
-                return params
-            case let .external(paymentMethod, billingDetails):
-                let params = IntentConfirmParams(type: .external(paymentMethod))
-                params.paymentMethodParams.billingDetails = billingDetails
-                return params
-            }
-        }()
+        let previousConfirmParams = previousPaymentOption?.newConfirmParams
 
         if previousConfirmParams != nil {
             self.mode = .addingNew
