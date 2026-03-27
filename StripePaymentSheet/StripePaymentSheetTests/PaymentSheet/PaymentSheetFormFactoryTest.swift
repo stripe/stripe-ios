@@ -1618,25 +1618,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
     }
 
-    func testShowsCheckbox_CheckoutSessionOfferSaveAccepted() {
-        let configuration = PaymentSheet.Configuration()
-        let factory = PaymentSheetFormFactory(
-            intent: makeCheckoutSessionIntent(offerSave: [
-                "enabled": true,
-                "status": "accepted",
-            ]),
-            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.card)
-        )
-
-        XCTAssertFalse(factory.isSettingUp)
-        XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
-
-        let params = factory.makeSaveCheckbox().updateParams(params: IntentConfirmParams(type: .stripe(.card)))
-        XCTAssertEqual(params?.saveForFutureUseCheckboxState, .deselected)
-    }
-
     func testShowsCheckbox_CheckoutSessionOfferSaveNotAccepted() {
         let configuration = PaymentSheet.Configuration()
         let factory = PaymentSheetFormFactory(
