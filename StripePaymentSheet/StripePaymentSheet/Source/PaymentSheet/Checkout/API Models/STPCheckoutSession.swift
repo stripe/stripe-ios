@@ -469,9 +469,22 @@ extension STPCheckoutSession {
         return allResponseFields["setup_future_usage"] as? String
     }
 
+    var isPaymentMethodOptionsSetupFutureUsageSet: Bool {
+        return paymentMethodOptions?.isSetupFutureUsageSet ?? false
+    }
+
     func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
-        _ = paymentMethodType
-        return topLevelSetupFutureUsage
+        let perPaymentMethodSetupFutureUsage =
+            (allResponseFields["setup_future_usage_for_payment_method_type"] as? [AnyHashable: Any])?[paymentMethodType.identifier] as? String
+        if let perPaymentMethodSetupFutureUsage {
+            return perPaymentMethodSetupFutureUsage
+        }
+
+        if let paymentMethodOptionsSetupFutureUsage = paymentMethodOptions?.setupFutureUsage(for: paymentMethodType) {
+            return paymentMethodOptionsSetupFutureUsage
+        }
+
+        return allResponseFields["setup_future_usage"] as? String
     }
 
     func merchantWillSavePaymentMethod(_ paymentMethodType: STPPaymentMethodType) -> Bool {

@@ -163,8 +163,8 @@ enum Intent {
                 return !setupFutureUsageValues.isEmpty
             }
             return nil
-        case .checkoutSession:
-            return nil
+        case .checkoutSession(let checkoutSession):
+            return checkoutSession.isPaymentMethodOptionsSetupFutureUsageSet
         case .setupIntent:
             return nil
         }
@@ -191,7 +191,7 @@ enum Intent {
         case .checkoutSession(let checkoutSession):
             switch checkoutSession.mode {
             case .payment:
-                guard let setupFutureUsage = checkoutSession.topLevelSetupFutureUsage else {
+                guard let setupFutureUsage = checkoutSession.setupFutureUsage(for: paymentMethodType) else {
                     return false
                 }
                 return setupFutureUsage != "none"
