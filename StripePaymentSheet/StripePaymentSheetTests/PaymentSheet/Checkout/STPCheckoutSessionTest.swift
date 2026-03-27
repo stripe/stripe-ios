@@ -13,6 +13,19 @@ import StripePaymentsObjcTestUtils
 import XCTest
 
 class STPCheckoutSessionTest: XCTestCase {
+    private func makeCheckoutSession(_ overrides: [String: Any]) -> STPCheckoutSession {
+        var json: [String: Any] = [
+            "session_id": "cs_test",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer": ["id": "cus_123"],
+        ]
+        overrides.forEach { json[$0.key] = $0.value }
+        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+    }
 
     // MARK: - STPAPIResponseDecodable Tests
 
@@ -388,6 +401,105 @@ class STPCheckoutSessionTest: XCTestCase {
         ])!
 
         XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+    }
+
+    func testCheckoutSessionIntent_setupFutureUsageString() {
+        let session = makeCheckoutSession([
+            "setup_future_usage": "off_session",
+        ])
+
+        XCTAssertEqual(Intent.checkoutSession(session).setupFutureUsageString, "off_session")
+    }
+
+    func testCheckoutSessionIntent_isPaymentMethodOptionsSetupFutureUsageSet() {
+        let session = makeCheckoutSession([
+            "payment_method_options": [
+                "paypal": [
+                    "setup_future_usage": "off_session",
+                ],
+            ],
+            "payment_method_types": ["paypal"],
+        ])
+
+        XCTAssertEqual(Intent.checkoutSession(session).isPaymentMethodOptionsSetupFutureUsageSet, true)
+    }
+
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevel() {
+        let session = makeCheckoutSession([
+            "setup_future_usage": "off_session",
+            "payment_method_types": ["paypal"],
+        ])
+
+        XCTAssertTrue(Intent.checkoutSession(session).isSetupFutureUsageSet(for: .payPal))
+    }
+
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_paymentMethodOptions() {
+        let session = makeCheckoutSession([
+            "payment_method_options": [
+                "paypal": [
+                    "setup_future_usage": "off_session",
+                ],
+            ],
+            "payment_method_types": ["paypal"],
+        ])
+
+        XCTAssertTrue(Intent.checkoutSession(session).isSetupFutureUsageSet(for: .payPal))
+    }
+
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_paymentMethodOptionsNoneOverridesTopLevel() {
+        let session = makeCheckoutSession([
+            "setup_future_usage": "off_session",
+            "payment_method_options": [
+                "paypal": [
+                    "setup_future_usage": "none",
+                ],
+            ],
+            "payment_method_types": ["paypal"],
+        ])
+
+        XCTAssertFalse(Intent.checkoutSession(session).isSetupFutureUsageSet(for: .payPal))
+    }
+
+    func testMakeMandateDataForCheckoutSession_paymentModeWithTopLevelSetupFutureUsage() {
+        let session = makeCheckoutSession([
+            "setup_future_usage": "off_session",
+            "payment_method_types": ["paypal"],
+        ])
+
+        XCTAssertNotNil(PaymentSheet.makeMandateDataForCheckoutSession(
+            checkoutSession: session,
+            paymentMethodType: .payPal
+        ))
+    }
+
+    func testMakeMandateDataForCheckoutSession_paymentModeWithPaymentMethodOptionsNoneOverridesTopLevel() {
+        let session = makeCheckoutSession([
+            "setup_future_usage": "off_session",
+            "payment_method_options": [
+                "paypal": [
+                    "setup_future_usage": "none",
+                ],
+            ],
+            "payment_method_types": ["paypal"],
+        ])
+
+        XCTAssertNil(PaymentSheet.makeMandateDataForCheckoutSession(
+            checkoutSession: session,
+            paymentMethodType: .payPal
+        ))
+    }
+
+    func testMakeMandateDataForCheckoutSession_setupMode() {
+        let session = makeCheckoutSession([
+            "mode": "setup",
+            "payment_status": "no_payment_required",
+            "payment_method_types": ["paypal"],
+        ])
+
+        XCTAssertNotNil(PaymentSheet.makeMandateDataForCheckoutSession(
+            checkoutSession: session,
+            paymentMethodType: .payPal
+        ))
     }
 
 }

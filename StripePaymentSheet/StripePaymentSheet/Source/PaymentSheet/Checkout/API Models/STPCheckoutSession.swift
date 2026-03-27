@@ -458,6 +458,14 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 // MARK: - Parsing Helpers
 
 extension STPCheckoutSession {
+    var topLevelSetupFutureUsage: String? {
+        return allResponseFields["setup_future_usage"] as? String
+    }
+
+    var isPaymentMethodOptionsSetupFutureUsageSet: Bool {
+        return paymentMethodOptions?.isSetupFutureUsageSet ?? false
+    }
+
     func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
         let perPaymentMethodSetupFutureUsage =
             (allResponseFields["setup_future_usage_for_payment_method_type"] as? [AnyHashable: Any])?[paymentMethodType.identifier] as? String

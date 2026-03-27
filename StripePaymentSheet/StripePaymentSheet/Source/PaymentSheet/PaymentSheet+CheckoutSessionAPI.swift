@@ -68,6 +68,10 @@ extension PaymentSheet {
 
                 return confirmType.shouldSave
             }()
+            let mandateData = makeMandateDataForCheckoutSession(
+                checkoutSession: checkoutSession,
+                paymentMethodType: paymentMethodType
+            )
 
             // 3. Call confirm API
             let response = try await configuration.apiClient.confirmCheckoutSession(
@@ -76,6 +80,7 @@ extension PaymentSheet {
                 expectedAmount: expectedAmount,
                 expectedPaymentMethodType: paymentMethodType.identifier,
                 savePaymentMethod: savePaymentMethod,
+                mandateData: mandateData,
                 returnURL: configuration.returnURL,
                 shipping: makeCheckoutSessionShippingParams(configuration: configuration),
                 paymentMethodOptions: paymentMethodOptions,
@@ -169,5 +174,28 @@ extension PaymentSheet {
 
     private static func makeCheckoutSessionShippingParams(configuration: PaymentElementConfiguration) -> STPPaymentIntentShippingDetailsParams? {
         return STPPaymentIntentShippingDetailsParams(paymentSheetConfiguration: configuration)
+    }
+
+    static func makeMandateDataForCheckoutSession(
+        checkoutSession: STPCheckoutSession,
+        paymentMethodType: STPPaymentMethodType
+    ) -> STPMandateDataParams? {
+        switch checkoutSession.mode {
+        case .payment:
+            guard STPPaymentMethodType.requiresMandateDataForPaymentIntent.contains(paymentMethodType),
+                  checkoutSession.setupFutureUsage(for: paymentMethodType) != nil,
+                  checkoutSession.setupFutureUsage(for: paymentMethodType) != "none"
+            else {
+                return nil
+            }
+            return .makeWithInferredValues()
+        case .setup:
+            guard STPPaymentMethodType.requiresMandateDataForSetupIntent.contains(paymentMethodType) else {
+                return nil
+            }
+            return .makeWithInferredValues()
+        case .subscription, .unknown:
+            return nil
+        }
     }
 }
