@@ -34,10 +34,16 @@ import Foundation
         guard let response = response else {
             return nil
         }
-        let dict = response.stp_dictionaryByRemovingNulls()
+        var dict = response.stp_dictionaryByRemovingNulls()
 
         guard let paymentMethod = dict.stp_string(forKey: "payment_method") else {
             return nil
+        }
+
+        // TODO: Remove remapping when it changes on backend
+        // Remap API field "url" to "art_image" for model deserialization
+        if let url = dict.removeValue(forKey: "url") {
+            dict["art_image"] = url
         }
 
         let artImageString = dict.stp_string(forKey: "art_image") ?? ""
