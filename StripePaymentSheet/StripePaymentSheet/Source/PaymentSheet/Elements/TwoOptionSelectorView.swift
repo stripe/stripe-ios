@@ -142,11 +142,11 @@ final class TwoOptionSelectorView: UIView {
         indicatorLeadingConstraint?.isActive = true
         indicatorTrailingConstraint?.isActive = true
 
+        updateBorderColors()
         updateButtonStyles(animated: false)
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
+    private func updateBorderColors() {
         let borderColor = appearance.colors.componentBorder.withAlphaComponent(0.5).cgColor
         trackView.layer.borderColor = borderColor
         selectionIndicatorView.layer.borderColor = borderColor
@@ -222,6 +222,7 @@ final class TwoOptionSelectorView: UIView {
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        updateBorderColors()
         updateButtonStyles(animated: false)
     }
 #endif
