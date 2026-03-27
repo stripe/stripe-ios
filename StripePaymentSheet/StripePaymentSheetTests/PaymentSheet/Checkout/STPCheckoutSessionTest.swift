@@ -362,6 +362,21 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
     }
 
+    func testMerchantWillSavePaymentMethod_paymentModeWithTopLevelSetupFutureUsage() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_payment_sfu",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer": ["id": "cus_123"],
+            "setup_future_usage": "off_session",
+        ])!
+
+        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+    }
+
     func testMerchantWillSavePaymentMethod_paymentModeWithoutCustomer() {
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
             "session_id": "cs_test_payment_no_customer",
@@ -402,4 +417,36 @@ class STPCheckoutSessionTest: XCTestCase {
 
         XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
     }
+
+    func testMerchantWillSavePaymentMethod_subscriptionModeWithCustomer() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_subscription",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "subscription",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer": ["id": "cus_123"],
+        ])!
+
+        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+    }
+
+    func testCheckoutSessionIntent_setupFutureUsageString() {
+        let session = makeCheckoutSession([
+            "setup_future_usage": "off_session",
+        ])
+
+        XCTAssertEqual(Intent.checkoutSession(session).setupFutureUsageString, "off_session")
+    }
+
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevel() {
+        let session = makeCheckoutSession([
+            "setup_future_usage": "off_session",
+            "payment_method_types": ["paypal"],
+        ])
+
+        XCTAssertTrue(Intent.checkoutSession(session).isSetupFutureUsageSet(for: .payPal))
+    }
+
 }
