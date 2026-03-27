@@ -78,7 +78,7 @@ extension PaymentSheet {
             switch confirmType {
             case let .saved(savedPaymentMethod, _, _, _):
                 paymentMethod = savedPaymentMethod
-            case let .new(params, paymentOptions, newPaymentMethod, shouldSaveForIntent, savePaymentMethodForCheckoutSession, shouldSetAsDefaultPM):
+            case let .new(params, paymentOptions, newPaymentMethod, saveForFutureUseCheckboxState, shouldSetAsDefaultPM):
                 if let newPaymentMethod {
                     let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError,
                                                       error: PaymentSheetError.unexpectedNewPaymentMethod,
@@ -87,7 +87,13 @@ extension PaymentSheet {
                 }
                 stpAssert(newPaymentMethod == nil)
                 paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
-                confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSaveForIntent: shouldSaveForIntent, savePaymentMethodForCheckoutSession: savePaymentMethodForCheckoutSession, shouldSetAsDefaultPM: shouldSetAsDefaultPM)
+                confirmType = .new(
+                    params: params,
+                    paymentOptions: paymentOptions,
+                    paymentMethod: paymentMethod,
+                    saveForFutureUseCheckboxState: saveForFutureUseCheckboxState,
+                    shouldSetAsDefaultPM: shouldSetAsDefaultPM
+                )
             }
 
             // 2a. If we have a preparePaymentMethodHandler, use the shared payment token session flow

@@ -77,7 +77,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
         // When we confirm the Intent...
         let examplePaymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
         _ = await PaymentSheet.routeDeferredIntentConfirmation(
-            confirmType: .new(params: examplePaymentMethodParams, paymentOptions: .init(), paymentMethod: nil, shouldSaveForIntent: false, shouldSetAsDefaultPM: nil),
+            confirmType: .new(params: examplePaymentMethodParams, paymentOptions: .init(), paymentMethod: nil, saveForFutureUseCheckboxState: .hidden, shouldSetAsDefaultPM: nil),
             configuration: configuration,
             intentConfig: intentConfig,
             authenticationContext: TestAuthenticationContext(),
@@ -313,7 +313,7 @@ final class PaymentSheet_DeferredAPITest: STPNetworkStubbingTestCase {
                 params: paymentMethodParams,
                 paymentOptions: .init(),
                 paymentMethod: nil,
-                shouldSaveForIntent: false,
+                saveForFutureUseCheckboxState: .hidden,
                 shouldSetAsDefaultPM: false
             ),
             configuration: configuration,

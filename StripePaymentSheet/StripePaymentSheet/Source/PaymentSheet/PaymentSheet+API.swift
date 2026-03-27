@@ -216,14 +216,6 @@ extension PaymentSheet {
                 setAllowRedisplay(confirmParams, paymentMethodType)
                 confirmParams.paymentMethodParams.radarOptions = radarOptions
                 confirmParams.paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
-                let savePaymentMethod: Bool? = {
-                    guard confirmParams.saveForFutureUseCheckboxState != .hidden,
-                          PaymentSheet.PaymentMethodType.stripe(confirmParams.paymentMethodParams.type).supportsSaveForFutureUseCheckbox()
-                    else {
-                        return nil
-                    }
-                    return confirmParams.saveForFutureUseCheckboxState == .selected
-                }()
                 switch intent {
                     // MARK: ↪ PaymentIntent
                 case .paymentIntent(let paymentIntent):
@@ -231,8 +223,10 @@ extension PaymentSheet {
                         confirmPaymentMethodType: .new(
                             params: confirmParams.paymentMethodParams,
                             paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                            shouldSaveForIntent: confirmParams.saveForFutureUseCheckboxState == .selected,
-                            savePaymentMethodForCheckoutSession: savePaymentMethod,
+                            // This unified state captures whether the save checkbox was hidden,
+                            // shown and deselected, or shown and selected. Downstream intent and
+                            // Checkout Session flows derive their own request semantics from it.
+                            saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
                             shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
                         ),
                         paymentIntent: paymentIntent,
@@ -255,8 +249,7 @@ extension PaymentSheet {
                         confirmPaymentMethodType: .new(
                             params: confirmParams.paymentMethodParams,
                             paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                            shouldSaveForIntent: false,
-                            savePaymentMethodForCheckoutSession: savePaymentMethod,
+                            saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
                             shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
                         ),
                         setupIntent: setupIntent,
@@ -280,8 +273,7 @@ extension PaymentSheet {
                             confirmType: .new(
                                 params: confirmParams.paymentMethodParams,
                                 paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                                shouldSaveForIntent: confirmParams.saveForFutureUseCheckboxState == .selected,
-                                savePaymentMethodForCheckoutSession: savePaymentMethod,
+                                saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
                                 shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
                             ),
                             configuration: configuration,
@@ -303,8 +295,7 @@ extension PaymentSheet {
                             confirmType: .new(
                                 params: confirmParams.paymentMethodParams,
                                 paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                                shouldSaveForIntent: confirmParams.saveForFutureUseCheckboxState == .selected,
-                                savePaymentMethodForCheckoutSession: savePaymentMethod,
+                                saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
                                 shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
                             ),
                             configuration: configuration,
@@ -449,7 +440,7 @@ extension PaymentSheet {
                                 confirmType: .new(
                                     params: paymentMethodParams,
                                     paymentOptions: STPConfirmPaymentMethodOptions(),
-                                    shouldSaveForIntent: shouldSave
+                                    saveForFutureUseCheckboxState: shouldSave ? .selected : .hidden
                                 ),
                                 configuration: configuration,
                                 intentConfig: intentConfig,
@@ -470,7 +461,7 @@ extension PaymentSheet {
                             confirmType: .new(
                                 params: paymentMethodParams,
                                 paymentOptions: STPConfirmPaymentMethodOptions(),
-                                shouldSaveForIntent: shouldSave
+                                saveForFutureUseCheckboxState: shouldSave ? .selected : .hidden
                             ),
                             configuration: configuration,
                             authenticationContext: authenticationContext,
@@ -795,27 +786,34 @@ extension PaymentSheet {
     enum ConfirmPaymentMethodType {
         case saved(STPPaymentMethod, paymentOptions: STPConfirmPaymentMethodOptions?, clientAttributionMetadata: STPClientAttributionMetadata?, radarOptions: STPRadarOptions?)
         /// - paymentMethod: Pass this if you created a PaymentMethod already (e.g. for the deferred flow).
-        /// - shouldSaveForIntent: Used by PaymentIntent / deferred-intent flows to decide whether to write intent save semantics
-        ///   like `payment_method_options[*][setup_future_usage]`.
-        /// - savePaymentMethodForCheckoutSession: Used only by Checkout Session confirmation to decide whether to send the
-        ///   top-level `save_payment_method` param. This is optional so Checkout Sessions can distinguish "checkbox hidden"
-        ///   (`nil`) from "checkbox shown but deselected" (`false`).
-        case new(params: STPPaymentMethodParams, paymentOptions: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, shouldSaveForIntent: Bool, savePaymentMethodForCheckoutSession: Bool? = nil, shouldSetAsDefaultPM: Bool? = nil)
+        /// - saveForFutureUseCheckboxState: The single source of truth for save consent when confirming with a new
+        ///   payment method. It preserves whether the save checkbox was hidden, shown and deselected, or shown and
+        ///   selected so intent-based flows and Checkout Session flows can each derive the API parameters they need.
+        case new(params: STPPaymentMethodParams, paymentOptions: STPConfirmPaymentMethodOptions, paymentMethod: STPPaymentMethod? = nil, saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState, shouldSetAsDefaultPM: Bool? = nil)
+
+        /// Projects the unified checkbox state into intent save semantics.
         var shouldSaveForIntent: Bool {
-            switch self {
-            case .saved:
+            saveForFutureUseCheckboxState == .selected
+        }
+
+        /// Projects the unified checkbox state into Checkout Session `save_payment_method` semantics.
+        var savePaymentMethodForCheckoutSession: Bool? {
+            switch saveForFutureUseCheckboxState {
+            case .hidden:
+                return nil
+            case .deselected:
                 return false
-            case .new(_, _, _, let shouldSaveForIntent, _, _):
-                return shouldSaveForIntent
+            case .selected:
+                return true
             }
         }
 
-        var savePaymentMethodForCheckoutSession: Bool? {
+        private var saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState {
             switch self {
             case .saved:
-                return nil
-            case .new(_, _, _, _, let savePaymentMethodForCheckoutSession, _):
-                return savePaymentMethodForCheckoutSession
+                return .hidden
+            case .new(_, _, _, let saveForFutureUseCheckboxState, _):
+                return saveForFutureUseCheckboxState
             }
         }
     }
@@ -837,8 +835,8 @@ extension PaymentSheet {
             params.paymentMethodId = paymentMethod.stripeId
             params.radarOptions = radarOptions
             params.clientAttributionMetadata = clientAttributionMetadata
-        case let .new(paymentMethodParams, paymentMethodoptions, paymentMethod, _shouldSaveForIntent, _, shouldSetAsDefaultPM):
-            shouldSaveForIntent = _shouldSaveForIntent
+        case let .new(paymentMethodParams, paymentMethodoptions, paymentMethod, _, shouldSetAsDefaultPM):
+            shouldSaveForIntent = confirmPaymentMethodType.shouldSaveForIntent
             if let paymentMethod = paymentMethod {
                 paymentMethodType = paymentMethod.type
                 params = STPPaymentIntentConfirmParams(clientSecret: paymentIntent.clientSecret, paymentMethodType: paymentMethod.type)
@@ -893,7 +891,7 @@ extension PaymentSheet {
             params.paymentMethodID = paymentMethod.stripeId
             params.radarOptions = radarOptions
             params.clientAttributionMetadata = clientAttributionMetadata
-        case let .new(paymentMethodParams, _, paymentMethod, _, _, shouldSetAsDefaultPM):
+        case let .new(paymentMethodParams, _, paymentMethod, _, shouldSetAsDefaultPM):
             if let paymentMethod {
                 params = STPSetupIntentConfirmParams(
                     clientSecret: setupIntent.clientSecret,

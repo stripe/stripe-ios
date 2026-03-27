@@ -181,7 +181,7 @@ extension PaymentSheet {
             confirmationTokenParams.paymentMethod = paymentMethod.stripeId
             confirmationTokenParams.paymentMethodOptions = paymentOptions
             confirmationTokenParams.clientAttributionMetadata = clientAttributionMetadata
-        case .new(let paymentMethodParams, let paymentOptions, _, _, _, let shouldSetAsDefaultPM):
+        case .new(let paymentMethodParams, let paymentOptions, _, _, let shouldSetAsDefaultPM):
             confirmationTokenParams.paymentMethodData = paymentMethodParams
             confirmationTokenParams.paymentMethodOptions = paymentOptions
             // Send CAM at the top-level of all requests in scope for consistency
@@ -253,7 +253,7 @@ extension PaymentSheet {
         switch confirmType {
         case .saved(let paymentMethod, _, _, _):
             return paymentMethod.type
-        case .new(let params, _, _, _, _, _):
+        case .new(let params, _, _, _, _):
             return params.type
         }
     }

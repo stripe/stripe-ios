@@ -91,7 +91,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             params: createTestPaymentMethodParams(),
             paymentOptions: STPConfirmPaymentMethodOptions(),
             paymentMethod: nil,
-            shouldSaveForIntent: shouldSave,
+            saveForFutureUseCheckboxState: shouldSave ? .selected : .hidden,
             shouldSetAsDefaultPM: shouldSetAsDefaultPM
         )
     }
@@ -183,7 +183,7 @@ final class PaymentSheet_ConfirmationTokenTests: STPNetworkStubbingTestCase {
             params: paymentMethodParams,
             paymentOptions: paymentOptions,
             paymentMethod: nil,
-            shouldSaveForIntent: false,
+            saveForFutureUseCheckboxState: .hidden,
             shouldSetAsDefaultPM: false
         )
 
