@@ -83,6 +83,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
     private var isReloading: Bool = false
+    var isBusy: Bool { isPaymentInFlight || isReloading }
     private(set) var savedPaymentMethods: [STPPaymentMethod]
     let isFlowController: Bool
     /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
@@ -296,7 +297,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return .makeDefaultType(intent: intent)
         }()
         let status: ConfirmButton.Status = {
-            if isPaymentInFlight || isReloading {
+            if isBusy {
                 return .processing
             }
             if let cvcRecollectionViewController, isRecollectingCVC {
@@ -360,7 +361,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // Freeze the UI and show a spinner on the primary button while we reload the intent.
         // If you add new UI, make sure it's also disabled/hidden during reloading.
         self.isReloading = isReloading
-        isUserInteractionEnabled = !isReloading
+        isUserInteractionEnabled = !isBusy
         if isReloading {
             view.endEditing(true)
         }
@@ -828,11 +829,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 // MARK: - BottomSheetContentViewController
 extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
     var allowsDragToDismiss: Bool {
-        return isPaymentInFlight || isReloading
+        return isBusy
     }
 
     func didTapOrSwipeToDismiss() {
-        guard !isPaymentInFlight, !isReloading else {
+        guard !isBusy else {
            return
         }
         didCancel()

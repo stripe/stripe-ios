@@ -60,6 +60,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private(set) var error: Error?
     private var isPaymentInFlight: Bool = false
     private var isReloading: Bool = false
+    private var isBusy: Bool { isPaymentInFlight || isReloading }
     private(set) var isDismissable: Bool = true
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
@@ -308,7 +309,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     // state -> view
     private func updateUI(animated: Bool = true) {
         // Disable interaction if necessary
-        let shouldEnableUserInteraction = !isPaymentInFlight && !isReloading
+        let shouldEnableUserInteraction = !isBusy
         if shouldEnableUserInteraction != view.isUserInteractionEnabled {
             sendEventToSubviews(
                 shouldEnableUserInteraction ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
@@ -316,8 +317,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             )
         }
         view.isUserInteractionEnabled = shouldEnableUserInteraction
-        isDismissable = !isPaymentInFlight && !isReloading
-        navigationBar.isUserInteractionEnabled = !isPaymentInFlight && !isReloading
+        isDismissable = !isBusy
+        navigationBar.isUserInteractionEnabled = !isBusy
 
         // Update our views (starting from the top of the screen):
         configureNavBar()
@@ -375,7 +376,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         // Notice
         updateBottomNotice()
 
-        if isPaymentInFlight || isReloading {
+        if isBusy {
             buyButtonStatus = .processing
         }
         if case .selectingSaved = mode, case .applePay = savedPaymentOptionsViewController.selectedPaymentOption {
