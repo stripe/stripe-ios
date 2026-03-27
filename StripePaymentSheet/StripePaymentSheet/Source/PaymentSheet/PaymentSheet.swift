@@ -181,7 +181,9 @@ public class PaymentSheet {
                     self.confirmationChallenge = ConfirmationChallenge(enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
                     let presentPaymentSheet: () -> Void = {
                         let paymentSheetVC = self.makePaymentSheetVC(
-                            loadResult: loadResult
+                            loadResult: loadResult,
+                            previousPaymentOption: nil,
+                            shouldLogExperimentExposure: true
                         )
                         self.bottomSheetViewController.setViewControllers([paymentSheetVC])
                     }
@@ -287,8 +289,8 @@ public class PaymentSheet {
     @MainActor
     func makePaymentSheetVC(
         loadResult: PaymentSheetLoader.LoadResult,
-        previousPaymentOption: PaymentOption? = nil,
-        shouldLogExperimentExposure: Bool = true
+        previousPaymentOption: PaymentOption?,
+        shouldLogExperimentExposure: Bool
     ) -> PaymentSheetViewControllerProtocol {
         var configuration = self.configuration
         let layout = configuration.resolveLayout(

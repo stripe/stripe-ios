@@ -63,7 +63,8 @@ final class PaymentSheetReloadTests: XCTestCase {
             configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: loadResult,
             analyticsHelper: ._testValue(),
-            delegate: delegate
+            delegate: delegate,
+            previousPaymentOption: nil
         )
         _ = vc.view
 
@@ -103,7 +104,8 @@ final class PaymentSheetReloadTests: XCTestCase {
             configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: loadResult,
             analyticsHelper: ._testValue(),
-            delegate: delegate
+            delegate: delegate,
+            previousPaymentOption: nil
         )
         _ = vc.view
 
