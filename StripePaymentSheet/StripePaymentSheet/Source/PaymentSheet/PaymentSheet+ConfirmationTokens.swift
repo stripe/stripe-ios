@@ -181,7 +181,7 @@ extension PaymentSheet {
             confirmationTokenParams.paymentMethod = paymentMethod.stripeId
             confirmationTokenParams.paymentMethodOptions = paymentOptions
             confirmationTokenParams.clientAttributionMetadata = clientAttributionMetadata
-        case .new(let paymentMethodParams, let paymentOptions, _, _, let shouldSetAsDefaultPM):
+        case .new(let paymentMethodParams, let paymentOptions, _, _, _, let shouldSetAsDefaultPM):
             confirmationTokenParams.paymentMethodData = paymentMethodParams
             confirmationTokenParams.paymentMethodOptions = paymentOptions
             // Send CAM at the top-level of all requests in scope for consistency
@@ -202,7 +202,7 @@ extension PaymentSheet {
         case .payment(_, _, let intentSetupFutureUsage, _, let paymentMethodOptions):
             let paymentMethodType = paymentMethodType(from: confirmType)
             // Priority order: user checkbox > PMO SFU > top-level SFU
-            if confirmType.shouldSave {
+            if confirmType.shouldSaveForIntent {
                 // 1. User chose to save payment method via checkbox takes highest priority
                 confirmationTokenParams.setupFutureUsage = .offSession
             } else if let pmoSFU = paymentMethodOptions?.setupFutureUsageValues?[paymentMethodType] {
@@ -253,7 +253,7 @@ extension PaymentSheet {
         switch confirmType {
         case .saved(let paymentMethod, _, _, _):
             return paymentMethod.type
-        case .new(let params, _, _, _, _):
+        case .new(let params, _, _, _, _, _):
             return params.type
         }
     }

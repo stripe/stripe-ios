@@ -467,7 +467,10 @@ extension STPCheckoutSession {
         switch mode {
         case .setup:
             return true
-        case .payment, .subscription, .unknown:
+        case .payment:
+            return false
+        case .subscription, .unknown:
+            stpAssertionFailure("Unknown and subscription modes are not currently supported with checkout sessions")
             return false
         }
     }

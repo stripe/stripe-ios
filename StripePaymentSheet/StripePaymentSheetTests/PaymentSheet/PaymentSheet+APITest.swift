@@ -1357,8 +1357,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
 
         let confirmTypes: [PaymentSheet.ConfirmPaymentMethodType] = [
-            .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, shouldSave: false),
-            .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, paymentMethod: examplePaymentMethod, shouldSave: false),
+            .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, shouldSaveForIntent: false),
+            .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, paymentMethod: examplePaymentMethod, shouldSaveForIntent: false),
             .saved(examplePaymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: nil, radarOptions: nil),
         ]
         for confirmType in confirmTypes {
@@ -1393,8 +1393,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
         // Confirming w/ a new Paypal PM...
         let confirmTypes: [PaymentSheet.ConfirmPaymentMethodType] = [
-            .new(params: paypalPaymentMethodParams, paymentOptions: paymentOptions, shouldSave: false),
-            .new(params: paypalPaymentMethodParams, paymentOptions: paymentOptions, paymentMethod: paypalPaymentMethod, shouldSave: false),
+            .new(params: paypalPaymentMethodParams, paymentOptions: paymentOptions, shouldSaveForIntent: false),
+            .new(params: paypalPaymentMethodParams, paymentOptions: paymentOptions, paymentMethod: paypalPaymentMethod, shouldSaveForIntent: false),
         ]
 
         for confirmType in confirmTypes {

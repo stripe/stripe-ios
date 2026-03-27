@@ -32,7 +32,7 @@ extension PaymentSheet {
             let paymentMethodType: STPPaymentMethodType
             let paymentMethodOptions: STPConfirmPaymentMethodOptions?
             switch confirmType {
-            case let .new(params, paymentOptions, newPaymentMethod, _, _):
+            case let .new(params, paymentOptions, newPaymentMethod, _, _, _):
                 if let newPaymentMethod {
                     let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError,
                                                       error: PaymentSheetError.unexpectedNewPaymentMethod,
@@ -50,24 +50,19 @@ extension PaymentSheet {
                 paymentMethodOptions = paymentOptions
             }
 
-            // 2. Get expected amount from checkout session
+            // 2. Get expected amount and save_payment_method from checkout session
             let expectedAmount = try checkoutSession.expectedAmount()
             let savePaymentMethod: Bool? = {
-                guard checkoutSession.mode != .setup,
-                      checkoutSession.customerId != nil,
-                      checkoutSession.savedPaymentMethodsOfferSave?.enabled == true
-                else {
+                switch(checkoutSession.mode) {
+                case .setup:
+                    // setup mode does not send the save_payment_method param
+                    return nil
+                case .payment:
+                    return confirmType.savePaymentMethodForCheckoutSession
+                case .subscription, .unknown:
+                    stpAssertionFailure("Only payment and setup mode implemented")
                     return nil
                 }
-
-                switch paymentMethodType {
-                case .card, .USBankAccount:
-                    break
-                default:
-                    return nil
-                }
-
-                return confirmType.shouldSave
             }()
 
             // 3. Call confirm API

@@ -432,6 +432,38 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
+    func testCheckoutSessionConfirmWithHiddenCheckboxOmitsSavePaymentMethod() {
+        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: MockJson.checkoutSession)!
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let confirmParams = MockParams.intentConfirmParams
+
+        stubCreatePaymentMethodExpecting(allowRedisplay: "unspecified")
+        stubCheckoutSessionConfirm(
+            sessionId: checkoutSession.stripeId,
+            savePaymentMethod: nil
+        )
+
+        let configuration = MockParams.configuration(pk: MockParams.publicKey)
+        let exp = expectation(description: "confirm completed")
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .checkoutSession(checkoutSession),
+            elementsSession: elementsSession,
+            paymentOption: .new(confirmParams: confirmParams),
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
+            completion: { result, _ in
+                XCTAssertEqual(result, .completed)
+                exp.fulfill()
+            }
+        )
+
+        waitForExpectations(timeout: 10)
+    }
+
     func testCheckoutSessionConfirmWithUnsupportedPaymentMethodOmitsSavePaymentMethod() {
         var checkoutSessionJSON = MockJson.checkoutSession
         checkoutSessionJSON["payment_method_types"] = ["paypal"]
