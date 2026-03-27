@@ -409,10 +409,9 @@ extension PaymentSheetFormFactory {
             if let previousCustomerInput = previousCustomerInput, previousCustomerInput.saveForFutureUseCheckboxState != .hidden {
                 // Use the previous customer input checkbox state if it was shown
                 return previousCustomerInput.saveForFutureUseCheckboxState == .selected
-            } else {
-                // Otherwise, use the default selected state
-                return configuration.savePaymentMethodOptInBehavior.isSelectedByDefault
             }
+            // Otherwise, use the default selected state
+            return configuration.savePaymentMethodOptInBehavior.isSelectedByDefault
         }()
         let element = CheckboxElement(
             theme: configuration.appearance.asElementsTheme,
