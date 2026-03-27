@@ -829,11 +829,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 // MARK: - BottomSheetContentViewController
 extension PaymentSheetVerticalViewController: BottomSheetContentViewController {
     var allowsDragToDismiss: Bool {
-        return isBusy
+        return isPaymentInFlight
     }
 
     func didTapOrSwipeToDismiss() {
-        guard !isBusy else {
+        guard !isPaymentInFlight else {
            return
         }
         didCancel()
