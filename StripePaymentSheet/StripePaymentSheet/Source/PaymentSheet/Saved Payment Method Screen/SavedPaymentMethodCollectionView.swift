@@ -86,7 +86,7 @@ extension SavedPaymentMethodCollectionView {
             cardArtEnabled: Bool
         ) -> PaymentMethodImageView.Configuration {
             .init(
-                cardArtURL: cardArtEnabled ? paymentMethod.cardArtURL(height: 40) : nil,
+                cardArtURL: cardArtEnabled ? paymentMethod.cardArtCDNURL(height: 40) : nil,
                 imageFromBundle: paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: userInterfaceStyle, iconStyle: iconStyle),
                 postProcess: nil
             )

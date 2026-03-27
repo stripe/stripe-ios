@@ -11,13 +11,13 @@ class STPPaymentMethodCardArtTest: XCTestCase {
     func testDecodedObject_allFields() {
         let response: [AnyHashable: Any] = [
             "payment_method": "pm_123",
-            "url": "https://b.stripecdn.com/cardart/assets/abc123",
+            "art_image": "https://b.stripecdn.com/cardart/assets/abc123",
             "program_name": "My Program",
         ]
         let cardArt = STPPaymentMethodCardArt.decodedObject(fromAPIResponse: response)
         XCTAssertNotNil(cardArt)
         XCTAssertEqual(cardArt?.paymentMethod, "pm_123")
-        XCTAssertEqual(cardArt?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/abc123")
+        XCTAssertEqual(cardArt?.artImage?.absoluteString, "https://b.stripecdn.com/cardart/assets/abc123")
         XCTAssertEqual(cardArt?.programName, "My Program")
     }
 
@@ -26,7 +26,7 @@ class STPPaymentMethodCardArtTest: XCTestCase {
         let cardArt = STPPaymentMethodCardArt.decodedObject(fromAPIResponse: response)
         XCTAssertNotNil(cardArt)
         XCTAssertEqual(cardArt?.paymentMethod, "pm_456")
-        XCTAssertNil(cardArt?.url)
+        XCTAssertNil(cardArt?.artImage)
         XCTAssertNil(cardArt?.programName)
     }
 
@@ -36,7 +36,7 @@ class STPPaymentMethodCardArtTest: XCTestCase {
 
     func testDecodedObject_missingPaymentMethod() {
         let response: [AnyHashable: Any] = [
-            "url": "https://b.stripecdn.com/cardart/assets/abc123",
+            "art_image": "https://b.stripecdn.com/cardart/assets/abc123",
             "program_name": "Name",
         ]
         XCTAssertNil(STPPaymentMethodCardArt.decodedObject(fromAPIResponse: response))

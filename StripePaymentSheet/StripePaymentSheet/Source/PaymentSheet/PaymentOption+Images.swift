@@ -164,8 +164,11 @@ extension STPPaymentMethod {
 
 extension STPPaymentMethod {
     /// Returns the card art CDN URL if this is a card payment method with card art available.
-    func cardArtURL(height: Int) -> URL? {
-        return card?.cardArt?.url?.stripeCDNURL(height: height)
+    func cardArtCDNURL(height: Int, dpr: Int = 3) -> URL? {
+        guard let artImage = card?.cardArt?.artImage else {
+            return nil
+        }
+        return URL(string: "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=\(height),dpr=\(dpr)/\(artImage.absoluteString)")
     }
 }
 
@@ -323,11 +326,5 @@ extension UIImage {
         borderPath.lineWidth = borderWidth
         borderPath.stroke()
         return UIGraphicsGetImageFromCurrentImageContext()!
-    }
-}
-
-extension URL {
-    func stripeCDNURL(height: Int, dpr: Int = 3) -> URL? {
-        return URL(string: "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=\(height),dpr=\(dpr)/\(self.absoluteString)")
     }
 }

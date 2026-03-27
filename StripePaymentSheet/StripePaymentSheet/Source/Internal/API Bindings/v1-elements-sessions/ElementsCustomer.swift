@@ -136,9 +136,13 @@ struct ElementsCustomer: Equatable, Hashable {
         artByPaymentMethodId: [String: [AnyHashable: Any]]
     ) {
         guard let pmId = paymentMethod["id"] as? String,
-              let art = artByPaymentMethodId[pmId],
+              var art = artByPaymentMethodId[pmId],
               var card = paymentMethod["card"] as? [AnyHashable: Any] else {
             return
+        }
+        // Remap API field "url" to "art_image" for model deserialization
+        if let url = art.removeValue(forKey: "url") {
+            art["art_image"] = url
         }
         card["card_art"] = art
         paymentMethod["card"] = card

@@ -575,7 +575,7 @@ extension RowButton {
         cardArtEnabled: Bool
     ) -> PaymentMethodImageView.Configuration {
         .init(
-            cardArtURL: cardArtEnabled ? paymentMethod.cardArtURL(height: 20) : nil,
+            cardArtURL: cardArtEnabled ? paymentMethod.cardArtCDNURL(height: 20) : nil,
             imageFromBundle: paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: iconStyle),
             postProcess: { $0.roundedWithBorder(radius: 3) }
         )

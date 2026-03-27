@@ -5,27 +5,27 @@
 import Foundation
 
 @_spi(STP) public class STPPaymentMethodCardArt: NSObject, STPAPIResponseDecodable {
-    @objc public private(set) var paymentMethod: String
-    @objc public private(set) var url: URL?
-    @objc public private(set) var programName: String?
-    @objc public private(set) var allResponseFields: [AnyHashable: Any] = [:]
+    public private(set) var paymentMethod: String
+    public private(set) var artImage: URL?
+    public private(set) var programName: String?
+    public private(set) var allResponseFields: [AnyHashable: Any] = [:]
 
     /// :nodoc:
-    @objc public override var description: String {
+    public override var description: String {
         let props = [
             // Object
             String(format: "%@: %p", NSStringFromClass(STPPaymentMethodCardArt.self), self),
             // Properties
-            "url: \(String(describing: url))",
+            "artImage: \(String(describing: artImage))",
             "programName: \(String(describing: programName))",
         ]
         return "<\(props.joined(separator: "; "))>"
     }
 
     // MARK: - STPAPIResponseDecodable
-    required init(paymentMethod: String, url: URL?, programName: String?) {
+    required init(paymentMethod: String, artImage: URL?, programName: String?) {
         self.paymentMethod = paymentMethod
-        self.url = url
+        self.artImage = artImage
         self.programName = programName
         super.init()
     }
@@ -40,10 +40,10 @@ import Foundation
             return nil
         }
 
-        let urlString = dict.stp_string(forKey: "url") ?? ""
-        let url = URL(string: urlString)
+        let artImageString = dict.stp_string(forKey: "art_image") ?? ""
+        let artImage = URL(string: artImageString)
         let programName = dict.stp_string(forKey: "program_name")
-        let cardArt = self.init(paymentMethod: paymentMethod, url: url, programName: programName)
+        let cardArt = self.init(paymentMethod: paymentMethod, artImage: artImage, programName: programName)
 
         cardArt.allResponseFields = response
         return cardArt
