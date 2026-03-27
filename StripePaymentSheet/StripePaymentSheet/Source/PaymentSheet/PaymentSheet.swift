@@ -472,6 +472,8 @@ internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSh
 
     func pay(with paymentOption: PaymentOption)
     func clearTextFields()
+    /// Freeze the UI and show a spinner on the primary button while we reload the intent.
+    /// If you add new UI, make sure it's also disabled/hidden during reloading.
     func setReloading(_ isReloading: Bool)
     func setReloadError(_ error: Error)
 }
