@@ -33,8 +33,7 @@ final class CurrencySelectorElement: Element {
     ) {
         self.exchangeRateMeta = exchangeRateMeta
         let (left, right) = Self.buildSelectorItems(
-            currentCurrency: currentCurrency,
-            currentTotal: currentTotal,
+            exchangeRateMeta: exchangeRateMeta,
             localizedPricesMetas: localizedPricesMetas
         )
         selectorElement = TwoOptionSelectorElement(
@@ -59,16 +58,22 @@ final class CurrencySelectorElement: Element {
 
     // MARK: - Two-option builder
 
-    /// Current currency on the left, the other available currency on the right.
+    /// Local currency on the left, integration (merchant) currency on the right.
+    /// Uses `exchangeRateMeta` for stable ordering that doesn't change on reload.
     private static func buildSelectorItems(
-        currentCurrency: String,
-        currentTotal: Int,
+        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
     ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
-        let other = localizedPricesMetas.first { $0.currency.lowercased() != currentCurrency.lowercased() }
+        let localCurrency = exchangeRateMeta.localizedCurrency.lowercased()
+        let integrationCurrency = exchangeRateMeta.integrationCurrency.lowercased()
 
-        let left = makeSelectorItem(currency: currentCurrency, total: currentTotal)
-        let right = other.map { makeSelectorItem(currency: $0.currency, total: $0.total) } ?? left
+        let localMeta = localizedPricesMetas.first { $0.currency.lowercased() == localCurrency }
+        let integrationMeta = localizedPricesMetas.first { $0.currency.lowercased() == integrationCurrency }
+
+        let left = localMeta.map { makeSelectorItem(currency: $0.currency, total: $0.total) }
+            ?? makeSelectorItem(currency: localCurrency, total: 0)
+        let right = integrationMeta.map { makeSelectorItem(currency: $0.currency, total: $0.total) }
+            ?? makeSelectorItem(currency: integrationCurrency, total: 0)
 
         return (left: left, right: right)
     }
@@ -107,7 +112,7 @@ final class CurrencySelectorElement: Element {
         if let rateDouble = Double(meta.exchangeRate) {
             let formatter = NumberFormatter()
             formatter.minimumFractionDigits = 2
-            formatter.maximumFractionDigits = 4
+            formatter.maximumFractionDigits = 3
             formattedRate = formatter.string(from: NSNumber(value: rateDouble)) ?? meta.exchangeRate
         } else {
             formattedRate = meta.exchangeRate
