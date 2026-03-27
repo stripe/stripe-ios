@@ -87,7 +87,7 @@ final class CurrencySelectorElementTests: XCTestCase {
 
         let label = try XCTUnwrap(captionLabel(in: element.view))
         XCTAssertFalse(label.isHidden)
-        XCTAssertEqual(label.text, "1 USD = 0.777 GBP")
+        XCTAssertEqual(label.text, "1 USD = 0.7769 GBP")
     }
 
     func testShowsBankDisclaimerWhenIntegrationCurrencySelected() throws {
@@ -126,13 +126,13 @@ final class CurrencySelectorElementTests: XCTestCase {
         )
 
         let label = try XCTUnwrap(captionLabel(in: element.view))
-        XCTAssertEqual(label.text, "1 USD = 0.777 GBP")
+        XCTAssertEqual(label.text, "1 USD = 0.7769 GBP")
 
         element.selectCurrency("usd")
         XCTAssertEqual(label.text, String.Localized.bankExchangeRateDisclaimer)
 
         element.selectCurrency("gbp")
-        XCTAssertEqual(label.text, "1 USD = 0.777 GBP")
+        XCTAssertEqual(label.text, "1 USD = 0.7769 GBP")
     }
 
     func testOrderingIsStableRegardlessOfCurrentCurrency() {

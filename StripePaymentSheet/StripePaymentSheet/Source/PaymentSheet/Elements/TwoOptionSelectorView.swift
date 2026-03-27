@@ -79,30 +79,25 @@ final class TwoOptionSelectorView: UIView {
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainStackView)
 
-        // Track (very light gray background in light mode, very dark in dark mode to contrast with the pill)
+        // Track background
         trackView.backgroundColor = UIColor.dynamic(light: UIColor(red: 243/255, green: 244/255, blue: 246/255, alpha: 1),
                                                     dark: UIColor(white: 1, alpha: 0.03))
         trackView.layer.borderWidth = 0.5
         trackView.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .uniform)
         trackView.clipsToBounds = false
 
-        // Selection indicator (white pill that slides)
+        // Selection indicator pill
         selectionIndicatorView.backgroundColor = UIColor.dynamic(
             light: appearance.colors.componentBackground,
             dark: appearance.colors.componentBackground.lighten(by: 0.04)
         )
         selectionIndicatorView.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .uniform)
 
-        // Subtle shadow
         selectionIndicatorView.layer.shadowColor = UIColor.black.cgColor
         selectionIndicatorView.layer.shadowOpacity = 0.06
         selectionIndicatorView.layer.shadowOffset = CGSize(width: 0, height: 1)
         selectionIndicatorView.layer.shadowRadius = 2
-
-        // Subtle border
         selectionIndicatorView.layer.borderWidth = 0.5
-
-        // Buttons stack
         buttonsStackView.axis = .horizontal
         buttonsStackView.spacing = 0
         buttonsStackView.distribution = .fillEqually
@@ -137,7 +132,7 @@ final class TwoOptionSelectorView: UIView {
         buttonsStackView.addArrangedSubview(leftButton)
         buttonsStackView.addArrangedSubview(rightButton)
 
-        // Setup Indicator Constraints
+        // Indicator constraints
         selectionIndicatorView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             selectionIndicatorView.topAnchor.constraint(equalTo: buttonsStackView.topAnchor),
@@ -171,15 +166,11 @@ final class TwoOptionSelectorView: UIView {
     private func updateButtonStyles(animated: Bool) {
         let isLeftSelected = leftItem.id == selectedItemId
 
-        // Update text colors
         leftButton.setTitleColor(isLeftSelected ? appearance.colors.componentText : appearance.colors.textSecondary, for: .normal)
         rightButton.setTitleColor(!isLeftSelected ? appearance.colors.componentText : appearance.colors.textSecondary, for: .normal)
 
-        // Both buttons use medium font weight to match the screenshot
         leftButton.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
         rightButton.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
-
-        // Update Constraints
         indicatorLeadingConstraint?.isActive = false
         indicatorTrailingConstraint?.isActive = false
 

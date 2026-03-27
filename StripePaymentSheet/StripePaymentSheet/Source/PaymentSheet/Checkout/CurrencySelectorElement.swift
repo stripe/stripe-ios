@@ -112,7 +112,7 @@ final class CurrencySelectorElement: Element {
         if let rateDouble = Double(meta.exchangeRate) {
             let formatter = NumberFormatter()
             formatter.minimumFractionDigits = 2
-            formatter.maximumFractionDigits = 3
+            formatter.maximumFractionDigits = 4
             formattedRate = formatter.string(from: NSNumber(value: rateDouble)) ?? meta.exchangeRate
         } else {
             formattedRate = meta.exchangeRate
