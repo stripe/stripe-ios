@@ -37,7 +37,8 @@ class MockElement: Element {
 class PaymentSheetFormFactoryTest: XCTestCase {
 
     private func makeCheckoutSessionIntent(
-        offerSave: [String: Any]? = nil
+        offerSave: [String: Any]? = nil,
+        hasCustomer: Bool = true
     ) -> Intent {
         var json: [String: Any] = [
             "session_id": "cs_test_checkout_save",
@@ -49,6 +50,11 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             "livemode": false,
             "payment_method_types": ["card"],
         ]
+        if hasCustomer {
+            json["customer"] = [
+                "id": "cus_test_checkout_save",
+            ]
+        }
         if let offerSave {
             json["customer_managed_saved_payment_methods_offer_save"] = offerSave
         }
@@ -1676,6 +1682,21 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 "enabled": false,
                 "status": "accepted",
             ]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testHidesCheckbox_CheckoutSessionOfferSaveEnabledWithoutCustomer() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: makeCheckoutSessionIntent(offerSave: [
+                "enabled": true,
+                "status": "accepted",
+            ], hasCustomer: false),
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)

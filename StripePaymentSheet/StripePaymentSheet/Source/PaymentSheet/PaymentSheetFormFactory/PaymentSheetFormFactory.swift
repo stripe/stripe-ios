@@ -1049,7 +1049,10 @@ extension PaymentSheetFormFactory {
             return elementsSession.savePaymentMethodConsentBehavior
         }
 
-        guard let offerSave = checkoutSession.savedPaymentMethodsOfferSave, offerSave.enabled else {
+        guard checkoutSession.customerId != nil,
+              let offerSave = checkoutSession.savedPaymentMethodsOfferSave,
+              offerSave.enabled
+        else {
             return .paymentSheetWithCheckoutSessionPaymentMethodSaveDisabled
         }
 
