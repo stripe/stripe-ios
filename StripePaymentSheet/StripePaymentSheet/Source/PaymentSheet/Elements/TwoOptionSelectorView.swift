@@ -80,8 +80,9 @@ final class TwoOptionSelectorView: UIView {
         addSubview(mainStackView)
 
         // Track background
-        trackView.backgroundColor = UIColor.dynamic(light: UIColor(red: 243/255, green: 244/255, blue: 246/255, alpha: 1),
-                                                    dark: UIColor(white: 1, alpha: 0.03))
+        trackView.backgroundColor = UIColor.dynamic(
+            light: appearance.colors.componentBackground.darken(by: 0.04),
+            dark: appearance.colors.componentBackground.lighten(by: 0.01))
         trackView.layer.borderWidth = 0.5
         trackView.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .uniform)
         trackView.clipsToBounds = false
@@ -93,10 +94,7 @@ final class TwoOptionSelectorView: UIView {
         )
         selectionIndicatorView.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .uniform)
 
-        selectionIndicatorView.layer.shadowColor = UIColor.black.cgColor
-        selectionIndicatorView.layer.shadowOpacity = 0.06
-        selectionIndicatorView.layer.shadowOffset = CGSize(width: 0, height: 1)
-        selectionIndicatorView.layer.shadowRadius = 2
+        selectionIndicatorView.layer.applyShadow(shadow: appearance.shadow.asElementThemeShadow)
         selectionIndicatorView.layer.borderWidth = 0.5
         buttonsStackView.axis = .horizontal
         buttonsStackView.spacing = 0
