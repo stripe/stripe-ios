@@ -1610,21 +1610,6 @@ public class STPPaymentHandler: NSObject {
                             return
                         }
                         currentAction.paymentIntent = paymentIntent
-                        if let challengeClientOutcome {
-                            let pmType = paymentIntent.paymentMethod?.type ?? .unknown
-                            _resolveAfterChallengeDismissed(
-                                requiresAction: paymentIntent.status == .requiresAction,
-                                isSuccess: paymentIntent.status == .succeeded
-                                    || paymentIntent.status == .requiresCapture
-                                    || (paymentIntent.status == .processing
-                                        && STPPaymentHandler._isProcessingIntentSuccess(for: pmType)),
-                                challengeClientOutcome: challengeClientOutcome,
-                                pollingBudget: pollingBudget,
-                                startDate: startDate,
-                                currentAction: currentAction
-                            )
-                            return
-                        }
                         // If the transaction is still unexpectedly processing, refresh the PaymentIntent
                         // This could happen if, for example, a payment is approved in an SFSafariViewController, the user closes the sheet, and the approval races with this fetch.
                         if
@@ -1639,6 +1624,19 @@ public class STPPaymentHandler: NSObject {
                                     pollingBudget: processingPollingBudget
                                 )
                             }
+                        } else if let challengeClientOutcome {
+                            let pmType = paymentIntent.paymentMethod?.type ?? .unknown
+                            _resolveAfterChallengeDismissed(
+                                requiresAction: paymentIntent.status == .requiresAction,
+                                isSuccess: paymentIntent.status == .succeeded
+                                    || paymentIntent.status == .requiresCapture
+                                    || (paymentIntent.status == .processing
+                                        && STPPaymentHandler._isProcessingIntentSuccess(for: pmType)),
+                                challengeClientOutcome: challengeClientOutcome,
+                                pollingBudget: pollingBudget,
+                                startDate: startDate,
+                                currentAction: currentAction
+                            )
                         } else {
                             let requiresAction: Bool = self._handlePaymentIntentStatus(
                                 forAction: currentAction
@@ -1717,17 +1715,6 @@ public class STPPaymentHandler: NSObject {
                     return
                 }
                 currentAction.setupIntent = setupIntent
-                if let challengeClientOutcome {
-                    _resolveAfterChallengeDismissed(
-                        requiresAction: setupIntent.status == .requiresAction,
-                        isSuccess: setupIntent.status == .succeeded,
-                        challengeClientOutcome: challengeClientOutcome,
-                        pollingBudget: pollingBudget,
-                        startDate: startDate,
-                        currentAction: currentAction
-                    )
-                    return
-                }
                 if let type = setupIntent.paymentMethod?.type,
                    !STPPaymentHandler._isProcessingIntentSuccess(for: type) || (type == .card && safariViewControllerDismissedManually),
                    setupIntent.status == .processing,
@@ -1737,6 +1724,15 @@ public class STPPaymentHandler: NSObject {
                     processingPollingBudget.pollAfter {
                         self._retrieveAndCheckIntentForCurrentAction(pollingBudget: processingPollingBudget)
                     }
+                } else if let challengeClientOutcome {
+                    _resolveAfterChallengeDismissed(
+                        requiresAction: setupIntent.status == .requiresAction,
+                        isSuccess: setupIntent.status == .succeeded,
+                        challengeClientOutcome: challengeClientOutcome,
+                        pollingBudget: pollingBudget,
+                        startDate: startDate,
+                        currentAction: currentAction
+                    )
                 } else {
                     let requiresAction: Bool = self._handleSetupIntentStatus(
                         forAction: currentAction
