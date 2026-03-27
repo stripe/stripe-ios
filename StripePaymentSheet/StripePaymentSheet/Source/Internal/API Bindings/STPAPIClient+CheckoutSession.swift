@@ -68,7 +68,6 @@ extension STPAPIClient {
     ///   - expectedAmount: The expected amount for validation. `nil` in setup mode.
     ///   - expectedPaymentMethodType: The expected payment method type (e.g., "card")
     ///   - savePaymentMethod: Optional top-level save_payment_method value for save-to-customer behavior.
-    ///   - mandateData: Optional top-level mandate_data payload.
     ///   - returnURL: Optional return URL for redirect-based payment methods
     ///   - shipping: Optional shipping details
     ///   - paymentMethodOptions: Optional payment method options. BLIK code is extracted and passed as top-level `blik_code` parameter.
@@ -81,7 +80,6 @@ extension STPAPIClient {
         expectedAmount: Int?,
         expectedPaymentMethodType: String,
         savePaymentMethod: Bool? = nil,
-        mandateData: STPMandateDataParams? = nil,
         returnURL: String? = nil,
         shipping: STPPaymentIntentShippingDetailsParams? = nil,
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
@@ -105,10 +103,6 @@ extension STPAPIClient {
 
         if let savePaymentMethod {
             parameters["save_payment_method"] = savePaymentMethod
-        }
-
-        if let mandateData {
-            parameters["mandate_data"] = STPFormEncoder.dictionary(forObject: mandateData)["mandate_data"]
         }
 
         if let returnURL {

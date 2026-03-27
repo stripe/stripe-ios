@@ -185,10 +185,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
         // 3. Extract shipping details from PKPayment (if provided)
         let shipping = makeShippingDetailsParams(from: paymentInformation)
-        let mandateData = PaymentSheet.makeMandateDataForCheckoutSession(
-            checkoutSession: checkoutSession,
-            paymentMethodType: .card
-        )
 
         // 4. Call confirm API with the Apple Pay payment method
         let response = try await context.apiClient.confirmCheckoutSession(
@@ -196,7 +192,6 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             paymentMethod: paymentMethod.id,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
-            mandateData: mandateData,
             returnURL: context.returnUrl,
             shipping: shipping,
             paymentMethodOptions: nil,

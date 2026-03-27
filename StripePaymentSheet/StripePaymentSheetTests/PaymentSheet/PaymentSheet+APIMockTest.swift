@@ -506,44 +506,6 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         waitForExpectations(timeout: 10)
     }
 
-    func testCheckoutSessionConfirmWithSavedPayPalAndSetupFutureUsageSendsMandateData() {
-        var checkoutSessionJSON = MockJson.checkoutSession
-        checkoutSessionJSON["payment_method_types"] = ["paypal"]
-        checkoutSessionJSON["setup_future_usage"] = "off_session"
-        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: checkoutSessionJSON)!
-        let savedPayPal = STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_123",
-            "type": "paypal",
-            "created": "12345",
-        ])!
-
-        stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
-            savePaymentMethod: nil,
-            mandateData: true
-        )
-
-        let configuration = MockParams.configuration(pk: MockParams.publicKey)
-        let exp = expectation(description: "confirm completed")
-        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
-
-        PaymentSheet.confirm(
-            configuration: configuration,
-            authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
-            elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),
-            paymentOption: .saved(paymentMethod: savedPayPal, confirmParams: nil),
-            paymentHandler: paymentHandler,
-            analyticsHelper: ._testValue(),
-            completion: { result, _ in
-                XCTAssertEqual(result, .completed)
-                exp.fulfill()
-            }
-        )
-
-        waitForExpectations(timeout: 10)
-    }
-
 }
 
 extension PaymentSheetAPIMockTest: STPAuthenticationContext {
@@ -700,7 +662,6 @@ private extension PaymentSheetAPIMockTest {
     func stubCheckoutSessionConfirm(
         sessionId: String,
         savePaymentMethod: Bool? = nil,
-        mandateData: Bool = false,
         shouldSucceed: Bool = true,
         line: UInt = #line
     ) {
@@ -711,8 +672,6 @@ private extension PaymentSheetAPIMockTest {
         } response: { [self] request in
             let params = bodyParams(from: request, line: line)
             assertParam(params, named: "save_payment_method", is: savePaymentMethod.map(String.init), line: line)
-            assertParam(params, named: "mandate_data[customer_acceptance][type]", is: mandateData ? "online" : nil, line: line)
-            assertParam(params, named: "mandate_data[customer_acceptance][online][infer_from_client]", is: mandateData ? "true" : nil, line: line)
             defer { exp.fulfill() }
 
             if shouldSucceed {

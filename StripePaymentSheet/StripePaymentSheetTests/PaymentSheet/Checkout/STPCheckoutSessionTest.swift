@@ -460,46 +460,4 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertFalse(Intent.checkoutSession(session).isSetupFutureUsageSet(for: .payPal))
     }
 
-    func testMakeMandateDataForCheckoutSession_paymentModeWithTopLevelSetupFutureUsage() {
-        let session = makeCheckoutSession([
-            "setup_future_usage": "off_session",
-            "payment_method_types": ["paypal"],
-        ])
-
-        XCTAssertNotNil(PaymentSheet.makeMandateDataForCheckoutSession(
-            checkoutSession: session,
-            paymentMethodType: .payPal
-        ))
-    }
-
-    func testMakeMandateDataForCheckoutSession_paymentModeWithPaymentMethodOptionsNoneOverridesTopLevel() {
-        let session = makeCheckoutSession([
-            "setup_future_usage": "off_session",
-            "payment_method_options": [
-                "paypal": [
-                    "setup_future_usage": "none",
-                ],
-            ],
-            "payment_method_types": ["paypal"],
-        ])
-
-        XCTAssertNil(PaymentSheet.makeMandateDataForCheckoutSession(
-            checkoutSession: session,
-            paymentMethodType: .payPal
-        ))
-    }
-
-    func testMakeMandateDataForCheckoutSession_setupMode() {
-        let session = makeCheckoutSession([
-            "mode": "setup",
-            "payment_status": "no_payment_required",
-            "payment_method_types": ["paypal"],
-        ])
-
-        XCTAssertNotNil(PaymentSheet.makeMandateDataForCheckoutSession(
-            checkoutSession: session,
-            paymentMethodType: .payPal
-        ))
-    }
-
 }
