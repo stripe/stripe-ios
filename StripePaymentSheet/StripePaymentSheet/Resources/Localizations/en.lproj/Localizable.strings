@@ -184,6 +184,12 @@ with the transaction. */
 to be saved and used in future checkout sessions. */
 "Create an account with Link for faster checkout across the web" = "Create an account with Link for faster checkout across the web";
 
+/* Label for a payment method type that only accepts credit cards. */
+"Credit card" = "Credit card";
+
+/* Label for a payment method type that only accepts debit cards. */
+"Debit card" = "Debit card";
+
 /* Label shown in the payment type picker describing a card payment */
 "Debit or credit card" = "Debit or credit card";
 
@@ -341,6 +347,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* Accessibility instructions for card scanning. */
 "Point the camera at your card." = "Point the camera at your card.";
+
+/* Label for a payment method type that only accepts prepaid cards. */
+"Prepaid card" = "Prepaid card";
 
 /* Label of a button that, when tapped, initiates payment, becomes disabled, and displays this text */
 "Processing..." = "Processing...";
