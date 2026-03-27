@@ -41,6 +41,8 @@ extension PaymentSheet {
             }
         }
 
+        /// Returns confirm params for `.new` and `.external` options, nil otherwise.
+        /// This is often used to restore a customer's previous form input when re-presenting `AddPaymentMethodViewController`.
         var newConfirmParams: IntentConfirmParams? {
             switch self {
             case .applePay, .saved, .link:
