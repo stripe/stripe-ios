@@ -323,7 +323,10 @@ public class PaymentSheet {
     @MainActor
     private func performReload(mode: InitializationMode) {
         guard let currentVC = bottomSheetViewController.contentStack.first
-                as? PaymentSheetViewControllerProtocol else { return }
+                as? PaymentSheetViewControllerProtocol else {
+            stpAssertionFailure("Expected contentStack.first to be a PaymentSheetViewControllerProtocol")
+            return
+        }
 
         currentVC.setReloading(true)
 
