@@ -323,7 +323,7 @@ public class PaymentSheet {
     }
 
     @MainActor
-    private func performReload(mode: InitializationMode) {
+    private func performReload(mode: InitializationMode) async {
         guard let currentVC = bottomSheetViewController.contentStack.first
                 as? PaymentSheetViewControllerProtocol else {
             stpAssertionFailure("Expected contentStack.first to be a PaymentSheetViewControllerProtocol")
@@ -332,31 +332,29 @@ public class PaymentSheet {
 
         currentVC.setReloading(true)
 
-        Task {
-            do {
-                let loadResult = try await PaymentSheetLoader.load(
-                    mode: mode,
-                    configuration: configuration,
-                    analyticsHelper: analyticsHelper,
-                    integrationShape: .paymentSheet,
-                    isUpdate: true
-                )
-                // Re-create with the new elementsSession, which may have different captcha/attestation data.
-                self.confirmationChallenge = ConfirmationChallenge(
-                    enableAttestation: configuration.enableAttestationOnConfirmation,
-                    elementsSession: loadResult.elementsSession,
-                    stripeAttest: configuration.apiClient.stripeAttest
-                )
-                let newVC = makePaymentSheetVC(
-                    loadResult: loadResult,
-                    previousPaymentOption: currentVC.selectedPaymentOption,
-                    shouldLogExperimentExposure: false
-                )
-                bottomSheetViewController.setViewControllers([newVC])
-            } catch {
-                currentVC.setReloading(false)
-                currentVC.setReloadError(error)
-            }
+        do {
+            let loadResult = try await PaymentSheetLoader.load(
+                mode: mode,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                integrationShape: .paymentSheet,
+                isUpdate: true
+            )
+            // Re-create with the new elementsSession, which may have different captcha/attestation data.
+            self.confirmationChallenge = ConfirmationChallenge(
+                enableAttestation: configuration.enableAttestationOnConfirmation,
+                elementsSession: loadResult.elementsSession,
+                stripeAttest: configuration.apiClient.stripeAttest
+            )
+            let newVC = makePaymentSheetVC(
+                loadResult: loadResult,
+                previousPaymentOption: currentVC.selectedPaymentOption,
+                shouldLogExperimentExposure: false
+            )
+            bottomSheetViewController.setViewControllers([newVC])
+        } catch {
+            currentVC.setReloading(false)
+            currentVC.setReloadError(error)
         }
     }
 }
