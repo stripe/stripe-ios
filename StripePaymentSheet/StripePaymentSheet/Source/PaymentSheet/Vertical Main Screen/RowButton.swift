@@ -540,7 +540,7 @@ extension RowButton {
 
     static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = PaymentMethodImageView()
-        imageView.set(.savedPaymentMethodRow(paymentMethod, iconStyle: appearance.iconStyle, cardArtEnabled: appearance.cardArtEnabled))
+        imageView.set(imageConfiguration(for: paymentMethod, iconStyle: appearance.iconStyle, cardArtEnabled: appearance.cardArtEnabled))
         let text = paymentMethod.isLinkPassthroughMode
             ? STPPaymentMethodType.link.displayName
             : paymentMethod.paymentSheetLabel
@@ -567,6 +567,18 @@ extension RowButton {
             return paymentMethod.paymentSheetAccessibilityLabel
         }()
         return button
+    }
+
+    static func imageConfiguration(
+        for paymentMethod: STPPaymentMethod,
+        iconStyle: PaymentSheet.Appearance.IconStyle,
+        cardArtEnabled: Bool
+    ) -> PaymentMethodImageView.Configuration {
+        .init(
+            cardArtURL: cardArtEnabled ? paymentMethod.cardArtURL(height: 20) : nil,
+            imageFromBundle: paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: iconStyle),
+            postProcess: { $0.roundedWithBorder(radius: 3) }
+        )
     }
 }
 

@@ -12,47 +12,6 @@ class PaymentMethodImageView: UIImageView {
         let cardArtURL: URL?
         let imageFromBundle: UIImage
         let postProcess: ((UIImage) -> UIImage)?
-
-        static func savedPaymentMethodCell(
-            _ paymentMethod: STPPaymentMethod,
-            userInterfaceStyle: UIUserInterfaceStyle,
-            iconStyle: PaymentSheet.Appearance.IconStyle,
-            cardArtEnabled: Bool
-        ) -> Configuration {
-            Configuration(
-                cardArtURL: cardArtEnabled ? paymentMethod.cardArtURL(height: 40) : nil,
-                imageFromBundle: paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: userInterfaceStyle, iconStyle: iconStyle),
-                postProcess: nil
-            )
-        }
-
-        static func savedPaymentMethodRow(
-            _ paymentMethod: STPPaymentMethod,
-            iconStyle: PaymentSheet.Appearance.IconStyle,
-            cardArtEnabled: Bool
-        ) -> Configuration {
-            Configuration(
-                cardArtURL: cardArtEnabled ? paymentMethod.cardArtURL(height: 20) : nil,
-                imageFromBundle: paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: iconStyle),
-                postProcess: { $0.roundedWithBorder(radius: 3) }
-            )
-        }
-
-        static func applePay(userInterfaceStyle: UIUserInterfaceStyle) -> Configuration {
-            Configuration(
-                cardArtURL: nil,
-                imageFromBundle: PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: userInterfaceStyle),
-                postProcess: nil
-            )
-        }
-
-        static func link(userInterfaceStyle: UIUserInterfaceStyle) -> Configuration {
-            Configuration(
-                cardArtURL: nil,
-                imageFromBundle: PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: userInterfaceStyle),
-                postProcess: nil
-            )
-        }
     }
 
     private var configuration: Configuration?
