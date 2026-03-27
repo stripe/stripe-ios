@@ -364,6 +364,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         ) { status, _, error in
             XCTAssertEqual(status, .failed)
             XCTAssertNotNil(error)
+            XCTAssertEqual(error?.localizedDescription, "Captcha failed")
             expectation.fulfill()
         }
 
@@ -516,6 +517,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         ) { status, _, error in
             XCTAssertEqual(status, .failed)
             XCTAssertNotNil(error)
+            XCTAssertEqual(error?.localizedDescription, "Captcha failed")
             expectation.fulfill()
         }
 
@@ -635,6 +637,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         ) { status, _, error in
             XCTAssertEqual(status, .failed)
             XCTAssertNotNil(error)
+            XCTAssertEqual(error?.localizedDescription, "fail")
             expectation.fulfill()
         }
 
@@ -676,6 +679,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         ) { status, _, error in
             XCTAssertEqual(status, .failed)
             XCTAssertNotNil(error)
+            XCTAssertEqual(error?.localizedDescription, "fail")
             expectation.fulfill()
         }
 
@@ -819,46 +823,6 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         wait(for: [expectation], timeout: 5.0)
     }
 
-    func testPI_challengeFailed_budgetExhausted_completesFailedWithError() {
-        let mockAPIClient = STPAPIClientPollingMock()
-        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
-        let expectation = self.expectation(description: "Completes as failed after budget exhausted")
-
-        let paymentIntent = STPFixtures.paymentIntent(
-            paymentMethodTypes: ["card"],
-            status: .requiresAction,
-            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
-        )
-        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
-            let responseDict = paymentIntent.allResponseFields.merging([
-                "status": STPPaymentIntentStatus.string(from: .requiresAction),
-            ]) { _, new in new }
-            completion(STPPaymentIntent.decodedObject(fromAPIResponse: responseDict), nil)
-        }
-
-        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
-            apiClient: mockAPIClient,
-            authenticationContext: self,
-            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
-            paymentIntent: paymentIntent,
-            returnURL: nil
-        ) { status, _, error in
-            XCTAssertEqual(status, .failed)
-            XCTAssertNotNil(error)
-            expectation.fulfill()
-        }
-
-        let exhaustedBudget = PollingBudget(startDate: Date().addingTimeInterval(-10), duration: 1.0)
-        paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
-            pollingBudget: exhaustedBudget,
-            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
-        )
-
-        wait(for: [expectation], timeout: 5.0)
-    }
-
     func testSI_challengeCanceled_budgetExhausted_completesCanceledWithNoError() {
         let mockAPIClient = STPAPIClientPollingMock()
         let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
@@ -894,6 +858,88 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
             currentAction: currentAction,
             pollingBudget: exhaustedBudget,
             challengeClientOutcome: .canceled
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testPI_challengeFailed_budgetExhausted_completesFailedWithError() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as failed after budget exhausted")
+
+        let paymentIntent = STPFixtures.paymentIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrievePaymentIntentHandler = { _, _, completion in
+            let responseDict = paymentIntent.allResponseFields.merging([
+                "status": STPPaymentIntentStatus.string(from: .requiresAction),
+            ]) { _, new in new }
+            completion(STPPaymentIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerPaymentIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            paymentIntent: paymentIntent,
+            returnURL: nil
+        ) { status, _, error in
+            XCTAssertEqual(status, .failed)
+            XCTAssertNotNil(error)
+            XCTAssertEqual(error?.localizedDescription, "fail")
+            expectation.fulfill()
+        }
+
+        let exhaustedBudget = PollingBudget(startDate: Date().addingTimeInterval(-10), duration: 1.0)
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            pollingBudget: exhaustedBudget,
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+        )
+
+        wait(for: [expectation], timeout: 5.0)
+    }
+
+    func testSI_challengeFailed_budgetExhausted_completesFailedWithError() {
+        let mockAPIClient = STPAPIClientPollingMock()
+        let paymentHandler = STPPaymentHandler(apiClient: mockAPIClient)
+        let expectation = self.expectation(description: "Completes as failed after budget exhausted")
+
+        let setupIntent = STPFixtures.setupIntent(
+            paymentMethodTypes: ["card"],
+            status: .requiresAction,
+            paymentMethod: ["id": "pm_test", "type": "card", "created": 12345]
+        )
+        mockAPIClient.retrieveSetupIntentHandler = { _, _, completion in
+            let responseDict = setupIntent.allResponseFields.merging([
+                "status": STPSetupIntentStatus.string(from: .requiresAction),
+            ]) { _, new in new }
+            completion(STPSetupIntent.decodedObject(fromAPIResponse: responseDict), nil)
+        }
+
+        let currentAction = STPPaymentHandlerSetupIntentActionParams(
+            apiClient: mockAPIClient,
+            authenticationContext: self,
+            threeDSCustomizationSettings: STPThreeDSCustomizationSettings(),
+            setupIntent: setupIntent,
+            returnURL: nil
+        ) { status, _, error in
+            XCTAssertEqual(status, .failed)
+            XCTAssertNotNil(error)
+            XCTAssertEqual(error?.localizedDescription, "fail")
+            expectation.fulfill()
+        }
+
+        let exhaustedBudget = PollingBudget(startDate: Date().addingTimeInterval(-10), duration: 1.0)
+        paymentHandler.currentAction = currentAction
+        paymentHandler._retrieveAndCheckIntentForCurrentAction(
+            currentAction: currentAction,
+            pollingBudget: exhaustedBudget,
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
         )
 
         wait(for: [expectation], timeout: 5.0)
