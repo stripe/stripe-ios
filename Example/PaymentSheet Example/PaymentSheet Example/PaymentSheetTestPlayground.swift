@@ -280,13 +280,6 @@ struct PaymentSheetTestPlayground: View {
                                     title: "Checkout Session",
                                     searchText: $searchText
                                 ) {
-                                    if playgroundController.settings.mode != .setup {
-                                        SearchableSettingView(
-                                            setting: checkoutSessionSetupFutureUsageBinding,
-                                            title: "Top-level Setup Future Usage",
-                                            searchText: $searchText
-                                        )
-                                    }
                                     SearchableSettingView(
                                         setting: paymentMethodSaveBinding,
                                         title: "Offer Save",
@@ -370,23 +363,6 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.paymentMethodConfigurationId = (newString != "") ? newString : nil
         }
     }
-
-    var checkoutSessionSetupFutureUsageBinding: Binding<PaymentSheetTestPlaygroundSettings.CheckoutSessionSetupFutureUsage> {
-        Binding<PaymentSheetTestPlaygroundSettings.CheckoutSessionSetupFutureUsage> {
-            switch playgroundController.settings.mode {
-            case .paymentWithSetup:
-                return .offSession
-            case .payment, .setup:
-                return .notSet
-            }
-        } set: { newValue in
-            guard playgroundController.settings.mode != .setup else {
-                return
-            }
-            playgroundController.settings.mode = (newValue == .offSession) ? .paymentWithSetup : .payment
-        }
-    }
-
     var customerModeBinding: Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
         Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
             return playgroundController.settings.customerMode

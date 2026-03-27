@@ -356,21 +356,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case enabled
         case disabled
     }
-    enum CheckoutSessionSetupFutureUsage: String, PickerEnum {
-        static var enumName: String { "Checkout Session SetupFutureUsage" }
-
-        case notSet
-        case offSession = "off_session"
-
-        var displayName: String {
-            switch self {
-            case .notSet:
-                return "Not set"
-            case .offSession:
-                return "Off session"
-            }
-        }
-    }
     enum PaymentMethodRedisplay: String, PickerEnum {
         static var enumName: String { "PaymentMethodRedisplay" }
 

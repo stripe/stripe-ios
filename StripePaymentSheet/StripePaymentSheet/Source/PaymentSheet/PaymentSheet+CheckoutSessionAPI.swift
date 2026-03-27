@@ -54,7 +54,8 @@ extension PaymentSheet {
             let expectedAmount = try checkoutSession.expectedAmount()
             let savePaymentMethod: Bool? = {
                 guard checkoutSession.mode != .setup,
-                      checkoutSession.customerId != nil
+                      checkoutSession.customerId != nil,
+                      checkoutSession.savedPaymentMethodsOfferSave?.enabled == true
                 else {
                     return nil
                 }
