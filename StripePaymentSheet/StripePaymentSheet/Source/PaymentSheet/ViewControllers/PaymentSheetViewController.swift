@@ -306,8 +306,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             )
         }
         view.isUserInteractionEnabled = shouldEnableUserInteraction
-        isDismissable = !isBusy
-        navigationBar.isUserInteractionEnabled = !isBusy
+        isDismissable = shouldEnableUserInteraction
+        navigationBar.isUserInteractionEnabled = shouldEnableUserInteraction
 
         // Update our views (starting from the top of the screen):
         configureNavBar()
