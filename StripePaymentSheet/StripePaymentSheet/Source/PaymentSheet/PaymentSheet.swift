@@ -339,6 +339,7 @@ public class PaymentSheet {
                     integrationShape: .paymentSheet,
                     isUpdate: true
                 )
+                // Re-create with the new elementsSession, which may have different captcha/attestation data.
                 self.confirmationChallenge = ConfirmationChallenge(
                     enableAttestation: configuration.enableAttestationOnConfirmation,
                     elementsSession: loadResult.elementsSession,
