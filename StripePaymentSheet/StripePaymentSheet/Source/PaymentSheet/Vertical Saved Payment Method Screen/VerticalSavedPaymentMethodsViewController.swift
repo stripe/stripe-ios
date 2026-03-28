@@ -43,6 +43,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let paymentMethodUpdate: Bool
     private let isCBCEligible: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let customerProvider: CustomerProvider
 
     private var updateViewController: UpdatePaymentMethodViewController?
     private var defaultPaymentMethod: STPPaymentMethod?
@@ -127,7 +128,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, customerProvider: customerProvider)
     }()
 
     // MARK: Internal properties
@@ -176,11 +177,13 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
         elementsSession: STPElementsSession,
+        customerProvider: CustomerProvider = .none(),
         analyticsHelper: PaymentSheetAnalyticsHelper,
         defaultPaymentMethod: STPPaymentMethod?
     ) {
         self.configuration = configuration
         self.elementsSession = elementsSession
+        self.customerProvider = customerProvider
         self.defaultPaymentMethod = defaultPaymentMethod
         self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         self.paymentMethodRemoveLast = elementsSession.paymentMethodRemoveLast(configuration: configuration)

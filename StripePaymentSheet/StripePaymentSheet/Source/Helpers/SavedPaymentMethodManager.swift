@@ -18,22 +18,28 @@ final class SavedPaymentMethodManager {
 
     let configuration: PaymentElementConfiguration
     let elementsSession: STPElementsSession
+    let customerProvider: CustomerProvider
 
     private lazy var ephemeralKey: String? = {
-        guard let ephemeralKey = configuration.customer?.ephemeralKeySecret(basedOn: elementsSession) else {
+        guard let ephemeralKey = customerProvider.ephemeralKeySecret(basedOn: elementsSession) else {
             stpAssert(true, "Failed to read ephemeral key.")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetError,
                                               error: Error.missingEphemeralKey,
-                                              additionalNonPIIParams: ["customer_access_provider": configuration.customer?.customerAccessProvider.analyticValue ?? "unknown"])
+                                              additionalNonPIIParams: ["customer_access_provider": customerProvider.analyticsValue ?? "unknown"])
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             return nil
         }
         return ephemeralKey
     }()
 
-    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) {
+    init(
+        configuration: PaymentElementConfiguration,
+        elementsSession: STPElementsSession,
+        customerProvider: CustomerProvider? = nil
+    ) {
         self.configuration = configuration
         self.elementsSession = elementsSession
+        self.customerProvider = customerProvider ?? CustomerProvider.make(configuration: configuration)
     }
 
     func update(paymentMethod: STPPaymentMethod,
@@ -52,9 +58,8 @@ final class SavedPaymentMethodManager {
             return
         }
 
-        if let customerAccessProvider = configuration.customer?.customerAccessProvider,
-           case .customerSession(let customerSessionClientSecret) = customerAccessProvider,
-           let customerId = configuration.customer?.id {
+        if let customerSessionClientSecret = customerProvider.customerSessionClientSecretIfAvailable,
+           let customerId = customerProvider.customerID {
             if paymentMethod.type == .card {
                 configuration.apiClient.detachPaymentMethodRemoveDuplicates(
                     paymentMethod.stripeId,
@@ -86,7 +91,7 @@ final class SavedPaymentMethodManager {
         guard let ephemeralKey else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read ephemeral key while setting a payment method as default.")
         }
-        guard let customerId = configuration.customer?.id else {
+        guard let customerId = customerProvider.customerID else {
             throw PaymentSheetError.unknown(debugDescription: "Failed to read customerId while setting a payment method as default.")
         }
         return try await configuration.apiClient.setAsDefaultPaymentMethod(defaultPaymentMethodId, for: customerId, using: ephemeralKey)

@@ -146,9 +146,12 @@ extension CustomerSheetDataSource {
     func fetchElementsSession(setupIntentClientSecret: String) async throws -> (STPSetupIntent, STPElementsSession) {
         switch dataSource {
         case .customerAdapter:
+            let paymentSheetConfiguration = PaymentSheet.Configuration()
+            let customerProvider = CustomerProvider.make(mode: .setupIntentClientSecret(setupIntentClientSecret), configuration: paymentSheetConfiguration)
             return try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: setupIntentClientSecret,
-                                                                                              clientDefaultPaymentMethod: nil,
-                                                                                              configuration: PaymentSheet.Configuration.init())
+                                                                             clientDefaultPaymentMethod: nil,
+                                                                             configuration: paymentSheetConfiguration,
+                                                                             customerProvider: customerProvider)
         case .customerSession(let customerSessionAdapter):
            return try await customerSessionAdapter.elementsSession(setupIntentClientSecret: setupIntentClientSecret)
         }

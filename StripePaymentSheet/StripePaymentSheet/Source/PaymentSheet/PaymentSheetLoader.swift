@@ -18,6 +18,21 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+        let customerProvider: CustomerProvider
+
+        init(
+            intent: Intent,
+            elementsSession: STPElementsSession,
+            savedPaymentMethods: [STPPaymentMethod],
+            paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+            customerProvider: CustomerProvider? = nil
+        ) {
+            self.intent = intent
+            self.elementsSession = elementsSession
+            self.savedPaymentMethods = savedPaymentMethods
+            self.paymentMethodTypes = paymentMethodTypes
+            self.customerProvider = customerProvider ?? CustomerProvider.make(intent: intent, configuration: PaymentSheet.Configuration())
+        }
     }
 
     enum IntegrationShape {
@@ -38,6 +53,7 @@ final class PaymentSheetLoader {
     static func load(
         mode: PaymentSheet.InitializationMode,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
         isUpdate: Bool = false,
@@ -45,7 +61,7 @@ final class PaymentSheetLoader {
     ) {
         Task { @MainActor in
             do {
-                let loadResult = try await load(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, integrationShape: integrationShape, isUpdate: isUpdate)
+                let loadResult = try await load(mode: mode, configuration: configuration, customerProvider: customerProvider, analyticsHelper: analyticsHelper, integrationShape: integrationShape, isUpdate: isUpdate)
                 completion(.success(loadResult))
             } catch {
                 completion(.failure(error))
@@ -59,10 +75,12 @@ final class PaymentSheetLoader {
     static func load(
         mode: PaymentSheet.InitializationMode,
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
         isUpdate: Bool = false
     ) async throws -> LoadResult {
+        let customerProvider = customerProvider ?? CustomerProvider.make(mode: mode, configuration: configuration)
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
         analyticsHelper.logLoadStarted(isUpdate: isUpdate)
@@ -78,7 +96,7 @@ final class PaymentSheetLoader {
                let error = intentConfiguration.validate() {
                 throw error
             }
-            if case .checkoutSession = mode, configuration.customer != nil {
+            if case .checkoutSession = mode, customerProvider.hasConfigurationCustomer {
                 stpAssertionFailure("Configuration.customer must not be set when using a CheckoutSession. The CheckoutSession manages its own customer.")
                 throw PaymentSheetError.integrationError(nonPIIDebugDescription: "PaymentSheet.Configuration.customer must not be set when using a CheckoutSession.")
             }
@@ -91,16 +109,30 @@ final class PaymentSheetLoader {
             // Fetch ElementsSession
             // ⚠️ Note using `async let` instead of Tasks here triggered a crash when compiling with Xcode 26.4 / Swift 6.3
             let elementsSessionAndIntentTask = Task {
-                try await fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
+                try await fetchElementsSessionAndIntent(
+                    mode: mode,
+                    configuration: configuration,
+                    customerProvider: customerProvider,
+                    analyticsHelper: analyticsHelper,
+                    loadTimings: loadTimings
+                )
             }
 
             // Fetch Customer email if using EK for Link and it wasn't provided in `configuration`. If using CS, Customer will be in v1/e/s response.
             let prefetchedLinkEmailAndSourceTask = Task {
-                try? await getCustomerEmailForLinkWithEphemeralKey(configuration: configuration, loadTimings: loadTimings)
+                try? await getCustomerEmailForLinkWithEphemeralKey(
+                    configuration: configuration,
+                    customerProvider: customerProvider,
+                    loadTimings: loadTimings
+                )
             }
             // Fetch Customer SPMs if using EK b/c they're not in the v1/e/s response.
             let prefetchedSavedPaymentMethodsTask = Task {
-                try await fetchSavedPaymentMethodsWithEphemeralKey(configuration: configuration, loadTimings: loadTimings)
+                try await fetchSavedPaymentMethodsWithEphemeralKey(
+                    configuration: configuration,
+                    customerProvider: customerProvider,
+                    loadTimings: loadTimings
+                )
             }
 
             // Load misc singletons
@@ -203,7 +235,8 @@ final class PaymentSheetLoader {
                 intent: intent,
                 elementsSession: elementsSession,
                 savedPaymentMethods: filteredSavedPaymentMethods,
-                paymentMethodTypes: paymentMethodTypes
+                paymentMethodTypes: paymentMethodTypes,
+                customerProvider: customerProvider
             )
 
             // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
@@ -311,11 +344,16 @@ final class PaymentSheetLoader {
 
     /// If configuration uses Ephemeral Key, retrieve Customer object and return email
     @MainActor
-    static func getCustomerEmailForLinkWithEphemeralKey(configuration: PaymentElementConfiguration, loadTimings: LoadTimings) async throws -> (email: String, source: EmailSource)? {
+    static func getCustomerEmailForLinkWithEphemeralKey(
+        configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
+        loadTimings: LoadTimings
+    ) async throws -> (email: String, source: EmailSource)? {
         guard
             configuration.defaultBillingDetails.email == nil, // If email was already provided, don't make a network request to retrieve it.
-            let customerID = configuration.customer?.id,
-            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider
+            let customerID = customerProvider.customerID,
+            customerProvider.usesLegacyEphemeralKey,
+            let ephemeralKey = customerProvider.ephemeralKeySecret(basedOn: nil)
         else {
             return nil
         }
@@ -332,7 +370,13 @@ final class PaymentSheetLoader {
 
     typealias ElementSessionAndIntent = (elementsSession: STPElementsSession, intent: Intent)
     @MainActor
-    static func fetchElementsSessionAndIntent(mode: PaymentSheet.InitializationMode, configuration: PaymentElementConfiguration, analyticsHelper: PaymentSheetAnalyticsHelper, loadTimings: LoadTimings) async throws -> ElementSessionAndIntent {
+    static func fetchElementsSessionAndIntent(
+        mode: PaymentSheet.InitializationMode,
+        configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
+        analyticsHelper: PaymentSheetAnalyticsHelper,
+        loadTimings: LoadTimings
+    ) async throws -> ElementSessionAndIntent {
         loadTimings.logStart("fetchElementsSession")
         defer {
             loadTimings.logEnd("fetchElementsSession")
@@ -340,10 +384,10 @@ final class PaymentSheetLoader {
         let intent: Intent
         let elementsSession: STPElementsSession
         let clientDefaultPaymentMethod: String? = {
-            guard let customer = configuration.customer else {
+            guard let customerID = customerProvider.customerID else {
                 return nil
             }
-            return defaultStripePaymentMethodId(forCustomerID: customer.id)
+            return defaultStripePaymentMethodId(forCustomerID: customerID)
         }()
 
         switch mode {
@@ -352,7 +396,8 @@ final class PaymentSheetLoader {
             do {
                 (paymentIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(paymentIntentClientSecret: clientSecret,
                                                                                                              clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                                                                                                             configuration: configuration)
+                                                                                                             configuration: configuration,
+                                                                                                             customerProvider: customerProvider)
             } catch let error {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 guard shouldFallback(for: error) else {
@@ -372,7 +417,8 @@ final class PaymentSheetLoader {
             do {
                 (setupIntent, elementsSession) = try await configuration.apiClient.retrieveElementsSession(setupIntentClientSecret: clientSecret,
                                                                                                            clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                                                                                                           configuration: configuration)
+                                                                                                           configuration: configuration,
+                                                                                                           customerProvider: customerProvider)
             } catch let error {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
                 guard shouldFallback(for: error) else {
@@ -391,7 +437,8 @@ final class PaymentSheetLoader {
             do {
                 elementsSession = try await configuration.apiClient.retrieveDeferredElementsSession(withIntentConfig: intentConfig,
                                                                                                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
-                                                                                                configuration: configuration)
+                                                                                                configuration: configuration,
+                                                                                                customerProvider: customerProvider)
                 intent = .deferredIntent(intentConfig: intentConfig)
             } catch {
                 analyticsHelper.log(event: .paymentSheetElementsSessionLoadFailed, error: error)
@@ -526,11 +573,13 @@ final class PaymentSheetLoader {
     @MainActor
     static func fetchSavedPaymentMethodsWithEphemeralKey(
         configuration: PaymentElementConfiguration,
+        customerProvider: CustomerProvider,
         loadTimings: LoadTimings
     ) async throws -> [STPPaymentMethod]? {
         guard
-            let customerID = configuration.customer?.id,
-            case .legacyCustomerEphemeralKey(let ephemeralKey) = configuration.customer?.customerAccessProvider
+            let customerID = customerProvider.customerID,
+            customerProvider.usesLegacyEphemeralKey,
+            let ephemeralKey = customerProvider.ephemeralKeySecret(basedOn: nil)
         else {
             return nil
         }

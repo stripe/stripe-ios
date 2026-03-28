@@ -36,7 +36,7 @@ class ShopPayECEPresenter: NSObject, UIAdaptivePresentationControllerDelegate {
     func present(from viewController: UIViewController,
                  confirmHandler: @escaping (PaymentSheetResult) -> Void) {
         // ShopPay support is experimental and currently not supported outside of CustomerSessions. Barring GA, there are no plans to support it with legacy EK or CheckoutSessions.
-        guard case .customerSession(let customerSessionClientSecret) = flowController.configuration.customer?.customerAccessProvider else {
+        guard let customerSessionClientSecret = flowController.customerProvider.customerSessionClientSecretIfAvailable else {
             stpAssertionFailure("Integration Error: CustomerSessions is required")
             return
         }

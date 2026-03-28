@@ -97,7 +97,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     var linkConfirmOption: PaymentSheet.LinkConfirmOption?
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, customerProvider: loadResult.customerProvider)
     }()
 
     // MARK: - Views

@@ -300,6 +300,7 @@ extension PaymentSheet {
         private(set) var didPresentAndContinue: Bool = false
         private var confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
+        var customerProvider: CustomerProvider
 
         // MARK: - Initializer (Internal)
 
@@ -310,6 +311,7 @@ extension PaymentSheet {
         ) {
             self.configuration = configuration
             self.analyticsHelper = analyticsHelper
+            self.customerProvider = loadResult.customerProvider
             self.analyticsHelper.logInitialized()
             self.analyticsHelper.startTimeMeasurement(.checkout)
             self.viewController = Self.makeViewController(
@@ -425,10 +427,12 @@ extension PaymentSheet {
         ) {
             STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: PaymentSheet.FlowController.self)
             let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .flowController, configuration: configuration)
+            let customerProvider = CustomerProvider.make(mode: mode, configuration: configuration)
             AnalyticsHelper.shared.generateSessionID()
             PaymentSheetLoader.load(
                 mode: mode,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .flowController
             ) { result in
@@ -687,11 +691,13 @@ extension PaymentSheet {
         private func performUpdate(mode: PaymentSheet.InitializationMode, completion: @escaping (Error?) -> Void) {
             let updateID = UUID()
             latestUpdateContext = UpdateContext(id: updateID)
+            let customerProvider = CustomerProvider.make(mode: mode, configuration: configuration)
 
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheetLoader.load(
                 mode: mode,
                 configuration: configuration,
+                customerProvider: customerProvider,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .flowController,
                 isUpdate: true
@@ -709,6 +715,7 @@ extension PaymentSheet {
 
                 switch result {
                 case .success(let loadResult):
+                    self.customerProvider = loadResult.customerProvider
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
 
                     self.viewController = Self.makeViewController(
@@ -743,7 +750,8 @@ extension PaymentSheet {
                 intent: viewController.loadResult.intent,
                 elementsSession: viewController.loadResult.elementsSession,
                 savedPaymentMethods: viewController.savedPaymentMethods, // Note: not using load result!
-                paymentMethodTypes: viewController.loadResult.paymentMethodTypes
+                paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
+                customerProvider: viewController.loadResult.customerProvider
             )
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,

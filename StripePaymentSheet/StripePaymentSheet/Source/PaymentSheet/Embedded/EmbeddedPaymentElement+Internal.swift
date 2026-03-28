@@ -201,6 +201,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             selectedPaymentMethod: selectedSavedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
+            customerProvider: customerProvider,
             analyticsHelper: analyticsHelper,
             defaultPaymentMethod: defaultPaymentMethod
         )
