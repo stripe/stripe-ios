@@ -46,11 +46,30 @@ final class CurrencySelectorElement: Element {
         selectorElement.delegate = self
     }
 
-    // MARK: - Public API
+    // MARK: - Factory
 
-    func selectCurrency(_ currency: String) {
-        selectorElement.select(currency.lowercased())
+    static func makeIfNeeded(
+        intent: Intent,
+        isFlowController: Bool,
+        appearance: PaymentSheet.Appearance
+    ) -> CurrencySelectorElement? {
+        guard !isFlowController else { return nil }
+        guard case .checkoutSession(let session) = intent else { return nil }
+        guard session.adaptivePricingActive else { return nil }
+        guard !session.localizedPricesMetas.isEmpty else { return nil }
+        guard let exchangeRateMeta = session.exchangeRateMeta else { return nil }
+        guard let currency = session.currency, let total = session.totals?.total else { return nil }
+
+        return CurrencySelectorElement(
+            currentCurrency: currency,
+            currentTotal: total,
+            localizedPricesMetas: session.localizedPricesMetas,
+            exchangeRateMeta: exchangeRateMeta,
+            appearance: appearance
+        )
     }
+
+    // MARK: - Public API
 
     func setEnabled(_ enabled: Bool) {
         selectorElement.setEnabled(enabled)

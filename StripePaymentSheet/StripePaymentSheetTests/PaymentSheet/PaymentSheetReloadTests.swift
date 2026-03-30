@@ -140,4 +140,8 @@ private class MockPaymentSheetViewControllerDelegate: PaymentSheetViewController
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol
     ) {}
 
+    func paymentSheetViewControllerDidSelectCurrency(
+        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
+        currency: String
+    ) {}
 }

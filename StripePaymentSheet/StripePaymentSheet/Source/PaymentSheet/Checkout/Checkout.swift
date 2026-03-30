@@ -212,9 +212,11 @@ public final class Checkout: ObservableObject {
     /// - Throws: ``CheckoutError`` if the update fails.
     @discardableResult
     func selectCurrency(_ currency: String) async throws -> Checkout {
-        try requireOpenSession()
-        _ = try await performAPIUpdate(.setCurrency(currency))
-        return self
+        try requireOpenSessionForInSheetUpdate()
+        return try await withSessionUpdateGuard {
+            _ = try await performAPIUpdate(.setCurrency(currency))
+            return self
+        }
     }
 
     // MARK: - Tax ID
@@ -260,6 +262,19 @@ public final class Checkout: ObservableObject {
         sessionUpdateCount += 1
         defer { sessionUpdateCount -= 1 }
         return try await body()
+    }
+
+    /// Validates that the session is loaded and open (but allows the sheet to be presented).
+    /// Used by mutations triggered from inside the presented sheet (e.g. currency selection).
+    @discardableResult
+    private func requireOpenSessionForInSheetUpdate() throws -> STPCheckoutSession {
+        guard let currentSession = stpSession else {
+            throw CheckoutError.sessionNotLoaded
+        }
+        guard currentSession.status == .open else {
+            throw CheckoutError.sessionNotOpen
+        }
+        return currentSession
     }
 
     /// Validates that the session is loaded, open, and no sheet is presented.
