@@ -17,7 +17,7 @@ class STPPaymentMethodCardArtTest: XCTestCase {
         let cardArt = STPPaymentMethodCardArt.decodedObject(fromAPIResponse: response)
         XCTAssertNotNil(cardArt)
         XCTAssertEqual(cardArt?.paymentMethod, "pm_123")
-        XCTAssertEqual(cardArt?.artImage?.absoluteString, "https://b.stripecdn.com/cardart/assets/abc123")
+        XCTAssertEqual(cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/abc123")
         XCTAssertEqual(cardArt?.programName, "My Program")
     }
 
@@ -37,7 +37,8 @@ class STPPaymentMethodCardArtTest: XCTestCase {
         ]
         let cardArt = STPPaymentMethodCardArt.decodedObject(fromAPIResponse: response)
         XCTAssertNotNil(cardArt)
-        XCTAssertNil(cardArt?.artImage)
+        XCTAssertNotNil(cardArt?.artImage)
+        XCTAssertNil(cardArt?.artImage?.url)
     }
 
     func testDecodedObject_nilResponse() {

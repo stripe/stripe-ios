@@ -753,7 +753,7 @@ class STPElementsSessionTest: XCTestCase {
         let pm = customer?.paymentMethods.first
         XCTAssertNotNil(pm?.card?.cardArt)
         XCTAssertEqual(pm?.card?.cardArt?.paymentMethod, "pm_123card")
-        XCTAssertEqual(pm?.card?.cardArt?.artImage?.absoluteString, "https://b.stripecdn.com/cardart/assets/abc123")
+        XCTAssertEqual(pm?.card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/abc123")
         XCTAssertEqual(pm?.card?.cardArt?.programName, "Test Program")
     }
 
@@ -801,8 +801,8 @@ class STPElementsSessionTest: XCTestCase {
         let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
         let pms = customer?.paymentMethods
         XCTAssertEqual(pms?.count, 2)
-        XCTAssertEqual(pms?[0].card?.cardArt?.artImage?.absoluteString, "https://b.stripecdn.com/cardart/assets/visa")
-        XCTAssertEqual(pms?[1].card?.cardArt?.artImage?.absoluteString, "https://b.stripecdn.com/cardart/assets/amex")
+        XCTAssertEqual(pms?[0].card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/visa")
+        XCTAssertEqual(pms?[1].card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/amex")
     }
 
     func testMergeCardArt_flatFormat_partialMatch() {
@@ -820,7 +820,7 @@ class STPElementsSessionTest: XCTestCase {
         let pms = customer?.paymentMethods
         XCTAssertEqual(pms?.count, 2)
         XCTAssertNotNil(pms?[0].card?.cardArt)
-        XCTAssertEqual(pms?[0].card?.cardArt?.artImage?.absoluteString, "https://b.stripecdn.com/cardart/assets/visa")
+        XCTAssertEqual(pms?[0].card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/visa")
         XCTAssertNil(pms?[1].card?.cardArt)
     }
 
@@ -856,7 +856,7 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertNotNil(customer)
         let pm = customer?.paymentMethods.first
         XCTAssertNotNil(pm?.card?.cardArt)
-        XCTAssertEqual(pm?.card?.cardArt?.artImage?.absoluteString, "https://b.stripecdn.com/cardart/assets/abc123")
+        XCTAssertEqual(pm?.card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/abc123")
     }
 
     func testMergeCardArt_linkFormat_nonMatchingId() {
@@ -893,7 +893,7 @@ class STPElementsSessionTest: XCTestCase {
         let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
         let pms = customer?.paymentMethods
         XCTAssertEqual(pms?.count, 2)
-        XCTAssertEqual(pms?[0].card?.cardArt?.artImage?.absoluteString, "https://b.stripecdn.com/cardart/assets/visa")
-        XCTAssertEqual(pms?[1].card?.cardArt?.artImage?.absoluteString, "https://b.stripecdn.com/cardart/assets/amex")
+        XCTAssertEqual(pms?[0].card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/visa")
+        XCTAssertEqual(pms?[1].card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/amex")
     }
 }
