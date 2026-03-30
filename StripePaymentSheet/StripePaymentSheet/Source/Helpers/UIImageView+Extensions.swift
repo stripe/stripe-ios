@@ -17,16 +17,26 @@ extension UIImageView {
             self.image = fallbackImage
             return
         }
+
+        // We use `tag` to ensure that if we call `setImage(with:)` multiple times,
+        // we ONLY set the image from the `urlString` for the last `urlString` passed.
+        //
+        // This avoids async bugs where an older image could override a newer image.
+        tag = url.hashValue
         Task { [weak self] in
             do {
                 let image = try await DownloadManager.sharedManager.downloadImage(url: url)
                 let processedImage = processOnDownloadedImage?(image) ?? image
                 await MainActor.run {
-                    self?.image = processedImage
+                    if self?.tag == url.hashValue {
+                        self?.image = processedImage
+                    }
                 }
             } catch {
                 await MainActor.run {
-                    self?.image = fallbackImage
+                    if self?.tag == url.hashValue {
+                        self?.image = fallbackImage
+                    }
                 }
             }
         }
