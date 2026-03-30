@@ -80,18 +80,13 @@ final class TwoOptionSelectorView: UIView {
         addSubview(mainStackView)
 
         // Track background
-        trackView.backgroundColor = UIColor.dynamic(
-            light: appearance.colors.componentBackground.darken(by: 0.04),
-            dark: appearance.colors.componentBackground.lighten(by: 0.01))
+        trackView.backgroundColor = appearance.colors.background
         trackView.layer.borderWidth = 0.5
         trackView.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .uniform)
         trackView.clipsToBounds = false
 
         // Selection indicator pill
-        selectionIndicatorView.backgroundColor = UIColor.dynamic(
-            light: appearance.colors.componentBackground,
-            dark: appearance.colors.componentBackground.lighten(by: 0.04)
-        )
+        selectionIndicatorView.backgroundColor = appearance.colors.componentBackground
         selectionIndicatorView.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .uniform)
 
         selectionIndicatorView.layer.applyShadow(shadow: appearance.shadow.asElementThemeShadow)
