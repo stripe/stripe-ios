@@ -449,7 +449,10 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
         currency: String
     ) {
-        guard let checkout else { return }
+        guard let checkout else {
+            stpAssertionFailure("Expected checkout to be set when currency selection occurs")
+            return
+        }
         paymentSheetViewController.setReloading(true)
         Task { @MainActor in
             do {

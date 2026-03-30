@@ -1195,8 +1195,8 @@ extension PaymentSheetVerticalViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
-        if let selector = element as? CurrencySelectorElement {
-            handleCurrencySelection(selector.selectedCurrency)
+        if let currencySelectorElement, element === currencySelectorElement {
+            handleCurrencySelection(currencySelectorElement.selectedCurrency)
             return
         }
         self.error = nil
