@@ -543,7 +543,7 @@ extension RowButton {
         let savedPaymentMethodRowImage = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle)
         if appearance.cardArtEnabled {
             imageView.setImage(with: paymentMethod.cardArtCDNURL(height: 20),
-                               postProcess: { $0.roundedWithBorder(radius: 3) },
+                               processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
                                fallbackImage: savedPaymentMethodRowImage)
         } else {
             imageView.image = savedPaymentMethodRowImage
