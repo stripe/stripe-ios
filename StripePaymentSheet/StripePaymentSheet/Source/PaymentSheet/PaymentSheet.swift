@@ -306,7 +306,6 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
                 delegate: self,
-                checkout: checkout,
                 previousPaymentOption: previousPaymentOption
             )
             return vc
@@ -316,7 +315,6 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 isFlowController: false,
                 analyticsHelper: analyticsHelper,
-                checkout: checkout,
                 previousPaymentOption: previousPaymentOption
             )
             vc.paymentSheetDelegate = self
@@ -447,13 +445,21 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         }
     }
 
-    func paymentSheetViewControllerDidRequestReload(
+    func paymentSheetViewControllerDidSelectCurrency(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
-        checkout: Checkout
+        currency: String
     ) {
+        guard let checkout else { return }
+        paymentSheetViewController.setReloading(true)
         Task { @MainActor in
-            guard let stpSession = checkout.session as? STPCheckoutSession else { return }
-            await self.performReload(mode: .checkoutSession(stpSession))
+            do {
+                try await checkout.selectCurrency(currency)
+                guard let stpSession = checkout.session as? STPCheckoutSession else { return }
+                await self.performReload(mode: .checkoutSession(stpSession))
+            } catch {
+                paymentSheetViewController.setReloading(false)
+                paymentSheetViewController.setReloadError(error)
+            }
         }
     }
 }
@@ -506,8 +512,8 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     )
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
-    func paymentSheetViewControllerDidRequestReload(
+    func paymentSheetViewControllerDidSelectCurrency(
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
-        checkout: Checkout
+        currency: String
     )
 }

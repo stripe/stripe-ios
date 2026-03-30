@@ -52,7 +52,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
 
     // MARK: - Writable Properties
     private var currencySelectorElement: CurrencySelectorElement?
-    private weak var checkout: Checkout?
     weak var delegate: PaymentSheetViewControllerDelegate?
     enum Mode {
         case selectingSaved
@@ -144,7 +143,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: PaymentSheetViewControllerDelegate,
-        checkout: Checkout? = nil,
         previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
@@ -202,7 +200,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             formCache: formCache,
             analyticsHelper: analyticsHelper
         )
-        self.checkout = checkout
         self.analyticsHelper = analyticsHelper
 
         super.init(nibName: nil, bundle: nil)
@@ -737,16 +734,6 @@ extension PaymentSheetViewController: ElementDelegate {
     }
 
     private func handleCurrencySelection(_ currency: String) {
-        guard let checkout else { return }
-        setReloading(true)
-        Task { @MainActor in
-            do {
-                try await checkout.selectCurrency(currency)
-                delegate?.paymentSheetViewControllerDidRequestReload(self, checkout: checkout)
-            } catch {
-                setReloading(false)
-                setReloadError(error)
-            }
-        }
+        delegate?.paymentSheetViewControllerDidSelectCurrency(self, currency: currency)
     }
 }
