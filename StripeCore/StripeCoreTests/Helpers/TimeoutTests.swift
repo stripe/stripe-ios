@@ -13,6 +13,7 @@ import XCTest
 class TimeoutTests: XCTestCase {
     struct TestError: Error {}
 
+    @available(iOS 17, *)
     func testWithTimeout_allOperationsCompleteBeforeTimeout() async {
         let operation1 = {
             try await Task.sleep(nanoseconds: 500_000_000) // 0.5s
@@ -166,6 +167,7 @@ class TimeoutTests: XCTestCase {
         XCTAssertEqual(value, "Success")
     }
 
+    @available(iOS 17, *)
     func testWithTimeout_parallel() async {
         // All operations start at the same time, so total time should be ~0.5s
         let startTime = Date()
