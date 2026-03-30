@@ -36,12 +36,12 @@ class CustomerSheetDataSource {
                                completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
         Task {
             do {
-                async let (elementsSessionResult, customerSessionClientSecret) = try customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret()
+                let esTask = Task { try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret() }
 
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()
-                let customerId = try await customerSessionClientSecret.customerId
-                let elementSession = try await elementsSessionResult
+                let (elementSession, customerSessionClientSecret) = try await esTask.value
+                let customerId = customerSessionClientSecret.customerId
                 let paymentOption = customerSessionAdapter.fetchSelectedPaymentOption(for: customerId, elementsSession: elementSession)
 
                 // Override with specs from elementSession
@@ -61,20 +61,26 @@ class CustomerSheetDataSource {
     func loadPaymentMethodInfo(customerAdapter: CustomerAdapter, completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
         Task {
             do {
-                async let paymentMethodsResult = try customerAdapter.fetchPaymentMethods()
-                async let selectedPaymentMethodResult = try customerAdapter.fetchSelectedPaymentOption()
-                async let elementsSessionResult = try self.configuration.apiClient.retrieveDeferredElementsSessionForCustomerSheet(paymentMethodTypes: customerAdapter.paymentMethodTypes,
-                                                                                                                                   onBehalfOf: nil,
-                                                                                                                                   clientDefaultPaymentMethod: nil,
-                                                                                                                                   customerSessionClientSecret: nil)
+                let paymentMethodsTask = Task { try await customerAdapter.fetchPaymentMethods() }
+                let selectedPaymentMethodTask = Task { try await customerAdapter.fetchSelectedPaymentOption() }
+                let elementsSessionTask = Task {
+                    try await self.configuration.apiClient.retrieveDeferredElementsSessionForCustomerSheet(
+                        paymentMethodTypes: customerAdapter.paymentMethodTypes,
+                        onBehalfOf: nil,
+                        clientDefaultPaymentMethod: nil,
+                        customerSessionClientSecret: nil
+                    )
+                }
 
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()
 
-                let (paymentMethods, selectedPaymentMethod, elementSession) = try await (paymentMethodsResult.filter({ paymentMethod in
+                let paymentMethods = try await paymentMethodsTask.value.filter({ paymentMethod in
                     guard let card = paymentMethod.card else { return true }
                     return configuration.cardBrandFilter.isAccepted(cardBrand: card.preferredDisplayBrand)
-                }), selectedPaymentMethodResult, elementsSessionResult)
+                })
+                let selectedPaymentMethod = try await selectedPaymentMethodTask.value
+                let elementSession = try await elementsSessionTask.value
 
                 // Override with specs from elementSession
                 _ = FormSpecProvider.shared.loadFrom(elementSession.paymentMethodSpecs as Any)

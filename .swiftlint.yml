@@ -120,3 +120,14 @@ custom_rules:
     included:
       - ".*Tests\\.swift$"
       - ".*Tests/"
+  no_async_let:
+    name: "async let is banned"
+    message: "async let crashes in Xcode 26.4. Do not use async let until Xcode 27 is required (May 2027)."
+    regex: '\basync\s+let\b'
+    severity: error
+    excluded_match_kinds:
+      - comment
+      - comment_url
+      - doccomment
+      - doccomment_field
+      - string

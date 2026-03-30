@@ -89,7 +89,7 @@ final class PaymentSheetLoader {
             }
 
             // Fetch ElementsSession
-            // ⚠️ Note using `async let` instead of Tasks here triggered a crash when compiling with Xcode 26.4 / Swift 6.3
+            // ⚠️ Note: Use Task instead of `async let` here — `async let` crashes when compiling with Xcode 26.4 / Swift 6.3
             let elementsSessionAndIntentTask = Task {
                 try await fetchElementsSessionAndIntent(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, loadTimings: loadTimings)
             }
