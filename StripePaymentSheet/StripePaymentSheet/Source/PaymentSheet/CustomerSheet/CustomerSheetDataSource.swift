@@ -36,11 +36,11 @@ class CustomerSheetDataSource {
                                completion: @escaping (Result<([STPPaymentMethod], CustomerPaymentOption?, STPElementsSession), Error>) -> Void) {
         Task {
             do {
-                let esTask = Task { try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret() }
+                let fetchSessionsTask = Task { try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret() }
 
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()
-                let (elementSession, customerSessionClientSecret) = try await esTask.value
+                let (elementSession, customerSessionClientSecret) = try await fetchSessionsTask.value
                 let customerId = customerSessionClientSecret.customerId
                 let paymentOption = customerSessionAdapter.fetchSelectedPaymentOption(for: customerId, elementsSession: elementSession)
 
