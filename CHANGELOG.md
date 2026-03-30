@@ -5,6 +5,7 @@ PATCH
 ### Payments
 * [Fixed] Fixed an issue introduced in 25.8.0 where manually closing a webview 3ds2 challenge after failing the challenge and before it's automatically dismissed could result in a succeeded result.
 * [Fixed] Fixed a crash when compiling < Swift 5.9 / < iOS 17 due to parameter packs being unsupported.
+* [Fixed] Improved loading times for integrations that have Link disabled.
 
 ## 25.9.0 2026-03-24
 ### PaymentSheet

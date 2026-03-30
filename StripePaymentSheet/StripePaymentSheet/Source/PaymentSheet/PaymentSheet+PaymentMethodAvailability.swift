@@ -72,7 +72,7 @@ extension PaymentSheet {
             return false
         }
         let linkGlobalHoldback = experimentsData.experimentAssignments[LinkGlobalHoldback.experimentName]
-        let linkABTest = experimentsData.experimentAssignments["link_ab_test"]
+        let linkABTest = experimentsData.experimentAssignments[LinkABTest.experimentName]
         return linkGlobalHoldback == .holdback || linkABTest == .holdback
     }
 
