@@ -7,7 +7,7 @@
 
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CheckoutSessionsPreview) @testable import StripePaymentSheet
 
 import XCTest
 
@@ -84,5 +84,8 @@ extension PaymentSheetViewControllerSnapshotTests: PaymentSheetViewControllerDel
     }
 
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewControllerProtocol) {
+    }
+
+    func paymentSheetViewControllerDidRequestReload(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewControllerProtocol, checkout: Checkout) {
     }
 }

@@ -7,7 +7,7 @@
 
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(STP) @_spi(CheckoutSessionsPreview) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import XCTest
 
@@ -140,4 +140,8 @@ private class MockPaymentSheetViewControllerDelegate: PaymentSheetViewController
         _ paymentSheetViewController: PaymentSheetViewControllerProtocol
     ) {}
 
+    func paymentSheetViewControllerDidRequestReload(
+        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
+        checkout: Checkout
+    ) {}
 }

@@ -306,6 +306,7 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
                 delegate: self,
+                checkout: checkout,
                 previousPaymentOption: previousPaymentOption
             )
             return vc
@@ -315,6 +316,7 @@ public class PaymentSheet {
                 loadResult: loadResult,
                 isFlowController: false,
                 analyticsHelper: analyticsHelper,
+                checkout: checkout,
                 previousPaymentOption: previousPaymentOption
             )
             vc.paymentSheetDelegate = self
@@ -444,6 +446,16 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
             )
         }
     }
+
+    func paymentSheetViewControllerDidRequestReload(
+        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
+        checkout: Checkout
+    ) {
+        Task { @MainActor in
+            guard let stpSession = checkout.session as? STPCheckoutSession else { return }
+            await self.performReload(mode: .checkoutSession(stpSession))
+        }
+    }
 }
 
 // MARK: - CheckoutIntegrationDelegate
@@ -494,4 +506,8 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     )
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
+    func paymentSheetViewControllerDidRequestReload(
+        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
+        checkout: Checkout
+    )
 }

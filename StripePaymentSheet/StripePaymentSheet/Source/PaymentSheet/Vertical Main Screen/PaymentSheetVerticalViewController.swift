@@ -114,6 +114,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }()
 
     var confirmationChallenge: ConfirmationChallenge?
+    private var currencySelectorElement: CurrencySelectorElement?
+    private weak var checkout: Checkout?
 
     // MARK: - UI properties
 
@@ -160,6 +162,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         loadResult: PaymentSheetLoader.LoadResult,
         isFlowController: Bool,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        checkout: Checkout? = nil,
         walletButtonsViewState: PaymentSheet.WalletButtonsViewState = .hidden,
         previousPaymentOption: PaymentOption? = nil
     ) {
@@ -179,8 +182,16 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.shouldShowApplePayInList = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && Self.walletButtonsViewAllowsExpressType(.applePay, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         // Edge case: If Apple Pay isn't in the list, show Link as a wallet button and not in the list
         self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
+        self.checkout = checkout
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
+
+        self.currencySelectorElement = CurrencySelectorElement.makeIfNeeded(
+            intent: intent,
+            isFlowController: isFlowController,
+            appearance: configuration.appearance
+        )
+        self.currencySelectorElement?.delegate = self
 
         regenerateUI()
 
@@ -362,6 +373,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // If you add new UI, make sure it's also disabled/hidden during reloading.
         self.isReloading = isReloading
         isUserInteractionEnabled = !isBusy
+        currencySelectorElement?.setEnabled(!isBusy)
         if isReloading {
             view.endEditing(true)
         }
@@ -532,7 +544,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         paymentContainerView.directionalLayoutMargins = .zero
 
         // One stack view contains all our subviews
-        let views: [UIView] = [paymentContainerView, mandateView, errorLabel].compactMap { $0 }
+        let views: [UIView] = [currencySelectorElement?.view, paymentContainerView, mandateView, errorLabel].compactMap { $0 }
         for view in views {
             stackView.addArrangedSubview(view)
         }
@@ -1186,7 +1198,25 @@ extension PaymentSheetVerticalViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
+        if let selector = element as? CurrencySelectorElement {
+            handleCurrencySelection(selector.selectedCurrency)
+            return
+        }
         self.error = nil
         updateUI()
+    }
+
+    private func handleCurrencySelection(_ currency: String) {
+        guard let checkout else { return }
+        setReloading(true)
+        Task { @MainActor in
+            do {
+                try await checkout.selectCurrency(currency)
+                paymentSheetDelegate?.paymentSheetViewControllerDidRequestReload(self, checkout: checkout)
+            } catch {
+                setReloading(false)
+                setReloadError(error)
+            }
+        }
     }
 }
