@@ -126,10 +126,12 @@ final class CurrencySelectorElementTests: XCTestCase {
         let label = try XCTUnwrap(captionLabel(in: element.view))
         XCTAssertEqual(label.text, "1 USD = 0.7769 GBP")
 
-        element.selectCurrency("usd")
+        let usdButton = try XCTUnwrap(button(in: element.view, id: "currency_option_usd"))
+        usdButton.sendActions(for: .touchUpInside)
         XCTAssertEqual(label.text, String.Localized.bankExchangeRateDisclaimer)
 
-        element.selectCurrency("gbp")
+        let gbpButton = try XCTUnwrap(button(in: element.view, id: "currency_option_gbp"))
+        gbpButton.sendActions(for: .touchUpInside)
         XCTAssertEqual(label.text, "1 USD = 0.7769 GBP")
     }
 

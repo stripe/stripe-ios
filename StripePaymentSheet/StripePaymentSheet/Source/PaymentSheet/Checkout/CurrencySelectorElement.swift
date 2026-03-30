@@ -72,10 +72,6 @@ final class CurrencySelectorElement: Element {
 
     // MARK: - Public API
 
-    func selectCurrency(_ currency: String) {
-        selectorElement.select(currency.lowercased())
-    }
-
     func setEnabled(_ enabled: Bool) {
         selectorElement.setEnabled(enabled)
     }
