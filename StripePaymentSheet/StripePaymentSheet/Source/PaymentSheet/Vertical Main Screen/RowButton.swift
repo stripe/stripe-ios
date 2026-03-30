@@ -540,6 +540,7 @@ extension RowButton {
 
     static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         let savedPaymentMethodRowImage = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle)
         if appearance.cardArtEnabled {
             imageView.setImage(with: paymentMethod.cardArtCDNURL(height: 20),
