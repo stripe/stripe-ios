@@ -752,7 +752,6 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertNotNil(customer)
         let pm = customer?.paymentMethods.first
         XCTAssertNotNil(pm?.card?.cardArt)
-        XCTAssertEqual(pm?.card?.cardArt?.paymentMethod, "pm_123card")
         XCTAssertEqual(pm?.card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/abc123")
         XCTAssertEqual(pm?.card?.cardArt?.programName, "Test Program")
     }

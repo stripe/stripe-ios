@@ -5,7 +5,6 @@
 import Foundation
 
 @_spi(STP) public class STPPaymentMethodCardArt: NSObject, STPAPIResponseDecodable {
-    public private(set) var paymentMethod: String
     public private(set) var artImage: STPPaymentMethodCardArtImage?
     public private(set) var programName: String?
     public private(set) var allResponseFields: [AnyHashable: Any] = [:]
@@ -23,8 +22,7 @@ import Foundation
     }
 
     // MARK: - STPAPIResponseDecodable
-    required init(paymentMethod: String, artImage: STPPaymentMethodCardArtImage?, programName: String?) {
-        self.paymentMethod = paymentMethod
+    required init(artImage: STPPaymentMethodCardArtImage?, programName: String?) {
         self.artImage = artImage
         self.programName = programName
         super.init()
@@ -36,14 +34,10 @@ import Foundation
         }
         let dict = response.stp_dictionaryByRemovingNulls()
 
-        guard let paymentMethod = dict.stp_string(forKey: "payment_method") else {
-            return nil
-        }
-
         let artImageDict = dict["art_image"] as? [AnyHashable: Any]
         let artImage = STPPaymentMethodCardArtImage.decodedObject(fromAPIResponse: artImageDict)
         let programName = dict.stp_string(forKey: "program_name")
-        let cardArt = self.init(paymentMethod: paymentMethod, artImage: artImage, programName: programName)
+        let cardArt = self.init(artImage: artImage, programName: programName)
 
         cardArt.allResponseFields = response
         return cardArt

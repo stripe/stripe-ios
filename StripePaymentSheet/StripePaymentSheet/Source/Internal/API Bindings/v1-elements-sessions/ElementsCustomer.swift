@@ -60,8 +60,9 @@ struct ElementsCustomer: Equatable, Hashable {
         var cardArtByPaymentMethodId: [String: STPPaymentMethodCardArt] = [:]
         if let cardArtArray = response["card_art"] as? [[AnyHashable: Any]] {
             for artJSON in cardArtArray {
-                if let cardArt = STPPaymentMethodCardArt.decodedObject(fromAPIResponse: artJSON) {
-                    cardArtByPaymentMethodId[cardArt.paymentMethod] = cardArt
+                if let paymentMethodId = artJSON["payment_method"] as? String,
+                    let cardArt = STPPaymentMethodCardArt.decodedObject(fromAPIResponse: artJSON) {
+                    cardArtByPaymentMethodId[paymentMethodId] = cardArt
                 }
             }
         }

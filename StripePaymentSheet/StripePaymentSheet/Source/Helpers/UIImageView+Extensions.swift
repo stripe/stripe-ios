@@ -20,13 +20,11 @@ extension UIImageView {
         Task { [weak self] in
             do {
                 let image = try await DownloadManager.sharedManager.downloadImage(url: url)
-                guard !Task.isCancelled else { return }
                 let processedImage = processOnDownloadedImage?(image) ?? image
                 await MainActor.run {
                     self?.image = processedImage
                 }
             } catch {
-                guard !Task.isCancelled else { return }
                 await MainActor.run {
                     self?.image = fallbackImage
                 }
