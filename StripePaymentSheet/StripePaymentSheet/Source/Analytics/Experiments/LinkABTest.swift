@@ -8,7 +8,7 @@
 import Foundation
 
 struct LinkABTest: LoggableExperiment {
-    private static let experimentName = "link_ab_test"
+    static let experimentName = "link_ab_test"
     private let baseExperiment: BaseLinkHoldbackExperiment
 
     let name: String = experimentName
