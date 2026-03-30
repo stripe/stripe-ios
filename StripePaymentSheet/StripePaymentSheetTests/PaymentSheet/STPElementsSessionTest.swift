@@ -742,7 +742,7 @@ class STPElementsSessionTest: XCTestCase {
             "payment_methods": [testCardJSON],
             "card_art": [
                 ["payment_method": "pm_123card",
-                 "url": "https://b.stripecdn.com/cardart/assets/abc123",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
                  "program_name": "Test Program",
                 ],
             ],
@@ -762,7 +762,7 @@ class STPElementsSessionTest: XCTestCase {
             "payment_methods": [testCardJSON],
             "card_art": [
                 ["payment_method": "pm_nonexistent",
-                 "url": "https://b.stripecdn.com/cardart/assets/other",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/other"],
                  "program_name": "Test Program",
                 ],
             ],
@@ -788,11 +788,11 @@ class STPElementsSessionTest: XCTestCase {
             "payment_methods": [testCardJSON, testCardAmexJSON],
             "card_art": [
                 ["payment_method": "pm_123card",
-                 "url": "https://b.stripecdn.com/cardart/assets/visa",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/visa"],
                  "program_name": "Test Program visa",
                 ],
                 ["payment_method": "pm_123amexcard",
-                 "url": "https://b.stripecdn.com/cardart/assets/amex",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/amex"],
                  "program_name": "Test Program amex",
                 ],
             ],
@@ -810,7 +810,7 @@ class STPElementsSessionTest: XCTestCase {
             "payment_methods": [testCardJSON, testCardAmexJSON],
             "card_art": [
                 ["payment_method": "pm_123card",
-                 "url": "https://b.stripecdn.com/cardart/assets/visa",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/visa"],
                  "program_name": "Test Program",
                 ],
             ],
@@ -846,7 +846,7 @@ class STPElementsSessionTest: XCTestCase {
             "payment_methods_with_link_details": [linkWrappedPM(testCardJSON)],
             "card_art": [
                 ["payment_method": "pm_123card",
-                 "url": "https://b.stripecdn.com/cardart/assets/abc123",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
                  "program_name": "Test Program",
                 ],
             ],
@@ -864,7 +864,7 @@ class STPElementsSessionTest: XCTestCase {
             "payment_methods_with_link_details": [linkWrappedPM(testCardJSON)],
             "card_art": [
                 ["payment_method": "pm_nonexistent",
-                 "url": "https://b.stripecdn.com/cardart/assets/other",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/other"],
                  "program_name": "Test Program",
                 ],
             ],
@@ -880,11 +880,11 @@ class STPElementsSessionTest: XCTestCase {
             "payment_methods_with_link_details": [linkWrappedPM(testCardJSON), linkWrappedPM(testCardAmexJSON)],
             "card_art": [
                 ["payment_method": "pm_123card",
-                 "url": "https://b.stripecdn.com/cardart/assets/visa",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/visa"],
                  "program_name": "Test Program visa",
                 ],
                 ["payment_method": "pm_123amexcard",
-                 "url": "https://b.stripecdn.com/cardart/assets/amex",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/amex"],
                  "program_name": "Test Program amex",
                 ],
             ],

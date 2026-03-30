@@ -56,7 +56,7 @@ final class PaymentOptionImagesTest: XCTestCase {
                 "exp_year": "2030",
                 "card_art": [
                     "payment_method": "pm_1",
-                    "art_image": "https://b.stripecdn.com/cardart/assets/abc123",
+                    "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
                 ],
             ],
         ])!
@@ -80,7 +80,7 @@ final class PaymentOptionImagesTest: XCTestCase {
                 "exp_year": "2030",
                 "card_art": [
                     "payment_method": "pm_1",
-                    "art_image": "https://b.stripecdn.com/cardart/assets/abc123",
+                    "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
                 ],
             ],
         ])!
