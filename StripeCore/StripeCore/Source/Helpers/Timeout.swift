@@ -10,23 +10,45 @@ import Foundation
 @_spi(STP) public struct TimeoutError: Error {}
 @_spi(STP) public struct UnexpectedNilError: Error {}
 
-/// Runs multiple operations in parallel with individual timeouts
+/// Runs two operations in parallel with individual timeouts.
+/// Used as a fallback on iOS 16 where Swift parameter packs are unavailable at runtime.
+/// - Parameters:
+///   - timeout: The maximum time interval to wait for each operation to complete
+///   - operation1: First operation to run with timeout
+///   - operation2: Second operation to run with timeout
+/// - Returns: Tuple of Results in the order that the operations were passed in, where each Result contains either the operation's value or its error
+@_spi(STP) public func withTimeout<T1, T2>(
+    _ timeout: TimeInterval,
+    _ operation1: @escaping () async throws -> T1,
+    _ operation2: @escaping () async throws -> T2
+) async -> (Result<T1, Error>, Result<T2, Error>) {
+    let task1 = Task<T1, Error> {
+        return try await withTimeout(timeout) { try await operation1() }
+    }
+    let task2 = Task<T2, Error> {
+        return try await withTimeout(timeout) { try await operation2() }
+    }
+    return await (task1.result, task2.result)
+}
+
+/// Runs multiple operations in parallel with individual timeouts.
+/// Requires iOS 17+ due to Swift parameter pack runtime support (_swift_allocateMetadataPack).
 /// - Parameters:
 ///   - timeout: The maximum time interval to wait for each operation to complete
 ///   - operations: Variadic operations to run with timeout
 /// - Returns: Tuple of Results in the order that the operations were passed in, where each Result contains either the operation's value or its error
- @_spi(STP) public func withTimeout<each T>(
+@available(iOS 17, *)
+@_spi(STP) public func withTimeout<each T>(
     _ timeout: TimeInterval,
     _ operations: repeat @escaping () async throws -> each T
- ) async -> (repeat Result<each T, Error>) {
-    // Wrap each operation with timeout logic
+) async -> (repeat Result<each T, Error>) {
+    // Wrap each operation with timeout logic  
     let timeoutTasks = (repeat Task<each T, Error> {
         return try await withTimeout(timeout) { try await (each operations)() }
     })
-
     // Wait for all tasks to complete and collect results using .result
     return await (repeat (each timeoutTasks).result)
- }
+}
 
 /// Runs a singular operation with a timeout
 /// - Parameters:
