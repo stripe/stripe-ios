@@ -50,7 +50,6 @@ import Foundation
     }
 }
 
-
 @_spi(STP) public class STPPaymentMethodCardArtImage: NSObject, STPAPIResponseDecodable {
     public private(set) var url: URL?
     public private(set) var allResponseFields: [AnyHashable: Any] = [:]
