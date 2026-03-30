@@ -37,18 +37,20 @@ import Foundation
 ///   - timeout: The maximum time interval to wait for each operation to complete
 ///   - operations: Variadic operations to run with timeout
 /// - Returns: Tuple of Results in the order that the operations were passed in, where each Result contains either the operation's value or its error
+#if swift(>=5.9)
 @available(iOS 17, *)
 @_spi(STP) public func withTimeout<each T>(
     _ timeout: TimeInterval,
     _ operations: repeat @escaping () async throws -> each T
 ) async -> (repeat Result<each T, Error>) {
-    // Wrap each operation with timeout logic  
+    // Wrap each operation with timeout logic
     let timeoutTasks = (repeat Task<each T, Error> {
         return try await withTimeout(timeout) { try await (each operations)() }
     })
     // Wait for all tasks to complete and collect results using .result
     return await (repeat (each timeoutTasks).result)
 }
+#endif
 
 /// Runs a singular operation with a timeout
 /// - Parameters:
