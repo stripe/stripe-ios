@@ -79,35 +79,6 @@ extension SavedPaymentMethodCollectionView {
     class PaymentOptionCell: UICollectionViewCell, EventHandler {
         static let reuseIdentifier = "PaymentOptionCell"
 
-        static func imageConfiguration(
-            for paymentMethod: STPPaymentMethod,
-            userInterfaceStyle: UIUserInterfaceStyle,
-            iconStyle: PaymentSheet.Appearance.IconStyle,
-            cardArtEnabled: Bool
-        ) -> PaymentMethodImageView.Configuration {
-            .init(
-                cardArtURL: cardArtEnabled ? paymentMethod.cardArtCDNURL(height: 40) : nil,
-                imageFromBundle: paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: userInterfaceStyle, iconStyle: iconStyle),
-                postProcess: nil
-            )
-        }
-
-        static func applePayImageConfiguration(userInterfaceStyle: UIUserInterfaceStyle) -> PaymentMethodImageView.Configuration {
-            .init(
-                cardArtURL: nil,
-                imageFromBundle: PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: userInterfaceStyle),
-                postProcess: nil
-            )
-        }
-
-        static func linkImageConfiguration(userInterfaceStyle: UIUserInterfaceStyle) -> PaymentMethodImageView.Configuration {
-            .init(
-                cardArtURL: nil,
-                imageFromBundle: PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: userInterfaceStyle),
-                postProcess: nil
-            )
-        }
-
         lazy var label: UILabel = {
             let label = UILabel()
             label.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
@@ -115,9 +86,7 @@ extension SavedPaymentMethodCollectionView {
             label.adjustsFontForContentSizeCategory = true
             return label
         }()
-        lazy var paymentMethodLogo: PaymentMethodImageView = {
-            return PaymentMethodImageView()
-        }()
+        let paymentMethodLogo = UIImageView()
         let plus: CircleIconView = CircleIconView(icon: .icon_plus,
                                                   fillColor: UIColor.dynamic(
             light: .systemGray5, dark: .tertiaryLabel))
@@ -385,20 +354,25 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
-                        paymentMethodLogo.set(Self.imageConfiguration(for: paymentMethod, userInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle, cardArtEnabled: cardArtEnabled))
+                        let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
+                        if cardArtEnabled {
+                            paymentMethodLogo.setImage(with: paymentMethod.cardArtCDNURL(height: 40), fallbackImage: paymentMethodCellImage)
+                        } else {
+                            paymentMethodLogo.image = paymentMethodCellImage
+                        }
                     case .applePay:
                         // TODO (cleanup) - get this from PaymentOptionDisplayData?
                         label.text = String.Localized.apple_pay
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.set(Self.applePayImageConfiguration(userInterfaceStyle: overrideUserInterfaceStyle))
+                        paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
                     case .link:
                         label.text = STPPaymentMethodType.link.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.set(Self.linkImageConfiguration(userInterfaceStyle: overrideUserInterfaceStyle))
+                        paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )

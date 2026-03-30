@@ -539,8 +539,15 @@ extension RowButton {
     }
 
     static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
-        let imageView = PaymentMethodImageView()
-        imageView.set(imageConfiguration(for: paymentMethod, iconStyle: appearance.iconStyle, cardArtEnabled: appearance.cardArtEnabled))
+        let imageView = UIImageView()
+        let savedPaymentMethodRowImage = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle)
+        if appearance.cardArtEnabled {
+            imageView.setImage(with: paymentMethod.cardArtCDNURL(height: 20),
+                               postProcess: { $0.roundedWithBorder(radius: 3) },
+                               fallbackImage: savedPaymentMethodRowImage)
+        } else {
+            imageView.image = savedPaymentMethodRowImage
+        }
         let text = paymentMethod.isLinkPassthroughMode
             ? STPPaymentMethodType.link.displayName
             : paymentMethod.paymentSheetLabel
@@ -567,18 +574,6 @@ extension RowButton {
             return paymentMethod.paymentSheetAccessibilityLabel
         }()
         return button
-    }
-
-    static func imageConfiguration(
-        for paymentMethod: STPPaymentMethod,
-        iconStyle: PaymentSheet.Appearance.IconStyle,
-        cardArtEnabled: Bool
-    ) -> PaymentMethodImageView.Configuration {
-        .init(
-            cardArtURL: cardArtEnabled ? paymentMethod.cardArtCDNURL(height: 20) : nil,
-            imageFromBundle: paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: iconStyle),
-            postProcess: { $0.roundedWithBorder(radius: 3) }
-        )
     }
 }
 
