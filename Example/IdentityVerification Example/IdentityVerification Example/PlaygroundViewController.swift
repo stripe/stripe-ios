@@ -73,6 +73,12 @@ class PlaygroundViewController: UIViewController {
         case idCard = "id_card"
     }
 
+    enum OtpCheckType: String, CaseIterable {
+        case attempt = "attempt"
+        case none = "none"
+        case required = "required"
+    }
+
     /// Use native SDK or web redirect
     var invocationType: InvocationType {
         return InvocationType.allCases[nativeOrWebSelector.selectedSegmentIndex]
@@ -86,10 +92,6 @@ class PlaygroundViewController: UIViewController {
     /// VerificationType specified in the UI toggle
     var verificationType: VerificationType {
         return VerificationType.allCases[verificationTypeSelector.selectedSegmentIndex]
-    }
-
-    var shouldRequirePhoneOTPVerification: Bool {
-        return otpCheckSelector.selectedSegmentIndex == 1
     }
 
     /// List of allowed document types based on UI toggles
@@ -133,8 +135,8 @@ class PlaygroundViewController: UIViewController {
 
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
-
-        configureUpdatedParameterUI()
+        // TODO(ccen) enable phoneOtpContainerView when backend adds support to PII
+        phoneOtpContainerView.isHidden = true
         didChangeNativeOrWeb(self)
         didChangeNewOrReuse(self)
     }
@@ -146,6 +148,7 @@ class PlaygroundViewController: UIViewController {
 
     @IBAction func fallbackToDocumentValueChanged(_ uiSwitch: UISwitch) {
         documentOptionsContainerView.isHidden = !uiSwitch.isOn
+        otpCheckContainerView.isHidden = !uiSwitch.isOn
     }
 
     @IBAction func requireOtpSwitchValueChanged(_ uiSwitch: UISwitch) {
@@ -155,20 +158,18 @@ class PlaygroundViewController: UIViewController {
     func requestVerificationSession() {
         // Disable the button while we make the request
         updateButtonState(isLoading: true)
-
-        let session = URLSession.shared
-        var url: URL
+        var endpoint: String
         var requestDict: [String: Any]
 
         if creationMethod == .reuse {
-            url = URL(string: baseURL + reuseEndpoint)!
+            endpoint = reuseEndpoint
 
             requestDict = [
                 "verification_session": reuseVerificationSessionIDInput.text ?? ""
             ]
         } else {
             // Make request to our verification endpoint
-            url = URL(string: baseURL + verifyEndpoint)!
+            endpoint = verifyEndpoint
 
             // Forwarding VerificationSession options from the client to server to
             // for demo purposes. In production, these are typically set by the
@@ -203,18 +204,17 @@ class PlaygroundViewController: UIViewController {
                 // no-op
                 break
             case .phone:
-                options["phone_otp"] = [
-                    "require_verification": shouldRequirePhoneOTPVerification,
-                ]
                 if fallbackToDocumentSwitch.isOn {
                     options["document"] = [
-                            "allowed_types": documentAllowedTypes.map { $0.rawValue },
-                            "require_id_number": requireIDNumberSwitch.isOn,
-                            "require_live_capture": requireLiveCaptureSwitch.isOn,
-                            "require_matching_selfie": requireSelfieSwitch.isOn,
-                        ]
-                    options["phone_records"] = [
-                        "fallback_type": "document",
+                        "allowed_types": documentAllowedTypes.map { $0.rawValue },
+                        "require_id_number": requireIDNumberSwitch.isOn,
+                        "require_live_capture": requireLiveCaptureSwitch.isOn,
+                        "require_matching_selfie": requireSelfieSwitch.isOn,
+                    ]
+                }
+                if OtpCheckType.allCases[otpCheckSelector.selectedSegmentIndex] == .required {
+                    options["phone"] = [
+                        "require_verification": true,
                     ]
                 }
             }
@@ -223,54 +223,90 @@ class PlaygroundViewController: UIViewController {
                 requestDict["provided_details"] = providedDetails
             }
             requestDict["options"] = options
-
-            do {
-                let additionalParameters = try parsedAdditionalRequestParameters()
-                if additionalParameters["verification_flow"] != nil,
-                    additionalParameters["type"] == nil
-                {
-                    requestDict.removeValue(forKey: "type")
-                }
-                requestDict = mergeJSONObjects(
-                    requestDict,
-                    with: additionalParameters
-                )
-            } catch {
-                updateButtonState(isLoading: false)
-                displayAlert("Invalid additional params JSON", nil)
-                return
-            }
         }
 
+        performRequest(to: endpoint, requestDict: requestDict) { [weak self] responseJson in
+            guard let self = self else {
+                return
+            }
+
+            if self.creationMethod == .new,
+                self.invocationType == .native
+            {
+                guard let verificationSessionId = responseJson["id"] else {
+                    self.updateButtonState(isLoading: false)
+                    assertionFailure("Did not receive a valid id.")
+                    return
+                }
+
+                self.performRequest(
+                    to: self.reuseEndpoint,
+                    requestDict: [
+                        "verification_session": verificationSessionId,
+                    ]
+                ) { [weak self] responseJson in
+                    self?.updateButtonState(isLoading: false)
+                    self?.startVerificationFlow(responseJson: responseJson)
+                }
+            } else {
+                self.updateButtonState(isLoading: false)
+                self.startVerificationFlow(responseJson: responseJson)
+            }
+        }
+    }
+
+    func performRequest(
+        to endpoint: String,
+        requestDict: [String: Any],
+        completion: @escaping ([String: String]) -> Void
+    ) {
         let requestJson: Data
         do {
             requestJson = try JSONSerialization.data(withJSONObject: requestDict, options: [])
         } catch {
             updateButtonState(isLoading: false)
-            displayAlert("Unable to encode request parameters", nil)
+            print(error)
             return
         }
 
+        let url = URL(string: baseURL + endpoint)!
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
         urlRequest.httpBody = requestJson
 
-        let task = session.dataTask(with: urlRequest) { [weak self] data, _, error in
+        let task = URLSession.shared.dataTask(with: urlRequest) { [weak self] data, _, error in
             DispatchQueue.main.async { [weak self] in
-                // Re-enable button
-                self?.updateButtonState(isLoading: false)
+                guard let self = self else {
+                    return
+                }
 
-                guard
-                    error == nil,
-                    let data = data,
-                    let responseJson = try? JSONDecoder().decode([String: String].self, from: data)
-                else {
+                guard error == nil else {
+                    self.updateButtonState(isLoading: false)
                     print(error as Any)
                     return
                 }
 
-                self?.startVerificationFlow(responseJson: responseJson)
+                guard
+                    let data = data,
+                    let responseJson = try? JSONDecoder().decode([String: String].self, from: data)
+                else {
+                    self.updateButtonState(isLoading: false)
+                    if let data = data,
+                        let responseString = String(data: data, encoding: .utf8)
+                    {
+                        print(responseString)
+                    }
+                    return
+                }
+
+                if let errorMessage = responseJson["error"] {
+                    self.updateButtonState(isLoading: false)
+                    print(errorMessage)
+                    return
+                }
+
+                completion(responseJson)
             }
         }
         task.resume()
@@ -386,35 +422,34 @@ class PlaygroundViewController: UIViewController {
         case .document:
             documentOptionsContainerView.isHidden = false
             phoneOptionsContainerView.isHidden = true
-            phoneOtpContainerView.isHidden = false
-            phoneView.isHidden = !requirePhoneNumberSwitch.isOn
+            requirePhoneNumberSwitch.isOn = false
+            phoneView.isHidden = true
             fallbackToDocumentSwitch.isOn = false
             otpCheckContainerView.isHidden = true
             phoneElement.clearPhoneNumber()
         case .idNumber:
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = true
-            phoneOtpContainerView.isHidden = false
-            phoneView.isHidden = !requirePhoneNumberSwitch.isOn
+            requirePhoneNumberSwitch.isOn = false
+            phoneView.isHidden = true
             fallbackToDocumentSwitch.isOn = false
             otpCheckContainerView.isHidden = true
             phoneElement.clearPhoneNumber()
         case .address:
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = true
-            phoneOtpContainerView.isHidden = true
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
             fallbackToDocumentSwitch.isOn = false
             otpCheckContainerView.isHidden = true
             phoneElement.clearPhoneNumber()
         case .phone:
-            documentOptionsContainerView.isHidden = !fallbackToDocumentSwitch.isOn
+            documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = false
-            phoneOtpContainerView.isHidden = true
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
-            otpCheckContainerView.isHidden = false
+            fallbackToDocumentSwitch.isOn = false
+            otpCheckContainerView.isHidden = true
             phoneElement.clearPhoneNumber()
         }
     }
@@ -435,19 +470,24 @@ class PlaygroundViewController: UIViewController {
         switch creationMethod {
         case .new:
             verificationTypeContainerView.isHidden = false
-            configureRequestInputFieldForNewSession()
-            didChangeVerificationType(sender)
-        case .reuse:
-            verificationTypeContainerView.isHidden = true
-            documentOptionsContainerView.isHidden = true
+            documentOptionsContainerView.isHidden = false
             phoneOptionsContainerView.isHidden = true
-            phoneOtpContainerView.isHidden = true
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
             fallbackToDocumentSwitch.isOn = false
             otpCheckContainerView.isHidden = true
             phoneElement.clearPhoneNumber()
-            configureRequestInputFieldForSessionReuse()
+            reuseVerificationIDContainerView.isHidden = true
+        case .reuse:
+            verificationTypeContainerView.isHidden = true
+            documentOptionsContainerView.isHidden = true
+            phoneOptionsContainerView.isHidden = true
+            requirePhoneNumberSwitch.isOn = false
+            phoneView.isHidden = true
+            fallbackToDocumentSwitch.isOn = false
+            otpCheckContainerView.isHidden = true
+            phoneElement.clearPhoneNumber()
+            reuseVerificationIDContainerView.isHidden = false
         }
     }
 
@@ -532,90 +572,6 @@ class PlaygroundViewController: UIViewController {
             return
         }
         disableCustomColorsFonts()
-    }
-}
-
-private extension PlaygroundViewController {
-    enum PlaygroundRequestBuilderError: Error {
-        case additionalParametersMustBeJSONObject
-    }
-
-    var requestInputLabel: UILabel? {
-        return reuseVerificationIDContainerView.arrangedSubviews.first as? UILabel
-    }
-
-    var duplicateDetectionLabel: UILabel? {
-        return (requireAddressSwitch.superview as? UIStackView)?.arrangedSubviews.first as? UILabel
-    }
-
-    var phoneOTPLabel: UILabel? {
-        return otpCheckContainerView.arrangedSubviews.first as? UILabel
-    }
-
-    func configureUpdatedParameterUI() {
-        duplicateDetectionLabel?.text = "Enable Duplicate Detection"
-        phoneOTPLabel?.text = "Require OTP Verification"
-
-        while otpCheckSelector.numberOfSegments > 2 {
-            otpCheckSelector.removeSegment(at: otpCheckSelector.numberOfSegments - 1, animated: false)
-        }
-        if otpCheckSelector.numberOfSegments < 2 {
-            otpCheckSelector.insertSegment(withTitle: "Off", at: 0, animated: false)
-            otpCheckSelector.insertSegment(withTitle: "On", at: 1, animated: false)
-        } else {
-            otpCheckSelector.setTitle("Off", forSegmentAt: 0)
-            otpCheckSelector.setTitle("On", forSegmentAt: 1)
-        }
-        otpCheckSelector.selectedSegmentIndex = 1
-    }
-
-    func configureRequestInputFieldForNewSession() {
-        reuseVerificationIDContainerView.isHidden = false
-        requestInputLabel?.text = "Additional Params JSON (optional):"
-        requestInputLabel?.numberOfLines = 0
-        reuseVerificationSessionIDInput.text = nil
-        reuseVerificationSessionIDInput.placeholder = "{\"client_reference_id\":\"user_123\",\"metadata\":{\"source\":\"ios_example\"}}"
-    }
-
-    func configureRequestInputFieldForSessionReuse() {
-        reuseVerificationIDContainerView.isHidden = false
-        requestInputLabel?.text = "VerificationSession ID:"
-        requestInputLabel?.numberOfLines = 1
-        reuseVerificationSessionIDInput.text = nil
-        reuseVerificationSessionIDInput.placeholder = "vs_..."
-    }
-
-    func parsedAdditionalRequestParameters() throws -> [String: Any] {
-        guard creationMethod == .new,
-            let rawValue = reuseVerificationSessionIDInput.text?
-                .trimmingCharacters(in: .whitespacesAndNewlines),
-            !rawValue.isEmpty
-        else {
-            return [:]
-        }
-
-        let jsonObject = try JSONSerialization.jsonObject(with: Data(rawValue.utf8), options: [])
-        guard let jsonDictionary = jsonObject as? [String: Any] else {
-            throw PlaygroundRequestBuilderError.additionalParametersMustBeJSONObject
-        }
-        return jsonDictionary
-    }
-
-    func mergeJSONObjects(
-        _ base: [String: Any],
-        with overrides: [String: Any]
-    ) -> [String: Any] {
-        var result = base
-        for (key, value) in overrides {
-            if let overrideDictionary = value as? [String: Any],
-                let baseDictionary = result[key] as? [String: Any]
-            {
-                result[key] = mergeJSONObjects(baseDictionary, with: overrideDictionary)
-            } else {
-                result[key] = value
-            }
-        }
-        return result
     }
 }
 
