@@ -114,16 +114,14 @@ final class PayWithLinkViewController: BottomSheetViewController {
         /// Returns the supported payment details types for the current Link account, filtered by the supportedPaymentMethodTypes.
         /// Returns [.card] as fallback if no types are supported after filtering.
         func getSupportedPaymentDetailsTypes(linkAccount: PaymentSheetLinkAccount) -> Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> {
-            let allSupportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: elementsSession)
+            var allSupportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: elementsSession)
 
-            // TODO(jkelle): Modify this line once we want to render PMs we don't have explicit support for (#6432).
-            // Remove the `allCases` default for `nil` filter types.
-            // https://docs.google.com/document/d/1x834BjHYro9-bDoAVaqgHm7LDPDwzpk4z_5BvxYwwtU
-            let supportedPaymentDetailsTypes = supportedPaymentMethodTypes?.detailsTypes ?? Set(ConsumerPaymentDetails.DetailsType.allCases.map(ParsedEnum.init))
-            let filteredSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes.intersection(supportedPaymentDetailsTypes)
+            if let supportedPaymentDetailsTypes = supportedPaymentMethodTypes?.detailsTypes {
+                allSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes.intersection(supportedPaymentDetailsTypes)
+            }
 
-            if !filteredSupportedPaymentDetailsTypes.isEmpty {
-                return filteredSupportedPaymentDetailsTypes
+            if !allSupportedPaymentDetailsTypes.isEmpty {
+                return allSupportedPaymentDetailsTypes
             } else {
                 // Card is the default payment method type when no other type is available.
                 return [ParsedEnum(.card)]

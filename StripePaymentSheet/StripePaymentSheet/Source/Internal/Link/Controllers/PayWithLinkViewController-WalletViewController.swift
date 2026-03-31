@@ -435,31 +435,35 @@ extension PayWithLinkViewController.WalletViewController {
         let paymentMethod = viewModel.paymentMethods[index]
         var actions: [Action] = []
 
-        if !paymentMethod.isDefault {
-            let setAsDefaultAction = Action(
-                title: STPLocalizedString(
-                    "Set as default",
-                    "Label for a button or menu item that sets a payment method as default when tapped."
-                ),
-                action: { [weak self] in
-                    self?.paymentPicker.showLoader(at: index)
-                    self?.viewModel.setDefaultPaymentMethod(at: index) { [weak self] _ in
-                        self?.paymentPicker.hideLoader(at: index)
-                        self?.paymentPicker.reloadData()
+        switch paymentMethod.details {
+        case .card, .bankAccount:
+            if !paymentMethod.isDefault {
+                let setAsDefaultAction = Action(
+                    title: STPLocalizedString(
+                        "Set as default",
+                        "Label for a button or menu item that sets a payment method as default when tapped."
+                    ),
+                    action: { [weak self] in
+                        self?.paymentPicker.showLoader(at: index)
+                        self?.viewModel.setDefaultPaymentMethod(at: index) { [weak self] _ in
+                            self?.paymentPicker.hideLoader(at: index)
+                            self?.paymentPicker.reloadData()
+                        }
                     }
-                }
-            )
-            actions.append(setAsDefaultAction)
-        }
-
-        if case ConsumerPaymentDetails.Details.card(_) = paymentMethod.details {
-            let updateCardAction = Action(
-                title: String.Localized.update_card,
-                action: { [weak self] in
-                    self?.updatePaymentMethod(at: index)
-                }
-            )
-            actions.append(updateCardAction)
+                )
+                actions.append(setAsDefaultAction)
+            }
+            if case ConsumerPaymentDetails.Details.card(_) = paymentMethod.details {
+                let updateCardAction = Action(
+                    title: String.Localized.update_card,
+                    action: { [weak self] in
+                        self?.updatePaymentMethod(at: index)
+                    }
+                )
+                actions.append(updateCardAction)
+            }
+        case .unparsable:
+            break
         }
 
         let removeTitle: String? = {
@@ -472,7 +476,10 @@ extension PayWithLinkViewController.WalletViewController {
                     "Title for a button that when tapped removes a linked bank account."
                 )
             case .unparsable:
-                return nil
+                return STPLocalizedString(
+                    "Remove payment method",
+                    "Title for a button that when tapped removes a payment method."
+                )
             }
         }()
 

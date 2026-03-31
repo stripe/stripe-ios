@@ -24,6 +24,7 @@ final class ConsumerPaymentDetails: Decodable {
     let billingAddress: BillingAddress?
     let billingEmailAddress: String?
     let nickname: String?
+    let display: DisplayMetadata?
     var isDefault: Bool
 
     init(stripeID: String,
@@ -31,12 +32,14 @@ final class ConsumerPaymentDetails: Decodable {
          billingAddress: BillingAddress?,
          billingEmailAddress: String?,
          nickname: String?,
+         display: DisplayMetadata? = nil,
          isDefault: Bool) {
         self.stripeID = stripeID
         self.details = details
         self.billingAddress = billingAddress
         self.billingEmailAddress = billingEmailAddress
         self.nickname = nickname
+        self.display = display
         self.isDefault = isDefault
     }
 
@@ -45,6 +48,7 @@ final class ConsumerPaymentDetails: Decodable {
         case billingAddress = "billing_address"
         case billingEmailAddress = "billing_email_address"
         case nickname
+        case display
         case isDefault
     }
 
@@ -59,6 +63,7 @@ final class ConsumerPaymentDetails: Decodable {
         } else {
             self.nickname = nil
         }
+        self.display = try? container.decode(DisplayMetadata.self, forKey: .display)
         // The payment details are included in the dictionary, so we pass the whole dict to Details
         self.details = try decoder.singleValueContainer().decode(Details.self)
         self.isDefault = try container.decode(Bool.self, forKey: .isDefault)
@@ -112,7 +117,8 @@ extension ConsumerPaymentDetails {
             // These are US bank accounts, so only check for US country code
             return allowedCountries.contains("US")
         case .unparsable:
-            return false
+            // Unknown types don't have country info; allow them if display metadata is present.
+            return display != nil
         }
     }
 
@@ -132,6 +138,19 @@ extension ConsumerPaymentDetails {
     enum DetailsType: String, SafeParsedEnumCodable {
         case card = "CARD"
         case bankAccount = "BANK_ACCOUNT"
+    }
+
+    struct DisplayMetadata: Decodable {
+        let label: String
+        let sublabel: String?
+
+        let icon: Icon?
+        struct Icon: Decodable {
+            let main: URL?
+            enum CodingKeys: String, CodingKey {
+                case main = "default"
+            }
+        }
     }
 
     // swiftlint:disable:next enum_safe_decodable
@@ -361,7 +380,7 @@ extension ConsumerPaymentDetails {
         case .bankAccount(let bank):
             return bank.displayName(with: nickname)
         case .unparsable:
-            return ""
+            return display?.label ?? ""
         }
     }
 
@@ -375,7 +394,9 @@ extension ConsumerPaymentDetails {
         case .bankAccount(let bankAccount):
             return bankAccount.displayName(with: nickname)
         case .unparsable:
-            return nil
+            guard let display else { return nil }
+            let components = [display.label, display.sublabel].compactMap { $0 }
+            return components.joined(separator: " ")
         }
     }
 
@@ -409,7 +430,9 @@ extension ConsumerPaymentDetails {
                 digits
             )
         case .unparsable:
-            return ""
+            guard let display else { return "" }
+            let components = [display.label, display.sublabel].compactMap { $0 }
+            return components.joined(separator: " ")
         }
     }
 
