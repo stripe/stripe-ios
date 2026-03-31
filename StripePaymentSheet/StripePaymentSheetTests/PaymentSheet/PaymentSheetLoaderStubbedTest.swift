@@ -596,4 +596,185 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         }
         wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
+
+    // MARK: - Link Lookup Holdback Tests
+
+    @MainActor
+    private func assertLinkLookup(
+        experimentAssignments: [String: ExperimentGroup]?,
+        flags: [String: Bool] = [:],
+        shouldCallLookup: Bool,
+        message: String
+    ) async throws {
+        var didCallLookup = false
+        stub { urlRequest in
+            if urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true {
+                didCallLookup = true
+                return true
+            }
+            return false
+        } response: { _ in
+            return HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+        }
+
+        let experimentsData = experimentAssignments.map {
+            ExperimentsData(arbId: "test_arb", experimentAssignments: $0, allResponseFields: [:])
+        }
+        let elementsSession = STPElementsSession._testValue(
+            experimentsData: experimentsData,
+            flags: flags
+        )
+
+        var config = PaymentSheet.Configuration()
+        config.apiClient = stubbedAPIClient()
+        config.defaultBillingDetails.email = "test@example.com"
+
+        _ = try await PaymentSheetLoader.lookupLinkAccount(
+            elementsSession: elementsSession,
+            configuration: config,
+            prefetchedEmailAndSource: nil,
+            loadTimings: .init(),
+            isUpdate: false
+        )
+
+        if shouldCallLookup {
+            XCTAssertTrue(didCallLookup, message)
+        } else {
+            XCTAssertFalse(didCallLookup, message)
+        }
+    }
+
+    func testLookupLink_linkDisabled_holdbackGlobal_shouldLookup() async throws {
+        try await assertLinkLookup(
+            experimentAssignments: [LinkGlobalHoldback.experimentName: .holdback],
+            shouldCallLookup: true,
+            message: "Expected Link lookup when link_global_holdback is 'holdback'"
+        )
+    }
+
+    func testLookupLink_linkDisabled_holdbackABTest_shouldLookup() async throws {
+        try await assertLinkLookup(
+            experimentAssignments: ["link_ab_test": .holdback],
+            shouldCallLookup: true,
+            message: "Expected Link lookup when link_ab_test is 'holdback'"
+        )
+    }
+
+    func testLookupLink_linkDisabled_bothExperimentsHoldback_shouldLookup() async throws {
+        try await assertLinkLookup(
+            experimentAssignments: [
+                LinkGlobalHoldback.experimentName: .holdback,
+                "link_ab_test": .holdback,
+            ],
+            shouldCallLookup: true,
+            message: "Expected Link lookup when both experiments are 'holdback'"
+        )
+    }
+
+    func testLookupLink_linkDisabled_holdbackWithKillswitch_shouldNotLookup() async throws {
+        try await assertLinkLookup(
+            experimentAssignments: [LinkGlobalHoldback.experimentName: .holdback],
+            flags: ["elements_disable_link_global_holdback_lookup": true],
+            shouldCallLookup: false,
+            message: "Link lookup should not happen when killswitch is enabled"
+        )
+    }
+
+    func testLookupLink_linkDisabled_noExperimentsData_shouldNotLookup() async throws {
+        try await assertLinkLookup(
+            experimentAssignments: nil,
+            shouldCallLookup: false,
+            message: "Link lookup should not happen when there is no experiments data"
+        )
+    }
+
+    func testLookupLink_linkDisabled_controlGroup_shouldNotLookup() async throws {
+        try await assertLinkLookup(
+            experimentAssignments: [LinkGlobalHoldback.experimentName: .control],
+            shouldCallLookup: false,
+            message: "Link lookup should not happen when experiment is 'control' (not holdback)"
+        )
+    }
+
+    // MARK: - Non-blocking Link Lookup + Experiment Logging
+
+    func testLoad_linkDisabled_holdback_doesNotBlockOnLookup() throws {
+        // Stub sessions with experiments_data injected into the response
+        StubbedBackend.stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_200,
+            responseCallback: { data in
+                // First replace the payment method placeholders
+                var mutated = StubbedBackend.updatePaymentMethodDetail(
+                    data: data,
+                    variables: [
+                        "<paymentMethods>": "\"card\"",
+                        "<currency>": "\"usd\"",
+                    ]
+                )
+                // Inject experiments_data into the JSON
+                var json = try! JSONSerialization.jsonObject(with: mutated) as! [String: Any]
+                json["experiments_data"] = [
+                    "arb_id": "test_arb_123",
+                    "experiment_assignments": [
+                        "link_global_holdback": "holdback",
+                    ],
+                ]
+                mutated = try! JSONSerialization.data(withJSONObject: json)
+                return mutated
+            }
+        )
+
+        // Stub lookup with a 5-second delay
+        stub { urlRequest in
+            urlRequest.url?.absoluteString.contains("/v1/consumers/sessions/lookup") ?? false
+        } response: { _ in
+            let mockResponseData = try! FileMock.consumers_lookup_200.data()
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+                .responseTime(0.3)
+        }
+
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
+        StubbedBackend.stubCustomers()
+
+        let mockAnalyticsClientV2 = MockAnalyticsClientV2()
+        var configuration = self.configuration(apiClient: stubbedAPIClient())
+        configuration.defaultBillingDetails.email = "test@example.com"
+
+        // load() should complete within 0.2s even though the Link Lookup takes 0.3: this validates lookup is non-blocking
+        let loaded = expectation(description: "Loaded")
+        PaymentSheetLoader.load(
+            mode: .paymentIntentClientSecret("pi_12345_secret_54321"),
+            configuration: configuration,
+            analyticsHelper: ._testValue(
+                integrationShape: .flowController,
+                configuration: configuration,
+                analyticsClientV2: mockAnalyticsClientV2
+            ),
+            integrationShape: .flowController
+        ) { result in
+            switch result {
+            case .success:
+                loaded.fulfill()
+            case .failure(let error):
+                XCTFail(error.nonGenericDescription)
+            }
+        }
+        wait(for: [loaded], timeout: 0.2)
+
+        // Experiment exposures are logged asynchronously after the lookup completes
+        let predicate = NSPredicate { _, _ in
+            mockAnalyticsClientV2.loggedAnalyticPayloads(withEventName: "elements.experiment_exposure").count >= 3
+        }
+        wait(for: [XCTNSPredicateExpectation(predicate: predicate, object: nil)], timeout: 5)
+
+        // Verify the 3 exposure events
+        let exposures = mockAnalyticsClientV2.loggedAnalyticPayloads(withEventName: "elements.experiment_exposure")
+        XCTAssertEqual(exposures.count, 3)
+        let experimentNames = Set(exposures.compactMap { $0["experiment_retrieved"] as? String })
+        XCTAssertEqual(experimentNames, ["link_global_holdback", "link_global_holdback_aa", "link_ab_test"])
+        for exposure in exposures {
+            XCTAssertEqual(exposure["arb_id"] as? String, "test_arb_123")
+            XCTAssertNotNil(exposure["assignment_group"], "Expected assignment_group in exposure: \(exposure)")
+        }
+    }
 }

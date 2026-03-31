@@ -15,15 +15,20 @@ extension Checkout {
         /// The customer's full name.
         public let name: String?
 
+        /// The customer's phone number.
+        public let phone: String?
+
         /// The customer's address.
         public let address: Address
 
         /// Creates an address update.
         /// - Parameters:
         ///   - name: The customer's full name.
+        ///   - phone: The customer's phone number.
         ///   - address: The customer's address.
-        public init(name: String? = nil, address: Address) {
+        public init(name: String? = nil, phone: String? = nil, address: Address) {
             self.name = name
+            self.phone = phone
             self.address = address
         }
     }

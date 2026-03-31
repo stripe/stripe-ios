@@ -82,6 +82,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     let walletButtonsShownExternally: Bool
     var error: Swift.Error?
     var isPaymentInFlight: Bool = false
+    private var isReloading: Bool = false
+    var isBusy: Bool { isPaymentInFlight || isReloading }
     private(set) var savedPaymentMethods: [STPPaymentMethod]
     let isFlowController: Bool
     /// Previous customer input - in FlowController's `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
@@ -112,6 +114,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     }()
 
     var confirmationChallenge: ConfirmationChallenge?
+    private var currencySelectorElement: CurrencySelectorElement?
 
     // MARK: - UI properties
 
@@ -179,6 +182,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
+
+        self.currencySelectorElement = CurrencySelectorElement.makeIfNeeded(
+            intent: intent,
+            isFlowController: isFlowController,
+            appearance: configuration.appearance
+        )
+        self.currencySelectorElement?.delegate = self
 
         regenerateUI()
 
@@ -295,7 +305,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return .makeDefaultType(intent: intent)
         }()
         let status: ConfirmButton.Status = {
-            if isPaymentInFlight {
+            if isBusy {
                 return .processing
             }
             if let cvcRecollectionViewController, isRecollectingCVC {
@@ -351,6 +361,25 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                 self.bottomSheetController?.contentOffsetPercentage = 1
             }
         })
+    }
+
+    // MARK: - PaymentSheetViewControllerProtocol
+
+    func setReloading(_ isReloading: Bool) {
+        // Freeze the UI and show a spinner on the primary button while we reload the intent.
+        // If you add new UI, make sure it's also disabled/hidden during reloading.
+        self.isReloading = isReloading
+        isUserInteractionEnabled = !isBusy
+        currencySelectorElement?.setEnabled(!isBusy)
+        if isReloading {
+            view.endEditing(true)
+        }
+        updatePrimaryButton()
+    }
+
+    func setReloadError(_ error: Swift.Error) {
+        self.error = error
+        updateError()
     }
 
     /// Returns the default selected row in the vertical list - the previous payment option, the last VC's selection, or the customer's default.
@@ -504,6 +533,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     var primaryButtonTopAnchorConstraint: NSLayoutConstraint!
     // MARK: - UIViewController Methods
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
@@ -511,7 +541,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         paymentContainerView.directionalLayoutMargins = .zero
 
         // One stack view contains all our subviews
-        let views: [UIView] = [paymentContainerView, mandateView, errorLabel].compactMap { $0 }
+        let views: [UIView] = [currencySelectorElement?.view, paymentContainerView, mandateView, errorLabel].compactMap { $0 }
         for view in views {
             stackView.addArrangedSubview(view)
         }
@@ -1165,7 +1195,15 @@ extension PaymentSheetVerticalViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
+        if let currencySelectorElement, element === currencySelectorElement {
+            handleCurrencySelection(currencySelectorElement.selectedCurrency)
+            return
+        }
         self.error = nil
         updateUI()
+    }
+
+    private func handleCurrencySelection(_ currency: String) {
+        paymentSheetDelegate?.paymentSheetViewControllerDidSelectCurrency(self, currency: currency)
     }
 }

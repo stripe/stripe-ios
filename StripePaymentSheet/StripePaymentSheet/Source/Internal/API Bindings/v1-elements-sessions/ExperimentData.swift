@@ -7,20 +7,20 @@
 
 import Foundation
 
-@_spi(STP) public enum ExperimentGroup: String {
+enum ExperimentGroup: String {
     case control
     case treatment
     case holdback
     case controlTest = "control_test"
 }
 
-@_spi(STP) public class ExperimentsData: NSObject, STPAPIResponseDecodable {
-    @_spi(STP) public let arbId: String?
-    @_spi(STP) public let experimentAssignments: [String: ExperimentGroup]
+class ExperimentsData: NSObject, STPAPIResponseDecodable {
+    let arbId: String?
+    let experimentAssignments: [String: ExperimentGroup]
 
-    @_spi(STP) public let allResponseFields: [AnyHashable: Any]
+    let allResponseFields: [AnyHashable: Any]
 
-    @_spi(STP) public init(
+    init(
         arbId: String?,
         experimentAssignments: [String: ExperimentGroup],
         allResponseFields: [AnyHashable: Any]
@@ -30,7 +30,7 @@ import Foundation
         self.allResponseFields = allResponseFields
     }
 
-    @_spi(STP) public static func decodedObject(
+    static func decodedObject(
         fromAPIResponse response: [AnyHashable: Any]?
     ) -> Self? {
         guard let response else { return nil }
