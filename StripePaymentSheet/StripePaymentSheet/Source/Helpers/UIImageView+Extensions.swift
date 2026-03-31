@@ -10,8 +10,8 @@ extension UIImageView {
     // On failure or no URL, set fallback image.
     func setImage(
         with url: URL?,
-        processOnDownloadedImage: ((UIImage) -> UIImage)? = nil,
-        fallbackImage: UIImage
+        fallbackImage: UIImage,
+        processOnDownloadedImage: ((UIImage) -> UIImage)? = nil
     ) {
         guard let url else {
             self.image = fallbackImage
@@ -26,8 +26,8 @@ extension UIImageView {
         Task { [weak self] in
             do {
                 let image = try await DownloadManager.sharedManager.downloadImage(url: url)
-                let processedImage = processOnDownloadedImage?(image) ?? image
                 await MainActor.run {
+                    let processedImage = processOnDownloadedImage?(image) ?? image
                     if self?.tag == url.hashValue {
                         self?.image = processedImage
                     }
