@@ -542,10 +542,16 @@ extension RowButton {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         let savedPaymentMethodRowImage = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle)
-        if appearance.cardArtEnabled {
-            imageView.setImage(with: paymentMethod.cardArtCDNURL(height: 20),
-                               processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
-                               fallbackImage: savedPaymentMethodRowImage)
+        if appearance.cardArtEnabled, let cardArtURL = paymentMethod.cardArtCDNURL(height: 20) {
+            Task {
+                do {
+                    try await imageView.setImage(
+                        url: cardArtURL,
+                        processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) })
+                } catch {
+                    imageView.image = savedPaymentMethodRowImage
+                }
+            }
         } else {
             imageView.image = savedPaymentMethodRowImage
         }
