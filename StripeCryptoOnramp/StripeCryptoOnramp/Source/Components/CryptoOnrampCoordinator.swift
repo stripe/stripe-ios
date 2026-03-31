@@ -113,7 +113,7 @@ protocol CryptoOnrampCoordinatorProtocol {
     ///
     /// - Parameters:
     ///   - type: The payment method type to collect. For `.card`, `.bankAccount`, and `.cardAndBankAccount`, this presents Link. For `.applePay(paymentRequest:)`, this presents Apple Pay using the provided `PKPaymentRequest`.
-    ///     If the caller wants Apple Pay billing name and/or address returned in `.completedWithKycInfo`, the provided `PKPaymentRequest` must request `.name` and/or `.postalAddress` in `requiredBillingContactFields`.
+    ///     If the caller wants Apple Pay billing name and/or address returned in `.completed`, the provided `PKPaymentRequest` must request `.name` and/or `.postalAddress` in `requiredBillingContactFields`.
     ///   - viewController: The view controller from which to present the UI.
     /// - Returns: A `CollectPaymentMethodResult` describing the user’s selection.
     /// Throws an error if presentation or payment method collection fails.
@@ -174,7 +174,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let appearance: LinkAppearance
     private let analyticsClient: CryptoOnrampAnalyticsClient
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
-    private var applePayCollectedKycInfo: KycInfo?
     private var selectedPaymentSource: SelectedPaymentSource?
     private let cryptoCustomerState: CryptoCustomerState
 
@@ -461,7 +460,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         from viewController: UIViewController
     ) async throws -> CollectPaymentMethodResult {
         analyticsClient.log(.collectPaymentMethodStarted(paymentMethodType: type.analyticsValue))
-        applePayCollectedKycInfo = nil
 
         switch type {
         case .card, .bankAccount, .cardAndBankAccount:
@@ -471,7 +469,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
 
             guard let supportedPaymentMethodTypes = type.linkPaymentMethodType else {
-                return .canceled
+                throw Error.invalidSelectedPaymentSource
             }
 
             guard let result = await linkController.collectPaymentMethod(
@@ -492,14 +490,14 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             )
             selectedPaymentSource = .link
             analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
-            return .completed(displayData: preview)
+            return .completed(displayData: preview, kycInfo: nil)
         case .applePay(let paymentRequest):
             // This presents Apple Pay and fills the selected payment source in the delegate.
             do {
                 let status = try await presentApplePay(using: paymentRequest, from: viewController)
                 switch status {
                 case .success:
-                    guard case let .applePay(paymentMethod) = selectedPaymentSource else {
+                    guard case let .applePay(paymentMethod, kycInfo) = selectedPaymentSource else {
                         analyticsClient.log(.errorOccurred(during: .collectPaymentMethod, errorMessage: "No payment method selected"))
                         throw Error.invalidSelectedPaymentSource
                     }
@@ -523,17 +521,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     )
 
                     analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
-                    if let applePayCollectedKycInfo {
-                        return .completedWithKycInfo(
-                            displayData: paymentMethodPreview,
-                            kycInfo: applePayCollectedKycInfo
-                        )
-                    } else {
-                        return .completed(displayData: paymentMethodPreview)
-                    }
+                    
+                    return .completed(displayData: paymentMethodPreview, kycInfo: kycInfo)
                 case .canceled:
                     selectedPaymentSource = nil
-                    applePayCollectedKycInfo = nil
                     return .canceled
                 }
             } catch {
@@ -558,7 +549,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                         overridePublishableKey: platformApiClient.publishableKey
                     )
                     return paymentMethod.stripeId
-                case .applePay(let paymentMethod):
+                case .applePay(let paymentMethod, _):
                     return paymentMethod.id
                 }
             }()
@@ -656,8 +647,7 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
         didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment
     ) async throws -> String {
-        selectedPaymentSource = .applePay(paymentMethod)
-        applePayCollectedKycInfo = KycInfo(payment: paymentInformation)
+        selectedPaymentSource = .applePay(paymentMethod, KycInfo(payment: paymentInformation))
 
         return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
     }
@@ -668,15 +658,12 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
             applePayCompletionContinuation?.resume(returning: .success)
         case .userCancellation:
             selectedPaymentSource = nil
-            applePayCollectedKycInfo = nil
             applePayCompletionContinuation?.resume(returning: .canceled)
         case .error:
             selectedPaymentSource = nil
-            applePayCollectedKycInfo = nil
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         @unknown default:
             selectedPaymentSource = nil
-            applePayCollectedKycInfo = nil
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         }
 
@@ -802,7 +789,7 @@ private extension CryptoOnrampCoordinator {
             }
         }
     }
-
+    
     /// Maps a PaymentIntent status to a CheckoutResult, or returns nil if more handling is needed.
     func mapIntentToCheckoutResult(_ intent: STPPaymentIntent) throws -> CheckoutResult? {
         return try intent.checkoutResult?.get()

@@ -93,12 +93,26 @@ public struct Address: Equatable, Decodable {
 extension Address {
 
     /// Returns `true` when the address has no populated fields.
+//    var isEmpty: Bool {
+//        city == nil
+//        && country == nil
+//        && line1 == nil
+//        && line2 == nil
+//        && postalCode == nil
+//        && state == nil
+//    }
     var isEmpty: Bool {
-        city == nil
-            && country == nil
-            && line1 == nil
-            && line2 == nil
-            && postalCode == nil
-            && state == nil
+        !Self.hasContent(city)
+            && !Self.hasContent(country)
+            && !Self.hasContent(line1)
+            && !Self.hasContent(line2)
+            && !Self.hasContent(postalCode)
+            && !Self.hasContent(state)
     }
+
+    private static func hasContent(_ value: String?) -> Bool {
+        guard let value else { return false }
+        return !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
 }

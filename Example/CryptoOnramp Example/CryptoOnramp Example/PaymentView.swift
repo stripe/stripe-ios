@@ -685,7 +685,7 @@ struct PaymentView: View {
                     await MainActor.run {
                         isLoading.wrappedValue = false
                     }
-                case let .completed(displayData), let .completedWithKycInfo(displayData, _):
+                case let .completed(displayData, _):
                     await MainActor.run {
                         shouldShowPaymentMethodSheet = false
                     }
@@ -732,7 +732,7 @@ struct PaymentView: View {
                     await MainActor.run {
                         isLoading.wrappedValue = false
                     }
-                case .completed, .completedWithKycInfo:
+                case .completed:
                     let token = try await coordinator.createCryptoPaymentToken()
 
                     await MainActor.run {

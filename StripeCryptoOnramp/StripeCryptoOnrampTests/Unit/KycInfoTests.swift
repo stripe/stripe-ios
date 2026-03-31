@@ -106,6 +106,18 @@ final class KycInfoTests: XCTestCase {
 
         XCTAssertNil(KycInfo(payment: payment))
     }
+    
+    func testInitPaymentReturnsNilWhenBillingContactHasWhitespaceFields() {
+        let billingContact = PKContact()
+        var nameComponents = PersonNameComponents()
+        nameComponents.familyName = " "
+        nameComponents.givenName = " "
+        billingContact.postalAddress = CNMutablePostalAddress()
+
+        let payment = createMockPayment(billingContact: billingContact)
+
+        XCTAssertNil(KycInfo(payment: payment))
+    }
 
     private func createMockPayment(billingContact: PKContact?) -> PKPayment {
         let payment = PKPayment()
