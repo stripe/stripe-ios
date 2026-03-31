@@ -310,7 +310,6 @@ class PlaygroundViewController: UIViewController {
     }
 
     func setupVerificationSheetNativeUI(responseJson: [String: String]) {
-        print(responseJson)
         guard let verificationSessionId = responseJson["id"] else {
             assertionFailure("Did not receive a valid id.")
             return
