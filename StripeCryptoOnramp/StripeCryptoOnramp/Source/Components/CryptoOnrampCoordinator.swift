@@ -521,7 +521,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     )
 
                     analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
-                    
+
                     return .completed(displayData: paymentMethodPreview, kycInfo: kycInfo)
                 case .canceled:
                     selectedPaymentSource = nil
@@ -789,7 +789,7 @@ private extension CryptoOnrampCoordinator {
             }
         }
     }
-    
+
     /// Maps a PaymentIntent status to a CheckoutResult, or returns nil if more handling is needed.
     func mapIntentToCheckoutResult(_ intent: STPPaymentIntent) throws -> CheckoutResult? {
         return try intent.checkoutResult?.get()

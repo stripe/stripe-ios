@@ -54,7 +54,7 @@ final class AddressTests: XCTestCase {
 
         XCTAssertFalse(address.isEmpty)
     }
-    
+
     func testInitPaymentReturnsNilWhenBillingContactHasWhitespaceFields() {
         let address = Address(city: " ", country: " ", line1: " ", line2: " ", postalCode: " ", state: " ")
 
