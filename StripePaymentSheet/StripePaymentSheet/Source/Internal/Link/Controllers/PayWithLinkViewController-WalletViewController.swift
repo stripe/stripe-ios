@@ -472,7 +472,10 @@ extension PayWithLinkViewController.WalletViewController {
                     "Title for a button that when tapped removes a linked bank account."
                 )
             case .unparsable:
-                return nil
+                return STPLocalizedString(
+                    "Remove payment method",
+                    "Title for a button that when tapped removes a payment method."
+                )
             }
         }()
 

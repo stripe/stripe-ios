@@ -348,6 +348,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Title for a button that when tapped removes a linked bank account. */
 "Remove linked account" = "Remove linked account";
 
+/* Title for a button that when tapped removes a linked payment method. */
+"Remove payment method" = "Remove payment method";
+
 /* A button used for saving a new payment method
    Label on a button that when tapped, updates a card brand. */
 "Save" = "Save";
