@@ -93,7 +93,15 @@ final class RowButtonFloating: RowButton {
                                                                  promoBadge,
                                                                  accessoryView, ].compactMap { $0 })
         horizontalStackView.spacing = 8
-        [imageView, horizontalStackView].compactMap { $0 }
+
+        // Wrap imageView in a fixed-width container so that the horizontalStackView's
+        // leading edge stays aligned across rows regardless of image width.
+        let imageContainer = UIView()
+        imageContainer.translatesAutoresizingMaskIntoConstraints = false
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageContainer.addSubview(imageView)
+
+        [imageContainer, horizontalStackView].compactMap { $0 }
             .forEach { view in
                 view.translatesAutoresizingMaskIntoConstraints = false
                 view.isAccessibilityElement = false
@@ -103,26 +111,32 @@ final class RowButtonFloating: RowButton {
         // MARK: - Constraints
 
         // Resolve ambiguous height warning by setting these constraints w/ low priority
-        let imageViewTopConstraint = imageView.topAnchor.constraint(equalTo: topAnchor, constant: 14)
-        imageViewTopConstraint.priority = .defaultLow
-        let imageViewBottomConstraint = imageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
-        imageViewBottomConstraint.priority = .defaultLow
+        let imageContainerTopConstraint = imageContainer.topAnchor.constraint(equalTo: topAnchor, constant: 14)
+        imageContainerTopConstraint.priority = .defaultLow
+        let imageContainerBottomConstraint = imageContainer.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -14)
+        imageContainerBottomConstraint.priority = .defaultLow
 
         let imageViewTrailingConstant = isEmbedded ? appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins.trailing : 12
-
         NSLayoutConstraint.activate([
-            // Image view constraints
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: imageViewLeadingConstant),
-            imageView.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: imageViewMargin),
-            imageView.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -imageViewMargin),
+            // Image container constraints - fixed width of 30 (max image size)
+            imageContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: imageViewLeadingConstant),
+            imageContainer.topAnchor.constraint(greaterThanOrEqualTo: topAnchor, constant: imageViewMargin),
+            imageContainer.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -imageViewMargin),
+            imageContainer.widthAnchor.constraint(equalToConstant: 30),
+            imageContainer.heightAnchor.constraint(equalToConstant: 20),
+            imageContainer.centerYAnchor.constraint(equalTo: centerYAnchor),
+            imageContainerBottomConstraint,
+            imageContainerTopConstraint,
+
+            // Image view centered within its fixed-width container
+            imageView.centerXAnchor.constraint(equalTo: imageContainer.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: imageContainer.centerYAnchor),
             imageView.heightAnchor.constraint(equalToConstant: 20),
-            imageView.widthAnchor.constraint(equalToConstant: 24),
-            imageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            imageViewBottomConstraint,
-            imageViewTopConstraint,
+            imageView.widthAnchor.constraint(greaterThanOrEqualToConstant: 24),
+            imageView.widthAnchor.constraint(lessThanOrEqualToConstant: 30),
 
             // Content constraints - use configurable insets for the main content area
-            horizontalStackView.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: imageViewTrailingConstant),
+            horizontalStackView.leadingAnchor.constraint(equalTo: imageContainer.trailingAnchor, constant: imageViewTrailingConstant),
             horizontalStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -contentTrailingConstant),
             horizontalStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
             horizontalStackView.topAnchor.constraint(equalTo: topAnchor, constant: contentInsets),
