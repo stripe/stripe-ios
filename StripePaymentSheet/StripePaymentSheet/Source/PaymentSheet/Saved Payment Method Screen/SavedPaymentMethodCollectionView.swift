@@ -87,6 +87,9 @@ extension SavedPaymentMethodCollectionView {
             return label
         }()
         let paymentMethodLogo = UIImageView()
+        private lazy var paymentMethodLogoHeightConstraint: NSLayoutConstraint = {
+            paymentMethodLogo.heightAnchor.constraint(equalToConstant: paymentMethodLogoSize.height)
+        }()
         let plus: CircleIconView = CircleIconView(icon: .icon_plus,
                                                   fillColor: UIColor.dynamic(
             light: .systemGray5, dark: .tertiaryLabel))
@@ -205,8 +208,7 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: selectableRectangle.centerYAnchor),
                 paymentMethodLogo.widthAnchor.constraint(
                     equalToConstant: paymentMethodLogoSize.width),
-                paymentMethodLogo.heightAnchor.constraint(
-                    equalToConstant: paymentMethodLogoSize.height),
+                paymentMethodLogoHeightConstraint,
 
                 plus.centerXAnchor.constraint(equalTo: selectableRectangle.centerXAnchor),
                 plus.centerYAnchor.constraint(equalTo: selectableRectangle.centerYAnchor),
@@ -355,10 +357,18 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
                         let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
-                        if cardArtEnabled {
-                            paymentMethodLogo.setImage(with: paymentMethod.cardArtCDNURL(height: 40), fallbackImage: paymentMethodCellImage)
+                        let cardArtHeight: Int = 30
+                        if cardArtEnabled, let cardArtURL = paymentMethod.cardArtCDNURL(height: cardArtHeight) {
+                            paymentMethodLogo.setImage(with: cardArtURL,
+                                                       fallbackImage: paymentMethodCellImage,
+                                                       processOnDownloadedImage: { [weak self] in
+                                self?.paymentMethodLogoHeightConstraint.constant = CGFloat(cardArtHeight)
+                                return $0.roundedWithBorder(radius: 3)
+                            })
+                            paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         } else {
                             paymentMethodLogo.image = paymentMethodCellImage
+                            paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         }
                     case .applePay:
                         // TODO (cleanup) - get this from PaymentOptionDisplayData?
@@ -367,6 +377,7 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
                         paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                     case .link:
                         label.text = STPPaymentMethodType.link.displayName
                         accessibilityIdentifier = label.text
@@ -376,6 +387,7 @@ extension SavedPaymentMethodCollectionView {
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )
+                        paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                     case .add:
                         label.text = STPLocalizedString(
                             "+ Add",
