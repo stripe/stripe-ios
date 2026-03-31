@@ -14,7 +14,7 @@ class PlaygroundViewController: UIViewController {
     // Constants
     // View and fork the backend code here: https://codesandbox.io/p/devbox/dsx4vq
     let baseURL = "https://stripe-mobile-identity-verification-playground.stripedemos.com"
-    let verifyEndpoint = "/create-verification-session"
+    let verifyEndpoint = "/verification-sessions"
     let reuseEndpoint = "/reuse-verification-session"
 
     // Outlets
@@ -73,12 +73,6 @@ class PlaygroundViewController: UIViewController {
         case idCard = "id_card"
     }
 
-    enum OtpCheckType: String, CaseIterable {
-        case attempt = "attempt"
-        case none = "none"
-        case required = "required"
-    }
-
     /// Use native SDK or web redirect
     var invocationType: InvocationType {
         return InvocationType.allCases[nativeOrWebSelector.selectedSegmentIndex]
@@ -92,6 +86,10 @@ class PlaygroundViewController: UIViewController {
     /// VerificationType specified in the UI toggle
     var verificationType: VerificationType {
         return VerificationType.allCases[verificationTypeSelector.selectedSegmentIndex]
+    }
+
+    var shouldRequirePhoneOTPVerification: Bool {
+        return otpCheckSelector.selectedSegmentIndex == 1
     }
 
     /// List of allowed document types based on UI toggles
@@ -136,8 +134,9 @@ class PlaygroundViewController: UIViewController {
         activityIndicator.hidesWhenStopped = true
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
 
-        // TODO(ccen) enable phoneOtpContainerView when backend adds support to PII
-        phoneOtpContainerView.isHidden = true
+        configureUpdatedParameterUI()
+        didChangeNativeOrWeb(self)
+        didChangeNewOrReuse(self)
     }
 
     @objc
@@ -147,7 +146,6 @@ class PlaygroundViewController: UIViewController {
 
     @IBAction func fallbackToDocumentValueChanged(_ uiSwitch: UISwitch) {
         documentOptionsContainerView.isHidden = !uiSwitch.isOn
-        otpCheckContainerView.isHidden = !uiSwitch.isOn
     }
 
     @IBAction func requireOtpSwitchValueChanged(_ uiSwitch: UISwitch) {
@@ -180,61 +178,78 @@ class PlaygroundViewController: UIViewController {
             ]
 
             var options: [String: Any] = [:]
+            var providedDetails: [String: Any] = [:]
+
+            if requirePhoneNumberSwitch.isOn,
+                let phoneNumber = phoneElement.phoneNumber?.string(as: .e164)
+            {
+                options["phone"] = [
+                    "require_verification": true,
+                ]
+                providedDetails["phone"] = phoneNumber
+            }
 
             switch verificationType {
             case .document:
-                options = [
-                    "document": [
-                        "allowed_types": documentAllowedTypes.map { $0.rawValue },
-                        "require_id_number": requireIDNumberSwitch.isOn,
-                        "require_live_capture": requireLiveCaptureSwitch.isOn,
-                        "require_matching_selfie": requireSelfieSwitch.isOn,
-                        "require_address": requireAddressSwitch.isOn,
-                    ],
+                options["document"] = [
+                    "allowed_types": documentAllowedTypes.map { $0.rawValue },
+                    "require_id_number": requireIDNumberSwitch.isOn,
+                    "require_live_capture": requireLiveCaptureSwitch.isOn,
+                    "require_matching_selfie": requireSelfieSwitch.isOn,
                 ]
-                if requirePhoneNumberSwitch.isOn {
-                    options["phone"] = [
-                        "require_verification": true
-                    ]
-                    requestDict["provided_details"] = [
-                        "phone": phoneElement.phoneNumber?.string(as: .e164)
-                    ]
-                }
             case .idNumber:
-                if requirePhoneNumberSwitch.isOn {
-                    options["phone"] = [
-                        "require_verification": true
-                    ]
-                    requestDict["provided_details"] = [
-                        "phone": phoneElement.phoneNumber?.string(as: .e164)
-                    ]
-                }
+                break
             case .address:
                 // no-op
                 break
             case .phone:
+                options["phone_otp"] = [
+                    "require_verification": shouldRequirePhoneOTPVerification,
+                ]
                 if fallbackToDocumentSwitch.isOn {
-                    options = [
-                        "document": [
+                    options["document"] = [
                             "allowed_types": documentAllowedTypes.map { $0.rawValue },
                             "require_id_number": requireIDNumberSwitch.isOn,
                             "require_live_capture": requireLiveCaptureSwitch.isOn,
                             "require_matching_selfie": requireSelfieSwitch.isOn,
-                            "require_address": requireAddressSwitch.isOn,
-                        ],
-                        "phone_otp": [
-                            "check": OtpCheckType.allCases[otpCheckSelector.selectedSegmentIndex].rawValue
-                        ],
-                        "phone_records": [
-                            "fallback": "document"
-                        ],
+                        ]
+                    options["phone_records"] = [
+                        "fallback_type": "document",
                     ]
                 }
             }
+
+            if !providedDetails.isEmpty {
+                requestDict["provided_details"] = providedDetails
+            }
             requestDict["options"] = options
+
+            do {
+                let additionalParameters = try parsedAdditionalRequestParameters()
+                if additionalParameters["verification_flow"] != nil,
+                    additionalParameters["type"] == nil
+                {
+                    requestDict.removeValue(forKey: "type")
+                }
+                requestDict = mergeJSONObjects(
+                    requestDict,
+                    with: additionalParameters
+                )
+            } catch {
+                updateButtonState(isLoading: false)
+                displayAlert("Invalid additional params JSON", nil)
+                return
+            }
         }
 
-        let requestJson = try! JSONSerialization.data(withJSONObject: requestDict, options: [])
+        let requestJson: Data
+        do {
+            requestJson = try JSONSerialization.data(withJSONObject: requestDict, options: [])
+        } catch {
+            updateButtonState(isLoading: false)
+            displayAlert("Unable to encode request parameters", nil)
+            return
+        }
 
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
@@ -295,6 +310,7 @@ class PlaygroundViewController: UIViewController {
     }
 
     func setupVerificationSheetNativeUI(responseJson: [String: String]) {
+        print(responseJson)
         guard let verificationSessionId = responseJson["id"] else {
             assertionFailure("Did not receive a valid id.")
             return
@@ -371,38 +387,35 @@ class PlaygroundViewController: UIViewController {
         case .document:
             documentOptionsContainerView.isHidden = false
             phoneOptionsContainerView.isHidden = true
-            // phoneOtpContainerView.isHidden = false
-            requirePhoneNumberSwitch.isOn = false
-            phoneView.isHidden = true
+            phoneOtpContainerView.isHidden = false
+            phoneView.isHidden = !requirePhoneNumberSwitch.isOn
             fallbackToDocumentSwitch.isOn = false
             otpCheckContainerView.isHidden = true
             phoneElement.clearPhoneNumber()
         case .idNumber:
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = true
-            // phoneOtpContainerView.isHidden = false
-            requirePhoneNumberSwitch.isOn = false
-            phoneView.isHidden = true
+            phoneOtpContainerView.isHidden = false
+            phoneView.isHidden = !requirePhoneNumberSwitch.isOn
             fallbackToDocumentSwitch.isOn = false
             otpCheckContainerView.isHidden = true
             phoneElement.clearPhoneNumber()
         case .address:
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = true
-            // phoneOtpContainerView.isHidden = true
+            phoneOtpContainerView.isHidden = true
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
             fallbackToDocumentSwitch.isOn = false
             otpCheckContainerView.isHidden = true
             phoneElement.clearPhoneNumber()
         case .phone:
-            documentOptionsContainerView.isHidden = true
+            documentOptionsContainerView.isHidden = !fallbackToDocumentSwitch.isOn
             phoneOptionsContainerView.isHidden = false
-            // phoneOtpContainerView.isHidden = true
+            phoneOtpContainerView.isHidden = true
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
-            fallbackToDocumentSwitch.isOn = false
-            otpCheckContainerView.isHidden = true
+            otpCheckContainerView.isHidden = false
             phoneElement.clearPhoneNumber()
         }
     }
@@ -423,24 +436,19 @@ class PlaygroundViewController: UIViewController {
         switch creationMethod {
         case .new:
             verificationTypeContainerView.isHidden = false
-            documentOptionsContainerView.isHidden = false
-            phoneOptionsContainerView.isHidden = true
-            requirePhoneNumberSwitch.isOn = false
-            phoneView.isHidden = true
-            fallbackToDocumentSwitch.isOn = false
-            otpCheckContainerView.isHidden = true
-            phoneElement.clearPhoneNumber()
-            reuseVerificationIDContainerView.isHidden = true
+            configureRequestInputFieldForNewSession()
+            didChangeVerificationType(sender)
         case .reuse:
             verificationTypeContainerView.isHidden = true
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = true
+            phoneOtpContainerView.isHidden = true
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
             fallbackToDocumentSwitch.isOn = false
             otpCheckContainerView.isHidden = true
             phoneElement.clearPhoneNumber()
-            reuseVerificationIDContainerView.isHidden = false
+            configureRequestInputFieldForSessionReuse()
         }
     }
 
@@ -525,6 +533,90 @@ class PlaygroundViewController: UIViewController {
             return
         }
         disableCustomColorsFonts()
+    }
+}
+
+private extension PlaygroundViewController {
+    enum PlaygroundRequestBuilderError: Error {
+        case additionalParametersMustBeJSONObject
+    }
+
+    var requestInputLabel: UILabel? {
+        return reuseVerificationIDContainerView.arrangedSubviews.first as? UILabel
+    }
+
+    var duplicateDetectionLabel: UILabel? {
+        return (requireAddressSwitch.superview as? UIStackView)?.arrangedSubviews.first as? UILabel
+    }
+
+    var phoneOTPLabel: UILabel? {
+        return otpCheckContainerView.arrangedSubviews.first as? UILabel
+    }
+
+    func configureUpdatedParameterUI() {
+        duplicateDetectionLabel?.text = "Enable Duplicate Detection"
+        phoneOTPLabel?.text = "Require OTP Verification"
+
+        while otpCheckSelector.numberOfSegments > 2 {
+            otpCheckSelector.removeSegment(at: otpCheckSelector.numberOfSegments - 1, animated: false)
+        }
+        if otpCheckSelector.numberOfSegments < 2 {
+            otpCheckSelector.insertSegment(withTitle: "Off", at: 0, animated: false)
+            otpCheckSelector.insertSegment(withTitle: "On", at: 1, animated: false)
+        } else {
+            otpCheckSelector.setTitle("Off", forSegmentAt: 0)
+            otpCheckSelector.setTitle("On", forSegmentAt: 1)
+        }
+        otpCheckSelector.selectedSegmentIndex = 1
+    }
+
+    func configureRequestInputFieldForNewSession() {
+        reuseVerificationIDContainerView.isHidden = false
+        requestInputLabel?.text = "Additional Params JSON (optional):"
+        requestInputLabel?.numberOfLines = 0
+        reuseVerificationSessionIDInput.text = nil
+        reuseVerificationSessionIDInput.placeholder = "{\"client_reference_id\":\"user_123\",\"metadata\":{\"source\":\"ios_example\"}}"
+    }
+
+    func configureRequestInputFieldForSessionReuse() {
+        reuseVerificationIDContainerView.isHidden = false
+        requestInputLabel?.text = "VerificationSession ID:"
+        requestInputLabel?.numberOfLines = 1
+        reuseVerificationSessionIDInput.text = nil
+        reuseVerificationSessionIDInput.placeholder = "vs_..."
+    }
+
+    func parsedAdditionalRequestParameters() throws -> [String: Any] {
+        guard creationMethod == .new,
+            let rawValue = reuseVerificationSessionIDInput.text?
+                .trimmingCharacters(in: .whitespacesAndNewlines),
+            !rawValue.isEmpty
+        else {
+            return [:]
+        }
+
+        let jsonObject = try JSONSerialization.jsonObject(with: Data(rawValue.utf8), options: [])
+        guard let jsonDictionary = jsonObject as? [String: Any] else {
+            throw PlaygroundRequestBuilderError.additionalParametersMustBeJSONObject
+        }
+        return jsonDictionary
+    }
+
+    func mergeJSONObjects(
+        _ base: [String: Any],
+        with overrides: [String: Any]
+    ) -> [String: Any] {
+        var result = base
+        for (key, value) in overrides {
+            if let overrideDictionary = value as? [String: Any],
+                let baseDictionary = result[key] as? [String: Any]
+            {
+                result[key] = mergeJSONObjects(baseDictionary, with: overrideDictionary)
+            } else {
+                result[key] = value
+            }
+        }
+        return result
     }
 }
 
