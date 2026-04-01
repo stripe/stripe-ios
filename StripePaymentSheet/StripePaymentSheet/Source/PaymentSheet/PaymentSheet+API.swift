@@ -223,9 +223,6 @@ extension PaymentSheet {
                         confirmPaymentMethodType: .new(
                             params: confirmParams.paymentMethodParams,
                             paymentOptions: confirmParams.confirmPaymentMethodOptions,
-                            // This unified state captures whether the save checkbox was hidden,
-                            // shown and deselected, or shown and selected. Downstream intent and
-                            // Checkout Session flows derive their own request semantics from it.
                             saveForFutureUseCheckboxState: confirmParams.saveForFutureUseCheckboxState,
                             shouldSetAsDefaultPM: confirmParams.setAsDefaultPM
                         ),
