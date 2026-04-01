@@ -390,7 +390,7 @@ extension PaymentSheet {
             // Parameters:
             // - paymentMethodParams: The params to use for the payment.
             // - linkAccount: The Link account used for payment. Will be logged out if present after payment completes, whether it was successful or not.
-            let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, Bool) -> Void = { paymentMethodParams, linkAccount, shouldSave in
+            let confirmWithPaymentMethodParams: (STPPaymentMethodParams, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState) -> Void = { paymentMethodParams, linkAccount, saveForFutureUseCheckboxState in
                 Task { @MainActor in
                     let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethodParams.type)
                     paymentMethodParams.radarOptions = radarOptions
@@ -403,7 +403,7 @@ extension PaymentSheet {
                         let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
                         let paymentMethodType = paymentMethodParams.type
                         let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
-                        paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
+                        paymentOptions.setSetupFutureUsageIfNecessary(saveForFutureUseCheckboxState == .selected, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
                         paymentIntentParams.paymentMethodOptions = paymentOptions
                         paymentIntentParams.shipping = makeShippingParams(for: paymentIntent, configuration: configuration)
                         paymentIntentParams.clientAttributionMetadata = paymentMethodParams.clientAttributionMetadata
@@ -440,7 +440,7 @@ extension PaymentSheet {
                                 confirmType: .new(
                                     params: paymentMethodParams,
                                     paymentOptions: STPConfirmPaymentMethodOptions(),
-                                    saveForFutureUseCheckboxState: shouldSave ? .selected : .hidden
+                                    saveForFutureUseCheckboxState: saveForFutureUseCheckboxState
                                 ),
                                 configuration: configuration,
                                 intentConfig: intentConfig,
@@ -461,7 +461,7 @@ extension PaymentSheet {
                             confirmType: .new(
                                 params: paymentMethodParams,
                                 paymentOptions: STPConfirmPaymentMethodOptions(),
-                                saveForFutureUseCheckboxState: shouldSave ? .selected : .hidden
+                                saveForFutureUseCheckboxState: saveForFutureUseCheckboxState
                             ),
                             configuration: configuration,
                             authenticationContext: authenticationContext,
@@ -476,7 +476,7 @@ extension PaymentSheet {
                     }
                 }
             }
-            let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, Bool, STPClientAttributionMetadata?) -> Void = { paymentMethod, linkAccount, shouldSave, clientAttributionMetadata in
+            let confirmWithPaymentMethod: (STPPaymentMethod, PaymentSheetLinkAccount?, IntentConfirmParams.SaveForFutureUseCheckboxState, STPClientAttributionMetadata?) -> Void = { paymentMethod, linkAccount, saveForFutureUseCheckboxState, clientAttributionMetadata in
                 Task { @MainActor in
                     let radarOptions = await confirmationChallenge?.makeRadarOptions(for: paymentMethod.type)
                     let mandateCustomerAcceptanceParams = STPMandateCustomerAcceptanceParams()
@@ -495,7 +495,7 @@ extension PaymentSheet {
                         let paymentOptions = paymentIntentParams.paymentMethodOptions ?? STPConfirmPaymentMethodOptions()
                         let paymentMethodType = paymentMethod.type
                         let currentSetupFutureUsage = paymentIntent.paymentMethodOptions?.setupFutureUsage(for: paymentMethodType)
-                        paymentOptions.setSetupFutureUsageIfNecessary(shouldSave, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
+                        paymentOptions.setSetupFutureUsageIfNecessary(saveForFutureUseCheckboxState == .selected, currentSetupFutureUsage: currentSetupFutureUsage, paymentMethodType: paymentMethodType, customer: configuration.customer)
                         paymentIntentParams.paymentMethodOptions = paymentOptions
                         paymentIntentParams.radarOptions = radarOptions
                         paymentIntentParams.mandateData = mandateData
@@ -571,9 +571,9 @@ extension PaymentSheet {
                     ConsumerPaymentDetails,
                     String?, // cvc
                     String?, // phone number
-                    Bool,
+                    IntentConfirmParams.SaveForFutureUseCheckboxState,
                     STPPaymentMethodAllowRedisplay?
-                ) -> Void = { linkAccount, paymentDetails, cvc, billingPhoneNumber, shouldSave, allowRedisplay in
+                ) -> Void = { linkAccount, paymentDetails, cvc, billingPhoneNumber, saveForFutureUseCheckboxState, allowRedisplay in
                     guard let paymentMethodParams = linkAccount.makePaymentMethodParams(
                         from: paymentDetails,
                         cvc: cvc,
@@ -585,15 +585,15 @@ extension PaymentSheet {
                         return
                     }
 
-                    confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
+                    confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
                 }
 
             let createPaymentDetailsAndConfirm:
                 (
                     PaymentSheetLinkAccount,
                     STPPaymentMethodParams,
-                    Bool
-                ) -> Void = { linkAccount, paymentMethodParams, shouldSave in
+                    IntentConfirmParams.SaveForFutureUseCheckboxState
+                ) -> Void = { linkAccount, paymentMethodParams, saveForFutureUseCheckboxState in
                     paymentMethodParams.clientAttributionMetadata = clientAttributionMetadata
                     guard linkAccount.sessionState == .verified else {
                         // We don't support 2FA in the native mobile Link flow, so if 2FA is required then this is a no-op.
@@ -601,7 +601,7 @@ extension PaymentSheet {
                         STPAnalyticsClient.sharedClient.logLinkPopupSkipped()
 
                         // Attempt to confirm directly with params
-                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
+                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
                         return
                     }
 
@@ -624,21 +624,21 @@ extension PaymentSheet {
                                 ) { result in
                                     switch result {
                                     case .success(let paymentDetailsShareResponse):
-                                        confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave, clientAttributionMetadata)
+                                        confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, saveForFutureUseCheckboxState, clientAttributionMetadata)
                                     case .failure(let error):
                                         STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                                         // If this fails, confirm directly
-                                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
+                                        confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
                                     }
                                 }
                             } else {
                                 // If not passthrough mode, confirm details directly
-                                confirmWithPaymentDetails(linkAccount, paymentDetails, paymentMethodParams.card?.cvc, billingPhoneNumber, shouldSave, paymentMethodParams.allowRedisplay)
+                                confirmWithPaymentDetails(linkAccount, paymentDetails, paymentMethodParams.card?.cvc, billingPhoneNumber, saveForFutureUseCheckboxState, paymentMethodParams.allowRedisplay)
                             }
                         case .failure(let error):
                             STPAnalyticsClient.sharedClient.logLinkCreatePaymentDetailsFailure(error: error)
                             // Attempt to confirm directly with params
-                            confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, shouldSave)
+                            confirmWithPaymentMethodParams(paymentMethodParams, linkAccount, saveForFutureUseCheckboxState)
                         }
                     }
                 }
@@ -679,18 +679,18 @@ extension PaymentSheet {
                         let linkPaymentMethodType: STPPaymentMethodType = elementsSession.linkPassthroughModeEnabled ? intentConfirmParams.paymentMethodParams.type : .link
                         // Set allow_redisplay on params
                         setAllowRedisplay(intentConfirmParams, linkPaymentMethodType)
-                        createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
+                        createPaymentDetailsAndConfirm(linkAccount, intentConfirmParams.paymentMethodParams, intentConfirmParams.saveForFutureUseCheckboxState)
                     case .failure(let error as NSError):
                         STPAnalyticsClient.sharedClient.logLinkSignupFailure(error: error)
                         // Attempt to confirm directly with params as a fallback.
                         setAllowRedisplay(intentConfirmParams, intentConfirmParams.paymentMethodParams.type)
-                        confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState == .selected)
+                        confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState)
                     }
                 }
             case .withPaymentMethod(let paymentMethod):
-                confirmWithPaymentMethod(paymentMethod, nil, false, clientAttributionMetadata) // from Link web controller
+                confirmWithPaymentMethod(paymentMethod, nil, .hidden, clientAttributionMetadata) // from Link web controller
             case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras, _):
-                let shouldSave = false // always false, as we don't show a save-to-merchant checkbox in Link VC
+                let saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState = .hidden // no save-to-merchant checkbox in Link VC
                 let allowRedisplay = paymentDetails.computeAllowRedisplay(
                     elementsSession: elementsSession,
                     isSettingUp: isSettingUp
@@ -707,14 +707,14 @@ extension PaymentSheet {
                     ) { result in
                         switch result {
                         case .success(let paymentDetailsShareResponse):
-                            confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, shouldSave, clientAttributionMetadata)
+                            confirmWithPaymentMethod(paymentDetailsShareResponse.paymentMethod, linkAccount, saveForFutureUseCheckboxState, clientAttributionMetadata)
                         case .failure(let error):
                             STPAnalyticsClient.sharedClient.logLinkSharePaymentDetailsFailure(error: error)
                             paymentHandlerCompletion(.failed, error as NSError)
                         }
                     }
                 } else {
-                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, shouldSave, allowRedisplay)
+                    confirmWithPaymentDetails(linkAccount, paymentDetails, paymentDetails.cvc, confirmationExtras?.billingPhoneNumber, saveForFutureUseCheckboxState, allowRedisplay)
                 }
             }
         case let .external(externalPaymentOption, billingDetails):
