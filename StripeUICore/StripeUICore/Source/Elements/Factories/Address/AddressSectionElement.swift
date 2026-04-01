@@ -355,7 +355,7 @@ import UIKit
         spec.makeCityElement(defaultValue: address.city, theme: theme) : nil
         state = fieldOrdering.contains(.state) ?
         spec.makeStateElement(defaultValue: address.state,
-                              stateDict: Dictionary(uniqueKeysWithValues: zip(spec.subKeys ?? [], spec.subLabels ?? [])),
+                              stateDict: Dictionary(uniqueKeysWithValues: zip(spec.subKeys ?? [], spec.subLabels ?? spec.subKeys ?? [])),
                               theme: theme) : nil
         postalCode = fieldOrdering.contains(.postal) ?
         spec.makePostalElement(countryCode: countryCode, defaultValue: address.postalCode, theme: theme) : nil
