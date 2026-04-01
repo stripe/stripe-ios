@@ -40,6 +40,8 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
     @objc public private(set) var threeDSecureUsage: STPPaymentMethodThreeDSecureUsage?
     /// If this Card is part of a Card Wallet, this contains the details of the Card Wallet.
     @objc public private(set) var wallet: STPPaymentMethodCardWallet?
+    /// Card art, if available
+    @objc @_spi(STP) public var cardArt: STPPaymentMethodCardArt?
 
     /// Returns a string representation for the provided card brand;
     /// i.e. `STPPaymentMethodCard.string(from brand:.visa) == "Visa"`.
@@ -67,6 +69,7 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
             "displayBrand = \(displayBrand?.description ?? "")",
             "threeDSecureUsage = \(threeDSecureUsage?.description ?? "")",
             "wallet = \(wallet?.description ?? "")",
+            "cardArt = \(cardArt?.description ?? "")",
         ]
 
         return "<\(props.joined(separator: "; "))>"
@@ -98,6 +101,8 @@ public class STPPaymentMethodCard: NSObject, STPAPIResponseDecodable {
             fromAPIResponse: dict.stp_dictionary(forKey: "three_d_secure_usage"))
         card.wallet = STPPaymentMethodCardWallet.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "wallet"))
+        card.cardArt = STPPaymentMethodCardArt.decodedObject(
+            fromAPIResponse: dict.stp_dictionary(forKey: "card_art"))
         return card
     }
 }
