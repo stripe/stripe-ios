@@ -137,8 +137,6 @@ class PlaygroundViewController: UIViewController {
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
         // TODO(ccen) enable phoneOtpContainerView when backend adds support to PII
         phoneOtpContainerView.isHidden = true
-        didChangeNativeOrWeb(self)
-        didChangeNewOrReuse(self)
     }
 
     @objc
@@ -179,48 +177,56 @@ class PlaygroundViewController: UIViewController {
             ]
 
             var options: [String: Any] = [:]
-            var providedDetails: [String: Any] = [:]
-
-            if requirePhoneNumberSwitch.isOn,
-                let phoneNumber = phoneElement.phoneNumber?.string(as: .e164)
-            {
-                options["phone"] = [
-                    "require_verification": true,
-                ]
-                providedDetails["phone"] = phoneNumber
-            }
 
             switch verificationType {
             case .document:
-                options["document"] = [
-                    "allowed_types": documentAllowedTypes.map { $0.rawValue },
-                    "require_id_number": requireIDNumberSwitch.isOn,
-                    "require_live_capture": requireLiveCaptureSwitch.isOn,
-                    "require_matching_selfie": requireSelfieSwitch.isOn,
+                options = [
+                    "document": [
+                        "allowed_types": documentAllowedTypes.map { $0.rawValue },
+                        "require_id_number": requireIDNumberSwitch.isOn,
+                        "require_live_capture": requireLiveCaptureSwitch.isOn,
+                        "require_matching_selfie": requireSelfieSwitch.isOn,
+                        "require_address": requireAddressSwitch.isOn,
+                    ],
                 ]
+                if requirePhoneNumberSwitch.isOn {
+                    options["phone"] = [
+                        "require_verification": true,
+                    ]
+                    requestDict["provided_details"] = [
+                        "phone": phoneElement.phoneNumber?.string(as: .e164),
+                    ]
+                }
             case .idNumber:
-                break
+                if requirePhoneNumberSwitch.isOn {
+                    options["phone"] = [
+                        "require_verification": true,
+                    ]
+                    requestDict["provided_details"] = [
+                        "phone": phoneElement.phoneNumber?.string(as: .e164),
+                    ]
+                }
             case .address:
                 // no-op
                 break
             case .phone:
                 if fallbackToDocumentSwitch.isOn {
-                    options["document"] = [
-                        "allowed_types": documentAllowedTypes.map { $0.rawValue },
-                        "require_id_number": requireIDNumberSwitch.isOn,
-                        "require_live_capture": requireLiveCaptureSwitch.isOn,
-                        "require_matching_selfie": requireSelfieSwitch.isOn,
+                    options = [
+                        "document": [
+                            "allowed_types": documentAllowedTypes.map { $0.rawValue },
+                            "require_id_number": requireIDNumberSwitch.isOn,
+                            "require_live_capture": requireLiveCaptureSwitch.isOn,
+                            "require_matching_selfie": requireSelfieSwitch.isOn,
+                            "require_address": requireAddressSwitch.isOn,
+                        ],
+                        "phone_otp": [
+                            "check": OtpCheckType.allCases[otpCheckSelector.selectedSegmentIndex].rawValue,
+                        ],
+                        "phone_records": [
+                            "fallback": "document",
+                        ],
                     ]
                 }
-                if OtpCheckType.allCases[otpCheckSelector.selectedSegmentIndex] == .required {
-                    options["phone"] = [
-                        "require_verification": true,
-                    ]
-                }
-            }
-
-            if !providedDetails.isEmpty {
-                requestDict["provided_details"] = providedDetails
             }
             requestDict["options"] = options
         }
