@@ -425,6 +425,10 @@ NZ
         app.textFields["Country or region"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇾 Uruguay")
         app.toolbars.buttons["Done"].tap()
+        app.textFields["Province"].waitForExistenceAndTap()
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Montevideo")
+        app.toolbars.buttons["Done"].tap()
+        app.buttons["Save address"].tap()
         app.buttons["Save address"].tap()
 
         // ...should update PaymentSheet.FlowController

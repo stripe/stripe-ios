@@ -476,7 +476,7 @@ enum ExpectedFormHierarchy {
                         FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Address line 1"]),
                         FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Address line 2"]),
                         FormHierarchyNode(type: "TextFieldElement", properties: ["label": "City"]),
-                        FormHierarchyNode(type: "TextFieldElement", properties: ["label": "State"]),
+                        FormHierarchyNode(type: "DropdownFieldElement", properties: ["itemCount": "28", "label": "State"]),
                         FormHierarchyNode(type: "TextFieldElement", properties: ["label": "Postal code"]),
                     ]),
                     FormHierarchyNode(type: "CheckboxElement", properties: ["label": "Billing address is same as shipping"]),
