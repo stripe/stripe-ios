@@ -1065,6 +1065,8 @@ extension PlaygroundController {
         if settings.integrationType == .checkoutSession {
             body["use_checkout_session"] = true
             body["customer_email"] = "moblie-test-user@stripe.com"
+            body["checkout_session_payment_method_remove"] = settings.paymentMethodRemove.rawValue
+            body["checkout_session_payment_method_save"] = settings.paymentMethodSave.rawValue
         }
 
         // Send custom keys to backend if provided
@@ -1101,10 +1103,6 @@ extension PlaygroundController {
             if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
                 body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
             }
-        }
-        if settings.integrationType == .checkoutSession {
-            body["checkout_session_payment_method_remove"] = settings.paymentMethodRemove.rawValue
-            body["checkout_session_payment_method_save"] = settings.paymentMethodSave.rawValue
         }
         return body
     }
