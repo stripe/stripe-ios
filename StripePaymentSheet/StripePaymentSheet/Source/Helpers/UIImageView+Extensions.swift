@@ -21,9 +21,17 @@ extension UIImageView {
         //
         // This avoids async bugs where an older image could override a newer image.
         tag = url.hashValue
-        let image = try await DownloadManager.sharedManager.downloadImage(url: url)
-        let processedImage = processOnDownloadedImage?(image) ?? image
-        guard tag == url.hashValue else { return }
-        self.image = processedImage
+        do {
+            let image = try await DownloadManager.sharedManager.downloadImage(url: url)
+            let processedImage = processOnDownloadedImage?(image) ?? image
+            guard tag == url.hashValue else { return }
+            self.image = processedImage
+        } catch {
+            // Check to ensure we're still setting the same url
+            guard tag == url.hashValue else { return }
+
+            // If url.hashValue hasn't changed, throw the error to handle setting a fallback if needed
+            throw error
+        }
     }
 }
