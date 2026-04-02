@@ -50,7 +50,6 @@ struct CheckoutPlaygroundView: View {
                             allowPromotionCodes: $viewModel.allowPromotionCodes,
                             automaticTax: $viewModel.automaticTax,
                             adaptivePricing: $viewModel.adaptivePricing,
-                            checkoutSessionPaymentMethodSave: $viewModel.checkoutSessionPaymentMethodSave,
                             checkoutSessionPaymentMethodRemove: $viewModel.checkoutSessionPaymentMethodRemove,
                             adaptivePricingCountry: $viewModel.adaptivePricingCountry
                         )
