@@ -45,6 +45,30 @@ class AppSettings {
         static let paymentsSelectedStatuses = "PaymentsSelectedStatuses"
         static let paymentsSelectedPaymentMethod = "PaymentsSelectedPaymentMethod"
 
+        // MARK: Custom Theme
+        static let formPlaceholderTextColor = "FormPlaceholderTextColor"
+        static let inputFieldPaddingX = "InputFieldPaddingX"
+        static let inputFieldPaddingY = "InputFieldPaddingY"
+        static let actionPrimaryTextTransform = "ActionPrimaryTextTransform"
+        static let actionSecondaryTextTransform = "ActionSecondaryTextTransform"
+        static let tableRowPaddingY = "TableRowPaddingY"
+        static let buttonDangerColorBackground = "ButtonDangerColorBackground"
+        static let buttonDangerColorBorder = "ButtonDangerColorBorder"
+        static let buttonDangerColorText = "ButtonDangerColorText"
+        static let badgeWarningColorBackground = "BadgeWarningColorBackground"
+        static let badgeWarningColorBorder = "BadgeWarningColorBorder"
+        static let badgeWarningColorText = "BadgeWarningColorText"
+        static let badgeLabelTextTransform = "BadgeLabelTextTransform"
+        static let badgeLabelFontWeight = "BadgeLabelFontWeight"
+        static let badgeLabelFontSize = "BadgeLabelFontSize"
+        static let badgePaddingY = "BadgePaddingY"
+        static let badgePaddingX = "BadgePaddingX"
+        static let buttonLabelTextTransform = "ButtonLabelTextTransform"
+        static let buttonLabelFontWeight = "ButtonLabelFontWeight"
+        static let buttonLabelFontSize = "ButtonLabelFontSize"
+        static let buttonPaddingY = "ButtonPaddingY"
+        static let buttonPaddingX = "ButtonPaddingX"
+        static let spacingUnit = "SpacingUnit"
     }
 
     static let shared = AppSettings()
@@ -183,6 +207,46 @@ class AppSettings {
 
     func setSelectedMerchant(merchant: MerchantInfo?) {
         defaults.setValue(merchant?.id, forKey: Constants.selectedMerchantKey)
+    }
+
+    // MARK: - Custom Theme Values
+
+    func customThemeValue(forKey key: String) -> String {
+        defaults.string(forKey: key) ?? ""
+    }
+
+    func setCustomThemeValue(_ value: String, forKey key: String) {
+        defaults.setValue(value, forKey: key)
+    }
+
+    // Clears all custom theme values
+    func clearCustomThemeValues() {
+        let keys = [
+            Constants.formPlaceholderTextColor,
+            Constants.inputFieldPaddingX,
+            Constants.inputFieldPaddingY,
+            Constants.actionPrimaryTextTransform,
+            Constants.actionSecondaryTextTransform,
+            Constants.tableRowPaddingY,
+            Constants.buttonDangerColorBackground,
+            Constants.buttonDangerColorBorder,
+            Constants.buttonDangerColorText,
+            Constants.badgeWarningColorBackground,
+            Constants.badgeWarningColorBorder,
+            Constants.badgeWarningColorText,
+            Constants.badgeLabelTextTransform,
+            Constants.badgeLabelFontWeight,
+            Constants.badgeLabelFontSize,
+            Constants.badgePaddingY,
+            Constants.badgePaddingX,
+            Constants.buttonLabelTextTransform,
+            Constants.buttonLabelFontWeight,
+            Constants.buttonLabelFontSize,
+            Constants.buttonPaddingY,
+            Constants.buttonPaddingX,
+            Constants.spacingUnit,
+        ]
+        keys.forEach { defaults.removeObject(forKey: $0) }
     }
 }
 

@@ -78,6 +78,7 @@ extension STPAPIClient {
     ///   - paymentMethod: The ID of the payment method to use for confirmation (payment method must have billing email)
     ///   - expectedAmount: The expected amount for validation. `nil` in setup mode.
     ///   - expectedPaymentMethodType: The expected payment method type (e.g., "card")
+    ///   - savePaymentMethod: Optional top-level save_payment_method value that controls whether confirmation attaches the payment method to the Checkout Session's customer.
     ///   - returnURL: Optional return URL for redirect-based payment methods
     ///   - shipping: Optional shipping details
     ///   - paymentMethodOptions: Optional payment method options. BLIK code is extracted and passed as top-level `blik_code` parameter.
@@ -89,6 +90,7 @@ extension STPAPIClient {
         paymentMethod: String,
         expectedAmount: Int?,
         expectedPaymentMethodType: String,
+        savePaymentMethod: Bool? = nil,
         returnURL: String? = nil,
         shipping: STPPaymentIntentShippingDetailsParams? = nil,
         paymentMethodOptions: STPConfirmPaymentMethodOptions? = nil,
@@ -108,6 +110,10 @@ extension STPAPIClient {
 
         if let expectedAmount {
             parameters["expected_amount"] = expectedAmount
+        }
+
+        if let savePaymentMethod {
+            parameters["save_payment_method"] = savePaymentMethod
         }
 
         if let returnURL {

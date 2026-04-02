@@ -225,6 +225,7 @@ final class PaymentSheetLoader {
                 orderedPaymentMethodTypes: paymentMethodTypes,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate,
+                hasCardArt: hasCardArt(savedPaymentMethods: filteredSavedPaymentMethods, appearance: configuration.appearance),
                 didLinkLookupTimeOut: didLinkLookupTimeOut
             )
             return loadResult
@@ -232,6 +233,11 @@ final class PaymentSheetLoader {
             analyticsHelper.logLoadFailed(error: error, loadTimings: loadTimings, isUpdate: isUpdate)
             throw error
         }
+    }
+
+    /// Returns `true` if the card art feature is enabled and at least one saved card has a card art image URL.
+    static func hasCardArt(savedPaymentMethods: [STPPaymentMethod], appearance: PaymentSheet.Appearance) -> Bool {
+        appearance.cardArtEnabled && savedPaymentMethods.contains { $0.type == .card && $0.card?.cardArt?.artImage?.url != nil }
     }
 
     // MARK: - Helper methods that load things

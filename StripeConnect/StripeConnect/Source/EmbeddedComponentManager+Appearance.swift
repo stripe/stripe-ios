@@ -39,7 +39,8 @@ extension EmbeddedComponentManager {
                 }
             }
 
-            init?(rawValue: String) {
+            @_spi(STP)
+            public init?(rawValue: String) {
                 switch rawValue {
                 case "none":
                     self = .none
@@ -68,7 +69,7 @@ extension EmbeddedComponentManager {
                 /// The text transform for this typography style.
                 public var textTransform: TextTransform?
 
-                /// Creates a `EmbeddedComponentManager.Appearance.Typography.Stylye` with default values
+                /// Creates a `EmbeddedComponentManager.Appearance.Typography.Style` with default values
                 public init() {}
             }
 
@@ -193,7 +194,25 @@ extension EmbeddedComponentManager {
             public init() { }
         }
 
-        /// Describes the appearance of a badge type usied in embedded components.
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        /// Describes the appearance of all button types used in embedded components
+        public struct ButtonDefaults {
+            /// The horizontal padding for all buttons
+            /// The default is calculated based on the spacingUnit
+            public var paddingHorizontal: CGFloat?
+            /// The vertical padding for all buttons
+            /// The default is calculated based on the spacingUnit
+            public var paddingVertical: CGFloat?
+            /// Describes the font size, weight, and text transform for all buttons
+            /// The labelMd style is used as the default if no style is provided
+            public var labelTypography: Typography.Style?
+
+            /// Creates a `EmbeddedComponentManager.Appearance.ButtonDefaults` with default values
+            public init() { }
+        }
+
+        /// Describes the appearance of a badge type used in embedded components.
         public struct Badge {
             /// The background color for this badge type.
             /// The alpha component is ignored.
@@ -204,6 +223,24 @@ extension EmbeddedComponentManager {
             public var colorText: UIColor?
 
             /// Creates a `EmbeddedComponentManager.Appearance.Badge` with default values
+            public init() {}
+        }
+
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        /// Describes the appearance of all badge types used in embedded components.
+        public struct BadgeDefaults {
+            /// The horizontal padding for all badges
+            /// The default is calculated based on the spacingUnit
+            public var paddingHorizontal: CGFloat?
+            /// The vertical padding for all badges
+            /// The default is calculated based on the spacingUnit
+            public var paddingVertical: CGFloat?
+            /// Describes the font size, weight, and text transform for all badges
+            /// The labelSm style is used as the default if no style is provided
+            public var labelTypography: Typography.Style?
+
+            /// Creates a `EmbeddedComponentManager.Appearance.BadgeDefaults` with default values
             public init() {}
         }
 
@@ -225,6 +262,36 @@ extension EmbeddedComponentManager {
             public init() {}
         }
 
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        /// Describes the appearance of a form type used in embedded components.
+        public struct Form {
+            /// The text placeholder color for this form type.
+            /// The alpha component is ignored.
+            public var colorPlaceholder: UIColor?
+            /// The horizontal padding for this form type
+            /// The default is calculated based on the spacingUnit
+            public var horizontalPadding: CGFloat?
+            /// The vertical padding for this form type
+            /// The default is calculated based on the spacingUnit
+            public var verticalPadding: CGFloat?
+            /// Describes the font size, weight, and text transform for this form type
+
+            /// Creates a `EmbeddedComponentManager.Appearance.Form` with default values
+            public init() {}
+        }
+
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        /// Describes the appearance of an Action type used in embedded components.
+        public struct Action {
+            /// The text transform for this action type
+            public var textTransform: TextTransform?
+
+            /// Creates a `EmbeddedComponentManager.Appearance.Action` with default values
+            public init() {}
+        }
+
         /// The default appearance
         public static let `default`: Appearance = .init()
 
@@ -239,6 +306,14 @@ extension EmbeddedComponentManager {
         public var buttonPrimary: Button  = .init()
         /// Describes the appearance of the secondary button
         public var buttonSecondary: Button  = .init()
+        /// Describes the appearance of the danger button
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        public var buttonDanger: Button  = .init()
+        /// Describes the padding and label typography shared by all button variants
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        public var buttonDefaults: ButtonDefaults = .init()
         /// Describes the appearance used to represent neutral
         /// state or lack of state in status badges.
         public var badgeNeutral: Badge  = .init()
@@ -252,8 +327,29 @@ extension EmbeddedComponentManager {
         /// critical situations that the user must address immediately, and to
         /// indicate failed or unsuccessful outcomes.
         public var badgeDanger: Badge  = .init()
+        /// Describes the padding and label typography shared by all badge variants
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        public var badgeDefaults: BadgeDefaults = .init()
         /// Describes the corner radius used in embedded components.
         public var cornerRadius: CornerRadius = .init()
+        /// Describes the appearance of a form used in embedded components.
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        public var form: Form  = .init()
+        /// Describes the vertical padding for table rows
+        /// The default is calculated based on the spacingUnit when unspecified.
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        public var tableRowPaddingY: CGFloat?
+        /// Describes the appearance of primary links
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        public var actionPrimaryStyle: Action  = .init()
+        /// Describes the appearance of secondary links
+        @_spi(PreviewConnect)
+        @_documentation(visibility: public)
+        public var actionSecondaryStyle: Action  = .init()
 
         /// Creates a `EmbeddedComponentManager.Appearance` with default values
         public init() {}

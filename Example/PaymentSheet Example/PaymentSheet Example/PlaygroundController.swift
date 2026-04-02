@@ -1104,6 +1104,7 @@ extension PlaygroundController {
         }
         if settings.integrationType == .checkoutSession {
             body["checkout_session_payment_method_remove"] = settings.paymentMethodRemove.rawValue
+            body["checkout_session_payment_method_save"] = settings.paymentMethodSave.rawValue
         }
         return body
     }

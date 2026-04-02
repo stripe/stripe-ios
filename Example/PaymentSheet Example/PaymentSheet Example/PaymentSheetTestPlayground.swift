@@ -219,6 +219,11 @@ struct PaymentSheetTestPlayground: View {
                                     searchText: $searchText
                                 ) {
                                     SearchableSettingView(
+                                        setting: paymentMethodSaveBinding,
+                                        title: "Offer Save",
+                                        searchText: $searchText
+                                    )
+                                    SearchableSettingView(
                                         setting: $playgroundController.settings.paymentMethodRemove,
                                         title: "Payment Method Remove",
                                         searchText: $searchText
