@@ -408,6 +408,7 @@ private extension PayWithLinkViewController {
                     shouldFetch: context.launchedFromFlowController
                 )
             }
+            defer { shippingAddressTask.cancel() }
 
             do {
                 let paymentDetails = try await paymentDetailsTask.value

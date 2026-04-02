@@ -71,6 +71,11 @@ class CustomerSheetDataSource {
                         customerSessionClientSecret: nil
                     )
                 }
+                defer {
+                    paymentMethodsTask.cancel()
+                    selectedPaymentMethodTask.cancel()
+                    elementsSessionTask.cancel()
+                }
 
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()

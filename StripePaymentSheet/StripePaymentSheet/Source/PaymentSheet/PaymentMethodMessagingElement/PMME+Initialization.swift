@@ -138,6 +138,7 @@ extension PaymentMethodMessagingElement {
                     taskGroup.addTask {
                         let lightImageTask = Task { try await downloadManager.downloadImage(url: image.lightThemePng.url) }
                         let darkImageTask = Task { try await downloadManager.downloadImage(url: image.darkThemePng.url) }
+                        defer { lightImageTask.cancel(); darkImageTask.cancel() }
                         let light = try await lightImageTask.value
                         let dark = try await darkImageTask.value
                         return (

@@ -178,7 +178,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertTrue(delegateWillPresentCalled)
 
         // Updates should fail while the form is presented
-        let updateResult = await sut.update(intentConfiguration: setupIntentConfig)
+        async let _updateResult = sut.update(intentConfiguration: setupIntentConfig)
+        let updateResult = await _updateResult // Unfortunate workaround b/c XCTAssertEqual doesn't support concurrency
         XCTAssertEqual(updateResult, .failed(error: PaymentSheetError.embeddedPaymentElementUpdateWithFormPresented))
     }
 
@@ -188,11 +189,11 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.delegate = self
         sut.presentingViewController = UIViewController()
         // ...updating...
-        let updateTask = Task { await sut.update(intentConfiguration: paymentIntentConfig) }
+        async let _updateResult = sut.update(intentConfiguration: paymentIntentConfig)
         // ...and immediately updating again, before the 1st update finishes...
-        let updateTask2 = Task { await sut.update(intentConfiguration: setupIntentConfig) }
-        let updateResult = await updateTask.value
-        let updateResult2 = await updateTask2.value
+        async let _updateResult2 = sut.update(intentConfiguration: setupIntentConfig)
+        let updateResult = await _updateResult // Unfortunate workaround b/c XCTAssertEqual doesn't support concurrency
+        let updateResult2 = await _updateResult2
         // ...should cancel the 1st update
         XCTAssertEqual(updateResult, .canceled)
         XCTAssertEqual(updateResult2, .succeeded)
@@ -216,7 +217,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         confirmParams.setDefaultBillingDetailsIfNecessary(for: sut.configuration)
 
         // ...updating...
-        let firstUpdateTask = Task { await sut.update(intentConfiguration: paymentIntentConfig) }
+        async let _firstUpdateResult = sut.update(intentConfiguration: paymentIntentConfig)
         // ...and immediately calling confirm, before the 1st update finishes...
         // Inject the test payment option
         sut._test_paymentOption = .new(confirmParams: confirmParams)
@@ -228,7 +229,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
         default:
             XCTFail("Expected confirm to succeed")
         }
-        let firstUpdateResult = await firstUpdateTask.value
+        let firstUpdateResult = await _firstUpdateResult
         XCTAssertEqual(firstUpdateResult, .succeeded)
     }
 
@@ -246,7 +247,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             XCTFail("Unexpectedly called confirm handler of broken config")
             return ""
         })
-        Task { _ = await sut.update(intentConfiguration: brokenConfig) }
+        async let _ = sut.update(intentConfiguration: brokenConfig)
         XCTAssertTrue(sut.latestUpdateTask == nil, "Sanity check - update should not be in progress at this point, `update` should not have been executed yet")
 
         // ...and immediately calling confirm, before the 1st update finishes...
@@ -282,8 +283,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
         })
         _ = await sut.update(intentConfiguration: brokenConfig)
         // ...and calling confirm, after the update finishes...
-        let confirmResult = await sut.confirm()
-        switch confirmResult {
+        async let confirmResult = sut.confirm()
+        switch await confirmResult {
         case let .failed(error: error):
             // ...should make the confirm call fail b/c the update failed
             XCTAssertEqual(error.nonGenericDescription.prefix(101), "An error occurred in PaymentSheet. The amount in `PaymentSheet.IntentConfiguration` must be non-zero!")
@@ -842,10 +843,10 @@ class EmbeddedPaymentElementTest: XCTestCase {
         sut.presentingViewController = UIViewController()
 
         // Fire two concurrent updates, first should be canceled
-        let updateTask1 = Task { await sut.update(checkout: checkout) }
-        let updateTask2 = Task { await sut.update(checkout: checkout) }
-        let updateResult1 = await updateTask1.value
-        let updateResult2 = await updateTask2.value
+        async let _updateResult1 = sut.update(checkout: checkout)
+        async let _updateResult2 = sut.update(checkout: checkout)
+        let updateResult1 = await _updateResult1
+        let updateResult2 = await _updateResult2
         XCTAssertEqual(updateResult1, .canceled)
         XCTAssertEqual(updateResult2, .succeeded)
     }
