@@ -61,6 +61,17 @@ extension STPAPIClient {
         )
     }
 
+    func detachPaymentMethod(
+        _ paymentMethodId: String,
+        fromCheckoutSession checkoutSessionId: String
+    ) async throws {
+        _ = try await APIRequest<STPCheckoutSession>.post(
+            with: self,
+            endpoint: "payment_pages/\(checkoutSessionId)",
+            parameters: ["payment_method_to_detach": paymentMethodId]
+        )
+    }
+
     /// Confirms a CheckoutSession with the provided payment method and parameters.
     /// - Parameters:
     ///   - sessionId: The ID of the checkout session (e.g., "cs_test_xxx")
