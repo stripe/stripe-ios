@@ -143,7 +143,10 @@ enum Intent {
             switch checkoutSession.mode {
             case .payment:
                 return checkoutSession.setupFutureUsage
-            case .setup, .subscription, .unknown:
+            case .setup:
+                return nil
+            case .subscription, .unknown:
+                stpAssertionFailure("subscription and unknown not implemented")
                 return nil
             }
         case .setupIntent:
@@ -164,6 +167,8 @@ enum Intent {
             }
             return nil
         case .checkoutSession:
+            // TODO(gbirch): implement during PMO SFU work
+            stpAssertionFailure("CheckoutSession PMO SFU work not yet implemented")
             return nil
         case .setupIntent:
             return nil
@@ -198,6 +203,7 @@ enum Intent {
             case .setup:
                 return true
             case .subscription, .unknown:
+                stpAssertionFailure("subscription and unknown not implemented")
                 return false
             }
         }
