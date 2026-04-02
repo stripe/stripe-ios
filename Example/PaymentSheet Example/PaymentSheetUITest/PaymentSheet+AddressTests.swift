@@ -429,7 +429,6 @@ NZ
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Montevideo")
         app.toolbars.buttons["Done"].tap()
         app.buttons["Save address"].tap()
-        app.buttons["Save address"].tap()
 
         // ...should update PaymentSheet.FlowController
         app.buttons["Payment method"].waitForExistenceAndTap()
