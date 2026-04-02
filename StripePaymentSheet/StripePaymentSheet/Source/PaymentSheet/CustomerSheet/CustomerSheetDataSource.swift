@@ -37,6 +37,7 @@ class CustomerSheetDataSource {
         Task {
             do {
                 let fetchSessionsTask = Task { try await customerSessionAdapter.elementsSessionWithCustomerSessionClientSecret() }
+                defer { fetchSessionsTask.cancel() }
 
                 // Ensure local specs are loaded prior to the ones from elementSession
                 await loadFormSpecs()
