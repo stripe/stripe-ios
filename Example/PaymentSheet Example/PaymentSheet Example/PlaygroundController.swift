@@ -1029,6 +1029,7 @@ extension PlaygroundController {
                        let jsonError = json["error"] {
                         errorMessage = jsonError
                     }
+                    self.fail(error: PlaygroundError(errorDescription: errorMessage))
                     continuation.resume(throwing: PlaygroundError(errorDescription: errorMessage))
                     return
                 }
