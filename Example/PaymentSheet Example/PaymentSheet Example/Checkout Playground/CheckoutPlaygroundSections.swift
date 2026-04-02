@@ -161,6 +161,7 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var allowPromotionCodes: Bool
     @Binding var automaticTax: Bool
     @Binding var adaptivePricing: Bool
+    @Binding var checkoutSessionPaymentMethodSave: Bool
     @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry
 
@@ -213,6 +214,11 @@ struct CheckoutPlaygroundFeaturesSection: View {
                         title: "Adaptive Pricing",
                         isOn: $adaptivePricing,
                         tooltip: "Sets `adaptive_pricing: { enabled: true }`. Displays prices in the customer's local currency."
+                    )
+                    CheckoutPlayground.ToggleRow(
+                        title: "Payment Method Offer Save",
+                        isOn: $checkoutSessionPaymentMethodSave,
+                        tooltip: "Sets `saved_payment_method_options.payment_method_save` to `enabled`. When on, Checkout can offer to save the payment method for future use."
                     )
                     CheckoutPlayground.ToggleRow(
                         title: "Payment Method Remove",
