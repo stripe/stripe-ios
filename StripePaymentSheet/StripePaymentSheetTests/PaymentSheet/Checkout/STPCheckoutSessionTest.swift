@@ -94,6 +94,7 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
         XCTAssertTrue(session.savedPaymentMethodsOfferSave!.enabled)
         XCTAssertEqual(session.savedPaymentMethodsOfferSave!.status, .notAccepted)
+        XCTAssertNil(session.setupFutureUsage)
 
         XCTAssertEqual(
             session.paymentMethodTypes,
@@ -202,6 +203,7 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertNil(session?.url)
         XCTAssertNil(session?.returnUrl)
         XCTAssertNil(session?.savedPaymentMethodsOfferSave)
+        XCTAssertNil(session?.setupFutureUsage)
     }
 
     func testDecodedObjectWithSetupMode() {
@@ -224,6 +226,14 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session?.paymentStatus, .noPaymentRequired)
         XCTAssertEqual(session?.setupIntentId, "seti_test123456")
         XCTAssertNil(session?.paymentIntentId)
+    }
+
+    func testDecodedObjectParsesTopLevelSetupFutureUsage() {
+        let session = makeCheckoutSession([
+            "setup_future_usage": "off_session",
+        ])
+
+        XCTAssertEqual(session.setupFutureUsage, "off_session")
     }
 
     func testTotalsWithTaxFromTaxAmounts() {

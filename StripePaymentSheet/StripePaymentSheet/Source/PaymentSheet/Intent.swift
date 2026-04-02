@@ -142,7 +142,7 @@ enum Intent {
         case .checkoutSession(let checkoutSession):
             switch checkoutSession.mode {
             case .payment:
-                return checkoutSession.topLevelSetupFutureUsage
+                return checkoutSession.setupFutureUsage
             case .setup, .subscription, .unknown:
                 return nil
             }
@@ -191,7 +191,7 @@ enum Intent {
         case .checkoutSession(let checkoutSession):
             switch checkoutSession.mode {
             case .payment:
-                guard let setupFutureUsage = checkoutSession.topLevelSetupFutureUsage else {
+                guard let setupFutureUsage = checkoutSession.setupFutureUsage else {
                     return false
                 }
                 return setupFutureUsage != "none"

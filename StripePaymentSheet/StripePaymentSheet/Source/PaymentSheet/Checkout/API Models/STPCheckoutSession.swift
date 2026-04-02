@@ -107,6 +107,9 @@ class STPCheckoutSession: NSObject {
     /// Parsed from `customer_managed_saved_payment_methods_offer_save` in the init response.
     let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
 
+    /// Top-level setup_future_usage for payment-mode checkout sessions.
+    let setupFutureUsage: String?
+
     /// Whether billing address collection is required for this session.
     /// Derived from `billing_address_collection == "required"` in the API response.
     let requiresBillingAddress: Bool
@@ -253,6 +256,7 @@ class STPCheckoutSession: NSObject {
         selectedShippingOptionId: String?,
         taxAmounts: [STPCheckoutSessionTaxAmount],
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
+        setupFutureUsage: String?,
         requiresBillingAddress: Bool,
         allowedShippingCountries: [String]?,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
@@ -287,6 +291,7 @@ class STPCheckoutSession: NSObject {
         self.selectedShippingOptionId = selectedShippingOptionId
         self.taxAmounts = taxAmounts
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
+        self.setupFutureUsage = setupFutureUsage
         self.requiresBillingAddress = requiresBillingAddress
         self.allowedShippingCountries = allowedShippingCountries
         self.localizedPricesMetas = localizedPricesMetas
@@ -361,6 +366,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
         let savedPaymentMethodsOfferSave = STPCheckoutSessionSavedPaymentMethodsOfferSave.decodedObject(
             from: dict["customer_managed_saved_payment_methods_offer_save"] as? [AnyHashable: Any]
         )
+        let setupFutureUsage = dict["setup_future_usage"] as? String
 
         // Parse address collection settings
         let requiresBillingAddress = (dict["billing_address_collection"] as? String) == "required"
@@ -443,6 +449,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             selectedShippingOptionId: selectedShippingOptionId,
             taxAmounts: taxAmounts,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
+            setupFutureUsage: setupFutureUsage,
             requiresBillingAddress: requiresBillingAddress,
             allowedShippingCountries: allowedShippingCountries,
             localizedPricesMetas: localizedPricesMetas,
@@ -458,13 +465,9 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 // MARK: - Parsing Helpers
 
 extension STPCheckoutSession {
-    var topLevelSetupFutureUsage: String? {
-        return allResponseFields["setup_future_usage"] as? String
-    }
-
     func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
         _ = paymentMethodType
-        return topLevelSetupFutureUsage
+        return setupFutureUsage
     }
 
     func merchantWillSavePaymentMethod(_ paymentMethodType: STPPaymentMethodType) -> Bool {
@@ -473,14 +476,15 @@ extension STPCheckoutSession {
         }
 
         switch mode {
-        case .setup, .subscription:
+        case .setup:
             return true
         case .payment:
             guard let setupFutureUsage = setupFutureUsage(for: paymentMethodType) else {
                 return false
             }
             return setupFutureUsage != "none"
-        case .unknown:
+        case .subscription, .unknown:
+            stpAssertionFailure("Unknown and subscription modes are not currently supported with checkout sessions")
             return false
         }
     }
