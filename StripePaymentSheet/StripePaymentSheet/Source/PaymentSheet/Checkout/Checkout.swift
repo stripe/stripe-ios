@@ -60,7 +60,6 @@ public final class Checkout: ObservableObject {
     /// - Parameters:
     ///   - clientSecret: The client secret for your Checkout Session (e.g. `cs_xxx_secret_yyy`).
     ///   - apiClient: The API client to use. Defaults to ``STPAPIClient.shared``.
-<<<<<<< Updated upstream
     public init(clientSecret: String, apiClient: STPAPIClient = .shared) {
         self.clientSecret = clientSecret
         self.apiClient = apiClient
@@ -73,25 +72,10 @@ public final class Checkout: ObservableObject {
     /// - Throws: ``CheckoutError`` if the request fails.
     @discardableResult
     public func load() async throws -> Checkout.Session {
-=======
-    /// - Throws: ``CheckoutError`` if the client secret is invalid or the request fails.
-    public init(clientSecret: String, apiClient: STPAPIClient = .shared) async throws {
->>>>>>> Stashed changes
         guard !clientSecret.isEmpty else {
             throw CheckoutError.invalidClientSecret
         }
-        self.clientSecret = clientSecret
-        self.apiClient = apiClient
 
-        do {
-            let sessionId = Self.extractSessionId(from: clientSecret)
-            let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
-            self.state = .loaded(checkoutSession)
-        } catch {
-            throw CheckoutError.apiError(message: error.nonGenericDescription)
-        }
-
-<<<<<<< Updated upstream
         return try await withSessionUpdateGuard {
             do {
                 let sessionId = Self.extractSessionId(from: clientSecret)
@@ -100,23 +84,6 @@ public final class Checkout: ObservableObject {
             } catch {
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
             }
-=======
-        // Set up the onConfirmed callback now that self is fully initialized.
-        stpSession?.onConfirmed = { [weak self] response in
-            self?.updateSession(response)
-        }
-    }
-
-    /// Internal initializer for testing that bypasses the network call.
-    init(clientSecret: String, apiClient: STPAPIClient = .shared, session: STPCheckoutSession) {
-        self.clientSecret = clientSecret
-        self.apiClient = apiClient
-        self.state = .loaded(session)
-
-        // Set up the onConfirmed callback now that self is fully initialized.
-        session.onConfirmed = { [weak self] response in
-            self?.updateSession(response)
->>>>>>> Stashed changes
         }
     }
 
@@ -184,12 +151,8 @@ public final class Checkout: ObservableObject {
     ///
     /// - Parameter params: The billing address to set. To reset tax computation
     ///   to a country-only region, pass an ``AddressUpdate`` with just the country.
-<<<<<<< Updated upstream
     /// - Returns: The updated ``Checkout.Session``.
-    /// - Throws: ``CheckoutError`` if the session is not loaded/open, or if
-=======
     /// - Throws: ``CheckoutError`` if the session is not open, or if
->>>>>>> Stashed changes
     ///   the server request fails.
     @discardableResult
     public func updateBillingAddress(_ params: AddressUpdate) async throws -> Checkout.Session {
@@ -202,14 +165,9 @@ public final class Checkout: ObservableObject {
             }
         } else {
             currentSession.billingAddressOverride = params
-<<<<<<< Updated upstream
-            session = currentSession
-            delegate?.checkout(self, didUpdate: currentSession)
-            return currentSession
-=======
             state = .loaded(currentSession)
             delegate?.checkout(self, didChangeState: state)
->>>>>>> Stashed changes
+            return currentSession
         }
     }
 
@@ -222,12 +180,8 @@ public final class Checkout: ObservableObject {
     ///
     /// - Parameter params: The shipping address to set. To reset tax computation
     ///   to a country-only region, pass an ``AddressUpdate`` with just the country.
-<<<<<<< Updated upstream
     /// - Returns: The updated ``Checkout.Session``.
-    /// - Throws: ``CheckoutError`` if the session is not loaded/open, or if
-=======
     /// - Throws: ``CheckoutError`` if the session is not open, or if
->>>>>>> Stashed changes
     ///   the server request fails.
     @discardableResult
     public func updateShippingAddress(_ params: AddressUpdate) async throws -> Checkout.Session {
@@ -240,14 +194,9 @@ public final class Checkout: ObservableObject {
             }
         } else {
             currentSession.shippingAddressOverride = params
-<<<<<<< Updated upstream
-            session = currentSession
-            delegate?.checkout(self, didUpdate: currentSession)
-            return currentSession
-=======
             state = .loaded(currentSession)
             delegate?.checkout(self, didChangeState: state)
->>>>>>> Stashed changes
+            return currentSession
         }
     }
 
@@ -347,13 +296,8 @@ public final class Checkout: ObservableObject {
 
     /// Performs an API update, then reloads full session state from init.
     /// The update endpoint can return partial data, so we always refresh from init
-<<<<<<< Updated upstream
-    /// to keep ``session`` as the single source of truth.
-    private func performAPIUpdate(_ update: SessionUpdate) async throws -> Checkout.Session {
-=======
     /// to keep the session as the single source of truth.
-    private func performAPIUpdate(_ update: SessionUpdate) async throws {
->>>>>>> Stashed changes
+    private func performAPIUpdate(_ update: SessionUpdate) async throws -> Checkout.Session {
         do {
             let sessionId = Self.extractSessionId(from: clientSecret)
             _ = try await apiClient.updateCheckoutSession(
