@@ -112,6 +112,10 @@ extension SavedPaymentMethodCollectionView {
             return label
         }()
 
+        lazy var paymentMethodLogoHeightConstraint: NSLayoutConstraint = {
+             paymentMethodLogo.heightAnchor.constraint(equalToConstant: paymentMethodLogoSize.height)
+        }()
+
         fileprivate var viewModel: SavedPaymentOptionsViewController.Selection?
 
         var isRemovingPaymentMethods: Bool = false {
@@ -205,8 +209,7 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: selectableRectangle.centerYAnchor),
                 paymentMethodLogo.widthAnchor.constraint(
                     equalToConstant: paymentMethodLogoSize.width),
-                paymentMethodLogo.heightAnchor.constraint(
-                    equalToConstant: paymentMethodLogoSize.height),
+                paymentMethodLogoHeightConstraint,
 
                 plus.centerXAnchor.constraint(equalTo: selectableRectangle.centerXAnchor),
                 plus.centerYAnchor.constraint(equalTo: selectableRectangle.centerYAnchor),
@@ -355,10 +358,18 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
                         let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
+                        paymentMethodLogo.tag = 0
+                        let cardArtHeight: Int = 30
                         if cardArtEnabled {
-                            paymentMethodLogo.setImage(with: paymentMethod.cardArtCDNURL(height: 40), fallbackImage: paymentMethodCellImage)
+                            paymentMethodLogo.setImage(with: paymentMethod.cardArtCDNURL(height: cardArtHeight),
+                                                       processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
+                                                       fallbackImage: paymentMethodCellImage,
+                                                       onSetImageCompletion: { [weak self] didSetDownloadedImage in
+                                self?.paymentMethodLogoHeightConstraint.constant = didSetDownloadedImage ? CGFloat(cardArtHeight) : paymentMethodLogoSize.height
+                            })
                         } else {
                             paymentMethodLogo.image = paymentMethodCellImage
+                            paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         }
                     case .applePay:
                         // TODO (cleanup) - get this from PaymentOptionDisplayData?
@@ -366,13 +377,17 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
+                        paymentMethodLogo.tag = 0
                         paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                     case .link:
                         label.text = STPPaymentMethodType.link.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
+                        paymentMethodLogo.tag = 0
                         paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )
