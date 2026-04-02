@@ -389,12 +389,12 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            guard let stpSession = checkout.session as? STPCheckoutSession else {
-                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
+            guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
                 completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
                 return
             }
-            if checkout.isPerformingSessionUpdate {
+            if checkout.state.isLoading {
                 let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.FlowController.create(checkout:configuration:completion:)."
                 assertionFailure(message)
                 completion(.failure(PaymentSheetError.integrationError(nonPIIDebugDescription: message)))
@@ -669,12 +669,12 @@ extension PaymentSheet {
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
-            guard let stpSession = checkout.session as? STPCheckoutSession else {
-                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
+            guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
                 completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
                 return
             }
-            if checkout.isPerformingSessionUpdate {
+            if checkout.state.isLoading {
                 let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.FlowController.update(checkout:completion:)."
                 assertionFailure(message)
                 completion(PaymentSheetError.integrationError(nonPIIDebugDescription: message))

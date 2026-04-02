@@ -812,8 +812,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSession() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
-        try await checkout.load()
+        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
@@ -831,8 +830,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSessionCancelsInFlight() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
-        try await checkout.load()
+        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient
@@ -854,8 +852,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
     func testUpdateCheckoutSessionWithCompletionBlock() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
-        try await checkout.load()
+        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
 
         var config = EmbeddedPaymentElement.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
         config.apiClient = apiClient

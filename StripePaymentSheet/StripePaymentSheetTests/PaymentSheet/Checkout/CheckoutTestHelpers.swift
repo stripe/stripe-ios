@@ -28,4 +28,11 @@ enum CheckoutTestHelpers {
         json["customer_email"] = customerEmail
         return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
     }
+
+    static func makeClosedSession() -> STPCheckoutSession {
+        var json = makeOpenSessionJSON()
+        json["status"] = "complete"
+        json["payment_status"] = "paid"
+        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+    }
 }

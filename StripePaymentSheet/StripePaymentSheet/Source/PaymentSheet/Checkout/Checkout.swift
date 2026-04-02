@@ -13,26 +13,25 @@ import Foundation
 
 /// Manages a Checkout Session lifecycle.
 ///
-/// Create a `Checkout` instance with your session's client secret, then call
-/// ``load()`` to fetch the session from Stripe's servers.
+/// Create a `Checkout` instance by awaiting the async initializer — the session
+/// is loaded before the initializer returns, so ``state`` is always available.
 ///
 /// ```swift
-/// let checkout = Checkout(clientSecret: "cs_xxx_secret_yyy")
-/// try await checkout.load()
-/// print(checkout.session)
+/// let checkout = try await Checkout(clientSecret: "cs_xxx_secret_yyy")
+/// print(checkout.state.session)
 /// ```
 ///
-/// In SwiftUI, `Checkout` publishes changes to ``session`` as an `ObservableObject`.
-/// In UIKit, set a ``delegate`` to receive ``CheckoutDelegate/checkout(_:didUpdate:)`` callbacks.
+/// In SwiftUI, `Checkout` publishes changes to ``state`` as an `ObservableObject`.
+/// In UIKit, set a ``delegate`` to receive ``CheckoutDelegate/checkout(_:didChangeState:)`` callbacks.
 @_spi(CheckoutSessionsPreview)
 @MainActor
 public final class Checkout: ObservableObject {
     // MARK: - Public Properties
 
-    /// The loaded session, or `nil` if ``load()`` hasn't completed yet.
-    @Published public private(set) var session: Checkout.Session?
+    /// The current loading state of the checkout session.
+    @Published public private(set) var state: State
 
-    /// A delegate that is notified when the session changes.
+    /// A delegate that is notified when the state changes.
     public weak var delegate: CheckoutDelegate?
 
     // MARK: - Private Properties
@@ -40,8 +39,7 @@ public final class Checkout: ObservableObject {
     /// Concrete accessor for internal use where `STPCheckoutSession`-specific
     /// properties (e.g. `allResponseFields`, `billingAddressOverride`) are needed.
     private var stpSession: STPCheckoutSession? {
-        get { session as? STPCheckoutSession }
-        set { session = newValue }
+        state.session as? STPCheckoutSession
     }
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
@@ -50,18 +48,19 @@ public final class Checkout: ObservableObject {
     private let apiClient: STPAPIClient
 
     /// Number of session-mutating API calls currently in flight.
-    /// Access is kept on the MainActor so payment UI integrations can validate
-    /// checkout state without relying on cross-actor workarounds.
     private var sessionUpdateCount = 0
-    /// Whether a session-mutating API call is currently in progress.
-    var isPerformingSessionUpdate: Bool { sessionUpdateCount > 0 }
 
     // MARK: - Initialization
 
-    /// Creates a new instance.
+    /// Creates and loads a new Checkout session.
+    ///
+    /// The session is fetched from Stripe's servers before the initializer
+    /// returns, so ``state`` is immediately available.
+    ///
     /// - Parameters:
     ///   - clientSecret: The client secret for your Checkout Session (e.g. `cs_xxx_secret_yyy`).
     ///   - apiClient: The API client to use. Defaults to ``STPAPIClient.shared``.
+<<<<<<< Updated upstream
     public init(clientSecret: String, apiClient: STPAPIClient = .shared) {
         self.clientSecret = clientSecret
         self.apiClient = apiClient
@@ -70,23 +69,54 @@ public final class Checkout: ObservableObject {
     // MARK: - Loading
 
     /// Fetches the Checkout Session from the Stripe API and populates ``session``.
+    /// - Returns: The loaded ``Checkout.Session``.
     /// - Throws: ``CheckoutError`` if the request fails.
-    public func load() async throws {
+    @discardableResult
+    public func load() async throws -> Checkout.Session {
+=======
+    /// - Throws: ``CheckoutError`` if the client secret is invalid or the request fails.
+    public init(clientSecret: String, apiClient: STPAPIClient = .shared) async throws {
+>>>>>>> Stashed changes
         guard !clientSecret.isEmpty else {
             throw CheckoutError.invalidClientSecret
         }
-        guard integrationDelegate?.isSheetPresented != true else {
-            throw CheckoutError.sheetCurrentlyPresented
+        self.clientSecret = clientSecret
+        self.apiClient = apiClient
+
+        do {
+            let sessionId = Self.extractSessionId(from: clientSecret)
+            let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+            self.state = .loaded(checkoutSession)
+        } catch {
+            throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
 
-        try await withSessionUpdateGuard {
+<<<<<<< Updated upstream
+        return try await withSessionUpdateGuard {
             do {
                 let sessionId = Self.extractSessionId(from: clientSecret)
                 let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
-                updateSession(checkoutSession)
+                return updateSession(checkoutSession)
             } catch {
                 throw CheckoutError.apiError(message: error.nonGenericDescription)
             }
+=======
+        // Set up the onConfirmed callback now that self is fully initialized.
+        stpSession?.onConfirmed = { [weak self] response in
+            self?.updateSession(response)
+        }
+    }
+
+    /// Internal initializer for testing that bypasses the network call.
+    init(clientSecret: String, apiClient: STPAPIClient = .shared, session: STPCheckoutSession) {
+        self.clientSecret = clientSecret
+        self.apiClient = apiClient
+        self.state = .loaded(session)
+
+        // Set up the onConfirmed callback now that self is fully initialized.
+        session.onConfirmed = { [weak self] response in
+            self?.updateSession(response)
+>>>>>>> Stashed changes
         }
     }
 
@@ -94,19 +124,23 @@ public final class Checkout: ObservableObject {
 
     /// Applies a promotion code to the session.
     /// - Parameter code: The promotion code to apply.
+    /// - Returns: The updated ``Checkout.Session``.
     /// - Throws: ``CheckoutError`` if applying the promotion code fails.
-    public func applyPromotionCode(_ code: String) async throws {
+    @discardableResult
+    public func applyPromotionCode(_ code: String) async throws -> Checkout.Session {
         try requireOpenSession()
-        try await withSessionUpdateGuard {
+        return try await withSessionUpdateGuard {
             try await performAPIUpdate(.setPromotionCode(code))
         }
     }
 
     /// Removes the currently applied promotion code.
+    /// - Returns: The updated ``Checkout.Session``.
     /// - Throws: ``CheckoutError`` if removing the promotion code fails.
-    public func removePromotionCode() async throws {
+    @discardableResult
+    public func removePromotionCode() async throws -> Checkout.Session {
         try requireOpenSession()
-        try await withSessionUpdateGuard {
+        return try await withSessionUpdateGuard {
             try await performAPIUpdate(.setPromotionCode(""))
         }
     }
@@ -115,10 +149,12 @@ public final class Checkout: ObservableObject {
 
     /// Updates the quantity of a line item.
     /// - Parameter params: The line item ID and new quantity to set.
+    /// - Returns: The updated ``Checkout.Session``.
     /// - Throws: ``CheckoutError`` if the update fails.
-    public func updateQuantity(with params: LineItemUpdate) async throws {
+    @discardableResult
+    public func updateQuantity(with params: LineItemUpdate) async throws -> Checkout.Session {
         try requireOpenSession()
-        try await withSessionUpdateGuard {
+        return try await withSessionUpdateGuard {
             try await performAPIUpdate(.setLineItemQuantity(lineItemId: params.lineItemId, quantity: params.quantity))
         }
     }
@@ -127,10 +163,12 @@ public final class Checkout: ObservableObject {
 
     /// Selects a shipping option for the session.
     /// - Parameter optionId: The ID of the shipping rate to select.
+    /// - Returns: The updated ``Checkout.Session``.
     /// - Throws: ``CheckoutError`` if the update fails.
-    public func selectShippingOption(_ optionId: String) async throws {
+    @discardableResult
+    public func selectShippingOption(_ optionId: String) async throws -> Checkout.Session {
         try requireOpenSession()
-        try await withSessionUpdateGuard {
+        return try await withSessionUpdateGuard {
             try await performAPIUpdate(.setShippingRate(optionId))
         }
     }
@@ -146,19 +184,32 @@ public final class Checkout: ObservableObject {
     ///
     /// - Parameter params: The billing address to set. To reset tax computation
     ///   to a country-only region, pass an ``AddressUpdate`` with just the country.
+<<<<<<< Updated upstream
+    /// - Returns: The updated ``Checkout.Session``.
     /// - Throws: ``CheckoutError`` if the session is not loaded/open, or if
+=======
+    /// - Throws: ``CheckoutError`` if the session is not open, or if
+>>>>>>> Stashed changes
     ///   the server request fails.
-    public func updateBillingAddress(_ params: AddressUpdate) async throws {
+    @discardableResult
+    public func updateBillingAddress(_ params: AddressUpdate) async throws -> Checkout.Session {
         let currentSession = try requireOpenSession()
         if currentSession.shouldSendTaxRegion(for: "billing") {
-            try await withSessionUpdateGuard {
-                try await performAPIUpdate(.setTaxRegion(params.address))
+            return try await withSessionUpdateGuard {
+                let updatedSession = try await performAPIUpdate(.setTaxRegion(params.address))
                 stpSession?.billingAddressOverride = params
+                return updatedSession
             }
         } else {
             currentSession.billingAddressOverride = params
+<<<<<<< Updated upstream
             session = currentSession
             delegate?.checkout(self, didUpdate: currentSession)
+            return currentSession
+=======
+            state = .loaded(currentSession)
+            delegate?.checkout(self, didChangeState: state)
+>>>>>>> Stashed changes
         }
     }
 
@@ -171,19 +222,32 @@ public final class Checkout: ObservableObject {
     ///
     /// - Parameter params: The shipping address to set. To reset tax computation
     ///   to a country-only region, pass an ``AddressUpdate`` with just the country.
+<<<<<<< Updated upstream
+    /// - Returns: The updated ``Checkout.Session``.
     /// - Throws: ``CheckoutError`` if the session is not loaded/open, or if
+=======
+    /// - Throws: ``CheckoutError`` if the session is not open, or if
+>>>>>>> Stashed changes
     ///   the server request fails.
-    public func updateShippingAddress(_ params: AddressUpdate) async throws {
+    @discardableResult
+    public func updateShippingAddress(_ params: AddressUpdate) async throws -> Checkout.Session {
         let currentSession = try requireOpenSession()
         if currentSession.shouldSendTaxRegion(for: "shipping") {
-            try await withSessionUpdateGuard {
-                try await performAPIUpdate(.setTaxRegion(params.address))
+            return try await withSessionUpdateGuard {
+                let updatedSession = try await performAPIUpdate(.setTaxRegion(params.address))
                 stpSession?.shippingAddressOverride = params
+                return updatedSession
             }
         } else {
             currentSession.shippingAddressOverride = params
+<<<<<<< Updated upstream
             session = currentSession
             delegate?.checkout(self, didUpdate: currentSession)
+            return currentSession
+=======
+            state = .loaded(currentSession)
+            delegate?.checkout(self, didChangeState: state)
+>>>>>>> Stashed changes
         }
     }
 
@@ -192,10 +256,12 @@ public final class Checkout: ObservableObject {
     /// Selects a currency for the session (adaptive pricing).
     /// - Parameter currency: The three-letter ISO currency code to switch to (e.g. "gbp").
     /// - Throws: ``CheckoutError`` if the update fails.
-    func selectCurrency(_ currency: String) async throws {
+    @discardableResult
+    func selectCurrency(_ currency: String) async throws -> Checkout {
         try requireOpenSessionForInSheetUpdate()
-        try await withSessionUpdateGuard {
-            try await performAPIUpdate(.setCurrency(currency))
+        return try await withSessionUpdateGuard {
+            _ = try await performAPIUpdate(.setCurrency(currency))
+            return self
         }
     }
 
@@ -203,17 +269,19 @@ public final class Checkout: ObservableObject {
 
     /// Sets the customer's tax ID on the session.
     /// - Parameter params: The tax ID type and value to set.
+    /// - Returns: The updated ``Checkout.Session``.
     /// - Throws: ``CheckoutError`` if the update fails.
-    public func updateTaxId(with params: TaxIdUpdate) async throws {
+    @discardableResult
+    public func updateTaxId(with params: TaxIdUpdate) async throws -> Checkout.Session {
         try requireOpenSession()
-        try await withSessionUpdateGuard {
+        return try await withSessionUpdateGuard {
             try await performAPIUpdate(.setTaxId(type: params.type, value: params.value))
         }
     }
 
     // MARK: - Internal Methods
 
-    /// Replaces ``session`` and notifies the delegate when the session data has changed.
+    /// Replaces the session and notifies the delegate when the session data has changed.
     @discardableResult
     func updateSession(_ newSession: STPCheckoutSession) -> Checkout.Session {
         // Carry over client-side address overrides to the new session.
@@ -223,9 +291,9 @@ public final class Checkout: ObservableObject {
             self?.updateSession(response)
         }
         let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
-        session = newSession
+        state = .loaded(newSession)
         if changed {
-            delegate?.checkout(self, didUpdate: newSession)
+            delegate?.checkout(self, didChangeState: state)
         }
         return newSession
     }
@@ -233,27 +301,36 @@ public final class Checkout: ObservableObject {
     // MARK: - Private Methods
 
     /// Tracks that a session update is in progress for the duration of `body`.
+    /// Transitions state to `.loading` while the body executes.
     /// Uses a counter so overlapping calls don't clear the flag early.
     /// Note: an actor wouldn't help — actors are reentrant at suspension points,
     /// so the same interleaving would occur.
     private func withSessionUpdateGuard<T>(_ body: () async throws -> T) async rethrows -> T {
         sessionUpdateCount += 1
-        defer { sessionUpdateCount -= 1 }
+        state = .loading(state.session)
+        defer {
+            sessionUpdateCount -= 1
+            if sessionUpdateCount == 0, case .loading(let session) = state {
+                state = .loaded(session)
+            }
+        }
         return try await body()
     }
 
-    /// Validates that the session is loaded and open (but allows the sheet to be presented).
+    /// Validates that the session is open (but allows the sheet to be presented).
     /// Used by mutations triggered from inside the presented sheet (e.g. currency selection).
-    private func requireOpenSessionForInSheetUpdate() throws {
+    @discardableResult
+    private func requireOpenSessionForInSheetUpdate() throws -> STPCheckoutSession {
         guard let currentSession = stpSession else {
             throw CheckoutError.sessionNotLoaded
         }
         guard currentSession.status == .open else {
             throw CheckoutError.sessionNotOpen
         }
+        return currentSession
     }
 
-    /// Validates that the session is loaded, open, and no sheet is presented.
+    /// Validates that the session is open and no sheet is presented.
     @discardableResult
     private func requireOpenSession() throws -> STPCheckoutSession {
         guard let currentSession = stpSession else {
@@ -270,8 +347,13 @@ public final class Checkout: ObservableObject {
 
     /// Performs an API update, then reloads full session state from init.
     /// The update endpoint can return partial data, so we always refresh from init
+<<<<<<< Updated upstream
     /// to keep ``session`` as the single source of truth.
+    private func performAPIUpdate(_ update: SessionUpdate) async throws -> Checkout.Session {
+=======
+    /// to keep the session as the single source of truth.
     private func performAPIUpdate(_ update: SessionUpdate) async throws {
+>>>>>>> Stashed changes
         do {
             let sessionId = Self.extractSessionId(from: clientSecret)
             _ = try await apiClient.updateCheckoutSession(
@@ -279,7 +361,7 @@ public final class Checkout: ObservableObject {
                 parameters: update.parameters
             )
             let refreshedCheckoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
-            updateSession(refreshedCheckoutSession)
+            return updateSession(refreshedCheckoutSession)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
