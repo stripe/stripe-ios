@@ -1102,6 +1102,9 @@ extension PlaygroundController {
                 body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
             }
         }
+        if settings.integrationType == .checkoutSession {
+            body["checkout_session_payment_method_save"] = settings.paymentMethodSave.rawValue
+        }
         return body
     }
 
