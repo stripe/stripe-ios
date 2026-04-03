@@ -321,7 +321,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             // With default billing details, individual address fields should be shown and pre-populated
             XCTAssertEqual(form.getTextFieldElement("Address line 1")?.text, "Rua das Flores, 123")
             XCTAssertEqual(form.getTextFieldElement("City")?.text, "São Paulo")
-            XCTAssertEqual(form.getTextFieldElement("State")?.text, "SP")
+            XCTAssertEqual(form.getDropdownFieldElement("State")?.selectedItem.rawData, "SP")
             XCTAssertEqual(form.getTextFieldElement("Postal code")?.text, "01234567")
         }
     }

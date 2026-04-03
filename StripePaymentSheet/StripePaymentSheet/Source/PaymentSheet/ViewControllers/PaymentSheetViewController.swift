@@ -65,7 +65,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private(set) var isDismissable: Bool = true
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
     // MARK: - Views
@@ -167,7 +167,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-                allowsRemovalOfPaymentMethods: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+                allowsRemovalOfPaymentMethods: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                 allowsUpdatePaymentMethod: elementsSession.paymentMethodUpdateForPaymentSheet
             ),

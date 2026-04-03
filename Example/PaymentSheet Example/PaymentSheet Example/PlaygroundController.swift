@@ -429,7 +429,7 @@ import UIKit
                     throw NSError(domain: "PlaygroundController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self deallocated"])
                 }
                 // Create a new intent
-                self.createIntent()
+                try await self.createIntent()
                 // Now confirm with the new intent
                 return try await self.confirmationTokenConfirmHandler(confirmationToken)
             }
@@ -466,7 +466,7 @@ import UIKit
                     throw NSError(domain: "PlaygroundController", code: -1, userInfo: [NSLocalizedDescriptionKey: "Self deallocated"])
                 }
                 // Create a new intent first
-                self.createIntent()
+                try await self.createIntent()
                 // Now confirm with the new intent
                 return try await withCheckedThrowingContinuation { continuation in
                     self.confirmHandler(pm, billingDetails) { result in
@@ -1011,18 +1011,18 @@ extension PlaygroundController {
         }
     }
 
-    func createIntent() {
+    func createIntent() async throws {
         let body = buildRequestBody(shouldCreateCustomerKey: false)
-        makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
-            guard
-                error == nil,
-                let data = data,
-                let json = try? JSONDecoder().decode([String: String].self, from: data),
-                (response as? HTTPURLResponse)?.statusCode != 400,
-                let clientSecret = json["intentClientSecret"]
-            else {
-                print(error as Any)
-                DispatchQueue.main.async {
+        self.clientSecret = try await withCheckedThrowingContinuation { continuation in
+            makeRequest(with: checkoutEndpoint, body: body) { data, response, error in
+                guard
+                    error == nil,
+                    let data = data,
+                    let json = try? JSONDecoder().decode([String: String].self, from: data),
+                    (response as? HTTPURLResponse)?.statusCode != 400,
+                    let clientSecret = json["intentClientSecret"]
+                else {
+                    print(error as Any)
                     var errorMessage = "An error occurred communicating with the example backend."
                     if let data = data,
                        let json = try? JSONDecoder().decode([String: String].self, from: data),
@@ -1030,12 +1030,13 @@ extension PlaygroundController {
                         errorMessage = jsonError
                     }
                     self.fail(error: PlaygroundError(errorDescription: errorMessage))
+                    continuation.resume(throwing: PlaygroundError(errorDescription: errorMessage))
+                    return
                 }
-                return
+                let intentID = STPPaymentIntent.id(fromClientSecret: clientSecret) ?? STPSetupIntent.id(fromClientSecret: clientSecret)
+                print("Created new stripe intent with id: \(intentID ?? "")")
+                continuation.resume(returning: clientSecret)
             }
-            self.clientSecret = clientSecret
-            let intentID = STPPaymentIntent.id(fromClientSecret: clientSecret) ?? STPSetupIntent.id(fromClientSecret: clientSecret)
-            print("Created new stripe intent with id: \(intentID ?? "")")
         }
     }
 
@@ -1060,6 +1061,8 @@ extension PlaygroundController {
         if settings.integrationType == .checkoutSession {
             body["use_checkout_session"] = true
             body["customer_email"] = "moblie-test-user@stripe.com"
+            body["checkout_session_payment_method_remove"] = settings.paymentMethodRemove.rawValue
+            body["checkout_session_payment_method_save"] = settings.paymentMethodSave.rawValue
         }
 
         // Send custom keys to backend if provided
@@ -1096,9 +1099,6 @@ extension PlaygroundController {
             if settings.paymentMethodSave == .disabled && settings.allowRedisplayOverride != .notSet {
                 body["customer_session_payment_method_save_allow_redisplay_override"] = settings.allowRedisplayOverride.rawValue
             }
-        }
-        if settings.integrationType == .checkoutSession {
-            body["checkout_session_payment_method_save"] = settings.paymentMethodSave.rawValue
         }
         return body
     }

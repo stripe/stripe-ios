@@ -207,4 +207,13 @@ enum Intent {
             }
         }
     }
+
+    func allowsPaymentMethodRemoval(elementsSession: STPElementsSession) -> Bool {
+        switch self {
+        case .checkoutSession(let checkoutSession):
+            return checkoutSession.customer?.canDetachPaymentMethod ?? false
+        case .paymentIntent, .setupIntent, .deferredIntent:
+            return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        }
+    }
 }
