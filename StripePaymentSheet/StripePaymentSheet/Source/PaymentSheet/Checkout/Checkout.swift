@@ -252,8 +252,9 @@ public final class Checkout: ObservableObject {
     /// Used by mutations triggered from inside the presented sheet (e.g. currency selection).
     @discardableResult
     private func requireOpenSessionForInSheetUpdate() throws -> STPCheckoutSession {
-        // stpSession is always non-nil after a successful init.
-        let currentSession = stpSession!
+        guard let currentSession = stpSession else {
+            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
+        }
         guard currentSession.status == .open else {
             throw CheckoutError.sessionNotOpen
         }
@@ -263,8 +264,9 @@ public final class Checkout: ObservableObject {
     /// Validates that the session is open and no sheet is presented.
     @discardableResult
     private func requireOpenSession() throws -> STPCheckoutSession {
-        // stpSession is always non-nil after a successful init.
-        let currentSession = stpSession!
+        guard let currentSession = stpSession else {
+            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
+        }
         guard currentSession.status == .open else {
             throw CheckoutError.sessionNotOpen
         }
