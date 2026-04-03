@@ -13,9 +13,6 @@ import Foundation
     /// The client secret provided to ``Checkout`` is empty.
     case invalidClientSecret
 
-    /// The session could not be resolved. This should not occur after a successful ``Checkout`` init.
-    case sessionNotLoaded
-
     /// The session is no longer open (e.g. it has been completed or expired).
     case sessionNotOpen
 
@@ -31,8 +28,6 @@ import Foundation
         switch self {
         case .invalidClientSecret:
             return "Checkout was initialized with an empty client secret."
-        case .sessionNotLoaded:
-            return "The session could not be resolved."
         case .sessionNotOpen:
             return "The session is no longer active."
         case .sheetCurrentlyPresented:

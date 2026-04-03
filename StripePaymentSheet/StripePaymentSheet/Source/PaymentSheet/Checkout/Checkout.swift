@@ -60,30 +60,34 @@ public final class Checkout: ObservableObject {
     /// - Parameters:
     ///   - clientSecret: The client secret for your Checkout Session (e.g. `cs_xxx_secret_yyy`).
     ///   - apiClient: The API client to use. Defaults to ``STPAPIClient.shared``.
-    public init(clientSecret: String, apiClient: STPAPIClient = .shared) {
-        self.clientSecret = clientSecret
-        self.apiClient = apiClient
-    }
-
-    // MARK: - Loading
-
-    /// Fetches the Checkout Session from the Stripe API and populates ``session``.
-    /// - Returns: The loaded ``Checkout.Session``.
-    /// - Throws: ``CheckoutError`` if the request fails.
-    @discardableResult
-    public func load() async throws -> Checkout.Session {
+    /// - Throws: ``CheckoutError`` if the client secret is invalid or the session cannot be loaded.
+    public init(clientSecret: String, apiClient: STPAPIClient = .shared) async throws {
         guard !clientSecret.isEmpty else {
             throw CheckoutError.invalidClientSecret
         }
+        self.clientSecret = clientSecret
+        self.apiClient = apiClient
 
-        return try await withSessionUpdateGuard {
-            do {
-                let sessionId = Self.extractSessionId(from: clientSecret)
-                let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
-                return updateSession(checkoutSession)
-            } catch {
-                throw CheckoutError.apiError(message: error.nonGenericDescription)
+        // Load the session before returning so `state` is immediately available.
+        let sessionId = Self.extractSessionId(from: clientSecret)
+        do {
+            let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+            self.state = .loaded(checkoutSession)
+            checkoutSession.onConfirmed = { [weak self] response in
+                self?.updateSession(response)
             }
+        } catch {
+            throw CheckoutError.apiError(message: error.nonGenericDescription)
+        }
+    }
+
+    /// Internal initializer for unit tests that injects a pre-loaded session.
+    init(clientSecret: String, session: STPCheckoutSession, apiClient: STPAPIClient = .shared) {
+        self.clientSecret = clientSecret
+        self.apiClient = apiClient
+        self.state = .loaded(session)
+        session.onConfirmed = { [weak self] response in
+            self?.updateSession(response)
         }
     }
 
@@ -270,9 +274,8 @@ public final class Checkout: ObservableObject {
     /// Used by mutations triggered from inside the presented sheet (e.g. currency selection).
     @discardableResult
     private func requireOpenSessionForInSheetUpdate() throws -> STPCheckoutSession {
-        guard let currentSession = stpSession else {
-            throw CheckoutError.sessionNotLoaded
-        }
+        // stpSession is always non-nil after a successful init.
+        let currentSession = stpSession!
         guard currentSession.status == .open else {
             throw CheckoutError.sessionNotOpen
         }
@@ -282,9 +285,8 @@ public final class Checkout: ObservableObject {
     /// Validates that the session is open and no sheet is presented.
     @discardableResult
     private func requireOpenSession() throws -> STPCheckoutSession {
-        guard let currentSession = stpSession else {
-            throw CheckoutError.sessionNotLoaded
-        }
+        // stpSession is always non-nil after a successful init.
+        let currentSession = stpSession!
         guard currentSession.status == .open else {
             throw CheckoutError.sessionNotOpen
         }
