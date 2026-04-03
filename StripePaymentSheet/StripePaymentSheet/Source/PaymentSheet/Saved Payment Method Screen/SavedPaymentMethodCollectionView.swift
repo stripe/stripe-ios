@@ -360,13 +360,20 @@ extension SavedPaymentMethodCollectionView {
                         let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
                         paymentMethodLogo.tag = 0
                         let cardArtHeight: Int = 30
-                        if cardArtEnabled {
-                            paymentMethodLogo.setImage(with: paymentMethod.cardArtCDNURL(height: cardArtHeight),
-                                                       processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
-                                                       fallbackImage: paymentMethodCellImage,
-                                                       onSetImageCompletion: { [weak self] didSetDownloadedImage in
-                                self?.paymentMethodLogoHeightConstraint.constant = didSetDownloadedImage ? CGFloat(cardArtHeight) : paymentMethodLogoSize.height
-                            })
+                        if cardArtEnabled, let cardArtURL = paymentMethod.cardArtCDNURL(height: cardArtHeight) {
+                            paymentMethodLogo.tag = cardArtURL.hashValue
+                            paymentMethodLogo.image = nil
+                            Task {
+                                let image = try? await DownloadManager.sharedManager.downloadImage(url: cardArtURL)
+                                guard paymentMethodLogo.tag == cardArtURL.hashValue else { return }
+                                if let image {
+                                    paymentMethodLogo.image = image.roundedWithBorder(radius: 3)
+                                    paymentMethodLogoHeightConstraint.constant = CGFloat(cardArtHeight)
+                                } else {
+                                    paymentMethodLogo.image = paymentMethodCellImage
+                                    paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
+                                }
+                            }
                         } else {
                             paymentMethodLogo.image = paymentMethodCellImage
                             paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height

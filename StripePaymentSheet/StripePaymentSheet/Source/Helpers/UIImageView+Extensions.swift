@@ -11,14 +11,10 @@ extension UIImageView {
     func setImage(
         with url: URL?,
         processOnDownloadedImage: ((UIImage) -> UIImage)? = nil,
-        fallbackImage: UIImage,
-        onSetImageCompletion: ((Bool) -> Void)? = nil
+        fallbackImage: UIImage
     ) {
         guard let url else {
             self.image = fallbackImage
-            if let onSetImageCompletion {
-                onSetImageCompletion(false)
-            }
             return
         }
 
@@ -34,18 +30,12 @@ extension UIImageView {
                 await MainActor.run {
                     if self?.tag == url.hashValue {
                         self?.image = processedImage
-                        if let onSetImageCompletion {
-                            onSetImageCompletion(true)
-                        }
                     }
                 }
             } catch {
                 await MainActor.run {
                     if self?.tag == url.hashValue {
                         self?.image = fallbackImage
-                        if let onSetImageCompletion {
-                            onSetImageCompletion(false)
-                        }
                     }
                 }
             }
