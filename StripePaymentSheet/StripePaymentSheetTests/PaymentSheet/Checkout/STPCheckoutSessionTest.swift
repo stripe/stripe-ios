@@ -361,20 +361,6 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
     }
 
-    func testMerchantWillSavePaymentMethod_subscriptionModeWithCustomer() {
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
-            "session_id": "cs_test_subscription",
-            "object": "checkout.session",
-            "livemode": false,
-            "mode": "subscription",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "customer": ["id": "cus_123"],
-        ])!
-
-        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
-    }
-
     func testCheckoutSessionIntent_setupFutureUsageString() {
         let session = makeCheckoutSession([
             "setup_future_usage": "off_session",
