@@ -223,6 +223,11 @@ struct PaymentSheetTestPlayground: View {
                                         title: "Offer Save",
                                         searchText: $searchText
                                     )
+                                    SearchableSettingView(
+                                        setting: $playgroundController.settings.paymentMethodRemove,
+                                        title: "Payment Method Remove",
+                                        searchText: $searchText
+                                    )
                                 }
                             }
                         }
