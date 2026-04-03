@@ -153,8 +153,10 @@ public final class Checkout: ObservableObject {
         let currentSession = try requireOpenSession()
         if currentSession.shouldSendTaxRegion(for: "billing") {
             try await withSessionUpdateGuard {
-                try await performAPIUpdate(.setTaxRegion(params.address))
-                stpSession?.billingAddressOverride = params
+                try await performAPIUpdate(.setTaxRegion(params.address), applyOverrides: { session in
+                    // Set the local address override on the refreshed session after a successful API call.
+                    session.billingAddressOverride = params
+                })
             }
         } else {
             currentSession.billingAddressOverride = params
@@ -178,8 +180,10 @@ public final class Checkout: ObservableObject {
         let currentSession = try requireOpenSession()
         if currentSession.shouldSendTaxRegion(for: "shipping") {
             try await withSessionUpdateGuard {
-                try await performAPIUpdate(.setTaxRegion(params.address))
-                stpSession?.shippingAddressOverride = params
+                try await performAPIUpdate(.setTaxRegion(params.address), applyOverrides: { session in
+                    // Set the local address override on the refreshed session after a successful API call.
+                    session.shippingAddressOverride = params
+                })
             }
         } else {
             currentSession.shippingAddressOverride = params
@@ -214,11 +218,16 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Internal Methods
 
-    /// Replaces the session and notifies the delegate when the session data has changed.
-    func updateSession(_ newSession: STPCheckoutSession) {
-        // Carry over client-side address overrides to the new session.
+    /// Replaces the current session and notifies the delegate.
+    ///
+    /// - Parameter applyOverrides: A closure to apply client-side overrides (e.g. address)
+    ///   to the new session before state is published via the delegate. This closure only
+    ///   runs after a successful API call, ensuring local state stays in sync with the backend.
+    func updateSession(_ newSession: STPCheckoutSession, applyOverrides: ((STPCheckoutSession) -> Void)? = nil) {
+        // Preserve client-side address overrides on the new session.
         newSession.billingAddressOverride = stpSession?.billingAddressOverride
         newSession.shippingAddressOverride = stpSession?.shippingAddressOverride
+        applyOverrides?(newSession)
         newSession.onConfirmed = { [weak self] response in
             self?.updateSession(response)
         }
@@ -279,7 +288,12 @@ public final class Checkout: ObservableObject {
     /// Performs an API update, then reloads full session state from init.
     /// The update endpoint can return partial data, so we always refresh from init
     /// to keep the session as the single source of truth.
-    private func performAPIUpdate(_ update: SessionUpdate) async throws {
+    /// - Parameter applyOverrides: Forwarded to ``updateSession(_:applyOverrides:)``
+    ///   to apply client-side overrides to the refreshed session before state is published.
+    private func performAPIUpdate(
+        _ update: SessionUpdate,
+        applyOverrides: ((STPCheckoutSession) -> Void)? = nil
+    ) async throws {
         do {
             let sessionId = Self.extractSessionId(from: clientSecret)
             _ = try await apiClient.updateCheckoutSession(
@@ -287,7 +301,7 @@ public final class Checkout: ObservableObject {
                 parameters: update.parameters
             )
             let refreshedCheckoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
-            updateSession(refreshedCheckoutSession)
+            updateSession(refreshedCheckoutSession, applyOverrides: applyOverrides)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
