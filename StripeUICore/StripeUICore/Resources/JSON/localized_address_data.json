@@ -42,11 +42,11 @@
       ],
       "sub_labels": [
         "أبو ظبي — Abu Dhabi",
-        "إمارة الشارقةّ — Sharjah",
+        "الشارقة — Sharjah",
         "الفجيرة — Fujairah",
         "ام القيوين — Umm Al Quwain",
-        "إمارة دبيّ — Dubai",
-        "إمارة رأس الخيمة — Ras al Khaimah",
+        "دبي — Dubai",
+        "رأس الخيمة — Ras al Khaimah",
         "عجمان — Ajman"
       ]
    },
@@ -555,7 +555,7 @@
         "福建省 — Fujian Sheng",
         "甘肃省 — Gansu Sheng",
         "广东省 — Guangdong Sheng",
-        "广西壮族自治区 — Guangxi Zhuangzuzizhiqu",
+        "广西 — Guangxi Zhuangzuzizhiqu",
         "贵州省 — Guizhou Sheng",
         "海南省 — Hainan Sheng",
         "河北省 — Hebei Sheng",
@@ -567,8 +567,8 @@
         "江苏省 — Jiangsu Sheng",
         "江西省 — Jiangxi Sheng",
         "辽宁省 — Liaoning Sheng",
-        "内蒙古自治区 — Neimenggu Zizhiqu",
-        "宁夏回族自治区 — Ningxia Huizuzizhiqu",
+        "内蒙古 — Neimenggu Zizhiqu",
+        "宁夏 — Ningxia Huizuzizhiqu",
         "青海省 — Qinghai Sheng",
         "山东省 — Shandong Sheng",
         "山西省 — Shanxi Sheng",
@@ -577,9 +577,9 @@
         "四川省 — Sichuan Sheng",
         "台湾 — Taiwan",
         "天津市 — Tianjin Shi",
-        "西藏自治区 — Xizang Zizhiqu",
+        "西藏 — Xizang Zizhiqu",
         "香港 — Hong Kong",
-        "新疆维吾尔自治区 — Xinjiang Weiwuerzizhiqu",
+        "新疆 — Xinjiang Weiwuerzizhiqu",
         "云南省 — Yunnan Sheng",
         "浙江省 — Zhejiang Sheng"
       ]
@@ -1040,9 +1040,9 @@
         "New Territories"
       ],
       "sub_labels": [
-        "Kowloon — Kowloon",
-        "Hong Kong — Hong Kong",
-        "New Territories — New Territories"
+        "九龍 — Kowloon",
+        "香港島 — Hong Kong",
+        "新界 — New Territories"
       ]
    },
    "HN":{
@@ -1742,23 +1742,23 @@
         "충청북도"
       ],
       "sub_labels": [
-        "강원도 — Gangwon-do",
-        "경기도 — Gyeonggi-do",
-        "경상남도 — Gyeongsangnam-do",
-        "경상북도 — Gyeongsangbuk-do",
-        "광주광역시 — Gwangju",
-        "대구광역시 — Daegu",
-        "대전광역시 — Daejeon",
-        "부산광역시 — Busan",
-        "서울특별시 — Seoul",
-        "세종특별자치시 — Sejong",
-        "울산광역시 — Ulsan",
-        "인천광역시 — Incheon",
-        "전라남도 — Jeollanam-do",
-        "전라북도 — Jeollabuk-do",
-        "제주특별자치도 — Jeju-do",
-        "충청남도 — Chungcheongnam-do",
-        "충청북도 — Chungcheongbuk-do"
+        "강원 — Gangwon-do",
+        "경기 — Gyeonggi-do",
+        "경남 — Gyeongsangnam-do",
+        "경북 — Gyeongsangbuk-do",
+        "광주 — Gwangju",
+        "대구 — Daegu",
+        "대전 — Daejeon",
+        "부산 — Busan",
+        "서울 — Seoul",
+        "세종 — Sejong",
+        "울산 — Ulsan",
+        "인천 — Incheon",
+        "전남 — Jeollanam-do",
+        "전북 — Jeollabuk-do",
+        "제주 — Jeju-do",
+        "충남 — Chungcheongnam-do",
+        "충북 — Chungcheongbuk-do"
       ]
    },
    "KW":{
@@ -3180,7 +3180,7 @@
         "Закарпатська область — Zakarpats'ka oblast",
         "Запорізька область — Zaporiz'ka oblast",
         "Івано-Франківська область — Ivano-Frankivs'ka oblast",
-        "місто Київ — Kyiv city",
+        "Київ — Kyiv city",
         "Київська область — Kiev oblast",
         "Кіровоградська область — Kirovohrads'ka oblast",
         "Львівська область — Lviv oblast",
