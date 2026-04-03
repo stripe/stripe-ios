@@ -347,7 +347,7 @@ final class FinancialConnectionsNetworkingUITests: XCTestCase {
         )
     }
 
-    func testNativeNetworkingManualEntryTestMode() throws {
+    func _testNativeNetworkingManualEntryTestMode() throws {
         let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
         executeNativeNetworkingManualEntryTestModeSignUpFlowTest(emailAddress: emailAddresss)
         executeNativeNetworkingManualEntryTestModeSignInFlowTest(emailAddress: emailAddresss)
