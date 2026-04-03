@@ -10,6 +10,9 @@ PATCH
 * [Fixed] Fixed amounts in HUF being formatted incorrectly.
 * [Fixed] Improved loading times for integrations that have Link disabled.
 
+### Connect
+* [Added] [#6201](https://github.com/stripe/stripe-ios/pull/6201) Added the types for new theming tokens in Connect Embedded Components and mapped them to the corresponding variable in ConnectJS
+
 ## 25.9.0 2026-03-24
 ### PaymentSheet
 * [Fixed] Fixed a crash when loading PaymentSheet, FlowController, and EmbeddedPaymentElement when compiling with XCode 26.4 / Swift 6.3 due to [a compiler bug](https://github.com/swiftlang/swift/issues/87481)
