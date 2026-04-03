@@ -2,6 +2,9 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release 
+### PaymentSheet
+* [Added] Added state dropdowns for countries with state types.
+
 ### Payments
 * [Fixed] Fixed an issue introduced in 25.8.0 where manually closing a webview 3ds2 challenge after failing the challenge and before it's automatically dismissed could result in a succeeded result.
 * [Fixed] Fixed amounts in HUF being formatted incorrectly.
