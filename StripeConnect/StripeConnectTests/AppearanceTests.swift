@@ -5,7 +5,7 @@
 //  Created by Chris Mays on 9/4/24.
 //
 
-@testable import StripeConnect
+@_spi(PreviewConnect) @testable import StripeConnect
 import UIKit
 import XCTest
 
@@ -62,6 +62,18 @@ class AppearanceTests: XCTestCase {
         appearance.buttonSecondary.colorBorder = UIColor(red: 0.7, green: 0.8, blue: 0.9, alpha: 1.0)
         appearance.buttonSecondary.colorText = UIColor(red: 0.8, green: 0.9, blue: 1.0, alpha: 1.0)
 
+        appearance.buttonDanger.colorBackground = UIColor(red: 0.8, green: 0.9, blue: 1.0, alpha: 1.0)
+        appearance.buttonDanger.colorText = UIColor(red: 0.9, green: 1.0, blue: 0.1, alpha: 1.0)
+        appearance.buttonDanger.colorBorder = UIColor(red: 1.0, green: 0.1, blue: 0.2, alpha: 1.0)
+
+        var buttonLabelStyle = Appearance.Typography.Style()
+        buttonLabelStyle.fontSize = 12
+        buttonLabelStyle.weight = .regular
+        buttonLabelStyle.textTransform = .uppercase
+        appearance.buttonDefaults.labelTypography = buttonLabelStyle
+        appearance.buttonDefaults.paddingVertical = 6
+        appearance.buttonDefaults.paddingHorizontal = 10
+
         appearance.badgeNeutral.colorBackground = UIColor(red: 0.9, green: 1.0, blue: 0.1, alpha: 1.0)
         appearance.badgeNeutral.colorText = UIColor(red: 1.0, green: 0.1, blue: 0.2, alpha: 1.0)
         appearance.badgeNeutral.colorBorder = UIColor(red: 0.1, green: 0.2, blue: 0.3, alpha: 1.0)
@@ -78,11 +90,29 @@ class AppearanceTests: XCTestCase {
         appearance.badgeDanger.colorText = UIColor(red: 0.9, green: 1.0, blue: 0.1, alpha: 1.0)
         appearance.badgeDanger.colorBorder = UIColor(red: 1.0, green: 0.1, blue: 0.2, alpha: 1.0)
 
+        var badgeLabelStyle = Appearance.Typography.Style()
+        badgeLabelStyle.fontSize = 12
+        badgeLabelStyle.weight = .regular
+        badgeLabelStyle.textTransform = .lowercase
+        appearance.badgeDefaults.labelTypography = badgeLabelStyle
+        appearance.badgeDefaults.paddingVertical = 6
+        appearance.badgeDefaults.paddingHorizontal = 10
+
         appearance.cornerRadius.base = 4
         appearance.cornerRadius.form = 6
         appearance.cornerRadius.button = 8
         appearance.cornerRadius.badge = 10
         appearance.cornerRadius.overlay = 12
+
+        appearance.tableRowPaddingY = 12
+
+        appearance.actionPrimaryStyle.textTransform = .uppercase
+        appearance.actionSecondaryStyle.textTransform = .lowercase
+
+        appearance.form.colorPlaceholder = UIColor(red: 0.3, green: 0.4, blue: 0.5, alpha: 1.0)
+        appearance.form.horizontalPadding = 12
+        appearance.form.verticalPadding = 6
+
         return appearance
     }()
 
@@ -132,6 +162,14 @@ class AppearanceTests: XCTestCase {
             "buttonSecondaryColorBackground": "rgb(153, 178, 204)",
             "buttonSecondaryColorBorder": "rgb(178, 204, 230)",
             "buttonSecondaryColorText": "rgb(204, 230, 255)",
+            "buttonDangerColorBackground": "rgb(204, 230, 255)",
+            "buttonDangerColorText": "rgb(230, 255, 26)",
+            "buttonDangerColorBorder": "rgb(255, 26, 51)",
+            "buttonLabelFontSize": "12px",
+            "buttonLabelFontWeight": "400",
+            "buttonLabelTextTransform": "uppercase",
+            "buttonPaddingX": "10px",
+            "buttonPaddingY": "6px",
             "badgeNeutralColorBackground": "rgb(230, 255, 26)",
             "badgeNeutralColorText": "rgb(255, 26, 51)",
             "badgeNeutralColorBorder": "rgb(26, 51, 76)",
@@ -144,11 +182,22 @@ class AppearanceTests: XCTestCase {
             "badgeDangerColorBackground": "rgb(204, 230, 255)",
             "badgeDangerColorText": "rgb(230, 255, 26)",
             "badgeDangerColorBorder": "rgb(255, 26, 51)",
+            "badgeLabelFontSize": "12px",
+            "badgeLabelFontWeight": "400",
+            "badgeLabelTextTransform": "lowercase",
+            "badgePaddingX": "10px",
+            "badgePaddingY": "6px",
             "borderRadius": "4px",
             "buttonBorderRadius": "8px",
             "formBorderRadius": "6px",
             "badgeBorderRadius": "10px",
             "overlayBorderRadius": "12px",
+            "tableRowPaddingY": "12px",
+            "actionPrimaryTextTransform": "uppercase",
+            "actionSecondaryTextTransform": "lowercase",
+            "formPlaceholderTextColor": "rgb(76, 102, 128)",
+            "inputFieldPaddingX": "12px",
+            "inputFieldPaddingY": "6px",
         ]
 
         XCTAssertEqual(actualValues, expectedValues)

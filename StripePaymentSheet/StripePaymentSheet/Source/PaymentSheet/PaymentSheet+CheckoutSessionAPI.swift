@@ -43,6 +43,10 @@ extension PaymentSheet {
                 paymentMethodType = params.type
                 paymentMethodOptions = paymentOptions
                 params.clientAttributionMetadata = clientAttributionMetadata
+                // Ensure email is set on the payment method — fall back to the checkout session's customer email
+                if params.billingDetails?.email == nil, let customerEmail = checkoutSession.customerEmail {
+                    params.nonnil_billingDetails.email = customerEmail
+                }
                 paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params)
             case let .saved(savedPaymentMethod, paymentOptions, _, _):
                 paymentMethod = savedPaymentMethod
@@ -50,8 +54,20 @@ extension PaymentSheet {
                 paymentMethodOptions = paymentOptions
             }
 
-            // 2. Get expected amount from checkout session
+            // 2. Get expected amount and save_payment_method from checkout session
             let expectedAmount = try checkoutSession.expectedAmount()
+            let savePaymentMethod: Bool? = {
+                switch checkoutSession.mode {
+                case .setup:
+                    // setup mode does not send the save_payment_method param
+                    return nil
+                case .payment:
+                    return confirmType.savePaymentMethodForCheckoutSession
+                case .subscription, .unknown:
+                    stpAssertionFailure("Only payment and setup mode implemented")
+                    return nil
+                }
+            }()
 
             // 3. Call confirm API
             let response = try await configuration.apiClient.confirmCheckoutSession(
@@ -59,6 +75,7 @@ extension PaymentSheet {
                 paymentMethod: paymentMethod.stripeId,
                 expectedAmount: expectedAmount,
                 expectedPaymentMethodType: paymentMethodType.identifier,
+                savePaymentMethod: savePaymentMethod,
                 returnURL: configuration.returnURL,
                 shipping: makeCheckoutSessionShippingParams(configuration: configuration),
                 paymentMethodOptions: paymentMethodOptions,

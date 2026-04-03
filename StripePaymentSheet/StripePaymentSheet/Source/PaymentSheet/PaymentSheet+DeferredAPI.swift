@@ -78,7 +78,7 @@ extension PaymentSheet {
             switch confirmType {
             case let .saved(savedPaymentMethod, _, _, _):
                 paymentMethod = savedPaymentMethod
-            case let .new(params, paymentOptions, newPaymentMethod, shouldSave, shouldSetAsDefaultPM):
+            case let .new(params, paymentOptions, newPaymentMethod, saveForFutureUseCheckboxState, shouldSetAsDefaultPM):
                 if let newPaymentMethod {
                     let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentSheetConfirmationError,
                                                       error: PaymentSheetError.unexpectedNewPaymentMethod,
@@ -87,7 +87,13 @@ extension PaymentSheet {
                 }
                 stpAssert(newPaymentMethod == nil)
                 paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params, additionalPaymentUserAgentValues: makeDeferredPaymentUserAgentValue(intentConfiguration: intentConfig))
-                confirmType = .new(params: params, paymentOptions: paymentOptions, paymentMethod: paymentMethod, shouldSave: shouldSave, shouldSetAsDefaultPM: shouldSetAsDefaultPM)
+                confirmType = .new(
+                    params: params,
+                    paymentOptions: paymentOptions,
+                    paymentMethod: paymentMethod,
+                    saveForFutureUseCheckboxState: saveForFutureUseCheckboxState,
+                    shouldSetAsDefaultPM: shouldSetAsDefaultPM
+                )
             }
 
             // 2a. If we have a preparePaymentMethodHandler, use the shared payment token session flow
@@ -116,8 +122,8 @@ extension PaymentSheet {
 
             // 2b. Otherwise, call the payment method confirmHandler
             let shouldSavePaymentMethod: Bool = {
-                // If `confirmType.shouldSave` is true, that means the customer has decided to save by checking the checkbox.
-                if confirmType.shouldSave {
+                // If `confirmType.shouldSaveForIntent` is true, that means the customer has decided to save by checking the checkbox.
+                if confirmType.shouldSaveForIntent {
                     return true
                 }
                 // Otherwise, set shouldSavePaymentMethod according to the IntentConfiguration SFU/PMO SFU values

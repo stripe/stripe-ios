@@ -110,10 +110,11 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var defaultPaymentMethod: STPPaymentMethod?
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
     var confirmationChallenge: ConfirmationChallenge?
+    private var currencySelectorElement: CurrencySelectorElement?
 
     // MARK: - UI properties
 
@@ -181,6 +182,13 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
+
+        self.currencySelectorElement = CurrencySelectorElement.makeIfNeeded(
+            intent: intent,
+            isFlowController: isFlowController,
+            appearance: configuration.appearance
+        )
+        self.currencySelectorElement?.delegate = self
 
         regenerateUI()
 
@@ -362,6 +370,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // If you add new UI, make sure it's also disabled/hidden during reloading.
         self.isReloading = isReloading
         isUserInteractionEnabled = !isBusy
+        currencySelectorElement?.setEnabled(!isBusy)
         if isReloading {
             view.endEditing(true)
         }
@@ -479,7 +488,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+            allowsPaymentMethodRemoval: loadResult.intent.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
             allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet
         )
         return VerticalPaymentMethodListViewController(
@@ -532,7 +541,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         paymentContainerView.directionalLayoutMargins = .zero
 
         // One stack view contains all our subviews
-        let views: [UIView] = [paymentContainerView, mandateView, errorLabel].compactMap { $0 }
+        let views: [UIView] = [currencySelectorElement?.view, paymentContainerView, mandateView, errorLabel].compactMap { $0 }
         for view in views {
             stackView.addArrangedSubview(view)
         }
@@ -796,7 +805,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                                                                                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
-                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                                                                                canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
@@ -815,6 +824,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         let vc = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
+            intent: intent,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
@@ -1186,7 +1196,15 @@ extension PaymentSheetVerticalViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
+        if let currencySelectorElement, element === currencySelectorElement {
+            handleCurrencySelection(currencySelectorElement.selectedCurrency)
+            return
+        }
         self.error = nil
         updateUI()
+    }
+
+    private func handleCurrencySelection(_ currency: String) {
+        paymentSheetDelegate?.paymentSheetViewControllerDidSelectCurrency(self, currency: currency)
     }
 }

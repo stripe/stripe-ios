@@ -352,6 +352,7 @@ struct AppearancePlaygroundView: View {
                             Text(String(describing: $0))
                         }
                     }
+                    Toggle("Card Art Enabled", isOn: $appearance.cardArtEnabled)
                     VStack {
                         Text("componentShadow")
                         ColorPicker("color", selection: componentShadowColorBinding)

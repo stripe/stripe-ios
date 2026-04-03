@@ -33,8 +33,7 @@ final class CurrencySelectorElement: Element {
     ) {
         self.exchangeRateMeta = exchangeRateMeta
         let (left, right) = Self.buildSelectorItems(
-            currentCurrency: currentCurrency,
-            currentTotal: currentTotal,
+            exchangeRateMeta: exchangeRateMeta,
             localizedPricesMetas: localizedPricesMetas
         )
         selectorElement = TwoOptionSelectorElement(
@@ -47,11 +46,30 @@ final class CurrencySelectorElement: Element {
         selectorElement.delegate = self
     }
 
-    // MARK: - Public API
+    // MARK: - Factory
 
-    func selectCurrency(_ currency: String) {
-        selectorElement.select(currency.lowercased())
+    static func makeIfNeeded(
+        intent: Intent,
+        isFlowController: Bool,
+        appearance: PaymentSheet.Appearance
+    ) -> CurrencySelectorElement? {
+        guard !isFlowController else { return nil }
+        guard case .checkoutSession(let session) = intent else { return nil }
+        guard session.adaptivePricingActive else { return nil }
+        guard !session.localizedPricesMetas.isEmpty else { return nil }
+        guard let exchangeRateMeta = session.exchangeRateMeta else { return nil }
+        guard let currency = session.currency, let total = session.totals?.total else { return nil }
+
+        return CurrencySelectorElement(
+            currentCurrency: currency,
+            currentTotal: total,
+            localizedPricesMetas: session.localizedPricesMetas,
+            exchangeRateMeta: exchangeRateMeta,
+            appearance: appearance
+        )
     }
+
+    // MARK: - Public API
 
     func setEnabled(_ enabled: Bool) {
         selectorElement.setEnabled(enabled)
@@ -59,16 +77,22 @@ final class CurrencySelectorElement: Element {
 
     // MARK: - Two-option builder
 
-    /// Current currency on the left, the other available currency on the right.
+    /// Local currency on the left, integration (merchant) currency on the right.
+    /// Uses `exchangeRateMeta` for stable ordering that doesn't change on reload.
     private static func buildSelectorItems(
-        currentCurrency: String,
-        currentTotal: Int,
+        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
     ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
-        let other = localizedPricesMetas.first { $0.currency.lowercased() != currentCurrency.lowercased() }
+        let localCurrency = exchangeRateMeta.localizedCurrency.lowercased()
+        let integrationCurrency = exchangeRateMeta.integrationCurrency.lowercased()
 
-        let left = makeSelectorItem(currency: currentCurrency, total: currentTotal)
-        let right = other.map { makeSelectorItem(currency: $0.currency, total: $0.total) } ?? left
+        let localMeta = localizedPricesMetas.first { $0.currency.lowercased() == localCurrency }
+        let integrationMeta = localizedPricesMetas.first { $0.currency.lowercased() == integrationCurrency }
+
+        let left = localMeta.map { makeSelectorItem(currency: $0.currency, total: $0.total) }
+            ?? makeSelectorItem(currency: localCurrency, total: 0)
+        let right = integrationMeta.map { makeSelectorItem(currency: $0.currency, total: $0.total) }
+            ?? makeSelectorItem(currency: integrationCurrency, total: 0)
 
         return (left: left, right: right)
     }
