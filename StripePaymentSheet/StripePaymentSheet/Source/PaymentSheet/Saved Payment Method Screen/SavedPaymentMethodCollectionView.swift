@@ -345,6 +345,7 @@ extension SavedPaymentMethodCollectionView {
             traitCollection.performAsCurrent {
                 let overrideUserInterfaceStyle: UIUserInterfaceStyle = appearance.colors.componentBackground.isDark ? .dark : .light
                 if let viewModel = viewModel {
+                    paymentMethodLogo.tag = 0
                     switch viewModel {
                     case .saved(let paymentMethod):
                         if let attributedText = attributedTextForLabel(paymentMethod: paymentMethod) {
@@ -374,7 +375,6 @@ extension SavedPaymentMethodCollectionView {
                                 }
                             }
                         } else {
-                            paymentMethodLogo.tag = 0
                             paymentMethodLogo.image = paymentMethodCellImage
                             paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         }
@@ -384,7 +384,6 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.tag = 0
                         paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
                         paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                     case .link:
@@ -392,7 +391,6 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.tag = 0
                         paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
                         paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
