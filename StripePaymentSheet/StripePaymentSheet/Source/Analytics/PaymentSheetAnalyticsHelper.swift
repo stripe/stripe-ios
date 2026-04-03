@@ -136,6 +136,7 @@ final class PaymentSheetAnalyticsHelper {
         orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType],
         loadTimings: PaymentSheetLoader.LoadTimings,
         isUpdate: Bool,
+        hasCardArt: Bool,
         didLinkLookupTimeOut: Bool?
     ) {
         self.intent = intent
@@ -162,6 +163,7 @@ final class PaymentSheetAnalyticsHelper {
             "integration_shape": integrationShape.analyticsValue,
             "load_timings": loadTimings.jsonObject,
             "is_update": isUpdate,
+            "has_card_art": hasCardArt,
         ]
         if let linkMode = elementsSession.linkSettings?.linkMode {
             params["link_mode"] = linkMode.rawValue

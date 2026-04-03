@@ -72,6 +72,8 @@ def expected_bump_marker
 end
 
 def validate_changelog_bump
+  return if @is_dry_run
+
   ChangelogUtils.validate_metadata!
 
   actual_marker = ChangelogUtils.bump_marker

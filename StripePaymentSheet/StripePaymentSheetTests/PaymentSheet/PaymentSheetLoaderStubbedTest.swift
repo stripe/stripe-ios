@@ -777,4 +777,33 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             XCTAssertNotNil(exposure["assignment_group"], "Expected assignment_group in exposure: \(exposure)")
         }
     }
+
+    // MARK: - hasCardArt
+
+    func testHasCardArt_enabledWithCardArt() {
+        let pm = STPPaymentMethod._testCardWithCardArt()
+        var appearance = PaymentSheet.Appearance()
+        appearance.cardArtEnabled = true
+        XCTAssertTrue(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm], appearance: appearance))
+    }
+
+    func testHasCardArt_disabledWithCardArt() {
+        let pm = STPPaymentMethod._testCardWithCardArt()
+        var appearance = PaymentSheet.Appearance()
+        appearance.cardArtEnabled = false
+        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm], appearance: appearance))
+    }
+
+    func testHasCardArt_enabledWithoutCardArt() {
+        let pm = STPPaymentMethod._testCard()
+        var appearance = PaymentSheet.Appearance()
+        appearance.cardArtEnabled = true
+        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm], appearance: appearance))
+    }
+
+    func testHasCardArt_emptyPaymentMethods() {
+        var appearance = PaymentSheet.Appearance()
+        appearance.cardArtEnabled = true
+        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [], appearance: appearance))
+    }
 }
