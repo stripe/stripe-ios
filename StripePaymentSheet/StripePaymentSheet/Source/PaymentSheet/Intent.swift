@@ -168,7 +168,6 @@ enum Intent {
             return nil
         case .checkoutSession:
             // TODO(gbirch): implement during PMO SFU work
-            stpAssertionFailure("CheckoutSession PMO SFU work not yet implemented")
             return nil
         case .setupIntent:
             return nil
