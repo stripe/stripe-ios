@@ -97,7 +97,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     var linkConfirmOption: PaymentSheet.LinkConfirmOption?
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
     // MARK: - Views
@@ -203,7 +203,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 isCVCRecollectionEnabled: false,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-                allowsRemovalOfPaymentMethods: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+                allowsRemovalOfPaymentMethods: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                 allowsUpdatePaymentMethod: elementsSession.paymentMethodUpdateForPaymentSheet
             ),
