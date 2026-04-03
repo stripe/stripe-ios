@@ -22,7 +22,10 @@ extension Checkout {
 
 @_spi(CheckoutSessionsPreview)
 extension Checkout.State {
-    /// The session, regardless of loading state.
+    /// The most recent session data, regardless of whether a mutation is in flight.
+    ///
+    /// In the ``Checkout/State/loading(_:)`` state the session may be stale
+    /// until the in-flight mutation completes.
     public var session: Checkout.Session {
         switch self {
         case .loaded(let session), .loading(let session):

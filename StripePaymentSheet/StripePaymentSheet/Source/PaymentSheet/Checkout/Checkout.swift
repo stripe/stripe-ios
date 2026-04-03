@@ -13,25 +13,28 @@ import Foundation
 
 /// Manages a Checkout Session lifecycle.
 ///
-/// Create a `Checkout` instance by awaiting the async initializer — the session
-/// is loaded before the initializer returns, so ``state`` is always available.
-///
 /// ```swift
 /// let checkout = try await Checkout(clientSecret: "cs_xxx_secret_yyy")
 /// print(checkout.state.session)
 /// ```
 ///
-/// In SwiftUI, `Checkout` publishes changes to ``state`` as an `ObservableObject`.
-/// In UIKit, set a ``delegate`` to receive ``CheckoutDelegate/checkout(_:didChangeState:)`` callbacks.
+/// The async initializer loads the session from Stripe before returning,
+/// so ``state`` is guaranteed to be ``State/loaded(_:)`` immediately after initialization.
+///
+/// Observe session changes with SwiftUI by using ``state`` (published via `ObservableObject`),
+/// or in UIKit by setting a ``delegate``.
 @_spi(CheckoutSessionsPreview)
 @MainActor
 public final class Checkout: ObservableObject {
     // MARK: - Public Properties
 
-    /// The current loading state of the checkout session.
+    /// The current state of the checkout session.
+    ///
+    /// After initialization this is always ``State/loaded(_:)``. It transitions to
+    /// ``State/loading(_:)`` while a mutation (e.g. applying a promo code) is in flight.
     @Published public private(set) var state: State
 
-    /// A delegate that is notified when the state changes.
+    /// A delegate notified when the session state changes.
     public weak var delegate: CheckoutDelegate?
 
     // MARK: - Private Properties
@@ -52,10 +55,7 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Initialization
 
-    /// Creates and loads a new Checkout session.
-    ///
-    /// The session is fetched from Stripe's servers before the initializer
-    /// returns, so ``state`` is immediately available.
+    /// Loads a Checkout Session from Stripe and returns a ready-to-use instance.
     ///
     /// - Parameters:
     ///   - clientSecret: The client secret for your Checkout Session (e.g. `cs_xxx_secret_yyy`).
@@ -68,7 +68,6 @@ public final class Checkout: ObservableObject {
         self.clientSecret = clientSecret
         self.apiClient = apiClient
 
-        // Load the session before returning so `state` is immediately available.
         let sessionId = Self.extractSessionId(from: clientSecret)
         do {
             let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
@@ -159,6 +158,7 @@ public final class Checkout: ObservableObject {
                 })
             }
         } else {
+            guard currentSession.billingAddressOverride != params else { return }
             currentSession.billingAddressOverride = params
             state = .loaded(currentSession)
             delegate?.checkout(self, didChangeState: state)
@@ -186,6 +186,7 @@ public final class Checkout: ObservableObject {
                 })
             }
         } else {
+            guard currentSession.shippingAddressOverride != params else { return }
             currentSession.shippingAddressOverride = params
             state = .loaded(currentSession)
             delegate?.checkout(self, didChangeState: state)
@@ -218,11 +219,11 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Internal Methods
 
-    /// Replaces the current session and notifies the delegate.
+    /// Replaces the current session, preserves client-side overrides, and notifies the delegate.
     ///
-    /// - Parameter applyOverrides: A closure to apply client-side overrides (e.g. address)
-    ///   to the new session before state is published via the delegate. This closure only
-    ///   runs after a successful API call, ensuring local state stays in sync with the backend.
+    /// - Parameter applyOverrides: Called with the new session after existing overrides are
+    ///   preserved but before state is published. Use this to set client-side properties
+    ///   (e.g. address overrides) that should be visible to the delegate and observers.
     func updateSession(_ newSession: STPCheckoutSession, applyOverrides: ((STPCheckoutSession) -> Void)? = nil) {
         // Preserve client-side address overrides on the new session.
         newSession.billingAddressOverride = stpSession?.billingAddressOverride
@@ -285,11 +286,14 @@ public final class Checkout: ObservableObject {
         return currentSession
     }
 
-    /// Performs an API update, then reloads full session state from init.
-    /// The update endpoint can return partial data, so we always refresh from init
-    /// to keep the session as the single source of truth.
-    /// - Parameter applyOverrides: Forwarded to ``updateSession(_:applyOverrides:)``
-    ///   to apply client-side overrides to the refreshed session before state is published.
+    /// Sends a mutation to the Stripe API and refreshes the session.
+    ///
+    /// The update endpoint returns partial data, so we always re-fetch the full session
+    /// afterward to keep ``state`` as the single source of truth.
+    ///
+    /// - Parameter applyOverrides: Forwarded to ``updateSession(_:applyOverrides:)``.
+    ///   Runs only after a successful API call — use this to set client-side overrides
+    ///   on the refreshed session so local state stays in sync with the backend.
     private func performAPIUpdate(
         _ update: SessionUpdate,
         applyOverrides: ((STPCheckoutSession) -> Void)? = nil
