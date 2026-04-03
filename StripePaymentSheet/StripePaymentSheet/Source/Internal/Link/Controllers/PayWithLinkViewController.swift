@@ -396,21 +396,28 @@ private extension PayWithLinkViewController {
         let supportedPaymentDetailsTypes = supportedPaymentDetailsTypesSet.toSortedArray()
 
         Task { @MainActor in
-            async let paymentDetailsResult = linkAccount.listPaymentDetails(
-                supportedTypes: supportedPaymentDetailsTypes,
-                shouldRetryOnAuthError: false
-            )
-
-            async let shippingAddressResult = fetchShippingAddress(
-                using: linkAccount,
-                shouldFetch: context.launchedFromFlowController
-            )
+            let paymentDetailsTask = Task {
+                try await linkAccount.listPaymentDetails(
+                    supportedTypes: supportedPaymentDetailsTypes,
+                    shouldRetryOnAuthError: false
+                )
+            }
+            let shippingAddressTask = Task {
+                try? await self.fetchShippingAddress(
+                    using: linkAccount,
+                    shouldFetch: context.launchedFromFlowController
+                )
+            }
+            defer {
+                paymentDetailsTask.cancel()
+                shippingAddressTask.cancel()
+            }
 
             do {
-                let paymentDetails = try await paymentDetailsResult
+                let paymentDetails = try await paymentDetailsTask.value
 
                 // Ignore any errors that might happen here.
-                shippingAddressResponse = try? await shippingAddressResult
+                shippingAddressResponse = await shippingAddressTask.value
 
                 presentAppropriateViewController(
                     with: linkAccount,
