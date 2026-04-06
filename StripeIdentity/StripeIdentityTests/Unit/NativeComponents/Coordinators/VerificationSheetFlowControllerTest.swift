@@ -8,6 +8,7 @@
 
 @_spi(STP) import StripeCore
 import StripeCoreTestUtils
+import UIKit
 import Vision
 import XCTest
 
@@ -43,6 +44,16 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             flowController.navigationController.viewControllers.first as Any,
             LoadingViewController.self
         )
+    }
+
+    func testNavigationControllerUsesBrandColorAsTintColor() {
+        let brandColor = UIColor(red: 0.25, green: 0.70, blue: 0.46, alpha: 1)
+        let flowController = VerificationSheetFlowController(
+            brandLogo: UIImage(),
+            brandColor: brandColor
+        )
+
+        XCTAssertEqual(flowController.navigationController.view.tintColor, brandColor)
     }
 
     // Tests the navigation stack between screen transitions

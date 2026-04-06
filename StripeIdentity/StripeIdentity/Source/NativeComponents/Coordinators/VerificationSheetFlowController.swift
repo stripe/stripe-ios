@@ -83,6 +83,7 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
 final class VerificationSheetFlowController: NSObject {
 
     let brandLogo: UIImage
+    let brandColor: UIColor?
 
     weak var delegate: VerificationSheetFlowControllerDelegate?
 
@@ -93,9 +94,11 @@ final class VerificationSheetFlowController: NSObject {
     private(set) var documentUploader: DocumentUploaderProtocol?
 
     init(
-        brandLogo: UIImage
+        brandLogo: UIImage,
+        brandColor: UIColor? = nil
     ) {
         self.brandLogo = brandLogo
+        self.brandColor = brandColor
     }
 
     private(set) lazy var navigationController: UINavigationController = {
@@ -103,6 +106,9 @@ final class VerificationSheetFlowController: NSObject {
             rootViewController: LoadingViewController()
         )
         navigationController.identityDelegate = self
+        if let brandColor {
+            navigationController.view.tintColor = brandColor
+        }
         return navigationController
     }()
 }
