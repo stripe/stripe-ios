@@ -79,6 +79,14 @@ class PlaygroundViewController: UIViewController {
         case required = "required"
     }
 
+    var otpCheckType: OtpCheckType {
+        return OtpCheckType.allCases[otpCheckSelector.selectedSegmentIndex]
+    }
+
+    var noOtpCheckSegmentIndex: Int {
+        return OtpCheckType.allCases.firstIndex(of: .none)!
+    }
+
     /// Use native SDK or web redirect
     var invocationType: InvocationType {
         return InvocationType.allCases[nativeOrWebSelector.selectedSegmentIndex]
@@ -137,6 +145,7 @@ class PlaygroundViewController: UIViewController {
         verifyButton.addTarget(self, action: #selector(didTapVerifyButton), for: .touchUpInside)
         // TODO(ccen) enable phoneOtpContainerView when backend adds support to PII
         phoneOtpContainerView.isHidden = true
+        didChangeNewOrReuse(self)
     }
 
     @objc
@@ -146,7 +155,6 @@ class PlaygroundViewController: UIViewController {
 
     @IBAction func fallbackToDocumentValueChanged(_ uiSwitch: UISwitch) {
         documentOptionsContainerView.isHidden = !uiSwitch.isOn
-        otpCheckContainerView.isHidden = !uiSwitch.isOn
     }
 
     @IBAction func requireOtpSwitchValueChanged(_ uiSwitch: UISwitch) {
@@ -210,21 +218,19 @@ class PlaygroundViewController: UIViewController {
                 // no-op
                 break
             case .phone:
+                options["phone_otp"] = [
+                    "check": otpCheckType.rawValue,
+                ]
                 if fallbackToDocumentSwitch.isOn {
-                    options = [
-                        "document": [
-                            "allowed_types": documentAllowedTypes.map { $0.rawValue },
-                            "require_id_number": requireIDNumberSwitch.isOn,
-                            "require_live_capture": requireLiveCaptureSwitch.isOn,
-                            "require_matching_selfie": requireSelfieSwitch.isOn,
-                            "require_address": requireAddressSwitch.isOn,
-                        ],
-                        "phone_otp": [
-                            "check": OtpCheckType.allCases[otpCheckSelector.selectedSegmentIndex].rawValue,
-                        ],
-                        "phone_records": [
-                            "fallback": "document",
-                        ],
+                    options["document"] = [
+                        "allowed_types": documentAllowedTypes.map { $0.rawValue },
+                        "require_id_number": requireIDNumberSwitch.isOn,
+                        "require_live_capture": requireLiveCaptureSwitch.isOn,
+                        "require_matching_selfie": requireSelfieSwitch.isOn,
+                        "require_address": requireAddressSwitch.isOn,
+                    ]
+                    options["phone_records"] = [
+                        "fallback": "document",
                     ]
                 }
             }
@@ -428,34 +434,43 @@ class PlaygroundViewController: UIViewController {
         case .document:
             documentOptionsContainerView.isHidden = false
             phoneOptionsContainerView.isHidden = true
+            phoneOptionsContainerView.arrangedSubviews.first?.isHidden = false
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
+            otpCheckSelector.selectedSegmentIndex = noOtpCheckSegmentIndex
             fallbackToDocumentSwitch.isOn = false
             otpCheckContainerView.isHidden = true
+
             phoneElement.clearPhoneNumber()
         case .idNumber:
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = true
+            phoneOptionsContainerView.arrangedSubviews.first?.isHidden = false
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
+            otpCheckSelector.selectedSegmentIndex = noOtpCheckSegmentIndex
             fallbackToDocumentSwitch.isOn = false
             otpCheckContainerView.isHidden = true
             phoneElement.clearPhoneNumber()
         case .address:
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = true
+            phoneOptionsContainerView.arrangedSubviews.first?.isHidden = false
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
+            otpCheckSelector.selectedSegmentIndex = noOtpCheckSegmentIndex
             fallbackToDocumentSwitch.isOn = false
             otpCheckContainerView.isHidden = true
             phoneElement.clearPhoneNumber()
         case .phone:
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = false
+            phoneOptionsContainerView.arrangedSubviews.first?.isHidden = false
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
+            otpCheckSelector.selectedSegmentIndex = noOtpCheckSegmentIndex
             fallbackToDocumentSwitch.isOn = false
-            otpCheckContainerView.isHidden = true
+            otpCheckContainerView.isHidden = false
             phoneElement.clearPhoneNumber()
         }
     }
@@ -476,20 +491,16 @@ class PlaygroundViewController: UIViewController {
         switch creationMethod {
         case .new:
             verificationTypeContainerView.isHidden = false
-            documentOptionsContainerView.isHidden = false
-            phoneOptionsContainerView.isHidden = true
-            requirePhoneNumberSwitch.isOn = false
-            phoneView.isHidden = true
-            fallbackToDocumentSwitch.isOn = false
-            otpCheckContainerView.isHidden = true
-            phoneElement.clearPhoneNumber()
             reuseVerificationIDContainerView.isHidden = true
+            didChangeVerificationType(sender)
         case .reuse:
             verificationTypeContainerView.isHidden = true
             documentOptionsContainerView.isHidden = true
             phoneOptionsContainerView.isHidden = true
+            phoneOptionsContainerView.arrangedSubviews.first?.isHidden = false
             requirePhoneNumberSwitch.isOn = false
             phoneView.isHidden = true
+            otpCheckSelector.selectedSegmentIndex = noOtpCheckSegmentIndex
             fallbackToDocumentSwitch.isOn = false
             otpCheckContainerView.isHidden = true
             phoneElement.clearPhoneNumber()
