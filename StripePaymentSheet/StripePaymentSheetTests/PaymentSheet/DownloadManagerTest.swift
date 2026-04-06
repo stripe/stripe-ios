@@ -26,13 +26,19 @@ class DownloadManagerTest: APIStubbedTestCase {
     override func setUp() {
         super.setUp()
         self.urlSessionConfig = APIStubbedTestCase.stubbedURLSessionConfig()
+        // Use a memory-only URLCache to isolate tests from each other's disk cache
+        self.urlSessionConfig.urlCache = URLCache(memoryCapacity: 5_000_000, diskCapacity: 0)
         self.analyticsClient = STPAnalyticsClient()
         self.rm = DownloadManager(urlSessionConfiguration: urlSessionConfig, analyticsClient: analyticsClient)
         self.rm.resetCache()
     }
 
     func testURLCacheConfiguration() {
-        let configurationUrlCache = urlSessionConfig.urlCache
+        // Use a fresh config without a pre-set URLCache to test the default in-production case
+        let defaultConfig = APIStubbedTestCase.stubbedURLSessionConfig()
+        defaultConfig.urlCache = nil
+        _ = DownloadManager(urlSessionConfiguration: defaultConfig, analyticsClient: analyticsClient)
+        let configurationUrlCache = defaultConfig.urlCache
 
         XCTAssertNotNil(configurationUrlCache)
         XCTAssertEqual(configurationUrlCache?.memoryCapacity, 5_000_000)

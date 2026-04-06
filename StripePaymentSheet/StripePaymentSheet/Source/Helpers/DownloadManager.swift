@@ -30,7 +30,8 @@ import UIKit
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         let configuration = urlSessionConfiguration
-        if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+        if configuration.urlCache == nil,
+           let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
             .first
         {
             let diskCacheURL = cachesURL.appendingPathComponent("STPCache")
