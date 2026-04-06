@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release
+
+## 25.10.0 2026-04-06
 ### AddressElement
 * [Added] Added state dropdown support for BR.
  
