@@ -48,7 +48,7 @@ extension STPCheckoutSession {
                 state: shipping.address.state
             ),
             name: shipping.name,
-            phone: nil
+            phone: shipping.phone
         )
     }
 
@@ -57,6 +57,7 @@ extension STPCheckoutSession {
         to details: inout PaymentSheet.BillingDetails
     ) {
         details.name = details.name ?? billing.name
+        details.phone = details.phone ?? billing.phone
         details.address.country = details.address.country ?? billing.address.country
         details.address.line1 = details.address.line1 ?? billing.address.line1
         details.address.line2 = details.address.line2 ?? billing.address.line2

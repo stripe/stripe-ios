@@ -1,9 +1,14 @@
 The next release's version bump will so far be:
 PATCH
 
-## X.Y.Z - changes pending release 
+## X.Y.Z - changes pending release
+### AddressElement
+* [Added] Added state dropdown support for BR.
+ 
 ### Payments
 * [Fixed] Fixed an issue introduced in 25.8.0 where manually closing a webview 3ds2 challenge after failing the challenge and before it's automatically dismissed could result in a succeeded result.
+* [Fixed] Fixed amounts in HUF being formatted incorrectly.
+* [Fixed] Improved loading times for integrations that have Link disabled.
 
 ## 25.9.0 2026-03-24
 ### PaymentSheet

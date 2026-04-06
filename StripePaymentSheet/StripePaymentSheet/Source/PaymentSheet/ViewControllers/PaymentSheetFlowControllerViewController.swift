@@ -97,7 +97,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     var linkConfirmOption: PaymentSheet.LinkConfirmOption?
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
     // MARK: - Views
@@ -184,18 +184,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         // Caveats:
         // - Only payment method details (including checkbox state) and billing details are restored
         // - Only restored if the previous input resulted in a completed form i.e. partial or invalid input is still discarded
-        let previousConfirmParams: IntentConfirmParams? = {
-            switch previousPaymentOption {
-            case .applePay, .saved, .link, nil:
-                return nil
-            case .new(confirmParams: let params):
-                return params
-            case let .external(paymentMethod, billingDetails):
-                let params = IntentConfirmParams(type: .external(paymentMethod))
-                params.paymentMethodParams.billingDetails = billingDetails
-                return params
-            }
-        }()
+        let previousConfirmParams = previousPaymentOption?.newConfirmParams
 
         // Default to saved payment selection mode, as long as we aren't restoring a customer's previous new payment method input
         // and they have saved PMs or Apple Pay or Link is enabled
@@ -214,7 +203,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 isCVCRecollectionEnabled: false,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-                allowsRemovalOfPaymentMethods: elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+                allowsRemovalOfPaymentMethods: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                 allowsUpdatePaymentMethod: elementsSession.paymentMethodUpdateForPaymentSheet
             ),

@@ -36,10 +36,17 @@ final class TwoOptionSelectorView: UIView {
     private(set) var selectedItemId: String
 
     private let mainStackView = UIStackView()
+    private let trackView = UIView()
     private let buttonsStackView = UIStackView()
+    private let selectionIndicatorView = UIView()
     private let captionLabel = UILabel()
     private var leftButton = UIButton(type: .system)
     private var rightButton = UIButton(type: .system)
+
+    private let trackPadding: CGFloat = 3
+
+    private var indicatorLeadingConstraint: NSLayoutConstraint?
+    private var indicatorTrailingConstraint: NSLayoutConstraint?
 
     // MARK: - Init
 
@@ -68,14 +75,37 @@ final class TwoOptionSelectorView: UIView {
 
     private func setupViews() {
         mainStackView.axis = .vertical
-        mainStackView.spacing = 8
+        mainStackView.spacing = 6
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainStackView)
 
+        // Track background
+        trackView.backgroundColor = appearance.colors.background
+        trackView.layer.borderWidth = 0.5
+        trackView.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .uniform)
+        trackView.clipsToBounds = false
+
+        // Selection indicator pill
+        selectionIndicatorView.backgroundColor = appearance.colors.componentBackground
+        selectionIndicatorView.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .uniform)
+
+        selectionIndicatorView.layer.applyShadow(shadow: appearance.shadow.asElementThemeShadow)
+        selectionIndicatorView.layer.borderWidth = 0.5
         buttonsStackView.axis = .horizontal
-        buttonsStackView.spacing = 8
+        buttonsStackView.spacing = 0
         buttonsStackView.distribution = .fillEqually
-        mainStackView.addArrangedSubview(buttonsStackView)
+        buttonsStackView.translatesAutoresizingMaskIntoConstraints = false
+
+        trackView.addSubview(selectionIndicatorView)
+        trackView.addSubview(buttonsStackView)
+        mainStackView.addArrangedSubview(trackView)
+
+        NSLayoutConstraint.activate([
+            buttonsStackView.topAnchor.constraint(equalTo: trackView.topAnchor, constant: trackPadding),
+            buttonsStackView.leadingAnchor.constraint(equalTo: trackView.leadingAnchor, constant: trackPadding),
+            buttonsStackView.trailingAnchor.constraint(equalTo: trackView.trailingAnchor, constant: -trackPadding),
+            buttonsStackView.bottomAnchor.constraint(equalTo: trackView.bottomAnchor, constant: -trackPadding),
+        ])
 
         captionLabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
         captionLabel.textColor = appearance.colors.textSecondary
@@ -95,37 +125,63 @@ final class TwoOptionSelectorView: UIView {
         buttonsStackView.addArrangedSubview(leftButton)
         buttonsStackView.addArrangedSubview(rightButton)
 
-        updateButtonStyles()
+        // Indicator constraints
+        selectionIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            selectionIndicatorView.topAnchor.constraint(equalTo: buttonsStackView.topAnchor),
+            selectionIndicatorView.bottomAnchor.constraint(equalTo: buttonsStackView.bottomAnchor),
+        ])
+
+        indicatorLeadingConstraint = selectionIndicatorView.leadingAnchor.constraint(equalTo: leftButton.leadingAnchor)
+        indicatorTrailingConstraint = selectionIndicatorView.trailingAnchor.constraint(equalTo: leftButton.trailingAnchor)
+        indicatorLeadingConstraint?.isActive = true
+        indicatorTrailingConstraint?.isActive = true
+
+        updateBorderColors()
+        updateButtonStyles(animated: false)
+    }
+
+    private func updateBorderColors() {
+        let borderColor = appearance.colors.componentBorder.withAlphaComponent(0.5).cgColor
+        trackView.layer.borderColor = borderColor
+        selectionIndicatorView.layer.borderColor = borderColor
     }
 
     private func configureButton(_ button: UIButton, item: TwoOptionSelectorItem) {
         button.setTitle(item.displayText, for: .normal)
-        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .subheadline, maximumPointSize: 20)
-        button.contentEdgeInsets = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
-        button.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .capsule)
+        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+        button.contentEdgeInsets = UIEdgeInsets(top: 7, left: 16, bottom: 7, right: 16)
+        button.backgroundColor = .clear
         button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
         button.accessibilityIdentifier = item.accessibilityIdentifier
     }
 
-    private func updateButtonStyles() {
-        styleButton(leftButton, isSelected: leftItem.id == selectedItemId)
-        styleButton(rightButton, isSelected: rightItem.id == selectedItemId)
-    }
+    private func updateButtonStyles(animated: Bool) {
+        let isLeftSelected = leftItem.id == selectedItemId
 
-    private func styleButton(_ button: UIButton, isSelected: Bool) {
-        button.backgroundColor = appearance.colors.componentBackground
-        button.setTitleColor(appearance.colors.componentText, for: .normal)
-        if isSelected {
-            let selectedBorderWidth = appearance.selectedBorderWidth ?? appearance.borderWidth
-            if selectedBorderWidth > 0 {
-                button.layer.borderWidth = selectedBorderWidth * 1.5
-            } else {
-                button.layer.borderWidth = 1.5
-            }
-            button.layer.borderColor = appearance.colors.selectedComponentBorder?.cgColor ?? appearance.colors.primary.cgColor
+        leftButton.setTitleColor(isLeftSelected ? appearance.colors.componentText : appearance.colors.textSecondary, for: .normal)
+        rightButton.setTitleColor(!isLeftSelected ? appearance.colors.componentText : appearance.colors.textSecondary, for: .normal)
+
+        leftButton.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+        rightButton.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+        indicatorLeadingConstraint?.isActive = false
+        indicatorTrailingConstraint?.isActive = false
+
+        if isLeftSelected {
+            indicatorLeadingConstraint = selectionIndicatorView.leadingAnchor.constraint(equalTo: leftButton.leadingAnchor)
+            indicatorTrailingConstraint = selectionIndicatorView.trailingAnchor.constraint(equalTo: leftButton.trailingAnchor)
         } else {
-            button.layer.borderColor = appearance.colors.componentBorder.cgColor
-            button.layer.borderWidth = appearance.borderWidth
+            indicatorLeadingConstraint = selectionIndicatorView.leadingAnchor.constraint(equalTo: rightButton.leadingAnchor)
+            indicatorTrailingConstraint = selectionIndicatorView.trailingAnchor.constraint(equalTo: rightButton.trailingAnchor)
+        }
+
+        indicatorLeadingConstraint?.isActive = true
+        indicatorTrailingConstraint?.isActive = true
+
+        if animated {
+            UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0, options: .curveEaseInOut) {
+                self.layoutIfNeeded()
+            }
         }
     }
 
@@ -152,7 +208,7 @@ final class TwoOptionSelectorView: UIView {
         guard itemId == leftItem.id || itemId == rightItem.id else { return }
         guard itemId != selectedItemId else { return }
         selectedItemId = itemId
-        updateButtonStyles()
+        updateButtonStyles(animated: true)
         if notifyDelegate {
             delegate?.twoOptionSelectorView(self, didSelectItemWithId: itemId)
         }
@@ -161,7 +217,8 @@ final class TwoOptionSelectorView: UIView {
 #if !os(visionOS)
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        updateButtonStyles()
+        updateBorderColors()
+        updateButtonStyles(animated: false)
     }
 #endif
 

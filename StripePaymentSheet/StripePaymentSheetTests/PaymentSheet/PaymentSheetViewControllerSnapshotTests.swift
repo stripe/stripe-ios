@@ -29,7 +29,8 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
             analyticsHelper: ._testValue(),
-            delegate: self
+            delegate: self,
+            previousPaymentOption: nil
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
@@ -43,7 +44,8 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
             analyticsHelper: ._testValue(),
-            delegate: self
+            delegate: self,
+            previousPaymentOption: nil
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
@@ -57,7 +59,8 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             configuration: ._testValue_MostPermissive(isApplePayEnabled: false),
             loadResult: makeTestLoadResult(savedPaymentMethods: paymentMethods),
             analyticsHelper: ._testValue(),
-            delegate: self
+            delegate: self,
+            previousPaymentOption: nil
         )
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
@@ -81,5 +84,8 @@ extension PaymentSheetViewControllerSnapshotTests: PaymentSheetViewControllerDel
     }
 
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewControllerProtocol) {
+    }
+
+    func paymentSheetViewControllerDidSelectCurrency(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewControllerProtocol, currency: String) {
     }
 }

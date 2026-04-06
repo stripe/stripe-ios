@@ -35,6 +35,33 @@ class MockElement: Element {
 }
 
 class PaymentSheetFormFactoryTest: XCTestCase {
+
+    private func makeCheckoutSessionIntent(
+        offerSave: [String: Any]? = nil,
+        hasCustomer: Bool = true
+    ) -> Intent {
+        var json: [String: Any] = [
+            "session_id": "cs_test_checkout_save",
+            "object": "checkout.session",
+            "mode": "payment",
+            "status": "open",
+            "payment_status": "unpaid",
+            "currency": "usd",
+            "livemode": false,
+            "payment_method_types": ["card"],
+        ]
+        if hasCustomer {
+            json["customer"] = [
+                "id": "cus_test_checkout_save",
+            ]
+        }
+        if let offerSave {
+            json["customer_managed_saved_payment_methods_offer_save"] = offerSave
+        }
+        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        return .checkoutSession(checkoutSession)
+    }
+
     func testUpdatesParams() {
         var configuration = PaymentSheet.Configuration()
         configuration.defaultBillingDetails.name = "Name"
@@ -1590,6 +1617,95 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(factory.isSettingUp)
         XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
     }
+
+    func testShowsCheckbox_CheckoutSessionOfferSaveNotAccepted() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: makeCheckoutSessionIntent(offerSave: [
+                "enabled": true,
+                "status": "not_accepted",
+            ]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertFalse(factory.isSettingUp)
+        XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
+
+        let params = factory.makeSaveCheckbox().updateParams(params: IntentConfirmParams(type: .stripe(.card)))
+        XCTAssertEqual(params?.saveForFutureUseCheckboxState, .deselected)
+    }
+
+    func testCheckoutSessionOfferSaveDoesNotOverrideOptOutDefaultSelection() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.savePaymentMethodOptInBehavior = .requiresOptOut
+        let factory = PaymentSheetFormFactory(
+            intent: makeCheckoutSessionIntent(offerSave: [
+                "enabled": true,
+                "status": "not_accepted",
+            ]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertTrue(factory.shouldDisplaySaveCheckbox)
+
+        let params = factory.makeSaveCheckbox().updateParams(params: IntentConfirmParams(type: .stripe(.card)))
+        XCTAssertEqual(params?.saveForFutureUseCheckboxState, .selected)
+    }
+
+    func testHidesCheckbox_CheckoutSessionOfferSaveDisabled() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: makeCheckoutSessionIntent(offerSave: [
+                "enabled": false,
+                "status": "accepted",
+            ]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testHidesCheckbox_CheckoutSessionOfferSaveEnabledWithoutCustomer() {
+        let configuration = PaymentSheet.Configuration()
+        let factory = PaymentSheetFormFactory(
+            intent: makeCheckoutSessionIntent(offerSave: [
+                "enabled": true,
+                "status": "accepted",
+            ], hasCustomer: false),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card)
+        )
+
+        XCTAssertFalse(factory.shouldDisplaySaveCheckbox)
+    }
+
+    func testCheckoutSessionOfferSaveDefaultDoesNotOverridePreviousCustomerInput() {
+        let previousCustomerInput = IntentConfirmParams(type: .stripe(.card))
+        previousCustomerInput.saveForFutureUseCheckboxState = .selected
+        let configuration = PaymentSheet.Configuration()
+
+        let factory = PaymentSheetFormFactory(
+            intent: makeCheckoutSessionIntent(offerSave: [
+                "enabled": true,
+                "status": "not_accepted",
+            ]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.card),
+            previousCustomerInput: previousCustomerInput
+        )
+
+        let params = factory.makeSaveCheckbox().updateParams(params: IntentConfirmParams(type: .stripe(.card)))
+        XCTAssertEqual(params?.saveForFutureUseCheckboxState, .selected)
+    }
+
     func testBillingAddressSection() {
         let defaultAddress = PaymentSheet.Address(
             city: "San Francisco",

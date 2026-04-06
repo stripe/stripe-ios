@@ -1,25 +1,29 @@
-GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TBfwgFY0qyl6XeW1P9iekiZ\?client_secret=pi_3TBfwgFY0qyl6XeW1P9iekiZ_secret_1KAMNt9WadsQQ437D8fehcI6v&expand%5B0%5D=payment_method$
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TFTibFY0qyl6XeW10p7U8AQ\/confirm$
 200
 application/json
-Content-Type: application/json
-Access-Control-Allow-Origin: *
-x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Hb2Q_0sAzbCrInDA3RDP01y_VxVXIlOaAmDN5ZDPiuPcxZQqD5emvjBwhhk2XB-j2mO5o435UByfJ_AY
-x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=uJwyaWRSCcQ1iuA8D4BfgT7uVyEXoHbPbaUPiRqqpJJs_l2PDDUzv9XKBf-fOduCQmPMHti2m7p6t8wy
 Server: nginx
+Cache-Control: no-cache, no-store
+x-wc: ABGHIJ
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+x-stripe-routing-context-priority-tier: api-testmode
+request-id: req_8iSOufIMmIX8Om
+Content-Length: 2078
+Vary: Origin
+Date: Fri, 27 Mar 2026 06:18:07 GMT
+original-request: req_8iSOufIMmIX8Om
+stripe-version: 2020-08-27
+idempotency-key: a73cd2d2-40ee-448f-8ff2-b72099c9b19d
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
-Cache-Control: no-cache, no-store
-Date: Mon, 16 Mar 2026 18:32:55 GMT
-stripe-version: 2020-08-27
 access-control-allow-credentials: true
-Content-Length: 2078
-x-stripe-routing-context-priority-tier: api-testmode
-Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Vary: Origin
-request-id: req_WvrRA33cwxATKl
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=pi_3TFTibFY0qyl6XeW10p7U8AQ_secret_TtmAoqe3xTbJ8E1jGTm7Wn1yP&confirmation_token=ctoken_1TFTibFY0qyl6XeWcmOMkCP5&expand\[0]=payment_method&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
 
 {
   "payment_method_configuration_details" : null,
@@ -44,7 +48,7 @@ request-id: req_WvrRA33cwxATKl
   },
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1TBfwfFY0qyl6XeWzcqezkQd",
+    "id" : "pm_1TFTibFY0qyl6XeW1pElKn5O",
     "billing_details" : {
       "email" : null,
       "phone" : null,
@@ -86,14 +90,14 @@ request-id: req_WvrRA33cwxATKl
       "country" : "US"
     },
     "livemode" : false,
-    "created" : 1773685973,
+    "created" : 1774592285,
     "allow_redisplay" : "unspecified",
     "type" : "card",
-    "customer" : "cus_U9zwRxN51wAwhp",
+    "customer" : "cus_UDvZuCmN3pJLXE",
     "customer_account" : null
   },
-  "client_secret" : "pi_3TBfwgFY0qyl6XeW1P9iekiZ_secret_1KAMNt9WadsQQ437D8fehcI6v",
-  "id" : "pi_3TBfwgFY0qyl6XeW1P9iekiZ",
+  "client_secret" : "pi_3TFTibFY0qyl6XeW10p7U8AQ_secret_TtmAoqe3xTbJ8E1jGTm7Wn1yP",
+  "id" : "pi_3TFTibFY0qyl6XeW10p7U8AQ",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -107,6 +111,6 @@ request-id: req_WvrRA33cwxATKl
     "card"
   ],
   "setup_future_usage" : "off_session",
-  "created" : 1773685974,
+  "created" : 1774592285,
   "description" : null
 }
