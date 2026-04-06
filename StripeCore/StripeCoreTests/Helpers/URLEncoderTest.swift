@@ -41,7 +41,7 @@ final class URLEncoderTest: XCTestCase {
                 ],
             ] as [String: AnyHashable]
         let result = URLEncoder.queryString(from: params)
-        XCTAssertEqual(result, "baz[qux]=BROKEN&foo=bar")
+        XCTAssertEqual(result, "baz[qux]=1&foo=bar")
     }
 
     func testPushProvisioningQueryStringFromParameters() {
