@@ -79,7 +79,7 @@ final class CurrencySelectorElement: Element {
 
     /// Local currency on the left, integration (merchant) currency on the right.
     /// Uses `exchangeRateMeta` for stable ordering that doesn't change on reload.
-    private static func buildSelectorItems(
+    static func buildSelectorItems(
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
     ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
@@ -97,7 +97,7 @@ final class CurrencySelectorElement: Element {
         return (left: left, right: right)
     }
 
-    private static func makeSelectorItem(currency: String, total: Int) -> TwoOptionSelectorItem {
+    static func makeSelectorItem(currency: String, total: Int) -> TwoOptionSelectorItem {
         let flag = flagEmoji(for: currency)
         let amount = String.localizedAmountDisplayString(for: total, currency: currency.uppercased())
         return TwoOptionSelectorItem(
@@ -111,7 +111,7 @@ final class CurrencySelectorElement: Element {
 
     /// Shows the exchange rate when the local currency is selected,
     /// or a bank-fees disclaimer when the merchant's currency is selected.
-    private static func caption(
+    static func caption(
         forSelectedCurrency selectedCurrency: String,
         exchangeRateMeta meta: STPCheckoutSessionExchangeRateMeta
     ) -> String {
@@ -123,7 +123,7 @@ final class CurrencySelectorElement: Element {
         return formatExchangeRate(from: meta)
     }
 
-    private static func formatExchangeRate(from meta: STPCheckoutSessionExchangeRateMeta) -> String {
+    static func formatExchangeRate(from meta: STPCheckoutSessionExchangeRateMeta) -> String {
         let sellCurrency = meta.sellCurrency.uppercased()
         let buyCurrency = meta.buyCurrency.uppercased()
 
@@ -140,9 +140,25 @@ final class CurrencySelectorElement: Element {
         return "1 \(sellCurrency) = \(formattedRate) \(buyCurrency)"
     }
 
+    // MARK: - Availability
+
+    /// Returns the adaptive pricing data needed to show a currency selector,
+    /// or `nil` if adaptive pricing is not available for the given session.
+    static func adaptivePricingData(
+        from session: Checkout.Session?
+    ) -> (session: STPCheckoutSession, exchangeRateMeta: STPCheckoutSessionExchangeRateMeta, currency: String)? {
+        guard let session = session as? STPCheckoutSession,
+              session.adaptivePricingActive,
+              !session.localizedPricesMetas.isEmpty,
+              let exchangeRateMeta = session.exchangeRateMeta,
+              let currency = session.currency
+        else { return nil }
+        return (session, exchangeRateMeta, currency)
+    }
+
     // MARK: - Flag emoji
 
-    private static func flagEmoji(for currencyCode: String) -> String {
+    static func flagEmoji(for currencyCode: String) -> String {
         let regionCode = String(currencyCode.lowercased().prefix(2)).uppercased()
         return String.regionFlagEmoji(for: regionCode) ?? ""
     }
