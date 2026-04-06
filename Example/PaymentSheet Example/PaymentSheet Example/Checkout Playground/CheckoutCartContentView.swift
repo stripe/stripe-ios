@@ -34,6 +34,7 @@ struct CheckoutCartContentView: View {
                             .padding(.horizontal)
                     }
 
+                    currencySelectorSection
                     lineItemsSection
                     shippingOptionsSection
                     shippingAddressSection
@@ -415,6 +416,25 @@ struct CheckoutCartContentView: View {
             }
             .padding(.horizontal)
         }
+    }
+
+    @ViewBuilder
+    private var currencySelectorSection: some View {
+        let appearance: Checkout.CurrencySelectorView.Appearance = {
+            var a = Checkout.CurrencySelectorView.Appearance()
+            a.cornerRadius = 12
+            a.backgroundColor = UIColor.systemBackground
+            a.selectedColor = UIColor.tintColor
+            a.selectedTextColor = .white
+            a.unselectedTextColor = UIColor.secondaryLabel
+            a.borderColor = UIColor.separator.withAlphaComponent(0.3)
+            a.captionColor = UIColor.tertiaryLabel
+            a.titleFont = .systemFont(ofSize: 15, weight: .semibold)
+            a.subtitleFont = .systemFont(ofSize: 11, weight: .regular)
+            return a
+        }()
+        Checkout.CurrencySelectorElement(checkout: checkout, appearance: appearance)
+            .padding(.horizontal)
     }
 
     @ViewBuilder
