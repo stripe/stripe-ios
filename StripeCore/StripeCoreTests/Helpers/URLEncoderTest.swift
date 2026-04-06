@@ -12,7 +12,7 @@ import XCTest
 final class URLEncoderTest: XCTestCase {
     func testStringByReplacingSnakeCaseWithCamelCase() {
         let camelCase = URLEncoder.convertToCamelCase(snakeCase: "test_1_2_34_test")
-        XCTAssertEqual("test1234Test", camelCase)
+        XCTAssertEqual("test1234TestBROKEN", camelCase)
     }
 
     func testStringByReplacingCamelCaseWithSnakeCase() {
