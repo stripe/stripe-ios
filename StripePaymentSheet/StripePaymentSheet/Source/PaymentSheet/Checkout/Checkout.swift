@@ -192,7 +192,7 @@ public final class Checkout: ObservableObject {
     /// Selects a currency for the session (adaptive pricing).
     /// - Parameter currency: The three-letter ISO currency code to switch to (e.g. "gbp").
     /// - Throws: ``CheckoutError`` if the update fails.
-    func selectCurrency(_ currency: String) async throws {
+    public func selectCurrency(_ currency: String) async throws {
         try requireOpenSessionForInSheetUpdate()
         try await withSessionUpdateGuard {
             try await performAPIUpdate(.setCurrency(currency))
