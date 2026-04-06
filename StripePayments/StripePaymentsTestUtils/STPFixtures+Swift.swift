@@ -175,6 +175,17 @@ public extension STPPaymentMethod {
     static func _testCard() -> STPPaymentMethod {
         return STPPaymentMethod.decodedObject(fromAPIResponse: _testCardJSON)!
     }
+
+    static func _testCardWithCardArt() -> STPPaymentMethod {
+        let pm = _testCard()
+        let cardArt = STPPaymentMethodCardArt.decodedObject(fromAPIResponse: [
+            "art_image": ["url": "https://example.com/art.png"],
+            "program_name": "Test Program",
+        ])
+        pm.card?.cardArt = cardArt
+        return pm
+    }
+
     static func _testCard(line1: String? = nil,
                           line2: String? = nil,
                           city: String? = nil,
