@@ -45,7 +45,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: self.configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .paymentSheet) { result in
             expectation.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...PaymentSheet should successfully load
                 guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
@@ -87,7 +87,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             integrationShape: .paymentSheet
         ) { result in
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 XCTAssertEqual(
                     Set(loadResult.elementsSession.orderedPaymentMethodTypes),
                     Set(expected)
@@ -154,7 +154,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             let loadExpectation = XCTestExpectation(description: "Load PaymentSheet")
             PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: self.configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
                 switch result {
-                case .success(let loadResult):
+                case .success(let (loadResult, _)):
                     guard case .deferredIntent = loadResult.intent else {
                         XCTFail()
                         return
@@ -344,7 +344,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
             loadExpectation.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...check that it only loads the one normal saved card
                 XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
                 XCTAssertEqual(loadResult.savedPaymentMethods.first?.stripeId, savedNonApplePayCard)
@@ -396,7 +396,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD"), paymentMethodTypes: ["card"], confirmHandler: confirmHandler)
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...check that it only loads the one normal saved card
                 XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
                 XCTAssertEqual(loadResult.savedPaymentMethods.first?.stripeId, savedPms[0])
@@ -457,7 +457,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .paymentSheet) { result in
             expectation.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...PaymentSheet should successfully load
                 guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
@@ -498,7 +498,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController) { result in
             expectation.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...PaymentSheet should *still* successfully load
                 guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
@@ -537,7 +537,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(mode: .paymentIntentClientSecret(clientSecret), configuration: configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .paymentSheet) { result in
             expectation.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...PaymentSheet should successfully load
                 guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
@@ -597,7 +597,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .paymentSheet) { result in
             loadExpectation.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...check that it filters out the saved Visa card
                 XCTAssertTrue(loadResult.savedPaymentMethods.isEmpty)
 
@@ -645,7 +645,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .complete, configuration: configuration), integrationShape: .paymentSheet) { result in
             loadExpectation.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...check that it filters out the saved credit card when only debit is allowed
                 XCTAssertTrue(loadResult.savedPaymentMethods.isEmpty)
 
@@ -790,7 +790,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         ) { result in
             expectation.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // Verify the intent is a checkoutSession
                 guard case let .checkoutSession(loadedSession) = loadResult.intent else {
                     XCTFail("Expected checkoutSession intent type")
@@ -831,7 +831,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         ) { result in
             expectation.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // Verify the intent is a checkoutSession
                 guard case let .checkoutSession(checkoutSession) = loadResult.intent else {
                     XCTFail("Expected checkoutSession intent type")
@@ -919,7 +919,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         ) { result in
             loadExpectation.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // Should succeed with valid payment method options
                 XCTAssertTrue(loadResult.paymentMethodTypes.contains(.stripe(.crypto)))
             case .failure(let error):
@@ -1000,7 +1000,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         ) { result in
             loadExpectation.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // Ensure the v1/elements/sessions endpoint returns successfully and didn't fallback
                 // fallback would mean pm types is only cards
                 XCTAssertTrue(loadResult.paymentMethodTypes.count > 1)
