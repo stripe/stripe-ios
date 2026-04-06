@@ -437,7 +437,7 @@ public final class EmbeddedPaymentElement {
     internal init(
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
-        confirmationChallenge: ConfirmationChallenge,
+        confirmationChallenge: ConfirmationChallenge? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration

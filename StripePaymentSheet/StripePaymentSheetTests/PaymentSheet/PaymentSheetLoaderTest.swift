@@ -234,7 +234,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(paymentMethods.map(\.type), allSPMTypes)
 
         // Load PaymentSheet...
-        let loadResult = try await PaymentSheetLoader.load(
+        let (loadResult, _) = try await PaymentSheetLoader.load(
             mode: .deferredIntent(._testValue()),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
@@ -284,7 +284,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(paymentMethods.map(\.type), allSPMTypes)
 
         // Load PaymentSheet...
-        let loadResult = try await PaymentSheetLoader.load(
+        let (loadResult, _) = try await PaymentSheetLoader.load(
             mode: .deferredIntent(._testValue()),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
@@ -437,7 +437,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
 
         // Load PaymentSheet...
         let intentConfig = PaymentSheet.IntentConfiguration._testValue()
-        let loadResult = try await PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController)
+        let (loadResult, _) = try await PaymentSheetLoader.load(mode: .deferredIntent(intentConfig), configuration: configuration, analyticsHelper: .init(integrationShape: .flowController, configuration: configuration), integrationShape: .flowController)
 
         // ...should have the expected saved PMs in the expected order
         XCTAssertEqual(loadResult.savedPaymentMethods.map(\.stripeId), expectedSavedPms)
@@ -669,7 +669,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.allowsDelayedPaymentMethods = false
 
         // Loading w/ ^ customer...
-        let loadResult = try await PaymentSheetLoader.load(
+        let (loadResult, _) = try await PaymentSheetLoader.load(
             mode: .deferredIntent(.init(mode: .payment(amount: 100, currency: "USD"), paymentMethodConfigurationId: pmcWithLinkEnabled) { _, _ in return "" }),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
@@ -725,7 +725,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.allowsDelayedPaymentMethods = false
 
         // Loading w/ ^ customer...
-        let loadResult = try await PaymentSheetLoader.load(
+        let (loadResult, _) = try await PaymentSheetLoader.load(
             mode: .deferredIntent(.init(mode: .payment(amount: 100, currency: "USD"), paymentMethodConfigurationId: pmcWithLinkEnabled) { _, _ in return "" }),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
