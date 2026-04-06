@@ -1,7 +1,7 @@
 ---
 name: babysit-pr
 description: Monitor Bitrise CI and automatically fix failures for pull requests
-disable-model-invocation: true
+disable-model-invocation: false
 argument-hint: "[PR number or URL] [--max-retries N]"
 ---
 
