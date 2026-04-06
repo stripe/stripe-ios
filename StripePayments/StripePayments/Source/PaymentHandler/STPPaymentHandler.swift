@@ -1890,7 +1890,7 @@ public class STPPaymentHandler: NSObject {
                 }
             } else {
                 currentAction.complete(with: challengeClientOutcome.actionStatus,
-                                       error: challengeClientOutcome.nsError)
+                                       error: challengeClientOutcome.error)
             }
         } else if isSuccess {
             currentAction.complete(with: .succeeded, error: nil)
@@ -1898,7 +1898,7 @@ public class STPPaymentHandler: NSObject {
             currentAction.complete(with: .failed, error: intentError)
         } else {
             currentAction.complete(with: challengeClientOutcome.actionStatus,
-                                   error: challengeClientOutcome.nsError)
+                                   error: challengeClientOutcome.error)
         }
     }
 
