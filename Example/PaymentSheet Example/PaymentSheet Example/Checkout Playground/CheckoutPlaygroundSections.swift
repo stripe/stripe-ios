@@ -11,6 +11,7 @@ struct CheckoutPlaygroundConfigurationSection: View {
     @Binding var mode: CheckoutPlayground.SessionMode
     @Binding var currency: CheckoutPlayground.Currency
     @Binding var customerType: CheckoutPlayground.CustomerType
+    @Binding var checkoutEndpointOption: CheckoutPlayground.EndpointOption
     @Binding var checkoutEndpoint: String
 
     var body: some View {
@@ -37,6 +38,20 @@ struct CheckoutPlaygroundConfigurationSection: View {
                     tooltip: "Simulates different customer states.\n\n• Guest: No customer object attached.\n• New: Creates a new Customer object.\n• Returning: Attaches a pre-existing Customer ID.",
                     displayText: { $0.rawValue.capitalized }
                 )
+                CheckoutPlayground.PickerRow(
+                    title: "Backend Endpoint",
+                    icon: "network",
+                    selection: Binding(
+                        get: { checkoutEndpointOption },
+                        set: { newValue in
+                            checkoutEndpointOption = newValue
+                            if let endpoint = newValue.endpoint {
+                                checkoutEndpoint = endpoint
+                            }
+                        }
+                    ),
+                    displayText: { $0.displayName }
+                )
                 HStack(spacing: 8) {
                     Image(systemName: "network")
                         .font(.system(size: 16))
@@ -47,6 +62,9 @@ struct CheckoutPlaygroundConfigurationSection: View {
                         .font(.subheadline)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
+                        .onChange(of: checkoutEndpoint) { newValue in
+                            checkoutEndpointOption = CheckoutPlayground.EndpointOption.from(endpoint: newValue)
+                        }
                 }
                 .padding(.vertical, 12)
                 .padding(.horizontal, 16)
@@ -143,6 +161,8 @@ struct CheckoutPlaygroundFeaturesSection: View {
     @Binding var allowPromotionCodes: Bool
     @Binding var automaticTax: Bool
     @Binding var adaptivePricing: Bool
+    @Binding var checkoutSessionPaymentMethodSave: Bool
+    @Binding var checkoutSessionPaymentMethodRemove: Bool
     @Binding var adaptivePricingCountry: CheckoutPlayground.AdaptivePricingCountry
 
     private var supportsSetupRestrictedFeatures: Bool {
@@ -194,6 +214,16 @@ struct CheckoutPlaygroundFeaturesSection: View {
                         title: "Adaptive Pricing",
                         isOn: $adaptivePricing,
                         tooltip: "Sets `adaptive_pricing: { enabled: true }`. Displays prices in the customer's local currency."
+                    )
+                    CheckoutPlayground.ToggleRow(
+                        title: "Payment Method Offer Save",
+                        isOn: $checkoutSessionPaymentMethodSave,
+                        tooltip: "Sets `saved_payment_method_options.payment_method_save` to `enabled`. When on, Checkout can offer to save the payment method for future use."
+                    )
+                    CheckoutPlayground.ToggleRow(
+                        title: "Payment Method Remove",
+                        isOn: $checkoutSessionPaymentMethodRemove,
+                        tooltip: "Sets `saved_payment_method_options.payment_method_remove` to `enabled`. When on, Checkout can allow customers to remove saved payment methods."
                     )
                     if adaptivePricing {
                         CheckoutPlayground.PickerRow(

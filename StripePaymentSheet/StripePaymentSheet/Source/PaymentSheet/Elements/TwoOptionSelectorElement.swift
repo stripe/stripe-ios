@@ -36,10 +36,6 @@ final class TwoOptionSelectorElement: Element {
         selectorView.delegate = self
     }
 
-    func select(_ itemId: String) {
-        selectorView.select(itemId, notifyDelegate: true)
-    }
-
     func updateCaption(_ caption: String?) {
         selectorView.updateCaption(caption)
     }

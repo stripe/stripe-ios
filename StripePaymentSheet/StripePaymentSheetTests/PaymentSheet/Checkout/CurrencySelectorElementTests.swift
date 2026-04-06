@@ -36,7 +36,8 @@ final class CurrencySelectorElementTests: XCTestCase {
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "usd", total: 1200),
                 localizedPriceMeta(currency: "eur", total: 1100),
-            ]
+            ],
+            exchangeRateMeta: exchangeRateMeta(buyCurrency: "eur", sellCurrency: "usd", exchangeRate: "0.92")
         )
         element.delegate = delegate
 
@@ -57,7 +58,8 @@ final class CurrencySelectorElementTests: XCTestCase {
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "usd", total: 1200),
                 localizedPriceMeta(currency: "eur", total: 1100),
-            ]
+            ],
+            exchangeRateMeta: exchangeRateMeta(buyCurrency: "eur", sellCurrency: "usd", exchangeRate: "0.92")
         )
         element.delegate = delegate
 
@@ -126,11 +128,44 @@ final class CurrencySelectorElementTests: XCTestCase {
         let label = try XCTUnwrap(captionLabel(in: element.view))
         XCTAssertEqual(label.text, "1 USD = 0.7769 GBP")
 
-        element.selectCurrency("usd")
+        let usdButton = try XCTUnwrap(button(in: element.view, id: "currency_option_usd"))
+        usdButton.sendActions(for: .touchUpInside)
         XCTAssertEqual(label.text, String.Localized.bankExchangeRateDisclaimer)
 
-        element.selectCurrency("gbp")
+        let gbpButton = try XCTUnwrap(button(in: element.view, id: "currency_option_gbp"))
+        gbpButton.sendActions(for: .touchUpInside)
         XCTAssertEqual(label.text, "1 USD = 0.7769 GBP")
+    }
+
+    func testOrderingIsStableRegardlessOfCurrentCurrency() {
+        let meta = exchangeRateMeta(buyCurrency: "gbp", sellCurrency: "usd", exchangeRate: "0.776917")
+        let metas = [
+            localizedPriceMeta(currency: "usd", total: 1200),
+            localizedPriceMeta(currency: "gbp", total: 1000),
+        ]
+
+        // Create with currentCurrency = gbp (local currency selected)
+        let elementA = makeCurrencySelectorElement(
+            currentCurrency: "gbp",
+            currentTotal: 1000,
+            localizedPricesMetas: metas,
+            exchangeRateMeta: meta
+        )
+
+        // Create with currentCurrency = usd (integration currency selected, e.g. after reload)
+        let elementB = makeCurrencySelectorElement(
+            currentCurrency: "usd",
+            currentTotal: 1200,
+            localizedPricesMetas: metas,
+            exchangeRateMeta: meta
+        )
+
+        let idsA = buttonIdentifiers(in: elementA.view)
+        let idsB = buttonIdentifiers(in: elementB.view)
+
+        // Both should have local currency (gbp) on the left and integration (usd) on the right
+        XCTAssertEqual(idsA, idsB, "Button ordering should be stable regardless of currentCurrency")
+        XCTAssertEqual(idsA, ["currency_option_gbp", "currency_option_usd"])
     }
 
     // MARK: - Helpers
@@ -184,8 +219,8 @@ final class CurrencySelectorElementTests: XCTestCase {
 
     private func selectedButton(in view: UIView) -> UIButton? {
         let buttons = allButtons(in: view)
-        let defaultBorderWidth = PaymentSheet.Appearance.default.borderWidth
-        return buttons.first(where: { $0.layer.borderWidth > defaultBorderWidth })
+        let selectedColor = PaymentSheet.Appearance.default.colors.componentText
+        return buttons.first(where: { $0.titleColor(for: .normal) == selectedColor })
     }
 
     private func captionLabel(in view: UIView) -> UILabel? {

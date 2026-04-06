@@ -209,6 +209,29 @@ struct PaymentSheetTestPlayground: View {
                             }
                         }
 
+                        if playgroundController.settings.integrationType == .checkoutSession {
+                            if searchText.isEmpty {
+                                Divider()
+                            }
+                            Group {
+                                SearchableSection(
+                                    title: "Checkout Session",
+                                    searchText: $searchText
+                                ) {
+                                    SearchableSettingView(
+                                        setting: paymentMethodSaveBinding,
+                                        title: "Offer Save",
+                                        searchText: $searchText
+                                    )
+                                    SearchableSettingView(
+                                        setting: $playgroundController.settings.paymentMethodRemove,
+                                        title: "Payment Method Remove",
+                                        searchText: $searchText
+                                    )
+                                }
+                            }
+                        }
+
                         if searchText.isEmpty {
                             Divider()
                         }
@@ -730,11 +753,12 @@ struct AttestationResetButtonView: View {
 
 struct SettingView<S: PickerEnum>: View {
     var setting: Binding<S>
+    var title: String?
 
     var body: some View {
         HStack {
-            Text(S.enumName).font(.subheadline)
-            Picker(S.enumName, selection: setting) {
+            Text(title ?? S.enumName).font(.subheadline)
+            Picker(title ?? S.enumName, selection: setting) {
                 ForEach(S.allCases, id: \.self) { t in
                     Text(t.displayName)
                 }

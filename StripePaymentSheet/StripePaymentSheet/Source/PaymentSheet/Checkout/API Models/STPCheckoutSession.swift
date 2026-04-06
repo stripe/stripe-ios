@@ -458,6 +458,22 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 // MARK: - Parsing Helpers
 
 extension STPCheckoutSession {
+    func merchantWillSavePaymentMethod(_ paymentMethodType: STPPaymentMethodType) -> Bool {
+        _ = paymentMethodType
+        guard customerId != nil else {
+            return false
+        }
+
+        switch mode {
+        case .setup:
+            return true
+        case .payment:
+            return false
+        case .subscription, .unknown:
+            stpAssertionFailure("Unknown and subscription modes are not currently supported with checkout sessions")
+            return false
+        }
+    }
 
     // MARK: Line Items
 
