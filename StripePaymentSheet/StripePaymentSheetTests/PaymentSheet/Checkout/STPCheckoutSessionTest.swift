@@ -66,6 +66,7 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.customer?.email, "customer@example.com")
         XCTAssertEqual(session.customer?.name, "Test Customer")
         XCTAssertEqual(session.customer?.phone, "+15555555555")
+        XCTAssertFalse(session.customer?.canDetachPaymentMethod ?? true)
         XCTAssertEqual(session.customer?.paymentMethods.count, 2)
         XCTAssertEqual(session.customer?.paymentMethods[0].stripeId, "pm_1Sxae3Lu5o3P18Zpt5YuRRoG")
         XCTAssertEqual(session.customer?.paymentMethods[0].type, .card)
@@ -213,6 +214,62 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertNil(session?.paymentIntentId)
     }
 
+    func testDecodedObjectParsesCanDetachPaymentMethodTrue() {
+        let json: [String: Any] = [
+            "session_id": "cs_test_detach_true",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer": [
+                "id": "cus_test_123",
+                "payment_methods": [],
+                "can_detach_payment_method": true,
+            ],
+        ]
+
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+
+        XCTAssertTrue(session?.customer?.canDetachPaymentMethod ?? false)
+    }
+
+    func testDecodedObjectParsesCanDetachPaymentMethodFalse() {
+        let json: [String: Any] = [
+            "session_id": "cs_test_detach_false",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer": [
+                "id": "cus_test_123",
+                "payment_methods": [],
+                "can_detach_payment_method": false,
+            ],
+        ]
+
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+
+        XCTAssertFalse(session?.customer?.canDetachPaymentMethod ?? true)
+    }
+
+    func testDecodedObjectDefaultsCanDetachPaymentMethodToFalse() {
+        let json: [String: Any] = [
+            "session_id": "cs_test_detach_default",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer": [
+                "id": "cus_test_123",
+                "payment_methods": [],
+            ],
+        ]
+
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
+
+        XCTAssertFalse(session?.customer?.canDetachPaymentMethod ?? true)
+    }
+
     func testTotalsWithTaxFromTaxAmounts() {
         let json: [String: Any] = [
             "session_id": "cs_test_tax",
@@ -268,4 +325,58 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(Checkout.PaymentStatus.paymentStatus(from: "unknown_value"), .unknown)
     }
 
+    func testMerchantWillSavePaymentMethod_paymentModeWithoutSetupFutureUsage() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_payment",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "customer": ["id": "cus_123"],
+        ])!
+
+        XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
+    }
+
+    func testMerchantWillSavePaymentMethod_paymentModeWithoutCustomer() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_payment_no_customer",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+            "setup_future_usage": "off_session",
+        ])!
+
+        XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
+    }
+
+    func testMerchantWillSavePaymentMethod_setupModeWithCustomer() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_setup_customer",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "setup",
+            "payment_status": "no_payment_required",
+            "payment_method_types": ["card"],
+            "customer": ["id": "cus_123"],
+        ])!
+
+        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+    }
+
+    func testMerchantWillSavePaymentMethod_setupModeWithoutCustomer() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_setup_no_customer",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "setup",
+            "payment_status": "no_payment_required",
+            "payment_method_types": ["card"],
+        ])!
+
+        XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
+    }
 }
