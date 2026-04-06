@@ -82,40 +82,6 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
 
     @MainActor
     private func makeSession(selectedCurrency: String) -> STPCheckoutSession {
-        let json: [AnyHashable: Any] = [
-            "session_id": "cs_test_123",
-            "client_secret": "cs_test_123_secret_abc",
-            "livemode": false,
-            "mode": "payment",
-            "status": "open",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "currency": selectedCurrency,
-            "total_summary": [
-                "subtotal": 1200,
-                "total": 1200,
-                "due": 1200,
-            ],
-            "developer_tool_context": [
-                "adaptive_pricing": [
-                    "active": true,
-                ],
-            ],
-            "adaptive_pricing_info": [
-                "integration_currency": "usd",
-                "integration_amount": 1200,
-                "active_presentment_currency": selectedCurrency,
-                "local_currency_options": [
-                    [
-                        "currency": "gbp",
-                        "amount": 1000,
-                        "presentment_exchange_rate": "0.776917",
-                        "conversion_markup_bps": 400,
-                    ] as [AnyHashable: Any],
-                ],
-            ] as [AnyHashable: Any],
-        ]
-
-        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+        CheckoutTestHelpers.makeAdaptivePricingSession(currency: selectedCurrency)
     }
 }
