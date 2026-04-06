@@ -15,7 +15,7 @@ class HeaderView: UIView {
     typealias IconViewModel = HeaderIconView.ViewModel
 
     struct Styling {
-        static let leadingTrailingConstraint: CGFloat = 16
+        static let leadingTrailingConstraint: CGFloat = 32
 
         static let stackViewSpacing: CGFloat = 24
 
