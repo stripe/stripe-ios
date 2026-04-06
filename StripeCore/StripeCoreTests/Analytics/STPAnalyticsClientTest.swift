@@ -9,7 +9,7 @@
 import Foundation
 import XCTest
 
-@testable@_spi(STP) @_spi(MobilePaymentElementAnalyticEventBeta) import StripeCore
+@testable@_spi(STP) @_spi(MobilePaymentElementAnalyticEventBeta) @_spi(ReactNativeSDK) import StripeCore
 
 class STPAnalyticsClientTest: XCTestCase {
 
@@ -72,6 +72,27 @@ class STPAnalyticsClientTest: XCTestCase {
 
         XCTAssertEqual(payload["library_name"] as? String, "MyAwesomeLibrary")
         XCTAssertEqual(payload["library_version"] as? String, "1.2.34")
+    }
+
+    func testCommonPayloadIncludesReactNativeAnalytics() {
+        let analyticsClient = STPAnalyticsClient()
+        let apiClient = STPAPIClient(publishableKey: "pk_test_foo")
+
+        // By default, RN fields should be nil
+        let payload = analyticsClient.commonPayload(apiClient)
+        XCTAssertNil(payload["react_native_is_new_architecture"])
+        XCTAssertNil(payload["react_native_version"])
+
+        // When set, they should appear in the payload
+        ReactNativeAnalytics.isNewArchitecture = false
+        ReactNativeAnalytics.reactNativeVersion = "0.75.3"
+        let payloadWithRN = analyticsClient.commonPayload(apiClient)
+        XCTAssertEqual(payloadWithRN["react_native_is_new_architecture"] as? Bool, false)
+        XCTAssertEqual(payloadWithRN["react_native_version"] as? String, "0.75.3")
+
+        // Clean up
+        ReactNativeAnalytics.isNewArchitecture = nil
+        ReactNativeAnalytics.reactNativeVersion = nil
     }
 
     func testCommonPayloadOmitsLibraryVersionWhenAppInfoVersionIsNil() {
