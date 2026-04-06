@@ -187,7 +187,7 @@ extension Checkout.CurrencySelectorView: TwoOptionSelectorViewDelegate {
         Task {
             do {
                 try await checkout.selectCurrency(id)
-                // Caption label updates automatically via rebuildIfNeeded from session update
+                // Caption label updates automatically via handleSessionUpdate from session update
             } catch {
                 // Revert to previous currency on error
                 if let fromCurrency {
