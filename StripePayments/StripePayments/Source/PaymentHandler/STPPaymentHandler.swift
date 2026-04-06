@@ -1548,7 +1548,6 @@ public class STPPaymentHandler: NSObject {
     /// - Parameters:
     ///   - currentAction: Action parameters to process, defaults to self.currentAction
     ///   - pollingBudget: Existing polling budget, or nil for first attempt
-    ///   - challengeClientOutcome: If provided and the intent is not in a success state, completes with this outcome instead of normal status handling.
     func _retrieveAndCheckIntentForCurrentAction(currentAction: STPPaymentHandlerActionParams? = nil, pollingBudget: PollingBudget? = nil) {
         // Alipay requires us to hit an endpoint before retrieving the PI, to ensure the status is up to date.
         let pingMarlinIfNecessary: ((STPPaymentHandlerPaymentIntentActionParams, @escaping STPVoidBlock) -> Void) = {

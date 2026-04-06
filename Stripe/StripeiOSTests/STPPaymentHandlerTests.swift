@@ -293,8 +293,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
             challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
         )
 
@@ -330,8 +329,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
             challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
         )
 
@@ -369,8 +367,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
             challengeClientOutcome: .failed(ChallengeError.webError(message: "Captcha failed", type: "captcha_error", code: "123"))
         )
 
@@ -406,8 +403,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
             challengeClientOutcome: .canceled
         )
 
@@ -444,8 +440,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
             challengeClientOutcome: .canceled
         )
 
@@ -483,8 +478,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
             challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
         )
 
@@ -522,8 +516,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
             challengeClientOutcome: .failed(ChallengeError.webError(message: "Captcha failed", type: "captcha_error", code: nil))
         )
 
@@ -559,8 +552,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
             challengeClientOutcome: .canceled
         )
 
@@ -597,8 +589,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
             challengeClientOutcome: .canceled
         )
 
@@ -642,8 +633,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
             challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
         )
 
@@ -684,8 +674,7 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
             challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
         )
 
@@ -727,10 +716,9 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
-            pollingBudget: PollingBudget(startDate: Date(), duration: 5.0),
-            challengeClientOutcome: .canceled
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
+            challengeClientOutcome: .canceled,
+            pollingBudget: PollingBudget(startDate: Date(), duration: 5.0)
         )
 
         wait(for: [expectation], timeout: 10.0)
@@ -769,10 +757,9 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         }
 
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
-            pollingBudget: PollingBudget(startDate: Date(), duration: 5.0),
-            challengeClientOutcome: .canceled
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
+            challengeClientOutcome: .canceled,
+            pollingBudget: PollingBudget(startDate: Date(), duration: 5.0)
         )
 
         wait(for: [expectation], timeout: 10.0)
@@ -814,10 +801,9 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
         // Start with an already-exhausted budget
         let exhaustedBudget = PollingBudget(startDate: Date().addingTimeInterval(-10), duration: 1.0)
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
-            pollingBudget: exhaustedBudget,
-            challengeClientOutcome: .canceled
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
+            challengeClientOutcome: .canceled,
+            pollingBudget: exhaustedBudget
         )
 
         wait(for: [expectation], timeout: 5.0)
@@ -854,10 +840,9 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
 
         let exhaustedBudget = PollingBudget(startDate: Date().addingTimeInterval(-10), duration: 1.0)
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
-            pollingBudget: exhaustedBudget,
-            challengeClientOutcome: .canceled
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
+            challengeClientOutcome: .canceled,
+            pollingBudget: exhaustedBudget
         )
 
         wait(for: [expectation], timeout: 5.0)
@@ -895,12 +880,10 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
 
         let exhaustedBudget = PollingBudget(startDate: Date().addingTimeInterval(-10), duration: 1.0)
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
-            pollingBudget: exhaustedBudget,
-            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil)),
+            pollingBudget: exhaustedBudget
         )
-
         wait(for: [expectation], timeout: 5.0)
     }
 
@@ -936,10 +919,9 @@ class STPPaymentHandlerStubbedTests: STPNetworkStubbingTestCase {
 
         let exhaustedBudget = PollingBudget(startDate: Date().addingTimeInterval(-10), duration: 1.0)
         paymentHandler.currentAction = currentAction
-        paymentHandler._retrieveAndCheckIntentForCurrentAction(
-            currentAction: currentAction,
-            pollingBudget: exhaustedBudget,
-            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil))
+        paymentHandler._retrieveAndCheckIntentAfterChallenge(
+            challengeClientOutcome: .failed(ChallengeError.webError(message: "fail", type: "type", code: nil)),
+            pollingBudget: exhaustedBudget
         )
 
         wait(for: [expectation], timeout: 5.0)
