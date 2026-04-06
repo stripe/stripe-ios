@@ -110,7 +110,7 @@ public class STPPaymentHandler: NSObject {
     /// as determined by the challenge screen before the intent is re-fetched.
     enum ChallengeClientOutcome {
         case canceled
-        case failed(Error)
+        case failed(NSError)
 
         var actionStatus: STPPaymentHandlerActionStatus {
             switch self {
@@ -118,10 +118,10 @@ public class STPPaymentHandler: NSObject {
             case .failed: return .failed
             }
         }
-        var nsError: NSError? {
+        var error: NSError? {
             switch self {
             case .canceled: return nil
-            case .failed(let error): return error as NSError
+            case .failed(let error): return error
             }
         }
     }
@@ -2149,7 +2149,7 @@ public class STPPaymentHandler: NSObject {
                             if case ChallengeError.userCanceled = error {
                                 self._retrieveAndCheckIntentAfterChallenge(challengeClientOutcome: .canceled)
                             } else {
-                                self._retrieveAndCheckIntentAfterChallenge(challengeClientOutcome: .failed(error))
+                                self._retrieveAndCheckIntentAfterChallenge(challengeClientOutcome: .failed(error as NSError))
                             }
                         }
                     }
