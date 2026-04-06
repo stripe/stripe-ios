@@ -1858,7 +1858,7 @@ public class STPPaymentHandler: NSObject {
                     currentAction: currentAction
                 )
             }
-        }  else {
+        } else {
             // TODO: Make currentAction an enum, stop optionally casting it
             stpAssert(false, "currentAction is an unknown type or nil intent.")
             currentAction.complete(
