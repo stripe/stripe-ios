@@ -274,7 +274,59 @@ class DownloadManagerTest: APIStubbedTestCase {
         XCTAssertEqual(self.validURL.absoluteString, firstAnalytic["url"] as? String)
     }
 
+    // MARK: - Disk cache promotion tests
+
+    func testDiskCachePromotion_returnsImageInsteadOfPlaceholder() {
+        let imageData = validImageData()
+        // Seed the URLCache with valid image data
+        seedURLCache(url: validURL, data: imageData)
+
+        // imageCache is empty, but URLCache has data — should promote and validImage
+        let image = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
+        XCTAssertEqual(image.size, validImageSize)
+    }
+
+    func testDiskCachePromotion_noPromotionWhenDiskCacheEmpty() {
+        // Both caches are empty — should return the placeholder
+        let image = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
+        XCTAssertEqual(image.size, placeholderImageSize)
+    }
+
+    func testDiskCachePromotion_promotedImageIsCachedForSubsequentCalls() {
+        let imageData = validImageData()
+        // Seed the URLCache
+        seedURLCache(url: validURL, data: imageData)
+
+        // First call promotes from disk cache
+        let image1 = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
+        XCTAssertEqual(image1.size, validImageSize)
+
+        // Clear the URLCache — only in-memory imageCache should have the image now
+        urlSessionConfig.urlCache?.removeAllCachedResponses()
+
+        // Second call should still return the same image from imageCache
+        let image2 = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
+        XCTAssertEqual(image2.pngData(), image1.pngData())
+    }
+
+    func testDiskCachePromotion_invalidDataReturnsPlaceholder() {
+        // Seed the URLCache with invalid image data
+        seedURLCache(url: validURL, data: Data("not an image".utf8))
+
+        // Should fail to decode and return placeholder
+        let image = rm.downloadImage(url: validURL, placeholder: nil, updateHandler: nil)
+        XCTAssertEqual(image.size, placeholderImageSize)
+    }
+
     // MARK: - Helper functions
+
+    private func seedURLCache(url: URL, data: Data) {
+        let request = URLRequest(url: url)
+        let response = HTTPURLResponse(url: url, statusCode: 200, httpVersion: nil, headerFields: nil)!
+        let cachedResponse = CachedURLResponse(response: response, data: data)
+        urlSessionConfig.urlCache?.storeCachedResponse(cachedResponse, for: request)
+    }
+
     private func validImageData() -> Data {
         return generateUIImage(size: validImageSize).pngData()!
     }
