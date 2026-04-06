@@ -10,9 +10,9 @@ import StripeCoreTestUtils
 @testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
 @_spi(STP) @testable import StripeUICore
 import UIKit
-// @iOS26
 // ☠️ WARNING: These snapshots do not have capsule corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
 @MainActor
+// @iOS26
 final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
 
     func testDefaultAppearance_localCurrencySelected() {
