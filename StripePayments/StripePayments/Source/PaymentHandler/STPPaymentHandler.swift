@@ -110,7 +110,7 @@ public class STPPaymentHandler: NSObject {
     /// as determined by the challenge screen before the intent is re-fetched.
     enum ChallengeClientOutcome {
         case canceled
-        case failed(NSError)
+        case failed(Error)
 
         var actionStatus: STPPaymentHandlerActionStatus {
             switch self {
@@ -118,10 +118,10 @@ public class STPPaymentHandler: NSObject {
             case .failed: return .failed
             }
         }
-        var error: NSError? {
+        var nsError: NSError? {
             switch self {
             case .canceled: return nil
-            case .failed(let error): return error
+            case .failed(let error): return error as NSError
             }
         }
     }
@@ -1890,7 +1890,7 @@ public class STPPaymentHandler: NSObject {
                 }
             } else {
                 currentAction.complete(with: challengeClientOutcome.actionStatus,
-                                       error: challengeClientOutcome.error)
+                                       error: challengeClientOutcome.nsError)
             }
         } else if isSuccess {
             currentAction.complete(with: .succeeded, error: nil)
@@ -1898,7 +1898,7 @@ public class STPPaymentHandler: NSObject {
             currentAction.complete(with: .failed, error: intentError)
         } else {
             currentAction.complete(with: challengeClientOutcome.actionStatus,
-                                   error: challengeClientOutcome.error)
+                                   error: challengeClientOutcome.nsError)
         }
     }
 
@@ -2149,7 +2149,7 @@ public class STPPaymentHandler: NSObject {
                             if case ChallengeError.userCanceled = error {
                                 self._retrieveAndCheckIntentAfterChallenge(challengeClientOutcome: .canceled)
                             } else {
-                                self._retrieveAndCheckIntentAfterChallenge(challengeClientOutcome: .failed(error as NSError))
+                                self._retrieveAndCheckIntentAfterChallenge(challengeClientOutcome: .failed(error))
                             }
                         }
                     }
