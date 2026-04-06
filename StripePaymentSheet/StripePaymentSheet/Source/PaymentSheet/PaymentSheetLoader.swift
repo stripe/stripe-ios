@@ -45,8 +45,8 @@ final class PaymentSheetLoader {
     ) {
         Task { @MainActor in
             do {
-                let (loadResult, challenge) = try await load(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, integrationShape: integrationShape, isUpdate: isUpdate)
-                completion(.success((loadResult, challenge)))
+                let (loadResult, confirmationChallenge) = try await load(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, integrationShape: integrationShape, isUpdate: isUpdate)
+                completion(.success((loadResult, confirmationChallenge)))
             } catch {
                 completion(.failure(error))
             }

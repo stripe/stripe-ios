@@ -756,7 +756,6 @@ extension PaymentSheet {
                 shouldLogExperimentExposure: false
             )
             self.viewController.flowControllerDelegate = self
-
             // Defer experiment exposure logging until next presentation
             self.hasLoggedLayoutExperimentExposure = false
             updatePaymentOption()
