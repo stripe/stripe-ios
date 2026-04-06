@@ -722,7 +722,6 @@ extension PaymentSheet {
                     )
                     self.viewController.flowControllerDelegate = self
                     self.confirmationChallenge = confirmationChallenge
-                    self.viewController.confirmationChallenge = confirmationChallenge
                     // Defer experiment exposure logging until next presentation
                     self.hasLoggedLayoutExperimentExposure = false
 
