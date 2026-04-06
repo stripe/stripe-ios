@@ -74,7 +74,7 @@ public final class EmbeddedPaymentElement {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
 
-        let loadResult = try await PaymentSheetLoader.load(
+        let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfiguration),
             configuration: configuration,
             analyticsHelper: analyticsHelper,
@@ -83,6 +83,7 @@ public final class EmbeddedPaymentElement {
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(
             configuration: configuration,
             loadResult: loadResult,
+            confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper
         )
         embeddedPaymentElement.clearPaymentOptionIfNeeded()
@@ -117,7 +118,7 @@ public final class EmbeddedPaymentElement {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: config)
 
-        let loadResult = try await PaymentSheetLoader.load(
+        let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
             mode: .checkoutSession(stpSession),
             configuration: config,
             analyticsHelper: analyticsHelper,
@@ -126,6 +127,7 @@ public final class EmbeddedPaymentElement {
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(
             configuration: config,
             loadResult: loadResult,
+            confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper
         )
         embeddedPaymentElement.clearPaymentOptionIfNeeded()
@@ -206,9 +208,10 @@ public final class EmbeddedPaymentElement {
             // ⚠️ Don't modify `self` until after all `awaits` to avoid being canceled halfway through and leaving self in a partially updated state.
             // 1. Reload v1/elements/session.
             let loadResult: PaymentSheetLoader.LoadResult
+            let confirmationChallenge: ConfirmationChallenge
             do {
                 // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-3079): Make `load` respect task cancellation to reduce network consumption
-                loadResult = try await PaymentSheetLoader.load(
+                (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
                     mode: mode,
                     configuration: configuration,
                     analyticsHelper: analyticsHelper,
@@ -225,6 +228,7 @@ public final class EmbeddedPaymentElement {
             // 2. At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
             let previousPaymentOption = self._paymentOption
             self.loadResult = loadResult
+            self.confirmationChallenge = confirmationChallenge
             self.savedPaymentMethods = loadResult.savedPaymentMethods
             self.formCache = .init() // Clear the cache because the form may have changed e.g. different mandate or different fields.
             let isPreviousPaymentOptionStillDisplayed: Bool = {
@@ -433,6 +437,7 @@ public final class EmbeddedPaymentElement {
     internal init(
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
+        confirmationChallenge: ConfirmationChallenge,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
@@ -440,6 +445,7 @@ public final class EmbeddedPaymentElement {
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
         self.analyticsHelper = analyticsHelper
+        self.confirmationChallenge = confirmationChallenge
 
         analyticsHelper.logInitialized()
         analyticsHelper.startTimeMeasurement(.checkout)
@@ -448,7 +454,6 @@ public final class EmbeddedPaymentElement {
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
         self.lastUpdatedPaymentOption = paymentOption
-        self.confirmationChallenge = ConfirmationChallenge(enableAttestation: configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: configuration.apiClient.stripeAttest)
     }
 }
 

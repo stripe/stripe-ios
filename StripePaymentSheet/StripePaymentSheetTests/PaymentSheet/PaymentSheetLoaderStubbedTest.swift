@@ -46,7 +46,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             integrationShape: .flowController
         ) { result in
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 guard case .paymentIntent(let paymentIntent) = loadResult.intent else {
                     XCTFail("Expecting payment intent")
                     return
@@ -87,7 +87,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             integrationShape: .flowController
         ) { result in
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 guard case .paymentIntent(let paymentIntent) = loadResult.intent else {
                     XCTFail("Expecting payment intent")
                     return
@@ -122,7 +122,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             integrationShape: .flowController
         ) { result in
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 guard case .paymentIntent(let paymentIntent) = loadResult.intent else {
                     XCTFail("Expecting payment intent")
                     return
@@ -154,7 +154,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
             integrationShape: .flowController
         ) { result in
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 guard case .paymentIntent(let paymentIntent) = loadResult.intent else {
                     XCTFail("Expecting payment intent")
                     return
@@ -202,7 +202,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         ) { result in
             loaded.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...should still succeed...
                 guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
@@ -263,7 +263,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         ) { result in
             loaded.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...should still succeed...
                 guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
@@ -314,7 +314,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         ) { result in
             loaded.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...should still succeed...
                 guard case let .paymentIntent(paymentIntent) = loadResult.intent else {
                     XCTFail()
@@ -363,7 +363,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         ) { result in
             loaded.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...should still succeed...
                 guard case let .setupIntent(setupIntent) = loadResult.intent else {
                     XCTFail()
@@ -423,7 +423,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         ) { result in
             loaded.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...should still succeed...
                 guard case .deferredIntent = loadResult.intent else {
                     XCTFail()
@@ -466,7 +466,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         ) { result in
             loaded2.fulfill()
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 // ...should still succeed...
                 guard case .deferredIntent = loadResult.intent else {
                     XCTFail()
