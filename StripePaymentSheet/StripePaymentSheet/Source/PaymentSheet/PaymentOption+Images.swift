@@ -16,7 +16,8 @@ extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen
     func makeIcon(
         currency: String?,
-        iconStyle: PaymentSheet.Appearance.IconStyle
+        iconStyle: PaymentSheet.Appearance.IconStyle,
+        cardArtEnabled: Bool = false
     ) -> UIImage {
         let isDarkMode = UIApplication.shared.activeScene?.traitCollection.isDarkMode ?? false
         switch self {
@@ -26,7 +27,16 @@ extension PaymentOption {
             if let linkedBank = paymentOption?.instantDebitsLinkedBank {
                 return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: linkedBank.bankName), iconStyle: iconStyle)
             } else {
-                return paymentMethod.makeIcon(iconStyle: iconStyle)
+                let cardNetworkImage = paymentMethod.makeIcon(iconStyle: iconStyle)
+                if cardArtEnabled, let cardArtURL = paymentMethod.cardArtCDNURL(height: 28) {
+                    let image = DownloadManager.sharedManager.downloadImage(
+                        url: cardArtURL,
+                        placeholder: cardNetworkImage,
+                        updateHandler: nil
+                    )
+                    return image == cardNetworkImage ? image : image.roundedWithBorder(radius: 3)
+                }
+                return cardNetworkImage
             }
         case .new(let confirmParams):
             return confirmParams.makeIcon(forDarkBackground: isDarkMode, currency: currency, iconStyle: iconStyle)
