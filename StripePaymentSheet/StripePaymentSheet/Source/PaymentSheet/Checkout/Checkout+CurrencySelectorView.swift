@@ -99,12 +99,14 @@ extension Checkout {
         /// session that has adaptive pricing data, then updates the caption
         /// on subsequent changes. Hides the view if AP data is unavailable.
         private func handleSessionUpdate() {
-            guard let (session, exchangeRateMeta, currency) =
+            guard let (session, exchangeRateMeta, rawCurrency) =
                     CurrencySelectorElement.adaptivePricingData(from: checkout.session)
             else {
                 tearDown()
                 return
             }
+
+            let currency = CurrencySelectorElement.CurrencyCode(rawCurrency)
 
             // Build the selector after inital sesison loading, after that just update the caption
             if selectorView == nil {
@@ -117,7 +119,7 @@ extension Checkout {
         private func buildSelectorView(
             session: STPCheckoutSession,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
-            currency: String
+            currency: CurrencySelectorElement.CurrencyCode
         ) {
             let (left, right) = CurrencySelectorElement.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
@@ -128,7 +130,7 @@ extension Checkout {
             let newSelector = TwoOptionSelectorView(
                 leftItem: left,
                 rightItem: right,
-                selectedItemId: currency.lowercased(),
+                selectedItemId: currency.apiValue,
                 appearance: psAppearance
             )
             newSelector.delegate = self
@@ -153,11 +155,11 @@ extension Checkout {
         }
 
         private func updateCaption(
-            currency: String,
+            currency: CurrencySelectorElement.CurrencyCode,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
         ) {
             let caption = CurrencySelectorElement.caption(
-                forSelectedCurrency: currency.lowercased(),
+                forSelectedCurrency: currency.apiValue,
                 exchangeRateMeta: exchangeRateMeta
             )
             selectorView?.updateCaption(caption)
