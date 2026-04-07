@@ -71,7 +71,7 @@ jobs:
             If you confirm these APIs need to be added/updated and have undergone necessary review, add the label `modifies public API` to this PR to acknowledge the interface change.
             Additionally, if you modified or removed an existing API, ensure you update the changelog to reflect the necessary version bump for your changes. Regular public API changes require a MAJOR version bump, and SPI API changes (other than `@_spi(STP)`-only declarations) require a MINOR or MAJOR version bump.
 
-            ℹ️ If this comment appears to be left in error, make sure your branch is up-to-date with `master`.
+            ℹ️ See the [Versioning](https://github.com/stripe/stripe-ios#versioning) section of the README for more details. If this comment appears to be left in error, make sure your branch is up-to-date with `master`.
           edit-mode: replace
           comment-id: ${{ steps.find_comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}
