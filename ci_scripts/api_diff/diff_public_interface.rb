@@ -39,9 +39,9 @@ def sorted_diff_lines(old_path, new_path)
   end
 end
 
-def non_stp_spi_line?(line)
+def stable_spi_line?(line)
   spi_names = line.scan(/@_spi\(([^)]+)\)/).flatten.map(&:strip)
-  spi_names.any? { |spi_name| spi_name != 'STP' }
+  spi_names.any? { |spi_name| spi_name != 'STP' && !spi_name.end_with?('Alpha') }
 end
 
 def has_non_additive_changes?(lines)
@@ -79,7 +79,7 @@ GetFrameworks.framework_names('./modules.yaml').each do |framework_name|
   master_private_interface_path = "#{framework_name}-master.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.private.swiftinterface"
   branch_private_interface_path = "#{framework_name}-new.xcframework/#{simulator_slice}/#{public_interface_dir}/arm64-apple-ios-simulator.private.swiftinterface"
   spi_diff_lines = sorted_diff_lines(master_private_interface_path, branch_private_interface_path).select do |line|
-    line.include?('@_spi(') && non_stp_spi_line?(line)
+    line.include?('@_spi(') && stable_spi_line?(line)
   end
 
   if has_non_additive_changes?(public_diff_lines)
