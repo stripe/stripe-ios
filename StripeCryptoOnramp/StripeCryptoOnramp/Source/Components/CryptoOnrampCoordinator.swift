@@ -478,7 +478,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 collectName: type.requiresNameCollection
             ) else {
-                selectedPaymentSource = nil
                 return .canceled
             }
 
@@ -524,7 +523,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
                     return .completed(displayData: paymentMethodPreview, kycInfo: kycInfo)
                 case .canceled:
-                    selectedPaymentSource = nil
                     return .canceled
                 }
             } catch {
@@ -629,6 +627,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
     public func logOut() async throws {
         do {
+            selectedPaymentSource = nil
             try await linkController.logOut()
             analyticsClient.log(.userLoggedOut)
         } catch {
@@ -657,13 +656,10 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
         case .success:
             applePayCompletionContinuation?.resume(returning: .success)
         case .userCancellation:
-            selectedPaymentSource = nil
             applePayCompletionContinuation?.resume(returning: .canceled)
         case .error:
-            selectedPaymentSource = nil
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         @unknown default:
-            selectedPaymentSource = nil
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         }
 

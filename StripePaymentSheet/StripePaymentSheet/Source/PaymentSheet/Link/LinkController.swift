@@ -367,7 +367,7 @@ import UIKit
         with email: String?,
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         collectName: Bool = false,
-        completion: @escaping () -> Void
+        completion: @escaping (_ didSelectPaymentMethod: Bool) -> Void
     ) {
         var configuration = self.configuration
         configuration.defaultBillingDetails.email = email
@@ -394,12 +394,12 @@ import UIKit
                 if shouldClearSelection {
                     self?.internalPaymentOption = nil
                 }
-                completion()
+                completion(false)
                 return
             }
 
             self?.internalPaymentOption = .link(option: confirmOption)
-            completion()
+            completion(true)
         }
     }
 
@@ -1036,9 +1036,9 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                     with: email,
                     supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                     collectName: collectName
-                ) { [weak self] in
+                ) { [weak self] didSelectPaymentMethod in
                     guard let self else { return }
-                    continuation.resume(returning: self.paymentMethodPreview)
+                    continuation.resume(returning: didSelectPaymentMethod ? self.paymentMethodPreview : nil)
                 }
             }
         }
