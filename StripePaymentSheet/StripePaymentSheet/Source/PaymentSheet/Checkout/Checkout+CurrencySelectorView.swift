@@ -20,7 +20,7 @@ extension Checkout {
     /// Place this view on your cart or checkout page (near the total price) to let
     /// customers toggle between their local currency and the merchant's currency.
     ///
-    /// The view automatically observes the ``Checkout`` session and:
+    /// The view automatically observes the ``CheckoutSession`` and:
     /// - Hides itself when Adaptive Pricing is not available
     /// - Shows two currency options with formatted amounts and exchange rate disclosure
     /// - Calls ``Checkout/selectCurrency(_:)`` when the customer taps a currency
@@ -47,7 +47,7 @@ extension Checkout {
         private let appearance: Appearance
         private var selectorView: TwoOptionSelectorView?
         private var sessionCancellable: AnyCancellable?
-        private var previousCurrency: String?
+        private var lastSelectedCurrency: String?
 
         // MARK: - Init
 
@@ -178,8 +178,8 @@ extension Checkout {
 
 extension Checkout.CurrencySelectorView: TwoOptionSelectorViewDelegate {
     func twoOptionSelectorView(_ view: TwoOptionSelectorView, didSelectItemWithId id: String) {
-        let fromCurrency = previousCurrency
-        previousCurrency = id
+        let fromCurrency = lastSelectedCurrency
+        lastSelectedCurrency = id
 
         // Disable interaction during the API call
         selectorView?.setEnabled(false)
@@ -192,7 +192,7 @@ extension Checkout.CurrencySelectorView: TwoOptionSelectorViewDelegate {
                 // Revert to previous currency on error
                 if let fromCurrency {
                     selectorView?.select(fromCurrency)
-                    previousCurrency = fromCurrency
+                    lastSelectedCurrency = fromCurrency
                 }
 
                 // TODO(porter) Figure out how to handle errors do we show an error message and alert the merchant?
