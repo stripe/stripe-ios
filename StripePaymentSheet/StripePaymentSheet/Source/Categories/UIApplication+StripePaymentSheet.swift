@@ -19,7 +19,7 @@ extension UIApplication {
             .sorted { firstWindow, _ in firstWindow.isKeyWindow }
         return windows.first
         #else
-        return activeScene?.windows.first { $0.isKeyWindow }
+        return activeOrFirstScene?.windows.first { $0.isKeyWindow }
         #endif
     }
 
@@ -28,7 +28,7 @@ extension UIApplication {
     /// Prefers a scene with `activationState == .foregroundActive`, but falls back to any
     /// connected `UIWindowScene` (e.g. when the scene is `.foregroundInactive` during app
     /// transitions). Logs an error only when no `UIWindowScene` exists at all.
-    var activeScene: UIWindowScene? {
+    var activeOrFirstScene: UIWindowScene? {
         let windowScenes = UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
 

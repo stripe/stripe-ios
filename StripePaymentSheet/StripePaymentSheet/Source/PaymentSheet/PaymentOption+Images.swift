@@ -18,7 +18,7 @@ extension PaymentOption {
         currency: String?,
         iconStyle: PaymentSheet.Appearance.IconStyle
     ) -> UIImage {
-        let isDarkMode = UIApplication.shared.activeScene?.traitCollection.isDarkMode ?? false
+        let isDarkMode = UIApplication.shared.activeOrFirstScene?.traitCollection.isDarkMode ?? false
         switch self {
         case .applePay:
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
