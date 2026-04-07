@@ -51,6 +51,8 @@ public final class Checkout: ObservableObject {
     private let apiClient: STPAPIClient
 
     /// Number of session-mutating API calls currently in flight.
+    /// Used by `withSessionUpdateGuard` to keep state as `.loading`
+    /// until all overlapping mutations complete.
     private var sessionUpdateCount = 0
 
     // MARK: - Initialization
@@ -150,6 +152,7 @@ public final class Checkout: ObservableObject {
     ///   the server request fails.
     public func updateBillingAddress(_ params: AddressUpdate) async throws {
         let currentSession = try requireOpenSession()
+        guard currentSession.billingAddressOverride != params else { return }
         if currentSession.shouldSendTaxRegion(for: "billing") {
             try await withSessionUpdateGuard {
                 try await performAPIUpdate(.setTaxRegion(params.address), applyOverrides: { session in
@@ -158,7 +161,6 @@ public final class Checkout: ObservableObject {
                 })
             }
         } else {
-            guard currentSession.billingAddressOverride != params else { return }
             currentSession.billingAddressOverride = params
             state = .loaded(currentSession)
             delegate?.checkout(self, didChangeState: state)
@@ -178,6 +180,7 @@ public final class Checkout: ObservableObject {
     ///   the server request fails.
     public func updateShippingAddress(_ params: AddressUpdate) async throws {
         let currentSession = try requireOpenSession()
+        guard currentSession.shippingAddressOverride != params else { return }
         if currentSession.shouldSendTaxRegion(for: "shipping") {
             try await withSessionUpdateGuard {
                 try await performAPIUpdate(.setTaxRegion(params.address), applyOverrides: { session in
@@ -186,7 +189,6 @@ public final class Checkout: ObservableObject {
                 })
             }
         } else {
-            guard currentSession.shippingAddressOverride != params else { return }
             currentSession.shippingAddressOverride = params
             state = .loaded(currentSession)
             delegate?.checkout(self, didChangeState: state)
@@ -233,7 +235,7 @@ public final class Checkout: ObservableObject {
             self?.updateSession(response)
         }
         let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
-        state = .loaded(newSession)
+        state = sessionUpdateCount > 0 ? .loading(newSession) : .loaded(newSession)
         if changed {
             delegate?.checkout(self, didChangeState: state)
         }
