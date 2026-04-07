@@ -55,7 +55,7 @@ public final class EmbeddedPaymentElement {
         guard let _paymentOption else {
             return nil
         }
-        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText, currency: intent.currency, iconStyle: configuration.appearance.iconStyle)
+        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText, currency: intent.currency, iconStyle: configuration.appearance.iconStyle, cardArtEnabled: configuration.appearance.cardArtEnabled)
     }
 
     /// An asynchronous failable initializer
