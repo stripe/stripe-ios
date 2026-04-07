@@ -174,7 +174,7 @@ final class CurrencySelectorElement: Element {
     // MARK: - Flag emoji
 
     static func flagEmoji(for currency: CurrencyCode) -> String {
-        let regionCode = String(currency.apiValue.prefix(2)).uppercased()
+        let regionCode = String(currency.displayValue.prefix(2))
         return String.regionFlagEmoji(for: regionCode) ?? ""
     }
 }
