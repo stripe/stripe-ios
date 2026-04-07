@@ -64,6 +64,15 @@ class RowButton: UIView, EventHandler {
         return !accessoryView.isHidden
     }
 
+    var imageViewSize: CGSize {
+        if appearance.cardArtEnabled {
+            // When card art is enabled, 1.25* size of images
+            return CGSize(width: 30, height: 25)
+        } else {
+            return CGSize(width: 24, height: 20)
+        }
+    }
+
     // MARK: Internal properties
 
     var heightConstraint: NSLayoutConstraint?
