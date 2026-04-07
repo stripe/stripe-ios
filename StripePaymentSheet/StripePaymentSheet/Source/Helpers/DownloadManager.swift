@@ -30,7 +30,8 @@ import UIKit
         analyticsClient: STPAnalyticsClient = .sharedClient
     ) {
         let configuration = urlSessionConfiguration
-        if let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+        if configuration.urlCache == nil,
+           let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
             .first
         {
             let diskCacheURL = cachesURL.appendingPathComponent("STPCache")
@@ -64,8 +65,14 @@ extension DownloadManager {
     public func downloadImage(url: URL, placeholder: UIImage?, updateHandler: UpdateImageHandler?) -> UIImage {
         let placeholder = placeholder ?? imagePlaceHolder()
         imageCacheLock.lock()
-        let cachedImage = imageCache[url]
+        var cachedImage = imageCache[url]
         imageCacheLock.unlock()
+
+        // If there is no cached image, attempt to promote from diskCache
+        if cachedImage == nil,
+           let diskImage = promoteFromDiskCache(url: url) {
+            cachedImage = diskImage
+        }
 
         if let updateHandler {
             Task {
@@ -91,6 +98,18 @@ extension DownloadManager {
     }
 
     // Common download functions
+
+    private func promoteFromDiskCache(url: URL) -> UIImage? {
+        let request = URLRequest(url: url)
+        guard let cachedResponse = session.configuration.urlCache?.cachedResponse(for: request),
+              let image = try? UIImage.from(imageData: cachedResponse.data) else {
+            return nil
+        }
+        imageCacheLock.withLock {
+            imageCache[url] = image
+        }
+        return image
+    }
 
     private func downloadImageSkippingCacheRead(url: URL) async throws -> UIImage {
         var errorParams: [String: Any] = ["url": url.absoluteString]

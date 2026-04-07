@@ -135,7 +135,9 @@ final class PaymentSheetAnalyticsHelper {
         defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
         orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType],
         loadTimings: PaymentSheetLoader.LoadTimings,
-        isUpdate: Bool
+        isUpdate: Bool,
+        hasCardArt: Bool,
+        didLinkLookupTimeOut: Bool?
     ) {
         self.intent = intent
         self.elementsSession = elementsSession
@@ -161,6 +163,7 @@ final class PaymentSheetAnalyticsHelper {
             "integration_shape": integrationShape.analyticsValue,
             "load_timings": loadTimings.jsonObject,
             "is_update": isUpdate,
+            "has_card_art": hasCardArt,
         ]
         if let linkMode = elementsSession.linkSettings?.linkMode {
             params["link_mode"] = linkMode.rawValue
@@ -178,6 +181,9 @@ final class PaymentSheetAnalyticsHelper {
         params["link_disabled_reasons"] = PaymentSheet.linkDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
         params["link_signup_disabled_reasons"] = PaymentSheet.linkSignupDisabledReasons(elementsSession: elementsSession, configuration: configuration).analyticsValue
         params["link_native_available"] = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
+        if let didLinkLookupTimeOut {
+            params["link_lookup_timed_out"] = didLinkLookupTimeOut
+        }
 
         log(
             event: .paymentSheetLoadSucceeded,

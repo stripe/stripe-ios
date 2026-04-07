@@ -92,7 +92,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         let experimentsData = ExperimentsData(
             arbId: arbId,
             experimentAssignments: [
-                "link_global_holdback": .treatment
+                LinkGlobalHoldback.experimentName: .treatment
             ],
             allResponseFields: [:]
         )
@@ -127,7 +127,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         }
 
         XCTAssertEqual(payload["arb_id"] as? String, arbId)
-        XCTAssertEqual(payload["experiment_retrieved"] as? String, "link_global_holdback")
+        XCTAssertEqual(payload["experiment_retrieved"] as? String, LinkGlobalHoldback.experimentName)
         XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
 
         XCTAssertEqual(payload["dimensions-recognition_type"] as? String, "email")

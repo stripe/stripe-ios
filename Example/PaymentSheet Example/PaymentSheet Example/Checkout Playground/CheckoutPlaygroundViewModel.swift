@@ -26,9 +26,12 @@ extension CheckoutPlayground {
         @Published var billingAddressCollection = false
         @Published var automaticTax = true
         @Published var adaptivePricing = false
+        @Published var checkoutSessionPaymentMethodSave = true
+        @Published var checkoutSessionPaymentMethodRemove = true
         @Published var adaptivePricingCountry: AdaptivePricingCountry = .none
         @Published var paymentMethodTypes: Set<String> = ["card"]
-        @Published var checkoutEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout_session"
+        @Published var checkoutEndpointOption: EndpointOption = .hosted
+        @Published var checkoutEndpoint = EndpointOption.hosted.endpoint ?? ""
 
         @Published var isCreating = false
         @Published var errorMessage: String?
@@ -102,6 +105,8 @@ extension CheckoutPlayground {
                 "automatic_tax": automaticTaxForRequest,
                 "payment_method_types": Array(paymentMethodTypes),
                 "adaptive_pricing": adaptivePricing,
+                "checkout_session_payment_method_save": checkoutSessionPaymentMethodSave ? "enabled" : "disabled",
+                "checkout_session_payment_method_remove": checkoutSessionPaymentMethodRemove ? "enabled" : "disabled",
             ]
             if adaptivePricing, adaptivePricingCountry != .none {
                 let countryCode = adaptivePricingCountry.rawValue.uppercased()

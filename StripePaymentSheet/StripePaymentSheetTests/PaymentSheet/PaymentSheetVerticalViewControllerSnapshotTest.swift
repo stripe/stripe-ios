@@ -436,4 +436,7 @@ extension PaymentSheetVerticalViewControllerSnapshotTest: PaymentSheetViewContro
 
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol) {
     }
+
+    func paymentSheetViewControllerDidSelectCurrency(_ paymentSheetViewController: any StripePaymentSheet.PaymentSheetViewControllerProtocol, currency: String) {
+    }
 }

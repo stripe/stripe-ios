@@ -36,6 +36,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     // MARK: Private properties
     private let configuration: PaymentElementConfiguration
+    private let intent: Intent
     private let elementsSession: STPElementsSession
     private let paymentMethodRemove: Bool
     private let paymentMethodRemoveLast: Bool
@@ -127,7 +128,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     }
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
     // MARK: Internal properties
@@ -173,6 +174,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
 
     init(
         configuration: PaymentElementConfiguration,
+        intent: Intent,
         selectedPaymentMethod: STPPaymentMethod?,
         paymentMethods: [STPPaymentMethod],
         elementsSession: STPElementsSession,
@@ -180,9 +182,10 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         defaultPaymentMethod: STPPaymentMethod?
     ) {
         self.configuration = configuration
+        self.intent = intent
         self.elementsSession = elementsSession
         self.defaultPaymentMethod = defaultPaymentMethod
-        self.paymentMethodRemove = elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
+        self.paymentMethodRemove = intent.allowsPaymentMethodRemoval(elementsSession: elementsSession)
         self.paymentMethodRemoveLast = elementsSession.paymentMethodRemoveLast(configuration: configuration)
         self.paymentMethodUpdate = elementsSession.paymentMethodUpdateForPaymentSheet
         self.paymentMethodSetAsDefault = elementsSession.paymentMethodSetAsDefaultForPaymentSheet
