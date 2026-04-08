@@ -61,9 +61,8 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
         appearance: Checkout.CurrencySelectorView.Appearance = .init(),
         disabled: Bool = false
     ) -> some View {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
         let session = CheckoutTestHelpers.makeAdaptivePricingSession(currency: selectedCurrency)
-        checkout.updateSession(session)
+        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
 
         return Checkout.CurrencySelectorElement(checkout: checkout, appearance: appearance)
             .disabled(disabled)
