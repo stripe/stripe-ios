@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import PassKit
+@_spi(STP) import StripePayments
 
 /// Represents KYC information required for crypto operations.
 @_spi(CryptoOnrampAlpha)
@@ -77,5 +79,65 @@ public struct KycInfo: Equatable {
         self.idNumber = idNumber
         self.address = address
         self.dateOfBirth = dateOfBirth
+    }
+}
+
+extension KycInfo {
+
+    /// Creates a `KycInfo` from Apple Pay billing information.
+    /// Returns `nil` if the `PKPayment` does not contain any usable billing name or address fields.
+    /// - Parameter payment: The Apple Pay payment whose billing information should be converted.
+    init?(payment: PKPayment) {
+        guard let billingContact = payment.billingContact else {
+            return nil
+        }
+
+        let firstName: String? = {
+            guard let givenName = billingContact.name?.givenName else {
+                return nil
+            }
+
+            let trimmedGivenName = givenName.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmedGivenName.isEmpty else {
+                return nil
+            }
+
+            return trimmedGivenName
+        }()
+
+        let lastName: String? = {
+            guard let familyName = billingContact.name?.familyName else {
+                return nil
+            }
+
+            let trimmedFamilyName = familyName.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmedFamilyName.isEmpty else {
+                return nil
+            }
+
+            return trimmedFamilyName
+        }()
+
+        let address: Address? = {
+            guard billingContact.postalAddress != nil else {
+                return nil
+            }
+
+            let stpAddress = STPAddress(pkContact: billingContact)
+            let address = Address(address: stpAddress)
+            return address.isEmpty ? nil : address
+        }()
+
+        guard firstName != nil || lastName != nil || address != nil else {
+            return nil
+        }
+
+        self.init(
+            firstName: firstName,
+            lastName: lastName,
+            idNumber: nil,
+            address: address,
+            dateOfBirth: nil
+        )
     }
 }
