@@ -200,6 +200,8 @@ extension STPAnalyticsClient {
             }
         }
         payload["plugin_type"] = PluginDetector.shared.pluginType?.rawValue
+        payload["react_native_is_new_architecture"] = ReactNativeAnalytics.isNewArchitecture
+        payload["react_native_version"] = ReactNativeAnalytics.reactNativeVersion
         payload["network_type"] = NetworkDetector.getConnectionType()
         payload["install"] = InstallMethod.current.rawValue
         payload["publishable_key"] = apiClient.sanitizedPublishableKey ?? "unknown"
