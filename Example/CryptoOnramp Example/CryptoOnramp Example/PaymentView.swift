@@ -679,8 +679,13 @@ struct PaymentView: View {
 
         Task {
             do {
-                if let displayData = try await coordinator.collectPaymentMethod(type: type, from: viewController) {
-
+                let result = try await coordinator.collectPaymentMethod(type: type, from: viewController)
+                switch result {
+                case .canceled:
+                    await MainActor.run {
+                        isLoading.wrappedValue = false
+                    }
+                case let .completed(displayData, _):
                     await MainActor.run {
                         shouldShowPaymentMethodSheet = false
                     }
@@ -691,9 +696,10 @@ struct PaymentView: View {
                         isLoading.wrappedValue = false
                         selectedPaymentMethod = .newPaymentMethod(tokenId: token, displayData: displayData)
                     }
-                } else { // cancelled
+                @unknown default:
                     await MainActor.run {
                         isLoading.wrappedValue = false
+                        alert = Alert(title: "Payment method selection failed", message: "Received an unexpected result while collecting payment method.")
                     }
                 }
             } catch {
@@ -720,16 +726,23 @@ struct PaymentView: View {
 
         Task {
             do {
-                if try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController) != nil {
+                let result = try await coordinator.collectPaymentMethod(type: .applePay(paymentRequest: request), from: viewController)
+                switch result {
+                case .canceled:
+                    await MainActor.run {
+                        isLoading.wrappedValue = false
+                    }
+                case .completed:
                     let token = try await coordinator.createCryptoPaymentToken()
 
                     await MainActor.run {
                         // intentionally not flipping `isLoading`, since `createOnrampSession` will set it back.
                         createOnrampSession(withCryptoPaymentTokenId: token)
                     }
-                } else { // cancelled
+                @unknown default:
                     await MainActor.run {
                         isLoading.wrappedValue = false
+                        alert = Alert(title: "Payment method selection failed", message: "Received an unexpected result while collecting payment method.")
                     }
                 }
             } catch {

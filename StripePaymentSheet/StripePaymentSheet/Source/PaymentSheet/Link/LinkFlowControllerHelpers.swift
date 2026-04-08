@@ -29,7 +29,6 @@ extension UIViewController {
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         shouldShowSecondaryCta: Bool = true,
-        confirmationChallenge: ConfirmationChallenge? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
         let payWithLinkController = PayWithNativeLinkController(
@@ -41,8 +40,7 @@ extension UIViewController {
             analyticsHelper: analyticsHelper,
             supportedPaymentMethodTypes: supportedPaymentMethodTypes,
             linkAppearance: linkAppearance,
-            linkConfiguration: linkConfiguration,
-            confirmationChallenge: confirmationChallenge
+            linkConfiguration: linkConfiguration
         )
 
         payWithLinkController.presentForPaymentMethodSelection(
