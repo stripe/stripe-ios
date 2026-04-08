@@ -74,6 +74,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     func didTapResetConfig() {
         self.settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         self.appearance = PaymentSheet.Appearance.default
+        CustomerSheet.PaymentOptionSelection._cardArtEnabled = false
         load()
     }
     func didTapSetToUnsupported() {
@@ -85,6 +86,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         if #available(iOS 14.0, *) {
             let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { [weak self] updatedAppearance in
                 self?.appearance = updatedAppearance
+                CustomerSheet.PaymentOptionSelection._cardArtEnabled = updatedAppearance.cardArtEnabled
                 self?.rootViewController.dismiss(animated: true, completion: nil)
                 self?.load()
             }))
