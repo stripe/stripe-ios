@@ -41,12 +41,12 @@ final class PaymentSheetLoader {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
         isUpdate: Bool = false,
-        completion: @escaping (Result<LoadResult, Error>) -> Void
+        completion: @escaping (Result<(LoadResult, ConfirmationChallenge), Error>) -> Void
     ) {
         Task { @MainActor in
             do {
-                let loadResult = try await load(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, integrationShape: integrationShape, isUpdate: isUpdate)
-                completion(.success(loadResult))
+                let (loadResult, confirmationChallenge) = try await load(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, integrationShape: integrationShape, isUpdate: isUpdate)
+                completion(.success((loadResult, confirmationChallenge)))
             } catch {
                 completion(.failure(error))
             }
@@ -62,7 +62,7 @@ final class PaymentSheetLoader {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
         isUpdate: Bool = false
-    ) async throws -> LoadResult {
+    ) async throws -> (LoadResult, ConfirmationChallenge) {
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
         analyticsHelper.logLoadStarted(isUpdate: isUpdate)
@@ -203,6 +203,11 @@ final class PaymentSheetLoader {
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes
             )
+            let confirmationChallenge = ConfirmationChallenge(
+                enableAttestation: configuration.enableAttestationOnConfirmation,
+                elementsSession: elementsSession,
+                stripeAttest: configuration.apiClient.stripeAttest
+            )
 
             // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
             loadTimings.logStart("makeViewModels")
@@ -228,7 +233,7 @@ final class PaymentSheetLoader {
                 hasCardArt: hasCardArt(savedPaymentMethods: filteredSavedPaymentMethods, appearance: configuration.appearance),
                 didLinkLookupTimeOut: didLinkLookupTimeOut
             )
-            return loadResult
+            return (loadResult, confirmationChallenge)
         } catch {
             analyticsHelper.logLoadFailed(error: error, loadTimings: loadTimings, isUpdate: isUpdate)
             throw error

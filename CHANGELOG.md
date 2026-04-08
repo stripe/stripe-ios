@@ -1,7 +1,12 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### Identity
+* [Improved] Improved StripeIdentity analytics with richer error details and screen/camera context to help debug verification flows.
+
+## 25.10.0 2026-04-06
 ### AddressElement
 * [Added] Added state dropdown support for BR.
  
@@ -10,8 +15,8 @@ PATCH
 * [Fixed] Fixed amounts in HUF being formatted incorrectly.
 * [Fixed] Improved loading times for integrations that have Link disabled.
 
-### Identity
-* [Improved] Improved StripeIdentity analytics with richer error details and screen/camera context to help debug verification flows.
+### Connect
+* [Added] [#6201](https://github.com/stripe/stripe-ios/pull/6201) Added the types for new theming tokens in Connect Embedded Components and mapped them to the corresponding variable in ConnectJS
 
 ## 25.9.0 2026-03-24
 ### PaymentSheet
