@@ -1,7 +1,9 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+## 25.10.0 2026-04-06
 ### AddressElement
 * [Added] Added state dropdown support for BR.
  
@@ -9,6 +11,9 @@ PATCH
 * [Fixed] Fixed an issue introduced in 25.8.0 where manually closing a webview 3ds2 challenge after failing the challenge and before it's automatically dismissed could result in a succeeded result.
 * [Fixed] Fixed amounts in HUF being formatted incorrectly.
 * [Fixed] Improved loading times for integrations that have Link disabled.
+
+### Connect
+* [Added] [#6201](https://github.com/stripe/stripe-ios/pull/6201) Added the types for new theming tokens in Connect Embedded Components and mapped them to the corresponding variable in ConnectJS
 
 ## 25.9.0 2026-03-24
 ### PaymentSheet

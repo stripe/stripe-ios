@@ -81,7 +81,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Alipay"].waitForExistenceAndTap()
         XCTAssertEqual(app.staticTexts["Payment method"].label, "Alipay")
 
-        let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] }).prefix(7)
+        let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
+            .filter({ !$0.starts(with: "elements.captcha.passive") && !($0.contains("attest")) })
+            .prefix(7)
         XCTAssertEqual(
             aliPayAnalytics,
             ["mc_embedded_update_started", "mc_load_started", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown"]
@@ -134,7 +136,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Continue"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Klarna"].isSelected)
 
-        let klarnaAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
+        let klarnaAnalytics = analyticsLog.compactMap({ $0[string: "event"] }).filter({ !$0.starts(with: "elements.captcha.passive") && !($0.contains("attest")) })
         XCTAssertEqual(
             klarnaAnalytics,
             ["mc_embedded_update_started", "mc_load_started", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown", "mc_form_completed", "mc_confirm_button_tapped"]
