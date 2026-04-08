@@ -56,7 +56,7 @@ public final class Checkout: ObservableObject {
     private var sessionUpdateCount = 0
 
     /// Sets the session on `state`, using `.loading` if another update is in flight.
-    private func setSession(_ session: CheckoutSession) {
+    private func setSession(_ session: Checkout.Session) {
         state = sessionUpdateCount > 0 ? .loading(session) : .loaded(session)
     }
 
