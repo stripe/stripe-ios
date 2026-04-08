@@ -348,4 +348,9 @@ import Foundation
     // MARK: - Synthetic latency tests
     case mpeSyntheticLatency = "mpe.synthetic_latency"
 
+    // MARK: - Adaptive Pricing
+    case adaptivePricingCurrencySelectorLoaded = "stripeios.adaptive_pricing.currency_selector_loaded"
+    case adaptivePricingCurrencyToggled = "stripeios.adaptive_pricing.currency_toggled"
+    case adaptivePricingCurrencyToggledFailed = "stripeios.adaptive_pricing.currency_toggled_failed"
+
 }

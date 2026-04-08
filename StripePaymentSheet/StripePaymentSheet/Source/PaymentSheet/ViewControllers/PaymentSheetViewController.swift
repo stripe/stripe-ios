@@ -206,7 +206,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.currencySelectorElement = CurrencySelectorElement.makeIfNeeded(
             intent: intent,
             isFlowController: false,
-            appearance: configuration.appearance
+            appearance: configuration.appearance,
+            analyticsHelper: analyticsHelper
         )
         self.currencySelectorElement?.delegate = self
         self.configuration.style.configure(self)

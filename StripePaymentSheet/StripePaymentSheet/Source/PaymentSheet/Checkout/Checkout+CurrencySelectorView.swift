@@ -73,6 +73,13 @@ extension Checkout {
                 .sink { [weak self] _ in
                     self?.handleSessionUpdate()
                 }
+
+            STPAnalyticsClient.sharedClient.log(
+                analytic: PaymentSheetAnalytic(
+                    event: .adaptivePricingCurrencySelectorLoaded,
+                    additionalParams: ["is_standalone_element": true]
+                )
+            )
         }
 
         @available(*, unavailable)
@@ -189,6 +196,12 @@ extension Checkout.CurrencySelectorView: TwoOptionSelectorViewDelegate {
         Task {
             do {
                 try await checkout.selectCurrency(id)
+                STPAnalyticsClient.sharedClient.log(
+                    analytic: PaymentSheetAnalytic(
+                        event: .adaptivePricingCurrencyToggled,
+                        additionalParams: [:]
+                    )
+                )
                 // Caption label updates automatically via handleSessionUpdate from session update
             } catch {
                 // Revert to previous currency on error
@@ -197,7 +210,12 @@ extension Checkout.CurrencySelectorView: TwoOptionSelectorViewDelegate {
                     lastSelectedCurrency = fromCurrency
                 }
 
-                // TODO(porter) Figure out how to handle errors do we show an error message and alert the merchant?
+                STPAnalyticsClient.sharedClient.log(
+                    analytic: PaymentSheetAnalytic(
+                        event: .adaptivePricingCurrencyToggledFailed,
+                        additionalParams: error.serializeForV1Analytics()
+                    )
+                )
             }
             selectorView?.setEnabled(isEnabled)
         }
