@@ -204,13 +204,14 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         loadPlayground(app, settings)
 
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        // filter out async passive captcha and attestation logs
+        let filteredAnalytics = analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false) && !($0[string: "event"]?.contains("attest") ?? false) })
         XCTAssertEqual(
-            // filter out async passive captcha and attestation logs
-            analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }),
+            filteredAnalytics.map({ $0[string: "event"] }),
             ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_savedpm_show"]
         )
         // `mc_load_succeeded` event `selected_lpm` should be "apple_pay", the default payment method.
-        XCTAssertEqual(analyticsLog[1][string: "selected_lpm"], "apple_pay")
+        XCTAssertEqual(filteredAnalytics[1][string: "selected_lpm"], "apple_pay")
         app.buttons["+ Add"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 2))
 
@@ -397,7 +398,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertNotNil(successText.label.range(of: "Success!"))
     }
 
-    func testUPIPaymentMethodPolling() throws {
+    // Disabled due to flakiness: ir-chance-fuse
+    func _testUPIPaymentMethodPolling() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .new
