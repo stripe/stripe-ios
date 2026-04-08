@@ -1972,7 +1972,7 @@ public class STPPaymentHandler: NSObject {
                     intentType: intentType,
                     apiClient: apiClient,
                     stripeJs: stripeJs
-                ) { [weak self] result in
+                ) { [weak self] _ in
                     guard let self = self else { return }
 
                     // Dismiss the challenge view
