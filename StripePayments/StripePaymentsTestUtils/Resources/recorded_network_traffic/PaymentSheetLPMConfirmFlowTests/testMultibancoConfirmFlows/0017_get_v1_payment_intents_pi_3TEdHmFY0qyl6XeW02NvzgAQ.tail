@@ -1,25 +1,25 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TBg2nFY0qyl6XeW1pl8SaPs\?client_secret=pi_3TBg2nFY0qyl6XeW1pl8SaPs_secret_GHzestVQpsxH1teEfypD1zQiD&expand%5B0%5D=payment_method$
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TEdHmFY0qyl6XeW02NvzgAQ\?client_secret=pi_3TEdHmFY0qyl6XeW02NvzgAQ_secret_g07nsJ8AQmlK0jA7ArVpZMsNX&expand%5B0%5D=payment_method$
 200
 application/json
 Content-Type: application/json
 Access-Control-Allow-Origin: *
 x-stripe-priority-routing-enabled: true
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=vdA0waQbJqnK7WJ71ECDzwPPupiETK49raMIzf0XuN9THHJ5S6FD15hgj1fqcjQYlnUqW7eali19aLo2
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=e2DYVgLdfYKN5GlESZ970ZgFAM3QXN1y6pryVqubbBSsoOjYvF14ddnqIzKssEVNk4RIKRaeJDs8bFZq
 x-wc: ABGHIJ
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
 Server: nginx
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 Cache-Control: no-cache, no-store
-Date: Mon, 16 Mar 2026 18:39:14 GMT
+Date: Tue, 24 Mar 2026 22:18:55 GMT
 stripe-version: 2020-08-27
 access-control-allow-credentials: true
 Content-Length: 1850
 x-stripe-routing-context-priority-tier: api-testmode
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Vary: Origin
-request-id: req_7f8bfW9b3KWpu7
+request-id: req_UfuS4OvbQC3LlZ
 
 {
   "payment_method_configuration_details" : null,
@@ -39,9 +39,9 @@ request-id: req_7f8bfW9b3KWpu7
   "next_action" : {
     "type" : "multibanco_display_details",
     "multibanco_display_details" : {
-      "expires_at" : 1774291153,
+      "expires_at" : 1774995534,
       "reference" : "123456789",
-      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/multibanco\/voucher\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9VQTAyZHZ5NHBRakxxSXZmakRkTm9Mb3pwcXN3Tndq0100W7sghp9v",
+      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/multibanco\/voucher\/test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLF9VRDNPMks2dnBiNDFwaVJBd25GS0s2Qm9paTRrR2lH0100mxfsKsSW",
       "entity" : "12345"
     }
   },
@@ -52,7 +52,7 @@ request-id: req_7f8bfW9b3KWpu7
   },
   "payment_method" : {
     "object" : "payment_method",
-    "id" : "pm_1TBg2mFY0qyl6XeWuPOXqH9w",
+    "id" : "pm_1TEdHmFY0qyl6XeWyLesXZpb",
     "billing_details" : {
       "email" : "foo@bar.com",
       "phone" : null,
@@ -68,7 +68,7 @@ request-id: req_7f8bfW9b3KWpu7
       }
     },
     "livemode" : false,
-    "created" : 1773686352,
+    "created" : 1774390734,
     "allow_redisplay" : "unspecified",
     "multibanco" : {
 
@@ -77,8 +77,8 @@ request-id: req_7f8bfW9b3KWpu7
     "type" : "multibanco",
     "customer_account" : null
   },
-  "client_secret" : "pi_3TBg2nFY0qyl6XeW1pl8SaPs_secret_GHzestVQpsxH1teEfypD1zQiD",
-  "id" : "pi_3TBg2nFY0qyl6XeW1pl8SaPs",
+  "client_secret" : "pi_3TEdHmFY0qyl6XeW02NvzgAQ_secret_g07nsJ8AQmlK0jA7ArVpZMsNX",
+  "id" : "pi_3TEdHmFY0qyl6XeW02NvzgAQ",
   "confirmation_method" : "automatic",
   "amount_details" : {
     "tip" : {
@@ -92,6 +92,6 @@ request-id: req_7f8bfW9b3KWpu7
     "multibanco"
   ],
   "setup_future_usage" : null,
-  "created" : 1773686353,
+  "created" : 1774390734,
   "description" : null
 }
