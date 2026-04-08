@@ -55,6 +55,11 @@ public final class Checkout: ObservableObject {
     /// until all overlapping mutations complete.
     private var sessionUpdateCount = 0
 
+    /// Sets the session on `state`, using `.loading` if another update is in flight.
+    private func setSession(_ session: CheckoutSession) {
+        state = sessionUpdateCount > 0 ? .loading(session) : .loaded(session)
+    }
+
     // MARK: - Initialization
 
     /// Loads a Checkout Session from Stripe and returns a ready-to-use instance.
@@ -162,7 +167,7 @@ public final class Checkout: ObservableObject {
             }
         } else {
             currentSession.billingAddressOverride = params
-            state = .loaded(currentSession)
+            setSession(currentSession)
             delegate?.checkout(self, didChangeState: state)
         }
     }
@@ -190,7 +195,7 @@ public final class Checkout: ObservableObject {
             }
         } else {
             currentSession.shippingAddressOverride = params
-            state = .loaded(currentSession)
+            setSession(currentSession)
             delegate?.checkout(self, didChangeState: state)
         }
     }
@@ -235,7 +240,7 @@ public final class Checkout: ObservableObject {
             self?.updateSession(response)
         }
         let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
-        state = sessionUpdateCount > 0 ? .loading(newSession) : .loaded(newSession)
+        setSession(newSession)
         if changed {
             delegate?.checkout(self, didChangeState: state)
         }
@@ -253,8 +258,8 @@ public final class Checkout: ObservableObject {
         state = .loading(state.session)
         defer {
             sessionUpdateCount -= 1
-            if sessionUpdateCount == 0, case .loading(let session) = state {
-                state = .loaded(session)
+            if case .loading(let session) = state {
+                setSession(session)
             }
         }
         return try await body()
