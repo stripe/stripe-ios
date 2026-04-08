@@ -23,7 +23,7 @@ extension Checkout {
     /// The view automatically observes the ``Checkout`` session and:
     /// - Hides itself when Adaptive Pricing is not available
     /// - Shows two currency options with formatted amounts and exchange rate disclosure
-    /// - Calls ``Checkout/selectCurrency(_:)`` when the customer taps a currency
+    /// - Calls ``Checkout.selectCurrency(_:)`` when the customer taps a currency
     ///
     /// ```swift
     /// Checkout.CurrencySelectorElement(checkout: checkout)
@@ -49,7 +49,7 @@ extension Checkout {
         public var body: some View {
             // Remove the view from SwiftUI layout entirely when AP is unavailable.
             // The UIView hides itself internally, but a hidden UIViewRepresentable
-            // can still occupy space — this guard ensures zero layout footprint.
+            // can still occupy space so this guard ensures zero layout footprint.
             if InternalCurrencySelector.adaptivePricingData(from: checkout.state.session) != nil {
                 CurrencySelectorViewRepresentable(checkout: checkout, appearance: appearance)
                     .fixedSize(horizontal: false, vertical: true)
@@ -58,7 +58,7 @@ extension Checkout {
     }
 }
 
-// MARK: - UIViewRepresentable Bridge
+// MARK: - UIViewRepresentable
 
 @available(iOS 15.0, *)
 private struct CurrencySelectorViewRepresentable: UIViewRepresentable {

@@ -76,10 +76,10 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        let vc = UIHostingController(rootView: AnyView(swiftUIView))
+        let vc = UIHostingController(rootView: swiftUIView)
 
-        // Use a tall window so SwiftUI has room to lay out content
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 400))
+        // Use a tall window so SwiftUI has room to lay out, then size to fit content
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
         window.overrideUserInterfaceStyle = darkMode ? .dark : .light
         window.rootViewController = vc
         window.makeKeyAndVisible()
@@ -89,24 +89,9 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
         vc.view.setNeedsLayout()
         vc.view.layoutIfNeeded()
 
-        // Find the CurrencySelectorView inside the hosting controller and snapshot it directly
-        guard let currencySelectorView = findCurrencySelectorView(in: vc.view) else {
-            XCTFail("Could not find CurrencySelectorView in hierarchy", file: file, line: line)
-            return
-        }
+        vc.view.frame = CGRect(origin: .zero, size: CGSize(width: 320, height: 57))
+        vc.view.layoutIfNeeded()
 
-        verifySelectorSnapshotView(currencySelectorView, darkMode: darkMode, file: file, line: line)
-    }
-
-    private func findCurrencySelectorView(in view: UIView) -> Checkout.CurrencySelectorView? {
-        if let selector = view as? Checkout.CurrencySelectorView {
-            return selector
-        }
-        for subview in view.subviews {
-            if let found = findCurrencySelectorView(in: subview) {
-                return found
-            }
-        }
-        return nil
+        STPSnapshotVerifyView(vc.view, file: file, line: line)
     }
 }
