@@ -19,7 +19,6 @@ Table of contents
 <!--ts-->
    * [Features](#Features)
    * [Releases](#Releases)
-   * [Versioning](#Versioning)
    * [Requirements](#Requirements)
    * [Getting started](#Getting-started)
       * [Integration](#Integration)
@@ -111,22 +110,7 @@ For other modules, follow the instructions below:
 
 If you're reading this on GitHub.com, please make sure you are looking at the [tagged version](https://github.com/stripe/stripe-ios/tags) that corresponds to the release you have installed. Otherwise, the instructions and example code may be mismatched with your copy.
 
-## Versioning
-
-All modules in the Stripe iOS SDK share a single version number and roughly follow [Semantic Versioning](https://semver.org/).
-
-There is one notable difference: **changes to `@_spi` APIs (used for beta/preview features) require at least a MINOR version bump**, even if those changes are breaking. This is because our CocoaPods podspecs pin inter-module dependencies using `~> X.Y.Z` (allowing only patch-level increases). Shipping a breaking `@_spi` change in a PATCH release could unexpectedly break consumers—such as `stripe-react-native`—that depend on those APIs.
-
-In summary:
-
-| Change type | Minimum version bump |
-|---|---|
-| Breaking change to public API | **MAJOR** |
-| Breaking change to `@_spi` (beta/preview) API | **MINOR** |
-| New public API or functionality | **MINOR** |
-| Bug fixes, non-breaking changes | **PATCH** |
-
-> **Note:** `@_spi` APIs are pre-release and carry no long-term stability guarantees. Consumers of these APIs should expect breaking changes across minor versions.
+> **Note on preview APIs:** Some modules expose preview/beta APIs via `@_spi` annotations. These carry no stability guarantees and may have breaking changes in minor versions.
 
 ## Requirements
 
