@@ -1156,8 +1156,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     func testUpdateCheckoutSession() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
-        try await checkout.load()
+        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
 
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
@@ -1171,8 +1170,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     func testUpdateCheckoutSessionFails() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
-        try await checkout.load()
+        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
 
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient
@@ -1197,8 +1195,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
     func testUpdateCheckoutSessionIgnoresInFlightUpdate() async throws {
         let response = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode()
         let apiClient = STPAPIClient(publishableKey: response.publishableKey)
-        let checkout = Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
-        try await checkout.load()
+        let checkout = try await Checkout(clientSecret: response.clientSecret, apiClient: apiClient)
 
         var config = PaymentSheet.Configuration()
         config.apiClient = apiClient

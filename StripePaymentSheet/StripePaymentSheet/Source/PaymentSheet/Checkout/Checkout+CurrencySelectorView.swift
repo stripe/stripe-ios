@@ -75,7 +75,7 @@ extension Checkout {
             handleSessionUpdate()
 
             // Observe future session changes
-            sessionCancellable = checkout.$session
+            sessionCancellable = checkout.$state
                 .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
@@ -129,7 +129,7 @@ extension Checkout {
         /// on subsequent changes. Hides the view if AP data is unavailable.
         private func handleSessionUpdate() {
             guard let (session, exchangeRateMeta, rawCurrency) =
-                    CurrencySelectorElement.adaptivePricingData(from: checkout.session)
+                    CurrencySelectorElement.adaptivePricingData(from: checkout.state.session)
             else {
                 tearDown()
                 return

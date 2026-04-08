@@ -11,7 +11,7 @@ import Foundation
 @_spi(CheckoutSessionsPreview)
 extension Checkout {
     /// An address used with ``updateBillingAddress(_:)`` and ``updateShippingAddress(_:)``.
-    public struct Address {
+    public struct Address: Equatable {
         /// Two-letter country code (ISO 3166-1 alpha-2). Always required.
         public let country: String
 

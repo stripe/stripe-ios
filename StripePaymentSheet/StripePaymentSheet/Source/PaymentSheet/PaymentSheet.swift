@@ -105,11 +105,11 @@ public class PaymentSheet {
     }
 
     /// Initializes PaymentSheet with a Checkout object
-    /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
+    /// - Parameter checkout: A loaded Checkout instance.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     @MainActor @_spi(CheckoutSessionsPreview) public convenience init(checkout: Checkout, configuration: Configuration) {
-        guard let stpSession = checkout.session as? STPCheckoutSession else {
-            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.session))")
+        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
         }
         var config = configuration
         stpSession.applyAddressOverrides(to: &config)
@@ -162,7 +162,7 @@ public class PaymentSheet {
                 completion(.failed(error: error))
                 return
             }
-            if let checkout, checkout.isPerformingSessionUpdate {
+            if let checkout, checkout.state.isLoading {
                 let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.present(from:completion:)."
                 assertionFailure(message)
                 completion(.failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message)))
@@ -453,7 +453,7 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
             do {
                 try await checkout.selectCurrency(currency)
                 self.analyticsHelper.logAdaptivePricingCurrencyToggled()
-                guard let stpSession = checkout.session as? STPCheckoutSession else { return }
+                guard let stpSession = checkout.state.session as? STPCheckoutSession else { return }
                 await self.performReload(mode: .checkoutSession(stpSession))
             } catch {
                 self.analyticsHelper.logAdaptivePricingCurrencyToggledFailed(error: error)
