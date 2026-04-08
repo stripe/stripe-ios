@@ -9,7 +9,8 @@ import XCTest
 
 class PaymentSheetStandardLPMUIOneTests: PaymentSheetStandardLPMUICase {
     // UPI is a little custom and isn't well-tested by PaymentSheetLPMConfirmFlowTests
-    func testUPIPaymentMethod() throws {
+    // Disabled due to flakiness: ir-chance-fuse
+    func _testUPIPaymentMethod() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .new

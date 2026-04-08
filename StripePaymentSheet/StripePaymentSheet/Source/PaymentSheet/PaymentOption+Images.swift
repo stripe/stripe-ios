@@ -16,7 +16,8 @@ extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen
     func makeIcon(
         currency: String?,
-        iconStyle: PaymentSheet.Appearance.IconStyle
+        iconStyle: PaymentSheet.Appearance.IconStyle,
+        cardArtEnabled: Bool = false
     ) -> UIImage {
         let isDarkMode = UIApplication.shared.activeOrFirstScene?.traitCollection.isDarkMode ?? false
         switch self {
@@ -26,7 +27,8 @@ extension PaymentOption {
             if let linkedBank = paymentOption?.instantDebitsLinkedBank {
                 return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: linkedBank.bankName), iconStyle: iconStyle)
             } else {
-                return paymentMethod.makeIcon(iconStyle: iconStyle)
+                let cardArtImage = paymentMethod.cardArtImage(cardArtEnabled: cardArtEnabled)
+                return cardArtImage ?? paymentMethod.makeIcon(iconStyle: iconStyle)
             }
         case .new(let confirmParams):
             return confirmParams.makeIcon(forDarkBackground: isDarkMode, currency: currency, iconStyle: iconStyle)
@@ -145,6 +147,19 @@ extension STPPaymentMethod {
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()
         }
+    }
+
+    func cardArtImage(cardArtEnabled: Bool, downloadManager: DownloadManager = DownloadManager.sharedManager) -> UIImage? {
+        guard cardArtEnabled, let cardArtURL = cardArtCDNURL(height: 28) else {
+            return nil
+        }
+        let placeholder = downloadManager.imagePlaceHolder()
+        let image = downloadManager.downloadImage(
+            url: cardArtURL,
+            placeholder: placeholder,
+            updateHandler: nil
+        )
+        return image == placeholder ? nil : image.roundedWithBorder(radius: 3)
     }
 }
 

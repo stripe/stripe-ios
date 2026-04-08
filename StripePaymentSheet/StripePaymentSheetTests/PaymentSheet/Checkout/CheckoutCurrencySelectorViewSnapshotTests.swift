@@ -50,6 +50,22 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         verify(view)
     }
 
+    func testErrorState() {
+        let view = makeCurrencySelectorView(selectedCurrency: "gbp")
+        view.showError("Something went wrong. Please try again.")
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        verify(view)
+    }
+
+    func testErrorState_darkMode() {
+        let view = makeCurrencySelectorView(selectedCurrency: "gbp")
+        view.showError("Something went wrong. Please try again.")
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        verify(view, darkMode: true)
+    }
+
     // MARK: - Helpers
 
     @MainActor

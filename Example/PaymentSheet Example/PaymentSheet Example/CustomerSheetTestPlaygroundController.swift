@@ -39,13 +39,14 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         }
         self.settings = settings
         self.currentlyRenderedSettings = .defaultValues()
-        $settings
-            .sink { [weak self] newValue in
-                if let isLoading = self?.isLoading,
-                   !isLoading,
-                   newValue.autoreload == .on {
-                self?.load()
+        $settings.removeDuplicates().sink { [weak self] newValue in
+            if newValue.autoreload == .on {
+                // This closure is called *before* `settings` is updated! Wait until the next run loop before calling `load`
+                DispatchQueue.main.async {
+                    self?.load()
+                }
             }
+
         }.store(in: &subscribers)
     }
 
@@ -73,6 +74,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
     func didTapResetConfig() {
         self.settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         self.appearance = PaymentSheet.Appearance.default
+        CustomerSheet.PaymentOptionSelection._cardArtEnabled = false
         load()
     }
     func didTapSetToUnsupported() {
@@ -84,6 +86,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         if #available(iOS 14.0, *) {
             let vc = UIHostingController(rootView: AppearancePlaygroundView(appearance: appearance, doneAction: { [weak self] updatedAppearance in
                 self?.appearance = updatedAppearance
+                CustomerSheet.PaymentOptionSelection._cardArtEnabled = updatedAppearance.cardArtEnabled
                 self?.rootViewController.dismiss(animated: true, completion: nil)
                 self?.load()
             }))
@@ -175,7 +178,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
                              customerSessionClientSecret: String?) -> CustomerSheet {
         let intentConfiguration = CustomerSheet.IntentConfiguration(setupIntentClientSecretProvider: { [weak self] in
             guard let self else { throw NSError(domain: "", code: 0) }
-            return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
+            return try await self.backend.createSetupIntent(customerId: customerId, settings: self.settings)
         })
         return CustomerSheet(configuration: configuration,
                              intentConfiguration: intentConfiguration,
@@ -191,7 +194,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
                 // This should be a block that fetches this from your server
                 return .init(customerId: customerId, ephemeralKeySecret: ephemeralKey)
             }, setupIntentClientSecretProvider: {
-                return try await self.backend.createSetupIntent(customerId: customerId, merchantCountryCode: self.settings.merchantCountryCode.rawValue)
+                return try await self.backend.createSetupIntent(customerId: customerId, settings: self.settings)
             })
         case .createAndAttach:
             return StripeCustomerAdapter(customerEphemeralKeyProvider: {
@@ -358,6 +361,14 @@ class CustomerSheetBackend {
                      "customer_session_payment_method_sync_default": settings.paymentMethodSyncDefault.rawValue,
         ] as [String: Any]
 
+        // Send custom keys to backend if provided
+        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
+            body["custom_secret_key"] = customSecretKey
+        }
+        if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
+            body["custom_publishable_key"] = customPublishableKey
+        }
+
         if let allowRedisplayValue = settings.paymentMethodAllowRedisplayFilters.arrayValue() {
             body["customer_session_payment_method_allow_redisplay_filters"] = allowRedisplayValue
         }
@@ -384,10 +395,17 @@ class CustomerSheetBackend {
         task.resume()
     }
 
-    func createSetupIntent(customerId: String, merchantCountryCode: String) async throws -> String {
-        let body = [ "customer_id": customerId,
-                     "merchant_country_code": merchantCountryCode,
+    func createSetupIntent(customerId: String, settings: CustomerSheetTestPlaygroundSettings) async throws -> String {
+        var body = [ "customer_id": customerId,
+                     "merchant_country_code": settings.merchantCountryCode.rawValue,
         ] as [String: Any]
+
+        if let customSecretKey = settings.customSecretKey, !customSecretKey.isEmpty {
+            body["custom_secret_key"] = customSecretKey
+        }
+        if let customPublishableKey = settings.customPublishableKey, !customPublishableKey.isEmpty {
+            body["custom_publishable_key"] = customPublishableKey
+        }
         let url = URL(string: "\(endpoint)/create_setup_intent")!
         let session = URLSession.shared
 
