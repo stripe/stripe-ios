@@ -463,6 +463,10 @@ struct CheckoutCartContentView: View {
 
                     Divider()
                         .padding(.vertical, 4)
+
+                    Checkout.CurrencySelectorElement(checkout: checkout)
+                        .padding(.vertical, 4)
+
                     HStack {
                         Text("Total")
                             .font(.title3).bold()

@@ -11,6 +11,10 @@ import Combine
 @_spi(STP) import StripeUICore
 import UIKit
 
+/// Capture the internal `CurrencySelectorElement` type before the `Checkout`
+/// extension introduces a same-named nested type.
+private typealias InternalCurrencySelector = CurrencySelectorElement
+
 // MARK: - CurrencySelectorView
 
 @_spi(CheckoutSessionsPreview)
@@ -122,13 +126,13 @@ extension Checkout {
         /// on subsequent changes. Hides the view if AP data is unavailable.
         private func handleSessionUpdate() {
             guard let (session, exchangeRateMeta, rawCurrency) =
-                    CurrencySelectorElement.adaptivePricingData(from: checkout.state.session)
+                    InternalCurrencySelector.adaptivePricingData(from: checkout.state.session)
             else {
                 tearDown()
                 return
             }
 
-            let currency = CurrencySelectorElement.CurrencyCode(rawCurrency)
+            let currency = InternalCurrencySelector.CurrencyCode(rawCurrency)
 
             clearError()
 
@@ -143,9 +147,9 @@ extension Checkout {
         private func buildSelectorView(
             session: STPCheckoutSession,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
-            currency: CurrencySelectorElement.CurrencyCode
+            currency: InternalCurrencySelector.CurrencyCode
         ) {
-            let (left, right) = CurrencySelectorElement.buildSelectorItems(
+            let (left, right) = InternalCurrencySelector.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
                 localizedPricesMetas: session.localizedPricesMetas
             )
@@ -173,10 +177,10 @@ extension Checkout {
         }
 
         private func updateCaption(
-            currency: CurrencySelectorElement.CurrencyCode,
+            currency: InternalCurrencySelector.CurrencyCode,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
         ) {
-            let caption = CurrencySelectorElement.caption(
+            let caption = InternalCurrencySelector.caption(
                 forSelectedCurrency: currency.apiValue,
                 exchangeRateMeta: exchangeRateMeta
             )
