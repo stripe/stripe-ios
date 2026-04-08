@@ -49,7 +49,16 @@ extension Checkout {
         private var sessionCancellable: AnyCancellable?
         private var lastSelectedCurrency: String?
         private let containerStackView = UIStackView()
-        private let errorLabel = UILabel()
+        private lazy var errorLabel: UILabel = {
+            let label = UILabel()
+            label.font = .preferredFont(forTextStyle: .caption2)
+            label.adjustsFontForContentSizeCategory = true
+            label.textColor = appearance.dangerColor
+            label.numberOfLines = 0
+            label.isHidden = true
+            label.setContentHuggingPriority(.required, for: .vertical)
+            return label
+        }()
 
         // MARK: - Init
 
@@ -66,7 +75,6 @@ extension Checkout {
             super.init(frame: .zero)
 
             setupContainerStackView()
-            setupErrorLabel()
 
             // Evaluate current state synchronously
             handleSessionUpdate()
@@ -111,15 +119,6 @@ extension Checkout {
                 containerStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
                 containerStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
             ])
-        }
-
-        private func setupErrorLabel() {
-            errorLabel.font = .preferredFont(forTextStyle: .caption2)
-            errorLabel.adjustsFontForContentSizeCategory = true
-            errorLabel.textColor = appearance.dangerColor
-            errorLabel.numberOfLines = 0
-            errorLabel.isHidden = true
-            errorLabel.setContentHuggingPriority(.required, for: .vertical)
             containerStackView.addArrangedSubview(errorLabel)
         }
 
