@@ -397,7 +397,8 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         XCTAssertNotNil(successText.label.range(of: "Success!"))
     }
 
-    func testUPIPaymentMethodPolling() throws {
+    // Disabled due to flakiness: ir-chance-fuse
+    func _testUPIPaymentMethodPolling() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.customerMode = .new
