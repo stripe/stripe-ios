@@ -50,13 +50,8 @@ extension Checkout {
         private var lastSelectedCurrency: String?
         private let containerStackView = UIStackView()
         private lazy var errorLabel: UILabel = {
-            let label = UILabel()
-            label.font = .preferredFont(forTextStyle: .caption2)
-            label.adjustsFontForContentSizeCategory = true
-            label.textColor = appearance.dangerColor
-            label.numberOfLines = 0
-            label.isHidden = true
-            label.setContentHuggingPriority(.required, for: .vertical)
+            let label = ElementsUI.makeErrorLabel(theme: appearance.asPaymentSheetAppearance().asElementsTheme)
+            label.setHiddenIfNecessary(true)
             return label
         }()
 
@@ -202,14 +197,14 @@ extension Checkout {
 
         func showError(_ message: String) {
             errorLabel.text = message
-            errorLabel.isHidden = false
+            errorLabel.setHiddenIfNecessary(false)
             invalidateIntrinsicContentSize()
         }
 
         func clearError() {
             guard errorLabel.text != nil else { return }
             errorLabel.text = nil
-            errorLabel.isHidden = true
+            errorLabel.setHiddenIfNecessary(true)
             invalidateIntrinsicContentSize()
         }
     }
