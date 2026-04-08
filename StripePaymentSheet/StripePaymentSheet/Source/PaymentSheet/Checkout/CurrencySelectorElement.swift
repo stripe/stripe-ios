@@ -44,7 +44,7 @@ final class CurrencySelectorElement: Element {
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
         appearance: PaymentSheet.Appearance,
-        analyticsHelper: PaymentSheetAnalyticsHelper? = nil
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.exchangeRateMeta = exchangeRateMeta
         let currency = CurrencyCode(currentCurrency)
@@ -60,7 +60,7 @@ final class CurrencySelectorElement: Element {
             appearance: appearance
         )
         selectorElement.delegate = self
-        analyticsHelper?.logAdaptivePricingCurrencySelectorInit(isStandaloneElement: false)
+        analyticsHelper.logAdaptivePricingCurrencySelectorInit(isStandaloneElement: false)
     }
 
     // MARK: - Factory
@@ -69,7 +69,7 @@ final class CurrencySelectorElement: Element {
         intent: Intent,
         isFlowController: Bool,
         appearance: PaymentSheet.Appearance,
-        analyticsHelper: PaymentSheetAnalyticsHelper? = nil
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) -> CurrencySelectorElement? {
         guard !isFlowController else { return nil }
         guard case .checkoutSession(let session) = intent else { return nil }
