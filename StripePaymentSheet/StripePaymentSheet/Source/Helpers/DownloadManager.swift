@@ -27,11 +27,11 @@ import UIKit
 
     public init(
         urlSessionConfiguration: URLSessionConfiguration = .default,
-        analyticsClient: STPAnalyticsClient = .sharedClient
+        analyticsClient: STPAnalyticsClient = .sharedClient,
+        isTesting: Bool = false
     ) {
         let configuration = urlSessionConfiguration
-        if configuration.urlCache == nil,
-           let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+        if !isTesting, let cachesURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
             .first
         {
             let diskCacheURL = cachesURL.appendingPathComponent("STPCache")
