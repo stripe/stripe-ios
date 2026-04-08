@@ -177,8 +177,8 @@ public class PaymentSheet {
                 integrationShape: .paymentSheet
             ) { result in
                 switch result {
-                case .success(let loadResult):
-                    self.confirmationChallenge = ConfirmationChallenge(enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
+                case .success(let (loadResult, confirmationChallenge)):
+                    self.confirmationChallenge = confirmationChallenge
                     let presentPaymentSheet: () -> Void = {
                         let paymentSheetVC = self.makePaymentSheetVC(
                             loadResult: loadResult,
@@ -333,19 +333,14 @@ public class PaymentSheet {
         currentVC.setReloading(true)
 
         do {
-            let loadResult = try await PaymentSheetLoader.load(
+            let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
                 mode: mode,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .paymentSheet,
                 isUpdate: true
             )
-            // Re-create with the new elementsSession, which may have different captcha/attestation data.
-            self.confirmationChallenge = ConfirmationChallenge(
-                enableAttestation: configuration.enableAttestationOnConfirmation,
-                elementsSession: loadResult.elementsSession,
-                stripeAttest: configuration.apiClient.stripeAttest
-            )
+            self.confirmationChallenge = confirmationChallenge
             let newVC = makePaymentSheetVC(
                 loadResult: loadResult,
                 previousPaymentOption: currentVC.selectedPaymentOption,
