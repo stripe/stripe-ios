@@ -306,6 +306,7 @@ extension PaymentSheet {
         required init(
             configuration: Configuration,
             loadResult: PaymentSheetLoader.LoadResult,
+            confirmationChallenge: ConfirmationChallenge? = nil,
             analyticsHelper: PaymentSheetAnalyticsHelper
         ) {
             self.configuration = configuration
@@ -320,8 +321,8 @@ extension PaymentSheet {
                 shouldLogExperimentExposure: false
             )
             self.viewController.flowControllerDelegate = self
-            self.confirmationChallenge = ConfirmationChallenge(enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
-            self.viewController.confirmationChallenge = self.confirmationChallenge
+            self.confirmationChallenge = confirmationChallenge
+
             updatePaymentOption()
         }
 
@@ -433,10 +434,11 @@ extension PaymentSheet {
                 integrationShape: .flowController
             ) { result in
                 switch result {
-                case .success(let loadResult):
+                case .success(let (loadResult, confirmationChallenge)):
                     let flowController = FlowController(
                         configuration: configuration,
                         loadResult: loadResult,
+                        confirmationChallenge: confirmationChallenge,
                         analyticsHelper: analyticsHelper
                     )
 
@@ -561,7 +563,6 @@ extension PaymentSheet {
                 intent: intent,
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
-                confirmationChallenge: confirmationChallenge,
                 callback: completionCallback
             )
         }
@@ -708,7 +709,7 @@ extension PaymentSheet {
                 }
 
                 switch result {
-                case .success(let loadResult):
+                case .success(let (loadResult, confirmationChallenge)):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
 
                     self.viewController = Self.makeViewController(
@@ -720,6 +721,7 @@ extension PaymentSheet {
                         shouldLogExperimentExposure: false
                     )
                     self.viewController.flowControllerDelegate = self
+                    self.confirmationChallenge = confirmationChallenge
                     // Defer experiment exposure logging until next presentation
                     self.hasLoggedLayoutExperimentExposure = false
 
@@ -962,7 +964,6 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
-    var confirmationChallenge: ConfirmationChallenge? { get set }
     func clearSelection()
 }
 
