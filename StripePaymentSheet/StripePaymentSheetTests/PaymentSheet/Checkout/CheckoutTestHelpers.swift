@@ -35,7 +35,7 @@ enum CheckoutTestHelpers {
         json["payment_status"] = "paid"
         return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
     }
-  
+
     static func makeAdaptivePricingSession(
         currency: String = "usd",
         adaptivePricingActive: Bool = true,
