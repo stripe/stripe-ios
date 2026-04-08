@@ -17,7 +17,8 @@ final class CurrencySelectorElementMakeIfNeededTests: XCTestCase {
         let result = CurrencySelectorElement.makeIfNeeded(
             intent: .checkoutSession(session),
             isFlowController: true,
-            appearance: .default
+            appearance: .default,
+            analyticsHelper: ._testValue()
         )
         XCTAssertNil(result)
     }
@@ -27,7 +28,8 @@ final class CurrencySelectorElementMakeIfNeededTests: XCTestCase {
         let result = CurrencySelectorElement.makeIfNeeded(
             intent: intent,
             isFlowController: false,
-            appearance: .default
+            appearance: .default,
+            analyticsHelper: ._testValue()
         )
         XCTAssertNil(result)
     }
@@ -37,7 +39,8 @@ final class CurrencySelectorElementMakeIfNeededTests: XCTestCase {
         let result = CurrencySelectorElement.makeIfNeeded(
             intent: .checkoutSession(session),
             isFlowController: false,
-            appearance: .default
+            appearance: .default,
+            analyticsHelper: ._testValue()
         )
         XCTAssertNil(result)
     }
@@ -47,7 +50,8 @@ final class CurrencySelectorElementMakeIfNeededTests: XCTestCase {
         let result = CurrencySelectorElement.makeIfNeeded(
             intent: .checkoutSession(session),
             isFlowController: false,
-            appearance: .default
+            appearance: .default,
+            analyticsHelper: ._testValue()
         )
         XCTAssertNil(result)
     }
@@ -59,7 +63,8 @@ final class CurrencySelectorElementMakeIfNeededTests: XCTestCase {
         let result = CurrencySelectorElement.makeIfNeeded(
             intent: .checkoutSession(session),
             isFlowController: false,
-            appearance: .default
+            appearance: .default,
+            analyticsHelper: ._testValue()
         )
         XCTAssertNil(result)
     }
@@ -69,7 +74,8 @@ final class CurrencySelectorElementMakeIfNeededTests: XCTestCase {
         let result = CurrencySelectorElement.makeIfNeeded(
             intent: .checkoutSession(session),
             isFlowController: false,
-            appearance: .default
+            appearance: .default,
+            analyticsHelper: ._testValue()
         )
         XCTAssertNotNil(result)
         XCTAssertEqual(result?.selectedCurrency, "usd")
