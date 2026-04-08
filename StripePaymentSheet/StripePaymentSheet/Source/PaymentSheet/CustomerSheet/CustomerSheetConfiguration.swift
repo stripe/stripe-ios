@@ -108,9 +108,14 @@ extension CustomerSheet {
         /// A Stripe payment method was selected
         case paymentMethod(paymentMethod: STPPaymentMethod, paymentOptionDisplayData: PaymentOptionDisplayData)
 
+        /// Temporary flag for card art development/testing. Will be removed before GA.
+        @_spi(STP) public static var _cardArtEnabled: Bool = false
+
         /// Create a PaymentOptionSelection for a saved payment method.
         public static func paymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
-            let data = PaymentOptionDisplayData(image: paymentMethod.makeIcon(), label: paymentMethod.paymentSheetLabel)
+            let paymentMethodIcon = paymentMethod.makeIcon()
+            let image = paymentMethod.cardArtImage(cardArtEnabled: _cardArtEnabled) ?? paymentMethodIcon
+            let data = PaymentOptionDisplayData(image: image, label: paymentMethod.paymentSheetLabel)
             return .paymentMethod(paymentMethod: paymentMethod, paymentOptionDisplayData: data)
         }
 
