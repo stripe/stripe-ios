@@ -98,7 +98,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     integrationShape: .paymentSheet
                 ) { result in
                     switch result {
-                    case .success(let loadResult):
+                    case .success(let (loadResult, _)):
                         XCTAssertEqual(
                             Set(loadResult.elementsSession.orderedPaymentMethodTypes),
                             Set(expected)
@@ -180,7 +180,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             integrationShape: .paymentSheet
         ) { result in
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 XCTAssertEqual(
                     Set(loadResult.elementsSession.orderedPaymentMethodTypes),
                     Set(expected)
@@ -245,7 +245,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             integrationShape: .paymentSheet
         ) { result in
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 XCTAssertEqual(
                     Set(loadResult.elementsSession.orderedPaymentMethodTypes),
                     Set(expected)
@@ -303,7 +303,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                 analyticsHelper: ._testValue(configuration: self.configuration),
                 integrationShape: .paymentSheet
             ) { result in
-                guard case .success(let loadResult) = result else {
+                guard case .success(let (loadResult, _)) = result else {
                     XCTFail()
                     return
                 }
@@ -372,7 +372,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     integrationShape: .paymentSheet
                 ) { result in
                     switch result {
-                    case .success(let loadResult):
+                    case .success(let (loadResult, _)):
                         XCTAssertEqual(loadResult.savedPaymentMethods, [])
                         // 2. Confirm the intent with a new card
                         PaymentSheet.confirm(
@@ -403,7 +403,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                                                 integrationShape: .paymentSheet
                                             ) { result in
                                                 switch result {
-                                                case .success(let loadResult):
+                                                case .success(let (loadResult, _)):
                                                     XCTAssertNotNil(loadResult.elementsSession.customer?.defaultPaymentMethod)
                                                     XCTAssertEqual(loadResult.elementsSession.customer?.defaultPaymentMethod, paymentIntent?.paymentMethodId)
                                                     expectation.fulfill()
@@ -451,7 +451,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             integrationShape: .paymentSheet
         ) { result in
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
                 // 2. Confirm the intent with a new card
                 PaymentSheet.confirm(
@@ -481,7 +481,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                                     integrationShape: .paymentSheet
                                 ) { result in
                                     switch result {
-                                    case .success(let loadResult):
+                                    case .success(let (loadResult, _)):
                                         XCTAssertNotNil(loadResult.elementsSession.customer?.defaultPaymentMethod)
                                         XCTAssertEqual(loadResult.elementsSession.customer?.defaultPaymentMethod, setupIntent?.paymentMethodID)
                                         expectation.fulfill()
@@ -527,7 +527,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             integrationShape: .paymentSheet
         ) { result in
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
                 // 2. Confirm the intent with a new card
                 PaymentSheet.confirm(
@@ -549,7 +549,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                             integrationShape: .paymentSheet
                         ) { result in
                             switch result {
-                            case .success(let loadResult):
+                            case .success(let (loadResult, _)):
                                 XCTAssertNotNil(loadResult.elementsSession.customer)
                                 XCTAssertNotNil(loadResult.elementsSession.customer?.defaultPaymentMethod)
                                 expectation.fulfill()
@@ -593,7 +593,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
             integrationShape: .paymentSheet
         ) { result in
             switch result {
-            case .success(let loadResult):
+            case .success(let (loadResult, _)):
                 XCTAssertEqual(loadResult.savedPaymentMethods, [])
                 // 2. Confirm the intent with a new card
                 PaymentSheet.confirm(
@@ -615,7 +615,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                             integrationShape: .paymentSheet
                         ) { result in
                             switch result {
-                            case .success(let loadResult):
+                            case .success(let (loadResult, _)):
                                 XCTAssertNotNil(loadResult.elementsSession.customer?.defaultPaymentMethod)
                                 expectation.fulfill()
                             case .failure(let error):
@@ -1637,7 +1637,7 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
                     integrationShape: .paymentSheet
                 ) { result in
                     switch result {
-                    case .success(let loadResult):
+                    case .success(let (loadResult, _)):
                         XCTAssertEqual(loadResult.elementsSession.customer?.defaultPaymentMethod, defaultPaymentMethod.stripeId)
                         expectation.fulfill()
                     case .failure(let error):
