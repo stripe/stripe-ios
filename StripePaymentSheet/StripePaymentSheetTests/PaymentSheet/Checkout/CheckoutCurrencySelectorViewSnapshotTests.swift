@@ -57,7 +57,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         selectedCurrency: String = "usd",
         appearance: Checkout.CurrencySelectorView.Appearance = .init()
     ) -> Checkout.CurrencySelectorView {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
+        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession(selectedCurrency: selectedCurrency)
         checkout.updateSession(session)
 

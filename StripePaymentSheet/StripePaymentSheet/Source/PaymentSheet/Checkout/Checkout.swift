@@ -30,8 +30,8 @@ public final class Checkout: ObservableObject {
 
     /// The current state of the checkout session.
     ///
-    /// After initialization this is always ``State/loaded(_:)``. It transitions to
-    /// ``State/loading(_:)`` while a mutation (e.g. applying a promo code) is in flight.
+    /// After initialization this is always ``State.loaded(_:)``. It transitions to
+    /// ``State.loading(_:)`` while a mutation (e.g. applying a promo code) is in flight.
     @Published public private(set) var state: State
 
     /// A delegate notified when the session state changes.
