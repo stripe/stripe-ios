@@ -106,26 +106,6 @@ public class STPPaymentHandler: NSObject {
         case invalidState
     }
 
-    /// The client-side outcome to use when the server intent is not in a success state,
-    /// as determined by the challenge screen before the intent is re-fetched.
-    enum ChallengeClientOutcome {
-        case canceled
-        case failed(Error)
-
-        var actionStatus: STPPaymentHandlerActionStatus {
-            switch self {
-            case .canceled: return .canceled
-            case .failed: return .failed
-            }
-        }
-        var nsError: NSError? {
-            switch self {
-            case .canceled: return nil
-            case .failed(let error): return error as NSError
-            }
-        }
-    }
-
     internal var currentAction: STPPaymentHandlerActionParams?
     /// YES from when a public method is first called until its associated completion handler is called.
     /// This property guards against simultaneous usage of this class; only one "next action" can be handled at a time.
@@ -1761,147 +1741,6 @@ public class STPPaymentHandler: NSObject {
         }
     }
 
-    func _retrieveAndCheckIntentAfterChallenge(challengeClientOutcome: ChallengeClientOutcome, pollingBudget: PollingBudget? = nil) {
-        guard let currentAction = self.currentAction else {
-            stpAssertionFailure("Calling _retrieveAndCheckIntentAfterChallenge without a currentAction")
-            let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling _retrieveAndCheckIntentAfterChallenge without a currentAction"])
-            analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
-            return
-        }
-
-        if let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams {
-            let startDate = Date()
-            self.retrieveOrRefreshPaymentIntent(
-                currentAction: currentAction,
-                timeout: pollingBudget?.networkTimeout
-            ) { [self] paymentIntent, error in
-                guard let paymentIntent, error == nil else {
-                    let effectivePollingBudget = pollingBudget ?? PollingBudget(startDate: Date(), duration: 15)
-                    if effectivePollingBudget.canPoll {
-                        effectivePollingBudget.pollAfter {
-                            self._retrieveAndCheckIntentAfterChallenge(
-                                challengeClientOutcome: challengeClientOutcome,
-                                pollingBudget: pollingBudget
-                            )
-                        }
-                    } else {
-                        let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing PaymentIntent.")
-                        currentAction.complete(
-                            with: STPPaymentHandlerActionStatus.failed,
-                            error: error as NSError
-                        )
-                    }
-                    return
-                }
-                currentAction.paymentIntent = paymentIntent
-                let pmType = paymentIntent.paymentMethod?.type ?? .unknown
-                let intentError: NSError? = {
-                    guard case .failed = challengeClientOutcome, let lastPaymentError = paymentIntent.lastPaymentError else { return nil }
-                    if lastPaymentError.type == .card {
-                        return _error(for: .paymentErrorCode, apiErrorCode: lastPaymentError.code, localizedDescription: lastPaymentError.message)
-                    }
-                    return _error(for: .paymentErrorCode, apiErrorCode: lastPaymentError.code)
-                }()
-                _resolveAfterChallengeDismissed(
-                    requiresAction: paymentIntent.status == .requiresAction,
-                    isSuccess: paymentIntent.status == .succeeded
-                    || paymentIntent.status == .requiresCapture
-                    || (paymentIntent.status == .processing
-                        && STPPaymentHandler._isProcessingIntentSuccess(for: pmType)),
-                    intentError: intentError,
-                    challengeClientOutcome: challengeClientOutcome,
-                    pollingBudget: pollingBudget,
-                    startDate: startDate,
-                    currentAction: currentAction
-                )
-            }
-        } else if let currentAction = currentAction as? STPPaymentHandlerSetupIntentActionParams {
-            let startDate = Date()
-            retrieveOrRefreshSetupIntent(
-                currentAction: currentAction,
-                timeout: pollingBudget?.networkTimeout
-            ) { [self] setupIntent, error in
-                guard let setupIntent, error == nil else {
-                    let effectivePollingBudget = pollingBudget ?? PollingBudget(startDate: Date(), duration: 1)
-                    if effectivePollingBudget.canPoll {
-                        effectivePollingBudget.pollAfter {
-                            self._retrieveAndCheckIntentAfterChallenge(
-                                challengeClientOutcome: challengeClientOutcome,
-                                pollingBudget: pollingBudget
-                            )
-                        }
-                    } else {
-                        let error = error ?? self._error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Missing SetupIntent.")
-                        currentAction.complete(
-                            with: STPPaymentHandlerActionStatus.failed,
-                            error: error as NSError
-                        )
-                    }
-                    return
-                }
-                currentAction.setupIntent = setupIntent
-                let intentError: NSError? = {
-                    guard case .failed = challengeClientOutcome, let lastSetupError = setupIntent.lastSetupError else { return nil }
-                    if lastSetupError.type == .card {
-                        return _error(for: .paymentErrorCode, apiErrorCode: lastSetupError.code, localizedDescription: lastSetupError.message)
-                    }
-                    return _error(for: .paymentErrorCode, apiErrorCode: lastSetupError.code)
-                }()
-                _resolveAfterChallengeDismissed(
-                    requiresAction: setupIntent.status == .requiresAction,
-                    isSuccess: setupIntent.status == .succeeded,
-                    intentError: intentError,
-                    challengeClientOutcome: challengeClientOutcome,
-                    pollingBudget: pollingBudget,
-                    startDate: startDate,
-                    currentAction: currentAction
-                )
-            }
-        } else {
-            // TODO: Make currentAction an enum, stop optionally casting it
-            stpAssert(false, "currentAction is an unknown type or nil intent.")
-            currentAction.complete(
-                with: .failed,
-                error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "currentAction is an unknown type or nil intent.")
-            )
-        }
-    }
-
-    private func _resolveAfterChallengeDismissed(
-        requiresAction: Bool,
-        isSuccess: Bool,
-        intentError: NSError?,
-        challengeClientOutcome: ChallengeClientOutcome,
-        pollingBudget: PollingBudget?,
-        startDate: Date,
-        currentAction: STPPaymentHandlerActionParams
-    ) {
-        if requiresAction, case .canceled = challengeClientOutcome {
-            // Only poll when the user canceled — the server may still be processing the challenge
-            // (e.g. user tapped the captcha checkmark then immediately tapped X).
-            // For webview errors (.failed), the server won't make further progress, so complete immediately.
-            let budget = pollingBudget ?? PollingBudget(startDate: startDate, duration: 15)
-            if budget.canPoll {
-                budget.pollAfter {
-                    self._retrieveAndCheckIntentAfterChallenge(
-                        challengeClientOutcome: challengeClientOutcome,
-                        pollingBudget: budget
-                    )
-                }
-            } else {
-                currentAction.complete(with: challengeClientOutcome.actionStatus,
-                                       error: challengeClientOutcome.nsError)
-            }
-        } else if isSuccess {
-            currentAction.complete(with: .succeeded, error: nil)
-        } else if let intentError {
-            currentAction.complete(with: .failed, error: intentError)
-        } else {
-            currentAction.complete(with: challengeClientOutcome.actionStatus,
-                                   error: challengeClientOutcome.nsError)
-        }
-    }
-
     @objc func _handleWillForegroundNotification() {
         NotificationCenter.default.removeObserver(
             self,
@@ -2138,20 +1977,9 @@ public class STPPaymentHandler: NSObject {
 
                     // Dismiss the challenge view
                     presentingVC.dismiss(animated: true) {
-                        switch result {
-                        case .success:
-                            // The web page handled the next action via Stripe.js
-                            // Now retrieve the updated intent to check its status
-                            self._retrieveAndCheckIntentForCurrentAction()
-
-                        case .failure(let error):
-                            // Re-fetch the intent before completing — the server may have already processed the challenge even though the client reported an error or cancel (like if the user taps the captcha checkmark and then gets disconnected from the network or taps the X to cancel).
-                            if case ChallengeError.userCanceled = error {
-                                self._retrieveAndCheckIntentAfterChallenge(challengeClientOutcome: .canceled)
-                            } else {
-                                self._retrieveAndCheckIntentAfterChallenge(challengeClientOutcome: .failed(error))
-                            }
-                        }
+                        // The web page handled the next action via Stripe.js
+                        // Now retrieve the updated intent to check its status
+                        self._retrieveAndCheckIntentForCurrentAction()
                     }
                 }
 
