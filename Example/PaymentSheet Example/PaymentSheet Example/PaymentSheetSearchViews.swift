@@ -82,16 +82,20 @@ private func pickerEnumMatchesSearch<S: PickerEnum>(_ enumType: S.Type, searchTe
 @available(iOS 15.0, *)
 struct SearchableSettingView<S: PickerEnum>: View {
     var setting: Binding<S>
+    var title: String?
     @Binding var searchText: String
 
     private var isVisible: Bool {
-        pickerEnumMatchesSearch(S.self, searchText: searchText)
+        if let title, settingMatchesSearch(title, searchText: searchText) {
+            return true
+        }
+        return pickerEnumMatchesSearch(S.self, searchText: searchText)
     }
 
     var body: some View {
         Group {
             if isVisible {
-                SettingView(setting: setting)
+                SettingView(setting: setting, title: title)
             }
         }
         .preference(key: VisibleSettingsCountKey.self, value: isVisible ? 1 : 0)

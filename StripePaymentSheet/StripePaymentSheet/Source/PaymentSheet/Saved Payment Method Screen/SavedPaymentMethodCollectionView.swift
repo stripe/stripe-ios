@@ -112,6 +112,10 @@ extension SavedPaymentMethodCollectionView {
             return label
         }()
 
+        lazy var paymentMethodLogoHeightConstraint: NSLayoutConstraint = {
+             paymentMethodLogo.heightAnchor.constraint(equalToConstant: paymentMethodLogoSize.height)
+        }()
+
         fileprivate var viewModel: SavedPaymentOptionsViewController.Selection?
 
         var isRemovingPaymentMethods: Bool = false {
@@ -205,8 +209,7 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: selectableRectangle.centerYAnchor),
                 paymentMethodLogo.widthAnchor.constraint(
                     equalToConstant: paymentMethodLogoSize.width),
-                paymentMethodLogo.heightAnchor.constraint(
-                    equalToConstant: paymentMethodLogoSize.height),
+                paymentMethodLogoHeightConstraint,
 
                 plus.centerXAnchor.constraint(equalTo: selectableRectangle.centerXAnchor),
                 plus.centerYAnchor.constraint(equalTo: selectableRectangle.centerYAnchor),
@@ -342,6 +345,7 @@ extension SavedPaymentMethodCollectionView {
             traitCollection.performAsCurrent {
                 let overrideUserInterfaceStyle: UIUserInterfaceStyle = appearance.colors.componentBackground.isDark ? .dark : .light
                 if let viewModel = viewModel {
+                    paymentMethodLogo.tag = 0
                     switch viewModel {
                     case .saved(let paymentMethod):
                         if let attributedText = attributedTextForLabel(paymentMethod: paymentMethod) {
@@ -355,10 +359,24 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
                         let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
-                        if cardArtEnabled {
-                            paymentMethodLogo.setImage(with: paymentMethod.cardArtCDNURL(height: 40), fallbackImage: paymentMethodCellImage)
+                        let cardArtHeight: Int = 28
+                        if cardArtEnabled, let cardArtURL = paymentMethod.cardArtCDNURL(height: cardArtHeight) {
+                            paymentMethodLogo.tag = cardArtURL.hashValue
+                            paymentMethodLogo.image = nil
+                            Task {
+                                let image = try? await DownloadManager.sharedManager.downloadImage(url: cardArtURL)
+                                guard paymentMethodLogo.tag == cardArtURL.hashValue else { return }
+                                if let image {
+                                    paymentMethodLogo.image = image.roundedWithBorder(radius: 3)
+                                    paymentMethodLogoHeightConstraint.constant = CGFloat(cardArtHeight)
+                                } else {
+                                    paymentMethodLogo.image = paymentMethodCellImage
+                                    paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
+                                }
+                            }
                         } else {
                             paymentMethodLogo.image = paymentMethodCellImage
+                            paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         }
                     case .applePay:
                         // TODO (cleanup) - get this from PaymentOptionDisplayData?
@@ -367,12 +385,14 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
                         paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                     case .link:
                         label.text = STPPaymentMethodType.link.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
                         paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )

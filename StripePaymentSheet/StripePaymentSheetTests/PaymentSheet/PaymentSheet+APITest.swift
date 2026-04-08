@@ -1354,8 +1354,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
 
         let confirmTypes: [PaymentSheet.ConfirmPaymentMethodType] = [
-            .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, shouldSave: false),
-            .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, paymentMethod: examplePaymentMethod, shouldSave: false),
+            .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, saveForFutureUseCheckboxState: .hidden),
+            .new(params: examplePaymentMethodParams, paymentOptions: paymentOptions, paymentMethod: examplePaymentMethod, saveForFutureUseCheckboxState: .hidden),
             .saved(examplePaymentMethod, paymentOptions: paymentOptions, clientAttributionMetadata: nil, radarOptions: nil),
         ]
         for confirmType in confirmTypes {
@@ -1382,6 +1382,35 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         }
     }
 
+    func testConfirmPaymentMethodType_projectsUnifiedSaveCheckboxState() {
+        let paymentMethodParams = STPPaymentMethodParams(card: STPFixtures.paymentMethodCardParams(), billingDetails: nil, metadata: nil)
+        let paymentOptions = STPConfirmPaymentMethodOptions()
+
+        let hidden = PaymentSheet.ConfirmPaymentMethodType.new(
+            params: paymentMethodParams,
+            paymentOptions: paymentOptions,
+            saveForFutureUseCheckboxState: .hidden
+        )
+        XCTAssertFalse(hidden.shouldSaveForIntent)
+        XCTAssertNil(hidden.savePaymentMethodForCheckoutSession)
+
+        let deselected = PaymentSheet.ConfirmPaymentMethodType.new(
+            params: paymentMethodParams,
+            paymentOptions: paymentOptions,
+            saveForFutureUseCheckboxState: .deselected
+        )
+        XCTAssertFalse(deselected.shouldSaveForIntent)
+        XCTAssertEqual(deselected.savePaymentMethodForCheckoutSession, false)
+
+        let selected = PaymentSheet.ConfirmPaymentMethodType.new(
+            params: paymentMethodParams,
+            paymentOptions: paymentOptions,
+            saveForFutureUseCheckboxState: .selected
+        )
+        XCTAssertTrue(selected.shouldSaveForIntent)
+        XCTAssertEqual(selected.savePaymentMethodForCheckoutSession, true)
+    }
+
     func testMakeIntentParams_paypal_sets_mandate() {
         let paypalPaymentMethodParams = STPPaymentMethodParams(payPal: .init(), billingDetails: nil, metadata: nil)
         let paypalPaymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: ["id": "pm_123", "type": "paypal", "created": "12345"])!
@@ -1390,8 +1419,8 @@ class PaymentSheetAPITest: STPNetworkStubbingTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
         // Confirming w/ a new Paypal PM...
         let confirmTypes: [PaymentSheet.ConfirmPaymentMethodType] = [
-            .new(params: paypalPaymentMethodParams, paymentOptions: paymentOptions, shouldSave: false),
-            .new(params: paypalPaymentMethodParams, paymentOptions: paymentOptions, paymentMethod: paypalPaymentMethod, shouldSave: false),
+            .new(params: paypalPaymentMethodParams, paymentOptions: paymentOptions, saveForFutureUseCheckboxState: .hidden),
+            .new(params: paypalPaymentMethodParams, paymentOptions: paymentOptions, paymentMethod: paypalPaymentMethod, saveForFutureUseCheckboxState: .hidden),
         ]
 
         for confirmType in confirmTypes {
