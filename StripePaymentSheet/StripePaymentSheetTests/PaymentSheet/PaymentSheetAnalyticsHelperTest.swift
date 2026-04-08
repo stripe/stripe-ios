@@ -730,22 +730,22 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         )
         analyticsClient._testLogHistory.removeAll()
 
-        // Loaded with is_standalone_element param
-        sut.logAdaptivePricingCurrencySelectorLoaded(isStandaloneElement: false)
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "stripeios.adaptive_pricing.currency_selector_loaded")
+        // Init with is_standalone_element param
+        sut.logAdaptivePricingCurrencySelectorInit(isStandaloneElement: false)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "elements.adaptive_pricing.currency_selector_init")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["is_standalone_element"] as? Bool, false)
 
-        sut.logAdaptivePricingCurrencySelectorLoaded(isStandaloneElement: true)
+        sut.logAdaptivePricingCurrencySelectorInit(isStandaloneElement: true)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["is_standalone_element"] as? Bool, true)
 
         // Toggled
         sut.logAdaptivePricingCurrencyToggled()
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "stripeios.adaptive_pricing.currency_toggled")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "elements.adaptive_pricing.currency_toggled")
 
         // Toggled failed serializes error
         let error = NSError(domain: "test_domain", code: 42)
         sut.logAdaptivePricingCurrencyToggledFailed(error: error)
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "stripeios.adaptive_pricing.currency_toggled_failed")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "elements.adaptive_pricing.currency_toggled.failed")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["error_type"] as? String, "test_domain")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["error_code"] as? String, "42")
     }

@@ -84,7 +84,7 @@ extension Checkout {
 
             STPAnalyticsClient.sharedClient.log(
                 analytic: PaymentSheetAnalytic(
-                    event: .adaptivePricingCurrencySelectorLoaded,
+                    event: .adaptivePricingCurrencySelectorInit,
                     additionalParams: ["is_standalone_element": true]
                 )
             )

@@ -459,8 +459,8 @@ final class PaymentSheetAnalyticsHelper {
 
     // MARK: - Adaptive Pricing
 
-    func logAdaptivePricingCurrencySelectorLoaded(isStandaloneElement: Bool) {
-        log(event: .adaptivePricingCurrencySelectorLoaded, params: ["is_standalone_element": isStandaloneElement])
+    func logAdaptivePricingCurrencySelectorInit(isStandaloneElement: Bool) {
+        log(event: .adaptivePricingCurrencySelectorInit, params: ["is_standalone_element": isStandaloneElement])
     }
 
     func logAdaptivePricingCurrencyToggled() {

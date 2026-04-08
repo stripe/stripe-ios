@@ -60,7 +60,7 @@ final class CurrencySelectorElement: Element {
             appearance: appearance
         )
         selectorElement.delegate = self
-        analyticsHelper?.logAdaptivePricingCurrencySelectorLoaded(isStandaloneElement: false)
+        analyticsHelper?.logAdaptivePricingCurrencySelectorInit(isStandaloneElement: false)
     }
 
     // MARK: - Factory
