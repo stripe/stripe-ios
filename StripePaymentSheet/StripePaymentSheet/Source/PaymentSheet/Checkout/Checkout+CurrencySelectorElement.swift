@@ -47,6 +47,9 @@ extension Checkout {
         }
 
         public var body: some View {
+            // Remove the view from SwiftUI layout entirely when AP is unavailable.
+            // The UIView hides itself internally, but a hidden UIViewRepresentable
+            // can still occupy space — this guard ensures zero layout footprint.
             if InternalCurrencySelector.adaptivePricingData(from: checkout.state.session) != nil {
                 CurrencySelectorViewRepresentable(checkout: checkout, appearance: appearance)
                     .fixedSize(horizontal: false, vertical: true)
@@ -59,11 +62,12 @@ extension Checkout {
 
 @available(iOS 15.0, *)
 private struct CurrencySelectorViewRepresentable: UIViewRepresentable {
-    @ObservedObject var checkout: Checkout
+    let checkout: Checkout
     let appearance: Checkout.CurrencySelectorView.Appearance
 
     func makeUIView(context: Context) -> Checkout.CurrencySelectorView {
         let view = Checkout.CurrencySelectorView(checkout: checkout, appearance: appearance)
+        // Forward SwiftUI's .disabled() modifier to the UIKit view.
         view.isEnabled = context.environment.isEnabled
         return view
     }
