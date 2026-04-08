@@ -68,6 +68,8 @@ For help with Apple's App Privacy Details form in App Store Connect, visit [Stri
 
 Some modules expose preview APIs via `@_spi` annotations. We aim to make breaking changes to these APIs only in major or minor releases, while retaining API compatibility across patch versions. (For example, a preview API may change when moving from version `12.1.0` to `12.2.0`, but should not change from `12.2.0` to `12.2.1`.) Please see the [Stripe Services Agreement](https://stripe.com/legal/ssa) section on "Preview Services" for more information.
 
+**Note:** `@_spi(STP)` APIs are reserved for internal Stripe use and should not be used by consumers of this SDK.
+
 ## Modules
 <!-- 
   EmergeTools project must be made public before adding to this table:
