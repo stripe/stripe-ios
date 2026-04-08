@@ -48,6 +48,12 @@ extension Checkout {
         private var selectorView: TwoOptionSelectorView?
         private var sessionCancellable: AnyCancellable?
         private var lastSelectedCurrency: String?
+        private let containerStackView = UIStackView()
+        private lazy var errorLabel: UILabel = {
+            let label = ElementsUI.makeErrorLabel(theme: appearance.asPaymentSheetAppearance().asElementsTheme)
+            label.setHiddenIfNecessary(true)
+            return label
+        }()
 
         // MARK: - Init
 
@@ -62,6 +68,8 @@ extension Checkout {
             self.checkout = checkout
             self.appearance = appearance
             super.init(frame: .zero)
+
+            setupContainerStackView()
 
             // Evaluate current state synchronously
             handleSessionUpdate()
@@ -90,10 +98,10 @@ extension Checkout {
         // MARK: - Layout
 
         override public var intrinsicContentSize: CGSize {
-            guard !isHidden, let selectorView else {
+            guard !isHidden, selectorView != nil else {
                 return .zero
             }
-            return selectorView.systemLayoutSizeFitting(
+            return containerStackView.systemLayoutSizeFitting(
                 CGSize(width: bounds.width, height: UIView.layoutFittingCompressedSize.height),
                 withHorizontalFittingPriority: .required,
                 verticalFittingPriority: .fittingSizeLevel
@@ -101,6 +109,20 @@ extension Checkout {
         }
 
         // MARK: - Private Methods
+
+        private func setupContainerStackView() {
+            containerStackView.axis = .vertical
+            containerStackView.spacing = 6
+            containerStackView.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(containerStackView)
+            NSLayoutConstraint.activate([
+                containerStackView.topAnchor.constraint(equalTo: topAnchor),
+                containerStackView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                containerStackView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                containerStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            ])
+            containerStackView.addArrangedSubview(errorLabel)
+        }
 
         /// Called when the session changes. Builds the selector on the first
         /// session that has adaptive pricing data, then updates the caption
@@ -114,6 +136,8 @@ extension Checkout {
             }
 
             let currency = CurrencySelectorElement.CurrencyCode(rawCurrency)
+
+            clearError()
 
             // Build the selector after inital sesison loading, after that just update the caption
             if selectorView == nil {
@@ -146,13 +170,7 @@ extension Checkout {
             newSelector.captionLabel.textColor = appearance.captionColor
 
             newSelector.translatesAutoresizingMaskIntoConstraints = false
-            addSubview(newSelector)
-            NSLayoutConstraint.activate([
-                newSelector.topAnchor.constraint(equalTo: topAnchor),
-                newSelector.leadingAnchor.constraint(equalTo: leadingAnchor),
-                newSelector.trailingAnchor.constraint(equalTo: trailingAnchor),
-                newSelector.bottomAnchor.constraint(equalTo: bottomAnchor),
-            ])
+            containerStackView.insertArrangedSubview(newSelector, at: 0)
 
             selectorView = newSelector
             newSelector.setEnabled(isEnabled)
@@ -177,7 +195,23 @@ extension Checkout {
         private func tearDown() {
             selectorView?.removeFromSuperview()
             selectorView = nil
+            clearError()
             isHidden = true
+            invalidateIntrinsicContentSize()
+        }
+
+        // MARK: - Error Display
+
+        func showError(_ message: String) {
+            errorLabel.text = message
+            errorLabel.setHiddenIfNecessary(false)
+            invalidateIntrinsicContentSize()
+        }
+
+        func clearError() {
+            guard errorLabel.text != nil else { return }
+            errorLabel.text = nil
+            errorLabel.setHiddenIfNecessary(true)
             invalidateIntrinsicContentSize()
         }
     }
@@ -216,6 +250,7 @@ extension Checkout.CurrencySelectorView: TwoOptionSelectorViewDelegate {
                         additionalParams: error.serializeForV1Analytics()
                     )
                 )
+                showError(error.localizedDescription)
             }
             selectorView?.setEnabled(isEnabled)
         }
