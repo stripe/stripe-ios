@@ -33,6 +33,7 @@ enum CheckoutTestHelpers {
         var json = makeOpenSessionJSON()
         json["status"] = "complete"
         json["payment_status"] = "paid"
+        return STPCheckoutSession.decodedObject(fromAPIResponse: json)!
     }
   
     static func makeAdaptivePricingSession(
