@@ -174,6 +174,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let appearance: LinkAppearance
     private let analyticsClient: CryptoOnrampAnalyticsClient
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
+    private var applePayPreviousPaymentSource: SelectedPaymentSource?
     private var selectedPaymentSource: SelectedPaymentSource?
     private let cryptoCustomerState: CryptoCustomerState
 
@@ -492,6 +493,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             return .completed(displayData: preview, kycInfo: nil)
         case .applePay(let paymentRequest):
             // This presents Apple Pay and fills the selected payment source in the delegate.
+            applePayPreviousPaymentSource = selectedPaymentSource
             do {
                 let status = try await presentApplePay(using: paymentRequest, from: viewController)
                 switch status {
@@ -519,6 +521,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                         sublabel: sublabel
                     )
 
+                    applePayPreviousPaymentSource = nil
                     analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
 
                     return .completed(displayData: paymentMethodPreview, kycInfo: kycInfo)
@@ -526,6 +529,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     return .canceled
                 }
             } catch {
+                applePayPreviousPaymentSource = nil
                 analyticsClient.log(.errorOccurred(during: .collectPaymentMethod, errorMessage: error.localizedDescription))
                 throw error
             }
@@ -627,6 +631,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
     public func logOut() async throws {
         do {
+            applePayPreviousPaymentSource = nil
             selectedPaymentSource = nil
             try await linkController.logOut()
             analyticsClient.log(.userLoggedOut)
@@ -656,13 +661,16 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
         case .success:
             applePayCompletionContinuation?.resume(returning: .success)
         case .userCancellation:
-            selectedPaymentSource = nil
+            selectedPaymentSource = applePayPreviousPaymentSource
+            applePayPreviousPaymentSource = nil
             applePayCompletionContinuation?.resume(returning: .canceled)
         case .error:
-            selectedPaymentSource = nil
+            selectedPaymentSource = applePayPreviousPaymentSource
+            applePayPreviousPaymentSource = nil
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         @unknown default:
-            selectedPaymentSource = nil
+            selectedPaymentSource = applePayPreviousPaymentSource
+            applePayPreviousPaymentSource = nil
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         }
 
