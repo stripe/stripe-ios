@@ -20,7 +20,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let checkoutSessionId = checkoutSessionResponse.id
 
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
+        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
 
         // Verify checkout session fields
         XCTAssertEqual(checkoutSession.stripeId, checkoutSessionId)
@@ -45,7 +45,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
 
         // 2. Init the checkout session to get the actual amount
-        let initResponse = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+        let initResponse = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId, adaptivePricingAllowed: true)
         let expectedAmount = initResponse.totals?.total ?? 0
 
         // 3. Create a payment method with test card and billing email
@@ -81,7 +81,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let checkoutSessionId = checkoutSessionResponse.id
 
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
+        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
 
         // Verify checkout session fields
         XCTAssertEqual(checkoutSession.stripeId, checkoutSessionId)
@@ -106,7 +106,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
 
         // 2. Init the checkout session
-        _ = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+        _ = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId, adaptivePricingAllowed: true)
 
         // 3. Create a payment method with test card and billing email
         let cardParams = STPPaymentMethodCardParams()

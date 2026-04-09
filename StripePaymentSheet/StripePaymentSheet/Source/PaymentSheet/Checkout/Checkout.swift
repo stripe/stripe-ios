@@ -34,6 +34,9 @@ public final class Checkout: ObservableObject {
     /// ``State.loading(_:)`` while a mutation (e.g. applying a promo code) is in flight.
     @Published public private(set) var state: State
 
+    /// The configuration supplied at initialization.
+    public let configuration: Configuration
+
     /// A delegate notified when the session state changes.
     public weak var delegate: CheckoutDelegate?
 
@@ -66,18 +69,27 @@ public final class Checkout: ObservableObject {
     ///
     /// - Parameters:
     ///   - clientSecret: The client secret for your Checkout Session (e.g. `cs_xxx_secret_yyy`).
+    ///   - configuration: Configuration options for the checkout. Defaults to ``Configuration/init()``.
     ///   - apiClient: The API client to use. Defaults to ``STPAPIClient.shared``.
     /// - Throws: ``CheckoutError`` if the client secret is invalid or the session cannot be loaded.
-    public init(clientSecret: String, apiClient: STPAPIClient = .shared) async throws {
+    public init(
+        clientSecret: String,
+        configuration: Configuration = Configuration(),
+        apiClient: STPAPIClient = .shared
+    ) async throws {
         guard !clientSecret.isEmpty else {
             throw CheckoutError.invalidClientSecret
         }
         self.clientSecret = clientSecret
+        self.configuration = configuration
         self.apiClient = apiClient
 
         let sessionId = Self.extractSessionId(from: clientSecret)
         do {
-            let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+            let checkoutSession = try await apiClient.initCheckoutSession(
+                checkoutSessionId: sessionId,
+                adaptivePricingAllowed: configuration.adaptivePricing.allowed
+            )
             self.state = .loaded(checkoutSession)
             checkoutSession.onConfirmed = { [weak self] response in
                 self?.updateSession(response)
@@ -88,8 +100,14 @@ public final class Checkout: ObservableObject {
     }
 
     /// Internal initializer for unit tests that injects a pre-loaded session.
-    init(clientSecret: String, session: STPCheckoutSession, apiClient: STPAPIClient = .shared) {
+    init(
+        clientSecret: String,
+        configuration: Configuration = Configuration(),
+        session: STPCheckoutSession,
+        apiClient: STPAPIClient = .shared
+    ) {
         self.clientSecret = clientSecret
+        self.configuration = configuration
         self.apiClient = apiClient
         self.state = .loaded(session)
         session.onConfirmed = { [weak self] response in
@@ -313,7 +331,10 @@ public final class Checkout: ObservableObject {
                 checkoutSessionId: sessionId,
                 parameters: update.parameters
             )
-            let refreshedCheckoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+            let refreshedCheckoutSession = try await apiClient.initCheckoutSession(
+                checkoutSessionId: sessionId,
+                adaptivePricingAllowed: configuration.adaptivePricing.allowed
+            )
             updateSession(refreshedCheckoutSession, applyOverrides: applyOverrides)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
