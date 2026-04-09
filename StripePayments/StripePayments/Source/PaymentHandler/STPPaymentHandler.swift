@@ -428,7 +428,6 @@ public class STPPaymentHandler: NSObject {
         shouldSendAnalytic: Bool = true,
         completion: @escaping STPPaymentHandlerActionPaymentIntentCompletionBlock
     ) {
-        
         let paymentIntentID = paymentIntent.stripeId
         let paymentMethod = paymentIntent.paymentMethod
         if shouldSendAnalytic {
