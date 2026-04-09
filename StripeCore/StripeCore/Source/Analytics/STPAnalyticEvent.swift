@@ -348,4 +348,9 @@ import Foundation
     // MARK: - Synthetic latency tests
     case mpeSyntheticLatency = "mpe.synthetic_latency"
 
+    // MARK: - Adaptive Pricing
+    case adaptivePricingCurrencySelectorInit = "elements.adaptive_pricing.currency_selector_init"
+    case adaptivePricingCurrencyToggled = "elements.adaptive_pricing.currency_toggled"
+    case adaptivePricingCurrencyToggledFailed = "elements.adaptive_pricing.currency_toggled.failed"
+
 }

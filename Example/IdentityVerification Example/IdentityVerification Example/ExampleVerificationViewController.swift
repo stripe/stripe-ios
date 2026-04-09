@@ -13,8 +13,8 @@ class ExampleVerificationViewController: UIViewController {
 
     // Constants
     // View and fork the backend code here: https://codesandbox.io/p/devbox/dsx4vq
-    let baseURL = "https://stripe-mobile-identity-verification-example.stripedemos.com"
-    let verifyEndpoint = "/create-verification-session"
+    let baseURL = "https://stripe-mobile-identity-verification-playground.stripedemos.com"
+    let verifyEndpoint = "/verification-sessions"
 
     // Outlets
     @IBOutlet weak var verifyButton: UIButton!
@@ -41,10 +41,17 @@ class ExampleVerificationViewController: UIViewController {
         // Make request to our verification endpoint
         let session = URLSession.shared
         let url = URL(string: baseURL + verifyEndpoint)!
+        let requestJson = try? JSONSerialization.data(
+            withJSONObject: [
+                "type": "document",
+            ],
+            options: []
+        )
 
         var urlRequest = URLRequest(url: url)
         urlRequest.httpMethod = "POST"
         urlRequest.setValue("application/json", forHTTPHeaderField: "Content-type")
+        urlRequest.httpBody = requestJson
 
         let task = session.dataTask(with: urlRequest) { [weak self] data, _, error in
             DispatchQueue.main.async { [weak self] in

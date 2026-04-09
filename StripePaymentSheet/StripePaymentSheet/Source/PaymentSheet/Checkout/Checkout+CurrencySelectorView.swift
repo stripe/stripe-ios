@@ -75,12 +75,19 @@ extension Checkout {
             handleSessionUpdate()
 
             // Observe future session changes
-            sessionCancellable = checkout.$session
+            sessionCancellable = checkout.$state
                 .dropFirst()
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
                     self?.handleSessionUpdate()
                 }
+
+            STPAnalyticsClient.sharedClient.log(
+                analytic: PaymentSheetAnalytic(
+                    event: .adaptivePricingCurrencySelectorInit,
+                    additionalParams: ["is_standalone_element": true]
+                )
+            )
         }
 
         @available(*, unavailable)
@@ -122,7 +129,7 @@ extension Checkout {
         /// on subsequent changes. Hides the view if AP data is unavailable.
         private func handleSessionUpdate() {
             guard let (session, exchangeRateMeta, rawCurrency) =
-                    CurrencySelectorElement.adaptivePricingData(from: checkout.session)
+                    CurrencySelectorElement.adaptivePricingData(from: checkout.state.session)
             else {
                 tearDown()
                 return
@@ -223,6 +230,12 @@ extension Checkout.CurrencySelectorView: TwoOptionSelectorViewDelegate {
         Task {
             do {
                 try await checkout.selectCurrency(id)
+                STPAnalyticsClient.sharedClient.log(
+                    analytic: PaymentSheetAnalytic(
+                        event: .adaptivePricingCurrencyToggled,
+                        additionalParams: [:]
+                    )
+                )
                 // Caption label updates automatically via handleSessionUpdate from session update
             } catch {
                 // Revert to previous currency on error
@@ -231,6 +244,12 @@ extension Checkout.CurrencySelectorView: TwoOptionSelectorViewDelegate {
                     lastSelectedCurrency = fromCurrency
                 }
 
+                STPAnalyticsClient.sharedClient.log(
+                    analytic: PaymentSheetAnalytic(
+                        event: .adaptivePricingCurrencyToggledFailed,
+                        additionalParams: error.serializeForV1Analytics()
+                    )
+                )
                 showError(error.localizedDescription)
             }
             selectorView?.setEnabled(isEnabled)
