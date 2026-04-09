@@ -14,11 +14,6 @@ import XCTest
 @MainActor
 final class CheckoutUnitTests: XCTestCase {
 
-    func testInitialStateIsNil() {
-        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
-        XCTAssertNil(checkout.session)
-    }
-
     func testExtractSessionId() {
         XCTAssertEqual(
             Checkout.extractSessionId(from: "cs_test_abc123_secret_xyz789"),
@@ -35,110 +30,115 @@ final class CheckoutUnitTests: XCTestCase {
         )
     }
 
+    func testInitSetsLoadedState() {
+        let checkout = makeCheckoutWithOpenSession()
+        guard case .loaded = checkout.state else {
+            XCTFail("Expected .loaded state after init with session")
+            return
+        }
+        XCTAssertEqual(checkout.state.session.status, .open)
+        XCTAssertFalse(checkout.state.isLoading)
+    }
+
+    // MARK: - Requires Open Session Tests
+
     func testApplyPromotionCodeRequiresOpenSession() async throws {
-        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
-        XCTAssertNil(checkout.session)
+        let checkout = makeCheckoutWithClosedSession()
 
         do {
             try await checkout.applyPromotionCode("SAVE25")
-            XCTFail("Expected CheckoutError.sessionNotLoaded")
+            XCTFail("Expected CheckoutError.sessionNotOpen")
         } catch let error as CheckoutError {
-            guard case .sessionNotLoaded = error else {
-                XCTFail("Expected .sessionNotLoaded, got \(error)")
+            guard case .sessionNotOpen = error else {
+                XCTFail("Expected .sessionNotOpen, got \(error)")
                 return
             }
         }
     }
 
     func testRemovePromotionCodeRequiresOpenSession() async throws {
-        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
-        XCTAssertNil(checkout.session)
+        let checkout = makeCheckoutWithClosedSession()
 
         do {
             try await checkout.removePromotionCode()
-            XCTFail("Expected CheckoutError.sessionNotLoaded")
+            XCTFail("Expected CheckoutError.sessionNotOpen")
         } catch let error as CheckoutError {
-            guard case .sessionNotLoaded = error else {
-                XCTFail("Expected .sessionNotLoaded, got \(error)")
+            guard case .sessionNotOpen = error else {
+                XCTFail("Expected .sessionNotOpen, got \(error)")
                 return
             }
         }
     }
 
     func testUpdateQuantityRequiresOpenSession() async throws {
-        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
-        XCTAssertNil(checkout.session)
+        let checkout = makeCheckoutWithClosedSession()
 
         do {
             try await checkout.updateQuantity(with: .init(lineItemId: "li_123", quantity: 2))
-            XCTFail("Expected CheckoutError.sessionNotLoaded")
+            XCTFail("Expected CheckoutError.sessionNotOpen")
         } catch let error as CheckoutError {
-            guard case .sessionNotLoaded = error else {
-                XCTFail("Expected .sessionNotLoaded, got \(error)")
+            guard case .sessionNotOpen = error else {
+                XCTFail("Expected .sessionNotOpen, got \(error)")
                 return
             }
         }
     }
 
     func testSelectShippingOptionRequiresOpenSession() async throws {
-        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
-        XCTAssertNil(checkout.session)
+        let checkout = makeCheckoutWithClosedSession()
 
         do {
             try await checkout.selectShippingOption("shr_123")
-            XCTFail("Expected CheckoutError.sessionNotLoaded")
+            XCTFail("Expected CheckoutError.sessionNotOpen")
         } catch let error as CheckoutError {
-            guard case .sessionNotLoaded = error else {
-                XCTFail("Expected .sessionNotLoaded, got \(error)")
+            guard case .sessionNotOpen = error else {
+                XCTFail("Expected .sessionNotOpen, got \(error)")
                 return
             }
         }
     }
 
     func testUpdateBillingAddressRequiresOpenSession() async throws {
-        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
-        XCTAssertNil(checkout.session)
+        let checkout = makeCheckoutWithClosedSession()
 
         do {
             try await checkout.updateBillingAddress(
                 .init(name: "Jane Doe", address: .init(country: "US"))
             )
-            XCTFail("Expected CheckoutError.sessionNotLoaded")
+            XCTFail("Expected CheckoutError.sessionNotOpen")
         } catch let error as CheckoutError {
-            guard case .sessionNotLoaded = error else {
-                XCTFail("Expected .sessionNotLoaded, got \(error)")
+            guard case .sessionNotOpen = error else {
+                XCTFail("Expected .sessionNotOpen, got \(error)")
                 return
             }
         }
     }
 
     func testUpdateShippingAddressRequiresOpenSession() async throws {
-        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
-        XCTAssertNil(checkout.session)
+        let checkout = makeCheckoutWithClosedSession()
 
         do {
             try await checkout.updateShippingAddress(
                 .init(name: "Jane Doe", address: .init(country: "US"))
             )
-            XCTFail("Expected CheckoutError.sessionNotLoaded")
+            XCTFail("Expected CheckoutError.sessionNotOpen")
         } catch let error as CheckoutError {
-            guard case .sessionNotLoaded = error else {
-                XCTFail("Expected .sessionNotLoaded, got \(error)")
+            guard case .sessionNotOpen = error else {
+                XCTFail("Expected .sessionNotOpen, got \(error)")
                 return
             }
         }
     }
 
     func testUpdateTaxIdRequiresOpenSession() async throws {
-        let checkout = Checkout(clientSecret: "cs_test_fake_secret_abc")
-        XCTAssertNil(checkout.session)
+        let checkout = makeCheckoutWithClosedSession()
 
         do {
             try await checkout.updateTaxId(with: .init(type: "eu_vat", value: "DE123456789"))
-            XCTFail("Expected CheckoutError.sessionNotLoaded")
+            XCTFail("Expected CheckoutError.sessionNotOpen")
         } catch let error as CheckoutError {
-            guard case .sessionNotLoaded = error else {
-                XCTFail("Expected .sessionNotLoaded, got \(error)")
+            guard case .sessionNotOpen = error else {
+                XCTFail("Expected .sessionNotOpen, got \(error)")
                 return
             }
         }
@@ -157,10 +157,10 @@ final class CheckoutUnitTests: XCTestCase {
         )
         try await checkout.updateBillingAddress(update)
 
-        let stored = checkout.session?.billingAddress
+        let stored = checkout.state.session.billingAddress
         XCTAssertEqual(stored?.name, "Jane Doe")
         XCTAssertEqual(stored?.address.country, "US")
-        XCTAssertTrue(delegate.didUpdateCalled)
+        XCTAssertTrue(delegate.didChangeStateCalled)
     }
 
     func testUpdateShippingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
@@ -174,32 +174,13 @@ final class CheckoutUnitTests: XCTestCase {
         )
         try await checkout.updateShippingAddress(update)
 
-        let stored = checkout.session?.shippingAddress
+        let stored = checkout.state.session.shippingAddress
         XCTAssertEqual(stored?.name, "John Smith")
         XCTAssertEqual(stored?.address.country, "US")
-        XCTAssertTrue(delegate.didUpdateCalled)
+        XCTAssertTrue(delegate.didChangeStateCalled)
     }
 
     // MARK: - Sheet Presented Guard Tests
-
-    func testLoadThrowsWhenSheetPresented() async {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        integrationDelegate.isSheetPresented = true
-        checkout.integrationDelegate = integrationDelegate
-
-        do {
-            try await checkout.load()
-            XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
-        } catch let error as CheckoutError {
-            guard case .sheetCurrentlyPresented = error else {
-                XCTFail("Expected .sheetCurrentlyPresented, got \(error)")
-                return
-            }
-        } catch {
-            XCTFail("Unexpected error type: \(error)")
-        }
-    }
 
     func testRequireOpenSessionThrowsWhenSheetPresented() async {
         let checkout = makeCheckoutWithOpenSession()
@@ -390,13 +371,13 @@ final class CheckoutUnitTests: XCTestCase {
         let confirmResponse = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
 
         // Invoke the onConfirmed closure as the confirm call sites do
-        let stpSession = checkout.session as! STPCheckoutSession
+        let stpSession = checkout.state.session as! STPCheckoutSession
         stpSession.onConfirmed?(confirmResponse)
 
         // Verify session was updated with the confirm response data
-        XCTAssertEqual(checkout.session?.status, .complete)
-        XCTAssertEqual(checkout.session?.paymentStatus, .paid)
-        XCTAssertTrue(delegate.didUpdateCalled)
+        XCTAssertEqual(checkout.state.session.status, .complete)
+        XCTAssertEqual(checkout.state.session.paymentStatus, .paid)
+        XCTAssertTrue(delegate.didChangeStateCalled)
     }
 
     func testOnConfirmedCarriesOverAddressOverrides() {
@@ -407,7 +388,7 @@ final class CheckoutUnitTests: XCTestCase {
             name: "Jane Doe",
             address: .init(country: "US")
         )
-        (checkout.session as! STPCheckoutSession).billingAddressOverride = billingUpdate
+        (checkout.state.session as! STPCheckoutSession).billingAddressOverride = billingUpdate
 
         // Simulate a confirm response
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
@@ -415,12 +396,12 @@ final class CheckoutUnitTests: XCTestCase {
         updatedJSON["payment_status"] = "paid"
         let confirmResponse = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
 
-        let stpSession = checkout.session as! STPCheckoutSession
+        let stpSession = checkout.state.session as! STPCheckoutSession
         stpSession.onConfirmed?(confirmResponse)
 
         // Address overrides should be carried over to the new session
-        XCTAssertEqual(checkout.session?.billingAddress?.name, "Jane Doe")
-        XCTAssertEqual(checkout.session?.billingAddress?.address.country, "US")
+        XCTAssertEqual(checkout.state.session.billingAddress?.name, "Jane Doe")
+        XCTAssertEqual(checkout.state.session.billingAddress?.address.country, "US")
     }
 
     func testOnConfirmedSetsNewClosureOnUpdatedSession() {
@@ -434,22 +415,38 @@ final class CheckoutUnitTests: XCTestCase {
         firstResponse["payment_status"] = "paid"
         let firstConfirm = STPCheckoutSession.decodedObject(fromAPIResponse: firstResponse)!
 
-        (checkout.session as! STPCheckoutSession).onConfirmed?(firstConfirm)
-        XCTAssertEqual(checkout.session?.status, .complete)
+        (checkout.state.session as! STPCheckoutSession).onConfirmed?(firstConfirm)
+        XCTAssertEqual(checkout.state.session.status, .complete)
 
         // The new session should also have onConfirmed set,
         // so a second invocation still works
-        let secondSession = checkout.session as! STPCheckoutSession
+        let secondSession = checkout.state.session as! STPCheckoutSession
         XCTAssertNotNil(secondSession.onConfirmed)
+    }
+
+    // MARK: - State Convenience Tests
+
+    func testStateSessionAlwaysReturnsSession() {
+        let checkout = makeCheckoutWithOpenSession()
+        XCTAssertNotNil(checkout.state.session)
+        XCTAssertEqual(checkout.state.session.status, .open)
+    }
+
+    func testStateIsLoadingReturnsFalseForLoaded() {
+        let checkout = makeCheckoutWithOpenSession()
+        XCTAssertFalse(checkout.state.isLoading)
     }
 
     // MARK: - Helpers
 
     private func makeCheckoutWithOpenSession() -> Checkout {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc")
         let session = CheckoutTestHelpers.makeOpenSession()
-        checkout.updateSession(session)
-        return checkout
+        return Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+    }
+
+    private func makeCheckoutWithClosedSession() -> Checkout {
+        let session = CheckoutTestHelpers.makeClosedSession()
+        return Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
     }
 }
 
@@ -457,12 +454,12 @@ final class CheckoutUnitTests: XCTestCase {
 
 @MainActor
 private class MockCheckoutDelegate: CheckoutDelegate {
-    var didUpdateCalled = false
-    var lastSession: Checkout.Session?
+    var didChangeStateCalled = false
+    var lastState: Checkout.State?
 
-    func checkout(_ checkout: Checkout, didUpdate session: Checkout.Session) {
-        didUpdateCalled = true
-        lastSession = session
+    func checkout(_ checkout: Checkout, didChangeState state: Checkout.State) {
+        didChangeStateCalled = true
+        lastState = state
     }
 }
 

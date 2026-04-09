@@ -47,6 +47,10 @@ extension Checkout.CurrencySelectorView {
         /// Default: `.secondaryLabel`
         public var captionColor: UIColor = .secondaryLabel
 
+        /// Color for error messages displayed below the selector.
+        /// Default: `.systemRed`
+        public var dangerColor: UIColor = .systemRed
+
         /// Creates an appearance with default values.
         public init() {}
 
@@ -60,6 +64,7 @@ extension Checkout.CurrencySelectorView {
             ps.colors.componentText = selectedTextColor
             ps.colors.textSecondary = unselectedTextColor
             ps.colors.componentBorder = borderColor
+            ps.colors.danger = dangerColor
             ps.font.base = titleFont
             return ps
         }

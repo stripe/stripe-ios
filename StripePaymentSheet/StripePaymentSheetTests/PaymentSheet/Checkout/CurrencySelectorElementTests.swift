@@ -185,7 +185,8 @@ final class CurrencySelectorElementTests: XCTestCase {
                 sellCurrency: "usd",
                 exchangeRate: "1.0"
             ),
-            appearance: .default
+            appearance: .default,
+            analyticsHelper: ._testValue()
         )
     }
 

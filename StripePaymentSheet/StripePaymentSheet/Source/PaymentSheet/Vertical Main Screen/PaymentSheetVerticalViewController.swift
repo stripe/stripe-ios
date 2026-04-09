@@ -185,7 +185,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.currencySelectorElement = CurrencySelectorElement.makeIfNeeded(
             intent: intent,
             isFlowController: isFlowController,
-            appearance: configuration.appearance
+            appearance: configuration.appearance,
+            analyticsHelper: analyticsHelper
         )
         self.currencySelectorElement?.delegate = self
 

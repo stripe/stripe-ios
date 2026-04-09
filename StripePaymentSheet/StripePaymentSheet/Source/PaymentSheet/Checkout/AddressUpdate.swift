@@ -11,7 +11,7 @@ import Foundation
 @_spi(CheckoutSessionsPreview)
 extension Checkout {
     /// Parameters for ``updateBillingAddress(_:)`` and ``updateShippingAddress(_:)``.
-    public struct AddressUpdate {
+    public struct AddressUpdate: Equatable {
         /// The customer's full name.
         public let name: String?
 

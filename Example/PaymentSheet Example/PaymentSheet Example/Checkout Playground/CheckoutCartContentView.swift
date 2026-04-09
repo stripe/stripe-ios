@@ -21,30 +21,27 @@ struct CheckoutCartContentView: View {
     @State private var shippingAddressDetails: AddressElement.AddressDetails?
     @State private var billingAddressDetails: AddressElement.AddressDetails?
 
-    @ViewBuilder
     var body: some View {
-        if checkout.session != nil {
-            ScrollView {
-                VStack(spacing: 24) {
-                    if let error = errorMessage {
-                        Text(error)
-                            .foregroundColor(.white)
-                            .padding()
-                            .background(Color.red.opacity(0.8).cornerRadius(10))
-                            .padding(.horizontal)
-                    }
-
-                    lineItemsSection
-                    shippingOptionsSection
-                    shippingAddressSection
-                    billingAddressSection
-                    promotionCodeSection
-                    orderSummarySection
-
-                    Spacer().frame(height: 100)
+        ScrollView {
+            VStack(spacing: 24) {
+                if let error = errorMessage {
+                    Text(error)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.red.opacity(0.8).cornerRadius(10))
+                        .padding(.horizontal)
                 }
-                .padding(.top, 20)
+
+                lineItemsSection
+                shippingOptionsSection
+                shippingAddressSection
+                billingAddressSection
+                promotionCodeSection
+                orderSummarySection
+
+                Spacer().frame(height: 100)
             }
+            .padding(.top, 20)
         }
     }
 
@@ -57,7 +54,7 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            let items = checkout.session?.lineItems ?? []
+            let items = checkout.state.session.lineItems ?? []
             if items.isEmpty {
                 Text("No items")
                     .foregroundColor(.secondary)
@@ -137,13 +134,13 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            let options = checkout.session?.shippingOptions ?? []
+            let options = checkout.state.session.shippingOptions ?? []
             if options.isEmpty {
                 Text("No shipping options available")
                     .foregroundColor(.secondary)
                     .padding(.horizontal)
             } else {
-                let selectedId = checkout.session?.selectedShippingOption?.id ?? ""
+                let selectedId = checkout.state.session.selectedShippingOption?.id ?? ""
                 VStack(spacing: 0) {
                     ForEach(options) { option in
                         Button(action: {
@@ -194,7 +191,7 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            if let override = checkout.session?.shippingAddress {
+            if let override = checkout.state.session.shippingAddress {
                 addressCard(
                     name: override.name,
                     address: override.address,
@@ -209,7 +206,7 @@ struct CheckoutCartContentView: View {
                 address: shippingAddressBinding,
                 configuration: makeAddressConfiguration(
                     title: "Shipping Address",
-                    override: checkout.session?.shippingAddress
+                    override: checkout.state.session.shippingAddress
                 )
             )
         }
@@ -222,7 +219,7 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            if let override = checkout.session?.billingAddress {
+            if let override = checkout.state.session.billingAddress {
                 addressCard(
                     name: override.name,
                     address: override.address,
@@ -237,7 +234,7 @@ struct CheckoutCartContentView: View {
                 address: billingAddressBinding,
                 configuration: makeAddressConfiguration(
                     title: "Billing Address",
-                    override: checkout.session?.billingAddress
+                    override: checkout.state.session.billingAddress
                 )
             )
         }
@@ -350,7 +347,7 @@ struct CheckoutCartContentView: View {
                 .padding(.horizontal)
 
             VStack {
-                if let appliedCode = checkout.session?.appliedPromotionCode {
+                if let appliedCode = checkout.state.session.appliedPromotionCode {
                     HStack {
                         Image(systemName: "tag.fill")
                             .foregroundColor(.green)
@@ -419,8 +416,8 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var orderSummarySection: some View {
-        if let totals = checkout.session?.totals {
-            let currency = checkout.session?.currency
+        if let totals = checkout.state.session.totals {
+            let currency = checkout.state.session.currency
             VStack(alignment: .leading, spacing: 16) {
                 Text("Order Summary")
                     .font(.title2).bold()
