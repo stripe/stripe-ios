@@ -15,7 +15,7 @@ final class AdaptivePricingSelectorElementTests: XCTestCase {
     func testCurrentCurrencyMissingFromMetas() {
         let element = makeAdaptivePricingSelectorElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "eur", total: 1100),
                 localizedPriceMeta(currency: "gbp", total: 1000),
@@ -32,7 +32,7 @@ final class AdaptivePricingSelectorElementTests: XCTestCase {
         let delegate = MockElementDelegate()
         let element = makeAdaptivePricingSelectorElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "usd", total: 1200),
                 localizedPriceMeta(currency: "eur", total: 1100),
@@ -54,7 +54,7 @@ final class AdaptivePricingSelectorElementTests: XCTestCase {
         let delegate = MockElementDelegate()
         let element = makeAdaptivePricingSelectorElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "usd", total: 1200),
                 localizedPriceMeta(currency: "eur", total: 1100),
@@ -73,7 +73,7 @@ final class AdaptivePricingSelectorElementTests: XCTestCase {
     func testShowsExchangeRateWhenLocalizedCurrencySelected() throws {
         let element = makeAdaptivePricingSelectorElement(
             currentCurrency: "gbp",
-            currentTotal: 1000,
+
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "usd", total: 1200),
                 localizedPriceMeta(currency: "gbp", total: 1000),
@@ -93,7 +93,7 @@ final class AdaptivePricingSelectorElementTests: XCTestCase {
     func testShowsBankDisclaimerWhenIntegrationCurrencySelected() throws {
         let element = makeAdaptivePricingSelectorElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "usd", total: 1200),
                 localizedPriceMeta(currency: "gbp", total: 1000),
@@ -113,7 +113,7 @@ final class AdaptivePricingSelectorElementTests: XCTestCase {
     func testCaptionSwitchesWhenSelectionChanges() throws {
         let element = makeAdaptivePricingSelectorElement(
             currentCurrency: "gbp",
-            currentTotal: 1000,
+
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "usd", total: 1200),
                 localizedPriceMeta(currency: "gbp", total: 1000),
@@ -147,7 +147,7 @@ final class AdaptivePricingSelectorElementTests: XCTestCase {
         // Create with currentCurrency = gbp (local currency selected)
         let elementA = makeAdaptivePricingSelectorElement(
             currentCurrency: "gbp",
-            currentTotal: 1000,
+
             localizedPricesMetas: metas,
             exchangeRateMeta: meta
         )
@@ -155,7 +155,7 @@ final class AdaptivePricingSelectorElementTests: XCTestCase {
         // Create with currentCurrency = usd (integration currency selected, e.g. after reload)
         let elementB = makeAdaptivePricingSelectorElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             localizedPricesMetas: metas,
             exchangeRateMeta: meta
         )
@@ -172,13 +172,11 @@ final class AdaptivePricingSelectorElementTests: XCTestCase {
 
     private func makeAdaptivePricingSelectorElement(
         currentCurrency: String,
-        currentTotal: Int,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta? = nil
     ) -> AdaptivePricingSelectorElement {
         AdaptivePricingSelectorElement(
             currentCurrency: currentCurrency,
-            currentTotal: currentTotal,
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta ?? self.exchangeRateMeta(
                 buyCurrency: localizedPricesMetas.first?.currency ?? "eur",

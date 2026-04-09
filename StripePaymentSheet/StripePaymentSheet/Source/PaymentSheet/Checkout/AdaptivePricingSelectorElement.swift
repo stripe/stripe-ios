@@ -40,7 +40,6 @@ final class AdaptivePricingSelectorElement: Element {
 
     init(
         currentCurrency: String,
-        currentTotal: Int,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
         appearance: PaymentSheet.Appearance,
@@ -76,11 +75,10 @@ final class AdaptivePricingSelectorElement: Element {
         guard session.adaptivePricingActive else { return nil }
         guard !session.localizedPricesMetas.isEmpty else { return nil }
         guard let exchangeRateMeta = session.exchangeRateMeta else { return nil }
-        guard let currency = session.currency, let total = session.totals?.total else { return nil }
+        guard let currency = session.currency else { return nil }
 
         return AdaptivePricingSelectorElement(
             currentCurrency: currency,
-            currentTotal: total,
             localizedPricesMetas: session.localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
             appearance: appearance,

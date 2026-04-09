@@ -17,7 +17,7 @@ final class AdaptivePricingSelectorElementSnapshotTests: STPSnapshotTestCase {
     func testFirstCurrencySelected() {
         let element = makeElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             metas: [meta(currency: "usd", total: 1200), meta(currency: "gbp", total: 950)]
         )
         verify(element)
@@ -26,7 +26,7 @@ final class AdaptivePricingSelectorElementSnapshotTests: STPSnapshotTestCase {
     func testWithExchangeRate() {
         let element = makeElement(
             currentCurrency: "gbp",
-            currentTotal: 950,
+
             metas: [meta(currency: "usd", total: 1200), meta(currency: "gbp", total: 950)],
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta(
                 id: "usd_to_gbp",
@@ -44,7 +44,7 @@ final class AdaptivePricingSelectorElementSnapshotTests: STPSnapshotTestCase {
     func testBankExchangeRateDisclaimer() {
         let element = makeElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             metas: [meta(currency: "usd", total: 1200), meta(currency: "gbp", total: 950)],
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta(
                 id: "usd_to_gbp",
@@ -62,7 +62,7 @@ final class AdaptivePricingSelectorElementSnapshotTests: STPSnapshotTestCase {
     func testDisabled() {
         let element = makeElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             metas: [meta(currency: "usd", total: 1200), meta(currency: "eur", total: 1100)]
         )
         element.setEnabled(false)
@@ -72,7 +72,7 @@ final class AdaptivePricingSelectorElementSnapshotTests: STPSnapshotTestCase {
     func testDarkMode() {
         let element = makeElement(
             currentCurrency: "gbp",
-            currentTotal: 950,
+
             metas: [meta(currency: "usd", total: 1200), meta(currency: "gbp", total: 950)],
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta(
                 id: "usd_to_gbp",
@@ -91,7 +91,7 @@ final class AdaptivePricingSelectorElementSnapshotTests: STPSnapshotTestCase {
         appearance = ._testMSPaintTheme
         let element = makeElement(
             currentCurrency: "eur",
-            currentTotal: 1100,
+
             metas: [meta(currency: "usd", total: 1200), meta(currency: "eur", total: 1100)],
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta(
                 id: "usd_to_eur",
@@ -115,13 +115,11 @@ private extension AdaptivePricingSelectorElementSnapshotTests {
 
     func makeElement(
         currentCurrency: String,
-        currentTotal: Int,
         metas: [STPCheckoutSessionLocalizedPriceMeta],
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta? = nil
     ) -> AdaptivePricingSelectorElement {
         AdaptivePricingSelectorElement(
             currentCurrency: currentCurrency,
-            currentTotal: currentTotal,
             localizedPricesMetas: metas,
             exchangeRateMeta: exchangeRateMeta ?? STPCheckoutSessionExchangeRateMeta(
                 id: "default",
