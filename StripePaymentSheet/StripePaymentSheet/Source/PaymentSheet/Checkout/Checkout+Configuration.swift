@@ -2,6 +2,8 @@
 //  Checkout+Configuration.swift
 //  StripePaymentSheet
 //
+//  Created by Nick Porter on 4/9/26.
+//
 
 import Foundation
 
