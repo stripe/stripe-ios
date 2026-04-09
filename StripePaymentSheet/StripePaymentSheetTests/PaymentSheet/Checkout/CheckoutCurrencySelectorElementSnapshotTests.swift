@@ -77,20 +77,11 @@ final class CheckoutCurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
         line: UInt = #line
     ) {
         let vc = UIHostingController(rootView: swiftUIView)
-
-        // Use a tall window so SwiftUI has room to lay out, then size to fit content
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
         window.overrideUserInterfaceStyle = darkMode ? .dark : .light
         window.rootViewController = vc
         window.makeKeyAndVisible()
-
-        // Force Combine delivery and layout
-        RunLoop.main.run(until: Date())
-        vc.view.setNeedsLayout()
-        vc.view.layoutIfNeeded()
-
         vc.view.frame = CGRect(origin: .zero, size: CGSize(width: 320, height: 57))
-        vc.view.layoutIfNeeded()
 
         STPSnapshotVerifyView(vc.view, file: file, line: line)
     }
