@@ -49,11 +49,18 @@ extension Checkout {
         public var body: some View {
             // Remove the view from SwiftUI layout entirely when AP is unavailable.
             // The UIView hides itself internally, but a hidden UIViewRepresentable
-            // can still occupy space so this guard ensures zero layout footprint.
-            if InternalCurrencySelector.adaptivePricingData(from: checkout.state.session) != nil {
+            // can still occupy space so this check ensures zero layout footprint.
+            if isAdaptivePricingAvailable {
                 CurrencySelectorViewRepresentable(checkout: checkout, appearance: appearance)
                     .fixedSize(horizontal: false, vertical: true)
             }
+        }
+
+        private var isAdaptivePricingAvailable: Bool {
+            guard InternalCurrencySelector.adaptivePricingData(from: checkout.state.session) != nil else {
+                return false
+            }
+            return true
         }
     }
 }
