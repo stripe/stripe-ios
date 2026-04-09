@@ -662,18 +662,16 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
             applePayCompletionContinuation?.resume(returning: .success)
         case .userCancellation:
             selectedPaymentSource = applePayPreviousPaymentSource
-            applePayPreviousPaymentSource = nil
             applePayCompletionContinuation?.resume(returning: .canceled)
         case .error:
             selectedPaymentSource = applePayPreviousPaymentSource
-            applePayPreviousPaymentSource = nil
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         @unknown default:
             selectedPaymentSource = applePayPreviousPaymentSource
-            applePayPreviousPaymentSource = nil
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         }
 
+        applePayPreviousPaymentSource = nil
         applePayCompletionContinuation = nil
     }
 }
