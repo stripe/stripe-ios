@@ -132,7 +132,8 @@ private extension AdaptivePricingSelectorElementSnapshotTests {
                 localizedCurrency: metas.first?.currency ?? "eur",
                 conversionMarkupBps: 400
             ),
-            appearance: appearance
+            appearance: appearance,
+            analyticsHelper: ._testValue()
         )
     }
 

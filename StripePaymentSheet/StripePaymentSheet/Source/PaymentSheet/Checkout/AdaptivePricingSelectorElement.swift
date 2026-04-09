@@ -43,7 +43,8 @@ final class AdaptivePricingSelectorElement: Element {
         currentTotal: Int,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
-        appearance: PaymentSheet.Appearance
+        appearance: PaymentSheet.Appearance,
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.exchangeRateMeta = exchangeRateMeta
         let currency = CurrencyCode(currentCurrency)
@@ -59,6 +60,7 @@ final class AdaptivePricingSelectorElement: Element {
             appearance: appearance
         )
         selectorElement.delegate = self
+        analyticsHelper.logAdaptivePricingCurrencySelectorInit(isStandaloneElement: false)
     }
 
     // MARK: - Factory
@@ -66,7 +68,8 @@ final class AdaptivePricingSelectorElement: Element {
     static func makeIfNeeded(
         intent: Intent,
         isFlowController: Bool,
-        appearance: PaymentSheet.Appearance
+        appearance: PaymentSheet.Appearance,
+        analyticsHelper: PaymentSheetAnalyticsHelper
     ) -> AdaptivePricingSelectorElement? {
         guard !isFlowController else { return nil }
         guard case .checkoutSession(let session) = intent else { return nil }
@@ -80,7 +83,8 @@ final class AdaptivePricingSelectorElement: Element {
             currentTotal: total,
             localizedPricesMetas: session.localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
-            appearance: appearance
+            appearance: appearance,
+            analyticsHelper: analyticsHelper
         )
     }
 

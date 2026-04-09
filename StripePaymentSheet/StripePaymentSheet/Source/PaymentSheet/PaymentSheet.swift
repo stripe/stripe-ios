@@ -452,9 +452,11 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         Task { @MainActor in
             do {
                 try await checkout.selectCurrency(currency)
+                self.analyticsHelper.logAdaptivePricingCurrencyToggled()
                 guard let stpSession = checkout.state.session as? STPCheckoutSession else { return }
                 await self.performReload(mode: .checkoutSession(stpSession))
             } catch {
+                self.analyticsHelper.logAdaptivePricingCurrencyToggledFailed(error: error)
                 paymentSheetViewController.setReloading(false)
                 paymentSheetViewController.setReloadError(error)
             }
