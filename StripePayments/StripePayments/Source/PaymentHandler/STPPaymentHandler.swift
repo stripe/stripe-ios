@@ -1972,26 +1972,14 @@ public class STPPaymentHandler: NSObject {
                     intentType: intentType,
                     apiClient: apiClient,
                     stripeJs: stripeJs
-                ) { [weak self] result in
+                ) { [weak self] _ in
                     guard let self = self else { return }
 
                     // Dismiss the challenge view
                     presentingVC.dismiss(animated: true) {
-                        switch result {
-                        case .success:
-                            // The web page handled the next action via Stripe.js
-                            // Now retrieve the updated intent to check its status
-                            self._retrieveAndCheckIntentForCurrentAction()
-
-                        case .failure(let error):
-                            // Handle user cancellation separately - don't show error message
-                            if case ChallengeError.userCanceled = error {
-                                // We don't forward cancelation errors
-                                currentAction.complete(with: .canceled, error: nil)
-                            } else {
-                                currentAction.complete(with: .failed, error: error as NSError)
-                            }
-                        }
+                        // The web page handled the next action via Stripe.js
+                        // Now retrieve the updated intent to check its status
+                        self._retrieveAndCheckIntentForCurrentAction()
                     }
                 }
 

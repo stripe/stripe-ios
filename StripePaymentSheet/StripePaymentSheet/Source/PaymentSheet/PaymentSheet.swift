@@ -105,11 +105,11 @@ public class PaymentSheet {
     }
 
     /// Initializes PaymentSheet with a Checkout object
-    /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
+    /// - Parameter checkout: A loaded Checkout instance.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     @MainActor @_spi(CheckoutSessionsPreview) public convenience init(checkout: Checkout, configuration: Configuration) {
-        guard let stpSession = checkout.session as? STPCheckoutSession else {
-            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.session))")
+        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
         }
         var config = configuration
         stpSession.applyAddressOverrides(to: &config)
@@ -162,7 +162,7 @@ public class PaymentSheet {
                 completion(.failed(error: error))
                 return
             }
-            if let checkout, checkout.isPerformingSessionUpdate {
+            if let checkout, checkout.state.isLoading {
                 let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.present(from:completion:)."
                 assertionFailure(message)
                 completion(.failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message)))
@@ -177,8 +177,8 @@ public class PaymentSheet {
                 integrationShape: .paymentSheet
             ) { result in
                 switch result {
-                case .success(let loadResult):
-                    self.confirmationChallenge = ConfirmationChallenge(enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
+                case .success(let (loadResult, confirmationChallenge)):
+                    self.confirmationChallenge = confirmationChallenge
                     let presentPaymentSheet: () -> Void = {
                         let paymentSheetVC = self.makePaymentSheetVC(
                             loadResult: loadResult,
@@ -333,19 +333,14 @@ public class PaymentSheet {
         currentVC.setReloading(true)
 
         do {
-            let loadResult = try await PaymentSheetLoader.load(
+            let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
                 mode: mode,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .paymentSheet,
                 isUpdate: true
             )
-            // Re-create with the new elementsSession, which may have different captcha/attestation data.
-            self.confirmationChallenge = ConfirmationChallenge(
-                enableAttestation: configuration.enableAttestationOnConfirmation,
-                elementsSession: loadResult.elementsSession,
-                stripeAttest: configuration.apiClient.stripeAttest
-            )
+            self.confirmationChallenge = confirmationChallenge
             let newVC = makePaymentSheetVC(
                 loadResult: loadResult,
                 previousPaymentOption: currentVC.selectedPaymentOption,
@@ -457,9 +452,11 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         Task { @MainActor in
             do {
                 try await checkout.selectCurrency(currency)
-                guard let stpSession = checkout.session as? STPCheckoutSession else { return }
+                self.analyticsHelper.logAdaptivePricingCurrencyToggled()
+                guard let stpSession = checkout.state.session as? STPCheckoutSession else { return }
                 await self.performReload(mode: .checkoutSession(stpSession))
             } catch {
+                self.analyticsHelper.logAdaptivePricingCurrencyToggledFailed(error: error)
                 paymentSheetViewController.setReloading(false)
                 paymentSheetViewController.setReloadError(error)
             }

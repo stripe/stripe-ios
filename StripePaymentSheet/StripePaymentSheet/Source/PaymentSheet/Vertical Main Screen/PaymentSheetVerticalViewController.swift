@@ -113,7 +113,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
-    var confirmationChallenge: ConfirmationChallenge?
     private var currencySelectorElement: CurrencySelectorElement?
 
     // MARK: - UI properties
@@ -186,7 +185,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.currencySelectorElement = CurrencySelectorElement.makeIfNeeded(
             intent: intent,
             isFlowController: isFlowController,
-            appearance: configuration.appearance
+            appearance: configuration.appearance,
+            analyticsHelper: analyticsHelper
         )
         self.currencySelectorElement?.delegate = self
 
@@ -594,7 +594,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            confirmationChallenge: confirmationChallenge,
             callback: { [weak self] confirmOption, _ in
                 guard let self else { return }
                 self.linkConfirmOption = confirmOption

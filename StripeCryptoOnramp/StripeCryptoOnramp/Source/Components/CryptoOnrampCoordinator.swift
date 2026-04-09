@@ -656,10 +656,13 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
         case .success:
             applePayCompletionContinuation?.resume(returning: .success)
         case .userCancellation:
+            selectedPaymentSource = nil
             applePayCompletionContinuation?.resume(returning: .canceled)
         case .error:
+            selectedPaymentSource = nil
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         @unknown default:
+            selectedPaymentSource = nil
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         }
 

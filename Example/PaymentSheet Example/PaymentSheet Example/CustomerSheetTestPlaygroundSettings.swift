@@ -82,6 +82,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
 
         case US
         case FR
+        case custom
     }
     enum PreferredNetworksEnabled: String, PickerEnum {
         static let enumName: String = "Preferred Networks (CBC)"
@@ -193,6 +194,10 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var cardBrandAcceptance: CardBrandAcceptance
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
 
+    // For testing purposes only; keys should typically not be defined on the client
+    var customSecretKey: String?
+    var customPublishableKey: String?
+
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
                                                    customerId: nil,
@@ -216,7 +221,9 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    paymentMethodAllowRedisplayFilters: .always,
                                                    paymentMethodSyncDefault: .disabled,
                                                    cardBrandAcceptance: .all,
-                                                   opensCardScannerAutomatically: .off)
+                                                   opensCardScannerAutomatically: .off,
+                                                   customSecretKey: nil,
+                                                   customPublishableKey: nil)
     }
 
     var base64Data: String {

@@ -55,7 +55,7 @@ public final class EmbeddedPaymentElement {
         guard let _paymentOption else {
             return nil
         }
-        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText, currency: intent.currency, iconStyle: configuration.appearance.iconStyle)
+        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText, currency: intent.currency, iconStyle: configuration.appearance.iconStyle, cardArtEnabled: configuration.appearance.cardArtEnabled)
     }
 
     /// An asynchronous failable initializer
@@ -74,7 +74,7 @@ public final class EmbeddedPaymentElement {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: configuration)
 
-        let loadResult = try await PaymentSheetLoader.load(
+        let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfiguration),
             configuration: configuration,
             analyticsHelper: analyticsHelper,
@@ -83,6 +83,7 @@ public final class EmbeddedPaymentElement {
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(
             configuration: configuration,
             loadResult: loadResult,
+            confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper
         )
         embeddedPaymentElement.clearPaymentOptionIfNeeded()
@@ -99,11 +100,11 @@ public final class EmbeddedPaymentElement {
         checkout: Checkout,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        guard let stpSession = checkout.session as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
+        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
             throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
         }
-        if checkout.isPerformingSessionUpdate {
+        if checkout.state.isLoading {
             let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.create(checkout:configuration:)."
             assertionFailure(message)
             throw PaymentSheetError.integrationError(nonPIIDebugDescription: message)
@@ -117,7 +118,7 @@ public final class EmbeddedPaymentElement {
         STPAnalyticsClient.sharedClient.addClass(toProductUsageIfNecessary: EmbeddedPaymentElement.self)
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: config)
 
-        let loadResult = try await PaymentSheetLoader.load(
+        let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
             mode: .checkoutSession(stpSession),
             configuration: config,
             analyticsHelper: analyticsHelper,
@@ -126,6 +127,7 @@ public final class EmbeddedPaymentElement {
         let embeddedPaymentElement: EmbeddedPaymentElement = .init(
             configuration: config,
             loadResult: loadResult,
+            confirmationChallenge: confirmationChallenge,
             analyticsHelper: analyticsHelper
         )
         embeddedPaymentElement.clearPaymentOptionIfNeeded()
@@ -164,11 +166,11 @@ public final class EmbeddedPaymentElement {
     @_spi(CheckoutSessionsPreview) public func update(
         checkout: Checkout
     ) async -> UpdateResult {
-        guard let stpSession = checkout.session as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
+        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
             return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
         }
-        if checkout.isPerformingSessionUpdate {
+        if checkout.state.isLoading {
             let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.update(checkout:)."
             assertionFailure(message)
             return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message))
@@ -206,9 +208,10 @@ public final class EmbeddedPaymentElement {
             // ⚠️ Don't modify `self` until after all `awaits` to avoid being canceled halfway through and leaving self in a partially updated state.
             // 1. Reload v1/elements/session.
             let loadResult: PaymentSheetLoader.LoadResult
+            let confirmationChallenge: ConfirmationChallenge
             do {
                 // TODO(https://jira.corp.stripe.com/browse/MOBILESDK-3079): Make `load` respect task cancellation to reduce network consumption
-                loadResult = try await PaymentSheetLoader.load(
+                (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
                     mode: mode,
                     configuration: configuration,
                     analyticsHelper: analyticsHelper,
@@ -225,6 +228,7 @@ public final class EmbeddedPaymentElement {
             // 2. At this point, we're still the latest update and update is successful - update self properties and inform our delegate.
             let previousPaymentOption = self._paymentOption
             self.loadResult = loadResult
+            self.confirmationChallenge = confirmationChallenge
             self.savedPaymentMethods = loadResult.savedPaymentMethods
             self.formCache = .init() // Clear the cache because the form may have changed e.g. different mandate or different fields.
             let isPreviousPaymentOptionStillDisplayed: Bool = {
@@ -433,6 +437,7 @@ public final class EmbeddedPaymentElement {
     internal init(
         configuration: Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
+        confirmationChallenge: ConfirmationChallenge? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper
     ) {
         self.configuration = configuration
@@ -440,6 +445,7 @@ public final class EmbeddedPaymentElement {
         self.savedPaymentMethods = loadResult.savedPaymentMethods
         self.defaultPaymentMethod = loadResult.elementsSession.customer?.getDefaultPaymentMethod()
         self.analyticsHelper = analyticsHelper
+        self.confirmationChallenge = confirmationChallenge
 
         analyticsHelper.logInitialized()
         analyticsHelper.startTimeMeasurement(.checkout)
@@ -448,7 +454,6 @@ public final class EmbeddedPaymentElement {
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
         self.lastUpdatedPaymentOption = paymentOption
-        self.confirmationChallenge = ConfirmationChallenge(enableAttestation: configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: configuration.apiClient.stripeAttest)
     }
 }
 

@@ -756,7 +756,7 @@ import UIKit
             }
         )
 
-        let result = try await PaymentSheetLoader.load(
+        let (result, _) = try await PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfiguration),
             configuration: configuration,
             analyticsHelper: analyticsHelper,
