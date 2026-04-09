@@ -32,6 +32,7 @@ struct CheckoutCartContentView: View {
                         .padding(.horizontal)
                 }
 
+                currencySelectorSection
                 lineItemsSection
                 shippingOptionsSection
                 shippingAddressSection
@@ -415,6 +416,25 @@ struct CheckoutCartContentView: View {
     }
 
     @ViewBuilder
+    private var currencySelectorSection: some View {
+        let appearance: Checkout.CurrencySelectorView.Appearance = {
+            var customAppearance = Checkout.CurrencySelectorView.Appearance()
+            customAppearance.cornerRadius = 12
+            customAppearance.backgroundColor = UIColor.systemBackground
+            customAppearance.selectedColor = UIColor.tintColor
+            customAppearance.selectedTextColor = .white
+            customAppearance.unselectedTextColor = UIColor.secondaryLabel
+            customAppearance.borderColor = UIColor.separator.withAlphaComponent(0.3)
+            customAppearance.captionColor = UIColor.secondaryLabel
+            customAppearance.titleFont = .systemFont(ofSize: 15, weight: .semibold)
+            customAppearance.subtitleFont = .systemFont(ofSize: 11, weight: .regular)
+            return customAppearance
+        }()
+        Checkout.CurrencySelectorElement(checkout: checkout, appearance: appearance)
+            .padding(.horizontal)
+    }
+
+    @ViewBuilder
     private var orderSummarySection: some View {
         if let totals = checkout.state.session.totals {
             let currency = checkout.state.session.currency
@@ -462,9 +482,6 @@ struct CheckoutCartContentView: View {
                     }
 
                     Divider()
-                        .padding(.vertical, 4)
-
-                    Checkout.CurrencySelectorElement(checkout: checkout)
                         .padding(.vertical, 4)
 
                     HStack {
