@@ -51,7 +51,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
     // MARK: - Writable Properties
-    private var currencySelectorElement: CurrencySelectorElement?
+    private var currencySelectorElement: AdaptivePricingSelectorElement?
     weak var delegate: PaymentSheetViewControllerDelegate?
     enum Mode {
         case selectingSaved
@@ -203,7 +203,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.analyticsHelper = analyticsHelper
 
         super.init(nibName: nil, bundle: nil)
-        self.currencySelectorElement = CurrencySelectorElement.makeIfNeeded(
+        self.currencySelectorElement = AdaptivePricingSelectorElement.makeIfNeeded(
             intent: intent,
             isFlowController: false,
             appearance: configuration.appearance

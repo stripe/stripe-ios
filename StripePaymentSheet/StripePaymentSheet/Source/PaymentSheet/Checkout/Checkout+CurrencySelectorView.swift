@@ -11,10 +11,6 @@ import Combine
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// Capture the internal `CurrencySelectorElement` type before the `Checkout`
-/// extension introduces a same-named nested type.
-private typealias InternalCurrencySelector = CurrencySelectorElement
-
 // MARK: - CurrencySelectorView
 
 @_spi(CheckoutSessionsPreview)
@@ -126,13 +122,13 @@ extension Checkout {
         /// on subsequent changes. Hides the view if AP data is unavailable.
         private func handleSessionUpdate() {
             guard let (session, exchangeRateMeta, rawCurrency) =
-                    InternalCurrencySelector.adaptivePricingData(from: checkout.state.session)
+                    AdaptivePricingSelectorElement.adaptivePricingData(from: checkout.state.session)
             else {
                 tearDown()
                 return
             }
 
-            let currency = InternalCurrencySelector.CurrencyCode(rawCurrency)
+            let currency = AdaptivePricingSelectorElement.CurrencyCode(rawCurrency)
 
             clearError()
 
@@ -147,9 +143,9 @@ extension Checkout {
         private func buildSelectorView(
             session: STPCheckoutSession,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
-            currency: InternalCurrencySelector.CurrencyCode
+            currency: AdaptivePricingSelectorElement.CurrencyCode
         ) {
-            let (left, right) = InternalCurrencySelector.buildSelectorItems(
+            let (left, right) = AdaptivePricingSelectorElement.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
                 localizedPricesMetas: session.localizedPricesMetas
             )
@@ -177,10 +173,10 @@ extension Checkout {
         }
 
         private func updateCaption(
-            currency: InternalCurrencySelector.CurrencyCode,
+            currency: AdaptivePricingSelectorElement.CurrencyCode,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
         ) {
-            let caption = InternalCurrencySelector.caption(
+            let caption = AdaptivePricingSelectorElement.caption(
                 forSelectedCurrency: currency.apiValue,
                 exchangeRateMeta: exchangeRateMeta
             )

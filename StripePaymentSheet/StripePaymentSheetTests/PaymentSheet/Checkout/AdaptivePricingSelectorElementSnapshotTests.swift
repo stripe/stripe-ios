@@ -1,5 +1,5 @@
 //
-//  CurrencySelectorElementSnapshotTests.swift
+//  AdaptivePricingSelectorElementSnapshotTests.swift
 //  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 3/20/26.
@@ -11,7 +11,7 @@ import StripeCoreTestUtils
 import UIKit
 // @iOS26
 // ☠️ WARNING: These snapshots do not have capsule corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
-final class CurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
+final class AdaptivePricingSelectorElementSnapshotTests: STPSnapshotTestCase {
     var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
 
     func testFirstCurrencySelected() {
@@ -108,7 +108,7 @@ final class CurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
 
 }
 
-private extension CurrencySelectorElementSnapshotTests {
+private extension AdaptivePricingSelectorElementSnapshotTests {
     func meta(currency: String, total: Int) -> STPCheckoutSessionLocalizedPriceMeta {
         STPCheckoutSessionLocalizedPriceMeta(id: currency, currency: currency, total: total)
     }
@@ -118,8 +118,8 @@ private extension CurrencySelectorElementSnapshotTests {
         currentTotal: Int,
         metas: [STPCheckoutSessionLocalizedPriceMeta],
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta? = nil
-    ) -> CurrencySelectorElement {
-        CurrencySelectorElement(
+    ) -> AdaptivePricingSelectorElement {
+        AdaptivePricingSelectorElement(
             currentCurrency: currentCurrency,
             currentTotal: currentTotal,
             localizedPricesMetas: metas,
@@ -137,7 +137,7 @@ private extension CurrencySelectorElementSnapshotTests {
     }
 
     func verify(
-        _ element: CurrencySelectorElement,
+        _ element: AdaptivePricingSelectorElement,
         darkMode: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line

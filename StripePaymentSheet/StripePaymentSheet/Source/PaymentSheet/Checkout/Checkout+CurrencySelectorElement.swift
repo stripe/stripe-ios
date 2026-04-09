@@ -7,10 +7,6 @@
 
 import SwiftUI
 
-/// Capture the internal `CurrencySelectorElement` type before the `Checkout`
-/// extension introduces a same-named nested type.
-private typealias InternalCurrencySelector = CurrencySelectorElement
-
 // MARK: - CurrencySelectorElement (SwiftUI)
 
 @_spi(CheckoutSessionsPreview)
@@ -57,7 +53,7 @@ extension Checkout {
         }
 
         private var isAdaptivePricingAvailable: Bool {
-            guard InternalCurrencySelector.adaptivePricingData(from: checkout.state.session) != nil else {
+            guard AdaptivePricingSelectorElement.adaptivePricingData(from: checkout.state.session) != nil else {
                 return false
             }
             return true
