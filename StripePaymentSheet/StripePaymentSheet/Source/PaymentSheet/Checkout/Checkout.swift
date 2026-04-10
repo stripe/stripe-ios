@@ -69,7 +69,7 @@ public final class Checkout: ObservableObject {
     ///
     /// - Parameters:
     ///   - clientSecret: The client secret for your Checkout Session (e.g. `cs_xxx_secret_yyy`).
-    ///   - configuration: Configuration options for the checkout. Defaults to ``Configuration/init()``.
+    ///   - configuration: Configuration options for the checkout. Defaults to ``Configuration.init()``.
     ///   - apiClient: The API client to use. Defaults to ``STPAPIClient.shared``.
     /// - Throws: ``CheckoutError`` if the client secret is invalid or the session cannot be loaded.
     public init(
