@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "電話番号の不備";
 
-"Invalid UPI ID" = "UPI ID が無効です";
 
 "Island" = "島しょ";
 
@@ -126,7 +125,6 @@
 
 "Town or city" = "市区町村";
 
-"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "電話番号を解析できません";
 

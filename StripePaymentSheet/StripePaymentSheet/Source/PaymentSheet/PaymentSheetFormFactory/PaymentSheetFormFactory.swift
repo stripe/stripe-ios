@@ -223,8 +223,6 @@ class PaymentSheetFormFactory {
                 return makeCard(linkAppearance: linkAppearance)
             } else if paymentMethod == .USBankAccount {
                 return makeUSBankAccount(merchantName: configuration.merchantDisplayName)
-            } else if paymentMethod == .UPI {
-                return makeUPI()
             } else if paymentMethod == .cashApp && isSettingUp {
                 // special case, display mandate for Cash App when setting up or pi+sfu
                 additionalElements = [makeCashAppMandate()]

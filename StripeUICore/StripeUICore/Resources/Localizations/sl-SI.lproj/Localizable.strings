@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "Nepopolna telefonska številka mobilnega telefona.";
 
-"Invalid UPI ID" = "Neveljaven UPI ID";
 
 "Island" = "Otok";
 
@@ -126,7 +125,6 @@
 
 "Town or city" = "Kraj ali mesto";
 
-"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Telefonske številke ni mogoče razčleniti";
 

@@ -52,8 +52,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     @objc private(set) public var netBanking: STPPaymentMethodNetBanking?
     /// If this is an OXXO PaymentMethod (i.e. `self.type == STPPaymentMethodTypeOXXO`), this contains additional details.
     @objc private(set) public var oxxo: STPPaymentMethodOXXO?
-    /// If this is a UPI PaymentMethod (i.e. `self.type == STPPaymentMethodTypeUPI`), this contains additional details. :nodoc:
-    @objc private(set) public var upi: STPPaymentMethodUPI?
     /// If this is a PayPal PaymentMethod (i.e. `self.type == STPPaymentMethodTypePayPal`), this contains additional details. :nodoc:
     @objc private(set) public var payPal: STPPaymentMethodPayPal?
     /// If this is an AfterpayClearpay PaymentMethod (i.e. `self.type == STPPaymentMethodTypeAfterpayClearpay`), this contains additional details. :nodoc:
@@ -147,7 +145,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
             "payPal = \(String(describing: payPal))",
             "przelewy24 = \(String(describing: przelewy24))",
             "sepaDebit = \(String(describing: sepaDebit))",
-            "upi = \(String(describing: upi))",
+
             "afterpay_clearpay = \(String(describing: afterpayClearpay))",
             "blik = \(String(describing: blik))",
             "weChatPay = \(String(describing: weChatPay))",
@@ -291,9 +289,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         )
         paymentMethod.oxxo = STPPaymentMethodOXXO.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "oxxo")
-        )
-        paymentMethod.upi = STPPaymentMethodUPI.decodedObject(
-            fromAPIResponse: dict.stp_dictionary(forKey: "upi")
         )
         paymentMethod.customerId = dict.stp_string(forKey: "customer")
         paymentMethod.alipay = STPPaymentMethodAlipay.decodedObject(

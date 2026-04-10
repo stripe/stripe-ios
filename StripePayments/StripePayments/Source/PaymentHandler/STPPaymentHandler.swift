@@ -814,7 +814,6 @@ public class STPPaymentHandler: NSObject {
 
         // Synchronous
         case .alipay,
-            .UPI,
             .iDEAL,
             .FPX,
             .cardPresent,
@@ -1389,19 +1388,6 @@ public class STPPaymentHandler: NSObject {
             // The customer must authorize after the microdeposits appear in their bank account
             // which may take 1-2 business days
             currentAction.complete(with: .succeeded, error: nil)
-        case .upiAwaitNotification:
-            // The customer must authorize the transaction in their banking app within 5 minutes
-            if let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext {
-                guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams else {
-                    currentAction.complete(with: .failed, error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Handling upiAwaitNotification next action with SetupIntent is not supported"))
-                    return
-                }
-                // If we are using PaymentSheet, PollingViewController will poll Stripe to determine success and complete the currentAction
-                presentingVC.presentPollingVCForAction(action: currentAction, type: .UPI, safariViewController: nil)
-            } else {
-                // The merchant integration should spin and poll their backend or Stripe to determine success
-                currentAction.complete(with: .succeeded, error: nil)
-            }
         case .cashAppRedirectToApp:
             guard let returnURL = URL(string: currentAction.returnURLString ?? "") else {
                 assertionFailure(missingReturnURLErrorMessage)
@@ -2067,7 +2053,6 @@ public class STPPaymentHandler: NSObject {
                 .konbiniDisplayDetails,
                 .verifyWithMicrodeposits,
                 .BLIKAuthorize,
-                .upiAwaitNotification,
                 .multibancoDisplayDetails:
                 return true
             }
@@ -2093,7 +2078,7 @@ public class STPPaymentHandler: NSObject {
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
-            .upiAwaitNotification, .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode,
+            .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode,
             .promptpayDisplayQrCode, .swishHandleRedirect, .multibancoDisplayDetails:
             break
         }

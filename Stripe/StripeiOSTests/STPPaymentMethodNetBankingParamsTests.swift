@@ -38,7 +38,7 @@ class STPPaymentMethodNetBankingParamsTests: STPNetworkStubbingTestCase {
                 XCTAssertEqual(paymentMethod?.type, .netBanking, "Incorrect PaymentMethod type")
             // Billing Details
             XCTAssertEqual(paymentMethod?.billingDetails!.name, "Jenny Rosen")
-            // UPI Details
+            // NetBanking Details
             XCTAssertNotNil(paymentMethod?.netBanking, "Missing NetBanking")
             XCTAssertEqual(paymentMethod?.netBanking!.bank, "icici")
         }
