@@ -24,7 +24,7 @@ public class STPPaymentMethodPayByBank: NSObject {
         return "<\(props.joined(separator: "; "))>"
     }
 
-    // MARK: - STPAPIResponseDecodeable
+    // MARK: - STPAPIResponseDecodable
     @objc
     /// :nodoc:
     public class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {

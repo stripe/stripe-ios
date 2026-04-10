@@ -19,9 +19,9 @@ class STPPaymentMethodPayByBankTests: XCTestCase {
             withClientSecret: Self.payByBankPaymentIntentClientSecret,
             expand: ["payment_method"]
         ) { paymentIntent, _ in
-            XCTAssertNotNil(paymentIntent?.paymentMethod?.allResponseFields["pay_by_bank"])
-            let payByBankJson = try? XCTUnwrap(paymentIntent?.paymentMethod?.payByBank?.allResponseFields)
-            completion(payByBankJson)
+            let payByBankJson = paymentIntent?.paymentMethod?.payByBank?.allResponseFields
+            XCTAssertNotNil(paymentIntent?.paymentMethod?.payByBank)
+            completion(payByBankJson ?? [:])
         }
     }
 
