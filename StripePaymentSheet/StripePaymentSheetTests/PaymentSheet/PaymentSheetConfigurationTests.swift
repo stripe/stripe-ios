@@ -166,6 +166,17 @@ class PaymentSheetConfigurationTests: XCTestCase {
         XCTAssertNotEqual(config1, config3)  // Different countries should not be equal
     }
 
+    func testSetupMandateText_default() {
+        let configuration = PaymentSheet.Configuration()
+        XCTAssertNil(configuration.setupMandateText)
+    }
+
+    func testSetupMandateText_canBeSet() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.setupMandateText = "By saving, you agree to our terms."
+        XCTAssertEqual(configuration.setupMandateText, "By saving, you agree to our terms.")
+    }
+
     func testBillingDetailsCollectionConfiguration_allowedCountries_mutability() {
         var configuration = PaymentSheet.BillingDetailsCollectionConfiguration()
         XCTAssertTrue(configuration.allowedCountries.isEmpty)

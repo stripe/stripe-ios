@@ -44,6 +44,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
     var resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout? { get }
+    var setupMandateText: String? { get set }
     var opensCardScannerAutomatically: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
     var enableAttestationOnConfirmation: Bool { get }

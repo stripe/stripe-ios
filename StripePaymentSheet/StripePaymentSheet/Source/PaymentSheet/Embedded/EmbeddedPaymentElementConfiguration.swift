@@ -144,6 +144,12 @@ extension EmbeddedPaymentElement {
         /// This is a client-side UX feature only. You must validate the funding type on your server using the confirmation token or radar rules before confirming the payment to ensure only allowed funding types are accepted.
         @_spi(CardFundingFilteringPrivatePreview) public var allowedCardFundingTypes: CardFundingType = .all
 
+        /// Optional custom mandate text to display above the Pay button when in SetupIntent mode.
+        /// When set, this text replaces the default mandate text that would normally be shown.
+        /// Use this to provide a custom agreement or terms that the customer must accept.
+        /// - Note: This only applies when the payment sheet is in SetupIntent mode.
+        public var setupMandateText: String?
+
         /// By default, the card form will provide a button to open the card scanner.
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false

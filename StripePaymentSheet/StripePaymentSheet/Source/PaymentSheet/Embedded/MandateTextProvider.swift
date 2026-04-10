@@ -38,6 +38,12 @@ class VerticalListMandateProvider: MandateTextProvider {
         savedPaymentMethod: STPPaymentMethod?,
         bottomNoticeAttributedString: NSAttributedString? = nil
     ) -> NSAttributedString? {
+        // If the merchant configured custom setup mandate text and we're in SetupIntent mode,
+        // show it above the Pay button regardless of payment method selection.
+        if let customSetupMandateText = configuration.setupMandateText, !intent.isPaymentIntent {
+            return NSAttributedString(string: customSetupMandateText)
+        }
+
         guard let paymentMethodType else { return nil }
         if savedPaymentMethod != nil {
             // 1. For saved PMs, manually build mandates

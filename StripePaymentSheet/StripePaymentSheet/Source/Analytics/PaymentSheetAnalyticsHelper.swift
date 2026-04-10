@@ -590,6 +590,7 @@ extension PaymentElementConfiguration {
         }
         payload["opens_card_scanner_automatically"] = opensCardScannerAutomatically
         payload["terms_display"] = termsDisplay.analyticValue
+        payload["has_setup_mandate_text"] = setupMandateText != nil
 
         return payload
     }
