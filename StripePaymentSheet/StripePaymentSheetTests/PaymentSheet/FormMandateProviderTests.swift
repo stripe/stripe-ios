@@ -174,7 +174,7 @@ class FormMandateProviderTests: XCTestCase {
     func testFormMandateProvider_customSetupMandateText_setupMode_shouldReturnCustomText() {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Test Merchant"
-        configuration.customSetupMandateText = "By setting up this payment method, you agree to Kavholm's terms of service."
+        configuration.customSetupMandateText = "By setting up this payment method, you agree to our terms of service."
 
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intentConfig = PaymentSheet.IntentConfiguration(
@@ -187,13 +187,13 @@ class FormMandateProviderTests: XCTestCase {
         // Card form collects user input, so standard mandate is nil, but custom text should still appear
         let result = formMandateProvider.mandate(for: .stripe(.card), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
         XCTAssertNotNil(result)
-        XCTAssertTrue(result!.string.contains("Kavholm's terms of service"))
+        XCTAssertTrue(result!.string.contains("our terms of service"))
     }
 
     func testFormMandateProvider_customSetupMandateText_paymentMode_shouldNotReturnCustomText() {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Test Merchant"
-        configuration.customSetupMandateText = "By setting up this payment method, you agree to Kavholm's terms of service."
+        configuration.customSetupMandateText = "By setting up this payment method, you agree to our terms of service."
 
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intentConfig = PaymentSheet.IntentConfiguration(
@@ -211,7 +211,7 @@ class FormMandateProviderTests: XCTestCase {
     func testFormMandateProvider_customSetupMandateText_nilPaymentMethodType_setupMode_shouldReturnCustomText() {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Test Merchant"
-        configuration.customSetupMandateText = "Custom mandate for Kavholm."
+        configuration.customSetupMandateText = "Custom mandate text for testing."
 
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intentConfig = PaymentSheet.IntentConfiguration(
@@ -223,13 +223,13 @@ class FormMandateProviderTests: XCTestCase {
 
         let result = formMandateProvider.mandate(for: nil, savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
         XCTAssertNotNil(result)
-        XCTAssertEqual(result?.string, "Custom mandate for Kavholm.")
+        XCTAssertEqual(result?.string, "Custom mandate text for testing.")
     }
 
     func testFormMandateProvider_customSetupMandateText_nilPaymentMethodType_paymentMode_shouldReturnNil() {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Test Merchant"
-        configuration.customSetupMandateText = "Custom mandate for Kavholm."
+        configuration.customSetupMandateText = "Custom mandate text for testing."
 
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intentConfig = PaymentSheet.IntentConfiguration(
@@ -246,7 +246,7 @@ class FormMandateProviderTests: XCTestCase {
     func testFormMandateProvider_customSetupMandateText_combinedWithStandardMandate() {
         var configuration = PaymentSheet.Configuration()
         configuration.merchantDisplayName = "Test Merchant"
-        configuration.customSetupMandateText = "Custom Kavholm mandate."
+        configuration.customSetupMandateText = "Custom example mandate."
 
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
         let intentConfig = PaymentSheet.IntentConfiguration(
@@ -259,7 +259,7 @@ class FormMandateProviderTests: XCTestCase {
         let result = formMandateProvider.mandate(for: .stripe(.cashApp), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
         XCTAssertNotNil(result)
         // The custom text should appear before the standard Cash App mandate
-        XCTAssertTrue(result!.string.hasPrefix("Custom Kavholm mandate."))
+        XCTAssertTrue(result!.string.hasPrefix("Custom example mandate."))
         XCTAssertTrue(result!.string.contains("Cash App"))
     }
 
