@@ -143,6 +143,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private lazy var bottomNoticeTextField: UITextView = {
         return ElementsUI.makeNoticeTextField(theme: configuration.appearance.asElementsTheme)
     }()
+    private lazy var setupMandateView: SimpleMandateTextView = {
+        return SimpleMandateTextView(theme: configuration.appearance.asElementsTheme)
+    }()
 
     private typealias WalletHeaderView = PaymentSheetViewController.WalletHeaderView
     private lazy var walletHeader: WalletHeaderView = {
@@ -240,6 +243,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             walletHeader,
             paymentContainerView,
             errorLabel,
+            setupMandateView,
             confirmButton,
             bottomNoticeTextField,
         ])
@@ -439,8 +443,19 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         case .addingNew:
             self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
         }
+
+        // Show custom setup mandate text above the confirm button when in SetupIntent mode
+        let customMandateText: NSAttributedString?
+        if let setupMandateText = configuration.setupMandateText, !intent.isPaymentIntent {
+            customMandateText = NSAttributedString(string: setupMandateText)
+        } else {
+            customMandateText = nil
+        }
+        self.setupMandateView.attributedText = customMandateText
+
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
+            self.setupMandateView.setHiddenIfNecessary(customMandateText == nil)
         }
     }
 

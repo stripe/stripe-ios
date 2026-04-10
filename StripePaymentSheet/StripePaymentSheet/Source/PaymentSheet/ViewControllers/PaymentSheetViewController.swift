@@ -113,6 +113,9 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private lazy var bottomNoticeTextField: UITextView = {
         return ElementsUI.makeNoticeTextField(theme: configuration.appearance.asElementsTheme)
     }()
+    private lazy var setupMandateView: SimpleMandateTextView = {
+        return SimpleMandateTextView(theme: configuration.appearance.asElementsTheme)
+    }()
     private lazy var buyButton: ConfirmButton = {
         let callToAction: ConfirmButton.CallToActionType = {
             if let customCtaLabel = configuration.primaryButtonLabel {
@@ -229,7 +232,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             arrangedSubviews.append(currencySelectorView)
         }
         arrangedSubviews.append(contentsOf: [
-            headerLabel, walletHeader, paymentContainerView, errorLabel, buyButton, bottomNoticeTextField,
+            headerLabel, walletHeader, paymentContainerView, errorLabel, setupMandateView, buyButton, bottomNoticeTextField,
         ])
         let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
@@ -418,8 +421,19 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         case .addingNew:
             self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
         }
+
+        // Show custom setup mandate text above the buy button when in SetupIntent mode
+        let customMandateText: NSAttributedString?
+        if let setupMandateText = configuration.setupMandateText, !intent.isPaymentIntent {
+            customMandateText = NSAttributedString(string: setupMandateText)
+        } else {
+            customMandateText = nil
+        }
+        self.setupMandateView.attributedText = customMandateText
+
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
+            self.setupMandateView.setHiddenIfNecessary(customMandateText == nil)
         }
     }
 

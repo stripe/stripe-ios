@@ -65,6 +65,40 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
         sut.view.autosizeHeight(width: 375)
         STPSnapshotVerifyView(sut.view)
     }
+
+    func testSetupMandateText_setupIntent_showsCustomMandateAboveBuyButton() {
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        configuration.setupMandateText = "By saving your card, you agree to our terms."
+        let loadResult = PaymentSheetLoader.LoadResult(
+            intent: ._testSetupIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.card)]
+        )
+        let sut = PaymentSheetViewController(
+            configuration: configuration,
+            loadResult: loadResult,
+            analyticsHelper: ._testValue(),
+            delegate: self,
+            previousPaymentOption: nil
+        )
+        sut.view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(sut.view)
+    }
+
+    func testSetupMandateText_paymentIntent_doesNotShowCustomMandate() {
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        configuration.setupMandateText = "By saving your card, you agree to our terms."
+        let sut = PaymentSheetViewController(
+            configuration: configuration,
+            loadResult: makeTestLoadResult(savedPaymentMethods: []),
+            analyticsHelper: ._testValue(),
+            delegate: self,
+            previousPaymentOption: nil
+        )
+        sut.view.autosizeHeight(width: 375)
+        STPSnapshotVerifyView(sut.view)
+    }
 }
 
 extension PaymentSheetViewControllerSnapshotTests: PaymentSheetViewControllerDelegate {
