@@ -191,6 +191,7 @@ struct PaymentSheetTestPlayground: View {
                                 }
                             }
                         }
+                        SearchableSettingView(setting: $playgroundController.settings.manualCapture, searchText: $searchText)
                         if playgroundController.settings.customerKeyType == .customerSession {
                             SearchableView(searchableName: "Customer Session", searchText: $searchText) {
                                 VStack {
@@ -377,6 +378,9 @@ struct PaymentSheetTestPlayground: View {
             return playgroundController.settings.customSecretKey ?? ""
         } set: { newString in
             playgroundController.settings.customSecretKey = newString
+            if newString.hasPrefix("sk_live") {
+                playgroundController.settings.manualCapture = .on
+            }
         }
     }
 
@@ -385,6 +389,9 @@ struct PaymentSheetTestPlayground: View {
             return playgroundController.settings.customPublishableKey ?? ""
         } set: { newString in
             playgroundController.settings.customPublishableKey = newString
+            if newString.hasPrefix("pk_live") {
+                playgroundController.settings.manualCapture = .on
+            }
         }
     }
 
