@@ -762,6 +762,16 @@ import UIKit
         }))
         rootViewController.present(vc, animated: true, completion: nil)
     }
+    func checkoutSessionSettingsTapped() {
+        if #available(iOS 15.0, *) {
+            let vc = UIHostingController(rootView: CheckoutSessionPlaygroundView(viewModel: settings, doneAction: { updatedSettings in
+                self.settings = updatedSettings
+                self.rootViewController.dismiss(animated: true, completion: nil)
+                self.load(reinitializeControllers: true)
+            }))
+            rootViewController.present(vc, animated: true, completion: nil)
+        }
+    }
 
     // Completion
 
@@ -1063,9 +1073,24 @@ extension PlaygroundController {
         // Add CheckoutSession flag if using CheckoutSession integration type
         if settings.integrationType == .checkoutSession {
             body["use_checkout_session"] = true
-            body["customer_email"] = "moblie-test-user@stripe.com"
             body["checkout_session_payment_method_remove"] = settings.paymentMethodRemove.rawValue
             body["checkout_session_payment_method_save"] = settings.paymentMethodSave.rawValue
+            body["allow_promotion_codes"] = settings.csAllowPromotionCodes == .on
+            body["automatic_tax"] = settings.csAutomaticTax == .on
+            body["adaptive_pricing"] = settings.csAdaptivePricing == .on
+            body["display_shipping_rates"] = settings.csDisplayShippingRates == .on
+            body["adjustable_quantity"] = settings.csAdjustableQuantity == .on
+            body["use_manual_capture"] = settings.csManualCapture == .on
+            if let email = settings.csCustomerEmail, !email.isEmpty {
+                body["customer_email"] = email
+            }
+            if let pmc = settings.csPaymentMethodConfiguration, !pmc.isEmpty {
+                body["payment_method_configuration"] = pmc
+            }
+            let sfuDict = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
+            if !sfuDict.isEmpty {
+                body["payment_method_options_setup_future_usage"] = sfuDict
+            }
         }
 
         // Send custom keys to backend if provided

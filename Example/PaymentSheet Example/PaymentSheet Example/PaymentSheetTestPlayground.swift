@@ -210,24 +210,19 @@ struct PaymentSheetTestPlayground: View {
                         }
 
                         if playgroundController.settings.integrationType == .checkoutSession {
-                            if searchText.isEmpty {
-                                Divider()
-                            }
-                            Group {
-                                SearchableSection(
-                                    title: "Checkout Session",
-                                    searchText: $searchText
-                                ) {
-                                    SearchableSettingView(
-                                        setting: paymentMethodSaveBinding,
-                                        title: "Offer Save",
-                                        searchText: $searchText
-                                    )
-                                    SearchableSettingView(
-                                        setting: $playgroundController.settings.paymentMethodRemove,
-                                        title: "Payment Method Remove",
-                                        searchText: $searchText
-                                    )
+                            SearchableView(searchableName: "Checkout Session", searchText: $searchText) {
+                                VStack {
+                                    HStack {
+                                        Text("Checkout Session")
+                                            .font(.subheadline)
+                                        Spacer()
+                                        Button {
+                                            playgroundController.checkoutSessionSettingsTapped()
+                                        } label: {
+                                            Text("CS Settings")
+                                                .font(.callout.smallCaps())
+                                        }.buttonStyle(.bordered)
+                                    }
                                 }
                             }
                         }
