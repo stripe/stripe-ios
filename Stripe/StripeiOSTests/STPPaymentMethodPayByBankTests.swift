@@ -20,7 +20,7 @@ class STPPaymentMethodPayByBankTests: XCTestCase {
             expand: ["payment_method"]
         ) { paymentIntent, _ in
             let payByBankJson = paymentIntent?.paymentMethod?.payByBank?.allResponseFields
-            XCTAssertNotNil(paymentIntent?.paymentMethod?.payByBank)
+            XCTAssertNotNil(payByBankJson)
             completion(payByBankJson ?? [:])
         }
     }
