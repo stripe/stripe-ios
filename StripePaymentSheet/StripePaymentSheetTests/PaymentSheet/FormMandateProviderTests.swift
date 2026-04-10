@@ -169,4 +169,115 @@ class FormMandateProviderTests: XCTestCase {
         XCTAssertNil(result)
     }
 
+    // MARK: - Custom setup mandate text tests
+
+    func testFormMandateProvider_customSetupMandateText_setupMode_shouldReturnCustomText() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Test Merchant"
+        configuration.customSetupMandateText = "By setting up this payment method, you agree to Kavholm's terms of service."
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .setup(currency: "USD", setupFutureUsage: .offSession),
+            confirmHandler: { _, _ in return "" }
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
+
+        // Card form collects user input, so standard mandate is nil, but custom text should still appear
+        let result = formMandateProvider.mandate(for: .stripe(.card), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
+        XCTAssertNotNil(result)
+        XCTAssertTrue(result!.string.contains("Kavholm's terms of service"))
+    }
+
+    func testFormMandateProvider_customSetupMandateText_paymentMode_shouldNotReturnCustomText() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Test Merchant"
+        configuration.customSetupMandateText = "By setting up this payment method, you agree to Kavholm's terms of service."
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 1000, currency: "USD"),
+            confirmHandler: { _, _ in return "" }
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
+
+        let result = formMandateProvider.mandate(for: .stripe(.card), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
+        // In payment mode, custom setup mandate text should not appear
+        XCTAssertNil(result)
+    }
+
+    func testFormMandateProvider_customSetupMandateText_nilPaymentMethodType_setupMode_shouldReturnCustomText() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Test Merchant"
+        configuration.customSetupMandateText = "Custom mandate for Kavholm."
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .setup(currency: "USD", setupFutureUsage: .offSession),
+            confirmHandler: { _, _ in return "" }
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
+
+        let result = formMandateProvider.mandate(for: nil, savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result?.string, "Custom mandate for Kavholm.")
+    }
+
+    func testFormMandateProvider_customSetupMandateText_nilPaymentMethodType_paymentMode_shouldReturnNil() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Test Merchant"
+        configuration.customSetupMandateText = "Custom mandate for Kavholm."
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .payment(amount: 1000, currency: "USD"),
+            confirmHandler: { _, _ in return "" }
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
+
+        let result = formMandateProvider.mandate(for: nil, savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
+        XCTAssertNil(result)
+    }
+
+    func testFormMandateProvider_customSetupMandateText_combinedWithStandardMandate() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Test Merchant"
+        configuration.customSetupMandateText = "Custom Kavholm mandate."
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .setup(currency: "USD", setupFutureUsage: .offSession),
+            confirmHandler: { _, _ in return "" }
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
+
+        let result = formMandateProvider.mandate(for: .stripe(.cashApp), savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
+        XCTAssertNotNil(result)
+        // The custom text should appear before the standard Cash App mandate
+        XCTAssertTrue(result!.string.hasPrefix("Custom Kavholm mandate."))
+        XCTAssertTrue(result!.string.contains("Cash App"))
+    }
+
+    func testFormMandateProvider_noCustomSetupMandateText_setupMode_shouldReturnNilForNilPaymentMethodType() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Test Merchant"
+        // customSetupMandateText is not set (nil)
+
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            mode: .setup(currency: "USD", setupFutureUsage: .offSession),
+            confirmHandler: { _, _ in return "" }
+        )
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let formMandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: ._testValue())
+
+        let result = formMandateProvider.mandate(for: nil, savedPaymentMethod: nil, bottomNoticeAttributedString: nil)
+        XCTAssertNil(result)
+    }
+
 }

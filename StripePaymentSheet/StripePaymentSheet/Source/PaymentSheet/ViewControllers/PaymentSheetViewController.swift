@@ -412,15 +412,37 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     }
 
     func updateBottomNotice() {
-        switch mode {
-        case .selectingSaved:
-            self.bottomNoticeTextField.attributedText = savedPaymentOptionsViewController.bottomNoticeAttributedString
-        case .addingNew:
-            self.bottomNoticeTextField.attributedText = addPaymentMethodViewController.bottomNoticeAttributedString
-        }
+        let baseNotice: NSAttributedString? = {
+            switch mode {
+            case .selectingSaved:
+                return savedPaymentOptionsViewController.bottomNoticeAttributedString
+            case .addingNew:
+                return addPaymentMethodViewController.bottomNoticeAttributedString
+            }
+        }()
+        self.bottomNoticeTextField.attributedText = combinedBottomNotice(baseNotice: baseNotice)
         UIView.animate(withDuration: PaymentSheetUI.defaultAnimationDuration) {
             self.bottomNoticeTextField.setHiddenIfNecessary(self.bottomNoticeTextField.attributedText?.length == 0)
         }
+    }
+
+    /// Combines the custom setup mandate text (if applicable) with the standard bottom notice.
+    private func combinedBottomNotice(baseNotice: NSAttributedString?) -> NSAttributedString? {
+        guard let customText = configuration.customSetupMandateText, !intent.isPaymentIntent else {
+            return baseNotice
+        }
+        let theme = configuration.appearance.asElementsTheme
+        let customMandate = NSAttributedString(string: customText, attributes: [
+            .font: theme.fonts.caption,
+            .foregroundColor: theme.colors.secondaryText,
+        ])
+        guard let baseNotice, baseNotice.length > 0 else {
+            return customMandate
+        }
+        let combined = NSMutableAttributedString(attributedString: customMandate)
+        combined.append(NSAttributedString(string: "\n"))
+        combined.append(baseNotice)
+        return combined
     }
 
     @objc

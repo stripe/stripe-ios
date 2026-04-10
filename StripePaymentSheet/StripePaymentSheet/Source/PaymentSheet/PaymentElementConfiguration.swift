@@ -47,6 +47,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var opensCardScannerAutomatically: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
     var enableAttestationOnConfirmation: Bool { get }
+    var customSetupMandateText: String? { get set }
 }
 
 extension PaymentElementConfiguration {

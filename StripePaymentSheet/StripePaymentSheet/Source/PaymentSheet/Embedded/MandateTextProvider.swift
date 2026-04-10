@@ -38,6 +38,50 @@ class VerticalListMandateProvider: MandateTextProvider {
         savedPaymentMethod: STPPaymentMethod?,
         bottomNoticeAttributedString: NSAttributedString? = nil
     ) -> NSAttributedString? {
+        let standardMandate = standardMandateText(
+            for: paymentMethodType,
+            savedPaymentMethod: savedPaymentMethod,
+            bottomNoticeAttributedString: bottomNoticeAttributedString
+        )
+        return combinedMandateText(standardMandate: standardMandate)
+    }
+
+    /// Computes the combined mandate text by prepending custom setup mandate text (if applicable) to the standard mandate.
+    private func combinedMandateText(standardMandate: NSAttributedString?) -> NSAttributedString? {
+        let customMandate = customSetupMandateAttributedString
+        switch (customMandate, standardMandate) {
+        case (nil, nil):
+            return nil
+        case (let custom?, nil):
+            return custom
+        case (nil, let standard?):
+            return standard
+        case (let custom?, let standard?):
+            let combined = NSMutableAttributedString(attributedString: custom)
+            combined.append(NSAttributedString(string: "\n"))
+            combined.append(standard)
+            return combined
+        }
+    }
+
+    /// The custom setup mandate text as an attributed string, styled to match standard mandate text.
+    /// Returns `nil` if the configuration doesn't have custom text or the intent is not in setup mode.
+    private var customSetupMandateAttributedString: NSAttributedString? {
+        guard let customText = configuration.customSetupMandateText, !intent.isPaymentIntent else {
+            return nil
+        }
+        let theme = configuration.appearance.asElementsTheme
+        return NSAttributedString(string: customText, attributes: [
+            .font: theme.fonts.caption,
+            .foregroundColor: theme.colors.secondaryText,
+        ])
+    }
+
+    private func standardMandateText(
+        for paymentMethodType: PaymentSheet.PaymentMethodType?,
+        savedPaymentMethod: STPPaymentMethod?,
+        bottomNoticeAttributedString: NSAttributedString?
+    ) -> NSAttributedString? {
         guard let paymentMethodType else { return nil }
         if savedPaymentMethod != nil {
             // 1. For saved PMs, manually build mandates
@@ -83,7 +127,7 @@ class VerticalListMandateProvider: MandateTextProvider {
             }
 
             // If we get to this point, we didn't show the form, so return the mandate from the form if it exists
-            // 🙋‍♂️ Note: assumes mandates are SimpleMandateElement!
+            // Note: assumes mandates are SimpleMandateElement!
             return form.getMandateText()
         }
     }
