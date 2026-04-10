@@ -1,5 +1,5 @@
 //
-//  CurrencySelectorElementTests.swift
+//  AdaptivePricingSelectorElementTests.swift
 //  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 3/20/26.
@@ -10,12 +10,12 @@ import UIKit
 import XCTest
 
 @MainActor
-final class CurrencySelectorElementTests: XCTestCase {
+final class AdaptivePricingSelectorElementTests: XCTestCase {
 
     func testCurrentCurrencyMissingFromMetas() {
-        let element = makeCurrencySelectorElement(
+        let element = makeAdaptivePricingSelectorElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "eur", total: 1100),
                 localizedPriceMeta(currency: "gbp", total: 1000),
@@ -30,9 +30,9 @@ final class CurrencySelectorElementTests: XCTestCase {
 
     func testTapOnNewCurrencyNotifiesDelegateAndUpdatesSelection() throws {
         let delegate = MockElementDelegate()
-        let element = makeCurrencySelectorElement(
+        let element = makeAdaptivePricingSelectorElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "usd", total: 1200),
                 localizedPriceMeta(currency: "eur", total: 1100),
@@ -52,9 +52,9 @@ final class CurrencySelectorElementTests: XCTestCase {
 
     func testTapOnSelectedCurrencyDoesNotNotifyDelegate() throws {
         let delegate = MockElementDelegate()
-        let element = makeCurrencySelectorElement(
+        let element = makeAdaptivePricingSelectorElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "usd", total: 1200),
                 localizedPriceMeta(currency: "eur", total: 1100),
@@ -71,9 +71,9 @@ final class CurrencySelectorElementTests: XCTestCase {
     }
 
     func testShowsExchangeRateWhenLocalizedCurrencySelected() throws {
-        let element = makeCurrencySelectorElement(
+        let element = makeAdaptivePricingSelectorElement(
             currentCurrency: "gbp",
-            currentTotal: 1000,
+
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "usd", total: 1200),
                 localizedPriceMeta(currency: "gbp", total: 1000),
@@ -91,9 +91,9 @@ final class CurrencySelectorElementTests: XCTestCase {
     }
 
     func testShowsBankDisclaimerWhenIntegrationCurrencySelected() throws {
-        let element = makeCurrencySelectorElement(
+        let element = makeAdaptivePricingSelectorElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "usd", total: 1200),
                 localizedPriceMeta(currency: "gbp", total: 1000),
@@ -111,9 +111,9 @@ final class CurrencySelectorElementTests: XCTestCase {
     }
 
     func testCaptionSwitchesWhenSelectionChanges() throws {
-        let element = makeCurrencySelectorElement(
+        let element = makeAdaptivePricingSelectorElement(
             currentCurrency: "gbp",
-            currentTotal: 1000,
+
             localizedPricesMetas: [
                 localizedPriceMeta(currency: "usd", total: 1200),
                 localizedPriceMeta(currency: "gbp", total: 1000),
@@ -145,17 +145,17 @@ final class CurrencySelectorElementTests: XCTestCase {
         ]
 
         // Create with currentCurrency = gbp (local currency selected)
-        let elementA = makeCurrencySelectorElement(
+        let elementA = makeAdaptivePricingSelectorElement(
             currentCurrency: "gbp",
-            currentTotal: 1000,
+
             localizedPricesMetas: metas,
             exchangeRateMeta: meta
         )
 
         // Create with currentCurrency = usd (integration currency selected, e.g. after reload)
-        let elementB = makeCurrencySelectorElement(
+        let elementB = makeAdaptivePricingSelectorElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             localizedPricesMetas: metas,
             exchangeRateMeta: meta
         )
@@ -170,15 +170,13 @@ final class CurrencySelectorElementTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeCurrencySelectorElement(
+    private func makeAdaptivePricingSelectorElement(
         currentCurrency: String,
-        currentTotal: Int,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta? = nil
-    ) -> CurrencySelectorElement {
-        CurrencySelectorElement(
+    ) -> AdaptivePricingSelectorElement {
+        AdaptivePricingSelectorElement(
             currentCurrency: currentCurrency,
-            currentTotal: currentTotal,
             localizedPricesMetas: localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta ?? self.exchangeRateMeta(
                 buyCurrency: localizedPricesMetas.first?.currency ?? "eur",

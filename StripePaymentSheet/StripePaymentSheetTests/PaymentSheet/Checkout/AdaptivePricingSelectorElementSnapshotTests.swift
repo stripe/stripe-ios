@@ -1,5 +1,5 @@
 //
-//  CurrencySelectorElementSnapshotTests.swift
+//  AdaptivePricingSelectorElementSnapshotTests.swift
 //  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 3/20/26.
@@ -11,13 +11,13 @@ import StripeCoreTestUtils
 import UIKit
 // @iOS26
 // ☠️ WARNING: These snapshots do not have capsule corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
-final class CurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
+final class AdaptivePricingSelectorElementSnapshotTests: STPSnapshotTestCase {
     var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
 
     func testFirstCurrencySelected() {
         let element = makeElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             metas: [meta(currency: "usd", total: 1200), meta(currency: "gbp", total: 950)]
         )
         verify(element)
@@ -26,7 +26,7 @@ final class CurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
     func testWithExchangeRate() {
         let element = makeElement(
             currentCurrency: "gbp",
-            currentTotal: 950,
+
             metas: [meta(currency: "usd", total: 1200), meta(currency: "gbp", total: 950)],
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta(
                 id: "usd_to_gbp",
@@ -44,7 +44,7 @@ final class CurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
     func testBankExchangeRateDisclaimer() {
         let element = makeElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             metas: [meta(currency: "usd", total: 1200), meta(currency: "gbp", total: 950)],
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta(
                 id: "usd_to_gbp",
@@ -62,7 +62,7 @@ final class CurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
     func testDisabled() {
         let element = makeElement(
             currentCurrency: "usd",
-            currentTotal: 1200,
+
             metas: [meta(currency: "usd", total: 1200), meta(currency: "eur", total: 1100)]
         )
         element.setEnabled(false)
@@ -72,7 +72,7 @@ final class CurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
     func testDarkMode() {
         let element = makeElement(
             currentCurrency: "gbp",
-            currentTotal: 950,
+
             metas: [meta(currency: "usd", total: 1200), meta(currency: "gbp", total: 950)],
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta(
                 id: "usd_to_gbp",
@@ -91,7 +91,7 @@ final class CurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
         appearance = ._testMSPaintTheme
         let element = makeElement(
             currentCurrency: "eur",
-            currentTotal: 1100,
+
             metas: [meta(currency: "usd", total: 1200), meta(currency: "eur", total: 1100)],
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta(
                 id: "usd_to_eur",
@@ -108,20 +108,18 @@ final class CurrencySelectorElementSnapshotTests: STPSnapshotTestCase {
 
 }
 
-private extension CurrencySelectorElementSnapshotTests {
+private extension AdaptivePricingSelectorElementSnapshotTests {
     func meta(currency: String, total: Int) -> STPCheckoutSessionLocalizedPriceMeta {
         STPCheckoutSessionLocalizedPriceMeta(id: currency, currency: currency, total: total)
     }
 
     func makeElement(
         currentCurrency: String,
-        currentTotal: Int,
         metas: [STPCheckoutSessionLocalizedPriceMeta],
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta? = nil
-    ) -> CurrencySelectorElement {
-        CurrencySelectorElement(
+    ) -> AdaptivePricingSelectorElement {
+        AdaptivePricingSelectorElement(
             currentCurrency: currentCurrency,
-            currentTotal: currentTotal,
             localizedPricesMetas: metas,
             exchangeRateMeta: exchangeRateMeta ?? STPCheckoutSessionExchangeRateMeta(
                 id: "default",
@@ -138,7 +136,7 @@ private extension CurrencySelectorElementSnapshotTests {
     }
 
     func verify(
-        _ element: CurrencySelectorElement,
+        _ element: AdaptivePricingSelectorElement,
         darkMode: Bool = false,
         file: StaticString = #filePath,
         line: UInt = #line

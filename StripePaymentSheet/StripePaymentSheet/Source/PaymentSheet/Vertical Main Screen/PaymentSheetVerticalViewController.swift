@@ -113,7 +113,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
-    private var currencySelectorElement: CurrencySelectorElement?
+    private var currencySelectorElement: AdaptivePricingSelectorElement?
 
     // MARK: - UI properties
 
@@ -182,7 +182,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
 
-        self.currencySelectorElement = CurrencySelectorElement.makeIfNeeded(
+        self.currencySelectorElement = AdaptivePricingSelectorElement.makeIfNeeded(
             intent: intent,
             isFlowController: isFlowController,
             appearance: configuration.appearance,

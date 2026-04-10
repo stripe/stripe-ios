@@ -1,5 +1,5 @@
 //
-//  CurrencySelectorElement.swift
+//  AdaptivePricingSelectorElement.swift
 //  StripePaymentSheet
 //
 //  Created by Nick Porter on 3/20/26.
@@ -11,7 +11,7 @@ import UIKit
 
 /// Adaptive pricing currency selector built on `TwoOptionSelectorElement`.
 /// Shows two currencies with flag emoji and formatted amounts.
-final class CurrencySelectorElement: Element {
+final class AdaptivePricingSelectorElement: Element {
 
     /// A normalized currency code that provides typed access for API vs display use.
     struct CurrencyCode: Equatable {
@@ -40,7 +40,6 @@ final class CurrencySelectorElement: Element {
 
     init(
         currentCurrency: String,
-        currentTotal: Int,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
         appearance: PaymentSheet.Appearance,
@@ -70,17 +69,16 @@ final class CurrencySelectorElement: Element {
         isFlowController: Bool,
         appearance: PaymentSheet.Appearance,
         analyticsHelper: PaymentSheetAnalyticsHelper
-    ) -> CurrencySelectorElement? {
+    ) -> AdaptivePricingSelectorElement? {
         guard !isFlowController else { return nil }
         guard case .checkoutSession(let session) = intent else { return nil }
         guard session.adaptivePricingActive else { return nil }
         guard !session.localizedPricesMetas.isEmpty else { return nil }
         guard let exchangeRateMeta = session.exchangeRateMeta else { return nil }
-        guard let currency = session.currency, let total = session.totals?.total else { return nil }
+        guard let currency = session.currency else { return nil }
 
-        return CurrencySelectorElement(
+        return AdaptivePricingSelectorElement(
             currentCurrency: currency,
-            currentTotal: total,
             localizedPricesMetas: session.localizedPricesMetas,
             exchangeRateMeta: exchangeRateMeta,
             appearance: appearance,
@@ -185,7 +183,7 @@ final class CurrencySelectorElement: Element {
 
 // MARK: - ElementDelegate forwarding
 
-extension CurrencySelectorElement: ElementDelegate {
+extension AdaptivePricingSelectorElement: ElementDelegate {
     func didUpdate(element: Element) {
         selectorElement.updateCaption(
             Self.caption(forSelectedCurrency: selectedCurrency, exchangeRateMeta: exchangeRateMeta)
