@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "Номер телефона введен не полностью";
 
-"Invalid UPI ID" = "Недействительный идентификатор UPI";
 
 "Island" = "Остров";
 
@@ -126,7 +125,6 @@
 
 "Town or city" = "Город";
 
-"UPI ID" = "Идентификатор UPI";
 
 "Unable to parse phone number" = "Не удается разобрать номер телефона";
 

@@ -65,8 +65,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
     @objc public var netBanking: STPPaymentMethodNetBankingParams?
     /// If this is an OXXO PaymentMethod, this contains additional details.
     @objc public var oxxo: STPPaymentMethodOXXOParams?
-    /// If this is a UPI PaymentMethod, this contains additional details.
-    @objc public var upi: STPPaymentMethodUPIParams?
     /// If this is a GrabPay PaymentMethod, this contains additional details.
     @objc public var grabPay: STPPaymentMethodGrabPayParams?
     /// If this is a Afterpay PaymentMethod, this contains additional details.
@@ -340,24 +338,6 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
         self.type = .OXXO
         self.oxxo = oxxo
         self.billingDetails = billingDetails
-    }
-
-    /// Creates params for a UPI PaymentMethod;
-    /// - Parameters:
-    ///   - upi:   An object containing additional UPI details.
-    ///   - billingDetails:  An object containing the user's billing details.
-    ///   - metadata:     Additional information to attach to the PaymentMethod.
-    @objc
-    public convenience init(
-        upi: STPPaymentMethodUPIParams,
-        billingDetails: STPPaymentMethodBillingDetails?,
-        metadata: [String: String]?
-    ) {
-        self.init()
-        self.type = .UPI
-        self.upi = upi
-        self.billingDetails = billingDetails
-        self.metadata = metadata
     }
 
     /// Creates params for an Alipay PaymentMethod.
@@ -810,7 +790,7 @@ public class STPPaymentMethodParams: NSObject, STPFormEncodable {
             NSStringFromSelector(#selector(getter: bancontact)): "bancontact",
             NSStringFromSelector(#selector(getter: netBanking)): "netbanking",
             NSStringFromSelector(#selector(getter: oxxo)): "oxxo",
-            NSStringFromSelector(#selector(getter: upi)): "upi",
+
             NSStringFromSelector(#selector(getter: afterpayClearpay)): "afterpayClearpay",
             NSStringFromSelector(#selector(getter: weChatPay)): "wechat_pay",
             NSStringFromSelector(#selector(getter: boleto)): "boleto",
@@ -1056,24 +1036,6 @@ extension STPPaymentMethodParams {
         )
     }
 
-    /// Creates params for a UPI PaymentMethod;
-    /// - Parameters:
-    ///   - upi:   An object containing additional UPI details.
-    ///   - billingDetails:  An object containing the user's billing details. Note that `billingDetails.name` and `billingDetails.email` are required to save bank details from a UPI payment.
-    ///   - metadata:     Additional information to attach to the PaymentMethod.
-    @objc(paramsWithUPI:billingDetails:metadata:)
-    public class func paramsWith(
-        upi: STPPaymentMethodUPIParams,
-        billingDetails: STPPaymentMethodBillingDetails?,
-        metadata: [String: String]?
-    ) -> STPPaymentMethodParams {
-        return STPPaymentMethodParams(
-            upi: upi,
-            billingDetails: billingDetails,
-            metadata: metadata
-        )
-    }
-
     /// Creates params for an Alipay PaymentMethod.
     /// - Parameters:
     ///   - alipay:   An object containing additional Alipay details.
@@ -1249,8 +1211,6 @@ extension STPPaymentMethodParams {
             netBanking = STPPaymentMethodNetBankingParams()
         case .OXXO:
             oxxo = STPPaymentMethodOXXOParams()
-        case .UPI:
-            upi = STPPaymentMethodUPIParams()
         case .payPal:
             payPal = STPPaymentMethodPayPalParams()
         case .afterpayClearpay:

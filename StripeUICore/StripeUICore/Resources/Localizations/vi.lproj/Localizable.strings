@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "Số điện thoại chưa đầy đủ";
 
-"Invalid UPI ID" = "Số ID UPI không hợp lệ";
 
 "Island" = "Đảo";
 
@@ -126,7 +125,6 @@
 
 "Town or city" = "Thị trấn hoặc thành phố";
 
-"UPI ID" = "Số ID UPI";
 
 "Unable to parse phone number" = "Không thể phân tích cú pháp số điện thoại";
 

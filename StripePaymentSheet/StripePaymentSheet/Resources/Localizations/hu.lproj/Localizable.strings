@@ -40,7 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Vegye meg most, vagy fizessen később Klarnával";
 
-"Buy using a UPI ID" = "Vásárlás UPI-azonosítóval";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A fizetés megerősítésével a PayPalon engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
 
@@ -180,7 +179,6 @@
 
 "Open to see more information." = "Nyissa meg további adatok megtekintéséhez.";
 
-"Open your UPI app to approve your payment within %@" = "Nyissa meg az UPI-alkalmazását a fizetés jóváhagyásához %@ belül";
 
 "Or" = "vagy";
 

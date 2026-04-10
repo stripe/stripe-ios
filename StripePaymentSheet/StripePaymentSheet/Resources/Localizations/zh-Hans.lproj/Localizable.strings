@@ -40,7 +40,6 @@
 
 "Buy now or pay later with Klarna" = "用 Klarna 先买后付";
 
-"Buy using a UPI ID" = "用 UPI ID 购买";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "确认您的 PayPal 付款即表示您允许 %@ 按照他们的条款从您的 PayPal 扣取未来款项。";
 
@@ -182,7 +181,6 @@
 
 "Open to see more information." = "打开以查看更多信息。";
 
-"Open your UPI app to approve your payment within %@" = "请在 %@ 内打开您的 UPI 应用来批准付款";
 
 "Or" = "或";
 
