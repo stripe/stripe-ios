@@ -53,10 +53,7 @@ extension Checkout {
         }
 
         private var isAdaptivePricingAvailable: Bool {
-            guard AdaptivePricingSelectorElement.adaptivePricingData(from: checkout.state.session) != nil else {
-                return false
-            }
-            return true
+            return AdaptivePricingSelectorElement.adaptivePricingData(from: checkout.state.session) != nil
         }
     }
 }
