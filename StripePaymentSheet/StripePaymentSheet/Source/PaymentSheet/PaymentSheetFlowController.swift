@@ -41,6 +41,21 @@ extension PaymentSheet {
             }
         }
 
+        /// Returns confirm params for `.new` and `.external` options, nil otherwise.
+        /// This is often used to restore a customer's previous form input when re-presenting `AddPaymentMethodViewController`.
+        var newConfirmParams: IntentConfirmParams? {
+            switch self {
+            case .applePay, .saved, .link:
+                return nil
+            case .new(confirmParams: let params):
+                return params
+            case let .external(paymentMethod, billingDetails):
+                let params = IntentConfirmParams(type: .external(paymentMethod))
+                params.paymentMethodParams.billingDetails = billingDetails
+                return params
+            }
+        }
+
         var savedPaymentMethod: STPPaymentMethod? {
             switch self {
             case .applePay, .link, .new, .external:
@@ -165,8 +180,8 @@ extension PaymentSheet {
                 }
             }
 
-            init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle) {
-                image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle)
+            init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, cardArtEnabled: Bool = false) {
+                image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle, cardArtEnabled: cardArtEnabled)
                 switch paymentOption {
                 case .applePay:
                     label = String.Localized.apple_pay
@@ -291,6 +306,7 @@ extension PaymentSheet {
         required init(
             configuration: Configuration,
             loadResult: PaymentSheetLoader.LoadResult,
+            confirmationChallenge: ConfirmationChallenge? = nil,
             analyticsHelper: PaymentSheetAnalyticsHelper
         ) {
             self.configuration = configuration
@@ -305,8 +321,8 @@ extension PaymentSheet {
                 shouldLogExperimentExposure: false
             )
             self.viewController.flowControllerDelegate = self
-            self.confirmationChallenge = ConfirmationChallenge(enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
-            self.viewController.confirmationChallenge = self.confirmationChallenge
+            self.confirmationChallenge = confirmationChallenge
+
             updatePaymentOption()
         }
 
@@ -374,12 +390,12 @@ extension PaymentSheet {
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            guard let stpSession = checkout.session as? STPCheckoutSession else {
-                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
+            guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
                 completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
                 return
             }
-            if checkout.isPerformingSessionUpdate {
+            if checkout.state.isLoading {
                 let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.FlowController.create(checkout:configuration:completion:)."
                 assertionFailure(message)
                 completion(.failure(PaymentSheetError.integrationError(nonPIIDebugDescription: message)))
@@ -418,10 +434,11 @@ extension PaymentSheet {
                 integrationShape: .flowController
             ) { result in
                 switch result {
-                case .success(let loadResult):
+                case .success(let (loadResult, confirmationChallenge)):
                     let flowController = FlowController(
                         configuration: configuration,
                         loadResult: loadResult,
+                        confirmationChallenge: confirmationChallenge,
                         analyticsHelper: analyticsHelper
                     )
 
@@ -546,7 +563,6 @@ extension PaymentSheet {
                 intent: intent,
                 elementsSession: elementsSession,
                 analyticsHelper: analyticsHelper,
-                confirmationChallenge: confirmationChallenge,
                 callback: completionCallback
             )
         }
@@ -654,12 +670,12 @@ extension PaymentSheet {
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
-            guard let stpSession = checkout.session as? STPCheckoutSession else {
-                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.session))")
+            guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
                 completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
                 return
             }
-            if checkout.isPerformingSessionUpdate {
+            if checkout.state.isLoading {
                 let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.FlowController.update(checkout:completion:)."
                 assertionFailure(message)
                 completion(PaymentSheetError.integrationError(nonPIIDebugDescription: message))
@@ -693,7 +709,7 @@ extension PaymentSheet {
                 }
 
                 switch result {
-                case .success(let loadResult):
+                case .success(let (loadResult, confirmationChallenge)):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
 
                     self.viewController = Self.makeViewController(
@@ -705,6 +721,7 @@ extension PaymentSheet {
                         shouldLogExperimentExposure: false
                     )
                     self.viewController.flowControllerDelegate = self
+                    self.confirmationChallenge = confirmationChallenge
                     // Defer experiment exposure logging until next presentation
                     self.hasLoggedLayoutExperimentExposure = false
 
@@ -747,7 +764,7 @@ extension PaymentSheet {
         /// Updates the published paymentOption property based on the current state
         func updatePaymentOption() {
             if let selectedPaymentOption = internalPaymentOption {
-                paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency, iconStyle: configuration.appearance.iconStyle)
+                paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency, iconStyle: configuration.appearance.iconStyle, cardArtEnabled: configuration.appearance.cardArtEnabled)
             } else {
                 paymentOption = nil
             }
@@ -947,7 +964,6 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
     /// Note that, unlike selectedPaymentOption, this is non-nil even if the PM form is invalid.
     var selectedPaymentMethodType: PaymentSheet.PaymentMethodType? { get }
     var flowControllerDelegate: FlowControllerViewControllerDelegate? { get set }
-    var confirmationChallenge: ConfirmationChallenge? { get set }
     func clearSelection()
 }
 

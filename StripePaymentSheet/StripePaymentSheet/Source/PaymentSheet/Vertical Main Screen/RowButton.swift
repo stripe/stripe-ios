@@ -64,6 +64,15 @@ class RowButton: UIView, EventHandler {
         return !accessoryView.isHidden
     }
 
+    var imageViewSize: CGSize {
+        if appearance.cardArtEnabled {
+            // When card art is enabled, 1.25* size of images
+            return CGSize(width: 30, height: 25)
+        } else {
+            return CGSize(width: 24, height: 20)
+        }
+    }
+
     // MARK: Internal properties
 
     var heightConstraint: NSLayoutConstraint?
@@ -539,9 +548,16 @@ extension RowButton {
     }
 
     static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
-        let imageView = UIImageView(image: paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle))
+        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-
+        let savedPaymentMethodRowImage = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle)
+        if appearance.cardArtEnabled {
+            imageView.setImage(with: paymentMethod.cardArtCDNURL(height: 20),
+                               processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
+                               fallbackImage: savedPaymentMethodRowImage)
+        } else {
+            imageView.image = savedPaymentMethodRowImage
+        }
         let text = paymentMethod.isLinkPassthroughMode
             ? STPPaymentMethodType.link.displayName
             : paymentMethod.paymentSheetLabel

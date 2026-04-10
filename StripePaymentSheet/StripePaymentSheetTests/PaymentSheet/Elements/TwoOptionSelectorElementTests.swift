@@ -51,26 +51,16 @@ final class TwoOptionSelectorElementTests: XCTestCase {
 
     // MARK: - Programmatic selection
 
-    func testProgrammaticSelectNotifiesDelegate() {
+    func testTapSelectNotifiesDelegate() throws {
         let delegate = MockTwoOptionDelegate()
         let element = makeElement(left: ("a", "A", "option_a"), right: ("b", "B", "option_b"), selectedId: "a")
         element.delegate = delegate
 
-        element.select("b")
+        let buttonB = try XCTUnwrap(button(in: element.view, id: "option_b"))
+        buttonB.sendActions(for: .touchUpInside)
 
         XCTAssertEqual(element.selectedItemId, "b")
         XCTAssertTrue(delegate.didUpdateCalled)
-    }
-
-    func testProgrammaticSelectWithInvalidIdIsNoOp() {
-        let delegate = MockTwoOptionDelegate()
-        let element = makeElement(left: ("a", "A", "option_a"), right: ("b", "B", "option_b"), selectedId: "a")
-        element.delegate = delegate
-
-        element.select("nonexistent")
-
-        XCTAssertEqual(element.selectedItemId, "a")
-        XCTAssertFalse(delegate.didUpdateCalled)
     }
 
     // MARK: - Caption

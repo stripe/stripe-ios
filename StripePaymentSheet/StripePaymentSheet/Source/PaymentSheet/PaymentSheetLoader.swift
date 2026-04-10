@@ -41,12 +41,12 @@ final class PaymentSheetLoader {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
         isUpdate: Bool = false,
-        completion: @escaping (Result<LoadResult, Error>) -> Void
+        completion: @escaping (Result<(LoadResult, ConfirmationChallenge), Error>) -> Void
     ) {
         Task { @MainActor in
             do {
-                let loadResult = try await load(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, integrationShape: integrationShape, isUpdate: isUpdate)
-                completion(.success(loadResult))
+                let (loadResult, confirmationChallenge) = try await load(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, integrationShape: integrationShape, isUpdate: isUpdate)
+                completion(.success((loadResult, confirmationChallenge)))
             } catch {
                 completion(.failure(error))
             }
@@ -62,7 +62,7 @@ final class PaymentSheetLoader {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
         isUpdate: Bool = false
-    ) async throws -> LoadResult {
+    ) async throws -> (LoadResult, ConfirmationChallenge) {
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
         analyticsHelper.logLoadStarted(isUpdate: isUpdate)
@@ -123,50 +123,48 @@ final class PaymentSheetLoader {
             }
             loadTimings.logEnd("loadFormSpecs")
 
-            // Load link account session if necessary. Continue without Link if it errors.
-            let linkAccount = try? await lookupLinkAccount(
-                elementsSession: elementsSession,
-                configuration: configuration,
-                prefetchedEmailAndSource: prefetchedLinkEmailAndSourceTask.value,
-                loadTimings: loadTimings,
-                isUpdate: isUpdate
-            )
-            LinkAccountContext.shared.account = linkAccount
+            let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
+            let lookupLinkAccountTask = Task { @MainActor in
+                let prefetchedLinkEmailAndSource = await prefetchedLinkEmailAndSourceTask.value
+                let linkAccount = try? await Self.lookupLinkAccount(
+                    elementsSession: elementsSession,
+                    configuration: configuration,
+                    prefetchedEmailAndSource: prefetchedLinkEmailAndSource,
+                    loadTimings: loadTimings,
+                    isUpdate: isUpdate
+                )
 
-            // Log experiment exposures
-            loadTimings.logStart("logExperiments")
-            if let arbId = elementsSession.experimentsData?.arbId {
-                let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
-                    arbId: arbId,
-                    session: elementsSession,
+                // We don't want to set the global singleton if we timed out, because that means setting it after MPE has finished loading, which the code is not necessarily expecting.
+                guard !Task.isCancelled else { return }
+                if isLinkEnabled {
+                    LinkAccountContext.shared.account = linkAccount
+                }
+                Self.logLinkExperimentExposures(
+                    elementsSession: elementsSession,
                     configuration: configuration,
                     linkAccount: linkAccount,
-                    integrationShape: analyticsHelper.integrationShape
+                    analyticsHelper: analyticsHelper
                 )
-                analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
-
-                let linkGlobalHoldbackAAExperiment = LinkGlobalHoldbackAA(
-                    arbId: arbId,
-                    session: elementsSession,
-                    configuration: configuration,
-                    linkAccount: linkAccount,
-                    integrationShape: analyticsHelper.integrationShape
-                )
-                analyticsHelper.logExposure(experiment: linkGlobalHoldbackAAExperiment)
-
-                let linkAbTestExperiment = LinkABTest(
-                    arbId: arbId,
-                    session: elementsSession,
-                    configuration: configuration,
-                    linkAccount: linkAccount,
-                    integrationShape: analyticsHelper.integrationShape
-                )
-                analyticsHelper.logExposure(experiment: linkAbTestExperiment)
             }
-            loadTimings.logEnd("logExperiments")
+            // Only block on link lookup if it's enabled.
+            var didLinkLookupTimeOut: Bool?
+            if isLinkEnabled {
+                let result = await withTimeout(5.0) {
+                    await lookupLinkAccountTask.value
+                }
+                switch result {
+                case .success:
+                    didLinkLookupTimeOut = false
+                case .failure(let error):
+                    if error is TimeoutError {
+                        didLinkLookupTimeOut = true
+                        // Since we're using unstructured Tasks, we have to manually cancel it.
+                        lookupLinkAccountTask.cancel()
+                    }
+                }
+            }
 
             loadTimings.logStart("computePaymentMethodTypes")
-            let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
             let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
 
             // Disable FC Lite if killswitch is enabled
@@ -205,6 +203,11 @@ final class PaymentSheetLoader {
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes
             )
+            let confirmationChallenge = ConfirmationChallenge(
+                enableAttestation: configuration.enableAttestationOnConfirmation,
+                elementsSession: elementsSession,
+                stripeAttest: configuration.apiClient.stripeAttest
+            )
 
             // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
             loadTimings.logStart("makeViewModels")
@@ -226,13 +229,20 @@ final class PaymentSheetLoader {
                 defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                 orderedPaymentMethodTypes: paymentMethodTypes,
                 loadTimings: loadTimings,
-                isUpdate: isUpdate
+                isUpdate: isUpdate,
+                hasCardArt: hasCardArt(savedPaymentMethods: filteredSavedPaymentMethods, appearance: configuration.appearance),
+                didLinkLookupTimeOut: didLinkLookupTimeOut
             )
-            return loadResult
+            return (loadResult, confirmationChallenge)
         } catch {
             analyticsHelper.logLoadFailed(error: error, loadTimings: loadTimings, isUpdate: isUpdate)
             throw error
         }
+    }
+
+    /// Returns `true` if the card art feature is enabled and at least one saved card has a card art image URL.
+    static func hasCardArt(savedPaymentMethods: [STPPaymentMethod], appearance: PaymentSheet.Appearance) -> Bool {
+        appearance.cardArtEnabled && savedPaymentMethods.contains { $0.type == .card && $0.card?.cardArt?.artImage?.url != nil }
     }
 
     // MARK: - Helper methods that load things
@@ -307,6 +317,46 @@ final class PaymentSheetLoader {
             emailSource: lookupEmail.source,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
         )
+    }
+
+    @MainActor
+    private static func logLinkExperimentExposures(
+        elementsSession: STPElementsSession,
+        configuration: PaymentElementConfiguration,
+        linkAccount: PaymentSheetLinkAccount?,
+        analyticsHelper: PaymentSheetAnalyticsHelper
+    ) {
+        Task {
+            guard let arbId = elementsSession.experimentsData?.arbId else {
+                return
+            }
+            let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
+                arbId: arbId,
+                session: elementsSession,
+                configuration: configuration,
+                linkAccount: linkAccount,
+                integrationShape: analyticsHelper.integrationShape
+            )
+            analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
+
+            let linkGlobalHoldbackAAExperiment = LinkGlobalHoldbackAA(
+                arbId: arbId,
+                session: elementsSession,
+                configuration: configuration,
+                linkAccount: linkAccount,
+                integrationShape: analyticsHelper.integrationShape
+            )
+            analyticsHelper.logExposure(experiment: linkGlobalHoldbackAAExperiment)
+
+            let linkAbTestExperiment = LinkABTest(
+                arbId: arbId,
+                session: elementsSession,
+                configuration: configuration,
+                linkAccount: linkAccount,
+                integrationShape: analyticsHelper.integrationShape
+            )
+            analyticsHelper.logExposure(experiment: linkAbTestExperiment)
+        }
     }
 
     /// If configuration uses Ephemeral Key, retrieve Customer object and return email

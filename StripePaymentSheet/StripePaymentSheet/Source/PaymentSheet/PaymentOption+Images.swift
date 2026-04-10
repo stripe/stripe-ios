@@ -16,9 +16,10 @@ extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen
     func makeIcon(
         currency: String?,
-        iconStyle: PaymentSheet.Appearance.IconStyle
+        iconStyle: PaymentSheet.Appearance.IconStyle,
+        cardArtEnabled: Bool = false
     ) -> UIImage {
-        let isDarkMode = UIApplication.shared.activeScene?.traitCollection.isDarkMode ?? false
+        let isDarkMode = UIApplication.shared.activeOrFirstScene?.traitCollection.isDarkMode ?? false
         switch self {
         case .applePay:
             return Image.apple_pay_mark.makeImage().withRenderingMode(.alwaysOriginal)
@@ -26,7 +27,8 @@ extension PaymentOption {
             if let linkedBank = paymentOption?.instantDebitsLinkedBank {
                 return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: linkedBank.bankName), iconStyle: iconStyle)
             } else {
-                return paymentMethod.makeIcon(iconStyle: iconStyle)
+                let cardArtImage = paymentMethod.cardArtImage(cardArtEnabled: cardArtEnabled)
+                return cardArtImage ?? paymentMethod.makeIcon(iconStyle: iconStyle)
             }
         case .new(let confirmParams):
             return confirmParams.makeIcon(forDarkBackground: isDarkMode, currency: currency, iconStyle: iconStyle)
@@ -48,12 +50,13 @@ extension PaymentOption {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle) -> UIImage {
         switch self {
         case .applePay:
             return Image.carousel_applepay.makeImage(template: false, overrideUserInterfaceStyle: overrideUserInterfaceStyle)
-        case .saved(let paymentMethod, _):
-            return paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: iconStyle)
+        case .saved:
+            assertionFailure("This shouldn't be called - makeSavedPaymentMethodCellImage is called on instances of STPPaymentMethod")
+            return UIImage()
         case .new:
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
             return UIImage()
@@ -145,6 +148,19 @@ extension STPPaymentMethod {
             return makeIcon()
         }
     }
+
+    func cardArtImage(cardArtEnabled: Bool, downloadManager: DownloadManager = DownloadManager.sharedManager) -> UIImage? {
+        guard cardArtEnabled, let cardArtURL = cardArtCDNURL(height: 28) else {
+            return nil
+        }
+        let placeholder = downloadManager.imagePlaceHolder()
+        let image = downloadManager.downloadImage(
+            url: cardArtURL,
+            placeholder: placeholder,
+            updateHandler: nil
+        )
+        return image == placeholder ? nil : image.roundedWithBorder(radius: 3)
+    }
 }
 
  extension STPPaymentMethodParams {
@@ -159,7 +175,17 @@ extension STPPaymentMethod {
             return PaymentSheet.PaymentMethodType.stripe(type).makeImage(forDarkBackground: forDarkBackground, currency: currency, iconStyle: iconStyle, updateHandler: updateHandler)
         }
     }
- }
+}
+
+extension STPPaymentMethod {
+    /// Returns the card art CDN URL if this is a card payment method with card art available.
+    func cardArtCDNURL(height: Int, dpr: Int = 3) -> URL? {
+        guard let artImageURL = card?.cardArt?.artImage?.url else {
+            return nil
+        }
+        return URL(string: "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=\(height),dpr=\(dpr)/\(artImageURL.absoluteString)")
+    }
+}
 
 extension STPPaymentMethodType {
 
@@ -302,6 +328,20 @@ extension UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         UIBezierPath(roundedRect: rect, cornerRadius: radius).addClip()
         draw(in: rect)
+        return UIGraphicsGetImageFromCurrentImageContext()!
+    }
+
+    func roundedWithBorder(radius: CGFloat, borderWidth: CGFloat = 1, borderColor: UIColor = UIColor.black.withAlphaComponent(0.2)) -> UIImage {
+        let rect = CGRect(origin: .zero, size: size)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let path = UIBezierPath(roundedRect: rect, cornerRadius: radius)
+        path.addClip()
+        draw(in: rect)
+        let borderRect = rect.insetBy(dx: borderWidth / 2, dy: borderWidth / 2)
+        let borderPath = UIBezierPath(roundedRect: borderRect, cornerRadius: radius - borderWidth / 2)
+        borderColor.setStroke()
+        borderPath.lineWidth = borderWidth
+        borderPath.stroke()
         return UIGraphicsGetImageFromCurrentImageContext()!
     }
 }

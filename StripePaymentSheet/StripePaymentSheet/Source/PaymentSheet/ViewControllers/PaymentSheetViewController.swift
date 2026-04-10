@@ -51,6 +51,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
     // MARK: - Writable Properties
+    private var currencySelectorElement: CurrencySelectorElement?
     weak var delegate: PaymentSheetViewControllerDelegate?
     enum Mode {
         case selectingSaved
@@ -59,25 +60,17 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     private var mode: Mode
     private(set) var error: Error?
     private var isPaymentInFlight: Bool = false
+    private var isReloading: Bool = false
+    private var isBusy: Bool { isPaymentInFlight || isReloading }
     private(set) var isDismissable: Bool = true
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+        return SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
     // MARK: - Views
 
-    private lazy var addPaymentMethodViewController: AddPaymentMethodViewController = {
-        return AddPaymentMethodViewController(
-            intent: intent,
-            elementsSession: elementsSession,
-            configuration: configuration,
-            paymentMethodTypes: loadResult.paymentMethodTypes,
-            formCache: formCache,
-            analyticsHelper: analyticsHelper,
-            delegate: self
-        )
-    }()
+    private let addPaymentMethodViewController: AddPaymentMethodViewController
 
     private let savedPaymentOptionsViewController: SavedPaymentOptionsViewController
     internal lazy var navigationBar: SheetNavigationBar = {
@@ -149,7 +142,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         configuration: PaymentSheet.Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        delegate: PaymentSheetViewControllerDelegate
+        delegate: PaymentSheetViewControllerDelegate,
+        previousPaymentOption: PaymentOption? = nil
     ) {
         // Only call loadResult.intent.cvcRecollectionEnabled once per load
         let isCVCRecollectionEnabled = loadResult.intent.cvcRecollectionEnabled
@@ -173,7 +167,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,
                 isTestMode: configuration.apiClient.isTestmode,
                 allowsRemovalOfLastSavedPaymentMethod: elementsSession.paymentMethodRemoveLast(configuration: configuration),
-                allowsRemovalOfPaymentMethods: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+                allowsRemovalOfPaymentMethods: intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                 allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
                 allowsUpdatePaymentMethod: elementsSession.paymentMethodUpdateForPaymentSheet
             ),
@@ -185,16 +179,40 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             analyticsHelper: analyticsHelper
         )
 
-        if loadResult.savedPaymentMethods.isEmpty {
+        // Restore the customer's previous payment method.
+        // For saved PMs, this happens naturally, so we just need to handle new payment methods.
+        let previousConfirmParams = previousPaymentOption?.newConfirmParams
+
+        if previousConfirmParams != nil {
+            self.mode = .addingNew
+        } else if loadResult.savedPaymentMethods.isEmpty {
             self.mode = .addingNew
         } else {
             self.mode = .selectingSaved
         }
+
+        self.addPaymentMethodViewController = AddPaymentMethodViewController(
+            intent: loadResult.intent,
+            elementsSession: loadResult.elementsSession,
+            configuration: configuration,
+            previousCustomerInput: previousConfirmParams,
+            paymentMethodTypes: loadResult.paymentMethodTypes,
+            formCache: formCache,
+            analyticsHelper: analyticsHelper
+        )
         self.analyticsHelper = analyticsHelper
 
         super.init(nibName: nil, bundle: nil)
+        self.currencySelectorElement = CurrencySelectorElement.makeIfNeeded(
+            intent: intent,
+            isFlowController: false,
+            appearance: configuration.appearance,
+            analyticsHelper: analyticsHelper
+        )
+        self.currencySelectorElement?.delegate = self
         self.configuration.style.configure(self)
         self.savedPaymentOptionsViewController.delegate = self
+        self.addPaymentMethodViewController.delegate = self
         // TODO: This self.view call should be moved to viewDidLoad
         self.view.backgroundColor = configuration.appearance.colors.background
     }
@@ -206,9 +224,14 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.view.backgroundColor = configuration.appearance.colors.background
 
         // One stack view contains all our subviews
-        let stackView = UIStackView(arrangedSubviews: [
+        var arrangedSubviews: [UIView] = []
+        if let currencySelectorView = currencySelectorElement?.view {
+            arrangedSubviews.append(currencySelectorView)
+        }
+        arrangedSubviews.append(contentsOf: [
             headerLabel, walletHeader, paymentContainerView, errorLabel, buyButton, bottomNoticeTextField,
         ])
+        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.spacing = PaymentSheetUI.defaultPadding
@@ -288,7 +311,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     // state -> view
     private func updateUI(animated: Bool = true) {
         // Disable interaction if necessary
-        let shouldEnableUserInteraction = !isPaymentInFlight
+        let shouldEnableUserInteraction = !isBusy
         if shouldEnableUserInteraction != view.isUserInteractionEnabled {
             sendEventToSubviews(
                 shouldEnableUserInteraction ? .shouldEnableUserInteraction : .shouldDisableUserInteraction,
@@ -297,7 +320,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
         view.isUserInteractionEnabled = shouldEnableUserInteraction
         isDismissable = !isPaymentInFlight
-        navigationBar.isUserInteractionEnabled = !isPaymentInFlight
+        navigationBar.isUserInteractionEnabled = shouldEnableUserInteraction
+        currencySelectorElement?.setEnabled(shouldEnableUserInteraction)
 
         // Update our views (starting from the top of the screen):
         configureNavBar()
@@ -355,7 +379,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         // Notice
         updateBottomNotice()
 
-        if isPaymentInFlight {
+        if isBusy {
             buyButtonStatus = .processing
         }
         if case .selectingSaved = mode, case .applePay = savedPaymentOptionsViewController.selectedPaymentOption {
@@ -485,6 +509,28 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 }
             }
         }
+    }
+
+    // MARK: - PaymentSheetViewControllerProtocol
+
+    var selectedPaymentOption: PaymentSheet.PaymentOption? {
+        switch mode {
+        case .selectingSaved:
+            return savedPaymentOptionsViewController.selectedPaymentOption
+        case .addingNew:
+            return addPaymentMethodViewController.paymentOption
+        }
+    }
+
+    // Freeze the UI and show a spinner on the primary button while we reload the intent.
+    // If you add new UI, make sure it's also disabled/hidden during reloading.
+    func setReloading(_ isReloading: Bool) {
+        self.isReloading = isReloading
+        updateUI()
+    }
+
+    func setReloadError(_ error: Error) {
+        set(error: error)
     }
 }
 
@@ -672,5 +718,23 @@ extension PaymentSheetViewController: SheetNavigationBarDelegate {
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure("Tapped back button in invalid mode")
         }
+    }
+}
+
+// MARK: - ElementDelegate
+
+extension PaymentSheetViewController: ElementDelegate {
+    func continueToNextField(element: Element) {
+        // No-op
+    }
+
+    func didUpdate(element: Element) {
+        if let currencySelectorElement, element === currencySelectorElement {
+            handleCurrencySelection(currencySelectorElement.selectedCurrency)
+        }
+    }
+
+    private func handleCurrencySelection(_ currency: String) {
+        delegate?.paymentSheetViewControllerDidSelectCurrency(self, currency: currency)
     }
 }

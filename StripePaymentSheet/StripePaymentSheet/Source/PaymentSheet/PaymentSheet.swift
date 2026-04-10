@@ -105,11 +105,11 @@ public class PaymentSheet {
     }
 
     /// Initializes PaymentSheet with a Checkout object
-    /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
+    /// - Parameter checkout: A loaded Checkout instance.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
     @MainActor @_spi(CheckoutSessionsPreview) public convenience init(checkout: Checkout, configuration: Configuration) {
-        guard let stpSession = checkout.session as? STPCheckoutSession else {
-            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.session))")
+        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
         }
         var config = configuration
         stpSession.applyAddressOverrides(to: &config)
@@ -162,7 +162,7 @@ public class PaymentSheet {
                 completion(.failed(error: error))
                 return
             }
-            if let checkout, checkout.isPerformingSessionUpdate {
+            if let checkout, checkout.state.isLoading {
                 let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.present(from:completion:)."
                 assertionFailure(message)
                 completion(.failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message)))
@@ -177,37 +177,14 @@ public class PaymentSheet {
                 integrationShape: .paymentSheet
             ) { result in
                 switch result {
-                case .success(let loadResult):
-                    self.confirmationChallenge = ConfirmationChallenge(enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: loadResult.elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
+                case .success(let (loadResult, confirmationChallenge)):
+                    self.confirmationChallenge = confirmationChallenge
                     let presentPaymentSheet: () -> Void = {
-                        // Set the PaymentSheetViewController as the content of our bottom sheet
-                        let paymentSheetVC: PaymentSheetViewControllerProtocol = {
-                            // Resolve automatic layout based on experiment
-                            var configuration = self.configuration
-                            let resolvedPaymentMethodLayout = configuration.resolveLayout(
-                                loadResult: loadResult,
-                                configuration: self.configuration,
-                                analyticsHelper: self.analyticsHelper
-                            )
-                            switch resolvedPaymentMethodLayout {
-                            case .horizontal:
-                                return PaymentSheetViewController(
-                                    configuration: configuration,
-                                    loadResult: loadResult,
-                                    analyticsHelper: self.analyticsHelper,
-                                    delegate: self
-                                )
-                            case .vertical:
-                                let verticalVC = PaymentSheetVerticalViewController(
-                                    configuration: configuration,
-                                    loadResult: loadResult,
-                                    isFlowController: false,
-                                    analyticsHelper: self.analyticsHelper
-                                )
-                                verticalVC.paymentSheetDelegate = self
-                                return verticalVC
-                            }
-                        }()
+                        let paymentSheetVC = self.makePaymentSheetVC(
+                            loadResult: loadResult,
+                            previousPaymentOption: nil,
+                            shouldLogExperimentExposure: true
+                        )
                         self.bottomSheetViewController.setViewControllers([paymentSheetVC])
                     }
                     if let linkAccount = LinkAccountContext.shared.account, loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(for: linkAccount) {
@@ -307,6 +284,74 @@ public class PaymentSheet {
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
     var confirmationChallenge: ConfirmationChallenge?
+
+    // MARK: - Factory & Reload
+    @MainActor
+    func makePaymentSheetVC(
+        loadResult: PaymentSheetLoader.LoadResult,
+        previousPaymentOption: PaymentOption?,
+        shouldLogExperimentExposure: Bool
+    ) -> PaymentSheetViewControllerProtocol {
+        var configuration = self.configuration
+        let layout = configuration.resolveLayout(
+            loadResult: loadResult,
+            configuration: self.configuration,
+            analyticsHelper: self.analyticsHelper,
+            shouldLogExperimentExposure: shouldLogExperimentExposure
+        )
+        switch layout {
+        case .horizontal:
+            let vc = PaymentSheetViewController(
+                configuration: configuration,
+                loadResult: loadResult,
+                analyticsHelper: analyticsHelper,
+                delegate: self,
+                previousPaymentOption: previousPaymentOption
+            )
+            return vc
+        case .vertical:
+            let vc = PaymentSheetVerticalViewController(
+                configuration: configuration,
+                loadResult: loadResult,
+                isFlowController: false,
+                analyticsHelper: analyticsHelper,
+                previousPaymentOption: previousPaymentOption
+            )
+            vc.paymentSheetDelegate = self
+            return vc
+        }
+    }
+
+    @MainActor
+    private func performReload(mode: InitializationMode) async {
+        guard let currentVC = bottomSheetViewController.contentStack.first
+                as? PaymentSheetViewControllerProtocol else {
+            stpAssertionFailure("Expected contentStack.first to be a PaymentSheetViewControllerProtocol")
+            return
+        }
+
+        currentVC.setReloading(true)
+
+        do {
+            let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
+                mode: mode,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                integrationShape: .paymentSheet,
+                isUpdate: true
+            )
+            self.confirmationChallenge = confirmationChallenge
+            let newVC = makePaymentSheetVC(
+                loadResult: loadResult,
+                previousPaymentOption: currentVC.selectedPaymentOption,
+                shouldLogExperimentExposure: false
+            )
+            bottomSheetViewController.setViewControllers([newVC])
+        } catch {
+            currentVC.setReloading(false)
+            currentVC.setReloadError(error)
+        }
+    }
 }
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
@@ -394,6 +439,29 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
             )
         }
     }
+
+    func paymentSheetViewControllerDidSelectCurrency(
+        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
+        currency: String
+    ) {
+        guard let checkout else {
+            stpAssertionFailure("Expected checkout to be set when currency selection occurs")
+            return
+        }
+        paymentSheetViewController.setReloading(true)
+        Task { @MainActor in
+            do {
+                try await checkout.selectCurrency(currency)
+                self.analyticsHelper.logAdaptivePricingCurrencyToggled()
+                guard let stpSession = checkout.state.session as? STPCheckoutSession else { return }
+                await self.performReload(mode: .checkoutSession(stpSession))
+            } catch {
+                self.analyticsHelper.logAdaptivePricingCurrencyToggledFailed(error: error)
+                paymentSheetViewController.setReloading(false)
+                paymentSheetViewController.setReloadError(error)
+            }
+        }
+    }
 }
 
 // MARK: - CheckoutIntegrationDelegate
@@ -422,9 +490,14 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
     var intent: Intent { get }
     var elementsSession: STPElementsSession { get }
+    var selectedPaymentOption: PaymentSheet.PaymentOption? { get }
 
     func pay(with paymentOption: PaymentOption)
     func clearTextFields()
+    /// Freeze the UI and show a spinner on the primary button while we reload the intent.
+    /// If you add new UI, make sure it's also disabled/hidden during reloading.
+    func setReloading(_ isReloading: Bool)
+    func setReloadError(_ error: Error)
 }
 
 protocol PaymentSheetViewControllerDelegate: AnyObject {
@@ -439,4 +512,8 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     )
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
+    func paymentSheetViewControllerDidSelectCurrency(
+        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
+        currency: String
+    )
 }

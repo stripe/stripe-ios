@@ -90,6 +90,14 @@ struct CustomerSheetTestPlayground: View {
                             }.buttonStyle(.bordered)
                         }
                         SettingPickerView(setting: merchantCountryBinding)
+                        if playgroundController.settings.merchantCountryCode == .custom {
+                            TextField("sk_(test/live)_...", text: customSecretKeyBinding)
+                                .autocapitalization(.none)
+                                .autocorrectionDisabled()
+                            TextField("pk_(test/live)_...", text: customPublishableKeyBinding)
+                                .autocapitalization(.none)
+                                .autocorrectionDisabled()
+                        }
                         SettingView(setting: paymentMethodModeBinding)
                         SettingView(setting: $playgroundController.settings.applePay)
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
@@ -163,6 +171,11 @@ struct CustomerSheetTestPlayground: View {
             if playgroundController.settings.merchantCountryCode.rawValue != newCountry.rawValue {
                 playgroundController.settings.customerMode = .new
             }
+            // Clear custom keys if we switch to non-custom merchant
+            if newCountry != .custom {
+                playgroundController.settings.customSecretKey = nil
+                playgroundController.settings.customPublishableKey = nil
+            }
             playgroundController.settings.merchantCountryCode = newCountry
         }
     }
@@ -179,6 +192,22 @@ struct CustomerSheetTestPlayground: View {
             return playgroundController.settings.headerTextForSelectionScreen ?? ""
         } set: { newString in
             playgroundController.settings.headerTextForSelectionScreen = (newString != "") ? newString : nil
+        }
+    }
+
+    var customSecretKeyBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customSecretKey ?? ""
+        } set: { newString in
+            playgroundController.settings.customSecretKey = newString
+        }
+    }
+
+    var customPublishableKeyBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customPublishableKey ?? ""
+        } set: { newString in
+            playgroundController.settings.customPublishableKey = newString
         }
     }
 }

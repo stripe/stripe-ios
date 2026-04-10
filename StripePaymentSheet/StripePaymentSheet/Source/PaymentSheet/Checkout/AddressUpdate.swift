@@ -11,9 +11,12 @@ import Foundation
 @_spi(CheckoutSessionsPreview)
 extension Checkout {
     /// Parameters for ``updateBillingAddress(_:)`` and ``updateShippingAddress(_:)``.
-    public struct AddressUpdate {
+    public struct AddressUpdate: Equatable {
         /// The customer's full name.
         public let name: String?
+
+        /// The customer's phone number.
+        public let phone: String?
 
         /// The customer's address.
         public let address: Address
@@ -21,9 +24,11 @@ extension Checkout {
         /// Creates an address update.
         /// - Parameters:
         ///   - name: The customer's full name.
+        ///   - phone: The customer's phone number.
         ///   - address: The customer's address.
-        public init(name: String? = nil, address: Address) {
+        public init(name: String? = nil, phone: String? = nil, address: Address) {
             self.name = name
+            self.phone = phone
             self.address = address
         }
     }

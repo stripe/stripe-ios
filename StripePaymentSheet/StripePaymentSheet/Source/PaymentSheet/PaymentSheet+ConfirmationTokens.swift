@@ -202,7 +202,7 @@ extension PaymentSheet {
         case .payment(_, _, let intentSetupFutureUsage, _, let paymentMethodOptions):
             let paymentMethodType = paymentMethodType(from: confirmType)
             // Priority order: user checkbox > PMO SFU > top-level SFU
-            if confirmType.shouldSave {
+            if confirmType.shouldSaveForIntent {
                 // 1. User chose to save payment method via checkbox takes highest priority
                 confirmationTokenParams.setupFutureUsage = .offSession
             } else if let pmoSFU = paymentMethodOptions?.setupFutureUsageValues?[paymentMethodType] {

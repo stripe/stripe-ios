@@ -12,14 +12,12 @@ import SwiftUI
 @available(iOS 15.0, *)
 struct CheckoutCartView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var checkout: Checkout
+    @State private var checkout: Checkout?
 
     @State private var isLoading = false
     @State private var errorMessage: String?
 
-    init(clientSecret: String) {
-        _checkout = StateObject(wrappedValue: Checkout(clientSecret: clientSecret))
-    }
+    let clientSecret: String
 
     var body: some View {
         NavigationView {
@@ -27,14 +25,14 @@ struct CheckoutCartView: View {
                 Color(UIColor.systemGroupedBackground)
                     .ignoresSafeArea()
 
-                if let session = checkout.session {
+                if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
                         isLoading: $isLoading,
                         errorMessage: $errorMessage
                     )
                     .overlay(alignment: .bottom) {
-                        if session.totals != nil {
+                        if checkout.state.session.totals != nil {
                             CheckoutCartPaymentButton(
                                 checkout: checkout,
                                 onDismiss: { dismiss() }
@@ -53,7 +51,7 @@ struct CheckoutCartView: View {
                     }
                 }
 
-                if isLoading && checkout.session != nil {
+                if isLoading && checkout != nil {
                     Color.black.opacity(0.1)
                         .ignoresSafeArea()
                     ProgressView()
@@ -79,7 +77,7 @@ struct CheckoutCartView: View {
         isLoading = true
         errorMessage = nil
         do {
-            try await checkout.load()
+            checkout = try await Checkout(clientSecret: clientSecret)
         } catch {
             errorMessage = error.localizedDescription
         }
