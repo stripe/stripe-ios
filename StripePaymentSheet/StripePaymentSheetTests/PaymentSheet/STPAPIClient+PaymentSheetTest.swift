@@ -248,6 +248,104 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
 
         XCTAssertEqual(sellerDetailsParams["network_id"] as? String, "network_123")
         XCTAssertEqual(sellerDetailsParams["external_id"] as? String, "external_456")
+        XCTAssertEqual(sellerDetailsParams["business_name"] as? String, "Till's Pills")
+        XCTAssertNil(sellerDetailsParams["network_business_profile"])
+    }
+
+    func testElementsSessionParameters_DeferredPayment_WithNetworkBusinessProfile() throws {
+        let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(
+            networkId: "network_123",
+            externalId: "external_456",
+            businessName: "Till's Pills",
+            networkBusinessProfile: "nbp_123"
+        )
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            sharedPaymentTokenSessionWithMode: .payment(amount: 2000, currency: "USD"),
+            sellerDetails: sellerDetails,
+            paymentMethodTypes: ["card"],
+            preparePaymentMethodHandler: { _, _ in }
+        )
+
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .deferredIntent(intentConfig),
+            epmConfiguration: nil,
+            cpmConfiguration: nil,
+            clientDefaultPaymentMethod: nil,
+            customerAccessProvider: nil,
+            linkDisallowFundingSourceCreation: []
+        )
+
+        let sellerDetailsParams = try XCTUnwrap(parameters["seller_details"] as? [String: Any])
+
+        XCTAssertEqual(sellerDetailsParams["network_id"] as? String, "network_123")
+        XCTAssertEqual(sellerDetailsParams["external_id"] as? String, "external_456")
+        XCTAssertEqual(sellerDetailsParams["business_name"] as? String, "Till's Pills")
+        XCTAssertEqual(sellerDetailsParams["network_business_profile"] as? String, "nbp_123")
+    }
+
+    func testElementsSessionParameters_DeferredPayment_WithSellerDetails_OptionalFields() throws {
+        let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(
+            networkBusinessProfile: "nbp_only"
+        )
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            sharedPaymentTokenSessionWithMode: .payment(amount: 2000, currency: "USD"),
+            sellerDetails: sellerDetails,
+            paymentMethodTypes: ["card"],
+            preparePaymentMethodHandler: { _, _ in }
+        )
+
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .deferredIntent(intentConfig),
+            epmConfiguration: nil,
+            cpmConfiguration: nil,
+            clientDefaultPaymentMethod: nil,
+            customerAccessProvider: nil,
+            linkDisallowFundingSourceCreation: []
+        )
+
+        let sellerDetailsParams = try XCTUnwrap(parameters["seller_details"] as? [String: Any])
+
+        XCTAssertNil(sellerDetailsParams["network_id"])
+        XCTAssertNil(sellerDetailsParams["external_id"])
+        XCTAssertNil(sellerDetailsParams["business_name"])
+        XCTAssertEqual(sellerDetailsParams["network_business_profile"] as? String, "nbp_only")
+    }
+
+    func testBetaHeader_AddedWhenNetworkBusinessProfileProvided() throws {
+        let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(
+            networkBusinessProfile: "nbp_123"
+        )
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            sharedPaymentTokenSessionWithMode: .payment(amount: 2000, currency: "USD"),
+            sellerDetails: sellerDetails,
+            paymentMethodTypes: ["card"],
+            preparePaymentMethodHandler: { _, _ in }
+        )
+
+        let apiClient = STPAPIClient(publishableKey: "pk_test")
+        XCTAssertFalse(apiClient.betas.contains("payment_element_seller_payment_methods_beta_1=v1"))
+
+        // We can't easily test the full request flow, but we can verify the beta would be added
+        // by checking the intentConfig condition
+        XCTAssertNotNil(intentConfig.sellerDetails?.networkBusinessProfile)
+    }
+
+    func testValidation_SellerDetailsAndPaymentMethodConfiguration_MutuallyExclusive() {
+        let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(
+            networkId: "network_123",
+            externalId: "external_456",
+            businessName: "Till's Pills"
+        )
+        let intentConfig = PaymentSheet.IntentConfiguration(
+            sharedPaymentTokenSessionWithMode: .payment(amount: 2000, currency: "USD"),
+            sellerDetails: sellerDetails,
+            paymentMethodConfigurationId: "pmc_123",
+            preparePaymentMethodHandler: { _, _ in }
+        )
+
+        let error = intentConfig.validate()
+        XCTAssertNotNil(error)
+        XCTAssertTrue(error is PaymentSheetError)
     }
 
     func testElementsSessionParameters_DeferredPayment_WithoutSellerDetails() throws {

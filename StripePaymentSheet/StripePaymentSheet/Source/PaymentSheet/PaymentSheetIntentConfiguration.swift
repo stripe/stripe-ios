@@ -58,14 +58,30 @@ public extension PaymentSheet {
 
         /// Seller details for facilitated payment sessions
         @_spi(SharedPaymentToken) public struct SellerDetails {
-            public let networkId: String
-            public let externalId: String
-            public let businessName: String
+            public let networkId: String?
+            public let externalId: String?
+            public let businessName: String?
+            public let networkBusinessProfile: String?
 
+            /// Backwards-compatible initializer with required fields
             public init(networkId: String, externalId: String, businessName: String) {
                 self.networkId = networkId
                 self.externalId = externalId
                 self.businessName = businessName
+                self.networkBusinessProfile = nil
+            }
+
+            /// Initializer with all optional fields including networkBusinessProfile
+            public init(
+                networkId: String? = nil,
+                externalId: String? = nil,
+                businessName: String? = nil,
+                networkBusinessProfile: String? = nil
+            ) {
+                self.networkId = networkId
+                self.externalId = externalId
+                self.businessName = businessName
+                self.networkBusinessProfile = networkBusinessProfile
             }
         }
 
@@ -261,10 +277,12 @@ public extension PaymentSheet {
 
         @discardableResult
         func validate() -> Error? {
-            let errorMessage: String
             if case .payment(let amount, _, _, _, _) = mode, amount <= 0 {
-                errorMessage = "The amount in `PaymentSheet.IntentConfiguration` must be non-zero! See https://docs.stripe.com/api/payment_intents/create#create_payment_intent-amount"
+                let errorMessage = "The amount in `PaymentSheet.IntentConfiguration` must be non-zero! See https://docs.stripe.com/api/payment_intents/create#create_payment_intent-amount"
                 return PaymentSheetError.intentConfigurationValidationFailed(message: errorMessage)
+            }
+            if sellerDetails != nil && paymentMethodConfigurationId != nil {
+                return PaymentSheetError.paymentMethodConfigurationAndSellerDetailsMutuallyExclusive
             }
             return nil
         }
