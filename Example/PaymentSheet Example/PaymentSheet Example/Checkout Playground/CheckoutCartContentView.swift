@@ -599,3 +599,42 @@ struct CheckoutCartContentView: View {
         }
     }
 }
+
+@available(iOS 15.0, *)
+struct CheckoutCartSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @ObservedObject var checkout: Checkout
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+
+    var body: some View {
+        NavigationView {
+            ZStack {
+                Color(UIColor.systemGroupedBackground)
+                    .ignoresSafeArea()
+
+                CheckoutCartContentView(
+                    checkout: checkout,
+                    isLoading: $isLoading,
+                    errorMessage: $errorMessage
+                )
+
+                if isLoading {
+                    Color.black.opacity(0.1)
+                        .ignoresSafeArea()
+                    ProgressView()
+                }
+            }
+            .navigationTitle("Cart")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
+                            .foregroundColor(.primary)
+                    }
+                }
+            }
+        }
+    }
+}
