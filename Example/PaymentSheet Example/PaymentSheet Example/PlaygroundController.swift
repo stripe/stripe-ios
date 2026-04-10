@@ -1060,6 +1060,11 @@ extension PlaygroundController {
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
 
+        // Send use_manual_capture when toggled on
+        if settings.manualCapture == .on {
+            body["use_manual_capture"] = true
+        }
+
         // Add CheckoutSession flag if using CheckoutSession integration type
         if settings.integrationType == .checkoutSession {
             body["use_checkout_session"] = true
