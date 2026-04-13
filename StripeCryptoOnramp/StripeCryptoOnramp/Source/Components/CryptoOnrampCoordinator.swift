@@ -174,7 +174,14 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let appearance: LinkAppearance
     private let analyticsClient: CryptoOnrampAnalyticsClient
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
-    private var applePayPreviousPaymentSource: SelectedPaymentSource?
+
+    /// Temporary snapshot of the selection that existed before starting an Apple Pay collection flow.
+    ///
+    /// We set this immediately before presenting Apple Pay so we can restore `selectedPaymentSource`
+    /// if the Apple Pay flow is canceled or fails after `didCreatePaymentMethod` has already updated
+    /// `selectedPaymentSource`. This value should only represent pre-existing selection state for the
+    /// active Apple Pay attempt, and must be cleared once that attempt completes, fails, or the user logs out.
+    private var paymentSourceBeforeApplePay: SelectedPaymentSource?
     private var selectedPaymentSource: SelectedPaymentSource?
     private let cryptoCustomerState: CryptoCustomerState
 
@@ -493,7 +500,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             return .completed(displayData: preview, kycInfo: nil)
         case .applePay(let paymentRequest):
             // This presents Apple Pay and fills the selected payment source in the delegate.
-            applePayPreviousPaymentSource = selectedPaymentSource
+            paymentSourceBeforeApplePay = selectedPaymentSource
             do {
                 let status = try await presentApplePay(using: paymentRequest, from: viewController)
                 switch status {
@@ -521,7 +528,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                         sublabel: sublabel
                     )
 
-                    applePayPreviousPaymentSource = nil
+                    paymentSourceBeforeApplePay = nil
                     analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
 
                     return .completed(displayData: paymentMethodPreview, kycInfo: kycInfo)
@@ -529,7 +536,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     return .canceled
                 }
             } catch {
-                applePayPreviousPaymentSource = nil
+                paymentSourceBeforeApplePay = nil
                 analyticsClient.log(.errorOccurred(during: .collectPaymentMethod, errorMessage: error.localizedDescription))
                 throw error
             }
@@ -631,7 +638,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
     public func logOut() async throws {
         do {
-            applePayPreviousPaymentSource = nil
+            paymentSourceBeforeApplePay = nil
             selectedPaymentSource = nil
             try await linkController.logOut()
             analyticsClient.log(.userLoggedOut)
@@ -661,17 +668,17 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
         case .success:
             applePayCompletionContinuation?.resume(returning: .success)
         case .userCancellation:
-            selectedPaymentSource = applePayPreviousPaymentSource
+            selectedPaymentSource = paymentSourceBeforeApplePay
             applePayCompletionContinuation?.resume(returning: .canceled)
         case .error:
-            selectedPaymentSource = applePayPreviousPaymentSource
+            selectedPaymentSource = paymentSourceBeforeApplePay
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         @unknown default:
-            selectedPaymentSource = applePayPreviousPaymentSource
+            selectedPaymentSource = paymentSourceBeforeApplePay
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         }
 
-        applePayPreviousPaymentSource = nil
+        paymentSourceBeforeApplePay = nil
         applePayCompletionContinuation = nil
     }
 }
