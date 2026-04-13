@@ -244,6 +244,17 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.Wero.paymentIntent) { _ in }
     }
 
+    func testPayByBankConfirmFlows() async throws {
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "example-app-scheme://unused"
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "GBP",
+                               paymentMethodType: .payByBank,
+                               merchantCountry: .GB,
+                               configuration: configuration,
+                               expectedHierarchy: ExpectedFormHierarchy.PayByBank.paymentIntent) { _ in }
+    }
+
     func testCryptoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
@@ -1062,7 +1073,8 @@ extension PaymentSheetLPMConfirmFlowTests {
             )
             let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
             let checkoutSession = try await csApiClient.initCheckoutSession(
-                checkoutSessionId: checkoutSessionResponse.id
+                checkoutSessionId: checkoutSessionResponse.id,
+                adaptivePricingAllowed: true
             )
 
             intents = [
@@ -1306,7 +1318,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 customerID: customer
             )
             let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id)
+            let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id, adaptivePricingAllowed: true)
 
             return [
                 ("SetupIntent", .setupIntent(setupIntent)),

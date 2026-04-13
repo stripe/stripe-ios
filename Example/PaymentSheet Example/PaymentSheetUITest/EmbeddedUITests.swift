@@ -186,6 +186,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Pay €50.99"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
 
+        // Swipe up just a little bit to expose embedded
+        app.swipeUp(velocity: 100)
+
         // Switch to embedded mode kicks off a reload
         app.buttons["embedded"].waitForExistenceAndTap(timeout: 5)
         app.buttons["Present embedded payment element"].waitForExistenceAndTap()

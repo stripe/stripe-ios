@@ -32,6 +32,7 @@ struct CheckoutCartContentView: View {
                         .padding(.horizontal)
                 }
 
+                currencySelectorSection
                 lineItemsSection
                 shippingOptionsSection
                 shippingAddressSection
@@ -415,6 +416,25 @@ struct CheckoutCartContentView: View {
     }
 
     @ViewBuilder
+    private var currencySelectorSection: some View {
+        let appearance: Checkout.CurrencySelectorView.Appearance = {
+            var customAppearance = Checkout.CurrencySelectorView.Appearance()
+            customAppearance.cornerRadius = 12
+            customAppearance.backgroundColor = UIColor.systemBackground
+            customAppearance.selectedColor = UIColor.tintColor
+            customAppearance.selectedTextColor = .white
+            customAppearance.unselectedTextColor = UIColor.secondaryLabel
+            customAppearance.borderColor = UIColor.separator.withAlphaComponent(0.3)
+            customAppearance.captionColor = UIColor.secondaryLabel
+            customAppearance.titleFont = .systemFont(ofSize: 15, weight: .semibold)
+            customAppearance.subtitleFont = .systemFont(ofSize: 11, weight: .regular)
+            return customAppearance
+        }()
+        Checkout.CurrencySelectorElement(checkout: checkout, appearance: appearance)
+            .padding(.horizontal)
+    }
+
+    @ViewBuilder
     private var orderSummarySection: some View {
         if let totals = checkout.state.session.totals {
             let currency = checkout.state.session.currency
@@ -463,6 +483,7 @@ struct CheckoutCartContentView: View {
 
                     Divider()
                         .padding(.vertical, 4)
+
                     HStack {
                         Text("Total")
                             .font(.title3).bold()
@@ -596,6 +617,45 @@ struct CheckoutCartContentView: View {
                 errorMessage = error.localizedDescription
             }
             isLoading = false
+        }
+    }
+}
+
+@available(iOS 15.0, *)
+struct CheckoutCartSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @ObservedObject var checkout: Checkout
+    @State private var isLoading = false
+    @State private var errorMessage: String?
+
+    var body: some View {
+        NavigationView {
+            ZStack {
+                Color(UIColor.systemGroupedBackground)
+                    .ignoresSafeArea()
+
+                CheckoutCartContentView(
+                    checkout: checkout,
+                    isLoading: $isLoading,
+                    errorMessage: $errorMessage
+                )
+
+                if isLoading {
+                    Color.black.opacity(0.1)
+                        .ignoresSafeArea()
+                    ProgressView()
+                }
+            }
+            .navigationTitle("Cart")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "xmark")
+                            .foregroundColor(.primary)
+                    }
+                }
+            }
         }
     }
 }

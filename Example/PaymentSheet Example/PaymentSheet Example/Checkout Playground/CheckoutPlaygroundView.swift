@@ -79,7 +79,7 @@ struct CheckoutPlaygroundView: View {
             .navigationBarTitleDisplayMode(.inline)
             .sheet(isPresented: $viewModel.navigateToCheckout) {
                 if let clientSecret = viewModel.clientSecret {
-                    CheckoutCartView(clientSecret: clientSecret)
+                    CheckoutCartView(clientSecret: clientSecret, adaptivePricing: viewModel.adaptivePricing)
                 }
             }
         }
