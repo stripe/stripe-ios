@@ -191,6 +191,7 @@ struct PaymentSheetTestPlayground: View {
                                 }
                             }
                         }
+                        SearchableSettingView(setting: $playgroundController.settings.manualCapture, searchText: $searchText)
                         if playgroundController.settings.customerKeyType == .customerSession {
                             SearchableView(searchableName: "Customer Session", searchText: $searchText) {
                                 VStack {
@@ -377,6 +378,9 @@ struct PaymentSheetTestPlayground: View {
             return playgroundController.settings.customSecretKey ?? ""
         } set: { newString in
             playgroundController.settings.customSecretKey = newString
+            if newString.hasPrefix("sk_live") {
+                playgroundController.settings.manualCapture = .on
+            }
         }
     }
 
@@ -385,6 +389,9 @@ struct PaymentSheetTestPlayground: View {
             return playgroundController.settings.customPublishableKey ?? ""
         } set: { newString in
             playgroundController.settings.customPublishableKey = newString
+            if newString.hasPrefix("pk_live") {
+                playgroundController.settings.manualCapture = .on
+            }
         }
     }
 
@@ -484,6 +491,7 @@ struct PaymentSheetButtons: View {
     @State private var embeddedIsPresented: Bool = false
     @State private var psFCOptionsIsPresented: Bool = false
     @State private var psFCIsConfirming: Bool = false
+    @State private var showingCart: Bool = false
 
     func reloadPlaygroundController() {
         playgroundController.load(reinitializeControllers: true)
@@ -494,6 +502,25 @@ struct PaymentSheetButtons: View {
     @ViewBuilder
     var embeddedSettingsView: some View {
         EmbeddedSettingsView()
+    }
+
+    @ViewBuilder
+    var cartButton: some View {
+        if playgroundController.checkout != nil {
+            if #available(iOS 15.0, *) {
+                Button {
+                    showingCart = true
+                } label: {
+                    Label("Cart", systemImage: "cart.fill")
+                        .font(.callout.smallCaps())
+                }
+                .buttonStyle(.bordered)
+            } else {
+                Button("Cart") {
+                    showingCart = true
+                }
+            }
+        }
     }
 
     var titleAndReloadView: some View {
@@ -534,6 +561,7 @@ struct PaymentSheetButtons: View {
                             }
                             .paymentSheet(isPresented: $psIsPresented, paymentSheet: ps, onCompletion: playgroundController.onPSCompletion)
                             Spacer()
+                            cartButton
                             Button {
                                 playgroundController.didTapShippingAddressButton()
                             } label: {
@@ -564,6 +592,7 @@ struct PaymentSheetButtons: View {
                             }
                             .disabled(playgroundController.paymentSheetFlowController == nil)
                             .padding()
+                            cartButton
                             Button {
                                 playgroundController.didTapShippingAddressButton()
                             } label: {
@@ -605,6 +634,7 @@ struct PaymentSheetButtons: View {
                                 Text("Present embedded payment element")
                             }
                             Spacer()
+                            cartButton
                             Button {
                                 playgroundController.didTapShippingAddressButton()
                             } label: {
@@ -622,6 +652,11 @@ struct PaymentSheetButtons: View {
                         ExamplePaymentStatusView(result: result)
                     }
                 }
+            }
+        }
+        .sheet(isPresented: $showingCart) {
+            if #available(iOS 15.0, *), let checkout = playgroundController.checkout {
+                CheckoutCartSheet(checkout: checkout)
             }
         }
     }

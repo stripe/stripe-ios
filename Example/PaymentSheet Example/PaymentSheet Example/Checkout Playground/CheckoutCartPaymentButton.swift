@@ -11,7 +11,7 @@ import SwiftUI
 
 @available(iOS 15.0, *)
 struct CheckoutCartPaymentButton: View {
-    let checkout: Checkout
+    @ObservedObject var checkout: Checkout
     let onDismiss: () -> Void
 
     private var session: Checkout.Session { checkout.state.session }
