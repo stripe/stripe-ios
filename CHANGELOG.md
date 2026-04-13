@@ -1,7 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+
+## 25.11.0 2026-04-13
 ### PaymentSheet
 * [Added] Added support for Pay by Bank payments (GA in GB, private preview in EU).
 
