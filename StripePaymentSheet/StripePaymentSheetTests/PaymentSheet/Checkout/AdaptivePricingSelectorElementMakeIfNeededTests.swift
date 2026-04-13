@@ -1,5 +1,5 @@
 //
-//  CurrencySelectorElementMakeIfNeededTests.swift
+//  AdaptivePricingSelectorElementMakeIfNeededTests.swift
 //  StripePaymentSheetTests
 //
 //  Created by Nick Porter on 3/30/26.
@@ -10,11 +10,11 @@
 import XCTest
 
 @MainActor
-final class CurrencySelectorElementMakeIfNeededTests: XCTestCase {
+final class AdaptivePricingSelectorElementMakeIfNeededTests: XCTestCase {
 
     func testReturnsNilWhenIsFlowController() {
         let session = makeAdaptivePricingSession()
-        let result = CurrencySelectorElement.makeIfNeeded(
+        let result = AdaptivePricingSelectorElement.makeIfNeeded(
             intent: .checkoutSession(session),
             isFlowController: true,
             appearance: .default,
@@ -25,7 +25,7 @@ final class CurrencySelectorElementMakeIfNeededTests: XCTestCase {
 
     func testReturnsNilWhenIntentIsNotCheckoutSession() {
         let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 1000, currency: "usd"), confirmHandler: { _, _, _ in }))
-        let result = CurrencySelectorElement.makeIfNeeded(
+        let result = AdaptivePricingSelectorElement.makeIfNeeded(
             intent: intent,
             isFlowController: false,
             appearance: .default,
@@ -36,7 +36,7 @@ final class CurrencySelectorElementMakeIfNeededTests: XCTestCase {
 
     func testReturnsNilWhenAdaptivePricingNotActive() {
         let session = makeSession(adaptivePricingActive: false)
-        let result = CurrencySelectorElement.makeIfNeeded(
+        let result = AdaptivePricingSelectorElement.makeIfNeeded(
             intent: .checkoutSession(session),
             isFlowController: false,
             appearance: .default,
@@ -47,7 +47,7 @@ final class CurrencySelectorElementMakeIfNeededTests: XCTestCase {
 
     func testReturnsNilWhenLocalizedPricesMetasEmpty() {
         let session = makeSession(includeLocalizedPrices: false)
-        let result = CurrencySelectorElement.makeIfNeeded(
+        let result = AdaptivePricingSelectorElement.makeIfNeeded(
             intent: .checkoutSession(session),
             isFlowController: false,
             appearance: .default,
@@ -60,7 +60,7 @@ final class CurrencySelectorElementMakeIfNeededTests: XCTestCase {
         // Create a session with adaptive pricing active and localized prices, but
         // without the exchange rate fields so exchangeRateMeta parses as nil.
         let session = makeSession(includeExchangeRateFields: false)
-        let result = CurrencySelectorElement.makeIfNeeded(
+        let result = AdaptivePricingSelectorElement.makeIfNeeded(
             intent: .checkoutSession(session),
             isFlowController: false,
             appearance: .default,
@@ -71,7 +71,7 @@ final class CurrencySelectorElementMakeIfNeededTests: XCTestCase {
 
     func testReturnsElementWhenAllConditionsMet() {
         let session = makeAdaptivePricingSession()
-        let result = CurrencySelectorElement.makeIfNeeded(
+        let result = AdaptivePricingSelectorElement.makeIfNeeded(
             intent: .checkoutSession(session),
             isFlowController: false,
             appearance: .default,

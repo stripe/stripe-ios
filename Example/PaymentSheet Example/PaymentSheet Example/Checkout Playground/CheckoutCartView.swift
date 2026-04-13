@@ -18,6 +18,7 @@ struct CheckoutCartView: View {
     @State private var errorMessage: String?
 
     let clientSecret: String
+    let adaptivePricing: Bool
 
     var body: some View {
         NavigationView {
@@ -77,7 +78,9 @@ struct CheckoutCartView: View {
         isLoading = true
         errorMessage = nil
         do {
-            checkout = try await Checkout(clientSecret: clientSecret)
+            var config = Checkout.Configuration()
+            config.adaptivePricing.allowed = adaptivePricing
+            checkout = try await Checkout(clientSecret: clientSecret, configuration: config)
         } catch {
             errorMessage = error.localizedDescription
         }

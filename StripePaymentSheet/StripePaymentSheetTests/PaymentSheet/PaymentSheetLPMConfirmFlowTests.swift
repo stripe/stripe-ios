@@ -1062,7 +1062,8 @@ extension PaymentSheetLPMConfirmFlowTests {
             )
             let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
             let checkoutSession = try await csApiClient.initCheckoutSession(
-                checkoutSessionId: checkoutSessionResponse.id
+                checkoutSessionId: checkoutSessionResponse.id,
+                adaptivePricingAllowed: true
             )
 
             intents = [
@@ -1306,7 +1307,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 customerID: customer
             )
             let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-            let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id)
+            let checkoutSession = try await csApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionResponse.id, adaptivePricingAllowed: true)
 
             return [
                 ("SetupIntent", .setupIntent(setupIntent)),

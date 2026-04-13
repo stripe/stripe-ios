@@ -111,11 +111,14 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum Amount: Int, PickerEnum {
         static var enumName: String { "Amount" }
 
+        case _100 = 100
         case _5099 = 5099
         case _10000 = 10000
 
         var displayName: String {
             switch self {
+            case ._100:
+                return "1.00"
             case ._5099:
                 return "50.99"
             case ._10000:
@@ -628,6 +631,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum ManualCapture: String, PickerEnum {
+        static let enumName: String = "Manual Capture"
+        case on
+        case off
+    }
+
     enum AllowsRemovalOfLastSavedPaymentMethodEnabled: String, PickerEnum {
         static let enumName: String = "allowsRemovalOfLastSavedPaymentMethod"
         case on
@@ -732,6 +741,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var customPaymentMethods: CustomPaymentMethods
     var preferredNetworksEnabled: PreferredNetworksEnabled
     var requireCVCRecollection: RequireCVCRecollectionEnabled
+    var manualCapture: ManualCapture
     var allowsRemovalOfLastSavedPaymentMethod: AllowsRemovalOfLastSavedPaymentMethodEnabled
 
     var attachDefaults: BillingDetailsAttachDefaults
@@ -792,6 +802,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             customPaymentMethods: .off,
             preferredNetworksEnabled: .off,
             requireCVCRecollection: .off,
+            manualCapture: .off,
             allowsRemovalOfLastSavedPaymentMethod: .on,
             attachDefaults: .off,
             collectName: .automatic,
