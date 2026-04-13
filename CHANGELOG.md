@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Added] Added support for Pay by Bank payments (GA in GB, private preview in EU).
 
 ## 25.10.0 2026-04-06
 ### AddressElement
