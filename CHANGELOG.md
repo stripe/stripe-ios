@@ -3,6 +3,9 @@ MINOR
 
 ## X.Y.Z - changes pending release
 
+### Identity
+* [Changed] Updated the Identity example app playground to use the latest VerificationSession API and request parameters.
+
 ## 25.10.0 2026-04-06
 ### AddressElement
 * [Added] Added state dropdown support for BR.
