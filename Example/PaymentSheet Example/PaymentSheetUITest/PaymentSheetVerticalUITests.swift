@@ -233,8 +233,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         setupCards(cards: ["5555555555554444"], settings: settings)
 
         // Exercise edge case w/ FC and 3+ PMs. Delete the selected card and tap out of the screen
+        app.buttons["flowController"].waitForExistenceAndTap()
         settings.uiStyle = .flowController
-        loadPlayground(app, settings)
+        reload(app, settings: settings)
         app.buttons["Payment method"].waitForExistenceAndTap()
         let firstPaymentMethod = app.buttons["•••• 4444"]
         XCTAssertTrue(firstPaymentMethod.isSelected)
@@ -254,8 +255,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertEqual(app.buttons["Payment method"].label, "•••• 1001, card, Jenny Rosen, jenny.rosen@example.com, +1 (555) 555-5555, 1 Rue de Rivoli, Paris, 75001, FR")
 
         // Switch to PaymentSheet
+        app.buttons["paymentSheet"].waitForExistenceAndTap()
         settings.uiStyle = .paymentSheet
-        loadPlayground(app, settings)
+        reload(app, settings: settings)
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["View more"].waitForExistenceAndTap())
         XCTAssertTrue(app.staticTexts["Select card"].waitForExistence(timeout: 5.0))
