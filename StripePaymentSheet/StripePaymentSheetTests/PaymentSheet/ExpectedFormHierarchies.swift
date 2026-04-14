@@ -185,6 +185,12 @@ enum ExpectedFormHierarchy {
         }
     }
 
+    // MARK: - PayByBank
+
+    enum PayByBank {
+        static var paymentIntent: FormHierarchyNode { emptyForm }
+    }
+
     // MARK: - FPX
 
     enum FPX {
