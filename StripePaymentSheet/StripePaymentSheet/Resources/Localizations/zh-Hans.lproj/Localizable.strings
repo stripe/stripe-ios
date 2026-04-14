@@ -30,16 +30,6 @@
 
 "Bank account details cannot be changed." = "无法更改银行账户详情。";
 
-"Buy now or pay later with  <img/>" = "用 <img/> 先买后付";
-
-"Buy now or pay later with Afterpay" = "用 Afterpay 先买后付";
-
-"Buy now or pay later with Cash App Afterpay" = "用 Cash App Afterpay 先买后付";
-
-"Buy now or pay later with Clearpay" = "用 Clearpay 先买后付";
-
-"Buy now or pay later with Klarna" = "用 Klarna 先买后付";
-
 "Buy using a UPI ID" = "用 UPI ID 购买";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "确认您的 PayPal 付款即表示您允许 %@ 按照他们的条款从您的 PayPal 扣取未来款项。";

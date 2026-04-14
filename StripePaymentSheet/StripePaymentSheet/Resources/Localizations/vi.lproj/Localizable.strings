@@ -30,16 +30,6 @@
 
 "Bank account details cannot be changed." = "Không thể thay đổi thông tin tài khoản ngân hàng.";
 
-"Buy now or pay later with  <img/>" = "Mua ngay hoặc thanh toán sau bằng <img/>";
-
-"Buy now or pay later with Afterpay" = "Mua ngay hoặc thanh toán sau bằng Afterpay";
-
-"Buy now or pay later with Cash App Afterpay" = "Mua ngay hoặc thanh toán sau bằng Ứng dụng Thanh toán Afterpay";
-
-"Buy now or pay later with Clearpay" = "Mua ngay hoặc thanh toán sau bằng Clearpay";
-
-"Buy now or pay later with Klarna" = "Mua ngay hoặc thanh toán sau bằng Klarna";
-
 "Buy using a UPI ID" = "Mua bằng cách sử dụng ID UPI";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Bằng cách xác nhận khoản thanh toán của quý vị với PayPal, quý vị cho phép %@ tính phí tài khoản PayPal của quý vị cho các khoản thanh toán trong tương lai theo các điều khoản của họ.";

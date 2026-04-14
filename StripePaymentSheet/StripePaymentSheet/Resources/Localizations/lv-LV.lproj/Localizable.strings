@@ -30,16 +30,6 @@
 
 "Bank account details cannot be changed." = "Bankas konta informāciju nevar mainīt.";
 
-"Buy now or pay later with  <img/>" = "Pērciet tagad vai maksājiet vēlāk ar <img/>";
-
-"Buy now or pay later with Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Afterpay";
-
-"Buy now or pay later with Cash App Afterpay" = "Pērciet tagad vai maksājiet vēlāk ar Cash App Afterpay";
-
-"Buy now or pay later with Clearpay" = "Pērciet tagad vai maksājiet vēlāk ar Clearpay";
-
-"Buy now or pay later with Klarna" = "Pērciet tagad vai maksājiet vēlāk ar Klarna";
-
 "Buy using a UPI ID" = "Pirkt, izmantojot UPI ID";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Apstiprinot maksājumu PayPal, jūs atļaujat %@ saskaņā ar viņu noteikumiem iekasēt no jūsu PayPal konta summas par turpmākajiem maksājumiem.";

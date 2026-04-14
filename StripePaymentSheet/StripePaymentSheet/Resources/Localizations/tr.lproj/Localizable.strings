@@ -30,16 +30,6 @@
 
 "Bank account details cannot be changed." = "Banka hesabı ayrıntıları değiştirilemiyor.";
 
-"Buy now or pay later with  <img/>" = "Şimdi satın alın veya daha sonra <img/> ile ödeyin.";
-
-"Buy now or pay later with Afterpay" = "Şimdi satın alın veya daha sonra Afterpay ile ödeyin";
-
-"Buy now or pay later with Cash App Afterpay" = "Şimdi satın alın veya daha sonra Cash Uygulaması Afterpay ile ödeyin";
-
-"Buy now or pay later with Clearpay" = "Şimdi satın alın veya daha sonra Clearpay ile ödeyin";
-
-"Buy now or pay later with Klarna" = "Şimdi satın alın veya daha sonra Klarna ile ödeyin";
-
 "Buy using a UPI ID" = "UPI Numarası kullanarak satın alın";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal'la ödemeyi onayladığınızda, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak PayPal hesabınızı ücretlendirme izni vermiş olursunuz.";

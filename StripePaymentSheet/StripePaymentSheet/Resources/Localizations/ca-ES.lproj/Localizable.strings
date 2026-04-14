@@ -30,16 +30,6 @@
 
 "Bank account details cannot be changed." = "Les dades del compte bancari no es poden canviar.";
 
-"Buy now or pay later with  <img/>" = "Compra ara o paga més endavant amb <img/>";
-
-"Buy now or pay later with Afterpay" = "Compra ara o paga més endavant amb Afterpay";
-
-"Buy now or pay later with Cash App Afterpay" = "Compra ara o paga més endavant amb Cash App Afterpay";
-
-"Buy now or pay later with Clearpay" = "Compra ara o paga més endavant amb Clearpay";
-
-"Buy now or pay later with Klarna" = "Compra ara o paga més endavant amb Klarna";
-
 "Buy using a UPI ID" = "Compra amb un ID d'UPI";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Si confirmeu el pagament amb PayPal, permeteu que %@ faci càrrecs al vostre compte de PayPal per a pagaments en el futur d'acord amb les seves condicions.";

@@ -30,16 +30,6 @@
 
 "Bank account details cannot be changed." = "Les coordonnées bancaires ne peuvent pas être modifiées.";
 
-"Buy now or pay later with  <img/>" = "Paiement différé avec <img/>";
-
-"Buy now or pay later with Afterpay" = "Paiement différé avec Afterpay";
-
-"Buy now or pay later with Cash App Afterpay" = "Paiement différé avec Cash App Afterpay";
-
-"Buy now or pay later with Clearpay" = "Paiement différé avec Clearpay";
-
-"Buy now or pay later with Klarna" = "Paiement différé avec Klarna";
-
 "Buy using a UPI ID" = "Acheter à l'aide d'un ID d'UPI";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "En confirmant votre paiement via PayPal, vous autorisez %@ à débiter votre compte PayPal pour les paiements à venir, conformément à ses conditions.";

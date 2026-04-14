@@ -30,16 +30,6 @@
 
 "Bank account details cannot be changed." = "A bankszámlaadatok nem módosíthatók.";
 
-"Buy now or pay later with  <img/>" = "Vegye meg most vagy fizessen később a következővel: <img/>";
-
-"Buy now or pay later with Afterpay" = "Vegye meg most, vagy fizessen később Afterpayjel";
-
-"Buy now or pay later with Cash App Afterpay" = "Vegye meg most, vagy fizessen később Cash App Afterpayjel";
-
-"Buy now or pay later with Clearpay" = "Vegye meg most, vagy fizessen később Clearpayjel";
-
-"Buy now or pay later with Klarna" = "Vegye meg most, vagy fizessen később Klarnával";
-
 "Buy using a UPI ID" = "Vásárlás UPI-azonosítóval";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A fizetés megerősítésével a PayPalon engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";

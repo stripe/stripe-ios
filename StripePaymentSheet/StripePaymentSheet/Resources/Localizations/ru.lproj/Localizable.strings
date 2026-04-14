@@ -30,16 +30,6 @@
 
 "Bank account details cannot be changed." = "Реквизиты банковского счета нельзя изменить.";
 
-"Buy now or pay later with  <img/>" = "Купите сейчас или оплатите позже через <img/>";
-
-"Buy now or pay later with Afterpay" = "Купите сейчас или оплатите позже через систему Afterpay";
-
-"Buy now or pay later with Cash App Afterpay" = "Купите сейчас или оплатите позже через Cash App Afterpay";
-
-"Buy now or pay later with Clearpay" = "Купите сейчас или оплатите позже через систему Clearpay";
-
-"Buy now or pay later with Klarna" = "Купите сейчас или оплатите позже через систему Klarna";
-
 "Buy using a UPI ID" = "Купить с помощью идентификатора UPI";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Подтверждая платеж через PayPal, вы тем самым разрешаете компании %@ списывать с вашего счета PayPal суммы будущих платежей согласно условиям.";
