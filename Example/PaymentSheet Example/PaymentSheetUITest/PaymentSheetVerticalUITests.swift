@@ -234,7 +234,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         // Exercise edge case w/ FC and 3+ PMs. Delete the selected card and tap out of the screen
         app.buttons["flowController"].waitForExistenceAndTap()
-        app.buttons["Payment method"].waitForExistenceAndTap()
+        // Wait for autoreload to complete after switching to flow controller mode
+        XCTAssertTrue(app.buttons["Payment method"].waitForExistenceAndTap(timeout: 10))
         let firstPaymentMethod = app.buttons["•••• 4444"]
         XCTAssertTrue(firstPaymentMethod.isSelected)
         app.buttons["View more"].waitForExistenceAndTap()
