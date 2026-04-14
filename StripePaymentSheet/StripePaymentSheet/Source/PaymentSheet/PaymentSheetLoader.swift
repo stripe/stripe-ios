@@ -219,6 +219,12 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
+
+            // Pre-fetch card art without waiting for this to finish
+            if let defaultPaymentMethod = paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
+               case .saved(let stpPaymentMethod) = defaultPaymentMethod {
+                stpPaymentMethod.preloadCardArtImage(cardArtEnabled: configuration.appearance.cardArtEnabled)
+            }
             loadTimings.logEnd("makeViewModels")
 
             // Send load finished analytic

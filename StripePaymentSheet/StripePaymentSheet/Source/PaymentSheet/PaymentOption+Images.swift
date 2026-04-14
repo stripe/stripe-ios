@@ -27,7 +27,7 @@ extension PaymentOption {
             if let linkedBank = paymentOption?.instantDebitsLinkedBank {
                 return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: linkedBank.bankName), iconStyle: iconStyle)
             } else {
-                let cardArtImage = paymentMethod.cardArtImage(cardArtEnabled: cardArtEnabled)
+                let cardArtImage = paymentMethod.cachedCardArtImage(cardArtEnabled: cardArtEnabled)
                 return cardArtImage ?? paymentMethod.makeIcon(iconStyle: iconStyle)
             }
         case .new(let confirmParams):
@@ -149,8 +149,8 @@ extension STPPaymentMethod {
         }
     }
 
-    func cardArtImage(cardArtEnabled: Bool, downloadManager: DownloadManager = DownloadManager.sharedManager) -> UIImage? {
-        guard cardArtEnabled, let cardArtURL = cardArtCDNURL(height: 28) else {
+    func cachedCardArtImage(cardArtEnabled: Bool, downloadManager: DownloadManager = DownloadManager.sharedManager) -> UIImage? {
+        guard let cardArtURL = vendedCardArtURL(cardArtEnabled: cardArtEnabled) else {
             return nil
         }
         let placeholder = downloadManager.imagePlaceHolder()
@@ -160,6 +160,25 @@ extension STPPaymentMethod {
             updateHandler: nil
         )
         return image == placeholder ? nil : image.roundedWithBorder(radius: 3)
+    }
+
+    func preloadCardArtImage(cardArtEnabled: Bool, downloadManager: DownloadManager = DownloadManager.sharedManager) {
+        guard let cardArtURL = vendedCardArtURL(cardArtEnabled: cardArtEnabled) else {
+            return
+        }
+        let updateHandler: ((UIImage) -> Void)? = { _ in }
+        _ = downloadManager.downloadImage(
+            url: cardArtURL,
+            placeholder: nil,
+            updateHandler: updateHandler
+        )
+    }
+
+    func vendedCardArtURL(cardArtEnabled: Bool) -> URL? {
+        guard cardArtEnabled, let cardArtURL = cardArtCDNURL(height: 26) else {
+            return nil
+        }
+        return cardArtURL
     }
 }
 
