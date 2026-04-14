@@ -30,16 +30,6 @@
 
 "Bank account details cannot be changed." = "Podaci o bankovnom računu ne mogu se mijenjati.";
 
-"Buy now or pay later with  <img/>" = "Kupite sada ili platite kasnije s  <img/>";
-
-"Buy now or pay later with Afterpay" = "Kupite odmah ili platite kasnije pomoću Afterpaya";
-
-"Buy now or pay later with Cash App Afterpay" = "Kupite sada ili platite kasnije s Cash App Afterpay";
-
-"Buy now or pay later with Clearpay" = "Kupite odmah ili platite kasnije pomoću Clearpaya";
-
-"Buy now or pay later with Klarna" = "Kupite sada ili platite kasnije pomoću Klarne";
-
 "Buy using a UPI ID" = "Kupi koristeći UPI ID";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrđivanjem vašeg plaćanja putem usluge PayPal, dopuštate poduzeću %@ da tereti vaš račun PayPal za buduća plaćanja u skladu s njegovim uvjetima.";

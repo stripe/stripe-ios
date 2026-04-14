@@ -30,16 +30,6 @@
 
 "Bank account details cannot be changed." = "Pangakonto andmeid ei saa muuta.";
 
-"Buy now or pay later with  <img/>" = "Osta kohe või maksa hiljem makseviisiga <img/>";
-
-"Buy now or pay later with Afterpay" = "Osta praegu või maksa Afterpay abil hiljem";
-
-"Buy now or pay later with Cash App Afterpay" = "Osta praegu või maksa Cash App Afterpay abil hiljem";
-
-"Buy now or pay later with Clearpay" = "Osta praegu või maksa Clearpay abil hiljem";
-
-"Buy now or pay later with Klarna" = "Ostke nüüd või makske hiljem Klarnaga";
-
 "Buy using a UPI ID" = "UPI ID abil ostmine";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPaliga makset kinnitades lubate %@-l võtta teie PayPali kontolt tulevaste maksete eest tasu vastavalt nende tingimustele.";

@@ -30,16 +30,6 @@
 
 "Bank account details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων τραπεζικού λογαριασμού.";
 
-"Buy now or pay later with  <img/>" = "Αγορά τώρα ή πληρωμή αργότερα με <img/>";
-
-"Buy now or pay later with Afterpay" = "Αγορά τώρα ή πληρωμή αργότερα με Afterpay";
-
-"Buy now or pay later with Cash App Afterpay" = "Αγορά τώρα ή πληρωμή αργότερα με Cash App Afterpay";
-
-"Buy now or pay later with Clearpay" = "Αγορά τώρα ή πληρωμή αργότερα με Clearpay";
-
-"Buy now or pay later with Klarna" = "Αγορά τώρα ή πληρωμή αργότερα με Klarna";
-
 "Buy using a UPI ID" = "Αγορά με χρήση αναγνωριστικού UPI";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Με την επιβεβαίωση της πληρωμής σας μέσω PayPal, επιτρέπετε στην %@ να χρεώσει τον λογαριασμό σας PayPal για μελλοντικές πληρωμές σύμφωνα με τους όρους της.";

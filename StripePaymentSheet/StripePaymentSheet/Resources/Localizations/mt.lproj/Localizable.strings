@@ -30,16 +30,6 @@
 
 "Bank account details cannot be changed." = "Id-dettalji tal-kont tal-bank ma jistgħux jinbidlu.";
 
-"Buy now or pay later with  <img/>" = "Ixtri issa jew ħallas iktar tard grazzi għal <img/>";
-
-"Buy now or pay later with Afterpay" = "Ixtri issa jew ħallas iktar tard b'Afterpay";
-
-"Buy now or pay later with Cash App Afterpay" = "Ixtri issa jew ħallas iktar tard b'Cash App Afterpay";
-
-"Buy now or pay later with Clearpay" = "Ixtri issa jew ħallas iktar tard bi Clearpay";
-
-"Buy now or pay later with Klarna" = "Ixtri issa jew ħallas iktar tard bi Klarna";
-
 "Buy using a UPI ID" = "Ixtri billi tuża ID UPI";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Meta tikkonferma l-pagament b'PayPal tkun qed tħalli lil %@ tiġbor il-flus mill-kont ta' PayPal tiegħek għall-pagamenti tal-ġejjieni skont ir-regoli tagħha.";
