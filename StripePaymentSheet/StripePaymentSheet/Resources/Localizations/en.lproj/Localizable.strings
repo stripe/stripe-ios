@@ -48,19 +48,19 @@
 "Bank account details cannot be changed." = "Bank account details cannot be changed.";
 
 /* Promotional text for Afterpay/Clearpay - the image tag will display the Afterpay or Clearpay logo. This text is displayed in a button that lets the customer pay with Afterpay/Clearpay */
-"Buy now or pay later with  <img/>" = "Buy Now, Pay Later with  <img/>";
+"Buy Now, Pay Later with  <img/>" = "Buy Now, Pay Later with  <img/>";
 
 /* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Afterpay" = "Buy Now, Pay Later with Afterpay";
+"Buy Now, Pay Later with Afterpay" = "Buy Now, Pay Later with Afterpay";
 
 /* Subtitle shown on a button allowing a user to select to pay with Afterpay. */
-"Buy now or pay later with Cash App Afterpay" = "Buy Now, Pay Later with Cash App Afterpay";
+"Buy Now, Pay Later with Cash App Afterpay" = "Buy Now, Pay Later with Cash App Afterpay";
 
 /* Subtitle shown on a button allowing a user to select to pay with Clearpay. */
-"Buy now or pay later with Clearpay" = "Buy Now, Pay Later with Clearpay";
+"Buy Now, Pay Later with Clearpay" = "Buy Now, Pay Later with Clearpay";
 
 /* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
-"Buy now or pay later with Klarna" = "Buy Now, Pay Later with Klarna";
+"Buy Now, Pay Later with Klarna" = "Buy Now, Pay Later with Klarna";
 
 /* Header text shown above a UPI ID text field */
 "Buy using a UPI ID" = "Buy using a UPI ID";
