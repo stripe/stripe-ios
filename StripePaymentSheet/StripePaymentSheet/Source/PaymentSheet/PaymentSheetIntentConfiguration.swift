@@ -63,15 +63,6 @@ public extension PaymentSheet {
             public let businessName: String?
             public let networkBusinessProfile: String?
 
-            /// Backwards-compatible initializer with required fields
-            public init(networkId: String, externalId: String, businessName: String) {
-                self.networkId = networkId
-                self.externalId = externalId
-                self.businessName = businessName
-                self.networkBusinessProfile = nil
-            }
-
-            /// Initializer with all optional fields including networkBusinessProfile
             public init(
                 networkId: String? = nil,
                 externalId: String? = nil,
