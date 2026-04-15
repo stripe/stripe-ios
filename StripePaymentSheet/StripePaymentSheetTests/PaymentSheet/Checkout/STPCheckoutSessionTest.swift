@@ -377,6 +377,15 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
     }
 
+    func testMerchantWillSavePaymentMethod_paymentModeWithTopLevelSetupFutureUsageNone() {
+        let session = makeCheckoutSession([
+            "setup_future_usage": "none",
+        ])
+
+        XCTAssertEqual(session.setupFutureUsage, "none")
+        XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
+    }
+
     func testMerchantWillSavePaymentMethod_paymentModeWithoutCustomer() {
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
             "session_id": "cs_test_payment_no_customer",
@@ -433,6 +442,16 @@ class STPCheckoutSessionTest: XCTestCase {
         ])
 
         XCTAssertTrue(Intent.checkoutSession(session).isSetupFutureUsageSet(for: .payPal))
+    }
+
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevelNone() {
+        let session = makeCheckoutSession([
+            "setup_future_usage": "none",
+            "payment_method_types": ["paypal"],
+        ])
+
+        XCTAssertEqual(Intent.checkoutSession(session).setupFutureUsageString, "none")
+        XCTAssertFalse(Intent.checkoutSession(session).isSetupFutureUsageSet(for: .payPal))
     }
 
 }
