@@ -220,7 +220,9 @@ final class PaymentSheetLoader {
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
 
-            // Pre-fetch card art without waiting for this to finish
+            // Temporary band-aid for pre-loading card art: fire-and-forget fetch to warm the in-meory cache for PS.FC
+            // and embedded PaymentOptionDisplayData APIs.
+            // TODO: Revisit overall pre-loading approach to make this work for other payment methods
             if let defaultPaymentMethod = paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                case .saved(let stpPaymentMethod) = defaultPaymentMethod {
                 stpPaymentMethod.preloadCardArtImage(cardArtEnabled: configuration.appearance.cardArtEnabled)
