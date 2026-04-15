@@ -410,6 +410,11 @@ final class PaymentSheetAnalyticsHelper {
             }
         }()
         var params: [String: Any] = [:]
+        if case .saved = paymentOption {
+            params["is_saved_payment_method"] = true
+        } else {
+            params["is_saved_payment_method"] = false
+        }
         if case let .new(confirmParams) = paymentOption {
             if let setAsDefault = confirmParams.setAsDefaultPM {
                 params["set_as_default"] = setAsDefault
