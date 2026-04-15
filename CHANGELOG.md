@@ -1,10 +1,10 @@
 The next release's version bump will so far be:
-MAJOR
+MINOR
 
 ## X.Y.Z - changes pending release
 
 ### All
-* [Removed] Removed UPI support across the SDK, PaymentSheet, example apps, tests, and recorded fixtures.
+* [Removed] Removed UPI support across the SDK.
 
 ## 25.11.0 2026-04-13
 ### PaymentSheet
