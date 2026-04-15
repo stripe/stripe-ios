@@ -232,6 +232,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // TODO(porter) Use the vertical mode to save cards when ready
         setupCards(cards: ["5555555555554444"], settings: settings)
 
+        // Scroll down slightly to reveal flow controller:
+        app.swipeUp(velocity: 100)
+
         // Exercise edge case w/ FC and 3+ PMs. Delete the selected card and tap out of the screen
         app.buttons["flowController"].waitForExistenceAndTap()
         app.buttons["Payment method"].waitForExistenceAndTap()
