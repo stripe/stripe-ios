@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### PaymentSheet
+* [Fixed] Fixed an issue where `LinkController` used the shared `STPAPIClient` instead of the `apiClient` specified in the caller, affecting apps using multiple API client instances.
+
 ## 25.11.0 2026-04-13
 ### PaymentSheet
 * [Added] Added support for Pay by Bank payments (GA in GB, private preview in EU).
