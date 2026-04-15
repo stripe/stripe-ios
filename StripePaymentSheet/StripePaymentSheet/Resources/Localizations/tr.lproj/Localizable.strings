@@ -40,7 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Şimdi satın alın veya daha sonra Klarna ile ödeyin";
 
-"Buy using a UPI ID" = "UPI Numarası kullanarak satın alın";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal'la ödemeyi onayladığınızda, %@ şirketine gelecekteki ödemeler için kendi koşullarına uygun olarak PayPal hesabınızı ücretlendirme izni vermiş olursunuz.";
 
@@ -182,7 +181,6 @@
 
 "Open to see more information." = "Daha fazla bilgi almak için açın.";
 
-"Open your UPI app to approve your payment within %@" = "Ödemenizi onaylamak için %@ içinde UPI uygulamanızı açın";
 
 "Or" = "Veya";
 

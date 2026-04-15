@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "หมายเลขโทรศัพท์ไม่ครบถ้วน";
 
-"Invalid UPI ID" = "UPI ID ไม่ถูกต้อง";
 
 "Island" = "เกาะ";
 
@@ -126,7 +125,6 @@
 
 "Town or city" = "เมืองหรือจังหวัด";
 
-"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "ไม่สามารถแยกวิเคราะห์หมายเลขโทรศัพท์ได้";
 

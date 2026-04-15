@@ -3013,28 +3013,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(hasBillingAddress, "BLIK form should contain billing address section when address collection is .full")
     }
 
-    func testMakeUPI_withAllowedCountries() {
-        var configuration = PaymentSheet.Configuration()
-        configuration.billingDetailsCollectionConfiguration.address = .full
-        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["IN", "US"]
-
-        let factory = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.UPI]),
-            elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.UPI)
-        )
-
-        let form = factory.makeUPI()
-        XCTAssertNotNil(form)
-
-        // Verify form contains billing address section when address collection is .full
-        let hasBillingAddress = form.elements.contains { element in
-            return element is PaymentMethodElementWrapper<AddressSectionElement>
-        }
-        XCTAssertTrue(hasBillingAddress, "UPI form should contain billing address section when address collection is .full")
-    }
-
     // MARK: - Saved Payment Method Country Filtering Tests
 
     func testSavedPaymentMethods_countryFiltering_emptyAllowedCountries() {

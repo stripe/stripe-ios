@@ -323,16 +323,6 @@ import Foundation
         )
     }
 
-    // MARK: - UPI
-
-    static var upi_id: String {
-        STPLocalizedString("UPI ID", "Label for UPI ID number field on form")
-    }
-
-    static var invalid_upi_id: String {
-        STPLocalizedString("Invalid UPI ID", "Error message when UPI ID is invalid")
-    }
-
     // MARK: - Blik
 
     static var blik_code: String {

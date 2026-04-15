@@ -40,7 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Paiement fractionné avec Klarna";
 
-"Buy using a UPI ID" = "Acheter à l'aide d'un ID d'UPI";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "En confirmant votre paiement avec PayPal, vous autorisez %@ à débiter votre compte PayPal pour les paiements à venir, conformément à ses conditions.";
 
@@ -182,7 +181,6 @@
 
 "Open to see more information." = "Ouvrez pour obtenir plus d’informations.";
 
-"Open your UPI app to approve your payment within %@" = "Ouvrez votre application d'UPI pour autoriser votre paiement dans %@";
 
 "Or" = "Ou";
 
