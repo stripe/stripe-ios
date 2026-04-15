@@ -44,7 +44,7 @@ final class STPPaymentMethodCardArtImageTest: APIStubbedTestCase {
 
     func testCardArtImage_returnsImageWhenCached() {
         let pm = STPPaymentMethod._testCardWithCardArt()
-        let cardArtURL = pm.cardArtCDNURL(height: 26)!
+        let cardArtURL = pm.cardArtCDNURL(cardArtEnabled: true)!
 
         // Pre-seed the URL cache so downloadImage returns the real image
         let imageData = generateUIImage(size: CGSize(width: 100, height: 26)).pngData()!
