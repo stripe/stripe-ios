@@ -303,8 +303,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Card"].waitForExistence(timeout: 5.0))
         // Verify there's no more Saved section
         XCTAssertFalse(app.staticTexts["Saved"].waitForExistence(timeout: 0.1))
-        // Verify primary button is enabled b/c Apple Pay should be selected
-        XCTAssertTrue(app.buttons["Continue"].isEnabled)
+        // Verify primary button isn't enabled b/c there is no selected PM
+        XCTAssertFalse(app.buttons["Set up"].isEnabled)
     }
 
     private func setupCards(cards: [String], settings: PaymentSheetTestPlaygroundSettings) {
