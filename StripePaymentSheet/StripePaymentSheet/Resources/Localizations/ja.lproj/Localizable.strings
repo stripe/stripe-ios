@@ -40,8 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Klarna で後払い";
 
-"Buy using a UPI ID" = "UPI ID を使って購入";
-
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "PayPal による支払いを確定すると、%@ が規約に従って今後の支払いをお客様の PayPal アカウントに請求することを許可することになります。";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Amazon Pay への処理を続行すると、%@ が規約に従って今後の支払いをお客様の Amazon Pay アカウントに請求することを許可することになります。";
@@ -181,8 +179,6 @@
 "Only card brand can be changed." = "カードブランドのみ変更できます。";
 
 "Open to see more information." = "詳細情報を表示するにはこちらを開いてください。";
-
-"Open your UPI app to approve your payment within %@" = "UPI アプリを開いて %@ 以内に支払いを承認してください";
 
 "Or" = "または";
 

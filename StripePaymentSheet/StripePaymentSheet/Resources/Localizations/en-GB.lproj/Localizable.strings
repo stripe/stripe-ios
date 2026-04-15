@@ -40,8 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
 
-"Buy using a UPI ID" = "Buy using a UPI ID";
-
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms.";
@@ -181,8 +179,6 @@
 "Only card brand can be changed." = "Only card brand can be changed.";
 
 "Open to see more information." = "Open to see more information.";
-
-"Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
 
 "Or" = "Or";
 

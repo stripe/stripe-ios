@@ -238,8 +238,6 @@ extension STPPaymentMethodType {
                 case .outlined:
                     return .pm_type_us_bank_outlined
                 }
-            case .UPI:
-                return .pm_type_upi
             case .cashApp:
                 return .pm_type_cashapp
             case .revolutPay:

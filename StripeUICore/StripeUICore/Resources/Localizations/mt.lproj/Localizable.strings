@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "In-numru tat-telefon mhuwiex komplut";
 
-"Invalid UPI ID" = "L-ID UPI mhix tajba";
-
 "Island" = "Gżira";
 
 "Last" = "L-aħħar";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "Il-kodiċi sort li daħħalt mhux tajjeb.";
 
 "Town or city" = "Belt";
-
-"UPI ID" = "ID UPI";
 
 "Unable to parse phone number" = "Ma jistax jaqra n-numru tat-telefown";
 

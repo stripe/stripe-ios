@@ -40,8 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Kúpte teraz alebo zaplaťte neskôr pomocou služby Klarna";
 
-"Buy using a UPI ID" = "Zakúpiť prostredníctvom identifikačného čísla UPI";
-
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrdením platby prostredníctvom služby PayPal povolíte spoločnosti %@, aby z vášho účtu PayPal účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pokračovaním na službu Amazon Pay povolíte spoločnosti %@, aby z vášho účtu Amazon Pay účtovala poplatky za budúce platby v súlade s podmienkami tejto spoločnosti.";
@@ -181,8 +179,6 @@
 "Only card brand can be changed." = "Je možné zmeniť len značku banky.";
 
 "Open to see more information." = "Otvorte a zobrazte viac informácií.";
-
-"Open your UPI app to approve your payment within %@" = "Otvorte si aplikáciu UPI za účelom schválenia platby v rámci %@";
 
 "Or" = "Alebo";
 
