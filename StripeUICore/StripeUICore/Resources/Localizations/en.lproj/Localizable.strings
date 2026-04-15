@@ -108,7 +108,6 @@ Label of an address field */
 /* Error description for incomplete phone number */
 "Incomplete phone number" = "Incomplete phone number";
 
-
 /* Label of an address field */
 "Island" = "Island";
 
@@ -195,7 +194,6 @@ Label of an address field */
 
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Unable to parse phone number";
-
 
 /* Accessibility hint indicating to use the accessibility rotor to open links. The word 'rotor' should be localized to match Apple's language here: https://support.apple.com/HT204783 */
 "Use rotor to access links" = "Use rotor to access links";

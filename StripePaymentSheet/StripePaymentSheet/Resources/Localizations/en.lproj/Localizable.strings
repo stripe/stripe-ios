@@ -62,7 +62,6 @@
 /* Promotional text for Klarna, displayed in a button that lets the customer pay with Klarna */
 "Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
 
-
 /* Paypal mandate text */
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
