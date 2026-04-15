@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "電話番号の不備";
 
-
 "Island" = "島しょ";
 
 "Last" = "姓";
@@ -124,7 +123,6 @@
 "The sort code you entered is invalid." = "入力したソートコードが無効です。";
 
 "Town or city" = "市区町村";
-
 
 "Unable to parse phone number" = "電話番号を解析できません";
 

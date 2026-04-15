@@ -40,7 +40,6 @@
 
 "Buy now or pay later with Klarna" = "ซื้อตอนนี้หรือจ่ายทีหลังด้วย Klarna";
 
-
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "การยืนยันการการชำระเงินด้วย PayPal หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี PayPal ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "การดำเนินการต่อที่ Amazon Pay หมายความว่าคุณอนุญาตให้ %@ เรียกเก็บเงินจากบัญชี Amazon Pay ของคุณสำหรับการชำระเงินในอนาคตตามเงื่อนไขของผู้ค้ารายดังกล่าว";
@@ -180,7 +179,6 @@
 "Only card brand can be changed." = "เปลี่ยนได้เฉพาะแบรนด์บัตรเท่านั้น";
 
 "Open to see more information." = "เปิดเพื่อดูข้อมูลเพิ่มเติม";
-
 
 "Or" = "หรือ";
 

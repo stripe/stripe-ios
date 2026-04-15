@@ -40,7 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Pērciet tagad vai maksājiet vēlāk ar Klarna";
 
-
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Apstiprinot maksājumu PayPal, jūs atļaujat %@ saskaņā ar viņu noteikumiem iekasēt no jūsu PayPal konta summas par turpmākajiem maksājumiem.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Turpinot doties uz Amazon Pay, jūs atļaujat %@ iekasēt no jūsu Amazon Pay konta turpmākajiem maksājumiem saskaņā ar Klarna noteikumiem.";
@@ -180,7 +179,6 @@
 "Only card brand can be changed." = "Var mainīt tikai kartes zīmolu.";
 
 "Open to see more information." = "Atvērt, lai skatītu vairāk informācijas.";
-
 
 "Or" = "Vai";
 

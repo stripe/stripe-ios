@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "Puutteellinen puhelinnumero";
 
-
 "Island" = "Saari";
 
 "Last" = "Sukunimi";
@@ -124,7 +123,6 @@
 "The sort code you entered is invalid." = "Antamasi pankin tunnusnumero on virheellinen.";
 
 "Town or city" = "Kaupunki tai kunta";
-
 
 "Unable to parse phone number" = "Puhelinnumeron jäsennys epäonnistui";
 

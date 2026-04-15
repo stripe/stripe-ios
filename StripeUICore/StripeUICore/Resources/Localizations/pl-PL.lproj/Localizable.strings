@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "Niekompletny numer telefonu";
 
-
 "Island" = "Wyspa";
 
 "Last" = "Nazwisko";
@@ -124,7 +123,6 @@
 "The sort code you entered is invalid." = "Wprowadzony kod sortowania jest nieprawidłowy.";
 
 "Town or city" = "Miejscowość";
-
 
 "Unable to parse phone number" = "Nie można dokonać parsowania numeru telefonu";
 

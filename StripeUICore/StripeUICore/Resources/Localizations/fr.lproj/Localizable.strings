@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "Numéro de téléphone incomplet";
 
-
 "Island" = "Île";
 
 "Last" = "Nom";
@@ -124,7 +123,6 @@
 "The sort code you entered is invalid." = "Le code guichet que vous avez saisi n'est pas valide.";
 
 "Town or city" = "Ville";
-
 
 "Unable to parse phone number" = "Impossible d'analyser le numéro de téléphone";
 

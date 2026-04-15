@@ -278,8 +278,6 @@ to be saved and used in future checkout sessions. */
 /* Accessibility hint to tell the user that they can open a form sheet with more information. */
 "Open to see more information." = "Open to see more information.";
 
-/* Countdown timer text on a screen asking the user to approve a payment */
-
 /* Separator label between two options */
 "Or" = "Or";
 

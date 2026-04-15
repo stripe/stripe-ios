@@ -76,8 +76,6 @@
 /* Default missing source type label */
 "Unknown" = "Unknown";
 
-/* Payment Method type brand name */
-
 /* Payment Method type name for US bank account payments. */
 "US bank account" = "US bank account";
 

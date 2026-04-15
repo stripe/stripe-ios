@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "Nepopolna telefonska številka mobilnega telefona.";
 
-
 "Island" = "Otok";
 
 "Last" = "Priimek";
@@ -124,7 +123,6 @@
 "The sort code you entered is invalid." = "Ta številka banke ni veljavna.";
 
 "Town or city" = "Kraj ali mesto";
-
 
 "Unable to parse phone number" = "Telefonske številke ni mogoče razčleniti";
 

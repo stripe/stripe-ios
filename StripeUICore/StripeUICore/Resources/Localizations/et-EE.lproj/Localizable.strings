@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "Telefoninumber puudulik";
 
-
 "Island" = "Saar";
 
 "Last" = "Viimane";
@@ -124,7 +123,6 @@
 "The sort code you entered is invalid." = "Sisestatud sorteerimiskood ei ole kehtiv.";
 
 "Town or city" = "Linn";
-
 
 "Unable to parse phone number" = "Telefoninumbri parsimine ebaõnnestus";
 

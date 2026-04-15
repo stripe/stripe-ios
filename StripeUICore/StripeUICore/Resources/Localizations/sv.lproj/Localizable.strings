@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "Ofullständigt telefonnummer";
 
-
 "Island" = "Ö";
 
 "Last" = "Efternamn";
@@ -124,7 +123,6 @@
 "The sort code you entered is invalid." = "Det angivna clearingnumret (sort code) är ogiltigt.";
 
 "Town or city" = "Stad";
-
 
 "Unable to parse phone number" = "Det gick inte att analysera telefonnumret";
 

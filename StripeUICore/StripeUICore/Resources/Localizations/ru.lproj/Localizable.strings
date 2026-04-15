@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "Номер телефона введен не полностью";
 
-
 "Island" = "Остров";
 
 "Last" = "Фамилия";
@@ -124,7 +123,6 @@
 "The sort code you entered is invalid." = "Введенный код сортировки неверен.";
 
 "Town or city" = "Город";
-
 
 "Unable to parse phone number" = "Не удается разобрать номер телефона";
 

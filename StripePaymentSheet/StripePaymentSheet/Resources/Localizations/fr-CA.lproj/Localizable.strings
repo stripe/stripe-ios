@@ -40,7 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Paiement fractionné avec Klarna";
 
-
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "En confirmant votre paiement avec PayPal, vous autorisez %@ à débiter votre compte PayPal pour les paiements à venir, conformément à ses conditions.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "En poursuivant sur Amazon Pay, vous autorisez %@ à débiter votre compte Amazon Pay pour les paiements à venir, conformément à ses conditions.";
@@ -180,7 +179,6 @@
 "Only card brand can be changed." = "Vous pouvez uniquement modifier la marque de la carte.";
 
 "Open to see more information." = "Ouvrez pour obtenir plus d’informations.";
-
 
 "Or" = "Ou";
 

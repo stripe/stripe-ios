@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "หมายเลขโทรศัพท์ไม่ครบถ้วน";
 
-
 "Island" = "เกาะ";
 
 "Last" = "นามสกุล";
@@ -124,7 +123,6 @@
 "The sort code you entered is invalid." = "Sort Code ที่คุณป้อนไม่ถูกต้อง";
 
 "Town or city" = "เมืองหรือจังหวัด";
-
 
 "Unable to parse phone number" = "ไม่สามารถแยกวิเคราะห์หมายเลขโทรศัพท์ได้";
 

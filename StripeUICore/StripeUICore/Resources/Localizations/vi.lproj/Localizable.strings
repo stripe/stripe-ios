@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "Số điện thoại chưa đầy đủ";
 
-
 "Island" = "Đảo";
 
 "Last" = "Họ";
@@ -124,7 +123,6 @@
 "The sort code you entered is invalid." = "Mã sắp xếp bạn đã nhập không hợp lệ.";
 
 "Town or city" = "Thị trấn hoặc thành phố";
-
 
 "Unable to parse phone number" = "Không thể phân tích cú pháp số điện thoại";
 

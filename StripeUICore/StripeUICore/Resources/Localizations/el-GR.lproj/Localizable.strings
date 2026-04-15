@@ -70,7 +70,6 @@
 
 "Incomplete phone number" = "Ελλιπής αριθμός τηλεφώνου";
 
-
 "Island" = "Νησί";
 
 "Last" = "Επώνυμο";
@@ -124,7 +123,6 @@
 "The sort code you entered is invalid." = "Ο κωδικός sort που εισαγάγατε δεν είναι έγκυρος.";
 
 "Town or city" = "Κωμόπολη ή πόλη";
-
 
 "Unable to parse phone number" = "Δεν ήταν δυνατή η ανάλυση του αριθμού τηλεφώνου";
 
