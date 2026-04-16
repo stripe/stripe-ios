@@ -244,6 +244,17 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                                expectedHierarchy: ExpectedFormHierarchy.Wero.paymentIntent) { _ in }
     }
 
+    func testPayByBankConfirmFlows() async throws {
+        var configuration = PaymentSheet.Configuration()
+        configuration.returnURL = "example-app-scheme://unused"
+        try await _testConfirm(intentKinds: [.paymentIntent],
+                               currency: "GBP",
+                               paymentMethodType: .payByBank,
+                               merchantCountry: .GB,
+                               configuration: configuration,
+                               expectedHierarchy: ExpectedFormHierarchy.PayByBank.paymentIntent) { _ in }
+    }
+
     func testCryptoConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
@@ -608,8 +619,8 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testAffirmConfirmFlows() async throws {
-        try await _testConfirm(intentKinds: [.paymentIntent], currency: "USD", amount: 3500, paymentMethodType: .affirm, merchantCountry: .US,
-                               expectedHierarchy: ExpectedFormHierarchy.Affirm.paymentIntent) { _ in }  // Affirm requires minimum $35.00
+        try await _testConfirm(intentKinds: [.paymentIntent], currency: "USD", amount: 5000, paymentMethodType: .affirm, merchantCountry: .US,
+                               expectedHierarchy: ExpectedFormHierarchy.Affirm.paymentIntent) { _ in }  // Affirm requires minimum $50.00
     }
 
     func testZipConfirmFlows() async throws {

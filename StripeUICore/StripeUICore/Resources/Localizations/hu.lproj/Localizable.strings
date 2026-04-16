@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "Hiányos telefonszám";
 
-"Invalid UPI ID" = "Érvénytelen UPI-azonosító";
-
 "Island" = "Sziget";
 
 "Last" = "Vezetéknév";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "A beírt bankazonosító érvénytelen.";
 
 "Town or city" = "Kisváros vagy város";
-
-"UPI ID" = "UPI-azonosító";
 
 "Unable to parse phone number" = "A telefonszám nem értelmezhető";
 

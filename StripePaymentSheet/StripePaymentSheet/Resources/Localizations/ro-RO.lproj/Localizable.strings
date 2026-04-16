@@ -40,8 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Cumpărați acum sau plătiți mai târziu folosind Klarna";
 
-"Buy using a UPI ID" = "Cumpărați folosind un ID UPI";
-
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Prin confirmarea plății cu PayPal, permiteți %@ să vă taxeze contul PayPal pentru plățile viitoare în conformitate cu termenii acesteia.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Prin continuarea către Amazon Pay, permiteți %@ să vă taxeze contul Amazon Pay pentru plățile viitoare în conformitate cu termenii acesteia.";
@@ -181,8 +179,6 @@
 "Only card brand can be changed." = "Doar marca cardului poate fi modificată.";
 
 "Open to see more information." = "Deschideți pentru a vedea mai multe informații.";
-
-"Open your UPI app to approve your payment within %@" = "Deschideți aplicația UPI pentru a aproba plata în termen de %@";
 
 "Or" = "Sau";
 

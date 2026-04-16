@@ -66,8 +66,8 @@ class RowButton: UIView, EventHandler {
 
     var imageViewSize: CGSize {
         if appearance.cardArtEnabled {
-            // When card art is enabled, 1.25* size of images
-            return CGSize(width: 30, height: 25)
+            // When card art is enabled, allow images to grow in width to 30px
+            return CGSize(width: 30, height: 20)
         } else {
             return CGSize(width: 24, height: 20)
         }

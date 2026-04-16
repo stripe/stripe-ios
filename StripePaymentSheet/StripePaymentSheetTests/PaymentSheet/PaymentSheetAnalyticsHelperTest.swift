@@ -528,6 +528,11 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             XCTAssertEqual(analyticsClient._testLogHistory.last!["link_ui"] as? String, paymentOption.linkUIAnalyticsValue)
             XCTAssertEqual(analyticsClient._testLogHistory.last!["link_use_attestation"] as? Bool, false)
             XCTAssertEqual(analyticsClient._testLogHistory.last!["link_mobile_suppress_2fa_modal"] as? Bool, true)
+            if case .saved = paymentOption {
+                XCTAssertEqual(analyticsClient._testLogHistory.last!["is_saved_payment_method"] as? Bool, true)
+            } else {
+                XCTAssertEqual(analyticsClient._testLogHistory.last!["is_saved_payment_method"] as? Bool, false)
+            }
             let mpeConfig = analyticsClient._testLogHistory.last!["mpe_config"] as! [String: Any]
             XCTAssertEqual(mpeConfig["custom_payment_methods"] as? [String], ["cpmt_123", "cpmt_789"])
         }
