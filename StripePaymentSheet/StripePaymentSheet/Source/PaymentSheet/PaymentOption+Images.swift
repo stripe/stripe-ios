@@ -27,7 +27,7 @@ extension PaymentOption {
             if let linkedBank = paymentOption?.instantDebitsLinkedBank {
                 return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: linkedBank.bankName), iconStyle: iconStyle)
             } else {
-                let cardArtImage = paymentMethod.cardArtImage(cardArtEnabled: cardArtEnabled)
+                let cardArtImage = paymentMethod.cachedCardArtImage(cardArtEnabled: cardArtEnabled)
                 return cardArtImage ?? paymentMethod.makeIcon(iconStyle: iconStyle)
             }
         case .new(let confirmParams):
@@ -149,8 +149,8 @@ extension STPPaymentMethod {
         }
     }
 
-    func cardArtImage(cardArtEnabled: Bool, downloadManager: DownloadManager = DownloadManager.sharedManager) -> UIImage? {
-        guard cardArtEnabled, let cardArtURL = cardArtCDNURL(height: 28) else {
+    func cachedCardArtImage(cardArtEnabled: Bool, downloadManager: DownloadManager = DownloadManager.sharedManager) -> UIImage? {
+        guard let cardArtURL = cardArtCDNURL(cardArtEnabled: cardArtEnabled) else {
             return nil
         }
         let placeholder = downloadManager.imagePlaceHolder()
@@ -160,6 +160,22 @@ extension STPPaymentMethod {
             updateHandler: nil
         )
         return image == placeholder ? nil : image.roundedWithBorder(radius: 3)
+    }
+
+    // Populates the in-memory card art cache. Promotes from disk cache if available,
+    // then fires a best-effort network request to fetch the latest image.
+    func preloadCardArtImage(cardArtEnabled: Bool, downloadManager: DownloadManager = DownloadManager.sharedManager) {
+        guard let cardArtURL = cardArtCDNURL(cardArtEnabled: cardArtEnabled) else {
+            return
+        }
+        // Passing a non-nil updateHandler triggers a best-effort network
+        // download that refreshes the in-memory cache.
+        let updateHandler: ((UIImage) -> Void)? = { _ in }
+        _ = downloadManager.downloadImage(
+            url: cardArtURL,
+            placeholder: nil,
+            updateHandler: updateHandler
+        )
     }
 }
 
@@ -179,11 +195,12 @@ extension STPPaymentMethod {
 
 extension STPPaymentMethod {
     /// Returns the card art CDN URL if this is a card payment method with card art available.
-    func cardArtCDNURL(height: Int, dpr: Int = 3) -> URL? {
-        guard let artImageURL = card?.cardArt?.artImage?.url else {
+    static let cardArtHeight: Int = 26
+    func cardArtCDNURL(cardArtEnabled: Bool, dpr: Int = 3) -> URL? {
+        guard cardArtEnabled, let artImageURL = card?.cardArt?.artImage?.url else {
             return nil
         }
-        return URL(string: "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=\(height),dpr=\(dpr)/\(artImageURL.absoluteString)")
+        return URL(string: "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=\(STPPaymentMethod.cardArtHeight),dpr=\(dpr)/\(artImageURL.absoluteString)")
     }
 }
 

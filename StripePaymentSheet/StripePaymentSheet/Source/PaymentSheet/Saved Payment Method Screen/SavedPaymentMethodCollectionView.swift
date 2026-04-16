@@ -359,8 +359,7 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
                         let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
-                        let cardArtHeight: Int = 26
-                        if cardArtEnabled, let cardArtURL = paymentMethod.cardArtCDNURL(height: cardArtHeight) {
+                        if let cardArtURL = paymentMethod.cardArtCDNURL(cardArtEnabled: cardArtEnabled) {
                             paymentMethodLogo.tag = cardArtURL.hashValue
                             paymentMethodLogo.image = nil
                             Task {
@@ -368,7 +367,7 @@ extension SavedPaymentMethodCollectionView {
                                 guard paymentMethodLogo.tag == cardArtURL.hashValue else { return }
                                 if let image {
                                     paymentMethodLogo.image = image.roundedWithBorder(radius: 3)
-                                    paymentMethodLogoHeightConstraint.constant = CGFloat(cardArtHeight)
+                                    paymentMethodLogoHeightConstraint.constant = CGFloat(STPPaymentMethod.cardArtHeight)
                                 } else {
                                     paymentMethodLogo.image = paymentMethodCellImage
                                     paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
