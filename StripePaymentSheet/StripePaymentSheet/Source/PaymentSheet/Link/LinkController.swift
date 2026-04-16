@@ -208,6 +208,7 @@ import UIKit
         Task {
             do {
                 var configuration = PaymentSheet.Configuration()
+                configuration.apiClient = apiClient
                 if let appearance = appearance {
                     configuration.style = appearance.style
                 }

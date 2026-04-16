@@ -48,6 +48,7 @@ enum Image: String, CaseIterable, ImageMaker {
     case pm_type_multibanco = "icon-pm-multibanco"
     case pm_type_oxxo = "icon-pm-oxxo"
     case pm_type_p24 = "icon-pm-p24"
+    case pm_type_paybybank = "icon-pm-paybybank"
     case pm_type_paynow = "icon-pm-paynow"
     case pm_type_paypal = "icon-pm-paypal"
     case pm_type_paypay = "icon-pm-paypay"
@@ -59,7 +60,6 @@ enum Image: String, CaseIterable, ImageMaker {
     case pm_type_sunbit = "icon-pm-sunbit"
     case pm_type_swish = "icon-pm-swish"
     case pm_type_twint = "icon-pm-twint"
-    case pm_type_upi = "icon-pm-upi"
     case pm_type_zip = "icon-pm-zip"
 
     // Icons/symbols
@@ -109,7 +109,7 @@ enum Image: String, CaseIterable, ImageMaker {
     // Affirm Images
     case affirm_copy = "affirm_mark"
 
-    // Polling / UPI
+    // Polling
     case polling_error = "polling_error_icon"
 
     // Mandates

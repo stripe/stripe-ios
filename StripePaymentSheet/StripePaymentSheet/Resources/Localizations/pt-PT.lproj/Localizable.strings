@@ -40,8 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Comprar agora ou pagar mais tarde com Klarna";
 
-"Buy using a UPI ID" = "Comprar com uma ID UPI";
-
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ao confirmar o seu pagamento com o PayPal, autoriza %@ a cobrar pagamentos futuros à sua conta PayPal de acordo com as respetivas condições.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ao continuar para Amazon Pay, autoriza %@ a cobrar pagamentos futuros à sua conta Amazon Pay de acordo com as respetivas condições.";
@@ -181,8 +179,6 @@
 "Only card brand can be changed." = "Só é possível alterar a marca do cartão.";
 
 "Open to see more information." = "Abra para ver mais informações.";
-
-"Open your UPI app to approve your payment within %@" = "Abra a sua aplicação UPI para aprovar o seu pagamento com %@";
 
 "Or" = "Ou";
 
