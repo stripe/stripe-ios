@@ -180,6 +180,16 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         )
     }
 
+    func test_supportedPaymentMethodTypes_whenFilterIsNil_usesAllCasesAtIntersection() throws {
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [.bankAccount],
+            supportedPaymentMethodTypes: nil,
+            linkFundingSources: ["BANK_ACCOUNT"]
+        )
+
+        XCTAssertEqual(sut.supportedPaymentMethodTypes, [.bankAccount])
+    }
+
     func test_cardBrandFiltering_passThroughEnabled() throws {
         let sut = try makeSUT(supportedPaymentDetailsTypes: [.card],
                               linkFundingSources: ["CARD"],
@@ -368,6 +378,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
     func makeSUT(
         paymentMethods: [ConsumerPaymentDetails] = LinkStubs.paymentMethods(),
         supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType> = [.card, .bankAccount],
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkFundingSources: [String] = ["CARD"],
         cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all,
         allowedCardFundingTypes: PaymentSheet.CardFundingType = .all,
@@ -415,6 +426,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
                 initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 analyticsHelper: ._testValue()
             ),
             paymentMethods: paymentMethods
