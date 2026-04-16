@@ -139,8 +139,17 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        case .setupIntent, .checkoutSession:
-            // TODO(porter) Figure out SFU string during confirmation work
+        case .checkoutSession(let checkoutSession):
+            switch checkoutSession.mode {
+            case .payment:
+                return checkoutSession.setupFutureUsage
+            case .setup:
+                return nil
+            case .subscription, .unknown:
+                stpAssertionFailure("subscription and unknown not implemented")
+                return nil
+            }
+        case .setupIntent:
             return nil
         }
     }
@@ -157,8 +166,10 @@ enum Intent {
                 return !setupFutureUsageValues.isEmpty
             }
             return nil
-        case .setupIntent, .checkoutSession:
-            // TODO(porter) Figure out PMO+SFU during confirmation work
+        case .checkoutSession:
+            // TODO(gbirch): implement during PMO SFU work
+            return nil
+        case .setupIntent:
             return nil
         }
     }
@@ -183,11 +194,16 @@ enum Intent {
             }
         case .checkoutSession(let checkoutSession):
             switch checkoutSession.mode {
-            case .payment, .subscription, .unknown:
-                // TODO(porter) Figure out SFU during confirmation work
-                return false
+            case .payment:
+                guard let setupFutureUsage = checkoutSession.setupFutureUsage else {
+                    return false
+                }
+                return setupFutureUsage != "none"
             case .setup:
                 return true
+            case .subscription, .unknown:
+                stpAssertionFailure("subscription and unknown not implemented")
+                return false
             }
         }
     }
