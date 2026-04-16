@@ -40,8 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Koupit nyní nebo zaplatit pomocí Klarna";
 
-"Buy using a UPI ID" = "Koupit pomocí UPI ID";
-
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Potvrzením platby prostřednictvím služby PayPal povolujete, aby společnost %@ účtovala z vašeho účtu PayPal budoucí platby v souladu s jejich podmínkami.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Pokračováním v Amazon Pay povolujete společnosti %@, aby v souladu se svými podmínkami účtovala na váš účet Revolut Pay budoucí platby.";
@@ -181,8 +179,6 @@
 "Only card brand can be changed." = "Změnit lze pouze značku karty.";
 
 "Open to see more information." = "Otevřete pro více informací.";
-
-"Open your UPI app to approve your payment within %@" = "Otevřete aplikaci UPI, abyste mohli platbu schválit do %@";
 
 "Or" = "Nebo";
 

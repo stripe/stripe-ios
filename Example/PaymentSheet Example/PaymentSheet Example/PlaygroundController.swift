@@ -1050,11 +1050,6 @@ extension PlaygroundController {
 
     /// Builds the common request body parameters used for both loading backend and creating intents
     private func buildRequestBody(shouldCreateCustomerKey: Bool = true) -> [String: Any] {
-        // TODO(porter) Expand to PI+SFU and later, we only support payment and setup mode with CheckoutSession for now
-        if case .checkoutSession = settings.integrationType, case .paymentWithSetup = settings.mode {
-            assertionFailure("payment with setup mode is not currently supported with CheckoutSession integration type")
-        }
-
         var body = [
             "customer": customerIdOrType,
             "currency": settings.currency.rawValue,

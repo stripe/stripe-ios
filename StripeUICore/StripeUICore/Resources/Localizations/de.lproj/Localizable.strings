@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "Unvollständige Telefonnummer";
 
-"Invalid UPI ID" = "Ungültige UPI-ID";
-
 "Island" = "Insel";
 
 "Last" = "Name";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "Die eingegebene Bankleitzahl ist ungültig.";
 
 "Town or city" = "Stadt oder Ort";
-
-"UPI ID" = "UPI-ID";
 
 "Unable to parse phone number" = "Telefonnummer kann nicht geparst werden";
 

@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "Niekompletny numer telefonu";
 
-"Invalid UPI ID" = "Nieprawidłowy UPI ID";
-
 "Island" = "Wyspa";
 
 "Last" = "Nazwisko";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "Wprowadzony kod sortowania jest nieprawidłowy.";
 
 "Town or city" = "Miejscowość";
-
-"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Nie można dokonać parsowania numeru telefonu";
 
