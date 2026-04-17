@@ -57,21 +57,16 @@ extension PaymentSheet {
             // 2. Get expected amount and save_payment_method from checkout session
             let expectedAmount = try checkoutSession.expectedAmount()
             let savePaymentMethod: Bool? = {
-                guard checkoutSession.mode != .setup,
-                      checkoutSession.customerId != nil,
-                      checkoutSession.savedPaymentMethodsOfferSave?.enabled == true
-                else {
+                switch checkoutSession.mode {
+                case .setup:
+                    // setup mode does not send the save_payment_method param
+                    return nil
+                case .payment:
+                    return confirmType.savePaymentMethodForCheckoutSession
+                case .subscription, .unknown:
+                    stpAssertionFailure("Only payment and setup mode implemented")
                     return nil
                 }
-
-                switch paymentMethodType {
-                case .card, .USBankAccount:
-                    break
-                default:
-                    return nil
-                }
-
-                return confirmType.savePaymentMethodForCheckoutSession
             }()
 
             // 3. Call confirm API

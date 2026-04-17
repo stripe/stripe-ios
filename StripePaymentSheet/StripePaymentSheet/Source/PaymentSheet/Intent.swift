@@ -142,8 +142,11 @@ enum Intent {
         case .checkoutSession(let checkoutSession):
             switch checkoutSession.mode {
             case .payment:
-                return checkoutSession.topLevelSetupFutureUsage
-            case .setup, .subscription, .unknown:
+                return checkoutSession.setupFutureUsage
+            case .setup:
+                return nil
+            case .subscription, .unknown:
+                stpAssertionFailure("subscription and unknown not implemented")
                 return nil
             }
         case .setupIntent:
@@ -198,6 +201,7 @@ enum Intent {
             case .setup:
                 return true
             case .subscription, .unknown:
+                stpAssertionFailure("subscription and unknown not implemented")
                 return false
             }
         }
