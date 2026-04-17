@@ -194,8 +194,6 @@ extension EmbeddedComponentManager {
             public init() { }
         }
 
-        @_spi(PreviewConnect)
-        @_documentation(visibility: public)
         /// Describes the appearance of all button types used in embedded components
         public struct ButtonDefaults {
             /// The horizontal padding for all buttons
@@ -226,8 +224,6 @@ extension EmbeddedComponentManager {
             public init() {}
         }
 
-        @_spi(PreviewConnect)
-        @_documentation(visibility: public)
         /// Describes the appearance of all badge types used in embedded components.
         public struct BadgeDefaults {
             /// The horizontal padding for all badges
@@ -262,8 +258,6 @@ extension EmbeddedComponentManager {
             public init() {}
         }
 
-        @_spi(PreviewConnect)
-        @_documentation(visibility: public)
         /// Describes the appearance of a form type used in embedded components.
         public struct Form {
             /// The text placeholder color for this form type.
@@ -281,8 +275,6 @@ extension EmbeddedComponentManager {
             public init() {}
         }
 
-        @_spi(PreviewConnect)
-        @_documentation(visibility: public)
         /// Describes the appearance of an Action type used in embedded components.
         public struct Action {
             /// The text transform for this action type
@@ -307,12 +299,8 @@ extension EmbeddedComponentManager {
         /// Describes the appearance of the secondary button
         public var buttonSecondary: Button  = .init()
         /// Describes the appearance of the danger button
-        @_spi(PreviewConnect)
-        @_documentation(visibility: public)
         public var buttonDanger: Button  = .init()
         /// Describes the padding and label typography shared by all button variants
-        @_spi(PreviewConnect)
-        @_documentation(visibility: public)
         public var buttonDefaults: ButtonDefaults = .init()
         /// Describes the appearance used to represent neutral
         /// state or lack of state in status badges.
@@ -328,27 +316,17 @@ extension EmbeddedComponentManager {
         /// indicate failed or unsuccessful outcomes.
         public var badgeDanger: Badge  = .init()
         /// Describes the padding and label typography shared by all badge variants
-        @_spi(PreviewConnect)
-        @_documentation(visibility: public)
         public var badgeDefaults: BadgeDefaults = .init()
         /// Describes the corner radius used in embedded components.
         public var cornerRadius: CornerRadius = .init()
         /// Describes the appearance of a form used in embedded components.
-        @_spi(PreviewConnect)
-        @_documentation(visibility: public)
         public var form: Form  = .init()
         /// Describes the vertical padding for table rows
         /// The default is calculated based on the spacingUnit when unspecified.
-        @_spi(PreviewConnect)
-        @_documentation(visibility: public)
         public var tableRowPaddingY: CGFloat?
         /// Describes the appearance of primary links
-        @_spi(PreviewConnect)
-        @_documentation(visibility: public)
         public var actionPrimaryStyle: Action  = .init()
         /// Describes the appearance of secondary links
-        @_spi(PreviewConnect)
-        @_documentation(visibility: public)
         public var actionSecondaryStyle: Action  = .init()
 
         /// Creates a `EmbeddedComponentManager.Appearance` with default values
