@@ -1194,12 +1194,27 @@ extension PaymentSheetLPMConfirmFlowTests {
                 )
             })
 
+            let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
+                types: paymentMethodTypes,
+                currency: currency,
+                amount: amount,
+                merchantCountry: merchantCountry.rawValue,
+                customerID: customer,
+                setupFutureUsage: "off_session"
+            )
+            let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+            let checkoutSession = try await csApiClient.initCheckoutSession(
+                checkoutSessionId: checkoutSessionResponse.id,
+                adaptivePricingAllowed: true
+            )
+
             return [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with payment method flow", makeDeferredIntent(deferredCSC)),
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with payment method flow", makeDeferredIntent(deferredSSC)),
                 ("Deferred PaymentIntent w/ setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                 ("Deferred PaymentIntent w/ setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                ("CheckoutSession w/ setup_future_usage", .checkoutSession(checkoutSession)),
             ]
         case .paymentIntentWithPMOSetupFutureUsage:
             // This tests the scenario where IntentConfiguration has PMO setup_future_usage.
@@ -1283,12 +1298,29 @@ extension PaymentSheetLPMConfirmFlowTests {
                 }
             )
 
+            let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
+                types: paymentMethodTypes,
+                currency: currency,
+                amount: amount,
+                merchantCountry: merchantCountry.rawValue,
+                customerID: customer,
+                paymentMethodOptionsSetupFutureUsage: [
+                    paymentMethod.identifier: "off_session",
+                ]
+            )
+            let csApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+            let checkoutSession = try await csApiClient.initCheckoutSession(
+                checkoutSessionId: checkoutSessionResponse.id,
+                adaptivePricingAllowed: true
+            )
+
             return [
                 ("PaymentIntent", .paymentIntent(paymentIntent)),
                 ("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation", makeDeferredIntent(deferredCSC)),
                 ("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation", makeDeferredIntent(deferredSSC)),
                 ("Deferred PaymentIntent w/ PMO setup_future_usage - client side confirmation with confirmation token", makeDeferredIntent(deferredCSCWithConfirmationToken)),
                 ("Deferred PaymentIntent w/ PMO setup_future_usage - server side confirmation with confirmation token", makeDeferredIntent(deferredSSCWithConfirmationToken)),
+                ("CheckoutSession w/ PMO setup_future_usage", .checkoutSession(checkoutSession)),
             ]
         case .setupIntent:
             let setupIntent: STPSetupIntent = try await {

@@ -201,6 +201,8 @@ extension STPTestingAPIClient {
         amount: Int? = nil,
         merchantCountry: String? = "us",
         customerID: String? = nil,
+        setupFutureUsage: String? = nil,
+        paymentMethodOptionsSetupFutureUsage: [String: String]? = nil,
         allowPromotionCodes: Bool = false,
         allowAdjustableLineItemQuantity: Bool = false,
         includeShippingOptions: Bool = false,
@@ -274,6 +276,16 @@ extension STPTestingAPIClient {
         }
         if let customerEmailLocation {
             additionalParameters["customer_email"] = "test+location_\(customerEmailLocation)@example.com"
+        }
+        if let setupFutureUsage {
+            additionalParameters["setup_future_usage"] = setupFutureUsage
+        }
+        if let paymentMethodOptionsSetupFutureUsage, !paymentMethodOptionsSetupFutureUsage.isEmpty {
+            additionalParameters["payment_method_options"] = paymentMethodOptionsSetupFutureUsage.reduce(into: [String: Any]()) { result, entry in
+                result[entry.key] = [
+                    "setup_future_usage": entry.value,
+                ]
+            }
         }
         let params: [String: Any?] = [
             "account": merchantCountry,
