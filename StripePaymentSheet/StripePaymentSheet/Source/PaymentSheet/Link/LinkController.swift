@@ -362,13 +362,13 @@ import UIKit
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
     /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
     /// - Parameter collectName: Whether or not we should collect the user's name and attach it to the billing details.
-    /// - Parameter completion: A closure that is called when the user has selected a payment method or canceled the sheet. If the user selects a payment method, the `paymentMethodPreview` will be updated accordingly.
+    /// - Parameter completion: A closure that is called when the user has selected a payment method or canceled the sheet. Passes the selected `PaymentMethodPreview` on success, or `nil` if the user canceled.
     @_spi(STP) public func collectPaymentMethod(
         from presentingViewController: UIViewController,
         with email: String?,
         supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
         collectName: Bool = false,
-        completion: @escaping () -> Void
+        completion: @escaping (PaymentMethodPreview?) -> Void
     ) {
         var configuration = self.configuration
         configuration.defaultBillingDetails.email = email
@@ -395,12 +395,12 @@ import UIKit
                 if shouldClearSelection {
                     self?.internalPaymentOption = nil
                 }
-                completion()
+                completion(nil)
                 return
             }
 
             self?.internalPaymentOption = .link(option: confirmOption)
-            completion()
+            completion(self?.paymentMethodPreview)
         }
     }
 
@@ -1037,9 +1037,8 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                     with: email,
                     supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                     collectName: collectName
-                ) { [weak self] in
-                    guard let self else { return }
-                    continuation.resume(returning: self.paymentMethodPreview)
+                ) { result in
+                    continuation.resume(returning: result)
                 }
             }
         }
