@@ -361,11 +361,14 @@ extension SavedPaymentMethodCollectionView {
                         if let cardArtURL = paymentMethod.cardArtCDNURL(cardArtEnabled: cardArtEnabled) {
                             if paymentMethodLogo.tag != cardArtURL.hashValue {
                                 paymentMethodLogo.tag = cardArtURL.hashValue
-                                paymentMethodLogo.image = nil
+                                paymentMethodLogo.image = STPImageLibrary.cardBrandChoiceImage()
+                                paymentMethodLogoHeightConstraint.constant = CGFloat(STPPaymentMethod.cardArtHeight)
+                                paymentMethodLogo.addShimmer()
                             }
                             Task {
                                 let image = try? await DownloadManager.sharedManager.downloadImage(url: cardArtURL)
                                 guard paymentMethodLogo.tag == cardArtURL.hashValue else { return }
+                                paymentMethodLogo.removeShimmer()
                                 if let image {
                                     paymentMethodLogo.image = image.roundedWithBorder(radius: 3)
                                     paymentMethodLogoHeightConstraint.constant = CGFloat(STPPaymentMethod.cardArtHeight)

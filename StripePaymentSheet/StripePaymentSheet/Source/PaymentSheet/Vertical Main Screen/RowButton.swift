@@ -554,7 +554,8 @@ extension RowButton {
         if appearance.cardArtEnabled {
             imageView.setImage(with: paymentMethod.cardArtCDNURL(cardArtEnabled: appearance.cardArtEnabled),
                                processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
-                               fallbackImage: savedPaymentMethodRowImage)
+                               fallbackImage: savedPaymentMethodRowImage,
+                               shimmeringImage: STPImageLibrary.cardBrandChoiceImage())
         } else {
             imageView.image = savedPaymentMethodRowImage
         }
