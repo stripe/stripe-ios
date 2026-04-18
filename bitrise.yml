@@ -20,10 +20,12 @@ app:
 trigger_map:
 - push_branch: master
   pipeline: main-trigger-pipeline
+  changed_files: '^(?!.*\.md$).*'
 - pull_request_source_branch: releases/*
   pipeline: releases-trigger-pipeline
 - pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
+  changed_files: '^(?!.*\.md$).*'
 pipelines:
   main-trigger-pipeline:
     workflows:
