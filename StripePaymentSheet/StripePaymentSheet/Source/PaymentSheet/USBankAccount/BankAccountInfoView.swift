@@ -18,6 +18,7 @@ protocol BankAccountInfoViewDelegate {
 class BankAccountInfoView: UIView {
     struct Constants {
         static let spacing: CGFloat = 12
+        static let largerSpacing: CGFloat = 16
     }
 
     private let appearance: PaymentSheet.Appearance
@@ -127,9 +128,12 @@ class BankAccountInfoView: UIView {
         xIconTappableArea.addSubview(xIcon)
         addSubview(xIconTappableArea)
 
+        let useLargerHorizontalInset = theme.cornerRadius == nil && LiquidGlassDetector.isEnabledInMerchantApp
+        let horizontalInset = useLargerHorizontalInset ? Constants.largerSpacing : Constants.spacing
+
         NSLayoutConstraint.activate([
             bankIconImageView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            bankIconImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.spacing),
+            bankIconImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalInset),
 
             contentStackView.leadingAnchor.constraint(equalTo: bankIconImageView.trailingAnchor, constant: Constants.spacing),
             contentStackView.topAnchor.constraint(equalTo: topAnchor, constant: Constants.spacing),
