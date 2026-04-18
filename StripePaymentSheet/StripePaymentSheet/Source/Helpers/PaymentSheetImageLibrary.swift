@@ -1,23 +1,18 @@
 //
-//  STPImageLibrary.swift
+//  PaymentSheetImageLibrary.swift
 //  StripePaymentSheet
-//
-//  Created by David Estes on 7/6/22.
-//  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
 
-@_spi(STP)
-public class PaymentSheetImageLibrary {
+class PaymentSheetImageLibrary {
 
     /// An icon representing Afterpay.
-    @objc
-    public class func afterpayLogo(currency: String? = nil) -> UIImage {
+    class func afterpayLogo(currency: String? = nil) -> UIImage {
         if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
             return self.safeImageNamed("clearpay_mark", templateIfAvailable: true)
         } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
@@ -28,8 +23,7 @@ public class PaymentSheetImageLibrary {
     }
 
     /// This returns the appropriate icon for the affirm logo
-    @objc
-    public class func affirmLogo() -> UIImage {
+    class func affirmLogo() -> UIImage {
         return Image.affirm_copy.makeImage()
     }
 
@@ -50,8 +44,7 @@ public class PaymentSheetImageLibrary {
         "wellsfargo": [#"Wells Fargo"#],
     ]
 
-    @_spi(STP)
-    public class func bankIconCode(for bankName: String?) -> String {
+    class func bankIconCode(for bankName: String?) -> String {
         guard let bankName = bankName else {
             return "default"
         }
@@ -65,8 +58,7 @@ public class PaymentSheetImageLibrary {
         return "default"
     }
 
-    @_spi(STP) @_spi(AppearanceAPIAdditionsPreview)
-    public class func bankIcon(for bank: String?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
+    class func bankIcon(for bank: String?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         guard let bank = bank else {
             return STPPaymentMethodType.USBankAccount.makeImage(iconStyle: iconStyle) ?? UIImage()
         }
@@ -89,7 +81,74 @@ public class PaymentSheetImageLibrary {
     }
 
     class func linkBankIcon() -> UIImage {
-        STPImageLibrary.linkBankIcon()
+        return Image.link_bank_icon.makeImage(template: true)
+    }
+
+    // MARK: - Card Brand Images
+
+    /// This returns the appropriate icon for the specified card brand.
+    class func cardBrandImage(for brand: STPCardBrand) -> UIImage {
+        let imageName: String
+        switch brand {
+        case .amex:
+            imageName = "ps_card_amex"
+        case .dinersClub:
+            imageName = "ps_card_diners"
+        case .discover:
+            imageName = "ps_card_discover"
+        case .JCB:
+            imageName = "ps_card_jcb"
+        case .mastercard:
+            imageName = "ps_card_mastercard"
+        case .unionPay:
+            imageName = "ps_card_unionpay"
+        case .cartesBancaires:
+            imageName = "ps_card_cartes_bancaires"
+        case .visa:
+            imageName = "ps_card_visa"
+        case .unknown:
+            imageName = "ps_card_unknown"
+        @unknown default:
+            imageName = "ps_card_unknown"
+        }
+        return safeImageNamed(imageName)
+    }
+
+    /// This returns an unpadded image for the specified card brand if available.
+    class func unpaddedCardBrandImage(for brand: STPCardBrand) -> UIImage {
+        switch brand {
+        case .cartesBancaires:
+            return safeImageNamed("ps_card_unpadded_cartes_bancaires")
+        case .visa:
+            return safeImageNamed("ps_card_unpadded_visa")
+        case .amex:
+            return safeImageNamed("ps_card_unpadded_amex")
+        case .mastercard:
+            return safeImageNamed("ps_card_unpadded_mastercard")
+        case .dinersClub:
+            return safeImageNamed("ps_card_unpadded_diners_club")
+        case .unionPay:
+            return safeImageNamed("ps_card_unpadded_unionpay")
+        case .discover:
+            return safeImageNamed("ps_card_unpadded_discover")
+        case .JCB:
+            return safeImageNamed("ps_card_unpadded_jcb")
+        case .unknown:
+            return cardBrandImage(for: brand)
+        @unknown default:
+            return cardBrandImage(for: brand)
+        }
+    }
+
+    /// This returns a small icon indicating the CVC location for the given card brand.
+    class func cvcImage(for brand: STPCardBrand) -> UIImage {
+        let imageName = brand == .amex ? "ps_card_cvc_amex" : "ps_card_cvc"
+        return safeImageNamed(imageName)
+    }
+
+    /// An icon to use when the type of the card is unknown.
+    class func unknownCardCardImage() -> UIImage {
+        return cardBrandImage(for: .unknown)
     }
 }
 
@@ -130,6 +189,6 @@ extension STPCardBrand {
 // MARK: - ImageMaker
 
 // :nodoc:
-@_spi(STP) extension PaymentSheetImageLibrary: ImageMaker {
-    @_spi(STP) public typealias BundleLocator = StripePaymentSheetBundleLocator
+extension PaymentSheetImageLibrary: ImageMaker {
+    typealias BundleLocator = StripePaymentSheetBundleLocator
 }
