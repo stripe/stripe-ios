@@ -1,0 +1,98 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TNQfYJQVROkWvqT0HDnMQxm\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=MQ8Cm8123LCcj6ZE4mVUBA2fp35rgnJkXTUKNpkMtPNtGi349c5HcHEaIDq41RDw6-sLlGdSMHs106Kn
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=MQ8Cm8123LCcj6ZE4mVUBA2fp35rgnJkXTUKNpkMtPNtGi349c5HcHEaIDq41RDw6-sLlGdSMHs106Kn&t=1"
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=MQ8Cm8123LCcj6ZE4mVUBA2fp35rgnJkXTUKNpkMtPNtGi349c5HcHEaIDq41RDw6-sLlGdSMHs106Kn&t=1"}],"include_subdomains":true}
+request-id: req_h5TlUQGn2aoruF
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1986
+Vary: Origin
+Date: Sat, 18 Apr 2026 04:39:49 GMT
+original-request: req_h5TlUQGn2aoruF
+stripe-version: 2020-08-27
+idempotency-key: 782c6917-468b-48de-830b-a66ab9069be8
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=automatic&client_secret=pi_3TNQfYJQVROkWvqT0HDnMQxm_secret_68n4hBJPo1sF1JdEA6jiGp55I&expand\[0]=payment_method&payment_method=pm_1TNQfYJQVROkWvqTpGYuyPT1&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "brl",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "boleto_display_details" : {
+      "expires_at" : 1776487369,
+      "number" : "01010101010101010101010101010101010101010101010",
+      "pdf" : "https:\/\/payments.stripe.com\/boleto\/voucher\/test_YWNjdF8xSllGRmpKUVZST2tXdnFULF9VTTh4N2ZiNDBUNXdwS0ZvcHBZWGpQM2ZxRU96cUpk0100koODEoA4\/pdf",
+      "hosted_voucher_url" : "https:\/\/payments.stripe.com\/boleto\/voucher\/test_YWNjdF8xSllGRmpKUVZST2tXdnFULF9VTTh4N2ZiNDBUNXdwS0ZvcHBZWGpQM2ZxRU96cUpk0100koODEoA4"
+    },
+    "type" : "boleto_display_details"
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "boleto" : {
+      "fingerprint" : "48wcl030Axz32v7b",
+      "tax_id" : "00000000000"
+    },
+    "id" : "pm_1TNQfYJQVROkWvqTpGYuyPT1",
+    "billing_details" : {
+      "email" : "foo@bar.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Jane Doe",
+      "address" : {
+        "state" : "SP",
+        "country" : "BR",
+        "line2" : "",
+        "city" : "São Paulo",
+        "line1" : "Rua das Flores, 123",
+        "postal_code" : "01234567"
+      }
+    },
+    "livemode" : false,
+    "created" : 1776487188,
+    "allow_redisplay" : "unspecified",
+    "type" : "boleto",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3TNQfYJQVROkWvqT0HDnMQxm_secret_68n4hBJPo1sF1JdEA6jiGp55I",
+  "id" : "pi_3TNQfYJQVROkWvqT0HDnMQxm",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "boleto"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1776487188,
+  "description" : null
+}

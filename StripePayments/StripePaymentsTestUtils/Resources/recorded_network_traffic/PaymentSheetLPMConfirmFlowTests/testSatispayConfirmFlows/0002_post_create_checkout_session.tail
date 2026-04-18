@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=XeeF8rNhTDF0udGoDdaBXZ9i%2Fl83J7C3UyuRrrYfbcZiSq%2Blk6sC6lD48f22NYXrBIQ5ftk5VdReJ17A73Vqv7wlX9Evg44eece4KztZ8vDgntGUMO2JkyyfaoNTFQ8Nm0AfdKU5bgWk3KxHSPqCQpXnu3AxdNrnI0L%2FLs8n352VUn%2FrFzfZzFwuv0KSK25zgMfpTG8Om09vr6TgUawfJiStogj17MYHY7rcrqtMpc8%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: 8d048ff1aab94036f4763e3998333e30
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:44:42 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: 9bccd5232eea5b0cecae4a56a7d25475
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=2z06zIe27e1GuXQ%2F5VOMV1fnHsBBfB1xbJOnCGmIqbXfyJnt5dszLvZBZr3Jto7Ni0CG1gtHbVkbK8lVk3O9vTImYNFBp17qPDrlZmHG5yD59p6xykegBsnBHX1iTR%2FvmfIqEwxkmvGuJDhLOW4SYQYys%2BTBrVpS09Lhp4Je5tfbkXKxLlcr6ciVhiB0vp2SgQ19Q56wA4f2DAN%2F58RXFz5001A%2FPvh1BVhMF6Khhtw%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Sat, 18 Apr 2026 04:38:09 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000
 
-{"id":"cs_test_a1K5b2clEs6frskOcwuR4M3Anb4vppT6pGErsKVX0arDssbDLxYrr8HiAI","client_secret":"cs_test_a1K5b2clEs6frskOcwuR4M3Anb4vppT6pGErsKVX0arDssbDLxYrr8HiAI_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51PSnETIFbdis1OxTALF4Z8ugUQpVS06UQDVahMSmwrbEYphjNYitXtOSqMPVKfzl3jukg6gLLrtZNnPlDrRbDpMd00U0tId6iv"}
+{"id":"cs_test_a1hjUsOq6rrk1OE5IdlIbxsdjBo49waGQX5YlsnxPOfqga355k3WC1mFvQ","client_secret":"cs_test_a1hjUsOq6rrk1OE5IdlIbxsdjBo49waGQX5YlsnxPOfqga355k3WC1mFvQ_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51PSnETIFbdis1OxTALF4Z8ugUQpVS06UQDVahMSmwrbEYphjNYitXtOSqMPVKfzl3jukg6gLLrtZNnPlDrRbDpMd00U0tId6iv"}
