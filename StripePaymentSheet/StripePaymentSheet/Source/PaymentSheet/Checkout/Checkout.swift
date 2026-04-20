@@ -31,7 +31,7 @@ public final class Checkout: ObservableObject {
     /// The current state of the checkout session.
     ///
     /// After initialization this is always ``State.loaded(_:)``. It transitions to
-    /// ``State.loading(_:)`` while a mutation (e.g. applying a promo code) is in flight.
+    /// ``State.loading(_:)`` while a mutation or refresh is in flight.
     @Published public private(set) var state: State
 
     /// The configuration supplied at initialization.
@@ -53,12 +53,12 @@ public final class Checkout: ObservableObject {
     private let clientSecret: String
     private let apiClient: STPAPIClient
 
-    /// Number of session-mutating API calls currently in flight.
+    /// Number of session mutations or refreshes currently in flight.
     /// Used by `withSessionUpdateGuard` to keep state as `.loading`
-    /// until all overlapping mutations complete.
+    /// until all overlapping operations complete.
     private var sessionUpdateCount = 0
 
-    /// Sets the session on `state`, using `.loading` if another update is in flight.
+    /// Sets the session on `state`, using `.loading` if another operation is in flight.
     private func setSession(_ session: Checkout.Session) {
         state = sessionUpdateCount > 0 ? .loading(session) : .loaded(session)
     }
@@ -112,6 +112,24 @@ public final class Checkout: ObservableObject {
         self.state = .loaded(session)
         session.onConfirmed = { [weak self] response in
             self?.updateSession(response)
+        }
+    }
+
+    // MARK: - Session
+
+    /// Refreshes the session by fetching the latest copy from Stripe.
+    ///
+    /// Call this after making server-side changes to the Checkout Session so
+    /// the local ``state`` stays in sync with Stripe.
+    ///
+    /// - Throws: ``CheckoutError`` if checkout UI is currently presented or the
+    ///   latest session cannot be fetched.
+    public func refresh() async throws {
+        guard integrationDelegate?.isSheetPresented != true else {
+            throw CheckoutError.sheetCurrentlyPresented
+        }
+        try await withSessionUpdateGuard {
+            try await refreshSession()
         }
     }
 
@@ -266,7 +284,7 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Private Methods
 
-    /// Tracks that a session update is in progress for the duration of `body`.
+    /// Tracks that a session mutation or refresh is in progress for the duration of `body`.
     /// Transitions state to `.loading` while the body executes.
     /// Uses a counter so overlapping calls don't clear the flag early.
     /// Note: an actor wouldn't help — actors are reentrant at suspension points,
@@ -331,6 +349,18 @@ public final class Checkout: ObservableObject {
                 checkoutSessionId: sessionId,
                 parameters: update.parameters
             )
+        } catch {
+            throw CheckoutError.apiError(message: error.nonGenericDescription)
+        }
+        try await refreshSession(applyOverrides: applyOverrides)
+    }
+
+    /// Fetches the latest Checkout Session from Stripe and publishes it to observers.
+    private func refreshSession(
+        applyOverrides: ((STPCheckoutSession) -> Void)? = nil
+    ) async throws {
+        do {
+            let sessionId = Self.extractSessionId(from: clientSecret)
             let refreshedCheckoutSession = try await apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
