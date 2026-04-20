@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "Onvolledig telefoonnummer";
 
-"Invalid UPI ID" = "Ongeldige UPI-ID";
-
 "Island" = "Eiland";
 
 "Last" = "Achternaam";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "De opgegeven bankcode is ongeldig.";
 
 "Town or city" = "Stad of plaats";
-
-"UPI ID" = "UPI-ID";
 
 "Unable to parse phone number" = "Kan telefoonnummer niet parseren";
 

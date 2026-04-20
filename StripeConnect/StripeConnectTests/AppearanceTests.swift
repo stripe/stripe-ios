@@ -5,7 +5,7 @@
 //  Created by Chris Mays on 9/4/24.
 //
 
-@_spi(PreviewConnect) @testable import StripeConnect
+@testable import StripeConnect
 import UIKit
 import XCTest
 

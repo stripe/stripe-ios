@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "Telefoninumber puudulik";
 
-"Invalid UPI ID" = "Kehtetu UPI ID";
-
 "Island" = "Saar";
 
 "Last" = "Viimane";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "Sisestatud sorteerimiskood ei ole kehtiv.";
 
 "Town or city" = "Linn";
-
-"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Telefoninumbri parsimine ebaõnnestus";
 

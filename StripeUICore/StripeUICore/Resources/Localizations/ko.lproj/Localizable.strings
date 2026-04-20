@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "불완전한 전화번호";
 
-"Invalid UPI ID" = "잘못된 UPI ID";
-
 "Island" = "섬";
 
 "Last" = "성";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "입력하신 분류 코드가 유효하지 않습니다.";
 
 "Town or city" = "마을 또는 도시";
-
-"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "전화번호 구문 분석 불가능";
 

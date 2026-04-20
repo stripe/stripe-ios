@@ -114,7 +114,7 @@ extension CustomerSheet {
         /// Create a PaymentOptionSelection for a saved payment method.
         public static func paymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
             let paymentMethodIcon = paymentMethod.makeIcon()
-            let image = paymentMethod.cardArtImage(cardArtEnabled: _cardArtEnabled) ?? paymentMethodIcon
+            let image = paymentMethod.cachedCardArtImage(cardArtEnabled: _cardArtEnabled) ?? paymentMethodIcon
             let data = PaymentOptionDisplayData(image: image, label: paymentMethod.paymentSheetLabel)
             return .paymentMethod(paymentMethod: paymentMethod, paymentOptionDisplayData: data)
         }

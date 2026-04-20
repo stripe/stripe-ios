@@ -2,8 +2,22 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+
+### All
+* [Removed] Removed UPI support across the SDK.
+
+### PaymentSheet
+* [Fixed] Fixed an issue where `LinkController` used the shared `STPAPIClient` instead of the `apiClient` specified in the caller, affecting apps using multiple API client instances.
+
+### Connect
+* [Changed] [#66351](https://github.com/stripe/stripe-ios/pull/6351) Theming tokens in connect embedded components is now GA.
+
+## 25.11.0 2026-04-13
 ### PaymentSheet
 * [Added] Added support for Pay by Bank payments (GA in GB, private preview in EU).
+
+### Identity
+* [Changed] Updated the Identity example app playground to use the latest VerificationSession API and request parameters.
 
 ## 25.10.0 2026-04-06
 ### AddressElement

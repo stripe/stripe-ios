@@ -93,7 +93,7 @@ import UIKit
     private let requestSurface: LinkRequestSurface
 
     private lazy var linkAccountService: LinkAccountServiceProtocol = {
-        LinkAccountService(elementsSession: elementsSession)
+        LinkAccountService(apiClient: apiClient, elementsSession: elementsSession)
     }()
 
     private var selectedPaymentDetails: ConsumerPaymentDetails? {
@@ -208,6 +208,7 @@ import UIKit
         Task {
             do {
                 var configuration = PaymentSheet.Configuration()
+                configuration.apiClient = apiClient
                 if let appearance = appearance {
                     configuration.style = appearance.style
                 }
