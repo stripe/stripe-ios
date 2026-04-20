@@ -93,7 +93,7 @@ import UIKit
     private let requestSurface: LinkRequestSurface
 
     private lazy var linkAccountService: LinkAccountServiceProtocol = {
-        LinkAccountService(elementsSession: elementsSession)
+        LinkAccountService(apiClient: apiClient, elementsSession: elementsSession)
     }()
 
     private var selectedPaymentDetails: ConsumerPaymentDetails? {

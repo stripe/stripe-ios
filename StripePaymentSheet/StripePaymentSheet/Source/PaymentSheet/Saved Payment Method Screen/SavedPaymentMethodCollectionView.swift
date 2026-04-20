@@ -345,7 +345,6 @@ extension SavedPaymentMethodCollectionView {
             traitCollection.performAsCurrent {
                 let overrideUserInterfaceStyle: UIUserInterfaceStyle = appearance.colors.componentBackground.isDark ? .dark : .light
                 if let viewModel = viewModel {
-                    paymentMethodLogo.tag = 0
                     switch viewModel {
                     case .saved(let paymentMethod):
                         if let attributedText = attributedTextForLabel(paymentMethod: paymentMethod) {
@@ -359,16 +358,17 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
                         let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
-                        let cardArtHeight: Int = 26
-                        if cardArtEnabled, let cardArtURL = paymentMethod.cardArtCDNURL(height: cardArtHeight) {
-                            paymentMethodLogo.tag = cardArtURL.hashValue
-                            paymentMethodLogo.image = nil
+                        if let cardArtURL = paymentMethod.cardArtCDNURL(cardArtEnabled: cardArtEnabled) {
+                            if paymentMethodLogo.tag != cardArtURL.hashValue {
+                                paymentMethodLogo.tag = cardArtURL.hashValue
+                                paymentMethodLogo.image = nil
+                            }
                             Task {
                                 let image = try? await DownloadManager.sharedManager.downloadImage(url: cardArtURL)
                                 guard paymentMethodLogo.tag == cardArtURL.hashValue else { return }
                                 if let image {
                                     paymentMethodLogo.image = image.roundedWithBorder(radius: 3)
-                                    paymentMethodLogoHeightConstraint.constant = CGFloat(cardArtHeight)
+                                    paymentMethodLogoHeightConstraint.constant = CGFloat(STPPaymentMethod.cardArtHeight)
                                 } else {
                                     paymentMethodLogo.image = paymentMethodCellImage
                                     paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
@@ -384,14 +384,18 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        let paymentMethodLogoImage = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogo.image = paymentMethodLogoImage
+                        paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
                         paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                     case .link:
                         label.text = STPPaymentMethodType.link.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        let paymentMethodLogoImage = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogo.image = paymentMethodLogoImage
+                        paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
                         paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
@@ -404,6 +408,7 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityLabel = String.Localized.add_new_payment_method
                         selectableRectangle.accessibilityIdentifier = "+ Add"
                         paymentMethodLogo.isHidden = true
+                        paymentMethodLogo.tag = 0
                         plus.isHidden = false
                         plus.setNeedsDisplay()
                     }
