@@ -5,6 +5,7 @@ GEM
       base64
       nkf
       rexml
+    abbrev (0.1.2)
     activesupport (7.1.5.1)
       base64
       benchmark (>= 0.3)
@@ -337,6 +338,7 @@ PLATFORMS
 
 DEPENDENCIES
   CFPropertyList
+  abbrev
   cocoapods
   colorize
   dotstrings
