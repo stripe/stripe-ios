@@ -3,22 +3,24 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=J4zST6HUgl7P0oo2fm7Xf188YwDL7oiCbXVnL4NeWlEYCWu1TW1rZU0yrv7x_z2n16dhjgPLcSSWY-Ta
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=zR76XeGVZ1jjlnmRfmF7aEnHV0r1LAolX1VGmHyoAcpxLw92dBFkzDlc3OUXBr4j7tk8PmiZUDyN8-Kl
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=zR76XeGVZ1jjlnmRfmF7aEnHV0r1LAolX1VGmHyoAcpxLw92dBFkzDlc3OUXBr4j7tk8PmiZUDyN8-Kl&t=1"
+x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=zR76XeGVZ1jjlnmRfmF7aEnHV0r1LAolX1VGmHyoAcpxLw92dBFkzDlc3OUXBr4j7tk8PmiZUDyN8-Kl&t=1"}],"include_subdomains":true}
+request-id: req_Ozi8GC4zuCKAOM
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_jEv97cr7a0SOBP
 Content-Length: 841
 Vary: Origin
-Date: Mon, 16 Mar 2026 18:35:27 GMT
-original-request: req_jEv97cr7a0SOBP
+Date: Sat, 18 Apr 2026 04:59:59 GMT
+original-request: req_Ozi8GC4zuCKAOM
 stripe-version: 2020-08-27
-idempotency-key: b5cd3aed-a9c6-4bf6-9ced-bd8b4255d66f
+idempotency-key: 4e1c8bd7-99b2-46ea-8278-58f4b553764d
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -26,11 +28,11 @@ Content-Type: application/json
 X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=EUR&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=ideal&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[name]=Foo&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=ideal&return_url=https%3A\/\/foo\.com
 
 {
-  "id" : "ctoken_1TBfz9FY0qyl6XeWrxK39msY",
+  "id" : "ctoken_1TNQz4FY0qyl6XeWbnF9Dn5l",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1773729327,
+  "expires_at" : 1776531598,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : null,
   "object" : "confirmation_token",
@@ -58,7 +60,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "type" : "ideal",
     "customer_account" : null
   },
-  "created" : 1773686127,
+  "created" : 1776488398,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null

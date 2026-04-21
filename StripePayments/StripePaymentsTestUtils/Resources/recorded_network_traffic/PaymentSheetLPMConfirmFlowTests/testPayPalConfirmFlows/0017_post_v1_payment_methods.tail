@@ -3,22 +3,24 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=PfQu7UVY5pnnsctKT6yKnAnu8fXP2_QeSzvHWARyW37ydBWUXi5l7qNaz1wqWzQkdvqHxbOwf6xWc0A8
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=MQ8Cm8123LCcj6ZE4mVUBA2fp35rgnJkXTUKNpkMtPNtGi349c5HcHEaIDq41RDw6-sLlGdSMHs106Kn
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=MQ8Cm8123LCcj6ZE4mVUBA2fp35rgnJkXTUKNpkMtPNtGi349c5HcHEaIDq41RDw6-sLlGdSMHs106Kn&t=1"
+x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=MQ8Cm8123LCcj6ZE4mVUBA2fp35rgnJkXTUKNpkMtPNtGi349c5HcHEaIDq41RDw6-sLlGdSMHs106Kn&t=1"}],"include_subdomains":true}
+request-id: req_QEUd3e9RBSPWsm
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_dT8UxEDqgBzsVG
 Content-Length: 566
 Vary: Origin
-Date: Mon, 16 Mar 2026 18:39:54 GMT
-original-request: req_dT8UxEDqgBzsVG
+Date: Sat, 18 Apr 2026 04:52:02 GMT
+original-request: req_QEUd3e9RBSPWsm
 stripe-version: 2020-08-27
-idempotency-key: fd23240f-8906-4e83-be36-ca5767d3664b
+idempotency-key: a8461b13-9b62-4f16-8ebf-4fcbfcaea499
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -32,7 +34,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     "payer_id" : null,
     "payer_email" : null
   },
-  "id" : "pm_1TBg3SKG6vc7r7YCzKMySEQ7",
+  "id" : "pm_1TNQrOKG6vc7r7YCoYaEwEWx",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -48,7 +50,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&client_attribution_metadata\[
     }
   },
   "livemode" : false,
-  "created" : 1773686394,
+  "created" : 1776487922,
   "allow_redisplay" : "unspecified",
   "type" : "paypal",
   "customer" : null,

@@ -237,6 +237,24 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.setupFutureUsage, "off_session")
     }
 
+    func testDecodedObjectParsesPerPaymentMethodSetupFutureUsage() {
+        let session = makeCheckoutSession([
+            "payment_method_types": ["card", "us_bank_account"],
+            "setup_future_usage_for_payment_method_type": [
+                "card": "off_session",
+                "us_bank_account": "none",
+            ],
+        ])
+
+        XCTAssertEqual(
+            session.setupFutureUsageForPaymentMethodType as NSDictionary,
+            [
+                "card": "off_session",
+                "us_bank_account": "none",
+            ] as NSDictionary
+        )
+    }
+
     func testDecodedObjectParsesCanDetachPaymentMethodTrue() {
         let json: [String: Any] = [
             "session_id": "cs_test_detach_true",
@@ -386,6 +404,25 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertFalse(session.merchantWillSavePaymentMethod(.card))
     }
 
+    func testMerchantWillSavePaymentMethod_paymentModeWithPerPaymentMethodSetupFutureUsage() {
+        let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
+            "session_id": "cs_test_payment_per_pm_sfu",
+            "object": "checkout.session",
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card", "us_bank_account"],
+            "customer": ["id": "cus_123"],
+            "setup_future_usage_for_payment_method_type": [
+                "card": "off_session",
+                "us_bank_account": "none",
+            ],
+        ])!
+
+        XCTAssertTrue(session.merchantWillSavePaymentMethod(.card))
+        XCTAssertFalse(session.merchantWillSavePaymentMethod(.USBankAccount))
+    }
+
     func testMerchantWillSavePaymentMethod_paymentModeWithoutCustomer() {
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: [
             "session_id": "cs_test_payment_no_customer",
@@ -435,6 +472,17 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(Intent.checkoutSession(session).setupFutureUsageString, "off_session")
     }
 
+    func testCheckoutSessionIntent_isPaymentMethodOptionsSetupFutureUsageSet() {
+        let session = makeCheckoutSession([
+            "setup_future_usage_for_payment_method_type": [
+                "paypal": "off_session",
+            ],
+            "payment_method_types": ["paypal"],
+        ])
+
+        XCTAssertEqual(Intent.checkoutSession(session).isPaymentMethodOptionsSetupFutureUsageSet, true)
+    }
+
     func testCheckoutSessionIntent_isSetupFutureUsageSet_topLevel() {
         let session = makeCheckoutSession([
             "setup_future_usage": "off_session",
@@ -451,6 +499,29 @@ class STPCheckoutSessionTest: XCTestCase {
         ])
 
         XCTAssertEqual(Intent.checkoutSession(session).setupFutureUsageString, "none")
+        XCTAssertFalse(Intent.checkoutSession(session).isSetupFutureUsageSet(for: .payPal))
+    }
+
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethod() {
+        let session = makeCheckoutSession([
+            "setup_future_usage_for_payment_method_type": [
+                "paypal": "off_session",
+            ],
+            "payment_method_types": ["paypal"],
+        ])
+
+        XCTAssertTrue(Intent.checkoutSession(session).isSetupFutureUsageSet(for: .payPal))
+    }
+
+    func testCheckoutSessionIntent_isSetupFutureUsageSet_perPaymentMethodNoneOverridesTopLevel() {
+        let session = makeCheckoutSession([
+            "setup_future_usage": "off_session",
+            "setup_future_usage_for_payment_method_type": [
+                "paypal": "none",
+            ],
+            "payment_method_types": ["paypal"],
+        ])
+
         XCTAssertFalse(Intent.checkoutSession(session).isSetupFutureUsageSet(for: .payPal))
     }
 
