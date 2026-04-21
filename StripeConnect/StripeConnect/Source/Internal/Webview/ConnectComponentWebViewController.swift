@@ -97,6 +97,13 @@ class ConnectComponentWebViewController: ConnectWebViewController {
             allowedHosts: allowedHosts
         )
 
+        // Register for trait changes (iOS 17+ uses the modern API since traitCollectionDidChange is deprecated)
+        if #available(iOS 17.0, *) {
+            registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: Self, _: UITraitCollection) in
+                self.updateAppearance(appearance: self.componentManager.appearance)
+            }
+        }
+
         // Setup views
         webView.addSubview(activityIndicator)
         NSLayoutConstraint.activate([
@@ -162,8 +169,10 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        DispatchQueue.main.async {
-            self.updateAppearance(appearance: self.componentManager.appearance)
+        if #unavailable(iOS 17.0) {
+            DispatchQueue.main.async {
+                self.updateAppearance(appearance: self.componentManager.appearance)
+            }
         }
     }
 
@@ -393,7 +402,6 @@ private extension ConnectComponentWebViewController {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            // swiftlint:disable:previous unused_capture_list
             guard let self else { return }
             sendMessage(UpdateConnectInstanceSender(payload: .init(locale: webLocale.toLanguageTag(), appearance: .init(appearance: componentManager.appearance, traitCollection: traitCollection))))
         }

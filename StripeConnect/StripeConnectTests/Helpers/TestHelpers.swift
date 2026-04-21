@@ -32,6 +32,8 @@ enum TestHelpers {
     }
 }
 
+private var _traitChangeWindow: UIWindow?
+
 extension UIViewController {
     // Overriding the user interface style alone does not trigger a trait collection change
     // the view also needs to be added to a window.
@@ -41,8 +43,10 @@ extension UIViewController {
         window.makeKeyAndVisible()
         window.overrideUserInterfaceStyle = style
 
-        // NOTE: On iOS 16 and lower, we need to trigger a layout on the VC to
-        // trigger a trait collection change. This is not needed on 17+
+        // Retain the window so it (and the VC) aren't deallocated before
+        // async trait change callbacks fire on iOS 17+
+        _traitChangeWindow = window
+
         view.setNeedsLayout()
         view.layoutIfNeeded()
     }

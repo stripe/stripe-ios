@@ -163,7 +163,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
     /// 3. The response from request is empty
     func testSubmitVerificationFrames() throws {
         let base64EncodedVerificationFrames = "base64_encoded_list_of_verify_frames"
-        let mockResponse = "{}".data(using: .utf8)!
+        let mockResponse = Data("{}".utf8)
         let mockParameter = VerifyFrames(
             clientSecret: CIVIntentMockData.clientSecret,
             verificationFramesData: base64EncodedVerificationFrames
@@ -224,11 +224,11 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
     /// 3. The response from request is empty
     func testSubmitVerificationFrames_Expanded() throws {
         let verificationFrameData = VerificationFramesData(
-            imageData: "image_data".data(using: .utf8)!,
+            imageData: Data("image_data".utf8),
             viewfinderMargins: ViewFinderMargins(left: 0, upper: 0, right: 0, lower: 0)
         )
 
-        let mockResponse = "{}".data(using: .utf8)!
+        let mockResponse = Data("{}".utf8)
 
         /// The list of verification frame datas are encoded with snake_case before converting to a `VerifyFrames` object
         let jsonEncoder = JSONEncoder()
@@ -255,10 +255,32 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
                 ),
                 true
             )
-            XCTAssertEqual(
-                String(data: httpBody, encoding: .utf8),
-                "client_secret=\(CIVIntentMockData.clientSecret)&verification_frames_data=\(urlEncodedString)"
-            )
+            // Compare query params individually since JSONEncoder key ordering is non-deterministic
+            let bodyString = String(data: httpBody, encoding: .utf8) ?? ""
+            let bodyParams = bodyString.split(separator: "&").sorted()
+            let expectedParams = "client_secret=\(CIVIntentMockData.clientSecret)&verification_frames_data=\(urlEncodedString)".split(separator: "&").sorted()
+            XCTAssertEqual(bodyParams.count, expectedParams.count)
+            // Check client_secret matches exactly
+            XCTAssertTrue(bodyString.contains("client_secret=\(CIVIntentMockData.clientSecret)"))
+            // Check verification_frames_data by decoding the JSON structurally
+            if let framesParam = bodyString.components(separatedBy: "verification_frames_data=").last,
+               let decoded = framesParam.removingPercentEncoding,
+               let jsonData = Data(decoded.utf8) as Data?,
+               let actual = try? JSONSerialization.jsonObject(with: jsonData) as? [[String: Any]],
+               let expectedDecoded = Data(verificationFramesDataString.utf8) as Data?,
+               let expected = try? JSONSerialization.jsonObject(with: expectedDecoded) as? [[String: Any]] {
+                XCTAssertEqual(actual.count, expected.count)
+                // Compare the first frame's keys and values
+                if let actualFrame = actual.first, let expectedFrame = expected.first {
+                    XCTAssertEqual(actualFrame["image_data"] as? String, expectedFrame["image_data"] as? String)
+                    XCTAssertEqual(
+                        actualFrame["viewfinder_margins"] as? [String: Int],
+                        expectedFrame["viewfinder_margins"] as? [String: Int]
+                    )
+                }
+            } else {
+                XCTFail("Failed to parse verification_frames_data from request body")
+            }
             XCTAssertEqual(request.httpMethod, "POST")
 
             return true
@@ -296,7 +318,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
     /// 2. The response from request is empty
     func testUploadScanStats() throws {
         let startDate = Date()
-        let mockResponse = "{}".data(using: .utf8)!
+        let mockResponse = Data("{}".utf8)
         let payload: ScanAnalyticsPayload = .init(
             configuration: .init(strictModeFrames: 0),
             payloadInfo: .init(

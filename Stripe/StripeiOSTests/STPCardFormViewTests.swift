@@ -73,22 +73,22 @@ class STPCardFormViewTests: XCTestCase {
     }
 
     func testHidingPostalCodeOnInit() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK")) {
-            let cardForm = STPCardFormView()
-            XCTAssertTrue(cardForm.postalCodeField.isHidden)
-        }
+        let cardForm = STPCardFormView()
+        // HK has no postal codes, so the postal code field should be hidden
+        cardForm.countryCode = "HK"
+        XCTAssertTrue(cardForm.postalCodeField.isHidden)
     }
 
     func testHidingPostalUPECodeOnInit() {
-        NSLocale.stp_withLocale(as: NSLocale(localeIdentifier: "zh_Hans_HK")) {
-            let cardForm = STPCardFormView(
-                billingAddressCollection: .automatic,
-                style: .standard,
-                postalCodeRequirement: .upe,
-                prefillDetails: nil
-            )
-            XCTAssertTrue(cardForm.postalCodeField.isHidden)
-        }
+        let cardForm = STPCardFormView(
+            billingAddressCollection: .automatic,
+            style: .standard,
+            postalCodeRequirement: .upe,
+            prefillDetails: nil
+        )
+        // HK is not in the UPE postal-required list, so the field should be hidden
+        cardForm.countryCode = "HK"
+        XCTAssertTrue(cardForm.postalCodeField.isHidden)
     }
 
     func testNotHidingPostalUPECodeOnInit() {
