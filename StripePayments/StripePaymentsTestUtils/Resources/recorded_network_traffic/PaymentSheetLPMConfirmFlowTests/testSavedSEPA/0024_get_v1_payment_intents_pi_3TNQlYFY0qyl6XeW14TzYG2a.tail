@@ -1,0 +1,99 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TNQlYFY0qyl6XeW14TzYG2a\?client_secret=pi_3TNQlYFY0qyl6XeW14TzYG2a_secret_f4pCkcO5eb0L4eNkjCBwhyt2S&expand%5B0%5D=payment_method$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=pjiswzuHqTq48rgGbqkNuw3ioSH5za-uoMB_vXdihmT4Zbkv3dVftJ29D30euwILO0j9pJG0V6FNiXV-
+Server: nginx
+x-wc: 3c3
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=pjiswzuHqTq48rgGbqkNuw3ioSH5za-uoMB_vXdihmT4Zbkv3dVftJ29D30euwILO0j9pJG0V6FNiXV-&t=1"
+Cache-Control: no-cache, no-store
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=pjiswzuHqTq48rgGbqkNuw3ioSH5za-uoMB_vXdihmT4Zbkv3dVftJ29D30euwILO0j9pJG0V6FNiXV-&t=1"}],"include_subdomains":true}
+request-id: req_jXmjI7hwLx4suA
+Content-Length: 1822
+Vary: Origin
+Date: Sat, 18 Apr 2026 04:46:02 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "processing",
+  "object" : "payment_intent",
+  "currency" : "eur",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "sepa_debit" : {
+      "fingerprint" : "TadlYGPrD03gCeZx",
+      "country" : "AT",
+      "last4" : "3201",
+      "bank_code" : "19043",
+      "generated_from" : {
+        "setup_attempt" : null,
+        "charge" : null
+      },
+      "branch_code" : ""
+    },
+    "id" : "pm_1TNQlMFY0qyl6XeW3h2QjGGq",
+    "billing_details" : {
+      "email" : "email@email.com",
+      "phone" : "555-555-5555",
+      "tax_id" : null,
+      "name" : "Isaac Asimov",
+      "address" : {
+        "state" : null,
+        "country" : "GB",
+        "line2" : null,
+        "city" : "London",
+        "line1" : "Stripe, 7th Floor The Bower Warehouse",
+        "postal_code" : "EC1V 9NR"
+      }
+    },
+    "livemode" : false,
+    "created" : 1776487549,
+    "allow_redisplay" : "unspecified",
+    "type" : "sepa_debit",
+    "customer" : "cus_UM93Nwmj15CPHv",
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3TNQlYFY0qyl6XeW14TzYG2a_secret_f4pCkcO5eb0L4eNkjCBwhyt2S",
+  "id" : "pi_3TNQlYFY0qyl6XeW14TzYG2a",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "sepa_debit"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1776487560,
+  "description" : null
+}

@@ -195,12 +195,11 @@ extension STPTestingAPIClient {
         let publishableKey: String
     }
 
-    func fetchCheckoutSessionPaymentMode(
-        types: [String] = ["card"],
+    static func checkoutSessionAdditionalParameters(
         currency: String = "usd",
         amount: Int? = nil,
-        merchantCountry: String? = "us",
-        customerID: String? = nil,
+        setupFutureUsage: String? = nil,
+        paymentMethodOptionsSetupFutureUsage: [String: String]? = nil,
         allowPromotionCodes: Bool = false,
         allowAdjustableLineItemQuantity: Bool = false,
         includeShippingOptions: Bool = false,
@@ -210,7 +209,7 @@ extension STPTestingAPIClient {
         enableTaxIdCollection: Bool = false,
         adaptivePricingEnabled: Bool = false,
         customerEmailLocation: String? = nil
-    ) async throws -> CreateCheckoutSessionResponse {
+    ) -> [String: Any] {
         var additionalParameters: [String: Any] = [:]
         if allowPromotionCodes {
             additionalParameters["allow_promotion_codes"] = true
@@ -275,6 +274,54 @@ extension STPTestingAPIClient {
         if let customerEmailLocation {
             additionalParameters["customer_email"] = "test+location_\(customerEmailLocation)@example.com"
         }
+        if let setupFutureUsage {
+            var paymentIntentData = additionalParameters["payment_intent_data"] as? [String: Any] ?? [:]
+            paymentIntentData["setup_future_usage"] = setupFutureUsage
+            additionalParameters["payment_intent_data"] = paymentIntentData
+        }
+        if let paymentMethodOptionsSetupFutureUsage, !paymentMethodOptionsSetupFutureUsage.isEmpty {
+            additionalParameters["payment_method_options"] = paymentMethodOptionsSetupFutureUsage.reduce(into: [String: Any]()) { result, entry in
+                result[entry.key] = [
+                    "setup_future_usage": entry.value,
+                ]
+            }
+        }
+        return additionalParameters
+    }
+
+    func fetchCheckoutSessionPaymentMode(
+        types: [String] = ["card"],
+        currency: String = "usd",
+        amount: Int? = nil,
+        merchantCountry: String? = "us",
+        customerID: String? = nil,
+        setupFutureUsage: String? = nil,
+        paymentMethodOptionsSetupFutureUsage: [String: String]? = nil,
+        allowPromotionCodes: Bool = false,
+        allowAdjustableLineItemQuantity: Bool = false,
+        includeShippingOptions: Bool = false,
+        collectShippingAddress: Bool = false,
+        collectBillingAddress: Bool = false,
+        automaticTax: Bool = false,
+        enableTaxIdCollection: Bool = false,
+        adaptivePricingEnabled: Bool = false,
+        customerEmailLocation: String? = nil
+    ) async throws -> CreateCheckoutSessionResponse {
+        let additionalParameters = Self.checkoutSessionAdditionalParameters(
+            currency: currency,
+            amount: amount,
+            setupFutureUsage: setupFutureUsage,
+            paymentMethodOptionsSetupFutureUsage: paymentMethodOptionsSetupFutureUsage,
+            allowPromotionCodes: allowPromotionCodes,
+            allowAdjustableLineItemQuantity: allowAdjustableLineItemQuantity,
+            includeShippingOptions: includeShippingOptions,
+            collectShippingAddress: collectShippingAddress,
+            collectBillingAddress: collectBillingAddress,
+            automaticTax: automaticTax,
+            enableTaxIdCollection: enableTaxIdCollection,
+            adaptivePricingEnabled: adaptivePricingEnabled,
+            customerEmailLocation: customerEmailLocation
+        )
         let params: [String: Any?] = [
             "account": merchantCountry,
             "payment_method_types": types,

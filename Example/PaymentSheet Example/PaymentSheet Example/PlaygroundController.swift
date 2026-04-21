@@ -1110,7 +1110,7 @@ extension PlaygroundController {
         }
 
         // Only set PMO SFU on the Intent if we're Intent-first, never set it for deferred intents.
-        if settings.integrationType == .normal {
+        if settings.integrationType == .normal || settings.integrationType == .checkoutSession {
             body["payment_method_options_setup_future_usage"] = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
         }
         if shouldCreateCustomerKey {
