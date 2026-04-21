@@ -7,7 +7,7 @@ on:
 
 jobs:
   dead-code-check:
-    runs-on: macos-15
+    runs-on: macos-26
     permissions:
       pull-requests: write
 
@@ -18,7 +18,7 @@ jobs:
           fetch-depth: 1
 
       - name: Setup Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
+        run: sudo xcode-select -s /Applications/Xcode_26.1.app/Contents/Developer
 
       - name: Install Periphery
         run: brew install periphery
