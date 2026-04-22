@@ -64,6 +64,10 @@ The Stripe iOS SDK collects data to help us improve our products and prevent fra
 
 For help with Apple's App Privacy Details form in App Store Connect, visit [Stripe iOS SDK Privacy Details](https://support.stripe.com/questions/stripe-ios-sdk-privacy-details).
 
+#### Preview APIs
+
+Some modules expose preview APIs via `@_spi` annotations. We aim to make breaking changes to these APIs only in major or minor releases, while retaining API compatibility across patch versions. (For example, a preview API may change when moving from version `12.1.0` to `12.2.0`, but should not change from `12.2.0` to `12.2.1`.) Please see the [Stripe Services Agreement](https://stripe.com/legal/ssa) section on "Preview Services" for more information.
+
 ## Modules
 <!-- 
   EmergeTools project must be made public before adding to this table:
