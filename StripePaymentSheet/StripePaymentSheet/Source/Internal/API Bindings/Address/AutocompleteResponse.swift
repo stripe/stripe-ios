@@ -31,15 +31,15 @@ class AutocompleteResponse: NSObject {
 
 // MARK: - STPAPIResponseDecodable
 extension AutocompleteResponse: STPAPIResponseDecodable {
-    static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
+    static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
               let suggestionsDict = dict["suggestions"] as? [[AnyHashable: Any]],
               let source = dict["source"] as? String
         else {
             return nil
         }
-        
-        let suggestions = suggestionsDict.compactMap{ suggestionDict in AddressSuggestion.decodedObject(fromAPIResponse: suggestionDict)}
+
+        let suggestions = suggestionsDict.compactMap { suggestionDict in AddressSuggestion.decodedObject(fromAPIResponse: suggestionDict) }
 
         return AutocompleteResponse(
             suggestions: suggestions,
@@ -93,7 +93,7 @@ extension AddressSuggestion: AddressSearchResult {
 
 // MARK: - STPAPIResponseDecodable
 extension AddressSuggestion: STPAPIResponseDecodable {
-    static func decodedObject(fromAPIResponse response: [AnyHashable : Any]?) -> Self? {
+    static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
               let title = dict["title"] as? String,
               let subtitle = dict["subtitle"] as? String,
