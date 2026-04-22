@@ -53,6 +53,10 @@ final class MLModelLoader {
             try fileManager.moveItem(at: compiledModel, to: destinationURL)
             return destinationURL
         } catch {
+            Self.logModelLoadingError(
+                error,
+                stage: "cache_compiled_model"
+            )
             return nil
         }
     }
@@ -83,12 +87,20 @@ final class MLModelLoader {
 
             // Check if model is already cached to file system
             let cachedModel = self.getCachedLocation(forRemoteURL: remoteURL)
-            if let mlModel = try? MLModel(contentsOf: cachedModel) {
+            do {
+                let mlModel = try MLModel(contentsOf: cachedModel)
                 return returnedPromise.resolve(with: mlModel)
-            }
+            } catch {
+                if FileManager.default.fileExists(atPath: cachedModel.path) {
+                    Self.logModelLoadingError(
+                        error,
+                        stage: "load_cached_model"
+                    )
 
-            // If the model failed to load because it was corrupted, delete the artifact
-            try? FileManager.default.removeItem(at: cachedModel)
+                    // If the model failed to load because it was corrupted, delete the artifact
+                    try? FileManager.default.removeItem(at: cachedModel)
+                }
+            }
 
             self.fileDownloader.downloadFileTemporarily(from: remoteURL).chained(on: loadPromiseCacheQueue) {
                 [weak self] tmpFileURL -> Promise<MLModel> in
@@ -139,5 +151,24 @@ final class MLModelLoader {
             }
             return promise
         }
+    }
+}
+
+private extension MLModelLoader {
+    static func logModelLoadingError(
+        _ error: Error,
+        stage: String,
+        filePath: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        IdentityAnalyticsClient.logUnscopedGenericError(
+            error,
+            context: "ml_model_load",
+            additionalMetadata: [
+                "ml_model_stage": stage,
+            ],
+            filePath: filePath,
+            line: line
+        )
     }
 }

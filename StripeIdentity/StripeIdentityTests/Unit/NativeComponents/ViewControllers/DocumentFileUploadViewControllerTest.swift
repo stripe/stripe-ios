@@ -9,6 +9,7 @@
 import Foundation
 @_spi(STP) import StripeCameraCoreTestUtils
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeCoreTestUtils
 import UIKit
 import XCTest
 
@@ -20,6 +21,7 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
     var mockCameraPermissionsManager: MockCameraPermissionsManager!
     var mockAppSettingsHelper: MockAppSettingsHelper!
     var mockSheetController: VerificationSheetControllerMock!
+    var mockAnalyticsClient: MockAnalyticsClientV2!
 
     let mockImage = CapturedImageMock.frontDriversLicense.image
     let mockImageURL = CapturedImageMock.frontDriversLicense.url
@@ -31,7 +33,13 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
         mockCameraPermissionsManager = .init()
         mockAppSettingsHelper = .init()
         mockAppSettingsHelper.canOpenAppSettings = true
-        mockSheetController = .init()
+        mockAnalyticsClient = .init()
+        mockSheetController = .init(
+            analyticsClient: IdentityAnalyticsClient(
+                verificationSessionId: "",
+                analyticsClient: mockAnalyticsClient
+            )
+        )
     }
 
     func testIdCardFront() {
@@ -115,6 +123,45 @@ final class DocumentFileUploadViewControllerTest: XCTestCase {
             return XCTFail("Expected UIAlertController")
         }
         XCTAssertEqual(alertController.actions.map { $0.title }, ["App Settings", "OK"])
+
+        let analytic = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "camera_permission_denied"
+        ).first
+        XCTAssert(analytic: analytic, hasMetadata: "screen_name", withValue: "file_upload")
+        XCTAssert(analytic: analytic, hasMetadata: "camera_source", withValue: "image_picker")
+        XCTAssert(analytic: analytic, hasMetadata: "camera_event_kind", withValue: "permission")
+        XCTAssert(analytic: analytic, hasMetadata: "camera_access_state", withValue: "denied")
+
+        let errorAnalytic = mockAnalyticsClient.loggedAnalyticPayloads(
+            withEventName: "camera_error"
+        ).first
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "screen_name", withValue: "file_upload")
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "camera_source", withValue: "image_picker")
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "camera_event_kind", withValue: "permission")
+        XCTAssert(analytic: errorAnalytic, hasMetadata: "camera_access_state", withValue: "denied")
+        let error = (errorAnalytic?["event_metadata"] as? [String: Any])?["error"] as? [String: Any]
+        XCTAssertEqual(error?["type"] as? String, "cameraPermissionDenied")
+        XCTAssertEqual(error?["file"] as? String, "DocumentFileUploadViewController.swift")
+    }
+
+    func testTakePhotoCameraPermissionsGrantedDoesNotLogAnalytics() {
+        let vc = makeViewController()
+        vc.didTapSelect(for: .front, from: UIButton())
+        vc.takePhoto()
+        XCTAssertTrue(mockCameraPermissionsManager.didRequestCameraAccess)
+
+        mockCameraPermissionsManager.respondToRequest(granted: true)
+        wait(for: [mockCameraPermissionsManager.didCompleteExpectation], timeout: 1)
+        XCTAssertEqual(
+            mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_granted")
+                .count,
+            0
+        )
+        XCTAssertEqual(
+            mockAnalyticsClient.loggedAnalyticPayloads(withEventName: "camera_permission_denied")
+                .count,
+            0
+        )
     }
 
     func testSelectFileFromSystem() {

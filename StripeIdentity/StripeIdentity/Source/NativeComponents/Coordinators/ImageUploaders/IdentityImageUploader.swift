@@ -139,6 +139,7 @@ final class IdentityImageUploader {
                 )
             )
         } catch {
+            logUploadError(error, stage: .highResCrop, fileName: fileName)
             return Promise(error: error)
         }
     }
@@ -174,6 +175,7 @@ final class IdentityImageUploader {
                 jpegCompressionQuality: jpegCompressionQuality
             )
         } catch {
+            logUploadError(error, stage: .imageResize, fileName: fileName)
             return Promise(error: error)
         }
     }
@@ -208,9 +210,41 @@ final class IdentityImageUploader {
                         fileSizeBytes: metrics.fileSizeBytes,
                         sheetController: self.sheetController
                     )
+                } else if let self = self,
+                    case .failure(let error) = result
+                {
+                    self.logUploadError(error, stage: .imageUpload, fileName: fileName)
                 }
             }
         }
         return promise
+    }
+}
+
+private extension IdentityImageUploader {
+    enum UploadErrorStage: String {
+        case highResCrop
+        case imageResize
+        case imageUpload
+    }
+    func logUploadError(
+        _ error: Error,
+        stage: UploadErrorStage,
+        fileName: String,
+        filePath: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        analyticsClient.logGenericError(
+            error: error,
+            additionalMetadata: [
+                "error_context": "image_upload",
+                "image_upload_stage": stage.rawValue,
+                "file_name": fileName,
+                "file_purpose": configuration.filePurpose,
+            ],
+            filePath: filePath,
+            line: line,
+            sheetController: sheetController
+        )
     }
 }

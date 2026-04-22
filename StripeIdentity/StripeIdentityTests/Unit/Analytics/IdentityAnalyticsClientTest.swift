@@ -6,7 +6,6 @@
 //
 
 @_spi(STP) import StripeCoreTestUtils
-import StripeCoreTestUtils
 import XCTest
 
 @_spi(STP) @testable import StripeCore
@@ -60,6 +59,20 @@ final class IdentityAnalyticsClientTest: XCTestCase {
         // no experiement exposure log
         XCTAssertEqual(mockAnalyticsClient.loggedAnalyticsPayloads.count, 1)
         XCTAssertTrue(mockAnalyticsClient.loggedAnalyticsPayloads.contains(where: { $0["event_name"] as? String == IdentityAnalyticsClient.EventName.screenAppeared.rawValue }))
+    }
+
+    func testLogScreenAppearedIncludesPreviousScreenNameIfProvided() throws {
+        sheetController.verificationPageResponse = .success(try VerificationPageMock.response200NoExp.make())
+
+        self.analyticsClient.logScreenAppeared(
+            screenName: .documentWarmup,
+            previousScreenName: .biometricConsent,
+            sheetController: sheetController
+        )
+
+        let analytic = mockAnalyticsClient.loggedAnalyticsPayloads.first
+        XCTAssert(analytic: analytic, hasMetadata: "screen_name", withValue: "document_warmup")
+        XCTAssert(analytic: analytic, hasMetadata: "previous_screen_name", withValue: "consent")
     }
 
 }

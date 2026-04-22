@@ -237,7 +237,9 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                 scanner: anyFaceScanner,
                 concurrencyManager: concurrencyManager
                     ?? ImageScanningConcurrencyManager(
-                        sheetController: sheetController
+                        sheetController: sheetController,
+                        scannerName: .selfie,
+                        screenName: .selfieCapture
                     ),
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper
@@ -342,7 +344,9 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         }
         sheetController.analyticsClient.logCameraError(
             sheetController: sheetController,
-            error: error
+            error: error,
+            screenName: analyticsScreenName,
+            cameraSource: .cameraSession
         )
     }
 
@@ -355,7 +359,9 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         }
         sheetController.analyticsClient.logCameraPermissionsChecked(
             sheetController: sheetController,
-            isGranted: isGranted
+            isGranted: isGranted,
+            screenName: analyticsScreenName,
+            cameraSource: .cameraSession
         )
     }
 
