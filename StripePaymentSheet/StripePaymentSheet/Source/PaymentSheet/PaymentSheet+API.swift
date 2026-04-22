@@ -644,7 +644,8 @@ extension PaymentSheet {
             case .wallet:
                 let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
                 if useNativeLink {
-                    let linkController = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: true, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
+                    // logPayment is false because callers of PaymentSheet.confirm() are responsible for logging the payment result.
+                    let linkController = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: false, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
                     linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                         completion(result, confirmationType)
                     })
