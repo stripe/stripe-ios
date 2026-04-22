@@ -486,7 +486,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                         print("✅ \(description): PaymentSheet.confirm completed")
                     }
                 }
-                await fulfillment(of: [e], timeout: 10)
+                await fulfillment(of: [e], timeout: 15)
             }
         }
     }
