@@ -182,8 +182,7 @@ public class PaymentSheet {
                     let presentPaymentSheet: () -> Void = {
                         let paymentSheetVC = self.makePaymentSheetVC(
                             loadResult: loadResult,
-                            previousPaymentOption: nil,
-                            shouldLogExperimentExposure: true
+                            previousPaymentOption: nil
                         )
                         self.bottomSheetViewController.setViewControllers([paymentSheetVC])
                     }
@@ -289,15 +288,12 @@ public class PaymentSheet {
     @MainActor
     func makePaymentSheetVC(
         loadResult: PaymentSheetLoader.LoadResult,
-        previousPaymentOption: PaymentOption?,
-        shouldLogExperimentExposure: Bool
+        previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
         var configuration = self.configuration
         let layout = configuration.resolveLayout(
             loadResult: loadResult,
-            configuration: self.configuration,
-            analyticsHelper: self.analyticsHelper,
-            shouldLogExperimentExposure: shouldLogExperimentExposure
+            configuration: self.configuration
         )
         switch layout {
         case .horizontal:
@@ -343,8 +339,7 @@ public class PaymentSheet {
             self.confirmationChallenge = confirmationChallenge
             let newVC = makePaymentSheetVC(
                 loadResult: loadResult,
-                previousPaymentOption: currentVC.selectedPaymentOption,
-                shouldLogExperimentExposure: false
+                previousPaymentOption: currentVC.selectedPaymentOption
             )
             bottomSheetViewController.setViewControllers([newVC])
         } catch {

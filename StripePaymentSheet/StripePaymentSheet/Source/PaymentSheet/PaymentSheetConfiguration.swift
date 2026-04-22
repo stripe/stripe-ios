@@ -251,13 +251,11 @@ extension PaymentSheet {
         /// When using WalletButtonsView, configures payment method visibility across available surfaces.
         @_spi(STP) public var walletButtonsVisibility: WalletButtonsVisibility = WalletButtonsVisibility()
 
-        /// Resolves `.automatic` to `.horizontal` or `.vertical` based on experiment.
+        /// Resolves `.automatic` to `.horizontal` or `.vertical` based on the number of supported payment methods.
         /// For non-automatic layouts, returns self.
         mutating func resolveLayout(
             loadResult: PaymentSheetLoader.LoadResult,
-            configuration: PaymentElementConfiguration,
-            analyticsHelper: PaymentSheetAnalyticsHelper,
-            shouldLogExperimentExposure: Bool = true
+            configuration: PaymentElementConfiguration
         ) -> PaymentMethodLayout.ResolvedLayout {
             var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout
             switch paymentMethodLayout {
@@ -266,22 +264,10 @@ extension PaymentSheet {
             case .vertical:
                 resolvedPaymentMethodLayout = .vertical
             case .automatic:
-                // Default to vertical (control)
-                resolvedPaymentMethodLayout = .vertical
-
-                let experiments: [LoggableExperiment] = PaymentSheetLayoutExperiment.createExperiments(
-                    loadResult: loadResult,
-                    configuration: configuration,
-                    analyticsHelper: analyticsHelper
-                )
-
-                experiments.forEach { experiment in
-                    // Log experiment exposure if needed
-                    if shouldLogExperimentExposure {
-                        analyticsHelper.logExposure(experiment: experiment)
-                    }
-                    // Return horizontal for treatment and vertical otherwise
-                    resolvedPaymentMethodLayout = experiment.group == .treatment ? .horizontal : .vertical
+                if loadResult.paymentMethodTypes.count >= 3 {
+                    resolvedPaymentMethodLayout = .vertical
+                } else {
+                    resolvedPaymentMethodLayout = .horizontal
                 }
             }
             self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout

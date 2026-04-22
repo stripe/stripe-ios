@@ -13,7 +13,7 @@ import UIKit
 import XCTest
 
 @_spi(STP)@testable import StripeCore
-@_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
@@ -605,34 +605,17 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-    func testPaymentMethodLayoutAutomatic() {
+    func testPaymentMethodLayoutAutomaticVertical() {
         configuration.paymentMethodLayout = .automatic
-        stubNewCustomerResponse()
+        stubNewCustomerResponseWithAutomaticLayout(paymentMethodTypes: [.card, .afterpayClearpay, .alipay, .klarna, .USBankAccount, .weChatPay, .affirm])
         preparePaymentSheet()
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-    func testPaymentMethodLayoutAutomaticWithHorizontalExperiment() {
+    func testPaymentMethodLayoutAutomaticHorizontal() {
         configuration.paymentMethodLayout = .automatic
-        stubNewCustomerResponseWithHorizontalExperiment(experimentAssignments: """
-      {
-      "ocs_mobile_horizontal_mode": "treatment",
-      "ocs_mobile_horizontal_mode_aa": "control_test"
-      }
-      """)
-        preparePaymentSheet()
-        presentPaymentSheet(darkMode: false)
-        verify(paymentSheet.bottomSheetViewController.view!)
-    }
-
-    func testPaymentMethodLayoutAutomaticWithHorizontalExperimentAA() {
-        configuration.paymentMethodLayout = .automatic
-        stubNewCustomerResponseWithHorizontalExperiment(experimentAssignments: """
-      {
-      "ocs_mobile_horizontal_mode_aa": "control_test"
-      }
-      """)
+        stubNewCustomerResponseWithAutomaticLayout(paymentMethodTypes: [.card, .USBankAccount])
         preparePaymentSheet()
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -1220,12 +1203,12 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubConsumerSession()
     }
 
-    private func stubNewCustomerResponseWithHorizontalExperiment(experimentAssignments: String) {
+    private func stubNewCustomerResponseWithAutomaticLayout(paymentMethodTypes: [STPPaymentMethodType]) {
         stubSessions(
-            fileMock: .elements_sessions_paymentMethod_savedPM_horizontalExperiment_200,
+            fileMock: .elements_sessions_paymentMethod_savedPM_automaticLayout_200,
             responseCallback: { data in
                 var template = String(data: data, encoding: .utf8)!
-                template = template.replacingOccurrences(of: "[EXPERIMENT_ASSIGNMENTS_HERE]", with: experimentAssignments)
+                template = template.replacingOccurrences(of: "[PAYMENT_METHOD_TYPES]", with: paymentMethodTypes.map{"\"\($0.identifier)\""}.joined(separator: ","))
                 return template.data(using: .utf8)!
             }
         )
