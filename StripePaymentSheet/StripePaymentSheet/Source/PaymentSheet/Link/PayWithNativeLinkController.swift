@@ -54,7 +54,7 @@ final class PayWithNativeLinkController {
     let configuration: PaymentElementConfiguration
     let logPayment: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper
-    let supportedPaymentMethodTypes: [LinkPaymentMethodType]
+    let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
 
     private let linkAppearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
@@ -67,7 +67,7 @@ final class PayWithNativeLinkController {
         configuration: PaymentElementConfiguration,
         logPayment: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         confirmationChallenge: ConfirmationChallenge? = nil

@@ -25,7 +25,7 @@ extension UIViewController {
         intent: Intent,
         elementsSession: STPElementsSession,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         shouldShowSecondaryCta: Bool = true,
