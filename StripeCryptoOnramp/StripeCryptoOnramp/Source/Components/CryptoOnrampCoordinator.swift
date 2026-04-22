@@ -175,13 +175,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let analyticsClient: CryptoOnrampAnalyticsClient
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
 
-    /// Temporary snapshot of the selection that existed before starting an Apple Pay collection flow.
+    /// Apple Pay payment source created by `didCreatePaymentMethod` but not yet committed.
     ///
-    /// We set this immediately before presenting Apple Pay so we can restore `selectedPaymentSource`
-    /// if the Apple Pay flow is canceled or fails after `didCreatePaymentMethod` has already updated
-    /// `selectedPaymentSource`. This value should only represent pre-existing selection state for the
-    /// active Apple Pay attempt, and must be cleared once that attempt completes, fails, or the user logs out.
-    private var paymentSourceBeforeApplePay: SelectedPaymentSource?
+    /// Apple Pay can create the payment method before the sheet reports final success. Keep it here
+    /// until `didCompleteWith(.success)`, then promote it to `selectedPaymentSource`. Cancellation
+    /// or failure leaves the existing selection untouched; this value is cleared when the Apple Pay
+    /// attempt starts, completes, or the user logs out.
+    private var pendingApplePayPaymentSource: SelectedPaymentSource?
     private var selectedPaymentSource: SelectedPaymentSource?
     private let cryptoCustomerState: CryptoCustomerState
 
@@ -499,8 +499,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
             return .completed(displayData: preview, kycInfo: nil)
         case .applePay(let paymentRequest):
-            // This presents Apple Pay and fills the selected payment source in the delegate.
-            paymentSourceBeforeApplePay = selectedPaymentSource
+            // This presents Apple Pay and promotes the pending payment source on success.
+            pendingApplePayPaymentSource = nil
             do {
                 let status = try await presentApplePay(using: paymentRequest, from: viewController)
                 switch status {
@@ -528,7 +528,6 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                         sublabel: sublabel
                     )
 
-                    paymentSourceBeforeApplePay = nil
                     analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
 
                     return .completed(displayData: paymentMethodPreview, kycInfo: kycInfo)
@@ -536,7 +535,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     return .canceled
                 }
             } catch {
-                paymentSourceBeforeApplePay = nil
+                pendingApplePayPaymentSource = nil
                 analyticsClient.log(.errorOccurred(during: .collectPaymentMethod, errorMessage: error.localizedDescription))
                 throw error
             }
@@ -638,7 +637,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
     public func logOut() async throws {
         do {
-            paymentSourceBeforeApplePay = nil
+            pendingApplePayPaymentSource = nil
             selectedPaymentSource = nil
             try await linkController.logOut()
             analyticsClient.log(.userLoggedOut)
@@ -658,7 +657,7 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
         didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment
     ) async throws -> String {
-        selectedPaymentSource = .applePay(paymentMethod, KycInfo(payment: paymentInformation))
+        pendingApplePayPaymentSource = .applePay(paymentMethod, KycInfo(payment: paymentInformation))
 
         return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
     }
@@ -666,19 +665,21 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
     public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Swift.Error?) {
         switch status {
         case .success:
-            applePayCompletionContinuation?.resume(returning: .success)
+            if let pendingApplePayPaymentSource {
+                selectedPaymentSource = pendingApplePayPaymentSource
+                applePayCompletionContinuation?.resume(returning: .success)
+            } else {
+                applePayCompletionContinuation?.resume(throwing: ApplePayPaymentStatus.Error.applePayFallbackError)
+            }
         case .userCancellation:
-            selectedPaymentSource = paymentSourceBeforeApplePay
             applePayCompletionContinuation?.resume(returning: .canceled)
         case .error:
-            selectedPaymentSource = paymentSourceBeforeApplePay
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         @unknown default:
-            selectedPaymentSource = paymentSourceBeforeApplePay
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         }
 
-        paymentSourceBeforeApplePay = nil
+        pendingApplePayPaymentSource = nil
         applePayCompletionContinuation = nil
     }
 }
