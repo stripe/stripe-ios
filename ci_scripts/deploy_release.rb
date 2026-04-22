@@ -7,7 +7,7 @@ require_relative 'get_bundle_version'
 # This should generally be the minimum Xcode version supported by the App Store, as the
 # compiled XCFrameworks won't be usable on older versions.
 # We sometimes bump this if an Xcode bug or deprecation forces us to upgrade early.
-MIN_SUPPORTED_XCODE_VERSION = '15.0'.freeze
+MIN_SUPPORTED_XCODE_VERSION = '26.1'.freeze
 
 def verify_xcode_version
   # Verify that xcode-select -p returns the correct version for building Stripe.xcframework.

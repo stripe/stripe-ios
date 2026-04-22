@@ -1140,7 +1140,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     func presentPaymentSheet(darkMode: Bool, preferredContentSizeCategory: UIContentSizeCategory = .large) {
         let vc = UIViewController()
         let navController = UINavigationController(rootViewController: vc)
-        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 1026))
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 812))
         window.isHidden = false // Without this line PaymentSheet is rendered too tall; unclear why since `false` is the default
         if darkMode {
             window.overrideUserInterfaceStyle = .dark

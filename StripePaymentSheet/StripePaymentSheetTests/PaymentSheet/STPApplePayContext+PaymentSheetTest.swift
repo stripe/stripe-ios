@@ -149,7 +149,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.countryCode, "GB")
             XCTAssertEqual(sut.supportedNetworks, [.masterCard, .maestro, .discover])
             if #available(macOS 14.0, iOS 17.0, *) {
-                XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
+                XCTAssertEqual(sut.applePayLaterAvailability, .available)
             }
             }
         }
@@ -168,7 +168,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.countryCode, "GB")
             XCTAssertEqual(sut.supportedNetworks, [.visa])
             if #available(macOS 14.0, iOS 17.0, *) {
-                XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
+                XCTAssertEqual(sut.applePayLaterAvailability, .available)
             }
         }
     }

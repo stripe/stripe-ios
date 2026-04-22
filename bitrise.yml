@@ -4,8 +4,7 @@ project_type: ios
 app:
   envs:
   - FASTLANE_XCODE_LIST_TIMEOUT: "120"
-  - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
-  - DEFAULT_TEST_DEVICE_26_1: platform=iOS Simulator,name=iPhone 12 mini,OS=26.1
+  - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.1
   - BITRISE_PROJECT_PATH: Stripe.xcworkspace
   - GIT_AUTHOR_NAME: Bitrise CI
   - GIT_AUTHOR_EMAIL: mobile-sdk-team@stripe.com
@@ -31,7 +30,6 @@ pipelines:
         abort_on_fail: true
       framework-tests: {}
       framework-tests-ios-26: {}
-      test-builds-xcode-16: {}
       test-builds-xcode-26: {}
       install-tests: {}
       size-report: {}
@@ -49,8 +47,6 @@ pipelines:
         abort_on_fail: true
       framework-tests-no-mocks: {}
       framework-tests-ios-26: {}
-      test-builds-xcode-16: {}
-      test-builds-xcode-16-release: {}
       test-builds-xcode-26: {}
       test-builds-xcode-26-release: {}
       deploy-docs: {}
@@ -67,7 +63,6 @@ pipelines:
 
   nightly-pipeline:
     workflows:
-      test-builds-xcode-16-release: {}
       framework-tests-no-mocks: {}
       check-docs: {}
       legacy-tests-15: {}
@@ -88,8 +83,6 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-26.1.x
-    envs:
-    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_1
   deploy-docs:
     steps:
     - activate-ssh-key@4: {}
@@ -122,8 +115,6 @@ workflows:
     meta:
       bitrise.io:
         stack: osx-xcode-26.1.x
-    envs:
-    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_1
   trigger-react-native-ci:
     steps:
     - script@1:
@@ -175,10 +166,10 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.1
   deploy-example-apps:
     steps:
     - set-xcode-build-number@1:
@@ -240,7 +231,7 @@ workflows:
         - webhook_url_on_error: $SLACK_CONNECTIONS_IOS_FAILURES_WEBHOOK_URL
     - deploy-to-bitrise-io@2: {}
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.1
   financial-connections-stability-tests-for-edge:
     before_run:
     - prep_all
@@ -253,7 +244,7 @@ workflows:
         - scheme: FinancialConnections Example
     - deploy-to-bitrise-io@2: {}
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.1
   framework-tests:
     steps:
     - fastlane@3:
@@ -371,7 +362,7 @@ workflows:
     after_run: []
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
   framework-tests-ios-26:
     steps:
@@ -382,7 +373,7 @@ workflows:
         title: Generate iOS 26 test plan
     - xcode-test@6:
         inputs:
-        - destination: $DEFAULT_TEST_DEVICE_26_1
+        - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
         - scheme: AllStripeFrameworks-iOS26
@@ -396,8 +387,6 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
-    envs:
-    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_1
   latency-tests:
     steps:
     - xcode-test@6:
@@ -413,10 +402,9 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
     envs:
-    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE
     - RECORD_LATENCY_TESTS: "true"
     - BITRISE_GIT_COMMIT: $BITRISE_GIT_COMMIT
     - BITRISE_BUILD_URL: $BITRISE_BUILD_URL
@@ -440,34 +428,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
-        machine_type_id: g2.mac.large
-  test-builds-xcode-16:
-    steps:
-    - xcode-build-for-test@2:
-        inputs:
-        - scheme: AllStripeFrameworks
-        - destination: generic/platform=iOS Simulator
-    - deploy-to-bitrise-io@2: {}
-    envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 15,OS=18.0
-    before_run:
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-16.0.x
-        machine_type_id: g2.mac.large
-  test-builds-xcode-16-release:
-    steps:
-    - script@1:
-        inputs:
-        - content: xcodebuild build -workspace "Stripe.xcworkspace" -scheme "AllStripeFrameworks" -configuration "Release" -sdk "iphonesimulator" | xcpretty
-        title: Build release builds
-    before_run:
-    - prep_all
-    meta:
-      bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
   test-builds-xcode-26:
     steps:
@@ -521,7 +482,7 @@ workflows:
     before_run:
     - prep_all
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.1
   integration-all:
     steps:
     - xcode-test@6:
@@ -536,10 +497,10 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.1
   legacy-tests-15:
     steps:
     - fastlane@3:
@@ -550,7 +511,7 @@ workflows:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.5
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
     before_run:
     - prep_all
@@ -564,7 +525,7 @@ workflows:
         - lane: legacy_tests_16
         title: fastlane legacy_tests_16
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.1
     before_run:
     - prep_all
     after_run:
@@ -572,7 +533,7 @@ workflows:
     - notify_ci
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
   lint-tests:
     steps:
@@ -606,7 +567,7 @@ workflows:
         title: fastlane analyze
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
   notify_ci:
     steps:
@@ -628,7 +589,7 @@ workflows:
       - LOKALISE_API_KEY: $LOKALISE_API_KEY
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
   pod-lint-tests:
     steps:
@@ -639,7 +600,7 @@ workflows:
     before_run:
     - prep_all
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.1
   prep_all:
     steps:
     - xcode-start-simulator@0:
@@ -709,7 +670,7 @@ workflows:
         title: Generate size report
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
   ui-tests-paymentsheet:
     steps:
@@ -723,8 +684,8 @@ workflows:
         title: Set test plan based on parallel index
     - script@1:
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (26.1)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        title: Warm up emulator (iPhone 12 mini, OS=26.1)
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -739,14 +700,14 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
   ui-tests-connect:
     steps:
     - script@1:
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (26.1)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        title: Warm up emulator (iPhone 12 mini, OS=26.1)
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -761,14 +722,14 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
   ui-tests-crypto:
     steps:
     - script@1:
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (26.1)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        title: Warm up emulator (iPhone 12 mini, OS=26.1)
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -783,7 +744,7 @@ workflows:
     - prep_all
     meta:
       bitrise.io:
-        stack: osx-xcode-16.0.x
+        stack: osx-xcode-26.1.x
         machine_type_id: g2.mac.large
   upload_logs:
     steps:
@@ -796,5 +757,5 @@ workflows:
         title: Deploy test log artifacts
 meta:
   bitrise.io:
-    stack: osx-xcode-16.0.x
+    stack: osx-xcode-26.1.x
     machine_type_id: g2.mac.large

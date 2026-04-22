@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # setup_simulator.sh
-# Automatically finds or creates an iPhone 12 mini with iOS 16.4 for testing
+# Automatically finds or creates an iPhone 12 mini with iOS 26.1 for testing
 # Caches the result to .stripe-ios-config for reuse
 
 set -e
 
 CONFIG_FILE=".stripe-ios-config"
 DEVICE_TYPE="iPhone 12 mini"
-IOS_VERSION="16.4"
+IOS_VERSION="26.1"
 SIMULATOR_NAME="iPhone 12 mini (Stripe)"
 
 # Function to clear cache
@@ -33,7 +33,7 @@ validate_uuid() {
 
 # Function to create new simulator
 create_simulator() {
-    xcrun simctl create "$SIMULATOR_NAME" "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini" "com.apple.CoreSimulator.SimRuntime.iOS-16-4"
+    xcrun simctl create "$SIMULATOR_NAME" "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini" "com.apple.CoreSimulator.SimRuntime.iOS-26-1"
 }
 
 # Function to validate simulator exists
@@ -99,7 +99,7 @@ EOF
 if [ "$1" = "--help" ] || [ "$1" = "-h" ]; then
     echo "Usage: source $0 [--clear-cache] [--help]"
     echo ""
-    echo "Automatically finds or creates an iPhone 12 mini with iOS 16.4 for testing."
+    echo "Automatically finds or creates an iPhone 12 mini with iOS 26.1 for testing."
     echo "Caches the result to .stripe-ios-config for reuse."
     echo ""
     echo "Options:"
