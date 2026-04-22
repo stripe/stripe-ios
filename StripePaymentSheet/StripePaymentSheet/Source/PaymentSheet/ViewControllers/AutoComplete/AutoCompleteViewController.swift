@@ -27,6 +27,8 @@ class AutoCompleteViewController: UIViewController {
     let addressSpecProvider: AddressSpecProvider
     /// Vertical offset for the view controller content. Negative values move content up, positive values move content down.
     let verticalOffset: CGFloat
+    /// Session token for grouping autocomplete and place details calls.
+    let sessionToken: String = UUID().uuidString
 
     private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
@@ -34,6 +36,9 @@ class AutoCompleteViewController: UIViewController {
         searchCompleter.resultTypes = .address
         return searchCompleter
     }()
+
+    private var autocompleteTask: Task<Void, Never>?
+    private var debounceTask: Task<Void, Never>?
 
     weak var delegate: AutoCompleteViewControllerDelegate?
 
@@ -237,13 +242,52 @@ class AutoCompleteViewController: UIViewController {
 // MARK: ElementDelegate
 extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
-        if !autoCompleteLine.text.isEmpty {
-            addressSearchCompleter.queryFragment = autoCompleteLine.text
+        let query = autoCompleteLine.text
+        guard query.count >= 2 else { return }
+        if configuration.useAutocompleteEndpoints {
+            debounceTask?.cancel()
+            debounceTask = Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 400_000_000)
+                guard !Task.isCancelled else { return }
+                fetchAPIResults(query: query)
+            }
+        } else {
+            addressSearchCompleter.queryFragment = query
         }
     }
 
     func continueToNextField(element: Element) {
         // no-op
+    }
+
+    private func fetchAPIResults(query: String) {
+        autocompleteTask?.cancel()
+        autocompleteTask = Task { @MainActor in
+            do {
+                let languageCode: String
+                if #available(iOS 16, *) {
+                    languageCode = Locale.current.language.languageCode?.identifier ?? "en"
+                } else {
+                    // Fallback on earlier versions
+                    languageCode = Locale.current.languageCode ?? "en"
+                }
+                let countryCodes = configuration.autocompleteCountries.isEmpty
+                    ? configuration.allowedCountries
+                    : configuration.autocompleteCountries
+                let response = try await configuration.apiClient.autocomplete(
+                    searchText: query,
+                    languageCode: languageCode,
+                    countryCodes: countryCodes,
+                    sessionToken: sessionToken
+                )
+                guard !Task.isCancelled else { return }
+                self.results = response.suggestions
+            } catch {
+                guard !Task.isCancelled else { return }
+                // Fall back to MapKit on API failure
+                self.addressSearchCompleter.queryFragment = query
+            }
+        }
     }
 }
 

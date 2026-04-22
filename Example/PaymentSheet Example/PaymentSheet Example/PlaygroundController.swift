@@ -412,6 +412,7 @@ import UIKit
             )
         }
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
+        configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
         return configuration
     }
 

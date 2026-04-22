@@ -306,4 +306,36 @@ extension STPAPIClient {
     }
 }
 
+// MARK: - Address Autocomplete
+
+extension STPAPIClient {
+    /// Fetches autocomplete suggestions.
+    /// - Parameters:
+    ///   - searchText: The search text.
+    ///   - languageCode: The language to display results in, derived from the device.
+    ///   - countryCodes: The countries to restrict the results to, from the country selector.
+    ///   - sessionToken: The session identifier that groups the autocomplete requests together to be billed together.
+    func autocomplete(
+        searchText: String,
+        languageCode: String,
+        countryCodes: [String],
+        sessionToken: String
+    ) async throws -> AutocompleteResponse {
+        let endpoint = "\(APIEndpointElementsAddress)/autocomplete"
+        let parameters: [String: Any] = [
+            "search_text": searchText,
+            "language": languageCode,
+            "country_codes": countryCodes,
+            "session_token": sessionToken,
+        ]
+
+        return try await APIRequest<AutocompleteResponse>.post(
+            with: self,
+            endpoint: endpoint,
+            parameters: parameters
+        )
+    }
+}
+
 private let APIEndpointElementsSessions = "elements/sessions"
+private let APIEndpointElementsAddress = "elements/address"
