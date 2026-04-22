@@ -12,6 +12,9 @@ MINOR
 ### Connect
 * [Changed] [#66351](https://github.com/stripe/stripe-ios/pull/6351) Theming tokens in connect embedded components is now GA.
 
+### CryptoOnramp (Alpha)
+* [Fixed] Fixed an issue (#6363) in which StripeCryptoOnramp was not properly exposed via Swift Package Manager.
+
 ## 25.11.0 2026-04-13
 ### PaymentSheet
 * [Added] Added support for Pay by Bank payments (GA in GB, private preview in EU).
