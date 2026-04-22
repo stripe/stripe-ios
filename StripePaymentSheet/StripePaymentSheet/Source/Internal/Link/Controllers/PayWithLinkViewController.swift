@@ -476,31 +476,22 @@ private extension PayWithLinkViewController {
         paymentDetails: [ConsumerPaymentDetails]
     ) {
         let viewController: BottomSheetContentViewController
-        if paymentDetails.isEmpty {
-            // Check if only bank accounts are supported - if so, launch Financial Connections directly
-            let supportedTypes = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
-            if supportedTypes == [.bankAccount] {
-                startFinancialConnections { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .completed:
-                        self.loadAndPresentWallet()
-                    case .canceled:
-                        self.cancel(shouldReturnToPaymentSheet: false)
-                    case .failed(let error):
-                        self.finish(withResult: .failed(error: error), deferredIntentConfirmationType: nil)
-                    }
+        // Check if only bank accounts are supported - if so, launch Financial Connections directly
+        let supportedTypes = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+        if paymentDetails.isEmpty && supportedTypes == [.bankAccount] {
+            startFinancialConnections { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .completed:
+                    self.loadAndPresentWallet()
+                case .canceled:
+                    self.cancel(shouldReturnToPaymentSheet: false)
+                case .failed(let error):
+                    self.finish(withResult: .failed(error: error), deferredIntentConfirmationType: nil)
                 }
-                // Show a loading view while Financial Connections is being prepared
-                viewController = LoaderViewController(context: context)
-            } else {
-                let addPaymentMethodVC = NewPaymentViewController(
-                    linkAccount: linkAccount,
-                    context: context,
-                    isAddingFirstPaymentMethod: true
-                )
-                viewController = addPaymentMethodVC
             }
+            // Show a loading view while Financial Connections is being prepared
+            viewController = LoaderViewController(context: context)
         } else {
             let walletViewController = WalletViewController(
                 linkAccount: linkAccount,
