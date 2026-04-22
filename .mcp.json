@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "bitrise": {
+      "type": "http",
+      "url": "https://mcp.bitrise.io",
+      "headers": {
+        "Authorization": "Bearer ${BITRISE_TOKEN}"
+      }
+    }
+  }
+}

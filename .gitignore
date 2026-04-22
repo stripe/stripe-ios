@@ -46,5 +46,8 @@ Stripe.xcworkspace/xcuserdata/*
 # Local LLM settings (ignore local settings but allow project settings)
 .claude/settings.local.json
 
+# Local environment variables (tokens, keys)
+.env
+
 # Simulator configuration cache
 .stripe-ios-config
