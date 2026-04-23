@@ -113,8 +113,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
 
-    private var currencySelectorElement: AdaptivePricingSelectorElement?
-
     // MARK: - UI properties
 
     lazy var navigationBar: SheetNavigationBar = {
@@ -181,14 +179,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         self.shouldShowLinkInList = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration) && isFlowController && (shouldShowApplePayInList || walletButtonsViewState.showApplePay) && Self.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
         self.analyticsHelper = analyticsHelper
         super.init(nibName: nil, bundle: nil)
-
-        self.currencySelectorElement = AdaptivePricingSelectorElement.makeIfNeeded(
-            intent: intent,
-            isFlowController: isFlowController,
-            appearance: configuration.appearance,
-            analyticsHelper: analyticsHelper
-        )
-        self.currencySelectorElement?.delegate = self
 
         regenerateUI()
 
@@ -370,7 +360,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         // If you add new UI, make sure it's also disabled/hidden during reloading.
         self.isReloading = isReloading
         isUserInteractionEnabled = !isBusy
-        currencySelectorElement?.setEnabled(!isBusy)
         if isReloading {
             view.endEditing(true)
         }
@@ -541,7 +530,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         paymentContainerView.directionalLayoutMargins = .zero
 
         // One stack view contains all our subviews
-        let views: [UIView] = [currencySelectorElement?.view, paymentContainerView, mandateView, errorLabel].compactMap { $0 }
+        let views: [UIView] = [paymentContainerView, mandateView, errorLabel]
         for view in views {
             stackView.addArrangedSubview(view)
         }
@@ -1195,15 +1184,7 @@ extension PaymentSheetVerticalViewController: ElementDelegate {
     }
 
     func didUpdate(element: Element) {
-        if let currencySelectorElement, element === currencySelectorElement {
-            handleCurrencySelection(currencySelectorElement.selectedCurrency)
-            return
-        }
         self.error = nil
         updateUI()
-    }
-
-    private func handleCurrencySelection(_ currency: String) {
-        paymentSheetDelegate?.paymentSheetViewControllerDidSelectCurrency(self, currency: currency)
     }
 }
