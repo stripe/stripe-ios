@@ -327,7 +327,7 @@ class IntegrationTesterUITests: XCTestCase {
         buyButton.forceTapElement()
 
         let safari = XCUIApplication(bundleIdentifier: "com.apple.mobilesafari")
-        XCTAssertTrue(safari.wait(for: .runningForeground, timeout: 15)) // wait for Safari to open
+        XCTAssertTrue(safari.wait(for: .runningForeground, timeout: 30)) // wait for Safari to open, may take a while the first time
         let webViewsQuery = safari.webViews
         // Sometimes this is a Button, sometimes it's a StaticText. ¯\_(ツ)_/¯
         let completeAuth = webViewsQuery.descendants(matching: .any)["AUTHORIZE TEST PAYMENT"].firstMatch
