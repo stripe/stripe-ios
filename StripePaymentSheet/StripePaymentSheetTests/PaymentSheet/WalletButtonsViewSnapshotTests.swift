@@ -14,7 +14,9 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
 
     @available(iOS 16.0, *)
     func testWalletButtonsView() {
-        let flowController = PaymentSheet.FlowController(configuration: ._testValue_MostPermissive(), loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.paymentMethodLayout = .vertical
+        let flowController = PaymentSheet.FlowController(configuration: config, loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
         let WalletButtonsView = WalletButtonsView(
             flowController: flowController,
             confirmHandler: { _ in },
@@ -35,6 +37,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
     func testWalletButtonsViewWithCustomHeight() {
         // Create a configuration with custom primary button height
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.paymentMethodLayout = .vertical
         config.appearance.primaryButton.height = 60
 
         let flowController = PaymentSheet.FlowController(configuration: config, loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
@@ -58,6 +61,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
     func testWalletButtonsViewWithTallHeight() {
         // Create a configuration with tall primary button height
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.paymentMethodLayout = .vertical
         config.appearance.primaryButton.height = 80
 
         let flowController = PaymentSheet.FlowController(configuration: config, loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
@@ -83,7 +87,9 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
         let linkAccount = PaymentSheetLinkAccount._testValue(email: "user@example.com", isRegistered: true)
         LinkAccountContext.shared.account = linkAccount
 
-        let flowController = PaymentSheet.FlowController(configuration: ._testValue_MostPermissive(), loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.paymentMethodLayout = .vertical
+        let flowController = PaymentSheet.FlowController(configuration: config, loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
         let WalletButtonsView = WalletButtonsView(
             flowController: flowController,
             confirmHandler: { _ in },
@@ -111,6 +117,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
 
         // Create a configuration with tall primary button height
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.paymentMethodLayout = .vertical
         config.appearance.primaryButton.height = 80
 
         let flowController = PaymentSheet.FlowController(configuration: config, loadResult: ._testValue(paymentMethodTypes: [], savedPaymentMethods: []), analyticsHelper: ._testValue())
@@ -139,6 +146,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
     func testWalletButtonsViewWithShopPay() {
         // Create a configuration with ShopPay enabled
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.paymentMethodLayout = .vertical
         config.shopPay = PaymentSheet.ShopPayConfiguration(
             shippingAddressRequired: false,
             lineItems: [PaymentSheet.ShopPayConfiguration.LineItem(name: "Test Item", amount: 1000)],
@@ -167,6 +175,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
     func testWalletButtonsViewWithShopPayCustomHeight() {
         // Create a configuration with ShopPay enabled and custom primary button height
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.paymentMethodLayout = .vertical
         config.shopPay = PaymentSheet.ShopPayConfiguration(
             shippingAddressRequired: false,
             lineItems: [PaymentSheet.ShopPayConfiguration.LineItem(name: "Test Item", amount: 1000)],
@@ -196,6 +205,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
     func testWalletButtonsViewWithShopPayTallHeight() {
         // Create a configuration with ShopPay enabled and tall primary button height
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.paymentMethodLayout = .vertical
         config.shopPay = PaymentSheet.ShopPayConfiguration(
             shippingAddressRequired: false,
             lineItems: [PaymentSheet.ShopPayConfiguration.LineItem(name: "Test Item", amount: 1000)],
@@ -225,6 +235,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
     func testWalletButtonsViewWithCustomCornerRadius() {
         // Create a configuration with custom corner radius
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.paymentMethodLayout = .vertical
         config.shopPay = PaymentSheet.ShopPayConfiguration(
             shippingAddressRequired: false,
             lineItems: [PaymentSheet.ShopPayConfiguration.LineItem(name: "Test Item", amount: 1000)],
@@ -254,6 +265,7 @@ class WalletButtonsViewSnapshotTests: STPSnapshotTestCase {
     func testWalletButtonsViewWithPrimaryButtonCornerRadius() {
         // Create a configuration with custom primary button corner radius (overrides general corner radius)
         var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.paymentMethodLayout = .vertical
         config.shopPay = PaymentSheet.ShopPayConfiguration(
             shippingAddressRequired: false,
             lineItems: [PaymentSheet.ShopPayConfiguration.LineItem(name: "Test Item", amount: 1000)],

@@ -33,6 +33,7 @@ class ECEIntegrationTests: XCTestCase {
         mockConfiguration.apiClient = apiClient
         mockConfiguration.merchantDisplayName = "Test Merchant"
         mockConfiguration.customer = .init(id: "cus_123", customerSessionClientSecret: "cuss_12345")
+        mockConfiguration.paymentMethodLayout = .vertical
 
         // Setup Shop Pay configuration
         shopPayConfiguration = PaymentSheet.ShopPayConfiguration(

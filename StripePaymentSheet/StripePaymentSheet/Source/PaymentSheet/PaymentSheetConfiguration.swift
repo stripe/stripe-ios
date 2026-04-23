@@ -218,12 +218,12 @@ extension PaymentSheet {
         private var paymentMethodTypeCount: Int = 0
 
         /// The resolved layout of payment methods. Computed from `paymentMethodLayout` and `paymentMethodTypeCount`.
-        /// - Note: Internal code should use this property instead of `paymentMethodLayout`.
+        /// - Note: Internal code should use this property instead of `paymentMethodLayout`. `resolveLayout` must be called after each load to maintain synchronicity.
         internal var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout {
             switch paymentMethodLayout {
             case .horizontal: return .horizontal
             case .vertical: return .vertical
-            case .automatic: return paymentMethodTypeCount == 0 || paymentMethodTypeCount >= 3  ? .vertical : .horizontal
+            case .automatic: return paymentMethodTypeCount >= 3  ? .vertical : .horizontal
             }
         }
 
