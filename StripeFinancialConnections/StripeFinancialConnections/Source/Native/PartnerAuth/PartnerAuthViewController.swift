@@ -311,27 +311,34 @@ final class PartnerAuthViewController: SheetViewController {
             )
             return
         }
-        let continueStateViews = ContinueStateViews(
-            institutionImageUrl: institution.icon?.default,
-            appearance: dataSource.manifest.appearance,
-            didSelectContinue: { [weak self] in
-                guard let self else { return }
-                self.dataSource.analyticsClient.log(
-                    eventName: "click.apptoapp.continue",
-                    pane: .partnerAuth
-                )
-                self.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
-            },
-            didSelectCancel: { [weak self] in
-                guard let self else { return }
-                self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
-            }
-        )
-        self.continueStateViews = continueStateViews
-        setup(
-            withContentView: continueStateViews.contentView,
-            footerView: continueStateViews.footerView
-        )
+
+        let setContinueState = { [weak self] in
+            // Update the view to indicate to the user that they can continue linking their bank account
+            // in their banking app. They shouldn't ever see this unless they exit their banking app and
+            // return to the merchant app.
+            guard let self else { return }
+            let continueStateViews = ContinueStateViews(
+                institutionImageUrl: institution.icon?.default,
+                appearance: dataSource.manifest.appearance,
+                didSelectContinue: { [weak self] in
+                    guard let self else { return }
+                    self.dataSource.analyticsClient.log(
+                        eventName: "click.apptoapp.continue",
+                        pane: .partnerAuth
+                    )
+                    self.openInstitutionAuthenticationNativeRedirect(authSession: authSession)
+                },
+                didSelectCancel: { [weak self] in
+                    guard let self else { return }
+                    self.delegate?.partnerAuthViewControllerDidRequestToGoBack(self)
+                }
+            )
+            self.continueStateViews = continueStateViews
+            self.setup(
+                withContentView: continueStateViews.contentView,
+                footerView: continueStateViews.footerView
+            )
+        }
 
         subscribeToURLAndAppActiveNotifications()
         UIApplication.shared.open(
@@ -339,7 +346,8 @@ final class PartnerAuthViewController: SheetViewController {
             options: [.universalLinksOnly: true]
         ) { (didOpenBankingApp) in
             guard !didOpenBankingApp else {
-                // we pass control to the bank app
+                // we did pass control to the bank app
+                setContinueState()
                 return
             }
             // if we get here, it means the banking app is not installed
