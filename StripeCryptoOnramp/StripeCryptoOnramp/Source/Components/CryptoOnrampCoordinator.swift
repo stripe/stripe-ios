@@ -81,6 +81,30 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, the user has already attached KYC info, or an API error occurs.
     func attachKYCInfo(info: KycInfo) async throws
 
+    /// Retrieves EU identifiers still required for MICA and CRS/CARF compliance.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Returns: The MICA and CRS/CARF country code requirements that still need identifiers.
+    /// Throws if an authenticated Link user is not available, KYC information has not yet been collected, or an API error occurs.
+    func retrieveMissingEUIdentifiers() async throws -> MissingEUIdentifiers
+
+    /// Submits EU identifiers for MICA and CRS/CARF compliance.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter identifiers: The MICA national identifiers and CRS/CARF tax identification numbers to submit.
+    /// - Returns: A result describing whether the identifiers were accepted, and what remains missing or invalid if not.
+    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    func submitEUIdentifiers(identifiers: EUIdentifiers) async throws -> SubmitEUIdentifiersResult
+
+    /// Presents the CRS/CARF declaration for review and records acceptance if the user confirms.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter viewController: The view controller from which to present the declaration.
+    /// - Returns: A `CRSCARFDeclarationResult` indicating whether the user confirmed or canceled.
+    /// Throws if an authenticated Link user is not available, EU identifiers have not been submitted, or an API error occurs.
+    @MainActor
+    func presentCRSCARFDeclaration(from viewController: UIViewController) async throws -> CRSCARFDeclarationResult
+
     /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.
     ///
     /// - Parameters:
@@ -364,6 +388,48 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.kycInfoSubmitted)
         } catch {
             analyticsClient.log(.errorOccurred(during: .attachKycInfo, errorMessage: error.localizedDescription))
+            throw error
+        }
+    }
+
+    public func retrieveMissingEUIdentifiers() async throws -> MissingEUIdentifiers {
+        do {
+            let identifiers = try await apiClient.retrieveMissingEUIdentifiers(linkAccountInfo: linkAccountInfo)
+            return identifiers
+        } catch {
+            throw error
+        }
+    }
+
+    public func submitEUIdentifiers(identifiers: EUIdentifiers) async throws -> SubmitEUIdentifiersResult {
+        do {
+            let result = try await apiClient.submitEUIdentifiers(identifiers: identifiers, linkAccountInfo: linkAccountInfo)
+            return result
+        } catch {
+            throw error
+        }
+    }
+
+    @MainActor
+    public func presentCRSCARFDeclaration(from viewController: UIViewController) async throws -> CRSCARFDeclarationResult {
+        do {
+            let linkAccountInfo = try await self.linkAccountInfo
+            let declaration = try await apiClient.retrieveCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
+            let result: CRSCARFDeclarationResult = switch try await linkController.presentCRSCARFDeclaration(
+                text: declaration.text,
+                appearance: appearance,
+                from: viewController,
+                onConfirm: { [apiClient] in
+                    _ = try await apiClient.confirmCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
+                }
+            ) {
+            case .confirmed:
+                .confirmed
+            case .canceled:
+                .canceled
+            }
+            return result
+        } catch {
             throw error
         }
     }
