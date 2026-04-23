@@ -695,6 +695,7 @@ extension NativeFlowController {
         dataManager.errorPaneReferrerPane = referrerPane
         pushPane(.unexpectedError, animated: false)
     }
+
 }
 
 // MARK: - ConsentViewControllerDelegate
@@ -787,6 +788,52 @@ extension NativeFlowController: IDConsentContentViewControllerDelegate {
     }
 }
 
+// MARK: - StreamlinedConsentViewControllerDelegate
+
+extension NativeFlowController: StreamlinedConsentViewControllerDelegate {
+    func streamlinedConsentViewController(
+        _ viewController: StreamlinedConsentViewController,
+        didRequestNextPane nextPane: FinancialConnectionsSessionManifest.NextPane,
+        nextPaneOrDrawerOnSecondaryCta: String?
+    ) {
+        let parameters = CreatePaneParameters(
+            nextPaneOrDrawerOnSecondaryCta: nextPaneOrDrawerOnSecondaryCta
+        )
+        if nextPane == .networkingLinkLoginWarmup {
+            presentPaneAsSheet(nextPane, parameters: parameters)
+        } else {
+            pushPane(nextPane, parameters: parameters, animated: true)
+        }
+    }
+
+    func streamlinedConsentViewController(
+        _ viewController: StreamlinedConsentViewController,
+        didConsentWithManifest manifest: FinancialConnectionsSessionManifest
+    ) {
+        delegate?.nativeFlowController(
+            self,
+            didReceiveEvent: FinancialConnectionsEvent(name: .consentAcquired)
+        )
+
+        dataManager.manifest = manifest
+
+        let nextPane = manifest.nextPane
+        if nextPane == .networkingLinkLoginWarmup {
+            presentPaneAsSheet(nextPane)
+        } else if nextPane == .partnerAuth {
+            // For partner auth, check if we have a pre-created auth session
+            // and present as sheet for OAuth institutions
+            if let authSession = dataManager.authSession, authSession.isOauthNonOptional {
+                presentPaneAsSheet(nextPane)
+            } else {
+                pushPane(nextPane, animated: true)
+            }
+        } else {
+            pushPane(nextPane, animated: true)
+        }
+    }
+}
+
 // MARK: - InstitutionPickerViewControllerDelegate
 
 extension NativeFlowController: InstitutionPickerViewControllerDelegate {
@@ -839,8 +886,24 @@ extension NativeFlowController: InstitutionPickerViewControllerDelegate {
         dataManager.institution = institution
         dataManager.manifest = payload.manifest
         dataManager.idConsentContent = payload.text?.idConsentContentPane
+        dataManager.streamlinedConsentContent = payload.text?.streamlinedConsentPane
 
-        pushPane(payload.manifest.nextPane, animated: true, clearNavigationStack: true)
+        let nextPane = payload.manifest.nextPane
+
+        // For streamlined consent, pre-create the auth session in the background
+        // so we know whether to present partner auth as sheet (OAuth) or push (non-OAuth)
+        if nextPane == .streamlinedConsent {
+            dataManager.apiClient.createAuthSession(
+                clientSecret: dataManager.clientSecret,
+                institutionId: institution.id
+            ).observe { [weak self] result in
+                if case .success(let authSession) = result {
+                    self?.dataManager.authSession = authSession
+                }
+            }
+        }
+
+        pushPane(nextPane, animated: true, clearNavigationStack: true)
     }
 
     func institutionPickerViewControllerDidSelectManuallyAddYourAccount(
@@ -1497,6 +1560,22 @@ private func CreatePaneViewController(
             let idConsentContentViewController = IDConsentContentViewController(dataSource: idConsentContentDataSource)
             idConsentContentViewController.delegate = nativeFlowController
             viewController = idConsentContentViewController
+        } else {
+            assertionFailure("Code logic error. Missing parameters for \(pane).")
+            viewController = nil
+        }
+    case .streamlinedConsent:
+        if let streamlinedConsentContent = dataManager.streamlinedConsentContent {
+            let streamlinedConsentDataSource = StreamlinedConsentDataSourceImplementation(
+                manifest: dataManager.manifest,
+                streamlinedConsentContent: streamlinedConsentContent,
+                apiClient: dataManager.apiClient,
+                clientSecret: dataManager.clientSecret,
+                analyticsClient: dataManager.analyticsClient
+            )
+            let streamlinedConsentViewController = StreamlinedConsentViewController(dataSource: streamlinedConsentDataSource)
+            streamlinedConsentViewController.delegate = nativeFlowController
+            viewController = streamlinedConsentViewController
         } else {
             assertionFailure("Code logic error. Missing parameters for \(pane).")
             viewController = nil
