@@ -498,16 +498,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
     }
 
-    // MARK: - PaymentSheetViewControllerProtocol
-
-    var selectedPaymentOption: PaymentSheet.PaymentOption? {
-        switch mode {
-        case .selectingSaved:
-            return savedPaymentOptionsViewController.selectedPaymentOption
-        case .addingNew:
-            return addPaymentMethodViewController.paymentOption
-        }
-    }
 }
 
 // MARK: - Wallet Header Delegate
