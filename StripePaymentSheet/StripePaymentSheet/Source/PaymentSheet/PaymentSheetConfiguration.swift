@@ -223,7 +223,7 @@ extension PaymentSheet {
             switch paymentMethodLayout {
             case .horizontal: return .horizontal
             case .vertical: return .vertical
-            case .automatic: return paymentMethodTypeCount >= 3 ? .vertical : .horizontal
+            case .automatic: return paymentMethodTypeCount == 0 || paymentMethodTypeCount >= 3  ? .vertical : .horizontal
             }
         }
 

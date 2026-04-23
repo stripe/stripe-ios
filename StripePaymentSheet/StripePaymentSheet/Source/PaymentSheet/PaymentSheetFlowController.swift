@@ -243,9 +243,6 @@ extension PaymentSheet {
 
         private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
         private var didDismissLinkVerificationDialog: Bool = false
-        // We check the experiment assignment when creating the FlowController view controller, but we don't want to log the layout experiment exposure until the sheet is actually presented
-        // If the FlowController is loaded with a selected payment option and the user confirms without presenting the sheet, the layout had no bearing on the user's actions, so we don't want that session included in the experiment
-        private var hasLoggedLayoutExperimentExposure: Bool = false
 
         // If a WalletButtonsView is currently visible
         var walletButtonsViewState: WalletButtonsViewState = .hidden {
@@ -717,8 +714,6 @@ extension PaymentSheet {
                     )
                     self.viewController.flowControllerDelegate = self
                     self.confirmationChallenge = confirmationChallenge
-                    // Defer experiment exposure logging until next presentation
-                    self.hasLoggedLayoutExperimentExposure = false
 
                     // Update the payment option and synchronously pre-load image into cache
                     self.updatePaymentOption()
@@ -750,8 +745,6 @@ extension PaymentSheet {
                 previousPaymentOption: self.internalPaymentOption
             )
             self.viewController.flowControllerDelegate = self
-            // Defer experiment exposure logging until next presentation
-            self.hasLoggedLayoutExperimentExposure = false
             updatePaymentOption()
         }
 
