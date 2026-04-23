@@ -607,7 +607,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     func testPaymentMethodLayoutAutomaticVertical() {
         configuration.paymentMethodLayout = .automatic
-        stubNewCustomerResponseWithAutomaticLayout(paymentMethodTypes: [.card, .afterpayClearpay, .alipay, .klarna, .USBankAccount, .weChatPay, .affirm])
+        stubNewCustomerResponseWithAutomaticLayout(paymentMethodTypes: [.card, .afterpayClearpay, .USBankAccount])
         preparePaymentSheet()
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)

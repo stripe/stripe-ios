@@ -283,12 +283,14 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         }
         // When loaded with US Bank (an example PM)...
         let loadResult = PaymentSheetLoader.LoadResult(
-            intent: ._testDeferredIntent(paymentMethodTypes: [.USBankAccount, .cashApp], setupFutureUsage: .offSession),
-            elementsSession: ._testValue(paymentMethodTypes: ["us_bank_account", "cashapp"], isLinkPassthroughModeEnabled: false),
+            intent: ._testDeferredIntent(paymentMethodTypes: [.card, .cashApp], setupFutureUsage: .offSession),
+            elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp"], isLinkPassthroughModeEnabled: false),
             savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.USBankAccount), .stripe(.cashApp)]
+            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)]
         )
-        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(isApplePayEnabled: false), loadResult: loadResult, isFlowController: true, analyticsHelper: ._testValue(), previousPaymentOption: nil)
+        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
+        configuration.paymentMethodLayout = .vertical
+        let sut = PaymentSheetVerticalViewController(configuration: configuration, loadResult: loadResult, isFlowController: true, analyticsHelper: ._testValue(), previousPaymentOption: nil)
         // ...and an error is set...
         sut.updateErrorLabel(for: MockError())
         // ...we should display the error
@@ -332,7 +334,9 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .linkCardBrand]
         )
-        let sut = PaymentSheetVerticalViewController(configuration: ._testValue_MostPermissive(), loadResult: loadResult, isFlowController: false, analyticsHelper: ._testValue(), previousPaymentOption: nil)
+        var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive()
+        configuration.paymentMethodLayout = .vertical
+        let sut = PaymentSheetVerticalViewController(configuration: configuration, loadResult: loadResult, isFlowController: false, analyticsHelper: ._testValue(), previousPaymentOption: nil)
         _ = makeBottomSheetAndLayout(sut) // Laying out before calling `didTap` avoids breaking constraints due to zero size
         let listVC = sut.paymentMethodListViewController!
         listVC.didTap(rowButton: listVC.getRowButton(accessibilityIdentifier: "Bank"), selection: .new(paymentMethodType: .linkCardBrand))
