@@ -32,21 +32,11 @@ class STPPostalCodeInputTextFieldValidator: STPInputTextFieldValidator {
         }
     }
 
-    let postalCodeRequirement: STPPostalCodeRequirement
-
-    required init(
-        postalCodeRequirement: STPPostalCodeRequirement
-    ) {
-        self.postalCodeRequirement = postalCodeRequirement
-        super.init()
-    }
-
     private func updateValidationState() {
 
         switch STPPostalCodeValidator.validationState(
             forPostalCode: inputValue,
-            countryCode: countryCode,
-            with: postalCodeRequirement
+            countryCode: countryCode
         )
         {
         case .valid:
