@@ -9,9 +9,9 @@ import Foundation
 
 enum ExperimentGroup: String {
     case control
-    case treatment
+    case treatment // periphery:ignore - decoded from API response via rawValue init; needed for experiment analytics
     case holdback
-    case controlTest = "control_test"
+    case controlTest = "control_test" // periphery:ignore - decoded from API response via rawValue init
 }
 
 class ExperimentsData: NSObject, STPAPIResponseDecodable {
