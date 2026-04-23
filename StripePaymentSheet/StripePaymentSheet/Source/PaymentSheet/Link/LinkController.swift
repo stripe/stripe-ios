@@ -58,6 +58,13 @@ import UIKit
         case canceled
     }
 
+    @frozen @_spi(STP) public enum CRSCARFDeclarationResult {
+        /// The user accepted the declaration.
+        case confirmed
+        /// The user dismissed the declaration without accepting.
+        case canceled
+    }
+
     /// Errors specific incorrect integrations with LinkController
     @_spi(STP) public enum IntegrationError: LocalizedError {
         case noPaymentMethodSelected
