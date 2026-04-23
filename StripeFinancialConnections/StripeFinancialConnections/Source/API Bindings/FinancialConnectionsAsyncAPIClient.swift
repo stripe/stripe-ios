@@ -612,7 +612,10 @@ extension FinancialConnectionsAsyncAPIClient {
             !linkedAccountIds.isEmpty
         {
             do {
-                _ = try await pollAccountNumbersForSelectedAccounts(linkedAccountIds: linkedAccountIds)
+                _ = try await pollAccountNumbersForSelectedAccounts(
+                    linkedAccountIds: linkedAccountIds,
+                    clientSecret: clientSecret
+                )
                 let saveAccountsToLinkResult = try await saveAccountsToLinkHandler()
                 return saveAccountsToLinkResult
             } catch {
@@ -630,9 +633,11 @@ extension FinancialConnectionsAsyncAPIClient {
     }
 
     private func pollAccountNumbersForSelectedAccounts(
-        linkedAccountIds: [String]
+        linkedAccountIds: [String],
+        clientSecret: String
     ) async throws -> EmptyResponse {
         let parameters: [String: Any] = [
+            "client_secret": clientSecret,
             "linked_accounts": linkedAccountIds,
         ]
         return try await poll(
