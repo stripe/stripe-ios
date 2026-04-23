@@ -17,7 +17,7 @@ import StripePaymentSheet
 struct KYCInfoView: View {
 
     /// Controls which KYC information set this form collects.
-    enum CollectionMode {
+    enum CollectionMode: Equatable {
 
         /// Original behavior where all fields are shown and date of birth + id number are required.
         case original
@@ -116,21 +116,12 @@ struct KYCInfoView: View {
         )
     }
 
-    private var isDateOfBirthIncluded: Binding<Bool> {
-        Binding(
-            get: { dateOfBirth != nil },
-            set: { shouldIncludeDateOfBirth in
-                dateOfBirth = shouldIncludeDateOfBirth ? (dateOfBirth ?? Self.today) : nil
-            }
-        )
-    }
-
     private var collectedKYCLevel: KYCLevel {
         switch collectionMode {
         case .original, .kycLevel1StepUp:
             return .level1
         case .kycLevel0:
-            return (dateOfBirth != nil && !idNumber.isEmpty) ? .level1 : .level0
+            return .level0
         }
     }
 
@@ -183,32 +174,21 @@ struct KYCInfoView: View {
                     }
                 }
 
-                FormField(title("Social Security Number", required: collectionMode.requiresDateOfBirthAndIdNumber)) {
-                    makeTextField(
-                        "Enter your SSN",
-                        text: $idNumber,
-                        field: .idNumber,
-                        keyboardType: .numberPad
-                    )
-                }
+                if collectionMode != .kycLevel0 {
+                    FormField(title("Social Security Number", required: collectionMode.requiresDateOfBirthAndIdNumber)) {
+                        makeTextField(
+                            "Enter your SSN",
+                            text: $idNumber,
+                            field: .idNumber,
+                            keyboardType: .numberPad
+                        )
+                    }
 
-                FormField(title("Date of Birth", required: collectionMode.requiresDateOfBirthAndIdNumber)) {
-                    VStack(alignment: .leading, spacing: 12) {
-                        if collectionMode.requiresDateOfBirthAndIdNumber {
-                            DatePicker("", selection: dateOfBirthBinding, in: ...Self.today, displayedComponents: .date)
-                                .datePickerStyle(WheelDatePickerStyle())
-                                .labelsHidden()
-                                .frame(maxWidth: .infinity)
-                        } else {
-                            Toggle("Add date of birth now", isOn: isDateOfBirthIncluded)
-
-                            if dateOfBirth != nil {
-                                DatePicker("", selection: dateOfBirthBinding, in: ...Self.today, displayedComponents: .date)
-                                    .datePickerStyle(WheelDatePickerStyle())
-                                    .labelsHidden()
-                                    .frame(maxWidth: .infinity)
-                            }
-                        }
+                    FormField(title("Date of Birth", required: collectionMode.requiresDateOfBirthAndIdNumber)) {
+                        DatePicker("", selection: dateOfBirthBinding, in: ...Self.today, displayedComponents: .date)
+                            .datePickerStyle(WheelDatePickerStyle())
+                            .labelsHidden()
+                            .frame(maxWidth: .infinity)
                     }
                 }
 

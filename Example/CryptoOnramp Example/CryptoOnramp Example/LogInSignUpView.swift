@@ -114,15 +114,13 @@ struct LogInSignUpView: View {
         .safeAreaInset(edge: .bottom) {
             VStack(spacing: 8) {
                 Button("Log In") {
-                    isEmailFieldFocused = false
-                    isPasswordFieldFocused = false
+                    dismissKeyboard()
                     logIn()
                 }
                 .buttonStyle(PrimaryButtonStyle())
 
                 Button("Sign Up") {
-                    isEmailFieldFocused = false
-                    isPasswordFieldFocused = false
+                    dismissKeyboard()
                     signUp()
                 }
                 .buttonStyle(PrimaryButtonStyle())
@@ -146,6 +144,11 @@ struct LogInSignUpView: View {
     }
 
     // MARK: - Actions
+
+    private func dismissKeyboard() {
+        isEmailFieldFocused = false
+        isPasswordFieldFocused = false
+    }
 
     private func logIn() {
         isLoading.wrappedValue = true
