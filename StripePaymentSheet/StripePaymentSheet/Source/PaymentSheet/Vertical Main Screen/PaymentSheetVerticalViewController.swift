@@ -353,24 +353,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         })
     }
 
-    // MARK: - PaymentSheetViewControllerProtocol
-
-    func setReloading(_ isReloading: Bool) {
-        // Freeze the UI and show a spinner on the primary button while we reload the intent.
-        // If you add new UI, make sure it's also disabled/hidden during reloading.
-        self.isReloading = isReloading
-        isUserInteractionEnabled = !isBusy
-        if isReloading {
-            view.endEditing(true)
-        }
-        updatePrimaryButton()
-    }
-
-    func setReloadError(_ error: Swift.Error) {
-        self.error = error
-        updateError()
-    }
-
     /// Returns the default selected row in the vertical list - the previous payment option, the last VC's selection, or the customer's default.
     func calculateInitialSelection() -> RowButtonType? {
         if let previousPaymentOption {

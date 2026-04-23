@@ -508,17 +508,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             return addPaymentMethodViewController.paymentOption
         }
     }
-
-    // Freeze the UI and show a spinner on the primary button while we reload the intent.
-    // If you add new UI, make sure it's also disabled/hidden during reloading.
-    func setReloading(_ isReloading: Bool) {
-        self.isReloading = isReloading
-        updateUI()
-    }
-
-    func setReloadError(_ error: Error) {
-        set(error: error)
-    }
 }
 
 // MARK: - Wallet Header Delegate
