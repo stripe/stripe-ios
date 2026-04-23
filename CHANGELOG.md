@@ -7,6 +7,7 @@ MINOR
 * [Removed] Removed UPI support across the SDK.
 
 ### PaymentSheet
+* [Fixed] Fixed an issue where PaymentSheet displayed raw API error messages (e.g. `invalid_request_error` details) to end consumers instead of a user-friendly generic message. Only `card_error` messages are now shown to users.
 * [Fixed] Fixed an issue where `LinkController` used the shared `STPAPIClient` instead of the `apiClient` specified in the caller, affecting apps using multiple API client instances.
 
 ### Connect

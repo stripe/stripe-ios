@@ -19,13 +19,24 @@ extension Error {
         }
         if localizedDescription == "The operation couldn’t be completed. (STPPaymentHandlerErrorDomain error 2.)",
            let underlyingError = (self as NSError).userInfo["NSUnderlyingError"] as? NSError {
-            let errorMessage = underlyingError.userInfo[STPError.errorMessageKey] as? String ?? NSError.stp_unexpectedErrorMessage()
-            return errorMessage
+            // Only show raw API messages for card_error types, which are safe to display to users.
+            // Other API error types (e.g. invalid_request_error) contain developer-facing details.
+            if let errorType = underlyingError.userInfo[STPError.stripeErrorTypeKey] as? String,
+               errorType != "card_error" {
+                return NSError.stp_unexpectedErrorMessage()
+            }
+            return underlyingError.userInfo[STPError.errorMessageKey] as? String ?? NSError.stp_unexpectedErrorMessage()
         }
         // If the `localizedDescription` is not generic, return the `localizedDescription`
         if localizedDescription != NSError.stp_unexpectedErrorMessage() { return localizedDescription }
 
-        // If error message is generic, return raw value for error message instead
+        // If error message is generic, only return raw API message for card_error types.
+        // Non-card API errors (e.g. invalid_request_error) contain developer-facing details
+        // that should not be shown to end users.
+        if let errorType = (self as NSError).userInfo[STPError.stripeErrorTypeKey] as? String,
+           errorType != "card_error" {
+            return NSError.stp_unexpectedErrorMessage()
+        }
         let errorMessage = (self as NSError).userInfo[STPError.errorMessageKey] as? String ?? NSError.stp_unexpectedErrorMessage()
         return errorMessage
     }
