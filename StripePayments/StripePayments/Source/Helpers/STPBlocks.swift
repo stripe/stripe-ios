@@ -29,7 +29,7 @@ public typealias STPErrorBlock = (Error?) -> Void
 public typealias STPBooleanSuccessBlock = (Bool, Error?) -> Void
 /// A callback to be run with a JSON response.
 /// - Parameters:
-///   - jsonResponse:  The JSON response, or nil if an error occured.
+///   - jsonResponse:  The JSON response, or nil if an error occurred.
 ///   - error:         The error that occurred, if any.
 public typealias STPJSONResponseCompletionBlock = ([AnyHashable: Any]?, Error?) -> Void
 /// A callback to be run with a token response from the Stripe API.
@@ -90,9 +90,9 @@ public typealias STPCustomerCompletionBlock = (STPCustomer?, Error?) -> Void
     case errorVerificationExpired
     /// The verification object has been attempted too many times
     case errorVerificationTooManyAttempts
-    /// An error occured while retrieving the ephemeral key
+    /// An error occurred while retrieving the ephemeral key
     case ephemeralKeyError
-    /// An unknown error occured
+    /// An unknown error occurred
     case unknownError
 }
 
@@ -115,7 +115,7 @@ public typealias STPPaymentStatusBlock = (STPPaymentStatus, Error?) -> Void
 ///
 /// - Parameters:
 ///    - radarSession: The RadarSession object.
-///    - error: The error that occured, if any.
+///    - error: The error that occurred, if any.
 public typealias STPRadarSessionCompletionBlock = (STPRadarSession?, Error?) -> Void
 
 /// A callback to be run with a ConfirmationToken response from the Stripe API.
