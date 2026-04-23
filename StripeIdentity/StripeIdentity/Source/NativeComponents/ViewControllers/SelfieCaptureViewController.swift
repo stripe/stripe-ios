@@ -192,9 +192,8 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     let apiConfig: StripeAPI.VerificationPageStaticContentSelfiePage
     let imageScanningSession: SelfieImageScanningSession
     let selfieUploader: SelfieUploaderProtocol
-
-    /// The user's consent selection
-    private var consentSelection: Bool? = false
+    /// The user's training consent selection
+    private var consentSelection: Bool
 
     /// This timer will be nil if it's time to take another sample from the camera feed
     private var sampleTimer: Timer?
@@ -203,11 +202,13 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 
     init(
         apiConfig: StripeAPI.VerificationPageStaticContentSelfiePage,
+        trainingConsent: Bool?,
         imageScanningSession: SelfieImageScanningSession,
         selfieUploader: SelfieUploaderProtocol,
         sheetController: VerificationSheetControllerProtocol
     ) {
         self.apiConfig = apiConfig
+        self.consentSelection = trainingConsent ?? false
         self.imageScanningSession = imageScanningSession
         self.selfieUploader = selfieUploader
         super.init(sheetController: sheetController, analyticsScreenName: .selfieCapture)
@@ -221,6 +222,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         cameraSession: CameraSessionProtocol,
         selfieUploader: SelfieUploaderProtocol,
         anyFaceScanner: AnyFaceScanner,
+        trainingConsent: Bool? = nil,
         concurrencyManager: ImageScanningConcurrencyManagerProtocol? = nil,
         cameraPermissionsManager: CameraPermissionsManagerProtocol = CameraPermissionsManager
             .shared,
@@ -229,6 +231,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     ) {
         self.init(
             apiConfig: apiConfig,
+            trainingConsent: trainingConsent,
             imageScanningSession: SelfieImageScanningSession(
                 initialState: initialState,
                 initialCameraPosition: .front,
@@ -324,10 +327,8 @@ extension SelfieCaptureViewController {
             from: analyticsScreenName,
             selfieUploader: selfieUploader,
             capturedImages: faceCaptureData,
-            trainingConsent: consentSelection == true
-        ) { [weak self] in
-            self?.imageScanningSession.setStateScanned(capturedData: faceCaptureData)
-        }
+            trainingConsent: consentSelection
+        ) {}
     }
 }
 
@@ -464,7 +465,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         }
 
         selfieUploader.uploadImages(faceCaptureData)
-        scanningSession.setStateScanned(capturedData: faceCaptureData)
+        saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
     }
 }
 

@@ -239,6 +239,55 @@ final class VerificationSheetControllerTest: XCTestCase {
         }
     }
 
+    func testSaveSelfieDataIncludesTrainingConsent() throws {
+        controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
+
+        let mockResponse = try VerificationPageDataMock.noErrors.make()
+        let selfieUploader = SelfieUploaderMock()
+        let capturedImages = makeFaceCaptureData()
+
+        let saveRequestExp = expectation(description: "Save selfie request was made")
+        mockAPIClient.verificationPageData.callBackOnRequest {
+            saveRequestExp.fulfill()
+        }
+
+        controller.saveSelfieFileDataAndTransition(
+            from: .selfieCapture,
+            selfieUploader: selfieUploader,
+            capturedImages: capturedImages,
+            trainingConsent: true
+        ) {
+            self.exp.fulfill()
+        }
+
+        selfieUploader.uploadPromise.resolve(with: try makeUploadedSelfieFiles())
+
+        wait(for: [saveRequestExp], timeout: 1)
+        XCTAssertNil(
+            mockAPIClient.verificationPageData.requestHistory.first?.collectedData?
+                .biometricConsent
+        )
+        XCTAssertEqual(
+            mockAPIClient.verificationPageData.requestHistory.first?.collectedData?
+                .face?.trainingConsent,
+            true
+        )
+
+        mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
+
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
+        wait(for: [submitRequestExp], timeout: 1)
+
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
+
+        wait(for: [exp], timeout: 1)
+        XCTAssertNil(controller.collectedData.biometricConsent)
+        XCTAssertEqual(controller.collectedData.face?.trainingConsent, true)
+    }
+
     func testSaveDocumentFrontNotNeedbackSuccess() throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
@@ -915,6 +964,57 @@ final class VerificationSheetControllerTest: XCTestCase {
     }
 }
 
+extension VerificationSheetControllerTest {
+    fileprivate func makeFaceCaptureData() -> FaceCaptureData {
+        let image = CapturedImageMock.frontDriversLicense.image.cgImage!
+        let faceRect = CGRect(x: 0.3, y: 0.2, width: 0.4, height: 0.4)
+        let samples: [FaceScannerInputOutput] = [0.7, 0.8, 0.9].map { score in
+            FaceScannerInputOutput(
+                image: image,
+                scannerOutput: .init(
+                    faceDetectorOutput: .init(
+                        predictions: [
+                            .init(
+                                rect: faceRect,
+                                score: score
+                            )
+                        ]
+                    ),
+                    cameraProperties: nil,
+                    motionBlurResult: nil,
+                    isValid: true
+                ),
+                cameraExifMetadata: nil
+            )
+        }
+        return FaceCaptureData(samples: samples)!
+    }
+
+    fileprivate func makeUploadedSelfieFiles() throws -> SelfieUploader.FileData {
+        return .init(
+            bestHighResFile: try makeStripeFile(id: "best_high"),
+            bestLowResFile: try makeStripeFile(id: "best_low"),
+            firstHighResFile: try makeStripeFile(id: "first_high"),
+            firstLowResFile: try makeStripeFile(id: "first_low"),
+            lastHighResFile: try makeStripeFile(id: "last_high"),
+            lastLowResFile: try makeStripeFile(id: "last_low")
+        )
+    }
+
+    fileprivate func makeStripeFile(id: String) throws -> StripeFile {
+        let data = """
+        {
+          "created": 0,
+          "id": "\(id)",
+          "purpose": "identity_private",
+          "size": 1,
+          "type": "jpg"
+        }
+        """.data(using: .utf8)!
+        return try JSONDecoder().decode(StripeFile.self, from: data)
+    }
+}
+
 private final class MockDelegate: VerificationSheetControllerDelegate {
     private(set) var result: IdentityVerificationSheet.VerificationFlowResult?
 
@@ -923,5 +1023,21 @@ private final class MockDelegate: VerificationSheetControllerDelegate {
         didFinish result: IdentityVerificationSheet.VerificationFlowResult
     ) {
         self.result = result
+    }
+}
+
+private final class SelfieUploaderMock: SelfieUploaderProtocol {
+    let uploadPromise = Promise<SelfieUploader.FileData>()
+
+    var uploadFuture: Future<SelfieUploader.FileData>? {
+        return uploadPromise
+    }
+
+    func uploadImages(_ capturedImages: FaceCaptureData) {
+        // no-op
+    }
+
+    func reset() {
+        // no-op
     }
 }

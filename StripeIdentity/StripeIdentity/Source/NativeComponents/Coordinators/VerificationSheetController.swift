@@ -113,7 +113,9 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     func overrideTestModeReturnValue(result: IdentityVerificationSheet.VerificationFlowResult)
 
     /// Transition to DocumentCaptureViewController without any API request
-    func transitionToSelfieCapture()
+    func transitionToSelfieCapture(
+        trainingConsent: Bool?
+    )
 
     /// Transition to DocumentCaptureViewController without any API request
     func transitionToDocumentCapture()
@@ -506,7 +508,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         )
     }
 
-    func transitionToSelfieCapture() {
+    func transitionToSelfieCapture(
+        trainingConsent: Bool?
+    ) {
         guard let verificationPageResponse = verificationPageResponse else {
             assertionFailure("verificationPageResponse is nil")
             return
@@ -514,7 +518,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
         flowController.transitionToSelfieCaptureScreen(
             staticContentResult: verificationPageResponse,
-            sheetController: self
+            sheetController: self,
+            trainingConsent: trainingConsent
         )
     }
 
