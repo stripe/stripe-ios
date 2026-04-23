@@ -90,10 +90,35 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     private func verify(
         _ view: Checkout.CurrencySelectorView,
         darkMode: Bool = false,
+        width: CGFloat = 320,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        verifySelectorSnapshotView(view, darkMode: darkMode, file: file, line: line)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        let widthConstraint = view.widthAnchor.constraint(equalToConstant: width)
+        widthConstraint.isActive = true
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+
+        let fittingSize = view.systemLayoutSizeFitting(
+            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
+            withHorizontalFittingPriority: .required,
+            verticalFittingPriority: .fittingSizeLevel
+        )
+        widthConstraint.isActive = false
+
+        let size = CGSize(width: width, height: fittingSize.height)
+        let window = UIWindow(frame: CGRect(origin: .zero, size: size))
+        window.overrideUserInterfaceStyle = darkMode ? .dark : .light
+        window.isHidden = false
+
+        view.translatesAutoresizingMaskIntoConstraints = true
+        view.frame = CGRect(origin: .zero, size: size)
+        window.addSubview(view)
+        window.layoutIfNeeded()
+        view.layoutIfNeeded()
+
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 
     @MainActor
