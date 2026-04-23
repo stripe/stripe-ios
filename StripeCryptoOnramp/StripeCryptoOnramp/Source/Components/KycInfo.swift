@@ -60,6 +60,15 @@ public struct KycInfo: Equatable {
     /// The customer’s date of birth.
     public var dateOfBirth: DateOfBirth?
 
+    /// The two-letter country code of the customer’s country of birth (ISO 3166-1 alpha-2), if collected. Required for EU customers.
+    public var birthCountry: String?
+
+    /// The customer’s city of birth, if collected. Required for EU customers.
+    public var birthCity: String?
+
+    /// The two-letter country codes of the customer’s nationalities (ISO 3166-1 alpha-2), if collected. Required for EU customers.
+    public var nationalities: [String]?
+
     /// Creates a new instance of `KycInfo`.
     /// - Parameters:
     ///   - firstName: The customer’s first name, if collected.
@@ -67,18 +76,27 @@ public struct KycInfo: Equatable {
     ///   - idNumber: The number associated with the customer’s id.
     ///   - address: The address of the customer, if collected.
     ///   - dateOfBirth: The customer’s date of birth.
+    ///   - birthCountry: The two-letter country code of the customer’s country of birth (ISO 3166-1 alpha-2), if collected. Required for EU customers.
+    ///   - birthCity: The customer’s city of birth, if collected. Required for EU customers.
+    ///   - nationalities: The two-letter country codes of the customer’s nationalities (ISO 3166-1 alpha-2), if collected. Required for EU customers.
     public init(
         firstName: String?,
         lastName: String?,
         idNumber: String?,
         address: Address?,
-        dateOfBirth: DateOfBirth?
+        dateOfBirth: DateOfBirth?,
+        birthCountry: String? = nil,
+        birthCity: String? = nil,
+        nationalities: [String]? = nil
     ) {
         self.firstName = firstName
         self.lastName = lastName
         self.idNumber = idNumber
         self.address = address
         self.dateOfBirth = dateOfBirth
+        self.birthCountry = birthCountry
+        self.birthCity = birthCity
+        self.nationalities = nationalities
     }
 }
 
