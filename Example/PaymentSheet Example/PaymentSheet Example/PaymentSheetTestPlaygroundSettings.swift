@@ -318,6 +318,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case never
     }
 
+    enum LinkBrand: String, PickerEnum {
+        static var enumName: String { "Link brand" }
+
+        case `default`
+        case notlink
+    }
+
     enum AllowsDelayedPMs: String, PickerEnum {
         static var enumName: String { "allowsDelayedPMs" }
 
@@ -747,6 +754,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var linkPassthroughMode: LinkPassthroughMode
     var linkEnabledMode: LinkEnabledMode
     var linkDisplay: LinkDisplay
+    var linkBrand: LinkBrand
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
@@ -818,6 +826,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             linkPassthroughMode: .passthrough,
             linkEnabledMode: .native,
             linkDisplay: .automatic,
+            linkBrand: .default,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
