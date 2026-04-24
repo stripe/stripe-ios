@@ -2,10 +2,6 @@
   "apple_pay_preference": "enabled",
   "business_name": "Mobile Example Account",
   "config_id": "123",
-  "experiments_data": {
-      "arb_id": "arb_id_123",
-      "experiment_assignments": [EXPERIMENT_ASSIGNMENTS_HERE]
-  },
   "flags": {
     "elements_include_payment_intent_id_in_analytics_events": true,
     "elements_enable_mx_card_installments": false,
@@ -24,28 +20,14 @@
   "merchant_id": "acct_1111111111111111",
   "order": null,
   "ordered_payment_method_types_and_wallets": [
-    "card",
     "google_pay",
-    "acss_debit",
-    "afterpay_clearpay",
-    "alipay",
-    "klarna",
-    "us_bank_account",
-    "wechat_pay",
-    "affirm"
+    [PAYMENT_METHOD_TYPES]
   ],
   "payment_method_preference": {
     "object": "payment_method_preference",
     "country_code": "US",
     "ordered_payment_method_types": [
-      "card",
-      "acss_debit",
-      "afterpay_clearpay",
-      "alipay",
-      "klarna",
-      "us_bank_account",
-      "wechat_pay",
-      "affirm"
+        [PAYMENT_METHOD_TYPES]
     ],
     "payment_intent": {
       "id": "pi_31111111111",
@@ -72,14 +54,7 @@
         }
       },
       "payment_method_types": [
-        "card",
-        "acss_debit",
-        "afterpay_clearpay",
-        "alipay",
-        "klarna",
-        "us_bank_account",
-        "wechat_pay",
-        "affirm"
+          [PAYMENT_METHOD_TYPES]
       ],
       "processing": null,
       "receipt_email": null,

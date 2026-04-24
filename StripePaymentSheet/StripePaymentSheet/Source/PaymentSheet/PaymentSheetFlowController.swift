@@ -243,9 +243,6 @@ extension PaymentSheet {
 
         private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
         private var didDismissLinkVerificationDialog: Bool = false
-        // We check the experiment assignment when creating the FlowController view controller, but we don't want to log the layout experiment exposure until the sheet is actually presented
-        // If the FlowController is loaded with a selected payment option and the user confirms without presenting the sheet, the layout had no bearing on the user's actions, so we don't want that session included in the experiment
-        private var hasLoggedLayoutExperimentExposure: Bool = false
 
         // If a WalletButtonsView is currently visible
         var walletButtonsViewState: WalletButtonsViewState = .hidden {
@@ -317,8 +314,7 @@ extension PaymentSheet {
                 configuration: configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
-                walletButtonsViewState: self.walletButtonsViewState,
-                shouldLogExperimentExposure: false
+                walletButtonsViewState: self.walletButtonsViewState
             )
             self.viewController.flowControllerDelegate = self
             self.confirmationChallenge = confirmationChallenge
@@ -498,9 +494,6 @@ extension PaymentSheet {
 
             let showPaymentOptions: () -> Void = { [weak self] in
                 guard let self = self else { return }
-
-                // Log experiment exposure now that the sheet is being presented
-                self.logExperimentExposureIfNeeded()
 
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let bottomSheetVC = Self.makeBottomSheetViewController(
@@ -717,13 +710,10 @@ extension PaymentSheet {
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
                         walletButtonsViewState: walletButtonsViewState,
-                        previousPaymentOption: self.internalPaymentOption,
-                        shouldLogExperimentExposure: false
+                        previousPaymentOption: self.internalPaymentOption
                     )
                     self.viewController.flowControllerDelegate = self
                     self.confirmationChallenge = confirmationChallenge
-                    // Defer experiment exposure logging until next presentation
-                    self.hasLoggedLayoutExperimentExposure = false
 
                     // Update the payment option and synchronously pre-load image into cache
                     self.updatePaymentOption()
@@ -752,12 +742,9 @@ extension PaymentSheet {
                 loadResult: updatedLoadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState,
-                previousPaymentOption: self.internalPaymentOption,
-                shouldLogExperimentExposure: false
+                previousPaymentOption: self.internalPaymentOption
             )
             self.viewController.flowControllerDelegate = self
-            // Defer experiment exposure logging until next presentation
-            self.hasLoggedLayoutExperimentExposure = false
             updatePaymentOption()
         }
 
@@ -774,22 +761,6 @@ extension PaymentSheet {
         private func preloadPaymentOptionImage() {
             // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk)
             _ = paymentOption?.image
-        }
-
-        /// Logs experiment exposure if it was deferred during initialization
-        private func logExperimentExposureIfNeeded() {
-            guard !hasLoggedLayoutExperimentExposure, configuration.paymentMethodLayout == .automatic else { return }
-            hasLoggedLayoutExperimentExposure = true
-
-            let experiments: [LoggableExperiment] = PaymentSheetLayoutExperiment.createExperiments(
-                loadResult: viewController.loadResult,
-                configuration: configuration,
-                analyticsHelper: analyticsHelper
-            )
-
-            experiments.forEach { experiment in
-                analyticsHelper.logExposure(experiment: experiment)
-            }
         }
 
         // MARK: Internal helper methods
@@ -814,19 +785,13 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
-            previousPaymentOption: PaymentOption? = nil,
-            shouldLogExperimentExposure: Bool = true
+            previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
-            // Resolve automatic layout based on experiment
+            // Resolve automatic layout based on number of supported payment methods
             var configuration = configuration
-            let resolvedPaymentMethodLayout = configuration.resolveLayout(
-                loadResult: loadResult,
-                configuration: configuration,
-                analyticsHelper: analyticsHelper,
-                shouldLogExperimentExposure: shouldLogExperimentExposure
-            )
-            switch resolvedPaymentMethodLayout {
+            configuration.resolveLayout(loadResult: loadResult)
+            switch configuration.resolvedPaymentMethodLayout {
             case .horizontal:
                 controller = PaymentSheetFlowControllerViewController(
                     configuration: configuration,

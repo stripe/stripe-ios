@@ -214,9 +214,23 @@ extension PaymentSheet {
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
         public var paymentMethodLayout: PaymentMethodLayout = .automatic
 
-        /// The resolved layout of payment methods after calling `resolve()` on `paymentMethodLayout`.
-        /// - Note: Internal code should use this property instead of `paymentMethodLayout`.
-        internal private(set) var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout?
+        /// Number of supported payment method types; set via `resolveLayout(loadResult:)`. Used to resolve `.automatic` layout.
+        private var paymentMethodTypeCount: Int = 0
+
+        /// The resolved layout of payment methods. Computed from `paymentMethodLayout` and `paymentMethodTypeCount`.
+        /// - Note: Internal code should use this property instead of `paymentMethodLayout`. `resolveLayout` must be called after each load to maintain synchronicity.
+        internal var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout {
+            switch paymentMethodLayout {
+            case .horizontal: return .horizontal
+            case .vertical: return .vertical
+            case .automatic: return paymentMethodTypeCount >= 3  ? .vertical : .horizontal
+            }
+        }
+
+        /// Sets `paymentMethodTypeCount` from the load result so `.automatic` can be resolved.
+        mutating func resolveLayout(loadResult: PaymentSheetLoader.LoadResult) {
+            paymentMethodTypeCount = loadResult.paymentMethodTypes.count
+        }
 
         /// By default, PaymentSheet will accept all supported cards by Stripe.
         /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
@@ -250,43 +264,6 @@ extension PaymentSheet {
 
         /// When using WalletButtonsView, configures payment method visibility across available surfaces.
         @_spi(STP) public var walletButtonsVisibility: WalletButtonsVisibility = WalletButtonsVisibility()
-
-        /// Resolves `.automatic` to `.horizontal` or `.vertical` based on experiment.
-        /// For non-automatic layouts, returns self.
-        mutating func resolveLayout(
-            loadResult: PaymentSheetLoader.LoadResult,
-            configuration: PaymentElementConfiguration,
-            analyticsHelper: PaymentSheetAnalyticsHelper,
-            shouldLogExperimentExposure: Bool = true
-        ) -> PaymentMethodLayout.ResolvedLayout {
-            var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout
-            switch paymentMethodLayout {
-            case .horizontal:
-                resolvedPaymentMethodLayout = .horizontal
-            case .vertical:
-                resolvedPaymentMethodLayout = .vertical
-            case .automatic:
-                // Default to vertical (control)
-                resolvedPaymentMethodLayout = .vertical
-
-                let experiments: [LoggableExperiment] = PaymentSheetLayoutExperiment.createExperiments(
-                    loadResult: loadResult,
-                    configuration: configuration,
-                    analyticsHelper: analyticsHelper
-                )
-
-                experiments.forEach { experiment in
-                    // Log experiment exposure if needed
-                    if shouldLogExperimentExposure {
-                        analyticsHelper.logExposure(experiment: experiment)
-                    }
-                    // Return horizontal for treatment and vertical otherwise
-                    resolvedPaymentMethodLayout = experiment.group == .treatment ? .horizontal : .vertical
-                }
-            }
-            self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
-            return resolvedPaymentMethodLayout
-        }
     }
 
     /// When using WalletButtonsView, configures payment method visibility across available surfaces.
