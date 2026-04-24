@@ -46,21 +46,13 @@ final class PayWithLinkButton: UIControl {
 
     let brand: LinkSettings.Brand
 
-    var primaryLinkLogoTintColor: UIColor? {
+    var primaryLinkLogoImage: UIImage {
         switch brand {
         case .link:
-            return nil
+            return Image.link_logo_bw.makeImage(template: false)
         case .notlink:
-            return UIColor(red: 0.23, green: 0.74, blue: 0.66, alpha: 1.0)
+            return Image.notlink_logo_bw.makeImage(template: false)
         }
-    }
-
-    var primaryLinkLogoImage: UIImage {
-        let image = Image.link_logo_bw.makeImage(template: false)
-        guard let tintColor = primaryLinkLogoTintColor else {
-            return image
-        }
-        return image.withTintColor(tintColor, renderingMode: .alwaysOriginal)
     }
 
     var cornerRadius: CGFloat = ElementsUI.defaultCornerRadius {

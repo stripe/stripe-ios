@@ -46,6 +46,11 @@ final public class FinancialConnectionsSheet {
 
     /// Configuration for the Financial Connections Sheet.
     public struct Configuration {
+        @_spi(STP) public enum LinkBrand {
+            case link
+            case notlink
+        }
+
         /// Style options for colors in Financial Connections.
         @frozen public enum UserInterfaceStyle {
             /// (default)  Financial Connections will automatically switch between light and dark mode compatible colors based on device settings.
@@ -73,9 +78,11 @@ final public class FinancialConnectionsSheet {
         }
 
         public var style: UserInterfaceStyle
+        @_spi(STP) public var linkBrand: LinkBrand?
 
         public init(style: UserInterfaceStyle = .automatic) {
             self.style = style
+            self.linkBrand = nil
         }
     }
 

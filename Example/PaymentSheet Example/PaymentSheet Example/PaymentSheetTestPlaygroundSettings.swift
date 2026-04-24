@@ -321,7 +321,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum LinkBrand: String, PickerEnum {
         static var enumName: String { "Link brand" }
 
-        case `default`
+        case link
         case notlink
     }
 
@@ -826,7 +826,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             linkPassthroughMode: .passthrough,
             linkEnabledMode: .native,
             linkDisplay: .automatic,
-            linkBrand: .default,
+            linkBrand: .link,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
