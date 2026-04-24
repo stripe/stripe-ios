@@ -12,7 +12,7 @@ import Foundation
 /// For internal SDK use only
 @objc(STP_Internal_LinkSettings)
 @_spi(STP) public final class LinkSettings: NSObject, STPAPIResponseDecodable {
-    @_spi(STP) @frozen public enum FundingSource: String, Encodable {
+    @_spi(STP) public enum FundingSource: String, SafeParsedEnumCodable {
         case card = "CARD"
         case bankAccount = "BANK_ACCOUNT"
     }
@@ -28,7 +28,7 @@ import Foundation
         case none = "NONE"
     }
 
-    @_spi(STP) public let fundingSources: Set<FundingSource>
+    @_spi(STP) public let fundingSources: Set<ParsedEnum<FundingSource>>
     @_spi(STP) public let popupWebviewOption: PopupWebviewOption?
     @_spi(STP) public let passthroughModeEnabled: Bool?
     @_spi(STP) public let disableSignup: Bool?
@@ -51,7 +51,7 @@ import Foundation
     }
 
     @_spi(STP) public init(
-        fundingSources: Set<FundingSource>,
+        fundingSources: Set<ParsedEnum<FundingSource>>,
         popupWebviewOption: PopupWebviewOption?,
         passthroughModeEnabled: Bool?,
         disableSignup: Bool?,
@@ -96,8 +96,7 @@ import Foundation
             return nil
         }
 
-        // Server may send down funding sources we haven't implemented yet, so we'll just ignore any unknown sources
-        let validFundingSources = Set(fundingSourcesStrings.compactMap(FundingSource.init))
+        let validFundingSources = Set(fundingSourcesStrings.map { ParsedEnum<FundingSource>(rawValue: $0) })
 
         let webviewOption = PopupWebviewOption(rawValue: response["link_popup_webview_option"] as? String ?? "")
         let passthroughModeEnabled = response["link_passthrough_mode_enabled"] as? Bool ?? false

@@ -7,24 +7,26 @@
 
 import Foundation
 
+@_spi(STP) import StripeCore
+
 @_spi(STP) public enum LinkPaymentMethodType: String, CaseIterable {
     case card = "CARD"
     case bankAccount = "BANK_ACCOUNT"
 }
 
 extension Array where Element == LinkPaymentMethodType {
-    var detailsTypes: Set<ConsumerPaymentDetails.DetailsType> {
+    var detailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> {
         Set(map(\.detailsType))
     }
 }
 
 private extension LinkPaymentMethodType {
-    var detailsType: ConsumerPaymentDetails.DetailsType {
+    var detailsType: ParsedEnum<ConsumerPaymentDetails.DetailsType> {
         switch self {
         case .card:
-            return .card
+            return ParsedEnum(.card)
         case .bankAccount:
-            return .bankAccount
+            return ParsedEnum(.bankAccount)
         }
     }
 }
