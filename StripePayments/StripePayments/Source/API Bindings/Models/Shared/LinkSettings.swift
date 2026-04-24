@@ -28,7 +28,13 @@ import Foundation
         case none = "NONE"
     }
 
-    @_spi(STP) public let fundingSources: Set<ParsedEnum<FundingSource>>
+    @_spi(STP) @frozen public enum Brand: String {
+        case link = "link"
+        case notlink = "notlink"
+    }
+
+    @_spi(STP) public let brand: Brand
+    @_spi(STP) public let fundingSources: Set<FundingSource>
     @_spi(STP) public let popupWebviewOption: PopupWebviewOption?
     @_spi(STP) public let passthroughModeEnabled: Bool?
     @_spi(STP) public let disableSignup: Bool?
@@ -51,7 +57,8 @@ import Foundation
     }
 
     @_spi(STP) public init(
-        fundingSources: Set<ParsedEnum<FundingSource>>,
+        brand: Brand,
+        fundingSources: Set<FundingSource>,
         popupWebviewOption: PopupWebviewOption?,
         passthroughModeEnabled: Bool?,
         disableSignup: Bool?,
@@ -68,6 +75,7 @@ import Foundation
         linkSupportedPaymentMethodsOnboardingEnabled: [String],
         allResponseFields: [AnyHashable: Any]
     ) {
+        self.brand = brand
         self.fundingSources = fundingSources
         self.popupWebviewOption = popupWebviewOption
         self.passthroughModeEnabled = passthroughModeEnabled
@@ -96,7 +104,11 @@ import Foundation
             return nil
         }
 
-        let validFundingSources = Set(fundingSourcesStrings.map { ParsedEnum<FundingSource>(rawValue: $0) })
+        let brandString = response["link_brand"] as? String
+        let brand = brandString.flatMap(Brand.init(rawValue:)) ?? .link
+
+        // Server may send down funding sources we haven't implemented yet, so we'll just ignore any unknown sources
+        let validFundingSources = Set(fundingSourcesStrings.compactMap(FundingSource.init))
 
         let webviewOption = PopupWebviewOption(rawValue: response["link_popup_webview_option"] as? String ?? "")
         let passthroughModeEnabled = response["link_passthrough_mode_enabled"] as? Bool ?? false
@@ -129,6 +141,7 @@ import Foundation
         }
 
         return LinkSettings(
+            brand: brand,
             fundingSources: validFundingSources,
             popupWebviewOption: webviewOption,
             passthroughModeEnabled: passthroughModeEnabled,

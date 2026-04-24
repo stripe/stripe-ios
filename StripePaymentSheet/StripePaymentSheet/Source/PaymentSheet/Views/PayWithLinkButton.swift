@@ -44,6 +44,25 @@ final class PayWithLinkButton: UIControl {
         }
     }
 
+    let brand: LinkSettings.Brand
+
+    var primaryLinkLogoTintColor: UIColor? {
+        switch brand {
+        case .link:
+            return nil
+        case .notlink:
+            return UIColor(red: 0.23, green: 0.74, blue: 0.66, alpha: 1.0)
+        }
+    }
+
+    var primaryLinkLogoImage: UIImage {
+        let image = Image.link_logo_bw.makeImage(template: false)
+        guard let tintColor = primaryLinkLogoTintColor else {
+            return image
+        }
+        return image.withTintColor(tintColor, renderingMode: .alwaysOriginal)
+    }
+
     var cornerRadius: CGFloat = ElementsUI.defaultCornerRadius {
         didSet {
             setNeedsLayout()
@@ -112,7 +131,7 @@ final class PayWithLinkButton: UIControl {
         let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link)
 
         // Create the Link logo attachment
-        let linkImage = Image.link_logo_bw.makeImage(template: false)
+        let linkImage = primaryLinkLogoImage
         let linkAttachment = NSTextAttachment(image: linkImage)
 
         let linkLogoRatio = linkImage.size.width / linkImage.size.height
@@ -151,7 +170,7 @@ final class PayWithLinkButton: UIControl {
 
     private lazy var emailSeparatorView: UIView = Self.makeSeparatorView()
     private lazy var emailStackView: UIStackView = {
-        let logoView = Self.makeLogoView()
+        let logoView = makeLogoView()
         let stackView = UIStackView(arrangedSubviews: [
             logoView,
             emailSeparatorView,
@@ -180,7 +199,7 @@ final class PayWithLinkButton: UIControl {
     }()
 
     private lazy var cardStackView: UIStackView = {
-        let logoView = Self.makeLogoView()
+        let logoView = makeLogoView()
         let stackView = UIStackView(arrangedSubviews: [
             logoView,
             cardBrandSeparatorView,
@@ -214,7 +233,8 @@ final class PayWithLinkButton: UIControl {
         return .noValidAccount
     }
 
-    init() {
+    init(brand: LinkSettings.Brand = .link) {
+        self.brand = brand
         super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
         isAccessibilityElement = true
         self.linkAccount = LinkAccountContext.shared.account
@@ -260,8 +280,8 @@ private extension PayWithLinkButton {
         return NSAttributedString(attachment: spacerAttachment)
     }
 
-    static func makeLogoView() -> UIImageView {
-        let logoView = UIImageView(image: Image.link_logo_bw.makeImage(template: false))
+    func makeLogoView() -> UIImageView {
+        let logoView = UIImageView(image: primaryLinkLogoImage)
         logoView.translatesAutoresizingMaskIntoConstraints = false
         logoView.contentMode = .scaleAspectFill
 

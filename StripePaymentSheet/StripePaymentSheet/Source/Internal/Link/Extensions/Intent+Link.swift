@@ -27,7 +27,7 @@ extension STPElementsSession {
     }
 
     var linkFundingSources: Set<ParsedEnum<LinkSettings.FundingSource>>? {
-        linkSettings?.fundingSources
+        linkSettings.map { Set($0.fundingSources.map(ParsedEnum.init)) }
     }
 
     var disableLinkSignup: Bool {

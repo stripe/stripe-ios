@@ -49,6 +49,9 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
 }
 
 extension PaymentElementConfiguration {
+    func resolvedLinkBrand(elementsSession: STPElementsSession? = nil) -> LinkSettings.Brand {
+        link.brand ?? elementsSession?.linkBrand ?? .link
+    }
 
     /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
     func requiresBillingDetailCollection() -> Bool {
