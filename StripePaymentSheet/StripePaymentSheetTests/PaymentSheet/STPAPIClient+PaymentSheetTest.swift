@@ -226,6 +226,39 @@ class STPAPIClient_PaymentSheetTest: XCTestCase {
         XCTAssertNil(parameters["link"])
     }
 
+    func testElementsSessionParameters_doesNotSendLinkBrand() throws {
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .paymentIntentClientSecret("pi_123_secret_456"),
+            epmConfiguration: nil,
+            cpmConfiguration: nil,
+            clientDefaultPaymentMethod: nil,
+            customerAccessProvider: nil,
+            linkDisallowFundingSourceCreation: [],
+            linkBrand: .notlink
+        )
+
+        XCTAssertNil(parameters["link_brand"])
+        XCTAssertNil((parameters["link"] as? [String: Any])?["brand"])
+    }
+
+    func testElementsSessionParameters_doesNotSendLinkBrandAlongsideLinkParams() throws {
+        let parameters = STPAPIClient(publishableKey: "pk_test").makeElementsSessionsParams(
+            mode: .paymentIntentClientSecret("pi_123_secret_456"),
+            epmConfiguration: nil,
+            cpmConfiguration: nil,
+            clientDefaultPaymentMethod: nil,
+            customerAccessProvider: nil,
+            linkDisallowFundingSourceCreation: ["usInstantBankPayment"],
+            linkBrand: .notlink
+        )
+
+        XCTAssertNil(parameters["link_brand"])
+
+        let linkParams = try XCTUnwrap(parameters["link"] as? [String: Any])
+        XCTAssertEqual(linkParams["disallow_funding_source_creation"] as? [String], ["usInstantBankPayment"])
+        XCTAssertNil(linkParams["brand"])
+    }
+
     func testElementsSessionParameters_DeferredPayment_WithSellerDetails() throws {
         let sellerDetails = PaymentSheet.IntentConfiguration.SellerDetails(networkId: "network_123", externalId: "external_456", businessName: "Till's Pills")
         let intentConfig = PaymentSheet.IntentConfiguration(

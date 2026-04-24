@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -528,6 +529,9 @@ extension PaymentSheet {
         /// The Link display mode.
         public var display: Display = .automatic
 
+        /// The brand to use for Link. Expected values are `.link` or `.notlink`.
+        @_spi(STP) public var brand: LinkSettings.Brand?
+
         /// The Link funding sources that should be disabled. Defaults to an empty set.
         @_spi(STP) public var disallowFundingSourceCreation: Set<String> = []
 
@@ -556,12 +560,22 @@ extension PaymentSheet {
             self.display = display
         }
 
+        @_spi(STP) public init(
+            display: Display = .automatic,
+            brand: LinkSettings.Brand? = nil
+        ) {
+            self.display = display
+            self.brand = brand
+        }
+
         @_spi(CollectMissingLinkBillingDetailsPreview) public init(
             display: Display = .automatic,
-            collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
+            collectMissingBillingDetailsForExistingPaymentMethods: Bool = true,
+            brand: LinkSettings.Brand? = nil
         ) {
             self.display = display
             self.collectMissingBillingDetailsForExistingPaymentMethods = collectMissingBillingDetailsForExistingPaymentMethods
+            self.brand = brand
         }
     }
 

@@ -69,6 +69,27 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertFalse(elementsSession.shouldAttestOnConfirmation)
     }
 
+    func testDecodedObjectFromAPIResponseMapping_linkBrand() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson[jsonDict: "link_settings"]?["link_brand"] = "onelink"
+
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertEqual(LinkSettings.Brand.notlink.rawValue, "onelink")
+        XCTAssertEqual(elementsSession.linkSettings?.brand, .notlink)
+        XCTAssertEqual(elementsSession.linkBrand, .notlink)
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_missingLinkBrandDefaultsToLink() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson[jsonDict: "link_settings"]?["link_brand"] = nil
+
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertEqual(elementsSession.linkSettings?.brand, .link)
+        XCTAssertEqual(elementsSession.linkBrand, .link)
+    }
+
     func testDecodedObjectFromAPIResponseMapping_passiveCaptcha() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         elementsSessionJson["flags"] = ["elements_enable_passive_captcha": true]

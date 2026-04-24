@@ -11,7 +11,7 @@ struct FinancialConnectionsSynchronize: Decodable {
     let manifest: FinancialConnectionsSessionManifest
     let text: Text?
     let visual: VisualUpdate
-
+    let brand: String?
     struct Text: Decodable {
         let accountPickerPane: FinancialConnectionsAccountPickerPane?
         let consentPane: FinancialConnectionsConsent?

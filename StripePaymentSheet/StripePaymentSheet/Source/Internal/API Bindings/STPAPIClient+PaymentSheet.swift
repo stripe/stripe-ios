@@ -20,6 +20,7 @@ extension STPAPIClient {
         clientDefaultPaymentMethod: String?,
         customerAccessProvider: PaymentSheet.CustomerAccessProvider?,
         linkDisallowFundingSourceCreation: Set<String>,
+        linkBrand: LinkSettings.Brand? = nil,
         userOverrideCountry: String? = nil
     ) -> [String: Any] {
         var parameters: [String: Any] = [
@@ -119,6 +120,7 @@ extension STPAPIClient {
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                 customerAccessProvider: configuration.customer?.customerAccessProvider,
                 linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
+                linkBrand: configuration.link.brand,
                 userOverrideCountry: configuration.userOverrideCountry
             )
         )
@@ -148,6 +150,7 @@ extension STPAPIClient {
                 clientDefaultPaymentMethod: clientDefaultPaymentMethod,
                 customerAccessProvider: configuration.customer?.customerAccessProvider,
                 linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
+                linkBrand: configuration.link.brand,
                 userOverrideCountry: configuration.userOverrideCountry
             )
         )
@@ -174,6 +177,7 @@ extension STPAPIClient {
             clientDefaultPaymentMethod: clientDefaultPaymentMethod,
             customerAccessProvider: configuration.customer?.customerAccessProvider,
             linkDisallowFundingSourceCreation: configuration.link.disallowFundingSourceCreation,
+            linkBrand: configuration.link.brand,
             userOverrideCountry: configuration.userOverrideCountry
         )
         let elementsSession = try await APIRequest<STPElementsSession>.getWith(

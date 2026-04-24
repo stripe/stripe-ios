@@ -82,6 +82,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let allowManualEntry: Bool
     let appVerificationEnabled: Bool?
     let assignmentEventId: String?
+    let brand: String?
     let businessName: String?
     let cancelUrl: String?
     let consentAcquiredAt: String?
@@ -147,6 +148,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         allowManualEntry: Bool,
         appVerificationEnabled: Bool? = nil,
         assignmentEventId: String? = nil,
+        brand: String? = "link",
         businessName: String? = nil,
         cancelUrl: String? = nil,
         consentAcquiredAt: String? = nil,
@@ -187,6 +189,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         self.allowManualEntry = allowManualEntry
         self.appVerificationEnabled = appVerificationEnabled
         self.assignmentEventId = assignmentEventId
+        self.brand = brand
         self.businessName = businessName
         self.cancelUrl = cancelUrl
         self.consentRequired = consentRequired
