@@ -8,6 +8,7 @@ MINOR
 
 ### PaymentSheet
 * [Fixed] Fixed an issue where `LinkController` used the shared `STPAPIClient` instead of the `apiClient` specified in the caller, affecting apps using multiple API client instances.
+* [Changed] When paymentMethodLayout is set to automatic, the layout is now horizontal when there are 2 or fewer payment methods available.
 
 ### Connect
 * [Changed] [#66351](https://github.com/stripe/stripe-ios/pull/6351) Theming tokens in connect embedded components is now GA.
