@@ -114,6 +114,44 @@ final class PlaygroundConfiguration {
         }
     }
 
+    // MARK: - Link Brand
+
+    enum LinkBrand: String, CaseIterable, Identifiable, Hashable {
+        case link = "link"
+        case notlink = "notlink"
+
+        var id: String {
+            return rawValue
+        }
+
+        var displayName: String {
+            switch self {
+            case .link:
+                return "Link"
+            case .notlink:
+                return "Not Link"
+            }
+        }
+    }
+
+    private static let linkBrandKey = "link_brand"
+
+    var linkBrand: LinkBrand {
+        get {
+            if
+                let linkBrandString = configurationStore[Self.linkBrandKey] as? String,
+                let linkBrand = LinkBrand(rawValue: linkBrandString)
+            {
+                return linkBrand
+            } else {
+                return .link
+            }
+        }
+        set {
+            configurationStore[Self.linkBrandKey] = newValue.rawValue
+        }
+    }
+
     // MARK: - SDK Type
 
     enum SDKType: String, CaseIterable, Identifiable, Hashable {
@@ -561,6 +599,15 @@ final class PlaygroundConfiguration {
             self.experience = experience
         } else {
             self.experience = .financialConnections
+        }
+
+        if
+            let linkBrandString = dictionary[Self.linkBrandKey] as? String,
+            let linkBrand = LinkBrand(rawValue: linkBrandString)
+        {
+            self.linkBrand = linkBrand
+        } else {
+            self.linkBrand = .link
         }
 
         if

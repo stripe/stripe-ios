@@ -18,16 +18,14 @@ final class PayWithLinkButtonTests: XCTestCase {
         XCTAssertEqual(header.linkBrand, .notlink)
     }
 
-    func testBrandTintsPrimaryLinkLogoAsset() {
+    func testBrandUsesDistinctPrimaryLinkLogoAsset() {
         let linkButton = PayWithLinkButton(brand: .link)
         let notlinkButton = PayWithLinkButton(brand: .notlink)
 
-        XCTAssertNil(linkButton.primaryLinkLogoTintColor)
-        XCTAssertEqual(notlinkButton.primaryLinkLogoTintColor, UIColor(red: 0.23, green: 0.74, blue: 0.66, alpha: 1.0))
         XCTAssertNotEqual(renderedPNGData(for: linkButton.primaryLinkLogoImage), renderedPNGData(for: notlinkButton.primaryLinkLogoImage))
     }
 
-    func testBrandDoesNotChangeButtonStylingOutsideLogoTint() {
+    func testBrandDoesNotChangeButtonStylingOutsideLogoImage() {
         let linkButton = PayWithLinkButton(brand: .link)
         let notlinkButton = PayWithLinkButton(brand: .notlink)
 

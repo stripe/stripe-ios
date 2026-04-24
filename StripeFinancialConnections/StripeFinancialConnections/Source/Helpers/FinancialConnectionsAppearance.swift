@@ -8,8 +8,14 @@
 import UIKit
 
 struct FinancialConnectionsAppearance: Equatable {
-    static let stripe: Self = .init(from: .light)
-    static let link: Self = .init(from: .linkLight)
+    static let stripe: Self = .init(theme: .light)
+    static let link: Self = .init(theme: .linkLight)
+
+    private enum ResolvedBrand: Equatable {
+        case stripe
+        case link
+        case notlink
+    }
 
     struct Colors: Equatable {
         // Some colors are static, and don't depend on the manifest's theme.
@@ -31,7 +37,6 @@ struct FinancialConnectionsAppearance: Equatable {
         let primaryAccent: UIColor
         let textAction: UIColor
         let textFieldFocused: UIColor
-        let logo: UIColor
         let iconTint: UIColor
         let iconBackground: UIColor
         let spinner: UIColor
@@ -40,15 +45,77 @@ struct FinancialConnectionsAppearance: Equatable {
 
     let colors: Colors
     let logo: Image
+    let logoTintColor: UIColor
 
-    init(from theme: FinancialConnectionsSessionManifest.Theme?) {
+    init(
+        theme: FinancialConnectionsSessionManifest.Theme?,
+        brand: FinancialConnectionsSessionManifest.Brand? = nil
+    ) {
+        let resolvedBrand = Self.resolveBrand(theme: theme, brand: brand)
+
         switch theme {
         case .linkLight:
             self.colors = .link
-            self.logo = .link_logo
         case .light, .dashboardLight, .unparsable, .none:
             self.colors = .stripe
+        }
+
+        switch resolvedBrand {
+        case .stripe:
             self.logo = .stripe_logo
+            self.logoTintColor = Self.stripeLogoTintColor(for: theme)
+        case .link:
+            self.logo = .link_logo
+            self.logoTintColor = Self.linkLogoTintColor(for: theme)
+        case .notlink:
+            self.logo = .notlink_logo
+            self.logoTintColor = .notlinkLogo
+        }
+    }
+
+    private static func resolveBrand(
+        theme: FinancialConnectionsSessionManifest.Theme?,
+        brand: FinancialConnectionsSessionManifest.Brand?
+    ) -> ResolvedBrand {
+        switch PresentationManager.shared.configuration.linkBrand {
+        case .link:
+            return .link
+        case .notlink:
+            return .notlink
+        case .none:
+            break
+        }
+
+        switch brand {
+        case .link:
+            return .link
+        case .notlink:
+            return .notlink
+        case .unparsable, .none:
+            switch theme {
+            case .linkLight:
+                return .link
+            case .light, .dashboardLight, .unparsable, .none:
+                return .stripe
+            }
+        }
+    }
+
+    private static func stripeLogoTintColor(for theme: FinancialConnectionsSessionManifest.Theme?) -> UIColor {
+        switch theme {
+        case .linkLight:
+            return .linkLogo
+        case .light, .dashboardLight, .unparsable, .none:
+            return .stripeLogo
+        }
+    }
+
+    private static func linkLogoTintColor(for theme: FinancialConnectionsSessionManifest.Theme?) -> UIColor {
+        switch theme {
+        case .linkLight:
+            return .linkLogo
+        case .light, .dashboardLight, .unparsable, .none:
+            return .stripeLogo
         }
     }
 }
@@ -59,7 +126,6 @@ extension FinancialConnectionsAppearance.Colors {
         primaryAccent: .neutral0,
         textAction: .dynamic(light: .brand600, dark: .brand500),
         textFieldFocused: .brand600,
-        logo: .dynamic(light: .brand600, dark: .neutral0),
         iconTint: .brand500,
         iconBackground: .dynamic(light: .brand25, dark: .brand25Dark),
         spinner: .brand500,
@@ -71,7 +137,6 @@ extension FinancialConnectionsAppearance.Colors {
         primaryAccent: .linkGreen900,
         textAction: .dynamic(light: .linkGreen500, dark: .linkGreen200),
         textFieldFocused: .linkGreen200,
-        logo: .dynamic(light: .linkGreen900, dark: .neutral0),
         iconTint: .linkGreen500,
         iconBackground: .dynamic(light: .linkGreen50, dark: .linkGreen50Dark),
         spinner: .linkGreen200,
@@ -81,6 +146,13 @@ extension FinancialConnectionsAppearance.Colors {
 
 // MARK: - Raw colors
 private extension UIColor {
+    static let stripeLogo: UIColor = .dynamic(light: .brand600, dark: .neutral0)
+    static let linkLogo: UIColor = .dynamic(light: .linkGreen900, dark: .neutral0)
+    static let notlinkLogo: UIColor = .dynamic(
+        light: UIColor(red: 0.23, green: 0.74, blue: 0.66, alpha: 1.0),
+        dark: .neutral0
+    )
+
     // MARK: Neutral
     static var neutral0: UIColor {
         return UIColor(red: 255 / 255.0, green: 255 / 255.0, blue: 255 / 255.0, alpha: 1) // #ffffff
