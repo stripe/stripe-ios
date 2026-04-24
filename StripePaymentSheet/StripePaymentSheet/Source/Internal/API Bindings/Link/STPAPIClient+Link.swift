@@ -463,7 +463,7 @@ extension STPAPIClient {
 
     func listPaymentDetails(
         for consumerSessionClientSecret: String,
-        supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
+        supportedPaymentDetailsTypes: [ParsedEnum<ConsumerPaymentDetails.DetailsType>],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {

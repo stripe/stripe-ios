@@ -529,7 +529,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                 analyticsClient: analyticsClient
             )
             sut.intent = ._testValue()
-            sut.elementsSession = ._testValue(paymentMethodTypes: ["card"], externalPaymentMethodTypes: [], linkMode: .linkCardBrand, linkFundingSources: [.card], linkUseAttestation: true, linkSuppress2FA: true)
+            sut.elementsSession = ._testValue(paymentMethodTypes: ["card"], externalPaymentMethodTypes: [], linkMode: .linkCardBrand, linkFundingSources: [ParsedEnum(.card)], linkUseAttestation: true, linkSuppress2FA: true)
             sut.logPayment(
                 paymentOption: paymentOption,
                 result: result,
