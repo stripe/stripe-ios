@@ -204,7 +204,6 @@ final class PaymentSheetLoader {
                 paymentMethodTypes: paymentMethodTypes
             )
             let confirmationChallenge = ConfirmationChallenge(
-                enableAttestation: configuration.enableAttestationOnConfirmation,
                 elementsSession: elementsSession,
                 stripeAttest: configuration.apiClient.stripeAttest
             )

@@ -156,13 +156,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
-    enum EnableAttestationOnConfirmation: String, PickerEnum {
-        static var enumName: String { "Enable attestation on confirmation" }
-
-        case on
-        case off
-    }
-
     enum OpensCardScannerAutomatically: String, PickerEnum {
         static let enumName: String = "opensCardScannerAutomatically"
         case on
@@ -176,7 +169,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var applePay: ApplePay
     var headerTextForSelectionScreen: String?
     var defaultBillingAddress: DefaultBillingAddress
-    var enableAttestationOnConfirmation: EnableAttestationOnConfirmation
     var autoreload: Autoreload
 
     var attachDefaults: BillingDetailsAttachDefaults
@@ -206,7 +198,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    applePay: .on,
                                                    headerTextForSelectionScreen: nil,
                                                    defaultBillingAddress: .off,
-                                                   enableAttestationOnConfirmation: .on,
                                                    autoreload: .on,
                                                    attachDefaults: .off,
                                                    collectName: .automatic,

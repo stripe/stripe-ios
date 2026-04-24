@@ -46,7 +46,6 @@ struct PaymentSheetTestPlayground: View {
                     .textInputAutocapitalization(.never)
             }
         }
-        SearchableSettingView(setting: $playgroundController.settings.enableAttestationOnConfirmation, searchText: searchText)
         Group {
             if playgroundController.settings.merchantCountryCode == .US {
                 SearchableSettingView(setting: linkEnabledModeBinding, searchText: searchText)
