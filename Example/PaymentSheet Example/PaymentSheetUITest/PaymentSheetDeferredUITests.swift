@@ -30,12 +30,14 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         // two wallet pms and 3 in the carousel
         XCTAssertEqual(
             (initialDisplayedPaymentMethodsEvent.map { $0["visible_payment_methods"] } as? [String])?.count,
-            4
+            5,
+            "Expected Apple Pay + Link plus 3 fully visible carousel payment methods."
         )
         // the rest are hidden
         XCTAssertEqual(
             (initialDisplayedPaymentMethodsEvent.map { $0["hidden_payment_methods"] } as? [String])?.count,
-            7
+            6,
+            "Expected the remaining payment methods to stay off-screen in the horizontal carousel."
         )
         XCTAssertEqual(
             initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_layout"] },
