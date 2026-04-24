@@ -89,7 +89,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
 
         sut.paymentSheetLinkAccountDelegate = PaymentSheetLinkAccountDelegateStub(expectation: refreshExp)
         // List the payment details. This will fail, refresh the token, then succeed.
-        sut.listPaymentDetails(supportedTypes: [.card, .bankAccount]) { result in
+        sut.listPaymentDetails(supportedTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)]) { result in
             switch result {
             case .success:
                 listedPaymentDetailsExp.fulfill()
@@ -108,7 +108,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
             unredactedPhoneNumber: nil,
             phoneNumberCountry: nil,
             verificationSessions: [],
-            supportedPaymentDetailsTypes: [.card],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
             mobileFallbackWebviewParams: nil,
             currentAuthenticationLevel: .oneFactorAuth,
             minimumAuthenticationLevel: .oneFactorAuth
@@ -124,7 +124,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
             unredactedPhoneNumber: nil,
             phoneNumberCountry: nil,
             verificationSessions: [],
-            supportedPaymentDetailsTypes: [.card],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
             mobileFallbackWebviewParams: nil,
             currentAuthenticationLevel: .notAuthenticated,
             minimumAuthenticationLevel: .oneFactorAuth
@@ -162,7 +162,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
 
         // List the payment details. This will fail, refresh the token, then succeed.
         sut.listPaymentDetails(
-            supportedTypes: [.card, .bankAccount],
+            supportedTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             shouldRetryOnAuthError: false
         ) { result in
             switch result {
@@ -192,7 +192,7 @@ class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {
             unredactedPhoneNumber: "(555) 555-5555",
             phoneNumberCountry: "US",
             verificationSessions: [],
-            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             mobileFallbackWebviewParams: nil
         )
         completion(.success(stubSession))
@@ -233,4 +233,57 @@ extension PaymentSheetLinkAccountTests {
         )
     }
 
+}
+
+// MARK: - FundingSource.detailsType mapping tests
+
+final class FundingSourceDetailsTypeMappingTests: XCTestCase {
+
+    func test_card_mapsToCardDetailsType() {
+        let fundingSource = ParsedEnum(LinkSettings.FundingSource.card)
+        XCTAssertEqual(fundingSource.detailsType, ParsedEnum(.card))
+        XCTAssertEqual(fundingSource.detailsType.value, .card)
+    }
+
+    func test_bankAccount_mapsToBankAccountDetailsType() {
+        let fundingSource = ParsedEnum(LinkSettings.FundingSource.bankAccount)
+        XCTAssertEqual(fundingSource.detailsType, ParsedEnum(.bankAccount))
+        XCTAssertEqual(fundingSource.detailsType.value, .bankAccount)
+    }
+
+    func test_unknownType_transfersRawValue() {
+        let fundingSource = ParsedEnum<LinkSettings.FundingSource>(rawValue: "PIX")
+        let detailsType = fundingSource.detailsType
+        XCTAssertNil(detailsType.value, "Unknown funding source should produce an unparsed details type")
+        XCTAssertEqual(detailsType.rawValue, "PIX", "Raw value should be preserved for unknown types")
+    }
+
+    func test_unknownType_appearsInIntersectionWhenConsumerSessionAlsoAdvertisesIt() {
+        // If both the funding sources and the consumer session advertise an unknown type,
+        // it should survive the intersection even though neither side can parse it.
+        let fundingSourceDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [
+            ParsedEnum(rawValue: "PIX"),
+            ParsedEnum(.card),
+        ]
+        let sessionTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [
+            ParsedEnum(rawValue: "PIX"),
+        ]
+        let supported = fundingSourceDetailsTypes.intersection(sessionTypes)
+        XCTAssertEqual(supported.count, 1)
+        XCTAssertEqual(supported.first?.rawValue, "PIX")
+        XCTAssertNil(supported.first?.value)
+    }
+
+    func test_unknownType_isExcludedFromIntersectionWhenSessionDoesNotAdvertiseIt() {
+        let fundingSourceDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [
+            ParsedEnum(rawValue: "PIX"),
+            ParsedEnum(.card),
+        ]
+        let sessionTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [
+            ParsedEnum(.card),
+        ]
+        let supported = fundingSourceDetailsTypes.intersection(sessionTypes)
+        XCTAssertEqual(supported.count, 1)
+        XCTAssertEqual(supported.first?.value, .card)
+    }
 }
