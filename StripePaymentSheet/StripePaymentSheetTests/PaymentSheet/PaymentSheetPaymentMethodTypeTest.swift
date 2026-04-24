@@ -383,7 +383,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: ._testValue(
                 intent: intent,
                 linkMode: .linkCardBrand,
-                linkFundingSources: [.card, .bankAccount],
+                linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
                 linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
             ),
             configuration: configuration
@@ -402,7 +402,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: ._testValue(
                 intent: intent,
                 linkMode: .linkCardBrand,
-                linkFundingSources: [.card, .bankAccount]
+                linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)]
             ),
             configuration: configuration
         )
@@ -418,7 +418,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card, .bankAccount],
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
         )
 
@@ -436,7 +436,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkCardBrand,
-            linkFundingSources: [.card, .bankAccount],
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"]
         )
 
@@ -461,7 +461,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card, .bankAccount],
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
         )
 
@@ -482,7 +482,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card, .bankAccount],
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
         )
 
@@ -509,7 +509,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card],
+            linkFundingSources: [ParsedEnum(.card)],
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"]
         )
 
@@ -540,7 +540,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card]
+            linkFundingSources: [ParsedEnum(.card)]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
@@ -559,7 +559,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card]
+            linkFundingSources: [ParsedEnum(.card)]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
@@ -577,7 +577,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card]
+            linkFundingSources: [ParsedEnum(.card)]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
@@ -598,7 +598,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card, .bankAccount]
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
@@ -621,7 +621,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkCardBrand,
-            linkFundingSources: [.card, .bankAccount],
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
         )
 
@@ -639,7 +639,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkCardBrand,
-            linkFundingSources: [.card, .bankAccount],
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"]
         )
 
@@ -664,7 +664,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card, .bankAccount]
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
@@ -684,7 +684,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkCardBrand,
-            linkFundingSources: [.card, .bankAccount],
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD", "INSTANT_DEBITS"]
         )
 
@@ -711,7 +711,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkCardBrand,
-            linkFundingSources: [.card],
+            linkFundingSources: [ParsedEnum(.card)],
             linkSupportedPaymentMethodsOnboardingEnabled: ["CARD"]
         )
 
@@ -742,7 +742,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card]
+            linkFundingSources: [ParsedEnum(.card)]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
@@ -761,7 +761,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkCardBrand,
-            linkFundingSources: [.card, .bankAccount]
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsInstantBankPayments(
@@ -779,7 +779,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkCardBrand,
-            linkFundingSources: [.card]
+            linkFundingSources: [ParsedEnum(.card)]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
@@ -800,7 +800,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         let elementsSession = STPElementsSession._testValue(
             intent: intent,
             linkMode: .linkPaymentMethod,
-            linkFundingSources: [.card, .bankAccount]
+            linkFundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)]
         )
 
         let availability = PaymentSheet.PaymentMethodType.supportsLinkCardIntegration(
