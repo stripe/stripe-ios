@@ -20,7 +20,7 @@ extension STPAPIClient {
         clientDefaultPaymentMethod: String?,
         customerAccessProvider: PaymentSheet.CustomerAccessProvider?,
         linkDisallowFundingSourceCreation: Set<String>,
-        linkBrand: LinkSettings.Brand? = nil,
+        linkBrand: LinkBrand? = nil,
         userOverrideCountry: String? = nil
     ) -> [String: Any] {
         var parameters: [String: Any] = [

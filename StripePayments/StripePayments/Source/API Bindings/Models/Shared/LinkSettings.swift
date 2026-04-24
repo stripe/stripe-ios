@@ -28,12 +28,7 @@ import Foundation
         case none = "NONE"
     }
 
-    @_spi(STP) @frozen public enum Brand: String {
-        case link = "link"
-        case notlink = "onelink"
-    }
-
-    @_spi(STP) public let brand: Brand
+    @_spi(STP) public let brand: LinkBrand
     @_spi(STP) public let fundingSources: Set<FundingSource>
     @_spi(STP) public let popupWebviewOption: PopupWebviewOption?
     @_spi(STP) public let passthroughModeEnabled: Bool?
@@ -57,7 +52,7 @@ import Foundation
     }
 
     @_spi(STP) public init(
-        brand: Brand,
+        brand: LinkBrand,
         fundingSources: Set<FundingSource>,
         popupWebviewOption: PopupWebviewOption?,
         passthroughModeEnabled: Bool?,
@@ -106,7 +101,7 @@ import Foundation
 
         // Server may send down funding sources we haven't implemented yet, so we'll just ignore any unknown sources
         let brandString = response["link_brand"] as? String
-        let brand: Brand = (brandString == "onelink") ? .notlink : .link
+        let brand: LinkBrand = (brandString == "onelink") ? .notlink : .link
         let validFundingSources = Set(fundingSourcesStrings.compactMap(FundingSource.init))
 
         let webviewOption = PopupWebviewOption(rawValue: response["link_popup_webview_option"] as? String ?? "")

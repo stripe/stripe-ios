@@ -4,6 +4,7 @@
 //
 
 import StripeCoreTestUtils
+@testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePaymentSheet
 import UIKit
 
@@ -53,7 +54,7 @@ private extension PayWithLinkButtonSnapshotTests {
         )
     }
 
-    func makeSUT(brand: LinkSettings.Brand = .link) -> PayWithLinkButton {
+    func makeSUT(brand: LinkBrand = .link) -> PayWithLinkButton {
         PayWithLinkButton(brand: brand)
     }
 }

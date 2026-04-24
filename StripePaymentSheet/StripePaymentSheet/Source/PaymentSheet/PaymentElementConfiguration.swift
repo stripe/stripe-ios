@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
@@ -49,7 +50,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
 }
 
 extension PaymentElementConfiguration {
-    func resolvedLinkBrand(elementsSession: STPElementsSession? = nil) -> LinkSettings.Brand {
+    func resolvedLinkBrand(elementsSession: STPElementsSession? = nil) -> LinkBrand {
         link.brand ?? elementsSession?.linkBrand ?? .link
     }
 

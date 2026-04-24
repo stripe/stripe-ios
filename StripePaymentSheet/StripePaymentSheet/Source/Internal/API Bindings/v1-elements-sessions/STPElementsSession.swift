@@ -362,7 +362,7 @@ extension STPElementsSession {
         linkSettings?.linkMode == .linkCardBrand
     }
 
-    var linkBrand: LinkSettings.Brand? {
+    var linkBrand: LinkBrand? {
         linkSettings?.brand
     }
 

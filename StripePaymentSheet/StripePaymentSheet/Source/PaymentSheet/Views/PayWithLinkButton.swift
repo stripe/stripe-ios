@@ -44,7 +44,7 @@ final class PayWithLinkButton: UIControl {
         }
     }
 
-    let brand: LinkSettings.Brand
+    let brand: LinkBrand
 
     var primaryLinkLogoTintColor: UIColor? {
         switch brand {
@@ -233,7 +233,7 @@ final class PayWithLinkButton: UIControl {
         return .noValidAccount
     }
 
-    init(brand: LinkSettings.Brand = .link) {
+    init(brand: LinkBrand = .link) {
         self.brand = brand
         super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
         isAccessibilityElement = true

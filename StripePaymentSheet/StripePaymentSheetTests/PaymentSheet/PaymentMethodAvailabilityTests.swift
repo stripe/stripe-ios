@@ -5,6 +5,7 @@
 //  Created by Nick Porter on 1/22/25.
 //
 
+@testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
@@ -187,7 +188,7 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
 
 extension LinkSettings {
     static func _testValue(
-        brand: LinkSettings.Brand = .link,
+        brand: LinkBrand = .link,
         disableSignup: Bool = false,
         flags: [String: Bool]? = nil,
         linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
