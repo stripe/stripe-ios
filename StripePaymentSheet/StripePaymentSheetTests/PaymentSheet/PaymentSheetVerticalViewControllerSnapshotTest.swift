@@ -283,10 +283,10 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
         }
         // When loaded with US Bank (an example PM)...
         let loadResult = PaymentSheetLoader.LoadResult(
-            intent: ._testDeferredIntent(paymentMethodTypes: [.card, .cashApp], setupFutureUsage: .offSession),
-            elementsSession: ._testValue(paymentMethodTypes: ["card", "cashapp"], isLinkPassthroughModeEnabled: false),
+            intent: ._testDeferredIntent(paymentMethodTypes: [.USBankAccount, .cashApp], setupFutureUsage: .offSession),
+            elementsSession: ._testValue(paymentMethodTypes: ["us_bank_account", "cashapp"], isLinkPassthroughModeEnabled: false),
             savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.card), .stripe(.cashApp)]
+            paymentMethodTypes: [.stripe(.USBankAccount), .stripe(.cashApp)]
         )
         var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)
         configuration.paymentMethodLayout = .vertical
