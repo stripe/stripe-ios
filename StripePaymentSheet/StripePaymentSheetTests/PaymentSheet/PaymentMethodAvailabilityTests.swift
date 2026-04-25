@@ -9,6 +9,24 @@
 import XCTest
 
 final class PaymentMethodAvailabilityTests: XCTestCase {
+    func testResolvedLinkBrand_usesElementsSessionBrand() {
+        let elementsSession = STPElementsSession._testValue(
+            linkSettings: ._testValue(brand: .notlink)
+        )
+        let configuration = PaymentSheet.Configuration()
+
+        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .notlink)
+    }
+
+    func testResolvedLinkBrand_prefersConfigurationOverride() {
+        let elementsSession = STPElementsSession._testValue(
+            linkSettings: ._testValue(brand: .link)
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(brand: .notlink)
+
+        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .notlink)
+    }
 
     func testIsLinkEnabled_supportsLinkFalse_linkNotPresent() {
         let elementsSession = STPElementsSession._testValue(
@@ -169,12 +187,14 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
 
 extension LinkSettings {
     static func _testValue(
+        brand: LinkSettings.Brand = .link,
         disableSignup: Bool = false,
         flags: [String: Bool]? = nil,
         linkSupportedPaymentMethodsOnboardingEnabled: [String] = ["CARD"]
     ) -> LinkSettings {
         return .init(
-            fundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
+            brand: brand,
+            fundingSources: [.card, .bankAccount],
             popupWebviewOption: nil,
             passthroughModeEnabled: true,
             disableSignup: disableSignup,

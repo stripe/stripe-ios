@@ -70,6 +70,12 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case unparsable
     }
 
+    enum Brand: String, SafeEnumCodable, Equatable {
+        case link = "link"
+        case notlink = "notlink"
+        case unparsable
+    }
+
     // MARK: - Properties
 
     let accountholderCustomerEmailAddress: String?
@@ -82,6 +88,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let allowManualEntry: Bool
     let appVerificationEnabled: Bool?
     let assignmentEventId: String?
+    let brand: Brand?
     let businessName: String?
     let cancelUrl: String?
     let consentAcquiredAt: String?
@@ -113,7 +120,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let theme: Theme?
 
     var appearance: FinancialConnectionsAppearance {
-        FinancialConnectionsAppearance(from: theme)
+        FinancialConnectionsAppearance(theme: theme, brand: brand)
     }
 
     var shouldAttachLinkedPaymentMethod: Bool {
@@ -147,6 +154,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         allowManualEntry: Bool,
         appVerificationEnabled: Bool? = nil,
         assignmentEventId: String? = nil,
+        brand: Brand? = nil,
         businessName: String? = nil,
         cancelUrl: String? = nil,
         consentAcquiredAt: String? = nil,
@@ -187,6 +195,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         self.allowManualEntry = allowManualEntry
         self.appVerificationEnabled = appVerificationEnabled
         self.assignmentEventId = assignmentEventId
+        self.brand = brand
         self.businessName = businessName
         self.cancelUrl = cancelUrl
         self.consentRequired = consentRequired

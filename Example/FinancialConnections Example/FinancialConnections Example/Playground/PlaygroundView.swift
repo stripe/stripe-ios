@@ -127,6 +127,22 @@ struct PlaygroundView: View {
                             }
                             .pickerStyle(.segmented)
                         }
+
+                        if viewModel.integrationType.wrappedValue == .standalone
+                            && viewModel.experience.wrappedValue == .instantBankPayment
+                            && viewModel.sdkType.wrappedValue != .fcLite {
+                            HStack {
+                                Text("Link brand")
+                                    .font(.subheadline)
+                                Picker("Link brand", selection: viewModel.linkBrand) {
+                                    ForEach(PlaygroundConfiguration.LinkBrand.allCases) {
+                                        Text($0.displayName)
+                                            .tag($0)
+                                    }
+                                }
+                                .pickerStyle(.segmented)
+                            }
+                        }
                     }
 
                     Section(header: Text("Relink")) {
