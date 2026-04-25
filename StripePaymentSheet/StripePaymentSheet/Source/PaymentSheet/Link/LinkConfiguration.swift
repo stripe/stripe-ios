@@ -6,7 +6,6 @@
 //
 
 import Foundation
-@_spi(STP) import StripePayments
 
 /// Injectible configuration for Link behavior and content.
 @_spi(STP)
@@ -18,17 +17,12 @@ public struct LinkConfiguration {
     /// Whether to allow the user to log out. When `false`, the logout menu button will be hidden.
     public let allowLogout: Bool
 
-    /// The brand to use for Link. Expected values are `.link` or `.notlink`.
-    public let brand: LinkSettings.Brand?
-
     /// Creates a new instance of `LinkConfiguration`.
     /// - Parameters:
     ///   - hintMessage: Custom hint message to display in the wallet view. If `nil`, no hint will be shown.
     ///   - allowLogout: Whether to allow the user to log out. When `false`, the logout menu button will be hidden. Defaults to `true`.
-    ///   - brand: The brand to use for Link. Expected values are `.link` or `.notlink`. Defaults to `nil`.
-    public init(hintMessage: String? = nil, allowLogout: Bool = true, brand: LinkSettings.Brand? = nil) {
+    public init(hintMessage: String? = nil, allowLogout: Bool = true) {
         self.hintMessage = hintMessage
         self.allowLogout = allowLogout
-        self.brand = brand
     }
 }
