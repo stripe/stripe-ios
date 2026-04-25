@@ -114,6 +114,19 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
         verify(picker)
     }
 
+    func testUnknownPaymentMethodWithDisplayMetadata() {
+        let paymentMethods = LinkStubs.paymentMethods()
+        let mockDataSource = MockDataSource(paymentMethods: paymentMethods)
+        mockDataSource.selectedIndex = LinkStubs.PaymentMethodIndices.unknownWithDisplay
+
+        let picker = LinkPaymentMethodPicker()
+        picker.dataSource = mockDataSource
+        picker.layoutSubviews()
+        picker.setExpanded(true, animated: false)
+
+        verify(picker)
+    }
+
     func testLongerEmail() {
         let mockDataSource = MockDataSource(
             paymentMethods: [],

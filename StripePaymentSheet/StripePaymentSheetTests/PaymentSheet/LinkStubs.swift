@@ -24,6 +24,7 @@ extension LinkStubs {
         static let cardWithFailingChecks = 1
         static let bankAccount = 2
         static let expiredCard = 3
+        static let unknownWithDisplay = 4
         static let notExisting = -1
     }
 
@@ -85,10 +86,19 @@ extension LinkStubs {
                 nickname: "Patrick's card",
                 isDefault: false
             ),
+            ConsumerPaymentDetails(
+                stripeID: "5",
+                details: .unparsable(rawValue: "CRYPTO"),
+                billingAddress: nil,
+                billingEmailAddress: nil,
+                nickname: nil,
+                display: .init(label: "Stablecoin", sublabel: "Wallet •••2", icon: nil),
+                isDefault: false
+            ),
         ]
     }
 
-    static func consumerSession(supportedPaymentDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [ParsedEnum(.card), ParsedEnum(.bankAccount)]) -> ConsumerSession {
+    static func consumerSession(supportedPaymentDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [ParsedEnum(.card), ParsedEnum(.bankAccount), ParsedEnum(rawValue: "CRYPTO")]) -> ConsumerSession {
         return ConsumerSession(
             clientSecret: "client_secret",
             emailAddress: "user@example.com",
