@@ -183,12 +183,31 @@ class RotatingCardBrandsView: UIView {
             stackView.spacing = Self.LogoSpacing
             stackView.alignment = .center
             self.stackView = stackView
+            updateAccessibilityLabel()
         }
+    }
+
+    private func updateAccessibilityLabel() {
+        let brandNames = cardBrands.compactMap { STPCardBrandUtilities.stringFrom($0) }
+            .filter { $0 != "Unknown" }
+        guard !brandNames.isEmpty else {
+            accessibilityLabel = nil
+            return
+        }
+        let joinedNames: String
+        if brandNames.count == 1 {
+            joinedNames = brandNames[0]
+        } else {
+            let allButLast = brandNames.dropLast().joined(separator: ", ")
+            joinedNames = "\(allButLast), and \(brandNames.last!)"
+        }
+        accessibilityLabel = .Localized.supported_cards(brandNames: joinedNames)
     }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         isUserInteractionEnabled = false
+        isAccessibilityElement = true
     }
 
     required init?(coder: NSCoder) {
