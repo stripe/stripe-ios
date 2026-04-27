@@ -428,7 +428,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 appearance: appearance,
                 from: viewController,
                 onConfirm: { [apiClient] in
-                    _ = try await apiClient.confirmCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
+                    try await apiClient.confirmCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
                 }
             ) {
             case .confirmed:
