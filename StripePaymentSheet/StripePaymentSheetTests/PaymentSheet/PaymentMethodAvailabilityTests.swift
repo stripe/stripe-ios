@@ -195,7 +195,7 @@ extension LinkSettings {
     ) -> LinkSettings {
         return .init(
             brand: brand,
-            fundingSources: [.card, .bankAccount],
+            fundingSources: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             popupWebviewOption: nil,
             passthroughModeEnabled: true,
             disableSignup: disableSignup,
