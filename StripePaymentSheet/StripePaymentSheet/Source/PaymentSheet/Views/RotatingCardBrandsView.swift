@@ -194,14 +194,13 @@ class RotatingCardBrandsView: UIView {
             accessibilityLabel = nil
             return
         }
-        let joinedNames: String
         if brandNames.count == 1 {
-            joinedNames = brandNames[0]
+            accessibilityLabel = .Localized.card_brand(brandName: brandNames[0])
         } else {
             let allButLast = brandNames.dropLast().joined(separator: ", ")
-            joinedNames = "\(allButLast), and \(brandNames.last!)"
+            let joinedNames = "\(allButLast), and \(brandNames.last!)"
+            accessibilityLabel = .Localized.supported_cards(brandNames: joinedNames)
         }
-        accessibilityLabel = .Localized.supported_cards(brandNames: joinedNames)
     }
 
     override init(frame: CGRect) {
