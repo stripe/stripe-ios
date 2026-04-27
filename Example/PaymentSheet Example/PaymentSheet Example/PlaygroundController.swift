@@ -140,9 +140,13 @@ import UIKit
 
         switch settings.linkDisplay {
         case .automatic:
-            return PaymentSheet.LinkConfiguration(display: .automatic, brand: brand)
+            var config = PaymentSheet.LinkConfiguration(display: .automatic)
+            config.brand = brand
+            return config
         case .never:
-            return PaymentSheet.LinkConfiguration(display: .never, brand: brand)
+            var config = PaymentSheet.LinkConfiguration(display: .never)
+            config.brand = brand
+            return config
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
