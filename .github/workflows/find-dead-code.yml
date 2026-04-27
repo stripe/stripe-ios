@@ -21,7 +21,14 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_16.4.app/Contents/Developer
 
       - name: Install Periphery
-        run: brew install periphery
+        env:
+          # Pinned to avoid regressions from new releases. Periphery 3.7.3+ has a bug
+          # with mixed Swift/ObjC indexing that causes duplicate declaration conflicts.
+          PERIPHERY_VERSION: 3.6.0
+        run: |
+          curl -sL "https://github.com/peripheryapp/periphery/releases/download/${PERIPHERY_VERSION}/periphery-${PERIPHERY_VERSION}.zip" -o /tmp/periphery.zip
+          unzip -o /tmp/periphery.zip -d /tmp/periphery
+          install /tmp/periphery/periphery /usr/local/bin/periphery
 
       - name: Build project and run Periphery scan
         id: periphery-scan
