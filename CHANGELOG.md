@@ -1,8 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
 
+## 25.12.0 2026-04-27
 ### Identity
 * [Improved] Improved StripeIdentity analytics with richer error details and screen/camera context to help debug verification flows.
 
