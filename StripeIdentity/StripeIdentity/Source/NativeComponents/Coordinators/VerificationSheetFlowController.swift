@@ -132,6 +132,39 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         }
     }
 
+    func makeDocumentUploader(
+        staticContent: StripeAPI.VerificationPage,
+        sheetController: VerificationSheetControllerProtocol
+    ) -> DocumentUploader {
+        let documentUploader = DocumentUploader(
+            imageUploader: IdentityImageUploader(
+                configuration: .init(from: staticContent.documentCapture),
+                sheetController: sheetController
+            )
+        )
+        self.documentUploader = documentUploader
+        return documentUploader
+    }
+
+    func makeDocumentFileUploadViewController(
+        staticContent: StripeAPI.VerificationPage,
+        sheetController: VerificationSheetControllerProtocol,
+        documentUploader: DocumentUploaderProtocol? = nil
+    ) -> DocumentFileUploadViewController {
+        let documentUploader = documentUploader
+            ?? makeDocumentUploader(
+                staticContent: staticContent,
+                sheetController: sheetController
+            )
+
+        return DocumentFileUploadViewController(
+            requireLiveCapture: staticContent.documentCapture.requireLiveCapture,
+            sheetController: sheetController,
+            documentUploader: documentUploader,
+            availableIDTypes: staticContent.documentSelect.idDocumentTypeAllowlistKeys
+        )
+    }
+
     /// Transitions to the IndividualViewController in the flow with a 'push' animation.
     func transitionToIndividualScreen(
         staticContentResult: Result<StripeCore.StripeAPI.VerificationPage, Error>,
@@ -637,13 +670,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         sheetController: VerificationSheetControllerProtocol
     ) -> UIViewController {
         // reinitalize documentUploader with new idDocumentType each time
-        let documentUploader = DocumentUploader(
-            imageUploader: IdentityImageUploader(
-                configuration: .init(from: staticContent.documentCapture),
-                sheetController: sheetController
-            )
+        let documentUploader = makeDocumentUploader(
+            staticContent: staticContent,
+            sheetController: sheetController
         )
-        self.documentUploader = documentUploader
 
         let availableTypes = staticContent.documentSelect.idDocumentTypeAllowlistKeys
 
@@ -652,11 +682,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
             sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
 
             // Return document upload screen if we can't load models for auto-capture
-            return DocumentFileUploadViewController(
-                requireLiveCapture: staticContent.documentCapture.requireLiveCapture,
+            return makeDocumentFileUploadViewController(
+                staticContent: staticContent,
                 sheetController: sheetController,
                 documentUploader: documentUploader,
-                availableIDTypes: availableTypes
             )
 
         case .success(let anyDocumentScanner):

@@ -212,6 +212,12 @@
 /* State when identity document has been successfully scanned */
 "Scanned" = "Scanned";
 
+/* Segmented control option for live identity document capture */
+"Live" = "Live";
+
+/* Segmented control option for manual identity document upload */
+"Manual" = "Manual";
+
 /* Button to select a file to upload */
 "Select" = "Select";
 
