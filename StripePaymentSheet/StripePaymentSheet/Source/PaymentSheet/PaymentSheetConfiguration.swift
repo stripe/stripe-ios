@@ -560,6 +560,14 @@ extension PaymentSheet {
             self.display = display
         }
 
+        @_spi(STP) public init(
+            display: Display = .automatic,
+            brand: LinkSettings.Brand? = nil
+        ) {
+            self.display = display
+            self.brand = brand
+        }
+
         @_spi(CollectMissingLinkBillingDetailsPreview) public init(
             display: Display = .automatic,
             collectMissingBillingDetailsForExistingPaymentMethods: Bool = true

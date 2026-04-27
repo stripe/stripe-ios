@@ -143,8 +143,6 @@ struct FinancialConnectionsSessionManifest: Decodable {
         !consentRequired || consentAcquiredAt != nil
     }
 
-#if DEBUG
-    // periphery:ignore
     init(
         accountholderCustomerEmailAddress: String? = nil,
         accountholderIsLinkConsumer: Bool? = nil,
@@ -228,5 +226,4 @@ struct FinancialConnectionsSessionManifest: Decodable {
         self.successUrl = successUrl
         self.theme = theme
     }
-#endif
 }

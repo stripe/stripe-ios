@@ -41,28 +41,6 @@ struct FinancialConnectionsAppearance: Equatable {
         let iconBackground: UIColor
         let spinner: UIColor
         let border: UIColor
-
-        static let stripe: FinancialConnectionsAppearance.Colors = .init(
-            primary: .brand500,
-            primaryAccent: .neutral0,
-            textAction: .dynamic(light: .brand600, dark: .brand500),
-            textFieldFocused: .brand600,
-            iconTint: .brand500,
-            iconBackground: .dynamic(light: .brand25, dark: .brand25Dark),
-            spinner: .brand500,
-            border: .brand600
-        )
-
-        static let link: FinancialConnectionsAppearance.Colors = .init(
-            primary: .linkGreen200,
-            primaryAccent: .linkGreen900,
-            textAction: .dynamic(light: .linkGreen500, dark: .linkGreen200),
-            textFieldFocused: .linkGreen200,
-            iconTint: .linkGreen500,
-            iconBackground: .dynamic(light: .linkGreen50, dark: .linkGreen50Dark),
-            spinner: .linkGreen200,
-            border: .linkGreen200
-        )
     }
 
     let colors: Colors
@@ -140,6 +118,30 @@ struct FinancialConnectionsAppearance: Equatable {
             return .stripeLogo
         }
     }
+}
+
+extension FinancialConnectionsAppearance.Colors {
+    static let stripe: FinancialConnectionsAppearance.Colors = .init(
+        primary: .brand500,
+        primaryAccent: .neutral0,
+        textAction: .dynamic(light: .brand600, dark: .brand500),
+        textFieldFocused: .brand600,
+        iconTint: .brand500,
+        iconBackground: .dynamic(light: .brand25, dark: .brand25Dark),
+        spinner: .brand500,
+        border: .brand600
+    )
+
+    static let link: FinancialConnectionsAppearance.Colors = .init(
+        primary: .linkGreen200,
+        primaryAccent: .linkGreen900,
+        textAction: .dynamic(light: .linkGreen500, dark: .linkGreen200),
+        textFieldFocused: .linkGreen200,
+        iconTint: .linkGreen500,
+        iconBackground: .dynamic(light: .linkGreen50, dark: .linkGreen50Dark),
+        spinner: .linkGreen200,
+        border: .linkGreen200
+    )
 }
 
 // MARK: - Raw colors
