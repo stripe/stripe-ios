@@ -646,7 +646,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
             currency: "USD",
             intentPaymentMethodType: .card,
-            linkFundingSources: [.card],
+            linkFundingSources: [ParsedEnum(.card)],
             makeLinkPaymentMethod: { apiClient in
                 let params = STPPaymentMethodParams._testCardValue(email: "paymentsheet-link-card-confirm-flows@example.com")
                 params.card?.expMonth = 12
@@ -668,7 +668,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage],
             currency: "USD",
             intentPaymentMethodType: .USBankAccount,
-            linkFundingSources: [.bankAccount],
+            linkFundingSources: [ParsedEnum(.bankAccount)],
             makeLinkPaymentMethod: { apiClient in
                 try await apiClient.createPaymentMethod(
                     with: ._testUSBankAccountValue(
@@ -1440,7 +1440,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         amount: Int? = nil,
         intentPaymentMethodType: STPPaymentMethodType,
         merchantCountry: MerchantCountry = .US,
-        linkFundingSources: Set<LinkSettings.FundingSource>,
+        linkFundingSources: Set<ParsedEnum<LinkSettings.FundingSource>>,
         makeLinkPaymentMethod: (STPAPIClient) async throws -> STPPaymentMethod
     ) async throws {
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:

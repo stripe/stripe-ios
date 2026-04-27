@@ -352,7 +352,7 @@ struct LinkPMDisplayDetails {
     }
 
     func listPaymentDetails(
-        supportedTypes: [ConsumerPaymentDetails.DetailsType],
+        supportedTypes: [ParsedEnum<ConsumerPaymentDetails.DetailsType>],
         shouldRetryOnAuthError: Bool = true
     ) async throws -> [ConsumerPaymentDetails] {
         return try await withCheckedThrowingContinuation { continuation in
@@ -371,7 +371,7 @@ struct LinkPMDisplayDetails {
     }
 
     func listPaymentDetails(
-        supportedTypes: [ConsumerPaymentDetails.DetailsType],
+        supportedTypes: [ParsedEnum<ConsumerPaymentDetails.DetailsType>],
         shouldRetryOnAuthError: Bool = true,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {
@@ -653,12 +653,12 @@ extension PaymentSheetLinkAccount {
     /// Returns a set containing the Payment Details types that the user is able to use for confirming the given `intent`.
     /// - Parameter intent: The Intent that the user is trying to confirm.
     /// - Returns: A set containing the supported Payment Details types.
-    func supportedPaymentDetailsTypes(for elementsSession: STPElementsSession) -> Set<ConsumerPaymentDetails.DetailsType> {
+    func supportedPaymentDetailsTypes(for elementsSession: STPElementsSession) -> Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> {
         guard let currentSession, let fundingSources = elementsSession.linkFundingSources else {
             return []
         }
 
-        let fundingSourceDetailsTypes = Set(fundingSources.compactMap { $0.detailsType })
+        let fundingSourceDetailsTypes = Set(fundingSources.map(\.detailsType))
 
         // Take the intersection of the consumer session types and the merchant-provided Link funding sources
         var supportedPaymentDetailsTypes = fundingSourceDetailsTypes.intersection(currentSession.supportedPaymentDetailsTypes)
@@ -675,14 +675,14 @@ extension PaymentSheetLinkAccount {
         var supportedPaymentMethodTypes = [STPPaymentMethodType]()
 
         for paymentDetailsType in supportedPaymentDetailsTypes(for: elementsSession) {
-            switch paymentDetailsType {
+            switch paymentDetailsType.value {
             case .card:
                 supportedPaymentMethodTypes.append(.card)
             case .bankAccount:
                 break
 //                TODO(link): Fix instant debits
 //                supportedPaymentMethodTypes.append(.instantDebits)
-            case .unparsable:
+            case nil:
                 break
             }
         }
@@ -711,14 +711,9 @@ private extension PaymentSheetLinkAccount {
 
 }
 
-private extension LinkSettings.FundingSource {
-    var detailsType: ConsumerPaymentDetails.DetailsType? {
-        switch self {
-        case .card:
-            return .card
-        case .bankAccount:
-            return .bankAccount
-        }
+extension ParsedEnum where E == LinkSettings.FundingSource {
+    var detailsType: ParsedEnum<ConsumerPaymentDetails.DetailsType> {
+        ParsedEnum<ConsumerPaymentDetails.DetailsType>(rawValue: rawValue)
     }
 }
 

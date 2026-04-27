@@ -103,7 +103,6 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.defaultBillingAddress)
                         SettingView(setting: $playgroundController.settings.preferredNetworksEnabled)
                         SettingView(setting: $playgroundController.settings.cardBrandAcceptance)
-                        SettingView(setting: $playgroundController.settings.enableAttestationOnConfirmation)
                         SettingView(setting: $playgroundController.settings.autoreload)
                         TextField("headerTextForSelectionScreen", text: headerTextForSelectionScreenBinding)
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
