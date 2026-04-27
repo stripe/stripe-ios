@@ -1,0 +1,106 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=6NV-KQ6tSMM8fH7dZuPsXWGRo0PSEL2xIi-CnOZRBi-85E2cnv0oHsdTQkdR3cOKSSj7aWE6EHLOXMOb
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=6NV-KQ6tSMM8fH7dZuPsXWGRo0PSEL2xIi-CnOZRBi-85E2cnv0oHsdTQkdR3cOKSSj7aWE6EHLOXMOb&t=1"
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=6NV-KQ6tSMM8fH7dZuPsXWGRo0PSEL2xIi-CnOZRBi-85E2cnv0oHsdTQkdR3cOKSSj7aWE6EHLOXMOb&t=1"}],"include_subdomains":true}
+request-id: req_Ot0ln6C8A5K7QW
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1757
+Vary: Origin
+Date: Sat, 18 Apr 2026 04:58:41 GMT
+original-request: req_Ot0ln6C8A5K7QW
+stripe-version: 2020-08-27
+idempotency-key: 3dfd08ec-db29-41bc-85dc-3dcdff28baf1
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[capture_method]=automatic&client_context\[currency]=USD&client_context\[mode]=payment&client_context\[payment_method_types]\[0]=card&client_context\[setup_future_usage]=off_session&payment_method=pm_1TNQxoFY0qyl6XeW1FPIXRWo&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session&shipping\[address]\[city]=San%20Francisco&shipping\[address]\[country]=US&shipping\[address]\[line1]=510%20Townsend%20St&shipping\[address]\[postal_code]=94103&shipping\[address]\[state]=CA&shipping\[name]=Jane%20Doe
+
+{
+  "id" : "ctoken_1TNQxpFY0qyl6XeWKniLjRxQ",
+  "setup_intent" : null,
+  "livemode" : false,
+  "shipping" : {
+    "address" : {
+      "state" : "CA",
+      "country" : "US",
+      "line2" : null,
+      "city" : "San Francisco",
+      "line1" : "510 Townsend St",
+      "postal_code" : "94103"
+    },
+    "name" : "Jane Doe",
+    "phone" : null
+  },
+  "expires_at" : 1776531521,
+  "return_url" : "https:\/\/foo.com",
+  "setup_future_usage" : "off_session",
+  "object" : "confirmation_token",
+  "payment_method_preview" : {
+    "allow_redisplay" : "unspecified",
+    "billing_details" : {
+      "email" : "jane@example.com",
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "Jane Doe",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "customer" : null,
+    "card" : {
+      "regulated_status" : "unregulated",
+      "last4" : "4242",
+      "funding" : "credit",
+      "generated_from" : null,
+      "networks" : {
+        "available" : [
+          "visa"
+        ],
+        "preferred" : null
+      },
+      "brand" : "visa",
+      "checks" : {
+        "address_postal_code_check" : null,
+        "cvc_check" : null,
+        "address_line1_check" : null
+      },
+      "three_d_secure_usage" : {
+        "supported" : true
+      },
+      "wallet" : {
+        "type" : "apple_pay",
+        "apple_pay" : {
+          "type" : "apple_pay"
+        },
+        "dynamic_last4" : "4242"
+      },
+      "display_brand" : "visa",
+      "exp_month" : 12,
+      "exp_year" : 2027,
+      "country" : "US"
+    },
+    "type" : "card",
+    "customer_account" : null
+  },
+  "created" : 1776488321,
+  "payment_intent" : null,
+  "use_stripe_sdk" : true,
+  "payment_method_options" : null
+}

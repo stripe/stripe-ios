@@ -242,9 +242,6 @@ extension PaymentSheet {
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
 
-        /// If true, device will attest and assert on confirmation requests
-        @_spi(STP) public var enableAttestationOnConfirmation: Bool = false
-
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
 

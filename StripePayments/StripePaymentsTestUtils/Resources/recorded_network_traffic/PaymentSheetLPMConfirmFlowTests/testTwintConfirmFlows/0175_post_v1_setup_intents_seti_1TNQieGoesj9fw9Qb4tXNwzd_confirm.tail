@@ -1,0 +1,81 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/setup_intents\/seti_1TNQieGoesj9fw9Qb4tXNwzd\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=-B-kHDTlvqLOxoKXk6qXTCdzxQOEh9x2IKA_JQDhD9lg8yDWoF6jPrIpni2R3jt_w_hTqWw7TeqCl5MK
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=-B-kHDTlvqLOxoKXk6qXTCdzxQOEh9x2IKA_JQDhD9lg8yDWoF6jPrIpni2R3jt_w_hTqWw7TeqCl5MK&t=1"
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=-B-kHDTlvqLOxoKXk6qXTCdzxQOEh9x2IKA_JQDhD9lg8yDWoF6jPrIpni2R3jt_w_hTqWw7TeqCl5MK&t=1"}],"include_subdomains":true}
+request-id: req_4qEZilENTVQ0Hp
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1327
+Vary: Origin
+Date: Sat, 18 Apr 2026 04:43:02 GMT
+original-request: req_4qEZilENTVQ0Hp
+stripe-version: 2020-08-27
+idempotency-key: df9b411d-3fe8-4e74-afaf-2eebc0aaac31
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=standard&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=seti_1TNQieGoesj9fw9Qb4tXNwzd_secret_UM9097hzM87C7fUgv2RTg1ZQbDhcYjA&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=standard&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=twint&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "id" : "seti_1TNQieGoesj9fw9Qb4tXNwzd",
+  "description" : null,
+  "excluded_payment_method_types" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1KmkHbGoesj9fw9Q\/sa_nonce_UM90MQdSBRFecRzlhQOWXP1nR69HypZ"
+    }
+  },
+  "livemode" : false,
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1TNQigGoesj9fw9QDP9jrjHc",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : null,
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "livemode" : false,
+    "twint" : {
+
+    },
+    "created" : 1776487382,
+    "allow_redisplay" : "unspecified",
+    "type" : "twint",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "payment_method_configuration_details" : null,
+  "usage" : "off_session",
+  "payment_method_types" : [
+    "twint"
+  ],
+  "object" : "setup_intent",
+  "last_setup_error" : null,
+  "created" : 1776487380,
+  "client_secret" : "seti_1TNQieGoesj9fw9Qb4tXNwzd_secret_UM9097hzM87C7fUgv2RTg1ZQbDhcYjA",
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "status" : "requires_action"
+}

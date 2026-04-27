@@ -85,7 +85,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         unredactedPhoneNumber: "(555) 555-5555",
                         phoneNumberCountry: "US",
                         verificationSessions: [.init(type: .sms, state: .verified)],
-                        supportedPaymentDetailsTypes: [.card],
+                        supportedPaymentDetailsTypes: [ParsedEnum(.card)],
                         mobileFallbackWebviewParams: nil
                     ),
                     publishableKey: "pk_xxx_for_link_account_xxx",
@@ -193,7 +193,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                             unredactedPhoneNumber: "(555) 555-5555",
                             phoneNumberCountry: "US",
                             verificationSessions: [.init(type: .sms, state: .verified)],
-                            supportedPaymentDetailsTypes: [.card],
+                            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
                             mobileFallbackWebviewParams: nil
                         ),
                         publishableKey: MockParams.publicKey,
@@ -320,7 +320,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
                         unredactedPhoneNumber: "(555) 555-5555",
                         phoneNumberCountry: "US",
                         verificationSessions: [.init(type: .sms, state: .verified)],
-                        supportedPaymentDetailsTypes: [.card],
+                        supportedPaymentDetailsTypes: [ParsedEnum(.card)],
                         mobileFallbackWebviewParams: nil
                     ),
                     publishableKey: MockParams.publicKey,
@@ -537,6 +537,42 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         waitForExpectations(timeout: 10)
     }
+
+    func testCheckoutSessionConfirmWithNonCardPaymentMethodIncludesSavePaymentMethod() {
+        var checkoutSessionJSON = MockJson.checkoutSession
+        checkoutSessionJSON["payment_method_types"] = ["paypal"]
+        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["paypal"])
+        let confirmParams = IntentConfirmParams(type: .stripe(.payPal))
+        confirmParams.saveForFutureUseCheckboxState = .selected
+
+        stubCreatePaymentMethodExpecting(allowRedisplay: "always")
+        stubCheckoutSessionConfirm(
+            sessionId: checkoutSession.stripeId,
+            savePaymentMethod: true
+        )
+
+        let configuration = MockParams.configuration(pk: MockParams.publicKey)
+        let exp = expectation(description: "confirm completed")
+        let paymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
+
+        PaymentSheet.confirm(
+            configuration: configuration,
+            authenticationContext: self,
+            intent: .checkoutSession(checkoutSession),
+            elementsSession: elementsSession,
+            paymentOption: .new(confirmParams: confirmParams),
+            paymentHandler: paymentHandler,
+            analyticsHelper: ._testValue(),
+            completion: { result, _ in
+                XCTAssertEqual(result, .completed)
+                exp.fulfill()
+            }
+        )
+
+        waitForExpectations(timeout: 10)
+    }
+
 }
 
 extension PaymentSheetAPIMockTest: STPAuthenticationContext {

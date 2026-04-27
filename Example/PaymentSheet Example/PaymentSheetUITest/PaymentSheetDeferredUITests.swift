@@ -15,6 +15,8 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.integrationType = .deferred_csc
+        settings.apmsEnabled = .off
+        settings.supportedPaymentMethods = "card, us_bank_account"
         loadPlayground(app, settings)
 
         app.buttons["Present PaymentSheet"].tap()
@@ -27,16 +29,13 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
             ["mc_complete_init_applepay", "mc_load_started", "mc_load_succeeded", "mc_complete_sheet_newpm_show", "mc_initial_displayed_payment_methods", "mc_form_shown", "link.inline_signup.shown"]
         )
         let initialDisplayedPaymentMethodsEvent = analyticsLog.first(where: { $0[string: "event"] == "mc_initial_displayed_payment_methods" })
-        // two wallet pms and 3 in the carousel
+        // two wallet pms and 2 in the carousel
         XCTAssertEqual(
             (initialDisplayedPaymentMethodsEvent.map { $0["visible_payment_methods"] } as? [String])?.count,
             4
         )
-        // the rest are hidden
-        XCTAssertEqual(
-            (initialDisplayedPaymentMethodsEvent.map { $0["hidden_payment_methods"] } as? [String])?.count,
-            7
-        )
+        // there are no hidden pms
+        XCTAssertNil(initialDisplayedPaymentMethodsEvent.map { $0["hidden_payment_methods"] } as? [String])
         XCTAssertEqual(
             initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_layout"] },
             "horizontal"

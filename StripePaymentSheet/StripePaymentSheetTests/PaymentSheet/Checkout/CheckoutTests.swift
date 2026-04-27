@@ -34,6 +34,39 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertFalse(checkout.state.isLoading)
     }
 
+    func testRefreshFetchesLatestServerState() async throws {
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
+            allowPromotionCodes: true
+        )
+        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkout = try await Checkout(
+            clientSecret: checkoutSessionResponse.clientSecret,
+            apiClient: apiClient
+        )
+        let delegate = MockCheckoutDelegate()
+        checkout.delegate = delegate
+
+        XCTAssertNil(checkout.state.session.appliedPromotionCode)
+        XCTAssertEqual(checkout.state.session.totals?.total, 2000)
+
+        _ = try await apiClient.updateCheckoutSession(
+            checkoutSessionId: checkoutSessionResponse.id,
+            parameters: ["promotion_code": "SAVE25"]
+        )
+
+        // The local copy remains stale until refresh() fetches the latest session snapshot.
+        XCTAssertNil(checkout.state.session.appliedPromotionCode)
+        XCTAssertEqual(checkout.state.session.totals?.total, 2000)
+
+        try await checkout.refresh()
+
+        XCTAssertEqual(checkout.state.session.appliedPromotionCode, "SAVE25")
+        XCTAssertEqual(checkout.state.session.totals?.total, 1500)
+        XCTAssertFalse(checkout.state.isLoading)
+        XCTAssertTrue(delegate.didChangeStateCalled)
+        XCTAssertEqual(delegate.lastState?.session.appliedPromotionCode, "SAVE25")
+    }
+
     func testDelegateCalledOnPromotionCodeApply() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true

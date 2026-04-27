@@ -3,22 +3,24 @@ https:\/\/api\.stripe\.com\/v1\/confirmation_tokens$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=PfQu7UVY5pnnsctKT6yKnAnu8fXP2_QeSzvHWARyW37ydBWUXi5l7qNaz1wqWzQkdvqHxbOwf6xWc0A8
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=8IZS7rDF9zLSGPC9kFLzH_CDq3w8wLvzJjjHpYfGUjlmbxnJ3TmIeS3C5yh_PzY1s1Q8zlXk0KPhz10g
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=8IZS7rDF9zLSGPC9kFLzH_CDq3w8wLvzJjjHpYfGUjlmbxnJ3TmIeS3C5yh_PzY1s1Q8zlXk0KPhz10g&t=1"
+x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=8IZS7rDF9zLSGPC9kFLzH_CDq3w8wLvzJjjHpYfGUjlmbxnJ3TmIeS3C5yh_PzY1s1Q8zlXk0KPhz10g&t=1"}],"include_subdomains":true}
+request-id: req_Gdnt8Ka3gdqLkT
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_NhLvP9nPDs9F2M
 Content-Length: 820
 Vary: Origin
-Date: Mon, 16 Mar 2026 18:30:06 GMT
-original-request: req_NhLvP9nPDs9F2M
+Date: Sat, 18 Apr 2026 04:33:13 GMT
+original-request: req_Gdnt8Ka3gdqLkT
 stripe-version: 2020-08-27
-idempotency-key: 4fddf7c1-3bfa-4c08-958c-8a294c4c4142
+idempotency-key: fea7dd49-f2f4-45bf-a94e-35e025f1a27c
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -26,11 +28,11 @@ Content-Type: application/json
 X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=deferred&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_context\[mode]=setup&client_context\[payment_method_types]\[0]=bancontact&client_context\[setup_future_usage]=off_session&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details]\[email]=f%40z\.c&payment_method_data\[billing_details]\[name]=Foo&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=deferred&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=bancontact&return_url=https%3A\/\/foo\.com&setup_future_usage=off_session
 
 {
-  "id" : "ctoken_1TBftyFY0qyl6XeWX3t6fXyS",
+  "id" : "ctoken_1TNQZBFY0qyl6XeWv9TuvxBl",
   "setup_intent" : null,
   "livemode" : false,
   "shipping" : null,
-  "expires_at" : 1773729006,
+  "expires_at" : 1776529993,
   "return_url" : "https:\/\/foo.com",
   "setup_future_usage" : "off_session",
   "object" : "confirmation_token",
@@ -57,7 +59,7 @@ X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client
     "type" : "bancontact",
     "customer_account" : null
   },
-  "created" : 1773685806,
+  "created" : 1776486793,
   "payment_intent" : null,
   "use_stripe_sdk" : true,
   "payment_method_options" : null
