@@ -23,7 +23,7 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
             linkSettings: ._testValue(brand: .link)
         )
         var configuration = PaymentSheet.Configuration()
-        configuration.link = .init(brand: .notlink)
+        configuration.link.brand = .notlink
 
         XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .notlink)
     }
