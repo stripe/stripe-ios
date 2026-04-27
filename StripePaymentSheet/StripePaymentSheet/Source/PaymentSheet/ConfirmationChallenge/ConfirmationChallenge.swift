@@ -21,16 +21,15 @@ actor ConfirmationChallenge {
 
     typealias ChallengeTokens = (hcaptchaToken: String?, assertion: StripeAttest.Assertion?)
 
-    // enableAttestation is determined by the playground switch and will be removed on release
-    public init(enableAttestation: Bool, elementsSession: STPElementsSession, stripeAttest: StripeAttest) {
-        self.init(enableAttestation: enableAttestation, elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: PassiveHCaptchaFactory())
+    public init(elementsSession: STPElementsSession, stripeAttest: StripeAttest) {
+        self.init(elementsSession: elementsSession, stripeAttest: stripeAttest, hcaptchaFactory: PassiveHCaptchaFactory())
     }
 
-    init(enableAttestation: Bool, elementsSession: STPElementsSession, stripeAttest: StripeAttest, hcaptchaFactory: HCaptchaFactory) {
+    init(elementsSession: STPElementsSession, stripeAttest: StripeAttest, hcaptchaFactory: HCaptchaFactory) {
         if let passiveCaptchaData = elementsSession.passiveCaptchaData {
             self.passiveCaptchaChallenge = PassiveCaptchaChallenge(passiveCaptchaData: passiveCaptchaData, hcaptchaFactory: hcaptchaFactory)
         }
-        if enableAttestation, elementsSession.shouldAttestOnConfirmation {
+        if elementsSession.shouldAttestOnConfirmation {
             self.attestationChallenge = AttestationChallenge(stripeAttest: stripeAttest, canSyncState: elementsSession.linkSettings?.attestationStateSyncEnabled ?? false)
         }
     }

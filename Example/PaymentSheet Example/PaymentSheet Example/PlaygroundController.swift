@@ -210,10 +210,6 @@ import UIKit
             configuration.allowsDelayedPaymentMethods = true
         }
 
-        if settings.enableAttestationOnConfirmation == .on {
-            configuration.enableAttestationOnConfirmation = true
-        }
-
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
@@ -337,10 +333,6 @@ import UIKit
 
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
-        }
-
-        if settings.enableAttestationOnConfirmation == .on {
-            configuration.enableAttestationOnConfirmation = true
         }
 
         if settings.shippingInfo != .off {

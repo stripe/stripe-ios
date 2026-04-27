@@ -162,7 +162,6 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
             configuration.cardBrandAcceptance = .allowed(brands: [.visa])
         }
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
-        configuration.enableAttestationOnConfirmation = settings.enableAttestationOnConfirmation == .on
 
         return configuration
     }

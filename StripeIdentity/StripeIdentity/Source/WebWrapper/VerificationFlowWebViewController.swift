@@ -179,6 +179,28 @@ extension VerificationFlowWebViewController {
     fileprivate func didTapCloseButton() {
         dismiss(animated: true, completion: nil)
     }
+
+    fileprivate func logLoadingFailure(
+        _ error: Error,
+        stage: VerificationFlowWebViewFailureStage,
+        filePath: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        IdentityAnalyticsClient.sharedAnalyticsClient.log(
+            eventName: IdentityAnalyticsClient.EventName.genericError.rawValue,
+            parameters: [
+                "event_metadata": [
+                    "error_context": "verification_webview",
+                    "webview_failure_stage": stage.rawValue,
+                    "error_details": AnalyticsClientV2.serialize(
+                        error: error,
+                        filePath: filePath,
+                        line: line
+                    ),
+                ],
+            ]
+        )
+    }
 }
 
 // MARK: - VerificationFlowWebViewDelegate
@@ -200,5 +222,13 @@ extension VerificationFlowWebViewController: VerificationFlowWebViewDelegate {
 
     func verificationFlowWebView(_ view: VerificationFlowWebView, didOpenURLInNewTarget url: URL) {
         UIApplication.shared.open(url)
+    }
+
+    func verificationFlowWebView(
+        _ view: VerificationFlowWebView,
+        didFailLoadingWith error: Error,
+        stage: VerificationFlowWebViewFailureStage
+    ) {
+        logLoadingFailure(error, stage: stage)
     }
 }
