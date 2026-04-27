@@ -50,8 +50,8 @@ final class PayWithLinkButton: UIControl {
         switch brand {
         case .link, .unparsable:
             return Image.link_logo_bw.makeImage(template: false)
-        case .notlink:
-            return Image.notlink_logo_bw.makeImage(template: false)
+        case .onelink:
+            return Image.onelink_logo_bw.makeImage(template: false)
         }
     }
 

@@ -11,31 +11,32 @@ final class PayWithLinkButtonTests: XCTestCase {
         let header = PaymentSheetViewController.WalletHeaderView(
             options: [.link],
             appearance: .default,
-            linkBrand: .notlink,
+            linkBrand: .onelink,
             delegate: nil
         )
 
-        XCTAssertEqual(header.linkBrand, .notlink)
+        XCTAssertEqual(header.linkBrand, .onelink)
     }
 
     func testBrandUsesDistinctPrimaryLinkLogoAsset() {
         let linkButton = PayWithLinkButton(brand: .link)
-        let notlinkButton = PayWithLinkButton(brand: .notlink)
+        let onelinkButton = PayWithLinkButton(brand: .onelink)
 
-        XCTAssertNotEqual(renderedPNGData(for: linkButton.primaryLinkLogoImage), renderedPNGData(for: notlinkButton.primaryLinkLogoImage))
+        XCTAssertNotEqual(renderedPNGData(for: linkButton.primaryLinkLogoImage), renderedPNGData(for: onelinkButton.primaryLinkLogoImage))
     }
 
     func testBrandDoesNotChangeButtonStylingOutsideLogoImage() {
         let linkButton = PayWithLinkButton(brand: .link)
-        let notlinkButton = PayWithLinkButton(brand: .notlink)
+        let onelinkButton = PayWithLinkButton(brand: .onelink)
 
         linkButton.layoutIfNeeded()
-        notlinkButton.layoutIfNeeded()
+        onelinkButton.layoutIfNeeded()
 
-        XCTAssertEqual(notlinkButton.brand, .notlink)
-        XCTAssertTrue(linkButton.backgroundColor?.isEqual(notlinkButton.backgroundColor) ?? false)
-        XCTAssertEqual(linkButton.accessibilityLabel, notlinkButton.accessibilityLabel)
-        XCTAssertEqual(linkButton.intrinsicContentSize, notlinkButton.intrinsicContentSize)
+        XCTAssertEqual(onelinkButton.brand, .onelink)
+        XCTAssertTrue(linkButton.backgroundColor?.isEqual(onelinkButton.backgroundColor) ?? false)
+        XCTAssertEqual(linkButton.accessibilityLabel, onelinkButton.accessibilityLabel)
+        XCTAssertEqual(linkButton.intrinsicContentSize, onelinkButton.intrinsicContentSize)
+    }
     }
 
     private func renderedPNGData(for image: UIImage) -> Data? {

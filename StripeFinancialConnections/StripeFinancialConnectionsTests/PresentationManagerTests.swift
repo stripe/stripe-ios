@@ -34,11 +34,11 @@ class PresentationManagerTests: XCTestCase {
 
     func testLinkBrandOverrideIsAvailableToAppearanceResolution() {
         var configuration = FinancialConnectionsSheet.Configuration()
-        configuration.linkBrand = .notlink
+        configuration.linkBrand = .onelink
         PresentationManager.shared.configuration = configuration
 
         let appearance = FinancialConnectionsAppearance(theme: .light, brand: nil)
 
-        XCTAssertEqual(appearance.logo, .notlink_logo)
+        XCTAssertEqual(appearance.logo, .onelink_logo)
     }
 }
