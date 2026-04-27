@@ -142,7 +142,7 @@ final class FinancialConnectionsSessionTests: XCTestCase {
 
     private func makeManifest(
         theme: FinancialConnectionsSessionManifest.Theme,
-        brand: FinancialConnectionsSessionManifest.Brand? = nil
+        brand: LinkBrand? = nil
     ) -> FinancialConnectionsSessionManifest {
         FinancialConnectionsSessionManifest(
             allowManualEntry: false,

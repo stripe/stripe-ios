@@ -5,6 +5,7 @@
 //  Created by Mat Schmid on 2025-01-24.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 struct FinancialConnectionsAppearance: Equatable {
@@ -49,7 +50,7 @@ struct FinancialConnectionsAppearance: Equatable {
 
     init(
         theme: FinancialConnectionsSessionManifest.Theme?,
-        brand: FinancialConnectionsSessionManifest.Brand? = nil
+        brand: LinkBrand? = nil
     ) {
         let resolvedBrand = Self.resolveBrand(theme: theme, brand: brand)
 
@@ -75,7 +76,7 @@ struct FinancialConnectionsAppearance: Equatable {
 
     private static func resolveBrand(
         theme: FinancialConnectionsSessionManifest.Theme?,
-        brand: FinancialConnectionsSessionManifest.Brand?
+        brand: LinkBrand?
     ) -> ResolvedBrand {
         switch PresentationManager.shared.configuration.linkBrand {
         case .link:

@@ -70,12 +70,6 @@ struct FinancialConnectionsSessionManifest: Decodable {
         case unparsable
     }
 
-    enum Brand: String, SafeEnumCodable, Equatable {
-        case link = "link"
-        case notlink = "notlink"
-        case unparsable
-    }
-
     // MARK: - Properties
 
     let accountholderCustomerEmailAddress: String?
@@ -88,7 +82,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let allowManualEntry: Bool
     let appVerificationEnabled: Bool?
     let assignmentEventId: String?
-    let brand: Brand?
+    let brand: LinkBrand?
     let businessName: String?
     let cancelUrl: String?
     let consentAcquiredAt: String?
@@ -154,7 +148,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
         allowManualEntry: Bool,
         appVerificationEnabled: Bool? = nil,
         assignmentEventId: String? = nil,
-        brand: Brand? = nil,
+        brand: LinkBrand? = nil,
         businessName: String? = nil,
         cancelUrl: String? = nil,
         consentAcquiredAt: String? = nil,

@@ -85,7 +85,7 @@ class STPElementsSessionTest: XCTestCase {
 
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
 
-        XCTAssertEqual(LinkSettings.Brand.notlink.rawValue, "notlink")
+        XCTAssertEqual(LinkBrand.notlink.rawValue, "notlink")
         XCTAssertEqual(elementsSession.linkSettings?.brand, .notlink)
         XCTAssertEqual(elementsSession.linkBrand, .notlink)
     }
