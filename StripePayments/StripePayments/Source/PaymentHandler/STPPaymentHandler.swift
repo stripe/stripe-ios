@@ -175,6 +175,60 @@ public class STPPaymentHandler: NSObject {
     /// Note that Session ID is not good enough, since a single session may have multiple calls to confirm.
     internal var actionID: String?
 
+    // MARK: - Stuck Action Recovery
+
+    /// Cancels any in-flight action, fires its completion with `.canceled`, and resets all state.
+    /// Called when a new public entry point detects that `inProgress` is stuck, or when the
+    /// safety timeout fires.
+    private func _cancelCurrentAction(reason: String) {
+        let errorAnalytic = ErrorAnalytic(
+            event: .unexpectedPaymentHandlerError,
+            error: InternalError.invalidState,
+            additionalNonPIIParams: ["error_message": "Auto-canceling stuck action: \(reason)"]
+        )
+        analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
+
+        // Cancel 3DS2 transaction if active
+        if let transaction = currentAction?.threeDS2Transaction {
+            STDSSwiftTryCatch.try({
+                transaction.cancelChallengeFlow()
+            }, catch: { _ in }, finallyBlock: {})
+        }
+
+        // Dismiss Safari view controller
+        safariViewController?.dismiss(animated: false, completion: nil)
+        safariViewController = nil
+        safariViewControllerDismissedManually = false
+
+        // Cancel ASWebAuthenticationSession
+        asWebAuthenticationSession?.cancel()
+        asWebAuthenticationSession = nil
+
+        // Unregister URL callback listener
+        STPURLCallbackHandler.shared().unregisterListener(self)
+
+        // Remove foreground notification observer
+        NotificationCenter.default.removeObserver(
+            self,
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
+
+        // Fire the old action's completion with .canceled so the old caller is notified
+        let oldAction = currentAction
+        currentAction = nil
+        oldAction?.complete(
+            with: .canceled,
+            error: _error(
+                for: .noConcurrentActionsErrorCode,
+                loggingSafeErrorMessage: "Action was auto-canceled because a new action was requested while the previous one was stuck."
+            )
+        )
+
+        // Reset inProgress
+        Self.inProgress = false
+    }
+
     // MARK: - PaymentIntent APIs
     /// Confirms the PaymentIntent using the provided `params` and handles any next actions required to authenticate the PaymentIntent.
     /// - Parameters:
@@ -197,10 +251,9 @@ public class STPPaymentHandler: NSObject {
             completion(status, paymentIntent, error)
         }
         if Self.inProgress {
-            assertionFailure("`STPPaymentHandler.confirmPayment` was called while a previous call is still in progress.")
-            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
-            return
-        } else if !STPPaymentIntentConfirmParams.isClientSecretValid(paymentParams.clientSecret) {
+            _cancelCurrentAction(reason: "confirmPayment called while previous action in progress")
+        }
+        if !STPPaymentIntentConfirmParams.isClientSecretValid(paymentParams.clientSecret) {
             assertionFailure("`STPPaymentHandler.confirmPayment` was called with an invalid client secret. See https://docs.stripe.com/api/payment_intents/object#payment_intent_object-client_secret")
             completion(.failed, nil, _error(for: .invalidClientSecret))
             return
@@ -441,9 +494,7 @@ public class STPPaymentHandler: NSObject {
             completion(status, paymentIntent, error)
         }
         if Self.inProgress {
-            assertionFailure("`STPPaymentHandler.handleNextAction` was called while a previous call is still in progress.")
-            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
-            return
+            _cancelCurrentAction(reason: "handleNextAction called while previous action in progress")
         }
         if paymentIntent.paymentMethodId != nil {
             assert(paymentIntent.paymentMethod != nil, "A PaymentIntent w/ attached paymentMethod must be retrieved w/ an expanded PaymentMethod")
@@ -536,10 +587,9 @@ public class STPPaymentHandler: NSObject {
         }
 
         if Self.inProgress {
-            assertionFailure("`STPPaymentHandler.confirmSetupIntent` was called while a previous call is still in progress.")
-            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
-            return
-        } else if !STPSetupIntentConfirmParams.isClientSecretValid(
+            _cancelCurrentAction(reason: "confirmSetupIntent called while previous action in progress")
+        }
+        if !STPSetupIntentConfirmParams.isClientSecretValid(
             setupIntentConfirmParams.clientSecret
         ) {
             assertionFailure("`STPPaymentHandler.confirmSetupIntent` was called with an invalid client secret. See https://docs.stripe.com/api/payment_intents/object#setup_intent_object-client_secret")
@@ -732,9 +782,7 @@ public class STPPaymentHandler: NSObject {
             completion(status, setupIntent, error)
         }
         if Self.inProgress {
-            assertionFailure("`STPPaymentHandler.confirmPayment` was called while a previous call is still in progress.")
-            completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
-            return
+            _cancelCurrentAction(reason: "handleNextActionForSetupIntent called while previous action in progress")
         }
         if setupIntent.paymentMethodID != nil {
             assert(setupIntent.paymentMethod != nil, "A SetupIntent w/ attached paymentMethod must be retrieved w/ an expanded PaymentMethod")
@@ -2463,6 +2511,7 @@ extension STPPaymentHandler {
             stpAssertionFailure("Calling didCompleteChallengeWith without currentAction.")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling didCompleteChallengeWith without currentAction."])
             analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
+            Self.inProgress = false
             return
         }
         let transactionStatus = completionEvent.transactionStatus
@@ -2517,6 +2566,7 @@ extension STPPaymentHandler {
             stpAssertionFailure("Calling transactionDidCancel without currentAction.")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling transactionDidCancel without currentAction."])
             analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
+            Self.inProgress = false
             return
         }
 
@@ -2537,6 +2587,7 @@ extension STPPaymentHandler {
             stpAssertionFailure("Calling transactionDidTimeOut without currentAction.")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling transactionDidTimeOut without currentAction."])
             analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
+            Self.inProgress = false
             return
         }
 
@@ -2563,6 +2614,7 @@ extension STPPaymentHandler {
             stpAssertionFailure("Calling didErrorWithProtocolErrorEvent without currentAction.")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling didErrorWithProtocolErrorEvent without currentAction."])
             analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
+            Self.inProgress = false
             return
         }
 
@@ -2598,6 +2650,7 @@ extension STPPaymentHandler {
             stpAssertionFailure("Calling didErrorWithRuntimeErrorEvent without currentAction.")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling didErrorWithRuntimeErrorEvent without currentAction."])
             analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
+            Self.inProgress = false
             return
         }
 
@@ -2667,6 +2720,7 @@ extension STPPaymentHandler {
             stpAssertionFailure("Calling cancel3DS2ChallengeFlow without currentAction.")
             let errorAnalytic = ErrorAnalytic(event: .unexpectedPaymentHandlerError, error: InternalError.invalidState, additionalNonPIIParams: ["error_message": "Calling cancel3DS2ChallengeFlow without currentAction."])
             analyticsClient.log(analytic: errorAnalytic, apiClient: apiClient)
+            Self.inProgress = false
             return
         }
         guard let transaction = currentAction.threeDS2Transaction else {
