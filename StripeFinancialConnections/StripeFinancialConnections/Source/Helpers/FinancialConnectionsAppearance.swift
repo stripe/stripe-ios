@@ -83,7 +83,7 @@ struct FinancialConnectionsAppearance: Equatable {
             return .link
         case .notlink:
             return .notlink
-        case .none:
+        case .unparsable, .none:
             break
         }
 
