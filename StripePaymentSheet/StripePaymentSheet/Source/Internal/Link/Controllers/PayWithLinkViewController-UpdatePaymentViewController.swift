@@ -203,7 +203,7 @@ extension PayWithLinkViewController {
         }
 
         private func createUpdateDetails(for params: LinkPaymentMethodFormElement.Params) -> UpdatePaymentDetailsParams.DetailsType? {
-            switch paymentMethod.type {
+            switch paymentMethod.type.value {
             case .card:
                 return .card(
                     expiryDate: params.expiryDate,
@@ -212,7 +212,7 @@ extension PayWithLinkViewController {
                 )
             case .bankAccount:
                 return .bankAccount(billingDetails: params.billingDetails)
-            case .unparsable:
+            case nil: // don't allow updating payment method types the SDK doesn't know about
                 return nil
             }
         }

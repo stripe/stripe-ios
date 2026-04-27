@@ -1,0 +1,851 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_c1U0lKwqZPVlCM91KN7INOm8UzVogautcd4I3A52TLVRsf0rUnKGRM5kbb\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=A6IILSxbAHeFxqiBQjvoD-D8JKQQ7xsxqvpPkfOSqgPp8iF4Wc9Ozqz1jQhSlG6IIHz6mKgS0Zd7itfX
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=A6IILSxbAHeFxqiBQjvoD-D8JKQQ7xsxqvpPkfOSqgPp8iF4Wc9Ozqz1jQhSlG6IIHz6mKgS0Zd7itfX&t=1"
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=A6IILSxbAHeFxqiBQjvoD-D8JKQQ7xsxqvpPkfOSqgPp8iF4Wc9Ozqz1jQhSlG6IIHz6mKgS0Zd7itfX&t=1"}],"include_subdomains":true}
+request-id: req_w34vU08irKum81
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 30408
+Vary: Origin
+Date: Sat, 18 Apr 2026 16:09:04 GMT
+original-request: req_w34vU08irKum81
+stripe-version: 2020-08-27
+idempotency-key: 33548e0a-8616-4dad-9a22-268ac6bc4cca
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=standard&client_attribution_metadata\[payment_method_selection_flow]=automatic&expand\[0]=payment_intent&expand\[1]=payment_intent\.payment_method&expand\[2]=setup_intent&expand\[3]=setup_intent\.payment_method&expected_payment_method_type=amazon_pay&payment_method=pm_1TNbQZFY0qyl6XeWGiwnjkpz&return_url=https%3A\/\/foo\.com
+
+{
+  "lpm_settings" : null,
+  "sepa_debit_info" : null,
+  "automatic_payment_method_types" : false,
+  "tax_context" : {
+    "automatic_tax_error" : null,
+    "automatic_tax_enabled" : false,
+    "automatic_tax_taxability_reason" : null,
+    "dynamic_tax_enabled" : false,
+    "tax_id_collection_enabled" : false,
+    "automatic_tax_exempt" : null,
+    "customer_tax_country" : null,
+    "tax_id_collection_required" : "never",
+    "has_maximum_tax_ids" : false,
+    "automatic_tax_address_source" : null
+  },
+  "payment_method_types" : [
+    "amazon_pay"
+  ],
+  "payment_method_options" : {
+    "card" : {
+      "request_three_d_secure" : "automatic"
+    }
+  },
+  "bnpl_in_link_ui_enabled" : false,
+  "consent_collection" : null,
+  "origin_context" : null,
+  "use_payment_methods" : true,
+  "enforcement_mode" : "open",
+  "blocked_billing_address_countries" : [
+
+  ],
+  "id" : "ppage_1TNbQ0FY0qyl6XeWgocYY19D",
+  "subscription_settings" : null,
+  "consent" : null,
+  "application" : null,
+  "payment_method_collection" : "always",
+  "setup_intent" : {
+    "id" : "seti_1TNbQ0FY0qyl6XeWx47tc4US",
+    "description" : null,
+    "excluded_payment_method_types" : null,
+    "next_action" : {
+      "type" : "redirect_to_url",
+      "redirect_to_url" : {
+        "return_url" : "https:\/\/foo.com",
+        "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/sa_nonce_UMK4Uhi19Rkvb8OwFn0USNMbEPL1hD2"
+      }
+    },
+    "livemode" : false,
+    "payment_method" : {
+      "object" : "payment_method",
+      "amazon_pay" : {
+
+      },
+      "id" : "pm_1TNbQZFY0qyl6XeWGiwnjkpz",
+      "billing_details" : {
+        "email" : "test@example.com",
+        "phone" : null,
+        "tax_id" : null,
+        "name" : null,
+        "address" : {
+          "state" : null,
+          "country" : null,
+          "line2" : null,
+          "city" : null,
+          "line1" : null,
+          "postal_code" : null
+        }
+      },
+      "livemode" : false,
+      "created" : 1776528543,
+      "allow_redisplay" : "always",
+      "type" : "amazon_pay",
+      "customer" : null,
+      "customer_account" : null
+    },
+    "payment_method_configuration_details" : null,
+    "usage" : "off_session",
+    "payment_method_types" : [
+      "amazon_pay"
+    ],
+    "object" : "setup_intent",
+    "last_setup_error" : null,
+    "created" : 1776528508,
+    "client_secret" : "seti_1TNbQ0FY0qyl6XeWx47tc4US_secret_UMK4ve56qzvoXROCOD0isFKQzF8hpxT",
+    "automatic_payment_methods" : null,
+    "cancellation_reason" : null,
+    "status" : "requires_action"
+  },
+  "shipping_options" : [
+
+  ],
+  "setup_future_usage_for_payment_method_type" : {
+
+  },
+  "capture_method" : null,
+  "statement_descriptor" : "mobile",
+  "session_id" : "cs_test_c1U0lKwqZPVlCM91KN7INOm8UzVogautcd4I3A52TLVRsf0rUnKGRM5kbb",
+  "shipping_address_collection" : null,
+  "konbini_confirmation_number" : null,
+  "setup_future_usage" : null,
+  "invoice_creation" : null,
+  "has_dynamic_tax_rates" : false,
+  "receipt_emails_enabled" : false,
+  "link_settings" : {
+    "link_consumer_incentive" : null,
+    "link_payment_session_context" : null,
+    "consumer_found" : null,
+    "hcaptcha_rqdata" : null,
+    "link_supported_payment_methods_onboarding_enabled" : [
+
+    ],
+    "enable_partner_lookup" : false,
+    "link_us_bank_account_funding_source_enabled" : false,
+    "link_funding_sources" : [
+
+    ],
+    "hcaptcha_site_key" : null,
+    "link_brand" : "link",
+    "link_mode" : null,
+    "link_supported_payment_methods" : [
+
+    ]
+  },
+  "object" : "checkout.session",
+  "customer" : null,
+  "shipping_rate" : null,
+  "success_url" : null,
+  "utm_codes" : null,
+  "beta_versions" : null,
+  "has_async_attached_payment_method" : false,
+  "feature_flags" : {
+    "checkout_enable_pay_by_bank_remember_bank_selection" : true,
+    "checkout_link_phone_registration_treatment_1_enabled" : true,
+    "smor_checkout_ui_iteration" : true,
+    "checkout_link_purchase_protections_rollout" : true,
+    "checkout_link_enable_mfa" : true,
+    "checkout_optional_items" : true,
+    "checkout_link_in_habanero_enabled" : true,
+    "checkout_passive_captcha" : true,
+    "adaptive_pricing_buyer_currency_expansion" : true,
+    "checkout_custom_enable_clover_warning" : true,
+    "checkout_enable_link_api_passive_hcaptcha" : true,
+    "checkout_address_autocomplete_enabled" : true,
+    "checkout_enable_link_api_hcaptcha_rqdata" : true,
+    "checkout_hcaptcha_redundancy_control_enabled" : true,
+    "checkout_show_swish_factoring_notice" : true
+  },
+  "locale" : null,
+  "custom_text" : {
+    "shipping_address" : null,
+    "terms_of_service_acceptance" : null,
+    "submit" : null,
+    "after_submit" : null
+  },
+  "route_to_orchestration_interface" : false,
+  "customer_email" : null,
+  "payment_method_filtering" : null,
+  "custom_components" : [
+
+  ],
+  "ui_mode" : "custom",
+  "url" : null,
+  "developer_tool_context" : null,
+  "token_notification_url" : "https:\/\/pm-hooks.stripe.com\/apple_pay\/merchant_token\/pDq7tf9uieoQWMVJixFwuOve\/acct_1G6m1pFY0qyl6XeW\/",
+  "init_checksum" : "3KribbTooTY5aUJRbS00ydSv3LlR8BlN",
+  "bnpl_link_experiment_payment_method_type" : null,
+  "tax_meta" : {
+    "status" : null,
+    "error_reason" : null,
+    "computation_type" : "manual",
+    "customer_tax_exempt" : null
+  },
+  "payment_status" : "no_payment_required",
+  "enabled_third_party_wallets" : [
+    {
+      "apple_pay" : {
+        "required_version" : 2
+      },
+      "id" : "APPLE_PAY",
+      "enabled" : false,
+      "carousel_enabled" : false
+    },
+    {
+      "id" : "GOOGLE_PAY",
+      "enabled" : false,
+      "google_pay" : {
+        "id" : "GOOGLE_PAY",
+        "version_minor" : 0,
+        "version_major" : 2
+      },
+      "carousel_enabled" : false
+    },
+    {
+      "id" : "AMAZON_PAY",
+      "carousel_enabled" : true,
+      "enabled" : false
+    },
+    {
+      "id" : "KLARNA_EXPRESS",
+      "carousel_enabled" : false,
+      "enabled" : false
+    }
+  ],
+  "klarna_info" : null,
+  "visible_custom_component_locations" : [
+    "checkout_form_before",
+    "checkout_form_after",
+    "submit_button_before",
+    "submit_button_after",
+    "contact_before",
+    "contact_after",
+    "express_checkout_before",
+    "express_checkout_after",
+    "payment_details_before",
+    "payment_details_after"
+  ],
+  "display_consent_collection_promotions" : false,
+  "policies" : {
+    "contacts" : {
+      "display_phone" : true,
+      "display_url" : true,
+      "enabled" : false,
+      "display_email" : true
+    },
+    "legal" : {
+      "agreement_required" : false,
+      "enabled" : false
+    },
+    "returns" : {
+      "custom_message" : null,
+      "exchanges_accepted" : false,
+      "returns_accepted" : null,
+      "fee_type" : null,
+      "fee_required" : null,
+      "policy_url" : null,
+      "window_start" : null,
+      "refunds_accepted" : null,
+      "window" : null,
+      "enabled" : false,
+      "exceptions_apply" : false,
+      "logistics" : [
+
+      ]
+    }
+  },
+  "card_brands" : {
+    "mastercard" : true,
+    "link" : true,
+    "carnet" : false,
+    "accel" : false,
+    "elo" : false,
+    "rupay" : false,
+    "maestro" : false,
+    "unionpay" : true,
+    "amex" : true,
+    "conecs" : false,
+    "jcb" : true,
+    "visa" : true,
+    "cartes_bancaires" : false,
+    "pulse" : false,
+    "discover" : true,
+    "star" : false,
+    "eftpos_au" : false,
+    "diners" : true,
+    "girocard" : false,
+    "nyce" : false
+  },
+  "geocoding" : {
+    "country_code" : "US",
+    "region_name" : "NC"
+  },
+  "account_settings" : {
+    "assets" : {
+      "use_logo" : false,
+      "icon" : null,
+      "logo" : null
+    },
+    "specified_commercial_transactions_act_url" : null,
+    "business_url" : "https:\/\/github.com\/stripe\/stripe-ios",
+    "privacy_policy_url" : null,
+    "branding" : {
+      "button_color" : "#0074d4",
+      "background_color" : "#ffffff",
+      "border_style" : "default",
+      "font_family" : "default"
+    },
+    "statement_descriptor" : "mobile",
+    "support_email" : null,
+    "display_name" : "CI Stuff",
+    "merchant_of_record_country" : "US",
+    "order_summary_display_name" : "CI Stuff",
+    "support_phone" : "+12105550123",
+    "merchant_of_record_display_name" : "CI Stuff",
+    "support_url" : null,
+    "account_id" : "acct_1G6m1pFY0qyl6XeW",
+    "country" : "US",
+    "terms_of_service_url" : null
+  },
+  "payment_method_specs" : [
+    {
+      "async" : false,
+      "fields" : [
+
+      ],
+      "type" : "amazon_pay",
+      "selector_icon" : {
+        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-amazonpay_light@3x-46eb8b8a4a252b78d7b4c3b96d4ed7ae.png",
+        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-amazonpay_light-22cdec0f5f5609554a34fa62fa583f23.svg"
+      }
+    }
+  ],
+  "server_built_elements_session_params" : {
+    "expand" : [
+
+    ],
+    "checkout_session_id" : "cs_test_c1U0lKwqZPVlCM91KN7INOm8UzVogautcd4I3A52TLVRsf0rUnKGRM5kbb",
+    "client_betas" : [
+
+    ],
+    "deferred_intent" : {
+      "mode" : "setup",
+      "payment_method_types" : [
+        "amazon_pay"
+      ],
+      "setup_future_usage" : "off_session"
+    },
+    "type" : "deferred_intent"
+  },
+  "shipping_tax_amounts" : null,
+  "billing_address_collection" : null,
+  "experiments_data" : {
+    "event_id" : "f588e2d8-5c90-4fb3-adfc-6af8bdb17841",
+    "experiment_metadata" : {
+      "ocs_buyer_xp_cpl_lpm_holdback" : {
+        "heldback_special_wallets" : [
+
+        ]
+      }
+    },
+    "experiment_assignments" : {
+      "emea_wallets_ideal_wero_rebranding" : "treatment",
+      "ocs_buyer_xp_cpl_progressive_ece" : "control",
+      "ocs_buyer_xp_cpl_embedded_pay_button" : "control",
+      "cpl_spicy_guacamole" : "control",
+      "connections_checkout_us_bank_account_picker_icons" : "control",
+      "checkout_li_larger_image_size" : "control",
+      "link_ab_test_aa" : "control",
+      "ocs_buyer_xp_cpl_terms_above_submit" : "control",
+      "ocs_buyer_xp_cpl_saved_payment_display" : "control",
+      "ocs_buyer_xp_cpl_discover_card_icon_removal" : "control",
+      "ocs_buyer_xp_cpl_currency_symbol_optimization" : "control",
+      "ocs_buyer_xp_cpl_remove_link_sign_up_box_when_no_pm_selected" : "control",
+      "smor_checkout_ui_iteration" : "control",
+      "checkout_link_instant_debits_accordion_logos" : "control",
+      "checkout_enable_real_time_tax_id_verification_experiment" : "control",
+      "ff_checkout_test_frontend_eff" : "control",
+      "ocs_buyer_xp_cpl_link_signup_in_form" : "control",
+      "ocs_buyer_xp_remove_name_field_guac_related_pms" : "control",
+      "link_risk_based_disable_auto_prompting_checkout" : "control",
+      "ocs_buyer_xp_cpl_iap_apple_pay_exclusivity" : "control",
+      "ocs_buyer_xp_cpl_ap_currency_non_default_select_phase_1" : "control",
+      "ocs_buyer_xp_cpl_iap_apple_pay_and_link_exclusivity" : "control",
+      "checkout_es_la_locale_fallback" : "control",
+      "cpl_guacamole" : "control",
+      "ocs_buyer_xp_cpl_lpm_content_simplification" : "control"
+    }
+  },
+  "return_url" : "https:\/\/example.com\/return",
+  "mode" : "setup",
+  "cancel_url" : null,
+  "elements_session" : {
+    "payment_method_preference" : {
+      "country_code" : "US",
+      "object" : "payment_method_preference",
+      "type" : "deferred_intent",
+      "ordered_payment_method_types" : [
+        "amazon_pay"
+      ]
+    },
+    "capability_enabled_card_networks" : [
+      "cartes_bancaires",
+      "jcb",
+      "diners",
+      "discover"
+    ],
+    "flags" : {
+      "enable_tax_id_suspicious_pattern_check" : false,
+      "elements_easel_enable_elements_inspector_for_advanced_integrations_backend" : false,
+      "elements_enable_acss_debit_spm" : true,
+      "elements_enable_bizum_custom_payment_form" : true,
+      "financial_connections_enable_deferred_intent_flow" : true,
+      "elements_enable_remove_last_validation" : true,
+      "link_enable_signup_in_summary_in_habanero" : false,
+      "ocs_payment_prompt_for_agents" : false,
+      "apple_pay_prb_killswitch" : false,
+      "elements_enable_easel_for_pi" : true,
+      "elements_enable_ephemeral_key_for_confirmation_token_creation" : true,
+      "elements_enable_fraud_signal_data_transfer_to_hcaptcha" : false,
+      "elements_mobile_card_funding_filtering" : true,
+      "link_payment_element_minor_signup_ui_updates" : false,
+      "link_enable_ncdv_usage_id_selectors_l3" : true,
+      "elements_disable_express_checkout_button_amazon_pay" : false,
+      "elements_easel_disable_appearance_api" : false,
+      "link_auth_partner_enable_link_auth_token_login" : true,
+      "link_enable_ncdv_recall_id_selectors_l3" : true,
+      "elements_disable_link_email_otp" : false,
+      "enable_afterpay_clearpay_cbt_afterpay_rails" : false,
+      "ocs_buyer_xp_elements_card_brand_choice_toggle" : false,
+      "paypal_billing_address_support_in_ece" : true,
+      "elements_enable_pay_by_bank_remember_bank_selection" : true,
+      "link_auth_partner_enable_ios_instagram" : true,
+      "link_user_action_attempt_login_using_stored_credentials" : true,
+      "elements_disable_sepa_debit_eea_address_requirement" : false,
+      "elements_enable_instant_debits_postal_code_collection" : false,
+      "elements_easel_disable_feedback" : false,
+      "elements_extend_hcaptcha_refresh_time" : true,
+      "link_auth_partner_consume_link_auth_intent" : true,
+      "ocs_buyer_xp_elements_remove_cpm_redirect_text" : false,
+      "elements_enable_south_korea_market_underlying_pms" : false,
+      "link_payment_element_steerage_enabled" : true,
+      "elements_mobile_force_setup_future_use_behavior_and_new_mandate_text" : false,
+      "elements_disable_payment_element_card_country_zip_validations" : false,
+      "link_payment_element_default_value_auto_open_modal" : true,
+      "elements_enable_link_card_brand_in_saved_payment_methods" : true,
+      "elements_disable_link_global_holdback_lookup" : false,
+      "financial_connections_enable_ca_accounts" : false,
+      "elements_easel_disable_address_fill" : false,
+      "ocs_buyer_xp_elements_remove_redirect_lpm_content" : false,
+      "elements_enable_payment_method_options_setup_future_usage" : true,
+      "enable_custom_checkout_currency_selector_element" : false,
+      "elements_mobile_android_tap_to_add_enabled" : false,
+      "link_enable_address_country_restrictions" : false,
+      "link_auth_partner_enable_android_fb" : true,
+      "elements_easel_disable_health_check" : false,
+      "link_mobile_express_checkout_element_inline_otp_killswitch" : false,
+      "elements_disable_paypal_express" : false,
+      "elements_enable_au_becs_debit_spm" : true,
+      "elements_enable_write_allow_redisplay" : false,
+      "legacy_customer_session_payment_element_features" : false,
+      "elements_easel_enable_lpm_autofills" : true,
+      "link_auth_partner_enable_authentication_element" : true,
+      "elements_enable_payment_method_logo_position_killswitch" : false,
+      "elements_allow_manual_payment_method_creation_with_spm" : false,
+      "elements_easel_disable" : false,
+      "link_enable_auth_partner_communication" : true,
+      "elements_apply_amex_icon_sorting" : false,
+      "elements_hide_card_brand_icons" : false,
+      "link_auth_partner_enable_distinctly_link_ios_facebook" : true,
+      "elements_easel_disable_customer_location_mocking" : false,
+      "elements_easel_disable_position_customization" : false,
+      "elements_enable_appearance_recompute" : false,
+      "elements_enable_19_digit_pans" : false,
+      "always_show_ece_paypal_recurring_button" : false,
+      "elements_enable_interac_apple_pay" : false,
+      "enable_payment_method_api_shop_pay" : true,
+      "enable_elements_tax_id_type_filtering" : false,
+      "elements_human_security_enabled" : false,
+      "link_enable_white_ece_button_theme" : false,
+      "link_in_accordion_layout_available_in_stripejs" : false,
+      "link_payment_element_widget_view_enabled" : true,
+      "elements_easel_disable_magic_fill" : false,
+      "avoid_redundant_billing_details_for_klarna" : false,
+      "distinctly_link_payment_element_ramp" : true,
+      "link_auth_partner_bypass_bridge_check" : false,
+      "elements_disable_express_checkout_button_shop_pay" : false,
+      "payment_element_link_modal_preload_killswitch" : false,
+      "link_enable_pass_checkout_session_id_to_signup" : true,
+      "elements_enable_jp_card_installments" : true,
+      "elements_show_expanded_spm" : false,
+      "disable_payment_element_if_required_billing_config" : false,
+      "elements_enable_read_allow_redisplay" : false,
+      "elements_enable_link_spm" : true,
+      "elements_enable_save_for_future_payments_pre_check" : false,
+      "link_forest_enable_ece_bank_use_shipping_as_billing" : false,
+      "elements_disable_express_checkout_button_klarna" : false,
+      "distinctly_link_cbc_killswitch" : false,
+      "elements_prefer_fc_lite" : false,
+      "elements_disable_payment_element_custom_payment_methods_byof" : false,
+      "elements_mobile_cardscan_use_mlkit" : false,
+      "elements_enable_link_takeover_in_guacamole" : false,
+      "link_disable_auth_partner_ua_check" : false,
+      "abstracted_adaptive_pricing_should_show_markup_disclosure_percentage" : false,
+      "elements_easel_disable_optimizations_check" : false,
+      "elements_enable_passive_captcha" : false,
+      "distinctly_link_payment_element_opt_out_merchant_blocklist" : false,
+      "link_ewcs_email_and_cookie_lookup_enabled" : false,
+      "enable_custom_checkout_apple_pay_on_chrome" : true,
+      "elements_enable_new_google_places_api" : true,
+      "elements_enable_express_checkout_button_demo_pay" : false,
+      "elements_enable_installments_on_deferred_intents" : true,
+      "disable_cbc_in_link_popup" : false,
+      "ocs_buyer_xp_elements_remove_generic_footer" : false,
+      "elements_spm_set_as_default" : true,
+      "elements_does_not_collect_postal_code_for_non_us_card_transactions_killswitch" : false,
+      "link_disable_login_if_signed_up_outside_of_elements" : true,
+      "elements_enable_link_autofill_prompt_padding_fix" : false,
+      "elements_mobile_attest_on_intent_confirmation" : false,
+      "elements_stop_move_focus_to_first_errored_field" : true,
+      "ocs_buyer_xp_enable_payment_element_accordion_box_shadow" : false,
+      "elements_mobile_allow_stripecardscan" : false,
+      "elements_enable_nz_bank_account_spm" : true,
+      "elements_use_checkout_app_id_for_human_security" : true,
+      "sandboxes_rebrand_testmode" : false,
+      "link_enable_card_brand_choice" : true,
+      "link_payment_element_keep_optional_doi_open_rollout" : true,
+      "adaptive_pricing_for_elements_with_payment_intents" : false,
+      "elements_allow_custom_payment_method_creation" : false,
+      "elements_disable_recurring_express_checkout_button_amazon_pay" : false,
+      "show_swish_factoring_notice" : true,
+      "link_purchase_protections_rollout" : true,
+      "elements_disable_fc_lite" : false,
+      "link_auth_partner_delay_recognition" : true,
+      "elements_enable_invalid_country_for_pm_error" : true,
+      "elements_enable_payment_element_custom_payment_methods_byof" : false,
+      "ocs_buyer_xp_elements_remove_wallets_redirect_text" : false,
+      "elements_easel_enable_elements_inspector" : true,
+      "apple_pay_pe_killswitch" : false,
+      "elements_hcaptcha_in_payment_method_data_radar_options" : false,
+      "paypal_phone_number_support_in_ece" : false,
+      "elements_enable_pay_by_bank_multi_country_bank_selector_rollout_countries" : false,
+      "elements_easel_disable_payment_fill" : false,
+      "elements_easel_disable_tax_id_fill" : false,
+      "elements_spm_max_visible_payment_methods" : false,
+      "elements_enable_bacs_debit_spm" : true,
+      "id_bank_transfers_v1_integration" : false,
+      "elements_enable_mx_card_installments" : true,
+      "elements_easel_disable_appearance_api_per_element_options" : true,
+      "elements_enable_easel_for_pi_killswitch" : false,
+      "elements_enable_google_pay_webview_heuristics" : true,
+      "elements_spm_messages" : false,
+      "elements_easel_disable_session_summary" : false,
+      "apple_pay_ece_killswitch" : false,
+      "distinctly_link_pe_purchase_protection" : true,
+      "link_enable_link_session_key_consumer_person_details" : false,
+      "link_auth_partner_enable_distinctly_link_android_fb" : true,
+      "link_auth_partner_delay_android_fb_cookie_login" : false,
+      "legacy_confirmation_tokens" : false,
+      "link_auth_partner_enable_distinctly_link_ios_instagram" : false,
+      "elements_easel_disable_elements_inspector_for_pi" : true,
+      "link_auth_partner_enable_ece" : true,
+      "distinctly_link_pe_backup_payment_method" : true,
+      "link_dedupe_shipping_address_creation" : true,
+      "ece_apple_pay_payment_request_passthrough" : false,
+      "link_enable_link_session_key_link_onboarding_session" : false,
+      "elements_enable_billing_details_in_pe_change_event" : true,
+      "networked_business_profile_demo" : false,
+      "elements_enable_payment_method_logo_position" : true,
+      "payto_enable_modal_in_payment_element" : true,
+      "checkout_link_in_habanero_enabled" : true,
+      "checkout_enable_bank_payment_method_spm" : true,
+      "elements_checkout_form_enable_new_amount_summary" : false,
+      "elements_disable_progressive_cursor" : false,
+      "enable_checkout_session_update_customer" : false,
+      "link_enable_auth_partner_sizing_logging" : true
+    },
+    "merchant_logo_url" : null,
+    "session_id" : "elements_session_1boF5fx2xlj",
+    "card_installments_enabled" : false,
+    "account_id" : "acct_1G6m1pFY0qyl6XeW",
+    "config_id" : "b0850caa-0676-475a-b8bc-1e211d25c399",
+    "merchant_currency" : "usd",
+    "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
+    "card_brand_choice" : {
+      "eligible" : false,
+      "preferred_networks" : [
+        "cartes_bancaires"
+      ],
+      "supported_cobranded_networks" : {
+        "cartes_bancaires" : true
+      }
+    },
+    "shipping_address_settings" : {
+      "autocomplete_allowed" : false
+    },
+    "external_payment_method_data" : null,
+    "custom_payment_method_data" : null,
+    "meta_pay_signed_container_context" : null,
+    "apple_pay_preference" : "disabled",
+    "payment_method_configuration_id" : null,
+    "merchant_country" : "US",
+    "google_pay_preference" : "disabled",
+    "paypal_express_config" : {
+      "client_id" : null,
+      "client_token" : null,
+      "paypal_merchant_id" : null
+    },
+    "experiments_data" : {
+      "arb_id" : "4e7114ab-7ca2-4273-bbbb-42a283f5b82d",
+      "experiment_metadata" : {
+        "seed" : "9cdc1757d7fd36f8f445bfa834b60470c8ca5d0e113efdc8dff975518140b683",
+        "semi_dominant_payment_methods" : [
+
+        ],
+        "lpm_holdback_t1_payment_methods" : [
+
+        ],
+        "lpm_adoption_ranking_upe_v2_ignore_fixed_lpms" : false,
+        "lpm_holdback_t2_payment_methods" : [
+
+        ]
+      },
+      "experiment_assignments" : {
+        "ocs_mobile_horizontal_mode_aa" : "control",
+        "link_ce_conversion_cookie_aa" : "control",
+        "ff_elements_test_frontend_eff" : "control",
+        "ocs_buyer_xp_elements_link_opt_in_on_payment_select" : "control",
+        "elements_hcaptcha_init_timeout" : "control",
+        "link_pe_signup_prominence" : "control",
+        "link_ce_conversion_unrecognized_aa" : "control",
+        "link_ab_test_aa" : "control",
+        "link_default_opt_in_disable_blocking" : "control",
+        "link_default_opt_in_disable_blocking_aa" : "control",
+        "connections_elements_incentive_shorten_promo_banner_text" : "control",
+        "link_dl_pe_inline_entrypoint" : "control",
+        "link_popup_browser_support" : "control",
+        "link_ulm_conversion_unrecognized_copy_change" : "control",
+        "ocs_mobile_horizontal_mode" : "control",
+        "paypal_payment_handler" : "control",
+        "link_ce_conversion_brand_change" : "control",
+        "link_dl_pe_inline_entrypoint_aa" : "control",
+        "link_popup_browser_support_aa" : "control",
+        "link_ewcs_clover_latency" : "control",
+        "link_ce_conversion_unrecognized_post_entry_aa" : "control",
+        "link_ce_conversion_ncdv_aa" : "control",
+        "connections_elements_variable_incentives_for_ibp_recurring_payments" : "control",
+        "link_pe_signup_prominence_aa" : "control"
+      }
+    },
+    "legacy_customer" : null,
+    "link_settings" : {
+      "link_passthrough_mode_enabled" : false,
+      "link_payment_element_smart_defaults_enabled" : false,
+      "link_mobile_attestation_state_sync_enabled" : false,
+      "link_no_code_default_values_recall" : true,
+      "link_funding_sources" : [
+
+      ],
+      "link_crypto_onramp_force_cvc_reverification" : false,
+      "link_enable_signup_in_express_checkout_element" : false,
+      "link_wanderlust_in_elements_enabled" : false,
+      "link_consumer_incentive" : null,
+      "link_crypto_onramp_bank_upsell" : false,
+      "link_ece_browser_compatibility_override" : false,
+      "link_enable_email_otp_for_link_popup" : false,
+      "link_crypto_onramp_elements_logout_disabled" : false,
+      "link_no_code_default_values_identification" : true,
+      "link_pay_button_element_enabled" : true,
+      "link_payment_element_enable_webauthn_login" : false,
+      "link_bank_onboarding_enabled" : false,
+      "link_enable_instant_debits_in_testmode" : false,
+      "link_payment_element_disabled_by_targeting" : false,
+      "link_sign_up_opt_in_feature_enabled" : false,
+      "link_only_for_payment_method_types_enabled" : false,
+      "link_disabled_reasons" : {
+        "payment_element_payment_method_mode" : [
+          "link_not_specified_in_payment_method_types"
+        ],
+        "payment_element_passthrough_mode" : [
+          "link_not_enabled_on_payment_config",
+          "does_not_include_card_in_payment_method_types"
+        ]
+      },
+      "link_sign_up_opt_in_initial_value" : false,
+      "link_mobile_use_attestation_endpoints" : false,
+      "link_elements_pageload_sign_up_disabled" : false,
+      "link_disable_pe_signup_prompt" : false,
+      "link_elements_is_crypto_onramp" : false,
+      "link_no_code_default_values_usage" : true,
+      "link_enable_webauthn_for_link_popup" : false,
+      "link_email_verification_login_enabled" : false,
+      "link_popup_webview_option" : "shared",
+      "link_targeting_results" : {
+        "payment_element_passthrough_mode" : null
+      },
+      "link_trusted_merchant_check_enabled" : false,
+      "link_global_holdback_on" : false,
+      "link_show_prefer_debit_card_hint" : false,
+      "link_local_storage_login_enabled" : false,
+      "link_payment_session_context" : null,
+      "link_session_storage_login_enabled" : false,
+      "link_brand" : "link",
+      "link_disable_in_safari_private_browsing" : false,
+      "link_mobile_disable_rux_in_flow_controller" : false,
+      "link_authenticated_change_event_enabled" : false,
+      "link_pm_killswitch_on_in_elements" : false,
+      "link_supported_payment_methods_onboarding_enabled" : [
+
+      ],
+      "link_hcaptcha_site_key" : null,
+      "link_payment_element_disable_signup" : false,
+      "link_enable_displayable_default_values_in_ece" : false,
+      "link_disable_email_otp" : false,
+      "link_hcaptcha_rqdata" : null,
+      "link_default_opt_in" : "NONE",
+      "link_supported_payment_methods" : [
+
+      ],
+      "link_mobile_disable_default_opt_in" : false,
+      "link_mode" : null,
+      "link_mobile_disable_signup" : false,
+      "link_popup_smart_defaults_enabled" : false
+    },
+    "passive_captcha" : null,
+    "payment_method_specs" : [
+      {
+        "async" : false,
+        "fields" : [
+
+        ],
+        "selector_icon" : {
+          "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-amazonpay_light@3x-46eb8b8a4a252b78d7b4c3b96d4ed7ae.png",
+          "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-amazonpay_light-22cdec0f5f5609554a34fa62fa583f23.svg"
+        },
+        "type" : "amazon_pay",
+        "next_action_spec" : {
+          "confirm_response_status_specs" : {
+            "requires_action" : {
+              "type" : "redirect_to_url"
+            }
+          },
+          "post_confirm_handling_pi_status_specs" : {
+            "requires_action" : {
+              "type" : "canceled"
+            },
+            "succeeded" : {
+              "type" : "finished"
+            }
+          }
+        }
+      }
+    ],
+    "prefill_selectors" : {
+      "default_values" : {
+        "email" : [
+
+        ],
+        "merchant_provides_default_values_on_update" : true
+      }
+    },
+    "unactivated_payment_method_types" : [
+      "amazon_pay"
+    ],
+    "unverified_payment_methods_on_domain" : [
+
+    ],
+    "order" : null,
+    "link_purchase_protections_data" : {
+      "type" : null,
+      "is_eligible" : false
+    },
+    "apple_pay_merchant_token_webhook_url" : null,
+    "customer" : null,
+    "klarna_express_config" : {
+      "klarna_mid" : null
+    },
+    "lpm_killswitches" : {
+      "express_checkout" : [
+
+      ],
+      "payment_element" : [
+
+      ]
+    },
+    "business_name" : "CI Stuff",
+    "ordered_payment_method_types_and_wallets" : [
+      "amazon_pay"
+    ],
+    "customer_error" : null
+  },
+  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_c1U0lKwqZPVlCM91KN7INOm8UzVogautcd4I3A52TLVRsf0rUnKGRM5kbb#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpmamlwaGsnKSdga2RnaWBVaWRmYG1qaWFgd3YnP3F3cGB4JSUl",
+  "prefilled" : null,
+  "redirect_on_completion" : null,
+  "blob" : null,
+  "client_reference_id" : null,
+  "status" : "open",
+  "submit_type" : null,
+  "email_collection" : "always",
+  "permissions" : null,
+  "custom_fields" : [
+
+  ],
+  "phone_number_collection" : {
+    "enabled" : false
+  },
+  "livemode" : false,
+  "ordered_payment_method_types" : [
+    "amazon_pay"
+  ],
+  "state" : "active",
+  "currency" : "usd",
+  "subscription_data" : null,
+  "customer_managed_saved_payment_methods_offer_save" : null,
+  "card_brand_choice" : {
+    "eligible" : false,
+    "preferred_networks" : [
+      "cartes_bancaires"
+    ],
+    "supported_cobranded_networks" : {
+      "cartes_bancaires" : false
+    }
+  },
+  "shipping" : null,
+  "crypto_in_link_ui_enabled" : false,
+  "rqdata" : "ezpjY05OieFLyhspDkJLXmE7lp++4eDtKV2xcB+5ljImKPdtZPIs9RRdO3v7nb3l+PABh4vFfcobo24mPoRwjntcOtTSg+uawVaKY3RndQ+cWPSsgsIl8lIeLE92X7nUZVSKCaNNDh4YMUVAVGJ9b8ffhDU5MMKE3XhHbrjJsZaopeVdoXsS16w2HtNJgctITDrg7FuZYw0H8XDKfirS9CJ\/xV7a+QzaORx9KAVVlC9ZjzuXSEFnAFCzwB9W8y02S7u1E4viGjc+69NHqUdLhxhy\/dmAaaTz+8N8gu1NgstcMlnXgYFtMSOivQ==F\/CXwiF4Jz66XqY6",
+  "total_summary" : {
+    "due" : 0,
+    "subtotal" : 0,
+    "total" : 0
+  },
+  "on_behalf_of" : null,
+  "cross_sell_group" : null,
+  "site_key" : "20000000-ffff-ffff-ffff-000000000002",
+  "checkout_multistep_ui" : false,
+  "eid" : "0bf7c48c-7dc9-49cf-ad7a-33195f42b44f",
+  "line_item_group" : null,
+  "managed_payments" : null,
+  "name_collection" : null,
+  "payment_intent" : null,
+  "config_id" : "eaeab9c9-cd02-40e1-9cc6-f710b0d2c006",
+  "is_sandbox_merchant" : false
+}

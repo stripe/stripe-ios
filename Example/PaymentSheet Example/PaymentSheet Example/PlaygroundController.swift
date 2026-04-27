@@ -210,10 +210,6 @@ import UIKit
             configuration.allowsDelayedPaymentMethods = true
         }
 
-        if settings.enableAttestationOnConfirmation == .on {
-            configuration.enableAttestationOnConfirmation = true
-        }
-
         if settings.shippingInfo != .off {
             configuration.allowsPaymentMethodsRequiringShippingAddress = true
             configuration.shippingDetails = { [weak self] in
@@ -337,10 +333,6 @@ import UIKit
 
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
-        }
-
-        if settings.enableAttestationOnConfirmation == .on {
-            configuration.enableAttestationOnConfirmation = true
         }
 
         if settings.shippingInfo != .off {
@@ -1110,7 +1102,7 @@ extension PlaygroundController {
         }
 
         // Only set PMO SFU on the Intent if we're Intent-first, never set it for deferred intents.
-        if settings.integrationType == .normal {
+        if settings.integrationType == .normal || settings.integrationType == .checkoutSession {
             body["payment_method_options_setup_future_usage"] = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
         }
         if shouldCreateCustomerKey {

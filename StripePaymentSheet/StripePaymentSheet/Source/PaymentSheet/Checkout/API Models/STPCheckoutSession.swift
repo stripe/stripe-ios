@@ -110,6 +110,10 @@ class STPCheckoutSession: NSObject {
     /// Top-level setup_future_usage for payment-mode checkout sessions.
     let setupFutureUsage: String?
 
+    /// Per-payment-method setup_future_usage overrides for payment-mode checkout sessions.
+    /// Parsed from `setup_future_usage_for_payment_method_type` in the init response.
+    let setupFutureUsageForPaymentMethodType: [String: String]
+
     /// Whether billing address collection is required for this session.
     /// Derived from `billing_address_collection == "required"` in the API response.
     let requiresBillingAddress: Bool
@@ -257,6 +261,7 @@ class STPCheckoutSession: NSObject {
         taxAmounts: [STPCheckoutSessionTaxAmount],
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
         setupFutureUsage: String?,
+        setupFutureUsageForPaymentMethodType: [String: String],
         requiresBillingAddress: Bool,
         allowedShippingCountries: [String]?,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
@@ -292,6 +297,7 @@ class STPCheckoutSession: NSObject {
         self.taxAmounts = taxAmounts
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
         self.setupFutureUsage = setupFutureUsage
+        self.setupFutureUsageForPaymentMethodType = setupFutureUsageForPaymentMethodType
         self.requiresBillingAddress = requiresBillingAddress
         self.allowedShippingCountries = allowedShippingCountries
         self.localizedPricesMetas = localizedPricesMetas
@@ -367,6 +373,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             from: dict["customer_managed_saved_payment_methods_offer_save"] as? [AnyHashable: Any]
         )
         let setupFutureUsage = dict["setup_future_usage"] as? String
+        let setupFutureUsageForPaymentMethodType = dict["setup_future_usage_for_payment_method_type"] as? [String: String] ?? [:]
 
         // Parse address collection settings
         let requiresBillingAddress = (dict["billing_address_collection"] as? String) == "required"
@@ -450,6 +457,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             taxAmounts: taxAmounts,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
             setupFutureUsage: setupFutureUsage,
+            setupFutureUsageForPaymentMethodType: setupFutureUsageForPaymentMethodType,
             requiresBillingAddress: requiresBillingAddress,
             allowedShippingCountries: allowedShippingCountries,
             localizedPricesMetas: localizedPricesMetas,
@@ -465,8 +473,16 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 // MARK: - Parsing Helpers
 
 extension STPCheckoutSession {
+    var isPaymentMethodOptionsSetupFutureUsageSet: Bool {
+        return !setupFutureUsageForPaymentMethodType.isEmpty
+    }
+
     func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
-        _ = paymentMethodType
+        let perPaymentMethodSetupFutureUsage = setupFutureUsageForPaymentMethodType[paymentMethodType.identifier]
+        if let perPaymentMethodSetupFutureUsage {
+            return perPaymentMethodSetupFutureUsage
+        }
+
         return setupFutureUsage
     }
 

@@ -88,7 +88,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         let launchedFromFlowController: Bool
         let initiallySelectedPaymentDetailsID: String?
         let callToAction: ConfirmButton.CallToActionType
-        let supportedPaymentMethodTypes: [LinkPaymentMethodType]
+        let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
         var lastAddedPaymentDetails: ConsumerPaymentDetails?
         var analyticsHelper: PaymentSheetAnalyticsHelper
         let linkAppearance: LinkAppearance?
@@ -113,15 +113,20 @@ final class PayWithLinkViewController: BottomSheetViewController {
 
         /// Returns the supported payment details types for the current Link account, filtered by the supportedPaymentMethodTypes.
         /// Returns [.card] as fallback if no types are supported after filtering.
-        func getSupportedPaymentDetailsTypes(linkAccount: PaymentSheetLinkAccount) -> Set<ConsumerPaymentDetails.DetailsType> {
+        func getSupportedPaymentDetailsTypes(linkAccount: PaymentSheetLinkAccount) -> Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> {
             let allSupportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: elementsSession)
-            let filteredSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes.intersection(supportedPaymentMethodTypes.detailsTypes)
+
+            // TODO(jkelle): Modify this line once we want to render PMs we don't have explicit support for (#6432).
+            // Remove the `allCases` default for `nil` filter types.
+            // https://docs.google.com/document/d/1x834BjHYro9-bDoAVaqgHm7LDPDwzpk4z_5BvxYwwtU
+            let supportedPaymentDetailsTypes = supportedPaymentMethodTypes?.detailsTypes ?? Set(ConsumerPaymentDetails.DetailsType.allCases.map(ParsedEnum.init))
+            let filteredSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes.intersection(supportedPaymentDetailsTypes)
 
             if !filteredSupportedPaymentDetailsTypes.isEmpty {
                 return filteredSupportedPaymentDetailsTypes
             } else {
                 // Card is the default payment method type when no other type is available.
-                return [.card]
+                return [ParsedEnum(.card)]
             }
         }
 
@@ -136,7 +141,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         ///   - launchedFromFlowController: Whether the flow was opened from `FlowController`.
         ///   - initiallySelectedPaymentDetailsID: The ID of an initially selected payment method. This is set when opened instead of FlowController.
         ///   - callToAction: A custom CTA to display on the confirm button. If `nil`, will display `intent`'s default CTA.
-        ///   - supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
+        ///   - supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil`, all available types are supported.
         ///   - analyticsHelper: An instance of `AnalyticsHelper` to use for logging.
         ///   - linkAppearance: Optional appearance overrides for Link UI.
         ///   - linkConfiguration: Configuration for Link behavior and content.
@@ -150,7 +155,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             launchedFromFlowController: Bool = false,
             initiallySelectedPaymentDetailsID: String?,
             callToAction: ConfirmButton.CallToActionType?,
-            supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+            supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             linkAppearance: LinkAppearance? = nil,
             linkConfiguration: LinkConfiguration? = nil
@@ -211,7 +216,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         initiallySelectedPaymentDetailsID: String? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil
     ) {
@@ -478,7 +483,7 @@ private extension PayWithLinkViewController {
         if paymentDetails.isEmpty {
             // Check if only bank accounts are supported - if so, launch Financial Connections directly
             let supportedTypes = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
-            if supportedTypes == [.bankAccount] {
+            if supportedTypes == [ParsedEnum(.bankAccount)] {
                 startFinancialConnections { [weak self] result in
                     guard let self else { return }
                     switch result {
@@ -848,8 +853,8 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
 }
 
 // Used to get deterministic ordering
-extension Set where Element == ConsumerPaymentDetails.DetailsType {
-    func toSortedArray() -> [ConsumerPaymentDetails.DetailsType] {
+extension Set where Element == ParsedEnum<ConsumerPaymentDetails.DetailsType> {
+    func toSortedArray() -> [ParsedEnum<ConsumerPaymentDetails.DetailsType>] {
         return self.sorted { lhs, rhs in
             lhs.rawValue.localizedCaseInsensitiveCompare(rhs.rawValue) == .orderedAscending
         }

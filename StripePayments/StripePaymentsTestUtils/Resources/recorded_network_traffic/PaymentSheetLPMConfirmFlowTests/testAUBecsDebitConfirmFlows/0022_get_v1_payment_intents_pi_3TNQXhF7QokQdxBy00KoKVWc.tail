@@ -1,0 +1,59 @@
+GET
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TNQXhF7QokQdxBy00KoKVWc\?client_secret=pi_3TNQXhF7QokQdxBy00KoKVWc_secret_jhz4kikfdCp1jCvLG7XCWIRqQ$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=Kl2cDbHPM0FcC0EfvZwZqXLN8EX3Xlqrk4gt4AEAxvE-Th6owvvyKVq-KxG3dbNWQBsbl_0I4blbZjbM
+Server: nginx
+x-wc: 3c3
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=Kl2cDbHPM0FcC0EfvZwZqXLN8EX3Xlqrk4gt4AEAxvE-Th6owvvyKVq-KxG3dbNWQBsbl_0I4blbZjbM&t=1"
+Cache-Control: no-cache, no-store
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+x-stripe-routing-context-priority-tier: api-testmode
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=Kl2cDbHPM0FcC0EfvZwZqXLN8EX3Xlqrk4gt4AEAxvE-Th6owvvyKVq-KxG3dbNWQBsbl_0I4blbZjbM&t=1"}],"include_subdomains":true}
+request-id: req_Gc11MDl3OXiH3w
+Content-Length: 849
+Vary: Origin
+Date: Sat, 18 Apr 2026 04:31:41 GMT
+stripe-version: 2020-08-27
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_payment_method",
+  "object" : "payment_intent",
+  "currency" : "aud",
+  "last_payment_error" : null,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : null,
+  "payment_method" : null,
+  "client_secret" : "pi_3TNQXhF7QokQdxBy00KoKVWc_secret_jhz4kikfdCp1jCvLG7XCWIRqQ",
+  "id" : "pi_3TNQXhF7QokQdxBy00KoKVWc",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "au_becs_debit"
+  ],
+  "setup_future_usage" : "off_session",
+  "created" : 1776486701,
+  "description" : null
+}

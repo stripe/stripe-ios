@@ -166,9 +166,8 @@ enum Intent {
                 return !setupFutureUsageValues.isEmpty
             }
             return nil
-        case .checkoutSession:
-            // TODO(gbirch): implement during PMO SFU work
-            return nil
+        case .checkoutSession(let checkoutSession):
+            return checkoutSession.isPaymentMethodOptionsSetupFutureUsageSet
         case .setupIntent:
             return nil
         }
@@ -195,7 +194,7 @@ enum Intent {
         case .checkoutSession(let checkoutSession):
             switch checkoutSession.mode {
             case .payment:
-                guard let setupFutureUsage = checkoutSession.setupFutureUsage else {
+                guard let setupFutureUsage = checkoutSession.setupFutureUsage(for: paymentMethodType) else {
                     return false
                 }
                 return setupFutureUsage != "none"
