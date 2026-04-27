@@ -4,6 +4,7 @@
 //
 //  Created by Mel Ludowise on 5/26/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
+//  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
 import Foundation
