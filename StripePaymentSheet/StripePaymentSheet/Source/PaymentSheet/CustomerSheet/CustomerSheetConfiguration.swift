@@ -85,9 +85,6 @@ extension CustomerSheet {
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
 
-        /// If true, device will attest and assert on confirmation requests
-        @_spi(STP) public var enableAttestationOnConfirmation: Bool = false
-
         public init () {
         }
     }
