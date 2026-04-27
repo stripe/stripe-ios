@@ -264,13 +264,7 @@ extension AutoCompleteViewController: ElementDelegate {
         autocompleteTask?.cancel()
         autocompleteTask = Task { @MainActor in
             do {
-                let languageCode: String
-                if #available(iOS 16, *) {
-                    languageCode = Locale.current.language.languageCode?.identifier ?? "en"
-                } else {
-                    // Fallback on earlier versions
-                    languageCode = Locale.current.languageCode ?? "en"
-                }
+                let languageCode = Locale.current.identifier
                 let countryCodes = configuration.autocompleteCountries.isEmpty
                     ? configuration.allowedCountries
                     : configuration.autocompleteCountries
