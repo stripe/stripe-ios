@@ -41,4 +41,26 @@ class PresentationManagerTests: XCTestCase {
 
         XCTAssertEqual(appearance.logo, .onelink_logo)
     }
+
+    func testOnelinkBrandUsesSameTintAsLinkForLightTheme() {
+        let onelinkAppearance = FinancialConnectionsAppearance(theme: .light, brand: .onelink)
+        let linkAppearance = FinancialConnectionsAppearance(theme: .light, brand: .link)
+
+        XCTAssertTrue(onelinkAppearance.logoTintColor.isEqual(linkAppearance.logoTintColor))
+    }
+
+    func testOnelinkBrandUsesSameTintAsLinkForLinkTheme() {
+        let onelinkAppearance = FinancialConnectionsAppearance(theme: .linkLight, brand: .onelink)
+        let linkAppearance = FinancialConnectionsAppearance(theme: .linkLight, brand: .link)
+
+        XCTAssertTrue(onelinkAppearance.logoTintColor.isEqual(linkAppearance.logoTintColor))
+    }
+
+    func testLinkBrandStillUsesThemeTinting() {
+        let linkAppearance = FinancialConnectionsAppearance(theme: .light, brand: .link)
+        let stripeAppearance = FinancialConnectionsAppearance(theme: .light, brand: nil)
+
+        XCTAssertFalse(linkAppearance.logoTintColor.isEqual(.clear))
+        XCTAssertFalse(stripeAppearance.logoTintColor.isEqual(.clear))
+    }
 }

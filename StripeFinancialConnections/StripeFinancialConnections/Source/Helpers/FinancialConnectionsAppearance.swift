@@ -70,7 +70,7 @@ struct FinancialConnectionsAppearance: Equatable {
             self.logoTintColor = Self.linkLogoTintColor(for: theme)
         case .onelink:
             self.logo = .onelink_logo
-            self.logoTintColor = .onelinkLogo
+            self.logoTintColor = Self.linkLogoTintColor(for: theme)
         }
     }
 
@@ -149,10 +149,6 @@ extension FinancialConnectionsAppearance.Colors {
 private extension UIColor {
     static let stripeLogo: UIColor = .dynamic(light: .brand600, dark: .neutral0)
     static let linkLogo: UIColor = .dynamic(light: .linkGreen900, dark: .neutral0)
-    static let onelinkLogo: UIColor = .dynamic(
-        light: UIColor(red: 0.23, green: 0.74, blue: 0.66, alpha: 1.0),
-        dark: .neutral0
-    )
 
     // MARK: Neutral
     static var neutral0: UIColor {
