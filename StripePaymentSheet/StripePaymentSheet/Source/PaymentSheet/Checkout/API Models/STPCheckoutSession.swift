@@ -148,11 +148,11 @@ class STPCheckoutSession: NSObject {
     /// The raw API response used to create this object.
     let allResponseFields: [AnyHashable: Any]
 
-    /// Client-side billing address override, set via Checkout.updateBillingAddress(_:).
-    var billingAddressOverride: Checkout.AddressUpdate?
+    /// Client-side billing address override, set via Checkout.updateBillingAddress(name:phone:address:).
+    var billingAddressOverride: Checkout.ContactAddress?
 
-    /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
-    var shippingAddressOverride: Checkout.AddressUpdate?
+    /// Client-side shipping address override, set via Checkout.updateShippingAddress(name:phone:address:).
+    var shippingAddressOverride: Checkout.ContactAddress?
 
     /// Called by confirm handlers with the updated session after a successful confirm.
     /// `Checkout.updateSession(_:)` sets this so the confirm response flows back
