@@ -173,7 +173,6 @@ import UIKit
         ])
 
         self.cbcIndicatorSizeConstraint = cbcIndicatorSizeConstraint
-        isAccessibilityElement = true
         updateIcon()
     }
 
@@ -208,16 +207,6 @@ import UIKit
 
     private func updateIcon() {
         imageView.image = image(for: cardBrandState)
-        updateAccessibilityLabel()
-    }
-
-    private func updateAccessibilityLabel() {
-        let brand = cardBrandState.brand
-        if brand != .unknown, let brandName = STPCardBrandUtilities.stringFrom(brand) {
-            accessibilityLabel = brandName
-        } else {
-            accessibilityLabel = nil
-        }
     }
 
     private func performTransitionAnimation() {
