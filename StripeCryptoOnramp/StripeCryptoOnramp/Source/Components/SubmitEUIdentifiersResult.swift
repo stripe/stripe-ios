@@ -31,7 +31,7 @@ public struct SubmitEUIdentifiersResult: Decodable, Equatable {
         valid = try container.decodeIfPresent(Bool.self, forKey: .valid) ?? true
         let nestedMissingIdentifiers = try container.decodeIfPresent(MissingEUIdentifiers.self, forKey: .missingIdentifiers)
         let topLevelMissingIdentifiers = try? MissingEUIdentifiers(from: decoder)
-        missingIdentifiers = nestedMissingIdentifiers ?? topLevelMissingIdentifiers?.nilIfEmpty
+        missingIdentifiers = (nestedMissingIdentifiers ?? topLevelMissingIdentifiers)?.nilIfEmpty
         errors = try container.decodeIfPresent([String].self, forKey: .errors)
     }
 }

@@ -124,7 +124,7 @@ extension STPAPIClient {
 
         try validateSessionState(using: linkAccountInfo)
 
-        let endpoint = "crypto/internal/get_identifier_requirements"
+        let endpoint = "crypto/internal/identifier_requirements"
         return try await get(
             resource: endpoint,
             parameters: try credentialsParameters(consumerSessionClientSecret: consumerSessionClientSecret)

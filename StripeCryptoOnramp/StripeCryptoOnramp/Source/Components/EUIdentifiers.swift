@@ -17,13 +17,24 @@ public struct EUIdentifier: Codable, Equatable {
     /// The national identifier or tax identification number value.
     public let identifier: String
 
+    /// The type of MICA national identifier provided, if applicable.
+    public let identifierType: String?
+
     /// Creates an `EUIdentifier`.
     /// - Parameters:
     ///   - country: The two-letter country code associated with the identifier (ISO 3166-1 alpha-2).
     ///   - identifier: The national identifier or tax identification number value.
-    public init(country: String, identifier: String) {
+    ///   - identifierType: The type of MICA national identifier provided, if applicable.
+    public init(country: String, identifier: String, identifierType: String? = nil) {
         self.country = country
         self.identifier = identifier
+        self.identifierType = identifierType
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case country
+        case identifier
+        case identifierType = "identifier_type"
     }
 }
 
