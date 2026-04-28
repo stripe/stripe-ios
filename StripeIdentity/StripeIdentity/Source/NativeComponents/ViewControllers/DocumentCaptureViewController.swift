@@ -395,7 +395,9 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 scanner: anyDocumentScanner,
                 concurrencyManager: concurrencyManager
                     ?? ImageScanningConcurrencyManager(
-                        sheetController: sheetController
+                        sheetController: sheetController,
+                        scannerName: .document,
+                        screenName: .documentCapture
                     ),
                 cameraPermissionsManager: cameraPermissionsManager,
                 appSettingsHelper: appSettingsHelper
@@ -643,7 +645,9 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         }
         sheetController.analyticsClient.logCameraError(
             sheetController: sheetController,
-            error: error
+            error: error,
+            screenName: analyticsScreenName,
+            cameraSource: .cameraSession
         )
     }
 
@@ -656,7 +660,9 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
         }
         sheetController.analyticsClient.logCameraPermissionsChecked(
             sheetController: sheetController,
-            isGranted: isGranted
+            isGranted: isGranted,
+            screenName: analyticsScreenName,
+            cameraSource: .cameraSession
         )
     }
 
