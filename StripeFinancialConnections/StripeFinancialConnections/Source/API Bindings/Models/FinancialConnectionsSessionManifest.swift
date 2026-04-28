@@ -204,3 +204,4 @@ extension FinancialConnectionsSessionManifest {
         )
     }
 }
+#endif
