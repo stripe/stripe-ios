@@ -30,9 +30,7 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
     }
 
     func testResolvedLinkBrand_defaultsToLinkWhenElementsSessionHasNoBrand() {
-        let elementsSession = STPElementsSession._testValue(
-            linkSettings: ._testValue(brand: nil)
-        )
+        let elementsSession = STPElementsSession._testValue()
         let configuration = PaymentSheet.Configuration()
 
         XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .link)

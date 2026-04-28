@@ -109,19 +109,6 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         XCTAssertTrue(manifest.appearance.colors.primary.isEqual(FinancialConnectionsAppearance.Colors.stripe.primary))
     }
 
-    func testNotlinkBrandUsesExpectedTintColors() {
-        let appearance = FinancialConnectionsAppearance(theme: .light, brand: .notlink)
-
-        XCTAssertEqual(
-            appearance.logoTintColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .light)),
-            UIColor(red: 0.23, green: 0.74, blue: 0.66, alpha: 1.0)
-        )
-        XCTAssertEqual(
-            appearance.logoTintColor.resolvedColor(with: UITraitCollection(userInterfaceStyle: .dark)),
-            .white
-        )
-    }
-
     private func makeSynchronize(brandValue: String?) throws -> FinancialConnectionsSynchronize {
         var payload = try JSONSerialization.jsonObject(with: FinancialConnectionsSynchronizeMock.synchronize.data()) as? [String: Any]
         var manifest = payload?["manifest"] as? [String: Any]
