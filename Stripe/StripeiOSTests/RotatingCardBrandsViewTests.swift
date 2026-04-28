@@ -57,7 +57,7 @@ class RotatingCardBrandsViewTests: XCTestCase {
         XCTAssertTrue(view.isAccessibilityElement)
         XCTAssertEqual(
             view.accessibilityLabel,
-            "Supported cards: Visa, Mastercard, American Express, and Discover"
+            "Supported cards: Visa, Mastercard, American Express, Discover"
         )
     }
 
@@ -70,7 +70,7 @@ class RotatingCardBrandsViewTests: XCTestCase {
     func testAccessibilityLabelWithTwoBrands() {
         let view = RotatingCardBrandsView()
         view.cardBrands = [.visa, .mastercard]
-        XCTAssertEqual(view.accessibilityLabel, "Supported cards: Visa, and Mastercard")
+        XCTAssertEqual(view.accessibilityLabel, "Supported cards: Visa, Mastercard")
     }
 
     func testAccessibilityLabelWithEmptyBrands() {
