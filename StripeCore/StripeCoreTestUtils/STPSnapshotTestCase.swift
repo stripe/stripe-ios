@@ -28,7 +28,7 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         }
     }
 
-    var isIOS26_1: Bool {
+    public var isIOS26_1: Bool {
         let isiOS26_1 = UIDevice.current.systemVersion == TEST_DEVICE_OS_VERSION_26_1
         #if compiler(>=6.2.1)
         let isXcode26_1 = true
