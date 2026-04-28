@@ -101,6 +101,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     private var lastScanningInstructionTextUpdate = Date.distantPast
 
     private func resetLastScanningInstructionText() {
+        resetScanningInstructionTextTimer?.invalidate()
         lastScanningInstructionText = nil
         lastScanningInstructionTextUpdate = Date.distantPast
     }
@@ -121,6 +122,21 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 )
             )
         case .scanning(let documentSide, let documentScannerOutput):
+            if captureMode == .manual {
+                resetLastScanningInstructionText()
+                return .scan(
+                    .init(
+                        scanningViewModel: .videoPreview(
+                            imageScanningSession.cameraSession,
+                            animateBorder: false
+                        ),
+                        instructionalText: scanningTextWithNoInput(
+                            availableIDTypes: availableIDTypes,
+                            for: documentSide
+                        )
+                    )
+                )
+            }
             let newScanningInstructionText: String
             let now = Date()
             // update instruction text, at most once a second
@@ -437,7 +453,10 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             ),
             viewModel: flowViewModel
         )
-        documentCaptureView.configure(with: viewModel)
+        documentCaptureView.configure(
+            with: viewModel,
+            topAccessoryView: shouldShowCaptureModeControl ? captureModeControl : nil
+        )
         generateFeedbackIfNeededForStateChange()
     }
 
@@ -469,23 +488,15 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     }
 
     private func configureCaptureModeControl() {
-        guard shouldShowCaptureModeControl else {
-            navigationItem.titleView = nil
-            return
-        }
-
-        navigationItem.titleView = captureModeControl
         updateCaptureModeControl()
     }
 
     private func updateCaptureModeControl() {
         guard shouldShowCaptureModeControl else {
-            navigationItem.titleView = nil
             return
         }
         captureModeControl.selectedSegmentIndex = captureMode.rawValue
         captureModeControl.isEnabled = captureModeControlIsEnabled
-        navigationItem.titleView = captureModeControl
     }
 
     @objc
@@ -525,6 +536,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         case .scanning(let documentSide, _):
             if captureMode == .manual {
                 imageScanningSession.stopTimeoutTimer()
+                imageScanningSession.updateScanningState(nil)
             } else {
                 imageScanningSession.startTimeoutTimer(
                     expectedClassification: documentSide
@@ -730,7 +742,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
 
         guard captureMode == .live else {
             imageScanningSession.stopTimeoutTimer()
-            imageScanningSession.updateScanningState(scannerOutputOptional)
+            imageScanningSession.updateScanningState(nil)
             if !hadCapturedCameraFrame {
                 updateUI()
             }

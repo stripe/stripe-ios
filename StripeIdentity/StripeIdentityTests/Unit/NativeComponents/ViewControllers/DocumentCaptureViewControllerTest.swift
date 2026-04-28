@@ -499,8 +499,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
     func testCaptureModeControlShownWhenManualCaptureIsAllowed() throws {
         let vc = makeViewController(state: .initial)
-
-        let control = try XCTUnwrap(vc.navigationItem.titleView as? UISegmentedControl)
+        XCTAssertNil(vc.navigationItem.titleView)
+        let control = try XCTUnwrap(findCaptureModeControl(in: vc.documentCaptureView))
         XCTAssertEqual(control.selectedSegmentIndex, 0)
         XCTAssertTrue(control.isEnabled)
     }
@@ -511,14 +511,14 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             state: .initial,
             apiConfig: mockResponse.documentCapture
         )
+        XCTAssertNil(findCaptureModeControl(in: vc.documentCaptureView))
 
         XCTAssertNil(vc.navigationItem.titleView)
     }
 
     func testCaptureModeControlDisabledWhenScanned() throws {
         let vc = makeViewController(state: .scanned(.front, UIImage()))
-
-        let control = try XCTUnwrap(vc.navigationItem.titleView as? UISegmentedControl)
+        let control = try XCTUnwrap(findCaptureModeControl(in: vc.documentCaptureView))
         XCTAssertFalse(control.isEnabled)
     }
 
@@ -544,10 +544,25 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
 
         XCTAssertStateEqual(
             vc.imageScanningSession.state,
-            .scanning(.front, mockDocumentScannerOutput)
+            .scanning(.front, nil)
         )
         XCTAssertNil(mockDocumentUploader.uploadedSide)
         XCTAssertEqual(vc.buttonViewModels.first?.state, .enabled)
+        guard case .scan(let viewModel) = vc.viewModel else {
+            return XCTFail("Expected scan view model")
+        }
+        guard case .videoPreview(_, let animateBorder) = viewModel.scanningViewModel else {
+            return XCTFail("Expected video preview while scanning")
+        }
+        XCTAssertFalse(animateBorder)
+        XCTAssertEqual(
+            viewModel.instructionalText,
+            vc.scanningTextWithNoInput(
+                availableIDTypes: DocumentCaptureViewControllerTest.mockVerificationPage
+                    .documentSelect.idDocumentTypeAllowlistKeys,
+                for: .front
+            )
+        )
 
         vc.buttonViewModels.first?.didTap()
 
@@ -905,10 +920,24 @@ extension DocumentCaptureViewControllerTest {
 
     @discardableResult
     fileprivate func switchToManualCapture(_ vc: DocumentCaptureViewController) throws -> UISegmentedControl {
-        let control = try XCTUnwrap(vc.navigationItem.titleView as? UISegmentedControl)
+        let control = try XCTUnwrap(findCaptureModeControl(in: vc.documentCaptureView))
         control.selectedSegmentIndex = 1
         vc.didChangeCaptureMode(control)
         return control
+    }
+
+    fileprivate func findCaptureModeControl(in view: UIView) -> UISegmentedControl? {
+        if let control = view as? UISegmentedControl {
+            return control
+        }
+
+        for subview in view.subviews {
+            if let control = findCaptureModeControl(in: subview) {
+                return control
+            }
+        }
+
+        return nil
     }
 
     fileprivate func makeViewController(
