@@ -128,9 +128,8 @@ struct PlaygroundView: View {
                             .pickerStyle(.segmented)
                         }
 
-                        if viewModel.integrationType.wrappedValue == .standalone
-                            && viewModel.experience.wrappedValue == .instantBankPayment
-                            && viewModel.sdkType.wrappedValue != .fcLite {
+                        if !(viewModel.integrationType.wrappedValue == .standalone
+                            && viewModel.experience.wrappedValue == .financialConnections) {
                             HStack {
                                 Text("Link brand")
                                     .font(.subheadline)

@@ -842,6 +842,10 @@ private func PresentPaymentSheet(
     case .alwaysDark: configuration.style = .alwaysDark
     }
 
+    if config.linkBrand == .notlink {
+        configuration.link.brand = .notlink
+    }
+
     let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)
     // disable app-to-app for UI tests
     configuration.returnURL = isUITest ? nil : PlaygroundViewModel.returnUrl

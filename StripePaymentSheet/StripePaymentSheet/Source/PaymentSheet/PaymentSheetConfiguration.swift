@@ -557,7 +557,7 @@ extension PaymentSheet {
         public init(
             display: Display = .automatic
         ) {
-            self.display = display
+            self.init(display: display, brand: nil)
         }
 
         @_spi(STP) public init(
