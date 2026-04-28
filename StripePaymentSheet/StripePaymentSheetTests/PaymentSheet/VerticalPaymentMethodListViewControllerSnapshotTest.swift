@@ -73,7 +73,7 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
         let window = UIWindow()
         window.isHidden = false
         window.addAndPinSubview(sut.view, insets: .zero)
-        STPSnapshotVerifyView(window, autoSizingHeightForWidth: 375, overallTolerance: 0.01)
+        STPSnapshotVerifyView(window, overallTolerance: 0.01, autoSizingHeightForWidth: 375)
     }
 
     func testReturningLinkConsumer() {
