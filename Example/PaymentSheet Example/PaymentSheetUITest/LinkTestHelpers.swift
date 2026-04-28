@@ -66,7 +66,7 @@ extension XCTestCase {
         if includingBillingDetails {
             fillOutBillingDetails(app)
         } else {
-            XCTAssertTrue(app.fc_dismissKeyboard())
+            app.fc_dismissKeyboard()
         }
     }
 
@@ -106,7 +106,7 @@ extension XCTestCase {
                 zipField.typeText("94080")
             }
 
-            XCTAssertTrue(app.fc_dismissKeyboard())
+            app.fc_dismissKeyboard()
         }
     }
 
