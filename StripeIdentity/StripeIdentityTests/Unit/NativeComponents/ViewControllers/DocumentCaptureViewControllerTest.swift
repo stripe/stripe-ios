@@ -561,8 +561,8 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
             mockDocumentUploader.uploadedDocumentScannerOutput,
             mockDocumentScannerOutput
         )
-        XCTAssertEqual(vc.buttonViewModels.count, 2)
-        XCTAssertEqual(vc.buttonViewModels.last?.text, "Continue")
+        XCTAssertEqual(vc.buttonViewModels.count, 1)
+        XCTAssertEqual(vc.buttonViewModels.first?.text, "Continue")
     }
 
     func testFileUploadButtonCameraAccess() {

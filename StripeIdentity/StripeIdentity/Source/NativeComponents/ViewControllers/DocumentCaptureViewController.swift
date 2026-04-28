@@ -224,19 +224,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 [weak self] in
                 self?.saveOrFlipDocument(scannedImage: image, documentSide: documentSide)
             }
-            guard captureMode == .manual else {
-                return [continueButton]
-            }
-            return [
-                .init(
-                    text: takePhotoButtonText,
-                    isPrimary: false,
-                    didTap: { [weak self] in
-                        self?.retakeManualPhoto(for: documentSide)
-                    }
-                ),
-                continueButton,
-            ]
+            return [continueButton]
 
         case .noCameraAccess:
             var models = [IdentityFlowView.ViewModel.Button]()
@@ -584,12 +572,6 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             expectedClassification: documentSide,
             capturedData: UIImage(cgImage: latestCapturedCameraFrame.image)
         )
-    }
-
-    private func retakeManualPhoto(for documentSide: DocumentSide) {
-        latestCapturedCameraFrame = nil
-        bestFramePicker.reset()
-        imageScanningSession.startScanning(expectedClassification: documentSide)
     }
 
     private func saveFrontAndDecideBack(
