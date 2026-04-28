@@ -138,90 +138,69 @@ struct FinancialConnectionsSessionManifest: Decodable {
     }
 }
 
-#if DEBUG
 extension FinancialConnectionsSessionManifest {
     init(
-        accountholderCustomerEmailAddress: String? = nil,
-        accountholderIsLinkConsumer: Bool? = nil,
-        accountholderPhoneNumber: String? = nil,
-        accountholderToken: String? = nil,
-        accountDisconnectionMethod: FinancialConnectionsSessionManifest.AccountDisconnectionMethod? = nil,
-        activeAuthSession: FinancialConnectionsAuthSession? = nil,
-        activeInstitution: FinancialConnectionsInstitution? = nil,
         allowManualEntry: Bool,
-        appVerificationEnabled: Bool? = nil,
-        assignmentEventId: String? = nil,
         brand: LinkBrand? = nil,
-        businessName: String? = nil,
-        cancelUrl: String? = nil,
-        consentAcquiredAt: String? = nil,
         consentRequired: Bool,
         customManualEntryHandling: Bool,
         disableLinkMoreAccounts: Bool,
         displayText: FinancialConnectionsSessionManifest.DisplayText? = nil,
         experimentAssignments: [String: String]? = nil,
         features: [String: Bool]? = nil,
-        hostedAuthUrl: String? = nil,
         id: String,
-        initialInstitution: FinancialConnectionsInstitution? = nil,
         instantVerificationDisabled: Bool,
         institutionSearchDisabled: Bool,
-        isEndUserFacing: Bool? = nil,
-        isLinkWithStripe: Bool? = nil,
-        isNetworkingUserFlow: Bool? = nil,
-        isStripeDirect: Bool? = nil,
         livemode: Bool,
         manualEntryMode: FinancialConnectionsSessionManifest.ManualEntryMode,
         manualEntryUsesMicrodeposits: Bool,
         nextPane: FinancialConnectionsSessionManifest.NextPane,
-        paymentMethodType: FinancialConnectionsPaymentMethodType? = nil,
         permissions: [StripeAPI.FinancialConnectionsAccount.Permissions],
         product: String,
         singleAccount: Bool,
-        skipSuccessPane: Bool? = nil,
-        successUrl: String? = nil,
         theme: Theme? = nil
     ) {
-        self.accountholderCustomerEmailAddress = accountholderCustomerEmailAddress
-        self.accountholderIsLinkConsumer = accountholderIsLinkConsumer
-        self.accountholderPhoneNumber = accountholderPhoneNumber
-        self.accountholderToken = accountholderToken
-        self.accountDisconnectionMethod = accountDisconnectionMethod
-        self.activeAuthSession = activeAuthSession
-        self.activeInstitution = activeInstitution
-        self.allowManualEntry = allowManualEntry
-        self.appVerificationEnabled = appVerificationEnabled
-        self.assignmentEventId = assignmentEventId
-        self.brand = brand
-        self.businessName = businessName
-        self.cancelUrl = cancelUrl
-        self.consentRequired = consentRequired
-        self.consentAcquiredAt = consentAcquiredAt
-        self.customManualEntryHandling = customManualEntryHandling
-        self.disableLinkMoreAccounts = disableLinkMoreAccounts
-        self.displayText = displayText
-        self.experimentAssignments = experimentAssignments
-        self.features = features
-        self.hostedAuthUrl = hostedAuthUrl
-        self.id = id
-        self.initialInstitution = initialInstitution
-        self.instantVerificationDisabled = instantVerificationDisabled
-        self.institutionSearchDisabled = institutionSearchDisabled
-        self.isEndUserFacing = isEndUserFacing
-        self.isLinkWithStripe = isLinkWithStripe
-        self.isNetworkingUserFlow = isNetworkingUserFlow
-        self.isStripeDirect = isStripeDirect
-        self.livemode = livemode
-        self.manualEntryMode = manualEntryMode
-        self.manualEntryUsesMicrodeposits = manualEntryUsesMicrodeposits
-        self.nextPane = nextPane
-        self.paymentMethodType = paymentMethodType
-        self.permissions = permissions
-        self.product = product
-        self.singleAccount = singleAccount
-        self.skipSuccessPane = skipSuccessPane
-        self.successUrl = successUrl
-        self.theme = theme
+        self.init(
+            accountholderCustomerEmailAddress: nil,
+            accountholderIsLinkConsumer: nil,
+            accountholderPhoneNumber: nil,
+            accountholderToken: nil,
+            accountDisconnectionMethod: nil,
+            activeAuthSession: nil,
+            activeInstitution: nil,
+            allowManualEntry: allowManualEntry,
+            appVerificationEnabled: nil,
+            assignmentEventId: nil,
+            brand: brand,
+            businessName: nil,
+            cancelUrl: nil,
+            consentAcquiredAt: nil,
+            consentRequired: consentRequired,
+            customManualEntryHandling: customManualEntryHandling,
+            disableLinkMoreAccounts: disableLinkMoreAccounts,
+            displayText: displayText,
+            experimentAssignments: experimentAssignments,
+            features: features,
+            hostedAuthUrl: nil,
+            id: id,
+            initialInstitution: nil,
+            instantVerificationDisabled: instantVerificationDisabled,
+            institutionSearchDisabled: institutionSearchDisabled,
+            isEndUserFacing: nil,
+            isLinkWithStripe: nil,
+            isNetworkingUserFlow: nil,
+            isStripeDirect: nil,
+            livemode: livemode,
+            manualEntryMode: manualEntryMode,
+            manualEntryUsesMicrodeposits: manualEntryUsesMicrodeposits,
+            nextPane: nextPane,
+            paymentMethodType: nil,
+            permissions: permissions,
+            product: product,
+            singleAccount: singleAccount,
+            skipSuccessPane: nil,
+            successUrl: nil,
+            theme: theme
+        )
     }
 }
-#endif
