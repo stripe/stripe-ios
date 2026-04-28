@@ -174,11 +174,8 @@ extension FinancialConnectionsNavigationController {
         let logoView: UIImageView? = {
             guard !shouldHideLogo else { return nil }
 
-            let usesTemplate = appearance.logo != .notlink_logo
-            let logoImage = UIImageView(image: appearance.logo.makeImage(template: usesTemplate))
-            if usesTemplate {
-                logoImage.tintColor = appearance.logoTintColor
-            }
+            let logoImage = UIImageView(image: appearance.logo.makeImage(template: true))
+            logoImage.tintColor = appearance.logoTintColor
             logoImage.contentMode = .scaleAspectFit
             logoImage.sizeToFit()
 
