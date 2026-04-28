@@ -22,7 +22,7 @@ final class RowButtonFlatWithDisclosure: RowButton {
     }()
 
     override func setupUI() {
-        let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
+        let labelsStackView = UIStackView(arrangedSubviews: [label, sublabelView])
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 

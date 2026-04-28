@@ -72,6 +72,7 @@ extension EmbeddedPaymentElement {
             mandateProvider: mandateProvider,
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
             savedPaymentMethods: loadResult.savedPaymentMethods,
+            bnplRowButtonData: loadResult.bnplRowButtonData,
             customer: configuration.customer,
             currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
@@ -464,11 +465,16 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
             return
         }
 
-        // Don't show the change button for the disclosure style
-        let shouldShowChangeButton = configuration.appearance.embeddedPaymentElement.row.style != .flatWithDisclosure
-        if shouldShowChangeButton {
-            embeddedPaymentMethodsView.selectedRowButton?.addChangeButton()
+        guard !(embeddedPaymentMethodsView.selectedRowButton?.sublabel is RowButtonBNPLSublabel) else {
+            stpAssertionFailure("updateChangeButtonAndSublabelState should not be called for BNPL row buttons.")
+            embeddedPaymentMethodsView.selectedRowChangeButtonState = (false, nil)
+            return
         }
+
+        let selectedRowButton = embeddedPaymentMethodsView.selectedRowButton
+        let shouldShowChangeButton =
+            configuration.appearance.embeddedPaymentElement.row.style != .flatWithDisclosure &&
+            selectedRowButton?.plainSublabel != nil
 
         // Add a sublabel
         let sublabel: String? = {
@@ -486,12 +492,12 @@ extension EmbeddedPaymentElement: EmbeddedFormViewControllerDelegate {
                 return nil
             }
         }()
-        // Only overwrite the existing sublabel if we have a new one
-        if let sublabel {
-            embeddedPaymentMethodsView.selectedRowButton?.setSublabel(text: sublabel)
+        if shouldShowChangeButton, let selectedRowButton {
+            selectedRowButton.showChangeButton(sublabel: sublabel)
+            embeddedPaymentMethodsView.selectedRowChangeButtonState = (true, sublabel)
+        } else {
+            embeddedPaymentMethodsView.selectedRowChangeButtonState = (false, nil)
         }
-
-        embeddedPaymentMethodsView.selectedRowChangeButtonState = (shouldShowChangeButton, sublabel)
     }
 }
 

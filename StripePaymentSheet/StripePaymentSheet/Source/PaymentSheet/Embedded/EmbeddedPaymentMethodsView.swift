@@ -71,9 +71,7 @@ class EmbeddedPaymentMethodsView: UIView {
             }
         }
     }
-    private var linkRowButton: RowButton? {
-        rowButtons.first(where: { $0.type == .link })
-    }
+    private var linkRow: (rowButton: RowButton, sublabel: RowButtonPlainSublabel)?
 
     private let mandateProvider: MandateTextProvider
     private let shouldShowMandate: Bool
@@ -101,6 +99,7 @@ class EmbeddedPaymentMethodsView: UIView {
     }()
     private var savedPaymentMethodButton: RowButton?
     private(set) var rowButtons: [RowButton]
+    private let bnplRowButtonData: [PaymentSheet.PaymentMethodType: RowButtonBNPLData]
     weak var delegate: EmbeddedPaymentMethodsViewDelegate?
     /// Keeps track of whether we're showing a change button/sublabel on the selected row
     /// Hacky - ideally we have a RowButtonViewModel type of object that keeps track of this state.
@@ -118,6 +117,7 @@ class EmbeddedPaymentMethodsView: UIView {
         mandateProvider: MandateTextProvider,
         shouldShowMandate: Bool = true,
         savedPaymentMethods: [STPPaymentMethod] = [],
+        bnplRowButtonData: [PaymentSheet.PaymentMethodType: RowButtonBNPLData] = [:],
         customer: PaymentSheet.CustomerConfiguration? = nil,
         currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
@@ -132,6 +132,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
         self.delegate = delegate
+        self.bnplRowButtonData = bnplRowButtonData
         self.rowButtons = []
         super.init(frame: .zero)
 
@@ -164,11 +165,12 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowLink {
-            let linkRowButton = RowButton.makeForLink(appearance: appearance, isEmbedded: true) { [weak self] rowButton in
+            let linkRow = RowButton.makeForLink(appearance: appearance, isEmbedded: true) { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             }
-            rowButtons.append(linkRowButton)
+            self.linkRow = linkRow
+            rowButtons.append(linkRow.rowButton)
         }
 
         // Add all non-card PMs (card is added above)
@@ -197,10 +199,12 @@ class EmbeddedPaymentMethodsView: UIView {
         if let initialSelectedRowType, let rowButtonMatchingInitialSelection = rowButtons.filter({ $0.type == initialSelectedRowType }).first {
             rowButtonMatchingInitialSelection.isSelected = true
             if let initialSelectedRowChangeButtonState {
-                selectedRowChangeButtonState = initialSelectedRowChangeButtonState
-                if initialSelectedRowChangeButtonState.shouldShowChangeButton {
-                    rowButtonMatchingInitialSelection.addChangeButton()
-                    rowButtonMatchingInitialSelection.setSublabel(text: initialSelectedRowChangeButtonState.sublabel)
+                if rowButtonMatchingInitialSelection.plainSublabel != nil,
+                   initialSelectedRowChangeButtonState.shouldShowChangeButton {
+                    selectedRowChangeButtonState = initialSelectedRowChangeButtonState
+                    rowButtonMatchingInitialSelection.showChangeButton(sublabel: initialSelectedRowChangeButtonState.sublabel)
+                } else {
+                    selectedRowChangeButtonState = (false, nil)
                 }
             }
             self.selectedRowButton = rowButtonMatchingInitialSelection
@@ -261,7 +265,7 @@ class EmbeddedPaymentMethodsView: UIView {
         super.didMoveToWindow()
 
         if window != nil {
-            if linkRowButton != nil {
+            if linkRow != nil {
                 initializeLinkAccountObserver()
             }
         } else {
@@ -309,7 +313,7 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?, animated: Bool = true) {
-        guard let linkRowButton else {
+        guard let linkRow else {
             return
         }
 
@@ -319,7 +323,7 @@ class EmbeddedPaymentMethodsView: UIView {
             sublabel = linkAccount.email
         }
 
-        linkRowButton.setSublabel(text: sublabel, animated: animated)
+        linkRow.sublabel.setSublabel(text: sublabel, animated: animated)
     }
 
     func updateSavedPaymentMethodRow(_ savedPaymentMethods: [STPPaymentMethod],
@@ -506,6 +510,7 @@ class EmbeddedPaymentMethodsView: UIView {
             paymentMethodType: paymentMethodType,
             currency: currency,
             hasSavedCard: savedPaymentMethods.hasSavedCard,
+            bnplData: bnplRowButtonData[paymentMethodType],
             accessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
             appearance: appearance,
@@ -534,29 +539,5 @@ extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
 extension Array where Element == STPPaymentMethod {
     var hasSavedCard: Bool {
         return !self.filter { $0.type == .card }.isEmpty
-    }
-}
-
-extension RowButton {
-    func addChangeButton() {
-        // Hack: We assume the accessory view is "Change >"
-        self.accessoryView?.isHidden = false
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-        self.accessoryView?.alpha = 0
-        UIView.animate(withDuration: 0.2) {
-            self.accessoryView?.alpha = 1
-        }
-        makeSameHeightAsOtherRowButtonsIfNecessary()
-    }
-
-    func removeChangeButton(shouldClearSublabel: Bool) {
-        // Hack: We assume the accessory view is "Change >"
-        self.accessoryView?.isHidden = true
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-        if shouldClearSublabel {
-            setSublabel(text: nil)
-        }
     }
 }

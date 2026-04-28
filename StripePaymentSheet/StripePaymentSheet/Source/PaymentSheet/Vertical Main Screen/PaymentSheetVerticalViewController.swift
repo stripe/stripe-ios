@@ -499,6 +499,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             shouldShowLink: shouldShowLinkInList,
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             overrideHeaderView: makeWalletHeaderView(),
+            bnplRowButtonData: loadResult.bnplRowButtonData,
             appearance: configuration.appearance,
             currency: loadResult.intent.currency,
             amount: loadResult.intent.amount,

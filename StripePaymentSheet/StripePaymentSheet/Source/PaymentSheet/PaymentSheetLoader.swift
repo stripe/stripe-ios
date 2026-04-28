@@ -18,6 +18,21 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+        let bnplRowButtonData: [PaymentSheet.PaymentMethodType: RowButtonBNPLData]
+
+        init(
+            intent: Intent,
+            elementsSession: STPElementsSession,
+            savedPaymentMethods: [STPPaymentMethod],
+            paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+            bnplRowButtonData: [PaymentSheet.PaymentMethodType: RowButtonBNPLData] = [:]
+        ) {
+            self.intent = intent
+            self.elementsSession = elementsSession
+            self.savedPaymentMethods = savedPaymentMethods
+            self.paymentMethodTypes = paymentMethodTypes
+            self.bnplRowButtonData = bnplRowButtonData
+        }
     }
 
     enum IntegrationShape {
@@ -201,7 +216,8 @@ final class PaymentSheetLoader {
                 intent: intent,
                 elementsSession: elementsSession,
                 savedPaymentMethods: filteredSavedPaymentMethods,
-                paymentMethodTypes: paymentMethodTypes
+                paymentMethodTypes: paymentMethodTypes,
+                bnplRowButtonData: [:]
             )
             let confirmationChallenge = ConfirmationChallenge(
                 enableAttestation: configuration.enableAttestationOnConfirmation,

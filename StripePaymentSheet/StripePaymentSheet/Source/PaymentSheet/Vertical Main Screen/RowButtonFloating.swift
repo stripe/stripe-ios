@@ -43,8 +43,7 @@ final class RowButtonFloating: RowButton {
         return 16
     }
 
-    override func updateSelectedState() {
-        super.updateSelectedState()
+    override func updateStyleSelectedState() {
         selectableRectangle.isSelected = isSelected
     }
 
@@ -53,7 +52,7 @@ final class RowButtonFloating: RowButton {
         let spacerTop = UIView()
         let spacerBottom = UIView()
 
-        let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
+        let labelsStackView = UIStackView(arrangedSubviews: [label, sublabelView])
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 

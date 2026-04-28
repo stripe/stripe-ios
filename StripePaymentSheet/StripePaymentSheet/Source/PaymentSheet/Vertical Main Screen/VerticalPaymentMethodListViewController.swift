@@ -20,9 +20,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
     var rowButtons: [RowButton] {
         return stackView.arrangedSubviews.compactMap { $0 as? RowButton }
     }
-    private var linkRowButton: RowButton? {
-        rowButtons.first(where: { $0.type == .link })
-    }
+    private var linkRow: (rowButton: RowButton, sublabel: RowButtonPlainSublabel)?
     private(set) var currentSelection: RowButtonType?
     let stackView = UIStackView()
     let appearance: PaymentSheet.Appearance
@@ -38,6 +36,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private var shouldShowApplePay: Bool
     private var shouldShowLink: Bool
     private var paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+    private var bnplRowButtonData: [PaymentSheet.PaymentMethodType: RowButtonBNPLData]
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -57,6 +56,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         shouldShowLink: Bool,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         overrideHeaderView: UIView?,
+        bnplRowButtonData: [PaymentSheet.PaymentMethodType: RowButtonBNPLData] = [:],
         appearance: PaymentSheet.Appearance,
         currency: String?,
         amount: Int?,
@@ -74,6 +74,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         self.shouldShowApplePay = shouldShowApplePay
         self.shouldShowLink = shouldShowLink
         self.paymentMethodTypes = paymentMethodTypes
+        self.bnplRowButtonData = bnplRowButtonData
 
         super.init(nibName: nil, bundle: nil)
         self.renderContent()
@@ -88,6 +89,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
     }
 
     private func renderContent() {
+        linkRow = nil
         // Add the header - either the passed in `header` or "Select payment method"
         let header = overrideHeaderView ?? PaymentSheetUI.makeHeaderLabel(title: .Localized.select_payment_method, appearance: appearance)
         stackView.addArrangedSubview(header)
@@ -141,9 +143,11 @@ class VerticalPaymentMethodListViewController: UIViewController {
         let link: RowButton? = {
             guard shouldShowLink else { return nil }
             let selection = RowButtonType.link
-            let rowButton = RowButton.makeForLink(appearance: appearance) { [weak self] in
+            let linkRow = RowButton.makeForLink(appearance: appearance) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .link)
             }
+            self.linkRow = linkRow
+            let rowButton = linkRow.rowButton
             if initialSelection == selection {
                 rowButton.isSelected = true
                 currentSelection = selection
@@ -160,6 +164,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 paymentMethodType: paymentMethodType,
                 currency: currency,
                 hasSavedCard: savedPaymentMethods.contains { $0.type == .card },
+                bnplData: bnplRowButtonData[paymentMethodType],
                 promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
@@ -192,7 +197,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         view = stackView
         view.backgroundColor = appearance.colors.background
 
-        if linkRowButton != nil {
+        if linkRow != nil {
             initializeLinkAccountObserver()
         }
     }
@@ -218,12 +223,12 @@ class VerticalPaymentMethodListViewController: UIViewController {
     }
 
     private func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?) {
-        guard let linkRowButton else {
+        guard let linkRow else {
             return
         }
 
         let sublabel = linkAccount?.email ?? .Localized.link_subtitle_text
-        linkRowButton.setSublabel(text: sublabel)
+        linkRow.sublabel.setSublabel(text: sublabel)
     }
 
     // MARK: - Helpers

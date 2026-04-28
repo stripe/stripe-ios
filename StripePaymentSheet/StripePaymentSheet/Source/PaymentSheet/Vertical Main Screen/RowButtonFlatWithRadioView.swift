@@ -20,8 +20,7 @@ final class RowButtonFlatWithRadioView: RowButton {
         return radioButton
     }()
 
-    override func updateSelectedState() {
-        super.updateSelectedState()
+    override func updateStyleSelectedState() {
         radioButton.isOn = isSelected
     }
 
@@ -30,7 +29,7 @@ final class RowButtonFlatWithRadioView: RowButton {
         let spacerTop = UIView()
         let spacerBottom = UIView()
 
-        let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
+        let labelsStackView = UIStackView(arrangedSubviews: [label, sublabelView])
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 

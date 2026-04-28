@@ -21,13 +21,12 @@ final class RowButtonFlatWithCheckmark: RowButton {
         return checkmarkImageView
     }()
 
-    override func updateSelectedState() {
-        super.updateSelectedState()
+    override func updateStyleSelectedState() {
         checkmarkImageView.isHidden = !isSelected
     }
 
     override func setupUI() {
-        let labelsStackView = UIStackView(arrangedSubviews: [label, sublabel].compactMap { $0 })
+        let labelsStackView = UIStackView(arrangedSubviews: [label, sublabelView])
         labelsStackView.axis = .vertical
         labelsStackView.alignment = .leading
 
