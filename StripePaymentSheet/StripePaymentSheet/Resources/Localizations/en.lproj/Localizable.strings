@@ -131,9 +131,6 @@
 /* Button text on a screen asking the user to approve a payment */
 "Cancel and pay another way" = "Cancel and pay another way";
 
-/* Accessibility label for the card brand icon when a single brand is detected. %@ is the card brand name (e.g. 'Visa') */
-"Card brand: %@" = "Card brand: %@";
-
 /* Text on a screen that indicates card details cannot be changed. */
 "Card details cannot be changed." = "Card details cannot be changed.";
 
