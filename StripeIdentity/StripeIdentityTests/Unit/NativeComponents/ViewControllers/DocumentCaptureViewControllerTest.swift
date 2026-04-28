@@ -563,6 +563,12 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertFalse(control.isEnabled)
     }
 
+    func testCaptureModeControlHiddenWhenTimedOut() throws {
+        let vc = makeViewController(state: .timeout(.front))
+
+        XCTAssertNil(findCaptureModeControl(in: vc.documentCaptureView))
+    }
+
     func testManualCaptureSwitchUpdatesModeWithoutTransitioning() throws {
         let vc = makeViewController(state: .scanning(.front, nil))
         let control = try switchToManualCapture(vc)
@@ -616,6 +622,13 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(
             mockDocumentUploader.uploadedDocumentScannerOutput,
             mockDocumentScannerOutput
+        )
+        guard case .scan(let scannedViewModel) = vc.viewModel else {
+            return XCTFail("Expected scan view model after manual capture")
+        }
+        XCTAssertEqual(
+            scannedViewModel.instructionalText,
+            DocumentCaptureViewController.imageTakenInstructionalText
         )
         XCTAssertEqual(vc.buttonViewModels.count, 1)
         XCTAssertEqual(vc.buttonViewModels.first?.text, "Continue")

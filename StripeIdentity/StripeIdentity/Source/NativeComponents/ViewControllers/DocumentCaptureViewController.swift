@@ -78,7 +78,16 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     // MARK: Computed Properties
 
     private var shouldShowCaptureModeControl: Bool {
-        !apiConfig.requireLiveCapture
+        guard !apiConfig.requireLiveCapture else {
+            return false
+        }
+
+        switch imageScanningSession.state {
+        case .initial, .scanning, .scanned, .saving:
+            return true
+        case .noCameraAccess, .cameraError, .timeout:
+            return false
+        }
     }
 
     private var captureModeControlIsEnabled: Bool {
@@ -171,7 +180,9 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             return .scan(
                 .init(
                     scanningViewModel: .scanned(image),
-                    instructionalText: DocumentCaptureViewController.scannedInstructionalText
+                    instructionalText: captureMode == .manual
+                        ? DocumentCaptureViewController.imageTakenInstructionalText
+                        : DocumentCaptureViewController.scannedInstructionalText
                 )
             )
         case .noCameraAccess:
