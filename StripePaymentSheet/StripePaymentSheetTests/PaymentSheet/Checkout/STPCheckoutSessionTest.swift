@@ -148,8 +148,6 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.allowedShippingCountries, ["US", "CA"])
         XCTAssertTrue(session.requiresShippingAddress)
 
-        // Selected shipping option
-        XCTAssertEqual(session.selectedShippingOptionId, "shr_standard")
         XCTAssertEqual(session.totals?.shipping, 500)
 
         // Adaptive pricing

@@ -87,20 +87,12 @@ class STPCheckoutSession: NSObject {
     /// The available shipping options for this session.
     let shippingOptions: [Checkout.ShippingOption]
 
-    /// The ID of the currently selected shipping option, if any.
-    let selectedShippingOptionId: String?
-
     /// The tax amounts associated with this session.
     let taxAmounts: [STPCheckoutSessionTaxAmount]
 
     /// The total tax amount for this session, in the smallest currency unit.
     var totalTaxAmount: Int {
         taxAmounts.reduce(0) { $0 + $1.amount }
-    }
-
-    /// The currently applied promotion code, if one is present.
-    var appliedPromotionCode: String? {
-        discounts.first(where: { $0.promotionCode != nil })?.promotionCode
     }
 
     /// Server-side flag controlling the "Save for future use" checkbox.
@@ -257,7 +249,6 @@ class STPCheckoutSession: NSObject {
         discounts: [Checkout.Discount],
         lineItems: [Checkout.LineItem],
         shippingOptions: [Checkout.ShippingOption],
-        selectedShippingOptionId: String?,
         taxAmounts: [STPCheckoutSessionTaxAmount],
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
         setupFutureUsage: String?,
@@ -293,7 +284,6 @@ class STPCheckoutSession: NSObject {
         self.discounts = discounts
         self.lineItems = lineItems
         self.shippingOptions = shippingOptions
-        self.selectedShippingOptionId = selectedShippingOptionId
         self.taxAmounts = taxAmounts
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
         self.setupFutureUsage = setupFutureUsage
@@ -347,7 +337,6 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
         let discounts = Self.parseDiscounts(from: dict)
         let lineItems = Self.parseLineItems(from: dict, defaultCurrency: currency)
         let shippingOptions = Self.parseShippingOptions(from: dict, defaultCurrency: currency)
-        let selectedShippingOptionId = Self.parseSelectedShippingOptionId(from: dict)
         let taxAmounts = STPCheckoutSessionTaxAmount.taxAmounts(from: dict)
 
         // Build totals from total_summary + derived amounts
@@ -453,7 +442,6 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             discounts: discounts,
             lineItems: lineItems,
             shippingOptions: shippingOptions,
-            selectedShippingOptionId: selectedShippingOptionId,
             taxAmounts: taxAmounts,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
             setupFutureUsage: setupFutureUsage,
@@ -534,15 +522,6 @@ extension STPCheckoutSession {
             return []
         }
         return options.compactMap { parseShippingOption(from: $0, defaultCurrency: defaultCurrency) }
-    }
-
-    static func parseSelectedShippingOptionId(from dict: [AnyHashable: Any]) -> String? {
-        if let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any],
-           let shippingRate = lineItemGroup["shipping_rate"] as? [AnyHashable: Any],
-           let id = shippingRate["id"] as? String {
-            return id
-        }
-        return dict["shipping_rate"] as? String
     }
 
     static func parseSelectedShippingAmount(from dict: [AnyHashable: Any]) -> Int {
