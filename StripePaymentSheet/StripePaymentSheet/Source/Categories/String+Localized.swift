@@ -374,7 +374,7 @@ extension String.Localized {
         String(
             format: STPLocalizedString(
                 "Supported cards: %@",
-                "Accessibility label for the card brand icons displayed next to the card number field. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, and Discover')"
+                "Accessibility label for the card brand icons displayed next to the card number field. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover')"
             ),
             brandNames
         )
