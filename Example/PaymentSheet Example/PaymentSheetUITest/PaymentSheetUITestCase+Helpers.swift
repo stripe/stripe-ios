@@ -167,29 +167,32 @@ extension PaymentSheetUITestCase {
 
         addApplePayBillingIfNeeded(applePay)
 
-        // Tap the card again to select it (required on iOS 18 and earlier)
-        let cardSelectionButton = applePay.buttons.containing(cardPredicate).firstMatch
-        if cardSelectionButton.waitForExistence(timeout: 3.0) {
-            cardSelectionButton.forceTapElement()
-        }
-
-        // Look for "Pay with Passcode" (iOS 18) or tap the "Pay" summary button (iOS 26)
+        // Look for "Pay with Passcode" first (iOS 18 and earlier)
         let payButton = applePay.buttons["Pay with Passcode"]
-        if payButton.waitForExistence(timeout: 5.0) {
+        if payButton.waitForExistence(timeout: 3.0) {
+            // iOS 18: tap card again to select, then pay
+            let cardSelectionButton = applePay.buttons.containing(cardPredicate).firstMatch
+            cardSelectionButton.forceTapElement()
+            XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
             payButton.forceTapElement()
         } else {
-            // iOS 26: no "Pay with Passcode" — the payment may auto-confirm
-            // or we need to tap a "Done" / confirmation button
-            let donePredicate = NSPredicate(format: "identifier == 'dismiss' OR label == 'Done'")
-            let doneButton = applePay.buttons.matching(donePredicate).firstMatch
-            if doneButton.waitForExistence(timeout: 3.0) {
-                doneButton.forceTapElement()
+            // iOS 26: the Apple Pay simulator auto-confirms after a delay.
+            // Double-tap the side button equivalent by tapping the pay summary row.
+            let payPredicate = NSPredicate(format: "label BEGINSWITH 'Pay '")
+            let payRow = applePay.buttons.matching(payPredicate).firstMatch
+            if payRow.waitForExistence(timeout: 3.0) {
+                payRow.forceTapElement()
+                // Wait briefly then tap again — iOS 26 simulates double-click
+                sleep(1)
+                if payRow.exists {
+                    payRow.forceTapElement()
+                }
             }
         }
 
         let successText = app.staticTexts["Success!"]
         //      This actually takes upwards of 20 seconds sometimes, especially in the deferred flow :/
-        XCTAssertTrue(successText.waitForExistence(timeout: 30.0), "Payment did not succeed. App state: \(app.state.rawValue). Apple Pay state: \(applePay.state.rawValue). Static texts: \(app.staticTexts.allElementsBoundByIndex.prefix(10).map { $0.label })")
+        XCTAssertTrue(successText.waitForExistence(timeout: 30.0), "Payment did not succeed. App static texts: \(app.staticTexts.allElementsBoundByIndex.prefix(5).map { $0.label })")
     }
 
     func addApplePayBillingIfNeeded(_ applePay: XCUIApplication) {

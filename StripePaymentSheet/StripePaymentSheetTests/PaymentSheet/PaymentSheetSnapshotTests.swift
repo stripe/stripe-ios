@@ -1195,6 +1195,12 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
+        // Force the view to the window's size for consistent snapshots across environments.
+        // The presentation controller may size the bottom sheet differently on CI vs local.
+        if let window = view.window {
+            view.frame = window.bounds
+            view.layoutIfNeeded()
+        }
         STPSnapshotVerifyView(
             view,
             identifier: identifier,
