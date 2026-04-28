@@ -51,7 +51,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         app.typeText("4242424242424242")
         app.typeText("1228") // Expiry
         app.typeText("123") // CVC
-        app.toolbars.buttons["Done"].tap() // Dismiss keyboard.
+        app.fc_dismissKeyboard() // Dismiss keyboard.
 
         // Dismiss FlowController payment method selector
         continueButton.tap()

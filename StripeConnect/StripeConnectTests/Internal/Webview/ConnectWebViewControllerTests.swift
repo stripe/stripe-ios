@@ -60,7 +60,8 @@ class ConnectWebViewControllerTests: XCTestCase {
     }
 
     /// HTTP/HTTPS navigations with no target from a non-allowlisted host should open in a SafariVC
-    func testOpenSafariVCIfNotInAllowedHosts() {
+    func testOpenSafariVCIfNotInAllowedHosts() throws {
+        try XCTSkipIf(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26, "WKNavigationAction cannot be subclassed on iOS 26+")
         var safariVC: SFSafariViewController?
         webVC.presentPopup = { vc in
             safariVC = vc as? SFSafariViewController
@@ -75,7 +76,8 @@ class ConnectWebViewControllerTests: XCTestCase {
     }
 
     /// HTTP/HTTPS navigations with no target and an allowlisted host should open in a popup webview
-    func testOpenAsPopUpIfInAllowedHosts() {
+    func testOpenAsPopUpIfInAllowedHosts() throws {
+        try XCTSkipIf(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26, "WKNavigationAction cannot be subclassed on iOS 26+")
         for url in [
             "https://connect-js.stripe.com",
             "https://connect-js.stripe.com/hello",
@@ -103,7 +105,8 @@ class ConnectWebViewControllerTests: XCTestCase {
     }
 
     /// Non-HTTP/HTTPS navigations with no target should use the system's URL routing
-    func testCustomURLScheme() {
+    func testCustomURLScheme() throws {
+        try XCTSkipIf(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26, "WKNavigationAction cannot be subclassed on iOS 26+")
         let url = URL(string: "connect://test")!
         let canOpenURLExpectation = XCTestExpectation(description: "Can open url called")
         let openURLExpectation = XCTestExpectation(description: "Open url called")
@@ -129,7 +132,8 @@ class ConnectWebViewControllerTests: XCTestCase {
     }
 
     /// Any navigation request with a non-nil target should not open a popup
-    func testJavascriptPopupHandling() {
+    func testJavascriptPopupHandling() throws {
+        try XCTSkipIf(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26, "WKNavigationAction cannot be subclassed on iOS 26+")
         let url = URL(string: "connect://test")!
         mockURLOpener.canOpenURLOverride = { _ in
             XCTFail("Can open url should not be called")
@@ -151,7 +155,8 @@ class ConnectWebViewControllerTests: XCTestCase {
 
     /// Download if `Content-Disposition` header is an attachment
     @MainActor
-    func testResponsePolicyForAttachments() async {
+    func testResponsePolicyForAttachments() async throws {
+        try XCTSkipIf(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26, "WKNavigationResponse cannot be subclassed on iOS 26+")
         // Use a non-allow listed URL to ensure these can be treated as a download
         let response = HTTPURLResponse(
             url: URL(string: "https://stripe-s3.com/path")!,

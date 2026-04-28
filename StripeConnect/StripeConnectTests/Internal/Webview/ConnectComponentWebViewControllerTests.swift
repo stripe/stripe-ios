@@ -411,7 +411,9 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
     }
 
     @MainActor
-    func testDidReceiveNon200StatusTriggersLoadError() async {
+    func testDidReceiveNon200StatusTriggersLoadError() async throws {
+        // MockNavigationResponse subclasses WKNavigationResponse, which crashes on iOS 26+
+        try XCTSkipIf(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26, "WKNavigationResponse cannot be subclassed on iOS 26+")
         var error: Error?
         let componentManager = componentManagerAssertingOnFetch()
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,

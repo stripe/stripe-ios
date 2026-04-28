@@ -83,12 +83,9 @@ class FCLiteUITests: XCTestCase {
         let autofillButton = app.webViews.firstMatch.buttons.containing(autofillButtonPredicate).firstMatch
         XCTAssertTrue(autofillButton.waitForExistenceAndTap(timeout: 5.0))
 
-        // Dismiss keyboard if open - check for "Done" (iOS 18) or checkmark button (iOS 26)
-        let keyboardDoneButton = app.toolbars.buttons["Done"]
-        if keyboardDoneButton.waitForExistence(timeout: 1.0) {
-            keyboardDoneButton.tap()
-            Thread.sleep(forTimeInterval: 0.5)
-        }
+        // Dismiss keyboard if open
+        app.fc_dismissKeyboard()
+        Thread.sleep(forTimeInterval: 0.5)
 
         // Tap "Save with Link" button (tapPrimaryButton handles keyboard dismissal if needed)
         let saveWithLinkButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Save with Link'")
