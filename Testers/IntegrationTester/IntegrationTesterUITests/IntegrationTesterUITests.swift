@@ -135,9 +135,14 @@ class IntegrationTesterUITests: XCTestCase {
 
         app.handleiOSKeyboardTipIfNeeded()
 
-        let doneButton = app.buttons["Done"]
-        XCTAssertTrue(doneButton.waitForExistence(timeout: 10.0))
-        doneButton.forceTapElement()
+        // Dismiss keyboard — try toolbar Done button, fall back to tapping elsewhere
+        let doneButton = app.toolbars.buttons["Done"]
+        if doneButton.waitForExistence(timeout: 3.0) {
+            doneButton.tap()
+        } else {
+            // iOS 26 fallback: tap near the top of the screen to dismiss
+            app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
+        }
 
         let submitCodeButton = app.buttons["Submit"]
         XCTAssertTrue(submitCodeButton.waitForExistence(timeout: 10.0))
