@@ -1199,6 +1199,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             view,
             identifier: identifier,
             overallTolerance: 0.01, // unfortunately on iOS 26 w/ XCode beta 7 there are *sometimes* differences as large as ~0.003%.
+            autoSizingHeightForWidth: 375,
             file: file,
             line: line
         )

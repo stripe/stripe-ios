@@ -159,25 +159,37 @@ extension PaymentSheetUITestCase {
 
         addApplePayContactIfNeeded(applePay)
 
-        let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+        let cardPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
 
-        let cardButton = applePay.buttons.containing(predicate).firstMatch
+        let cardButton = applePay.buttons.containing(cardPredicate).firstMatch
         XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
         cardButton.forceTapElement()
 
         addApplePayBillingIfNeeded(applePay)
 
-        let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
-        XCTAssertTrue(cardSelectionButton.waitForExistence(timeout: 10.0))
-        cardSelectionButton.forceTapElement()
+        // Tap the card again to select it (required on iOS 18 and earlier)
+        let cardSelectionButton = applePay.buttons.containing(cardPredicate).firstMatch
+        if cardSelectionButton.waitForExistence(timeout: 3.0) {
+            cardSelectionButton.forceTapElement()
+        }
 
+        // Look for "Pay with Passcode" (iOS 18) or tap the "Pay" summary button (iOS 26)
         let payButton = applePay.buttons["Pay with Passcode"]
-        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
-        payButton.forceTapElement()
+        if payButton.waitForExistence(timeout: 5.0) {
+            payButton.forceTapElement()
+        } else {
+            // iOS 26: no "Pay with Passcode" — the payment may auto-confirm
+            // or we need to tap a "Done" / confirmation button
+            let donePredicate = NSPredicate(format: "identifier == 'dismiss' OR label == 'Done'")
+            let doneButton = applePay.buttons.matching(donePredicate).firstMatch
+            if doneButton.waitForExistence(timeout: 3.0) {
+                doneButton.forceTapElement()
+            }
+        }
 
         let successText = app.staticTexts["Success!"]
         //      This actually takes upwards of 20 seconds sometimes, especially in the deferred flow :/
-        XCTAssertTrue(successText.waitForExistence(timeout: 30.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 30.0), "Payment did not succeed. App state: \(app.state.rawValue). Apple Pay state: \(applePay.state.rawValue). Static texts: \(app.staticTexts.allElementsBoundByIndex.prefix(10).map { $0.label })")
     }
 
     func addApplePayBillingIfNeeded(_ applePay: XCUIApplication) {
@@ -210,7 +222,14 @@ extension PaymentSheetUITestCase {
             zipCell.tap()
             zipCell.typeText("95014")
 
-            applePay.buttons["Done"].tap()
+            // On iOS 26, there can be multiple "Done" buttons visible.
+            // Target the one in the "Billing Address" navigation bar specifically.
+            let billingDone = applePay.navigationBars["Billing Address"].buttons["Done"]
+            if billingDone.exists {
+                billingDone.tap()
+            } else {
+                applePay.buttons["Done"].firstMatch.tap()
+            }
         }
     }
 
@@ -222,8 +241,8 @@ extension PaymentSheetUITestCase {
             XCTAssertTrue(applePay.staticTexts["Select An Email Address"].waitForExistence(timeout: 4.0))
             applePay.buttons.matching(identifier: "Add Email Address").element(boundBy: 1).tap()
             applePay.typeText("test@example.com")
-            // Hit the checkmark done button in the top right
-            applePay.buttons["Done"].tap()
+            // Hit the done button — use firstMatch to avoid ambiguity on iOS 26
+            applePay.buttons["Done"].firstMatch.tap()
         }
     }
 
