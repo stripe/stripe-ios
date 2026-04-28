@@ -136,7 +136,10 @@ struct FinancialConnectionsSessionManifest: Decodable {
     var consentAcquired: Bool {
         !consentRequired || consentAcquiredAt != nil
     }
+}
 
+#if DEBUG
+extension FinancialConnectionsSessionManifest {
     init(
         accountholderCustomerEmailAddress: String? = nil,
         accountholderIsLinkConsumer: Bool? = nil,
@@ -221,3 +224,4 @@ struct FinancialConnectionsSessionManifest: Decodable {
         self.theme = theme
     }
 }
+#endif
