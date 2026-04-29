@@ -157,12 +157,14 @@ public final class Checkout: ObservableObject {
     // MARK: - Line Items
 
     /// Updates the quantity of a line item.
-    /// - Parameter params: The line item ID and new quantity to set.
+    /// - Parameters:
+    ///   - lineItemId: The line item ID to update.
+    ///   - quantity: The new quantity to set.
     /// - Throws: ``CheckoutError`` if the update fails.
-    public func updateQuantity(with params: LineItemUpdate) async throws {
+    public func updateQuantity(lineItemId: String, quantity: Int) async throws {
         try requireOpenSession()
         try await withSessionUpdateGuard {
-            try await performAPIUpdate(.setLineItemQuantity(lineItemId: params.lineItemId, quantity: params.quantity))
+            try await performAPIUpdate(.setLineItemQuantity(lineItemId: lineItemId, quantity: quantity))
         }
     }
 
@@ -187,22 +189,30 @@ public final class Checkout: ObservableObject {
     /// address source is "billing", the address is also sent to the server to
     /// compute updated tax amounts.
     ///
-    /// - Parameter params: The billing address to set. To reset tax computation
-    ///   to a country-only region, pass an ``AddressUpdate`` with just the country.
+    /// - Parameters:
+    ///   - name: The customer's full name.
+    ///   - phone: The customer's phone number.
+    ///   - address: The billing address to set. To reset tax computation
+    ///     to a country-only region, pass a ``Checkout.Address`` with just the country.
     /// - Throws: ``CheckoutError`` if the session is not open, or if
     ///   the server request fails.
-    public func updateBillingAddress(_ params: AddressUpdate) async throws {
+    public func updateBillingAddress(
+        name: String? = nil,
+        phone: String? = nil,
+        address: Address
+    ) async throws {
         let currentSession = try requireOpenSession()
-        guard currentSession.billingAddressOverride != params else { return }
+        let contactAddress = ContactAddress(name: name, phone: phone, address: address)
+        guard currentSession.billingAddressOverride != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "billing") {
             try await withSessionUpdateGuard {
-                try await performAPIUpdate(.setTaxRegion(params.address), applyOverrides: { session in
+                try await performAPIUpdate(.setTaxRegion(address), applyOverrides: { session in
                     // Set the local address override on the refreshed session after a successful API call.
-                    session.billingAddressOverride = params
+                    session.billingAddressOverride = contactAddress
                 })
             }
         } else {
-            currentSession.billingAddressOverride = params
+            currentSession.billingAddressOverride = contactAddress
             setSession(currentSession)
             delegate?.checkout(self, didChangeState: state)
         }
@@ -215,22 +225,30 @@ public final class Checkout: ObservableObject {
     /// address source is "shipping", the address is also sent to the server to
     /// compute updated tax amounts.
     ///
-    /// - Parameter params: The shipping address to set. To reset tax computation
-    ///   to a country-only region, pass an ``AddressUpdate`` with just the country.
+    /// - Parameters:
+    ///   - name: The customer's full name.
+    ///   - phone: The customer's phone number.
+    ///   - address: The shipping address to set. To reset tax computation
+    ///     to a country-only region, pass a ``Checkout.Address`` with just the country.
     /// - Throws: ``CheckoutError`` if the session is not open, or if
     ///   the server request fails.
-    public func updateShippingAddress(_ params: AddressUpdate) async throws {
+    public func updateShippingAddress(
+        name: String? = nil,
+        phone: String? = nil,
+        address: Address
+    ) async throws {
         let currentSession = try requireOpenSession()
-        guard currentSession.shippingAddressOverride != params else { return }
+        let contactAddress = ContactAddress(name: name, phone: phone, address: address)
+        guard currentSession.shippingAddressOverride != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "shipping") {
             try await withSessionUpdateGuard {
-                try await performAPIUpdate(.setTaxRegion(params.address), applyOverrides: { session in
+                try await performAPIUpdate(.setTaxRegion(address), applyOverrides: { session in
                     // Set the local address override on the refreshed session after a successful API call.
-                    session.shippingAddressOverride = params
+                    session.shippingAddressOverride = contactAddress
                 })
             }
         } else {
-            currentSession.shippingAddressOverride = params
+            currentSession.shippingAddressOverride = contactAddress
             setSession(currentSession)
             delegate?.checkout(self, didChangeState: state)
         }
@@ -251,12 +269,14 @@ public final class Checkout: ObservableObject {
     // MARK: - Tax ID
 
     /// Sets the customer's tax ID on the session.
-    /// - Parameter params: The tax ID type and value to set.
+    /// - Parameters:
+    ///   - type: The type of tax ID to set (for example, `"eu_vat"`).
+    ///   - value: The tax ID value to set.
     /// - Throws: ``CheckoutError`` if the update fails.
-    public func updateTaxId(with params: TaxIdUpdate) async throws {
+    public func updateTaxId(type: String, value: String) async throws {
         try requireOpenSession()
         try await withSessionUpdateGuard {
-            try await performAPIUpdate(.setTaxId(type: params.type, value: params.value))
+            try await performAPIUpdate(.setTaxId(type: type, value: value))
         }
     }
 
