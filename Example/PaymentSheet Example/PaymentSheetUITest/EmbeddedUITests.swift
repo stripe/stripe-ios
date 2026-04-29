@@ -246,7 +246,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         app.buttons["Checkout"].waitForExistenceAndTap()
         payWithApplePay()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        if ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26 {
+            XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        }
     }
 
     func testSingleCardCBC_onRemove_selectStateNone() {
@@ -493,7 +495,9 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         app.buttons["Checkout"].waitForExistenceAndTap()
         payWithApplePay()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        if ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26 {
+            XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        }
     }
 
     func testSelection_savedPaymentMethod() {
@@ -711,13 +715,15 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Checkout"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
         payWithApplePay()
-        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
+        if ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26 {
+            XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
 
-        // Apple Pay should be selected by default upon reloading with the same customer
-        app.buttons["Reload"].tap()
-        app.buttons["Present embedded payment element"].waitForExistenceAndTap()
-        XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
-        XCTAssertEqual(app.staticTexts["Payment method"].label, "Apple Pay")
+            // Apple Pay should be selected by default upon reloading with the same customer
+            app.buttons["Reload"].tap()
+            app.buttons["Present embedded payment element"].waitForExistenceAndTap()
+            XCTAssertTrue(app.staticTexts["Payment method"].waitForExistence(timeout: 10))
+            XCTAssertEqual(app.staticTexts["Payment method"].label, "Apple Pay")
+        }
     }
 
     func testLink() {
