@@ -9,7 +9,7 @@ import Foundation
 
 /// The EU identifiers a customer still needs to provide for MICA and CRS/CARF compliance.
 @_spi(CryptoOnrampAlpha)
-public struct MissingEUIdentifiers: Decodable, Equatable {
+public struct MissingEUIdentifiers: Decodable, Equatable, Hashable {
 
     /// Country codes requiring national identifiers for MICA compliance.
     public let missingIdentifiersMICA: [String]
