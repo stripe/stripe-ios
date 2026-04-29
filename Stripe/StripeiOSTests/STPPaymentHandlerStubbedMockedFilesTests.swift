@@ -470,6 +470,75 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         XCTAssertGreaterThanOrEqual(retrieveCount, 2, "Should have polled at least once after initial processing status")
     }
 
+    /// Verifies that deallocating an STPPaymentHandler mid-3DS resets the static `inProgress` flag.
+    /// Regression test: PaymentSheet/FlowController create their own STPPaymentHandler instances.
+    /// If deallocated mid-flow, the static `inProgress` flag must be released via deinit to avoid
+    /// permanently blocking all future payment attempts with noConcurrentActionsErrorCode.
+    func testInProgressResetAfterHandlerDeallocated() {
+        let nextActionData = """
+              {
+                "redirect_to_url": {
+                  "return_url": "payments-example://stripe-redirect",
+                  "url": "https://hooks.stripe.com/3d_secure/acct_123/pa_nonce_321/redirect"
+                },
+                "type": "redirect_to_url"
+              }
+            """
+        let paymentMethodData = """
+              {
+                "id": "pm_123",
+                "object": "payment_method",
+                "card": {"brand": "visa", "last4": "4242"},
+                "type": "card"
+              }
+            """
+        stubConfirm(
+            fileMock: .paymentIntentResponse,
+            responseCallback: { data in
+                self.replaceData(data: data, variables: [
+                    "<next_action>": nextActionData,
+                    "<payment_method>": paymentMethodData,
+                    "<status>": "\"requires_action\"",
+                ])
+            }
+        )
+
+        let didRedirect = expectation(description: "didRedirect")
+        weak var weakHandler: STPPaymentHandler?
+
+        // Create a handler and start a 3DS flow
+        var handler: STPPaymentHandler? = STPPaymentHandler(apiClient: stubbedAPIClient())
+        weakHandler = handler
+        handler!._redirectShim = { _, _, _ in
+            didRedirect.fulfill()
+        }
+
+        let params = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
+        params.returnURL = "payments-example://stripe-redirect"
+        params.paymentMethodParams = STPPaymentMethodParams(
+            card: STPPaymentMethodCardParams(),
+            billingDetails: nil,
+            metadata: nil
+        )
+
+        handler!.confirmPaymentIntent(params: params, authenticationContext: self) { _, _, _ in }
+
+        guard XCTWaiter.wait(for: [didRedirect], timeout: 2.0) != .timedOut else {
+            XCTFail("Unable to redirect")
+            return
+        }
+
+        // Handler is now mid-3DS, inProgress is true
+        XCTAssertTrue(handler!.isInProgress)
+
+        // Deallocate the handler (simulating FlowController being dropped mid-3DS)
+        handler = nil
+
+        // deinit should have reset the static inProgress flag
+        let freshHandler = STPPaymentHandler(apiClient: stubbedAPIClient())
+        XCTAssertFalse(freshHandler.isInProgress, "inProgress should be reset when handler is deallocated mid-flow")
+    }
+
     private func confirmPaymentWithSucceed(
         nextActionData: String,
         paymentMethodData: String,

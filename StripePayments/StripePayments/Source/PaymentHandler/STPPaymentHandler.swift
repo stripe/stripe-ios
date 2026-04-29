@@ -110,6 +110,8 @@ public class STPPaymentHandler: NSObject {
     /// YES from when a public method is first called until its associated completion handler is called.
     /// This property guards against simultaneous usage of this class; only one "next action" can be handled at a time.
     private static var inProgress = false
+    /// Tracks whether this specific instance is the one that set the static `inProgress` flag.
+    private var isHandlingAction = false
     private var safariViewController: SFSafariViewController?
     var safariViewControllerDismissedManually = false
     private var asWebAuthenticationSession: ASWebAuthenticationSession?
@@ -131,6 +133,15 @@ public class STPPaymentHandler: NSObject {
         self.apiClient = apiClient
         self.threeDSCustomizationSettings = threeDSCustomizationSettings
         super.init()
+    }
+
+    deinit {
+        // If this instance set the static inProgress flag, release it.
+        // Without this, deallocating a non-singleton STPPaymentHandler mid-flow
+        // (e.g. when FlowController is dropped) permanently blocks all future payments.
+        if isHandlingAction {
+            Self.inProgress = false
+        }
     }
 
     /// By default `sharedHandler` initializes with STPAPIClient.shared.
@@ -206,6 +217,7 @@ public class STPPaymentHandler: NSObject {
             return
         }
         Self.inProgress = true
+        isHandlingAction = true
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self]
             status,
@@ -216,6 +228,7 @@ public class STPPaymentHandler: NSObject {
             }
             // Reset our internal state
             Self.inProgress = false
+            strongSelf.isHandlingAction = false
 
             // Ensure the .succeeded case returns a PaymentIntent in the expected state.
             if let paymentIntent = paymentIntent, status == .succeeded {
@@ -449,6 +462,7 @@ public class STPPaymentHandler: NSObject {
             assert(paymentIntent.paymentMethod != nil, "A PaymentIntent w/ attached paymentMethod must be retrieved w/ an expanded PaymentMethod")
         }
         Self.inProgress = true
+        isHandlingAction = true
 
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self]
@@ -460,6 +474,7 @@ public class STPPaymentHandler: NSObject {
             }
             // Reset our internal state
             Self.inProgress = false
+            strongSelf.isHandlingAction = false
             // Ensure the .succeeded case returns a PaymentIntent in the expected state.
             if let paymentIntent = paymentIntent,
                status == .succeeded
@@ -548,6 +563,7 @@ public class STPPaymentHandler: NSObject {
         }
 
         Self.inProgress = true
+        isHandlingAction = true
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self]
             status,
@@ -558,6 +574,7 @@ public class STPPaymentHandler: NSObject {
             }
             // Reset our internal state
             Self.inProgress = false
+            self.isHandlingAction = false
 
             if status == .succeeded {
                 // Ensure the .succeeded case returns a SetupIntent in the expected state.
@@ -741,6 +758,7 @@ public class STPPaymentHandler: NSObject {
         }
 
         Self.inProgress = true
+        isHandlingAction = true
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self]
             status,
@@ -751,6 +769,7 @@ public class STPPaymentHandler: NSObject {
             }
             // Reset our internal state
             Self.inProgress = false
+            strongSelf.isHandlingAction = false
 
             if status == .succeeded {
                 // Ensure the .succeeded case returns a PaymentIntent in the expected state.
