@@ -122,8 +122,8 @@ extension XCUIApplication {
             fcTitleLabel.tap()
             return
         }
-        // Last resort: tap near the middle of the screen (not top, to avoid nav buttons)
-        coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3)).tap()
+        // Last resort: tap near the top of the screen to dismiss
+        coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
     }
 }
 
