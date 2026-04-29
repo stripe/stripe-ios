@@ -19,6 +19,8 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     enum Route: Hashable {
         case registration(email: String, oAuthScopes: [OAuthScopes])
         case kycInfo(collectionMode: KYCInfoView.CollectionMode)
+        case euIdentifiers(missingIdentifiers: MissingEUIdentifiers)
+        case crsCarfDeclaration
         case identity
         case wallets
         case payment(wallet: CustomerWalletsResponse.Wallet)
@@ -36,6 +38,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     private var kycLevel: KYCLevel = .none
     private var isKycVerified = false
     private var isIdDocumentVerified = false
+    private var isEUCustomer = false
+    private var hasSubmittedEUIdentifiers = false
+    private var hasAcceptedCRSCARFDeclaration = false
+    private var missingEUIdentifiers: MissingEUIdentifiers?
     private var kycInfoCollectionMode: KYCInfoView.CollectionMode = .original
     private var createOnrampSessionResponse: CreateOnrampSessionResponse?
     private var selectedPaymentMethodDescription: String?
@@ -49,11 +55,14 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
 
     /// Begins the flow for an existing user.
     /// - Parameter kycInfoCollectionMode: The KYC info screen collection mode to use if KYC needs to be collected.
-    func startForExistingUser(kycInfoCollectionMode: KYCInfoView.CollectionMode = .original) {
+    func startForExistingUser(
+        kycInfoCollectionMode: KYCInfoView.CollectionMode = .original,
+        coordinator: CryptoOnrampCoordinator
+    ) {
         resetInternalState()
         self.kycInfoCollectionMode = kycInfoCollectionMode
         Task {
-            await refreshCustomerInfoAndPushNext()
+            await refreshCustomerInfoAndPushNext(coordinator: coordinator)
         }
     }
 
@@ -73,19 +82,45 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     /// Advances to the next step of the flow post-registration.
-    func advanceAfterRegistration() {
+    func advanceAfterRegistration(coordinator: CryptoOnrampCoordinator) {
         Task {
-            await refreshCustomerInfoAndPushNext()
+            await refreshCustomerInfoAndPushNext(coordinator: coordinator)
         }
     }
 
     /// Advances to the next step of the flow post-KYC info collection.
     /// - Parameter collectedKYCLevel: The KYC level collected by the KYC info view.
-    func advanceAfterKyc(collectedKYCLevel: KYCLevel) {
+    func advanceAfterKyc(
+        collectedKYCLevel: KYCLevel,
+        isEUCustomer: Bool,
+        coordinator: CryptoOnrampCoordinator
+    ) {
         kycLevel = collectedKYCLevel
+        self.isEUCustomer = isEUCustomer
+        hasSubmittedEUIdentifiers = false
+        hasAcceptedCRSCARFDeclaration = false
+        missingEUIdentifiers = nil
         if kycInfoCollectionMode == .original {
             isKycVerified = true
         }
+        if isEUCustomer {
+            Task {
+                await retrieveEUIdentifierRequirementsAndAdvance(coordinator: coordinator)
+            }
+        } else {
+            advanceToNextStep()
+        }
+    }
+
+    /// Advances after submitting required EU identifiers.
+    func advanceAfterEUIdentifiers() {
+        hasSubmittedEUIdentifiers = true
+        advanceToNextStep()
+    }
+
+    /// Advances after accepting the CRS/CARF declaration.
+    func advanceAfterCRSCARFDeclaration() {
+        hasAcceptedCRSCARFDeclaration = true
         advanceToNextStep()
     }
 
@@ -122,7 +157,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         advanceToNextStep()
     }
 
-    private func refreshCustomerInfoAndPushNext() async {
+    private func refreshCustomerInfoAndPushNext(coordinator: CryptoOnrampCoordinator) async {
         isLoading?.wrappedValue = true
         defer { isLoading?.wrappedValue = false }
         do {
@@ -130,6 +165,12 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
             kycLevel = info.kycLevel
             isKycVerified = info.isKycVerified
             isIdDocumentVerified = info.isIdDocumentVerified
+            isEUCustomer = info.isEUCustomer
+            hasSubmittedEUIdentifiers = info.hasSubmittedEUIdentifiers
+            hasAcceptedCRSCARFDeclaration = info.hasAcceptedCRSCARFDeclaration
+            if shouldRetrieveEUIdentifierRequirements && hasCollectedInitialKYCInfo {
+                setEUIdentifierRequirements(try await coordinator.retrieveMissingEUIdentifiers())
+            }
             advanceToNextStep()
         } catch {
             presentAlert(
@@ -137,6 +178,37 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
                 message: "Please ensure you have the required OAuth scopes selected and try again.\n\n\(error.localizedDescription)"
             )
         }
+    }
+
+    private var shouldRetrieveEUIdentifierRequirements: Bool {
+        isEUCustomer && !hasSubmittedEUIdentifiers && missingEUIdentifiers == nil
+    }
+
+    private var hasCollectedInitialKYCInfo: Bool {
+        if kycInfoCollectionMode == .original {
+            return isKycVerified
+        }
+
+        return kycLevel.includesLevel0
+    }
+
+    private func retrieveEUIdentifierRequirementsAndAdvance(coordinator: CryptoOnrampCoordinator) async {
+        isLoading?.wrappedValue = true
+        defer { isLoading?.wrappedValue = false }
+        do {
+            setEUIdentifierRequirements(try await coordinator.retrieveMissingEUIdentifiers())
+            advanceToNextStep()
+        } catch {
+            presentAlert(
+                title: "Unable to determine EU identifier requirements",
+                message: error.localizedDescription
+            )
+        }
+    }
+
+    private func setEUIdentifierRequirements(_ missingIdentifiers: MissingEUIdentifiers) {
+        missingEUIdentifiers = missingIdentifiers
+        hasSubmittedEUIdentifiers = missingIdentifiers.isEmpty
     }
 
     private func advanceToNextStep() {
@@ -150,13 +222,20 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         }
 
         // For `.original`, identity verification also routes from this coordinator.
-        // Non-original modes skip identity routing here. Level 1 and identity collection for those modes
-        // will occur just-in-time when an error occurs during the onramp session / checkout process,
-        // not by this coordinator.
-        let shouldShowIdentity = kycInfoCollectionMode == .original && !isIdDocumentVerified
+        // EU users also route through identity verification here after EU identifiers and CRS/CARF.
+        // Other non-original modes still defer level 1 and identity collection until onramp session / checkout errors.
+        let shouldShowIdentity = (kycInfoCollectionMode == .original || isEUCustomer) && !isIdDocumentVerified
 
         if shouldShowKYCInfo {
             path.append(.kycInfo(collectionMode: kycInfoCollectionMode))
+        } else if
+            isEUCustomer,
+            !hasSubmittedEUIdentifiers,
+            let missingEUIdentifiers,
+            !missingEUIdentifiers.isEmpty {
+            path.append(.euIdentifiers(missingIdentifiers: missingEUIdentifiers))
+        } else if isEUCustomer && !hasAcceptedCRSCARFDeclaration {
+            path.append(.crsCarfDeclaration)
         } else if shouldShowIdentity {
             path.append(.identity)
         } else if let successfulCheckoutMessage {
@@ -181,6 +260,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
         kycLevel = .none
         isKycVerified = false
         isIdDocumentVerified = false
+        isEUCustomer = false
+        hasSubmittedEUIdentifiers = false
+        hasAcceptedCRSCARFDeclaration = false
+        missingEUIdentifiers = nil
         kycInfoCollectionMode = .original
         selectedWallet = nil
         createOnrampSessionResponse = nil
@@ -197,7 +280,7 @@ extension CryptoOnrampFlowCoordinator.Route {
         switch self {
         case .registration, .payment, .paymentSummary:
             true
-        case .wallets, .kycInfo, .identity, .checkoutSuccess:
+        case .wallets, .kycInfo, .euIdentifiers, .crsCarfDeclaration, .identity, .checkoutSuccess:
             false
         }
     }
@@ -205,10 +288,16 @@ extension CryptoOnrampFlowCoordinator.Route {
     /// Whether to display the toolbar item for authenticated user actions, such as logging out.
     var showsAuthenticatedUserToolbarItem: Bool {
         switch self {
-        case .wallets, .kycInfo, .identity, .payment, .paymentSummary, .checkoutSuccess:
+        case .wallets, .kycInfo, .euIdentifiers, .crsCarfDeclaration, .identity, .payment, .paymentSummary, .checkoutSuccess:
             true
         case .registration:
             false
         }
+    }
+}
+
+private extension MissingEUIdentifiers {
+    var isEmpty: Bool {
+        missingIdentifiersMICA.isEmpty && missingIdentifiersCARF.isEmpty
     }
 }

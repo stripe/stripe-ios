@@ -17,6 +17,7 @@ struct CustomerInformationResponse: Decodable {
     let id: String
     let object: String
     let providedFields: [String]
+    let kycRegion: String?
     let verifications: [Verification]
 }
 
@@ -49,6 +50,7 @@ extension CustomerInformationResponse: CustomStringConvertible {
         return """
         id: \(id)
         object: \(object)
+        kycRegion: \(kycRegion ?? "none")
         providedFields:
         \(providedFields)
         verifications:
@@ -66,6 +68,19 @@ extension CustomerInformationResponse {
         "address_state",
         "address_postal_code",
         "address_country",
+    ]
+
+    private static let euRequiredFields: Set<String> = [
+        "first_name",
+        "last_name",
+        "dob",
+        "address_line_1",
+        "address_city",
+        "address_postal_code",
+        "address_country",
+        "birth_country",
+        "birth_city",
+        "nationalities",
     ]
 
     private static let level1AdditionalFields: Set<String> = [
@@ -86,9 +101,33 @@ extension CustomerInformationResponse {
         verifications.contains { $0.name == "kyc_verified" && $0.status == "verified" }
     }
 
+    var isEUCustomer: Bool {
+        kycRegion?.uppercased() == "EU"
+    }
+
+    var hasSubmittedEUIdentifiers: Bool {
+        providedFields.contains("eu_identifiers")
+    }
+
+    var hasAcceptedCRSCARFDeclaration: Bool {
+        providedFields.contains("eu_carf_attestation")
+    }
+
     /// The KYC level implied solely by the fields the customer has already provided.
     var kycLevelFromFieldsCollected: KYCLevel {
         let providedFieldSet = Set(providedFields)
+
+        if isEUCustomer {
+            guard providedFieldSet.isSuperset(of: Self.euRequiredFields) else {
+                return .none
+            }
+
+            guard providedFieldSet.isSuperset(of: Self.level2AdditionalFields) else {
+                return .level1
+            }
+
+            return .level2
+        }
 
         guard providedFieldSet.isSuperset(of: Self.level0RequiredFields) else {
             return .none
