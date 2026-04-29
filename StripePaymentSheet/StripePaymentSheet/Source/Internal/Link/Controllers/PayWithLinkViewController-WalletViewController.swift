@@ -57,7 +57,8 @@ extension PayWithLinkViewController {
             compact: viewModel.shouldUseCompactConfirmButton,
             linkAppearance: viewModel.linkAppearance,
             didTapWhenDisabled: { [weak self] in
-                self?.cardDetailsRecollectionSection.showAllValidationErrors()
+                guard let self, self.viewModel.shouldShowRecollectionSection else { return }
+                self.cardDetailsRecollectionSection.showAllValidationErrors()
             }
         ) { [weak self] in
             guard let self else {
