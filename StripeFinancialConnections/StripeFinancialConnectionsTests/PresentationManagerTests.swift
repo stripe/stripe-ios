@@ -60,7 +60,7 @@ class PresentationManagerTests: XCTestCase {
         let linkAppearance = FinancialConnectionsAppearance(theme: .light, brand: .link)
         let stripeAppearance = FinancialConnectionsAppearance(theme: .light, brand: nil)
 
-        XCTAssertFalse(linkAppearance.logoTintColor.isEqual(.clear))
-        XCTAssertFalse(stripeAppearance.logoTintColor.isEqual(.clear))
+        XCTAssertFalse(linkAppearance.logoTintColor.isEqual(UIColor.clear))
+        XCTAssertFalse(stripeAppearance.logoTintColor.isEqual(UIColor.clear))
     }
 }
