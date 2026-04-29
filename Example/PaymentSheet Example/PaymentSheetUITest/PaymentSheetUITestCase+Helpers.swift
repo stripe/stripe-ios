@@ -153,10 +153,10 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
     }
 
-    func payWithApplePay() throws {
+    func payWithApplePay() {
         // iOS 26 changed the Apple Pay simulator payment authorization flow.
         // The "Pay with Passcode" button no longer exists and payment can't complete.
-        try XCTSkipIf(
+        try! XCTSkipIf(
             ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
             "Apple Pay simulator payment authorization changed in iOS 26"
         )

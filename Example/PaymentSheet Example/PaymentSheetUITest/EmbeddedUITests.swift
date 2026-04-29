@@ -159,7 +159,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Stop here; Klarna's test playground is out of scope
     }
 
-    func testSingleCardCBC_update_and_remove_selectStateApplePay() throws {
+    func testSingleCardCBC_update_and_remove_selectStateApplePay() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
@@ -245,7 +245,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(applePayButton.isSelected)
 
         app.buttons["Checkout"].waitForExistenceAndTap()
-        try payWithApplePay()
+        payWithApplePay()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
@@ -431,7 +431,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(editScreenEventCount, 2, "Expected 2 edit screen open events")
     }
 
-    func testMultipleCard_remove_selectNonSavedCard() throws {
+    func testMultipleCard_remove_selectNonSavedCard() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .embedded
@@ -492,7 +492,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(applePayButton.isSelected)
 
         app.buttons["Checkout"].waitForExistenceAndTap()
-        try payWithApplePay()
+        payWithApplePay()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
@@ -695,7 +695,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(cardNumberField.value as? String, "555555555555444, Your card number is incomplete.")
     }
 
-    func testApplePay() throws {
+    func testApplePay() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.mode = .payment
@@ -710,7 +710,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
         app.buttons["Checkout"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
-        try payWithApplePay()
+        payWithApplePay()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
 
         // Apple Pay should be selected by default upon reloading with the same customer

@@ -211,7 +211,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
      XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
      }
      */
-    func testDeferredPaymentIntent_ApplePay_ClientSideConfirmation() throws {
+    func testDeferredPaymentIntent_ApplePay_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.integrationType = .deferred_csc
@@ -222,10 +222,10 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
         applePayButton.tap()
 
-        try payWithApplePay()
+        payWithApplePay()
     }
 
-    func testDeferredIntent_ApplePayFlowControllerFlow_ClientSideConfirmation() throws {
+    func testDeferredIntent_ApplePayFlowControllerFlow_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.integrationType = .deferred_csc
@@ -245,6 +245,6 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
         app.buttons["Confirm"].tap()
 
-        try payWithApplePay()
+        payWithApplePay()
     }
 }
