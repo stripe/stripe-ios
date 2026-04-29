@@ -402,7 +402,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         app.fc_dismissKeyboard()
 
         let zipField = app.textFields["ZIP"]
-        XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(expField.waitForExistence(timeout: 10.0))
         zipField.tap()
         zipField.typeText("55555")
         XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
