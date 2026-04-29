@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
@@ -49,6 +50,10 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
 }
 
 extension PaymentElementConfiguration {
+    func resolvedLinkBrand(elementsSession: STPElementsSession) -> LinkBrand {
+        // `link.brand` is an explicit client override; `nil` means defer to the elements session response.
+        link.brand ?? elementsSession.linkBrand ?? .link
+    }
 
     /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
     func requiresBillingDetailCollection() -> Bool {
