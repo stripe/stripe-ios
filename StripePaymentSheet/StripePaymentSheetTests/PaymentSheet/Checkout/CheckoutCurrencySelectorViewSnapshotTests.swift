@@ -94,29 +94,13 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        view.translatesAutoresizingMaskIntoConstraints = false
-        let widthConstraint = view.widthAnchor.constraint(equalToConstant: width)
-        widthConstraint.isActive = true
-        view.setNeedsLayout()
-        view.layoutIfNeeded()
+        view.autosizeHeight(width: width)
 
-        let fittingSize = view.systemLayoutSizeFitting(
-            CGSize(width: width, height: UIView.layoutFittingCompressedSize.height),
-            withHorizontalFittingPriority: .required,
-            verticalFittingPriority: .fittingSizeLevel
-        )
-        widthConstraint.isActive = false
-
-        let size = CGSize(width: width, height: fittingSize.height)
-        let window = UIWindow(frame: CGRect(origin: .zero, size: size))
+        let window = UIWindow(frame: CGRect(origin: .zero, size: view.frame.size))
         window.overrideUserInterfaceStyle = darkMode ? .dark : .light
         window.isHidden = false
-
-        view.translatesAutoresizingMaskIntoConstraints = true
-        view.frame = CGRect(origin: .zero, size: size)
-        window.addSubview(view)
+        window.addAndPinSubview(view)
         window.layoutIfNeeded()
-        view.layoutIfNeeded()
 
         STPSnapshotVerifyView(view, file: file, line: line)
     }
