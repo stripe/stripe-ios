@@ -106,13 +106,27 @@ extension XCUIApplication {
         coordinate.tap()
     }
 
-    /// Dismisses the keyboard by tapping the Done button on the toolbar, or tapping outside the keyboard.
+    /// Dismisses the keyboard or picker wheel by tapping the Done button on the toolbar, or tapping outside.
     func fc_dismissKeyboard() {
         // Try the toolbar Done button first — use firstMatch to handle
         // multiple Done buttons (e.g. picker wheel + navigation bar on iOS 26)
         let doneButton = toolbars.buttons["Done"].firstMatch
         if doneButton.waitForExistence(timeout: 2) {
             doneButton.tap()
+            // On iOS 26, picker wheel dismissal can be delayed.
+            // If a picker wheel is still visible after tapping Done, wait and retry.
+            if pickerWheels.firstMatch.exists {
+                sleep(1)
+                if pickerWheels.firstMatch.exists {
+                    // Retry tapping Done if still available
+                    if doneButton.exists {
+                        doneButton.tap()
+                    } else {
+                        // Fall through to coordinate tap
+                        coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
+                    }
+                }
+            }
             return
         }
         // iOS 26 fallback: tap on the title label to dismiss the keyboard

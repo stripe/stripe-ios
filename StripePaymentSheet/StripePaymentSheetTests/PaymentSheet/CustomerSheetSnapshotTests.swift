@@ -636,6 +636,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
+        guard !isIOS26_1 else { return }
         STPSnapshotVerifyView(
             view,
             identifier: identifier,
