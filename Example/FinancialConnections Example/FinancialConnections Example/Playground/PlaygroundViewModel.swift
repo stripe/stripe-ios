@@ -842,8 +842,8 @@ private func PresentPaymentSheet(
     case .alwaysDark: configuration.style = .alwaysDark
     }
 
-    if config.linkBrand == .notlink {
-        configuration.link.brand = .notlink
+    if config.linkBrand == .onelink {
+        configuration.link.brand = .onelink
     }
 
     let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)

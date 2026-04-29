@@ -567,7 +567,6 @@ extension PaymentSheet {
             self.display = display
             self.brand = brand
         }
-
         @_spi(CollectMissingLinkBillingDetailsPreview) public init(
             display: Display = .automatic,
             collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
