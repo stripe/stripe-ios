@@ -28,6 +28,7 @@ import Foundation
         case none = "NONE"
     }
 
+    @_spi(STP) public let brand: LinkBrand
     @_spi(STP) public let fundingSources: Set<ParsedEnum<FundingSource>>
     @_spi(STP) public let popupWebviewOption: PopupWebviewOption?
     @_spi(STP) public let passthroughModeEnabled: Bool?
@@ -51,6 +52,7 @@ import Foundation
     }
 
     @_spi(STP) public init(
+        brand: LinkBrand,
         fundingSources: Set<ParsedEnum<FundingSource>>,
         popupWebviewOption: PopupWebviewOption?,
         passthroughModeEnabled: Bool?,
@@ -68,6 +70,7 @@ import Foundation
         linkSupportedPaymentMethodsOnboardingEnabled: [String],
         allResponseFields: [AnyHashable: Any]
     ) {
+        self.brand = brand
         self.fundingSources = fundingSources
         self.popupWebviewOption = popupWebviewOption
         self.passthroughModeEnabled = passthroughModeEnabled
@@ -95,6 +98,9 @@ import Foundation
         else {
             return nil
         }
+
+        let brandString = response["link_brand"] as? String
+        let brand = brandString.flatMap(LinkBrand.init(rawValue:)) ?? .link
 
         let validFundingSources = Set(fundingSourcesStrings.map { ParsedEnum<FundingSource>(rawValue: $0) })
 
@@ -129,6 +135,7 @@ import Foundation
         }
 
         return LinkSettings(
+            brand: brand,
             fundingSources: validFundingSources,
             popupWebviewOption: webviewOption,
             passthroughModeEnabled: passthroughModeEnabled,

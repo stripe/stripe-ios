@@ -31,4 +31,14 @@ class PresentationManagerTests: XCTestCase {
         PresentationManager.shared.present(toViewController, from: UIViewController())
         XCTAssertEqual(toViewController.traitCollection.userInterfaceStyle, .dark)
     }
+
+    func testLinkBrandOverrideIsAvailableToAppearanceResolution() {
+        var configuration = FinancialConnectionsSheet.Configuration()
+        configuration.linkBrand = .notlink
+        PresentationManager.shared.configuration = configuration
+
+        let appearance = FinancialConnectionsAppearance(theme: .light, brand: nil)
+
+        XCTAssertEqual(appearance.logo, .notlink_logo)
+    }
 }

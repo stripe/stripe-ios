@@ -175,7 +175,7 @@ extension FinancialConnectionsNavigationController {
             guard !shouldHideLogo else { return nil }
 
             let logoImage = UIImageView(image: appearance.logo.makeImage(template: true))
-            logoImage.tintColor = appearance.colors.logo
+            logoImage.tintColor = appearance.logoTintColor
             logoImage.contentMode = .scaleAspectFit
             logoImage.sizeToFit()
 
