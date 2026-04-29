@@ -1,31 +1,27 @@
 //
-//  AddressUpdate.swift
+//  ContactAddress.swift
 //  StripePaymentSheet
 //
-//  Created by Nick Porter on 3/2/26.
-//  Copyright © 2026 Stripe, Inc. All rights reserved.
-//
-
 import Foundation
 
 @_spi(CheckoutSessionsPreview)
 extension Checkout {
-    /// Parameters for ``updateBillingAddress(_:)`` and ``updateShippingAddress(_:)``.
-    public struct AddressUpdate: Equatable {
+    /// Contact details and a postal address captured for billing or shipping.
+    public struct ContactAddress: Equatable {
         /// The customer's full name.
         public let name: String?
 
         /// The customer's phone number.
         public let phone: String?
 
-        /// The customer's address.
+        /// The customer's postal address.
         public let address: Address
 
-        /// Creates an address update.
+        /// Creates contact details and a postal address.
         /// - Parameters:
         ///   - name: The customer's full name.
         ///   - phone: The customer's phone number.
-        ///   - address: The customer's address.
+        ///   - address: The customer's postal address.
         public init(name: String? = nil, phone: String? = nil, address: Address) {
             self.name = name
             self.phone = phone
