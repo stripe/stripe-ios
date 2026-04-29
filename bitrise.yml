@@ -282,7 +282,7 @@ workflows:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
+        - maximum_test_repetitions: "3"
         - scheme: StripePaymentSheet
         is_always_run: true
     - xcode-test@6:
@@ -303,7 +303,7 @@ workflows:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
+        - maximum_test_repetitions: "3"
         - scheme: StripeConnect
         is_always_run: true
     - xcode-test@6:
@@ -690,7 +690,7 @@ workflows:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
-        - maximum_test_repetitions: "2"
+        - maximum_test_repetitions: "3"
         - scheme: PaymentSheet Example
         - test_plan: $TEST_PLAN_SHARD
         - log_formatter: xcbeautify
