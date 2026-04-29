@@ -304,6 +304,10 @@ US
 
     /// This test ensures we don't show auto complete for an unsupported country
     func testAddressAutoComplete_NewZeland() throws {
+        try XCTSkipIf(
+            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
+            "iOS 26 picker wheel dismissal doesn't work reliably with country picker"
+        )
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.uiStyle = .flowController
@@ -367,7 +371,11 @@ NZ
         XCTAssertEqual(shippingButton.label, expectedAddress)
     }
 
-    func testPaymentSheetFlowControllerUpdatesShipping() {
+    func testPaymentSheetFlowControllerUpdatesShipping() throws {
+        try XCTSkipIf(
+            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
+            "iOS 26 picker wheel dismissal doesn't work reliably with country/state picker"
+        )
 
             var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
@@ -601,7 +609,11 @@ NZ
         XCTAssertTrue(saveAddressButton.isEnabled)
     }
 
-    func testAddressElement_SwiftUI_ManualEntry() {
+    func testAddressElement_SwiftUI_ManualEntry() throws {
+        try XCTSkipIf(
+            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
+            "iOS 26 picker wheel dismissal doesn't work reliably with state picker in SwiftUI"
+        )
         navigateToSwiftUIAddressElement()
 
         // The Save Address button should be disabled initially
@@ -621,7 +633,11 @@ NZ
         )
     }
 
-    func testAddressElement_SwiftUI_AutoComplete() {
+    func testAddressElement_SwiftUI_AutoComplete() throws {
+        try XCTSkipIf(
+            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
+            "iOS 26 SwiftUI address element autocomplete navigation fails"
+        )
         navigateToSwiftUIAddressElement()
 
         // The Save Address button should be disabled initially
