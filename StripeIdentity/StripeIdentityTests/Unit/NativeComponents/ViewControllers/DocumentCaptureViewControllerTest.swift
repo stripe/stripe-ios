@@ -634,6 +634,40 @@ final class DocumentCaptureViewControllerTest: XCTestCase {
         XCTAssertEqual(vc.buttonViewModels.first?.text, "Continue")
     }
 
+    func testManualCaptureCannotBeActivatedWhenLiveCaptureIsRequired() throws {
+        let mockResponse = try VerificationPageMock.requireLiveCapture.make()
+        let vc = makeViewController(
+            state: .scanning(.front, nil),
+            apiConfig: mockResponse.documentCapture
+        )
+        let control = UISegmentedControl(items: ["Live", "Manual"])
+        let mockDocumentScannerOutput = makeDocumentScannerOutputLegacy(with: .idCardFront)
+
+        control.selectedSegmentIndex = 1
+        vc.didChangeCaptureMode(control)
+
+        XCTAssertEqual(vc.buttonViewModels.count, 1)
+        XCTAssertEqual(vc.buttonViewModels.first?.text, "Continue")
+        XCTAssertEqual(vc.buttonViewModels.first?.state, .disabled)
+
+        mockTimeoutTimer(vc)
+        mockCameraFrameCaptured(vc)
+        mockConcurrencyManager.respondToScan(output: mockDocumentScannerOutput)
+
+        XCTAssertStateEqual(
+            vc.imageScanningSession.state,
+            .scanned(.front, UIImage())
+        )
+        XCTAssertEqual(mockDocumentUploader.uploadMethod, .autoCapture)
+        guard case .scan(let scannedViewModel) = vc.viewModel else {
+            return XCTFail("Expected scan view model after live capture")
+        }
+        XCTAssertEqual(
+            scannedViewModel.instructionalText,
+            DocumentCaptureViewController.scannedInstructionalText
+        )
+    }
+
     func testFileUploadButtonCameraAccess() {
         let vc = makeViewController(state: .noCameraAccess)
         vc.buttonViewModels.first!.didTap()

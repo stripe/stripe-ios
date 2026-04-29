@@ -77,8 +77,16 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
 
     // MARK: Computed Properties
 
+    private var isManualCaptureAllowed: Bool {
+        !apiConfig.requireLiveCapture
+    }
+
+    private var isManualCaptureMode: Bool {
+        isManualCaptureAllowed && captureMode == .manual
+    }
+
     private var shouldShowCaptureModeControl: Bool {
-        guard !apiConfig.requireLiveCapture else {
+        guard isManualCaptureAllowed else {
             return false
         }
 
@@ -131,7 +139,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
                 )
             )
         case .scanning(let documentSide, let documentScannerOutput):
-            if captureMode == .manual {
+            if isManualCaptureMode {
                 resetLastScanningInstructionText()
                 return .scan(
                     .init(
@@ -180,7 +188,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
             return .scan(
                 .init(
                     scanningViewModel: .scanned(image),
-                    instructionalText: captureMode == .manual
+                    instructionalText: isManualCaptureMode
                         ? DocumentCaptureViewController.imageTakenInstructionalText
                         : DocumentCaptureViewController.scannedInstructionalText
                 )
@@ -230,7 +238,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         switch imageScanningSession.state {
         case .initial,
             .scanning:
-            guard captureMode == .manual else {
+            guard isManualCaptureMode else {
                 return [.continueButton(state: .disabled, didTap: {})]
             }
             return [
@@ -508,7 +516,8 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
         guard shouldShowCaptureModeControl else {
             return
         }
-        captureModeControl.selectedSegmentIndex = captureMode.rawValue
+        captureModeControl.selectedSegmentIndex =
+            isManualCaptureMode ? CaptureMode.manual.rawValue : CaptureMode.live.rawValue
         captureModeControl.isEnabled = captureModeControlIsEnabled
     }
 
@@ -537,6 +546,11 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     }
 
     private func setCaptureMode(_ captureMode: CaptureMode) {
+        guard isManualCaptureAllowed || captureMode == .live else {
+            self.captureMode = .live
+            updateUI()
+            return
+        }
         guard self.captureMode != captureMode else {
             updateUI()
             return
@@ -569,7 +583,7 @@ final class DocumentCaptureViewController: IdentityFlowViewController {
     }
 
     private func captureManualPhoto() {
-        guard captureMode == .manual,
+        guard isManualCaptureMode,
             case .scanning(let documentSide, _) = imageScanningSession.state,
             let latestCapturedCameraFrame
         else {
@@ -756,8 +770,7 @@ extension DocumentCaptureViewController: ImageScanningSessionDelegate {
             scannerOutput: scannerOutputOptional,
             exifMetadata: exifMetadata
         )
-
-        guard captureMode == .live else {
+        guard !isManualCaptureMode else {
             imageScanningSession.stopTimeoutTimer()
             imageScanningSession.updateScanningState(nil)
             if !hadCapturedCameraFrame {
