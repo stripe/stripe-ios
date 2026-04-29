@@ -29,7 +29,6 @@ struct RegistrationView: View {
     /// Called when registration and authentication succeed.
     let onCompleted: () -> Void
 
-    @State private var fullName: String = ""
     @State private var phoneNumber: String = ""
     @State private var country: String = "US"
     @State private var errorMessage: String?
@@ -39,7 +38,6 @@ struct RegistrationView: View {
 
     @Environment(\.isLoading) private var isLoading
 
-    @FocusState private var isFullNameFieldFocused: Bool
     @FocusState private var isPhoneNumberFieldFocused: Bool
     @FocusState private var isCountryFieldFocused: Bool
 
@@ -74,13 +72,6 @@ struct RegistrationView: View {
                         .background(Color.gray.opacity(0.1))
                         .cornerRadius(8)
                         .foregroundColor(.secondary)
-                }
-
-                FormField("Full Name (optional)") {
-                    TextField("Enter your full name", text: $fullName)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .autocapitalization(.words)
-                        .focused($isFullNameFieldFocused)
                 }
 
                 FormField("Phone Number") {
@@ -156,7 +147,7 @@ struct RegistrationView: View {
             do {
                 try await coordinator.registerLinkUser(
                     email: email,
-                    fullName: fullName.isEmpty ? nil : fullName,
+                    fullName: nil,
                     phone: phoneNumber,
                     country: country
                 )
@@ -253,7 +244,6 @@ struct RegistrationView: View {
     }
 
     private func resetFocusState() {
-        isFullNameFieldFocused = false
         isPhoneNumberFieldFocused = false
         isCountryFieldFocused = false
     }
