@@ -28,7 +28,7 @@ extension Checkout {
         /// When allowed, Stripe may present prices in the customer's local
         /// currency alongside the merchant's settlement currency.
         ///
-        /// Default: ``AdaptivePricing/init()`` (`allowed: true`).
+        /// Default: ``AdaptivePricing.init()`` (`allowed: true`).
         public var adaptivePricing: AdaptivePricing = AdaptivePricing()
 
         /// Creates a configuration with default values.
