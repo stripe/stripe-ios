@@ -108,10 +108,11 @@ extension XCUIApplication {
 
     /// Dismisses the keyboard by tapping the Done button on the toolbar, or tapping outside the keyboard.
     func fc_dismissKeyboard() {
-        // Try the toolbar Done button first (iOS 18 and earlier)
-        let doneButtonByLabel = toolbars.buttons["Done"]
-        if doneButtonByLabel.waitForExistence(timeout: 1) {
-            doneButtonByLabel.tap()
+        // Try the toolbar Done button first — use firstMatch to handle
+        // multiple Done buttons (e.g. picker wheel + navigation bar on iOS 26)
+        let doneButton = toolbars.buttons["Done"].firstMatch
+        if doneButton.waitForExistence(timeout: 2) {
+            doneButton.tap()
             return
         }
         // iOS 26 fallback: tap on the title label to dismiss the keyboard
@@ -121,8 +122,8 @@ extension XCUIApplication {
             fcTitleLabel.tap()
             return
         }
-        // Last resort: tap near the top of the screen
-        coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
+        // Last resort: tap near the middle of the screen (not top, to avoid nav buttons)
+        coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.3)).tap()
     }
 }
 
