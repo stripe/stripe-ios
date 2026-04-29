@@ -222,7 +222,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         XCTAssertTrue(applePayButton.waitForExistence(timeout: 4.0))
         applePayButton.tap()
 
-        payWithApplePay()
+        try payWithApplePay()
     }
 
     func testDeferredIntent_ApplePayFlowControllerFlow_ClientSideConfirmation() throws {
@@ -245,6 +245,6 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
 
         app.buttons["Confirm"].tap()
 
-        payWithApplePay()
+        try payWithApplePay()
     }
 }

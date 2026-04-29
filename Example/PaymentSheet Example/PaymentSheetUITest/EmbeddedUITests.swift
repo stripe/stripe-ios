@@ -245,7 +245,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(applePayButton.isSelected)
 
         app.buttons["Checkout"].waitForExistenceAndTap()
-        payWithApplePay()
+        try payWithApplePay()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
@@ -492,7 +492,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(applePayButton.isSelected)
 
         app.buttons["Checkout"].waitForExistenceAndTap()
-        payWithApplePay()
+        try payWithApplePay()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
@@ -710,7 +710,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Checkout"].waitForExistence(timeout: 10))
         app.buttons["Checkout"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
-        payWithApplePay()
+        try payWithApplePay()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
 
         // Apple Pay should be selected by default upon reloading with the same customer

@@ -198,7 +198,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["vertical"].waitForExistenceAndTap()
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["apple_pay_button"].waitForExistenceAndTap())
-        payWithApplePay()
+        try payWithApplePay()
     }
 
     func testCanPayWithLinkWallet_verticalMode() {

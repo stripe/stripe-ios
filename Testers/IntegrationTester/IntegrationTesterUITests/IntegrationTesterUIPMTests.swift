@@ -29,6 +29,13 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
     }
 
     func testApplePay() throws {
+        // iOS 26 changed the Apple Pay simulator sheet — card switching and payment
+        // authorization no longer work the same way. Skip until Apple provides updated
+        // simulator support.
+        try XCTSkipIf(
+            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
+            "Apple Pay simulator UI changed in iOS 26"
+        )
         self.popToMainMenu()
         let tablesQuery = app.collectionViews
 

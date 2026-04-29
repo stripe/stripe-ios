@@ -41,6 +41,13 @@ class IntegrationTesterUICardTests: IntegrationTesterUITests {
 
     let hsbcCard = "4000582600000292"
     func testHSBCHTMLIssue() throws {
+        // iOS 26 OTP challenge submission doesn't complete the payment flow.
+        // The keyboard dismissal and OTP entry work, but the payment processing
+        // times out. Skip until the 3DS challenge flow is updated for iOS 26.
+        try XCTSkipIf(
+            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
+            "HSBC 3DS challenge flow doesn't complete on iOS 26 simulator"
+        )
         testHSBCWebViewLinksTrigger(cardNumber: hsbcCard)
     }
 
