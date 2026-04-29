@@ -154,12 +154,6 @@ extension PaymentSheetUITestCase {
     }
 
     func payWithApplePay() {
-        // iOS 26 changed the Apple Pay simulator payment authorization flow.
-        // The "Pay with Passcode" button no longer exists and payment can't complete.
-        try! XCTSkipIf(
-            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
-            "Apple Pay simulator payment authorization changed in iOS 26"
-        )
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
@@ -182,23 +176,34 @@ extension PaymentSheetUITestCase {
             XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
             payButton.forceTapElement()
         } else {
-            // iOS 26: the Apple Pay simulator auto-confirms after a delay.
-            // Double-tap the side button equivalent by tapping the pay summary row.
-            let payPredicate = NSPredicate(format: "label BEGINSWITH 'Pay '")
-            let payRow = applePay.buttons.matching(payPredicate).firstMatch
-            if payRow.waitForExistence(timeout: 3.0) {
-                payRow.forceTapElement()
-                // Wait briefly then tap again — iOS 26 simulates double-click
+            // iOS 26: Payment authorization uses a "Confirm with Side Button"
+            // prompt. In the simulator, we need to tap the confirmation button.
+            // Try several approaches to find the confirm action:
+
+            // Approach 1: Look for a "Pay" or "Confirm" button
+            let confirmPredicate = NSPredicate(format: "label BEGINSWITH 'Pay' OR label CONTAINS 'Confirm'")
+            let confirmButton = applePay.buttons.matching(confirmPredicate).firstMatch
+            if confirmButton.waitForExistence(timeout: 5.0) {
+                confirmButton.forceTapElement()
                 sleep(1)
-                if payRow.exists {
-                    payRow.forceTapElement()
+                // Double-tap if still present (simulates double-click side button)
+                if confirmButton.exists {
+                    confirmButton.forceTapElement()
+                }
+            } else {
+                // Approach 2: Tap the card again to trigger confirmation
+                let cardSelectionButton = applePay.buttons.containing(cardPredicate).firstMatch
+                if cardSelectionButton.exists {
+                    cardSelectionButton.forceTapElement()
+                    sleep(1)
+                    cardSelectionButton.forceTapElement()
                 }
             }
         }
 
         let successText = app.staticTexts["Success!"]
         //      This actually takes upwards of 20 seconds sometimes, especially in the deferred flow :/
-        XCTAssertTrue(successText.waitForExistence(timeout: 30.0), "Payment did not succeed. App static texts: \(app.staticTexts.allElementsBoundByIndex.prefix(5).map { $0.label })")
+        XCTAssertTrue(successText.waitForExistence(timeout: 30.0), "Payment did not succeed. Apple Pay buttons: \(applePay.buttons.allElementsBoundByIndex.prefix(10).map { $0.label })")
     }
 
     func addApplePayBillingIfNeeded(_ applePay: XCUIApplication) {
