@@ -601,6 +601,9 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // Sign up and add a payment method with billing details
         signUpFor(app, email: email)
+        app.otherElements["Stripe.Link.PaymentMethodPicker"].waitForExistenceAndTap(timeout: 10)
+        app.buttons["Add a payment method"].waitForExistenceAndTap()
+        app.buttons["Debit or credit card"].waitForExistenceAndTap()
         fillOutLinkCardData(app, cardNumber: "378282246310005", cvc: cvc, includingBillingDetails: true)
 
         payLink(app)
@@ -620,6 +623,9 @@ class PaymentSheetLinkUITests: PaymentSheetUITestCase {
 
         // Sign up and add a payment method without billing details
         signUpFor(app, email: email)
+        app.otherElements["Stripe.Link.PaymentMethodPicker"].waitForExistenceAndTap(timeout: 10)
+        app.buttons["Add a payment method"].waitForExistenceAndTap()
+        app.buttons["Debit or credit card"].waitForExistenceAndTap()
         fillOutLinkCardData(app, cardNumber: "378282246310005", cvc: cvc, includingBillingDetails: false)
         payLink(app)
         assertLinkPaymentSuccess(app)
