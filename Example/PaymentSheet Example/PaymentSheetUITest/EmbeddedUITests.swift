@@ -159,7 +159,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         // Stop here; Klarna's test playground is out of scope
     }
 
-    func testSingleCardCBC_update_and_remove_selectStateApplePay() {
+    func testSingleCardCBC_update_and_remove_selectStateApplePay() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .paymentSheet
@@ -431,7 +431,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(editScreenEventCount, 2, "Expected 2 edit screen open events")
     }
 
-    func testMultipleCard_remove_selectNonSavedCard() {
+    func testMultipleCard_remove_selectNonSavedCard() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.mode = .paymentWithSetup
         settings.uiStyle = .embedded
@@ -695,7 +695,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         XCTAssertEqual(cardNumberField.value as? String, "555555555555444, Your card number is incomplete.")
     }
 
-    func testApplePay() {
+    func testApplePay() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .new
         settings.mode = .payment

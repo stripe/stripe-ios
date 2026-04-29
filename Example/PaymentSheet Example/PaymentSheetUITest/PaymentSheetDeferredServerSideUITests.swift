@@ -208,7 +208,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
      XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
      }
      */
-    func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation() {
+    func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
@@ -223,7 +223,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         try payWithApplePay()
     }
 
-    func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation_ManualConfirmation() {
+    func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation_ManualConfirmation() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
@@ -240,7 +240,7 @@ class PaymentSheetDeferredServerSideUITests: PaymentSheetUITestCase {
         try payWithApplePay()
     }
 
-    func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation_Multiprocessor() {
+    func testDeferredPaymentIntent_ApplePay_ServerSideConfirmation_Multiprocessor() throws {
 
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal

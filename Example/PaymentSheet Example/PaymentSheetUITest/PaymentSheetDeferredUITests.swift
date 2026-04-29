@@ -211,7 +211,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
      XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
      }
      */
-    func testDeferredPaymentIntent_ApplePay_ClientSideConfirmation() {
+    func testDeferredPaymentIntent_ApplePay_ClientSideConfirmation() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.integrationType = .deferred_csc
