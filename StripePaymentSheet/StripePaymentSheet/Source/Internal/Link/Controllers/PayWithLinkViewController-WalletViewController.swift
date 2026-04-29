@@ -724,7 +724,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         paymentPicker.setAddButtonIsLoading(true)
         coordinator?.startFinancialConnections { [weak self] result in
             let completion = {
-                self?.confirmButton.update(status: .enabled)
+                self?.confirmButton.update(status: self?.viewModel.confirmButtonStatus ?? .disabled)
                 self?.paymentPicker.setAddButtonIsLoading(false)
             }
 
