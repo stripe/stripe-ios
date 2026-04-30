@@ -1195,14 +1195,18 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        // On iOS 26, the bottom sheet presentation controller sizes the view
-        // differently across machines, causing snapshot height mismatches.
-        // Skip comparison on iOS 26 until reference images can be recorded on CI.
-        guard !isIOS26_1 else { return }
-        STPSnapshotVerifyView(
-            view,
-            identifier: identifier,
-            overallTolerance: 0.01, // unfortunately on iOS 26 w/ XCode beta 7 there are *sometimes* differences as large as ~0.003%.
+        // Snapshot the window instead of the bottom sheet view directly.
+        // On iOS 26, the presentation controller sizes the bottom sheet view
+        // non-deterministically, but the window is always 375x812.
+        guard let window = view.window else {
+            XCTFail("View is not attached to a window", file: file, line: line)
+            return
+        }
+        FBSnapshotVerifyView(
+            window,
+            identifier: isIOS26 ? (identifier.map { "\($0)_iOS26" } ?? "iOS26") : identifier,
+            perPixelTolerance: 0.02,
+            overallTolerance: 0.01,
             file: file,
             line: line
         )

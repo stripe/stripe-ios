@@ -408,6 +408,15 @@ class MockExpressCheckoutWebviewDelegate: ExpressCheckoutWebviewDelegate {
 }
 
 @available(iOS 16.0, *)
+struct MockScriptMessage: ScriptMessageProtocol {
+    let name: String
+    let body: Any
+}
+
+/// WKScriptMessage subclass for integration tests that call userContentController(_:didReceive:).
+/// Note: WKScriptMessage crashes on dealloc in async test contexts on iOS 26.4, so prefer
+/// MockScriptMessage with handleMessage() directly when possible.
+@available(iOS 16.0, *)
 class MockWKScriptMessage: WKScriptMessage {
     private let _name: String
     private let _body: Any
@@ -424,17 +433,9 @@ class MockWKScriptMessage: WKScriptMessage {
         super.init()
     }
 
-    override var name: String {
-        return _name
-    }
-
-    override var body: Any {
-        return _body
-    }
-
-    override var frameInfo: WKFrameInfo {
-        return _frameInfo
-    }
+    override var name: String { _name }
+    override var body: Any { _body }
+    override var frameInfo: WKFrameInfo { _frameInfo }
 }
 
 @available(iOS 16.0, *)

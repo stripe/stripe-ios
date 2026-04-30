@@ -337,7 +337,7 @@ class ECEIntegrationTests: XCTestCase {
         ]
 
         for testCase in testCases {
-            let message = MockWKScriptMessage(name: testCase.name, body: testCase.body)
+            let message = MockScriptMessage(name: testCase.name, body: testCase.body)
 
             do {
                 let response = try await eceViewController.handleMessage(message: message)

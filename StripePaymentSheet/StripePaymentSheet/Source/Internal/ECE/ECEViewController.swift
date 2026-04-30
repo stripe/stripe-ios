@@ -8,6 +8,15 @@
 import UIKit
 @preconcurrency import WebKit
 
+/// A protocol abstracting the properties of WKScriptMessage needed by handleMessage.
+/// This allows tests to avoid subclassing WKScriptMessage (which crashes on dealloc in iOS 26.4).
+protocol ScriptMessageProtocol {
+    var name: String { get }
+    var body: Any { get }
+}
+
+extension WKScriptMessage: ScriptMessageProtocol {}
+
 // Protocol for handling Express Checkout Element events
 @available(iOS 16.0, *)
 protocol ExpressCheckoutWebviewDelegate: AnyObject {
@@ -350,7 +359,7 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
         }
     }
 
-    func handleMessage(message: WKScriptMessage) async throws -> Any? {
+    func handleMessage(message: some ScriptMessageProtocol) async throws -> Any? {
         let messageBody = message.body
         guard let expressCheckoutDelegate = expressCheckoutWebviewDelegate else {
             throw BridgeError("ExpressCheckoutWebviewDelegate not set")

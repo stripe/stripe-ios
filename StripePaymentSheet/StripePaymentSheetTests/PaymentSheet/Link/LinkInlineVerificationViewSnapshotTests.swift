@@ -50,8 +50,10 @@ class LinkInlineVerificationViewSnapshotTests: STPSnapshotTestCase {
         // Wait for the async startVerification() request to complete before removing the stub.
         // This prevents the request from being caught by other tests' catch-all stubs.
         // Use XCTWaiter to avoid failing the test if the request hasn't happened yet.
-        let waiter = XCTWaiter()
-        _ = waiter.wait(for: [verificationExpectation!], timeout: 2.0)
+        if let verificationExpectation {
+            let waiter = XCTWaiter()
+            _ = waiter.wait(for: [verificationExpectation], timeout: 2.0)
+        }
         if let verificationStub {
             HTTPStubs.removeStub(verificationStub)
         }

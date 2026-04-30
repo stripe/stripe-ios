@@ -636,10 +636,18 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        guard !isIOS26_1 else { return }
-        STPSnapshotVerifyView(
-            view,
-            identifier: identifier,
+        // Snapshot the window instead of the bottom sheet view directly.
+        // On iOS 26, the presentation controller sizes the bottom sheet view
+        // non-deterministically, but the window is always 375x812.
+        guard let window = view.window else {
+            XCTFail("View is not attached to a window", file: file, line: line)
+            return
+        }
+        FBSnapshotVerifyView(
+            window,
+            identifier: isIOS26 ? (identifier.map { "\($0)_iOS26" } ?? "iOS26") : identifier,
+            perPixelTolerance: 0.02,
+            overallTolerance: 0.01,
             file: file,
             line: line
         )
