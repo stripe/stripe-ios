@@ -81,20 +81,20 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, the user has already attached KYC info, or an API error occurs.
     func attachKYCInfo(info: KycInfo) async throws
 
-    /// Retrieves EU identifiers still required for MICA and CRS/CARF compliance.
+    /// Retrieves compliance identifiers still required for MICA and CRS/CARF compliance.
     /// Requires an authenticated Link user.
     ///
-    /// - Returns: The MICA and CRS/CARF country code requirements that still need identifiers.
+    /// - Returns: The missing compliance identifier requirements.
     /// Throws if an authenticated Link user is not available, KYC information has not yet been collected, or an API error occurs.
-    func retrieveMissingEUIdentifiers() async throws -> MissingEUIdentifiers
+    func retrieveMissingIdentifiers() async throws -> ComplianceIdentifierRequirements
 
-    /// Submits EU identifiers for MICA and CRS/CARF compliance.
+    /// Submits compliance identifiers for MICA and CRS/CARF compliance.
     /// Requires an authenticated Link user.
     ///
-    /// - Parameter identifiers: The MICA national identifiers and CRS/CARF tax identification numbers to submit.
+    /// - Parameter identifiers: The compliance identifiers to submit.
     /// - Returns: A result describing whether the identifiers were accepted, and what remains missing or invalid if not.
     /// Throws if an authenticated Link user is not available, or an API error occurs.
-    func submitEUIdentifiers(identifiers: EUIdentifiers) async throws -> SubmitEUIdentifiersResult
+    func submitIdentifiers(_ identifiers: [ComplianceIdentifier]) async throws -> SubmitIdentifiersResult
 
     /// Presents the CRS/CARF declaration for review and records acceptance if the user confirms.
     /// Requires an authenticated Link user.
@@ -400,18 +400,18 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
-    public func retrieveMissingEUIdentifiers() async throws -> MissingEUIdentifiers {
+    public func retrieveMissingIdentifiers() async throws -> ComplianceIdentifierRequirements {
         do {
-            let identifiers = try await apiClient.retrieveMissingEUIdentifiers(linkAccountInfo: linkAccountInfo)
+            let identifiers = try await apiClient.retrieveMissingIdentifiers(linkAccountInfo: linkAccountInfo)
             return identifiers
         } catch {
             throw error
         }
     }
 
-    public func submitEUIdentifiers(identifiers: EUIdentifiers) async throws -> SubmitEUIdentifiersResult {
+    public func submitIdentifiers(_ identifiers: [ComplianceIdentifier]) async throws -> SubmitIdentifiersResult {
         do {
-            let result = try await apiClient.submitEUIdentifiers(identifiers: identifiers, linkAccountInfo: linkAccountInfo)
+            let result = try await apiClient.submitIdentifiers(identifiers: identifiers, linkAccountInfo: linkAccountInfo)
             return result
         } catch {
             throw error

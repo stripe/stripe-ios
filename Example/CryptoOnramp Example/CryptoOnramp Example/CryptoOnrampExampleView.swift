@@ -94,12 +94,12 @@ struct CryptoOnrampExampleView: View {
                                     coordinator: coordinator
                                 )
                             }
-                        case let .euIdentifiers(missingIdentifiers):
-                            EUIdentifiersCollectionView(
+                        case let .complianceIdentifiers(requirements):
+                            ComplianceIdentifiersCollectionView(
                                 coordinator: coordinator,
-                                missingIdentifiers: missingIdentifiers
+                                requirements: requirements
                             ) {
-                                flowCoordinator.advanceAfterEUIdentifiers()
+                                flowCoordinator.advanceAfterIdentifiers()
                             }
                         case .crsCarfDeclaration:
                             CRSCARFDeclarationPresentingView(coordinator: coordinator) {

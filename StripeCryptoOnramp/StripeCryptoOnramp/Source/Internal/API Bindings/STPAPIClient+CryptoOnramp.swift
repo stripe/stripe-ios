@@ -112,12 +112,12 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
-    /// Retrieves EU identifiers still required for MICA and CRS/CARF compliance.
+    /// Retrieves compliance identifiers still required for MICA and CRS/CARF compliance.
     /// - Parameters:
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    /// - Returns: An instance of `MissingEUIdentifiers` containing MICA and CRS/CARF country code requirements.
+    /// - Returns: An instance of `ComplianceIdentifierRequirements` containing missing identifier requirements.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
-    func retrieveMissingEUIdentifiers(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> MissingEUIdentifiers {
+    func retrieveMissingIdentifiers(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> ComplianceIdentifierRequirements {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
@@ -131,17 +131,17 @@ extension STPAPIClient {
         )
     }
 
-    /// Submits EU identifiers for MICA and CRS/CARF compliance.
+    /// Submits compliance identifiers for MICA and CRS/CARF compliance.
     /// - Parameters:
-    ///   - identifiers: EU identifiers collected for MICA and CRS/CARF compliance.
+    ///   - identifiers: Compliance identifiers collected for MICA and CRS/CARF compliance.
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    /// - Returns: An instance of `SubmitEUIdentifiersResult` describing whether the identifiers were accepted.
+    /// - Returns: An instance of `SubmitIdentifiersResult` describing whether the identifiers were accepted.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     @discardableResult
-    func submitEUIdentifiers(
-        identifiers: EUIdentifiers,
+    func submitIdentifiers(
+        identifiers: [ComplianceIdentifier],
         linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
-    ) async throws -> SubmitEUIdentifiersResult {
+    ) async throws -> SubmitIdentifiersResult {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
             throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
         }
@@ -149,7 +149,7 @@ extension STPAPIClient {
         try validateSessionState(using: linkAccountInfo)
 
         let endpoint = "crypto/internal/eu_identifiers"
-        let requestObject = EUIdentifiersRequest(
+        let requestObject = SubmitIdentifiersRequest(
             credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
             identifiers: identifiers
         )

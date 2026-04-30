@@ -105,12 +105,12 @@ extension CustomerInformationResponse {
         kycRegion?.uppercased() == "EU"
     }
 
-    var hasSubmittedEUIdentifiers: Bool {
-        providedFields.contains("eu_identifiers")
+    var hasSubmittedIdentifiers: Bool {
+        providedFields.contains("identifiers")
     }
 
     var hasAcceptedCRSCARFDeclaration: Bool {
-        providedFields.contains("eu_carf_attestation")
+        providedFields.contains("attestation")
     }
 
     /// The KYC level implied solely by the fields the customer has already provided.

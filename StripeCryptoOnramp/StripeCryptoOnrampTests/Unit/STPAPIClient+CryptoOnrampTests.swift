@@ -92,18 +92,14 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         static let retrieveKYCInfoAPIPath = "/v1/crypto/internal/kyc_data_retrieve"
 
         // /v1/crypto/internal/identifier_requirements
-        static let retrieveMissingEUIdentifiersAPIPath = "/v1/crypto/internal/identifier_requirements"
+        static let retrieveMissingIdentifiersAPIPath = "/v1/crypto/internal/identifier_requirements"
 
         // /v1/crypto/internal/eu_identifiers
-        static let submitEUIdentifiersAPIPath = "/v1/crypto/internal/eu_identifiers"
-        static let validEUIdentifiers = EUIdentifiers(
-            mica: [
-                EUIdentifier(country: "EE", identifier: "MICA123", identifierType: "national_id")
-            ],
-            carf: [
-                EUIdentifier(country: "GR", identifier: "TIN123")
-            ]
-        )
+        static let submitIdentifiersAPIPath = "/v1/crypto/internal/eu_identifiers"
+        static let validIdentifiers = [
+            ComplianceIdentifier(type: .init(rawValue: "ee_ik"), value: "MICA123"),
+            ComplianceIdentifier(type: .init(rawValue: "gr_afm"), value: "TIN123"),
+        ]
 
         // /v1/crypto/internal/crs_carf_declaration
         static let crsCarfDeclarationAPIPath = "/v1/crypto/internal/crs_carf_declaration"
@@ -434,16 +430,30 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         XCTAssertEqual(response.personId, Constant.kycMockResponseObject.personId)
     }
 
-    func testRetrieveMissingEUIdentifiersSuccess() async throws {
+    func testRetrieveMissingIdentifiersSuccess() async throws {
         let mockResponseData = Data("""
         {
-          "missing_identifiers_mica": ["EE"],
-          "missing_identifiers_carf": ["GR"]
+          "identifiers": [
+            {
+              "type": "ee_ik",
+              "regulation": "eu_mica"
+            },
+            {
+              "type": "gr_afm",
+              "regulation": "eu_carf"
+            }
+          ],
+          "alternatives": [
+            {
+              "original_missing_identifiers": ["mt_nic"],
+              "alternative_missing_identifiers": ["mt_pp"]
+            }
+          ]
         }
         """.utf8)
 
         stub { request in
-            XCTAssertEqual(request.url?.path, Constant.retrieveMissingEUIdentifiersAPIPath)
+            XCTAssertEqual(request.url?.path, Constant.retrieveMissingIdentifiersAPIPath)
             XCTAssertEqual(request.httpMethod, "GET")
 
             guard let queryParametersString = request.url?.query else {
@@ -461,37 +471,51 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        let response = try await apiClient.retrieveMissingEUIdentifiers(linkAccountInfo: Constant.validLinkAccountInfo)
-        XCTAssertEqual(response.missingIdentifiersMICA, ["EE"])
-        XCTAssertEqual(response.missingIdentifiersCARF, ["GR"])
+        let response = try await apiClient.retrieveMissingIdentifiers(linkAccountInfo: Constant.validLinkAccountInfo)
+        XCTAssertEqual(response.identifiers.count, 2)
+        XCTAssertEqual(response.identifiers[0].type.rawValue, "ee_ik")
+        XCTAssertEqual(response.identifiers[0].regulation.rawValue, "eu_mica")
+        XCTAssertEqual(response.identifiers[1].type.rawValue, "gr_afm")
+        XCTAssertEqual(response.identifiers[1].regulation.rawValue, "eu_carf")
+        XCTAssertEqual(response.alternatives.count, 1)
+        XCTAssertEqual(response.alternatives[0].originalMissingIdentifiers.map(\.rawValue), ["mt_nic"])
+        XCTAssertEqual(response.alternatives[0].alternativeMissingIdentifiers.map(\.rawValue), ["mt_pp"])
     }
 
-    func testRetrieveMissingEUIdentifiersThrowsWithInvalidArguments() async {
+    func testRetrieveMissingIdentifiersThrowsWithInvalidArguments() async {
         let apiClient = stubbedAPIClient()
 
         var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
         noSecretLinkAccountInfo.consumerSessionClientSecret = nil
-        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveMissingEUIdentifiers(linkAccountInfo: noSecretLinkAccountInfo))
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveMissingIdentifiers(linkAccountInfo: noSecretLinkAccountInfo))
 
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
-        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveMissingEUIdentifiers(linkAccountInfo: unverifiedLinkAccountInfo))
+        await XCTAssertThrowsErrorAsync(_ = try await apiClient.retrieveMissingIdentifiers(linkAccountInfo: unverifiedLinkAccountInfo))
     }
 
-    func testSubmitEUIdentifiersSuccessWithValidationResult() async throws {
+    func testSubmitIdentifiersSuccessWithValidationResult() async throws {
         let mockResponseData = Data("""
         {
           "valid": false,
-          "missing_identifiers": {
-            "missing_identifiers_mica": ["EE"],
-            "missing_identifiers_carf": []
-          },
-          "errors": ["GR"]
+          "identifiers": [
+            {
+              "type": "mt_nic",
+              "regulation": "eu_mica"
+            }
+          ],
+          "alternatives": [
+            {
+              "original_missing_identifiers": ["mt_nic"],
+              "alternative_missing_identifiers": ["mt_pp"]
+            }
+          ],
+          "invalid_identifiers": ["mt_pp"]
         }
         """.utf8)
 
         stub { request in
-            XCTAssertEqual(request.url?.path, Constant.submitEUIdentifiersAPIPath)
+            XCTAssertEqual(request.url?.path, Constant.submitIdentifiersAPIPath)
             XCTAssertEqual(request.httpMethod, "POST")
 
             guard let httpBody = request.ohhttpStubs_httpBody else {
@@ -501,13 +525,12 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
             let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
-            XCTAssertEqual(parameters.count, 6)
+            XCTAssertEqual(parameters.count, 5)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
-            XCTAssertEqual(parameters["identifiers_mica[0][country]"], "EE")
-            XCTAssertEqual(parameters["identifiers_mica[0][identifier]"], "MICA123")
-            XCTAssertEqual(parameters["identifiers_mica[0][identifier_type]"], "national_id")
-            XCTAssertEqual(parameters["identifiers_carf[0][country]"], "GR")
-            XCTAssertEqual(parameters["identifiers_carf[0][identifier]"], "TIN123")
+            XCTAssertEqual(parameters["identifiers[0][type]"], "ee_ik")
+            XCTAssertEqual(parameters["identifiers[0][value]"], "MICA123")
+            XCTAssertEqual(parameters["identifiers[1][type]"], "gr_afm")
+            XCTAssertEqual(parameters["identifiers[1][value]"], "TIN123")
 
             return true
         } response: { _ in
@@ -515,31 +538,31 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        let response = try await apiClient.submitEUIdentifiers(
-            identifiers: Constant.validEUIdentifiers,
+        let response = try await apiClient.submitIdentifiers(
+            identifiers: Constant.validIdentifiers,
             linkAccountInfo: Constant.validLinkAccountInfo
         )
 
         XCTAssertFalse(response.valid)
-        XCTAssertEqual(response.missingIdentifiers?.missingIdentifiersMICA, ["EE"])
-        XCTAssertEqual(response.missingIdentifiers?.missingIdentifiersCARF, [])
-        XCTAssertEqual(response.errors, ["GR"])
+        XCTAssertEqual(response.identifiers.map(\.type.rawValue), ["mt_nic"])
+        XCTAssertEqual(response.identifiers.map(\.regulation.rawValue), ["eu_mica"])
+        XCTAssertEqual(response.alternatives[0].originalMissingIdentifiers.map(\.rawValue), ["mt_nic"])
+        XCTAssertEqual(response.alternatives[0].alternativeMissingIdentifiers.map(\.rawValue), ["mt_pp"])
+        XCTAssertEqual(response.invalidIdentifiers.map(\.rawValue), ["mt_pp"])
     }
 
-    func testSubmitEUIdentifiersSuccess() async throws {
+    func testSubmitIdentifiersSuccess() async throws {
         let mockResponseData = Data("""
         {
           "valid": true,
-          "missing_identifiers": {
-            "missing_identifiers_mica": [],
-            "missing_identifiers_carf": []
-          },
-          "errors": []
+          "identifiers": [],
+          "alternatives": [],
+          "invalid_identifiers": []
         }
         """.utf8)
 
         stub { request in
-            XCTAssertEqual(request.url?.path, Constant.submitEUIdentifiersAPIPath)
+            XCTAssertEqual(request.url?.path, Constant.submitIdentifiersAPIPath)
             XCTAssertEqual(request.httpMethod, "POST")
             return true
         } response: { _ in
@@ -547,24 +570,25 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         }
 
         let apiClient = stubbedAPIClient()
-        let response = try await apiClient.submitEUIdentifiers(
-            identifiers: Constant.validEUIdentifiers,
+        let response = try await apiClient.submitIdentifiers(
+            identifiers: Constant.validIdentifiers,
             linkAccountInfo: Constant.validLinkAccountInfo
         )
 
         XCTAssertTrue(response.valid)
-        XCTAssertNil(response.missingIdentifiers)
-        XCTAssertEqual(response.errors, [])
+        XCTAssertEqual(response.identifiers, [])
+        XCTAssertEqual(response.alternatives, [])
+        XCTAssertEqual(response.invalidIdentifiers, [])
     }
 
-    func testSubmitEUIdentifiersThrowsWithInvalidArguments() async {
+    func testSubmitIdentifiersThrowsWithInvalidArguments() async {
         let apiClient = stubbedAPIClient()
 
         var noSecretLinkAccountInfo = Constant.validLinkAccountInfo
         noSecretLinkAccountInfo.consumerSessionClientSecret = nil
         await XCTAssertThrowsErrorAsync(
-            _ = try await apiClient.submitEUIdentifiers(
-                identifiers: Constant.validEUIdentifiers,
+            _ = try await apiClient.submitIdentifiers(
+                identifiers: Constant.validIdentifiers,
                 linkAccountInfo: noSecretLinkAccountInfo
             )
         )
@@ -572,8 +596,8 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         var unverifiedLinkAccountInfo = Constant.validLinkAccountInfo
         unverifiedLinkAccountInfo.sessionState = .requiresVerification
         await XCTAssertThrowsErrorAsync(
-            _ = try await apiClient.submitEUIdentifiers(
-                identifiers: Constant.validEUIdentifiers,
+            _ = try await apiClient.submitIdentifiers(
+                identifiers: Constant.validIdentifiers,
                 linkAccountInfo: unverifiedLinkAccountInfo
             )
         )
