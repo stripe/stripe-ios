@@ -403,7 +403,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         app.textFields["Country or region"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
 
         let zipField = app.textFields["ZIP"]
         XCTAssertTrue(expField.waitForExistence(timeout: 10.0))
@@ -452,11 +452,11 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
 
         app.textFields["Country or region"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
 
         app.textFields["State"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Alabama")
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
 
         let line1Field = app.textFields["Address line 1"]
         XCTAssertTrue(line1Field.waitForExistence(timeout: 3.0))

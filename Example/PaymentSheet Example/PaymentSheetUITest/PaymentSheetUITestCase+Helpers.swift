@@ -340,7 +340,7 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(countryCodeSelector.waitForExistence(timeout: 10.0), "Failed to find phone text field")
         countryCodeSelector.tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States (+1)")
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
 
         sleep(1) // Wait for keyboard to dismiss
         phoneTextField.tap()

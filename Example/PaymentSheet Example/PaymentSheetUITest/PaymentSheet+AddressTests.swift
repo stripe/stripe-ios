@@ -48,7 +48,7 @@ class PaymentSheet_AddressTests: XCTestCase {
 
         app.textFields["State"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: state)
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
 
         app.textFields["ZIP"].tap()
         app.typeText(zip)
@@ -330,7 +330,7 @@ US
         // Set country to New Zealand
         app.textFields["Country or region"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇳🇿 New Zealand")
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
 
         // Address line 1 field should not contain an autocomplete affordance b/c autocomplete doesn't support New Zealand
         XCTAssertFalse(app.buttons["autocomplete_affordance"].exists)
@@ -413,7 +413,7 @@ NZ
         app.typeText("San Francisco")
         app.textFields["State"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
         app.typeText("California")
         app.textFields["ZIP"].tap()
         app.typeText("94102")
@@ -432,7 +432,7 @@ NZ
         app.buttons["Address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇾 Uruguay")
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
         app.buttons["Save address"].tap()
 
         // ...should update PaymentSheet.FlowController
@@ -453,10 +453,10 @@ NZ
         app.buttons["Address"].tap()
         app.textFields["Country or region"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
         app.textFields["State"].waitForExistenceAndTap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
         app.buttons["Save address"].tap()
 
         // ...should not affect your billing address...
@@ -491,7 +491,7 @@ NZ
         // Select UK for phone number country
         app.textFields["United States +1"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇬🇧 United Kingdom +44")
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
 
         // Ensure UK is persisted as phone country after tapping done
         XCTAssert(app.textFields["United Kingdom +44"].exists)
@@ -583,7 +583,7 @@ NZ
 
         stateField.tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "New York")
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
 
         postalField.tap()
         let existingPostal = postalField.value as? String ?? ""

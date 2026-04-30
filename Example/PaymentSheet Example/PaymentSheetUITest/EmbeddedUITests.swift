@@ -32,7 +32,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         cardButton.tap()
         XCTAssertTrue(app.staticTexts["Add card"].waitForExistence(timeout: 10))
         try! fillCardData(app, postalEnabled: true)
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
         XCTAssertTrue(app.buttons["Continue"].isEnabled)
         app.buttons["Continue"].waitForExistenceAndTap()
         sleep(1) // wait for 1 second for the sheet to dismiss
@@ -987,7 +987,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         // Card number from https://docs.stripe.com/testing#regulatory-cards
         try! fillCardData(app, cardNumber: "4000002760003184")
-        app.fc_dismissKeyboard()
+        app.stp_dismissKeyboard()
         app.buttons["Continue"].waitForExistenceAndTap()
         app.swipeUp() // scroll to see the checkout button
         app.buttons["Checkout"].waitForExistenceAndTap()

@@ -107,7 +107,7 @@ extension XCUIApplication {
     }
 
     /// Dismisses the keyboard or picker wheel by tapping the Done button on the toolbar, or tapping outside.
-    func fc_dismissKeyboard() {
+    func stp_dismissKeyboard() {
         // Try the toolbar Done button first — use firstMatch to handle
         // multiple Done buttons (e.g. picker wheel + navigation bar on iOS 26)
         let doneButton = toolbars.buttons["Done"].firstMatch
@@ -353,7 +353,7 @@ extension XCTestCase {
         // This handles the FinancialConnections networking Link signup screen
         let notNowButton = app.buttons["networking_link_signup_footer_view.not_now_button"]
         if notNowButton.waitForExistence(timeout: 10.0) {
-            app.fc_dismissKeyboard()
+            app.stp_dismissKeyboard()
             notNowButton.tap()
         }
     }
