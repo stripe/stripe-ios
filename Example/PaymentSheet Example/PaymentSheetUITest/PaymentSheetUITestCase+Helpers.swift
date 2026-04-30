@@ -154,33 +154,45 @@ extension PaymentSheetUITestCase {
     }
 
     func payWithApplePay() {
-        // iOS 26 simulator cannot complete Apple Pay authorization —
-        // the "Pay with Passcode" button was removed and no programmatic
-        // alternative exists in the simulator.
-        guard ProcessInfo.processInfo.operatingSystemVersion.majorVersion < 26 else {
-            return
-        }
-
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
         addApplePayContactIfNeeded(applePay)
 
-        let cardPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+        if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 {
+            // iOS 26: The Apple Pay sheet shows the selected card and a
+            // "Change Payment Method" button. Tap it to switch cards.
+            let changeButton = applePay.buttons["Change Payment Method"]
+            XCTAssertTrue(changeButton.waitForExistence(timeout: 10.0))
+            changeButton.tap()
 
-        let cardButton = applePay.buttons.containing(cardPredicate).firstMatch
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
+            let amexPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx'")
+            let amexButton = applePay.buttons.containing(amexPredicate).firstMatch
+            XCTAssertTrue(amexButton.waitForExistence(timeout: 10.0))
+            amexButton.forceTapElement()
 
-        addApplePayBillingIfNeeded(applePay)
+            addApplePayBillingIfNeeded(applePay)
 
-        // Tap card again to select, then pay with passcode
-        let payButton = applePay.buttons["Pay with Passcode"]
-        if payButton.waitForExistence(timeout: 3.0) {
-            let cardSelectionButton = applePay.buttons.containing(cardPredicate).firstMatch
-            cardSelectionButton.forceTapElement()
+            let payButton = applePay.buttons["Pay with Passcode"]
             XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
             payButton.forceTapElement()
+        } else {
+            let cardPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+
+            let cardButton = applePay.buttons.containing(cardPredicate).firstMatch
+            XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
+            cardButton.forceTapElement()
+
+            addApplePayBillingIfNeeded(applePay)
+
+            // Tap card again to select, then pay with passcode
+            let payButton = applePay.buttons["Pay with Passcode"]
+            if payButton.waitForExistence(timeout: 3.0) {
+                let cardSelectionButton = applePay.buttons.containing(cardPredicate).firstMatch
+                cardSelectionButton.forceTapElement()
+                XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+                payButton.forceTapElement()
+            }
         }
 
         let successText = app.staticTexts["Success!"]
