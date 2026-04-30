@@ -16,8 +16,7 @@ struct EUComplianceTestView: View {
     let coordinator: CryptoOnrampCoordinator
 
     @Environment(\.dismiss) private var dismiss
-    @State private var micaIdentifiersText = ""
-    @State private var carfIdentifiersText = ""
+    @State private var identifiersText = ""
     @State private var responseText = "Run an action to see the response."
     @State private var errorMessage: String?
     @State private var isRunning = false
@@ -46,32 +45,22 @@ struct EUComplianceTestView: View {
                     }
 
                     Button {
-                        retrieveMissingEUIdentifiers()
+                        retrieveMissingIdentifiers()
                     } label: {
-                        Label("Retrieve Missing EU Identifiers", systemImage: "list.bullet.rectangle")
+                        Label("Retrieve Missing Identifiers", systemImage: "list.bullet.rectangle")
                     }
                     .buttonStyle(PrimaryButtonStyle())
 
                     VStack(alignment: .leading, spacing: 12) {
-                        Text("Submit EU Identifiers")
+                        Text("Submit Identifiers")
                             .font(.headline)
 
-                        Text("Enter one identifier per line as CC:identifier.")
+                        Text("Enter one identifier per line as type:value.")
                             .font(.caption)
                             .foregroundColor(.secondary)
 
-                        FormField("MICA identifiers") {
-                            TextEditor(text: $micaIdentifiersText)
-                                .font(.system(.body, design: .monospaced))
-                                .frame(minHeight: 96)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color(uiColor: .separator))
-                                )
-                        }
-
-                        FormField("CRS/CARF identifiers") {
-                            TextEditor(text: $carfIdentifiersText)
+                        FormField("Identifiers") {
+                            TextEditor(text: $identifiersText)
                                 .font(.system(.body, design: .monospaced))
                                 .frame(minHeight: 96)
                                 .overlay(
@@ -81,9 +70,9 @@ struct EUComplianceTestView: View {
                         }
 
                         Button {
-                            submitEUIdentifiers()
+                            submitIdentifiers()
                         } label: {
-                            Label("Submit EU Identifiers", systemImage: "paperplane")
+                            Label("Submit Identifiers", systemImage: "paperplane")
                         }
                         .buttonStyle(PrimaryButtonStyle())
                     }
@@ -115,36 +104,30 @@ struct EUComplianceTestView: View {
         }
     }
 
-    private func retrieveMissingEUIdentifiers() {
+    private func retrieveMissingIdentifiers() {
         run {
-            let response = try await coordinator.retrieveMissingEUIdentifiers()
-            if micaIdentifiersText.isEmpty {
-                micaIdentifiersText = response.missingIdentifiersMICA.map { "\($0):" }.joined(separator: "\n")
-            }
-            if carfIdentifiersText.isEmpty {
-                carfIdentifiersText = response.missingIdentifiersCARF.map { "\($0):" }.joined(separator: "\n")
+            let response = try await coordinator.retrieveMissingIdentifiers()
+            if identifiersText.isEmpty {
+                identifiersText = response.identifiers.map { "\($0.type.rawValue):" }.joined(separator: "\n")
             }
             responseText = """
-            retrieveMissingEUIdentifiers:
-              missing_identifiers_mica: \(response.missingIdentifiersMICA)
-              missing_identifiers_carf: \(response.missingIdentifiersCARF)
+            retrieveMissingIdentifiers:
+              identifiers: \(response.identifiers.map { "\($0.type.rawValue) (\($0.regulation.rawValue))" })
+              alternatives: \(response.alternatives)
             """
         }
     }
 
-    private func submitEUIdentifiers() {
+    private func submitIdentifiers() {
         run {
-            let identifiers = try EUIdentifiers(
-                mica: parseIdentifiers(from: micaIdentifiersText),
-                carf: parseIdentifiers(from: carfIdentifiersText)
-            )
-            let response = try await coordinator.submitEUIdentifiers(identifiers: identifiers)
+            let identifiers = try parseIdentifiers(from: identifiersText)
+            let response = try await coordinator.submitIdentifiers(identifiers)
             responseText = """
-            submitEUIdentifiers:
+            submitIdentifiers:
               valid: \(response.valid)
-              missing_identifiers_mica: \(response.missingIdentifiers?.missingIdentifiersMICA ?? [])
-              missing_identifiers_carf: \(response.missingIdentifiers?.missingIdentifiersCARF ?? [])
-              errors: \(response.errors ?? [])
+              identifiers: \(response.identifiers.map { "\($0.type.rawValue) (\($0.regulation.rawValue))" })
+              alternatives: \(response.alternatives)
+              invalid_identifiers: \(response.invalidIdentifiers.map(\.rawValue))
             """
         }
     }
@@ -178,7 +161,7 @@ struct EUComplianceTestView: View {
         }
     }
 
-    private func parseIdentifiers(from text: String) throws -> [EUIdentifier] {
+    private func parseIdentifiers(from text: String) throws -> [ComplianceIdentifier] {
         try text
             .components(separatedBy: .newlines)
             .enumerated()
@@ -199,13 +182,13 @@ struct EUComplianceTestView: View {
                     throw InputError.invalidIdentifierLine(index + 1)
                 }
 
-                let country = parts[0].trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
-                let identifier = parts[1].trimmingCharacters(in: .whitespacesAndNewlines)
-                guard !country.isEmpty, !identifier.isEmpty else {
+                let type = parts[0].trimmingCharacters(in: .whitespacesAndNewlines)
+                let value = parts[1].trimmingCharacters(in: .whitespacesAndNewlines)
+                guard !type.isEmpty, !value.isEmpty else {
                     throw InputError.invalidIdentifierLine(index + 1)
                 }
 
-                return EUIdentifier(country: country, identifier: identifier)
+                return ComplianceIdentifier(type: .init(rawValue: type), value: value)
             }
     }
 }
@@ -216,7 +199,7 @@ private enum InputError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case let .invalidIdentifierLine(lineNumber):
-            return "Invalid identifier on line \(lineNumber). Use CC:identifier."
+            return "Invalid identifier on line \(lineNumber). Use type:value."
         }
     }
 }
