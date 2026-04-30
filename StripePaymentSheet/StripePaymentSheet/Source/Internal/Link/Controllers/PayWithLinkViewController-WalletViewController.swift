@@ -516,22 +516,49 @@ private extension PayWithLinkViewController.WalletViewController {
             switch paymentMethod.details {
             case .card:
                 return STPLocalizedString(
-                    "Are you sure you want to remove this card?",
-                    "Title of confirmation prompt when removing a saved card."
+                    "Remove card?",
+                    "Title for confirmation alert to remove a card"
                 )
             case .bankAccount:
                 return STPLocalizedString(
-                    "Are you sure you want to remove this linked account?",
-                    "Title of confirmation prompt when removing a linked bank account."
+                    "Remove bank?",
+                    "Title for confirmation alert to remove a bank account"
                 )
             case .unparsable:
-                return ""
+                if let paymentMethodName = paymentMethod.linkPaymentDetailsFormattedString,
+                   !paymentMethodName.isEmpty {
+                    return String(
+                        format: STPLocalizedString(
+                            "Remove %@",
+                            "Title of confirmation prompt when removing a saved payment method."
+                        ),
+                        paymentMethodName
+                    )
+                }
+                return STPLocalizedString(
+                    "Remove payment method",
+                    "Title for confirmation prompt when removing a saved payment method without a display label."
+                )
             }
+        }()
+
+        let alertMessage: String? = {
+            guard let paymentMethodName = paymentMethod.linkPaymentDetailsFormattedString,
+                  !paymentMethodName.isEmpty else {
+                return nil
+            }
+            return String(
+                format: STPLocalizedString(
+                    "%@ will no longer be saved to your wallet.",
+                    "Message shown in a confirmation prompt when removing a saved payment method."
+                ),
+                paymentMethodName
+            )
         }()
 
         let alertController = UIAlertController(
             title: alertTitle,
-            message: nil,
+            message: alertMessage,
             preferredStyle: .alert
         )
 
