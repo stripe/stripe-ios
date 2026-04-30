@@ -37,7 +37,7 @@ extension STPCheckoutSession {
         configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? customerEmail
     }
 
-    private func shippingAddressDetails(from shipping: Checkout.AddressUpdate) -> AddressViewController.AddressDetails {
+    private func shippingAddressDetails(from shipping: Checkout.ContactAddress) -> AddressViewController.AddressDetails {
         AddressViewController.AddressDetails(
             address: .init(
                 city: shipping.address.city,
@@ -53,7 +53,7 @@ extension STPCheckoutSession {
     }
 
     private func applyBillingAddress(
-        _ billing: Checkout.AddressUpdate,
+        _ billing: Checkout.ContactAddress,
         to details: inout PaymentSheet.BillingDetails
     ) {
         details.name = details.name ?? billing.name

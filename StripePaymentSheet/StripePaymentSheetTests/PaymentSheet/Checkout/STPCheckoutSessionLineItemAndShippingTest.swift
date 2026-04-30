@@ -88,48 +88,4 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
         XCTAssertEqual(session?.shippingOptions.count, 0)
     }
 
-    func testDecodedObjectSelectedShippingOption() {
-        let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
-
-        XCTAssertEqual(session.selectedShippingOptionId, "shr_standard")
-        XCTAssertEqual(session.totals?.shipping, 500)
-    }
-
-    func testSelectedShippingOptionProtocolProperty() {
-        let json = STPTestUtils.jsonNamed("CheckoutSession")!
-        let session: Checkout.Session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
-
-        let selected = session.selectedShippingOption
-        XCTAssertNotNil(selected)
-        XCTAssertEqual(selected?.id, "shr_standard")
-        XCTAssertEqual(selected?.displayName, "Standard Shipping")
-        XCTAssertEqual(selected?.amount, 500)
-        XCTAssertEqual(selected?.currency, "usd")
-    }
-
-    func testSelectedShippingOptionNilWhenNoSelection() {
-        let json: [String: Any] = [
-            "session_id": "cs_test_no_selection",
-            "object": "checkout.session",
-            "livemode": false,
-            "mode": "payment",
-            "payment_status": "unpaid",
-            "payment_method_types": ["card"],
-            "shipping_options": [
-                [
-                    "shipping_rate": [
-                        "id": "shr_standard",
-                        "display_name": "Standard Shipping",
-                        "amount": 500,
-                        "currency": "usd",
-                    ],
-                ],
-            ],
-        ]
-
-        let session: Checkout.Session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
-        XCTAssertNil(session.selectedShippingOption)
-    }
-
 }

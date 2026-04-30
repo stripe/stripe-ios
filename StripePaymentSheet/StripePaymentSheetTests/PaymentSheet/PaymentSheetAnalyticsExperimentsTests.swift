@@ -72,6 +72,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
     func testLinkGlobalHoldback() {
         let arbId = "arb_id_123"
         let linkSettings: LinkSettings = .init(
+            brand: .link,
             fundingSources: [],
             popupWebviewOption: nil,
             passthroughModeEnabled: true,
@@ -144,6 +145,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
     func testLinkABTest() {
         let arbId = "arb_id_321"
         let linkSettings: LinkSettings = .init(
+            brand: .link,
             fundingSources: [],
             popupWebviewOption: nil,
             passthroughModeEnabled: true,
