@@ -529,7 +529,7 @@ extension PaymentSheet {
         /// The Link display mode.
         public var display: Display = .automatic
 
-        /// The brand to use for Link. Expected values are `.link` or `.notlink`.
+        /// The brand to use for Link. Expected values are `.link` or `.onelink`.
         @_spi(STP) public var brand: LinkBrand?
 
         /// The Link funding sources that should be disabled. Defaults to an empty set.
@@ -567,7 +567,6 @@ extension PaymentSheet {
             self.display = display
             self.brand = brand
         }
-
         @_spi(CollectMissingLinkBillingDetailsPreview) public init(
             display: Display = .automatic,
             collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
