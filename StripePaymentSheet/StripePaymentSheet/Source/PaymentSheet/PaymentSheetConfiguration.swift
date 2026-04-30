@@ -218,9 +218,13 @@ extension PaymentSheet {
         /// Number of supported payment method types; set via `resolveLayout(loadResult:)`. Used to resolve `.automatic` layout.
         private var paymentMethodTypeCount: Int = 0
 
+        /// Whether the server has instructed us to force the vertical layout; set via `resolveLayout(loadResult:)`.
+        private var forceVerticalPaymentMethodLayout: Bool = false
+
         /// The resolved layout of payment methods. Computed from `paymentMethodLayout` and `paymentMethodTypeCount`.
         /// - Note: Internal code should use this property instead of `paymentMethodLayout`. `resolveLayout` must be called after each load to maintain synchronicity.
         internal var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout {
+            if forceVerticalPaymentMethodLayout { return .vertical }
             switch paymentMethodLayout {
             case .horizontal: return .horizontal
             case .vertical: return .vertical
@@ -231,6 +235,7 @@ extension PaymentSheet {
         /// Sets `paymentMethodTypeCount` from the load result so `.automatic` can be resolved.
         mutating func resolveLayout(loadResult: PaymentSheetLoader.LoadResult) {
             paymentMethodTypeCount = loadResult.paymentMethodTypes.count
+            forceVerticalPaymentMethodLayout = loadResult.elementsSession.forceVerticalPaymentMethodLayout
         }
 
         /// By default, PaymentSheet will accept all supported cards by Stripe.
