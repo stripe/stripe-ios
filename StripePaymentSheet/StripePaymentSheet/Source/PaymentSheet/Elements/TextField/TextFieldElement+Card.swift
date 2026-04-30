@@ -58,8 +58,8 @@ extension TextFieldElement {
 
         func accessibilityLabel(for text: String) -> String {
             let cardBrand = cardBrand(for: text)
-            if cardBrand != .unknown, let brandName = STPCardBrandUtilities.stringFrom(cardBrand) {
-                return .Localized.card_number_with_brand(brandName: brandName)
+            if cardBrand != .unknown {
+                return label
             }
             // Show supported brands when no specific brand is detected
             let isCBCEnabled = cardBrandChoiceElement != nil

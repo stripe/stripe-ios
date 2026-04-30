@@ -574,16 +574,10 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         XCTAssertTrue(label.contains("Discover"))
     }
 
-    func testAccessibilityLabel_knownBrand_showsBrandName() {
+    func testAccessibilityLabel_knownBrand_fallsBackToDefault() {
         let configuration = TextFieldElement.PANConfiguration()
         let label = configuration.accessibilityLabel(for: "4242424242424242")
-        XCTAssertEqual(label, "Card number. Card brand: Visa")
-    }
-
-    func testAccessibilityLabel_knownBrand_amex() {
-        let configuration = TextFieldElement.PANConfiguration()
-        let label = configuration.accessibilityLabel(for: "378282246310005")
-        XCTAssertEqual(label, "Card number. Card brand: American Express")
+        XCTAssertEqual(label, "Card number")
     }
 
     func testAccessoryView_excludesCartesBancairesWithoutCBC() {

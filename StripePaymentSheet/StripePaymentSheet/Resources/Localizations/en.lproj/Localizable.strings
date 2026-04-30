@@ -134,9 +134,6 @@
 /* Text on a screen that indicates card details cannot be changed. */
 "Card details cannot be changed." = "Card details cannot be changed.";
 
-/* Accessibility label for the card number field when a specific card brand is detected. %@ is the card brand name (e.g. 'Visa') */
-"Card number. Card brand: %@" = "Card number. Card brand: %@";
-
 /* Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
 "Card number. Supported cards include %@" = "Card number. Supported cards include %@";
 

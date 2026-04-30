@@ -370,16 +370,6 @@ extension String.Localized {
         )
     }
 
-    static func card_number_with_brand(brandName: String) -> String {
-        String(
-            format: STPLocalizedString(
-                "Card number. Card brand: %@",
-                "Accessibility label for the card number field when a specific card brand is detected. %@ is the card brand name (e.g. 'Visa')"
-            ),
-            brandName
-        )
-    }
-
     static func card_number_with_supported_brands(brandNames: String) -> String {
         String(
             format: STPLocalizedString(
