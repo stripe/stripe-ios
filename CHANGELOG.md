@@ -11,6 +11,7 @@ MINOR
 
 ### PaymentSheet
 * [Fixed] Fixed an issue where `LinkController` used the shared `STPAPIClient` instead of the `apiClient` specified in the caller, affecting apps using multiple API client instances.
+* [Fixed] Card brand images next to the card number field are now exposed to screen readers via the field's accessibility label (WCAG 2.2 § 1.1.1).
 
 ### Connect
 * [Changed] [#66351](https://github.com/stripe/stripe-ios/pull/6351) Theming tokens in connect embedded components is now GA.

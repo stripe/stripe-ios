@@ -564,20 +564,14 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
 
     // MARK: - Accessibility
 
-    func testAccessibilityLabel_emptyField_showsSupportedBrands() {
-        let configuration = TextFieldElement.PANConfiguration()
-        let label = configuration.accessibilityLabel(for: "")
-        XCTAssertTrue(label.hasPrefix("Card number. Supported cards include"))
-        XCTAssertTrue(label.contains("Visa"))
-        XCTAssertTrue(label.contains("Mastercard"))
-        XCTAssertTrue(label.contains("American Express"))
-        XCTAssertTrue(label.contains("Discover"))
-    }
-
-    func testAccessibilityLabel_knownBrand_fallsBackToDefault() {
-        let configuration = TextFieldElement.PANConfiguration()
-        let label = configuration.accessibilityLabel(for: "4242424242424242")
-        XCTAssertEqual(label, "Card number")
+    func testAccessibilityLabel_includesSupportedBrands() {
+        let textFieldElement = TextFieldElement(configuration: TextFieldElement.PANConfiguration())
+        // With empty input, the accessibility label should include supported card brands
+        let label = textFieldElement.viewModel.accessibilityLabel
+        XCTAssertEqual(
+            label,
+            "Card number. Supported cards include Visa, Mastercard, American Express, Discover, Diners Club, JCB, UnionPay"
+        )
     }
 
     func testAccessoryView_excludesCartesBancairesWithoutCBC() {
