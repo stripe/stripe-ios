@@ -370,11 +370,21 @@ extension String.Localized {
         )
     }
 
-    static func supported_cards(brandNames: String) -> String {
+    static func card_number_with_brand(brandName: String) -> String {
         String(
             format: STPLocalizedString(
-                "Supported cards: %@",
-                "Accessibility label for the card brand icons displayed next to the card number field. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover')"
+                "Card number. Card brand: %@",
+                "Accessibility label for the card number field when a specific card brand is detected. %@ is the card brand name (e.g. 'Visa')"
+            ),
+            brandName
+        )
+    }
+
+    static func card_number_with_supported_brands(brandNames: String) -> String {
+        String(
+            format: STPLocalizedString(
+                "Card number. Supported cards include %@",
+                "Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover')"
             ),
             brandNames
         )

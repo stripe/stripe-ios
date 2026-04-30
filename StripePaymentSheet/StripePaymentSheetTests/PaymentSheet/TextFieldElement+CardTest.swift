@@ -562,6 +562,30 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         }
     }
 
+    // MARK: - Accessibility
+
+    func testAccessibilityLabel_emptyField_showsSupportedBrands() {
+        let configuration = TextFieldElement.PANConfiguration()
+        let label = configuration.accessibilityLabel(for: "")
+        XCTAssertTrue(label.hasPrefix("Card number. Supported cards include"))
+        XCTAssertTrue(label.contains("Visa"))
+        XCTAssertTrue(label.contains("Mastercard"))
+        XCTAssertTrue(label.contains("American Express"))
+        XCTAssertTrue(label.contains("Discover"))
+    }
+
+    func testAccessibilityLabel_knownBrand_showsBrandName() {
+        let configuration = TextFieldElement.PANConfiguration()
+        let label = configuration.accessibilityLabel(for: "4242424242424242")
+        XCTAssertEqual(label, "Card number. Card brand: Visa")
+    }
+
+    func testAccessibilityLabel_knownBrand_amex() {
+        let configuration = TextFieldElement.PANConfiguration()
+        let label = configuration.accessibilityLabel(for: "378282246310005")
+        XCTAssertEqual(label, "Card number. Card brand: American Express")
+    }
+
     func testAccessoryView_excludesCartesBancairesWithoutCBC() {
         let configuration = TextFieldElement.PANConfiguration()
         let view = configuration.accessoryView(for: "", theme: .default)

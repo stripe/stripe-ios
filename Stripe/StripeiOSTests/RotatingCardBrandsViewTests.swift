@@ -48,34 +48,4 @@ class RotatingCardBrandsViewTests: XCTestCase {
         view.cardBrands = [.visa, .mastercard, .amex, .discover, .JCB, .cartesBancaires]
         XCTAssertEqual(view.rotatingCardBrands.first, .cartesBancaires)
     }
-
-    // MARK: - Accessibility
-
-    func testAccessibilityLabelWithMultipleBrands() {
-        let view = RotatingCardBrandsView()
-        view.cardBrands = [.visa, .mastercard, .amex, .discover]
-        XCTAssertTrue(view.isAccessibilityElement)
-        XCTAssertEqual(
-            view.accessibilityLabel,
-            "Supported cards: Visa, Mastercard, American Express, Discover"
-        )
-    }
-
-    func testAccessibilityLabelWithSingleBrand() {
-        let view = RotatingCardBrandsView()
-        view.cardBrands = [.visa]
-        XCTAssertEqual(view.accessibilityLabel, "Card brand: Visa")
-    }
-
-    func testAccessibilityLabelWithTwoBrands() {
-        let view = RotatingCardBrandsView()
-        view.cardBrands = [.visa, .mastercard]
-        XCTAssertEqual(view.accessibilityLabel, "Supported cards: Visa, Mastercard")
-    }
-
-    func testAccessibilityLabelWithEmptyBrands() {
-        let view = RotatingCardBrandsView()
-        view.cardBrands = []
-        XCTAssertNil(view.accessibilityLabel)
-    }
 }

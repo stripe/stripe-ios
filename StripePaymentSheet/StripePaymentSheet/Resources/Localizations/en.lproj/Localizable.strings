@@ -134,6 +134,12 @@
 /* Text on a screen that indicates card details cannot be changed. */
 "Card details cannot be changed." = "Card details cannot be changed.";
 
+/* Accessibility label for the card number field when a specific card brand is detected. %@ is the card brand name (e.g. 'Visa') */
+"Card number. Card brand: %@" = "Card number. Card brand: %@";
+
+/* Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
+"Card number. Supported cards include %@" = "Card number. Supported cards include %@";
+
 /* Label for a button that lets you change the details of a payment method */
 "Change" = "Change";
 
@@ -420,9 +426,6 @@ is not supported by the merchant */
 
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
-
-/* Accessibility label for the card brand icons displayed next to the card number field. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover') */
-"Supported cards: %@" = "Supported cards: %@";
 
 /* Accessibility hint to tell the user that they can tap to hide additional content. */
 "Tap to close" = "Tap to close";
