@@ -233,6 +233,7 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
         /// The list of verification frame datas are encoded with snake_case before converting to a `VerifyFrames` object
         let jsonEncoder = JSONEncoder()
         jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
+        jsonEncoder.outputFormatting = .sortedKeys
         let jsonVerificationFramesData = try jsonEncoder.encode([verificationFrameData])
 
         /// Turn the JSON data into a string
@@ -255,32 +256,10 @@ class STPAPIClient_CardImageVerificationTest: APIStubbedTestCase {
                 ),
                 true
             )
-            // Compare query params individually since JSONEncoder key ordering is non-deterministic
-            let bodyString = String(data: httpBody, encoding: .utf8) ?? ""
-            let bodyParams = bodyString.split(separator: "&").sorted()
-            let expectedParams = "client_secret=\(CIVIntentMockData.clientSecret)&verification_frames_data=\(urlEncodedString)".split(separator: "&").sorted()
-            XCTAssertEqual(bodyParams.count, expectedParams.count)
-            // Check client_secret matches exactly
-            XCTAssertTrue(bodyString.contains("client_secret=\(CIVIntentMockData.clientSecret)"))
-            // Check verification_frames_data by decoding the JSON structurally
-            if let framesParam = bodyString.components(separatedBy: "verification_frames_data=").last,
-               let decoded = framesParam.removingPercentEncoding,
-               let jsonData = Data(decoded.utf8) as Data?,
-               let actual = try? JSONSerialization.jsonObject(with: jsonData) as? [[String: Any]],
-               let expectedDecoded = Data(verificationFramesDataString.utf8) as Data?,
-               let expected = try? JSONSerialization.jsonObject(with: expectedDecoded) as? [[String: Any]] {
-                XCTAssertEqual(actual.count, expected.count)
-                // Compare the first frame's keys and values
-                if let actualFrame = actual.first, let expectedFrame = expected.first {
-                    XCTAssertEqual(actualFrame["image_data"] as? String, expectedFrame["image_data"] as? String)
-                    XCTAssertEqual(
-                        actualFrame["viewfinder_margins"] as? [String: Int],
-                        expectedFrame["viewfinder_margins"] as? [String: Int]
-                    )
-                }
-            } else {
-                XCTFail("Failed to parse verification_frames_data from request body")
-            }
+            XCTAssertEqual(
+                String(data: httpBody, encoding: .utf8),
+                "client_secret=\(CIVIntentMockData.clientSecret)&verification_frames_data=\(urlEncodedString)"
+            )
             XCTAssertEqual(request.httpMethod, "POST")
 
             return true
