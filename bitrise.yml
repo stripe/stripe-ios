@@ -499,6 +499,9 @@ workflows:
     - prep_all
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.4.1
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
   integration-all:
     steps:
     - xcode-test@6:

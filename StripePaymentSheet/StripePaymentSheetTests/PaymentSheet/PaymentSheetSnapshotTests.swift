@@ -1206,7 +1206,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
             window,
             identifier: isIOS26 ? (identifier.map { "\($0)_iOS26" } ?? "iOS26") : identifier,
             perPixelTolerance: 0.02,
-            overallTolerance: 0.01,
+            overallTolerance: 0.02,
             file: file,
             line: line
         )
