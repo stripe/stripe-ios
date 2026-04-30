@@ -362,6 +362,10 @@ extension STPElementsSession {
         linkSettings?.linkMode == .linkCardBrand
     }
 
+    var linkBrand: LinkBrand? {
+        linkSettings?.brand
+    }
+
     var incentive: PaymentMethodIncentive? {
         linkSettings?.linkConsumerIncentive.flatMap(PaymentMethodIncentive.init)
     }

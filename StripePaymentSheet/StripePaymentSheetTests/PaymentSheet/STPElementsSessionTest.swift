@@ -69,6 +69,47 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertFalse(elementsSession.shouldAttestOnConfirmation)
     }
 
+    func testDecodedObjectFromAPIResponseMapping_linkBrandLink() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson[jsonDict: "link_settings"]?["link_brand"] = "link"
+
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertEqual(elementsSession.linkSettings?.brand, .link)
+        XCTAssertEqual(elementsSession.linkBrand, .link)
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_linkBrandNotlink() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson[jsonDict: "link_settings"]?["link_brand"] = "notlink"
+
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertEqual(LinkBrand.onelink.rawValue, "notlink")
+        XCTAssertEqual(elementsSession.linkSettings?.brand, .onelink)
+        XCTAssertEqual(elementsSession.linkBrand, .onelink)
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_unknownLinkBrandDefaultsToLink() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson[jsonDict: "link_settings"]?["link_brand"] = "random_brand"
+
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertEqual(elementsSession.linkSettings?.brand, .link)
+        XCTAssertEqual(elementsSession.linkBrand, .link)
+    }
+
+    func testDecodedObjectFromAPIResponseMapping_missingLinkBrandDefaultsToLink() {
+        var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
+        elementsSessionJson[jsonDict: "link_settings"]?["link_brand"] = nil
+
+        let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
+
+        XCTAssertEqual(elementsSession.linkSettings?.brand, .link)
+        XCTAssertEqual(elementsSession.linkBrand, .link)
+    }
+
     func testDecodedObjectFromAPIResponseMapping_passiveCaptcha() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         elementsSessionJson["flags"] = ["elements_enable_passive_captcha": true]
