@@ -233,7 +233,7 @@ class PaymentSheetFormFactory {
                 // special case, display mandate for revolutPay when setting up or pi+sfu
                 additionalElements = [makeRevolutPayMandate()]
             } else if paymentMethod == .amazonPay && isSettingUp {
-                // sp"Amazon Pay"ecial case, display mandate for Amazon Pay when setting up or pi+sfu
+                // special case, display mandate for Amazon Pay when setting up or pi+sfu
                 additionalElements = [makeAmazonPayMandate()]
             } else if paymentMethod == .satispay && isSettingUp {
                 // special case, display mandate for Satispay when setting up or pi+sfu
