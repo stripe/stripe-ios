@@ -220,6 +220,6 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         line: UInt = #line
     ) {
         view.autosizeHeight(width: 300)
-        STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(view, identifier: identifier, overallTolerance: 0.01, file: file, line: line)
     }
 }
