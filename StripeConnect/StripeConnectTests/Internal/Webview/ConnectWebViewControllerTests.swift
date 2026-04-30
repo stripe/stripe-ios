@@ -60,24 +60,23 @@ class ConnectWebViewControllerTests: XCTestCase {
     }
 
     /// HTTP/HTTPS navigations with no target from a non-allowlisted host should open in a SafariVC
-    func testOpenSafariVCIfNotInAllowedHosts() throws {
-        try XCTSkipIf(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26, "WKNavigationAction cannot be subclassed on iOS 26+")
+    func testOpenSafariVCIfNotInAllowedHosts() {
         var safariVC: SFSafariViewController?
         webVC.presentPopup = { vc in
             safariVC = vc as? SFSafariViewController
         }
-        let webView = webVC.webView(webVC.webView,
-                                    createWebViewWith: webVC.webView.configuration,
-                        for: MockNavigationAction(request: .init(url: URL(string: "https://stripe.com")!)),
-                        windowFeatures: .init())
+        let webView = webVC.handleCreateWebView(
+            configuration: webVC.webView.configuration,
+            request: .init(url: URL(string: "https://stripe.com")!),
+            hasTargetFrame: false
+        )
 
         XCTAssertNil(webView)
         XCTAssertNotNil(safariVC)
     }
 
     /// HTTP/HTTPS navigations with no target and an allowlisted host should open in a popup webview
-    func testOpenAsPopUpIfInAllowedHosts() throws {
-        try XCTSkipIf(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26, "WKNavigationAction cannot be subclassed on iOS 26+")
+    func testOpenAsPopUpIfInAllowedHosts() {
         for url in [
             "https://connect-js.stripe.com",
             "https://connect-js.stripe.com/hello",
@@ -93,10 +92,11 @@ class ConnectWebViewControllerTests: XCTestCase {
                 popUp = (vc as? UINavigationController)?.viewControllers.first as? PopupWebViewController
 
             }
-            let webView = webVC.webView(webVC.webView,
-                                        createWebViewWith: webVC.webView.configuration,
-                                        for: MockNavigationAction(request: .init(url: URL(string: url)!)),
-                                        windowFeatures: .init())
+            let webView = webVC.handleCreateWebView(
+                configuration: webVC.webView.configuration,
+                request: .init(url: URL(string: url)!),
+                hasTargetFrame: false
+            )
 
             XCTAssertEqual(popUp?.webView, webView, url)
             XCTAssertNotNil(popUp?.navigationItem.rightBarButtonItem, url)
@@ -105,8 +105,7 @@ class ConnectWebViewControllerTests: XCTestCase {
     }
 
     /// Non-HTTP/HTTPS navigations with no target should use the system's URL routing
-    func testCustomURLScheme() throws {
-        try XCTSkipIf(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26, "WKNavigationAction cannot be subclassed on iOS 26+")
+    func testCustomURLScheme() {
         let url = URL(string: "connect://test")!
         let canOpenURLExpectation = XCTestExpectation(description: "Can open url called")
         let openURLExpectation = XCTestExpectation(description: "Open url called")
@@ -122,18 +121,18 @@ class ConnectWebViewControllerTests: XCTestCase {
         webVC.presentPopup = { _ in
             XCTFail("Present pop up should not be called")
         }
-        let webView = webVC.webView(webVC.webView,
-                                    createWebViewWith: webVC.webView.configuration,
-                                    for: MockNavigationAction(request: .init(url: url)),
-                                    windowFeatures: .init())
+        let webView = webVC.handleCreateWebView(
+            configuration: webVC.webView.configuration,
+            request: .init(url: url),
+            hasTargetFrame: false
+        )
 
         XCTAssertNil(webView)
         wait(for: [canOpenURLExpectation, openURLExpectation], timeout: TestHelpers.defaultTimeout)
     }
 
     /// Any navigation request with a non-nil target should not open a popup
-    func testJavascriptPopupHandling() throws {
-        try XCTSkipIf(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26, "WKNavigationAction cannot be subclassed on iOS 26+")
+    func testJavascriptPopupHandling() {
         let url = URL(string: "connect://test")!
         mockURLOpener.canOpenURLOverride = { _ in
             XCTFail("Can open url should not be called")
@@ -145,18 +144,17 @@ class ConnectWebViewControllerTests: XCTestCase {
         webVC.presentPopup = { _ in
             XCTFail("Present pop up should not be called")
         }
-        let webView = webVC.webView(webVC.webView,
-                                    createWebViewWith: webVC.webView.configuration,
-                                    for: MockNavigationAction(request: .init(url: url), targetFrame: .init()),
-                                    windowFeatures: .init())
+        let webView = webVC.handleCreateWebView(
+            configuration: webVC.webView.configuration,
+            request: .init(url: url),
+            hasTargetFrame: true
+        )
 
         XCTAssertNil(webView)
     }
 
     /// Download if `Content-Disposition` header is an attachment
-    @MainActor
-    func testResponsePolicyForAttachments() async throws {
-        try XCTSkipIf(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26, "WKNavigationResponse cannot be subclassed on iOS 26+")
+    func testResponsePolicyForAttachments() {
         // Use a non-allow listed URL to ensure these can be treated as a download
         let response = HTTPURLResponse(
             url: URL(string: "https://stripe-s3.com/path")!,
@@ -165,12 +163,9 @@ class ConnectWebViewControllerTests: XCTestCase {
             headerFields: ["Content-Disposition": "attachment; filename=payouts.csv"]
         )!
 
-        let policy = await webVC.webView(
-            webVC.webView,
-            decidePolicyFor: MockNavigationResponse(
-                response: response,
-                canShowMIMEType: true
-            )
+        let policy = webVC.policyForNavigationResponse(
+            canShowMIMEType: true,
+            response: response
         )
         XCTAssertEqual(policy, .download)
     }
@@ -412,45 +407,6 @@ extension ConnectWebViewControllerTests {
         }
         webVC.webView.evaluateJavaScript("alert('\(body)');") { _, _ in
         }
-    }
-}
-
-private class MockNavigationAction: WKNavigationAction {
-    let requestOverride: URLRequest
-    let targetFrameOverride: WKFrameInfo?
-
-    override var request: URLRequest {
-        requestOverride
-    }
-
-    override var targetFrame: WKFrameInfo? {
-        targetFrameOverride
-    }
-
-    init(request: URLRequest, targetFrame: WKFrameInfo? = nil) {
-        self.requestOverride = request
-        self.targetFrameOverride = targetFrame
-        super.init()
-    }
-}
-
-class MockNavigationResponse: WKNavigationResponse {
-    let responseOverride: URLResponse
-    let canShowMIMETypeOverride: Bool
-
-    override var response: URLResponse {
-        responseOverride
-    }
-
-    override var canShowMIMEType: Bool {
-        canShowMIMETypeOverride
-    }
-
-    init(response: URLResponse,
-         canShowMIMEType: Bool = false) {
-        self.responseOverride = response
-        self.canShowMIMETypeOverride = canShowMIMEType
-        super.init()
     }
 }
 

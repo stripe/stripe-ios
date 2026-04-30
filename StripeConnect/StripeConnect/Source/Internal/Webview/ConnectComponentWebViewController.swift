@@ -207,9 +207,13 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     }
 
     override func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse) async -> WKNavigationResponsePolicy {
-        // If the component web page fails to load with an HTTP error, send a
-        // load failure to event
-        if let response = navigationResponse.response as? HTTPURLResponse,
+        handleHTTPErrorResponse(navigationResponse.response)
+        return await super.webView(webView, decidePolicyFor: navigationResponse)
+    }
+
+    /// Checks if the response is an HTTP error for the component's base URL and triggers load failure if so.
+    func handleHTTPErrorResponse(_ response: URLResponse?) {
+        if let response = response as? HTTPURLResponse,
            response.url?.absoluteStringRemovingParams == componentManager.baseURL.absoluteString,
            response.hasErrorStatus {
             let error = HTTPStatusError(errorCode: response.statusCode)
@@ -219,8 +223,6 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                 url: response.url
             )))
         }
-
-        return await super.webView(webView, decidePolicyFor: navigationResponse)
     }
 
     struct ComponentProcessDidTerminateError: Error, AnalyticLoggableErrorV2 {

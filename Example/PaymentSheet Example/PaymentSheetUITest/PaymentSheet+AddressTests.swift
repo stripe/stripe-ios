@@ -76,8 +76,11 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.typeText(searchTerm)
 
         let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", expectedResult)).element
-        _ = searchedCell.waitForExistence(timeout: 5)
+        XCTAssertTrue(searchedCell.waitForExistence(timeout: 10))
         searchedCell.tap()
+
+        // Wait for the address fields to populate after autocomplete selection
+        _ = app.textFields["Address line 1"].waitForExistence(timeout: 10)
     }
 
     /// Helper function to verify address field values
@@ -130,7 +133,7 @@ class PaymentSheet_AddressTests: XCTestCase {
     private func navigateToSwiftUIAddressElement() {
         app.launch()
         let addressButton = app.staticTexts["AddressElement (SwiftUI)"]
-        if !addressButton.exists {
+        while !addressButton.exists {
             scrollDown()
         }
 
@@ -303,11 +306,7 @@ US
     }
 
     /// This test ensures we don't show auto complete for an unsupported country
-    func testAddressAutoComplete_NewZeland() throws {
-        try XCTSkipIf(
-            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
-            "iOS 26 picker wheel dismissal doesn't work reliably with country picker"
-        )
+    func testAddressAutoComplete_NewZeland() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.uiStyle = .flowController
@@ -372,12 +371,7 @@ NZ
     }
 
     func testPaymentSheetFlowControllerUpdatesShipping() throws {
-        try XCTSkipIf(
-            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
-            "iOS 26 picker wheel dismissal doesn't work reliably with country/state picker"
-        )
-
-            var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
+        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.applePayEnabled = .off
         settings.apmsEnabled = .off
@@ -413,8 +407,6 @@ NZ
         app.typeText("San Francisco")
         app.textFields["State"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "California")
-        app.stp_dismissKeyboard()
-        app.typeText("California")
         app.textFields["ZIP"].tap()
         app.typeText("94102")
         app.buttons["Save address"].tap()
@@ -610,10 +602,6 @@ NZ
     }
 
     func testAddressElement_SwiftUI_ManualEntry() throws {
-        try XCTSkipIf(
-            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
-            "iOS 26 picker wheel dismissal doesn't work reliably with state picker in SwiftUI"
-        )
         navigateToSwiftUIAddressElement()
 
         // The Save Address button should be disabled initially
@@ -636,7 +624,7 @@ NZ
     func testAddressElement_SwiftUI_AutoComplete() throws {
         try XCTSkipIf(
             ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
-            "iOS 26 SwiftUI address element autocomplete navigation fails"
+            "iOS 26: AddressElement (SwiftUI) option not visible in test app"
         )
         navigateToSwiftUIAddressElement()
 

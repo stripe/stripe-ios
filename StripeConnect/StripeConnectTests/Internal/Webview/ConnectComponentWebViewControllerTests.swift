@@ -411,9 +411,7 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
     }
 
     @MainActor
-    func testDidReceiveNon200StatusTriggersLoadError() async throws {
-        // MockNavigationResponse subclasses WKNavigationResponse, which crashes on iOS 26+
-        try XCTSkipIf(ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26, "WKNavigationResponse cannot be subclassed on iOS 26+")
+    func testDidReceiveNon200StatusTriggersLoadError() async {
         var error: Error?
         let componentManager = componentManagerAssertingOnFetch()
         let webVC = ConnectComponentWebViewController(componentManager: componentManager,
@@ -421,7 +419,8 @@ class ConnectComponentWebViewControllerTests: XCTestCase {
                                                       loadContent: false,
                                                       analyticsClientFactory: MockComponentAnalyticsClient.init,
                                                       didFailLoadWithError: { error = $0 })
-        _ = await webVC.webView(webVC.webView, decidePolicyFor: MockNavigationResponse(response: HTTPURLResponse(url: URL(string: "https://connect-js.stripe.com/v1.0/ios_webview.html")!, statusCode: 404, httpVersion: nil, headerFields: nil)!))
+        let response = HTTPURLResponse(url: URL(string: "https://connect-js.stripe.com/v1.0/ios_webview.html")!, statusCode: 404, httpVersion: nil, headerFields: nil)!
+        webVC.handleHTTPErrorResponse(response)
         XCTAssertEqual((error as? HTTPStatusError)?.errorCode, 404)
         // Loading indicator should stop
         XCTAssertFalse(webVC.activityIndicator.isAnimating)

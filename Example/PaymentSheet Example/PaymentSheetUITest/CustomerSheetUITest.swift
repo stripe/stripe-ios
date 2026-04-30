@@ -787,11 +787,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: timeout))
     }
 
-    func testUpdatePaymentMethod_auto() throws {
-        try XCTSkipIf(
-            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
-            "iOS 26 picker wheel dismissal doesn't work reliably with country picker"
-        )
+    func testUpdatePaymentMethod_auto() {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .returning
         settings.customerKeyType = .customerSession
@@ -833,7 +829,7 @@ class CustomerSheetUITest: XCTestCase {
         app.stp_dismissKeyboard()
 
         let zipField = app.textFields["ZIP"]
-        XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(expField.waitForExistence(timeout: 10.0))
         zipField.tap()
         zipField.typeText("55555")
         XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))

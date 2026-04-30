@@ -17,7 +17,7 @@ class PopupWebViewController: ConnectWebViewController {
 
     init(configuration: WKWebViewConfiguration,
          analyticsClient: ComponentAnalyticsClient,
-         navigationAction: WKNavigationAction,
+         request: URLRequest,
          allowedHosts: [String],
          urlOpener: ApplicationURLOpener = UIApplication.shared,
          sdkVersion: String? = StripeAPIConfiguration.STPSDKVersion) {
@@ -26,7 +26,7 @@ class PopupWebViewController: ConnectWebViewController {
                    allowedHosts: allowedHosts,
                    urlOpener: urlOpener,
                    sdkVersion: sdkVersion)
-        webView.load(navigationAction.request)
+        webView.load(request)
 
         // Keep navbar title in sync with web view
         titleObserver = webView.observe(\.title) { [weak self] webView, _ in

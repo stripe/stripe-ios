@@ -358,11 +358,7 @@ class PaymentSheetCustomerSessionDedupeUITests: PaymentSheetUITestCase {
         }
     }
 
-    func test_updatePaymentMethod() throws {
-        try XCTSkipIf(
-            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
-            "iOS 26 picker wheel dismissal doesn't work reliably with country picker"
-        )
+    func test_updatePaymentMethod() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.mode = .paymentWithSetup

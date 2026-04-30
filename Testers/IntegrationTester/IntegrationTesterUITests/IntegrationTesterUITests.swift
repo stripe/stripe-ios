@@ -135,21 +135,13 @@ class IntegrationTesterUITests: XCTestCase {
 
         app.handleiOSKeyboardTipIfNeeded()
 
-        // Dismiss keyboard — try toolbar Done button, fall back to tapping elsewhere
-        let doneButton = app.toolbars.buttons["Done"]
-        if doneButton.waitForExistence(timeout: 3.0) {
-            doneButton.tap()
-        } else {
-            // iOS 26 fallback: tap near the top of the screen to dismiss
-            app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
-        }
-
-        let submitCodeButton = app.buttons["Submit"]
-        XCTAssertTrue(submitCodeButton.waitForExistence(timeout: 10.0))
-        submitCodeButton.forceTapElement()
+        // On iOS 26, the WKWebView form accessory "Done" button isn't reachable
+        // via standard XCTest queries. Type Return to dismiss the keyboard and
+        // submit the form.
+        enterCodeText.typeText("\n")
 
         let statusView = app.staticTexts["Payment status view"]
-        XCTAssertTrue(statusView.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(statusView.waitForExistence(timeout: 30.0))
         XCTAssertNotNil(statusView.label.range(of: "Payment complete!"))
     }
 
