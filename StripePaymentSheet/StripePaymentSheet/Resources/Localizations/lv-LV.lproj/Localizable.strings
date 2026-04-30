@@ -305,3 +305,5 @@
 "Your IBAN should start with a two-letter country code." = "IBAN sākumā jābūt divu burtu valsts kodam.";
 
 "iDEAL Bank" = "iDEAL banka";
+
+"Card number. Supported cards include %@" = "Kartes numurs. Atbalstītās kartes: %@";

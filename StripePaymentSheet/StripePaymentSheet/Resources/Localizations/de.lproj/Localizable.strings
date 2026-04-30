@@ -305,3 +305,5 @@
 "Your IBAN should start with a two-letter country code." = "Ihre IBAN sollte mit einem zweistelligen Ländercode beginnen.";
 
 "iDEAL Bank" = "iDEAL-Bank";
+
+"Card number. Supported cards include %@" = "Kartennummer. Die unterstützten Karten umfassen %@";

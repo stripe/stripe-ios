@@ -303,3 +303,5 @@
 "Your IBAN should start with a two-letter country code." = "IBAN은 두 글자의 국가 코드로 시작해야 합니다.";
 
 "iDEAL Bank" = "iDEAL 은행";
+
+"Card number. Supported cards include %@" = "카드 번호. 지원되는 카드에는 %@가 포함됩니다";
