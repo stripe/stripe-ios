@@ -5,6 +5,7 @@
 //  Created by Krisjanis Gaidis on 7/14/22.
 //
 
+@_spi(STP) @testable import StripeCore
 @testable import StripeFinancialConnections
 import XCTest
 
@@ -46,6 +47,19 @@ class StringExtensionsTests: XCTestCase {
                         String.Link(range: NSRange(location: 17, length: 6), urlString: "https://www.stripe.com/link2"),
                     ]
                 )
+        )
+    }
+
+    func testBrandedLocalizedStrings_useProvidedBrandDisplayName() {
+        XCTAssertEqual(String.Localized.continue_with_link(brand: .link), "Continue with Link")
+        XCTAssertEqual(String.Localized.continue_with_link(brand: .onelink), "Continue with Onelink")
+        XCTAssertEqual(
+            String.Localized.use_information_you_previously_saved_with_your_brand_account(brand: .onelink),
+            "Use information you previously saved with your Onelink account."
+        )
+        XCTAssertEqual(
+            String.Localized.your_account_was_connected_but_could_not_be_saved_to_brand(brand: .onelink),
+            "Your account was connected, but couldn't be saved to Onelink."
         )
     }
 }

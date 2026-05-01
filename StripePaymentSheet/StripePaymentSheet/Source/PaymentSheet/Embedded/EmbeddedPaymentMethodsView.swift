@@ -79,6 +79,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private let shouldShowMandate: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let incentive: PaymentMethodIncentive?
+    private let linkBrand: LinkBrand
     /// A bit hacky; this is the mandate text for the given payment method, *regardless* of whether it is shown in the view.
     /// It'd be better if the source of truth of mandate text was not the view and instead an independent `func mandateText(...) -> NSAttributedString` function, but this is hard b/c US Bank Account doesn't show mandate in certain states.
     var mandateText: NSAttributedString? {
@@ -114,6 +115,7 @@ class EmbeddedPaymentMethodsView: UIView {
         appearance: PaymentSheet.Appearance,
         shouldShowApplePay: Bool,
         shouldShowLink: Bool,
+        linkBrand: LinkBrand = .link,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         mandateProvider: MandateTextProvider,
         shouldShowMandate: Bool = true,
@@ -131,6 +133,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.currency = currency
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
+        self.linkBrand = linkBrand
         self.delegate = delegate
         self.rowButtons = []
         super.init(frame: .zero)
@@ -164,7 +167,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowLink {
-            let linkRowButton = RowButton.makeForLink(appearance: appearance, isEmbedded: true) { [weak self] rowButton in
+            let linkRowButton = RowButton.makeForLink(appearance: appearance, linkBrand: linkBrand, isEmbedded: true) { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             }
@@ -313,7 +316,7 @@ class EmbeddedPaymentMethodsView: UIView {
             return
         }
 
-        var sublabel = String.Localized.link_subtitle_text
+        var sublabel = String.Localized.pay_faster_everywhere_brand_is_accepted(brand: linkBrand)
 
         if let linkAccount, linkAccount.isRegistered {
             sublabel = linkAccount.email

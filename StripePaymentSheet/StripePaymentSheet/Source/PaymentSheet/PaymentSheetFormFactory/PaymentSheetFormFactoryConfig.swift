@@ -6,6 +6,7 @@
 import Foundation
 import UIKit
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
 enum PaymentSheetFormFactoryConfig {
@@ -104,6 +105,15 @@ enum PaymentSheetFormFactoryConfig {
             // CustomerSheet does not yet support card funding filtering
             // Just return the default filter (none)
             return .default
+        }
+    }
+
+    func resolvedLinkBrand(elementsSession: STPElementsSession) -> LinkBrand {
+        switch self {
+        case .paymentElement(let config, _):
+            return config.resolvedLinkBrand(elementsSession: elementsSession)
+        case .customerSheet:
+            return .link
         }
     }
 

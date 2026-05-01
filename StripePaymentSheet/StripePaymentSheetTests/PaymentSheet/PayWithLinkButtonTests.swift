@@ -42,8 +42,28 @@ final class PayWithLinkButtonTests: XCTestCase {
 
         XCTAssertEqual(onelinkButton.brand, .onelink)
         XCTAssertTrue(linkButton.backgroundColor?.isEqual(onelinkButton.backgroundColor) ?? false)
-        XCTAssertEqual(linkButton.accessibilityLabel, onelinkButton.accessibilityLabel)
         XCTAssertEqual(linkButton.intrinsicContentSize, onelinkButton.intrinsicContentSize)
+    }
+
+    func testBrandUpdatesAccessibilityLabel() {
+        let linkButton = PayWithLinkButton(brand: .link)
+        let onelinkButton = PayWithLinkButton(brand: .onelink)
+
+        XCTAssertEqual(linkButton.accessibilityLabel, "Pay with Link")
+        XCTAssertEqual(onelinkButton.accessibilityLabel, "Pay with Onelink")
+    }
+
+    func testLocalizedBrandStrings_useProvidedBrandDisplayName() {
+        XCTAssertEqual(String.Localized.pay_with_link(brand: .link), "Pay with Link")
+        XCTAssertEqual(String.Localized.pay_with_link(brand: .onelink), "Pay with Onelink")
+        XCTAssertEqual(
+            String.Localized.pay_faster_everywhere_brand_is_accepted(brand: .onelink),
+            "Pay faster everywhere Onelink is accepted."
+        )
+        XCTAssertEqual(
+            String.Localized.save_my_info_for_faster_checkout(with: .onelink),
+            "Save my info for faster checkout with Onelink"
+        )
     }
 
     func testLoggedInStateSizesLogoViewToMatchBrandAsset() throws {

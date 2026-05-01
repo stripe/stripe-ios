@@ -240,7 +240,8 @@ extension PaymentMethodFormViewController: ElementDelegate {
             let variant = MandateVariant.updated(shouldSignUpToLink: linkSignup.viewModel.saveCheckboxChecked)
             let text = PaymentSheetFormFactory.makeMandateText(
                 variant: variant,
-                merchantName: configuration.merchantDisplayName
+                merchantName: configuration.merchantDisplayName,
+                brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
             )
             mandateElement.mandateTextView.attributedText = text
         }

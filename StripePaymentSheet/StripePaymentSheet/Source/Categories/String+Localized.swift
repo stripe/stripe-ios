@@ -72,8 +72,14 @@ extension String.Localized {
         STPLocalizedString("Bank account", "Title for collected bank account information")
     }
 
-    static var pay_with_link: String {
-        STPLocalizedString("Pay with Link", "Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'.")
+    static func pay_with_link(brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "Pay with %@",
+                "Text for the 'Pay with Link' button. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
+        )
     }
 
     static var bank_continue_mandate_text: String {
@@ -464,10 +470,13 @@ extension String.Localized {
         )
     }
 
-    static var link_subtitle_text: String {
-        STPLocalizedString(
-            "Simple, secure one-click payments",
-            "Subtitle shown on a button allowing a user to select to pay with Link."
+    static func pay_faster_everywhere_brand_is_accepted(brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "Pay faster everywhere %@ is accepted.",
+                "Subtitle for the Link signup screen. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
         )
     }
 
@@ -499,10 +508,97 @@ extension String.Localized {
         )
     }
 
-    static var by_continuing_you_agree_to_save_your_information_to_merchant_and_link: String {
-        STPLocalizedString(
-            "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.",
-            "Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link."
+    static func by_continuing_you_agree_to_save_your_information_to_merchant_and_link(
+        merchantDisplayName: String,
+        brand: LinkBrand
+    ) -> String {
+        String(
+            format: STPLocalizedString(
+                "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>.",
+                "Text displayed below a credit card entry form when the card will be saved with the merchant and saved to the Link brand. The first placeholder is a merchant name. The second placeholder is a Stripe brand name and should not be translated."
+            ),
+            merchantDisplayName,
+            brand.displayName
+        )
+    }
+
+    static func create_an_account_with_brand_for_faster_checkout_across_the_web(brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "Create an account with %@ for faster checkout across the web",
+                "Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
+        )
+    }
+
+    static func save_my_info_for_faster_checkout(with brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "Save my info for faster checkout with %@",
+                "Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
+        )
+    }
+
+    static func save_your_info_for_secure_1_click_checkout(with brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "Save your info for secure 1-click checkout with %@",
+                "Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
+        )
+    }
+
+    static func log_out_of_brand(_ brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "Log out of %@",
+                "Title of the logout action. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
+        )
+    }
+
+    static func by_joining_brand_you_agree_to_the_terms_and_privacy_policy(brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                "Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
+        )
+    }
+
+    static func by_providing_phone_number_and_email_you_agree_to_create_a_brand_account(brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                "Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
+        )
+    }
+
+    static func by_providing_your_email_you_agree_to_create_a_brand_account_and_save_your_payment_info(brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                "Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
+        )
+    }
+
+    static func by_providing_your_phone_number_you_agree_to_create_a_brand_account_and_save_your_payment_info(brand: LinkBrand) -> String {
+        String(
+            format: STPLocalizedString(
+                "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                "Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated."
+            ),
+            brand.displayName
         )
     }
 
