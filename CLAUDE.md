@@ -30,6 +30,12 @@ ci_scripts/run_tests.rb --all
 # Record snapshot reference images (tests will fail during recording)
 ci_scripts/run_tests.rb --record-snapshots --test StripePaymentSheetTests/SomeSnapshotTest
 
+# Record LiquidGlass snapshot reference images
+ci_scripts/run_tests.rb --record-snapshots --liquid-glass
+
+# Run LiquidGlass snapshot tests (without recording)
+ci_scripts/run_tests.rb --liquid-glass
+
 # Record network responses (tests will fail during recording)
 ci_scripts/run_tests.rb --record-network --test StripePaymentsTests/STPCardFunctionalTest
 
