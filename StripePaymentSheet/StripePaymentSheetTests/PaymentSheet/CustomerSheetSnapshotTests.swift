@@ -636,15 +636,10 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        // Snapshot the window instead of the bottom sheet view directly.
-        // On iOS 26, the presentation controller sizes the bottom sheet view
-        // non-deterministically, but the window is always 375x812.
-        guard let window = view.window else {
-            XCTFail("View is not attached to a window", file: file, line: line)
-            return
-        }
+        // Allow async-rendering views (e.g. PKPaymentButton) to finish loading
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
         FBSnapshotVerifyView(
-            window,
+            view,
             identifier: isLiquidGlassMode ? (identifier.map { "\($0)_LiquidGlass" } ?? "LiquidGlass") : identifier,
             perPixelTolerance: 0.02,
             overallTolerance: 0.01,
