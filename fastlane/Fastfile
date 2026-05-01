@@ -18,7 +18,7 @@ require 'yaml'
 default_platform(:ios)
 
 DEFAULT_TEST_DEVICE = 'iPhone 12 mini'.freeze
-DEFAULT_TEST_VERSION = '16.4'.freeze
+DEFAULT_TEST_VERSION = '26.4.1'.freeze
 # SPM-using .xcodeproj files can take a while to respond to `showBuildSettings`,
 # set Fastlane's timeout to a more reasonable value.
 ENV['FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT'] = '60'
@@ -170,7 +170,8 @@ platform :ios do
     end
     run_tests(
       workspace: './Tests/installation_tests/cocoapods/without_frameworks_objc/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
+      skip_detect_devices: true
     )
   end
 
@@ -180,7 +181,8 @@ platform :ios do
     end
     run_tests(
       workspace: './Tests/installation_tests/cocoapods/with_frameworks_objc/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
+      skip_detect_devices: true
     )
   end
 
@@ -190,7 +192,8 @@ platform :ios do
     end
     run_tests(
       workspace: './Tests/installation_tests/cocoapods/with_frameworks_swift/CocoapodsTest.xcworkspace',
-      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}"
+      destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
+      skip_detect_devices: true
     )
   end
 
@@ -198,7 +201,8 @@ platform :ios do
     run_tests(
       workspace: './Tests/installation_tests/swift_package_manager/with_objc/SPMTest.xcworkspace',
       destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
-      scheme: 'SPMTest'
+      scheme: 'SPMTest',
+      skip_detect_devices: true
     )
   end
 
@@ -206,7 +210,8 @@ platform :ios do
     run_tests(
       workspace: './Tests/installation_tests/swift_package_manager/with_swift/SPMTest.xcworkspace',
       destination: "platform=iOS Simulator,name=#{DEFAULT_TEST_DEVICE},OS=#{DEFAULT_TEST_VERSION}",
-      scheme: 'SPMTest'
+      scheme: 'SPMTest',
+      skip_detect_devices: true
     )
   end
 
