@@ -18,7 +18,7 @@ class LinkHintMessageViewSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        if #available(iOS 26, *) {
+        if isLiquidGlassMode, #available(iOS 26, *) {
             var configuration = PaymentSheet.Configuration()
             configuration.appearance.applyLiquidGlass()
             LinkUI.applyLiquidGlassIfPossible(configuration: configuration)

@@ -185,7 +185,7 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 
     // Tests that `primaryButton` used in Link has the correct height
     func testConfirmButtonInLinkUI() {
-        if #available(iOS 26, *) {
+        if isLiquidGlassMode, #available(iOS 26, *) {
             var configuration = PaymentSheet.Configuration()
             configuration.appearance.applyLiquidGlass()
             LinkUI.applyLiquidGlassIfPossible(configuration: configuration)
@@ -217,7 +217,8 @@ class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
 extension PaymentSheet.Appearance {
     mutating func applyLiquidGlassIfPossible() {
         #if !os(visionOS)
-        if #available(iOS 26.0, *) {
+        if ProcessInfo.processInfo.environment["STP_LIQUID_GLASS_MODE"] != nil,
+           #available(iOS 26.0, *) {
             self.applyLiquidGlass()
         }
         #endif
@@ -225,7 +226,8 @@ extension PaymentSheet.Appearance {
     func applyingLiquidGlassIfPossible() -> PaymentSheet.Appearance {
         var copy = self
         #if !os(visionOS)
-        if #available(iOS 26.0, *) {
+        if ProcessInfo.processInfo.environment["STP_LIQUID_GLASS_MODE"] != nil,
+           #available(iOS 26.0, *) {
             copy.applyLiquidGlass()
         }
         #endif

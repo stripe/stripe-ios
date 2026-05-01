@@ -19,7 +19,8 @@ import UIKit
 class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 
     override class func setUp() {
-        if #available(iOS 26, *) {
+        if ProcessInfo.processInfo.environment["STP_LIQUID_GLASS_MODE"] != nil,
+           #available(iOS 26, *) {
             var configuration = PaymentSheet.Configuration()
             configuration.appearance.applyLiquidGlass()
             LinkUI.applyLiquidGlassIfPossible(configuration: configuration)

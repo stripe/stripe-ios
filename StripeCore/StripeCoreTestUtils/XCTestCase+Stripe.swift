@@ -58,7 +58,7 @@ public extension XCTestCase {
         DispatchQueue.main.asyncAfter(deadline: .now() + seconds) {
             e.fulfill()
         }
-        waitForExpectations(timeout: seconds + 2)
+        waitForExpectations(timeout: seconds)
     }
 
 }
