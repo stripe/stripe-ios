@@ -13,7 +13,7 @@ import StripeCoreTestUtils
 import XCTest
 
 // ☠️ WARNING: These snapshots have selected borders that don't follow the correct curvature on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
-// @iOS26
+// @iOS18
 final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase {
 
     func test_all_saved_pms_and_apple_pay_and_link_dark() {

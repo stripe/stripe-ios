@@ -11,7 +11,7 @@ import StripeCoreTestUtils
 import XCTest
 
 // ☠️ WARNING: These snapshots have selected borders that don't follow the correct curvature on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
-// @iOS26
+// @iOS18
 final class VerticalSavedPaymentMethodsViewControllerSnapshotTests: STPSnapshotTestCase {
 
     func test_VerticalSavedPaymentOptionsViewControllerSnapshotTestsDarkMode() {

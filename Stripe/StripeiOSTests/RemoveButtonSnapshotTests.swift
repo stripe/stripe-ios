@@ -12,7 +12,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 
 // ☠️ WARNING: These snapshots do not have capsule corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
-// @iOS26
+// @iOS18
 class RemoveButtonSnapshotTests: STPSnapshotTestCase {
 
     func testRemoveButton() {

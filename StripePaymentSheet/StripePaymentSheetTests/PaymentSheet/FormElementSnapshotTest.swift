@@ -11,7 +11,7 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 
 // These are in StripePaymentSheet instead of StripeUICore so that we can test using PaymentSheet.Appearance rather than ElementsAppearance.
-// @iOS26
+// @iOS18
 final class FormElementSnapshotTest: STPSnapshotTestCase {
     var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
     var theme: ElementsAppearance {

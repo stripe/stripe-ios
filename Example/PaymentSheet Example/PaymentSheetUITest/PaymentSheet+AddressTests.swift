@@ -370,7 +370,7 @@ NZ
         XCTAssertEqual(shippingButton.label, expectedAddress)
     }
 
-    func testPaymentSheetFlowControllerUpdatesShipping() throws {
+    func testPaymentSheetFlowControllerUpdatesShipping() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.applePayEnabled = .off

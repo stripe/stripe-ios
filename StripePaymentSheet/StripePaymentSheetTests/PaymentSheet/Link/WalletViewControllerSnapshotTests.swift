@@ -13,7 +13,7 @@ import XCTest
 
 @testable@_spi(STP) import StripePaymentSheet
 
-// @iOS26
+// @iOS18
 final class WalletViewControllerSnapshotTests: STPSnapshotTestCase {
 
     override static func setUp() {

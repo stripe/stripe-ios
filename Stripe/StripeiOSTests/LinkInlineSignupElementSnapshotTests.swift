@@ -14,7 +14,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-// @iOS26
+// @iOS18
 class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 
     // MARK: Checkbox mode

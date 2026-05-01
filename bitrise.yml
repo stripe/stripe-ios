@@ -29,7 +29,7 @@ pipelines:
       lint-tests:
         abort_on_fail: true
       framework-tests: {}
-      framework-tests-ios-26: {}
+      framework-tests-ios-18: {}
       test-builds-xcode-26: {}
       test-builds-xcode-26-1: {}
       install-tests: {}
@@ -47,7 +47,7 @@ pipelines:
       lint-tests:
         abort_on_fail: true
       framework-tests-no-mocks: {}
-      framework-tests-ios-26: {}
+      framework-tests-ios-18: {}
       test-builds-xcode-26: {}
       test-builds-xcode-26-1: {}
       test-builds-xcode-26-release: {}
@@ -366,21 +366,23 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  framework-tests-ios-26:
+  framework-tests-ios-18:
     steps:
     - script@1:
         inputs:
         - content: |
-            ruby ci_scripts/generate_ios26_testplan.rb
-        title: Generate iOS 26 test plan
+            ruby ci_scripts/generate_ios18_testplan.rb
+        title: Generate iOS 18 test plan
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: AllStripeFrameworks-iOS26
+        - scheme: AllStripeFrameworks-iOS18
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 16,OS=18.4
     before_run:
     - prep_all
     after_run:

@@ -12,7 +12,7 @@ import UIKit
 
 @testable@_spi(STP) import StripePaymentSheet
 
-// @iOS26
+// @iOS18
 class PaymentMethodTypeCollectionViewCellSnapshotTests: STPSnapshotTestCase {
 
     func test_withPromoBadge() {

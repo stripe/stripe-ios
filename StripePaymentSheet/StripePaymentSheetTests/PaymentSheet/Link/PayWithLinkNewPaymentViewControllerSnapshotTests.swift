@@ -10,7 +10,7 @@ import StripeCoreTestUtils
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
-// @iOS26
+// @iOS18
 class PayWithLinkNewPaymentViewControllerSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {

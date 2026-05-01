@@ -15,7 +15,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
-// @iOS26
+// @iOS18
 class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 
     override class func setUp() {
