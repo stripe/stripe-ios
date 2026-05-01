@@ -65,7 +65,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, analyticsHelper: analyticsHelper, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
+        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, resolvedLayout: .horizontal, headerView: nil, analyticsHelper: analyticsHelper, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
         previousCustomerInput = nil
         return pmFormVC
@@ -171,7 +171,7 @@ class AddPaymentMethodViewController: UIViewController {
         }
         // These LPMs are not visible without without scrolling in the horizontal carousel
         let hiddenPaymentMethods: [String] = paymentMethodTypes.compactMap { $0.identifier }.filter { !visiblePaymentMethods.contains($0) }
-        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .horizontal)
+        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods)
     }
 
     // MARK: - Private
@@ -190,6 +190,7 @@ class AddPaymentMethodViewController: UIViewController {
                 previousCustomerInput: previousCustomerInput,
                 formCache: formCache,
                 configuration: configuration,
+                resolvedLayout: .horizontal,
                 headerView: nil,
                 analyticsHelper: analyticsHelper,
                 isLinkUI: isLinkUI,

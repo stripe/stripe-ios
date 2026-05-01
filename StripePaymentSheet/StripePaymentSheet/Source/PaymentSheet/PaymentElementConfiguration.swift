@@ -44,12 +44,16 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var analyticPayload: [String: Any] { get }
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
-    var resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout { get }
+    func resolvedLayout(forceVertical: Bool, paymentMethodTypeCount: Int) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout
     var opensCardScannerAutomatically: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
 }
 
 extension PaymentElementConfiguration {
+    func resolvedLayout(forceVertical: Bool, paymentMethodTypeCount: Int) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
+        return .vertical
+    }
+
     func resolvedLinkBrand(elementsSession: STPElementsSession) -> LinkBrand {
         // `link.brand` is an explicit client override; `nil` means defer to the elements session response.
         link.brand ?? elementsSession.linkBrand ?? .link
@@ -112,5 +116,4 @@ extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
         set {}
     }
 
-    var resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout { .vertical }
 }

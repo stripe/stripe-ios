@@ -116,14 +116,6 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
-    var isHorizontalMode: Bool {
-        switch self {
-        case .paymentElement(let config, _):
-            return config.resolvedPaymentMethodLayout == .horizontal
-        case .customerSheet:
-            return true
-        }
-    }
 
     var opensCardScannerAutomatically: Bool {
         switch self {

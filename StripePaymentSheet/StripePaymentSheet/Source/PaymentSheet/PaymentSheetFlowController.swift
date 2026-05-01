@@ -788,10 +788,10 @@ extension PaymentSheet {
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
-            // Resolve automatic layout based on number of supported payment methods
-            var configuration = configuration
-            configuration.resolveLayout(loadResult: loadResult)
-            switch configuration.resolvedPaymentMethodLayout {
+            switch configuration.resolvedLayout(
+                forceVertical: loadResult.elementsSession.forceVerticalPaymentMethodLayout,
+                paymentMethodTypeCount: loadResult.paymentMethodTypes.count
+            ) {
             case .horizontal:
                 controller = PaymentSheetFlowControllerViewController(
                     configuration: configuration,

@@ -46,6 +46,7 @@ class PaymentSheetFormFactory {
     let isFirstSavedPaymentMethod: Bool
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let paymentMethodIncentive: PaymentMethodIncentive?
+    let resolvedLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout
     let sellerName: String?
     let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
     let cardFundingFilter: CardFundingFilter
@@ -86,6 +87,7 @@ class PaymentSheetFormFactory {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentSheetFormFactoryConfig,
+        resolvedLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .vertical,
         paymentMethod: PaymentSheet.PaymentMethodType,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
@@ -121,6 +123,7 @@ class PaymentSheetFormFactory {
             }
         }()
         self.init(configuration: configuration,
+                  resolvedLayout: resolvedLayout,
                   paymentMethod: paymentMethod,
                   previousCustomerInput: previousCustomerInput,
                   addressSpecProvider: addressSpecProvider,
@@ -150,6 +153,7 @@ class PaymentSheetFormFactory {
 
     required init(
         configuration: PaymentSheetFormFactoryConfig,
+        resolvedLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .vertical,
         paymentMethod: PaymentSheet.PaymentMethodType,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
@@ -176,6 +180,7 @@ class PaymentSheetFormFactory {
         cardFundingFilter: CardFundingFilter = .default
     ) {
         self.configuration = configuration
+        self.resolvedLayout = resolvedLayout
         self.paymentMethod = paymentMethod
         self.addressSpecProvider = addressSpecProvider
         self.showLinkInlineCardSignup = showLinkInlineCardSignup
@@ -843,7 +848,7 @@ extension PaymentSheetFormFactory {
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.bodyText
         label.numberOfLines = 0
-        return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
+        return SubtitleElement(view: label, isHorizontalMode: resolvedLayout == .horizontal)
     }
 
     func makeInstantDebits() -> PaymentMethodElement {
@@ -913,7 +918,7 @@ extension PaymentSheetFormFactory {
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.secondaryText
         label.numberOfLines = 0
-        return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
+        return SubtitleElement(view: label, isHorizontalMode: resolvedLayout == .horizontal)
     }
 
     /// This method returns a "Contact information" Section containing a name, email, and phone field depending on the `PaymentSheet.Configuration.billingDetailsCollectionConfiguration` and your payment method's required fields.
