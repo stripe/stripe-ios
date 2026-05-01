@@ -96,7 +96,7 @@ public final class EmbeddedPaymentElement {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
-    @_spi(CheckoutSessionsPreview) public static func create(
+    @_spi(STP) public static func create(
         checkout: Checkout,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
@@ -163,7 +163,7 @@ public final class EmbeddedPaymentElement {
     /// - Returns: The result of the update.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
     /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
-    @_spi(CheckoutSessionsPreview) public func update(
+    @_spi(STP) public func update(
         checkout: Checkout
     ) async -> UpdateResult {
         guard let stpSession = checkout.state.session as? STPCheckoutSession else {
@@ -526,7 +526,7 @@ extension EmbeddedPaymentElement {
     /// - Parameter completion: A completion block containing the result of the update. Called on the main thread.
     /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
-    @_spi(CheckoutSessionsPreview) public func update(
+    @_spi(STP) public func update(
         checkout: Checkout,
         completion: @escaping (UpdateResult) -> Void
     ) {

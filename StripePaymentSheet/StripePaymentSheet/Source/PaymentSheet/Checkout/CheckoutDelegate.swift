@@ -9,7 +9,7 @@
 import Foundation
 
 /// Receives updates when a ``Checkout`` session changes.
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
 @MainActor
 public protocol CheckoutDelegate: AnyObject {
     /// Tells the delegate that the checkout state changed.
@@ -20,7 +20,7 @@ public protocol CheckoutDelegate: AnyObject {
 }
 
 /// Default no-op implementations.
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
 public extension CheckoutDelegate {
     func checkout(_ checkout: Checkout, didChangeState state: Checkout.State) {
         // Default empty implementation

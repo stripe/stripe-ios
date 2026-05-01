@@ -13,7 +13,7 @@ import UIKit
 
 // MARK: - CurrencySelectorView
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
 extension Checkout {
     /// A standalone currency selector for Adaptive Pricing.
     ///

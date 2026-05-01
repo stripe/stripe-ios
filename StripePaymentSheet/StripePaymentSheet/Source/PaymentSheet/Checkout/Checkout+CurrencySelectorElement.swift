@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: - CurrencySelectorElement (SwiftUI)
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
 extension Checkout {
     /// A SwiftUI currency selector for Adaptive Pricing.
     ///

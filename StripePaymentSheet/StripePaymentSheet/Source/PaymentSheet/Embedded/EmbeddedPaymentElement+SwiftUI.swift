@@ -99,7 +99,7 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Note: This method may only be called once. Subsequent calls will throw an error.
     /// - Throws: An error if loading failed.
-    @_spi(CheckoutSessionsPreview) public func load(
+    @_spi(STP) public func load(
         checkout: Checkout,
         configuration: EmbeddedPaymentElement.Configuration
     ) async throws {
@@ -161,7 +161,7 @@ public final class EmbeddedPaymentElementViewModel: ObservableObject {
     /// - Parameter checkout: The Checkout instance whose session has been updated.
     /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
-    @_spi(CheckoutSessionsPreview) public func update(
+    @_spi(STP) public func update(
         checkout: Checkout
     ) async -> EmbeddedPaymentElement.UpdateResult {
         // Wait for the load task to complete if it exists

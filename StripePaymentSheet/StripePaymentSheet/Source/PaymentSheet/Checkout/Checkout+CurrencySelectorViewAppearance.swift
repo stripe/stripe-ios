@@ -7,7 +7,7 @@
 
 import UIKit
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
 extension Checkout.CurrencySelectorView {
     /// Appearance configuration for ``Checkout.CurrencySelectorView``.
     public struct Appearance {

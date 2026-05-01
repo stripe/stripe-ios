@@ -4,7 +4,7 @@
 //
 import Foundation
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
 extension Checkout {
     /// Contact details and a postal address captured for billing or shipping.
     public struct ContactAddress: Equatable {
