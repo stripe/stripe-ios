@@ -12,7 +12,7 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 import UIKit
 
-// @iOS26
+// @LiquidGlass
 final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
     var appearance = PaymentSheet.Appearance().applyingLiquidGlassIfPossible()
     var theme: ElementsAppearance {
@@ -21,7 +21,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
 
     // MARK: - CardBrandChoiceElement (CBC Redesign) Tests
 
-    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
+    // Due to limitations of snapshot tests, the Liquid Glass snapshot recorded shows a rectangular border instead of a capsule
     func testCardBrandChoiceElement() {
         let element = CardBrandChoiceElement(
             cardBrands: [.visa, .cartesBancaires],
@@ -31,7 +31,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         verify(element)
     }
 
-    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
+    // Due to limitations of snapshot tests, the Liquid Glass snapshot recorded shows a rectangular border instead of a capsule
     func testCardBrandChoiceElement_withDisallowedBrands() {
         let element = CardBrandChoiceElement(
             cardBrands: [],
@@ -43,7 +43,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         verify(element)
     }
 
-    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
+    // Due to limitations of snapshot tests, the Liquid Glass snapshot recorded shows a rectangular border instead of a capsule
     func testCardBrandChoiceElement_CB() {
         let element = CardBrandChoiceElement(
             cardBrands: [.visa, .cartesBancaires],
@@ -56,7 +56,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         verify(element)
     }
 
-    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
+    // Due to limitations of snapshot tests, the Liquid Glass snapshot recorded shows a rectangular border instead of a capsule
     func testCardBrandChoiceElement_Visa() {
         let element = CardBrandChoiceElement(
             cardBrands: [.visa, .cartesBancaires],
@@ -85,7 +85,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
 
     // MARK: - CBC Tooltip Tests
 
-    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
+    // Due to limitations of snapshot tests, the Liquid Glass snapshot recorded shows a rectangular border instead of a capsule
     func testCBCTooltipView() {
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(true) }
@@ -94,7 +94,7 @@ final class CardBrandChoiceElementSnapshotTest: STPSnapshotTestCase {
         STPSnapshotVerifyView(cardSection.view)
     }
 
-    // Due to limitations of snapshot tests, the iOS26 snapshot recorded shows a rectangular border instead of a capsule
+    // Due to limitations of snapshot tests, the Liquid Glass snapshot recorded shows a rectangular border instead of a capsule
     func testCBCTooltipView_darkMode() {
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(true) }

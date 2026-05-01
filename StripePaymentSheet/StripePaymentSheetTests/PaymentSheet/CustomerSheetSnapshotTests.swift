@@ -645,7 +645,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         }
         FBSnapshotVerifyView(
             window,
-            identifier: isIOS26 ? (identifier.map { "\($0)_iOS26" } ?? "iOS26") : identifier,
+            identifier: isLiquidGlassMode ? (identifier.map { "\($0)_LiquidGlass" } ?? "LiquidGlass") : identifier,
             perPixelTolerance: 0.02,
             overallTolerance: 0.01,
             file: file,

@@ -33,7 +33,7 @@ validate_uuid() {
 
 # Function to create new simulator
 create_simulator() {
-    xcrun simctl create "$SIMULATOR_NAME" "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini" "com.apple.CoreSimulator.SimRuntime.iOS-26-4-1"
+    xcrun simctl create "$SIMULATOR_NAME" "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini" "com.apple.CoreSimulator.SimRuntime.iOS-26-4"
 }
 
 # Function to validate simulator exists

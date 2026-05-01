@@ -14,7 +14,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-// @iOS26
+// @LiquidGlass
 class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
 
     // MARK: Checkbox mode

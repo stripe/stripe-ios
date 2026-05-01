@@ -11,7 +11,7 @@ import StripeCoreTestUtils
 import XCTest
 
 // ☠️ WARNING: These snapshots are missing selected borders at the corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
-// @iOS26
+// @LiquidGlass
 final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTestCase, VerticalPaymentMethodListViewControllerDelegate {
     func shouldSelectPaymentMethod(_ selection: StripePaymentSheet.RowButtonType) -> Bool {
         return true

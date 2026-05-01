@@ -28,8 +28,8 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         }
     }
 
-    public var isIOS26: Bool {
-        return UIDevice.current.systemVersion == TEST_DEVICE_OS_VERSION_26
+    public var isLiquidGlassMode: Bool {
+        return ProcessInfo.processInfo.environment["STP_LIQUID_GLASS_MODE"] != nil
     }
 
     // Calls FBSnapshotVerifyView with a default 2% per-pixel color differentiation, as M1 and Intel machines render shadows differently.
@@ -43,9 +43,8 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        // Append "iOS26" to snapshot filename if testing on iOS 26
-        let ios26Identifier = identifier.map { "\($0)_iOS26" } ?? "iOS26"
-        let identifier = isIOS26 ? ios26Identifier : identifier
+        let liquidGlassIdentifier = identifier.map { "\($0)_LiquidGlass" } ?? "LiquidGlass"
+        let identifier = isLiquidGlassMode ? liquidGlassIdentifier : identifier
 
         if let autoSizingHeightForWidth {
             view.autosizeHeight(width: autoSizingHeightForWidth)

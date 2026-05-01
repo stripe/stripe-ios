@@ -29,7 +29,7 @@ pipelines:
       lint-tests:
         abort_on_fail: true
       framework-tests: {}
-      framework-tests-ios-26: {}
+      framework-tests-liquid-glass: {}
       test-builds-xcode-26: {}
       test-builds-xcode-26-1: {}
       install-tests: {}
@@ -47,7 +47,7 @@ pipelines:
       lint-tests:
         abort_on_fail: true
       framework-tests-no-mocks: {}
-      framework-tests-ios-26: {}
+      framework-tests-liquid-glass: {}
       test-builds-xcode-26: {}
       test-builds-xcode-26-1: {}
       test-builds-xcode-26-release: {}
@@ -60,6 +60,7 @@ pipelines:
       ui-tests-crypto: {}
       legacy-tests-15: {}
       legacy-tests-16: {}
+      legacy-tests-18: {}
       pod-lint-tests: {}
       integration-all: {}
 
@@ -69,6 +70,7 @@ pipelines:
       check-docs: {}
       legacy-tests-15: {}
       legacy-tests-16: {}
+      legacy-tests-18: {}
       deploy-dry-run: {}
       pod-lint-tests: {}
 workflows:
@@ -366,19 +368,19 @@ workflows:
       bitrise.io:
         stack: osx-xcode-26.4.x
         machine_type_id: g2.mac.large
-  framework-tests-ios-26:
+  framework-tests-liquid-glass:
     steps:
     - script@1:
         inputs:
         - content: |
-            ruby ci_scripts/generate_ios26_testplan.rb
-        title: Generate iOS 26 test plan
+            ruby ci_scripts/generate_liquid_glass_testplan.rb
+        title: Generate Liquid Glass test plan
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
         - test_repetition_mode: retry_on_failure
         - maximum_test_repetitions: "2"
-        - scheme: AllStripeFrameworks-iOS26
+        - scheme: AllStripeFrameworks-LiquidGlass
     - deploy-to-bitrise-io@2: {}
     - save-spm-cache@1: {}
     before_run:
@@ -545,6 +547,23 @@ workflows:
         title: fastlane legacy_tests_16
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.4.1
+    before_run:
+    - prep_all
+    after_run:
+    - upload_logs
+    - notify_ci
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+  legacy-tests-18:
+    steps:
+    - fastlane@3:
+        inputs:
+        - lane: legacy_tests_18
+        title: fastlane legacy_tests_18
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=18.6
     before_run:
     - prep_all
     after_run:

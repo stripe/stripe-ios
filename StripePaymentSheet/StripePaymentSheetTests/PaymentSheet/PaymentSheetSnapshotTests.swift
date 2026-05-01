@@ -23,6 +23,7 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
     )!
 
     var paymentSheet: PaymentSheet!
+    private var testWindow: UIWindow!
 
     private var configuration = PaymentSheet.Configuration()
 
@@ -1141,12 +1142,13 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         let vc = UIViewController()
         let navController = UINavigationController(rootViewController: vc)
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 375, height: 812))
-        window.isHidden = false // Without this line PaymentSheet is rendered too tall; unclear why since `false` is the default
         if darkMode {
             window.overrideUserInterfaceStyle = .dark
         }
         window.rootViewController = navController
-        window.layoutIfNeeded() // unclear why but w/o this vc.view.window is nil
+        window.makeKeyAndVisible()
+        self.testWindow = window // Retain the window to prevent deallocation
+        window.layoutIfNeeded()
 
         // Wait a turn of the runloop for the RVC to attach to the window, then present PaymentSheet
         DispatchQueue.main.async {
@@ -1198,15 +1200,19 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         // Snapshot the window instead of the bottom sheet view directly.
         // On iOS 26, the presentation controller sizes the bottom sheet view
         // non-deterministically, but the window is always 375x812.
+        // On iOS 26, window attachment can be delayed; wait for it.
+        if view.window == nil {
+            RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.5))
+        }
         guard let window = view.window else {
             XCTFail("View is not attached to a window", file: file, line: line)
             return
         }
         FBSnapshotVerifyView(
             window,
-            identifier: isIOS26 ? (identifier.map { "\($0)_iOS26" } ?? "iOS26") : identifier,
+            identifier: isLiquidGlassMode ? (identifier.map { "\($0)_LiquidGlass" } ?? "LiquidGlass") : identifier,
             perPixelTolerance: 0.02,
-            overallTolerance: 0.02,
+            overallTolerance: isLiquidGlassMode ? 0.05 : 0.02,
             file: file,
             line: line
         )

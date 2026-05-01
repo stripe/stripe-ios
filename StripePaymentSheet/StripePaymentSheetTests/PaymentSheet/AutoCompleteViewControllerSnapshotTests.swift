@@ -13,7 +13,7 @@ import StripeCoreTestUtils
 @testable import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
-// @iOS26
+// @LiquidGlass
 class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
 
     private var configuration: AddressViewController.Configuration {
