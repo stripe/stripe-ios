@@ -73,7 +73,11 @@ class PassiveCaptchaChallengeTests: XCTestCase {
         XCTAssertFalse(hcaptchaTokenResult.success)
         XCTAssertThrowsError(try hcaptchaTokenResult.get())
         let passiveCaptchaEvents = STPAnalyticsClient.sharedClient._testLogHistory.map({ $0["event"] as? String }).filter({ $0?.starts(with: "elements.captcha.passive") ?? false })
-        XCTAssertEqual(passiveCaptchaEvents, ["elements.captcha.passive.init", "elements.captcha.passive.execute"])
+        // On iOS 26+, a timeout also logs an error event
+        XCTAssertTrue(
+            passiveCaptchaEvents == ["elements.captcha.passive.init", "elements.captcha.passive.execute"] ||
+            passiveCaptchaEvents == ["elements.captcha.passive.init", "elements.captcha.passive.execute", "elements.captcha.passive.error"]
+        )
     }
 
     func testPassiveCaptchaLongTimeout() async throws {
