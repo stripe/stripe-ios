@@ -51,6 +51,7 @@ struct PaymentSheetTestPlayground: View {
             if playgroundController.settings.merchantCountryCode == .US {
                 SearchableSettingView(setting: linkEnabledModeBinding, searchText: searchText)
             }
+            SearchableSettingView(setting: $playgroundController.settings.linkFundingSources, searchText: $searchText)
             SearchableSettingView(setting: $playgroundController.settings.linkPassthroughMode, searchText: searchText)
             SearchableSettingView(setting: $playgroundController.settings.linkDisplay, searchText: searchText)
         }

@@ -136,12 +136,17 @@ import UIKit
     private var currentTaxRate: (String, Double)?
 
     var linkConfiguration: PaymentSheet.LinkConfiguration {
+        let brand: LinkBrand? = settings.linkBrand == .onelink ? .onelink : nil
+
+        var linkConfiguration: PaymentSheet.LinkConfiguration
         switch settings.linkDisplay {
         case .automatic:
-            PaymentSheet.LinkConfiguration(display: .automatic)
+            linkConfiguration = PaymentSheet.LinkConfiguration(display: .automatic, brand: brand)
         case .never:
-            PaymentSheet.LinkConfiguration(display: .never)
+            linkConfiguration = PaymentSheet.LinkConfiguration(display: .never, brand: brand)
         }
+        linkConfiguration.supportedPaymentMethodTypes = settings.linkFundingSources.supportedPaymentMethodTypes
+        return linkConfiguration
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
         guard settings.customerMode != .guest,
@@ -1061,6 +1066,14 @@ extension PlaygroundController {
             //            "set_shipping_address": true // Uncomment to make server vend PI with shipping address populated
         ] as [String: Any]
 
+        // Send use_manual_capture when toggled on
+        if settings.manualCapture == .on {
+            body["use_manual_capture"] = true
+        }
+
+        if let linkFundingSources = settings.linkFundingSources.requestValue {
+            body["link_funding_sources"] = linkFundingSources
+        }
         // Add CheckoutSession flag if using CheckoutSession integration type
         if settings.integrationType == .checkoutSession {
             body["use_checkout_session"] = true

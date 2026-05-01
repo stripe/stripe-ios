@@ -25,13 +25,14 @@ extension UIViewController {
         intent: Intent,
         elementsSession: STPElementsSession,
         analyticsHelper: PaymentSheetAnalyticsHelper,
-        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkAppearance: LinkAppearance? = nil,
         linkConfiguration: LinkConfiguration? = nil,
         shouldShowSecondaryCta: Bool = true,
         confirmationChallenge: ConfirmationChallenge? = nil,
         callback: @escaping (_ confirmOption: PaymentSheet.LinkConfirmOption?, _ shouldReturnToPaymentSheet: Bool) -> Void
     ) {
+        let effectiveSupportedPaymentMethodTypes = supportedPaymentMethodTypes ?? configuration.link.supportedPaymentMethodTypes ?? LinkPaymentMethodType.allCases
         let payWithLinkController = PayWithNativeLinkController(
             mode: .paymentMethodSelection,
             intent: intent,
@@ -39,7 +40,7 @@ extension UIViewController {
             configuration: configuration,
             logPayment: false,
             analyticsHelper: analyticsHelper,
-            supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+            supportedPaymentMethodTypes: effectiveSupportedPaymentMethodTypes,
             linkAppearance: linkAppearance,
             linkConfiguration: linkConfiguration,
             confirmationChallenge: confirmationChallenge
