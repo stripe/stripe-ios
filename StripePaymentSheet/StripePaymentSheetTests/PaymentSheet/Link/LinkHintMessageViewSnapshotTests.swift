@@ -13,7 +13,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-// @iOS18
+// @iOS26
 class LinkHintMessageViewSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {

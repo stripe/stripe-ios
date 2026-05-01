@@ -228,7 +228,7 @@
             ActionType = "Xcode.IDEStandardExecutionActionsCore.ExecutionActionType.ShellScriptAction">
             <ActionContent
                title = "Run Script"
-               scriptText = "cd &quot;$SRCROOT/..&quot;&#10;echo &quot;Started at: $(date)&quot; | tee /tmp/generate_ios18_testplan.log&#10;ruby ci_scripts/generate_ios18_testplan.rb | tee -a /tmp/generate_ios18_testplan.log&#10;"
+               scriptText = "cd &quot;$SRCROOT/..&quot;&#10;echo &quot;Started at: $(date)&quot; | tee /tmp/generate_ios26_testplan.log&#10;ruby ci_scripts/generate_ios26_testplan.rb | tee -a /tmp/generate_ios26_testplan.log&#10;"
                shellToInvoke = "/bin/bash">
                <EnvironmentBuildable>
                   <BuildableReference
@@ -260,7 +260,7 @@
       </EnvironmentVariables>
       <TestPlans>
          <TestPlanReference
-            reference = "container:Stripe/AllStripeFrameworks-iOS18.xctestplan"
+            reference = "container:Stripe/AllStripeFrameworks-iOS26.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>

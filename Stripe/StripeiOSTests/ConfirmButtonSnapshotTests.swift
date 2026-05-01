@@ -15,7 +15,7 @@ import UIKit
 @testable import StripeCore
 @testable import StripePaymentSheet
 
-// @iOS18
+// @iOS26
 class ConfirmButtonSnapshotTests: STPSnapshotTestCase {
     func testConfirmButton() {
         let appearance = PaymentSheet.Appearance.default.applyingLiquidGlassIfPossible()

@@ -13,7 +13,7 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripeUICore
 
-// @iOS18
+// @iOS26
 final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
 
     override static func setUp() {

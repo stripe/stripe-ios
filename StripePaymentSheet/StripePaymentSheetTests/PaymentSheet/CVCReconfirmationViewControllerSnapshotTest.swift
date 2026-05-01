@@ -12,7 +12,7 @@ import StripeCoreTestUtils
 
 import XCTest
 
-// @iOS18
+// @iOS26
 final class CVCReconfirmationViewControllerSnapshotTest: STPSnapshotTestCase {
     func testCVCRecollectionScreen() {
         var configuration: PaymentSheet.Configuration = ._testValue_MostPermissive(isApplePayEnabled: false)

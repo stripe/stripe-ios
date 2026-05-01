@@ -14,7 +14,7 @@ import UIKit
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePaymentSheet
 
-// @iOS18
+// @iOS26
 class WalletHeaderViewSnapshotTests: STPSnapshotTestCase {
 
     func testApplePayButton() {
