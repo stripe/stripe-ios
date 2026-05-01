@@ -116,7 +116,6 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
-
     var opensCardScannerAutomatically: Bool {
         switch self {
         case .customerSheet(let customerSheetConfiguration):
