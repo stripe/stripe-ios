@@ -15,7 +15,11 @@ extension String.Localized {
         return String(
             format: STPLocalizedString(
                 "Continue with %@",
-                "A button title. The placeholder is a Stripe brand name and should not be translated."
+                """
+                A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
+                   The title of a screen where users are informed that they can sign-in-to Link.
+                   The placeholder is a Stripe brand name and should not be translated.
+                """
             ),
             brand.displayName
         )
