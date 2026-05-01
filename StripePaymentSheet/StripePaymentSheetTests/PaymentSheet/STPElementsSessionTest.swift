@@ -107,7 +107,7 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertNil(elementsSession.merchantLogoUrl)
 
         // invalid URL string
-        elementsSessionJson["merchant_logo_url"] = ""
+        elementsSessionJson["merchant_logo_url"] = "http://invalid-url:invalid-url"
         elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
         XCTAssertNil(elementsSession.merchantLogoUrl)
 
