@@ -504,6 +504,10 @@ extension PaymentSheet {
         /// The Link funding sources that should be disabled. Defaults to an empty set.
         @_spi(STP) public var disallowFundingSourceCreation: Set<String> = []
 
+        /// Debug-only override for the Link payment method types shown in native Link.
+        /// When unset, native Link uses its default supported types derived from server state.
+        @_spi(STP) public var supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil
+
         /// Whether missing billing details should be collected for existing Link payment methods.
         @_spi(CollectMissingLinkBillingDetailsPreview) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
 

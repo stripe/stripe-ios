@@ -7,7 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripePayments
-@_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 
 struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum UIStyle: String, PickerEnum {
@@ -422,6 +422,47 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum LinkFundingSources: String, PickerEnum {
+        static var enumName: String { "Link funding sources" }
+
+        case all
+        case card
+        case bank
+
+        var displayName: String {
+            switch self {
+            case .all:
+                return "All"
+            case .card:
+                return "Card"
+            case .bank:
+                return "Bank"
+            }
+        }
+
+        var requestValue: [String]? {
+            switch self {
+            case .all:
+                return nil
+            case .card:
+                return ["CARD"]
+            case .bank:
+                return ["BANK_ACCOUNT"]
+            }
+        }
+
+        var supportedPaymentMethodTypes: [LinkPaymentMethodType]? {
+            switch self {
+            case .all:
+                return nil
+            case .card:
+                return [.card]
+            case .bank:
+                return [.bankAccount]
+            }
+        }
+    }
+
     enum UserOverrideCountry: String, PickerEnum {
         static var enumName: String { "UserOverrideCountry (debug only)" }
 
@@ -753,6 +794,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var customEmail: String?
     var linkPassthroughMode: LinkPassthroughMode
     var linkEnabledMode: LinkEnabledMode
+    var linkFundingSources: LinkFundingSources
     var linkDisplay: LinkDisplay
     var linkBrand: LinkBrand
     var userOverrideCountry: UserOverrideCountry
@@ -825,6 +867,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             customEmail: nil,
             linkPassthroughMode: .passthrough,
             linkEnabledMode: .native,
+            linkFundingSources: .all,
             linkDisplay: .automatic,
             linkBrand: .link,
             userOverrideCountry: .off,

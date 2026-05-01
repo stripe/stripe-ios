@@ -158,12 +158,14 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 confirmHandler(result)
             }
         case .link:
+            let supportedPaymentMethodTypes = flowController.configuration.link.supportedPaymentMethodTypes ?? LinkPaymentMethodType.allCases
             let linkController = PayWithNativeLinkController(
                 mode: .paymentMethodSelection,
                 intent: flowController.intent,
                 elementsSession: flowController.elementsSession,
                 configuration: flowController.configuration,
-                analyticsHelper: flowController.analyticsHelper
+                analyticsHelper: flowController.analyticsHelper,
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes
             )
             linkController.presentForPaymentMethodSelection(
                 from: WindowAuthenticationContext().authenticationPresentingViewController(),
