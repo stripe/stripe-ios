@@ -52,8 +52,6 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         if view.hasAmbiguousLayout {
             XCTFail("Snapshot test failed: \(view.debugDescription) has ambiguous layout. \nHorizontal: \(view.constraintsAffectingLayout(for: .horizontal)) \nVertical: \(view.constraintsAffectingLayout(for: .vertical))", file: file, line: line)
         }
-        // Allow async-rendering views (e.g. PKPaymentButton) to finish loading
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
         FBSnapshotVerifyView(
             view,
             identifier: identifier,

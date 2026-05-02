@@ -637,7 +637,7 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         line: UInt = #line
     ) {
         // Allow async-rendering views (e.g. PKPaymentButton) to finish loading
-        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.1))
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.5))
         FBSnapshotVerifyView(
             view,
             identifier: isLiquidGlassMode ? (identifier.map { "\($0)_LiquidGlass" } ?? "LiquidGlass") : identifier,
