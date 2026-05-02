@@ -15,10 +15,6 @@
       {
         "key": "STP_LIQUID_GLASS_MODE",
         "value": "1"
-      },
-      {
-        "key": "STP_RECORD_SNAPSHOTS",
-        "value": "1"
       }
     ],
     "targetForVariableExpansion": {
