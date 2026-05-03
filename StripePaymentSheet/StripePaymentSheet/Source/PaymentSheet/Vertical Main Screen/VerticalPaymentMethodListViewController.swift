@@ -13,6 +13,12 @@ import UIKit
 // MARK: - VerticalPaymentMethodListViewController
 /// A simple container VC for the VerticalPaymentMethodListView, which displays payment options in a vertical list.
 class VerticalPaymentMethodListViewController: UIViewController {
+    // Temporary prototype/test-only values for forcing the BNPL row variant in vertical mode.
+    // Remove all of this prototype wiring once PMME-backed row data is wired through the real integration path.
+    private static let forcePrototypeBNPLStyleForAllRows = true
+    private static let forcedBNPLLearnMoreText = "Learn more"
+    private static let forcedBNPLInfoURL = URL(string: "https://www.lego.com")!
+
     /// Returns the number of row buttons in the vertical list
     var rowCount: Int {
         return rowButtons.count
@@ -106,9 +112,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 }
             }()
 
-            let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
+            let savedPaymentMethodButton = makeSavedPaymentMethodRowButton(
                 paymentMethod: firstSavedPaymentMethod,
-                appearance: appearance,
                 accessoryView: accessoryButton
             ) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
@@ -129,7 +134,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         let applePay: RowButton? = {
             guard shouldShowApplePay else { return nil }
             let selection = RowButtonType.applePay
-            let rowButton = RowButton.makeForApplePay(appearance: appearance) { [weak self] in
+            let rowButton = makeApplePayRowButton { [weak self] in
                 self?.didTap(rowButton: $0, selection: .applePay)
             }
             if initialSelection == selection {
@@ -141,7 +146,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         let link: RowButton? = {
             guard shouldShowLink else { return nil }
             let selection = RowButtonType.link
-            let rowButton = RowButton.makeForLink(appearance: appearance) { [weak self] in
+            let rowButton = makeLinkRowButton { [weak self] in
                 self?.didTap(rowButton: $0, selection: .link)
             }
             if initialSelection == selection {
@@ -156,12 +161,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
         let paymentMethodTypes = paymentMethodTypes
         for paymentMethodType in paymentMethodTypes {
             let selection = RowButtonType.new(paymentMethodType: paymentMethodType)
-            let rowButton = RowButton.makeForPaymentMethodType(
+            let rowButton = makeRowButton(
                 paymentMethodType: paymentMethodType,
-                currency: currency,
-                hasSavedCard: savedPaymentMethods.contains { $0.type == .card },
-                promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
-                appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
                 shouldAnimateOnPress: delegate?.shouldSelectPaymentMethod(selection) == false
             ) { [weak self] in
@@ -218,6 +219,9 @@ class VerticalPaymentMethodListViewController: UIViewController {
     }
 
     private func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?) {
+        guard !Self.forcePrototypeBNPLStyleForAllRows else {
+            return
+        }
         guard let linkRowButton else {
             return
         }
@@ -230,7 +234,10 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
     func didTap(rowButton: RowButton, selection: RowButtonType) {
         guard let delegate else { return }
-        let shouldSelect = delegate.shouldSelectPaymentMethod(selection)
+        let isRetappingCurrentlySelectedRow = currentSelection == selection && rowButton.isSelected
+        // Preserve the existing selected state on repeated taps so BNPL rows don't replay
+        // their expand animation just because the same row was tapped again.
+        let shouldSelect = delegate.shouldSelectPaymentMethod(selection) && !isRetappingCurrentlySelectedRow
         if shouldSelect {
             // Deselect previous row
             rowButtons.forEach {
@@ -255,6 +262,206 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
         self.incentive = incentive
         self.refreshContent()
+    }
+
+    private func makeRowButton(
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        shouldAnimateOnPress: Bool,
+        didTap: @escaping RowButton.DidTapClosure
+    ) -> RowButton {
+        if let rowButton = makePrototypeBNPLRowButton(
+            type: .new(paymentMethodType: paymentMethodType),
+            paymentMethodType: paymentMethodType,
+            text: paymentMethodButtonText(for: paymentMethodType),
+            accessoryView: nil,
+            badgeText: nil,
+            promoBadge: makePromoBadge(for: paymentMethodType),
+            shouldAnimateOnPress: shouldAnimateOnPress,
+            didTap: didTap
+        ) {
+            return rowButton
+        }
+
+        return RowButton.makeForPaymentMethodType(
+            paymentMethodType: paymentMethodType,
+            currency: currency,
+            hasSavedCard: savedPaymentMethods.contains { $0.type == .card },
+            promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
+            appearance: appearance,
+            shouldAnimateOnPress: shouldAnimateOnPress,
+            didTap: didTap
+        )
+    }
+
+    // Temporary prototype/test-only helper.
+    // Remove this once saved rows can receive real PMME-backed row content through the production path.
+    private func makeSavedPaymentMethodRowButton(
+        paymentMethod: STPPaymentMethod,
+        accessoryView: UIView?,
+        didTap: @escaping RowButton.DidTapClosure
+    ) -> RowButton {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
+        let savedPaymentMethodRowImage = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle)
+        imageView.image = savedPaymentMethodRowImage
+
+        let text = paymentMethod.isLinkPassthroughMode
+            ? STPPaymentMethodType.link.displayName
+            : paymentMethod.paymentSheetLabel
+
+        if let rowButton = makePrototypeBNPLRowButton(
+            type: .saved(paymentMethod: paymentMethod),
+            paymentMethodType: .stripe(paymentMethod.type),
+            imageView: imageView,
+            text: text,
+            accessoryView: accessoryView,
+            badgeText: nil,
+            promoBadge: nil,
+            shouldAnimateOnPress: false,
+            didTap: didTap
+        ) {
+            return rowButton
+        }
+
+        return RowButton.makeForSavedPaymentMethod(
+            paymentMethod: paymentMethod,
+            appearance: appearance,
+            accessoryView: accessoryView,
+            didTap: didTap
+        )
+    }
+
+    // Temporary prototype/test-only helper.
+    // Remove this once wallet rows can receive real PMME-backed row content through the production path.
+    private func makeApplePayRowButton(didTap: @escaping RowButton.DidTapClosure) -> RowButton {
+        let imageView = UIImageView(image: Image.apple_pay_mark.makeImage())
+        imageView.contentMode = .scaleAspectFit
+
+        if let rowButton = makePrototypeBNPLRowButton(
+            type: .applePay,
+            paymentMethodType: nil,
+            imageView: imageView,
+            text: "Apple Pay",
+            accessoryView: nil,
+            badgeText: nil,
+            promoBadge: nil,
+            shouldAnimateOnPress: false,
+            didTap: didTap
+        ) {
+            return rowButton
+        }
+
+        return RowButton.makeForApplePay(appearance: appearance, didTap: didTap)
+    }
+
+    // Temporary prototype/test-only helper.
+    // Remove this once wallet rows can receive real PMME-backed row content through the production path.
+    private func makeLinkRowButton(didTap: @escaping RowButton.DidTapClosure) -> RowButton {
+        let imageView = UIImageView(image: Image.link_icon.makeImage())
+        imageView.contentMode = .scaleAspectFit
+
+        if let rowButton = makePrototypeBNPLRowButton(
+            type: .link,
+            paymentMethodType: nil,
+            imageView: imageView,
+            text: STPPaymentMethodType.link.displayName,
+            accessoryView: nil,
+            badgeText: nil,
+            promoBadge: nil,
+            shouldAnimateOnPress: false,
+            didTap: didTap
+        ) {
+            return rowButton
+        }
+
+        return RowButton.makeForLink(appearance: appearance, didTap: didTap)
+    }
+
+    private func paymentMethodButtonText(for paymentMethodType: PaymentSheet.PaymentMethodType) -> String {
+        if savedPaymentMethods.contains(where: { $0.type == .card }) && paymentMethodType == .stripe(.card) {
+            return .Localized.new_card
+        }
+        return paymentMethodType.displayName
+    }
+
+    private func makePromoBadge(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromoBadgeView? {
+        guard let promoText = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText else {
+            return nil
+        }
+        return PromoBadgeView(
+            appearance: appearance,
+            cornerRadius: nil,
+            tinyMode: false,
+            text: promoText
+        )
+    }
+
+    // Temporary prototype/test-only hook to force the BNPL row variant from a higher level than RowButton.
+    // Remove this entire helper once PMME-backed row data is plumbed through the real production path.
+    private func makePrototypeBNPLRowButton(
+        type: RowButtonType,
+        paymentMethodType: PaymentSheet.PaymentMethodType?,
+        imageView: UIImageView? = nil,
+        text: String,
+        accessoryView: UIView?,
+        badgeText: String?,
+        promoBadge: PromoBadgeView?,
+        shouldAnimateOnPress: Bool,
+        didTap: @escaping RowButton.DidTapClosure
+    ) -> RowButton? {
+        guard Self.forcePrototypeBNPLStyleForAllRows else {
+            return nil
+        }
+
+        let imageView = imageView ?? {
+            guard let paymentMethodType else {
+                return UIImageView()
+            }
+            let imageView = PaymentMethodTypeImageView(
+                paymentMethodType: paymentMethodType,
+                contrastMatchingColor: appearance.colors.componentText,
+                currency: currency,
+                iconStyle: appearance.iconStyle
+            )
+            imageView.contentMode = .scaleAspectFit
+            return imageView
+        }()
+
+        return RowButtonFloating(
+            appearance: appearance,
+            type: type,
+            imageView: imageView,
+            text: text,
+            bnplPromoText: forcedBNPLPromoText(for: paymentMethodType),
+            bnplLearnMoreText: Self.forcedBNPLLearnMoreText,
+            bnplInfoUrl: Self.forcedBNPLInfoURL,
+            badgeText: badgeText,
+            promoBadge: promoBadge,
+            accessoryView: accessoryView,
+            shouldAnimateOnPress: shouldAnimateOnPress,
+            didTap: didTap
+        )
+    }
+
+    // Temporary prototype/test-only copy source used by the forced BNPL row variant.
+    // Remove this once real PMME copy is passed down through the production path.
+    private func forcedBNPLPromoText(for paymentMethodType: PaymentSheet.PaymentMethodType?) -> String {
+        switch paymentMethodType {
+        case .stripe(.klarna)?:
+            return String.Localized.buy_now_or_pay_later_with_klarna
+        case .stripe(.afterpayClearpay)?:
+            if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
+                return String.Localized.buy_now_or_pay_later_with_clearpay
+            } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+                return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
+            } else {
+                return String.Localized.buy_now_or_pay_later_with_afterpay
+            }
+        case .stripe(.affirm)?:
+            return String.Localized.pay_over_time_with_affirm
+        default:
+            return "Prototype BNPL messaging"
+        }
     }
 
     static func makeSectionLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
