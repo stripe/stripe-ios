@@ -50,7 +50,11 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
 
     override func setUp() {
         super.setUp()
-        DownloadManager.sharedManager.resetCache()
+        let expectation = expectation(description: "Load specs")
+        FormSpecProvider.shared.load { _ in
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
     }
 
     func testNoSavedPM_noApplePayLink() {
