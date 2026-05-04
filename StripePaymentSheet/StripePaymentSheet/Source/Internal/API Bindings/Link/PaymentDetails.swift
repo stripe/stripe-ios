@@ -106,7 +106,7 @@ extension ConsumerPaymentDetails {
         }
 
         switch details {
-        case .card:
+        case .card, .unparsable:
             // If the merchant is filtering, only allow cards with a billing country
             if let country = billingAddress?.countryCode {
                 return allowedCountries.contains(country)
@@ -116,9 +116,6 @@ extension ConsumerPaymentDetails {
         case .bankAccount:
             // These are US bank accounts, so only check for US country code
             return allowedCountries.contains("US")
-        case .unparsable:
-            // Unknown types don't have country info; allow them if display metadata is present.
-            return display != nil
         }
     }
 

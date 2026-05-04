@@ -137,4 +137,59 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
         XCTAssertNil(details.display?.sublabel)
         XCTAssertNil(details.display?.icon)
     }
+
+    func test_unknownTypeWithBillingCountryInAllowedCountriesIsSupported() throws {
+        let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: ["CRYPTO"])
+        let linkAccount = LinkStubs.account()
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
+
+        let details = ConsumerPaymentDetails(
+            stripeID: "csmrpd_test_country_match",
+            details: .unparsable(rawValue: "CRYPTO"),
+            billingAddress: BillingAddress(countryCode: "US"),
+            billingEmailAddress: nil,
+            nickname: nil,
+            display: .init(label: "Stablecoin", sublabel: "Wallet •••2", icon: nil),
+            isDefault: false
+        )
+
+        XCTAssertTrue(
+            details.isSupported(
+                linkAccount: linkAccount,
+                elementsSession: elementsSession,
+                configuration: configuration,
+                cardBrandFilter: .default,
+                cardFundingFilter: .default
+            )
+        )
+    }
+
+    func test_unknownTypeWithoutBillingCountryIsNotSupportedWhenAllowedCountriesAreFiltered() throws {
+        let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: ["CRYPTO"])
+        let linkAccount = LinkStubs.account()
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
+
+        let details = ConsumerPaymentDetails(
+            stripeID: "csmrpd_test_missing_country",
+            details: .unparsable(rawValue: "CRYPTO"),
+            billingAddress: nil,
+            billingEmailAddress: nil,
+            nickname: nil,
+            display: .init(label: "Stablecoin", sublabel: "Wallet •••2", icon: nil),
+            isDefault: false
+        )
+
+        XCTAssertFalse(
+            details.isSupported(
+                linkAccount: linkAccount,
+                elementsSession: elementsSession,
+                configuration: configuration,
+                cardBrandFilter: .default,
+                cardFundingFilter: .default
+            )
+        )
+    }
+
 }
