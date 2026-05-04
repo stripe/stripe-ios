@@ -137,7 +137,7 @@ import UIKit
             paymentMethodPreview = .init(
                 paymentMethodType: type,
                 icon: iconForPaymentDetails(selectedPaymentDetails),
-                label: STPPaymentMethodType.link.displayName,
+                label: configuration.resolvedLinkBrand(elementsSession: elementsSession).displayName,
                 sublabel: selectedPaymentDetails.linkPaymentDetailsFormattedString
             )
         }

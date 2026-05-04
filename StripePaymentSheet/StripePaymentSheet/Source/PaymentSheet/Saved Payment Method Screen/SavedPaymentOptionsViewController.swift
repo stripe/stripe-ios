@@ -100,6 +100,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let customerID: String?
         let showApplePay: Bool
         let showLink: Bool
+        let linkBrand: LinkBrand
         let removeSavedPaymentMethodMessage: String?
         let merchantDisplayName: String
         let isCVCRecollectionEnabled: Bool
@@ -535,7 +536,8 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                           allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                           needsVerticalPaddingForBadge: hasDefault,
                           showDefaultPMBadge: isDefaultPaymentMethod(savedPaymentMethodId: viewModel.savedPaymentMethod?.stripeId),
-                          cardArtEnabled: appearance.cardArtEnabled)
+                          cardArtEnabled: appearance.cardArtEnabled,
+                          linkBrand: configuration.linkBrand)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance

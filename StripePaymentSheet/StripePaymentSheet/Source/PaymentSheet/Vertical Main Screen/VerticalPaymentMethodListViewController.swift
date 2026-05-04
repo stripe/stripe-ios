@@ -115,7 +115,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
             let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
                 paymentMethod: firstSavedPaymentMethod,
                 appearance: appearance,
-                accessoryView: accessoryButton
+                accessoryView: accessoryButton,
+                linkBrand: linkBrand
             ) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }

@@ -552,7 +552,7 @@ extension RowButton {
         return button
     }
 
-    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, linkBrand: LinkBrand = .link, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         let savedPaymentMethodRowImage = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle)
@@ -565,8 +565,8 @@ extension RowButton {
             imageView.image = savedPaymentMethodRowImage
         }
         let text = paymentMethod.isLinkPassthroughMode
-            ? STPPaymentMethodType.link.displayName
-            : paymentMethod.paymentSheetLabel
+            ? linkBrand.displayName
+            : paymentMethod.paymentSheetLabel(brand: linkBrand)
 
         let button = RowButton.create(
             appearance: appearance,
@@ -580,6 +580,12 @@ extension RowButton {
             didTap: didTap
         )
         button.accessibilityHelperView.accessibilityLabel = {
+            if paymentMethod.isLinkPassthroughMode {
+                if let badgeText {
+                    return "\(linkBrand.displayName), \(badgeText)"
+                }
+                return linkBrand.displayName
+            }
             if let badgeText {
                 if let accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel {
                     return "\(accessibilityLabel), \(badgeText)"

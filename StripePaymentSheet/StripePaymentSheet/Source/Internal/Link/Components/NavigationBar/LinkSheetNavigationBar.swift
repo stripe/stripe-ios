@@ -15,12 +15,14 @@ import UIKit
 /// For internal SDK use only
 @objc(STP_Internal_LinkSheetNavigationBar)
 class LinkSheetNavigationBar: SheetNavigationBar {
-    private let logoView: UIImageView = {
+    private let brand: LinkBrand
+
+    private lazy var logoView: UIImageView = {
         let imageView = UIImageView(image: Image.link_logo.makeImage(template: false))
         imageView.tintColor = .linkIconBrand
         imageView.isAccessibilityElement = true
         imageView.accessibilityTraits = .header
-        imageView.accessibilityLabel = STPPaymentMethodType.link.displayName
+        imageView.accessibilityLabel = brand.displayName
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -56,7 +58,8 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         return super.leftmostElement
     }
 
-    override init(isTestMode: Bool, appearance: PaymentSheet.Appearance, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
+    init(isTestMode: Bool, appearance: PaymentSheet.Appearance, brand: LinkBrand = .link, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
+        self.brand = brand
         super.init(
             isTestMode: isTestMode,
             appearance: appearance,

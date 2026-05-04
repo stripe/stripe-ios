@@ -483,6 +483,7 @@ class EmbeddedPaymentMethodsView: UIView {
             appearance: appearance,
             accessoryView: accessoryButton,
             isEmbedded: true,
+            linkBrand: linkBrand,
             didTap: { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(
                     .stripeId(savedPaymentMethod.stripeId),

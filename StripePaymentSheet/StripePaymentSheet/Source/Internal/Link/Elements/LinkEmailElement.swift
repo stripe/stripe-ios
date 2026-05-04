@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -89,11 +90,11 @@ class LinkEmailElement: Element {
         }
     }
 
-    public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsAppearance = .default) {
+    public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsAppearance = .default, brand: LinkBrand = .link) {
         self.theme = theme
 
         if showLogo {
-            self.infoView = LinkMoreInfoView(theme: theme)
+            self.infoView = LinkMoreInfoView(theme: theme, brand: brand)
         }
         emailAddressElement = TextFieldElement.makeEmail(defaultValue: defaultValue,
                                                          isOptional: isOptional,

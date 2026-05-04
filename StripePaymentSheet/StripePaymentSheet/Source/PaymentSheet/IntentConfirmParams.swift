@@ -46,6 +46,10 @@ final class IntentConfirmParams {
     }
 
     var expandedPaymentSheetLabel: String {
+        return expandedPaymentSheetLabel(brand: .link)
+    }
+
+    func expandedPaymentSheetLabel(brand: LinkBrand) -> String {
         switch paymentMethodType {
         case .stripe(let stpPaymentMethodType):
             switch stpPaymentMethodType {
@@ -62,9 +66,9 @@ final class IntentConfirmParams {
         case .external:
             return paymentSheetLabel
         case .instantDebits:
-            return STPPaymentMethodType.link.displayName
+            return brand.displayName
         case .linkCardBrand:
-            return STPPaymentMethodType.link.displayName
+            return brand.displayName
         }
     }
 

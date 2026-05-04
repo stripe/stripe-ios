@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
@@ -44,6 +45,28 @@ extension PaymentSheet {
 // MARK: - Helpers
 
 extension PaymentSheet.LinkConfirmOption {
+    func paymentSheetLabel(brand: LinkBrand) -> String {
+        switch self {
+        case .wallet, .withPaymentDetails:
+            return brand.displayName
+        case .signUp(_, _, _, _, let intentConfirmParams):
+            return intentConfirmParams.paymentMethodParams.paymentSheetLabel
+        case .withPaymentMethod(let paymentMethod):
+            return paymentMethod.paymentSheetLabel(brand: brand)
+        }
+    }
+
+    func paymentSheetSubLabel(brand: LinkBrand) -> String? {
+        let sublabel = paymentSheetSubLabel
+        switch sublabel {
+        case nil:
+            return nil
+        case brand.displayName, STPPaymentMethodType.link.displayName:
+            return nil
+        default:
+            return sublabel
+        }
+    }
 
     var account: PaymentSheetLinkAccount? {
         switch self {

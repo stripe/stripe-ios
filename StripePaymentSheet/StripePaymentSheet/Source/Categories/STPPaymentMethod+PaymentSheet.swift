@@ -13,6 +13,10 @@ import Foundation
 
 extension STPPaymentMethod {
     var paymentSheetLabel: String {
+        return paymentSheetLabel(brand: .link)
+    }
+
+    func paymentSheetLabel(brand: LinkBrand) -> String {
         switch type {
         case .card:
             // Link payment details here are for Link card brand
@@ -24,7 +28,7 @@ extension STPPaymentMethod {
             // The missing space is not an oversight, but on purpose
             return "••••\(usBankAccount?.last4 ?? "")"
         case .link:
-            return linkPaymentDetails?.label ?? type.displayName
+            return linkPaymentDetails?.label ?? brand.displayName
         default:
             return type.displayName
         }
@@ -61,18 +65,26 @@ extension STPPaymentMethod {
     }
 
     func paymentOptionLabel(confirmParams: IntentConfirmParams?) -> String {
+        return paymentOptionLabel(confirmParams: confirmParams, brand: .link)
+    }
+
+    func paymentOptionLabel(confirmParams: IntentConfirmParams?, brand: LinkBrand) -> String {
         if let instantDebitsLinkedBank = confirmParams?.instantDebitsLinkedBank {
             return "••••\(instantDebitsLinkedBank.last4 ?? "")"
         } else {
-            return paymentSheetLabel
+            return paymentSheetLabel(brand: brand)
         }
     }
 
     var expandedPaymentSheetLabel: String {
+        return expandedPaymentSheetLabel(brand: .link)
+    }
+
+    func expandedPaymentSheetLabel(brand: LinkBrand) -> String {
         switch type {
         case .card:
             if isLinkPaymentMethod || isLinkPassthroughMode {
-                return STPPaymentMethodType.link.displayName
+                return brand.displayName
             } else if let card {
                 return STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand) ?? STPPaymentMethodType.card.displayName
             } else {
@@ -80,21 +92,27 @@ extension STPPaymentMethod {
             }
         case .USBankAccount:
             if isLinkPassthroughMode {
-                return STPPaymentMethodType.link.displayName
+                return brand.displayName
             } else {
                 return usBankAccount?.bankName ?? type.displayName
             }
+        case .link:
+            return brand.displayName
         default:
             return type.displayName
         }
     }
 
     var paymentSheetSublabel: String? {
+        return paymentSheetSublabel(brand: .link)
+    }
+
+    func paymentSheetSublabel(brand: LinkBrand) -> String? {
         switch type {
         case .card:
-            return linkPaymentDetailsFormattedString ?? paymentSheetLabel
+            return linkPaymentDetailsFormattedString ?? paymentSheetLabel(brand: brand)
         case .USBankAccount:
-            return paymentSheetLabel
+            return paymentSheetLabel(brand: brand)
         case .link:
             return linkPaymentDetailsFormattedString
         default:
