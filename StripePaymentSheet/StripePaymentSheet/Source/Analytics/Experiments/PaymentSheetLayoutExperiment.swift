@@ -46,12 +46,13 @@ struct PaymentSheetLayoutExperiment {
     }
 
     static func createExperiments(
-        loadResult: PaymentSheetLoader.LoadResult,
+        elementsSession: STPElementsSession,
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        savedPaymentMethods: [STPPaymentMethod],
         configuration: PaymentElementConfiguration,
-        analyticsHelper: PaymentSheetAnalyticsHelper
+        integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
     ) -> [LoggableExperiment] {
-        let elementsSession = loadResult.elementsSession
-        let displayedPaymentMethods = loadResult.paymentMethodTypes.map { $0.identifier }
+        let displayedPaymentMethods = paymentMethodTypes.map { $0.identifier }
         guard let arbId = elementsSession.experimentsData?.arbId else {
             return []
         }
@@ -69,23 +70,37 @@ struct PaymentSheetLayoutExperiment {
         return [
             OCSMobileHorizontalModeAA(
                 arbId: arbId,
-                elementsSession: loadResult.elementsSession,
+                elementsSession: elementsSession,
                 displayedPaymentMethodTypes: displayedPaymentMethods,
                 walletPaymentMethodTypes: walletTypes,
-                hasSPM: !loadResult.savedPaymentMethods.isEmpty,
-                integrationShape: analyticsHelper.integrationShape
+                hasSPM: !savedPaymentMethods.isEmpty,
+                integrationShape: integrationShape
             ),
             OCSMobileHorizontalMode(
                 arbId: arbId,
-                elementsSession: loadResult.elementsSession,
+                elementsSession: elementsSession,
                 displayedPaymentMethodTypes: displayedPaymentMethods,
                 walletPaymentMethodTypes: walletTypes,
-                hasSPM: !loadResult.savedPaymentMethods.isEmpty,
-                integrationShape: analyticsHelper.integrationShape
+                hasSPM: !savedPaymentMethods.isEmpty,
+                integrationShape: integrationShape
             ),
         ].filter { experiment in
             elementsSession.experimentsData?.experimentAssignments[experiment.name] != nil
         }
+    }
+
+    static func createExperiments(
+        loadResult: PaymentSheetLoader.LoadResult,
+        configuration: PaymentElementConfiguration,
+        integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
+    ) -> [LoggableExperiment] {
+        return createExperiments(
+            elementsSession: loadResult.elementsSession,
+            paymentMethodTypes: loadResult.paymentMethodTypes,
+            savedPaymentMethods: loadResult.savedPaymentMethods,
+            configuration: configuration,
+            integrationShape: integrationShape
+        )
     }
 }
 

@@ -640,7 +640,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         }
 
-        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .vertical)
+        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods)
     }
 
     // MARK: - PaymentSheetViewControllerProtocol
@@ -1001,6 +1001,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             previousCustomerInput: previousCustomerInput,
             formCache: formCache,
             configuration: configuration,
+            resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
             isLinkUI: false,
@@ -1020,6 +1021,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             elementsSession: elementsSession,
             configuration: .paymentElement(configuration),
             paymentMethod: paymentMethodType,
+            resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
             previousCustomerInput: nil,
             linkAccount: LinkAccountContext.shared.account,
             accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),

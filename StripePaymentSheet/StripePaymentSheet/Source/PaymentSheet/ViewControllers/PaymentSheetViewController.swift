@@ -142,6 +142,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     required init(
         configuration: PaymentSheet.Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
+        resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: PaymentSheetViewControllerDelegate,
         previousPaymentOption: PaymentOption? = nil
@@ -196,6 +197,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             intent: loadResult.intent,
             elementsSession: loadResult.elementsSession,
             configuration: configuration,
+            resolvedPaymentMethodLayout: resolvedPaymentMethodLayout,
             previousCustomerInput: previousConfirmParams,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,

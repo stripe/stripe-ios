@@ -79,7 +79,8 @@ class ShopPayECEPresenterTests: XCTestCase {
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: [],
-            paymentMethodTypes: []
+            paymentMethodTypes: [],
+            resolvedPaymentMethodLayout: .vertical
         )
         analyticsHelper = PaymentSheetAnalyticsHelper(
             integrationShape: .flowController,
@@ -645,7 +646,8 @@ class ShopPayECEPresenterTests: XCTestCase {
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: [],
-            paymentMethodTypes: []
+            paymentMethodTypes: [],
+            resolvedPaymentMethodLayout: .vertical
         )
         let successfulFlowController = PaymentSheet.FlowController(
             configuration: mockConfiguration,

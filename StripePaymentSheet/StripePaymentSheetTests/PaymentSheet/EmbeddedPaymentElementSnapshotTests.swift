@@ -110,7 +110,8 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
             intent: .deferredIntent(intentConfig: paymentIntentConfig),
             elementsSession: ._testValue(paymentMethodTypes: ["card", "us_bank_account", "afterpay_clearpay"]),
             savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount), .stripe(.afterpayClearpay)]
+            paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount), .stripe(.afterpayClearpay)],
+            resolvedPaymentMethodLayout: .vertical
         )
         let sut = EmbeddedPaymentElement(
             configuration: configuration,

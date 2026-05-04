@@ -227,7 +227,7 @@ class EmbeddedPaymentMethodsView: UIView {
         // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
         let visiblePaymentMethods: [String] = rowButtons.filter { !$0.type.isSaved }.compactMap { $0.type.analyticsIdentifier }
         let hiddenPaymentMethods: [String] = []
-        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .vertical)
+        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods)
     }
 
     private var previousHeight: CGFloat?

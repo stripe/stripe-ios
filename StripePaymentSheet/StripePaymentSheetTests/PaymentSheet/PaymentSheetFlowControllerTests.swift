@@ -299,7 +299,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         let elementsSession = STPElementsSession._testCardValue()
-        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)])
+        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)], resolvedPaymentMethodLayout: .vertical)
 
         let flowController = PaymentSheet.FlowController(
             configuration: configuration,

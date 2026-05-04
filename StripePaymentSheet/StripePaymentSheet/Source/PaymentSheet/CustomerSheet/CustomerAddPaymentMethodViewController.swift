@@ -243,6 +243,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         let formElement = PaymentSheetFormFactory(
             configuration: configuration,
             paymentMethod: type,
+            resolvedPaymentMethodLayout: .horizontal,
             previousCustomerInput: nil,
             addressSpecProvider: .shared,
             showLinkInlineCardSignup: false,

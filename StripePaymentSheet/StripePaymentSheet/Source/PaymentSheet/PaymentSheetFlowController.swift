@@ -317,8 +317,7 @@ extension PaymentSheet {
                 configuration: configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
-                walletButtonsViewState: self.walletButtonsViewState,
-                shouldLogExperimentExposure: false
+                walletButtonsViewState: self.walletButtonsViewState
             )
             self.viewController.flowControllerDelegate = self
             self.confirmationChallenge = confirmationChallenge
@@ -717,8 +716,7 @@ extension PaymentSheet {
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
                         walletButtonsViewState: walletButtonsViewState,
-                        previousPaymentOption: self.internalPaymentOption,
-                        shouldLogExperimentExposure: false
+                        previousPaymentOption: self.internalPaymentOption
                     )
                     self.viewController.flowControllerDelegate = self
                     self.confirmationChallenge = confirmationChallenge
@@ -745,15 +743,15 @@ extension PaymentSheet {
                 intent: viewController.loadResult.intent,
                 elementsSession: viewController.loadResult.elementsSession,
                 savedPaymentMethods: viewController.savedPaymentMethods, // Note: not using load result!
-                paymentMethodTypes: viewController.loadResult.paymentMethodTypes
+                paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
+                resolvedPaymentMethodLayout: viewController.loadResult.resolvedPaymentMethodLayout
             )
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
                 loadResult: updatedLoadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState,
-                previousPaymentOption: self.internalPaymentOption,
-                shouldLogExperimentExposure: false
+                previousPaymentOption: self.internalPaymentOption
             )
             self.viewController.flowControllerDelegate = self
             // Defer experiment exposure logging until next presentation
@@ -784,7 +782,7 @@ extension PaymentSheet {
             let experiments: [LoggableExperiment] = PaymentSheetLayoutExperiment.createExperiments(
                 loadResult: viewController.loadResult,
                 configuration: configuration,
-                analyticsHelper: analyticsHelper
+                integrationShape: analyticsHelper.integrationShape
             )
 
             experiments.forEach { experiment in
@@ -814,23 +812,15 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
-            previousPaymentOption: PaymentOption? = nil,
-            shouldLogExperimentExposure: Bool = true
+            previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
-            // Resolve automatic layout based on experiment
-            var configuration = configuration
-            let resolvedPaymentMethodLayout = configuration.resolveLayout(
-                loadResult: loadResult,
-                configuration: configuration,
-                analyticsHelper: analyticsHelper,
-                shouldLogExperimentExposure: shouldLogExperimentExposure
-            )
-            switch resolvedPaymentMethodLayout {
+            switch loadResult.resolvedPaymentMethodLayout {
             case .horizontal:
                 controller = PaymentSheetFlowControllerViewController(
                     configuration: configuration,
                     loadResult: loadResult,
+                    resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
                     analyticsHelper: analyticsHelper,
                     previousPaymentOption: previousPaymentOption
                 )

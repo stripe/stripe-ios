@@ -386,7 +386,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func testLogInitialDisplayedPaymentMethods() {
         let paymentSheetHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        paymentSheetHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: ["card", "paypal", "alma", "p24"], hiddenPaymentMethods: ["eps"], paymentMethodLayout: .vertical)
+        paymentSheetHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: ["card", "paypal", "alma", "p24"], hiddenPaymentMethods: ["eps"])
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_initial_displayed_payment_methods")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["visible_payment_methods"] as? [String], ["card", "paypal", "alma", "p24"])
         XCTAssertEqual(analyticsClient._testLogHistory.last!["hidden_payment_methods"] as? [String], ["eps"])

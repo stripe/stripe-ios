@@ -29,7 +29,8 @@ final class PaymentSheetReloadTests: XCTestCase {
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
             savedPaymentMethods: savedPaymentMethods,
-            paymentMethodTypes: [.stripe(.card)]
+            paymentMethodTypes: [.stripe(.card)],
+            resolvedPaymentMethodLayout: .vertical
         )
     }
 

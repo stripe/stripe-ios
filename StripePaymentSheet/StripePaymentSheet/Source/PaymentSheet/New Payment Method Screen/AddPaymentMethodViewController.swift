@@ -53,6 +53,7 @@ class AddPaymentMethodViewController: UIViewController {
     private let intent: Intent
     private let elementsSession: STPElementsSession
     private let configuration: PaymentElementConfiguration
+    private let resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let linkAppearance: LinkAppearance?
@@ -65,7 +66,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, analyticsHelper: analyticsHelper, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
+        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, resolvedPaymentMethodLayout: resolvedPaymentMethodLayout, headerView: nil, analyticsHelper: analyticsHelper, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
         previousCustomerInput = nil
         return pmFormVC
@@ -103,6 +104,7 @@ class AddPaymentMethodViewController: UIViewController {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         previousCustomerInput: IntentConfirmParams? = nil,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         formCache: PaymentMethodFormCache,
@@ -118,6 +120,7 @@ class AddPaymentMethodViewController: UIViewController {
         }
         stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         self.configuration = configuration
+        self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
         self.intent = intent
         self.elementsSession = elementsSession
         self.previousCustomerInput = previousCustomerInput
@@ -171,7 +174,7 @@ class AddPaymentMethodViewController: UIViewController {
         }
         // These LPMs are not visible without without scrolling in the horizontal carousel
         let hiddenPaymentMethods: [String] = paymentMethodTypes.compactMap { $0.identifier }.filter { !visiblePaymentMethods.contains($0) }
-        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .horizontal)
+        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods)
     }
 
     // MARK: - Private
@@ -190,6 +193,7 @@ class AddPaymentMethodViewController: UIViewController {
                 previousCustomerInput: previousCustomerInput,
                 formCache: formCache,
                 configuration: configuration,
+                resolvedPaymentMethodLayout: resolvedPaymentMethodLayout,
                 headerView: nil,
                 analyticsHelper: analyticsHelper,
                 isLinkUI: isLinkUI,

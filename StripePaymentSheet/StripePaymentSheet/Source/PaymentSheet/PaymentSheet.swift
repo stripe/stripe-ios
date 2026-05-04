@@ -292,18 +292,20 @@ public class PaymentSheet {
         previousPaymentOption: PaymentOption?,
         shouldLogExperimentExposure: Bool
     ) -> PaymentSheetViewControllerProtocol {
-        var configuration = self.configuration
-        let layout = configuration.resolveLayout(
-            loadResult: loadResult,
-            configuration: self.configuration,
-            analyticsHelper: self.analyticsHelper,
-            shouldLogExperimentExposure: shouldLogExperimentExposure
-        )
-        switch layout {
+        if shouldLogExperimentExposure, configuration.paymentMethodLayout == .automatic {
+            let experiments = PaymentSheetLayoutExperiment.createExperiments(
+                loadResult: loadResult,
+                configuration: configuration,
+                integrationShape: analyticsHelper.integrationShape
+            )
+            experiments.forEach { analyticsHelper.logExposure(experiment: $0) }
+        }
+        switch loadResult.resolvedPaymentMethodLayout {
         case .horizontal:
             let vc = PaymentSheetViewController(
                 configuration: configuration,
                 loadResult: loadResult,
+                resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
                 analyticsHelper: analyticsHelper,
                 delegate: self,
                 previousPaymentOption: previousPaymentOption
