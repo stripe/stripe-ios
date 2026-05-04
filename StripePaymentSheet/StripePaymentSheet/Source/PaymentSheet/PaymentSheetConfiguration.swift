@@ -249,13 +249,12 @@ extension PaymentSheet {
         /// When using WalletButtonsView, configures payment method visibility across available surfaces.
         @_spi(STP) public var walletButtonsVisibility: WalletButtonsVisibility = WalletButtonsVisibility()
 
-        /// Resolves `.automatic` to `.horizontal` or `.vertical` based on experiment.
+        /// Resolves `.automatic` to `.horizontal` or `.vertical`.
         /// For non-automatic layouts, returns self.
         mutating func resolveLayout(
             loadResult: PaymentSheetLoader.LoadResult,
             configuration: PaymentElementConfiguration,
-            analyticsHelper: PaymentSheetAnalyticsHelper,
-            shouldLogExperimentExposure: Bool = true
+            analyticsHelper: PaymentSheetAnalyticsHelper
         ) -> PaymentMethodLayout.ResolvedLayout {
             var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout
             switch paymentMethodLayout {
@@ -264,23 +263,8 @@ extension PaymentSheet {
             case .vertical:
                 resolvedPaymentMethodLayout = .vertical
             case .automatic:
-                // Default to vertical (control)
+                // Default to vertical. Will be updated with ship recommendation in a different PR.
                 resolvedPaymentMethodLayout = .vertical
-
-                let experiments: [LoggableExperiment] = PaymentSheetLayoutExperiment.createExperiments(
-                    loadResult: loadResult,
-                    configuration: configuration,
-                    analyticsHelper: analyticsHelper
-                )
-
-                experiments.forEach { experiment in
-                    // Log experiment exposure if needed
-                    if shouldLogExperimentExposure {
-                        analyticsHelper.logExposure(experiment: experiment)
-                    }
-                    // Return horizontal for treatment and vertical otherwise
-                    resolvedPaymentMethodLayout = experiment.group == .treatment ? .horizontal : .vertical
-                }
             }
             self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
             return resolvedPaymentMethodLayout
