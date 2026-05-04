@@ -249,7 +249,7 @@ extension PaymentSheet {
                 recommendedPaymentMethodTypes.append(.linkCardBrand)
             }
 
-            if let merchantPaymentMethodOrder = configuration.paymentMethodOrder?.map({ $0.lowercased() }) {
+            if let merchantPaymentMethodOrder = configuration.paymentMethodOrder {
                 // Order the payment methods according to the merchant's `paymentMethodOrder` configuration:
                 var reorderedPaymentMethodTypes = [PaymentMethodType]()
 
@@ -257,7 +257,7 @@ extension PaymentSheet {
                 for pmIdentifier in merchantPaymentMethodOrder {
                     guard
                         // Ignore the PM if it's not in allPaymentMethodTypes
-                        let index = recommendedPaymentMethodTypes.firstIndex(where: { $0.identifier == pmIdentifier }),
+                        let index = recommendedPaymentMethodTypes.firstIndex(where: { $0.identifier.caseInsensitiveCompare(pmIdentifier) == .orderedSame }),
                         let paymentMethod = recommendedPaymentMethodTypes.stp_boundSafeObject(at: index),
                         // Ignore duplicate PMs
                         !reorderedPaymentMethodTypes.contains(paymentMethod)
