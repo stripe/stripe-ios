@@ -14,7 +14,7 @@ import StripeCryptoOnramp
 struct ComplianceIdentifiersCollectionView: View {
     private struct IdentifierInputState: Hashable {
         let requirement: ComplianceIdentifierRequirement
-        var selectedType: String
+        var selectedType: ComplianceIdentifierType
         var value: String
     }
 
@@ -120,13 +120,13 @@ struct ComplianceIdentifiersCollectionView: View {
                     selection: input.selectedType
                 ) {
                     ForEach(identifierTypeOptions, id: \.self) { type in
-                        Text(type).tag(type)
+                        Text(type.displayName).tag(type)
                     }
                 }
                 .pickerStyle(.segmented)
             }
 
-            FormField("\(input.wrappedValue.selectedType) for \(requirement.regulation.rawValue)") {
+            FormField("\(input.wrappedValue.selectedType.displayName) for \(requirement.regulation.rawValue)") {
                 TextField("Enter identifier", text: input.value)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .autocapitalization(.allCharacters)
@@ -134,7 +134,7 @@ struct ComplianceIdentifiersCollectionView: View {
         }
     }
 
-    private func identifierTypeOptions(for requirement: ComplianceIdentifierRequirement) -> [String] {
+    private func identifierTypeOptions(for requirement: ComplianceIdentifierRequirement) -> [ComplianceIdentifierType] {
         let alternativeIdentifiers = alternatives
             .first { $0.originalMissingIdentifiers.contains(requirement.type) }?
             .alternativeMissingIdentifiers ?? []
@@ -187,12 +187,13 @@ struct ComplianceIdentifiersCollectionView: View {
     }
 
     private func errorMessage(for result: SubmitIdentifiersResult) -> String {
-        let identifiers = result.identifiers.map { "\($0.type) (\($0.regulation.rawValue))" }
+        let identifiers = result.identifiers.map { "\($0.type.displayName) (\($0.regulation.rawValue))" }
+        let invalidIdentifiers = result.invalidIdentifiers.map(\.displayName)
 
         return """
         Some identifiers need to be corrected.
         Missing identifiers: \(identifiers)
-        Invalid identifiers: \(result.invalidIdentifiers)
+        Invalid identifiers: \(invalidIdentifiers)
         """
     }
 }
@@ -210,13 +211,13 @@ private extension Array where Element: Hashable {
             coordinator: coordinator,
             requirements: ComplianceIdentifierRequirements(
                 identifiers: [
-                    .init(type: "de_stn", regulation: .euCARF),
-                    .init(type: "mt_nic", regulation: .euMICA),
+                    .init(type: .deSTN, regulation: .euCARF),
+                    .init(type: .mtNIC, regulation: .euMICA),
                 ],
                 alternatives: [
                     .init(
-                        originalMissingIdentifiers: ["mt_nic"],
-                        alternativeMissingIdentifiers: ["mt_pp"]
+                        originalMissingIdentifiers: [.mtNIC],
+                        alternativeMissingIdentifiers: [.mtPP]
                     ),
                 ]
             ),

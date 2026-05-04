@@ -97,8 +97,8 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         // /v1/crypto/internal/eu_identifiers
         static let submitIdentifiersAPIPath = "/v1/crypto/internal/eu_identifiers"
         static let validIdentifiers = [
-            ComplianceIdentifier(type: "ee_ik", value: "MICA123"),
-            ComplianceIdentifier(type: "gr_afm", value: "TIN123"),
+            ComplianceIdentifier(type: .eeIK, value: "MICA123"),
+            ComplianceIdentifier(type: .grAFM, value: "TIN123"),
         ]
 
         // /v1/crypto/internal/crs_carf_declaration
@@ -473,13 +473,15 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
         let response = try await apiClient.retrieveMissingIdentifiers(linkAccountInfo: Constant.validLinkAccountInfo)
         XCTAssertEqual(response.identifiers.count, 2)
-        XCTAssertEqual(response.identifiers[0].type, "ee_ik")
+        XCTAssertEqual(response.identifiers[0].type, .eeIK)
+        XCTAssertEqual(response.identifiers[0].type.displayName, "Isikukood (PIC) - Estonia")
         XCTAssertEqual(response.identifiers[0].regulation, .euMICA)
-        XCTAssertEqual(response.identifiers[1].type, "gr_afm")
+        XCTAssertEqual(response.identifiers[1].type, .grAFM)
+        XCTAssertEqual(response.identifiers[1].type.displayName, "Tax Identification Number (ΑΦΜ) - Greece")
         XCTAssertEqual(response.identifiers[1].regulation, .euCARF)
         XCTAssertEqual(response.alternatives.count, 1)
-        XCTAssertEqual(response.alternatives[0].originalMissingIdentifiers, ["mt_nic"])
-        XCTAssertEqual(response.alternatives[0].alternativeMissingIdentifiers, ["mt_pp"])
+        XCTAssertEqual(response.alternatives[0].originalMissingIdentifiers, [.mtNIC])
+        XCTAssertEqual(response.alternatives[0].alternativeMissingIdentifiers, [.mtPP])
     }
 
     func testRetrieveMissingIdentifiersThrowsWithInvalidArguments() async {
@@ -544,11 +546,11 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         )
 
         XCTAssertFalse(response.valid)
-        XCTAssertEqual(response.identifiers.map(\.type), ["mt_nic"])
+        XCTAssertEqual(response.identifiers.map(\.type), [.mtNIC])
         XCTAssertEqual(response.identifiers.map(\.regulation), [.euMICA])
-        XCTAssertEqual(response.alternatives[0].originalMissingIdentifiers, ["mt_nic"])
-        XCTAssertEqual(response.alternatives[0].alternativeMissingIdentifiers, ["mt_pp"])
-        XCTAssertEqual(response.invalidIdentifiers, ["mt_pp"])
+        XCTAssertEqual(response.alternatives[0].originalMissingIdentifiers, [.mtNIC])
+        XCTAssertEqual(response.alternatives[0].alternativeMissingIdentifiers, [.mtPP])
+        XCTAssertEqual(response.invalidIdentifiers, [.mtPP])
     }
 
     func testSubmitIdentifiersSuccess() async throws {
