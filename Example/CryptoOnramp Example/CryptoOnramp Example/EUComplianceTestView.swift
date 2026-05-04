@@ -112,7 +112,7 @@ struct EUComplianceTestView: View {
             }
             responseText = """
             retrieveMissingIdentifiers:
-              identifiers: \(response.identifiers.map { "\($0.type.displayName) (\($0.regulation.rawValue))" })
+              identifiers: \(response.identifiers.map { "\($0.type.displayName) (\($0.regulation.displayName))" })
               alternatives: \(response.alternatives)
             """
         }
@@ -125,7 +125,7 @@ struct EUComplianceTestView: View {
             responseText = """
             submitIdentifiers:
               valid: \(response.valid)
-              identifiers: \(response.identifiers.map { "\($0.type.displayName) (\($0.regulation.rawValue))" })
+              identifiers: \(response.identifiers.map { "\($0.type.displayName) (\($0.regulation.displayName))" })
               alternatives: \(response.alternatives)
               invalid_identifiers: \(response.invalidIdentifiers.map(\.displayName))
             """

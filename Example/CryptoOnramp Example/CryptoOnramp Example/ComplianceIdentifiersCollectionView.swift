@@ -116,22 +116,30 @@ struct ComplianceIdentifiersCollectionView: View {
     private func identifierField(input: Binding<IdentifierInputState>) -> some View {
         let requirement = input.wrappedValue.requirement
         let identifierTypeOptions = identifierTypeOptions(for: requirement)
+        let title = input.wrappedValue.selectedType.displayName
+        let placeholder = "Enter identifier for \(requirement.regulation.displayName)"
 
-        VStack(alignment: .leading, spacing: 8) {
-            if identifierTypeOptions.count > 1 {
+        if identifierTypeOptions.count > 1 {
+            VStack(alignment: .leading, spacing: 8) {
                 Picker(
-                    "Identifier type",
                     selection: input.selectedType
                 ) {
                     ForEach(identifierTypeOptions, id: \.self) { type in
                         Text(type.displayName).tag(type)
                     }
+                } label: {
+                    Text(title)
+                        .font(.headline)
                 }
-                .pickerStyle(.segmented)
-            }
+                .pickerStyle(.menu)
 
-            FormField("\(input.wrappedValue.selectedType.displayName) for \(requirement.regulation.rawValue)") {
-                TextField("Enter identifier", text: input.value)
+                TextField(placeholder, text: input.value)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .autocapitalization(.allCharacters)
+            }
+        } else {
+            FormField(Text(title)) {
+                TextField(placeholder, text: input.value)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .autocapitalization(.allCharacters)
             }
@@ -191,7 +199,7 @@ struct ComplianceIdentifiersCollectionView: View {
     }
 
     private func errorMessage(for result: SubmitIdentifiersResult) -> String {
-        let identifiers = result.identifiers.map { "\($0.type.displayName) (\($0.regulation.rawValue))" }
+        let identifiers = result.identifiers.map { "\($0.type.displayName) (\($0.regulation.displayName))" }
         let invalidIdentifiers = result.invalidIdentifiers.map(\.displayName)
 
         return """
