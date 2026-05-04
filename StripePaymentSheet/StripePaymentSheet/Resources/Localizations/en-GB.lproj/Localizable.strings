@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Card details cannot be changed.";
 
+"Card number. Supported cards include %@" = "Card number. Supported cards include %@";
+
 "Change" = "Change";
 
 "Choose a card brand" = "Choose a card brand";
@@ -305,5 +307,3 @@
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
 
 "iDEAL Bank" = "iDEAL Bank";
-
-"Card number. Supported cards include %@" = "Card number. Supported cards include %@";

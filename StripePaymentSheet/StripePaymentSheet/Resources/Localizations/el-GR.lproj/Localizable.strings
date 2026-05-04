@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Δεν είναι δυνατή η αλλαγή των στοιχείων κάρτας.";
 
+"Card number. Supported cards include %@" = "Αριθμός κάρτας. Οι υποστηριζόμενες κάρτες περιλαμβάνουν την %@";
+
 "Change" = "Αλλαγή";
 
 "Choose a card brand" = "Επιλέξτε μια επωνυμία κάρτας";

@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Id-dettalji tal-karta ma jistgħux jinbidlu.";
 
+"Card number. Supported cards include %@" = "Numru tal-kard. Il-kards appoġġjati jinkludu %@";
+
 "Change" = "Ibdel";
 
 "Choose a card brand" = "Agħżel marka tal-karta";
@@ -305,5 +307,3 @@
 "Your IBAN should start with a two-letter country code." = "L-IBAN tiegħek għandu jibda b'kodiċi tal-pajjiż magħmul minn żewġ ittri.";
 
 "iDEAL Bank" = "Il-Bank iDEAL";
-
-"Card number. Supported cards include %@" = "Numru tal-kard. Il-kards appoġġjati jinkludu %@";

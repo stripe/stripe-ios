@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Betaalkaartgegevens kunnen niet worden gewijzigd.";
 
+"Card number. Supported cards include %@" = "Kaartnummer. Ondersteunde betaalkaarten zijn onder meer %@";
+
 "Change" = "Wijzigen";
 
 "Choose a card brand" = "Kies een merk betaalkaart";
@@ -305,5 +307,3 @@
 "Your IBAN should start with a two-letter country code." = "Het IBAN-nummer moet beginnen met een landcode van twee letters.";
 
 "iDEAL Bank" = "iDEAL-bank";
-
-"Card number. Supported cards include %@" = "Kaartnummer. Ondersteunde betaalkaarten zijn onder meer %@";

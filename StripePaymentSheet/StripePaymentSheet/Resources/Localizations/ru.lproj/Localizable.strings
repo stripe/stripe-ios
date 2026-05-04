@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Реквизиты карты нельзя изменить.";
 
+"Card number. Supported cards include %@" = "Номер карты. В число поддерживаемых карт входят %@";
+
 "Change" = "Изменить";
 
 "Choose a card brand" = "Выберите бренд карты";
@@ -305,5 +307,3 @@
 "Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
 
 "iDEAL Bank" = "Банк в системе iDEAL";
-
-"Card number. Supported cards include %@" = "Номер карты. В число поддерживаемых карт входят %@";
