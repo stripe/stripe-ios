@@ -6,6 +6,9 @@ MINOR
 ### PaymentSheet
 * [Fixed] Fixed an issue where `paymentMethodOrder` did not apply to custom payment methods due to case-sensitive matching.
 
+### CryptoOnramp (Alpha)
+* [Added] Added API models for upcoming EU support. 
+
 ## 25.12.0 2026-04-27
 ### Identity
 * [Improved] Improved StripeIdentity analytics with richer error details and screen/camera context to help debug verification flows.
