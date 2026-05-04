@@ -8,6 +8,7 @@ MINOR
 
 ### CryptoOnramp (Alpha)
 * [Added] Added API models for upcoming EU support. 
+* [Added] Added `birthCountry`, `birthCity`, and `nationalities` properties to `KycInfo`, required for EU customers.
 
 ## 25.12.0 2026-04-27
 ### Identity
