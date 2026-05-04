@@ -470,6 +470,27 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         XCTAssertGreaterThanOrEqual(retrieveCount, 2, "Should have polled at least once after initial processing status")
     }
 
+    /// Verifies that deallocating an STPPaymentHandler mid-flow resets the static `anyHandlerInProgress` flag.
+    /// Regression test: PaymentSheet/FlowController create their own STPPaymentHandler instances.
+    /// If deallocated mid-flow, deinit must release the global lock to avoid permanently blocking
+    /// all future payment attempts with noConcurrentActionsErrorCode.
+    func testInProgressResetAfterHandlerDeallocated() {
+        // Verify we start clean
+        XCTAssertFalse(STPPaymentHandler(apiClient: stubbedAPIClient()).isInProgress)
+
+        // Create a handler and simulate it being mid-flow
+        var handler: STPPaymentHandler? = STPPaymentHandler(apiClient: stubbedAPIClient())
+        handler!.isHandlingAction = true
+        XCTAssertTrue(handler!.isInProgress)
+
+        // Deallocate the handler (simulates FlowController being dropped mid-3DS)
+        handler = nil
+
+        // deinit should have reset the global flag
+        let freshHandler = STPPaymentHandler(apiClient: stubbedAPIClient())
+        XCTAssertFalse(freshHandler.isInProgress, "inProgress should be reset when handler is deallocated mid-flow")
+    }
+
     private func confirmPaymentWithSucceed(
         nextActionData: String,
         paymentMethodData: String,

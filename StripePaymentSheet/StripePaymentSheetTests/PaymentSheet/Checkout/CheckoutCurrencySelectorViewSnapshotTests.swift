@@ -90,10 +90,19 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     private func verify(
         _ view: Checkout.CurrencySelectorView,
         darkMode: Bool = false,
+        width: CGFloat = 320,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        verifySelectorSnapshotView(view, darkMode: darkMode, file: file, line: line)
+        view.autosizeHeight(width: width)
+
+        let window = UIWindow(frame: CGRect(origin: .zero, size: view.frame.size))
+        window.overrideUserInterfaceStyle = darkMode ? .dark : .light
+        window.isHidden = false
+        window.addAndPinSubview(view)
+        window.layoutIfNeeded()
+
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 
     @MainActor

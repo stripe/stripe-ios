@@ -110,8 +110,4 @@ extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
         get { return nil }
         set {}
     }
-
-    func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType], savedPaymentMethods: [STPPaymentMethod], integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
-        return .vertical
-    }
 }

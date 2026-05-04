@@ -305,3 +305,5 @@
 "Your IBAN should start with a two-letter country code." = "IBAN-tilinumero alkaa kaksikirjaimisella maakoodilla.";
 
 "iDEAL Bank" = "iDEAL-pankki";
+
+"Card number. Supported cards include %@" = "Kortin numero. Tuetut kortit sisältävät %@";

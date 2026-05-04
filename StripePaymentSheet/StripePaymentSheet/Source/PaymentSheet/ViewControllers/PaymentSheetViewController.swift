@@ -51,7 +51,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
     let analyticsHelper: PaymentSheetAnalyticsHelper
 
     // MARK: - Writable Properties
-    private var currencySelectorElement: AdaptivePricingSelectorElement?
     weak var delegate: PaymentSheetViewControllerDelegate?
     enum Mode {
         case selectingSaved
@@ -206,13 +205,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.analyticsHelper = analyticsHelper
 
         super.init(nibName: nil, bundle: nil)
-        self.currencySelectorElement = AdaptivePricingSelectorElement.makeIfNeeded(
-            intent: intent,
-            isFlowController: false,
-            appearance: configuration.appearance,
-            analyticsHelper: analyticsHelper
-        )
-        self.currencySelectorElement?.delegate = self
         self.configuration.style.configure(self)
         self.savedPaymentOptionsViewController.delegate = self
         self.addPaymentMethodViewController.delegate = self
@@ -227,13 +219,9 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         self.view.backgroundColor = configuration.appearance.colors.background
 
         // One stack view contains all our subviews
-        var arrangedSubviews: [UIView] = []
-        if let currencySelectorView = currencySelectorElement?.view {
-            arrangedSubviews.append(currencySelectorView)
-        }
-        arrangedSubviews.append(contentsOf: [
+        let arrangedSubviews: [UIView] = [
             headerLabel, walletHeader, paymentContainerView, errorLabel, buyButton, bottomNoticeTextField,
-        ])
+        ]
         let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
         stackView.directionalLayoutMargins = configuration.appearance.topFormInsets
         stackView.isLayoutMarginsRelativeArrangement = true
@@ -324,7 +312,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         view.isUserInteractionEnabled = shouldEnableUserInteraction
         isDismissable = !isPaymentInFlight
         navigationBar.isUserInteractionEnabled = shouldEnableUserInteraction
-        currencySelectorElement?.setEnabled(shouldEnableUserInteraction)
 
         // Update our views (starting from the top of the screen):
         configureNavBar()
@@ -514,27 +501,6 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
         }
     }
 
-    // MARK: - PaymentSheetViewControllerProtocol
-
-    var selectedPaymentOption: PaymentSheet.PaymentOption? {
-        switch mode {
-        case .selectingSaved:
-            return savedPaymentOptionsViewController.selectedPaymentOption
-        case .addingNew:
-            return addPaymentMethodViewController.paymentOption
-        }
-    }
-
-    // Freeze the UI and show a spinner on the primary button while we reload the intent.
-    // If you add new UI, make sure it's also disabled/hidden during reloading.
-    func setReloading(_ isReloading: Bool) {
-        self.isReloading = isReloading
-        updateUI()
-    }
-
-    func setReloadError(_ error: Error) {
-        set(error: error)
-    }
 }
 
 // MARK: - Wallet Header Delegate
@@ -721,23 +687,5 @@ extension PaymentSheetViewController: SheetNavigationBarDelegate {
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure("Tapped back button in invalid mode")
         }
-    }
-}
-
-// MARK: - ElementDelegate
-
-extension PaymentSheetViewController: ElementDelegate {
-    func continueToNextField(element: Element) {
-        // No-op
-    }
-
-    func didUpdate(element: Element) {
-        if let currencySelectorElement, element === currencySelectorElement {
-            handleCurrencySelection(currencySelectorElement.selectedCurrency)
-        }
-    }
-
-    private func handleCurrencySelection(_ currency: String) {
-        delegate?.paymentSheetViewControllerDidSelectCurrency(self, currency: currency)
     }
 }
