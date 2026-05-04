@@ -305,3 +305,5 @@
 "Your IBAN should start with a two-letter country code." = "Dit IBAN-nummer skal starte med en landekode på to bogstaver.";
 
 "iDEAL Bank" = "iDEAL Bank";
+
+"Card number. Supported cards include %@" = "Kortnummer. Understøttede kort omfatter %@";

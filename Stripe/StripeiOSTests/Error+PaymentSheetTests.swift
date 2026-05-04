@@ -37,13 +37,100 @@ class Error_PaymentSheetTests: XCTestCase {
         XCTAssertEqual(NSError.stp_unexpectedErrorMessage(), TestableError.generic.nonGenericDescription)
     }
 
-    func testError_HasGenericLocalizedDescription_WithServerError() {
-        let serverErrorMessage = "Test failed server response error messasge"
-        let info = [NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage(), STPError.errorMessageKey: serverErrorMessage]
-        let error = NSError(domain: "Test error domain", code: 123, userInfo: info)
+    // MARK: - Direct API errors (from STPAPIClient network responses)
 
-        XCTAssertEqual(serverErrorMessage, error.nonGenericDescription)
+    func testError_CardError_ShowsMessage() {
+        // Simulates a real card_error from the Stripe API (e.g. card declined).
+        // stp_error sets localizedDescription = stripeErrorMessage for card_error types.
+        let error = NSError.stp_error(
+            errorType: "card_error",
+            stripeErrorCode: "card_declined",
+            stripeErrorMessage: "Your card was declined.",
+            errorParam: nil,
+            declineCode: nil,
+            intent: nil,
+            httpResponse: nil
+        )
+
+        XCTAssertEqual("Your card was declined.", error.nonGenericDescription)
     }
+
+    func testError_InvalidRequestError_ShowsGenericMessage() {
+        // Simulates an invalid_request_error from the Stripe API (e.g. disabled Connect account).
+        // These are developer-facing and should never be shown to end users.
+        let error = NSError.stp_error(
+            errorType: "invalid_request_error",
+            stripeErrorCode: nil,
+            stripeErrorMessage: "This Connect account cannot currently make live charges.",
+            errorParam: nil,
+            declineCode: nil,
+            intent: nil,
+            httpResponse: nil
+        )
+
+        XCTAssertEqual(NSError.stp_unexpectedErrorMessage(), error.nonGenericDescription)
+    }
+
+    func testError_NoErrorType_ShowsMessage() {
+        // SDK-internal errors (e.g. connection failures) don't go through stp_error() and have no
+        // stripeErrorTypeKey in userInfo. When the key is absent, errorMessageKey is assumed user-facing.
+        let error = NSError(
+            domain: STPError.stripeDomain,
+            code: STPErrorCode.connectionError.rawValue,
+            userInfo: [
+                NSLocalizedDescriptionKey: NSError.stp_unexpectedErrorMessage(),
+                STPError.errorMessageKey: "There was an error connecting to Stripe.",
+            ]
+        )
+
+        XCTAssertEqual("There was an error connecting to Stripe.", error.nonGenericDescription)
+    }
+
+    // MARK: - PaymentHandler wrapped errors (from STPPaymentHandler confirmation flow)
+
+    func testError_PaymentHandlerWrapped_CardError_ShowsMessage() {
+        // Simulates STPPaymentHandler wrapping a card_error API response as NSUnderlyingError
+        // (e.g. after payment confirmation fails with "insufficient funds").
+        let underlyingError = NSError.stp_error(
+            errorType: "card_error",
+            stripeErrorCode: "insufficient_funds",
+            stripeErrorMessage: "Your card has insufficient funds.",
+            errorParam: nil,
+            declineCode: nil,
+            intent: nil,
+            httpResponse: nil
+        )
+        let error = NSError(
+            domain: "STPPaymentHandlerErrorDomain",
+            code: 2,
+            userInfo: [NSUnderlyingErrorKey: underlyingError]
+        )
+
+        XCTAssertEqual("Your card has insufficient funds.", error.nonGenericDescription)
+    }
+
+    func testError_PaymentHandlerWrapped_NonCardError_ShowsGenericMessage() {
+        // Simulates STPPaymentHandler wrapping an invalid_request_error as NSUnderlyingError
+        // (e.g. disabled Connect account error during confirmation).
+        let underlyingError = NSError.stp_error(
+            errorType: "invalid_request_error",
+            stripeErrorCode: nil,
+            stripeErrorMessage: "This Connect account cannot currently make live charges.",
+            errorParam: nil,
+            declineCode: nil,
+            intent: nil,
+            httpResponse: nil
+        )
+        let error = NSError(
+            domain: "STPPaymentHandlerErrorDomain",
+            code: 2,
+            userInfo: [NSUnderlyingErrorKey: underlyingError]
+        )
+
+        XCTAssertEqual(NSError.stp_unexpectedErrorMessage(), error.nonGenericDescription)
+    }
+
+    // MARK: - Non-generic localizedDescription
 
     func testError_HasLocalizedDescription() {
         let errorMessage = "Test errorMessage"

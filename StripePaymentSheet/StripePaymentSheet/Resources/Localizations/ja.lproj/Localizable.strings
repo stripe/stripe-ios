@@ -305,3 +305,5 @@
 "Your IBAN should start with a two-letter country code." = "IBANコードの先頭には 2 文字の国コードを入力してください。";
 
 "iDEAL Bank" = "iDEAL銀行";
+
+"Card number. Supported cards include %@" = "カード番号。対応カードは %@ です";

@@ -136,11 +136,13 @@ import UIKit
     private var currentTaxRate: (String, Double)?
 
     var linkConfiguration: PaymentSheet.LinkConfiguration {
+        let brand: LinkBrand? = settings.linkBrand == .onelink ? .onelink : nil
+
         switch settings.linkDisplay {
         case .automatic:
-            PaymentSheet.LinkConfiguration(display: .automatic)
+            return PaymentSheet.LinkConfiguration(display: .automatic, brand: brand)
         case .never:
-            PaymentSheet.LinkConfiguration(display: .never)
+            return PaymentSheet.LinkConfiguration(display: .never, brand: brand)
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {

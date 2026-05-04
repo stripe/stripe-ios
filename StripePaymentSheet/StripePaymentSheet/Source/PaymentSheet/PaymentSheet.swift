@@ -322,36 +322,6 @@ public class PaymentSheet {
         }
     }
 
-    @MainActor
-    private func performReload(mode: InitializationMode) async {
-        guard let currentVC = bottomSheetViewController.contentStack.first
-                as? PaymentSheetViewControllerProtocol else {
-            stpAssertionFailure("Expected contentStack.first to be a PaymentSheetViewControllerProtocol")
-            return
-        }
-
-        currentVC.setReloading(true)
-
-        do {
-            let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
-                mode: mode,
-                configuration: configuration,
-                analyticsHelper: analyticsHelper,
-                integrationShape: .paymentSheet,
-                isUpdate: true
-            )
-            self.confirmationChallenge = confirmationChallenge
-            let newVC = makePaymentSheetVC(
-                loadResult: loadResult,
-                previousPaymentOption: currentVC.selectedPaymentOption,
-                shouldLogExperimentExposure: false
-            )
-            bottomSheetViewController.setViewControllers([newVC])
-        } catch {
-            currentVC.setReloading(false)
-            currentVC.setReloadError(error)
-        }
-    }
 }
 
 extension PaymentSheet: PaymentSheetViewControllerDelegate {
@@ -440,28 +410,6 @@ extension PaymentSheet: PaymentSheetViewControllerDelegate {
         }
     }
 
-    func paymentSheetViewControllerDidSelectCurrency(
-        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
-        currency: String
-    ) {
-        guard let checkout else {
-            stpAssertionFailure("Expected checkout to be set when currency selection occurs")
-            return
-        }
-        paymentSheetViewController.setReloading(true)
-        Task { @MainActor in
-            do {
-                try await checkout.selectCurrency(currency)
-                self.analyticsHelper.logAdaptivePricingCurrencyToggled()
-                guard let stpSession = checkout.state.session as? STPCheckoutSession else { return }
-                await self.performReload(mode: .checkoutSession(stpSession))
-            } catch {
-                self.analyticsHelper.logAdaptivePricingCurrencyToggledFailed(error: error)
-                paymentSheetViewController.setReloading(false)
-                paymentSheetViewController.setReloadError(error)
-            }
-        }
-    }
 }
 
 // MARK: - CheckoutIntegrationDelegate
@@ -490,14 +438,9 @@ extension PaymentSheet: LoadingViewControllerDelegate {
 internal protocol PaymentSheetViewControllerProtocol: UIViewController, BottomSheetContentViewController {
     var intent: Intent { get }
     var elementsSession: STPElementsSession { get }
-    var selectedPaymentOption: PaymentSheet.PaymentOption? { get }
 
     func pay(with paymentOption: PaymentOption)
     func clearTextFields()
-    /// Freeze the UI and show a spinner on the primary button while we reload the intent.
-    /// If you add new UI, make sure it's also disabled/hidden during reloading.
-    func setReloading(_ isReloading: Bool)
-    func setReloadError(_ error: Error)
 }
 
 protocol PaymentSheetViewControllerDelegate: AnyObject {
@@ -512,8 +455,4 @@ protocol PaymentSheetViewControllerDelegate: AnyObject {
     )
     func paymentSheetViewControllerDidCancel(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: PaymentSheetViewControllerProtocol)
-    func paymentSheetViewControllerDidSelectCurrency(
-        _ paymentSheetViewController: PaymentSheetViewControllerProtocol,
-        currency: String
-    )
 }
