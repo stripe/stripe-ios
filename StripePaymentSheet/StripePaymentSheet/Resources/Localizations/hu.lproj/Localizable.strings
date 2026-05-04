@@ -88,6 +88,8 @@
 
 "Card details cannot be changed." = "A kártyai adatai nem módosíthatók.";
 
+"Card number. Supported cards include %@" = "Kártyaszám. A támogatott kártyák közé tartozik: %@";
+
 "Change" = "Módosítás";
 
 "Choose a card brand" = "Válasszon kártyatípust";
@@ -303,5 +305,3 @@
 "Your IBAN should start with a two-letter country code." = "Az IBAN-számának egy kétbetűs országkóddal kell kezdődnie.";
 
 "iDEAL Bank" = "iDEAL bank";
-
-"Card number. Supported cards include %@" = "Kártyaszám. A támogatott kártyák közé tartozik: %@";

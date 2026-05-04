@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Informácie o karte nie je možné meniť.";
 
+"Card number. Supported cards include %@" = "Číslo karty. K podporovaným kartám patria karty %@";
+
 "Change" = "Zmeniť";
 
 "Choose a card brand" = "Vybrať značku karty";
@@ -305,5 +307,3 @@
 "Your IBAN should start with a two-letter country code." = "Váš IBAN by mal začínať dvojpísmenovým kódom krajiny.";
 
 "iDEAL Bank" = "iDEAL banka";
-
-"Card number. Supported cards include %@" = "Číslo karty. K podporovaným kartám patria karty %@";
