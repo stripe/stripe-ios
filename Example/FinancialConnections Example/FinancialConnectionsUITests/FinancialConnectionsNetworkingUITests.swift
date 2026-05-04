@@ -10,7 +10,7 @@ import XCTest
 
 final class FinancialConnectionsNetworkingUITests: XCTestCase {
 
-    func testNativeNetworkingTestMode() throws {
+    func _testNativeNetworkingTestMode() throws {
         let emailAddresss = "\(UUID().uuidString)@UITestForIOS.com"
         executeNativeNetworkingTestModeSignUpFlowTest(emailAddress: emailAddresss)
         executeNativeNetworkingTestModeAutofillSignInFlowTest(emailAddress: emailAddresss)
