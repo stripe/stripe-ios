@@ -12,10 +12,14 @@ import StripeCryptoOnramp
 
 /// A simple screen for collecting missing compliance identifiers before continuing to identity verification.
 struct ComplianceIdentifiersCollectionView: View {
-    private struct IdentifierInputState: Hashable {
+    private struct IdentifierInputState: Identifiable {
         let requirement: ComplianceIdentifierRequirement
         var selectedType: ComplianceIdentifierType
         var value: String
+
+        var id: ComplianceIdentifierRequirement {
+            requirement
+        }
     }
 
     let coordinator: CryptoOnrampCoordinator
@@ -79,7 +83,7 @@ struct ComplianceIdentifiersCollectionView: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
 
-                ForEach($identifierInputs, id: \.self) { $input in
+                ForEach($identifierInputs) { $input in
                     identifierField(input: $input)
                 }
             }
