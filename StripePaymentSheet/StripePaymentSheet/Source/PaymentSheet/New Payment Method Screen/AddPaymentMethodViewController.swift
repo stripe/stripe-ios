@@ -104,7 +104,7 @@ class AddPaymentMethodViewController: UIViewController {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
-        resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
+        resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .horizontal,
         previousCustomerInput: IntentConfirmParams? = nil,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         formCache: PaymentMethodFormCache,

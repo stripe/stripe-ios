@@ -428,6 +428,7 @@ extension PaymentSheetFormFactory {
         elementsSession: STPElementsSession,
         configuration: PaymentSheetFormFactoryConfig,
         paymentMethod: PaymentSheet.PaymentMethodType,
+        resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .vertical,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil
@@ -437,6 +438,7 @@ extension PaymentSheetFormFactory {
             elementsSession: elementsSession,
             configuration: configuration,
             paymentMethod: paymentMethod,
+            resolvedPaymentMethodLayout: resolvedPaymentMethodLayout,
             previousCustomerInput: previousCustomerInput,
             addressSpecProvider: addressSpecProvider,
             linkAccount: linkAccount,

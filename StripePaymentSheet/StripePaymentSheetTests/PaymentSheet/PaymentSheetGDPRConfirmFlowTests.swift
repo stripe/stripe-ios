@@ -520,7 +520,7 @@ final class PaymentSheetGDPRConfirmFlowTests: STPNetworkStubbingTestCase {
         _ = PaymentSheet(mode: .deferredIntent(ic), configuration: PaymentSheet.Configuration())
 
         // Make the form
-        let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: elementsSession, configuration: .paymentElement(configuration), paymentMethod: paymentMethodType)
+        let formFactory = PaymentSheetFormFactory(intent: intent, elementsSession: elementsSession, configuration: .paymentElement(configuration), paymentMethod: paymentMethodType, resolvedPaymentMethodLayout: .vertical)
         let paymentMethodForm = formFactory.make()
         let view = UIView(frame: CGRect(x: 0, y: 0, width: 320, height: 1000))
         view.addAndPinSubview(paymentMethodForm.view)

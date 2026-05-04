@@ -34,7 +34,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         // ...and no default billing address...
         XCTAssertEqual(configuration.defaultBillingDetails, PaymentSheet.Configuration().defaultBillingDetails)
         // ...PaymentMethodFormVC...
-        let sut = PaymentMethodFormViewController(type: .stripe(.card), intent: ._testPaymentIntent(paymentMethodTypes: [.card]), elementsSession: ._testCardValue(), previousCustomerInput: nil, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+        let sut = PaymentMethodFormViewController(type: .stripe(.card), intent: ._testPaymentIntent(paymentMethodTypes: [.card]), elementsSession: ._testCardValue(), previousCustomerInput: nil, formCache: .init(), configuration: configuration, resolvedPaymentMethodLayout: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
 
         // ...should fill its address fields with the shipping address
         sut.beginAppearanceTransition(true, animated: false)
@@ -63,7 +63,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             previousCustomerInput: nil,
             formCache: .init(),
             configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
-
+            resolvedPaymentMethodLayout: .vertical,
             headerView: nil,
             analyticsHelper: ._testValue(),
             delegate: self
@@ -88,7 +88,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             previousCustomerInput: nil,
             formCache: formCache,
             configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
-
+            resolvedPaymentMethodLayout: .vertical,
             headerView: nil,
             analyticsHelper: ._testValue(),
             delegate: self
@@ -102,7 +102,7 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
             previousCustomerInput: nil,
             formCache: formCache,
             configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
-
+            resolvedPaymentMethodLayout: .vertical,
             headerView: nil,
             analyticsHelper: ._testValue(),
             delegate: self

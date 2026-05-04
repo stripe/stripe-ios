@@ -441,7 +441,8 @@ extension PaymentSheetFormFactorySnapshotTest {
             intent: intent,
             elementsSession: ._testValue(intent: intent),
             configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(paymentMethodType)
+            paymentMethod: .stripe(paymentMethodType),
+            resolvedPaymentMethodLayout: .vertical
         )
     }
 }

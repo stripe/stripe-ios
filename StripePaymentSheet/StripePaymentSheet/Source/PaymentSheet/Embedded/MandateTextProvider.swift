@@ -22,7 +22,7 @@ class VerticalListMandateProvider: MandateTextProvider {
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout
 
-    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent, analyticsHelper: PaymentSheetAnalyticsHelper, resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout) {
+    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent, analyticsHelper: PaymentSheetAnalyticsHelper, resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .vertical) {
         self.configuration = configuration
         self.elementsSession = elementsSession
         self.intent = intent
