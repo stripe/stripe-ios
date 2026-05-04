@@ -13,6 +13,6 @@ struct SubmitIdentifiersRequest: Encodable {
     /// Contains credentials required to make the request.
     let credentials: Credentials
 
-    /// Compliance identifiers collected for MICA and CRS/CARF compliance.
+    /// Compliance identifiers collected for MiCA and CRS/CARF compliance.
     let identifiers: [ComplianceIdentifier]
 }

@@ -81,14 +81,14 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, the user has already attached KYC info, or an API error occurs.
     func attachKYCInfo(info: KycInfo) async throws
 
-    /// Retrieves compliance identifiers still required for MICA and CRS/CARF compliance.
+    /// Retrieves compliance identifiers still required for MiCA and CRS/CARF compliance.
     /// Requires an authenticated Link user.
     ///
     /// - Returns: The missing compliance identifier requirements.
     /// Throws if an authenticated Link user is not available, KYC information has not yet been collected, or an API error occurs.
     func retrieveMissingIdentifiers() async throws -> ComplianceIdentifierRequirements
 
-    /// Submits compliance identifiers for MICA and CRS/CARF compliance.
+    /// Submits compliance identifiers for MiCA and CRS/CARF compliance.
     /// Requires an authenticated Link user.
     ///
     /// - Parameter identifiers: The compliance identifiers to submit.

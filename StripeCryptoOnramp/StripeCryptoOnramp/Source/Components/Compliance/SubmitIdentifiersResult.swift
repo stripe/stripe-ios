@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// The result of submitting compliance identifiers for MICA and CRS/CARF compliance.
+/// The result of submitting compliance identifiers for MiCA and CRS/CARF compliance.
 @_spi(CryptoOnrampAlpha)
 public struct SubmitIdentifiersResult: Decodable, Equatable {
 

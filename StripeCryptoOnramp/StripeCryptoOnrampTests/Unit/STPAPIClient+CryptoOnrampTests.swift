@@ -97,7 +97,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         // /v1/crypto/internal/eu_identifiers
         static let submitIdentifiersAPIPath = "/v1/crypto/internal/eu_identifiers"
         static let validIdentifiers = [
-            ComplianceIdentifier(type: .eeIK, value: "MICA123"),
+            ComplianceIdentifier(type: .eeIK, value: "MiCA123"),
             ComplianceIdentifier(type: .grAFM, value: "TIN123"),
         ]
 
@@ -475,7 +475,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         XCTAssertEqual(response.identifiers.count, 2)
         XCTAssertEqual(response.identifiers[0].type, .eeIK)
         XCTAssertEqual(response.identifiers[0].type.displayName, "Isikukood (PIC) - Estonia")
-        XCTAssertEqual(response.identifiers[0].regulation, .euMICA)
+        XCTAssertEqual(response.identifiers[0].regulation, .euMiCA)
         XCTAssertEqual(response.identifiers[1].type, .grAFM)
         XCTAssertEqual(response.identifiers[1].type.displayName, "Tax Identification Number (ΑΦΜ) - Greece")
         XCTAssertEqual(response.identifiers[1].regulation, .euCARF)
@@ -530,7 +530,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             XCTAssertEqual(parameters.count, 5)
             XCTAssertEqual(parameters["credentials[consumer_session_client_secret]"], Constant.requestSecret)
             XCTAssertEqual(parameters["identifiers[0][type]"], "ee_ik")
-            XCTAssertEqual(parameters["identifiers[0][value]"], "MICA123")
+            XCTAssertEqual(parameters["identifiers[0][value]"], "MiCA123")
             XCTAssertEqual(parameters["identifiers[1][type]"], "gr_afm")
             XCTAssertEqual(parameters["identifiers[1][value]"], "TIN123")
 
@@ -547,7 +547,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         XCTAssertFalse(response.valid)
         XCTAssertEqual(response.identifiers.map(\.type), [.mtNIC])
-        XCTAssertEqual(response.identifiers.map(\.regulation), [.euMICA])
+        XCTAssertEqual(response.identifiers.map(\.regulation), [.euMiCA])
         XCTAssertEqual(response.alternatives[0].originalMissingIdentifiers, [.mtNIC])
         XCTAssertEqual(response.alternatives[0].alternativeMissingIdentifiers, [.mtPP])
         XCTAssertEqual(response.invalidIdentifiers, [.mtPP])

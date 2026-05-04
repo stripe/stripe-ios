@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// A compliance identifier collected for MICA or CRS/CARF compliance.
+/// A compliance identifier collected for MiCA or CRS/CARF compliance.
 @_spi(CryptoOnrampAlpha)
 public struct ComplianceIdentifier: Codable, Equatable, Hashable {
 

@@ -14,6 +14,6 @@ public enum ComplianceRegulation: String, Codable, Equatable, Hashable {
     /// Common Reporting Standard (CRS) and Crypto-Asset Reporting Framework (CARF).
     case euCARF = "eu_carf"
 
-    /// Markets in Crypto-Assets Regulation (MICA).
-    case euMICA = "eu_mica"
+    /// Markets in Crypto-Assets Regulation (MiCA).
+    case euMiCA = "eu_mica"
 }

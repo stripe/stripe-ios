@@ -112,7 +112,7 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
-    /// Retrieves compliance identifiers still required for MICA and CRS/CARF compliance.
+    /// Retrieves compliance identifiers still required for MiCA and CRS/CARF compliance.
     /// - Parameters:
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
     /// - Returns: An instance of `ComplianceIdentifierRequirements` containing missing identifier requirements.
@@ -131,9 +131,9 @@ extension STPAPIClient {
         )
     }
 
-    /// Submits compliance identifiers for MICA and CRS/CARF compliance.
+    /// Submits compliance identifiers for MiCA and CRS/CARF compliance.
     /// - Parameters:
-    ///   - identifiers: Compliance identifiers collected for MICA and CRS/CARF compliance.
+    ///   - identifiers: Compliance identifiers collected for MiCA and CRS/CARF compliance.
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
     /// - Returns: An instance of `SubmitIdentifiersResult` describing whether the identifiers were accepted.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.

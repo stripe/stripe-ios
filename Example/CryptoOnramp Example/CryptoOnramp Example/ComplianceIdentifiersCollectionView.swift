@@ -212,7 +212,7 @@ private extension Array where Element: Hashable {
             requirements: ComplianceIdentifierRequirements(
                 identifiers: [
                     .init(type: .deSTN, regulation: .euCARF),
-                    .init(type: .mtNIC, regulation: .euMICA),
+                    .init(type: .mtNIC, regulation: .euMiCA),
                 ],
                 alternatives: [
                     .init(
