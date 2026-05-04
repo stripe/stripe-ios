@@ -3,6 +3,9 @@ MINOR
 
 ## X.Y.Z - changes pending release
 
+### PaymentSheet
+* [Fixed] Fixed an issue where `paymentMethodOrder` did not apply to custom payment methods due to case-sensitive matching.
+
 ## 25.12.0 2026-04-27
 ### Identity
 * [Improved] Improved StripeIdentity analytics with richer error details and screen/camera context to help debug verification flows.
