@@ -29,6 +29,8 @@ public struct ComplianceIdentifierRequirements: Decodable, Equatable, Hashable {
         self.alternatives = alternatives
     }
 
+    // MARK: - Decodable
+
     private enum CodingKeys: String, CodingKey {
         case identifiers
         case alternatives

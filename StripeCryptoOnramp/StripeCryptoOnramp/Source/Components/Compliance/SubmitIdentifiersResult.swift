@@ -23,6 +23,8 @@ public struct SubmitIdentifiersResult: Decodable, Equatable {
     /// Submitted identifier types whose values were invalid.
     public let invalidIdentifiers: [ComplianceIdentifierType]
 
+    // MARK: - Decodable
+
     private enum CodingKeys: String, CodingKey {
         case valid
         case identifiers

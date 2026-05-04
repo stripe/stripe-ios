@@ -11,8 +11,6 @@ import Foundation
 @_spi(CryptoOnrampAlpha)
 public struct ComplianceIdentifierType: Codable, Equatable, ExpressibleByStringLiteral, Hashable, RawRepresentable {
 
-    public let rawValue: String
-
     /// A human-readable display name for known identifier types.
     public var displayName: String {
         switch self {
@@ -79,18 +77,28 @@ public struct ComplianceIdentifierType: Codable, Equatable, ExpressibleByStringL
         }
     }
 
+    // MARK: - RawRepresentable
+
+    public let rawValue: String
+
     public init(rawValue: String) {
         self.rawValue = rawValue
     }
+
+    // MARK: - ExpressibleByStringLiteral
 
     public init(stringLiteral value: String) {
         self.init(rawValue: value)
     }
 
+    // MARK: - Decodable
+
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         self.init(rawValue: try container.decode(String.self))
     }
+
+    // MARK: - Encodable
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()

@@ -29,6 +29,8 @@ public struct ComplianceIdentifierAlternativeGroup: Decodable, Equatable, Hashab
         self.alternativeMissingIdentifiers = alternativeMissingIdentifiers
     }
 
+    // MARK: - Decodable
+
     private enum CodingKeys: String, CodingKey {
         case originalMissingIdentifiers = "original_missing_identifiers"
         case alternativeMissingIdentifiers = "alternative_missing_identifiers"
