@@ -714,8 +714,6 @@ extension PaymentSheet {
                     )
                     self.viewController.flowControllerDelegate = self
                     self.confirmationChallenge = confirmationChallenge
-                    // Defer experiment exposure logging until next presentation
-                    self.hasLoggedLayoutExperimentExposure = false
 
                     // Update the payment option and synchronously pre-load image into cache
                     self.updatePaymentOption()
@@ -747,8 +745,6 @@ extension PaymentSheet {
                 previousPaymentOption: self.internalPaymentOption
             )
             self.viewController.flowControllerDelegate = self
-            // Defer experiment exposure logging until next presentation
-            self.hasLoggedLayoutExperimentExposure = false
             updatePaymentOption()
         }
 
@@ -792,7 +788,7 @@ extension PaymentSheet {
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
-            // Resolve automatic layout based on experiment
+            // Resolve automatic layout
             var configuration = configuration
             let resolvedPaymentMethodLayout = configuration.resolveLayout(
                 loadResult: loadResult,
