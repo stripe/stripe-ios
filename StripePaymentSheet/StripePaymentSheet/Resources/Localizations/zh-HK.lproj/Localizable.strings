@@ -305,3 +305,5 @@
 "Your IBAN should start with a two-letter country code." = "您的 IBAN 應以兩個字母的國家代碼開頭。";
 
 "iDEAL Bank" = "iDEAL 銀行";
+
+"Card number. Supported cards include %@" = "銀行卡號碼。支援的銀行卡包括 %@";

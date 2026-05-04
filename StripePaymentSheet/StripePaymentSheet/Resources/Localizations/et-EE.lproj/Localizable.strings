@@ -305,3 +305,5 @@
 "Your IBAN should start with a two-letter country code." = "Teie IBAN peab algama kahetähelise riigikoodiga.";
 
 "iDEAL Bank" = "iDEALi pank";
+
+"Card number. Supported cards include %@" = "Kaardi number. Toetatud kaardid hõlmavad %@";
