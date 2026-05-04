@@ -1,17 +1,17 @@
 //
-//  AdaptivePricingSelectorElement.swift
+//  CurrencySelectorUtilities.swift
 //  StripePaymentSheet
 //
-//  Created by Nick Porter on 3/20/26.
+//  Created by Nick Porter on 4/23/26.
+//
 
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// Adaptive pricing currency selector built on `TwoOptionSelectorElement`.
-/// Shows two currencies with flag emoji and formatted amounts.
-final class AdaptivePricingSelectorElement: Element {
+/// Shared utilities for currency selector components (standalone and in-form).
+enum CurrencySelectorUtilities {
 
     /// A normalized currency code that provides typed access for API vs display use.
     struct CurrencyCode: Equatable {
@@ -24,72 +24,6 @@ final class AdaptivePricingSelectorElement: Element {
             self.apiValue = rawValue.lowercased()
             self.displayValue = rawValue.uppercased()
         }
-    }
-
-    weak var delegate: ElementDelegate?
-
-    let collectsUserInput: Bool = true
-
-    var view: UIView { selectorElement.view }
-
-    private let selectorElement: TwoOptionSelectorElement
-    private let exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
-
-    /// The selected currency code (lowercased).
-    var selectedCurrency: String { selectorElement.selectedItemId }
-
-    init(
-        currentCurrency: String,
-        localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
-        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
-        appearance: PaymentSheet.Appearance,
-        analyticsHelper: PaymentSheetAnalyticsHelper
-    ) {
-        self.exchangeRateMeta = exchangeRateMeta
-        let currency = CurrencyCode(currentCurrency)
-        let (left, right) = Self.buildSelectorItems(
-            exchangeRateMeta: exchangeRateMeta,
-            localizedPricesMetas: localizedPricesMetas
-        )
-        selectorElement = TwoOptionSelectorElement(
-            leftItem: left,
-            rightItem: right,
-            selectedItemId: currency.apiValue,
-            caption: Self.caption(forSelectedCurrency: currency.apiValue, exchangeRateMeta: exchangeRateMeta),
-            appearance: appearance
-        )
-        selectorElement.delegate = self
-        analyticsHelper.logAdaptivePricingCurrencySelectorInit(isStandaloneElement: false)
-    }
-
-    // MARK: - Factory
-
-    static func makeIfNeeded(
-        intent: Intent,
-        isFlowController: Bool,
-        appearance: PaymentSheet.Appearance,
-        analyticsHelper: PaymentSheetAnalyticsHelper
-    ) -> AdaptivePricingSelectorElement? {
-        guard !isFlowController else { return nil }
-        guard case .checkoutSession(let session) = intent else { return nil }
-        guard session.adaptivePricingActive else { return nil }
-        guard !session.localizedPricesMetas.isEmpty else { return nil }
-        guard let exchangeRateMeta = session.exchangeRateMeta else { return nil }
-        guard let currency = session.currency else { return nil }
-
-        return AdaptivePricingSelectorElement(
-            currentCurrency: currency,
-            localizedPricesMetas: session.localizedPricesMetas,
-            exchangeRateMeta: exchangeRateMeta,
-            appearance: appearance,
-            analyticsHelper: analyticsHelper
-        )
-    }
-
-    // MARK: - Public API
-
-    func setEnabled(_ enabled: Bool) {
-        selectorElement.setEnabled(enabled)
     }
 
     // MARK: - Two-option builder
@@ -178,20 +112,5 @@ final class AdaptivePricingSelectorElement: Element {
     static func flagEmoji(for currency: CurrencyCode) -> String {
         let regionCode = String(currency.displayValue.prefix(2))
         return String.regionFlagEmoji(for: regionCode) ?? ""
-    }
-}
-
-// MARK: - ElementDelegate forwarding
-
-extension AdaptivePricingSelectorElement: ElementDelegate {
-    func didUpdate(element: Element) {
-        selectorElement.updateCaption(
-            Self.caption(forSelectedCurrency: selectedCurrency, exchangeRateMeta: exchangeRateMeta)
-        )
-        delegate?.didUpdate(element: self)
-    }
-
-    func continueToNextField(element: Element) {
-        delegate?.continueToNextField(element: self)
     }
 }
