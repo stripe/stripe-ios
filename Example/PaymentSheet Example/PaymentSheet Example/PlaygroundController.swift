@@ -914,7 +914,12 @@ extension PlaygroundController {
                 // Load checkout session using Checkout SDK if using CheckoutSession
                 if let checkoutSessionClientSecret = json["checkoutSessionClientSecret"] {
                     do {
-                        self.checkout = try await Checkout(clientSecret: checkoutSessionClientSecret)
+                        var checkoutConfiguration = Checkout.Configuration()
+                        checkoutConfiguration.adaptivePricing.allowed = settingsToLoad.csAdaptivePricing == .on
+                        self.checkout = try await Checkout(
+                            clientSecret: checkoutSessionClientSecret,
+                            configuration: checkoutConfiguration
+                        )
                     } catch {
                         self.checkout = nil
                         print("Failed to load checkout session: \(error)")
