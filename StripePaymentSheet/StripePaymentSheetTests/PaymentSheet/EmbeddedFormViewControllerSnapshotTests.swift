@@ -41,6 +41,7 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
             shouldUseNewCardNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
             paymentMethodType: .stripe(paymentMethodType),
             previousPaymentOption: previousPaymentOption,
+            resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
             analyticsHelper: ._testValue(),
             delegate: self
         )

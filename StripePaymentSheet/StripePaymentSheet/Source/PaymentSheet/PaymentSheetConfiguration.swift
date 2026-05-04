@@ -215,26 +215,21 @@ extension PaymentSheet {
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
         public var paymentMethodLayout: PaymentMethodLayout = .automatic
 
-        /// Resolves `.automatic` to `.horizontal` or `.vertical` based on experiment.
+        /// Resolves `.automatic` to `.horizontal` or `.vertical`.
         /// For non-automatic layouts, returns self.
         func resolveLayout(
             elementsSession: STPElementsSession,
-            paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-            savedPaymentMethods: [STPPaymentMethod],
-            integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape
+            paymentMethodTypes: [PaymentSheet.PaymentMethodType]
         ) -> PaymentMethodLayout.ResolvedLayout {
             switch paymentMethodLayout {
             case .horizontal: return .horizontal
             case .vertical: return .vertical
             case .automatic:
-                let experiments = PaymentSheetLayoutExperiment.createExperiments(
-                    elementsSession: elementsSession,
-                    paymentMethodTypes: paymentMethodTypes,
-                    savedPaymentMethods: savedPaymentMethods,
-                    configuration: self,
-                    integrationShape: integrationShape
-                )
-                return experiments.first.map { $0.group == .treatment ? .horizontal : .vertical } ?? .vertical
+                if elementsSession.forceVerticalPaymentMethodLayout {
+                    return .vertical
+                } else {
+                    return paymentMethodTypes.count >= 3 ? .vertical : .horizontal
+                }
             }
         }
 

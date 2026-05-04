@@ -243,9 +243,6 @@ extension PaymentSheet {
 
         private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
         private var didDismissLinkVerificationDialog: Bool = false
-        // We check the experiment assignment when creating the FlowController view controller, but we don't want to log the layout experiment exposure until the sheet is actually presented
-        // If the FlowController is loaded with a selected payment option and the user confirms without presenting the sheet, the layout had no bearing on the user's actions, so we don't want that session included in the experiment
-        private var hasLoggedLayoutExperimentExposure: Bool = false
 
         // If a WalletButtonsView is currently visible
         var walletButtonsViewState: WalletButtonsViewState = .hidden {
@@ -498,9 +495,6 @@ extension PaymentSheet {
             let showPaymentOptions: () -> Void = { [weak self] in
                 guard let self = self else { return }
 
-                // Log experiment exposure now that the sheet is being presented
-                self.logExperimentExposureIfNeeded()
-
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let bottomSheetVC = Self.makeBottomSheetViewController(
                     self.viewController,
@@ -720,8 +714,6 @@ extension PaymentSheet {
                     )
                     self.viewController.flowControllerDelegate = self
                     self.confirmationChallenge = confirmationChallenge
-                    // Defer experiment exposure logging until next presentation
-                    self.hasLoggedLayoutExperimentExposure = false
 
                     // Update the payment option and synchronously pre-load image into cache
                     self.updatePaymentOption()
@@ -754,8 +746,6 @@ extension PaymentSheet {
                 previousPaymentOption: self.internalPaymentOption
             )
             self.viewController.flowControllerDelegate = self
-            // Defer experiment exposure logging until next presentation
-            self.hasLoggedLayoutExperimentExposure = false
             updatePaymentOption()
         }
 
@@ -772,22 +762,6 @@ extension PaymentSheet {
         private func preloadPaymentOptionImage() {
             // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk)
             _ = paymentOption?.image
-        }
-
-        /// Logs experiment exposure if it was deferred during initialization
-        private func logExperimentExposureIfNeeded() {
-            guard !hasLoggedLayoutExperimentExposure, configuration.paymentMethodLayout == .automatic else { return }
-            hasLoggedLayoutExperimentExposure = true
-
-            let experiments: [LoggableExperiment] = PaymentSheetLayoutExperiment.createExperiments(
-                loadResult: viewController.loadResult,
-                configuration: configuration,
-                integrationShape: analyticsHelper.integrationShape
-            )
-
-            experiments.forEach { experiment in
-                analyticsHelper.logExposure(experiment: experiment)
-            }
         }
 
         // MARK: Internal helper methods
@@ -820,7 +794,6 @@ extension PaymentSheet {
                 controller = PaymentSheetFlowControllerViewController(
                     configuration: configuration,
                     loadResult: loadResult,
-                    resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
                     analyticsHelper: analyticsHelper,
                     previousPaymentOption: previousPaymentOption
                 )

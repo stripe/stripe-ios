@@ -182,8 +182,7 @@ public class PaymentSheet {
                     let presentPaymentSheet: () -> Void = {
                         let paymentSheetVC = self.makePaymentSheetVC(
                             loadResult: loadResult,
-                            previousPaymentOption: nil,
-                            shouldLogExperimentExposure: true
+                            previousPaymentOption: nil
                         )
                         self.bottomSheetViewController.setViewControllers([paymentSheetVC])
                     }
@@ -289,23 +288,13 @@ public class PaymentSheet {
     @MainActor
     func makePaymentSheetVC(
         loadResult: PaymentSheetLoader.LoadResult,
-        previousPaymentOption: PaymentOption?,
-        shouldLogExperimentExposure: Bool
+        previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
-        if shouldLogExperimentExposure, configuration.paymentMethodLayout == .automatic {
-            let experiments = PaymentSheetLayoutExperiment.createExperiments(
-                loadResult: loadResult,
-                configuration: configuration,
-                integrationShape: analyticsHelper.integrationShape
-            )
-            experiments.forEach { analyticsHelper.logExposure(experiment: $0) }
-        }
         switch loadResult.resolvedPaymentMethodLayout {
         case .horizontal:
             let vc = PaymentSheetViewController(
                 configuration: configuration,
                 loadResult: loadResult,
-                resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
                 analyticsHelper: analyticsHelper,
                 delegate: self,
                 previousPaymentOption: previousPaymentOption

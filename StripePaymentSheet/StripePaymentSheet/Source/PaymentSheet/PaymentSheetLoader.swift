@@ -205,9 +205,7 @@ final class PaymentSheetLoader {
                 paymentMethodTypes: paymentMethodTypes,
                 resolvedPaymentMethodLayout: configuration.resolveLayout(
                     elementsSession: elementsSession,
-                    paymentMethodTypes: paymentMethodTypes,
-                    savedPaymentMethods: filteredSavedPaymentMethods,
-                    integrationShape: analyticsHelper.integrationShape
+                    paymentMethodTypes: paymentMethodTypes
                 )
             )
             let confirmationChallenge = ConfirmationChallenge(

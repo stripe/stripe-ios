@@ -168,7 +168,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     required init(
         configuration: PaymentSheet.Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
-        resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         previousPaymentOption: PaymentOption? = nil
     ) {
@@ -219,7 +218,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
-            resolvedPaymentMethodLayout: resolvedPaymentMethodLayout,
+            resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
             previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
             paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,

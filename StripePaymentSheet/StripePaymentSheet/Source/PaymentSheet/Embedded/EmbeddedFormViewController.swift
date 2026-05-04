@@ -231,7 +231,7 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     func updateMandate() {
-        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
+        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper, resolvedPaymentMethodLayout: resolvedPaymentMethodLayout)
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,

@@ -318,7 +318,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func updateMandate(animated: Bool = true) {
         let hadLabelInStackView = mandateView.attributedText != nil || errorLabel.text != nil
-        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
+        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper, resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout)
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
