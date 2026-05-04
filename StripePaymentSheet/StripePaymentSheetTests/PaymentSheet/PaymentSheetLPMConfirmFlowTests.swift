@@ -1544,7 +1544,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         noFieldsConfig.billingDetailsCollectionConfiguration.email = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.phone = .never
         noFieldsConfig.billingDetailsCollectionConfiguration.address = .never
-        var form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(noFieldsConfig), paymentMethod: .stripe(paymentMethodType), resolvedPaymentMethodLayout: .vertical).make()
+        var form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(noFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
 
         XCTAssertNil(getName(from: form))
         XCTAssertNil(form.getTextFieldElement("Email"))
@@ -1577,7 +1577,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                 state: "CA"
             )
         )
-        form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(allFieldsConfig), paymentMethod: .stripe(paymentMethodType), resolvedPaymentMethodLayout: .vertical).make()
+        form = PaymentSheetFormFactory(intent: ._testPaymentIntent(paymentMethodTypes: [paymentMethodType]), elementsSession: .emptyElementsSession, configuration: .paymentElement(allFieldsConfig), paymentMethod: .stripe(paymentMethodType)).make()
         XCTAssertNotNil(getName(from: form))
         XCTAssertNotNil(form.getTextFieldElement("Email"))
         XCTAssertNotNil(form.getPhoneNumberElement())
