@@ -291,11 +291,7 @@ public class PaymentSheet {
         previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
         var configuration = self.configuration
-        let layout = configuration.resolveLayout(
-            loadResult: loadResult,
-            configuration: self.configuration,
-            analyticsHelper: self.analyticsHelper
-        )
+        let layout = configuration.resolveLayout()
         switch layout {
         case .horizontal:
             let vc = PaymentSheetViewController(
