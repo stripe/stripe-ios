@@ -95,7 +95,7 @@ struct CryptoOnrampExampleView: View {
                                 )
                             }
                         case let .complianceIdentifiers(requirements):
-                            ComplianceIdentifiersCollectionView(
+                            ComplianceIdentifiersEntryView(
                                 coordinator: coordinator,
                                 requirements: requirements
                             ) {

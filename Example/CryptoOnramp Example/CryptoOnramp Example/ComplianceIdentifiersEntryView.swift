@@ -1,5 +1,5 @@
 //
-//  ComplianceIdentifiersCollectionView.swift
+//  ComplianceIdentifiersEntryView.swift
 //  CryptoOnramp Example
 //
 //  Created by Michael Liberatore on 4/30/26.
@@ -11,7 +11,7 @@ import SwiftUI
 import StripeCryptoOnramp
 
 /// A simple screen for collecting missing compliance identifiers before continuing to identity verification.
-struct ComplianceIdentifiersCollectionView: View {
+struct ComplianceIdentifiersEntryView: View {
     private struct IdentifierInputState: Identifiable {
         let requirement: ComplianceIdentifierRequirement
         var selectedType: ComplianceIdentifierType
@@ -219,7 +219,7 @@ private extension Array where Element: Hashable {
 
 #Preview {
     PreviewWrapperView { coordinator in
-        ComplianceIdentifiersCollectionView(
+        ComplianceIdentifiersEntryView(
             coordinator: coordinator,
             requirements: ComplianceIdentifierRequirements(
                 identifiers: [
