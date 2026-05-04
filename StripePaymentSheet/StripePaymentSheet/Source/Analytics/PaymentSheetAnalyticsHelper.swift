@@ -472,20 +472,6 @@ final class PaymentSheetAnalyticsHelper {
         log(event: .shopPayWebviewCancelled, params: ["did_receive_ece_click": didReceiveECEClick])
     }
 
-    // MARK: - Adaptive Pricing
-
-    func logAdaptivePricingCurrencySelectorInit(isStandaloneElement: Bool) {
-        log(event: .adaptivePricingCurrencySelectorInit, params: ["is_standalone_element": isStandaloneElement])
-    }
-
-    func logAdaptivePricingCurrencyToggled() {
-        log(event: .adaptivePricingCurrencyToggled)
-    }
-
-    func logAdaptivePricingCurrencyToggledFailed(error: Error) {
-        log(event: .adaptivePricingCurrencyToggledFailed, error: error)
-    }
-
     func log(
         event: STPAnalyticEvent,
         duration: TimeInterval? = nil,
