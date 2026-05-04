@@ -103,8 +103,6 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         // /v1/crypto/internal/crs_carf_declaration
         static let crsCarfDeclarationAPIPath = "/v1/crypto/internal/crs_carf_declaration"
-        static let crsCarfDeclarationText = "I declare that the information I provided is true and complete."
-        static let crsCarfDeclarationVersion = "2026-04-22"
 
         // /v1/crypto/internal/refresh_consumer_person
         static let refreshKYCInfoAPIPath = "/v1/crypto/internal/refresh_consumer_person"
@@ -431,26 +429,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
     }
 
     func testRetrieveMissingIdentifiersSuccess() async throws {
-        let mockResponseData = Data("""
-        {
-          "identifiers": [
-            {
-              "type": "ee_ik",
-              "regulation": "eu_mica"
-            },
-            {
-              "type": "gr_afm",
-              "regulation": "eu_carf"
-            }
-          ],
-          "alternatives": [
-            {
-              "original_missing_identifiers": ["mt_nic"],
-              "alternative_missing_identifiers": ["mt_pp"]
-            }
-          ]
-        }
-        """.utf8)
+        let mockResponseData = try RetrieveMissingIdentifiersResponseMock.retrieveMissingIdentifiersResponse_200.data()
 
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.retrieveMissingIdentifiersAPIPath)
@@ -472,11 +451,13 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         let apiClient = stubbedAPIClient()
         let response = try await apiClient.retrieveMissingIdentifiers(linkAccountInfo: Constant.validLinkAccountInfo)
-        XCTAssertEqual(response.identifiers.count, 2)
-        XCTAssertEqual(response.identifiers[0].type, .eeIK)
-        XCTAssertEqual(response.identifiers[0].regulation, .euMiCA)
-        XCTAssertEqual(response.identifiers[1].type, .grAFM)
+        XCTAssertEqual(response.identifiers.count, 3)
+        XCTAssertEqual(response.identifiers[0].type, .deSTN)
+        XCTAssertEqual(response.identifiers[0].regulation, .euCARF)
+        XCTAssertEqual(response.identifiers[1].type, .mtNIC)
         XCTAssertEqual(response.identifiers[1].regulation, .euCARF)
+        XCTAssertEqual(response.identifiers[2].type, .mtNIC)
+        XCTAssertEqual(response.identifiers[2].regulation, .euMiCA)
         XCTAssertEqual(response.alternatives.count, 1)
         XCTAssertEqual(response.alternatives[0].originalMissingIdentifiers, [.mtNIC])
         XCTAssertEqual(response.alternatives[0].alternativeMissingIdentifiers, [.mtPP])
@@ -495,24 +476,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
     }
 
     func testSubmitIdentifiersSuccessWithValidationResult() async throws {
-        let mockResponseData = Data("""
-        {
-          "valid": false,
-          "identifiers": [
-            {
-              "type": "mt_nic",
-              "regulation": "eu_mica"
-            }
-          ],
-          "alternatives": [
-            {
-              "original_missing_identifiers": ["mt_nic"],
-              "alternative_missing_identifiers": ["mt_pp"]
-            }
-          ],
-          "invalid_identifiers": ["mt_pp"]
-        }
-        """.utf8)
+        let mockResponseData = try SubmitIdentifiersResponseMock.submitIdentifiersResponse_Invalid_200.data()
 
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.submitIdentifiersAPIPath)
@@ -544,22 +508,15 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         )
 
         XCTAssertFalse(response.valid)
-        XCTAssertEqual(response.identifiers.map(\.type), [.mtNIC])
-        XCTAssertEqual(response.identifiers.map(\.regulation), [.euMiCA])
+        XCTAssertEqual(response.identifiers.map(\.type), [.deSTN, .mtNIC, .mtNIC])
+        XCTAssertEqual(response.identifiers.map(\.regulation), [.euCARF, .euCARF, .euMiCA])
         XCTAssertEqual(response.alternatives[0].originalMissingIdentifiers, [.mtNIC])
         XCTAssertEqual(response.alternatives[0].alternativeMissingIdentifiers, [.mtPP])
-        XCTAssertEqual(response.invalidIdentifiers, [.mtPP])
+        XCTAssertEqual(response.invalidIdentifiers, [.deSTN, .mtNIC])
     }
 
     func testSubmitIdentifiersSuccess() async throws {
-        let mockResponseData = Data("""
-        {
-          "valid": true,
-          "identifiers": [],
-          "alternatives": [],
-          "invalid_identifiers": []
-        }
-        """.utf8)
+        let mockResponseData = try SubmitIdentifiersResponseMock.submitIdentifiersResponse_Valid_200.data()
 
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.submitIdentifiersAPIPath)
@@ -604,12 +561,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
     }
 
     func testRetrieveCRSCARFDeclarationSuccess() async throws {
-        let mockResponseData = Data("""
-        {
-          "text": "\(Constant.crsCarfDeclarationText)",
-          "version": "\(Constant.crsCarfDeclarationVersion)"
-        }
-        """.utf8)
+        let mockResponseData = try RetrieveCRSCARFDeclarationResponseMock.retrieveCRSCARFDeclarationResponse_200.data()
 
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.crsCarfDeclarationAPIPath)
@@ -632,8 +584,8 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
         let response = try await apiClient.retrieveCRSCARFDeclaration(linkAccountInfo: Constant.validLinkAccountInfo)
 
-        XCTAssertEqual(response.text, Constant.crsCarfDeclarationText)
-        XCTAssertEqual(response.version, Constant.crsCarfDeclarationVersion)
+        XCTAssertEqual(response.text, "test")
+        XCTAssertEqual(response.version, "0")
     }
 
     func testRetrieveCRSCARFDeclarationThrowsWithInvalidArguments() async {
@@ -649,7 +601,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
     }
 
     func testConfirmCRSCARFDeclarationSuccess() async throws {
-        let mockResponseData = try JSONSerialization.data(withJSONObject: [:])
+        let mockResponseData = try ConfirmCRSCARFDeclarationResponseMock.confirmCRSCARFDeclarationResponse_200.data()
 
         stub { request in
             XCTAssertEqual(request.url?.path, Constant.crsCarfDeclarationAPIPath)
