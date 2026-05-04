@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Butiran kad tidak boleh diubah.";
 
+"Card number. Supported cards include %@" = "Nombor kad. Kad yang disokong termasuk %@";
+
 "Change" = "Ubah";
 
 "Choose a card brand" = "Pilih jenama kad";
@@ -305,5 +307,3 @@
 "Your IBAN should start with a two-letter country code." = "IBAN anda harus bermula dengan kod negara dua huruf.";
 
 "iDEAL Bank" = "Bank iDEAL";
-
-"Card number. Supported cards include %@" = "Nombor kad. Kad yang disokong termasuk %@";

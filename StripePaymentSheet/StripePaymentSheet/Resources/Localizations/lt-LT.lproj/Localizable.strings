@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Kortelės duomenų keisti negalima.";
 
+"Card number. Supported cards include %@" = "Kortelės numeris. Palaikomos kortelės: %@";
+
 "Change" = "Keisti";
 
 "Choose a card brand" = "Pasirinkite kortelės prekių ženklą";
@@ -305,5 +307,3 @@
 "Your IBAN should start with a two-letter country code." = "Jūsų IBAN turėtų prasidėti šalies kodu iš dviejų raidžių.";
 
 "iDEAL Bank" = "iDEAL bankas";
-
-"Card number. Supported cards include %@" = "Kortelės numeris. Palaikomos kortelės: %@";
