@@ -305,8 +305,11 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             adaptivePricingEnabled: true,
             customerEmailLocation: "DE"
         )
+        var configuration = Checkout.Configuration()
+        configuration.adaptivePricing.allowed = true
         let checkout = try await Checkout(
             clientSecret: checkoutSessionResponse.clientSecret,
+            configuration: configuration,
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         )
 
