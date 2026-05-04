@@ -322,7 +322,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         static var enumName: String { "Link brand" }
 
         case link
-        case notlink
+        case onelink
     }
 
     enum AllowsDelayedPMs: String, PickerEnum {

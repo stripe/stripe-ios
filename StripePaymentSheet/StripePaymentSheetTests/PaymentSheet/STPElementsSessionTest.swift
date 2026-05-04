@@ -85,9 +85,9 @@ class STPElementsSessionTest: XCTestCase {
 
         let elementsSession = STPElementsSession.decodedObject(fromAPIResponse: elementsSessionJson)!
 
-        XCTAssertEqual(LinkBrand.notlink.rawValue, "notlink")
-        XCTAssertEqual(elementsSession.linkSettings?.brand, .notlink)
-        XCTAssertEqual(elementsSession.linkBrand, .notlink)
+        XCTAssertEqual(LinkBrand.onelink.rawValue, "notlink")
+        XCTAssertEqual(elementsSession.linkSettings?.brand, .onelink)
+        XCTAssertEqual(elementsSession.linkBrand, .onelink)
     }
 
     func testDecodedObjectFromAPIResponseMapping_unknownLinkBrandDefaultsToLink() {

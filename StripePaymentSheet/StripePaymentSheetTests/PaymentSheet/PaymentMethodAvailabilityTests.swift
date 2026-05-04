@@ -12,11 +12,11 @@ import XCTest
 final class PaymentMethodAvailabilityTests: XCTestCase {
     func testResolvedLinkBrand_usesElementsSessionBrand() {
         let elementsSession = STPElementsSession._testValue(
-            linkSettings: ._testValue(brand: .notlink)
+            linkSettings: ._testValue(brand: .onelink)
         )
         let configuration = PaymentSheet.Configuration()
 
-        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .notlink)
+        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .onelink)
     }
 
     func testResolvedLinkBrand_prefersConfigurationOverride() {
@@ -24,9 +24,9 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
             linkSettings: ._testValue(brand: .link)
         )
         var configuration = PaymentSheet.Configuration()
-        configuration.link = .init(brand: .notlink)
+        configuration.link = .init(brand: .onelink)
 
-        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .notlink)
+        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .onelink)
     }
 
     func testResolvedLinkBrand_defaultsToLinkWhenElementsSessionHasNoBrand() {

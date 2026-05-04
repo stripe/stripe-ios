@@ -370,6 +370,16 @@ extension String.Localized {
         )
     }
 
+    static func card_number_with_supported_brands(brandNames: String) -> String {
+        String(
+            format: STPLocalizedString(
+                "Card number. Supported cards include %@",
+                "Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover')"
+            ),
+            brandNames
+        )
+    }
+
     static var select_your_payment_method: String {
         STPLocalizedString(
             "Select your payment method",

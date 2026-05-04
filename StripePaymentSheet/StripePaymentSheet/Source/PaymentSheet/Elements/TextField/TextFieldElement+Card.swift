@@ -56,6 +56,24 @@ extension TextFieldElement {
             return selectedBrand == .unknown ? cardBrandFromBin : selectedBrand
         }
 
+        func accessibilityLabel(for text: String) -> String {
+            let cardBrand = cardBrand(for: text)
+            if cardBrand != .unknown {
+                return label
+            }
+            // Show supported brands when no specific brand is detected
+            let isCBCEnabled = cardBrandChoiceElement != nil
+            let brands = RotatingCardBrandsView.orderedCardBrands(from: STPCardBrand.allCases.filter {
+                cardBrandFilter.isAccepted(cardBrand: $0) && ($0 != .cartesBancaires || isCBCEnabled)
+            })
+            let brandNames = brands.compactMap { STPCardBrandUtilities.stringFrom($0) }
+                .filter { $0 != "Unknown" }
+            if brandNames.isEmpty {
+                return label
+            }
+            return .Localized.card_number_with_supported_brands(brandNames: brandNames.joined(separator: ", "))
+        }
+
         func accessoryView(for text: String, theme: ElementsAppearance) -> UIView? {
             // If CBC is enabled and the PAN is not empty...
             if let cardBrandChoiceElement = cardBrandChoiceElement, !text.isEmpty {

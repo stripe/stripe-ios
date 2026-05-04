@@ -305,3 +305,5 @@
 "Your IBAN should start with a two-letter country code." = "Vaša koda IBAN se mora začeti z dvomestno kodo države.";
 
 "iDEAL Bank" = "Banka iDEAL";
+
+"Card number. Supported cards include %@" = "Številka kartice. Podprte kartice vključujejo %@";

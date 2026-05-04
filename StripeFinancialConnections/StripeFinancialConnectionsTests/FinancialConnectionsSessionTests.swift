@@ -83,8 +83,8 @@ final class FinancialConnectionsSessionTests: XCTestCase {
     func testSynchronizeParsesNotlinkBrand() throws {
         let synchronize = try makeSynchronize(brandValue: "notlink")
 
-        XCTAssertEqual(synchronize.manifest.brand, .notlink)
-        XCTAssertEqual(synchronize.manifest.appearance.logo, .notlink_logo)
+        XCTAssertEqual(synchronize.manifest.brand, .onelink)
+        XCTAssertEqual(synchronize.manifest.appearance.logo, .onelink_logo)
     }
 
     func testSynchronizeParsesUnknownBrandAsUnparsable() throws {
@@ -103,9 +103,9 @@ final class FinancialConnectionsSessionTests: XCTestCase {
     }
 
     func testExplicitBrandOverridesLogoWithoutChangingThemeColors() {
-        let manifest = makeManifest(theme: .light, brand: .notlink)
+        let manifest = makeManifest(theme: .light, brand: .onelink)
 
-        XCTAssertEqual(manifest.appearance.logo, .notlink_logo)
+        XCTAssertEqual(manifest.appearance.logo, .onelink_logo)
         XCTAssertTrue(manifest.appearance.colors.primary.isEqual(FinancialConnectionsAppearance.Colors.stripe.primary))
     }
 
