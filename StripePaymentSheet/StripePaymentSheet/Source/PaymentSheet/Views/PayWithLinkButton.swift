@@ -50,8 +50,8 @@ final class PayWithLinkButton: UIControl {
         switch brand {
         case .link, .unparsable:
             return Image.link_logo_bw.makeImage(template: false)
-        case .notlink:
-            return Image.notlink_logo_bw.makeImage(template: false)
+        case .onelink:
+            return Image.onelink_logo_bw.makeImage(template: false)
         }
     }
 
@@ -272,14 +272,22 @@ private extension PayWithLinkButton {
         return NSAttributedString(attachment: spacerAttachment)
     }
 
+    static func logoSize(for image: UIImage) -> CGSize {
+        let height = Constants.logoSize.height
+        let width = ceil(height * (image.size.width / max(image.size.height, 1)))
+        return CGSize(width: width, height: height)
+    }
+
     func makeLogoView() -> UIImageView {
-        let logoView = UIImageView(image: primaryLinkLogoImage)
+        let image = primaryLinkLogoImage
+        let logoSize = Self.logoSize(for: image)
+        let logoView = UIImageView(image: image)
         logoView.translatesAutoresizingMaskIntoConstraints = false
-        logoView.contentMode = .scaleAspectFill
+        logoView.contentMode = .scaleAspectFit
 
         NSLayoutConstraint.activate([
-            logoView.widthAnchor.constraint(equalToConstant: Constants.logoSize.width),
-            logoView.heightAnchor.constraint(equalToConstant: Constants.logoSize.height),
+            logoView.widthAnchor.constraint(equalToConstant: logoSize.width),
+            logoView.heightAnchor.constraint(equalToConstant: logoSize.height),
         ])
 
         return logoView

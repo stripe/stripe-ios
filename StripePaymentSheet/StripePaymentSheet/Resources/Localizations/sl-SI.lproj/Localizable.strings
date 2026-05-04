@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Podrobnosti kartice ni mogoče spremeniti.";
 
+"Card number. Supported cards include %@" = "Številka kartice. Podprte kartice vključujejo %@";
+
 "Change" = "Spremeni";
 
 "Choose a card brand" = "Izberite znamko kartice";

@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Kortoplysninger kan ikke ændres.";
 
+"Card number. Supported cards include %@" = "Kortnummer. Understøttede kort omfatter %@";
+
 "Change" = "Skift";
 
 "Choose a card brand" = "Vælg et kortbrand";

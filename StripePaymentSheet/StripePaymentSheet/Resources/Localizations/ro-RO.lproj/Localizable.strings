@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Detaliile cardului nu pot fi modificate.";
 
+"Card number. Supported cards include %@" = "Numărul cardului. Cardurile acceptate includ %@";
+
 "Change" = "Modificare";
 
 "Choose a card brand" = "Alegeți o marcă de carduri";

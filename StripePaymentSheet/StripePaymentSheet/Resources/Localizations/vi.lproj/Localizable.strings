@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Không thể thay đổi thông tin thẻ.";
 
+"Card number. Supported cards include %@" = "Số thẻ. Các thẻ được hỗ trợ bao gồm %@";
+
 "Change" = "Thay đổi";
 
 "Choose a card brand" = "Chọn thương hiệu thẻ";
