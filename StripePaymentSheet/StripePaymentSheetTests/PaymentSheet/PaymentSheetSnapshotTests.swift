@@ -621,6 +621,13 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
+    func testPaymentMethodLayoutAutomaticForceVertical() {
+        configuration.paymentMethodLayout = .automatic
+        stubNewCustomerResponseWithAutomaticLayout(paymentMethodTypes: [.card, .USBankAccount], forceVertical: true)
+        preparePaymentSheet()
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
     // MARK: - Special LPM tests
 
     func testPaymentSheet_LPM_InstantDebits_only_promotion() {
@@ -1203,12 +1210,13 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         stubConsumerSession()
     }
 
-    private func stubNewCustomerResponseWithAutomaticLayout(paymentMethodTypes: [STPPaymentMethodType]) {
+    private func stubNewCustomerResponseWithAutomaticLayout(paymentMethodTypes: [STPPaymentMethodType], forceVertical: Bool = false) {
         stubSessions(
             fileMock: .elements_sessions_paymentMethod_savedPM_automaticLayout_200,
             responseCallback: { data in
                 var template = String(data: data, encoding: .utf8)!
                 template = template.replacingOccurrences(of: "[PAYMENT_METHOD_TYPES]", with: paymentMethodTypes.map { "\"\($0.identifier)\"" }.joined(separator: ","))
+                template = template.replacingOccurrences(of: "[FLAG]", with: forceVertical.description)
                 return template.data(using: .utf8)!
             }
         )

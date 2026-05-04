@@ -5,7 +5,8 @@
   "flags": {
     "elements_include_payment_intent_id_in_analytics_events": true,
     "elements_enable_mx_card_installments": false,
-    "elements_enable_br_card_installments": false
+    "elements_enable_br_card_installments": false,
+    "elements_mobile_force_vertical_payment_method_layout": [FLAG]
   },
   "google_pay_preference": "enabled",
   "link_consumer_info": null,
