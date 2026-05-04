@@ -772,8 +772,9 @@ extension RowButton: UITextViewDelegate {
         in characterRange: NSRange,
         interaction: UITextItemInteraction
     ) -> Bool {
+        // Only handle a direct tap on the link text.
+        // Returning false for other interaction types suppresses previews, edit actions, and other system link affordances.
         guard interaction == .invokeDefaultAction else {
-            // Disable preview and actions
             return false
         }
         

@@ -837,6 +837,59 @@ extension PaymentSheetFormFactory {
         return country
     }
 
+    func makeKlarnaHeader() -> SubtitleElement {
+        if configuration.usePrototypeBNPLStyleForFormHeaders {
+            return makeBNPLHeader()
+        }
+        // Legacy fallback kept only so the prototype PMME header can be disabled from tests / temporary higher-level callers.
+        // Remove this fallback once the PMME-style BNPL header is the permanent implementation.
+        return makeCopyLabel(text: .Localized.buy_now_or_pay_later_with_klarna)
+    }
+
+    func makeAffirmHeader() -> SubtitleElement {
+        if configuration.usePrototypeBNPLStyleForFormHeaders {
+            return makeBNPLHeader()
+        }
+        // Legacy fallback kept only so the prototype PMME header can be disabled from tests / temporary higher-level callers.
+        // Remove this fallback once the PMME-style BNPL header is the permanent implementation.
+        return SubtitleElement(view: AffirmCopyLabel(theme: theme), isHorizontalMode: configuration.isHorizontalMode)
+    }
+
+    // Temporary prototype/test-only data source for BNPL form headers.
+    // Replace this with backend-provided copy once the form pipeline can receive BNPL header data.
+    func makePrototypeBNPLHeaderConfiguration() -> BNPLFormHeaderView.Configuration {
+        let promotion: String
+        switch paymentMethod {
+        case .stripe(.klarna):
+            promotion = String.Localized.buy_now_or_pay_later_with_klarna
+        case .stripe(.afterpayClearpay):
+            if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
+                promotion = String.Localized.buy_now_or_pay_later_with_clearpay
+            } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+                promotion = String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
+            } else {
+                promotion = String.Localized.buy_now_or_pay_later_with_afterpay
+            }
+        case .stripe(.affirm):
+            promotion = String.Localized.pay_over_time_with_affirm
+        default:
+            stpAssertionFailure("Unexpected payment method for BNPL header: \(paymentMethod)")
+            promotion = ""
+        }
+
+        return BNPLFormHeaderView.Configuration(
+            appearance: configuration.appearance,
+            promotion: promotion,
+            learnMoreText: "Learn more",
+            infoUrl: URL(string: "https://www.lego.com")!
+        )
+    }
+
+    func makeBNPLHeader() -> SubtitleElement {
+        let headerView = BNPLFormHeaderView(configuration: makePrototypeBNPLHeaderConfiguration())
+        return SubtitleElement(view: headerView, isHorizontalMode: configuration.isHorizontalMode)
+    }
+
     func makeCopyLabel(text: String) -> SubtitleElement {
         let label = UILabel()
         label.text = text

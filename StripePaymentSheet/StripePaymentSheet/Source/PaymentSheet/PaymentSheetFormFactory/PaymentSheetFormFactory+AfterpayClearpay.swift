@@ -21,6 +21,9 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> SubtitleElement {
+        if configuration.usePrototypeBNPLStyleForFormHeaders {
+            return makeBNPLHeader()
+        }
         return SubtitleElement(
             view: AfterpayPriceBreakdownView(
                 currency: currency,
