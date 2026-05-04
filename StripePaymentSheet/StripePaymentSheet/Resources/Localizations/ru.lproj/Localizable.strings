@@ -305,3 +305,5 @@
 "Your IBAN should start with a two-letter country code." = "Код IBAN должен начинаться с двухбуквенного кода страны.";
 
 "iDEAL Bank" = "Банк в системе iDEAL";
+
+"Card number. Supported cards include %@" = "Номер карты. В число поддерживаемых карт входят %@";
