@@ -21,7 +21,7 @@ public struct SubmitIdentifiersResult: Decodable, Equatable {
     public let alternatives: [ComplianceIdentifierAlternativeGroup]
 
     /// Submitted identifier types whose values were invalid.
-    public let invalidIdentifiers: [ComplianceIdentifierType]
+    public let invalidIdentifiers: [String]
 
     private enum CodingKeys: String, CodingKey {
         case valid
@@ -35,6 +35,6 @@ public struct SubmitIdentifiersResult: Decodable, Equatable {
         valid = try container.decodeIfPresent(Bool.self, forKey: .valid) ?? true
         identifiers = try container.decodeIfPresent([ComplianceIdentifierRequirement].self, forKey: .identifiers) ?? []
         alternatives = try container.decodeIfPresent([ComplianceIdentifierAlternativeGroup].self, forKey: .alternatives) ?? []
-        invalidIdentifiers = try container.decodeIfPresent([ComplianceIdentifierType].self, forKey: .invalidIdentifiers) ?? []
+        invalidIdentifiers = try container.decodeIfPresent([String].self, forKey: .invalidIdentifiers) ?? []
     }
 }

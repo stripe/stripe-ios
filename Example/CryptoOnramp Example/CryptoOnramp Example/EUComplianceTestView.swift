@@ -108,11 +108,11 @@ struct EUComplianceTestView: View {
         run {
             let response = try await coordinator.retrieveMissingIdentifiers()
             if identifiersText.isEmpty {
-                identifiersText = response.identifiers.map { "\($0.type.rawValue):" }.joined(separator: "\n")
+                identifiersText = response.identifiers.map { "\($0.type):" }.joined(separator: "\n")
             }
             responseText = """
             retrieveMissingIdentifiers:
-              identifiers: \(response.identifiers.map { "\($0.type.rawValue) (\($0.regulation.rawValue))" })
+              identifiers: \(response.identifiers.map { "\($0.type) (\($0.regulation.rawValue))" })
               alternatives: \(response.alternatives)
             """
         }
@@ -125,9 +125,9 @@ struct EUComplianceTestView: View {
             responseText = """
             submitIdentifiers:
               valid: \(response.valid)
-              identifiers: \(response.identifiers.map { "\($0.type.rawValue) (\($0.regulation.rawValue))" })
+              identifiers: \(response.identifiers.map { "\($0.type) (\($0.regulation.rawValue))" })
               alternatives: \(response.alternatives)
-              invalid_identifiers: \(response.invalidIdentifiers.map(\.rawValue))
+              invalid_identifiers: \(response.invalidIdentifiers)
             """
         }
     }
@@ -188,7 +188,7 @@ struct EUComplianceTestView: View {
                     throw InputError.invalidIdentifierLine(index + 1)
                 }
 
-                return ComplianceIdentifier(type: .init(rawValue: type), value: value)
+                return ComplianceIdentifier(type: type, value: value)
             }
     }
 }
