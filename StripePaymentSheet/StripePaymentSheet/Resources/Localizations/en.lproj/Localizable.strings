@@ -540,3 +540,6 @@ the heading the screen itself. */
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
 
+/* Error message shown to the user in live mode for non-card API errors, including the request ID for support reference. */
+"Something went wrong. Request ID: %@" = "Something went wrong. Request ID: %@";
+
