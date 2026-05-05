@@ -170,7 +170,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case TH
         case DE
         case IT
-        case usTax = "us_tax"
         case stripeShop = "stripe_shop_test"
         case custom
     }

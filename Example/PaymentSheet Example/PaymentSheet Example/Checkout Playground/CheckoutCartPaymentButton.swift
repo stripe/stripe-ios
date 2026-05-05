@@ -97,11 +97,6 @@ struct CheckoutCartPaymentButton: View {
     private func makePaymentSheet() -> PaymentSheet {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "payments-example://stripe-redirect"
-        configuration.merchantDisplayName = "Example, Inc."
-        configuration.applePay = PaymentSheet.ApplePayConfiguration(
-            merchantId: "merchant.com.stripe.umbrella.test",
-            merchantCountryCode: "US"
-        )
         return PaymentSheet(checkout: checkout, configuration: configuration)
     }
 }
