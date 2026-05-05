@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_payment_intent$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=ebZ7wmLDyXrDB8n3f8AlmuvYQ45JfKVVi59JBAzhEJE1YsHUS7hvntvpwbJCIUGRC9hg%2F3qVSfKH%2FC%2BE0d4KT0bCDkVxXj0ihNx9QAufxTNBtdYFVHSU%2FeW75UYT2%2FnQ1%2FBdwWJiwOJTEtNVD9KalKXDguNCO2ncuKq9H9yHm58DKjt996fftKBvZdUSqxLIlR9Xa5KxbV1OantxcCy8J7GFAp%2FZ93liVcLli4wrrW4%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: 963d81ac985fae0eaefe6d4206e35d80
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:39:13 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 202
 x-content-type-options: nosniff
+x-cloud-trace-context: 62889ca11b603f62618d40e946d5ff61;o=1
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=iKv2ya6A60WGBebMAJhP4oWxhVvoVQPBDNKTBPBdR4cG9mo17Alztf8NjJfhvJ4dMP90XqnJFpJ2AjXIPc9mrXiiwp3wmsOftNvoPAHz8G3zokUFgZd9C%2BHJ%2FhI8pdNx8OE9XYH1BjtaaQmrQFfNTfYJRhXuASAaYn%2BwiSj%2Fs9VdWxc4ZvV4yMOc8qbLcrTmvKRtT4sB58hBtRuVuQZ1eAbcWTEImCLqsQ9p1WH5hyk%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Tue, 05 May 2026 03:20:32 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 202
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 
-{"intent":"pi_3TBg2nFY0qyl6XeW1pl8SaPs","secret":"pi_3TBg2nFY0qyl6XeW1pl8SaPs_secret_GHzestVQpsxH1teEfypD1zQiD","status":"requires_action","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}
+{"intent":"pi_3TTZXAFY0qyl6XeW1F1ZZ8Wt","secret":"pi_3TTZXAFY0qyl6XeW1F1ZZ8Wt_secret_wfIgspDj7f1VGM8xdYLI4pHPK","status":"requires_action","publishable_key":"pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6"}
