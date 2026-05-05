@@ -1,7 +1,10 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### PaymentSheet
+* [Changed] Changed `@_spi(STP)` exposure of `LinkAppearance`, `VerifyKYCResult`, `PaymentSheetImageLibrary.bankIconCode(for:)`, and `PaymentSheetImageLibrary.bankIcon(for:iconStyle:)` to `@_spi(CryptoOnrampAlpha)`
 
 ## 25.13.0 2026-05-04
 ### PaymentSheet
