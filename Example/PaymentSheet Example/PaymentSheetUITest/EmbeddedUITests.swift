@@ -246,6 +246,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         app.buttons["Checkout"].waitForExistenceAndTap()
         payWithApplePay()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
     func testSingleCardCBC_onRemove_selectStateNone() {
@@ -492,6 +493,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         app.buttons["Checkout"].waitForExistenceAndTap()
         payWithApplePay()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
     }
 
     func testSelection_savedPaymentMethod() {
@@ -709,6 +711,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
         app.buttons["Checkout"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Checkout"].isEnabled)
         payWithApplePay()
+        XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10))
 
         // Apple Pay should be selected by default upon reloading with the same customer
         app.buttons["Reload"].tap()
