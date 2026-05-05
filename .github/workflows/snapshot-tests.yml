@@ -53,6 +53,8 @@ jobs:
           echo "SNAPSHOT_DESTINATION=platform=iOS Simulator,id=$UDID" >> "$GITHUB_ENV"
 
       - name: Run snapshot tests (record mode)
+        env:
+          SIMCTL_CHILD_STP_RECORD_SNAPSHOTS: "1"
         run: |
           set -o pipefail
           xcodebuild test \
@@ -60,10 +62,11 @@ jobs:
             -scheme StripeiOS \
             -destination "$SNAPSHOT_DESTINATION" \
             -only-testing:StripeiOSTests \
-            -testEnvironment STP_RECORD_SNAPSHOTS=1 \
             2>&1 | xcbeautify
 
       - name: Run snapshot tests - PaymentSheet (record mode)
+        env:
+          SIMCTL_CHILD_STP_RECORD_SNAPSHOTS: "1"
         run: |
           set -o pipefail
           xcodebuild test \
@@ -71,7 +74,6 @@ jobs:
             -scheme StripePaymentSheet \
             -destination "$SNAPSHOT_DESTINATION" \
             -only-testing:StripePaymentSheetTests \
-            -testEnvironment STP_RECORD_SNAPSHOTS=1 \
             2>&1 | xcbeautify
 
       - name: Collect recorded snapshots
