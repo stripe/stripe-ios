@@ -131,10 +131,7 @@ class PMMEUIView: UIView {
 
     private func openInfoModal() {
         analyticsHelper.logTapped()
-
-        let infoController = PMMEInfoModal(infoUrl: infoUrl, style: appearance.style)
-        infoController.modalPresentationStyle = .formSheet
-        window?.findTopMostPresentedViewController()?.present(infoController, animated: true)
+        PMMEInfoModal.present(infoUrl: infoUrl, style: appearance.style, from: self)
     }
 }
 

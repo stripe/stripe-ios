@@ -52,9 +52,7 @@ final class BNPLFormHeaderView: UIView {
     }
 
     private func openInfoModal() {
-        let infoController = PMMEInfoModal(infoUrl: configuration.infoUrl, style: .alwaysDark)
-        infoController.modalPresentationStyle = .formSheet
-        window?.findTopMostPresentedViewController()?.present(infoController, animated: true)
+        PMMEInfoModal.present(infoUrl: configuration.infoUrl, style: .alwaysDark, from: self)
     }
 }
 

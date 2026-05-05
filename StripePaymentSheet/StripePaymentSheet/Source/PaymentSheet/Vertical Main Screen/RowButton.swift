@@ -15,7 +15,10 @@ import UIKit
 /// - Note: This is an 'abstract base class', see its subclasses.
 class RowButton: UIView, EventHandler {
     typealias DidTapClosure = (RowButton) -> Void
-    
+
+    private static let sublabelVisibilityAnimationDuration: TimeInterval = 0.2
+    private static let sublabelFadeAnimationDuration: TimeInterval = 0.1
+
     // MARK: Subviews
 
     /// Exists for accessibility reasons to give the RowButton accessible features while keeping the accessory button accessible
@@ -29,7 +32,7 @@ class RowButton: UIView, EventHandler {
         switch sublabelVariant {
         case .plain(let label):
             label
-        case .bnpl(let textView, _, _):
+        case .paymentMethodMessaging(let textView, _):
             textView
         }
     }
@@ -77,11 +80,11 @@ class RowButton: UIView, EventHandler {
 
     // MARK: Internal properties
     
-    // We have two different variants of the row button - a normal one and one that displays BNPL/PMME data
-    // The later has some different behavior and uses a different view for the sublabel
+    // We have two different variants of the row button: a standard subtitle label
+    // or an inline PMME text view with a learn-more link.
     private enum SublabelVariant {
         case plain(UILabel)
-        case bnpl(sublabel: UITextView, infoUrl: URL, isExpanded: Bool)
+        case paymentMethodMessaging(sublabel: UITextView, infoUrl: URL)
     }
 
     private var sublabelVariant: SublabelVariant
@@ -125,17 +128,16 @@ class RowButton: UIView, EventHandler {
             didTap: didTap
         )
     }
-    
-    // BNPL/PMME initializer
+
+    // Inline PMME initializer
     convenience init(
         appearance: PaymentSheet.Appearance,
         type: RowButtonType,
         imageView: UIImageView,
         text: String,
-        // TODO: We may need to use other data here depending on how we hook up the data from the API. Probably no action needed here.
-        bnplPromoText: String,
-        bnplLearnMoreText: String,
-        bnplInfoUrl: URL,
+        promotionText: String,
+        learnMoreText: String,
+        infoUrl: URL,
         badgeText: String? = nil,
         promoBadge: PromoBadgeView? = nil,
         accessoryView: UIView? = nil,
@@ -143,13 +145,18 @@ class RowButton: UIView, EventHandler {
         isEmbedded: Bool = false,
         didTap: @escaping DidTapClosure
     ) {
-        let sublabel = Self.makeBnplSublabel(appearance: appearance, promotion: bnplPromoText, learnMoreText: bnplLearnMoreText, learnMoreUrl: bnplInfoUrl)
+        let sublabel = Self.makePaymentMethodMessagingSublabel(
+            appearance: appearance,
+            promotion: promotionText,
+            learnMoreText: learnMoreText,
+            learnMoreUrl: infoUrl
+        )
         self.init(
             appearance: appearance,
             type: type,
             imageView: imageView,
             text: text,
-            sublabel: .bnpl(sublabel: sublabel, infoUrl: bnplInfoUrl, isExpanded: false),
+            sublabel: .paymentMethodMessaging(sublabel: sublabel, infoUrl: infoUrl),
             badgeText: badgeText,
             promoBadge: promoBadge,
             accessoryView: accessoryView,
@@ -157,10 +164,9 @@ class RowButton: UIView, EventHandler {
             isEmbedded: isEmbedded,
             didTap: didTap
         )
-        // TODO: Make sure that in the Swift language this code is actually run and the function isn't exited early after the self.init() call. Fix if so.
         sublabel.delegate = self
     }
-    
+
     private init(
         appearance: PaymentSheet.Appearance,
         type: RowButtonType,
@@ -256,14 +262,15 @@ class RowButton: UIView, EventHandler {
 
     func setSublabel(text: String?, animated: Bool = true) {
         guard case .plain(let plainSublabel) = sublabelVariant else {
-            stpAssertionFailure("setting the sublabel is not supported in BNPL PMME row type")
+            stpAssertionFailure("Setting the sublabel is not supported for inline PMME row variants.")
             return
         }
         
         guard text != plainSublabel.text else {
             return
         }
-        let duration = animated ? 0.2 : 0
+        let duration = animated ? Self.sublabelVisibilityAnimationDuration : 0
+        let fadeDuration = animated ? Self.sublabelFadeAnimationDuration : 0
         guard let text else {
             UIView.animate(withDuration: duration) { [self] in
                 plainSublabel.text = nil
@@ -278,7 +285,7 @@ class RowButton: UIView, EventHandler {
         UIView.animate(withDuration: duration) {
             plainSublabel.isHidden = text.isEmpty
         }
-        UIView.animate(withDuration: duration / 2, delay: duration / 2) {
+        UIView.animate(withDuration: fadeDuration, delay: max(0, duration - fadeDuration)) {
             plainSublabel.alpha = 1
         }
     }
@@ -294,58 +301,41 @@ class RowButton: UIView, EventHandler {
         defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
         updateAccessibilityTraits()
         
-        if case let .bnpl(sublabelTextView, infoUrl, isExpanded) = sublabelVariant {
+        if case let .paymentMethodMessaging(sublabelTextView, _) = sublabelVariant {
             let shouldExpand = isSelected
-            // TODO: We should probably find a way to make the semantics clearer here. Kind of confusing to be mixing and matching "isExpanded" and "isSelected" and executing this function in this weird in-between state where isExpanded is out of date. Or maybe not, idk.
-            if isExpanded != shouldExpand {
-                updateBnplExpansion(isExpanded: shouldExpand)
+            let isExpanded = !sublabelTextView.isHidden
+            guard isExpanded != shouldExpand else {
+                return
             }
-            
-            // Update BNPL info
-            sublabelVariant = .bnpl(sublabel: sublabelTextView, infoUrl: infoUrl, isExpanded: shouldExpand)
+            setPaymentMethodMessagingExpanded(shouldExpand, textView: sublabelTextView)
         }
     }
-    
-    // TODO: Refactor the duration calculation to not repeat the constant everywhere
-    private func updateBnplExpansion(isExpanded: Bool) {
+
+    private func setPaymentMethodMessagingExpanded(_ isExpanded: Bool, textView: UITextView) {
         if isExpanded {
-            showBnplInfo()
-        } else {
-            hideBnplInfo()
-        }
-    }
-    
-    // TODO: maybe refactor the call stack of this function so that we don't have to guard on being in the BNPL style. At a minimum clean up the guard
-    private func showBnplInfo() {
-        guard case let .bnpl(sublabelTextView, _, _) = sublabelVariant else {
-            stpAssertionFailure("TODO: put message here")
+            heightConstraint?.isActive = false
+            textView.alpha = 0
+            UIView.animate(withDuration: Self.sublabelVisibilityAnimationDuration) {
+                textView.isHidden = false
+                self.setNeedsLayout()
+                self.layoutIfNeeded()
+            }
+            UIView.animate(
+                withDuration: Self.sublabelFadeAnimationDuration,
+                delay: Self.sublabelVisibilityAnimationDuration - Self.sublabelFadeAnimationDuration
+            ) {
+                textView.alpha = 1
+            }
             return
         }
-        heightConstraint?.isActive = false
-        sublabelTextView.alpha = 0
-        UIView.animate(withDuration: 0.2) {
-            sublabelTextView.isHidden = false
+
+        UIView.animate(withDuration: Self.sublabelVisibilityAnimationDuration) {
+            textView.isHidden = true
             self.setNeedsLayout()
             self.layoutIfNeeded()
         }
-        UIView.animate(withDuration: 0.1, delay: 0.1) {
-            sublabelTextView.alpha = 1
-        }
-    }
-    
-    // TODO: Refactor to be a single function with showBnplInfo, but only if it's clean and readable
-    private func hideBnplInfo() {
-        guard case let .bnpl(sublabelTextView, _, _) = sublabelVariant else {
-            stpAssertionFailure("TODO: put message here")
-            return
-        }
-        UIView.animate(withDuration: 0.2) {
-            sublabelTextView.isHidden = true
-            self.setNeedsLayout()
-            self.layoutIfNeeded()
-        }
-        UIView.animate(withDuration: 0.2) {
-            sublabelTextView.alpha = 0
+        UIView.animate(withDuration: Self.sublabelVisibilityAnimationDuration) {
+            textView.alpha = 0
         }
         makeSameHeightAsOtherRowButtonsIfNecessary()
     }
@@ -391,20 +381,21 @@ class RowButton: UIView, EventHandler {
     // MARK: Helper
 
     func makeSameHeightAsOtherRowButtonsIfNecessary() {
-        // To make all RowButtons the same height, set our height to the tallest non-BNPL/PMME variant (a RowButton w/ text and plain subtext)
-        
+        // To make all RowButtons the same height, set our height to the tallest
+        // standard variant (a RowButton with text and a plain sublabel).
+
         // The row button is allowed to be taller than the rest and we don't do this if either:
         //      1. We are flat_with_checkmark or flat_with_chevron style and have an accessory view
-        //      2. We are the BNPL/PMME variant and are selected (the PMME info is displayed)
+        //      2. We are displaying inline PMME text
         if isFlatWithCheckmarkOrChevronStyle && isDisplayingAccessoryView {
             heightConstraint?.isActive = false
             return
         }
-        if case .bnpl = sublabelVariant, isSelected {
+        if case let .paymentMethodMessaging(sublabelTextView, _) = sublabelVariant, !sublabelTextView.isHidden {
             heightConstraint?.isActive = false
             return
         }
-        
+
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
         if case .plain(let sublabel) = sublabelVariant, sublabel.text?.isEmpty == false {
             heightConstraint?.isActive = false
@@ -414,20 +405,14 @@ class RowButton: UIView, EventHandler {
         heightConstraint = heightAnchor.constraint(equalToConstant: Self.calculateTallestHeight(appearance: appearance, isEmbedded: isEmbedded))
         heightConstraint?.isActive = true
     }
-    
+
     private func openInfoModal() {
-        // TODO: We may need to log this being opened. Need to check what we decided on Slack and Google Docs
-        
-        guard case .bnpl(_, let learnMoreUrl, _) = sublabelVariant else {
-            stpAssertionFailure("We should never be trying to open the BNPL info modal outside of BNPL variant")
+        guard case let .paymentMethodMessaging(_, learnMoreUrl) = sublabelVariant else {
+            stpAssertionFailure("We should never open the PMME info modal outside of the inline PMME row variant.")
             return
         }
-        
-        // TODO: We need to set the style to respect what was passed in PaymentSheet.Configuration. If that is already automatically handled, we can just set the style to the current user interface style, but otherwise we need to add data piping to get the payment sheet configuration or find some other solution.
-        let infoController = PMMEInfoModal(infoUrl: learnMoreUrl, style: .alwaysDark)
-        infoController.modalPresentationStyle = .formSheet
-        // TODO: Let's match how this is done for modals elsewhere in the PaymentSheet (if this exists). I think there are modals that are launched for terms and conditions or mandates or something else.
-        window?.findTopMostPresentedViewController()?.present(infoController, animated: true)
+
+        PMMEInfoModal.present(infoUrl: learnMoreUrl, style: .automatic, from: self)
     }
 }
 
@@ -609,8 +594,12 @@ extension RowButton {
         return sublabel
     }
     
-    static func makeBnplSublabel(appearance: PaymentSheet.Appearance, promotion: String, learnMoreText: String, learnMoreUrl: URL) -> UITextView {
-        // TODO: we should check the stripe-android code to see how it colors the text in the inline PMME in the PaymentSheet and match the colors from there.
+    static func makePaymentMethodMessagingSublabel(
+        appearance: PaymentSheet.Appearance,
+        promotion: String,
+        learnMoreText: String,
+        learnMoreUrl: URL
+    ) -> UITextView {
         let textView = PMMEPromotionTextView(foregroundColor: appearance.colors.primary)
         textView.attributedText = NSMutableAttributedString.pmmePromoString(
             font: appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20),

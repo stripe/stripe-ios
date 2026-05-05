@@ -8,11 +8,10 @@
 @_spi(STP) import StripeUICore
 import UIKit
 
-// TODO: document
+/// Shared text view used by PMME surfaces that need tappable links without selectable text.
 class PMMEPromotionTextView: LinkOpeningTextView {
-    
+
     init(foregroundColor: UIColor) {
-        // TODO: double check on textContainer thing
         super.init(frame: .zero, textContainer: nil)
         isScrollEnabled = false
         isEditable = false
@@ -24,7 +23,7 @@ class PMMEPromotionTextView: LinkOpeningTextView {
         adjustsFontForContentSizeCategory = true
         linkTextAttributes = [.foregroundColor: foregroundColor]
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

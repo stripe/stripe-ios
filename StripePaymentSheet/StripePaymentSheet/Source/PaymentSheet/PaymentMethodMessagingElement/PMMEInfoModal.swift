@@ -127,3 +127,15 @@ extension PMMEInfoModal: WKNavigationDelegate {
         activityIndicator.stopAnimating()
     }
 }
+
+extension PMMEInfoModal {
+    static func present(
+        infoUrl: URL,
+        style: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle,
+        from sourceView: UIView?
+    ) {
+        let infoController = PMMEInfoModal(infoUrl: infoUrl, style: style)
+        infoController.modalPresentationStyle = .formSheet
+        sourceView?.window?.findTopMostPresentedViewController()?.present(infoController, animated: true)
+    }
+}
