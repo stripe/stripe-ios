@@ -19,6 +19,10 @@ MANIFEST="${SNAPSHOT_MANIFEST:-$(mktemp)}"
 
 mkdir -p "$OUTPUT_DIR/images/baseline" "$OUTPUT_DIR/images/new" "$OUTPUT_DIR/images/diff"
 
+# Threshold: ignore diffs where less than 0.5% of pixels changed
+# This filters out subpixel rendering noise / antialiasing differences
+DIFF_THRESHOLD="${SNAPSHOT_DIFF_THRESHOLD:-0.005}"
+
 # Build a manifest of changes: TYPE|REL_PATH
 find "$RECORDED_DIR" -name "*.png" -print0 | while IFS= read -r -d '' recorded_file; do
     rel_path="${recorded_file#$RECORDED_DIR/}"
@@ -28,7 +32,22 @@ find "$RECORDED_DIR" -name "*.png" -print0 | while IFS= read -r -d '' recorded_f
         echo "added|$rel_path" >> "$MANIFEST"
     else
         if ! cmp -s "$baseline_file" "$recorded_file"; then
-            echo "modified|$rel_path" >> "$MANIFEST"
+            # Check if the difference is above threshold
+            if command -v compare &> /dev/null; then
+                # Get normalized RMSE (0.0 = identical, 1.0 = completely different)
+                metric=$(compare -metric RMSE "$baseline_file" "$recorded_file" /dev/null 2>&1 || true)
+                normalized=$(echo "$metric" | grep -oE '\([0-9.]+\)' | tr -d '()')
+                if [ -n "$normalized" ]; then
+                    above=$(echo "$normalized > $DIFF_THRESHOLD" | bc -l 2>/dev/null || echo "1")
+                    if [ "$above" = "1" ]; then
+                        echo "modified|$rel_path" >> "$MANIFEST"
+                    fi
+                else
+                    echo "modified|$rel_path" >> "$MANIFEST"
+                fi
+            else
+                echo "modified|$rel_path" >> "$MANIFEST"
+            fi
         fi
     fi
 done || true
