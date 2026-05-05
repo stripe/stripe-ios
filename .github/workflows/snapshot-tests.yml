@@ -25,7 +25,15 @@ jobs:
           path: .snapshot-baselines
 
       - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+        run: |
+          # Use the latest Xcode 26.x to match Bitrise CI environment
+          XCODE_PATH=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
+          if [ -z "$XCODE_PATH" ]; then
+            # Fall back to latest available Xcode
+            XCODE_PATH=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1)
+          fi
+          echo "Using $XCODE_PATH"
+          sudo xcode-select -s "$XCODE_PATH"
 
       - name: Create and boot simulator
         run: |
