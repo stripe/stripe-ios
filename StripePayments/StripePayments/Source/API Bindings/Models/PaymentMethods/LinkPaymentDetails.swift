@@ -10,6 +10,7 @@ import Foundation
 @_spi(STP) @frozen public enum LinkPaymentDetails {
     case card(Card)
     case bankAccount(BankDetails)
+    case generic(Generic)
 
     @_spi(STP) public struct Card {
         @_spi(STP) public let id: String
@@ -52,12 +53,37 @@ import Foundation
         }
     }
 
+    @_spi(STP) public struct Generic {
+        @_spi(STP) public let id: String
+        @_spi(STP) public let label: String
+        @_spi(STP) public let sublabel: String?
+
+        @_spi(STP) public init(
+            id: String,
+            label: String,
+            sublabel: String?
+        ) {
+            self.id = id
+            self.label = label
+            self.sublabel = sublabel
+        }
+
+        @_spi(STP) public var formattedDisplayText: String {
+            return [label, sublabel]
+                .compactMap { $0 }
+                .filter { !$0.isEmpty }
+                .joined(separator: " ")
+        }
+    }
+
     @_spi(STP) public var id: String {
         switch self {
         case .card(let card):
             return card.id
         case .bankAccount(let bankDetails):
             return bankDetails.id
+        case .generic(let genericDetails):
+            return genericDetails.id
         }
     }
 
@@ -67,6 +93,8 @@ import Foundation
             return cardDetails.displayName ?? formattedLast4
         case .bankAccount(let bankAccountDetails):
             return bankAccountDetails.bankName
+        case .generic(let genericDetails):
+            return genericDetails.label
         }
     }
 
@@ -76,6 +104,8 @@ import Foundation
             return cardDetails.displayName != nil ? formattedLast4 : nil
         case .bankAccount:
             return formattedLast4
+        case .generic(let genericDetails):
+            return genericDetails.sublabel
         }
     }
 
@@ -85,6 +115,8 @@ import Foundation
             return "•••• \(cardDetails.last4)"
         case .bankAccount(let bankAccountDetails):
             return "••••\(bankAccountDetails.last4)"
+        case .generic(let genericDetails):
+            return genericDetails.sublabel ?? genericDetails.label
         }
     }
 }

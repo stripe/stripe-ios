@@ -4,12 +4,28 @@
 //
 
 import StripeCoreTestUtils
+@_spi(STP) @testable import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
 
 class STPPPaymentMethodPaymentSheetTests: XCTestCase {
+    func testLinkGenericFormattedDisplayText() {
+        let genericDetails = LinkPaymentDetails.Generic(
+            id: "csmrpd_123",
+            label: "Pix",
+            sublabel: "000••••••••"
+        )
+
+        XCTAssertEqual(genericDetails.formattedDisplayText, "Pix 000••••••••")
+        XCTAssertEqual(LinkPaymentDetails.generic(genericDetails).formattedLast4, "000••••••••")
+
+        let paymentMethod = STPPaymentMethod._testLink()
+        paymentMethod.linkPaymentDetails = .generic(genericDetails)
+        XCTAssertEqual(paymentMethod.linkPaymentDetailsFormattedString, "Pix 000••••••••")
+    }
+
     func testHasUpdatedCardParams() {
         XCTAssertFalse(_testHasUpdatedCardParams(STPPaymentMethod._testCard(), expMonth: 01, expYear: 40))
         XCTAssertTrue(_testHasUpdatedCardParams(STPPaymentMethod._testCard(), expMonth: 01, expYear: 41))

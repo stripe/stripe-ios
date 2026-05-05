@@ -6,7 +6,9 @@
 //
 
 import StripeCoreTestUtils
+@_spi(STP) import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
+@testable import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
 import XCTest
 
@@ -68,6 +70,25 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
         STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375)
     }
 
+    func testSavedGenericLinkPaymentMethod_noApplePayLink() {
+        let paymentMethod = makeGenericLinkSavedPaymentMethod()
+        let sut = VerticalPaymentMethodListViewController(
+            initialSelection: .saved(paymentMethod: paymentMethod),
+            savedPaymentMethods: [paymentMethod],
+            paymentMethodTypes: paymentMethods.map { .stripe($0) },
+            shouldShowApplePay: false,
+            shouldShowLink: false,
+            savedPaymentMethodAccessoryType: .edit,
+            overrideHeaderView: nil,
+            appearance: .default.applyingLiquidGlassIfPossible(),
+            currency: "USD",
+            amount: 1099,
+            incentive: nil,
+            delegate: self
+        )
+        STPSnapshotVerifyView(sut.view, autoSizingHeightForWidth: 375)
+    }
+
     func testAppearance() {
         let sut = VerticalPaymentMethodListViewController(initialSelection: .saved(paymentMethod: ._testCard()), savedPaymentMethods: [._testCard()], paymentMethodTypes: paymentMethods.map { .stripe($0) }, shouldShowApplePay: true, shouldShowLink: true, savedPaymentMethodAccessoryType: .edit, overrideHeaderView: nil, appearance: ._testMSPaintTheme, currency: "USD", amount: 1099, incentive: nil, delegate: self)
         let window = UIWindow()
@@ -94,5 +115,17 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
         window.addAndPinSubview(sut.view, insets: .zero)
         STPSnapshotVerifyView(window, autoSizingHeightForWidth: 375)
         LinkAccountContext.shared.account = nil
+    }
+
+    private func makeGenericLinkSavedPaymentMethod() -> STPPaymentMethod {
+        let paymentMethod = STPPaymentMethod._testLink()
+        paymentMethod.linkPaymentDetails = .generic(
+            LinkPaymentDetails.Generic(
+                id: "csmrpd_123",
+                label: "Pix",
+                sublabel: "000••••••••"
+            )
+        )
+        return paymentMethod
     }
 }
