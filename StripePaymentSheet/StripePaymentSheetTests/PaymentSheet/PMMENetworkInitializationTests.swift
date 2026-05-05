@@ -130,6 +130,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
 
         assertViewDataEqual(actualViewData, expectedViewData)
+
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementInit],
+            configuration: configuration
+        )
     }
 
     func testCreate_connectedAccount_singlePartner() async {
@@ -195,6 +200,11 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
 
         assertViewDataEqual(actualViewData, expectedViewData)
+
+        assertAnalyticsLogged(
+            events: [.paymentMethodMessagingElementInit],
+            configuration: configuration
+        )
     }
 
     func testCreate_multiPartner_alwaysDark() async {
