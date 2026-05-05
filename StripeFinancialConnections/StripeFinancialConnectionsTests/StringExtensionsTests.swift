@@ -6,7 +6,7 @@
 //
 
 @_spi(STP) @testable import StripeCore
-@testable import StripeFinancialConnections
+@testable @_spi(STP) import StripeFinancialConnections
 import XCTest
 
 class StringExtensionsTests: XCTestCase {
