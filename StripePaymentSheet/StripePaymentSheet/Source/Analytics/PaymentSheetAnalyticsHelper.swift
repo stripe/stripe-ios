@@ -20,6 +20,8 @@ final class PaymentSheetAnalyticsHelper {
     // Vars set later as PaymentSheet successfully loads, etc.
     var intent: Intent?
     var elementsSession: STPElementsSession?
+    /// Resolved once `logLoadSucceeded` is called; nil before that.
+    private(set) var paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout?
     private var startTimes: [TimeMeasurement: Date] = [:]
 
     enum IntegrationShape {
@@ -134,6 +136,7 @@ final class PaymentSheetAnalyticsHelper {
         elementsSession: STPElementsSession,
         defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
         orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         loadTimings: PaymentSheetLoader.LoadTimings,
         isUpdate: Bool,
         hasCardArt: Bool,
@@ -141,6 +144,7 @@ final class PaymentSheetAnalyticsHelper {
     ) {
         self.intent = intent
         self.elementsSession = elementsSession
+        self.paymentMethodOrientation = paymentMethodOrientation
         let defaultPaymentMethodAnalyticsValue: String = {
             switch defaultPaymentMethod {
             case .applePay:
@@ -217,8 +221,8 @@ final class PaymentSheetAnalyticsHelper {
         case vertical
     }
 
-    func logInitialDisplayedPaymentMethods(visiblePaymentMethods: [String], hiddenPaymentMethods: [String], paymentMethodLayout: PaymentMethodLayout) {
-        var params: [String: Any] = ["payment_method_layout": paymentMethodLayout.rawValue]
+    func logInitialDisplayedPaymentMethods(visiblePaymentMethods: [String], hiddenPaymentMethods: [String]) {
+        var params: [String: Any] = [:]
         if !visiblePaymentMethods.isEmpty {
             params["visible_payment_methods"] = visiblePaymentMethods
         }
@@ -507,6 +511,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["payment_method_options_setup_future_usage"] = intent?.isPaymentMethodOptionsSetupFutureUsageSet
         additionalParams["elements_session_config_id"] = elementsSession?.configID
         additionalParams["is_confirmation_tokens"] = intent?.intentConfig?.confirmationTokenConfirmHandler != nil
+        additionalParams["payment_method_orientation"] = paymentMethodOrientation?.rawValue
         if event.shouldLogFcSdkAvailability {
             additionalParams["fc_sdk_availability"] = FinancialConnectionsSDKAvailability.analyticsValue
         }
