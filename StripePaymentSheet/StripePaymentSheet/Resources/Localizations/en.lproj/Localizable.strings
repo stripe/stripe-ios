@@ -1,3 +1,6 @@
+/* Order summary line item showing name and quantity, e.g. 'Shirt ×3'. */
+"%1$@ ×%2$d" = "%1$@ ×%2$d";
+
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Add";
 
@@ -195,6 +198,9 @@ to be saved and used in future checkout sessions. */
 
 /* Text suggesting a corrected email address. First %@ will be replaced with the suggested email address, second %@ will be replaced with a tappable link. */
 "Did you mean %@? %@." = "Did you mean %1$@? %2$@.";
+
+/* Label for the discount row in an order summary, applied as a negative amount. */
+"Discount" = "Discount";
 
 /* Text for a button that allows manual entry of an address */
 "Enter address manually" = "Enter address manually";
@@ -405,6 +411,9 @@ to be saved and used in future checkout sessions. */
 /* Label of a button displayed below a payment method form. Tapping the button sets the payment method up for future use */
 "Set up" = "Set up";
 
+/* Label for the shipping cost row in an order summary. */
+"Shipping" = "Shipping";
+
 /* Text for an error that is shown when a user selects a shipping address that
 is not supported by the merchant */
 "Shipping to %@ is not supported." = "Shipping to %@ is not supported.";
@@ -424,11 +433,17 @@ is not supported by the merchant */
 /* Prompt for microdeposit verification before completing purchase with merchant. %@ will be replaced by merchant business name */
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
 
+/* Label for the subtotal row in an order summary, before tax/shipping/discounts. */
+"Subtotal" = "Subtotal";
+
 /* Accessibility hint to tell the user that they can tap to hide additional content. */
 "Tap to close" = "Tap to close";
 
 /* Accessibility hint to tell the user that they can tap to reveal additional content. */
 "Tap to expand" = "Tap to expand";
+
+/* Label for the tax row in an order summary. */
+"Tax" = "Tax";
 
 /* An error message. */
 "The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";

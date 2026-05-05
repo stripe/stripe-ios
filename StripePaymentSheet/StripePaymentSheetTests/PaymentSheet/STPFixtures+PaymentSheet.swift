@@ -363,7 +363,7 @@ extension Intent {
                 "amount": taxAmount,
                 "inclusive": false,
                 "taxable_amount": (subtotal ?? amount ?? 0),
-            ],]
+            ], ]
         }
         if discountAmount != 0 {
             lineItemGroup["discount_amounts"] = [[
@@ -371,7 +371,7 @@ extension Intent {
                 "coupon": [
                     "id": "coupon_test",
                 ],
-            ],]
+            ], ]
         }
         if !lineItemGroup.isEmpty {
             json["line_item_group"] = lineItemGroup
