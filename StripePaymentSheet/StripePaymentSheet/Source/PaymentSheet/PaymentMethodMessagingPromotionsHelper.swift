@@ -77,8 +77,15 @@ final class PaymentMethodMessagingPromotionsHelper {
 
         fetchTask = Task { [weak self] in
             let contents = await Self.fetchPromotionContents(configuration: requestConfiguration)
-            self?.setFetchState(.completed(contents))
+            self?.completeLoading(with: contents)
         }
+    }
+
+    func shouldUsePaymentMethodMessagingRow(for paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {
+        guard experiment.isInTreatment else {
+            return false
+        }
+        return Self.paymentMethodIdentifier(for: paymentMethodType) != nil
     }
 
     func promotion(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromotionContent? {
@@ -92,6 +99,10 @@ final class PaymentMethodMessagingPromotionsHelper {
             return nil
         }
         return contentsByPaymentMethodType[identifier]
+    }
+
+    func completeLoading(with contents: [String: PromotionContent]) {
+        setFetchState(.completed(contents))
     }
 
     private func beginLoadingIfIdle() -> Bool {

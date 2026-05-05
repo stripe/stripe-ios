@@ -298,6 +298,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
     // MARK: Tap handling
     func didTap(rowButton: RowButton) {
+        populatePaymentMethodMessagingIfAvailable(for: rowButton)
         self.selectedRowButton = rowButton
         delegate?.embeddedPaymentMethodsViewDidTapPaymentMethodRow()
         analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: rowButton.type.analyticsIdentifier)
@@ -502,24 +503,13 @@ class EmbeddedPaymentMethodsView: UIView {
             }
         )
         accessoryButton.isHidden = true
-        if let rowButton = makePaymentMethodMessagingRowButton(
-            paymentMethodType: paymentMethodType,
-            savedPaymentMethods: savedPaymentMethods,
-            accessoryView: accessoryButton,
-            promoBadge: makePromoBadge(for: paymentMethodType),
-            shouldAnimateOnPress: delegate?.shouldAnimateOnPress(paymentMethodType) == true,
-            didTap: { [weak self] rowButton in
-                self?.didTap(rowButton: rowButton)
-            }
-        ) {
-            return rowButton
-        }
         return RowButton.makeForPaymentMethodType(
             paymentMethodType: paymentMethodType,
             currency: currency,
             hasSavedCard: savedPaymentMethods.hasSavedCard,
             accessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
+            paymentMethodMessaging: paymentMethodMessagingConfiguration(paymentMethodType: paymentMethodType),
             appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
             shouldAnimateOnPress: delegate?.shouldAnimateOnPress(paymentMethodType) == true,
@@ -538,107 +528,23 @@ class EmbeddedPaymentMethodsView: UIView {
         return RowButton.makeForLink(appearance: appearance, isEmbedded: true, didTap: didTap)
     }
 
-    private func paymentMethodButtonText(for paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> String {
-        if savedPaymentMethods.hasSavedCard && paymentMethodType == .stripe(.card) {
-            return .Localized.new_card
-        }
-        return paymentMethodType.displayName
-    }
-
-    private func makePromoBadge(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromoBadgeView? {
-        guard let promoText = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText else {
-            return nil
-        }
-        return PromoBadgeView(
-            appearance: appearance,
-            cornerRadius: appearance.cornerRadius,
-            tinyMode: false,
-            text: promoText
-        )
-    }
-
-    private func makePaymentMethodMessagingRowButton(
+    private func paymentMethodMessagingConfiguration(
         paymentMethodType: PaymentSheet.PaymentMethodType,
-        savedPaymentMethods: [STPPaymentMethod],
-        accessoryView: UIView?,
-        promoBadge: PromoBadgeView?,
-        shouldAnimateOnPress: Bool,
-        didTap: @escaping RowButton.DidTapClosure
-    ) -> RowButton? {
-        guard let content = paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType) else {
-            return nil
+    ) -> RowButton.PaymentMethodMessagingConfiguration {
+        guard paymentMethodMessagingPromotionsHelper?.shouldUsePaymentMethodMessagingRow(for: paymentMethodType) == true else {
+            return .disabled
         }
+        return .enabled(content: paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType))
+    }
 
-        let imageView = PaymentMethodTypeImageView(
-            paymentMethodType: paymentMethodType,
-            contrastMatchingColor: appearance.colors.componentText,
-            currency: currency,
-            iconStyle: appearance.iconStyle
-        )
-        imageView.contentMode = .scaleAspectFit
-
-        switch appearance.embeddedPaymentElement.row.style {
-        case .flatWithRadio:
-            return RowButtonFlatWithRadioView(
-                appearance: appearance,
-                type: .new(paymentMethodType: paymentMethodType),
-                imageView: imageView,
-                text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
-                promotionText: content.promotion,
-                learnMoreText: content.learnMoreText,
-                infoUrl: content.infoUrl,
-                promoBadge: promoBadge,
-                accessoryView: accessoryView,
-                shouldAnimateOnPress: shouldAnimateOnPress,
-                isEmbedded: true,
-                didTap: didTap
-            )
-        case .floatingButton:
-            return RowButtonFloating(
-                appearance: appearance,
-                type: .new(paymentMethodType: paymentMethodType),
-                imageView: imageView,
-                text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
-                promotionText: content.promotion,
-                learnMoreText: content.learnMoreText,
-                infoUrl: content.infoUrl,
-                promoBadge: promoBadge,
-                accessoryView: accessoryView,
-                shouldAnimateOnPress: shouldAnimateOnPress,
-                isEmbedded: true,
-                didTap: didTap
-            )
-        case .flatWithCheckmark:
-            return RowButtonFlatWithCheckmark(
-                appearance: appearance,
-                type: .new(paymentMethodType: paymentMethodType),
-                imageView: imageView,
-                text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
-                promotionText: content.promotion,
-                learnMoreText: content.learnMoreText,
-                infoUrl: content.infoUrl,
-                promoBadge: promoBadge,
-                accessoryView: accessoryView,
-                shouldAnimateOnPress: shouldAnimateOnPress,
-                isEmbedded: true,
-                didTap: didTap
-            )
-        case .flatWithDisclosure:
-            return RowButtonFlatWithDisclosure(
-                appearance: appearance,
-                type: .new(paymentMethodType: paymentMethodType),
-                imageView: imageView,
-                text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
-                promotionText: content.promotion,
-                learnMoreText: content.learnMoreText,
-                infoUrl: content.infoUrl,
-                promoBadge: promoBadge,
-                accessoryView: accessoryView,
-                shouldAnimateOnPress: shouldAnimateOnPress,
-                isEmbedded: true,
-                didTap: didTap
-            )
+    private func populatePaymentMethodMessagingIfAvailable(for rowButton: RowButton) {
+        guard rowButton.isPaymentMethodMessagingCapable,
+              !rowButton.hasPaymentMethodMessagingContent,
+              let paymentMethodType = rowButton.type.paymentMethodType,
+              let content = paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType) else {
+            return
         }
+        rowButton.populatePaymentMethodMessagingIfNeeded(content)
     }
 
 }

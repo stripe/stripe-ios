@@ -228,6 +228,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
     func didTap(rowButton: RowButton, selection: RowButtonType) {
         guard let delegate else { return }
+        populatePaymentMethodMessagingIfAvailable(for: rowButton)
         let isRetappingCurrentlySelectedRow = currentSelection == selection && rowButton.isSelected
         // Preserve the existing selected state on repeated taps so BNPL rows don't replay
         // their expand animation just because the same row was tapped again.
@@ -263,19 +264,12 @@ class VerticalPaymentMethodListViewController: UIViewController {
         shouldAnimateOnPress: Bool,
         didTap: @escaping RowButton.DidTapClosure
     ) -> RowButton {
-        if let rowButton = makePaymentMethodMessagingRowButton(
-            paymentMethodType: paymentMethodType,
-            shouldAnimateOnPress: shouldAnimateOnPress,
-            didTap: didTap
-        ) {
-            return rowButton
-        }
-
         return RowButton.makeForPaymentMethodType(
             paymentMethodType: paymentMethodType,
             currency: currency,
             hasSavedCard: savedPaymentMethods.contains { $0.type == .card },
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
+            paymentMethodMessaging: paymentMethodMessagingConfiguration(for: paymentMethodType),
             appearance: appearance,
             shouldAnimateOnPress: shouldAnimateOnPress,
             didTap: didTap
@@ -305,56 +299,23 @@ class VerticalPaymentMethodListViewController: UIViewController {
         return RowButton.makeForLink(appearance: appearance, didTap: didTap)
     }
 
-    private func paymentMethodButtonText(for paymentMethodType: PaymentSheet.PaymentMethodType) -> String {
-        if savedPaymentMethods.contains(where: { $0.type == .card }) && paymentMethodType == .stripe(.card) {
-            return .Localized.new_card
+    private func paymentMethodMessagingConfiguration(
+        for paymentMethodType: PaymentSheet.PaymentMethodType
+    ) -> RowButton.PaymentMethodMessagingConfiguration {
+        guard paymentMethodMessagingPromotionsHelper?.shouldUsePaymentMethodMessagingRow(for: paymentMethodType) == true else {
+            return .disabled
         }
-        return paymentMethodType.displayName
+        return .enabled(content: paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType))
     }
 
-    private func makePromoBadge(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromoBadgeView? {
-        guard let promoText = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText else {
-            return nil
+    private func populatePaymentMethodMessagingIfAvailable(for rowButton: RowButton) {
+        guard rowButton.isPaymentMethodMessagingCapable,
+              !rowButton.hasPaymentMethodMessagingContent,
+              let paymentMethodType = rowButton.type.paymentMethodType,
+              let content = paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType) else {
+            return
         }
-        return PromoBadgeView(
-            appearance: appearance,
-            cornerRadius: nil,
-            tinyMode: false,
-            text: promoText
-        )
-    }
-
-    private func makePaymentMethodMessagingRowButton(
-        paymentMethodType: PaymentSheet.PaymentMethodType,
-        shouldAnimateOnPress: Bool,
-        didTap: @escaping RowButton.DidTapClosure
-    ) -> RowButton? {
-        guard let content = paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType) else {
-            return nil
-        }
-
-        let imageView = PaymentMethodTypeImageView(
-            paymentMethodType: paymentMethodType,
-            contrastMatchingColor: appearance.colors.componentText,
-            currency: currency,
-            iconStyle: appearance.iconStyle
-        )
-        imageView.contentMode = .scaleAspectFit
-
-        return RowButtonFloating(
-            appearance: appearance,
-            type: .new(paymentMethodType: paymentMethodType),
-            imageView: imageView,
-            text: paymentMethodButtonText(for: paymentMethodType),
-            promotionText: content.promotion,
-            learnMoreText: content.learnMoreText,
-            infoUrl: content.infoUrl,
-            badgeText: nil,
-            promoBadge: makePromoBadge(for: paymentMethodType),
-            accessoryView: nil,
-            shouldAnimateOnPress: shouldAnimateOnPress,
-            didTap: didTap
-        )
+        rowButton.populatePaymentMethodMessagingIfNeeded(content)
     }
 
     static func makeSectionLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {

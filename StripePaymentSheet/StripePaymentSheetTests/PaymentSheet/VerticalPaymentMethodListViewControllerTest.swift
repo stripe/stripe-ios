@@ -8,6 +8,7 @@
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
+import UIKit
 import XCTest
 
 final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
@@ -196,6 +197,55 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
 
         XCTAssertEqual(affirmButton.label.text, "Affirm")
         XCTAssertEqual(sublabel?.text, "Split your purchase into monthly payments. Learn more")
+    }
+
+    func testBNPLPromotionRow_RetapShowsLateLoadedPMMContent() {
+        let helper = PaymentMethodMessagingPromotionsHelper(
+            experiment: PaymentMethodMessagingPromotionsExperiment(group: .treatment),
+            prefetchedPromotionContents: [:]
+        )
+        let sut = VerticalPaymentMethodListViewController(
+            initialSelection: nil,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.affirm)],
+            shouldShowApplePay: false,
+            shouldShowLink: false,
+            savedPaymentMethodAccessoryType: .edit,
+            overrideHeaderView: nil,
+            appearance: .default,
+            currency: "USD",
+            amount: 1099,
+            incentive: nil,
+            paymentMethodMessagingPromotionsHelper: helper,
+            delegate: self
+        )
+        let animationsWereEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(animationsWereEnabled) }
+        let affirmButton = sut.getRowButton(accessibilityIdentifier: "Affirm")
+        let sublabel = affirmButton.sublabel as? UITextView
+
+        XCTAssertTrue(affirmButton.isPaymentMethodMessagingCapable)
+        XCTAssertEqual(sublabel?.text, "")
+
+        shouldSelectPaymentMethodReturnValue = true
+        sut.didTap(rowButton: affirmButton, selection: .new(paymentMethodType: .stripe(.affirm)))
+        XCTAssertTrue(affirmButton.isSelected)
+        XCTAssertTrue(sublabel?.isHidden ?? false)
+
+        helper.completeLoading(with: [
+            STPPaymentMethodType.affirm.identifier: .init(
+                promotion: "Split your purchase into monthly payments.",
+                learnMoreText: "Learn more",
+                infoUrl: URL(string: "https://example.com/affirm")!
+            ),
+        ])
+
+        sut.didTap(rowButton: affirmButton, selection: .new(paymentMethodType: .stripe(.affirm)))
+
+        XCTAssertTrue(affirmButton.hasPaymentMethodMessagingContent)
+        XCTAssertEqual(sublabel?.text, "Split your purchase into monthly payments. Learn more")
+        XCTAssertFalse(sublabel?.isHidden ?? true)
     }
 }
 
