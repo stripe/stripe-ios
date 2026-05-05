@@ -83,26 +83,41 @@ jobs:
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Install Vercel CLI
-        if: steps.diff.outputs.has_changes == 'true'
-        run: npm i -g vercel@latest
-
-      - name: Deploy report to Vercel
+      - name: Deploy report to GitHub Pages
         if: steps.diff.outputs.has_changes == 'true'
         id: deploy
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_SNAPSHOT_PROJECT_ID }}
         run: |
-          OUTPUT=$(vercel deploy snapshot-deploy --token="$VERCEL_TOKEN" --yes 2>&1)
-          echo "$OUTPUT"
-          DEPLOY_URL=$(echo "$OUTPUT" | grep -oE 'https://[a-zA-Z0-9._-]+\.vercelapp\.[^ ]*|https://[a-zA-Z0-9_-]+\.vercel\.app[^ ]*' | head -1)
-          if [ -z "$DEPLOY_URL" ]; then
-            echo "::error::Vercel deploy failed. Ensure VERCEL_SNAPSHOT_PROJECT_ID secret is set."
-            echo "::error::Vercel output: $OUTPUT"
-            exit 1
-          fi
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          PAGES_PATH="snapshots/pr-${PR_NUMBER}"
+          DEPLOY_URL="https://stripe.github.io/stripe-ios/${PAGES_PATH}"
+
+          # Fetch gh-pages branch (or create it)
+          git fetch origin gh-pages --depth=1 || true
+          git worktree add gh-pages-deploy origin/gh-pages 2>/dev/null || {
+            git worktree add --detach gh-pages-deploy
+            cd gh-pages-deploy
+            git checkout --orphan gh-pages
+            git rm -rf . > /dev/null 2>&1 || true
+            git commit --allow-empty -m "Init gh-pages"
+            cd ..
+          }
+
+          # Copy report to the PR-specific path
+          rm -rf "gh-pages-deploy/${PAGES_PATH}"
+          mkdir -p "gh-pages-deploy/${PAGES_PATH}"
+          cp -r snapshot-deploy/* "gh-pages-deploy/${PAGES_PATH}/"
+
+          # Push (retry on conflict from concurrent PRs)
+          cd gh-pages-deploy
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Snapshot report for PR #${PR_NUMBER}" || echo "No changes"
+          for i in 1 2 3; do
+            git push origin gh-pages && break
+            git pull --rebase origin gh-pages
+          done
+
           echo "url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
           echo "Deployed to: $DEPLOY_URL"
 
