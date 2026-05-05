@@ -458,11 +458,11 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Setup"].waitForExistenceAndTap()
         // ...(wait for it to finish updating)...
         _ = app.buttons["Reload"].waitForExistence(timeout: 10)
-        // ...should cause Card to no longer be the selected payment method, since the customer has not yet seen the mandate...
-        XCTAssertEqual(app.buttons["Payment method"].label, "None")
+        // ...should preserve Card as the selected payment method...
+        XCTAssertEqual(app.buttons["Payment method"].label, "•••• 4242, card, 12345, US")
         // ...and tapping back into FC should show the card form with the details preserved...
         app.buttons["Payment method"].waitForExistenceAndTap()
-        // ...and continuing should once again show the Card selected
+        // ...and continuing should still show the Card selected
         app.buttons["Continue"].waitForExistenceAndTap() // This implicitly tests that the form is already filled out
         XCTAssertEqual(app.buttons["Payment method"].label, "•••• 4242, card, 12345, US")
 
