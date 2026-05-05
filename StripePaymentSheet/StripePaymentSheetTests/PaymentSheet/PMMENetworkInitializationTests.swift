@@ -648,6 +648,17 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             ),
             paymentPlanGroups: [
                 .init(
+                    type: "klarna",
+                    content: .init(
+                        images: [],
+                        promotion: nil,
+                        inlinePartnerPromotion: nil,
+                        learnMore: .init(message: "See plans", url: URL(string: "https://example.com/klarna")!),
+                        legalDisclosure: nil,
+                        summary: .init(message: "Valid summary", url: nil)
+                    )
+                ),
+                .init(
                     type: "affirm",
                     content: .init(
                         images: [],
@@ -662,12 +673,26 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
 
         mockAnalyticsClient.reset()
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         let promotions = apiResponse.paymentSheetPromotionContents(
             apiClient: apiClient,
             analyticsClient: mockAnalyticsClient
         )
 
-        XCTAssertTrue(promotions.isEmpty)
+        XCTAssertEqual(
+            promotions,
+            [
+                "klarna": PaymentMethodMessagingPromotionsHelper.PromotionContent(
+                    promotion: "Valid summary",
+                    learnMoreText: "See plans",
+                    infoUrl: URL(string: "https://example.com/klarna")!
+                ),
+            ]
+        )
+        XCTAssertEqual(
+            STPAssertTestUtil.lastAssertMessage,
+            "Received invalid PMME payment_plan_group for PaymentSheet promotion type 'affirm'; required fields: summary.message, learn_more.message, learn_more.url."
+        )
 
         let unexpectedResponseEvents = mockAnalyticsClient.loggedAnalytics.compactMap { analytic in
             analytic as? ErrorAnalytic
@@ -675,10 +700,10 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             analytic.event == .unexpectedPMMEError
         }
 
-        XCTAssertEqual(unexpectedResponseEvents.count, 2)
+        XCTAssertEqual(unexpectedResponseEvents.count, 1)
         XCTAssertEqual(
             unexpectedResponseEvents.compactMap { $0.params["failure_reason"] as? String },
-            ["missing_required_promotion_fields", "all_payment_plan_groups_invalid"]
+            ["missing_required_promotion_fields"]
         )
         XCTAssertEqual(
             unexpectedResponseEvents.compactMap { $0.params["payment_method_type"] as? String },
