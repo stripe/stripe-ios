@@ -54,12 +54,14 @@ jobs:
 
       - name: Run snapshot tests (record mode)
         run: |
-          set -o pipefail
+          # Record mode causes all tests to "fail" (expected — they report
+          # "Reference image is now saved"). We ignore the exit code here
+          # and rely on the diff step to determine actual pass/fail.
           xcodebuild test \
             -workspace Stripe.xcworkspace \
             -scheme AllStripeFrameworks-RecordMode \
             -destination "$SNAPSHOT_DESTINATION" \
-            2>&1 | xcbeautify
+            2>&1 | xcbeautify || true
 
       - name: Collect recorded snapshots
         run: |
