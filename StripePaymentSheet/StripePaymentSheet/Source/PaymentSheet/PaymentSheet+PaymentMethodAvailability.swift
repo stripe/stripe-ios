@@ -205,9 +205,23 @@ extension Intent: PaymentMethodRequirementProvider {
         case .deferredIntent:
             // Verification method is always 'automatic'
             return [.validUSBankVerificationMethod]
-        case .checkoutSession:
-            // TODO(porter) Figure out requirements for CheckoutSession for confirmation
-            return []
+        case let .checkoutSession(checkoutSession):
+            var reqs = [PaymentMethodTypeRequirement]()
+
+            // The session is configured to collect a shipping address, so payment methods
+            // that require one can be offered.
+            if checkoutSession.requiresShippingAddress {
+                reqs.append(.shippingAddress)
+            }
+
+            // Mirror PaymentIntent/SetupIntent: valid us bank verification method
+            if let usBankOptions = checkoutSession.paymentMethodOptions?.usBankAccount,
+                usBankOptions.verificationMethod.isValidForPaymentSheet
+            {
+                reqs.append(.validUSBankVerificationMethod)
+            }
+
+            return reqs
         }
     }
 }
