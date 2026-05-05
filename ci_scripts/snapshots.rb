@@ -12,12 +12,17 @@ ROOT_DIR_PATHNAME = Pathname(ROOT_DIR)
 Dir.chdir(ROOT_DIR)
 
 scheme = "AllStripeFrameworks"
+ci_mode = false
 
 OptionParser.new do |opts|
   opts.banner = "Snapshot tool for stripe-ios\n Usage: snapshots.rb [options]"
 
   opts.on("--record", "Record snapshots") do |s|
     scheme = "AllStripeFrameworks-RecordMode"
+  end
+
+  opts.on("--ci", "CI mode: skip OS version check, use any available simulator") do |s|
+    ci_mode = true
   end
 end.parse!
 
@@ -35,5 +40,6 @@ File.open("StripeCore/StripeCoreTestUtils/STPSnapshotTestCase.swift", "r").each_
   end
 end
 
-system "./ci_scripts/test.rb --only-snapshot-tests --scheme #{scheme} --device \"#{device_model}\" --version \"#{os_version}\""
+version_flag = ci_mode ? "" : "--version \"#{os_version}\""
+system "./ci_scripts/test.rb --only-snapshot-tests --scheme #{scheme} --device \"#{device_model}\" #{version_flag}"
 print "\a" # done!
