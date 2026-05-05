@@ -107,7 +107,10 @@ public class PaymentSheet {
     /// Initializes PaymentSheet with a Checkout object
     /// - Parameter checkout: A loaded Checkout instance.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @MainActor @_spi(CheckoutSessionsPreview) public convenience init(checkout: Checkout, configuration: Configuration) {
+    @_spi(STP)
+    @_spi(ReactNativeSDK)
+    @MainActor
+    public convenience init(checkout: Checkout, configuration: Configuration) {
         guard let stpSession = checkout.state.session as? STPCheckoutSession else {
             fatalError("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
         }
