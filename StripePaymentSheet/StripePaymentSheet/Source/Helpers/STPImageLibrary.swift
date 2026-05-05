@@ -12,7 +12,7 @@ import Foundation
 @_spi(STP) import StripeUICore
 import UIKit
 
-@_spi(CryptoOnrampAlpha)
+@_spi(ReactNativeSDK)
 public class PaymentSheetImageLibrary {
 
     /// An icon representing Afterpay.
