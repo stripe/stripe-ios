@@ -644,7 +644,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.card)]
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodOrientation: .vertical
         )
         let sut = EmbeddedPaymentElement(
             configuration: configuration,
