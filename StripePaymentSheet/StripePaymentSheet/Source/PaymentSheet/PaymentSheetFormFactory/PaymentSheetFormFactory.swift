@@ -49,6 +49,7 @@ class PaymentSheetFormFactory {
     let sellerName: String?
     let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
     let cardFundingFilter: CardFundingFilter
+    let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
 
     var shouldDisplaySaveCheckbox: Bool {
         // Don't show the save checkbox in Link
@@ -92,6 +93,7 @@ class PaymentSheetFormFactory {
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         linkAppearance: LinkAppearance? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
@@ -140,6 +142,7 @@ class PaymentSheetFormFactory {
                   signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
+                  paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                   paymentMethodIncentive: elementsSession.incentive,
                   linkAppearance: linkAppearance,
                   sellerName: intent.sellerDetails?.businessName,
@@ -169,6 +172,7 @@ class PaymentSheetFormFactory {
         signupOptInInitialValue: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         paymentMethodIncentive: PaymentMethodIncentive?,
         linkAppearance: LinkAppearance? = nil,
         sellerName: String? = nil,
@@ -200,6 +204,7 @@ class PaymentSheetFormFactory {
         self.signupOptInInitialValue = signupOptInInitialValue
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
         self.linkAppearance = linkAppearance
         self.sellerName = sellerName
@@ -837,6 +842,62 @@ extension PaymentSheetFormFactory {
         return country
     }
 
+    func makeKlarnaHeader() -> SubtitleElement {
+        if let header = makeBNPLHeader() {
+            return header
+        }
+        return makeCopyLabel(text: .Localized.buy_now_or_pay_later_with_klarna)
+    }
+
+    func makeAffirmHeader() -> SubtitleElement {
+        if let header = makeBNPLHeader() {
+            return header
+        }
+        return SubtitleElement(view: AffirmCopyLabel(theme: theme), isHorizontalMode: configuration.isHorizontalMode)
+    }
+
+    // Temporary prototype/test-only data source for BNPL form headers.
+    // Replace this with backend-provided copy once the form pipeline can receive BNPL header data.
+    func makePrototypeBNPLHeaderConfiguration() -> BNPLFormHeaderView.Configuration {
+        let promotion: String
+        switch paymentMethod {
+        case .stripe(.klarna):
+            promotion = String.Localized.buy_now_or_pay_later_with_klarna
+        case .stripe(.afterpayClearpay):
+            if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
+                promotion = String.Localized.buy_now_or_pay_later_with_clearpay
+            } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+                promotion = String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
+            } else {
+                promotion = String.Localized.buy_now_or_pay_later_with_afterpay
+            }
+        case .stripe(.affirm):
+            promotion = String.Localized.pay_over_time_with_affirm
+        default:
+            stpAssertionFailure("Unexpected payment method for BNPL header: \(paymentMethod)")
+            promotion = ""
+        }
+
+        return BNPLFormHeaderView.Configuration(
+            appearance: configuration.appearance,
+            promotion: promotion,
+            learnMoreText: "Learn more",
+            infoUrl: URL(string: "https://www.lego.com")!
+        )
+    }
+
+    func makeBNPLHeader() -> SubtitleElement? {
+        guard let promotionContent = paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethod) else {
+            return nil
+        }
+        let headerView = BNPLFormHeaderView(configuration: .init(
+            appearance: configuration.appearance,
+            promotion: promotionContent.promotion,
+            learnMoreText: promotionContent.learnMoreText,
+            infoUrl: promotionContent.infoUrl
+        ))
+        return SubtitleElement(view: headerView, isHorizontalMode: configuration.isHorizontalMode)
+    }
     func makeCopyLabel(text: String) -> SubtitleElement {
         let label = UILabel()
         label.text = text

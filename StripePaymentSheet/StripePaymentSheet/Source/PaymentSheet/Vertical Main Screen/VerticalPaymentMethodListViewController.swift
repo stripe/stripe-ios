@@ -38,6 +38,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private var shouldShowApplePay: Bool
     private var shouldShowLink: Bool
     private var paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+    private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -61,6 +62,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         currency: String?,
         amount: Int?,
         incentive: PaymentMethodIncentive?,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
         self.appearance = appearance
@@ -74,6 +76,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         self.shouldShowApplePay = shouldShowApplePay
         self.shouldShowLink = shouldShowLink
         self.paymentMethodTypes = paymentMethodTypes
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
 
         super.init(nibName: nil, bundle: nil)
         self.renderContent()
@@ -257,6 +260,104 @@ class VerticalPaymentMethodListViewController: UIViewController {
         self.refreshContent()
     }
 
+    private func makeRowButton(
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        shouldAnimateOnPress: Bool,
+        didTap: @escaping RowButton.DidTapClosure
+    ) -> RowButton {
+        if let rowButton = makePaymentMethodMessagingRowButton(
+            paymentMethodType: paymentMethodType,
+            shouldAnimateOnPress: shouldAnimateOnPress,
+            didTap: didTap
+        ) {
+            return rowButton
+        }
+
+        return RowButton.makeForPaymentMethodType(
+            paymentMethodType: paymentMethodType,
+            currency: currency,
+            hasSavedCard: savedPaymentMethods.contains { $0.type == .card },
+            promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
+            appearance: appearance,
+            shouldAnimateOnPress: shouldAnimateOnPress,
+            didTap: didTap
+        )
+    }
+
+    // Temporary prototype/test-only helper.
+    // Remove this once saved rows can receive real PMME-backed row content through the production path.
+    private func makeSavedPaymentMethodRowButton(
+        paymentMethod: STPPaymentMethod,
+        accessoryView: UIView?,
+        didTap: @escaping RowButton.DidTapClosure
+    ) -> RowButton {
+        return RowButton.makeForSavedPaymentMethod(
+            paymentMethod: paymentMethod,
+            appearance: appearance,
+            accessoryView: accessoryView,
+            didTap: didTap
+        )
+    }
+
+    private func makeApplePayRowButton(didTap: @escaping RowButton.DidTapClosure) -> RowButton {
+        return RowButton.makeForApplePay(appearance: appearance, didTap: didTap)
+    }
+
+    private func makeLinkRowButton(didTap: @escaping RowButton.DidTapClosure) -> RowButton {
+        return RowButton.makeForLink(appearance: appearance, didTap: didTap)
+    }
+
+    private func paymentMethodButtonText(for paymentMethodType: PaymentSheet.PaymentMethodType) -> String {
+        if savedPaymentMethods.contains(where: { $0.type == .card }) && paymentMethodType == .stripe(.card) {
+            return .Localized.new_card
+        }
+        return paymentMethodType.displayName
+    }
+
+    private func makePromoBadge(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromoBadgeView? {
+        guard let promoText = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText else {
+            return nil
+        }
+        return PromoBadgeView(
+            appearance: appearance,
+            cornerRadius: nil,
+            tinyMode: false,
+            text: promoText
+        )
+    }
+
+    private func makePaymentMethodMessagingRowButton(
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        shouldAnimateOnPress: Bool,
+        didTap: @escaping RowButton.DidTapClosure
+    ) -> RowButton? {
+        guard let content = paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType) else {
+            return nil
+        }
+
+        let imageView = PaymentMethodTypeImageView(
+            paymentMethodType: paymentMethodType,
+            contrastMatchingColor: appearance.colors.componentText,
+            currency: currency,
+            iconStyle: appearance.iconStyle
+        )
+        imageView.contentMode = .scaleAspectFit
+
+        return RowButtonFloating(
+            appearance: appearance,
+            type: .new(paymentMethodType: paymentMethodType),
+            imageView: imageView,
+            text: paymentMethodButtonText(for: paymentMethodType),
+            bnplPromoText: content.promotion,
+            bnplLearnMoreText: content.learnMoreText,
+            bnplInfoUrl: content.infoUrl,
+            badgeText: nil,
+            promoBadge: makePromoBadge(for: paymentMethodType),
+            accessoryView: nil,
+            shouldAnimateOnPress: shouldAnimateOnPress,
+            didTap: didTap
+        )
+    }
     static func makeSectionLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
         let label = UILabel()
         label.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 25)

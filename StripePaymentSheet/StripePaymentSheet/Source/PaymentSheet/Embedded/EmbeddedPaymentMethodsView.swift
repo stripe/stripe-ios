@@ -30,7 +30,6 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
 
 /// The view for an embedded payment element
 class EmbeddedPaymentMethodsView: UIView {
-
     /// Return the default size to let Auto Layout manage the height.
     /// Overriding intrinsicContentSize values and setting `invalidIntrinsicContentSize` forces force SwiftUI to update layout immediately,
     /// resulting in abrupt, non-animated height changes.
@@ -41,6 +40,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
     private let currency: String?
+    private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     private(set) var previousSelectedRowButton: RowButton? {
         didSet {
             guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
@@ -121,6 +121,7 @@ class EmbeddedPaymentMethodsView: UIView {
         customer: PaymentSheet.CustomerConfiguration? = nil,
         currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
@@ -129,6 +130,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.shouldShowMandate = shouldShowMandate
         self.customer = customer
         self.currency = currency
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
         self.delegate = delegate
@@ -502,6 +504,18 @@ class EmbeddedPaymentMethodsView: UIView {
             }
         )
         accessoryButton.isHidden = true
+        if let rowButton = makePaymentMethodMessagingRowButton(
+            paymentMethodType: paymentMethodType,
+            savedPaymentMethods: savedPaymentMethods,
+            accessoryView: accessoryButton,
+            promoBadge: makePromoBadge(for: paymentMethodType),
+            shouldAnimateOnPress: delegate?.shouldAnimateOnPress(paymentMethodType) == true,
+            didTap: { [weak self] rowButton in
+                self?.didTap(rowButton: rowButton)
+            }
+        ) {
+            return rowButton
+        }
         return RowButton.makeForPaymentMethodType(
             paymentMethodType: paymentMethodType,
             currency: currency,
@@ -516,6 +530,117 @@ class EmbeddedPaymentMethodsView: UIView {
                 self?.didTap(rowButton: rowButton)
             }
         )
+    }
+
+    private func makeApplePayRowButton(didTap: @escaping RowButton.DidTapClosure) -> RowButton {
+        return RowButton.makeForApplePay(appearance: appearance, isEmbedded: true, didTap: didTap)
+    }
+
+    private func makeLinkRowButton(didTap: @escaping RowButton.DidTapClosure) -> RowButton {
+        return RowButton.makeForLink(appearance: appearance, isEmbedded: true, didTap: didTap)
+    }
+
+    private func paymentMethodButtonText(for paymentMethodType: PaymentSheet.PaymentMethodType, savedPaymentMethods: [STPPaymentMethod]) -> String {
+        if savedPaymentMethods.hasSavedCard && paymentMethodType == .stripe(.card) {
+            return .Localized.new_card
+        }
+        return paymentMethodType.displayName
+    }
+
+    private func makePromoBadge(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromoBadgeView? {
+        guard let promoText = incentive?.takeIfAppliesTo(paymentMethodType)?.displayText else {
+            return nil
+        }
+        return PromoBadgeView(
+            appearance: appearance,
+            cornerRadius: appearance.cornerRadius,
+            tinyMode: false,
+            text: promoText
+        )
+    }
+
+    private func makePaymentMethodMessagingRowButton(
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        savedPaymentMethods: [STPPaymentMethod],
+        accessoryView: UIView?,
+        promoBadge: PromoBadgeView?,
+        shouldAnimateOnPress: Bool,
+        didTap: @escaping RowButton.DidTapClosure
+    ) -> RowButton? {
+        guard let content = paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType) else {
+            return nil
+        }
+
+        let imageView = PaymentMethodTypeImageView(
+            paymentMethodType: paymentMethodType,
+            contrastMatchingColor: appearance.colors.componentText,
+            currency: currency,
+            iconStyle: appearance.iconStyle
+        )
+        imageView.contentMode = .scaleAspectFit
+
+        switch appearance.embeddedPaymentElement.row.style {
+        case .flatWithRadio:
+            return RowButtonFlatWithRadioView(
+                appearance: appearance,
+                type: .new(paymentMethodType: paymentMethodType),
+                imageView: imageView,
+                text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
+                bnplPromoText: content.promotion,
+                bnplLearnMoreText: content.learnMoreText,
+                bnplInfoUrl: content.infoUrl,
+                promoBadge: promoBadge,
+                accessoryView: accessoryView,
+                shouldAnimateOnPress: shouldAnimateOnPress,
+                isEmbedded: true,
+                didTap: didTap
+            )
+        case .floatingButton:
+            return RowButtonFloating(
+                appearance: appearance,
+                type: .new(paymentMethodType: paymentMethodType),
+                imageView: imageView,
+                text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
+                bnplPromoText: content.promotion,
+                bnplLearnMoreText: content.learnMoreText,
+                bnplInfoUrl: content.infoUrl,
+                promoBadge: promoBadge,
+                accessoryView: accessoryView,
+                shouldAnimateOnPress: shouldAnimateOnPress,
+                isEmbedded: true,
+                didTap: didTap
+            )
+        case .flatWithCheckmark:
+            return RowButtonFlatWithCheckmark(
+                appearance: appearance,
+                type: .new(paymentMethodType: paymentMethodType),
+                imageView: imageView,
+                text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
+                bnplPromoText: content.promotion,
+                bnplLearnMoreText: content.learnMoreText,
+                bnplInfoUrl: content.infoUrl,
+                promoBadge: promoBadge,
+                accessoryView: accessoryView,
+                shouldAnimateOnPress: shouldAnimateOnPress,
+                isEmbedded: true,
+                didTap: didTap
+            )
+        case .flatWithDisclosure:
+            return RowButtonFlatWithDisclosure(
+                appearance: appearance,
+                type: .new(paymentMethodType: paymentMethodType),
+                imageView: imageView,
+                text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
+                bnplPromoText: content.promotion,
+                bnplLearnMoreText: content.learnMoreText,
+                bnplInfoUrl: content.infoUrl,
+                promoBadge: promoBadge,
+                accessoryView: accessoryView,
+                shouldAnimateOnPress: shouldAnimateOnPress,
+                isEmbedded: true,
+                didTap: didTap
+            )
+        }
     }
 }
 
