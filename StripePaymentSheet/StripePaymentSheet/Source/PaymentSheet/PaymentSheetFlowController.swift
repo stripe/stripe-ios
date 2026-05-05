@@ -741,7 +741,8 @@ extension PaymentSheet {
                 intent: viewController.loadResult.intent,
                 elementsSession: viewController.loadResult.elementsSession,
                 savedPaymentMethods: viewController.savedPaymentMethods, // Note: not using load result!
-                paymentMethodTypes: viewController.loadResult.paymentMethodTypes
+                paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
+                paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation
             )
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
@@ -794,10 +795,7 @@ extension PaymentSheet {
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
-            // Resolve automatic layout
-            var configuration = configuration
-            let resolvedPaymentMethodLayout = configuration.resolveLayout()
-            switch resolvedPaymentMethodLayout {
+            switch loadResult.paymentMethodOrientation {
             case .horizontal:
                 controller = PaymentSheetFlowControllerViewController(
                     configuration: configuration,
