@@ -56,6 +56,9 @@ jobs:
           # and rely on the diff step to determine actual pass/fail.
           ruby ci_scripts/snapshots.rb --record --ci || true
 
+      - name: Install ImageMagick
+        run: brew install imagemagick
+
       - name: Collect recorded snapshots
         run: |
           mkdir -p recorded-snapshots
