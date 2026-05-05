@@ -83,43 +83,45 @@ jobs:
             echo "has_changes=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Deploy report to GitHub Pages
+      - name: Deploy report to snapshot-reports branch
         if: steps.diff.outputs.has_changes == 'true'
         id: deploy
         run: |
           PR_NUMBER="${{ github.event.pull_request.number }}"
-          PAGES_PATH="snapshots/pr-${PR_NUMBER}"
-          DEPLOY_URL="https://stripe.github.io/stripe-ios/${PAGES_PATH}"
+          REPORT_PATH="pr-${PR_NUMBER}"
+          BASE_URL="https://raw.githubusercontent.com/${{ github.repository }}/snapshot-reports/${REPORT_PATH}"
 
-          # Fetch gh-pages branch (or create it)
-          git fetch origin gh-pages --depth=1 || true
-          git worktree add gh-pages-deploy origin/gh-pages 2>/dev/null || {
-            git worktree add --detach gh-pages-deploy
-            cd gh-pages-deploy
-            git checkout --orphan gh-pages
+          # Fetch or create snapshot-reports branch
+          git fetch origin snapshot-reports --depth=1 2>/dev/null || true
+          if git rev-parse origin/snapshot-reports >/dev/null 2>&1; then
+            git worktree add reports-deploy origin/snapshot-reports --detach
+          else
+            git worktree add --detach reports-deploy
+            cd reports-deploy
+            git checkout --orphan snapshot-reports
             git rm -rf . > /dev/null 2>&1 || true
-            git commit --allow-empty -m "Init gh-pages"
+            git commit --allow-empty -m "Init snapshot-reports"
             cd ..
-          }
+          fi
 
           # Copy report to the PR-specific path
-          rm -rf "gh-pages-deploy/${PAGES_PATH}"
-          mkdir -p "gh-pages-deploy/${PAGES_PATH}"
-          cp -r snapshot-deploy/* "gh-pages-deploy/${PAGES_PATH}/"
+          rm -rf "reports-deploy/${REPORT_PATH}"
+          mkdir -p "reports-deploy/${REPORT_PATH}"
+          cp -r snapshot-deploy/* "reports-deploy/${REPORT_PATH}/"
 
           # Push (retry on conflict from concurrent PRs)
-          cd gh-pages-deploy
+          cd reports-deploy
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -m "Snapshot report for PR #${PR_NUMBER}" || echo "No changes"
           for i in 1 2 3; do
-            git push origin gh-pages && break
-            git pull --rebase origin gh-pages
+            git push origin snapshot-reports && break
+            git pull --rebase origin snapshot-reports
           done
 
-          echo "url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
-          echo "Deployed to: $DEPLOY_URL"
+          echo "url=$BASE_URL" >> "$GITHUB_OUTPUT"
+          echo "Deployed to: $BASE_URL"
 
       - name: Post PR comment
         if: steps.diff.outputs.has_changes == 'true' && steps.deploy.outputs.url && github.event_name == 'pull_request'
