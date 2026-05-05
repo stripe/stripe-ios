@@ -203,10 +203,7 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes,
-                paymentMethodOrientation: configuration.resolveLayout(
-                    elementsSession: elementsSession,
-                    paymentMethodTypes: paymentMethodTypes
-                )
+                paymentMethodOrientation: configuration.resolveLayout()
             )
             let confirmationChallenge = ConfirmationChallenge(
                 elementsSession: elementsSession,
