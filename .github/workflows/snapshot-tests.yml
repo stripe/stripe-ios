@@ -98,13 +98,12 @@ jobs:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_SNAPSHOT_PROJECT_ID }}
         run: |
-          DEPLOY_URL=$(vercel deploy snapshot-deploy \
-            --token="$VERCEL_TOKEN" \
-            --yes \
-            --name="stripe-ios-snapshots" \
-            2>&1 | grep -oE 'https://[^ ]+' | tail -1)
+          OUTPUT=$(vercel deploy snapshot-deploy --token="$VERCEL_TOKEN" --yes 2>&1)
+          echo "$OUTPUT"
+          DEPLOY_URL=$(echo "$OUTPUT" | grep -oE 'https://[a-zA-Z0-9_-]+\.vercel\.app[^ ]*' | head -1)
           if [ -z "$DEPLOY_URL" ]; then
-            echo "::error::Vercel deploy failed. Check VERCEL_TOKEN, VERCEL_ORG_ID, and VERCEL_SNAPSHOT_PROJECT_ID secrets."
+            echo "::error::Vercel deploy failed. Ensure VERCEL_SNAPSHOT_PROJECT_ID secret is set."
+            echo "::error::Vercel output: $OUTPUT"
             exit 1
           fi
           echo "url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
