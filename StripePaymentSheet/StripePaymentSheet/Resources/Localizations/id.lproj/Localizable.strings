@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Detail kartu tidak dapat diubah.";
 
+"Card number. Supported cards include %@" = "Nomor kartu. Kartu yang didukung meliputi %@";
+
 "Change" = "Ubah";
 
 "Choose a card brand" = "Pilih merek kartu";

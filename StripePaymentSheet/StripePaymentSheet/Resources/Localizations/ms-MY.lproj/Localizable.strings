@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Butiran kad tidak boleh diubah.";
 
+"Card number. Supported cards include %@" = "Nombor kad. Kad yang disokong termasuk %@";
+
 "Change" = "Ubah";
 
 "Choose a card brand" = "Pilih jenama kad";

@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Kortuppgifter kan inte ändras.";
 
+"Card number. Supported cards include %@" = "Kortnummer. Kort som stöds inkluderar %@";
+
 "Change" = "Ändra";
 
 "Choose a card brand" = "Välj ett kortmärke";

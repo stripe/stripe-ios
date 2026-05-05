@@ -241,6 +241,14 @@ class STPAPIClientStubbedTest: APIStubbedTestCase {
                     return item.name == "client_attribution_metadata[payment_method_selection_flow]" && item.value == paymentMethodSelectionFlow
                 }), shouldContainClientAttributionMetadata)
             }
+            if let checkoutSessionId = clientAttributionMetadata.checkoutSessionId {
+                XCTAssertEqual(queryItems.contains(where: { item in
+                    if let base {
+                        return item.name == "\(base)[client_attribution_metadata][checkout_session_id]" && item.value == checkoutSessionId
+                    }
+                    return item.name == "client_attribution_metadata[checkout_session_id]" && item.value == checkoutSessionId
+                }), shouldContainClientAttributionMetadata)
+            }
             return true
         } response: { _ in
             return .init()

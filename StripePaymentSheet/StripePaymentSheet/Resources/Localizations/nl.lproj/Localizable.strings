@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Betaalkaartgegevens kunnen niet worden gewijzigd.";
 
+"Card number. Supported cards include %@" = "Kaartnummer. Ondersteunde betaalkaarten zijn onder meer %@";
+
 "Change" = "Wijzigen";
 
 "Choose a card brand" = "Kies een merk betaalkaart";

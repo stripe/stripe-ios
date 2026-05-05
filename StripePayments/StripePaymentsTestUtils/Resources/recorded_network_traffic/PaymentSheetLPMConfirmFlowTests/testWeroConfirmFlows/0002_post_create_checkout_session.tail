@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=lnRORrLPy8lDqwBvVNDT%2BxAYvoKD9Y0DlK6eBHMsHqEsX5k6Lyl8uyd3m48QkHWhM%2BspC3gWdDl2Bwr0sUKSV1bI7qUzxCp88iX21wfdCzmIslrPwoBttJIr754x19vg6jpnv8njBev%2BA5NA2xjxXna6o5vu96dhRap0h34RPQKRPDITwL2XC1Na9vTam795StZfYYiEmelaYMzta43R6HDx74T9JPb7qGaWrbnRxYQ%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: 490de67095087cde97b37337c1a7b7b8
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:49:55 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: 3db4b9f2b028a9c5b94f97d918cfd85b
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=CkyG5edj1HIEsWghPjsRxPDl5nIaSckiAvHuZho9%2F%2FL6TZ%2BAsTQv%2FtS8FMcYjCGAQrKwelLhur4JEMR60ZsS0lVtuElFO%2F9kIOSwYdthJSlOBzGrhuFT2dxjwzniov6V%2BUu8y%2BbKxQp0QnDC6inOkRRlrX8zDPfOysPvsUiLdQIW86rcG28GFu5wllTxx5JHotuxcIy8l9itOIHFYVuNRCWm0aHLFGCjKBks0iaCeEA%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Tue, 05 May 2026 03:32:27 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000
 
-{"id":"cs_test_a1P55Pfyj9Q4c6JY8ea7g0h66DOKkrrS8Si9mPCJ21t14E6sKSB8KGOZvc","client_secret":"cs_test_a1P55Pfyj9Q4c6JY8ea7g0h66DOKkrrS8Si9mPCJ21t14E6sKSB8KGOZvc_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51PSnNaAlz2yHYCNZgjajit4L8Hl1rDDPPCj9XhHNZWRSi4vwHhrHIbTgstLJptPSzwQVl1HlyqhwWRs1rBJHag8W00sM0SOXIL"}
+{"id":"cs_test_a1X2micGtQ4Ld9YMfpMX4nhMmuEntF1pjnQmkOnVsTZyyLt4lSMrbeglze","client_secret":"cs_test_a1X2micGtQ4Ld9YMfpMX4nhMmuEntF1pjnQmkOnVsTZyyLt4lSMrbeglze_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51PSnNaAlz2yHYCNZgjajit4L8Hl1rDDPPCj9XhHNZWRSi4vwHhrHIbTgstLJptPSzwQVl1HlyqhwWRs1rBJHag8W00sM0SOXIL"}

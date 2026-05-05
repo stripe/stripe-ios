@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Card details cannot be changed.";
 
+"Card number. Supported cards include %@" = "Card number. Supported cards include %@";
+
 "Change" = "Change";
 
 "Choose a card brand" = "Choose a card brand";

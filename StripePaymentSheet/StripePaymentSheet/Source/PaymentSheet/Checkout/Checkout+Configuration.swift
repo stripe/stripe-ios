@@ -15,7 +15,7 @@ extension Checkout {
     ///
     /// ```swift
     /// var config = Checkout.Configuration()
-    /// config.adaptivePricing.allowed = false
+    /// config.adaptivePricing.allowed = true
     ///
     /// let checkout = try await Checkout(
     ///     clientSecret: "cs_xxx_secret_yyy",
@@ -28,7 +28,7 @@ extension Checkout {
         /// When allowed, Stripe may present prices in the customer's local
         /// currency alongside the merchant's settlement currency.
         ///
-        /// Default: ``AdaptivePricing.init()`` (`allowed: true`).
+        /// Default: ``AdaptivePricing.init()`` (`allowed: false`).
         public var adaptivePricing: AdaptivePricing = AdaptivePricing()
 
         /// Creates a configuration with default values.
@@ -48,11 +48,11 @@ extension Checkout.Configuration {
     public struct AdaptivePricing {
         /// Whether the integration allows adaptive pricing for this session.
         ///
-        /// Set to `false` to prevent Stripe from activating adaptive pricing,
-        /// even if the Checkout Session is configured for it on the server.
+        /// Set to `true` to have Stripe activate adaptive pricing,
+        /// returning localized currency amounts.
         ///
-        /// Default: `true`.
-        public var allowed: Bool = true
+        /// Default: `false`.
+        public var allowed: Bool = false
 
         /// Creates an adaptive pricing configuration with default values.
         public init() {}

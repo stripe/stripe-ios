@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Kortin tietoja ei voi muuttaa.";
 
+"Card number. Supported cards include %@" = "Kortin numero. Tuetut kortit sisältävät %@";
+
 "Change" = "Vaihda";
 
 "Choose a card brand" = "Valitse korttimerkki";

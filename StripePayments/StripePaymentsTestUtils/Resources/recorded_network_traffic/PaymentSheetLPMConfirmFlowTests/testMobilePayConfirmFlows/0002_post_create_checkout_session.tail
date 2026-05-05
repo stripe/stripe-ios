@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=DuemrjsvxgA55ja%2B7sLO5cPDxAApIdo%2FCvBdrjyZJNN6HbJQO%2BaM75aoFo5kr8jbPnOCcfGLRN9dSuvacYtXG8TCD7OKH3uNuczyHooeujpR3J4P%2BbPbWi5nMw90RgA%2FPDS367I4PoTSu5zOQbcEj1NJiLxcNLmm0RD4eBbA12B%2FfDP9YeBPTmoLEluGAmgUVdE34SryAZsrbMersylOUrLRSPl0TxhWcVui%2FgDCqaw%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: c4ab8c559da87898c8621a1e6821ea8f
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:38:53 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: 84cd723affffbd6b402dea5ead150033
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=niPHjJBC4Jnh2Xkgel8vPX%2F8AFA7DVqSiWOWGCHsC0dO2R4rqiog%2B4OiQY9TJl9840Ao6COhS9rIKLrVysQLp4g6ohxuwn1ktANpSYjlaO%2FWgvrONI9nJsiYs4hDO93hJ2KXbKjGK%2FhHiJMZsY0ia1%2FnlGWiRqfa6srsejqqGkDee0fcRbO1uYeplCWPs9bbd2%2BZSHCj14vQbk8oA5d03EtF6GBFmrj8nO786YBiKBM%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Tue, 05 May 2026 03:20:15 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000
 
-{"id":"cs_test_a16V9RTJxcjtWjLEcFnS4m4dryjePaFyZOZQ3U276IDygjYQibMxnarJnk","client_secret":"cs_test_a16V9RTJxcjtWjLEcFnS4m4dryjePaFyZOZQ3U276IDygjYQibMxnarJnk_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt"}
+{"id":"cs_test_a1SORqiBC2ut6fIwepjKnOgi2zKVC6mnLmFb1FmPai4AeQCb2VzgZ4pGmS","client_secret":"cs_test_a1SORqiBC2ut6fIwepjKnOgi2zKVC6mnLmFb1FmPai4AeQCb2VzgZ4pGmS_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt"}

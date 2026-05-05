@@ -613,31 +613,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-    func testPaymentMethodLayoutAutomaticWithHorizontalExperiment() {
-        configuration.paymentMethodLayout = .automatic
-        stubNewCustomerResponseWithHorizontalExperiment(experimentAssignments: """
-      {
-      "ocs_mobile_horizontal_mode": "treatment",
-      "ocs_mobile_horizontal_mode_aa": "control_test"
-      }
-      """)
-        preparePaymentSheet()
-        presentPaymentSheet(darkMode: false)
-        verify(paymentSheet.bottomSheetViewController.view!)
-    }
-
-    func testPaymentMethodLayoutAutomaticWithHorizontalExperimentAA() {
-        configuration.paymentMethodLayout = .automatic
-        stubNewCustomerResponseWithHorizontalExperiment(experimentAssignments: """
-      {
-      "ocs_mobile_horizontal_mode_aa": "control_test"
-      }
-      """)
-        preparePaymentSheet()
-        presentPaymentSheet(darkMode: false)
-        verify(paymentSheet.bottomSheetViewController.view!)
-    }
-
     // MARK: - Special LPM tests
 
     func testPaymentSheet_LPM_InstantDebits_only_promotion() {
@@ -1215,20 +1190,6 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private func stubNewCustomerResponse() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
-        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
-        stubCustomers()
-        stubConsumerSession()
-    }
-
-    private func stubNewCustomerResponseWithHorizontalExperiment(experimentAssignments: String) {
-        stubSessions(
-            fileMock: .elements_sessions_paymentMethod_savedPM_horizontalExperiment_200,
-            responseCallback: { data in
-                var template = String(data: data, encoding: .utf8)!
-                template = template.replacingOccurrences(of: "[EXPERIMENT_ASSIGNMENTS_HERE]", with: experimentAssignments)
-                return template.data(using: .utf8)!
-            }
-        )
         StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
         stubConsumerSession()
