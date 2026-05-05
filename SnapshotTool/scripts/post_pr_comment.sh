@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -uo pipefail
 
 # post_pr_comment.sh
 # Posts a snapshot diff summary as a PR comment with a link to the full report.
@@ -16,9 +16,14 @@ PR_NUMBER="${4:?}"
 GITHUB_REPO="${GITHUB_REPOSITORY:?GITHUB_REPOSITORY not set}"
 GITHUB_TOKEN="${GITHUB_TOKEN:?GITHUB_TOKEN not set}"
 
-CHANGED_COUNT=$(grep -c "^modified|" "$MANIFEST" || true)
-ADDED_COUNT=$(grep -c "^added|" "$MANIFEST" || true)
-REMOVED_COUNT=$(grep -c "^removed|" "$MANIFEST" || true)
+if [ ! -f "$MANIFEST" ]; then
+    echo "Manifest file not found: $MANIFEST"
+    exit 1
+fi
+
+CHANGED_COUNT=$(grep -c "^modified|" "$MANIFEST" 2>/dev/null || echo 0)
+ADDED_COUNT=$(grep -c "^added|" "$MANIFEST" 2>/dev/null || echo 0)
+REMOVED_COUNT=$(grep -c "^removed|" "$MANIFEST" 2>/dev/null || echo 0)
 TOTAL=$((CHANGED_COUNT + ADDED_COUNT + REMOVED_COUNT))
 
 MAX_INLINE=8
@@ -40,8 +45,7 @@ EOF
 if [ "$CHANGED_COUNT" -gt 0 ]; then
     echo "### Modified" >> "$BODY_FILE"
     echo "" >> "$BODY_FILE"
-    SHOWN=0
-    grep "^modified|" "$MANIFEST" | head -$MAX_INLINE | while IFS='|' read -r type rel_path; do
+    grep "^modified|" "$MANIFEST" 2>/dev/null | head -$MAX_INLINE | while IFS='|' read -r type rel_path; do
         filename=$(basename "$rel_path")
         echo "- \`${filename}\`" >> "$BODY_FILE"
     done
@@ -52,7 +56,7 @@ fi
 if [ "$ADDED_COUNT" -gt 0 ]; then
     echo "### Added" >> "$BODY_FILE"
     echo "" >> "$BODY_FILE"
-    grep "^added|" "$MANIFEST" | head -$MAX_INLINE | while IFS='|' read -r type rel_path; do
+    grep "^added|" "$MANIFEST" 2>/dev/null | head -$MAX_INLINE | while IFS='|' read -r type rel_path; do
         filename=$(basename "$rel_path")
         echo "- \`${filename}\`" >> "$BODY_FILE"
     done
@@ -63,7 +67,7 @@ fi
 if [ "$REMOVED_COUNT" -gt 0 ]; then
     echo "### Removed" >> "$BODY_FILE"
     echo "" >> "$BODY_FILE"
-    grep "^removed|" "$MANIFEST" | head -$MAX_INLINE | while IFS='|' read -r type rel_path; do
+    grep "^removed|" "$MANIFEST" 2>/dev/null | head -$MAX_INLINE | while IFS='|' read -r type rel_path; do
         filename=$(basename "$rel_path")
         echo "- \`${filename}\`" >> "$BODY_FILE"
     done
@@ -87,41 +91,42 @@ To approve these changes, a reviewer (not the PR author) should comment:
 \`\`\`
 EOF
 
-# Delete previous snapshot comments from this bot
-curl -s \
-    -H "Authorization: token $GITHUB_TOKEN" \
-    -H "Accept: application/vnd.github.v3+json" \
-    "https://api.github.com/repos/$GITHUB_REPO/issues/$PR_NUMBER/comments?per_page=100" \
-    | python3 -c "
-import json, sys
-comments = json.load(sys.stdin)
+# Delete previous snapshot comments
+python3 << PYEOF
+import json, urllib.request
+
+headers = {
+    'Authorization': 'token ${GITHUB_TOKEN}',
+    'Accept': 'application/vnd.github.v3+json',
+}
+
+# List comments
+req = urllib.request.Request(
+    'https://api.github.com/repos/${GITHUB_REPO}/issues/${PR_NUMBER}/comments?per_page=100',
+    headers=headers,
+)
+comments = json.loads(urllib.request.urlopen(req).read())
 for c in comments:
     if 'Snapshot Changes Detected' in (c.get('body') or ''):
-        print(c['id'])
-" 2>/dev/null | while read -r comment_id; do
-    curl -s -X DELETE \
-        -H "Authorization: token $GITHUB_TOKEN" \
-        -H "Accept: application/vnd.github.v3+json" \
-        "https://api.github.com/repos/$GITHUB_REPO/issues/$PR_NUMBER/comments/$comment_id" || true
-done
+        del_req = urllib.request.Request(
+            f"https://api.github.com/repos/${GITHUB_REPO}/issues/comments/{c['id']}",
+            headers=headers,
+            method='DELETE',
+        )
+        try:
+            urllib.request.urlopen(del_req)
+        except:
+            pass
 
-# Post the comment using python3 for safe JSON encoding
-python3 -c "
-import json, sys, urllib.request
-
-body = open('$BODY_FILE').read()
+# Post new comment
+body = open('${BODY_FILE}').read()
 payload = json.dumps({'body': body}).encode()
-
 req = urllib.request.Request(
-    'https://api.github.com/repos/$GITHUB_REPO/issues/$PR_NUMBER/comments',
+    'https://api.github.com/repos/${GITHUB_REPO}/issues/${PR_NUMBER}/comments',
     data=payload,
-    headers={
-        'Authorization': 'token $GITHUB_TOKEN',
-        'Accept': 'application/vnd.github.v3+json',
-        'Content-Type': 'application/json',
-    },
+    headers={**headers, 'Content-Type': 'application/json'},
     method='POST',
 )
 resp = urllib.request.urlopen(req)
 print(f'PR comment posted (status {resp.status})')
-"
+PYEOF
