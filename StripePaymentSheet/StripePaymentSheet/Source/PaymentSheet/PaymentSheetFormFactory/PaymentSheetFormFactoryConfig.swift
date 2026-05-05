@@ -11,10 +11,6 @@ import UIKit
 enum PaymentSheetFormFactoryConfig {
     case paymentElement(PaymentElementConfiguration, isLinkUI: Bool = false)
     case customerSheet(CustomerSheet.Configuration)
-    // Temporary prototype/test-only flag.
-    // Remove this once a real higher-level source of truth decides whether BNPL forms use the PMME header variant.
-    // While prototyping, keep this `true` so Klarna / Afterpay / Affirm forms always show the PMME-style header by default.
-    static var forcePrototypeBNPLStyleForFormHeaders = true
 
     var hasCustomer: Bool {
         switch self {
@@ -136,12 +132,6 @@ enum PaymentSheetFormFactoryConfig {
         case .paymentElement(let paymentElementConfiguration, _):
             return paymentElementConfiguration.opensCardScannerAutomatically
         }
-    }
-
-    var usePrototypeBNPLStyleForFormHeaders: Bool {
-        // Temporary passthrough for the prototype flag above.
-        // Delete this computed property when the prototype flag is removed.
-        return Self.forcePrototypeBNPLStyleForFormHeaders
     }
 
     func termsDisplayFor(paymentMethodType: PaymentSheet.PaymentMethodType) -> PaymentSheet.TermsDisplay {

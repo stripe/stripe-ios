@@ -503,6 +503,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             currency: loadResult.intent.currency,
             amount: loadResult.intent.amount,
             incentive: loadResult.elementsSession.incentive,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             delegate: self
         )
     }
@@ -1002,6 +1003,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             configuration: configuration,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             isLinkUI: false,
             delegate: self,
             previousLinkInlineSignupAction: previousLinkInlineSignupAction

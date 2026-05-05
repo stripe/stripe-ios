@@ -49,6 +49,7 @@ class PaymentSheetFormFactory {
     let sellerName: String?
     let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
     let cardFundingFilter: CardFundingFilter
+    let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
 
     var shouldDisplaySaveCheckbox: Bool {
         // Don't show the save checkbox in Link
@@ -92,6 +93,7 @@ class PaymentSheetFormFactory {
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         linkAppearance: LinkAppearance? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
@@ -140,6 +142,7 @@ class PaymentSheetFormFactory {
                   signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
+                  paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                   paymentMethodIncentive: elementsSession.incentive,
                   linkAppearance: linkAppearance,
                   sellerName: intent.sellerDetails?.businessName,
@@ -169,6 +172,7 @@ class PaymentSheetFormFactory {
         signupOptInInitialValue: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         paymentMethodIncentive: PaymentMethodIncentive?,
         linkAppearance: LinkAppearance? = nil,
         sellerName: String? = nil,
@@ -200,6 +204,7 @@ class PaymentSheetFormFactory {
         self.signupOptInInitialValue = signupOptInInitialValue
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
         self.linkAppearance = linkAppearance
         self.sellerName = sellerName
@@ -838,20 +843,16 @@ extension PaymentSheetFormFactory {
     }
 
     func makeKlarnaHeader() -> SubtitleElement {
-        if configuration.usePrototypeBNPLStyleForFormHeaders {
-            return makeBNPLHeader()
+        if let header = makeBNPLHeader() {
+            return header
         }
-        // Legacy fallback kept only so the prototype PMME header can be disabled from tests / temporary higher-level callers.
-        // Remove this fallback once the PMME-style BNPL header is the permanent implementation.
         return makeCopyLabel(text: .Localized.buy_now_or_pay_later_with_klarna)
     }
 
     func makeAffirmHeader() -> SubtitleElement {
-        if configuration.usePrototypeBNPLStyleForFormHeaders {
-            return makeBNPLHeader()
+        if let header = makeBNPLHeader() {
+            return header
         }
-        // Legacy fallback kept only so the prototype PMME header can be disabled from tests / temporary higher-level callers.
-        // Remove this fallback once the PMME-style BNPL header is the permanent implementation.
         return SubtitleElement(view: AffirmCopyLabel(theme: theme), isHorizontalMode: configuration.isHorizontalMode)
     }
 
@@ -885,8 +886,16 @@ extension PaymentSheetFormFactory {
         )
     }
 
-    func makeBNPLHeader() -> SubtitleElement {
-        let headerView = BNPLFormHeaderView(configuration: makePrototypeBNPLHeaderConfiguration())
+    func makeBNPLHeader() -> SubtitleElement? {
+        guard let promotionContent = paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethod) else {
+            return nil
+        }
+        let headerView = BNPLFormHeaderView(configuration: .init(
+            appearance: configuration.appearance,
+            promotion: promotionContent.promotion,
+            learnMoreText: promotionContent.learnMoreText,
+            infoUrl: promotionContent.infoUrl
+        ))
         return SubtitleElement(view: headerView, isHorizontalMode: configuration.isHorizontalMode)
     }
 

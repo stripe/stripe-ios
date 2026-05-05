@@ -18,6 +18,21 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+        let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+
+        init(
+            intent: Intent,
+            elementsSession: STPElementsSession,
+            savedPaymentMethods: [STPPaymentMethod],
+            paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+            paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil
+        ) {
+            self.intent = intent
+            self.elementsSession = elementsSession
+            self.savedPaymentMethods = savedPaymentMethods
+            self.paymentMethodTypes = paymentMethodTypes
+            self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+        }
     }
 
     enum IntegrationShape {
@@ -197,11 +212,20 @@ final class PaymentSheetLoader {
             let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
             let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
+            let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(elementsSession: elementsSession)
+            paymentMethodMessagingPromotionsHelper.prefetchIfNeeded(
+                intent: intent,
+                elementsSession: elementsSession,
+                configuration: configuration,
+                paymentMethodTypes: paymentMethodTypes
+            )
+
             let loadResult = LoadResult(
                 intent: intent,
                 elementsSession: elementsSession,
                 savedPaymentMethods: filteredSavedPaymentMethods,
-                paymentMethodTypes: paymentMethodTypes
+                paymentMethodTypes: paymentMethodTypes,
+                paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper
             )
             let confirmationChallenge = ConfirmationChallenge(
                 enableAttestation: configuration.enableAttestationOnConfirmation,

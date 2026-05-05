@@ -285,4 +285,35 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["dimensions-has_saved_payment_method"] as? String, "true")
         XCTAssertEqual(payload["dimensions-in_app_elements_integration_type"] as? String, "flowcontroller")
     }
+
+    func testPaymentMethodMessagingPromotionsExperiment() {
+        let experimentsData = ExperimentsData(
+            arbId: "arb_id_123",
+            experimentAssignments: [
+                PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment
+            ],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(
+            experimentsData: experimentsData,
+            customer: nil
+        )
+
+        let experiment = PaymentMethodMessagingPromotionsExperiment(
+            elementsSession: elementsSession,
+            selectedPaymentMethodType: "klarna",
+            promotionDisplayedSuccessfully: true,
+            layout: "vertical"
+        )
+
+        XCTAssertEqual(experiment.group, .treatment)
+        XCTAssertEqual(
+            experiment.dimensionsDictionary,
+            [
+                "selected_payment_method_type": "klarna",
+                "promotion_displayed_successfully": "true",
+                "in_app_elements_layout": "vertical",
+            ]
+        )
+    }
 }

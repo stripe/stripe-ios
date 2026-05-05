@@ -42,11 +42,22 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         return subtitle.view.subviews.compactMap { $0 as? BNPLFormHeaderView }.first
     }
 
-    override func tearDown() {
-        // Reset the temporary prototype flag after each test so opt-in / opt-out tests stay isolated.
-        // Update or remove this once the prototype BNPL form-header flag is deleted.
-        PaymentSheetFormFactoryConfig.forcePrototypeBNPLStyleForFormHeaders = true
-        super.tearDown()
+    private func makePrefetchedPMMEHelper(
+        paymentMethodType: STPPaymentMethodType,
+        promotion: String = String.Localized.buy_now_or_pay_later_with_klarna,
+        learnMoreText: String = "Learn more",
+        infoUrl: URL = URL(string: "https://example.com/learn-more")!
+    ) -> PaymentMethodMessagingPromotionsHelper {
+        PaymentMethodMessagingPromotionsHelper(
+            experiment: PaymentMethodMessagingPromotionsExperiment(group: .treatment),
+            prefetchedPromotionContents: [
+                paymentMethodType.identifier: .init(
+                    promotion: promotion,
+                    learnMoreText: learnMoreText,
+                    infoUrl: infoUrl
+                ),
+            ]
+        )
     }
 
     private func makeCheckoutSessionIntent(
@@ -2755,9 +2766,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     }
 
     func testMakeKlarnaHeader_DefaultsToLegacyHeader() {
-        // Explicitly disable the temporary prototype header flag to verify the legacy fallback remains available.
-        PaymentSheetFormFactoryConfig.forcePrototypeBNPLStyleForFormHeaders = false
-
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
             elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
@@ -2772,14 +2780,17 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     }
 
     func testMakeBNPLHeader_KlarnaUsesSharedPMMEHeaderViewWhenEnabled() {
-        // Explicitly enable the temporary prototype header flag to verify the PMME-style BNPL header path.
-        PaymentSheetFormFactoryConfig.forcePrototypeBNPLStyleForFormHeaders = true
-
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
             elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
             configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
-            paymentMethod: .stripe(.klarna)
+            paymentMethod: .stripe(.klarna),
+            accountService: LinkAccountService(
+                apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
+                elementsSession: ._testValue()
+            ),
+            analyticsHelper: nil,
+            paymentMethodMessagingPromotionsHelper: makePrefetchedPMMEHelper(paymentMethodType: .klarna)
         )
 
         let header = factory.makeKlarnaHeader()
@@ -2787,7 +2798,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         XCTAssertEqual(headerView?.configuration.promotion, String.Localized.buy_now_or_pay_later_with_klarna)
         XCTAssertEqual(headerView?.configuration.learnMoreText, "Learn more")
-        XCTAssertEqual(headerView?.configuration.infoUrl, URL(string: "https://www.lego.com")!)
+        XCTAssertEqual(headerView?.configuration.infoUrl, URL(string: "https://example.com/learn-more"))
     }
 
     func testMakePrototypeBNPLHeaderConfiguration_AfterpayUsesCurrencySpecificBranding() {

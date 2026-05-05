@@ -258,6 +258,7 @@ public final class EmbeddedPaymentElement {
                 elementsSession: loadResult.elementsSession,
                 savedPaymentMethods: loadResult.savedPaymentMethods,
                 analyticsHelper: self.analyticsHelper,
+                paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
                 formCache: self.formCache,
                 delegate: self
             )

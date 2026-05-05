@@ -30,12 +30,6 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
 
 /// The view for an embedded payment element
 class EmbeddedPaymentMethodsView: UIView {
-    // Temporary prototype/test-only values for forcing the BNPL row variant in embedded.
-    // Remove all of this prototype wiring once PMME-backed row data is wired through the real integration path.
-    private static let forcePrototypeBNPLStyleForAllRows = true
-    private static let forcedBNPLLearnMoreText = "Learn more"
-    private static let forcedBNPLInfoURL = URL(string: "https://www.lego.com")!
-
     /// Return the default size to let Auto Layout manage the height.
     /// Overriding intrinsicContentSize values and setting `invalidIntrinsicContentSize` forces force SwiftUI to update layout immediately,
     /// resulting in abrupt, non-animated height changes.
@@ -46,6 +40,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
     private let currency: String?
+    private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     private(set) var previousSelectedRowButton: RowButton? {
         didSet {
             guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
@@ -56,7 +51,7 @@ class EmbeddedPaymentMethodsView: UIView {
             switch previousSelectedRowButton.type {
             case .new(paymentMethodType: let paymentMethodType):
                 let isCardOrUSBankAccount = paymentMethodType == .stripe(.card) || paymentMethodType == .stripe(.USBankAccount)
-                previousSelectedRowButton.removeChangeButton(shouldClearSublabel: isCardOrUSBankAccount && !Self.forcePrototypeBNPLStyleForAllRows)
+                previousSelectedRowButton.removeChangeButton(shouldClearSublabel: isCardOrUSBankAccount)
             default:
                break
             }
@@ -126,6 +121,7 @@ class EmbeddedPaymentMethodsView: UIView {
         customer: PaymentSheet.CustomerConfiguration? = nil,
         currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
@@ -134,6 +130,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.shouldShowMandate = shouldShowMandate
         self.customer = customer
         self.currency = currency
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
         self.delegate = delegate
@@ -203,9 +200,7 @@ class EmbeddedPaymentMethodsView: UIView {
                 selectedRowChangeButtonState = initialSelectedRowChangeButtonState
                 if initialSelectedRowChangeButtonState.shouldShowChangeButton {
                     rowButtonMatchingInitialSelection.addChangeButton()
-                    if !Self.forcePrototypeBNPLStyleForAllRows {
-                        rowButtonMatchingInitialSelection.setSublabel(text: initialSelectedRowChangeButtonState.sublabel)
-                    }
+                    rowButtonMatchingInitialSelection.setSublabel(text: initialSelectedRowChangeButtonState.sublabel)
                 }
             }
             self.selectedRowButton = rowButtonMatchingInitialSelection
@@ -314,9 +309,6 @@ class EmbeddedPaymentMethodsView: UIView {
     }
 
     func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?, animated: Bool = true) {
-        guard !Self.forcePrototypeBNPLStyleForAllRows else {
-            return
-        }
         guard let linkRowButton else {
             return
         }
@@ -472,8 +464,6 @@ class EmbeddedPaymentMethodsView: UIView {
 #endif
     // MARK: - Helpers
 
-    // Temporary prototype/test-only helper.
-    // Remove this once saved rows can receive real PMME-backed row content through the production path.
     func makeSavedPaymentMethodButton(savedPaymentMethod: STPPaymentMethod,
                                       savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?) -> RowButton {
         let accessoryButton: RowButton.RightAccessoryButton? = {
@@ -485,28 +475,6 @@ class EmbeddedPaymentMethodsView: UIView {
                 return nil
             }
         }()
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = savedPaymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle)
-        let text = savedPaymentMethod.paymentSheetLabel
-        if let rowButton = makePrototypeBNPLRowButton(
-            type: .saved(paymentMethod: savedPaymentMethod),
-            paymentMethodType: .stripe(savedPaymentMethod.type),
-            imageView: imageView,
-            text: text,
-            accessoryView: accessoryButton,
-            promoBadge: nil,
-            shouldAnimateOnPress: false,
-            didTap: { [weak self] rowButton in
-                CustomerPaymentOption.setDefaultPaymentMethod(
-                    .stripeId(savedPaymentMethod.stripeId),
-                    forCustomer: self?.customer?.id
-                )
-                self?.didTap(rowButton: rowButton)
-            }
-        ) {
-            return rowButton
-        }
         let savedPaymentMethodButton = RowButton.makeForSavedPaymentMethod(
             paymentMethod: savedPaymentMethod,
             appearance: appearance,
@@ -534,10 +502,9 @@ class EmbeddedPaymentMethodsView: UIView {
             }
         )
         accessoryButton.isHidden = true
-        if let rowButton = makePrototypeBNPLRowButton(
-            type: .new(paymentMethodType: paymentMethodType),
+        if let rowButton = makePaymentMethodMessagingRowButton(
             paymentMethodType: paymentMethodType,
-            text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
+            savedPaymentMethods: savedPaymentMethods,
             accessoryView: accessoryButton,
             promoBadge: makePromoBadge(for: paymentMethodType),
             shouldAnimateOnPress: delegate?.shouldAnimateOnPress(paymentMethodType) == true,
@@ -563,43 +530,11 @@ class EmbeddedPaymentMethodsView: UIView {
         )
     }
 
-    // Temporary prototype/test-only helper.
-    // Remove this once wallet rows can receive real PMME-backed row content through the production path.
     private func makeApplePayRowButton(didTap: @escaping RowButton.DidTapClosure) -> RowButton {
-        let imageView = UIImageView(image: Image.apple_pay_mark.makeImage())
-        imageView.contentMode = .scaleAspectFit
-        if let rowButton = makePrototypeBNPLRowButton(
-            type: .applePay,
-            paymentMethodType: nil,
-            imageView: imageView,
-            text: "Apple Pay",
-            accessoryView: nil,
-            promoBadge: nil,
-            shouldAnimateOnPress: false,
-            didTap: didTap
-        ) {
-            return rowButton
-        }
         return RowButton.makeForApplePay(appearance: appearance, isEmbedded: true, didTap: didTap)
     }
 
-    // Temporary prototype/test-only helper.
-    // Remove this once wallet rows can receive real PMME-backed row content through the production path.
     private func makeLinkRowButton(didTap: @escaping RowButton.DidTapClosure) -> RowButton {
-        let imageView = UIImageView(image: Image.link_icon.makeImage())
-        imageView.contentMode = .scaleAspectFit
-        if let rowButton = makePrototypeBNPLRowButton(
-            type: .link,
-            paymentMethodType: nil,
-            imageView: imageView,
-            text: "Link",
-            accessoryView: nil,
-            promoBadge: nil,
-            shouldAnimateOnPress: false,
-            didTap: didTap
-        ) {
-            return rowButton
-        }
         return RowButton.makeForLink(appearance: appearance, isEmbedded: true, didTap: didTap)
     }
 
@@ -622,46 +557,36 @@ class EmbeddedPaymentMethodsView: UIView {
         )
     }
 
-    // Temporary prototype/test-only hook to force the BNPL row variant from the embedded row builders.
-    // Remove this entire helper once PMME-backed row data is plumbed through the real production path.
-    private func makePrototypeBNPLRowButton(
-        type: RowButtonType,
-        paymentMethodType: PaymentSheet.PaymentMethodType?,
-        imageView: UIImageView? = nil,
-        text: String,
+    private func makePaymentMethodMessagingRowButton(
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        savedPaymentMethods: [STPPaymentMethod],
         accessoryView: UIView?,
         promoBadge: PromoBadgeView?,
         shouldAnimateOnPress: Bool,
         didTap: @escaping RowButton.DidTapClosure
     ) -> RowButton? {
-        guard Self.forcePrototypeBNPLStyleForAllRows else {
+        guard let content = paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType) else {
             return nil
         }
 
-        let imageView = imageView ?? {
-            guard let paymentMethodType else {
-                return UIImageView()
-            }
-            let imageView = PaymentMethodTypeImageView(
-                paymentMethodType: paymentMethodType,
-                contrastMatchingColor: appearance.colors.componentText,
-                currency: currency,
-                iconStyle: appearance.iconStyle
-            )
-            imageView.contentMode = .scaleAspectFit
-            return imageView
-        }()
+        let imageView = PaymentMethodTypeImageView(
+            paymentMethodType: paymentMethodType,
+            contrastMatchingColor: appearance.colors.componentText,
+            currency: currency,
+            iconStyle: appearance.iconStyle
+        )
+        imageView.contentMode = .scaleAspectFit
 
         switch appearance.embeddedPaymentElement.row.style {
         case .flatWithRadio:
             return RowButtonFlatWithRadioView(
                 appearance: appearance,
-                type: type,
+                type: .new(paymentMethodType: paymentMethodType),
                 imageView: imageView,
-                text: text,
-                bnplPromoText: forcedBNPLPromoText(for: paymentMethodType),
-                bnplLearnMoreText: Self.forcedBNPLLearnMoreText,
-                bnplInfoUrl: Self.forcedBNPLInfoURL,
+                text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
+                bnplPromoText: content.promotion,
+                bnplLearnMoreText: content.learnMoreText,
+                bnplInfoUrl: content.infoUrl,
                 promoBadge: promoBadge,
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
@@ -671,12 +596,12 @@ class EmbeddedPaymentMethodsView: UIView {
         case .floatingButton:
             return RowButtonFloating(
                 appearance: appearance,
-                type: type,
+                type: .new(paymentMethodType: paymentMethodType),
                 imageView: imageView,
-                text: text,
-                bnplPromoText: forcedBNPLPromoText(for: paymentMethodType),
-                bnplLearnMoreText: Self.forcedBNPLLearnMoreText,
-                bnplInfoUrl: Self.forcedBNPLInfoURL,
+                text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
+                bnplPromoText: content.promotion,
+                bnplLearnMoreText: content.learnMoreText,
+                bnplInfoUrl: content.infoUrl,
                 promoBadge: promoBadge,
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
@@ -686,12 +611,12 @@ class EmbeddedPaymentMethodsView: UIView {
         case .flatWithCheckmark:
             return RowButtonFlatWithCheckmark(
                 appearance: appearance,
-                type: type,
+                type: .new(paymentMethodType: paymentMethodType),
                 imageView: imageView,
-                text: text,
-                bnplPromoText: forcedBNPLPromoText(for: paymentMethodType),
-                bnplLearnMoreText: Self.forcedBNPLLearnMoreText,
-                bnplInfoUrl: Self.forcedBNPLInfoURL,
+                text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
+                bnplPromoText: content.promotion,
+                bnplLearnMoreText: content.learnMoreText,
+                bnplInfoUrl: content.infoUrl,
                 promoBadge: promoBadge,
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
@@ -701,12 +626,12 @@ class EmbeddedPaymentMethodsView: UIView {
         case .flatWithDisclosure:
             return RowButtonFlatWithDisclosure(
                 appearance: appearance,
-                type: type,
+                type: .new(paymentMethodType: paymentMethodType),
                 imageView: imageView,
-                text: text,
-                bnplPromoText: forcedBNPLPromoText(for: paymentMethodType),
-                bnplLearnMoreText: Self.forcedBNPLLearnMoreText,
-                bnplInfoUrl: Self.forcedBNPLInfoURL,
+                text: paymentMethodButtonText(for: paymentMethodType, savedPaymentMethods: savedPaymentMethods),
+                bnplPromoText: content.promotion,
+                bnplLearnMoreText: content.learnMoreText,
+                bnplInfoUrl: content.infoUrl,
                 promoBadge: promoBadge,
                 accessoryView: accessoryView,
                 shouldAnimateOnPress: shouldAnimateOnPress,
@@ -716,26 +641,6 @@ class EmbeddedPaymentMethodsView: UIView {
         }
     }
 
-    // Temporary prototype/test-only copy source used by the forced BNPL row variant.
-    // Remove this once real PMME copy is passed down through the production path.
-    private func forcedBNPLPromoText(for paymentMethodType: PaymentSheet.PaymentMethodType?) -> String {
-        switch paymentMethodType {
-        case .stripe(.klarna)?:
-            return String.Localized.buy_now_or_pay_later_with_klarna
-        case .stripe(.afterpayClearpay)?:
-            if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
-                return String.Localized.buy_now_or_pay_later_with_clearpay
-            } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
-                return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
-            } else {
-                return String.Localized.buy_now_or_pay_later_with_afterpay
-            }
-        case .stripe(.affirm)?:
-            return String.Localized.pay_over_time_with_affirm
-        default:
-            return "Prototype BNPL messaging"
-        }
-    }
 }
 
 extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {
