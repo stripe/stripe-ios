@@ -21,9 +21,6 @@ extension PaymentSheetFormFactory {
     }
 
     func makeAfterpayClearpayHeader() -> SubtitleElement {
-        if let header = makeBNPLHeader() {
-            return header
-        }
         return SubtitleElement(
             view: AfterpayPriceBreakdownView(
                 currency: currency,
