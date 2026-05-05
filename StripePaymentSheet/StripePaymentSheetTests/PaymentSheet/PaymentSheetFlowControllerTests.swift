@@ -292,6 +292,135 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         XCTAssertEqual(displayData.labels.sublabel, "My Checking")
     }
 
+    // MARK: - mandateMarkedAsDisplayed Tests
+
+    func testMandateMarkedAsDisplayed_new() {
+        let params = IntentConfirmParams(type: .stripe(.card))
+        XCTAssertFalse(params.didDisplayMandate)
+
+        let option = PaymentOption.new(confirmParams: params)
+        let result = option.mandateMarkedAsDisplayed()
+
+        if case .new(let resultParams) = result {
+            XCTAssertTrue(resultParams.didDisplayMandate)
+        } else {
+            XCTFail("Expected .new option")
+        }
+    }
+
+    func testMandateMarkedAsDisplayed_saved() {
+        let params = IntentConfirmParams(type: .stripe(.card))
+        XCTAssertFalse(params.didDisplayMandate)
+
+        let paymentMethod = STPFixtures.paymentMethod()
+        let option = PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: params)
+        let result = option.mandateMarkedAsDisplayed()
+
+        if case .saved(_, let resultParams) = result {
+            XCTAssertTrue(resultParams?.didDisplayMandate ?? false)
+        } else {
+            XCTFail("Expected .saved option")
+        }
+    }
+
+    func testMandateMarkedAsDisplayed_applePay() {
+        let option = PaymentOption.applePay
+        let result = option.mandateMarkedAsDisplayed()
+        if case .applePay = result {
+            // expected
+        } else {
+            XCTFail("Expected .applePay option")
+        }
+    }
+
+    func testFlowControllerUpdate_preservesPaymentOptionWhenMandateIntroduced() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        // Use CashApp as an example PM: it has no user-input fields, but requires a mandate when setupFutureUsage is set.
+        // This simulates the scenario where update() introduces a mandate requirement.
+        let previousParams = IntentConfirmParams(type: .stripe(.cashApp))
+        previousParams.didDisplayMandate = true // As our fix does during update
+        let previousOption: PaymentOption = .new(confirmParams: previousParams)
+
+        let configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        let intentWithMandate = Intent._testPaymentIntent(paymentMethodTypes: [.cashApp], setupFutureUsage: .offSession)
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
+        let loadResultWithMandate = PaymentSheetLoader.LoadResult(
+            intent: intentWithMandate,
+            elementsSession: elementsSession,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.cashApp)]
+        )
+        let newVC = PaymentSheet.FlowController.makeViewController(
+            configuration: configuration,
+            loadResult: loadResultWithMandate,
+            analyticsHelper: ._testValue(),
+            walletButtonsViewState: .hidden,
+            previousPaymentOption: previousOption
+        )
+
+        // The payment option should be non-nil because didDisplayMandate was set
+        XCTAssertNotNil(newVC.selectedPaymentOption, "Payment option should be preserved after update introduces a mandate")
+    }
+
+    func testFlowControllerUpdate_mandateMarkedAsDisplayedPreservesFormPaymentOption() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            FormSpecProvider.shared.load { _ in
+                expectation.fulfill()
+            }
+        }
+        waitForExpectations(timeout: 1)
+
+        // Verify the fix works at the form level: when previousCustomerInput has didDisplayMandate = true,
+        // a form with a mandate element is immediately valid.
+        let previousParams = IntentConfirmParams(type: .stripe(.cashApp))
+        previousParams.didDisplayMandate = true
+
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.cashApp], setupFutureUsage: .offSession)
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["cashapp"])
+        let configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+
+        let formVC = PaymentMethodFormViewController(
+            type: .stripe(.cashApp),
+            intent: intent,
+            elementsSession: elementsSession,
+            previousCustomerInput: previousParams,
+            formCache: .init(),
+            configuration: configuration,
+            headerView: nil,
+            analyticsHelper: ._testValue(),
+            delegate: self
+        )
+
+        // The form should immediately return a valid payment option because the mandate is marked as displayed
+        XCTAssertNotNil(formVC.paymentOption, "Form should be valid when mandate was marked as displayed via previousCustomerInput")
+
+        // Verify that without didDisplayMandate, the form is NOT valid (the mandate blocks it)
+        let paramsWithoutMandate = IntentConfirmParams(type: .stripe(.cashApp))
+        paramsWithoutMandate.didDisplayMandate = false
+
+        let formVCWithoutMandate = PaymentMethodFormViewController(
+            type: .stripe(.cashApp),
+            intent: intent,
+            elementsSession: elementsSession,
+            previousCustomerInput: paramsWithoutMandate,
+            formCache: .init(),
+            configuration: configuration,
+            headerView: nil,
+            analyticsHelper: ._testValue(),
+            delegate: self
+        )
+
+        XCTAssertNil(formVCWithoutMandate.paymentOption, "Form should be invalid when mandate was not displayed")
+    }
+
     // MARK: - Enhanced Completion Block Tests
 
     func testPresentPaymentOptions_EnhancedCompletion_BothMethodsExist() {
@@ -334,5 +463,13 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
         // Wait for legacy callback
         wait(for: [legacyExpectation], timeout: 2.0)
+    }
+}
+
+extension PaymentSheetFlowControllerTests: PaymentMethodFormViewControllerDelegate {
+    func didUpdate(_ viewController: PaymentMethodFormViewController) {
+    }
+
+    func updateErrorLabel(for error: (any Error)?) {
     }
 }

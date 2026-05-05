@@ -712,12 +712,13 @@ extension PaymentSheet {
                 case .success(let (loadResult, confirmationChallenge)):
                     // 2. Re-initialize PaymentSheetFlowControllerViewController to update the UI to match the newly loaded data e.g. payment method types may have changed.
 
+                    let previousPaymentOption = self.internalPaymentOption?.mandateMarkedAsDisplayed()
                     self.viewController = Self.makeViewController(
                         configuration: self.configuration,
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
                         walletButtonsViewState: walletButtonsViewState,
-                        previousPaymentOption: self.internalPaymentOption,
+                        previousPaymentOption: previousPaymentOption,
                         shouldLogExperimentExposure: false
                     )
                     self.viewController.flowControllerDelegate = self
@@ -968,6 +969,23 @@ internal protocol FlowControllerViewControllerProtocol: BottomSheetContentViewCo
 }
 
 extension PaymentOption {
+    /// Returns the same payment option with `didDisplayMandate` set to true on its confirm params.
+    /// Used during FlowController.update() so that a newly-introduced mandate requirement doesn't
+    /// invalidate the customer's previous payment selection. The mandate will be displayed when the
+    /// customer next presents the payment options sheet.
+    func mandateMarkedAsDisplayed() -> PaymentOption {
+        switch self {
+        case .new(let confirmParams):
+            confirmParams.didDisplayMandate = true
+            return self
+        case .saved(_, let confirmParams):
+            confirmParams?.didDisplayMandate = true
+            return self
+        case .applePay, .link, .external:
+            return self
+        }
+    }
+
     var canLaunchLink: Bool {
         let hasLinkAccount = LinkAccountContext.shared.account?.isRegistered ?? false
         switch self {
