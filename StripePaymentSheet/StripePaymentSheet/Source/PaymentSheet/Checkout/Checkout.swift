@@ -58,9 +58,30 @@ public final class Checkout: ObservableObject {
     /// until all overlapping operations complete.
     private var sessionUpdateCount = 0
 
+    /// Set when a delegate notification is requested while state is `.loading`.
+    /// Flushed by `setSession` when state transitions back to `.loaded` so observers
+    /// always receive the final, settled state.
+    private var hasPendingDelegateNotification = false
+
     /// Sets the session on `state`, using `.loading` if another operation is in flight.
+    /// Flushes any deferred delegate notification once state lands on `.loaded`.
     private func setSession(_ session: Checkout.Session) {
         state = sessionUpdateCount > 0 ? .loading(session) : .loaded(session)
+        if !state.isLoading, hasPendingDelegateNotification {
+            hasPendingDelegateNotification = false
+            delegate?.checkout(self, didChangeState: state)
+        }
+    }
+
+    /// Notifies the delegate of the current state, deferring until state is `.loaded`
+    /// when a session update is in flight.
+    private func notifyDelegate() {
+        if state.isLoading {
+            hasPendingDelegateNotification = true
+        } else {
+            hasPendingDelegateNotification = false
+            delegate?.checkout(self, didChangeState: state)
+        }
     }
 
     // MARK: - Initialization
@@ -214,7 +235,7 @@ public final class Checkout: ObservableObject {
         } else {
             currentSession.billingAddressOverride = contactAddress
             setSession(currentSession)
-            delegate?.checkout(self, didChangeState: state)
+            notifyDelegate()
         }
     }
 
@@ -250,7 +271,7 @@ public final class Checkout: ObservableObject {
         } else {
             currentSession.shippingAddressOverride = contactAddress
             setSession(currentSession)
-            delegate?.checkout(self, didChangeState: state)
+            notifyDelegate()
         }
     }
 
@@ -298,7 +319,7 @@ public final class Checkout: ObservableObject {
         let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
         setSession(newSession)
         if changed {
-            delegate?.checkout(self, didChangeState: state)
+            notifyDelegate()
         }
     }
 
