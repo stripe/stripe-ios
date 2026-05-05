@@ -52,6 +52,24 @@ jobs:
           xcrun simctl boot "$UDID"
           echo "SNAPSHOT_DESTINATION=platform=iOS Simulator,id=$UDID" >> "$GITHUB_ENV"
 
+      - name: Discover snapshot tests
+        id: discover
+        run: |
+          # Use the same discovery logic as ci_scripts/snapshots.rb
+          ONLY_TESTING=$(ruby -e "
+            Dir.glob('**/*Snapshot{Test,Tests}.{swift,m}').each do |path|
+              pathname = Pathname.new(path)
+              test_dir = pathname.each_filename.detect { |f| f.end_with?('Tests') }
+              next if test_dir.nil?
+              test_target = test_dir == 'Tests' ? 'StripeiOS Tests' : test_dir
+              test_name = File.basename(path, '.*')
+              puts \"-only-testing:\\\"#{test_target}/#{test_name}\\\"\"
+            end
+          ")
+          echo "flags<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$ONLY_TESTING" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
       - name: Run snapshot tests (record mode)
         run: |
           # Record mode causes all tests to "fail" (expected — they report
@@ -61,6 +79,7 @@ jobs:
             -workspace Stripe.xcworkspace \
             -scheme AllStripeFrameworks-RecordMode \
             -destination "$SNAPSHOT_DESTINATION" \
+            ${{ steps.discover.outputs.flags }} \
             2>&1 | xcbeautify || true
 
       - name: Collect recorded snapshots
