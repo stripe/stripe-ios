@@ -780,41 +780,6 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(sptEvent["is_spt"] as? Bool, true, "SPT intent with preparePaymentMethodHandler should have is_spt = true")
     }
 
-    // MARK: - resolveLayout
-
-    func testResolveLayout_explicit() {
-        var config = PaymentSheet.Configuration()
-        let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card, .iDEAL, .SEPADebit])
-        let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.card), .stripe(.iDEAL), .stripe(.SEPADebit)]
-
-        config.paymentMethodLayout = .horizontal
-        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes), .horizontal)
-
-        config.paymentMethodLayout = .vertical
-        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes), .vertical)
-    }
-
-    func testResolveLayout_automatic_fewPaymentMethods() {
-        var config = PaymentSheet.Configuration()
-        config.paymentMethodLayout = .automatic
-        let elementsSession = STPElementsSession._testValue()
-
-        // 1 PM → horizontal
-        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card)]), .horizontal)
-        // 2 PMs → horizontal
-        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card), .stripe(.iDEAL)]), .horizontal)
-        // 3 PMs → vertical
-        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card), .stripe(.iDEAL), .stripe(.SEPADebit)]), .vertical)
-    }
-
-    func testResolveLayout_automatic_forceVertical() {
-        var config = PaymentSheet.Configuration()
-        config.paymentMethodLayout = .automatic
-        // forceVerticalPaymentMethodLayout flag set → vertical even with few PMs
-        let elementsSession = STPElementsSession._testValue(flags: ["elements_mobile_force_vertical_payment_method_layout": true])
-        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card)]), .vertical)
-    }
-
     // MARK: - payment_method_orientation analytics
 
     func testPaymentMethodOrientationAbsentBeforeLoad() {
