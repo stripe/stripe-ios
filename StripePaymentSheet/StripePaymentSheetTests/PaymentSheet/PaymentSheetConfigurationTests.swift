@@ -183,14 +183,12 @@ class PaymentSheetConfigurationTests: XCTestCase {
 
     func testResolveLayout_explicit() {
         var config = PaymentSheet.Configuration()
-        let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card, .iDEAL, .SEPADebit])
-        let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.card), .stripe(.iDEAL), .stripe(.SEPADebit)]
 
         config.paymentMethodLayout = .horizontal
-        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes), .horizontal)
+        XCTAssertEqual(config.resolveLayout(), .horizontal)
 
         config.paymentMethodLayout = .vertical
-        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes), .vertical)
+        XCTAssertEqual(config.resolveLayout(), .vertical)
     }
 }
 
