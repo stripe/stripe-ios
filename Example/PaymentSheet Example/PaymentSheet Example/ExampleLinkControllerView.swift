@@ -53,6 +53,14 @@ struct ExampleLinkControllerView: View {
                                 .focused($isEmailFieldFocused)
                         }
 
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Phone Number (optional)")
+                                .font(.subheadline)
+                            TextField("Enter phone number (E.164 format)", text: $phone)
+                                .textFieldStyle(RoundedBorderTextFieldStyle())
+                                .keyboardType(.phonePad)
+                        }
+
                         if userExists == false {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text("Full Name")
@@ -83,6 +91,34 @@ struct ExampleLinkControllerView: View {
                     .padding()
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(8)
+                    
+                    // Payment Method Types Configuration
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Supported Payment Method Types")
+                            .font(.headline)
+
+                        VStack(spacing: 8) {
+                            ForEach(LinkPaymentMethodType.allCases, id: \.self) { paymentMethodType in
+                                HStack {
+                                    Button(action: {
+                                        togglePaymentMethodType(paymentMethodType)
+                                    }) {
+                                        HStack {
+                                            Image(systemName: selectedPaymentMethodTypes.contains(paymentMethodType) ? "checkmark.square.fill" : "square")
+                                                .foregroundColor(selectedPaymentMethodTypes.contains(paymentMethodType) ? .blue : .gray)
+                                            Text(paymentMethodType.displayName)
+                                                .foregroundColor(.primary)
+                                            Spacer()
+                                        }
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
+                                }
+                            }
+                        }
+                    }
+                    .padding()
+                    .background(Color.gray.opacity(0.1))
+                    .cornerRadius(8)
 
                     // User Lookup Section
                     VStack(spacing: 12) {
@@ -98,40 +134,12 @@ struct ExampleLinkControllerView: View {
 
                     // Action Buttons
                     VStack(spacing: 12) {
+                        presentButton
+
                         registerNewUserButton
                         verifyUserButton
 
                         collectPaymentMethodButton
-
-                        // Payment Method Types Configuration - only show when user lookup has been performed
-                        if userExists != nil {
-                            VStack(alignment: .leading, spacing: 16) {
-                                Text("Supported Payment Method Types")
-                                    .font(.headline)
-
-                                VStack(spacing: 8) {
-                                    ForEach(LinkPaymentMethodType.allCases, id: \.self) { paymentMethodType in
-                                        HStack {
-                                            Button(action: {
-                                                togglePaymentMethodType(paymentMethodType)
-                                            }) {
-                                                HStack {
-                                                    Image(systemName: selectedPaymentMethodTypes.contains(paymentMethodType) ? "checkmark.square.fill" : "square")
-                                                        .foregroundColor(selectedPaymentMethodTypes.contains(paymentMethodType) ? .blue : .gray)
-                                                    Text(paymentMethodType.displayName)
-                                                        .foregroundColor(.primary)
-                                                    Spacer()
-                                                }
-                                            }
-                                            .buttonStyle(PlainButtonStyle())
-                                        }
-                                    }
-                                }
-                            }
-                            .padding()
-                            .background(Color.gray.opacity(0.1))
-                            .cornerRadius(8)
-                        }
 
                         createPaymentMethodButton
 
@@ -284,6 +292,15 @@ struct ExampleLinkControllerView: View {
             .buttonStyle(SecondaryButtonStyle())
             .disabled(isLoading)
         }
+    }
+
+    @ViewBuilder
+    private var presentButton: some View {
+        Button("Present") {
+            Task { await presentLinkFlow() }
+        }
+        .buttonStyle(PrimaryButtonStyle())
+        .disabled(isLoading)
     }
 
     @ViewBuilder
@@ -486,6 +503,55 @@ struct ExampleLinkControllerView: View {
                 self.statusMessage = "Payment method collected successfully"
             } else {
                 self.statusMessage = "Payment method collection canceled"
+            }
+        }
+    }
+
+    private func presentLinkFlow() async {
+        guard let linkController else {
+            await MainActor.run {
+                self.errorMessage = "LinkController not initialized"
+            }
+            return
+        }
+
+        await MainActor.run {
+            self.isEmailFieldFocused = false
+            self.isLoading = true
+            self.errorMessage = nil
+            self.statusMessage = "Presenting Link flow..."
+        }
+
+        guard let rootViewController = findViewController() else {
+            await MainActor.run {
+                self.isLoading = false
+                self.errorMessage = "Could not find root view controller"
+                self.statusMessage = nil
+            }
+            return
+        }
+
+        do {
+            let result = try await linkController.present(
+                email: email,
+                phoneNumber: phone.isEmpty ? nil : phone,
+                supportedPaymentMethodTypes: Array(selectedPaymentMethodTypes),
+                from: rootViewController
+            )
+            await MainActor.run {
+                self.isLoading = false
+                switch result {
+                case .completed(let paymentMethod):
+                    self.statusMessage = "Payment method created (ID: \(paymentMethod.stripeId))"
+                case .canceled:
+                    self.statusMessage = "Present flow canceled"
+                }
+            }
+        } catch {
+            await MainActor.run {
+                self.isLoading = false
+                self.errorMessage = "Present flow failed: \(error.localizedDescription)"
+                self.statusMessage = nil
             }
         }
     }
