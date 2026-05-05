@@ -218,7 +218,6 @@ final class PaymentSheetLoader {
             let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(elementsSession: elementsSession)
             paymentMethodMessagingPromotionsHelper.prefetchIfNeeded(
                 intent: intent,
-                elementsSession: elementsSession,
                 configuration: configuration,
                 paymentMethodTypes: paymentMethodTypes
             )

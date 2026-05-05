@@ -636,6 +636,56 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
     }
 
+    func testPaymentSheetPromotionContents_logsUnexpectedResponseAnalytics() {
+        let apiResponse = PaymentMethodMessagingElement.APIResponse(
+            content: .init(
+                images: [],
+                promotion: nil,
+                inlinePartnerPromotion: nil,
+                learnMore: nil,
+                legalDisclosure: nil,
+                summary: nil
+            ),
+            paymentPlanGroups: [
+                .init(
+                    type: "affirm",
+                    content: .init(
+                        images: [],
+                        promotion: nil,
+                        inlinePartnerPromotion: nil,
+                        learnMore: nil,
+                        legalDisclosure: nil,
+                        summary: nil
+                    )
+                ),
+            ]
+        )
+
+        mockAnalyticsClient.reset()
+        let promotions = apiResponse.paymentSheetPromotionContents(
+            apiClient: apiClient,
+            analyticsClient: mockAnalyticsClient
+        )
+
+        XCTAssertTrue(promotions.isEmpty)
+
+        let unexpectedResponseEvents = mockAnalyticsClient.loggedAnalytics.compactMap { analytic in
+            analytic as? ErrorAnalytic
+        }.filter { analytic in
+            analytic.event == .unexpectedPMMEError
+        }
+
+        XCTAssertEqual(unexpectedResponseEvents.count, 2)
+        XCTAssertEqual(
+            unexpectedResponseEvents.compactMap { $0.params["failure_reason"] as? String },
+            ["missing_required_promotion_fields", "all_payment_plan_groups_invalid"]
+        )
+        XCTAssertEqual(
+            unexpectedResponseEvents.compactMap { $0.params["payment_method_type"] as? String },
+            ["affirm"]
+        )
+    }
+
     func testCreate_localeFrench() async {
         // Given: A configuration with French locale
         let appearance = PaymentMethodMessagingElement.Appearance()

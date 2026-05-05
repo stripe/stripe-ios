@@ -7,16 +7,18 @@
 
 @_spi(STP) import StripePayments
 
-struct PaymentMethodMessagingPromotionsExperiment {
+struct PaymentMethodMessagingPromotionsExperiment: LoggableExperiment {
     static let experimentName = "ocs_mobile_payment_method_messaging_promotions"
 
+    let name: String = experimentName
+    let arbId: String
     let group: ExperimentGroup
 
     let selectedPaymentMethodType: String?
     let promotionDisplayedSuccessfully: Bool?
     let layout: String?
 
-    var dimensionsDictionary: [String: String] {
+    var dimensions: [String: String] {
         var dimensions: [String: String] = [:]
         if let selectedPaymentMethodType {
             dimensions["selected_payment_method_type"] = selectedPaymentMethodType
@@ -37,6 +39,7 @@ struct PaymentMethodMessagingPromotionsExperiment {
         layout: String? = nil
     ) {
         let assignment = elementsSession.experimentsData?.experimentAssignments[Self.experimentName]
+        self.arbId = elementsSession.experimentsData?.arbId ?? ""
         self.group = assignment ?? .control
         self.selectedPaymentMethodType = selectedPaymentMethodType
         self.promotionDisplayedSuccessfully = promotionDisplayedSuccessfully
@@ -44,11 +47,13 @@ struct PaymentMethodMessagingPromotionsExperiment {
     }
 
     init(
+        arbId: String,
         group: ExperimentGroup,
         selectedPaymentMethodType: String? = nil,
         promotionDisplayedSuccessfully: Bool? = nil,
         layout: String? = nil
     ) {
+        self.arbId = arbId
         self.group = group
         self.selectedPaymentMethodType = selectedPaymentMethodType
         self.promotionDisplayedSuccessfully = promotionDisplayedSuccessfully
