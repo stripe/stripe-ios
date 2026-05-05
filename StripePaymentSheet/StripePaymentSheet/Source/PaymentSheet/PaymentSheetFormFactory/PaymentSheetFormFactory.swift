@@ -50,6 +50,7 @@ class PaymentSheetFormFactory {
     let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
     let cardFundingFilter: CardFundingFilter
     let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
 
     var shouldDisplaySaveCheckbox: Bool {
         // Don't show the save checkbox in Link
@@ -88,6 +89,7 @@ class PaymentSheetFormFactory {
         elementsSession: STPElementsSession,
         configuration: PaymentSheetFormFactoryConfig,
         paymentMethod: PaymentSheet.PaymentMethodType,
+        paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
@@ -124,6 +126,7 @@ class PaymentSheetFormFactory {
         }()
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
+                  paymentMethodOrientation: paymentMethodOrientation,
                   previousCustomerInput: previousCustomerInput,
                   addressSpecProvider: addressSpecProvider,
                   showLinkInlineCardSignup: showLinkInlineCardSignup,
@@ -154,6 +157,7 @@ class PaymentSheetFormFactory {
     required init(
         configuration: PaymentSheetFormFactoryConfig,
         paymentMethod: PaymentSheet.PaymentMethodType,
+        paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         showLinkInlineCardSignup: Bool = false,
@@ -181,6 +185,7 @@ class PaymentSheetFormFactory {
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
+        self.paymentMethodOrientation = paymentMethodOrientation
         self.addressSpecProvider = addressSpecProvider
         self.showLinkInlineCardSignup = showLinkInlineCardSignup
         self.linkAccount = linkAccount
@@ -848,7 +853,7 @@ extension PaymentSheetFormFactory {
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.bodyText
         label.numberOfLines = 0
-        return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
+        return SubtitleElement(view: label, isHorizontalMode: paymentMethodOrientation == .horizontal)
     }
 
     func makeInstantDebits() -> PaymentMethodElement {
@@ -918,7 +923,7 @@ extension PaymentSheetFormFactory {
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.secondaryText
         label.numberOfLines = 0
-        return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
+        return SubtitleElement(view: label, isHorizontalMode: paymentMethodOrientation == .horizontal)
     }
 
     /// This method returns a "Contact information" Section containing a name, email, and phone field depending on the `PaymentSheet.Configuration.billingDetailsCollectionConfiguration` and your payment method's required fields.

@@ -8,7 +8,8 @@
 
 import Foundation
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A postal address used by Checkout's billing and shipping address APIs.
     public struct Address: Equatable {

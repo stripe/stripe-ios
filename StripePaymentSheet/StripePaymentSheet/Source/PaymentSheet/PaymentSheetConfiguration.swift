@@ -215,9 +215,15 @@ extension PaymentSheet {
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
         public var paymentMethodLayout: PaymentMethodLayout = .automatic
 
-        /// The resolved layout of payment methods after calling `resolve()` on `paymentMethodLayout`.
-        /// - Note: Internal code should use this property instead of `paymentMethodLayout`.
-        internal private(set) var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout?
+        /// Resolves `.automatic` to `.horizontal` or `.vertical`.
+        /// For non-automatic layouts, returns self.
+        func resolveLayout() -> PaymentMethodLayout.ResolvedLayout {
+            switch paymentMethodLayout {
+            case .horizontal: return .horizontal
+            case .vertical: return .vertical
+            case .automatic: return .vertical // Default to vertical. Will be updated with ship recommendation in a different PR.
+            }
+        }
 
         /// By default, PaymentSheet will accept all supported cards by Stripe.
         /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
@@ -248,23 +254,6 @@ extension PaymentSheet {
 
         /// When using WalletButtonsView, configures payment method visibility across available surfaces.
         @_spi(STP) public var walletButtonsVisibility: WalletButtonsVisibility = WalletButtonsVisibility()
-
-        /// Resolves `.automatic` to `.horizontal` or `.vertical`.
-        /// For non-automatic layouts, returns self.
-        mutating func resolveLayout() -> PaymentMethodLayout.ResolvedLayout {
-            var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout
-            switch paymentMethodLayout {
-            case .horizontal:
-                resolvedPaymentMethodLayout = .horizontal
-            case .vertical:
-                resolvedPaymentMethodLayout = .vertical
-            case .automatic:
-                // Default to vertical. Will be updated with ship recommendation in a different PR.
-                resolvedPaymentMethodLayout = .vertical
-            }
-            self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
-            return resolvedPaymentMethodLayout
-        }
     }
 
     /// When using WalletButtonsView, configures payment method visibility across available surfaces.
@@ -312,7 +301,7 @@ extension PaymentSheet {
         /// Stripe automatically chooses between `horizontal` and `vertical`.
         case automatic
 
-        enum ResolvedLayout {
+        enum ResolvedLayout: String {
             case horizontal
             case vertical
         }

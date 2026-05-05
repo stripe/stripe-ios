@@ -19,19 +19,22 @@ final class PaymentSheetLoader {
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
         let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+        let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
 
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
             savedPaymentMethods: [STPPaymentMethod],
             paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-            paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil
+            paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+            paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
             self.savedPaymentMethods = savedPaymentMethods
             self.paymentMethodTypes = paymentMethodTypes
             self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+            self.paymentMethodOrientation = paymentMethodOrientation
         }
     }
 
@@ -225,7 +228,8 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes,
-                paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper
+                paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+                paymentMethodOrientation: configuration.resolveLayout()
             )
             let confirmationChallenge = ConfirmationChallenge(
                 elementsSession: elementsSession,
