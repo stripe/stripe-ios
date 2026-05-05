@@ -240,7 +240,6 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                 orderedPaymentMethodTypes: paymentMethodTypes,
-                paymentMethodOrientation: loadResult.paymentMethodOrientation,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate,
                 hasCardArt: hasCardArt(savedPaymentMethods: filteredSavedPaymentMethods, appearance: configuration.appearance),

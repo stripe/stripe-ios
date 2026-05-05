@@ -224,12 +224,7 @@ extension PaymentSheet {
             switch paymentMethodLayout {
             case .horizontal: return .horizontal
             case .vertical: return .vertical
-            case .automatic:
-                if elementsSession.forceVerticalPaymentMethodLayout {
-                    return .vertical
-                } else {
-                    return paymentMethodTypes.count >= 3 ? .vertical : .horizontal
-                }
+            case .automatic: return .vertical // Default to vertical. Will be updated with ship recommendation in a different PR.
             }
         }
 

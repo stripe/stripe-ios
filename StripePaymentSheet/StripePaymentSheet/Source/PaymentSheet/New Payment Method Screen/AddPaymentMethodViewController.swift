@@ -174,7 +174,7 @@ class AddPaymentMethodViewController: UIViewController {
         }
         // These LPMs are not visible without without scrolling in the horizontal carousel
         let hiddenPaymentMethods: [String] = paymentMethodTypes.compactMap { $0.identifier }.filter { !visiblePaymentMethods.contains($0) }
-        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods)
+        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .horizontal)
     }
 
     // MARK: - Private

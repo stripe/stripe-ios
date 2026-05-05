@@ -395,10 +395,6 @@ extension STPElementsSession {
     var isCardFundingFilteringEnabled: Bool {
         flags["elements_mobile_card_funding_filtering"] == true
     }
-
-    var forceVerticalPaymentMethodLayout: Bool {
-        flags["elements_mobile_force_vertical_payment_method_layout"] == true
-    }
 }
 
 extension STPElementsSession {
