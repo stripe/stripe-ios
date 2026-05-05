@@ -13,7 +13,6 @@ jobs:
     permissions:
       checks: write
       pull-requests: read
-      contents: write
 
     steps:
       - name: Verify commenter is not PR author
@@ -33,39 +32,7 @@ jobs:
               return;
             }
             core.setOutput('pr_sha', pr.data.head.sha);
-            core.setOutput('pr_branch', pr.data.head.ref);
             core.info(`Snapshot approval by ${commenter} for PR by ${author}`);
-
-      - name: Checkout snapshot-baselines branch
-        uses: actions/checkout@v4
-        with:
-          ref: snapshot-baselines
-          path: baselines
-
-      - name: Checkout PR branch (to get recorded snapshots)
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ steps.verify.outputs.pr_branch }}
-          path: pr-branch
-
-      - name: Copy current reference images as new baselines
-        run: |
-          # The PR branch has the recorded reference images from the last CI run
-          # We collect them the same way CI does
-          find pr-branch -path "*/ReferenceImages_64/*" -name "*.png" | while read f; do
-            rel=$(echo "$f" | sed 's|.*/ReferenceImages_64/||')
-            mkdir -p "baselines/$(dirname "$rel")"
-            cp "$f" "baselines/$rel"
-          done
-
-      - name: Push updated baselines
-        run: |
-          cd baselines
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Update baselines from PR #${{ github.event.issue.number }}" || echo "No changes to commit"
-          git push origin snapshot-baselines
 
       - name: Update check status to success
         uses: actions/github-script@v7
