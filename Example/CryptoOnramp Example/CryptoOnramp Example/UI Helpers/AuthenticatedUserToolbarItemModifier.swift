@@ -8,8 +8,9 @@
 import SwiftUI
 import UIKit
 
+@_spi(STP) import StripeCore
 @_spi(CryptoOnrampAlpha) import StripeCryptoOnramp
-@_spi(STP) import StripePaymentSheet
+@_spi(CryptoOnrampAlpha) import StripePaymentSheet
 
 extension View {
 

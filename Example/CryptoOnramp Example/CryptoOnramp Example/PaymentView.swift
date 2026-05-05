@@ -14,7 +14,7 @@ import StripeCryptoOnramp
 @_spi(STP)
 import StripePayments
 
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 @_spi(AppearanceAPIAdditionsPreview)
 import StripePaymentSheet
 
