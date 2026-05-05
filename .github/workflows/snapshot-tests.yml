@@ -24,11 +24,6 @@ jobs:
           ref: snapshot-baselines
           path: .snapshot-baselines
 
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          bundler-cache: true
-
       - name: Select Xcode
         run: |
           # Use the latest Xcode 26.x to match Bitrise CI environment
@@ -59,7 +54,7 @@ jobs:
           # Record mode causes all tests to "fail" (expected — they report
           # "Reference image is now saved"). We ignore the exit code here
           # and rely on the diff step to determine actual pass/fail.
-          bundle exec ruby ci_scripts/snapshots.rb --record --ci || true
+          ruby ci_scripts/snapshots.rb --record --ci || true
 
       - name: Collect recorded snapshots
         run: |
