@@ -121,6 +121,14 @@ class PaymentSheetFormFactory {
                 return .unknown
             }
         }()
+        let linkBrand: LinkBrand = {
+            switch configuration {
+            case .paymentElement(let configuration, _):
+                return configuration.resolvedLinkBrand(elementsSession: elementsSession)
+            case .customerSheet:
+                return .link
+            }
+        }()
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
                   previousCustomerInput: previousCustomerInput,
@@ -143,14 +151,7 @@ class PaymentSheetFormFactory {
                   analyticsHelper: analyticsHelper,
                   paymentMethodIncentive: elementsSession.incentive,
                   linkAppearance: linkAppearance,
-                  linkBrand: {
-                      switch configuration {
-                      case .paymentElement(let configuration, _):
-                          return configuration.resolvedLinkBrand(elementsSession: elementsSession)
-                      case .customerSheet:
-                          return .link
-                      }
-                  }(),
+                  linkBrand: linkBrand,
                   sellerName: intent.sellerDetails?.businessName,
                   previousLinkInlineSignupAction: previousLinkInlineSignupAction,
                   cardFundingFilter: configuration.cardFundingFilter(for: elementsSession)
