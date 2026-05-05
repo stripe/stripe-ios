@@ -530,9 +530,7 @@ workflows:
         - content: |-
             #!/usr/bin/env bash
             set -e
-            brew tap robotsandpencils/made
-            brew install robotsandpencils/made/xcodes
-            sudo xcodes runtimes install "iOS 15.5"
+            xcodebuild -downloadPlatform iOS -buildVersion 15.5
     - fastlane@3:
         inputs:
         - lane: legacy_tests_15
@@ -556,9 +554,7 @@ workflows:
         - content: |-
             #!/usr/bin/env bash
             set -e
-            brew tap robotsandpencils/made
-            brew install robotsandpencils/made/xcodes
-            sudo xcodes runtimes install "iOS 16.4"
+            xcodebuild -downloadPlatform iOS -buildVersion 16.4
     - fastlane@3:
         inputs:
         - lane: legacy_tests_16
