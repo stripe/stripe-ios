@@ -1,0 +1,104 @@
+name: Approve Snapshot Changes
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  approve-snapshots:
+    if: |
+      github.event.issue.pull_request &&
+      contains(github.event.comment.body, '/approve-snapshots')
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: read
+      contents: write
+
+    steps:
+      - name: Verify commenter is not PR author
+        id: verify
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+            });
+            const commenter = context.payload.comment.user.login;
+            const author = pr.data.user.login;
+            if (commenter === author) {
+              core.setFailed(`PR author (${author}) cannot approve their own snapshots.`);
+              return;
+            }
+            core.setOutput('pr_sha', pr.data.head.sha);
+            core.setOutput('pr_branch', pr.data.head.ref);
+            core.info(`Snapshot approval by ${commenter} for PR by ${author}`);
+
+      - name: Checkout snapshot-baselines branch
+        uses: actions/checkout@v4
+        with:
+          ref: snapshot-baselines
+          path: baselines
+
+      - name: Checkout PR branch (to get recorded snapshots)
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.verify.outputs.pr_branch }}
+          path: pr-branch
+
+      - name: Copy current reference images as new baselines
+        run: |
+          # The PR branch has the recorded reference images from the last CI run
+          # We collect them the same way CI does
+          find pr-branch -path "*/ReferenceImages_64/*" -name "*.png" | while read f; do
+            rel=$(echo "$f" | sed 's|.*/ReferenceImages_64/||')
+            mkdir -p "baselines/$(dirname "$rel")"
+            cp "$f" "baselines/$rel"
+          done
+
+      - name: Push updated baselines
+        run: |
+          cd baselines
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Update baselines from PR #${{ github.event.issue.number }}" || echo "No changes to commit"
+          git push origin snapshot-baselines
+
+      - name: Update check status to success
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const sha = '${{ steps.verify.outputs.pr_sha }}';
+            const checks = await github.rest.checks.listForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: sha,
+              check_name: 'Snapshot Review',
+            });
+            if (checks.data.check_runs.length > 0) {
+              await github.rest.checks.update({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                check_run_id: checks.data.check_runs[0].id,
+                status: 'completed',
+                conclusion: 'success',
+                output: {
+                  title: 'Snapshots Approved',
+                  summary: `Approved by @${context.payload.comment.user.login}`,
+                },
+              });
+            }
+
+      - name: React to comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: '+1',
+            });

@@ -1,0 +1,194 @@
+name: Snapshot Tests
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+permissions:
+  checks: write
+  contents: write
+  pull-requests: write
+
+jobs:
+  snapshot-test:
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout baselines
+        uses: actions/checkout@v4
+        with:
+          ref: snapshot-baselines
+          path: .snapshot-baselines
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_16.2.app
+
+      - name: Boot simulator
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c "
+          import json, sys
+          data = json.load(sys.stdin)
+          for runtime, devices in data['devices'].items():
+              if 'iOS' in runtime:
+                  for d in devices:
+                      if 'iPhone 12 mini' in d['name']:
+                          print(d['udid'])
+                          sys.exit(0)
+          ")
+          xcrun simctl boot "$UDID" || true
+
+      - name: Run snapshot tests (record mode)
+        run: |
+          xcodebuild test \
+            -workspace Stripe.xcworkspace \
+            -scheme StripeiOS \
+            -destination "platform=iOS Simulator,name=iPhone 12 mini" \
+            STP_RECORD_SNAPSHOTS=1 \
+            2>&1 | xcbeautify || true
+
+      - name: Run snapshot tests - PaymentSheet (record mode)
+        run: |
+          xcodebuild test \
+            -workspace Stripe.xcworkspace \
+            -scheme StripePaymentSheet \
+            -destination "platform=iOS Simulator,name=iPhone 12 mini" \
+            STP_RECORD_SNAPSHOTS=1 \
+            2>&1 | xcbeautify || true
+
+      - name: Collect recorded snapshots
+        run: |
+          mkdir -p recorded-snapshots
+          find . -path "*/.snapshot-baselines" -prune -o \
+               -path "*/ReferenceImages_64/*" -name "*.png" -print | while read f; do
+            rel=$(echo "$f" | sed 's|.*/ReferenceImages_64/||')
+            mkdir -p "recorded-snapshots/$(dirname "$rel")"
+            cp "$f" "recorded-snapshots/$rel"
+          done
+
+      - name: Generate diff report
+        id: diff
+        env:
+          SNAPSHOT_MANIFEST: snapshot-deploy/manifest.txt
+        run: |
+          mkdir -p snapshot-deploy
+          chmod +x SnapshotTool/scripts/generate_diff_report.sh
+          if ./SnapshotTool/scripts/generate_diff_report.sh \
+              recorded-snapshots .snapshot-baselines snapshot-deploy/index.html; then
+            echo "has_changes=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_changes=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install Vercel CLI
+        if: steps.diff.outputs.has_changes == 'true'
+        run: npm i -g vercel@latest
+
+      - name: Deploy report to Vercel
+        if: steps.diff.outputs.has_changes == 'true'
+        id: deploy
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_SNAPSHOT_PROJECT_ID }}
+        run: |
+          DEPLOY_URL=$(vercel deploy snapshot-deploy \
+            --token="$VERCEL_TOKEN" \
+            --yes \
+            --name="stripe-ios-snapshots" \
+            2>/dev/null | tail -1)
+          echo "url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
+          echo "Deployed to: $DEPLOY_URL"
+
+      - name: Post PR comment
+        if: steps.diff.outputs.has_changes == 'true' && github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x SnapshotTool/scripts/post_pr_comment.sh
+          export GITHUB_REPOSITORY="${{ github.repository }}"
+          export GITHUB_TOKEN="$GH_TOKEN"
+          ./SnapshotTool/scripts/post_pr_comment.sh \
+            snapshot-deploy/manifest.txt \
+            recorded-snapshots \
+            "${{ steps.deploy.outputs.url }}" \
+            "${{ github.event.pull_request.number }}"
+
+      - name: Create check run (changes detected)
+        if: steps.diff.outputs.has_changes == 'true' && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Snapshot Review',
+              head_sha: context.payload.pull_request.head.sha,
+              status: 'completed',
+              conclusion: 'action_required',
+              output: {
+                title: 'Snapshot changes detected — review required',
+                summary: `Snapshots have changed. [View diff report](${{ steps.deploy.outputs.url }}) and comment \`/approve-snapshots\` to accept.`,
+              },
+            });
+
+      - name: Create check run (no changes)
+        if: steps.diff.outputs.has_changes == 'false' && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.checks.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: 'Snapshot Review',
+              head_sha: context.payload.pull_request.head.sha,
+              status: 'completed',
+              conclusion: 'success',
+              output: {
+                title: 'No snapshot changes',
+                summary: 'All snapshots match the baselines.',
+              },
+            });
+
+      - name: Clean up old PR comment
+        if: steps.diff.outputs.has_changes == 'false' && github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comments = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+            });
+            for (const c of comments.data) {
+              if (c.body && c.body.includes('Snapshot Changes Detected')) {
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: c.id,
+                });
+              }
+            }
+
+      - name: Update baselines on merge
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        run: |
+          # On merge to master, update baselines with what's currently recorded
+          cd .snapshot-baselines
+          cp -r ../recorded-snapshots/* . 2>/dev/null || true
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Update baselines from ${{ github.sha }}" || echo "No changes"
+          git push origin snapshot-baselines
+
+      - name: Upload recorded snapshots (artifact backup)
+        if: steps.diff.outputs.has_changes == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: recorded-snapshots
+          path: recorded-snapshots/
+          retention-days: 14
