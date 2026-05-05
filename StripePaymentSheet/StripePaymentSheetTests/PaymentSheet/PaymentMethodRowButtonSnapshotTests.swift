@@ -13,6 +13,12 @@ import UIKit
 
 class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
 
+    override func setUp() {
+        super.setUp()
+        FormSpecProvider.shared = FormSpecProvider()
+        DownloadManager.sharedManager.resetCache()
+    }
+
     func testPaymentMethodRowButton_unselected() {
         let rowButton = SavedPaymentMethodRowButton(paymentMethod: STPPaymentMethod._testCard(), appearance: .default)
         verify(rowButton)
