@@ -85,9 +85,6 @@ extension CustomerSheet {
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
 
-        /// If true, device will attest and assert on confirmation requests
-        @_spi(STP) public var enableAttestationOnConfirmation: Bool = false
-
         public init () {
         }
     }
@@ -114,7 +111,7 @@ extension CustomerSheet {
         /// Create a PaymentOptionSelection for a saved payment method.
         public static func paymentMethod(_ paymentMethod: STPPaymentMethod) -> PaymentOptionSelection {
             let paymentMethodIcon = paymentMethod.makeIcon()
-            let image = paymentMethod.cardArtImage(cardArtEnabled: _cardArtEnabled) ?? paymentMethodIcon
+            let image = paymentMethod.cachedCardArtImage(cardArtEnabled: _cardArtEnabled) ?? paymentMethodIcon
             let data = PaymentOptionDisplayData(image: image, label: paymentMethod.paymentSheetLabel)
             return .paymentMethod(paymentMethod: paymentMethod, paymentOptionDisplayData: data)
         }

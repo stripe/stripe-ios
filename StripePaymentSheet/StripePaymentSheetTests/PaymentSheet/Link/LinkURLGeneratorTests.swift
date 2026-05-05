@@ -28,7 +28,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                    locale: Locale.init(identifier: "en_US").toLanguageTag(),
                                    intentMode: .payment,
                                    setupFutureUsage: false,
-                                   linkFundingSources: [.card],
+                                   linkFundingSources: [ParsedEnum(.card)],
                                    clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .standard, paymentMethodSelectionFlow: .merchantSpecified)
     )
 
@@ -146,7 +146,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            locale: Locale.init(identifier: "en_US").toLanguageTag(),
                                            intentMode: .payment,
                                            setupFutureUsage: true,
-                                           linkFundingSources: [.card],
+                                           linkFundingSources: [ParsedEnum(.card)],
                                            clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic))
 
         XCTAssertEqual(params, expectedParams)
@@ -179,7 +179,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            locale: Locale.init(identifier: "en_US").toLanguageTag(),
                                            intentMode: .payment,
                                            setupFutureUsage: true,
-                                           linkFundingSources: [.card],
+                                           linkFundingSources: [ParsedEnum(.card)],
                                            clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic))
 
         XCTAssertEqual(params, expectedParams)
@@ -212,7 +212,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            locale: Locale.init(identifier: "en_US").toLanguageTag(),
                                            intentMode: .payment,
                                            setupFutureUsage: false,
-                                           linkFundingSources: [.card],
+                                           linkFundingSources: [ParsedEnum(.card)],
                                            clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic))
 
         XCTAssertEqual(params, expectedParams)
@@ -245,7 +245,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            locale: Locale.init(identifier: "en_US").toLanguageTag(),
                                            intentMode: .payment,
                                            setupFutureUsage: false,
-                                           linkFundingSources: [.card],
+                                           linkFundingSources: [ParsedEnum(.card)],
                                            clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic))
 
         XCTAssertEqual(params, expectedParams)
@@ -318,7 +318,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            intentMode: .payment,
                                            setupFutureUsage: false,
                                            cardBrandChoice: nil,
-                                           linkFundingSources: [.card],
+                                           linkFundingSources: [ParsedEnum(.card)],
                                            clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         )
 
@@ -354,7 +354,7 @@ class LinkURLGeneratorTests: XCTestCase {
                                            intentMode: .payment,
                                            setupFutureUsage: false,
                                            cardBrandChoice: nil,
-                                           linkFundingSources: [.bankAccount, .card],
+                                           linkFundingSources: [ParsedEnum(.bankAccount), ParsedEnum(.card)],
                                            clientAttributionMetadata: STPClientAttributionMetadata(elementsSessionConfigId: "123", paymentIntentCreationFlow: .deferred, paymentMethodSelectionFlow: .automatic)
         )
 

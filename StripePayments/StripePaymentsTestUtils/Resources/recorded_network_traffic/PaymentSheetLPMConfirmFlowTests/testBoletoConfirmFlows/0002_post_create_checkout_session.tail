@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=cDVJvSPdsrfhnmevGwWG0blCd4bgulcIrdLzvDvEUx1%2FI7o4S3Ho9qw9jl3YLJ2r8o0xeBsS4vY0uYu6ifCBkxI1RaSXPeMvTxZSnm5kIWLEdVdyxHctki%2BULV5C2gbvCPD4mnJbSx4HQKfZnsZwoZjwzNxQXRecE9jUCdGEpyTJzHU%2FeZnF4HSfsqmu5%2BOsVqI1n4Fj0hXaDzLw3%2F5O5aEHcq4mNp%2BmWrFSNlbMfQA%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: 1ef8e78212d954482b4c62f966c198ba;o=1
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:30:32 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: c5e3feddeefaed62180615ffd8c3726b
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=GZEJdQ425dwuki13zujSsd5o4v7FgcsEgAF3ZzNKfVSeCWLjbDABCCDA6FCAtaW6iPWP%2BrYAt3%2FO6J6fKGnZw6qW0ebXBXZZKPA%2BXttbMtS6jUzYW%2B0TJagcSo5NZbmrZAhUjWP94RzOjGadLWuHM6O0XVtRbv8VNgsbNKyzEQRmsdSSvOiHVjnbxic7vrknm%2BosSu6DOjZNMmYKdf5ypnWvSH8Q9zBwNjOJVnWjPRM%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Sat, 18 Apr 2026 04:39:34 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000
 
-{"id":"cs_test_a16e8pVDXqBZYAE48KDbdJquCz3JNqLiXVXRsnJ40iLxdL5FuEb5AKdURp","client_secret":"cs_test_a16e8pVDXqBZYAE48KDbdJquCz3JNqLiXVXRsnJ40iLxdL5FuEb5AKdURp_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51JYFFjJQVROkWvqT6Hy9pW7uPb6UzxT3aACZ0W3olY8KunzDE9mm6OxE5W2EHcdZk7LxN6xk9zumFbZL8zvNwixR0056FVxQmt"}
+{"id":"cs_test_a1pHL0qZ9nwFOXAhJLE5bkclDzn3cLwzF0xA3AciZVTve5haDKKqYvyLgK","client_secret":"cs_test_a1pHL0qZ9nwFOXAhJLE5bkclDzn3cLwzF0xA3AciZVTve5haDKKqYvyLgK_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51JYFFjJQVROkWvqT6Hy9pW7uPb6UzxT3aACZ0W3olY8KunzDE9mm6OxE5W2EHcdZk7LxN6xk9zumFbZL8zvNwixR0056FVxQmt"}

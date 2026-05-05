@@ -318,15 +318,15 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case never
     }
 
-    enum AllowsDelayedPMs: String, PickerEnum {
-        static var enumName: String { "allowsDelayedPMs" }
+    enum LinkBrand: String, PickerEnum {
+        static var enumName: String { "Link brand" }
 
-        case on
-        case off
+        case link
+        case onelink
     }
 
-    enum EnableAttestationOnConfirmation: String, PickerEnum {
-        static var enumName: String { "Enable attestation on confirmation" }
+    enum AllowsDelayedPMs: String, PickerEnum {
+        static var enumName: String { "allowsDelayedPMs" }
 
         case on
         case off
@@ -694,6 +694,32 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    // MARK: - Checkout Session enums
+    enum CSAllowPromotionCodes: String, PickerEnum {
+        static var enumName: String { "Allow Promotion Codes" }
+        case on, off
+    }
+    enum CSAutomaticTax: String, PickerEnum {
+        static var enumName: String { "Automatic Tax" }
+        case on, off
+    }
+    enum CSAdaptivePricing: String, PickerEnum {
+        static var enumName: String { "Adaptive Pricing" }
+        case on, off
+    }
+    enum CSDisplayShippingRates: String, PickerEnum {
+        static var enumName: String { "Display Shipping Rates" }
+        case on, off
+    }
+    enum CSAdjustableQuantity: String, PickerEnum {
+        static var enumName: String { "Adjustable Quantity" }
+        case on, off
+    }
+    enum CSManualCapture: String, PickerEnum {
+        static var enumName: String { "Manual Capture" }
+        case on, off
+    }
+
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
@@ -716,7 +742,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayEnabled: ApplePayEnabled
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
-    var enableAttestationOnConfirmation: EnableAttestationOnConfirmation
     var paymentMethodSave: PaymentMethodSave
     var allowRedisplayOverride: AllowRedisplayOverride
     var paymentMethodRemove: PaymentMethodRemove
@@ -729,10 +754,22 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var linkPassthroughMode: LinkPassthroughMode
     var linkEnabledMode: LinkEnabledMode
     var linkDisplay: LinkDisplay
+    var linkBrand: LinkBrand
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
     var checkoutEndpoint: String
+
+    // MARK: - Checkout Session settings
+    var csAllowPromotionCodes: CSAllowPromotionCodes
+    var csAutomaticTax: CSAutomaticTax
+    var csAdaptivePricing: CSAdaptivePricing
+    var csDisplayShippingRates: CSDisplayShippingRates
+    var csAdjustableQuantity: CSAdjustableQuantity
+    var csManualCapture: CSManualCapture
+    var csPaymentMethodConfiguration: String?
+    var csCustomerEmail: String?
+
     var autoreload: Autoreload
     var shakeAmbiguousViews: ShakeAmbiguousViews
     var instantDebitsIncentives: InstantDebitsIncentives
@@ -777,7 +814,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayEnabled: .on,
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
-            enableAttestationOnConfirmation: .on,
             paymentMethodSave: .enabled,
             allowRedisplayOverride: .notSet,
             paymentMethodRemove: .enabled,
@@ -790,10 +826,19 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             linkPassthroughMode: .passthrough,
             linkEnabledMode: .native,
             linkDisplay: .automatic,
+            linkBrand: .link,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,
             checkoutEndpoint: Self.defaultCheckoutEndpoint,
+            csAllowPromotionCodes: .off,
+            csAutomaticTax: .off,
+            csAdaptivePricing: .off,
+            csDisplayShippingRates: .off,
+            csAdjustableQuantity: .off,
+            csManualCapture: .off,
+            csPaymentMethodConfiguration: nil,
+            csCustomerEmail: nil,
             autoreload: .on,
             shakeAmbiguousViews: .off,
             instantDebitsIncentives: .off,

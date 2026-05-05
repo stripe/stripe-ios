@@ -15,11 +15,9 @@ import UIKit
 class PollingViewModel {
 
     let paymentMethodType: STPPaymentMethodType
-    let supportedPaymentMethods: [STPPaymentMethodType] = [.UPI, .blik, .paynow, .promptPay]
+    let supportedPaymentMethods: [STPPaymentMethodType] = [.blik, .paynow, .promptPay]
     lazy var CTA: String = {
         switch paymentMethodType {
-        case .UPI:
-            return .Localized.open_upi_app
         case .blik:
             return .Localized.blik_confirm_payment
         case .paynow, .promptPay:
@@ -30,8 +28,6 @@ class PollingViewModel {
     }()
     lazy var deadline: Date = {
         switch paymentMethodType {
-        case .UPI:
-            return Date().addingTimeInterval(60 * 5) // 5 minutes
         case .blik:
             return Date().addingTimeInterval(60) // 60 seconds
         case .paynow, .promptPay:
@@ -44,8 +40,6 @@ class PollingViewModel {
         switch paymentMethodType {
         case .blik, .paynow, .promptPay:
             return 1
-        case .UPI:
-            return 10
         default:
             fatalError("Polling retry interval has not been implemented for \(paymentMethodType)")
         }

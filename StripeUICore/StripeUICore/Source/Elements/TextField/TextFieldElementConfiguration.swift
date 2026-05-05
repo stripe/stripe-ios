@@ -22,6 +22,12 @@ import UIKit
      Defaults to `label`
      */
     var accessibilityLabel: String { get }
+
+    /**
+     Dynamic accessibility label based on the current text.
+     Defaults to the static `accessibilityLabel`.
+     */
+    func accessibilityLabel(for text: String) -> String
     var shouldShowClearButton: Bool { get }
     var disallowedCharacters: CharacterSet { get }
     /**
@@ -93,6 +99,10 @@ import UIKit
 public extension TextFieldElementConfiguration {
     var accessibilityLabel: String {
         return label
+    }
+
+    func accessibilityLabel(for text: String) -> String {
+        return accessibilityLabel
     }
 
     var disallowedCharacters: CharacterSet {

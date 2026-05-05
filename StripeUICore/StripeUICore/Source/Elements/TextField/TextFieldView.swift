@@ -197,6 +197,8 @@ class TextFieldView: UIView {
 
         // Update accessibility
         textField.accessibilityLabel = viewModel.accessibilityLabel
+        // Use the placeholder as a stable identifier for UI testing
+        textField.accessibilityIdentifier = viewModel.placeholder
 
         // Update placeholder, text
         textFieldView.placeholder = viewModel.placeholder

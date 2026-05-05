@@ -50,6 +50,13 @@ public protocol SafeEnumDecodable: Decodable {
 /// :nodoc:
 public protocol SafeEnumCodable: Encodable, SafeEnumDecodable {}
 
+/// A protocol for enums whose raw API string values should be preserved
+/// even when the value is unknown to the SDK.
+/// Unlike SafeEnumCodable, the raw string is never lost — use with `ParsedEnum`.
+/// :nodoc:
+@_spi(STP) public protocol SafeParsedEnumCodable: RawRepresentable, CaseIterable, Hashable
+    where RawValue == String {}
+
 extension UnknownFieldsDecodable {
     /// A dictionary containing all response fields from the original JSON,
     /// including unknown fields.

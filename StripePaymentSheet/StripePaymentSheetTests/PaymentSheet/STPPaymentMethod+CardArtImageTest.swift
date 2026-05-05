@@ -29,32 +29,32 @@ final class STPPaymentMethodCardArtImageTest: APIStubbedTestCase {
 
     func testCardArtImage_returnsNilWhenCardArtDisabled() {
         let pm = STPPaymentMethod._testCardWithCardArt()
-        XCTAssertNil(pm.cardArtImage(cardArtEnabled: false, downloadManager: downloadManager))
+        XCTAssertNil(pm.cachedCardArtImage(cardArtEnabled: false, downloadManager: downloadManager))
     }
 
     func testCardArtImage_returnsNilWhenNoCardArt() {
         let pm = STPPaymentMethod._testCard()
-        XCTAssertNil(pm.cardArtImage(cardArtEnabled: true, downloadManager: downloadManager))
+        XCTAssertNil(pm.cachedCardArtImage(cardArtEnabled: true, downloadManager: downloadManager))
     }
 
     func testCardArtImage_returnsNilWhenImageNotCached() {
         let pm = STPPaymentMethod._testCardWithCardArt()
-        XCTAssertNil(pm.cardArtImage(cardArtEnabled: true, downloadManager: downloadManager))
+        XCTAssertNil(pm.cachedCardArtImage(cardArtEnabled: true, downloadManager: downloadManager))
     }
 
     func testCardArtImage_returnsImageWhenCached() {
         let pm = STPPaymentMethod._testCardWithCardArt()
-        let cardArtURL = pm.cardArtCDNURL(height: 28)!
+        let cardArtURL = pm.cardArtCDNURL(cardArtEnabled: true)!
 
         // Pre-seed the URL cache so downloadImage returns the real image
-        let imageData = generateUIImage(size: CGSize(width: 100, height: 28)).pngData()!
+        let imageData = generateUIImage(size: CGSize(width: 100, height: 26)).pngData()!
         seedURLCache(url: cardArtURL, data: imageData)
 
-        let result = pm.cardArtImage(cardArtEnabled: true, downloadManager: downloadManager)
+        let result = pm.cachedCardArtImage(cardArtEnabled: true, downloadManager: downloadManager)
         XCTAssertNotNil(result)
 
         // The returned image should be the same as the one we created
-        XCTAssertEqual(result?.size, CGSize(width: 100, height: 28))
+        XCTAssertEqual(result?.size, CGSize(width: 100, height: 26))
     }
 
     // MARK: - Helpers

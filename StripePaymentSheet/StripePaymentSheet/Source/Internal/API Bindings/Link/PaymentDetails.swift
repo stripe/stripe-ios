@@ -127,16 +127,18 @@ extension ConsumerPaymentDetails {
 // MARK: - Details
 /// :nodoc:
 extension ConsumerPaymentDetails {
-    enum DetailsType: String, CaseIterable, SafeEnumCodable {
+
+    // swiftlint:disable:next enum_safe_decodable
+    enum DetailsType: String, SafeParsedEnumCodable {
         case card = "CARD"
         case bankAccount = "BANK_ACCOUNT"
-        case unparsable = ""
     }
 
-    enum Details: SafeEnumDecodable {
+    // swiftlint:disable:next enum_safe_decodable
+    enum Details: Decodable {
         case card(card: Card)
         case bankAccount(bankAccount: BankAccount)
-        case unparsable
+        case unparsable(rawValue: String)
 
         private enum CodingKeys: String, CodingKey {
             case type
@@ -147,26 +149,26 @@ extension ConsumerPaymentDetails {
         // Our JSON structure doesn't align with Swift's expected structure for enums with associated values, so we do custom decoding.
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            let type = try container.decode(DetailsType.self, forKey: CodingKeys.type)
-            switch type {
+            let parsedType = try container.decode(ParsedEnum<DetailsType>.self, forKey: CodingKeys.type)
+            switch parsedType.value {
             case .card:
                 self = .card(card: try container.decode(Card.self, forKey: CodingKeys.card))
             case .bankAccount:
                 self = .bankAccount(bankAccount: try container.decode(BankAccount.self, forKey: CodingKeys.bankAccount))
-            case .unparsable:
-                self = .unparsable
+            case nil:
+                self = .unparsable(rawValue: parsedType.rawValue)
             }
         }
     }
 
-    var type: DetailsType {
+    var type: ParsedEnum<DetailsType> {
         switch details {
         case .card:
-            return .card
+            return ParsedEnum(.card)
         case .bankAccount:
-            return .bankAccount
-        case .unparsable:
-            return .unparsable
+            return ParsedEnum(.bankAccount)
+        case .unparsable(let rawValue):
+            return ParsedEnum(rawValue: rawValue)
         }
     }
 }

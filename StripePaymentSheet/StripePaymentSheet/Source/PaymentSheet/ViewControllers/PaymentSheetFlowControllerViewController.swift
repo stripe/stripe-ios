@@ -152,6 +152,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             options: walletOptions,
             appearance: configuration.appearance,
             applePayButtonType: configuration.applePay?.buttonType ?? .plain,
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
             isPaymentIntent: intent.isPaymentIntent,
             delegate: self
         )

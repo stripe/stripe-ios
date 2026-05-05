@@ -108,33 +108,6 @@ import UIKit
                                                                   isOptional: isOptional), theme: theme)
     }
 
-    // MARK: VPA
-
-    struct VPAConfiguration: TextFieldElementConfiguration {
-        public let label = String.Localized.upi_id
-        public let disallowedCharacters: CharacterSet = .whitespacesAndNewlines
-        let invalidError = Error.invalid(
-            localizedDescription: .Localized.invalid_upi_id
-        )
-
-        public func validate(text: String, isOptional: Bool) -> ValidationState {
-            guard !text.isEmpty else {
-                return isOptional ? .valid : .invalid(Error.empty(localizedDescription: String.Localized.invalid_upi_id))
-            }
-
-            return STPVPANumberValidator.stringIsValidVPANumber(text) ? .valid : .invalid(invalidError)
-        }
-
-        public func keyboardProperties(for text: String) -> TextFieldElement.KeyboardProperties {
-            return .init(type: .emailAddress, textContentType: .emailAddress, autocapitalization: .none)
-        }
-
-    }
-
-    static func makeVPA(theme: ElementsAppearance = .default) -> TextFieldElement {
-        return TextFieldElement(configuration: VPAConfiguration(), theme: theme)
-    }
-
     // MARK: - Blik code
     struct BlikCodeConfiguration: TextFieldElementConfiguration {
         public let label = String.Localized.blik_code

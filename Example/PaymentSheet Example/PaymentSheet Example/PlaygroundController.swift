@@ -136,11 +136,13 @@ import UIKit
     private var currentTaxRate: (String, Double)?
 
     var linkConfiguration: PaymentSheet.LinkConfiguration {
+        let brand: LinkBrand? = settings.linkBrand == .onelink ? .onelink : nil
+
         switch settings.linkDisplay {
         case .automatic:
-            PaymentSheet.LinkConfiguration(display: .automatic)
+            return PaymentSheet.LinkConfiguration(display: .automatic, brand: brand)
         case .never:
-            PaymentSheet.LinkConfiguration(display: .never)
+            return PaymentSheet.LinkConfiguration(display: .never, brand: brand)
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
@@ -208,10 +210,6 @@ import UIKit
 
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
-        }
-
-        if settings.enableAttestationOnConfirmation == .on {
-            configuration.enableAttestationOnConfirmation = true
         }
 
         if settings.shippingInfo != .off {
@@ -337,10 +335,6 @@ import UIKit
 
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
-        }
-
-        if settings.enableAttestationOnConfirmation == .on {
-            configuration.enableAttestationOnConfirmation = true
         }
 
         if settings.shippingInfo != .off {
@@ -762,6 +756,16 @@ import UIKit
         }))
         rootViewController.present(vc, animated: true, completion: nil)
     }
+    func checkoutSessionSettingsTapped() {
+        if #available(iOS 15.0, *) {
+            let vc = UIHostingController(rootView: CheckoutSessionPlaygroundView(viewModel: settings, doneAction: { updatedSettings in
+                self.settings = updatedSettings
+                self.rootViewController.dismiss(animated: true, completion: nil)
+                self.load(reinitializeControllers: true)
+            }))
+            rootViewController.present(vc, animated: true, completion: nil)
+        }
+    }
 
     // Completion
 
@@ -910,7 +914,12 @@ extension PlaygroundController {
                 // Load checkout session using Checkout SDK if using CheckoutSession
                 if let checkoutSessionClientSecret = json["checkoutSessionClientSecret"] {
                     do {
-                        self.checkout = try await Checkout(clientSecret: checkoutSessionClientSecret)
+                        var checkoutConfiguration = Checkout.Configuration()
+                        checkoutConfiguration.adaptivePricing.allowed = settingsToLoad.csAdaptivePricing == .on
+                        self.checkout = try await Checkout(
+                            clientSecret: checkoutSessionClientSecret,
+                            configuration: checkoutConfiguration
+                        )
                     } catch {
                         self.checkout = nil
                         print("Failed to load checkout session: \(error)")
@@ -1040,11 +1049,6 @@ extension PlaygroundController {
 
     /// Builds the common request body parameters used for both loading backend and creating intents
     private func buildRequestBody(shouldCreateCustomerKey: Bool = true) -> [String: Any] {
-        // TODO(porter) Expand to PI+SFU and later, we only support payment and setup mode with CheckoutSession for now
-        if case .checkoutSession = settings.integrationType, case .paymentWithSetup = settings.mode {
-            assertionFailure("payment with setup mode is not currently supported with CheckoutSession integration type")
-        }
-
         var body = [
             "customer": customerIdOrType,
             "currency": settings.currency.rawValue,
@@ -1068,9 +1072,24 @@ extension PlaygroundController {
         // Add CheckoutSession flag if using CheckoutSession integration type
         if settings.integrationType == .checkoutSession {
             body["use_checkout_session"] = true
-            body["customer_email"] = "moblie-test-user@stripe.com"
             body["checkout_session_payment_method_remove"] = settings.paymentMethodRemove.rawValue
             body["checkout_session_payment_method_save"] = settings.paymentMethodSave.rawValue
+            body["allow_promotion_codes"] = settings.csAllowPromotionCodes == .on
+            body["automatic_tax"] = settings.csAutomaticTax == .on
+            body["adaptive_pricing"] = settings.csAdaptivePricing == .on
+            body["display_shipping_rates"] = settings.csDisplayShippingRates == .on
+            body["adjustable_quantity"] = settings.csAdjustableQuantity == .on
+            body["use_manual_capture"] = settings.csManualCapture == .on
+            if let email = settings.csCustomerEmail, !email.isEmpty {
+                body["customer_email"] = email
+            }
+            if let pmc = settings.csPaymentMethodConfiguration, !pmc.isEmpty {
+                body["payment_method_configuration"] = pmc
+            }
+            let sfuDict = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
+            if !sfuDict.isEmpty {
+                body["payment_method_options_setup_future_usage"] = sfuDict
+            }
         }
 
         // Send custom keys to backend if provided
@@ -1090,7 +1109,7 @@ extension PlaygroundController {
         }
 
         // Only set PMO SFU on the Intent if we're Intent-first, never set it for deferred intents.
-        if settings.integrationType == .normal {
+        if settings.integrationType == .normal || settings.integrationType == .checkoutSession {
             body["payment_method_options_setup_future_usage"] = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
         }
         if shouldCreateCustomerKey {

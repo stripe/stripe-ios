@@ -16,9 +16,6 @@ extension Checkout {
         /// Unique identifier for this checkout session.
         var id: String { get }
 
-        /// The mode of this checkout session.
-        var mode: Checkout.Mode { get }
-
         /// The status of this checkout session, or `nil` if not yet determined.
         var status: Checkout.Status? { get }
 
@@ -40,14 +37,8 @@ extension Checkout {
         /// The shipping rate options available for this session.
         var shippingOptions: [Checkout.ShippingOption] { get }
 
-        /// The currently selected shipping option, or `nil` if none is selected.
-        var selectedShippingOption: Checkout.ShippingOption? { get }
-
         /// The discounts applied to this session.
         var discounts: [Checkout.Discount] { get }
-
-        /// The promotion code currently applied to this session, or `nil`.
-        var appliedPromotionCode: String? { get }
 
         /// The ID of the Stripe customer for this session, or `nil` if no customer is attached.
         var customerId: String? { get }
@@ -58,11 +49,13 @@ extension Checkout {
         /// The URL to the hosted Checkout page, or `nil` if not using hosted mode.
         var url: URL? { get }
 
-        /// The billing address set via ``Checkout/updateBillingAddress(_:)``, or `nil`.
-        var billingAddress: Checkout.AddressUpdate? { get }
+        /// The billing contact details and address set via
+        /// ``Checkout.updateBillingAddress(name:phone:address:)``, or `nil`.
+        var billingAddress: Checkout.ContactAddress? { get }
 
-        /// The shipping address set via ``Checkout/updateShippingAddress(_:)``, or `nil`.
-        var shippingAddress: Checkout.AddressUpdate? { get }
+        /// The shipping contact details and address set via
+        /// ``Checkout.updateShippingAddress(name:phone:address:)``, or `nil`.
+        var shippingAddress: Checkout.ContactAddress? { get }
     }
 }
 

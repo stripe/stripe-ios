@@ -251,13 +251,6 @@ extension String.Localized {
         )
     }
 
-    static var open_upi_app: String {
-        STPLocalizedString(
-            "Open your UPI app to approve your payment within %@",
-            "Countdown timer text on a screen asking the user to approve a payment"
-        )
-    }
-
     static var payment_failed: String {
         STPLocalizedString(
             "Payment failed",
@@ -374,6 +367,16 @@ extension String.Localized {
         STPLocalizedString(
             "Select card",
             "Title shown above a view containing the customer's card payment methods"
+        )
+    }
+
+    static func card_number_with_supported_brands(brandNames: String) -> String {
+        String(
+            format: STPLocalizedString(
+                "Card number. Supported cards include %@",
+                "Accessibility label for the card number field including a list of supported card brands. %@ is a comma-separated list of card brand names (e.g. 'Visa, Mastercard, American Express, Discover')"
+            ),
+            brandNames
         )
     }
 

@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -241,9 +242,6 @@ extension PaymentSheet {
         /// By default, the card form will provide a button to open the card scanner.
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
-
-        /// If true, device will attest and assert on confirmation requests
-        @_spi(STP) public var enableAttestationOnConfirmation: Bool = false
 
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
@@ -531,6 +529,9 @@ extension PaymentSheet {
         /// The Link display mode.
         public var display: Display = .automatic
 
+        /// The brand to use for Link. Expected values are `.link` or `.onelink`.
+        @_spi(STP) public var brand: LinkBrand?
+
         /// The Link funding sources that should be disabled. Defaults to an empty set.
         @_spi(STP) public var disallowFundingSourceCreation: Set<String> = []
 
@@ -556,9 +557,16 @@ extension PaymentSheet {
         public init(
             display: Display = .automatic
         ) {
-            self.display = display
+            self.init(display: display, brand: nil)
         }
 
+        @_spi(STP) public init(
+            display: Display = .automatic,
+            brand: LinkBrand? = nil
+        ) {
+            self.display = display
+            self.brand = brand
+        }
         @_spi(CollectMissingLinkBillingDetailsPreview) public init(
             display: Display = .automatic,
             collectMissingBillingDetailsForExistingPaymentMethods: Bool = true

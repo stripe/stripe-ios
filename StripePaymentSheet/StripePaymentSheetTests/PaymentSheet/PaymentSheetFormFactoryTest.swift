@@ -2821,6 +2821,57 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(paypalForm_setup_paymentOption.didDisplayMandate)
     }
 
+    func testCheckoutSessionSetupFutureUsage_appliesMandateBehavior() {
+        func makeCheckoutSessionPayPalForm(
+            setupFutureUsage: String? = nil,
+            paymentMethodOptions: [String: Any]? = nil,
+            previousCustomerInput: IntentConfirmParams? = nil
+        ) -> PaymentMethodElement {
+            var json: [String: Any] = [
+                "session_id": "cs_test_paypal",
+                "object": "checkout.session",
+                "livemode": false,
+                "mode": "payment",
+                "payment_status": "unpaid",
+                "payment_method_types": ["paypal"],
+                "customer": ["id": "cus_123"],
+            ]
+            if let setupFutureUsage {
+                json["setup_future_usage"] = setupFutureUsage
+            }
+            if let paymentMethodOptions {
+                json["payment_method_options"] = paymentMethodOptions
+            }
+            let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+            return PaymentSheetFormFactory(
+                intent: .checkoutSession(checkoutSession),
+                elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),
+                configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
+                paymentMethod: .stripe(.payPal),
+                previousCustomerInput: previousCustomerInput
+            ).make()
+        }
+
+        let paymentForm = makeCheckoutSessionPayPalForm()
+        guard let paymentOption = paymentForm.updateParams(params: IntentConfirmParams(type: .stripe(.payPal))) else {
+            XCTFail("payment option should be non-nil")
+            return
+        }
+        XCTAssertFalse(paymentOption.didDisplayMandate)
+
+        var setupFutureUsageForm = makeCheckoutSessionPayPalForm(
+            setupFutureUsage: "off_session",
+            previousCustomerInput: paymentOption
+        )
+        XCTAssertNil(setupFutureUsageForm.updateParams(params: IntentConfirmParams(type: .stripe(.payPal))))
+        sendEventToSubviews(.viewDidAppear, from: setupFutureUsageForm.view)
+        guard let setupFutureUsageOption = setupFutureUsageForm.updateParams(params: IntentConfirmParams(type: .stripe(.payPal))) else {
+            XCTFail("payment option should be non-nil")
+            return
+        }
+        XCTAssertTrue(setupFutureUsageOption.didDisplayMandate)
+    }
+
     // MARK: - Helpers
 
     func addressSpecProvider(countries: [String]) -> AddressSpecProvider {
@@ -3011,28 +3062,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             return element is PaymentMethodElementWrapper<AddressSectionElement>
         }
         XCTAssertTrue(hasBillingAddress, "BLIK form should contain billing address section when address collection is .full")
-    }
-
-    func testMakeUPI_withAllowedCountries() {
-        var configuration = PaymentSheet.Configuration()
-        configuration.billingDetailsCollectionConfiguration.address = .full
-        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["IN", "US"]
-
-        let factory = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.UPI]),
-            elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.UPI)
-        )
-
-        let form = factory.makeUPI()
-        XCTAssertNotNil(form)
-
-        // Verify form contains billing address section when address collection is .full
-        let hasBillingAddress = form.elements.contains { element in
-            return element is PaymentMethodElementWrapper<AddressSectionElement>
-        }
-        XCTAssertTrue(hasBillingAddress, "UPI form should contain billing address section when address collection is .full")
     }
 
     // MARK: - Saved Payment Method Country Filtering Tests

@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "Número de teléfono incompleto";
 
-"Invalid UPI ID" = "ID de UPI no válida";
-
 "Island" = "Isla";
 
 "Last" = "Apellido";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "El código Sort que ingresaste no es válido.";
 
 "Town or city" = "Pueblo o ciudad";
-
-"UPI ID" = "ID de UPI";
 
 "Unable to parse phone number" = "No se pudo analizar el número de teléfono.";
 

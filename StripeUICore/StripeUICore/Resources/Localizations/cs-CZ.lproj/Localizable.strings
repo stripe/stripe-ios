@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "Neúplné telefonní číslo";
 
-"Invalid UPI ID" = "Neplatné UPI ID";
-
 "Island" = "Ostrov";
 
 "Last" = "Příjmení";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "Zadaný lokální bankovní kód je neplatný.";
 
 "Town or city" = "Město nebo velkoměsto";
-
-"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Nelze analyzovat telefonní číslo";
 

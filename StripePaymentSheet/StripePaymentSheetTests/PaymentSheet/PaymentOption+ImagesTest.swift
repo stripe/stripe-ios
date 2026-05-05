@@ -23,7 +23,7 @@ final class PaymentOptionImagesTest: XCTestCase {
                 "exp_year": "2030",
             ],
         ])!
-        XCTAssertNil(pm.cardArtCDNURL(height: 40))
+        XCTAssertNil(pm.cardArtCDNURL(cardArtEnabled: true))
     }
 
     func testCardArtURL_nilWhenCardArtHasNoURL() {
@@ -41,9 +41,27 @@ final class PaymentOptionImagesTest: XCTestCase {
                 ],
             ],
         ])!
-        XCTAssertNil(pm.cardArtCDNURL(height: 40))
+        XCTAssertNil(pm.cardArtCDNURL(cardArtEnabled: true))
     }
-
+    func testCardArtURL_nil() {
+        let pm = STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_1",
+            "type": "card",
+            "created": 1651273166,
+            "card": [
+                "last4": "4242",
+                "brand": "visa",
+                "exp_month": "12",
+                "exp_year": "2030",
+                "card_art": [
+                    "payment_method": "pm_1",
+                    "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
+                ],
+            ],
+        ])!
+        let url = pm.cardArtCDNURL(cardArtEnabled: false)
+        XCTAssertNil(url)
+    }
     func testCardArtURL_returnsCDNURL() {
         let pm = STPPaymentMethod.decodedObject(fromAPIResponse: [
             "id": "pm_1",
@@ -60,36 +78,12 @@ final class PaymentOptionImagesTest: XCTestCase {
                 ],
             ],
         ])!
-        let url = pm.cardArtCDNURL(height: 40)
+        let url = pm.cardArtCDNURL(cardArtEnabled: true)
         XCTAssertNotNil(url)
 
-        XCTAssertEqual(url!.absoluteString, "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=40,dpr=3/https://b.stripecdn.com/cardart/assets/abc123")
-        XCTAssertTrue(url!.absoluteString.contains("height=40"))
+        XCTAssertEqual(url!.absoluteString, "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=26,dpr=3/https://b.stripecdn.com/cardart/assets/abc123")
+        XCTAssertTrue(url!.absoluteString.contains("height=26"))
         XCTAssertTrue(url!.absoluteString.contains("dpr=3"))
-    }
-
-    func testCardArtURL_respectsHeightParameter() {
-        let pm = STPPaymentMethod.decodedObject(fromAPIResponse: [
-            "id": "pm_1",
-            "type": "card",
-            "created": 1651273166,
-            "card": [
-                "last4": "4242",
-                "brand": "visa",
-                "exp_month": "12",
-                "exp_year": "2030",
-                "card_art": [
-                    "payment_method": "pm_1",
-                    "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
-                ],
-            ],
-        ])!
-        let url20 = pm.cardArtCDNURL(height: 20)
-        XCTAssertEqual(url20!.absoluteString, "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=20,dpr=3/https://b.stripecdn.com/cardart/assets/abc123")
-
-        let url40 = pm.cardArtCDNURL(height: 40)
-        XCTAssertEqual(url40!.absoluteString, "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=40,dpr=3/https://b.stripecdn.com/cardart/assets/abc123")
-
     }
 
     func testCardArtURL_nilForNonCardPaymentMethod() {
@@ -102,6 +96,6 @@ final class PaymentOptionImagesTest: XCTestCase {
                 "last4": "6789",
             ],
         ])!
-        XCTAssertNil(pm.cardArtCDNURL(height: 40))
+        XCTAssertNil(pm.cardArtCDNURL(cardArtEnabled: true))
     }
 }

@@ -74,7 +74,7 @@ final class CheckoutUnitTests: XCTestCase {
         let checkout = makeCheckoutWithClosedSession()
 
         do {
-            try await checkout.updateQuantity(with: .init(lineItemId: "li_123", quantity: 2))
+            try await checkout.updateQuantity(lineItemId: "li_123", quantity: 2)
             XCTFail("Expected CheckoutError.sessionNotOpen")
         } catch let error as CheckoutError {
             guard case .sessionNotOpen = error else {
@@ -103,7 +103,8 @@ final class CheckoutUnitTests: XCTestCase {
 
         do {
             try await checkout.updateBillingAddress(
-                .init(name: "Jane Doe", address: .init(country: "US"))
+                name: "Jane Doe",
+                address: .init(country: "US")
             )
             XCTFail("Expected CheckoutError.sessionNotOpen")
         } catch let error as CheckoutError {
@@ -119,7 +120,8 @@ final class CheckoutUnitTests: XCTestCase {
 
         do {
             try await checkout.updateShippingAddress(
-                .init(name: "Jane Doe", address: .init(country: "US"))
+                name: "Jane Doe",
+                address: .init(country: "US")
             )
             XCTFail("Expected CheckoutError.sessionNotOpen")
         } catch let error as CheckoutError {
@@ -134,7 +136,7 @@ final class CheckoutUnitTests: XCTestCase {
         let checkout = makeCheckoutWithClosedSession()
 
         do {
-            try await checkout.updateTaxId(with: .init(type: "eu_vat", value: "DE123456789"))
+            try await checkout.updateTaxId(type: "eu_vat", value: "DE123456789")
             XCTFail("Expected CheckoutError.sessionNotOpen")
         } catch let error as CheckoutError {
             guard case .sessionNotOpen = error else {
@@ -151,11 +153,10 @@ final class CheckoutUnitTests: XCTestCase {
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
 
-        let update = Checkout.AddressUpdate(
+        try await checkout.updateBillingAddress(
             name: "Jane Doe",
             address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
         )
-        try await checkout.updateBillingAddress(update)
 
         let stored = checkout.state.session.billingAddress
         XCTAssertEqual(stored?.name, "Jane Doe")
@@ -168,11 +169,10 @@ final class CheckoutUnitTests: XCTestCase {
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
 
-        let update = Checkout.AddressUpdate(
+        try await checkout.updateShippingAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
-        try await checkout.updateShippingAddress(update)
 
         let stored = checkout.state.session.shippingAddress
         XCTAssertEqual(stored?.name, "John Smith")
@@ -190,6 +190,25 @@ final class CheckoutUnitTests: XCTestCase {
 
         do {
             try await checkout.applyPromotionCode("SAVE25")
+            XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
+        } catch let error as CheckoutError {
+            guard case .sheetCurrentlyPresented = error else {
+                XCTFail("Expected .sheetCurrentlyPresented, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+    func testRefreshThrowsWhenSheetPresentedEvenIfSessionIsClosed() async {
+        let checkout = makeCheckoutWithClosedSession()
+        let integrationDelegate = MockCheckoutIntegrationDelegate()
+        integrationDelegate.isSheetPresented = true
+        checkout.integrationDelegate = integrationDelegate
+
+        do {
+            try await checkout.refresh()
             XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
         } catch let error as CheckoutError {
             guard case .sheetCurrentlyPresented = error else {
@@ -384,7 +403,7 @@ final class CheckoutUnitTests: XCTestCase {
         let checkout = makeCheckoutWithOpenSession()
 
         // Set address overrides on the initial session
-        let billingUpdate = Checkout.AddressUpdate(
+        let billingUpdate = Checkout.ContactAddress(
             name: "Jane Doe",
             address: .init(country: "US")
         )

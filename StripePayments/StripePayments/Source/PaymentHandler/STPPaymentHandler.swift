@@ -107,9 +107,15 @@ public class STPPaymentHandler: NSObject {
     }
 
     internal var currentAction: STPPaymentHandlerActionParams?
-    /// YES from when a public method is first called until its associated completion handler is called.
-    /// This property guards against simultaneous usage of this class; only one "next action" can be handled at a time.
-    private static var inProgress = false
+    /// Guards against simultaneous usage — only one "next action" can be handled at a time.
+    /// This is global state across all STPPaymentHandler instances, though we track
+    /// our own state so we can reset it if needed during `dealloc`.
+    internal var isHandlingAction = false {
+        didSet {
+            Self.anyHandlerInProgress = isHandlingAction
+        }
+    }
+    private static var anyHandlerInProgress = false
     private var safariViewController: SFSafariViewController?
     var safariViewControllerDismissedManually = false
     private var asWebAuthenticationSession: ASWebAuthenticationSession?
@@ -131,6 +137,15 @@ public class STPPaymentHandler: NSObject {
         self.apiClient = apiClient
         self.threeDSCustomizationSettings = threeDSCustomizationSettings
         super.init()
+    }
+
+    deinit {
+        // If this instance was mid-flow when deallocated, clear the global lock.
+        // There's nothing else reasonable to do — the action is abandoned and no
+        // completion will ever fire, so we must release the lock to unblock future payments.
+        if isHandlingAction {
+            Self.anyHandlerInProgress = false
+        }
     }
 
     /// By default `sharedHandler` initializes with STPAPIClient.shared.
@@ -162,7 +177,7 @@ public class STPPaymentHandler: NSObject {
 
     internal var _redirectShim: ((URL, URL?, Bool) -> Void)?
     internal var isInProgress: Bool {
-        return STPPaymentHandler.inProgress
+        return STPPaymentHandler.anyHandlerInProgress
     }
     internal var analyticsClient: STPAnalyticsClient = .sharedClient
     /// Date at which `confirm` or `handleNextAction` is called. Used to report how long the call took.
@@ -196,7 +211,7 @@ public class STPPaymentHandler: NSObject {
             self?.logConfirmPaymentIntentCompleted(paymentIntentID: paymentIntentID, paymentParams: paymentParams, status: status, error: error)
             completion(status, paymentIntent, error)
         }
-        if Self.inProgress {
+        if Self.anyHandlerInProgress {
             assertionFailure("`STPPaymentHandler.confirmPayment` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
@@ -205,7 +220,7 @@ public class STPPaymentHandler: NSObject {
             completion(.failed, nil, _error(for: .invalidClientSecret))
             return
         }
-        Self.inProgress = true
+        isHandlingAction = true
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self]
             status,
@@ -215,7 +230,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             // Reset our internal state
-            Self.inProgress = false
+            strongSelf.isHandlingAction = false
 
             // Ensure the .succeeded case returns a PaymentIntent in the expected state.
             if let paymentIntent = paymentIntent, status == .succeeded {
@@ -440,7 +455,7 @@ public class STPPaymentHandler: NSObject {
             }
             completion(status, paymentIntent, error)
         }
-        if Self.inProgress {
+        if Self.anyHandlerInProgress {
             assertionFailure("`STPPaymentHandler.handleNextAction` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
@@ -448,7 +463,7 @@ public class STPPaymentHandler: NSObject {
         if paymentIntent.paymentMethodId != nil {
             assert(paymentIntent.paymentMethod != nil, "A PaymentIntent w/ attached paymentMethod must be retrieved w/ an expanded PaymentMethod")
         }
-        Self.inProgress = true
+        isHandlingAction = true
 
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionPaymentIntentCompletionBlock = { [weak self]
@@ -459,7 +474,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             // Reset our internal state
-            Self.inProgress = false
+            strongSelf.isHandlingAction = false
             // Ensure the .succeeded case returns a PaymentIntent in the expected state.
             if let paymentIntent = paymentIntent,
                status == .succeeded
@@ -535,7 +550,7 @@ public class STPPaymentHandler: NSObject {
             completion(status, setupIntent, error)
         }
 
-        if Self.inProgress {
+        if Self.anyHandlerInProgress {
             assertionFailure("`STPPaymentHandler.confirmSetupIntent` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
@@ -547,7 +562,7 @@ public class STPPaymentHandler: NSObject {
             return
         }
 
-        Self.inProgress = true
+        isHandlingAction = true
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self]
             status,
@@ -557,7 +572,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             // Reset our internal state
-            Self.inProgress = false
+            self.isHandlingAction = false
 
             if status == .succeeded {
                 // Ensure the .succeeded case returns a SetupIntent in the expected state.
@@ -731,7 +746,7 @@ public class STPPaymentHandler: NSObject {
             }
             completion(status, setupIntent, error)
         }
-        if Self.inProgress {
+        if Self.anyHandlerInProgress {
             assertionFailure("`STPPaymentHandler.confirmPayment` was called while a previous call is still in progress.")
             completion(.failed, nil, _error(for: .noConcurrentActionsErrorCode))
             return
@@ -740,7 +755,7 @@ public class STPPaymentHandler: NSObject {
             assert(setupIntent.paymentMethod != nil, "A SetupIntent w/ attached paymentMethod must be retrieved w/ an expanded PaymentMethod")
         }
 
-        Self.inProgress = true
+        isHandlingAction = true
         // wrappedCompletion ensures we perform some final logic before calling the completion block.
         let wrappedCompletion: STPPaymentHandlerActionSetupIntentCompletionBlock = { [weak self]
             status,
@@ -750,7 +765,7 @@ public class STPPaymentHandler: NSObject {
                 return
             }
             // Reset our internal state
-            Self.inProgress = false
+            strongSelf.isHandlingAction = false
 
             if status == .succeeded {
                 // Ensure the .succeeded case returns a PaymentIntent in the expected state.
@@ -814,7 +829,6 @@ public class STPPaymentHandler: NSObject {
 
         // Synchronous
         case .alipay,
-            .UPI,
             .iDEAL,
             .FPX,
             .cardPresent,
@@ -1390,19 +1404,6 @@ public class STPPaymentHandler: NSObject {
             // The customer must authorize after the microdeposits appear in their bank account
             // which may take 1-2 business days
             currentAction.complete(with: .succeeded, error: nil)
-        case .upiAwaitNotification:
-            // The customer must authorize the transaction in their banking app within 5 minutes
-            if let presentingVC = currentAction.authenticationContext as? PaymentSheetAuthenticationContext {
-                guard let currentAction = currentAction as? STPPaymentHandlerPaymentIntentActionParams else {
-                    currentAction.complete(with: .failed, error: _error(for: .unexpectedErrorCode, loggingSafeErrorMessage: "Handling upiAwaitNotification next action with SetupIntent is not supported"))
-                    return
-                }
-                // If we are using PaymentSheet, PollingViewController will poll Stripe to determine success and complete the currentAction
-                presentingVC.presentPollingVCForAction(action: currentAction, type: .UPI, safariViewController: nil)
-            } else {
-                // The merchant integration should spin and poll their backend or Stripe to determine success
-                currentAction.complete(with: .succeeded, error: nil)
-            }
         case .cashAppRedirectToApp:
             guard let returnURL = URL(string: currentAction.returnURLString ?? "") else {
                 assertionFailure(missingReturnURLErrorMessage)
@@ -2068,7 +2069,6 @@ public class STPPaymentHandler: NSObject {
                 .konbiniDisplayDetails,
                 .verifyWithMicrodeposits,
                 .BLIKAuthorize,
-                .upiAwaitNotification,
                 .multibancoDisplayDetails:
                 return true
             }
@@ -2094,7 +2094,7 @@ public class STPPaymentHandler: NSObject {
             threeDSSourceID = nextAction.useStripeSDK?.threeDSSourceID
         case .OXXODisplayDetails, .alipayHandleRedirect, .unknown, .BLIKAuthorize,
             .weChatPayRedirectToApp, .boletoDisplayDetails, .verifyWithMicrodeposits,
-            .upiAwaitNotification, .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode,
+            .cashAppRedirectToApp, .konbiniDisplayDetails, .payNowDisplayQrCode,
             .promptpayDisplayQrCode, .swishHandleRedirect, .multibancoDisplayDetails:
             break
         }

@@ -46,7 +46,6 @@ final class VerticalPaymentMethodListViewControllerSnapshotTest: STPSnapshotTest
         .revolutPay,
         .SEPADebit,
         .swish,
-        .UPI,
     ]
 
     override func setUp() {
