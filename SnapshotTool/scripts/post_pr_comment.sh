@@ -41,24 +41,37 @@ cat > "$BODY_FILE" << EOF
 
 EOF
 
-# List modified snapshots
+# Show modified snapshots with inline diff images
 if [ "$CHANGED_COUNT" -gt 0 ]; then
     echo "### Modified" >> "$BODY_FILE"
     echo "" >> "$BODY_FILE"
+    SHOWN=0
     grep "^modified|" "$MANIFEST" 2>/dev/null | head -$MAX_INLINE | while IFS='|' read -r type rel_path; do
         filename=$(basename "$rel_path")
-        echo "- \`${filename}\`" >> "$BODY_FILE"
+        echo "<details><summary><code>${filename}</code></summary>" >> "$BODY_FILE"
+        echo "" >> "$BODY_FILE"
+        echo "| Baseline | New | Diff |" >> "$BODY_FILE"
+        echo "|:---:|:---:|:---:|" >> "$BODY_FILE"
+        echo "| ![baseline](${REPORT_URL}/images/baseline/${rel_path}) | ![new](${REPORT_URL}/images/new/${rel_path}) | ![diff](${REPORT_URL}/images/diff/${rel_path}) |" >> "$BODY_FILE"
+        echo "" >> "$BODY_FILE"
+        echo "</details>" >> "$BODY_FILE"
+        echo "" >> "$BODY_FILE"
     done
     echo "" >> "$BODY_FILE"
 fi
 
-# List added snapshots
+# List added snapshots with preview
 if [ "$ADDED_COUNT" -gt 0 ]; then
     echo "### Added" >> "$BODY_FILE"
     echo "" >> "$BODY_FILE"
     grep "^added|" "$MANIFEST" 2>/dev/null | head -$MAX_INLINE | while IFS='|' read -r type rel_path; do
         filename=$(basename "$rel_path")
-        echo "- \`${filename}\`" >> "$BODY_FILE"
+        echo "<details><summary><code>${filename}</code></summary>" >> "$BODY_FILE"
+        echo "" >> "$BODY_FILE"
+        echo "![new](${REPORT_URL}/images/new/${rel_path})" >> "$BODY_FILE"
+        echo "" >> "$BODY_FILE"
+        echo "</details>" >> "$BODY_FILE"
+        echo "" >> "$BODY_FILE"
     done
     echo "" >> "$BODY_FILE"
 fi
