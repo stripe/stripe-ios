@@ -117,6 +117,27 @@ class STPAPIClientTest: XCTestCase {
         XCTAssertEqual(clientAttributionMetadata?["merchant_integration_source"], "elements")
         XCTAssertEqual(clientAttributionMetadata?["merchant_integration_subtype"], "mobile")
         XCTAssertEqual(clientAttributionMetadata?["merchant_integration_version"], "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)")
+        XCTAssertNil(clientAttributionMetadata?["checkout_session_id"])
+    }
+
+    func testClientAttributionMetadata_withCheckoutSessionId() {
+        AnalyticsHelper.shared.generateSessionID()
+        var params: [String: Any] = [:]
+        params = STPAPIClient.paramsAddingClientAttributionMetadata(
+            params,
+            clientAttributionMetadata: STPClientAttributionMetadata(
+                elementsSessionConfigId: "elements_session_123",
+                checkoutSessionId: "cs_test_xxx",
+                paymentMethodSelectionFlow: .automatic
+            )
+        )
+        let clientAttributionMetadata = params["client_attribution_metadata"] as? [String: String]
+        XCTAssertEqual(clientAttributionMetadata?["client_session_id"], AnalyticsHelper.shared.sessionID)
+        XCTAssertEqual(clientAttributionMetadata?["elements_session_config_id"], "elements_session_123")
+        XCTAssertEqual(clientAttributionMetadata?["checkout_session_id"], "cs_test_xxx")
+        XCTAssertEqual(clientAttributionMetadata?["payment_method_selection_flow"], "automatic")
+        // payment_intent_creation_flow is intentionally omitted for CheckoutSession
+        XCTAssertNil(clientAttributionMetadata?["payment_intent_creation_flow"])
     }
 
     func testSetAppInfo() {

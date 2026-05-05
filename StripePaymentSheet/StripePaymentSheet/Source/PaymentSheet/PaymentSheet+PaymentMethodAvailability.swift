@@ -172,42 +172,23 @@ extension Intent: PaymentMethodRequirementProvider {
     var fulfilledRequirements: [PaymentMethodTypeRequirement] {
         switch self {
         case let .paymentIntent(paymentIntent):
-            var reqs = [PaymentMethodTypeRequirement]()
-            // Shipping address
-            if let shippingInfo = paymentIntent.shipping {
-                if shippingInfo.name != nil,
-                    shippingInfo.address?.line1 != nil,
-                    shippingInfo.address?.country != nil,
-                    shippingInfo.address?.postalCode != nil
-                {
-                    reqs.append(.shippingAddress)
-                }
-            }
-
-            // valid us bank verification method
-            if let usBankOptions = paymentIntent.paymentMethodOptions?.usBankAccount,
-                usBankOptions.verificationMethod.isValidForPaymentSheet
+            var reqs = paymentIntent.paymentMethodOptions.fulfilledRequirements
+            if let shippingInfo = paymentIntent.shipping,
+                shippingInfo.name != nil,
+                shippingInfo.address?.line1 != nil,
+                shippingInfo.address?.country != nil,
+                shippingInfo.address?.postalCode != nil
             {
-                reqs.append(.validUSBankVerificationMethod)
+                reqs.append(.shippingAddress)
             }
-
             return reqs
         case let .setupIntent(setupIntent):
-            var reqs = [PaymentMethodTypeRequirement]()
-
-            // valid us bank verification method
-            if let usBankOptions = setupIntent.paymentMethodOptions?.usBankAccount,
-                usBankOptions.verificationMethod.isValidForPaymentSheet
-            {
-                reqs.append(.validUSBankVerificationMethod)
-            }
-            return reqs
+            return setupIntent.paymentMethodOptions.fulfilledRequirements
         case .deferredIntent:
             // Verification method is always 'automatic'
             return [.validUSBankVerificationMethod]
-        case .checkoutSession:
-            // TODO(porter) Figure out requirements for CheckoutSession for confirmation
-            return []
+        case let .checkoutSession(checkoutSession):
+            return checkoutSession.paymentMethodOptions.fulfilledRequirements
         }
     }
 }
@@ -220,6 +201,19 @@ extension STPPaymentMethodOptions.USBankAccount.VerificationMethod {
         case .automatic, .instant, .instantOrSkip:
             return true
         }
+    }
+}
+
+private extension Optional where Wrapped == STPPaymentMethodOptions {
+    /// Requirements implied by the payment-method-options block, regardless of which intent type owns it.
+    var fulfilledRequirements: [PaymentMethodTypeRequirement] {
+        var reqs: [PaymentMethodTypeRequirement] = []
+        if let usBankOptions = self?.usBankAccount,
+            usBankOptions.verificationMethod.isValidForPaymentSheet
+        {
+            reqs.append(.validUSBankVerificationMethod)
+        }
+        return reqs
     }
 }
 
