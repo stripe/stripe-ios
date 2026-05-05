@@ -60,7 +60,7 @@ jobs:
             -scheme StripeiOS \
             -destination "$SNAPSHOT_DESTINATION" \
             -only-testing:StripeiOSTests \
-            STP_RECORD_SNAPSHOTS=1 \
+            -testEnvironment STP_RECORD_SNAPSHOTS=1 \
             2>&1 | xcbeautify
 
       - name: Run snapshot tests - PaymentSheet (record mode)
@@ -71,7 +71,7 @@ jobs:
             -scheme StripePaymentSheet \
             -destination "$SNAPSHOT_DESTINATION" \
             -only-testing:StripePaymentSheetTests \
-            STP_RECORD_SNAPSHOTS=1 \
+            -testEnvironment STP_RECORD_SNAPSHOTS=1 \
             2>&1 | xcbeautify
 
       - name: Collect recorded snapshots
