@@ -16,7 +16,9 @@ struct FinancialConnectionsOAuthPrepane: Decodable {
     let body: OauthPrepaneBody
     let partnerNotice: OauthPrepanePartnerNotice?
     let cta: OauthPrepaneCTA
-    let dataAccessNotice: FinancialConnectionsDataAccessNotice
+
+    /// v25.13.0 and earlier (~May 2026) expect this field to be non-optional
+    let dataAccessNotice: FinancialConnectionsDataAccessNotice?
 
     struct OauthPrepaneBody: Decodable {
         let entries: [OauthPrepaneBodyEntry]?

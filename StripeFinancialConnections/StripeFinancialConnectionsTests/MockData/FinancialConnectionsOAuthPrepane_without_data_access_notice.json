@@ -1,0 +1,27 @@
+{
+  "institution_icon": {
+    "default": "https://example.com/institution.png"
+  },
+  "title": "Connect your account",
+  "subtitle": "Use your bank to continue",
+  "body": {
+    "entries": [
+      {
+        "type": "text",
+        "content": "Securely sign in with your bank."
+      }
+    ]
+  },
+  "partner_notice": {
+    "partner_icon": {
+      "default": "https://example.com/partner.png"
+    },
+    "text": "You will be redirected to your bank."
+  },
+  "cta": {
+    "text": "Continue",
+    "icon": {
+      "default": "https://example.com/cta.png"
+    }
+  }
+}
