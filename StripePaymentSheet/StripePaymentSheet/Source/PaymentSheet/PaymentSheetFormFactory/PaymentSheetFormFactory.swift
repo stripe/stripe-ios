@@ -842,6 +842,14 @@ extension PaymentSheetFormFactory {
         return country
     }
 
+    private var bnplHeaderStyle: PaymentSheet.UserInterfaceStyle {
+        guard case .paymentElement(let configuration, _) = configuration else {
+            stpAssertionFailure("BNPL headers are only supported for PaymentSheet and EmbeddedPaymentElement.")
+            return .automatic
+        }
+        return configuration.style
+    }
+
     func makeKlarnaHeader() -> SubtitleElement {
         if let header = makeBNPLHeader() {
             return header
@@ -880,6 +888,7 @@ extension PaymentSheetFormFactory {
 
         return BNPLFormHeaderView.Configuration(
             appearance: configuration.appearance,
+            style: bnplHeaderStyle,
             promotion: promotion,
             learnMoreText: "Learn more",
             infoUrl: URL(string: "https://www.lego.com")!
@@ -892,6 +901,7 @@ extension PaymentSheetFormFactory {
         }
         let headerView = BNPLFormHeaderView(configuration: .init(
             appearance: configuration.appearance,
+            style: bnplHeaderStyle,
             promotion: promotionContent.promotion,
             learnMoreText: promotionContent.learnMoreText,
             infoUrl: promotionContent.infoUrl

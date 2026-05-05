@@ -2799,6 +2799,30 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(headerView?.configuration.promotion, String.Localized.buy_now_or_pay_later_with_klarna)
         XCTAssertEqual(headerView?.configuration.learnMoreText, "Learn more")
         XCTAssertEqual(headerView?.configuration.infoUrl, URL(string: "https://example.com/learn-more"))
+        XCTAssertEqual(headerView?.configuration.style, .automatic)
+    }
+
+    func testMakeBNPLHeader_KlarnaPreservesConfiguredStyle() {
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.style = .alwaysDark
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
+            elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.klarna),
+            accountService: LinkAccountService(
+                apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
+                elementsSession: ._testValue()
+            ),
+            analyticsHelper: nil,
+            paymentMethodMessagingPromotionsHelper: makePrefetchedPMMEHelper(paymentMethodType: .klarna)
+        )
+
+        let header = factory.makeKlarnaHeader()
+        let headerView = extractBNPLHeaderView(from: header)
+
+        XCTAssertEqual(headerView?.configuration.style, .alwaysDark)
     }
 
     func testMakePrototypeBNPLHeaderConfiguration_AfterpayUsesCurrencySpecificBranding() {

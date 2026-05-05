@@ -9,6 +9,7 @@ import UIKit
 final class BNPLFormHeaderView: UIView {
     struct Configuration {
         let appearance: PaymentSheet.Appearance
+        let style: PaymentSheet.UserInterfaceStyle
         let promotion: String
         let learnMoreText: String
         let infoUrl: URL
@@ -42,6 +43,15 @@ final class BNPLFormHeaderView: UIView {
         self.configuration = configuration
         super.init(frame: .zero)
 
+        switch configuration.style {
+        case .automatic:
+            break
+        case .alwaysLight:
+            overrideUserInterfaceStyle = .light
+        case .alwaysDark:
+            overrideUserInterfaceStyle = .dark
+        }
+
         addAndPinSubview(textView)
         isAccessibilityElement = false
         accessibilityElements = [textView]
@@ -52,7 +62,18 @@ final class BNPLFormHeaderView: UIView {
     }
 
     private func openInfoModal() {
-        PMMEInfoModal.present(infoUrl: configuration.infoUrl, style: .alwaysDark, from: self)
+        PMMEInfoModal.present(infoUrl: configuration.infoUrl, style: pmmeStyle, from: self)
+    }
+
+    private var pmmeStyle: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle {
+        switch configuration.style {
+        case .automatic:
+            return .automatic
+        case .alwaysLight:
+            return .alwaysLight
+        case .alwaysDark:
+            return .alwaysDark
+        }
     }
 }
 
