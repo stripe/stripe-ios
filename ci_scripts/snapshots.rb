@@ -41,6 +41,28 @@ File.open("StripeCore/StripeCoreTestUtils/STPSnapshotTestCase.swift", "r").each_
   end
 end
 
-version_flag = ci_mode ? "" : "--version \"#{os_version}\""
-system "./ci_scripts/test.rb --only-snapshot-tests --scheme #{scheme} --device \"#{device_model}\" #{version_flag}"
+if ci_mode
+  # In CI mode, find the OS version of the available simulator matching the device
+  available_version = `xcrun simctl list devices available`.scan(/#{Regexp.escape(device_model)} \(.*?\) \(([^)]+)\)/).flatten
+                       .reject { |state| state == "Shutdown" || state == "Booted" }
+  # Parse from the runtime list instead
+  available_version = `xcrun simctl list devices available -j`
+  require 'json'
+  devices = JSON.parse(available_version)['devices']
+  os_version = nil
+  devices.each do |runtime, device_list|
+    next unless runtime.include?('iOS')
+    device_list.each do |d|
+      if d['name'] == device_model
+        # Extract version from runtime identifier (e.g., com.apple.CoreSimulator.SimRuntime.iOS-26-2 -> 26.2)
+        os_version = runtime.scan(/iOS[- ](\d+[.-]\d+)/).flatten.first&.tr('-', '.')
+        break
+      end
+    end
+    break if os_version
+  end
+  abort "Could not find OS version for #{device_model}" if os_version.nil?
+end
+
+system "./ci_scripts/test.rb --only-snapshot-tests --scheme #{scheme} --device \"#{device_model}\" --version \"#{os_version}\""
 print "\a" # done!
