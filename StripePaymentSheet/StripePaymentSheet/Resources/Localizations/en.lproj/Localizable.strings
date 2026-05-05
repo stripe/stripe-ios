@@ -102,7 +102,7 @@
 "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 /* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
+"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 /* Legal text shown when using AUBECS. */
 "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above.";
@@ -305,8 +305,8 @@ Pay faster at {Merchant Name} and thousands of businesses
 e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 "Pay faster at %@ and thousands of businesses." = "Pay faster at %@ and thousands of businesses.";
 
-/* Subtitle for the Link signup screen. The placeholder is a Stripe brand name and should not be translated. */
-"Pay faster everywhere %@ is accepted." = "Pay faster everywhere %@ is accepted.";
+/* Subtitle for the Link signup screen */
+"Pay faster everywhere Link is accepted." = "Pay faster everywhere Link is accepted.";
 
 /* Pay over time with Affirm copy */
 "Pay over time with %@" = "Pay over time with %@";
@@ -409,6 +409,9 @@ is not supported by the merchant */
 /* Accessibility label for an action or a button that shows a menu. */
 "Show menu" = "Show menu";
 
+/* Subtitle shown on a button allowing a user to select to pay with Link. */
+"Simple, secure one-click payments" = "Simple, secure one-click payments";
+
 /* Error message when an error case happens when linking your account */
 "Something went wrong when linking your account.\nPlease try again later." = "Something went wrong when linking your account.\nPlease try again later.";
 
@@ -466,4 +469,3 @@ the heading the screen itself. */
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
-

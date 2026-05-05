@@ -543,7 +543,7 @@ extension RowButton {
     ) -> RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
-        var subtext = String.Localized.pay_faster_everywhere_brand_is_accepted(brand: linkBrand)
+        var subtext = String.Localized.link_subtitle_text
         if let linkAccount = LinkAccountContext.shared.account, linkAccount.isRegistered {
             subtext = linkAccount.email
         }

@@ -62,7 +62,7 @@ final class LinkSignUpViewController: UIViewController {
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = String.Localized.pay_faster_everywhere_brand_is_accepted(brand: brand)
+        label.text = String.Localized.link_subtitle_text
         return label
     }()
 

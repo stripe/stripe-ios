@@ -482,19 +482,8 @@ extension String.Localized {
         )
     }
 
-    static func pay_faster_everywhere_brand_is_accepted(brand: LinkBrand) -> String {
-        switch brand {
-        case .link, .unparsable:
-            return existingLinkLocalizedString("Pay faster everywhere Link is accepted.")
-        case .onelink:
-            return String(
-                format: STPLocalizedString(
-                    "Pay faster everywhere %@ is accepted.",
-                    "Subtitle for the Link signup screen. The placeholder is a Stripe brand name and should not be translated."
-                ),
-                brand.displayName
-            )
-        }
+    static var link_subtitle_text: String {
+        existingLinkLocalizedString("Simple, secure one-click payments")
     }
 
     static var new_card: String {
@@ -631,7 +620,7 @@ extension String.Localized {
         case .onelink:
             return String(
                 format: STPLocalizedString(
-                    "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
+                    "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
                     "Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated."
                 ),
                 brand.displayName

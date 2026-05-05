@@ -316,7 +316,7 @@ class EmbeddedPaymentMethodsView: UIView {
             return
         }
 
-        var sublabel = String.Localized.pay_faster_everywhere_brand_is_accepted(brand: linkBrand)
+        var sublabel = String.Localized.link_subtitle_text
 
         if let linkAccount, linkAccount.isRegistered {
             sublabel = linkAccount.email

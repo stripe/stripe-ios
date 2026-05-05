@@ -225,7 +225,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
             return
         }
 
-        let sublabel = linkAccount?.email ?? .Localized.pay_faster_everywhere_brand_is_accepted(brand: linkBrand)
+        let sublabel = linkAccount?.email ?? .Localized.link_subtitle_text
         linkRowButton.setSublabel(text: sublabel)
     }
 
