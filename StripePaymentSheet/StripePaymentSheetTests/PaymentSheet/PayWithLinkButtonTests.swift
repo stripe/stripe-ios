@@ -58,6 +58,14 @@ final class PayWithLinkButtonTests: XCTestCase {
         XCTAssertEqual(String.Localized.pay_with_link(brand: .onelink), "Pay with Onelink")
         XCTAssertEqual(String.Localized.link_subtitle_text, "Simple, secure one-click payments")
         XCTAssertEqual(
+            String.Localized.pay_faster_everywhere_brand_is_accepted(brand: .link),
+            "Pay faster everywhere Link is accepted."
+        )
+        XCTAssertEqual(
+            String.Localized.pay_faster_everywhere_brand_is_accepted(brand: .onelink),
+            "Pay faster everywhere Onelink is accepted."
+        )
+        XCTAssertEqual(
             String.Localized.save_my_info_for_faster_checkout(with: .onelink),
             "Save my info for faster checkout with Onelink"
         )
