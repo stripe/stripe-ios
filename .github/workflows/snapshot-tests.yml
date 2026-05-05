@@ -94,7 +94,7 @@ jobs:
         run: |
           OUTPUT=$(vercel deploy snapshot-deploy --token="$VERCEL_TOKEN" --yes 2>&1)
           echo "$OUTPUT"
-          DEPLOY_URL=$(echo "$OUTPUT" | grep -oE 'https://[a-zA-Z0-9_-]+\.vercel\.app[^ ]*' | head -1)
+          DEPLOY_URL=$(echo "$OUTPUT" | grep -oE 'https://[a-zA-Z0-9._-]+\.vercelapp\.[^ ]*|https://[a-zA-Z0-9_-]+\.vercel\.app[^ ]*' | head -1)
           if [ -z "$DEPLOY_URL" ]; then
             echo "::error::Vercel deploy failed. Ensure VERCEL_SNAPSHOT_PROJECT_ID secret is set."
             echo "::error::Vercel output: $OUTPUT"
