@@ -11,7 +11,7 @@ import XCTest
 final class PaymentMethodMessagingPromotionsHelperTests: XCTestCase {
     func testShouldUsePaymentMethodMessagingRow_supportedTypeInTreatment() {
         let helper = PaymentMethodMessagingPromotionsHelper(
-            experiment: PaymentMethodMessagingPromotionsExperiment(group: .treatment),
+            experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
             prefetchedPromotionContents: [:]
         )
 
@@ -20,11 +20,11 @@ final class PaymentMethodMessagingPromotionsHelperTests: XCTestCase {
 
     func testShouldUsePaymentMethodMessagingRow_returnsFalseOutsideTreatmentOrForUnsupportedType() {
         let controlHelper = PaymentMethodMessagingPromotionsHelper(
-            experiment: PaymentMethodMessagingPromotionsExperiment(group: .control),
+            experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .control),
             prefetchedPromotionContents: [:]
         )
         let treatmentHelper = PaymentMethodMessagingPromotionsHelper(
-            experiment: PaymentMethodMessagingPromotionsExperiment(group: .treatment),
+            experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
             prefetchedPromotionContents: [:]
         )
 

@@ -167,7 +167,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
 
     func testBNPLPromotionRow_UsesPrefetchedPMMESummary() {
         let helper = PaymentMethodMessagingPromotionsHelper(
-            experiment: PaymentMethodMessagingPromotionsExperiment(group: .treatment),
+            experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
             prefetchedPromotionContents: [
                 STPPaymentMethodType.affirm.identifier: .init(
                     promotion: "Split your purchase into monthly payments.",
@@ -201,7 +201,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
 
     func testBNPLPromotionRow_RetapShowsLateLoadedPMMContent() {
         let helper = PaymentMethodMessagingPromotionsHelper(
-            experiment: PaymentMethodMessagingPromotionsExperiment(group: .treatment),
+            experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
             prefetchedPromotionContents: [:]
         )
         let sut = VerticalPaymentMethodListViewController(

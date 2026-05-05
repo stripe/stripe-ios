@@ -49,7 +49,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         infoUrl: URL = URL(string: "https://example.com/learn-more")!
     ) -> PaymentMethodMessagingPromotionsHelper {
         PaymentMethodMessagingPromotionsHelper(
-            experiment: PaymentMethodMessagingPromotionsExperiment(group: .treatment),
+            experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
             prefetchedPromotionContents: [
                 paymentMethodType.identifier: .init(
                     promotion: promotion,

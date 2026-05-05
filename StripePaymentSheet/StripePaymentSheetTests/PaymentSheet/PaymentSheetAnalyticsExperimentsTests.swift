@@ -306,9 +306,11 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             layout: "vertical"
         )
 
+        XCTAssertEqual(experiment.name, PaymentMethodMessagingPromotionsExperiment.experimentName)
+        XCTAssertEqual(experiment.arbId, "arb_id_123")
         XCTAssertEqual(experiment.group, .treatment)
         XCTAssertEqual(
-            experiment.dimensionsDictionary,
+            experiment.dimensions,
             [
                 "selected_payment_method_type": "klarna",
                 "promotion_displayed_successfully": "true",
