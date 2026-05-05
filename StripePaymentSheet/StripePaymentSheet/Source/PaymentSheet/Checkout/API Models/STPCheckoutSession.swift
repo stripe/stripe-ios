@@ -87,9 +87,6 @@ class STPCheckoutSession: NSObject {
     /// The available shipping options for this session.
     let shippingOptions: [Checkout.ShippingOption]
 
-    /// The ID of the currently selected shipping option, if any.
-    let selectedShippingOptionId: String?
-
     /// The tax amounts associated with this session.
     let taxAmounts: [STPCheckoutSessionTaxAmount]
 
@@ -98,17 +95,16 @@ class STPCheckoutSession: NSObject {
         taxAmounts.reduce(0) { $0 + $1.amount }
     }
 
-    /// The currently applied promotion code, if one is present.
-    var appliedPromotionCode: String? {
-        discounts.first(where: { $0.promotionCode != nil })?.promotionCode
-    }
-
     /// Server-side flag controlling the "Save for future use" checkbox.
     /// Parsed from `customer_managed_saved_payment_methods_offer_save` in the init response.
     let savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?
 
     /// Top-level setup_future_usage for payment-mode checkout sessions.
     let setupFutureUsage: String?
+
+    /// Per-payment-method setup_future_usage overrides for payment-mode checkout sessions.
+    /// Parsed from `setup_future_usage_for_payment_method_type` in the init response.
+    let setupFutureUsageForPaymentMethodType: [String: String]
 
     /// Whether billing address collection is required for this session.
     /// Derived from `billing_address_collection == "required"` in the API response.
@@ -144,11 +140,11 @@ class STPCheckoutSession: NSObject {
     /// The raw API response used to create this object.
     let allResponseFields: [AnyHashable: Any]
 
-    /// Client-side billing address override, set via Checkout.updateBillingAddress(_:).
-    var billingAddressOverride: Checkout.AddressUpdate?
+    /// Client-side billing address override, set via Checkout.updateBillingAddress(name:phone:address:).
+    var billingAddressOverride: Checkout.ContactAddress?
 
-    /// Client-side shipping address override, set via Checkout.updateShippingAddress(_:).
-    var shippingAddressOverride: Checkout.AddressUpdate?
+    /// Client-side shipping address override, set via Checkout.updateShippingAddress(name:phone:address:).
+    var shippingAddressOverride: Checkout.ContactAddress?
 
     /// Called by confirm handlers with the updated session after a successful confirm.
     /// `Checkout.updateSession(_:)` sets this so the confirm response flows back
@@ -253,10 +249,10 @@ class STPCheckoutSession: NSObject {
         discounts: [Checkout.Discount],
         lineItems: [Checkout.LineItem],
         shippingOptions: [Checkout.ShippingOption],
-        selectedShippingOptionId: String?,
         taxAmounts: [STPCheckoutSessionTaxAmount],
         savedPaymentMethodsOfferSave: STPCheckoutSessionSavedPaymentMethodsOfferSave?,
         setupFutureUsage: String?,
+        setupFutureUsageForPaymentMethodType: [String: String],
         requiresBillingAddress: Bool,
         allowedShippingCountries: [String]?,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
@@ -288,10 +284,10 @@ class STPCheckoutSession: NSObject {
         self.discounts = discounts
         self.lineItems = lineItems
         self.shippingOptions = shippingOptions
-        self.selectedShippingOptionId = selectedShippingOptionId
         self.taxAmounts = taxAmounts
         self.savedPaymentMethodsOfferSave = savedPaymentMethodsOfferSave
         self.setupFutureUsage = setupFutureUsage
+        self.setupFutureUsageForPaymentMethodType = setupFutureUsageForPaymentMethodType
         self.requiresBillingAddress = requiresBillingAddress
         self.allowedShippingCountries = allowedShippingCountries
         self.localizedPricesMetas = localizedPricesMetas
@@ -341,7 +337,6 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
         let discounts = Self.parseDiscounts(from: dict)
         let lineItems = Self.parseLineItems(from: dict, defaultCurrency: currency)
         let shippingOptions = Self.parseShippingOptions(from: dict, defaultCurrency: currency)
-        let selectedShippingOptionId = Self.parseSelectedShippingOptionId(from: dict)
         let taxAmounts = STPCheckoutSessionTaxAmount.taxAmounts(from: dict)
 
         // Build totals from total_summary + derived amounts
@@ -367,6 +362,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             from: dict["customer_managed_saved_payment_methods_offer_save"] as? [AnyHashable: Any]
         )
         let setupFutureUsage = dict["setup_future_usage"] as? String
+        let setupFutureUsageForPaymentMethodType = dict["setup_future_usage_for_payment_method_type"] as? [String: String] ?? [:]
 
         // Parse address collection settings
         let requiresBillingAddress = (dict["billing_address_collection"] as? String) == "required"
@@ -446,10 +442,10 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             discounts: discounts,
             lineItems: lineItems,
             shippingOptions: shippingOptions,
-            selectedShippingOptionId: selectedShippingOptionId,
             taxAmounts: taxAmounts,
             savedPaymentMethodsOfferSave: savedPaymentMethodsOfferSave,
             setupFutureUsage: setupFutureUsage,
+            setupFutureUsageForPaymentMethodType: setupFutureUsageForPaymentMethodType,
             requiresBillingAddress: requiresBillingAddress,
             allowedShippingCountries: allowedShippingCountries,
             localizedPricesMetas: localizedPricesMetas,
@@ -465,8 +461,16 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 // MARK: - Parsing Helpers
 
 extension STPCheckoutSession {
+    var isPaymentMethodOptionsSetupFutureUsageSet: Bool {
+        return !setupFutureUsageForPaymentMethodType.isEmpty
+    }
+
     func setupFutureUsage(for paymentMethodType: STPPaymentMethodType) -> String? {
-        _ = paymentMethodType
+        let perPaymentMethodSetupFutureUsage = setupFutureUsageForPaymentMethodType[paymentMethodType.identifier]
+        if let perPaymentMethodSetupFutureUsage {
+            return perPaymentMethodSetupFutureUsage
+        }
+
         return setupFutureUsage
     }
 
@@ -518,15 +522,6 @@ extension STPCheckoutSession {
             return []
         }
         return options.compactMap { parseShippingOption(from: $0, defaultCurrency: defaultCurrency) }
-    }
-
-    static func parseSelectedShippingOptionId(from dict: [AnyHashable: Any]) -> String? {
-        if let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any],
-           let shippingRate = lineItemGroup["shipping_rate"] as? [AnyHashable: Any],
-           let id = shippingRate["id"] as? String {
-            return id
-        }
-        return dict["shipping_rate"] as? String
     }
 
     static func parseSelectedShippingAmount(from dict: [AnyHashable: Any]) -> Int {

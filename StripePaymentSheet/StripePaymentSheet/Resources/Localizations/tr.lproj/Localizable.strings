@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Kart ayrıntıları değiştirilemiyor.";
 
+"Card number. Supported cards include %@" = "Kart numarası. Desteklenen kartlar %@ içerir";
+
 "Change" = "Değiştir";
 
 "Choose a card brand" = "Bir kart markası seçin";

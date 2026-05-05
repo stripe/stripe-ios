@@ -416,7 +416,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
             app.buttons["Card"].waitForExistenceAndTap()
             let numberField = app.textFields["Card number"]
             numberField.waitForExistenceAndTap()
-            app.typeText("4")
+            numberField.typeText("4")
             // ...and tapping to the main screen and back should preserve the card form
             app.buttons["Back"].waitForExistenceAndTap()
             app.buttons["Klarna"].waitForExistenceAndTap()

@@ -11,7 +11,7 @@ import PassKit
 @_spi(STP) @testable import StripeCore
 @_spi(STP) import StripeCoreTestUtils
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(CheckoutSessionsPreview) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
 import StripePaymentsTestUtils
 @_spi(STP) import StripeUICore
 
@@ -134,7 +134,7 @@ extension STPElementsSession {
         cardBrandChoiceData: [String: Any]? = nil,
         isLinkPassthroughModeEnabled: Bool? = nil,
         linkMode: LinkMode? = nil,
-        linkFundingSources: Set<LinkSettings.FundingSource> = [],
+        linkFundingSources: Set<ParsedEnum<LinkSettings.FundingSource>> = [],
         disableLinkSignup: Bool? = nil,
         defaultPaymentMethod: String? = nil,
         paymentMethods: [[AnyHashable: Any]]? = nil,
@@ -220,7 +220,7 @@ extension STPElementsSession {
         intent: Intent,
         isLinkPassthroughModeEnabled: Bool? = nil,
         linkMode: LinkMode? = nil,
-        linkFundingSources: Set<LinkSettings.FundingSource> = [],
+        linkFundingSources: Set<ParsedEnum<LinkSettings.FundingSource>> = [],
         defaultPaymentMethod: String? = nil,
         paymentMethods: [[AnyHashable: Any]]? = nil,
         allowsSetAsDefaultPM: Bool = false,
@@ -402,7 +402,8 @@ extension PaymentSheetLoader.LoadResult {
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
-            paymentMethodTypes: paymentMethodTypes.map { .stripe(STPPaymentMethod.type(from: $0)) }
+            paymentMethodTypes: paymentMethodTypes.map { .stripe(STPPaymentMethod.type(from: $0)) },
+            paymentMethodOrientation: .vertical
         )
     }
 }
@@ -438,6 +439,7 @@ extension PaymentSheetFormFactory {
             elementsSession: elementsSession,
             configuration: configuration,
             paymentMethod: paymentMethod,
+            paymentMethodOrientation: .vertical,
             previousCustomerInput: previousCustomerInput,
             addressSpecProvider: addressSpecProvider,
             linkAccount: linkAccount,

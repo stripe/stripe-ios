@@ -21,6 +21,36 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         var apiCallCount = 0
     }
 
+    private class MockURLProtocol: URLProtocol {
+        static var requestHandler: ((URLRequest) throws -> (HTTPURLResponse, Data))?
+
+        override class func canInit(with request: URLRequest) -> Bool {
+            return true
+        }
+
+        override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+            return request
+        }
+
+        override func startLoading() {
+            guard let requestHandler = Self.requestHandler else {
+                XCTFail("Missing request handler.")
+                return
+            }
+
+            do {
+                let (response, data) = try requestHandler(request)
+                client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+                client?.urlProtocol(self, didLoad: data)
+                client?.urlProtocolDidFinishLoading(self)
+            } catch {
+                client?.urlProtocol(self, didFailWithError: error)
+            }
+        }
+
+        override func stopLoading() {}
+    }
+
     private let mockApiClient = APIStubbedTestCase.stubbedAPIClient()
     private var apiClient: FinancialConnectionsAsyncAPIClient!
     private var tracker: CallTracker!
@@ -229,5 +259,88 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
 
         XCTAssertEqual(result, "Default Success")
         XCTAssertEqual(callCount, 1)
+    }
+
+    func testSaveAccountsToNetworkAndLink_pollAccountNumbersUsesClientSecretParameter() async throws {
+        var pollRequestQuery: String?
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [MockURLProtocol.self]
+        let stpAPIClient = STPAPIClient(publishableKey: "pk_test_123")
+        stpAPIClient.urlSession = URLSession(configuration: configuration)
+        let apiClient = FinancialConnectionsAsyncAPIClient(apiClient: stpAPIClient)
+
+        MockURLProtocol.requestHandler = { request in
+            guard let url = request.url else {
+                throw TestError.sampleError
+            }
+
+            let response = HTTPURLResponse(
+                url: url,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: ["Content-Type": "application/json"]
+            )!
+
+            if url.path.hasSuffix(FinancialConnectionsAPIEndpoint.pollAccountNumbers.rawValue) {
+                pollRequestQuery = url.query
+                return (response, Data("{}".utf8))
+            }
+
+            if url.path.hasSuffix(FinancialConnectionsAPIEndpoint.saveAccountsToLink.rawValue) {
+                let data = try JSONSerialization.data(withJSONObject: self.makeMinimalManifestResponse())
+                return (response, data)
+            }
+
+            throw TestError.sampleError
+        }
+        defer {
+            MockURLProtocol.requestHandler = nil
+        }
+
+        _ = try await apiClient.saveAccountsToNetworkAndLink(
+            shouldPollAccounts: true,
+            selectedAccounts: [try makePartnerAccount(linkedAccountId: "linked_account_123")],
+            emailAddress: nil,
+            phoneNumber: nil,
+            country: nil,
+            consumerSessionClientSecret: nil,
+            clientSecret: "las_client_secret_123",
+            isRelink: false
+        )
+
+        XCTAssertEqual(pollRequestQuery?.contains("client_secret=las_client_secret_123"), true)
+        XCTAssertEqual(pollRequestQuery?.contains("clientSecret="), false)
+    }
+
+    private func makePartnerAccount(linkedAccountId: String) throws -> FinancialConnectionsPartnerAccount {
+        let jsonObject: [String: Any] = [
+            "id": "fca_123",
+            "name": "Checking",
+            "linked_account_id": linkedAccountId,
+            "supported_payment_method_types": ["us_bank_account"],
+        ]
+        let data = try JSONSerialization.data(withJSONObject: jsonObject)
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        return try decoder.decode(FinancialConnectionsPartnerAccount.self, from: data)
+    }
+
+    private func makeMinimalManifestResponse() -> [String: Any] {
+        return [
+            "allow_manual_entry": false,
+            "consent_required": false,
+            "custom_manual_entry_handling": false,
+            "disable_link_more_accounts": false,
+            "id": "las_123",
+            "instant_verification_disabled": false,
+            "institution_search_disabled": false,
+            "livemode": false,
+            "manual_entry_mode": "automatic",
+            "manual_entry_uses_microdeposits": false,
+            "next_pane": "success",
+            "permissions": [],
+            "product": "bank_account",
+            "single_account": false,
+        ]
     }
 }

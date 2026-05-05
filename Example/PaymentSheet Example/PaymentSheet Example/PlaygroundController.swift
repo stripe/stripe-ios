@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -136,11 +136,13 @@ import UIKit
     private var currentTaxRate: (String, Double)?
 
     var linkConfiguration: PaymentSheet.LinkConfiguration {
+        let brand: LinkBrand? = settings.linkBrand == .onelink ? .onelink : nil
+
         switch settings.linkDisplay {
         case .automatic:
-            PaymentSheet.LinkConfiguration(display: .automatic)
+            return PaymentSheet.LinkConfiguration(display: .automatic, brand: brand)
         case .never:
-            PaymentSheet.LinkConfiguration(display: .never)
+            return PaymentSheet.LinkConfiguration(display: .never, brand: brand)
         }
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
@@ -208,10 +210,6 @@ import UIKit
 
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
-        }
-
-        if settings.enableAttestationOnConfirmation == .on {
-            configuration.enableAttestationOnConfirmation = true
         }
 
         if settings.shippingInfo != .off {
@@ -337,10 +335,6 @@ import UIKit
 
         if settings.allowsDelayedPMs == .on {
             configuration.allowsDelayedPaymentMethods = true
-        }
-
-        if settings.enableAttestationOnConfirmation == .on {
-            configuration.enableAttestationOnConfirmation = true
         }
 
         if settings.shippingInfo != .off {
@@ -920,7 +914,12 @@ extension PlaygroundController {
                 // Load checkout session using Checkout SDK if using CheckoutSession
                 if let checkoutSessionClientSecret = json["checkoutSessionClientSecret"] {
                     do {
-                        self.checkout = try await Checkout(clientSecret: checkoutSessionClientSecret)
+                        var checkoutConfiguration = Checkout.Configuration()
+                        checkoutConfiguration.adaptivePricing.allowed = settingsToLoad.csAdaptivePricing == .on
+                        self.checkout = try await Checkout(
+                            clientSecret: checkoutSessionClientSecret,
+                            configuration: checkoutConfiguration
+                        )
                     } catch {
                         self.checkout = nil
                         print("Failed to load checkout session: \(error)")
@@ -1110,7 +1109,7 @@ extension PlaygroundController {
         }
 
         // Only set PMO SFU on the Intent if we're Intent-first, never set it for deferred intents.
-        if settings.integrationType == .normal {
+        if settings.integrationType == .normal || settings.integrationType == .checkoutSession {
             body["payment_method_options_setup_future_usage"] = settings.paymentMethodOptionsSetupFutureUsage.toDictionary()
         }
         if shouldCreateCustomerKey {

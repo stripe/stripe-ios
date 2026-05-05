@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "カードの詳細は変更できません。";
 
+"Card number. Supported cards include %@" = "カード番号。対応カードは %@ です";
+
 "Change" = "変更する";
 
 "Choose a card brand" = "カードブランドを選択";

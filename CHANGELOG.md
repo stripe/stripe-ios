@@ -1,7 +1,15 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
+
+## 25.13.0 2026-05-04
+### PaymentSheet
+* [Fixed] Fixed an issue where `paymentMethodOrder` did not apply to custom payment methods due to case-sensitive matching.
+
+## 25.12.0 2026-04-27
+### Identity
+* [Improved] Improved StripeIdentity analytics with richer error details and screen/camera context to help debug verification flows.
 
 ### All
 * [Removed] Removed UPI support across the SDK.
@@ -9,9 +17,13 @@ MINOR
 
 ### PaymentSheet
 * [Fixed] Fixed an issue where `LinkController` used the shared `STPAPIClient` instead of the `apiClient` specified in the caller, affecting apps using multiple API client instances.
+* [Fixed] Card brand images next to the card number field are now exposed to screen readers via the field's accessibility label (WCAG 2.2 § 1.1.1).
 
 ### Connect
 * [Changed] [#66351](https://github.com/stripe/stripe-ios/pull/6351) Theming tokens in connect embedded components is now GA.
+
+### CryptoOnramp (Alpha)
+* [Fixed] Fixed an issue (#6363) in which StripeCryptoOnramp was not properly exposed via Swift Package Manager.
 
 ## 25.11.0 2026-04-13
 ### PaymentSheet

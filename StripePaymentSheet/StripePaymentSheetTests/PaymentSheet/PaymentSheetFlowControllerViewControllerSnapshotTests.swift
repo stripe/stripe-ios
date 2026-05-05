@@ -19,7 +19,8 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             intent: ._testValue(),
             elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
             savedPaymentMethods: savedPaymentMethods,
-            paymentMethodTypes: [.stripe(.card)]
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodOrientation: .horizontal
         )
     }
 
@@ -118,7 +119,8 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
                 isLinkPassthroughModeEnabled: false
             ),
             savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.card)]
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodOrientation: .horizontal
         )
 
         let sut = PaymentSheetFlowControllerViewController(

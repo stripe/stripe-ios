@@ -46,13 +46,13 @@ struct PaymentSheetTestPlayground: View {
                     .textInputAutocapitalization(.never)
             }
         }
-        SearchableSettingView(setting: $playgroundController.settings.enableAttestationOnConfirmation, searchText: searchText)
         Group {
             if playgroundController.settings.merchantCountryCode == .US {
                 SearchableSettingView(setting: linkEnabledModeBinding, searchText: searchText)
             }
             SearchableSettingView(setting: $playgroundController.settings.linkPassthroughMode, searchText: searchText)
             SearchableSettingView(setting: $playgroundController.settings.linkDisplay, searchText: searchText)
+            SearchableSettingView(setting: $playgroundController.settings.linkBrand, searchText: searchText)
         }
         SearchableSettingView(setting: $playgroundController.settings.userOverrideCountry, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.externalPaymentMethods, searchText: searchText)

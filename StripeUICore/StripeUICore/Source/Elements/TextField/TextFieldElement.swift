@@ -97,7 +97,7 @@ import UIKit
         }()
         return ViewModel(
             placeholder: placeholder,
-            accessibilityLabel: configuration.accessibilityLabel,
+            accessibilityLabel: configuration.accessibilityLabel(for: text),
             attributedText: configuration.makeDisplayText(for: text),
             keyboardProperties: configuration.keyboardProperties(for: text),
             validationState: configuration.validate(text: text, isOptional: configuration.isOptional),

@@ -529,7 +529,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                 analyticsClient: analyticsClient
             )
             sut.intent = ._testValue()
-            sut.elementsSession = ._testValue(paymentMethodTypes: ["card"], externalPaymentMethodTypes: [], linkMode: .linkCardBrand, linkFundingSources: [.card], linkUseAttestation: true, linkSuppress2FA: true)
+            sut.elementsSession = ._testValue(paymentMethodTypes: ["card"], externalPaymentMethodTypes: [], linkMode: .linkCardBrand, linkFundingSources: [ParsedEnum(.card)], linkUseAttestation: true, linkSuppress2FA: true)
             sut.logPayment(
                 paymentOption: paymentOption,
                 result: result,
@@ -758,36 +758,6 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         let sptEvent = analyticsClient._testLogHistory.last!
         XCTAssertEqual(sptEvent["is_decoupled"] as? Bool, true, "SPT intent should have is_decoupled = true")
         XCTAssertEqual(sptEvent["is_spt"] as? Bool, true, "SPT intent with preparePaymentMethodHandler should have is_spt = true")
-    }
-
-    // MARK: - Adaptive Pricing
-
-    func testLogAdaptivePricingEvents() {
-        let sut = PaymentSheetAnalyticsHelper(
-            integrationShape: .complete,
-            configuration: PaymentSheet.Configuration(),
-            analyticsClient: analyticsClient
-        )
-        analyticsClient._testLogHistory.removeAll()
-
-        // Init with is_standalone_element param
-        sut.logAdaptivePricingCurrencySelectorInit(isStandaloneElement: false)
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "elements.adaptive_pricing.currency_selector_init")
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["is_standalone_element"] as? Bool, false)
-
-        sut.logAdaptivePricingCurrencySelectorInit(isStandaloneElement: true)
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["is_standalone_element"] as? Bool, true)
-
-        // Toggled
-        sut.logAdaptivePricingCurrencyToggled()
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "elements.adaptive_pricing.currency_toggled")
-
-        // Toggled failed serializes error
-        let error = NSError(domain: "test_domain", code: 42)
-        sut.logAdaptivePricingCurrencyToggledFailed(error: error)
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "elements.adaptive_pricing.currency_toggled.failed")
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["error_type"] as? String, "test_domain")
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["error_code"] as? String, "42")
     }
 
     // MARK: - Helpers
