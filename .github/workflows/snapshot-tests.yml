@@ -27,26 +27,29 @@ jobs:
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode_16.2.app
 
-      - name: Boot simulator
+      - name: Create and boot simulator
         run: |
-          UDID=$(xcrun simctl list devices available -j | python3 -c "
+          # Create an iPhone 12 mini with the available iOS runtime
+          RUNTIME=$(xcrun simctl list runtimes -j | python3 -c "
           import json, sys
           data = json.load(sys.stdin)
-          for runtime, devices in data['devices'].items():
-              if 'iOS' in runtime:
-                  for d in devices:
-                      if 'iPhone 12 mini' in d['name']:
-                          print(d['udid'])
-                          sys.exit(0)
+          for r in reversed(data['runtimes']):
+              if 'iOS' in r['name'] and r['isAvailable']:
+                  print(r['identifier'])
+                  sys.exit(0)
           ")
-          xcrun simctl boot "$UDID" || true
+          echo "Using runtime: $RUNTIME"
+          UDID=$(xcrun simctl create "iPhone 12 mini" "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini" "$RUNTIME")
+          echo "Created simulator: $UDID"
+          xcrun simctl boot "$UDID"
+          echo "SNAPSHOT_DESTINATION=platform=iOS Simulator,id=$UDID" >> "$GITHUB_ENV"
 
       - name: Run snapshot tests (record mode)
         run: |
           xcodebuild test \
             -workspace Stripe.xcworkspace \
             -scheme StripeiOS \
-            -destination "platform=iOS Simulator,name=iPhone 12 mini" \
+            -destination "$SNAPSHOT_DESTINATION" \
             STP_RECORD_SNAPSHOTS=1 \
             2>&1 | xcbeautify || true
 
@@ -55,7 +58,7 @@ jobs:
           xcodebuild test \
             -workspace Stripe.xcworkspace \
             -scheme StripePaymentSheet \
-            -destination "platform=iOS Simulator,name=iPhone 12 mini" \
+            -destination "$SNAPSHOT_DESTINATION" \
             STP_RECORD_SNAPSHOTS=1 \
             2>&1 | xcbeautify || true
 
@@ -99,12 +102,16 @@ jobs:
             --token="$VERCEL_TOKEN" \
             --yes \
             --name="stripe-ios-snapshots" \
-            2>/dev/null | tail -1)
+            2>&1 | grep -oE 'https://[^ ]+' | tail -1)
+          if [ -z "$DEPLOY_URL" ]; then
+            echo "::error::Vercel deploy failed. Check VERCEL_TOKEN, VERCEL_ORG_ID, and VERCEL_SNAPSHOT_PROJECT_ID secrets."
+            exit 1
+          fi
           echo "url=$DEPLOY_URL" >> "$GITHUB_OUTPUT"
           echo "Deployed to: $DEPLOY_URL"
 
       - name: Post PR comment
-        if: steps.diff.outputs.has_changes == 'true' && github.event_name == 'pull_request'
+        if: steps.diff.outputs.has_changes == 'true' && steps.deploy.outputs.url && github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
