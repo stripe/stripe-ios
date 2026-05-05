@@ -58,6 +58,7 @@ pipelines:
         parallel: 4
       ui-tests-connect: {}
       ui-tests-crypto: {}
+      legacy-tests-15: {}
       legacy-tests-16: {}
       legacy-tests-18: {}
       pod-lint-tests: {}
@@ -67,6 +68,7 @@ pipelines:
     workflows:
       framework-tests-no-mocks: {}
       check-docs: {}
+      legacy-tests-15: {}
       legacy-tests-16: {}
       legacy-tests-18: {}
       deploy-dry-run: {}
@@ -520,14 +522,49 @@ workflows:
         machine_type_id: g2.mac.large
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.4.1
+  legacy-tests-15:
+    steps:
+    - script@1:
+        title: Install iOS 15.5 simulator runtime
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -e
+            brew tap robotsandpencils/made
+            brew install robotsandpencils/made/xcodes
+            sudo xcodes runtimes install "iOS 15.5"
+    - fastlane@3:
+        inputs:
+        - lane: legacy_tests_15
+        title: fastlane legacy_tests_15
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.5
+    meta:
+      bitrise.io:
+        stack: osx-xcode-26.4.x
+        machine_type_id: g2.mac.large
+    before_run:
+    - prep_all
+    after_run:
+    - upload_logs
+    - notify_ci
   legacy-tests-16:
     steps:
+    - script@1:
+        title: Install iOS 16.4 simulator runtime
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -e
+            brew tap robotsandpencils/made
+            brew install robotsandpencils/made/xcodes
+            sudo xcodes runtimes install "iOS 16.4"
     - fastlane@3:
         inputs:
         - lane: legacy_tests_16
         title: fastlane legacy_tests_16
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=26.4.1
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
     before_run:
     - prep_all
     after_run:
