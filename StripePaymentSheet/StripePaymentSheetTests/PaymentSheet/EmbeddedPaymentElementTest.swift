@@ -396,6 +396,23 @@ class EmbeddedPaymentElementTest: XCTestCase {
         await fulfillment(of: [rowSelectionBehaviorExpectation])
     }
 
+    func testPaymentOptionDisplayData_linkCardBrandUsesOnelinkLabel() {
+        let confirmParams = IntentConfirmParams(type: .linkCardBrand)
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card = cardParams
+
+        let displayData = EmbeddedPaymentElement.PaymentOptionDisplayData(
+            paymentOption: .new(confirmParams: confirmParams),
+            mandateText: nil,
+            currency: "usd",
+            iconStyle: .filled,
+            linkBrand: .onelink
+        )
+
+        XCTAssertEqual(displayData.label, "Onelink")
+    }
+
     func testClearPaymentOptionAfterSelection() async throws {
         let rowSelectionBehaviorExpectation = XCTestExpectation(description: "immediateAction handler is only called once.")
         rowSelectionBehaviorExpectation.expectedFulfillmentCount = 1

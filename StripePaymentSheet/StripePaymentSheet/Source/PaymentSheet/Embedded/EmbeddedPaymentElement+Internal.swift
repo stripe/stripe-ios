@@ -382,7 +382,7 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
             billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
             shippingDetails = nil
         case .new(let confirmParams):
-            label = confirmParams.paymentSheetLabel
+            label = confirmParams.paymentSheetLabel(brand: linkBrand)
             paymentMethodType = confirmParams.paymentMethodType.identifier
             billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
             shippingDetails = nil

@@ -206,6 +206,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             linkBrand: .onelink
         )
 
+        XCTAssertEqual(displayData.label, "Onelink")
         XCTAssertEqual(displayData.labels.label, "Onelink")
     }
 
@@ -229,6 +230,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
             linkBrand: .onelink
         )
 
+        XCTAssertEqual(displayData.label, "Onelink")
         XCTAssertEqual(displayData.labels.label, "Onelink")
     }
 

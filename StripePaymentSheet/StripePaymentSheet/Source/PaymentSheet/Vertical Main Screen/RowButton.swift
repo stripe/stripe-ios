@@ -573,7 +573,7 @@ extension RowButton {
             type: .saved(paymentMethod: paymentMethod),
             imageView: imageView,
             text: text,
-            subtext: paymentMethod.linkSpecificSublabel ?? subtext,
+            subtext: paymentMethod.linkSpecificSublabel(brand: linkBrand) ?? subtext,
             badgeText: badgeText,
             accessoryView: accessoryView,
             isEmbedded: isEmbedded,
@@ -676,14 +676,14 @@ extension PaymentSheet.Appearance {
 
 private extension STPPaymentMethod {
 
-    var linkSpecificSublabel: String? {
+    func linkSpecificSublabel(brand: LinkBrand) -> String? {
         if let linkPaymentDetails {
             return linkPaymentDetails.sublabel
         }
         if isLinkPassthroughMode {
-            // We render "Link" as the label, so use the original label
+            // We render the Link brand as the label, so use the original label
             // as the sublabel.
-            return paymentSheetLabel
+            return paymentSheetLabel(brand: brand)
         }
         return nil
     }

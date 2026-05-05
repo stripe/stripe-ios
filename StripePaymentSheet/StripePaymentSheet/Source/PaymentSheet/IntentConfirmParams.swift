@@ -38,8 +38,14 @@ final class IntentConfirmParams {
     var instantDebitsLinkedBank: InstantDebitsLinkedBank?
 
     var paymentSheetLabel: String {
+        return paymentSheetLabel(brand: .link)
+    }
+
+    func paymentSheetLabel(brand: LinkBrand) -> String {
         if let last4 = (financialConnectionsLinkedBank?.last4 ?? instantDebitsLinkedBank?.last4) {
             return "••••\(last4)"
+        } else if paymentMethodType == .instantDebits || paymentMethodType == .linkCardBrand {
+            return brand.displayName
         } else {
             return paymentMethodParams.paymentSheetLabel
         }

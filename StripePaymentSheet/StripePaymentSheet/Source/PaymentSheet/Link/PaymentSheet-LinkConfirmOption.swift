@@ -50,7 +50,7 @@ extension PaymentSheet.LinkConfirmOption {
         case .wallet, .withPaymentDetails:
             return brand.displayName
         case .signUp(_, _, _, _, let intentConfirmParams):
-            return intentConfirmParams.paymentMethodParams.paymentSheetLabel
+            return intentConfirmParams.paymentSheetLabel(brand: brand)
         case .withPaymentMethod(let paymentMethod):
             return paymentMethod.paymentSheetLabel(brand: brand)
         }
