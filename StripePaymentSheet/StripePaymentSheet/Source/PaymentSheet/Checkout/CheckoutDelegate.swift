@@ -10,6 +10,7 @@ import Foundation
 
 /// Receives updates when a ``Checkout`` session changes.
 @_spi(STP)
+@_spi(ReactNativeSDK)
 @MainActor
 public protocol CheckoutDelegate: AnyObject {
     /// Tells the delegate that the checkout state changed.
@@ -21,6 +22,7 @@ public protocol CheckoutDelegate: AnyObject {
 
 /// Default no-op implementations.
 @_spi(STP)
+@_spi(ReactNativeSDK)
 public extension CheckoutDelegate {
     func checkout(_ checkout: Checkout, didChangeState state: Checkout.State) {
         // Default empty implementation

@@ -14,6 +14,7 @@ import UIKit
 // MARK: - CurrencySelectorView
 
 @_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A standalone currency selector for Adaptive Pricing.
     ///

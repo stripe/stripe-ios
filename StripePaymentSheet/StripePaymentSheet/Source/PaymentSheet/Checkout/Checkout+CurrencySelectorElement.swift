@@ -10,6 +10,7 @@ import SwiftUI
 // MARK: - CurrencySelectorElement (SwiftUI)
 
 @_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A SwiftUI currency selector for Adaptive Pricing.
     ///

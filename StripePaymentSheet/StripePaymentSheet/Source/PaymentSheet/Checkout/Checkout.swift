@@ -24,6 +24,7 @@ import Foundation
 /// Observe session changes with SwiftUI by using ``state`` (published via `ObservableObject`),
 /// or in UIKit by setting a ``delegate``.
 @_spi(STP)
+@_spi(ReactNativeSDK)
 @MainActor
 public final class Checkout: ObservableObject {
     // MARK: - Public Properties

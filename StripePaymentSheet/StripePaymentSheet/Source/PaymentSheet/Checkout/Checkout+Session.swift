@@ -10,6 +10,7 @@ import Foundation
 // MARK: - Session Protocol
 
 @_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A read-only snapshot of a Stripe Checkout Session.
     public protocol Session {
@@ -62,6 +63,7 @@ extension Checkout {
 // MARK: - Mode
 
 @_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// The mode of a checkout session.
     public enum Mode: Sendable {
@@ -79,6 +81,7 @@ extension Checkout {
 // MARK: - Status
 
 @_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// The status of a checkout session.
     public enum Status: Sendable {
@@ -96,6 +99,7 @@ extension Checkout {
 // MARK: - PaymentStatus
 
 @_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// The payment status of a checkout session.
     public enum PaymentStatus: Sendable {
@@ -114,6 +118,7 @@ extension Checkout {
 // MARK: - Totals
 
 @_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// Monetary totals for a checkout session.
     ///
@@ -137,6 +142,7 @@ extension Checkout {
 // MARK: - LineItem
 
 @_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A line item in a checkout session.
     public struct LineItem: Sendable, Hashable, Identifiable {
@@ -156,6 +162,7 @@ extension Checkout {
 // MARK: - ShippingOption
 
 @_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A shipping option available in a checkout session.
     public struct ShippingOption: Sendable, Hashable, Identifiable {
@@ -173,6 +180,7 @@ extension Checkout {
 // MARK: - Discount
 
 @_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A discount applied to a checkout session.
     public struct Discount: Sendable, Hashable {
@@ -188,6 +196,7 @@ extension Checkout {
 // MARK: - Coupon
 
 @_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A coupon associated with a discount.
     public struct Coupon: Sendable, Hashable, Identifiable {
