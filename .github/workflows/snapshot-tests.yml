@@ -124,7 +124,7 @@ jobs:
         if: github.event_name == 'pull_request'
         id: label
         run: |
-          if echo '${{ toJSON(github.event.pull_request.labels.*.name) }}' | grep -q "allow snapshot changes"; then
+          if echo '${{ toJSON(github.event.pull_request.labels.*.name) }}' | grep -q "snapshot changes approved"; then
             echo "approved=true" >> "$GITHUB_OUTPUT"
           else
             echo "approved=false" >> "$GITHUB_OUTPUT"
@@ -136,7 +136,7 @@ jobs:
           steps.diff.outputs.has_changes == 'true' &&
           steps.label.outputs.approved == 'false'
         run: |
-          echo "::error::Snapshot changes detected. Review the diff report and add the 'allow snapshot changes' label to acknowledge."
+          echo "::error::Snapshot changes detected. Review the diff report and add the 'snapshot changes approved' label to acknowledge."
           echo "View diff report: ${{ steps.deploy.outputs.url }}"
           exit 1
 
