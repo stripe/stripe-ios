@@ -3,8 +3,6 @@ name: Snapshot Tests
 on:
   pull_request:
     branches: [master]
-  push:
-    branches: [master]
 
 permissions:
   checks: write
@@ -175,17 +173,6 @@ jobs:
               }
             }
 
-      - name: Update baselines on merge
-        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
-        run: |
-          # On merge to master, update baselines with what's currently recorded
-          cd .snapshot-baselines
-          cp -r ../recorded-snapshots/* . 2>/dev/null || true
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "Update baselines from ${{ github.sha }}" || echo "No changes"
-          git push origin snapshot-baselines
 
       - name: Upload recorded snapshots (artifact backup)
         if: steps.diff.outputs.has_changes == 'true'
