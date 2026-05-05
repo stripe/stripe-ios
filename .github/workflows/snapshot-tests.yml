@@ -74,10 +74,9 @@ jobs:
         env:
           SNAPSHOT_MANIFEST: snapshot-deploy/manifest.txt
         run: |
-          mkdir -p snapshot-deploy
           chmod +x SnapshotTool/scripts/generate_diff_report.sh
           if ./SnapshotTool/scripts/generate_diff_report.sh \
-              recorded-snapshots .snapshot-baselines snapshot-deploy/index.html; then
+              recorded-snapshots .snapshot-baselines snapshot-deploy; then
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           else
             echo "has_changes=true" >> "$GITHUB_OUTPUT"

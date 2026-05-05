@@ -3,26 +3,21 @@ set -euo pipefail
 
 # generate_diff_report.sh
 # Compares newly recorded snapshots against baselines and generates an HTML diff report.
+# Images are copied into the output directory as separate files (not base64 embedded).
 #
-# Usage: ./generate_diff_report.sh <recorded_dir> <baseline_dir> <output_html>
+# Usage: ./generate_diff_report.sh <recorded_dir> <baseline_dir> <output_dir>
 #
 # Exit codes:
 #   0 - No differences found
 #   1 - Differences found (report generated)
-#   2 - Error
 
-RECORDED_DIR="${1:?Usage: $0 <recorded_dir> <baseline_dir> <output_html>}"
-BASELINE_DIR="${2:?Usage: $0 <recorded_dir> <baseline_dir> <output_html>}"
-OUTPUT_HTML="${3:?Usage: $0 <recorded_dir> <baseline_dir> <output_html>}"
+RECORDED_DIR="${1:?Usage: $0 <recorded_dir> <baseline_dir> <output_dir>}"
+BASELINE_DIR="${2:?Usage: $0 <recorded_dir> <baseline_dir> <output_dir>}"
+OUTPUT_DIR="${3:?Usage: $0 <recorded_dir> <baseline_dir> <output_dir>}"
 
-DIFF_DIR=$(mktemp -d)
 MANIFEST="${SNAPSHOT_MANIFEST:-$(mktemp)}"
-trap "rm -rf $DIFF_DIR" EXIT
 
-CHANGED_COUNT=0
-ADDED_COUNT=0
-REMOVED_COUNT=0
-UNCHANGED_COUNT=0
+mkdir -p "$OUTPUT_DIR/images/baseline" "$OUTPUT_DIR/images/new" "$OUTPUT_DIR/images/diff"
 
 # Build a manifest of changes: TYPE|REL_PATH
 find "$RECORDED_DIR" -name "*.png" -print0 | while IFS= read -r -d '' recorded_file; do
@@ -34,22 +29,16 @@ find "$RECORDED_DIR" -name "*.png" -print0 | while IFS= read -r -d '' recorded_f
     else
         if ! cmp -s "$baseline_file" "$recorded_file"; then
             echo "modified|$rel_path" >> "$MANIFEST"
-            # Generate diff image if ImageMagick available
-            if command -v compare &> /dev/null; then
-                diff_output="$DIFF_DIR/$rel_path"
-                mkdir -p "$(dirname "$diff_output")"
-                compare "$baseline_file" "$recorded_file" -compose src -highlight-color '#FF000080' "$diff_output" 2>/dev/null || true
-            fi
         fi
     fi
-done
+done || true
 
 find "$BASELINE_DIR" -name "*.png" -print0 | while IFS= read -r -d '' baseline_file; do
     rel_path="${baseline_file#$BASELINE_DIR/}"
     if [ ! -f "$RECORDED_DIR/$rel_path" ]; then
         echo "removed|$rel_path" >> "$MANIFEST"
     fi
-done
+done || true
 
 # Count changes
 if [ ! -f "$MANIFEST" ] || [ ! -s "$MANIFEST" ]; then
@@ -69,17 +58,34 @@ fi
 
 echo "Found $TOTAL_CHANGES changes: $CHANGED_COUNT modified, $ADDED_COUNT added, $REMOVED_COUNT removed"
 
-# Helper to base64-encode an image
-img_uri() {
-    local file="$1"
-    if [ -f "$file" ]; then
-        echo "data:image/png;base64,$(base64 < "$file" | tr -d '\n')"
-    fi
+# Copy images and generate diffs
+copy_image() {
+    local src="$1" dst="$2"
+    mkdir -p "$(dirname "$dst")"
+    cp "$src" "$dst"
 }
 
-# Generate HTML report
-{
-cat << 'EOF'
+grep "^modified|" "$MANIFEST" | while IFS='|' read -r type rel_path; do
+    copy_image "$BASELINE_DIR/$rel_path" "$OUTPUT_DIR/images/baseline/$rel_path"
+    copy_image "$RECORDED_DIR/$rel_path" "$OUTPUT_DIR/images/new/$rel_path"
+    if command -v compare &> /dev/null; then
+        mkdir -p "$(dirname "$OUTPUT_DIR/images/diff/$rel_path")"
+        compare "$BASELINE_DIR/$rel_path" "$RECORDED_DIR/$rel_path" \
+            -compose src -highlight-color '#FF000080' \
+            "$OUTPUT_DIR/images/diff/$rel_path" 2>/dev/null || true
+    fi
+done || true
+
+grep "^added|" "$MANIFEST" | while IFS='|' read -r type rel_path; do
+    copy_image "$RECORDED_DIR/$rel_path" "$OUTPUT_DIR/images/new/$rel_path"
+done || true
+
+grep "^removed|" "$MANIFEST" | while IFS='|' read -r type rel_path; do
+    copy_image "$BASELINE_DIR/$rel_path" "$OUTPUT_DIR/images/baseline/$rel_path"
+done || true
+
+# Generate HTML report referencing the image files
+cat > "$OUTPUT_DIR/index.html" << 'EOF'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -122,77 +128,79 @@ h1 { font-size: 24px; margin-bottom: 16px; }
 </head>
 <body>
 <h1>Snapshot Diff Report</h1>
+<div id="app"></div>
+<script>
 EOF
 
-cat << HTML
-<div class="summary">
-<div class="stat m"><div class="n">${CHANGED_COUNT}</div><div class="l">Modified</div></div>
-<div class="stat a"><div class="n">${ADDED_COUNT}</div><div class="l">Added</div></div>
-<div class="stat r"><div class="n">${REMOVED_COUNT}</div><div class="l">Removed</div></div>
-</div>
-<div class="filters">
-<button class="on" onclick="filt(this,'all')">All (${TOTAL_CHANGES})</button>
-<button onclick="filt(this,'modified')">Modified (${CHANGED_COUNT})</button>
-<button onclick="filt(this,'added')">Added (${ADDED_COUNT})</button>
-<button onclick="filt(this,'removed')">Removed (${REMOVED_COUNT})</button>
-</div>
-HTML
+# Inject the manifest data as JSON
+echo "const MANIFEST = [" >> "$OUTPUT_DIR/index.html"
+while IFS='|' read -r type rel_path; do
+    # Escape for JS
+    escaped=$(echo "$rel_path" | sed 's/"/\\"/g')
+    echo "{type:\"$type\",path:\"$escaped\"}," >> "$OUTPUT_DIR/index.html"
+done < "$MANIFEST"
+echo "];" >> "$OUTPUT_DIR/index.html"
 
-# Emit each changed item
-grep "^modified|" "$MANIFEST" | while IFS='|' read -r type rel_path; do
-    filename=$(basename "$rel_path")
-    baseline_uri=$(img_uri "$BASELINE_DIR/$rel_path")
-    recorded_uri=$(img_uri "$RECORDED_DIR/$rel_path")
-    diff_uri=$(img_uri "$DIFF_DIR/$rel_path")
+cat >> "$OUTPUT_DIR/index.html" << 'EOF'
+const changed = MANIFEST.filter(m => m.type === 'modified').length;
+const added = MANIFEST.filter(m => m.type === 'added').length;
+const removed = MANIFEST.filter(m => m.type === 'removed').length;
+const total = MANIFEST.length;
 
-    cat << ITEM
-<div class="item" data-t="modified">
-<div class="name"><span class="badge modified">Modified</span>${filename}</div>
-<div class="modes">
-<button class="on" onclick="mode(this,'sbs')">Side by Side</button>
-<button onclick="mode(this,'overlay')">Overlay</button>
-<button onclick="mode(this,'diff')">Diff Only</button>
-</div>
-<div class="view" data-m="sbs">
-<div class="col sbs-v"><div class="lbl">Baseline</div><img src="${baseline_uri}" /></div>
-<div class="col sbs-v"><div class="lbl">New</div><img src="${recorded_uri}" /></div>
-<div class="col sbs-v diff-v"><div class="lbl">Diff</div><img src="${diff_uri}" /></div>
-<div class="col overlay-v hidden">
-<div class="overlay-wrap">
-<img src="${baseline_uri}" />
-<img class="ov" src="${recorded_uri}" style="opacity:0.5" />
-</div>
-<input type="range" class="slider" min="0" max="100" value="50" oninput="this.parentElement.querySelector('.ov').style.opacity=this.value/100" />
-</div>
-</div>
-</div>
-ITEM
-done
+function basename(p) { return p.split('/').pop(); }
 
-grep "^added|" "$MANIFEST" | while IFS='|' read -r type rel_path; do
-    filename=$(basename "$rel_path")
-    recorded_uri=$(img_uri "$RECORDED_DIR/$rel_path")
-    cat << ITEM
-<div class="item" data-t="added">
-<div class="name"><span class="badge added">Added</span>${filename}</div>
-<div class="view"><div class="col"><img src="${recorded_uri}" /></div></div>
-</div>
-ITEM
-done
+function renderItem(m) {
+  const name = basename(m.path);
+  if (m.type === 'modified') {
+    return `<div class="item" data-t="modified">
+      <div class="name"><span class="badge modified">Modified</span>${name}</div>
+      <div class="modes">
+        <button class="on" onclick="mode(this,'sbs')">Side by Side</button>
+        <button onclick="mode(this,'overlay')">Overlay</button>
+        <button onclick="mode(this,'diff')">Diff Only</button>
+      </div>
+      <div class="view">
+        <div class="col sbs-v"><div class="lbl">Baseline</div><img src="images/baseline/${m.path}" /></div>
+        <div class="col sbs-v"><div class="lbl">New</div><img src="images/new/${m.path}" /></div>
+        <div class="col sbs-v diff-v"><div class="lbl">Diff</div><img src="images/diff/${m.path}" /></div>
+        <div class="col overlay-v hidden">
+          <div class="overlay-wrap">
+            <img src="images/baseline/${m.path}" />
+            <img class="ov" src="images/new/${m.path}" style="opacity:0.5" />
+          </div>
+          <input type="range" class="slider" min="0" max="100" value="50"
+            oninput="this.parentElement.querySelector('.ov').style.opacity=this.value/100" />
+        </div>
+      </div>
+    </div>`;
+  } else if (m.type === 'added') {
+    return `<div class="item" data-t="added">
+      <div class="name"><span class="badge added">Added</span>${name}</div>
+      <div class="view"><div class="col"><img src="images/new/${m.path}" /></div></div>
+    </div>`;
+  } else {
+    return `<div class="item" data-t="removed">
+      <div class="name"><span class="badge removed">Removed</span>${name}</div>
+      <div class="view"><div class="col"><img src="images/baseline/${m.path}" style="opacity:0.5" /></div></div>
+    </div>`;
+  }
+}
 
-grep "^removed|" "$MANIFEST" | while IFS='|' read -r type rel_path; do
-    filename=$(basename "$rel_path")
-    baseline_uri=$(img_uri "$BASELINE_DIR/$rel_path")
-    cat << ITEM
-<div class="item" data-t="removed">
-<div class="name"><span class="badge removed">Removed</span>${filename}</div>
-<div class="view"><div class="col"><img src="${baseline_uri}" style="opacity:0.5" /></div></div>
-</div>
-ITEM
-done
+document.getElementById('app').innerHTML = `
+  <div class="summary">
+    <div class="stat m"><div class="n">${changed}</div><div class="l">Modified</div></div>
+    <div class="stat a"><div class="n">${added}</div><div class="l">Added</div></div>
+    <div class="stat r"><div class="n">${removed}</div><div class="l">Removed</div></div>
+  </div>
+  <div class="filters">
+    <button class="on" onclick="filt(this,'all')">All (${total})</button>
+    <button onclick="filt(this,'modified')">Modified (${changed})</button>
+    <button onclick="filt(this,'added')">Added (${added})</button>
+    <button onclick="filt(this,'removed')">Removed (${removed})</button>
+  </div>
+  ${MANIFEST.map(renderItem).join('\n')}
+`;
 
-cat << 'EOF'
-<script>
 function filt(btn, type) {
   btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
@@ -200,6 +208,7 @@ function filt(btn, type) {
     el.style.display = (type === 'all' || el.dataset.t === type) ? '' : 'none';
   });
 }
+
 function mode(btn, m) {
   btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('on'));
   btn.classList.add('on');
@@ -216,7 +225,6 @@ function mode(btn, m) {
 </body>
 </html>
 EOF
-} > "$OUTPUT_HTML"
 
-echo "Report generated: $OUTPUT_HTML"
+echo "Report generated: $OUTPUT_DIR/index.html"
 exit 1
