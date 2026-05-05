@@ -108,15 +108,6 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
-    func resolvedLinkBrand(elementsSession: STPElementsSession) -> LinkBrand {
-        switch self {
-        case .paymentElement(let config, _):
-            return config.resolvedLinkBrand(elementsSession: elementsSession)
-        case .customerSheet:
-            return .link
-        }
-    }
-
     var linkPaymentMethodsOnly: Bool {
         switch self {
         case .paymentElement(let config, _):
