@@ -216,11 +216,6 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
-    enum PaymentMethodLayout: String {
-        case horizontal
-        case vertical
-    }
-
     func logInitialDisplayedPaymentMethods(visiblePaymentMethods: [String], hiddenPaymentMethods: [String]) {
         var params: [String: Any] = [:]
         if !visiblePaymentMethods.isEmpty {
