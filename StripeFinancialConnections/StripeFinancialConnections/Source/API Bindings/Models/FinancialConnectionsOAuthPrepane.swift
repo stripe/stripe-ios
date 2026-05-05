@@ -16,7 +16,7 @@ struct FinancialConnectionsOAuthPrepane: Decodable {
     let body: OauthPrepaneBody
     let partnerNotice: OauthPrepanePartnerNotice?
     let cta: OauthPrepaneCTA
-    let dataAccessNotice: FinancialConnectionsDataAccessNotice
+    let dataAccessNotice: FinancialConnectionsDataAccessNotice?
 
     struct OauthPrepaneBody: Decodable {
         let entries: [OauthPrepaneBodyEntry]?
