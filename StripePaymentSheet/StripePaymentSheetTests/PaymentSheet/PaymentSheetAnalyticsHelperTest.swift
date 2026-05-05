@@ -195,7 +195,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
                 orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)],
-                resolvedPaymentMethodLayout: .vertical,
+                paymentMethodOrientation: .vertical,
                 loadTimings: .init(),
                 isUpdate: false,
                 hasCardArt: false,
@@ -231,7 +231,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testCardValue(),
             defaultPaymentMethod: nil,
             orderedPaymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .vertical,
+            paymentMethodOrientation: .vertical,
             loadTimings: .init(),
             isUpdate: false,
             hasCardArt: true,
@@ -294,7 +294,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
             orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)],
-            resolvedPaymentMethodLayout: .vertical,
+            paymentMethodOrientation: .vertical,
             loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // PI with SFU and PMO SFU
@@ -314,7 +314,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
             orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)],
-            resolvedPaymentMethodLayout: .vertical,
+            paymentMethodOrientation: .vertical,
             loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // PI with SFU and no PMO SFU
@@ -335,7 +335,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
             orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)],
-            resolvedPaymentMethodLayout: .vertical,
+            paymentMethodOrientation: .vertical,
             loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // Deferred PI with SFU and PMO SFU
@@ -355,7 +355,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
             orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)],
-            resolvedPaymentMethodLayout: .vertical,
+            paymentMethodOrientation: .vertical,
             loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // Deferred PI with SFU and no PMO SFU
@@ -372,7 +372,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
             orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)],
-            resolvedPaymentMethodLayout: .vertical,
+            paymentMethodOrientation: .vertical,
             loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // SI
@@ -585,7 +585,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testCardValue(),
             defaultPaymentMethod: nil,
             orderedPaymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .vertical,
+            paymentMethodOrientation: .vertical,
             loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
         sut.logPayment(
@@ -728,7 +728,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
             orderedPaymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .vertical,
+            paymentMethodOrientation: .vertical,
             loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
 
@@ -746,7 +746,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
             orderedPaymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .vertical,
+            paymentMethodOrientation: .vertical,
             loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
 
@@ -771,7 +771,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
             orderedPaymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .vertical,
+            paymentMethodOrientation: .vertical,
             loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
 
@@ -831,7 +831,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testCardValue(),
             defaultPaymentMethod: nil,
             orderedPaymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .horizontal,
+            paymentMethodOrientation: .horizontal,
             loadTimings: .init(),
             isUpdate: false,
             hasCardArt: false,
@@ -851,7 +851,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testCardValue(),
             defaultPaymentMethod: nil,
             orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount), .stripe(.afterpayClearpay)],
-            resolvedPaymentMethodLayout: .vertical,
+            paymentMethodOrientation: .vertical,
             loadTimings: .init(),
             isUpdate: false,
             hasCardArt: false,
@@ -871,7 +871,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testCardValue(),
             defaultPaymentMethod: nil,
             orderedPaymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .horizontal,
+            paymentMethodOrientation: .horizontal,
             loadTimings: .init(),
             isUpdate: false,
             hasCardArt: false,

@@ -18,7 +18,7 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
-        let resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout
+        let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
     }
 
     enum IntegrationShape {
@@ -203,7 +203,7 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes,
-                resolvedPaymentMethodLayout: configuration.resolveLayout(
+                paymentMethodOrientation: configuration.resolveLayout(
                     elementsSession: elementsSession,
                     paymentMethodTypes: paymentMethodTypes
                 )
@@ -240,7 +240,7 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                 orderedPaymentMethodTypes: paymentMethodTypes,
-                resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
+                paymentMethodOrientation: loadResult.paymentMethodOrientation,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate,
                 hasCardArt: hasCardArt(savedPaymentMethods: filteredSavedPaymentMethods, appearance: configuration.appearance),

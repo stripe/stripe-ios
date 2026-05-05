@@ -353,7 +353,7 @@ extension CustomerSheet_ConfirmFlowTests {
         let configuration = PaymentSheetFormFactoryConfig.customerSheet(customerSheetConfiguration)
         let formFactory = PaymentSheetFormFactory(configuration: configuration,
                                                   paymentMethod: psPaymentMethodType,
-                                                  resolvedPaymentMethodLayout: .horizontal,
+                                                  paymentMethodOrientation: .horizontal,
                                                   previousCustomerInput: nil,
                                                   addressSpecProvider: .shared,
                                                   showLinkInlineCardSignup: false,

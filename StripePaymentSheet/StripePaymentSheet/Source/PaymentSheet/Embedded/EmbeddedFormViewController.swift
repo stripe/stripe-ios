@@ -90,7 +90,7 @@ class EmbeddedFormViewController: UIViewController {
     private let intent: Intent
     private let elementsSession: STPElementsSession
     private let shouldUseNewCardNewCardHeader: Bool
-    private let resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout
+    private let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private var error: Swift.Error?
@@ -151,7 +151,7 @@ class EmbeddedFormViewController: UIViewController {
             previousCustomerInput: previousCustomerInput,
             formCache: formCache,
             configuration: configuration,
-            resolvedPaymentMethodLayout: resolvedPaymentMethodLayout,
+            paymentMethodOrientation: paymentMethodOrientation,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
             isLinkUI: false,
@@ -171,7 +171,7 @@ class EmbeddedFormViewController: UIViewController {
          shouldUseNewCardNewCardHeader: Bool,
          paymentMethodType: PaymentSheet.PaymentMethodType,
          previousPaymentOption: PaymentOption? = nil,
-         resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
+         paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
          analyticsHelper: PaymentSheetAnalyticsHelper,
          formCache: PaymentMethodFormCache = .init(),
          delegate: EmbeddedFormViewControllerDelegate
@@ -181,7 +181,7 @@ class EmbeddedFormViewController: UIViewController {
         self.shouldUseNewCardNewCardHeader = shouldUseNewCardNewCardHeader
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
-        self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
+        self.paymentMethodOrientation = paymentMethodOrientation
         self.analyticsHelper = analyticsHelper
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
@@ -231,7 +231,7 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     func updateMandate() {
-        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper, resolvedPaymentMethodLayout: resolvedPaymentMethodLayout)
+        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper, paymentMethodOrientation: paymentMethodOrientation)
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,

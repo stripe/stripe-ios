@@ -18,7 +18,7 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .vertical
+            paymentMethodOrientation: .horizontal
         )
     }
 

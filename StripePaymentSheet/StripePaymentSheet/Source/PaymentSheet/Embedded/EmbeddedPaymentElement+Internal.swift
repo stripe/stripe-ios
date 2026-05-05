@@ -59,7 +59,7 @@ extension EmbeddedPaymentElement {
             elementsSession: loadResult.elementsSession,
             intent: loadResult.intent,
             analyticsHelper: analyticsHelper,
-            resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout
+            paymentMethodOrientation: loadResult.paymentMethodOrientation
         )
         return EmbeddedPaymentMethodsView(
             initialSelectedRowType: initialSelection,
@@ -97,7 +97,7 @@ extension EmbeddedPaymentElement {
         intent: Intent,
         elementsSession: STPElementsSession,
         savedPaymentMethods: [STPPaymentMethod],
-        resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
+        paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         formCache: PaymentMethodFormCache,
         delegate: EmbeddedFormViewControllerDelegate
@@ -113,7 +113,7 @@ extension EmbeddedPaymentElement {
             shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
             paymentMethodType: paymentMethodType,
             previousPaymentOption: previousPaymentOption,
-            resolvedPaymentMethodLayout: resolvedPaymentMethodLayout,
+            paymentMethodOrientation: paymentMethodOrientation,
             analyticsHelper: analyticsHelper,
             formCache: formCache,
             delegate: delegate
@@ -144,7 +144,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
-            resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
+            paymentMethodOrientation: loadResult.paymentMethodOrientation,
             analyticsHelper: analyticsHelper,
             formCache: formCache,
             delegate: self
@@ -222,7 +222,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
             paymentMethodType: paymentMethodType,
             previousPaymentOption: nil,
-            resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
+            paymentMethodOrientation: loadResult.paymentMethodOrientation,
             analyticsHelper: analyticsHelper,
             formCache: .init(),  // Use a fresh form cache to ensure forms aren't re-added to a different view controller's hierarchy
             delegate: self

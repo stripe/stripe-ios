@@ -257,7 +257,7 @@ public final class EmbeddedPaymentElement {
                 intent: loadResult.intent,
                 elementsSession: loadResult.elementsSession,
                 savedPaymentMethods: loadResult.savedPaymentMethods,
-                resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
+                paymentMethodOrientation: loadResult.paymentMethodOrientation,
                 analyticsHelper: self.analyticsHelper,
                 formCache: self.formCache,
                 delegate: self

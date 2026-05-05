@@ -26,7 +26,7 @@ extension PaymentSheetFormFactory {
                 currency: currency,
                 appearance: configuration.appearance
             ),
-            isHorizontalMode: resolvedPaymentMethodLayout == .horizontal
+            isHorizontalMode: paymentMethodOrientation == .horizontal
         )
     }
 }

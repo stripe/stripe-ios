@@ -39,7 +39,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .vertical
+            paymentMethodOrientation: .vertical
         )
         XCTAssertTrue(makeViewController(loadResult: savedPMsLoadResult).children.first is VerticalPaymentMethodListViewController)
 
@@ -49,7 +49,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .vertical
+            paymentMethodOrientation: .vertical
         )
         XCTAssertTrue(makeViewController(loadResult: formDirectlyResult).children.first is PaymentMethodFormViewController)
 
@@ -59,7 +59,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .vertical
+            paymentMethodOrientation: .vertical
         )
         XCTAssertTrue(makeViewController(loadResult: onlyOnePM).children.first is VerticalPaymentMethodListViewController)
 
@@ -69,7 +69,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .vertical
+            paymentMethodOrientation: .vertical
         )
         XCTAssertTrue(makeViewController(loadResult: multiplePMs).children.first is VerticalPaymentMethodListViewController)
 
@@ -79,7 +79,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .vertical
+            paymentMethodOrientation: .vertical
         )
         XCTAssertTrue(makeViewController(loadResult: onePMAndLink).children.first is VerticalPaymentMethodListViewController)
 
@@ -89,7 +89,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
-            resolvedPaymentMethodLayout: .vertical
+            paymentMethodOrientation: .vertical
         )
         XCTAssertTrue(makeViewController(loadResult: onePMAndApplePay).children.first is VerticalPaymentMethodListViewController)
     }
@@ -102,7 +102,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
                 elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
                 savedPaymentMethods: hasSavedPM ? [._testCard()] : [],
                 paymentMethodTypes: [.stripe(.card)],
-                resolvedPaymentMethodLayout: .vertical
+                paymentMethodOrientation: .vertical
             )
             return PaymentSheetVerticalViewController(
                 configuration: configuration,
@@ -155,7 +155,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
                 elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
                 savedPaymentMethods: hasSavedPM ? [savedPM] : [],
                 paymentMethodTypes: [.stripe(.card)],
-                resolvedPaymentMethodLayout: .vertical
+                paymentMethodOrientation: .vertical
             )
             return PaymentSheetVerticalViewController(
                 configuration: configuration,

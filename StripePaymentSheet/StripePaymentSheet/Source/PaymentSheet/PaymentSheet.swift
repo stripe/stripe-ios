@@ -290,7 +290,7 @@ public class PaymentSheet {
         loadResult: PaymentSheetLoader.LoadResult,
         previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
-        switch loadResult.resolvedPaymentMethodLayout {
+        switch loadResult.paymentMethodOrientation {
         case .horizontal:
             let vc = PaymentSheetViewController(
                 configuration: configuration,

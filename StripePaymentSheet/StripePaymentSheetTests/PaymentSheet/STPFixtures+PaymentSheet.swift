@@ -401,7 +401,7 @@ extension PaymentSheetLoader.LoadResult {
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: paymentMethodTypes.map { .stripe(STPPaymentMethod.type(from: $0)) },
-            resolvedPaymentMethodLayout: .vertical
+            paymentMethodOrientation: .vertical
         )
     }
 }
@@ -437,7 +437,7 @@ extension PaymentSheetFormFactory {
             elementsSession: elementsSession,
             configuration: configuration,
             paymentMethod: paymentMethod,
-            resolvedPaymentMethodLayout: .vertical,
+            paymentMethodOrientation: .vertical,
             previousCustomerInput: previousCustomerInput,
             addressSpecProvider: addressSpecProvider,
             linkAccount: linkAccount,

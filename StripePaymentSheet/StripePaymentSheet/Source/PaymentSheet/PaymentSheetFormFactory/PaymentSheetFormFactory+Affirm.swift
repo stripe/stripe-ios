@@ -10,7 +10,7 @@ extension PaymentSheetFormFactory {
     func makeAffirm() -> PaymentMethodElement {
         let header = SubtitleElement(
             view: AffirmCopyLabel(theme: theme),
-            isHorizontalMode: resolvedPaymentMethodLayout == .horizontal
+            isHorizontalMode: paymentMethodOrientation == .horizontal
         )
         let contactInfoSection = makeContactInformationSection(
             nameRequiredByPaymentMethod: false,

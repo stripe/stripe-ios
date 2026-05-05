@@ -21,7 +21,7 @@ final class PaymentSheetAnalyticsHelper {
     var intent: Intent?
     var elementsSession: STPElementsSession?
     /// Resolved once `logLoadSucceeded` is called; nil before that.
-    private(set) var resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout?
+    private(set) var paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout?
     private var startTimes: [TimeMeasurement: Date] = [:]
 
     enum IntegrationShape {
@@ -136,7 +136,7 @@ final class PaymentSheetAnalyticsHelper {
         elementsSession: STPElementsSession,
         defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
         orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType],
-        resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
+        paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         loadTimings: PaymentSheetLoader.LoadTimings,
         isUpdate: Bool,
         hasCardArt: Bool,
@@ -144,7 +144,7 @@ final class PaymentSheetAnalyticsHelper {
     ) {
         self.intent = intent
         self.elementsSession = elementsSession
-        self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
+        self.paymentMethodOrientation = paymentMethodOrientation
         let defaultPaymentMethodAnalyticsValue: String = {
             switch defaultPaymentMethod {
             case .applePay:
@@ -506,7 +506,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["payment_method_options_setup_future_usage"] = intent?.isPaymentMethodOptionsSetupFutureUsageSet
         additionalParams["elements_session_config_id"] = elementsSession?.configID
         additionalParams["is_confirmation_tokens"] = intent?.intentConfig?.confirmationTokenConfirmHandler != nil
-        additionalParams["payment_method_orientation"] = resolvedPaymentMethodLayout?.rawValue
+        additionalParams["payment_method_orientation"] = paymentMethodOrientation?.rawValue
         if event.shouldLogFcSdkAvailability {
             additionalParams["fc_sdk_availability"] = FinancialConnectionsSDKAvailability.analyticsValue
         }

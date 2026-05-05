@@ -31,7 +31,7 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
             elementsSession: ._testValue(paymentMethodTypes: [paymentMethodType.identifier]),
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: [.stripe(paymentMethodType)],
-            resolvedPaymentMethodLayout: .vertical
+            paymentMethodOrientation: .vertical
         )
 
         return EmbeddedFormViewController(
@@ -41,7 +41,7 @@ final class EmbeddedFormViewControllerSnapshotTests: STPSnapshotTestCase {
             shouldUseNewCardNewCardHeader: loadResult.savedPaymentMethods.first?.type == .card,
             paymentMethodType: .stripe(paymentMethodType),
             previousPaymentOption: previousPaymentOption,
-            resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
+            paymentMethodOrientation: loadResult.paymentMethodOrientation,
             analyticsHelper: ._testValue(),
             delegate: self
         )

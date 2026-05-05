@@ -318,7 +318,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
     func updateMandate(animated: Bool = true) {
         let hadLabelInStackView = mandateView.attributedText != nil || errorLabel.text != nil
-        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper, resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout)
+        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper, paymentMethodOrientation: loadResult.paymentMethodOrientation)
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
@@ -972,7 +972,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             previousCustomerInput: previousCustomerInput,
             formCache: formCache,
             configuration: configuration,
-            resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
+            paymentMethodOrientation: loadResult.paymentMethodOrientation,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
             isLinkUI: false,
@@ -992,7 +992,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             elementsSession: elementsSession,
             configuration: .paymentElement(configuration),
             paymentMethod: paymentMethodType,
-            resolvedPaymentMethodLayout: loadResult.resolvedPaymentMethodLayout,
+            paymentMethodOrientation: loadResult.paymentMethodOrientation,
             previousCustomerInput: nil,
             linkAccount: LinkAccountContext.shared.account,
             accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
