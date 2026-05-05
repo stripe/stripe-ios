@@ -46,21 +46,25 @@ jobs:
 
       - name: Run snapshot tests (record mode)
         run: |
+          set -o pipefail
           xcodebuild test \
             -workspace Stripe.xcworkspace \
             -scheme StripeiOS \
             -destination "$SNAPSHOT_DESTINATION" \
+            -only-testing:StripeiOSTests \
             STP_RECORD_SNAPSHOTS=1 \
-            2>&1 | xcbeautify || true
+            2>&1 | xcbeautify
 
       - name: Run snapshot tests - PaymentSheet (record mode)
         run: |
+          set -o pipefail
           xcodebuild test \
             -workspace Stripe.xcworkspace \
             -scheme StripePaymentSheet \
             -destination "$SNAPSHOT_DESTINATION" \
+            -only-testing:StripePaymentSheetTests \
             STP_RECORD_SNAPSHOTS=1 \
-            2>&1 | xcbeautify || true
+            2>&1 | xcbeautify
 
       - name: Collect recorded snapshots
         run: |
