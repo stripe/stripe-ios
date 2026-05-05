@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Changed] When paymentMethodLayout is set to automatic, the layout is now horizontal when there are 2 or fewer payment methods available.
 
 ## 25.13.0 2026-05-04
 ### PaymentSheet
