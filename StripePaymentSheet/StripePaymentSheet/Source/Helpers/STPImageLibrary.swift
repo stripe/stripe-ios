@@ -50,7 +50,7 @@ public class PaymentSheetImageLibrary {
         "wellsfargo": [#"Wells Fargo"#],
     ]
 
-    @_spi(CryptoOnrampAlpha)
+    @_spi(ReactNativeSDK)
     public class func bankIconCode(for bankName: String?) -> String {
         guard let bankName = bankName else {
             return "default"
@@ -65,7 +65,7 @@ public class PaymentSheetImageLibrary {
         return "default"
     }
 
-    @_spi(CryptoOnrampAlpha) @_spi(AppearanceAPIAdditionsPreview)
+    @_spi(ReactNativeSDK) @_spi(AppearanceAPIAdditionsPreview)
     public class func bankIcon(for bank: String?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         guard let bank = bank else {
             return STPPaymentMethodType.USBankAccount.makeImage(iconStyle: iconStyle) ?? UIImage()
