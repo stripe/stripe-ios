@@ -94,7 +94,6 @@ extension PaymentElementConfiguration {
 
         return billingDetails
     }
-
     func termsDisplayFor(paymentMethodType: PaymentSheet.PaymentMethodType?) -> PaymentSheet.TermsDisplay {
         guard let paymentMethodType = paymentMethodType,
               case .stripe(let stpPaymentMethodType) = paymentMethodType,
