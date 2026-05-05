@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Die Kartenangaben können nicht geändert werden.";
 
+"Card number. Supported cards include %@" = "Kartennummer. Die unterstützten Karten umfassen %@";
+
 "Change" = "Ändern";
 
 "Choose a card brand" = "Wählen Sie eine Kartenmarke aus";
@@ -305,5 +307,3 @@
 "Your IBAN should start with a two-letter country code." = "Ihre IBAN sollte mit einem zweistelligen Ländercode beginnen.";
 
 "iDEAL Bank" = "iDEAL-Bank";
-
-"Card number. Supported cards include %@" = "Kartennummer. Die unterstützten Karten umfassen %@";
