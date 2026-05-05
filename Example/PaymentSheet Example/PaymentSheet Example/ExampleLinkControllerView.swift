@@ -91,7 +91,7 @@ struct ExampleLinkControllerView: View {
                     .padding()
                     .background(Color.gray.opacity(0.1))
                     .cornerRadius(8)
-                    
+
                     // Payment Method Types Configuration
                     VStack(alignment: .leading, spacing: 16) {
                         Text("Supported Payment Method Types")
