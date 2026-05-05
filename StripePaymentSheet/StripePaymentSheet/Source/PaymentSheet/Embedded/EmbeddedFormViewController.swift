@@ -90,7 +90,6 @@ class EmbeddedFormViewController: UIViewController {
     private let intent: Intent
     private let elementsSession: STPElementsSession
     private let shouldUseNewCardNewCardHeader: Bool
-    private let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private var error: Swift.Error?
@@ -151,7 +150,7 @@ class EmbeddedFormViewController: UIViewController {
             previousCustomerInput: previousCustomerInput,
             formCache: formCache,
             configuration: configuration,
-            paymentMethodOrientation: paymentMethodOrientation,
+            paymentMethodOrientation: .vertical,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
             isLinkUI: false,
@@ -171,7 +170,6 @@ class EmbeddedFormViewController: UIViewController {
          shouldUseNewCardNewCardHeader: Bool,
          paymentMethodType: PaymentSheet.PaymentMethodType,
          previousPaymentOption: PaymentOption? = nil,
-         paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
          analyticsHelper: PaymentSheetAnalyticsHelper,
          formCache: PaymentMethodFormCache = .init(),
          delegate: EmbeddedFormViewControllerDelegate
@@ -181,7 +179,6 @@ class EmbeddedFormViewController: UIViewController {
         self.shouldUseNewCardNewCardHeader = shouldUseNewCardNewCardHeader
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
-        self.paymentMethodOrientation = paymentMethodOrientation
         self.analyticsHelper = analyticsHelper
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
@@ -231,7 +228,7 @@ class EmbeddedFormViewController: UIViewController {
     }
 
     func updateMandate() {
-        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper, paymentMethodOrientation: paymentMethodOrientation)
+        let mandateProvider = VerticalListMandateProvider(configuration: configuration, elementsSession: elementsSession, intent: intent, analyticsHelper: analyticsHelper)
         let newMandateText = mandateProvider.mandate(
             for: selectedPaymentOption?.paymentMethodType,
             savedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,

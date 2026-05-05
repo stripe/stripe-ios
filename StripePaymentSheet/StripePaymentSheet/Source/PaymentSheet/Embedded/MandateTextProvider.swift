@@ -20,14 +20,12 @@ class VerticalListMandateProvider: MandateTextProvider {
     private let elementsSession: STPElementsSession
     private let intent: Intent
     private let analyticsHelper: PaymentSheetAnalyticsHelper
-    private let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
 
-    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent, analyticsHelper: PaymentSheetAnalyticsHelper, paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .vertical) {
+    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent, analyticsHelper: PaymentSheetAnalyticsHelper) {
         self.configuration = configuration
         self.elementsSession = elementsSession
         self.intent = intent
         self.analyticsHelper = analyticsHelper
-        self.paymentMethodOrientation = paymentMethodOrientation
     }
 
     /// Returns the mandate text for a given payment method type if we aren't going to show the form to the customer.
@@ -66,7 +64,7 @@ class VerticalListMandateProvider: MandateTextProvider {
                 elementsSession: elementsSession,
                 configuration: .paymentElement(configuration, isLinkUI: false),
                 paymentMethod: paymentMethodType,
-                paymentMethodOrientation: paymentMethodOrientation,
+                paymentMethodOrientation: .vertical,
                 previousCustomerInput: nil,
                 linkAccount: LinkAccountContext.shared.account,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),

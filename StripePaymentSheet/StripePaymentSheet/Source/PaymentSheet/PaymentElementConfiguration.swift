@@ -94,11 +94,6 @@ extension PaymentElementConfiguration {
 
         return billingDetails
     }
-    // Default implementation for surfaces that always use a vertical list (e.g. Embedded).
-    // `PaymentSheet.Configuration` overrides this with real automatic-resolution logic.
-    func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
-        .vertical
-    }
 
     func termsDisplayFor(paymentMethodType: PaymentSheet.PaymentMethodType?) -> PaymentSheet.TermsDisplay {
         guard let paymentMethodType = paymentMethodType,
@@ -116,5 +111,9 @@ extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
     var shopPay: PaymentSheet.ShopPayConfiguration? {
         get { return nil }
         set {}
+    }
+
+    func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
+        .vertical
     }
 }
