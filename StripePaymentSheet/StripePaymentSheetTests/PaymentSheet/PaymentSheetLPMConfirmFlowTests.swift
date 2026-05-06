@@ -491,6 +491,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 }
                 await fulfillment(of: [e], timeout: 30)
                 if didFail {
+                    // Bail out of the entire test to avoid crashing STPPaymentHandler with a concurrent call while it's still cleaning up.
                     return
                 }
             }
