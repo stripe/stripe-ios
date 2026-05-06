@@ -122,6 +122,8 @@ public final class Checkout: ObservableObject {
     /// Waits for all in-flight session updates (refresh, mutations, etc.) to complete.
     ///
     /// - Returns immediately if no operations are pending.
+    /// - Waits for the operations pending when this method is called; operations
+    ///   enqueued afterward are not included in this wait.
     /// - If any pending operation throws, the first such error is rethrown.
     /// - If the wait exceeds `timeout`, throws ``CheckoutError.timedOut``.
     ///
