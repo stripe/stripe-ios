@@ -228,7 +228,9 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
     func didTap(rowButton: RowButton, selection: RowButtonType) {
         guard let delegate else { return }
+        // PMM data is not always available on initial load/display of the RowButton, so we check on tap to see if the data has become available
         populatePaymentMethodMessagingIfAvailable(for: rowButton)
+        // We should avoid re-selecting an already selected row to avoid incorrect behavior in the RowButton
         let isRetappingCurrentlySelectedRow = currentSelection == selection && rowButton.isSelected
         // Preserve the existing selected state on repeated taps so BNPL rows don't replay
         // their expand animation just because the same row was tapped again.
@@ -308,6 +310,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         return .enabled(content: paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType))
     }
 
+    // PMM data is not always available on initial load/display of the RowButton, so we use this to populate PMM content ad hoc
     private func populatePaymentMethodMessagingIfAvailable(for rowButton: RowButton) {
         guard rowButton.isPaymentMethodMessagingCapable,
               !rowButton.hasPaymentMethodMessagingContent,

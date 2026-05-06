@@ -742,7 +742,7 @@ extension PaymentSheet {
                 elementsSession: viewController.loadResult.elementsSession,
                 savedPaymentMethods: viewController.savedPaymentMethods, // Note: not using load result!
                 paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
-                paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation
+                paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation,
                 paymentMethodMessagingPromotionsHelper: viewController.loadResult.paymentMethodMessagingPromotionsHelper
             )
             self.viewController = Self.makeViewController(
