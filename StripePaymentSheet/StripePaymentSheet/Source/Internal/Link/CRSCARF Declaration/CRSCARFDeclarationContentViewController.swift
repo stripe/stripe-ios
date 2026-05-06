@@ -10,8 +10,8 @@ import UIKit
 
 /// The content view of `CRSCARFDeclarationViewController`, which displays CRS/CARF declaration text with a confirmation button.
 final class CRSCARFDeclarationContentViewController: UIViewController, BottomSheetContentViewController {
-    // TODO(Localization): Localize the declaration heading and CTA copy.
-    // TODO(Figma): Confirm the final spacing and typography values against the latest CRS/CARF Figma.
+
+    // MARK: - BottomSheetContentViewController
 
     lazy var navigationBar: SheetNavigationBar = {
         let navigationBar = LinkSheetNavigationBar(
@@ -25,6 +25,8 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     }()
 
     let requiresFullScreen: Bool = true
+
+    // MARK: - CRSCARFDeclarationContentViewController
 
     private let text: String
     private let appearance: LinkAppearance
@@ -150,6 +152,8 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         confirmButton.update(status: .spinnerWithInteractionDisabled)
         onResult?(.confirmed)
     }
+
+    // MARK: - BottomSheetContentViewController
 
     func didTapOrSwipeToDismiss() {
         onResult?(.canceled)
