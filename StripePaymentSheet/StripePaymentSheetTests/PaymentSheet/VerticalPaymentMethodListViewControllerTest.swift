@@ -8,6 +8,7 @@
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
+import UIKit
 import XCTest
 
 final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
@@ -163,6 +164,31 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         )
         XCTAssertEqual(["Apple Pay", "Link", "SEPA Debit"], sut_no_cards.rowButtons.map { $0.label.text })
     }
+
+    func testBNPLPromotionRow_UsesLegacySubtitleUntilMessagingIsPopulated() {
+        let sut = VerticalPaymentMethodListViewController(
+            initialSelection: nil,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.affirm)],
+            shouldShowApplePay: false,
+            shouldShowLink: false,
+            savedPaymentMethodAccessoryType: .edit,
+            overrideHeaderView: nil,
+            appearance: .default,
+            currency: "USD",
+            amount: 1099,
+            incentive: nil,
+            delegate: self
+        )
+
+        let affirmButton = sut.getRowButton(accessibilityIdentifier: "Affirm")
+        let sublabel = affirmButton.sublabel as? UILabel
+
+        XCTAssertFalse(affirmButton.isPaymentMethodMessagingCapable)
+        XCTAssertEqual(sublabel?.text, String.Localized.pay_over_time_with_affirm)
+        XCTAssertFalse(sublabel?.isHidden ?? true)
+    }
+
 }
 
 extension VerticalPaymentMethodListViewControllerTest: VerticalPaymentMethodListViewControllerDelegate {

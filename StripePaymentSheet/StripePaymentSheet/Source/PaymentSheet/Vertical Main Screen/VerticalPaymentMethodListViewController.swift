@@ -237,7 +237,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
     func didTap(rowButton: RowButton, selection: RowButtonType) {
         guard let delegate else { return }
-        let shouldSelect = delegate.shouldSelectPaymentMethod(selection)
+        let isRetappingCurrentlySelectedRow = currentSelection == selection && rowButton.isSelected
+        let shouldSelect = delegate.shouldSelectPaymentMethod(selection) && !isRetappingCurrentlySelectedRow
         if shouldSelect {
             // Deselect previous row
             rowButtons.forEach {

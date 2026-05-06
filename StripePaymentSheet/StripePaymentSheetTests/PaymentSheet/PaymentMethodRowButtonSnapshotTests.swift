@@ -10,6 +10,7 @@ import StripeCoreTestUtils
 @_spi(STP) import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
 import UIKit
+import XCTest
 
 class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
 
@@ -93,6 +94,28 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             didTap: { _ in }
         )
         verify(rowButton)
+    }
+
+    func testPaymentMethodRowButton_paymentMethodMessaging_unselected() {
+        let rowButton = makePaymentMethodMessagingRowButton(isEmbedded: false)
+        verify(rowButton, identifier: "payment_method_messaging_unselected")
+    }
+
+    func testPaymentMethodRowButton_paymentMethodMessaging_selected() {
+        let rowButton = makePaymentMethodMessagingRowButton(isEmbedded: false)
+        rowButton.isSelected = true
+        verify(rowButton, identifier: "payment_method_messaging_selected")
+    }
+
+    func testEmbeddedPaymentMethodRowButton_paymentMethodMessaging_unselected() {
+        let rowButton = makePaymentMethodMessagingRowButton(isEmbedded: true)
+        verify(rowButton, identifier: "embedded_payment_method_messaging_unselected")
+    }
+
+    func testEmbeddedPaymentMethodRowButton_paymentMethodMessaging_selected() {
+        let rowButton = makePaymentMethodMessagingRowButton(isEmbedded: true)
+        rowButton.isSelected = true
+        verify(rowButton, identifier: "embedded_payment_method_messaging_selected")
     }
 
     func testPaymentMethodRowButton_newPaymentMethod_linkType_unselected() {
@@ -218,5 +241,45 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
     ) {
         view.autosizeHeight(width: 300)
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+    }
+
+    private func makePaymentMethodMessagingRowButton(isEmbedded: Bool) -> RowButton {
+        var appearance = PaymentSheet.Appearance.default
+        if isEmbedded {
+            appearance.embeddedPaymentElement.row.style = .flatWithRadio
+        }
+
+        let image = PaymentSheet.PaymentMethodType.stripe(.affirm).makeImage(forDarkBackground: false) { _ in
+            XCTFail("Unexpected async image update for snapshot helper.")
+        }
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+
+        if isEmbedded {
+            return RowButtonFlatWithRadioView(
+                appearance: appearance,
+                type: .new(paymentMethodType: .stripe(.affirm)),
+                imageView: imageView,
+                text: "Affirm",
+                promotionText: "Split your purchase into monthly payments.",
+                learnMoreText: "Learn more",
+                infoUrl: URL(string: "https://example.com/affirm")!,
+                shouldAnimateOnPress: false,
+                isEmbedded: true,
+                didTap: { _ in }
+            )
+        }
+
+        return RowButtonFloating(
+            appearance: appearance,
+            type: .new(paymentMethodType: .stripe(.affirm)),
+            imageView: imageView,
+            text: "Affirm",
+            promotionText: "Split your purchase into monthly payments.",
+            learnMoreText: "Learn more",
+            infoUrl: URL(string: "https://example.com/affirm")!,
+            shouldAnimateOnPress: false,
+            didTap: { _ in }
+        )
     }
 }
