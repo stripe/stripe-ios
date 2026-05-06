@@ -21,9 +21,12 @@ if [ ! -f "$MANIFEST" ]; then
     exit 1
 fi
 
-CHANGED_COUNT=$(grep -c "^modified|" "$MANIFEST" 2>/dev/null || echo 0)
-ADDED_COUNT=$(grep -c "^added|" "$MANIFEST" 2>/dev/null || echo 0)
-REMOVED_COUNT=$(grep -c "^removed|" "$MANIFEST" 2>/dev/null || echo 0)
+CHANGED_COUNT=$(grep -c "^modified|" "$MANIFEST" 2>/dev/null || echo "0")
+CHANGED_COUNT=$(echo "$CHANGED_COUNT" | tr -d '[:space:]')
+ADDED_COUNT=$(grep -c "^added|" "$MANIFEST" 2>/dev/null || echo "0")
+ADDED_COUNT=$(echo "$ADDED_COUNT" | tr -d '[:space:]')
+REMOVED_COUNT=$(grep -c "^removed|" "$MANIFEST" 2>/dev/null || echo "0")
+REMOVED_COUNT=$(echo "$REMOVED_COUNT" | tr -d '[:space:]')
 TOTAL=$((CHANGED_COUNT + ADDED_COUNT + REMOVED_COUNT))
 
 MAX_INLINE=8
