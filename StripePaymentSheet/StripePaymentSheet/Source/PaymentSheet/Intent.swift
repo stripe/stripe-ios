@@ -79,7 +79,7 @@ enum Intent {
         case .paymentIntent(let paymentIntent):
             return paymentIntent.paymentMethodOptions?.card?.requireCvcRecollection ?? false
         case .setupIntent, .checkoutSession:
-            // TODO(porter) Figure out CVC recollection flag during confirmation work
+            // CheckoutSession does not yet support CVC recollection
             return false
         }
     }

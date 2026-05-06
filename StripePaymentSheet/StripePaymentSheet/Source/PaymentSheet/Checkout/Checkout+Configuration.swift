@@ -7,7 +7,8 @@
 
 import Foundation
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// Configuration options for a ``Checkout`` instance.
     ///
@@ -36,7 +37,8 @@ extension Checkout {
     }
 }
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout.Configuration {
     /// Options for adaptive pricing behavior.
     ///

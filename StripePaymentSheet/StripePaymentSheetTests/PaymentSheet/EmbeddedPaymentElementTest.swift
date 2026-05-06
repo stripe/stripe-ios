@@ -7,7 +7,7 @@
 
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @_spi(CheckoutSessionsPreview) @testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
@@ -644,7 +644,8 @@ class EmbeddedPaymentElementTest: XCTestCase {
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.card)]
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodOrientation: .vertical
         )
         let sut = EmbeddedPaymentElement(
             configuration: configuration,
