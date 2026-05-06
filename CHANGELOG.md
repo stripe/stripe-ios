@@ -2,6 +2,9 @@ The next release's version bump will so far be:
 MINOR
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Added] Added API models for upcoming EU support. 
+* [Added] Added `birthCountry`, `birthCity`, and `nationalities` properties to `KycInfo`, required for EU customers.
 
 ### PaymentSheet
 * [Changed] Changed `@_spi(STP)` exposure of `LinkAppearance`, `VerifyKYCResult`, `PaymentSheetImageLibrary.bankIconCode(for:)`, and `PaymentSheetImageLibrary.bankIcon(for:iconStyle:)` to `@_spi(CryptoOnrampAlpha)`

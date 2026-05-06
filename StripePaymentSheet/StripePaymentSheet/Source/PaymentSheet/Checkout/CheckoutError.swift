@@ -9,7 +9,9 @@
 import Foundation
 
 /// An error returned by ``Checkout``.
-@_spi(CheckoutSessionsPreview) public enum CheckoutError: Error, LocalizedError, Sendable {
+@_spi(STP)
+@_spi(ReactNativeSDK)
+public enum CheckoutError: Error, LocalizedError, Sendable {
     /// The client secret provided to ``Checkout`` is empty.
     case invalidClientSecret
 

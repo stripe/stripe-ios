@@ -55,7 +55,7 @@
     STDSChallengeParameters *challengeParameters = [[STDSChallengeParameters alloc] init];
     
     // Assert timer is scheduled to fire 5 minutes from now, give or take 1 second
-    NSInteger timeout = 300;
+    NSTimeInterval timeout = 300;
     [transaction doChallengeWithViewController:[UIViewController new]
                            challengeParameters:challengeParameters
                        challengeStatusReceiver:self

@@ -18,6 +18,7 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+        let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
     }
 
     enum IntegrationShape {
@@ -201,7 +202,8 @@ final class PaymentSheetLoader {
                 intent: intent,
                 elementsSession: elementsSession,
                 savedPaymentMethods: filteredSavedPaymentMethods,
-                paymentMethodTypes: paymentMethodTypes
+                paymentMethodTypes: paymentMethodTypes,
+                paymentMethodOrientation: configuration.resolveLayout()
             )
             let confirmationChallenge = ConfirmationChallenge(
                 elementsSession: elementsSession,
