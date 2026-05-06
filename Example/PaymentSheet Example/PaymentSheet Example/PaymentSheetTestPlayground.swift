@@ -148,9 +148,9 @@ struct PaymentSheetTestPlayground: View {
                                 }
                                 SearchableSettingView(setting: customerKeyTypeBinding, searchText: $searchText)
                                 SearchableSettingView(setting: customerModeBinding, searchText: $searchText)
-                                if playgroundController.settings.customerMode == .customID {
+                                if playgroundController.settings.customerMode == .custom {
                                     SearchableView(searchableName: "Customer ID", searchText: $searchText) {
-                                        TextField("CustomerId", text: customerIdBinding)
+                                        TextField("cus_...", text: customerIdBinding)
                                             .autocorrectionDisabled()
                                     }
                                 }

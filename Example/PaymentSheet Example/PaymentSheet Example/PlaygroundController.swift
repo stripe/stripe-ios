@@ -506,7 +506,7 @@ import UIKit
             return "new"
         case .returning:
             return "returning"
-        case .customID:
+        case .custom:
             return settings.customerId ?? ""
         }
     }
@@ -1359,7 +1359,7 @@ extension PlaygroundController {
     }
 
     func loadLastSavedCustomer() {
-        if settings.customerMode == .customID {
+        if settings.customerMode == .custom {
             self.customerId = settings.customerId
             return
         }

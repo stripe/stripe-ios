@@ -100,7 +100,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case guest
         case new
         case returning
-        case customID
+        case custom
     }
     enum CustomerKeyType: String, PickerEnum {
         static var enumName: String { "CustomerKeyType" }
