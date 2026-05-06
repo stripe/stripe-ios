@@ -90,6 +90,7 @@ jobs:
           PR_NUMBER="${{ github.event.pull_request.number }}"
           REPORT_PATH="pr-${PR_NUMBER}"
           BASE_URL="https://raw.githubusercontent.com/${{ github.repository }}/snapshot-reports/${REPORT_PATH}"
+          REPORT_HTML_URL="https://htmlpreview.github.io/?https://raw.githubusercontent.com/${{ github.repository }}/snapshot-reports/${REPORT_PATH}/index.html"
 
           # Fetch or create snapshot-reports branch
           git fetch origin snapshot-reports --depth=1 2>/dev/null || true
@@ -121,6 +122,7 @@ jobs:
           done
 
           echo "url=$BASE_URL" >> "$GITHUB_OUTPUT"
+          echo "report_url=$REPORT_HTML_URL" >> "$GITHUB_OUTPUT"
           echo "Deployed to: $BASE_URL"
 
       - name: Post PR comment
@@ -131,6 +133,7 @@ jobs:
           chmod +x SnapshotTool/scripts/post_pr_comment.sh
           export GITHUB_REPOSITORY="${{ github.repository }}"
           export GITHUB_TOKEN="$GH_TOKEN"
+          export SNAPSHOT_REPORT_URL="${{ steps.deploy.outputs.report_url }}"
           ./SnapshotTool/scripts/post_pr_comment.sh \
             snapshot-deploy/manifest.txt \
             recorded-snapshots \

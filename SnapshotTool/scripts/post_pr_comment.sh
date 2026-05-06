@@ -90,7 +90,7 @@ fi
 cat >> "$BODY_FILE" << EOF
 ---
 
-**[👀 View Full Diff Report](${REPORT_URL})**
+**[👀 View Full Diff Report](${SNAPSHOT_REPORT_URL:-$REPORT_URL})**
 
 To approve these changes, a reviewer (not the PR author) should comment:
 \`\`\`
