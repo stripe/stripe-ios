@@ -2796,10 +2796,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let header = factory.makeKlarnaHeader()
         let headerView = extractBNPLHeaderView(from: header)
 
-        XCTAssertEqual(headerView?.configuration.promotion, String.Localized.buy_now_or_pay_later_with_klarna)
-        XCTAssertEqual(headerView?.configuration.learnMoreText, "Learn more")
-        XCTAssertEqual(headerView?.configuration.infoUrl, URL(string: "https://example.com/learn-more"))
-        XCTAssertEqual(headerView?.configuration.style, .automatic)
+        XCTAssertEqual(headerView?.promotion, String.Localized.buy_now_or_pay_later_with_klarna)
+        XCTAssertEqual(headerView?.learnMoreText, "Learn more")
+        XCTAssertEqual(headerView?.infoUrl, URL(string: "https://example.com/learn-more"))
+        XCTAssertEqual(headerView?.style, .automatic)
     }
 
     func testMakeBNPLHeader_KlarnaPreservesConfiguredStyle() {
@@ -2822,44 +2822,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let header = factory.makeKlarnaHeader()
         let headerView = extractBNPLHeaderView(from: header)
 
-        XCTAssertEqual(headerView?.configuration.style, .alwaysDark)
-    }
-
-    func testMakePrototypeBNPLHeaderConfiguration_AfterpayUsesCurrencySpecificBranding() {
-        let usdFactory = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.afterpayClearpay], currency: "usd"),
-            elementsSession: ._testValue(paymentMethodTypes: ["afterpay_clearpay"]),
-            configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
-            paymentMethod: .stripe(.afterpayClearpay)
-        )
-        XCTAssertEqual(usdFactory.makePrototypeBNPLHeaderConfiguration().promotion, String.Localized.buy_now_or_pay_later_with_cash_app_afterpay)
-
-        let gbpFactory = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.afterpayClearpay], currency: "gbp"),
-            elementsSession: ._testValue(paymentMethodTypes: ["afterpay_clearpay"]),
-            configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
-            paymentMethod: .stripe(.afterpayClearpay)
-        )
-        XCTAssertEqual(gbpFactory.makePrototypeBNPLHeaderConfiguration().promotion, String.Localized.buy_now_or_pay_later_with_clearpay)
-
-        let eurFactory = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.afterpayClearpay], currency: "eur"),
-            elementsSession: ._testValue(paymentMethodTypes: ["afterpay_clearpay"]),
-            configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
-            paymentMethod: .stripe(.afterpayClearpay)
-        )
-        XCTAssertEqual(eurFactory.makePrototypeBNPLHeaderConfiguration().promotion, String.Localized.buy_now_or_pay_later_with_afterpay)
-    }
-
-    func testMakePrototypeBNPLHeaderConfiguration_AffirmUsesSharedCopy() {
-        let factory = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.affirm], currency: "usd"),
-            elementsSession: ._testValue(paymentMethodTypes: ["affirm"]),
-            configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
-            paymentMethod: .stripe(.affirm)
-        )
-
-        XCTAssertEqual(factory.makePrototypeBNPLHeaderConfiguration().promotion, String.Localized.pay_over_time_with_affirm)
+        XCTAssertEqual(headerView?.style, .alwaysDark)
     }
 
     func testAppliesPreviousCustomerInput_klarna_country() {

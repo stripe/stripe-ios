@@ -7,18 +7,14 @@
 import UIKit
 
 final class BNPLFormHeaderView: UIView {
-    struct Configuration {
-        let appearance: PaymentSheet.Appearance
-        let style: PaymentSheet.UserInterfaceStyle
-        let promotion: String
-        let learnMoreText: String
-        let infoUrl: URL
-    }
-
-    let configuration: Configuration
+    private let appearance: PaymentSheet.Appearance
+    let style: PaymentSheet.UserInterfaceStyle
+    let promotion: String
+    let learnMoreText: String
+    let infoUrl: URL
 
     private var theme: ElementsAppearance {
-        configuration.appearance.asElementsTheme
+        appearance.asElementsTheme
     }
 
     private lazy var textView: PMMEPromotionTextView = {
@@ -31,19 +27,29 @@ final class BNPLFormHeaderView: UIView {
         textView.attributedText = NSMutableAttributedString.pmmePromoString(
             font: theme.fonts.subheadline,
             textColor: theme.colors.bodyText,
-            template: configuration.promotion,
+            template: promotion,
             substitution: nil,
-            learnMoreText: configuration.learnMoreText,
-            learnMoreUrl: configuration.infoUrl
+            learnMoreText: learnMoreText,
+            learnMoreUrl: infoUrl
         )
         return textView
     }()
 
-    init(configuration: Configuration) {
-        self.configuration = configuration
+    init(
+        appearance: PaymentSheet.Appearance,
+        style: PaymentSheet.UserInterfaceStyle,
+        promotion: String,
+        learnMoreText: String,
+        infoUrl: URL
+    ) {
+        self.appearance = appearance
+        self.style = style
+        self.promotion = promotion
+        self.learnMoreText = learnMoreText
+        self.infoUrl = infoUrl
         super.init(frame: .zero)
 
-        switch configuration.style {
+        switch style {
         case .automatic:
             break
         case .alwaysLight:
@@ -62,11 +68,11 @@ final class BNPLFormHeaderView: UIView {
     }
 
     private func openInfoModal() {
-        PMMEInfoModal.present(infoUrl: configuration.infoUrl, style: pmmeStyle, from: self)
+        PMMEInfoModal.present(infoUrl: infoUrl, style: pmmeStyle, from: self)
     }
 
     private var pmmeStyle: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle {
-        switch configuration.style {
+        switch style {
         case .automatic:
             return .automatic
         case .alwaysLight:

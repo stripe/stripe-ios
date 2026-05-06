@@ -18,7 +18,7 @@ final class BNPLFormHeaderViewTests: XCTestCase {
 
         let didHandleTap = headerView.textView(
             UITextView(),
-            shouldInteractWith: headerView.configuration.infoUrl,
+            shouldInteractWith: headerView.infoUrl,
             in: NSRange(location: 0, length: 0),
             interaction: .invokeDefaultAction
         )
@@ -39,7 +39,7 @@ final class BNPLFormHeaderViewTests: XCTestCase {
 
         let didHandleTap = headerView.textView(
             UITextView(),
-            shouldInteractWith: headerView.configuration.infoUrl,
+            shouldInteractWith: headerView.infoUrl,
             in: NSRange(location: 0, length: 0),
             interaction: .invokeDefaultAction
         )
@@ -56,13 +56,13 @@ final class BNPLFormHeaderViewTests: XCTestCase {
     private func makeHeaderView(
         style: PaymentSheet.UserInterfaceStyle
     ) -> (BNPLFormHeaderView, UIViewController, UIWindow) {
-        let headerView = BNPLFormHeaderView(configuration: .init(
+        let headerView = BNPLFormHeaderView(
             appearance: .default,
             style: style,
             promotion: "Split your purchase into monthly payments",
             learnMoreText: "Learn more",
             infoUrl: URL(string: "https://example.com/affirm")!
-        ))
+        )
         let rootViewController = UIViewController()
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
         window.rootViewController = rootViewController
