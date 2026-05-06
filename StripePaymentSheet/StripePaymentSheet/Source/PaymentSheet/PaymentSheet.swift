@@ -165,6 +165,7 @@ public class PaymentSheet {
                 completion(.failed(error: error))
                 return
             }
+            var loadMode = mode
             if let checkout {
                 do {
                     try await checkout.awaitPendingOperations()
@@ -175,14 +176,14 @@ public class PaymentSheet {
                 if let stpSession = checkout.state.session as? STPCheckoutSession {
                     // Checkout refreshes replace `state.session` with a new STPCheckoutSession,
                     // so resnapshot after pending updates instead of using the session captured at init.
-                    self.mode = .checkoutSession(stpSession)
+                    loadMode = .checkoutSession(stpSession)
                     stpSession.applyAddressOverrides(to: &self.configuration)
                 }
             }
 
             // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
             PaymentSheetLoader.load(
-                mode: mode,
+                mode: loadMode,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .paymentSheet
@@ -256,7 +257,7 @@ public class PaymentSheet {
     // MARK: - Internal Properties
 
     /// The initialization mode this instance was initialized with
-    var mode: InitializationMode
+    let mode: InitializationMode
 
     /// The Checkout that backs checkout-session mode integrations, if any.
     private weak var checkout: Checkout?
