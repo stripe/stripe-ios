@@ -89,7 +89,6 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         label.font = LinkUI.font(forTextStyle: .title)
         label.textColor = .linkTextPrimary
         label.text = "Declarations"
-        label.textAlignment = .left
         label.numberOfLines = 0
         return label
     }()
