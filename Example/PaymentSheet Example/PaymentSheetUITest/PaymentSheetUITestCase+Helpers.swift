@@ -159,25 +159,70 @@ extension PaymentSheetUITestCase {
 
         addApplePayContactIfNeeded(applePay)
 
-        let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+        if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 {
+            // iOS 26: The Apple Pay sheet shows a card button that includes
+            // "Add Billing Address" when billing is needed. Tap it to open billing.
+            let cardWithBillingPredicate = NSPredicate(format: "label CONTAINS 'Add Billing Address'")
+            let cardNeedingBilling = applePay.buttons.matching(cardWithBillingPredicate).firstMatch
+            if cardNeedingBilling.waitForExistence(timeout: 4.0) {
+                cardNeedingBilling.tap()
+                sleep(1)
 
-        let cardButton = applePay.buttons.containing(predicate).firstMatch
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
+                // Now the standalone "Add Billing Address" button should appear
+                let addBillingButton = applePay.buttons["Add Billing Address"]
+                if addBillingButton.waitForExistence(timeout: 4.0) {
+                    addBillingButton.tap()
 
-        addApplePayBillingIfNeeded(applePay)
+                    let firstNameCell = applePay.textFields["First Name"]
+                    if firstNameCell.waitForExistence(timeout: 4.0) {
+                        firstNameCell.tap()
+                        firstNameCell.typeText("Jane")
+                        applePay.textFields["Last Name"].tap()
+                        applePay.textFields["Last Name"].typeText("Doe")
+                        applePay.textFields["Street"].tap()
+                        applePay.textFields["Street"].typeText("One Apple Park Way")
+                        applePay.textFields["City"].tap()
+                        applePay.textFields["City"].typeText("Cupertino")
+                        applePay.textFields["State"].tap()
+                        applePay.textFields["State"].typeText("CA")
+                        applePay.textFields["ZIP"].tap()
+                        applePay.textFields["ZIP"].typeText("95014")
 
-        let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
-        XCTAssertTrue(cardSelectionButton.waitForExistence(timeout: 10.0))
-        cardSelectionButton.forceTapElement()
+                        let billingDone = applePay.navigationBars["Billing Address"].buttons["Done"]
+                        if billingDone.exists {
+                            billingDone.tap()
+                        } else {
+                            applePay.buttons["Done"].firstMatch.tap()
+                        }
+                        sleep(1)
+                    }
+                }
+            }
 
-        let payButton = applePay.buttons["Pay with Passcode"]
-        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
-        payButton.forceTapElement()
+            let payButton = applePay.buttons["Pay with Passcode"]
+            XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+            payButton.forceTapElement()
+        } else {
+            let cardPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+
+            let cardButton = applePay.buttons.containing(cardPredicate).firstMatch
+            XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
+            cardButton.forceTapElement()
+
+            addApplePayBillingIfNeeded(applePay)
+
+            // Tap card again to select, then pay with passcode
+            let payButton = applePay.buttons["Pay with Passcode"]
+            if payButton.waitForExistence(timeout: 3.0) {
+                let cardSelectionButton = applePay.buttons.containing(cardPredicate).firstMatch
+                cardSelectionButton.forceTapElement()
+                XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+                payButton.forceTapElement()
+            }
+        }
 
         let successText = app.staticTexts["Success!"]
-        //      This actually takes upwards of 20 seconds sometimes, especially in the deferred flow :/
-        XCTAssertTrue(successText.waitForExistence(timeout: 30.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 30.0), "Payment did not succeed.")
     }
 
     func addApplePayBillingIfNeeded(_ applePay: XCUIApplication) {
@@ -210,7 +255,14 @@ extension PaymentSheetUITestCase {
             zipCell.tap()
             zipCell.typeText("95014")
 
-            applePay.buttons["Done"].tap()
+            // On iOS 26, there can be multiple "Done" buttons visible.
+            // Target the one in the "Billing Address" navigation bar specifically.
+            let billingDone = applePay.navigationBars["Billing Address"].buttons["Done"]
+            if billingDone.exists {
+                billingDone.tap()
+            } else {
+                applePay.buttons["Done"].firstMatch.tap()
+            }
         }
     }
 
@@ -222,8 +274,8 @@ extension PaymentSheetUITestCase {
             XCTAssertTrue(applePay.staticTexts["Select An Email Address"].waitForExistence(timeout: 4.0))
             applePay.buttons.matching(identifier: "Add Email Address").element(boundBy: 1).tap()
             applePay.typeText("test@example.com")
-            // Hit the checkmark done button in the top right
-            applePay.buttons["Done"].tap()
+            // Hit the done button — use firstMatch to avoid ambiguity on iOS 26
+            applePay.buttons["Done"].firstMatch.tap()
         }
     }
 
@@ -326,7 +378,7 @@ extension PaymentSheetUITestCase {
         XCTAssertTrue(countryCodeSelector.waitForExistence(timeout: 10.0), "Failed to find phone text field")
         countryCodeSelector.tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States (+1)")
-        app.toolbars.buttons["Done"].tap()
+        app.stp_dismissKeyboard()
 
         sleep(1) // Wait for keyboard to dismiss
         phoneTextField.tap()

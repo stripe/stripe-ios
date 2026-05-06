@@ -9,7 +9,7 @@ import StripeCoreTestUtils
 @testable import StripePaymentSheet
 import UIKit
 
-// @iOS26
+// @LiquidGlass
 final class BankAccountInfoViewSnapshotTests: STPSnapshotTestCase {
 
     private static let frame = CGRect(x: 0, y: 0, width: 320, height: 1000)

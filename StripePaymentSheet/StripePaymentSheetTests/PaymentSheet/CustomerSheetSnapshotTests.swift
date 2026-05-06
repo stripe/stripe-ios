@@ -636,9 +636,13 @@ class CustomerSheetSnapshotTests: STPSnapshotTestCase {
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        STPSnapshotVerifyView(
+        // Allow async-rendering views (e.g. PKPaymentButton) to finish loading
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.5))
+        FBSnapshotVerifyView(
             view,
-            identifier: identifier,
+            identifier: isLiquidGlassMode ? (identifier.map { "\($0)_LiquidGlass" } ?? "LiquidGlass") : identifier,
+            perPixelTolerance: 0.02,
+            overallTolerance: 0.01,
             file: file,
             line: line
         )

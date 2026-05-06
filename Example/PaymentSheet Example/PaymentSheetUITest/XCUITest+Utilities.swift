@@ -106,14 +106,40 @@ extension XCUIApplication {
         coordinate.tap()
     }
 
-    /// Dismisses the keyboard by tapping the Done button on the toolbar, or tapping outside the keyboard.
-    func fc_dismissKeyboard() {
-        // Try the toolbar Done button first (iOS 18 and earlier)
-        let doneButtonByLabel = toolbars.buttons["Done"]
-        if doneButtonByLabel.waitForExistence(timeout: 1) {
-            doneButtonByLabel.tap()
+    /// Dismisses the keyboard or picker wheel by tapping the Done button on the toolbar, or tapping outside.
+    func stp_dismissKeyboard() {
+        let pickerGone = NSPredicate(format: "exists == false")
+        let picker = pickerWheels.firstMatch
+
+        // Try the toolbar Done button first — use firstMatch to handle
+        // multiple Done buttons (e.g. picker wheel + navigation bar on iOS 26)
+        let doneButton = toolbars.buttons["Done"].firstMatch
+        if doneButton.waitForExistence(timeout: 2) {
+            doneButton.tap()
+
+            // Wait for the picker wheel to actually disappear before returning.
+            if picker.exists {
+                let expectation = XCTNSPredicateExpectation(predicate: pickerGone, object: picker)
+                let result = XCTWaiter.wait(for: [expectation], timeout: 3.0)
+                if result != .timedOut {
+                    return
+                }
+                // Picker didn't dismiss — try tapping Done again
+                if doneButton.exists {
+                    doneButton.tap()
+                    let retryResult = XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: pickerGone, object: picker)], timeout: 3.0)
+                    if retryResult != .timedOut {
+                        return
+                    }
+                }
+                // Still visible — tap above the picker to dismiss
+                coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.2)).tap()
+                _ = XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: pickerGone, object: picker)], timeout: 3.0)
+            }
             return
         }
+
+        // No toolbar Done button found — try tapping outside to dismiss
         // iOS 26 fallback: tap on the title label to dismiss the keyboard
         // This works for FinancialConnections flows
         let fcTitleLabel = otherElements["fc_pane_title_label"]
@@ -121,8 +147,12 @@ extension XCUIApplication {
             fcTitleLabel.tap()
             return
         }
-        // Last resort: tap near the top of the screen
-        coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.1)).tap()
+        // Last resort: tap near the top of the screen to dismiss
+        coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.2)).tap()
+        // If a picker was visible, wait for it to go away
+        if picker.exists {
+            _ = XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: pickerGone, object: picker)], timeout: 3.0)
+        }
     }
 }
 
@@ -338,7 +368,7 @@ extension XCTestCase {
         // This handles the FinancialConnections networking Link signup screen
         let notNowButton = app.buttons["networking_link_signup_footer_view.not_now_button"]
         if notNowButton.waitForExistence(timeout: 10.0) {
-            app.fc_dismissKeyboard()
+            app.stp_dismissKeyboard()
             notNowButton.tap()
         }
     }

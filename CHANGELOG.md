@@ -16,6 +16,7 @@ MINOR
 
 ### All
 * [Removed] Removed UPI support across the SDK.
+* [Changed] The minimum Xcode version is now Xcode 26.2, as Apple has [dropped support for App Store submissions using Xcode 16.4](https://developer.apple.com/news/upcoming-requirements/?id=02032026a). 
 
 ### PaymentSheet
 * [Fixed] Fixed an issue where `LinkController` used the shared `STPAPIClient` instead of the `apiClient` specified in the caller, affecting apps using multiple API client instances.

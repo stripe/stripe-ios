@@ -338,7 +338,7 @@ class ECEIntegrationTests: XCTestCase {
         ]
 
         for testCase in testCases {
-            let message = MockWKScriptMessage(name: testCase.name, body: testCase.body)
+            let message = MockScriptMessage(name: testCase.name, body: testCase.body)
 
             do {
                 let response = try await eceViewController.handleMessage(message: message)
@@ -514,13 +514,11 @@ class ECEIntegrationTests: XCTestCase {
             ],
         ]
 
-        _ = try await eceViewController.userContentController(
-            WKUserContentController(),
-            didReceive: MockWKScriptMessage(
+        _ = try await eceViewController.handleMessage(
+            message: MockScriptMessage(
                 name: "calculateShipping",
                 body: ["shippingAddress": firstAddress]
-            ), replyHandler: { _, _ in
-            }
+            )
         )
 
         // Second address change
@@ -534,13 +532,11 @@ class ECEIntegrationTests: XCTestCase {
             ],
         ]
 
-        _ = try await eceViewController.userContentController(
-            WKUserContentController(),
-            didReceive: MockWKScriptMessage(
+        _ = try await eceViewController.handleMessage(
+            message: MockScriptMessage(
                 name: "calculateShipping",
                 body: ["shippingAddress": secondAddress]
-            ), replyHandler: { _, _ in
-            }
+            )
         )
 
         // Then

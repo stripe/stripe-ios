@@ -41,17 +41,37 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
         let applePay = XCUIApplication(bundleIdentifier: "com.apple.PassbookUIService")
         _ = applePay.wait(for: .runningForeground, timeout: 10)
 
-        let amexButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"]
-        XCTAssertTrue(amexButton.waitForExistence(timeout: 10.0))
-        amexButton.forceTapElement()
+        if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 {
+            // iOS 26: The Apple Pay sheet shows the selected card and a
+            // "Change Payment Method" button. Tap it to switch cards.
+            let changeButton = applePay.buttons["Change Payment Method"]
+            XCTAssertTrue(changeButton.waitForExistence(timeout: 10.0))
+            changeButton.tap()
 
-        let mastercardButton = applePay.buttons["Simulated Card - MasterCard, ‪•••• 1234‬"].firstMatch
-        XCTAssertTrue(mastercardButton.waitForExistence(timeout: 10.0))
-        mastercardButton.forceTapElement()
+            let mastercardPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - MasterCard'")
+            let mastercardButton = applePay.buttons.containing(mastercardPredicate).firstMatch
+            XCTAssertTrue(mastercardButton.waitForExistence(timeout: 10.0))
+            mastercardButton.forceTapElement()
 
-        let payButton = applePay.buttons["Pay with Passcode"]
-        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
-        payButton.forceTapElement()
+            let payButton = applePay.buttons["Pay with Passcode"]
+            XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+            payButton.forceTapElement()
+        } else {
+            let amexPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+            let amexButton = applePay.buttons.containing(amexPredicate).firstMatch
+            XCTAssertTrue(amexButton.waitForExistence(timeout: 10.0))
+            amexButton.forceTapElement()
+
+            let mastercardPredicate = NSPredicate(format: "label CONTAINS 'Simulated Card - MasterCard, ‪•••• 1234‬'")
+            let mastercardButton = applePay.buttons.containing(mastercardPredicate).firstMatch
+            XCTAssertTrue(mastercardButton.waitForExistence(timeout: 10.0))
+            mastercardButton.forceTapElement()
+
+            let payButton = applePay.buttons["Pay with Passcode"]
+            if payButton.waitForExistence(timeout: 5.0) {
+                payButton.forceTapElement()
+            }
+        }
 
         let statusView = app.staticTexts["Payment status view"]
         XCTAssertTrue(statusView.waitForExistence(timeout: 20.0))

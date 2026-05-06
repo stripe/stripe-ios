@@ -43,8 +43,10 @@ fastlane/.env
 # Xcode Related files
 Stripe.xcworkspace/xcuserdata/*
 
-# Local LLM settings (ignore local settings but allow project settings)
+# Local LLM settings and ephemeral state
 .claude/settings.local.json
+.claude/worktrees/
+.claude/scheduled_tasks.lock
 
 # Simulator configuration cache
 .stripe-ios-config

@@ -224,7 +224,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         payWithApplePay()
     }
 
-    func testDeferredIntent_ApplePayFlowControllerFlow_ClientSideConfirmation() throws {
+    func testDeferredIntent_ApplePayFlowControllerFlow_ClientSideConfirmation() {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.integrationType = .deferred_csc

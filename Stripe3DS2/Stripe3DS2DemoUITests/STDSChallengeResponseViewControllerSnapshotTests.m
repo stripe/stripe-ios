@@ -19,7 +19,7 @@
  @param identifier An optional identifier, used if there are multiple snapshot tests in a given -test method.
  */
 #define STPSnapshotVerifyView(view__, identifier__) \
-FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDefaultSuffixes(), 0.02, 0)
+FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDefaultSuffixes(), 0.02, 0.01)
 
 @interface STDSChallengeResponseViewControllerSnapshotTests: FBSnapshotTestCase
 

@@ -13,11 +13,12 @@ import XCTest
 
 @testable@_spi(STP) import StripePaymentSheet
 
-// @iOS26
+// @LiquidGlass
 final class LinkSignUpViewControllerSnapshotTests: STPSnapshotTestCase {
 
     override static func setUp() {
-        if #available(iOS 26, *) {
+        if ProcessInfo.processInfo.environment["STP_LIQUID_GLASS_MODE"] != nil,
+           #available(iOS 26, *) {
             var configuration = PaymentSheet.Configuration()
             configuration.appearance.applyLiquidGlass()
             LinkUI.applyLiquidGlassIfPossible(configuration: configuration)

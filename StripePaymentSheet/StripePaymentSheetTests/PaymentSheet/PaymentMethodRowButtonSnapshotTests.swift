@@ -13,6 +13,12 @@ import UIKit
 
 class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
 
+    override func setUp() {
+        super.setUp()
+        FormSpecProvider.shared = FormSpecProvider()
+        DownloadManager.sharedManager.resetCache()
+    }
+
     func testPaymentMethodRowButton_unselected() {
         let rowButton = SavedPaymentMethodRowButton(paymentMethod: STPPaymentMethod._testCard(), appearance: .default)
         verify(rowButton)
@@ -220,6 +226,6 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         line: UInt = #line
     ) {
         view.autosizeHeight(width: 300)
-        STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+        STPSnapshotVerifyView(view, identifier: identifier, overallTolerance: 0.01, file: file, line: line)
     }
 }

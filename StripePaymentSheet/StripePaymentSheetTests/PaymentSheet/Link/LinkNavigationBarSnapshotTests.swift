@@ -14,14 +14,14 @@ import UIKit
 @testable@_spi(STP) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 
-// @iOS26
+// @LiquidGlass
 class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
 
     override func setUp() {
 
         super.setUp()
 
-        if #available(iOS 26, *) {
+        if isLiquidGlassMode, #available(iOS 26, *) {
             var configuration = PaymentSheet.Configuration()
             configuration.appearance.applyLiquidGlass()
             LinkUI.applyLiquidGlassIfPossible(configuration: configuration)

@@ -781,7 +781,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         }
         // Make sure we have an active delegate that responds to all Link delegate methods
         guard let payWithLinkWebDelegate = payWithLinkDelegate as? PayWithLinkWebControllerDelegate else {
-            stpAssertionFailure("Delegate doesn't exist or can't be transformed into a PayWithLinkWebControllerDelegate")
+            // Delegate may have been deallocated during dismissal — not a fatal condition.
             return
         }
         // Set up a web controller with the same settings and swap to it

@@ -65,10 +65,11 @@ class ConnectWebViewControllerTests: XCTestCase {
         webVC.presentPopup = { vc in
             safariVC = vc as? SFSafariViewController
         }
-        let webView = webVC.webView(webVC.webView,
-                                    createWebViewWith: webVC.webView.configuration,
-                        for: MockNavigationAction(request: .init(url: URL(string: "https://stripe.com")!)),
-                        windowFeatures: .init())
+        let webView = webVC.handleCreateWebView(
+            configuration: webVC.webView.configuration,
+            request: .init(url: URL(string: "https://stripe.com")!),
+            hasTargetFrame: false
+        )
 
         XCTAssertNil(webView)
         XCTAssertNotNil(safariVC)
@@ -91,10 +92,11 @@ class ConnectWebViewControllerTests: XCTestCase {
                 popUp = (vc as? UINavigationController)?.viewControllers.first as? PopupWebViewController
 
             }
-            let webView = webVC.webView(webVC.webView,
-                                        createWebViewWith: webVC.webView.configuration,
-                                        for: MockNavigationAction(request: .init(url: URL(string: url)!)),
-                                        windowFeatures: .init())
+            let webView = webVC.handleCreateWebView(
+                configuration: webVC.webView.configuration,
+                request: .init(url: URL(string: url)!),
+                hasTargetFrame: false
+            )
 
             XCTAssertEqual(popUp?.webView, webView, url)
             XCTAssertNotNil(popUp?.navigationItem.rightBarButtonItem, url)
@@ -119,10 +121,11 @@ class ConnectWebViewControllerTests: XCTestCase {
         webVC.presentPopup = { _ in
             XCTFail("Present pop up should not be called")
         }
-        let webView = webVC.webView(webVC.webView,
-                                    createWebViewWith: webVC.webView.configuration,
-                                    for: MockNavigationAction(request: .init(url: url)),
-                                    windowFeatures: .init())
+        let webView = webVC.handleCreateWebView(
+            configuration: webVC.webView.configuration,
+            request: .init(url: url),
+            hasTargetFrame: false
+        )
 
         XCTAssertNil(webView)
         wait(for: [canOpenURLExpectation, openURLExpectation], timeout: TestHelpers.defaultTimeout)
@@ -141,17 +144,17 @@ class ConnectWebViewControllerTests: XCTestCase {
         webVC.presentPopup = { _ in
             XCTFail("Present pop up should not be called")
         }
-        let webView = webVC.webView(webVC.webView,
-                                    createWebViewWith: webVC.webView.configuration,
-                                    for: MockNavigationAction(request: .init(url: url), targetFrame: .init()),
-                                    windowFeatures: .init())
+        let webView = webVC.handleCreateWebView(
+            configuration: webVC.webView.configuration,
+            request: .init(url: url),
+            hasTargetFrame: true
+        )
 
         XCTAssertNil(webView)
     }
 
     /// Download if `Content-Disposition` header is an attachment
-    @MainActor
-    func testResponsePolicyForAttachments() async {
+    func testResponsePolicyForAttachments() {
         // Use a non-allow listed URL to ensure these can be treated as a download
         let response = HTTPURLResponse(
             url: URL(string: "https://stripe-s3.com/path")!,
@@ -160,12 +163,9 @@ class ConnectWebViewControllerTests: XCTestCase {
             headerFields: ["Content-Disposition": "attachment; filename=payouts.csv"]
         )!
 
-        let policy = await webVC.webView(
-            webVC.webView,
-            decidePolicyFor: MockNavigationResponse(
-                response: response,
-                canShowMIMEType: true
-            )
+        let policy = webVC.policyForNavigationResponse(
+            canShowMIMEType: true,
+            response: response
         )
         XCTAssertEqual(policy, .download)
     }
@@ -252,7 +252,12 @@ class ConnectWebViewControllerTests: XCTestCase {
         XCTAssertEqual(loggedError.code, 10)
     }
 
-    func testDownloadFinishedShowsShareSheet() {
+    func testDownloadFinishedShowsShareSheet() throws {
+        try XCTSkipIf(
+            ProcessInfo.processInfo.operatingSystemVersion.majorVersion == 18,
+            "UIActivityViewController intermittently crashes in unit tests on iOS 18 due to UIKit scene setup."
+        )
+
         let mockFileURL = URL(string: "file:///temp/example.csv")!
 
         var activityVC: UIActivityViewController?
@@ -407,45 +412,6 @@ extension ConnectWebViewControllerTests {
         }
         webVC.webView.evaluateJavaScript("alert('\(body)');") { _, _ in
         }
-    }
-}
-
-private class MockNavigationAction: WKNavigationAction {
-    let requestOverride: URLRequest
-    let targetFrameOverride: WKFrameInfo?
-
-    override var request: URLRequest {
-        requestOverride
-    }
-
-    override var targetFrame: WKFrameInfo? {
-        targetFrameOverride
-    }
-
-    init(request: URLRequest, targetFrame: WKFrameInfo? = nil) {
-        self.requestOverride = request
-        self.targetFrameOverride = targetFrame
-        super.init()
-    }
-}
-
-class MockNavigationResponse: WKNavigationResponse {
-    let responseOverride: URLResponse
-    let canShowMIMETypeOverride: Bool
-
-    override var response: URLResponse {
-        responseOverride
-    }
-
-    override var canShowMIMEType: Bool {
-        canShowMIMETypeOverride
-    }
-
-    init(response: URLResponse,
-         canShowMIMEType: Bool = false) {
-        self.responseOverride = response
-        self.canShowMIMETypeOverride = canShowMIMEType
-        super.init()
     }
 }
 

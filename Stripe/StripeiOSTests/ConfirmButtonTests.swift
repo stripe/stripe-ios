@@ -16,7 +16,7 @@ import XCTest
 
 class ConfirmButtonTests: XCTestCase {
 
-    // @iOS26
+    // @LiquidGlass
     func testBuyButtonShouldAutomaticallyAdjustItsForegroundColor() {
         let testCases: [(background: UIColor, foreground: UIColor)] = [
             // Dark backgrounds

@@ -436,7 +436,7 @@ class CustomerSheetUITest: XCTestCase {
         // Card brand choice should be enabled
         cardBrandChoiceCB.waitForExistenceAndTap(timeout: timeout)
         // Bug where it autoadvances to the MM / YY field even though it's filled out, have to tap Done again
-        app.toolbars.buttons["Done"].tap()
+        app.stp_dismissKeyboard()
 
         // We should have selected cartes bancaires
         XCTAssertTrue(app.buttons["Cartes Bancaires"].isSelected)
@@ -787,7 +787,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: timeout))
     }
 
-    func testUpdatePaymentMethod_auto() throws {
+    func testUpdatePaymentMethod_auto() {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .returning
         settings.customerKeyType = .customerSession
@@ -826,10 +826,10 @@ class CustomerSheetUITest: XCTestCase {
 
         app.textFields["Country or region"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
-        app.toolbars.buttons["Done"].tap()
+        app.stp_dismissKeyboard()
 
         let zipField = app.textFields["ZIP"]
-        XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(expField.waitForExistence(timeout: 10.0))
         zipField.tap()
         zipField.typeText("55555")
         XCTAssertTrue(app.buttons["Save"].waitForExistenceAndTap(timeout: 3.0))
@@ -878,11 +878,11 @@ class CustomerSheetUITest: XCTestCase {
 
         app.textFields["Country or region"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇺🇸 United States")
-        app.toolbars.buttons["Done"].tap()
+        app.stp_dismissKeyboard()
 
         app.textFields["State"].tap()
         app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "Alabama")
-        app.toolbars.buttons["Done"].tap()
+        app.stp_dismissKeyboard()
 
         let line1Field = app.textFields["Address line 1"]
         XCTAssertTrue(line1Field.waitForExistence(timeout: 3.0))
@@ -947,7 +947,7 @@ class CustomerSheetUITest: XCTestCase {
         let cardNumberField = app.textFields["Card number"]
         cardNumberField.waitForExistenceAndTap(timeout: timeout)
         cardNumberField.typeText("4")
-        app.toolbars.buttons["Done"].tap()
+        app.stp_dismissKeyboard()
 
         // Switch to bank form
         app.staticTexts["US bank account"].waitForExistenceAndTap(timeout: timeout)

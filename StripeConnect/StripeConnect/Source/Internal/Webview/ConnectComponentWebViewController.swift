@@ -97,6 +97,13 @@ class ConnectComponentWebViewController: ConnectWebViewController {
             allowedHosts: allowedHosts
         )
 
+        // Register for trait changes (iOS 17+ uses the modern API since traitCollectionDidChange is deprecated)
+        if #available(iOS 17.0, *) {
+            registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: Self, _: UITraitCollection) in
+                self.updateAppearance(appearance: self.componentManager.appearance)
+            }
+        }
+
         // Setup views
         webView.addSubview(activityIndicator)
         NSLayoutConstraint.activate([
@@ -162,8 +169,10 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        DispatchQueue.main.async {
-            self.updateAppearance(appearance: self.componentManager.appearance)
+        if #unavailable(iOS 17.0) {
+            DispatchQueue.main.async {
+                self.updateAppearance(appearance: self.componentManager.appearance)
+            }
         }
     }
 
@@ -198,9 +207,13 @@ class ConnectComponentWebViewController: ConnectWebViewController {
     }
 
     override func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse) async -> WKNavigationResponsePolicy {
-        // If the component web page fails to load with an HTTP error, send a
-        // load failure to event
-        if let response = navigationResponse.response as? HTTPURLResponse,
+        handleHTTPErrorResponse(navigationResponse.response)
+        return await super.webView(webView, decidePolicyFor: navigationResponse)
+    }
+
+    /// Checks if the response is an HTTP error for the component's base URL and triggers load failure if so.
+    func handleHTTPErrorResponse(_ response: URLResponse?) {
+        if let response = response as? HTTPURLResponse,
            response.url?.absoluteStringRemovingParams == componentManager.baseURL.absoluteString,
            response.hasErrorStatus {
             let error = HTTPStatusError(errorCode: response.statusCode)
@@ -210,8 +223,6 @@ class ConnectComponentWebViewController: ConnectWebViewController {
                 url: response.url
             )))
         }
-
-        return await super.webView(webView, decidePolicyFor: navigationResponse)
     }
 
     struct ComponentProcessDidTerminateError: Error, AnalyticLoggableErrorV2 {
@@ -393,7 +404,6 @@ private extension ConnectComponentWebViewController {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            // swiftlint:disable:previous unused_capture_list
             guard let self else { return }
             sendMessage(UpdateConnectInstanceSender(payload: .init(locale: webLocale.toLanguageTag(), appearance: .init(appearance: componentManager.appearance, traitCollection: traitCollection))))
         }

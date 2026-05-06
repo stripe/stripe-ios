@@ -38,6 +38,7 @@ extension STPAPIClient {
             /// Encode the array of verification frames data into JSON
             let jsonEncoder = JSONEncoder()
             jsonEncoder.keyEncodingStrategy = .convertToSnakeCase
+            jsonEncoder.outputFormatting = .sortedKeys
             let jsonVerificationFramesData = try jsonEncoder.encode(verificationFramesData)
 
             /// Turn the JSON data into a string

@@ -49,7 +49,8 @@ public extension EmbeddedPaymentElement.Configuration {
 public extension PaymentSheet.Appearance {
     mutating func applyLiquidGlassIfPossible() {
 #if !os(visionOS)
-        if #available(iOS 26.0, visionOS 26.0, *) {
+        if ProcessInfo.processInfo.environment["STP_LIQUID_GLASS_MODE"] != nil,
+           #available(iOS 26.0, visionOS 26.0, *) {
             self.applyLiquidGlass()
         }
 #endif
@@ -57,7 +58,8 @@ public extension PaymentSheet.Appearance {
     func applyingLiquidGlassIfPossible() -> PaymentSheet.Appearance {
         var copy = self
 #if !os(visionOS)
-        if #available(iOS 26.0, visionOS 26.0, *) {
+        if ProcessInfo.processInfo.environment["STP_LIQUID_GLASS_MODE"] != nil,
+           #available(iOS 26.0, visionOS 26.0, *) {
             copy.applyLiquidGlass()
         }
 #endif

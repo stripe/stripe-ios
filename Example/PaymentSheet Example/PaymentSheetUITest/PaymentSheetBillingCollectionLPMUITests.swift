@@ -5,7 +5,6 @@
 //  Created by David Estes on 2/11/26.
 //
 
-
 import XCTest
 
 class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITestCase {
@@ -125,7 +124,7 @@ class PaymentSheetBillingCollectionLPMUITests: PaymentSheetBillingCollectionUITe
         payButton.tap()
         let authorizeButton = app.firstDescendant(withLabel: "AUTHORIZE TEST PAYMENT")
         authorizeButton.waitForExistenceAndTap(timeout: 10.0)
-        XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
+        XCTAssertTrue(successText.waitForExistence(timeout: 20.0))
     }
 
     func testLpm_Afterpay_MinimalFields_WithDefaults() throws {

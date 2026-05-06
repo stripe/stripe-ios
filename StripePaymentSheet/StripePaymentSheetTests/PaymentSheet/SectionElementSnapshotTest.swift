@@ -10,7 +10,7 @@ import StripeCoreTestUtils
 @_spi(STP) @testable import StripeUICore
 
 // These are in StripePaymentSheet instead of StripeUICore so that we can test using PaymentSheet.Appearance rather than ElementsAppearance.
-// @iOS26
+// @LiquidGlass
 final class SectionElementSnapshotTest: STPSnapshotTestCase {
     let locale_enUS = Locale(identifier: "en_US")
     let timeZone_GMT = TimeZone(secondsFromGMT: 0)!

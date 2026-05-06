@@ -15,11 +15,12 @@ import UIKit
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
-// @iOS26
+// @LiquidGlass
 class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 
     override class func setUp() {
-        if #available(iOS 26, *) {
+        if ProcessInfo.processInfo.environment["STP_LIQUID_GLASS_MODE"] != nil,
+           #available(iOS 26, *) {
             var configuration = PaymentSheet.Configuration()
             configuration.appearance.applyLiquidGlass()
             LinkUI.applyLiquidGlassIfPossible(configuration: configuration)

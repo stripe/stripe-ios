@@ -171,10 +171,10 @@ class ConnectWebViewController: UIViewController {
 private extension ConnectWebViewController {
     // Opens the given navigation in a PopupWebViewController
     func openInPopup(configuration: WKWebViewConfiguration,
-                     navigationAction: WKNavigationAction) -> WKWebView? {
+                     request: URLRequest) -> WKWebView? {
         let popupVC = PopupWebViewController(configuration: configuration,
                                              analyticsClient: analyticsClient,
-                                             navigationAction: navigationAction,
+                                             request: request,
                                              allowedHosts: allowedHosts,
                                              urlOpener: urlOpener,
                                              sdkVersion: sdkVersion)
@@ -240,10 +240,24 @@ extension ConnectWebViewController: WKUIDelegate {
                  createWebViewWith configuration: WKWebViewConfiguration,
                  for navigationAction: WKNavigationAction,
                  windowFeatures: WKWindowFeatures) -> WKWebView? {
-        // If targetFrame is nil, this is a popup
-        guard navigationAction.targetFrame == nil else { return nil }
+        return handleCreateWebView(
+            configuration: configuration,
+            request: navigationAction.request,
+            hasTargetFrame: navigationAction.targetFrame != nil
+        )
+    }
 
-        if let url = navigationAction.request.url {
+    /// Extracted logic for handling popup navigation requests.
+    /// Determines whether to open a popup, Safari, or system URL handler.
+    func handleCreateWebView(
+        configuration: WKWebViewConfiguration,
+        request: URLRequest,
+        hasTargetFrame: Bool
+    ) -> WKWebView? {
+        // If targetFrame exists, this is not a popup
+        guard !hasTargetFrame else { return nil }
+
+        if let url = request.url {
             // Only `http` or `https` URL schemes can be opened in WKWebView or
             // SFSafariViewController. Opening other schemes, like `mailto`, will
             // cause a fatal error.
@@ -269,7 +283,7 @@ extension ConnectWebViewController: WKUIDelegate {
             }
         }
 
-        return openInPopup(configuration: configuration, navigationAction: navigationAction)
+        return openInPopup(configuration: configuration, request: request)
     }
 
     func webView(_ webView: WKWebView,
@@ -343,13 +357,25 @@ extension ConnectWebViewController: WKNavigationDelegate {
         _ webView: WKWebView,
         decidePolicyFor navigationResponse: WKNavigationResponse
     ) async -> WKNavigationResponsePolicy {
+        return policyForNavigationResponse(
+            canShowMIMEType: navigationResponse.canShowMIMEType,
+            response: navigationResponse.response
+        )
+    }
+
+    /// Extracted logic for deciding navigation response policy.
+    /// Returns `.download` if the response is an attachment, `.allow` otherwise.
+    func policyForNavigationResponse(
+        canShowMIMEType: Bool,
+        response: URLResponse?
+    ) -> WKNavigationResponsePolicy {
         // Downloads will typically originate from a non-allow-listed host (e.g. S3)
         // so first check if the response is a download before evaluating the host
 
         // The response should be a download if its Content-Disposition is
         // shaped like `attachment; filename=payouts.csv`
-        if navigationResponse.canShowMIMEType,
-           let response = navigationResponse.response as? HTTPURLResponse,
+        if canShowMIMEType,
+           let response = response as? HTTPURLResponse,
            let contentDisposition = response.value(forHTTPHeaderField: "Content-Disposition"),
            contentDisposition
             .split(separator: ";")

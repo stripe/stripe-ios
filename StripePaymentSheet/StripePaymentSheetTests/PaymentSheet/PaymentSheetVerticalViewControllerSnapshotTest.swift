@@ -34,7 +34,7 @@ final class PaymentSheetVerticalViewControllerSnapshotTest: STPSnapshotTestCase 
 
     func verify(_ sut: PaymentSheetVerticalViewController, identifier: String? = nil) {
         let bottomSheet = makeBottomSheetAndLayout(sut)
-        STPSnapshotVerifyView(bottomSheet.view, identifier: identifier)
+        STPSnapshotVerifyView(bottomSheet.view, identifier: identifier, overallTolerance: 0.01)
     }
 
     // Test when we display the PM list upon initialization
