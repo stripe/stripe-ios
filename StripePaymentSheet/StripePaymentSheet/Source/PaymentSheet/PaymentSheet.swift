@@ -68,7 +68,7 @@ public class PaymentSheet {
     }
 
     /// This contains all configurable properties of PaymentSheet
-    public let configuration: Configuration
+    public private(set) var configuration: Configuration
 
     /// The most recent error encountered by the customer, if any.
     public internal(set) var mostRecentError: Error?
@@ -165,11 +165,19 @@ public class PaymentSheet {
                 completion(.failed(error: error))
                 return
             }
-            if let checkout, checkout.state.isLoading {
-                let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.present(from:completion:)."
-                assertionFailure(message)
-                completion(.failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message)))
-                return
+            if let checkout {
+                do {
+                    try await checkout.awaitPendingOperations()
+                } catch {
+                    completion(.failed(error: error))
+                    return
+                }
+                if let stpSession = checkout.state.session as? STPCheckoutSession {
+                    // Checkout refreshes replace `state.session` with a new STPCheckoutSession,
+                    // so resnapshot after pending updates instead of using the session captured at init.
+                    self.mode = .checkoutSession(stpSession)
+                    stpSession.applyAddressOverrides(to: &self.configuration)
+                }
             }
 
             // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
@@ -248,7 +256,7 @@ public class PaymentSheet {
     // MARK: - Internal Properties
 
     /// The initialization mode this instance was initialized with
-    let mode: InitializationMode
+    var mode: InitializationMode
 
     /// The Checkout that backs checkout-session mode integrations, if any.
     private weak var checkout: Checkout?
