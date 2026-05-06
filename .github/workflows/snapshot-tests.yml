@@ -99,7 +99,7 @@ jobs:
           # Fetch or create snapshot-reports branch
           git fetch origin snapshot-reports --depth=1 2>/dev/null || true
           if git rev-parse origin/snapshot-reports >/dev/null 2>&1; then
-            git worktree add reports-deploy origin/snapshot-reports --detach
+            git worktree add reports-deploy -B snapshot-reports origin/snapshot-reports
           else
             git worktree add --detach reports-deploy
             cd reports-deploy
