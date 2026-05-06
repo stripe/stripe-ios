@@ -525,12 +525,12 @@ workflows:
   install-runtime-15:
     steps:
     - script@1:
-        title: Install iOS 15.5 simulator runtime
+        title: Install iOS 15.4 simulator runtime
         inputs:
         - content: |-
             #!/usr/bin/env bash
             set -e
-            xcodebuild -downloadPlatform iOS -buildVersion 15.5
+            xcodebuild -downloadPlatform iOS -buildVersion 15.4
   install-runtime-16:
     steps:
     - script@1:
@@ -547,7 +547,7 @@ workflows:
         - lane: legacy_tests_15
         title: fastlane legacy_tests_15
     envs:
-    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.5
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=15.4
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x

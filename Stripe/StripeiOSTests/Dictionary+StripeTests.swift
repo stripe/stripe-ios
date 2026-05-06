@@ -245,7 +245,7 @@ class Dictionary_StripeTests: XCTestCase {
         let dict =
             [
                 "a": "https://example.com",
-                "b": "http://invalid-url:invalid-url",
+                "b": "http://[invalid",
             ] as [AnyHashable: Any]
         XCTAssertEqual(dict.stp_url(forKey: "a"), URL(string: "https://example.com"))
         XCTAssertNil(dict.stp_url(forKey: "b"))
