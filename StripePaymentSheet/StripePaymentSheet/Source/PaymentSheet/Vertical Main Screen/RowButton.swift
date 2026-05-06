@@ -362,6 +362,8 @@ class RowButton: UIView, EventHandler {
         return isPopulated
     }
 
+    // PMM data is not always available on initial load/display of the RowButton.
+    // Use this to populate PMM content ad hoc once that data becomes available.
     func populatePaymentMethodMessagingIfNeeded(_ content: PaymentMethodMessagingContent) {
         guard case let .paymentMethodMessaging(textView, _, false) = sublabelVariant else {
             return

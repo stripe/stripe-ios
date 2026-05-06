@@ -237,7 +237,10 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
     func didTap(rowButton: RowButton, selection: RowButtonType) {
         guard let delegate else { return }
+        // We should avoid re-selecting an already selected row to avoid incorrect behavior in the RowButton
         let isRetappingCurrentlySelectedRow = currentSelection == selection && rowButton.isSelected
+        // Preserve the existing selected state on repeated taps so BNPL rows don't replay
+        // their expand animation just because the same row was tapped again.
         let shouldSelect = delegate.shouldSelectPaymentMethod(selection) && !isRetappingCurrentlySelectedRow
         if shouldSelect {
             // Deselect previous row
