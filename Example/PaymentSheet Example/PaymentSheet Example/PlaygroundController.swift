@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -136,12 +136,17 @@ import UIKit
     private var currentTaxRate: (String, Double)?
 
     var linkConfiguration: PaymentSheet.LinkConfiguration {
+        let brand: LinkBrand? = settings.linkBrand == .onelink ? .onelink : nil
+
+        var linkConfiguration: PaymentSheet.LinkConfiguration
         switch settings.linkDisplay {
         case .automatic:
-            PaymentSheet.LinkConfiguration(display: .automatic)
+            linkConfiguration = PaymentSheet.LinkConfiguration(display: .automatic, brand: brand)
         case .never:
-            PaymentSheet.LinkConfiguration(display: .never)
+            linkConfiguration = PaymentSheet.LinkConfiguration(display: .never, brand: brand)
         }
+        linkConfiguration.supportedPaymentMethodTypes = settings.linkFundingSources.supportedPaymentMethodTypes
+        return linkConfiguration
     }
     var customerConfiguration: PaymentSheet.CustomerConfiguration? {
         guard settings.customerMode != .guest,
@@ -912,7 +917,12 @@ extension PlaygroundController {
                 // Load checkout session using Checkout SDK if using CheckoutSession
                 if let checkoutSessionClientSecret = json["checkoutSessionClientSecret"] {
                     do {
-                        self.checkout = try await Checkout(clientSecret: checkoutSessionClientSecret)
+                        var checkoutConfiguration = Checkout.Configuration()
+                        checkoutConfiguration.adaptivePricing.allowed = settingsToLoad.csAdaptivePricing == .on
+                        self.checkout = try await Checkout(
+                            clientSecret: checkoutSessionClientSecret,
+                            configuration: checkoutConfiguration
+                        )
                     } catch {
                         self.checkout = nil
                         print("Failed to load checkout session: \(error)")
@@ -1060,6 +1070,10 @@ extension PlaygroundController {
         // Send use_manual_capture when toggled on
         if settings.manualCapture == .on {
             body["use_manual_capture"] = true
+        }
+
+        if let linkFundingSources = settings.linkFundingSources.requestValue {
+            body["link_funding_sources"] = linkFundingSources
         }
 
         // Add CheckoutSession flag if using CheckoutSession integration type

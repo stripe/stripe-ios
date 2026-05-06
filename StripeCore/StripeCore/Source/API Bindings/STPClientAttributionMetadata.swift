@@ -26,6 +26,8 @@ import Foundation
     @objc public let clientSessionId: String?
     /// The identifier string for the elements session
     @objc public let elementsSessionConfigId: String?
+    /// The identifier string for the Checkout Session, when present
+    @objc public let checkoutSessionId: String?
     /// The source for the merchant integration
     @objc public let merchantIntegrationSource: String
     /// The subtype for the merchant integration
@@ -38,10 +40,12 @@ import Foundation
     @objc public let paymentMethodSelectionFlow: String?
 
     public init(elementsSessionConfigId: String?,
+                checkoutSessionId: String? = nil,
                 paymentIntentCreationFlow: IntentCreationFlow? = nil,
                 paymentMethodSelectionFlow: PaymentMethodSelectionFlow? = nil) {
         self.clientSessionId = AnalyticsHelper.shared.sessionID
         self.elementsSessionConfigId = elementsSessionConfigId
+        self.checkoutSessionId = checkoutSessionId
         self.merchantIntegrationSource = "elements"
         self.merchantIntegrationSubtype = "mobile"
         self.merchantIntegrationVersion = "stripe-ios/\(StripeAPIConfiguration.STPSDKVersion)"
@@ -56,6 +60,7 @@ extension STPClientAttributionMetadata: Encodable {
     enum CodingKeys: String, CodingKey {
         case clientSessionId = "client_session_id"
         case elementsSessionConfigId = "elements_session_config_id"
+        case checkoutSessionId = "checkout_session_id"
         case merchantIntegrationSource = "merchant_integration_source"
         case merchantIntegrationSubtype = "merchant_integration_subtype"
         case merchantIntegrationVersion = "merchant_integration_version"
@@ -67,6 +72,7 @@ extension STPClientAttributionMetadata: Encodable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(clientSessionId, forKey: .clientSessionId)
         try container.encodeIfPresent(elementsSessionConfigId, forKey: .elementsSessionConfigId)
+        try container.encodeIfPresent(checkoutSessionId, forKey: .checkoutSessionId)
         try container.encode(merchantIntegrationSource, forKey: .merchantIntegrationSource)
         try container.encode(merchantIntegrationSubtype, forKey: .merchantIntegrationSubtype)
         try container.encode(merchantIntegrationVersion, forKey: .merchantIntegrationVersion)

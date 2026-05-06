@@ -1,7 +1,14 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Added] Added API models for upcoming EU support. 
+* [Added] Added `birthCountry`, `birthCity`, and `nationalities` properties to `KycInfo`, required for EU customers.
+
+## 25.13.0 2026-05-04
+### PaymentSheet
+* [Fixed] Fixed an issue where `paymentMethodOrder` did not apply to custom payment methods due to case-sensitive matching.
 
 ## 25.12.0 2026-04-27
 ### Identity
@@ -12,6 +19,7 @@ PATCH
 
 ### PaymentSheet
 * [Fixed] Fixed an issue where `LinkController` used the shared `STPAPIClient` instead of the `apiClient` specified in the caller, affecting apps using multiple API client instances.
+* [Fixed] Card brand images next to the card number field are now exposed to screen readers via the field's accessibility label (WCAG 2.2 § 1.1.1).
 
 ### Connect
 * [Changed] [#66351](https://github.com/stripe/stripe-ios/pull/6351) Theming tokens in connect embedded components is now GA.

@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=61FahugmO2Lm9MIvMqGB0Wlff08bpY%2B1gZnKVWQkA9e48S5aUTwaDnZ6YSGBtQJ48AwI0PFIFSg55rdFb55Fzlawayz6ekZgocTLKmTCslMCVoW7rlfrLNP%2Be0bqtOvVOBhvp1IZ47CBPw2NgiYmEquMi1DQJzUm3vfmIbHwkU6hVvpkJofHIAh8n5dpYzrmgZb5HC9ini3cYDiVR1dZCLrga7rIU4kXLlCULZ%2Bg%2BEQ%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: 44574c53ef41326c94af2e366b5743ee;o=1
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:30:11 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: 374ff5c5b1b54ab3a60e46e602590923
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=RI0sypccChv9yaMzZk2jitC7h9rjhOg6Yx%2FjaztpCDVpi8QLETD%2FePOjWdUQh1Q7OTox7D2RGg%2BbgIUlSqaqAYuWHDbhy8US%2B8%2FQ4q%2BCRYQhtsiZldF8Y5mUKScVYiu%2FlCRIbk8ikwwA0bQnVhtFm1sBVuXVolipjSwErmzLOcgfVe7sMvnO9DqOgJqxfsS2L9hH94BkPK6c98%2B089ZPdu1UDI7Bz%2FGV0dBAvqiCXzg%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Tue, 05 May 2026 03:11:55 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000
 
-{"id":"cs_test_a1t36y8SXwjngOg92bwntY1j2paC9qPKX9SIQT3NFHIFOYLVnTDXYzwIeL","client_secret":"cs_test_a1t36y8SXwjngOg92bwntY1j2paC9qPKX9SIQT3NFHIFOYLVnTDXYzwIeL_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51PSnNaAlz2yHYCNZgjajit4L8Hl1rDDPPCj9XhHNZWRSi4vwHhrHIbTgstLJptPSzwQVl1HlyqhwWRs1rBJHag8W00sM0SOXIL"}
+{"id":"cs_test_a1viQ8chZMjaTvw7bg7yvhQXIfrM2yXyxbmbJhocwDxXP4zj8RHiVzXtD3","client_secret":"cs_test_a1viQ8chZMjaTvw7bg7yvhQXIfrM2yXyxbmbJhocwDxXP4zj8RHiVzXtD3_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51PSnNaAlz2yHYCNZgjajit4L8Hl1rDDPPCj9XhHNZWRSi4vwHhrHIbTgstLJptPSzwQVl1HlyqhwWRs1rBJHag8W00sM0SOXIL"}

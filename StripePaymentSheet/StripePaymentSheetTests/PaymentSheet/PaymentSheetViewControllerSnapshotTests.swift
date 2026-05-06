@@ -17,7 +17,8 @@ final class PaymentSheetViewControllerSnapshotTests: STPSnapshotTestCase {
             intent: ._testValue(),
             elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: false),
             savedPaymentMethods: savedPaymentMethods,
-            paymentMethodTypes: [.stripe(.card)]
+            paymentMethodTypes: [.stripe(.card)],
+            paymentMethodOrientation: .horizontal
         )
     }
 
@@ -84,8 +85,5 @@ extension PaymentSheetViewControllerSnapshotTests: PaymentSheetViewControllerDel
     }
 
     func paymentSheetViewControllerDidSelectPayWithLink(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewControllerProtocol) {
-    }
-
-    func paymentSheetViewControllerDidSelectCurrency(_ paymentSheetViewController: StripePaymentSheet.PaymentSheetViewControllerProtocol, currency: String) {
     }
 }

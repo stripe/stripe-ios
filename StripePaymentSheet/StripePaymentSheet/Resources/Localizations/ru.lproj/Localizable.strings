@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Реквизиты карты нельзя изменить.";
 
+"Card number. Supported cards include %@" = "Номер карты. В число поддерживаемых карт входят %@";
+
 "Change" = "Изменить";
 
 "Choose a card brand" = "Выберите бренд карты";

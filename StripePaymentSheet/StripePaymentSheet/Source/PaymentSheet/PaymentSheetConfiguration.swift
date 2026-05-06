@@ -9,6 +9,7 @@
 import Foundation
 import PassKit
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -214,9 +215,15 @@ extension PaymentSheet {
         /// - Seealso: `PaymentSheet.PaymentMethodLayout` for the list of available layouts.
         public var paymentMethodLayout: PaymentMethodLayout = .automatic
 
-        /// The resolved layout of payment methods after calling `resolve()` on `paymentMethodLayout`.
-        /// - Note: Internal code should use this property instead of `paymentMethodLayout`.
-        internal private(set) var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout?
+        /// Resolves `.automatic` to `.horizontal` or `.vertical`.
+        /// For non-automatic layouts, returns self.
+        func resolveLayout() -> PaymentMethodLayout.ResolvedLayout {
+            switch paymentMethodLayout {
+            case .horizontal: return .horizontal
+            case .vertical: return .vertical
+            case .automatic: return .vertical // Default to vertical. Will be updated with ship recommendation in a different PR.
+            }
+        }
 
         /// By default, PaymentSheet will accept all supported cards by Stripe.
         /// You can specify card brands PaymentSheet should block disallow or allow payment for by providing an array of those card brands.
@@ -247,43 +254,6 @@ extension PaymentSheet {
 
         /// When using WalletButtonsView, configures payment method visibility across available surfaces.
         @_spi(STP) public var walletButtonsVisibility: WalletButtonsVisibility = WalletButtonsVisibility()
-
-        /// Resolves `.automatic` to `.horizontal` or `.vertical` based on experiment.
-        /// For non-automatic layouts, returns self.
-        mutating func resolveLayout(
-            loadResult: PaymentSheetLoader.LoadResult,
-            configuration: PaymentElementConfiguration,
-            analyticsHelper: PaymentSheetAnalyticsHelper,
-            shouldLogExperimentExposure: Bool = true
-        ) -> PaymentMethodLayout.ResolvedLayout {
-            var resolvedPaymentMethodLayout: PaymentMethodLayout.ResolvedLayout
-            switch paymentMethodLayout {
-            case .horizontal:
-                resolvedPaymentMethodLayout = .horizontal
-            case .vertical:
-                resolvedPaymentMethodLayout = .vertical
-            case .automatic:
-                // Default to vertical (control)
-                resolvedPaymentMethodLayout = .vertical
-
-                let experiments: [LoggableExperiment] = PaymentSheetLayoutExperiment.createExperiments(
-                    loadResult: loadResult,
-                    configuration: configuration,
-                    analyticsHelper: analyticsHelper
-                )
-
-                experiments.forEach { experiment in
-                    // Log experiment exposure if needed
-                    if shouldLogExperimentExposure {
-                        analyticsHelper.logExposure(experiment: experiment)
-                    }
-                    // Return horizontal for treatment and vertical otherwise
-                    resolvedPaymentMethodLayout = experiment.group == .treatment ? .horizontal : .vertical
-                }
-            }
-            self.resolvedPaymentMethodLayout = resolvedPaymentMethodLayout
-            return resolvedPaymentMethodLayout
-        }
     }
 
     /// When using WalletButtonsView, configures payment method visibility across available surfaces.
@@ -331,7 +301,7 @@ extension PaymentSheet {
         /// Stripe automatically chooses between `horizontal` and `vertical`.
         case automatic
 
-        enum ResolvedLayout {
+        enum ResolvedLayout: String {
             case horizontal
             case vertical
         }
@@ -528,8 +498,15 @@ extension PaymentSheet {
         /// The Link display mode.
         public var display: Display = .automatic
 
+        /// The brand to use for Link. Expected values are `.link` or `.onelink`.
+        @_spi(STP) public var brand: LinkBrand?
+
         /// The Link funding sources that should be disabled. Defaults to an empty set.
         @_spi(STP) public var disallowFundingSourceCreation: Set<String> = []
+
+        /// Debug-only override for the Link payment method types shown in native Link.
+        /// When unset, native Link uses its default supported types derived from server state.
+        @_spi(STP) public var supportedPaymentMethodTypes: [LinkPaymentMethodType]?
 
         /// Whether missing billing details should be collected for existing Link payment methods.
         @_spi(CollectMissingLinkBillingDetailsPreview) public var collectMissingBillingDetailsForExistingPaymentMethods: Bool = true
@@ -553,9 +530,16 @@ extension PaymentSheet {
         public init(
             display: Display = .automatic
         ) {
-            self.display = display
+            self.init(display: display, brand: nil)
         }
 
+        @_spi(STP) public init(
+            display: Display = .automatic,
+            brand: LinkBrand? = nil
+        ) {
+            self.display = display
+            self.brand = brand
+        }
         @_spi(CollectMissingLinkBillingDetailsPreview) public init(
             display: Display = .automatic,
             collectMissingBillingDetailsForExistingPaymentMethods: Bool = true

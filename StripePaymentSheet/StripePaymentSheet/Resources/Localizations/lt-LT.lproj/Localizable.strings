@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Kortelės duomenų keisti negalima.";
 
+"Card number. Supported cards include %@" = "Kortelės numeris. Palaikomos kortelės: %@";
+
 "Change" = "Keisti";
 
 "Choose a card brand" = "Pasirinkite kortelės prekių ženklą";

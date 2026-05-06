@@ -64,6 +64,7 @@ class VerticalListMandateProvider: MandateTextProvider {
                 elementsSession: elementsSession,
                 configuration: .paymentElement(configuration, isLinkUI: false),
                 paymentMethod: paymentMethodType,
+                paymentMethodOrientation: .vertical,
                 previousCustomerInput: nil,
                 linkAccount: LinkAccountContext.shared.account,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),

@@ -8,7 +8,7 @@
 
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 import StripePaymentsObjcTestUtils
 import XCTest
 
@@ -148,8 +148,6 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.allowedShippingCountries, ["US", "CA"])
         XCTAssertTrue(session.requiresShippingAddress)
 
-        // Selected shipping option
-        XCTAssertEqual(session.selectedShippingOptionId, "shr_standard")
         XCTAssertEqual(session.totals?.shipping, 500)
 
         // Adaptive pricing
@@ -338,32 +336,6 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session?.taxAmounts[0].amount, 186)
         XCTAssertFalse(session?.taxAmounts[0].inclusive ?? true)
         XCTAssertEqual(session?.taxAmounts[0].taxRate?.displayName, "Sales Tax")
-    }
-
-    // MARK: - Enum Tests
-
-    func testStatusEnumParsing() {
-        XCTAssertEqual(Checkout.Status.status(from: "open"), .open)
-        XCTAssertEqual(Checkout.Status.status(from: "complete"), .complete)
-        XCTAssertEqual(Checkout.Status.status(from: "expired"), .expired)
-        XCTAssertEqual(Checkout.Status.status(from: "OPEN"), .open)
-        XCTAssertEqual(Checkout.Status.status(from: "unknown_value"), .unknown)
-    }
-
-    func testModeEnumParsing() {
-        XCTAssertEqual(Checkout.Mode.mode(from: "payment"), .payment)
-        XCTAssertEqual(Checkout.Mode.mode(from: "setup"), .setup)
-        XCTAssertEqual(Checkout.Mode.mode(from: "subscription"), .subscription)
-        XCTAssertEqual(Checkout.Mode.mode(from: "PAYMENT"), .payment)
-        XCTAssertEqual(Checkout.Mode.mode(from: "unknown_value"), .unknown)
-    }
-
-    func testPaymentStatusEnumParsing() {
-        XCTAssertEqual(Checkout.PaymentStatus.paymentStatus(from: "paid"), .paid)
-        XCTAssertEqual(Checkout.PaymentStatus.paymentStatus(from: "unpaid"), .unpaid)
-        XCTAssertEqual(Checkout.PaymentStatus.paymentStatus(from: "no_payment_required"), .noPaymentRequired)
-        XCTAssertEqual(Checkout.PaymentStatus.paymentStatus(from: "PAID"), .paid)
-        XCTAssertEqual(Checkout.PaymentStatus.paymentStatus(from: "unknown_value"), .unknown)
     }
 
     func testMerchantWillSavePaymentMethod_paymentModeWithoutSetupFutureUsage() {

@@ -9,15 +9,13 @@ import Foundation
 
 // MARK: - Session Protocol
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A read-only snapshot of a Stripe Checkout Session.
     public protocol Session {
         /// Unique identifier for this checkout session.
         var id: String { get }
-
-        /// The mode of this checkout session.
-        var mode: Checkout.Mode { get }
 
         /// The status of this checkout session, or `nil` if not yet determined.
         var status: Checkout.Status? { get }
@@ -40,14 +38,8 @@ extension Checkout {
         /// The shipping rate options available for this session.
         var shippingOptions: [Checkout.ShippingOption] { get }
 
-        /// The currently selected shipping option, or `nil` if none is selected.
-        var selectedShippingOption: Checkout.ShippingOption? { get }
-
         /// The discounts applied to this session.
         var discounts: [Checkout.Discount] { get }
-
-        /// The promotion code currently applied to this session, or `nil`.
-        var appliedPromotionCode: String? { get }
 
         /// The ID of the Stripe customer for this session, or `nil` if no customer is attached.
         var customerId: String? { get }
@@ -58,17 +50,20 @@ extension Checkout {
         /// The URL to the hosted Checkout page, or `nil` if not using hosted mode.
         var url: URL? { get }
 
-        /// The billing address set via ``Checkout/updateBillingAddress(_:)``, or `nil`.
-        var billingAddress: Checkout.AddressUpdate? { get }
+        /// The billing contact details and address set via
+        /// ``Checkout.updateBillingAddress(name:phone:address:)``, or `nil`.
+        var billingAddress: Checkout.ContactAddress? { get }
 
-        /// The shipping address set via ``Checkout/updateShippingAddress(_:)``, or `nil`.
-        var shippingAddress: Checkout.AddressUpdate? { get }
+        /// The shipping contact details and address set via
+        /// ``Checkout.updateShippingAddress(name:phone:address:)``, or `nil`.
+        var shippingAddress: Checkout.ContactAddress? { get }
     }
 }
 
 // MARK: - Mode
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// The mode of a checkout session.
     public enum Mode: Sendable {
@@ -85,7 +80,8 @@ extension Checkout {
 
 // MARK: - Status
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// The status of a checkout session.
     public enum Status: Sendable {
@@ -102,7 +98,8 @@ extension Checkout {
 
 // MARK: - PaymentStatus
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// The payment status of a checkout session.
     public enum PaymentStatus: Sendable {
@@ -120,7 +117,8 @@ extension Checkout {
 
 // MARK: - Totals
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// Monetary totals for a checkout session.
     ///
@@ -143,7 +141,8 @@ extension Checkout {
 
 // MARK: - LineItem
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A line item in a checkout session.
     public struct LineItem: Sendable, Hashable, Identifiable {
@@ -162,7 +161,8 @@ extension Checkout {
 
 // MARK: - ShippingOption
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A shipping option available in a checkout session.
     public struct ShippingOption: Sendable, Hashable, Identifiable {
@@ -179,7 +179,8 @@ extension Checkout {
 
 // MARK: - Discount
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A discount applied to a checkout session.
     public struct Discount: Sendable, Hashable {
@@ -194,7 +195,8 @@ extension Checkout {
 
 // MARK: - Coupon
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A coupon associated with a discount.
     public struct Coupon: Sendable, Hashable, Identifiable {

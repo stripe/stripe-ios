@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "无法更改银行卡详情。";
 
+"Card number. Supported cards include %@" = "卡号。支持的卡片包括 %@";
+
 "Change" = "更改";
 
 "Choose a card brand" = "选择银行卡品牌";
