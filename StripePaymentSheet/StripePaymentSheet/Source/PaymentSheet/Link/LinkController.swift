@@ -642,7 +642,7 @@ import UIKit
                 declarationViewController.onResult = { [weak declarationViewController] result in
                     declarationViewController?.onResult = nil
 
-                    let dismissAndResumeWithResult: (Result<CRSCARFDeclarationResult, Swift.Error>) -> Void = { continuationResult in
+                    let dismissAndResumeWithResult = { continuationResult in
                         declarationViewController?.dismiss(animated: true) {
                             continuation.resume(with: continuationResult)
                         }
