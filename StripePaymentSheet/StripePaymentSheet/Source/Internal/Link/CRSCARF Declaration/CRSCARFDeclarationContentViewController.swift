@@ -73,9 +73,9 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         stackView.isLayoutMarginsRelativeArrangement = true
         stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
             top: LinkUI.smallContentSpacing,
-            leading: LinkUI.largeContentSpacing,
-            bottom: LinkUI.largeContentSpacing,
-            trailing: LinkUI.largeContentSpacing
+            leading: LinkUI.contentSpacing,
+            bottom: LinkUI.contentSpacing,
+            trailing: LinkUI.contentSpacing
         )
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
@@ -104,7 +104,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
 
     private var attributedDeclarationText: NSAttributedString {
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = LinkUI.smallContentSpacing / 2
+        paragraphStyle.lineSpacing = LinkUI.tinyContentSpacing
         return NSAttributedString(
             string: text,
             attributes: [
@@ -116,7 +116,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     private lazy var bottomButtonContainer: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.addAndPinSubviewToSafeArea(confirmButton, insets: .insets(amount: LinkUI.largeContentSpacing))
+        view.addAndPinSubviewToSafeArea(confirmButton, insets: .insets(amount: LinkUI.contentSpacing))
         return view
     }()
 
