@@ -63,15 +63,20 @@ jobs:
       - name: Collect recorded snapshots
         run: |
           mkdir -p recorded-snapshots
-          RECORD_DIR="${TMPDIR:-/tmp}snapshot-records"
+          RECORD_DIR="/tmp/snapshot-records"
+          echo "Looking for snapshots in: $RECORD_DIR"
           if [ -d "$RECORD_DIR" ]; then
             find "$RECORD_DIR" -name "*.png" | while read f; do
               rel="${f#$RECORD_DIR/}"
               mkdir -p "recorded-snapshots/$(dirname "$rel")"
               cp "$f" "recorded-snapshots/$rel"
             done
+            echo "Collected $(find recorded-snapshots -name '*.png' | wc -l | xargs) snapshots"
           else
             echo "::warning::No recorded snapshots found at $RECORD_DIR"
+            # Try to find where they ended up
+            echo "Searching for snapshot-records directories..."
+            find /tmp /var/folders -name "snapshot-records" -type d 2>/dev/null || true
           fi
 
       - name: Generate diff report

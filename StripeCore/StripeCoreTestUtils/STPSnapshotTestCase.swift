@@ -17,7 +17,7 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
     }
 
     open override func getReferenceImageDirectory(withDefault dir: String?) -> String {
-        return NSTemporaryDirectory() + "snapshot-records"
+        return ProcessInfo.processInfo.environment["SNAPSHOT_RECORD_DIR"] ?? "/tmp/snapshot-records"
     }
 
     // Calls FBSnapshotVerifyView with a default 2% per-pixel color differentiation, as M1 and Intel machines render shadows differently.
