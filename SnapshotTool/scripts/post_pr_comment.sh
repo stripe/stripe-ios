@@ -95,10 +95,7 @@ cat >> "$BODY_FILE" << EOF
 
 **[👀 View Full Diff Report](${SNAPSHOT_REPORT_URL:-$REPORT_URL})**
 
-To approve these changes, a reviewer (not the PR author) should comment:
-\`\`\`
-/approve-snapshots
-\`\`\`
+To approve, add the \`snapshot changes approved\` label to this PR.
 EOF
 
 # Delete previous snapshot comments
