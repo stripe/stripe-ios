@@ -1395,9 +1395,10 @@ extension PlaygroundController: CheckoutDelegate {
                 _ = await embeddedPlaygroundViewController?.embeddedPaymentElement?.update(checkout: checkout)
             }
         case .flowController:
-            paymentSheetFlowController?.update(checkout: checkout) { error in
+            paymentSheetFlowController?.update(checkout: checkout) { [weak self] error in
                 if let error {
                     print("PaymentSheet.FlowController.update(checkout:) failed: \(error)")
+                    self?.fail(error: error)
                 }
             }
         case .paymentSheet:
