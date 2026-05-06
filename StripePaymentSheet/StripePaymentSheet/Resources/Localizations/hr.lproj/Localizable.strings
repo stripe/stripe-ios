@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Podaci o kartici ne mogu se mijenjati.";
 
+"Card number. Supported cards include %@" = "Broj kartice. Podržane kartice obuhvaćaju %@";
+
 "Change" = "Promijeni";
 
 "Choose a card brand" = "Odaberite marku kartice";
@@ -305,5 +307,3 @@
 "Your IBAN should start with a two-letter country code." = "Vaš bi IBAN trebao započeti s kodom države od dva slova.";
 
 "iDEAL Bank" = "iDEAL Bank";
-
-"Card number. Supported cards include %@" = "Broj kartice. Podržane kartice obuhvaćaju %@";

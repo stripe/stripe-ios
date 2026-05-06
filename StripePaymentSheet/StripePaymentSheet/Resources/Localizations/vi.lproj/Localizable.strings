@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Không thể thay đổi thông tin thẻ.";
 
+"Card number. Supported cards include %@" = "Số thẻ. Các thẻ được hỗ trợ bao gồm %@";
+
 "Change" = "Thay đổi";
 
 "Choose a card brand" = "Chọn thương hiệu thẻ";
@@ -305,5 +307,3 @@
 "Your IBAN should start with a two-letter country code." = "IBAN của quý vị phải bắt đầu bằng mã quốc gia gồm hai chữ cái.";
 
 "iDEAL Bank" = "Ngân hàng iDEAL";
-
-"Card number. Supported cards include %@" = "Số thẻ. Các thẻ được hỗ trợ bao gồm %@";

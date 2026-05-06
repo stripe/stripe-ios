@@ -107,7 +107,10 @@ public class PaymentSheet {
     /// Initializes PaymentSheet with a Checkout object
     /// - Parameter checkout: A loaded Checkout instance.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @MainActor @_spi(CheckoutSessionsPreview) public convenience init(checkout: Checkout, configuration: Configuration) {
+    @_spi(STP)
+    @_spi(ReactNativeSDK)
+    @MainActor
+    public convenience init(checkout: Checkout, configuration: Configuration) {
         guard let stpSession = checkout.state.session as? STPCheckoutSession else {
             fatalError("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
         }
@@ -182,8 +185,7 @@ public class PaymentSheet {
                     let presentPaymentSheet: () -> Void = {
                         let paymentSheetVC = self.makePaymentSheetVC(
                             loadResult: loadResult,
-                            previousPaymentOption: nil,
-                            shouldLogExperimentExposure: true
+                            previousPaymentOption: nil
                         )
                         self.bottomSheetViewController.setViewControllers([paymentSheetVC])
                     }
@@ -289,17 +291,9 @@ public class PaymentSheet {
     @MainActor
     func makePaymentSheetVC(
         loadResult: PaymentSheetLoader.LoadResult,
-        previousPaymentOption: PaymentOption?,
-        shouldLogExperimentExposure: Bool
+        previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
-        var configuration = self.configuration
-        let layout = configuration.resolveLayout(
-            loadResult: loadResult,
-            configuration: self.configuration,
-            analyticsHelper: self.analyticsHelper,
-            shouldLogExperimentExposure: shouldLogExperimentExposure
-        )
-        switch layout {
+        switch loadResult.paymentMethodOrientation {
         case .horizontal:
             let vc = PaymentSheetViewController(
                 configuration: configuration,

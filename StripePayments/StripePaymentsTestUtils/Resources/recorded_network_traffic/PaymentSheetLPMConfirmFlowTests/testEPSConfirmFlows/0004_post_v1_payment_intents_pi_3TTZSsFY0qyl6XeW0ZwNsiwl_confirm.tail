@@ -1,0 +1,101 @@
+POST
+https:\/\/api\.stripe\.com\/v1\/payment_intents\/pi_3TTZSsFY0qyl6XeW0ZwNsiwl\/confirm$
+200
+application/json
+access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=zBe4w4HJ5dMpPgzR1-92JVwZX0Z4wBhMTqtjRiu0lNYtV-4_KLRRXp5AtpGEdaYL4NyNswug-oj2E6gJ
+Server: nginx
+Cache-Control: no-cache, no-store
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=zBe4w4HJ5dMpPgzR1-92JVwZX0Z4wBhMTqtjRiu0lNYtV-4_KLRRXp5AtpGEdaYL4NyNswug-oj2E6gJ&t=1"
+x-wc: 3c3
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+Access-Control-Allow-Origin: *
+stripe-should-retry: false
+x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=zBe4w4HJ5dMpPgzR1-92JVwZX0Z4wBhMTqtjRiu0lNYtV-4_KLRRXp5AtpGEdaYL4NyNswug-oj2E6gJ&t=1"}],"include_subdomains":true}
+request-id: req_LCUY2LAxA7vFvT
+x-stripe-routing-context-priority-tier: api-testmode
+Content-Length: 1753
+Vary: Origin
+Date: Tue, 05 May 2026 03:16:08 GMT
+original-request: req_LCUY2LAxA7vFvT
+stripe-version: 2020-08-27
+idempotency-key: c74d77f4-9a59-4721-b2f4-5a6311d5ff78
+access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
+access-control-max-age: 300
+access-control-allow-credentials: true
+Content-Type: application/json
+X-Stripe-Mock-Request: client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=standard&client_attribution_metadata\[payment_method_selection_flow]=merchant_specified&client_secret=pi_3TTZSsFY0qyl6XeW0ZwNsiwl_secret_ZLcGRFso5Rqc3wnska43xguRN&expand\[0]=payment_method&mandate_data\[customer_acceptance]\[online]\[infer_from_client]=true&mandate_data\[customer_acceptance]\[type]=online&payment_method_data\[allow_redisplay]=unspecified&payment_method_data\[billing_details%5Bname%5D]=John%20Doe&payment_method_data\[client_attribution_metadata]\[client_session_id]=.*&payment_method_data\[client_attribution_metadata]\[elements_session_config_id]=.*&payment_method_data\[client_attribution_metadata]\[merchant_integration_source]=elements&payment_method_data\[client_attribution_metadata]\[merchant_integration_subtype]=mobile&payment_method_data\[client_attribution_metadata]\[merchant_integration_version]=.*&payment_method_data\[client_attribution_metadata]\[payment_intent_creation_flow]=standard&payment_method_data\[client_attribution_metadata]\[payment_method_selection_flow]=merchant_specified&payment_method_data\[eps%5Bbank%5D]=arzte_und_apotheker_bank&payment_method_data\[guid]=.*&payment_method_data\[muid]=.*&payment_method_data\[payment_user_agent]=.*&payment_method_data\[sid]=.*&payment_method_data\[type]=eps&return_url=https%3A\/\/foo\.com&use_stripe_sdk=true
+
+{
+  "payment_method_configuration_details" : null,
+  "canceled_at" : null,
+  "source" : null,
+  "amount" : 5050,
+  "capture_method" : "automatic",
+  "livemode" : false,
+  "shipping" : null,
+  "status" : "requires_action",
+  "object" : "payment_intent",
+  "currency" : "eur",
+  "last_payment_error" : null,
+  "amount_subtotal" : 5050,
+  "automatic_payment_methods" : null,
+  "cancellation_reason" : null,
+  "next_action" : {
+    "type" : "redirect_to_url",
+    "redirect_to_url" : {
+      "return_url" : "https:\/\/foo.com",
+      "url" : "https:\/\/pm-redirects.stripe.com\/authorize\/acct_1G6m1pFY0qyl6XeW\/pa_nonce_USURrZGx0I9qqKlWow5f36FjSosemCF"
+    }
+  },
+  "total_details" : {
+    "amount_discount" : 0,
+    "amount_tip" : null,
+    "amount_tax" : 0
+  },
+  "payment_method" : {
+    "object" : "payment_method",
+    "id" : "pm_1TTZSuFY0qyl6XeWMW9BX3xg",
+    "billing_details" : {
+      "email" : null,
+      "phone" : null,
+      "tax_id" : null,
+      "name" : "John Doe",
+      "address" : {
+        "state" : null,
+        "country" : null,
+        "line2" : null,
+        "city" : null,
+        "line1" : null,
+        "postal_code" : null
+      }
+    },
+    "eps" : {
+      "bank" : "arzte_und_apotheker_bank"
+    },
+    "livemode" : false,
+    "created" : 1777950968,
+    "allow_redisplay" : "unspecified",
+    "type" : "eps",
+    "customer" : null,
+    "customer_account" : null
+  },
+  "client_secret" : "pi_3TTZSsFY0qyl6XeW0ZwNsiwl_secret_ZLcGRFso5Rqc3wnska43xguRN",
+  "id" : "pi_3TTZSsFY0qyl6XeW0ZwNsiwl",
+  "confirmation_method" : "automatic",
+  "amount_details" : {
+    "tip" : {
+
+    }
+  },
+  "excluded_payment_method_types" : null,
+  "processing" : null,
+  "receipt_email" : null,
+  "payment_method_types" : [
+    "eps"
+  ],
+  "setup_future_usage" : null,
+  "created" : 1777950966,
+  "description" : null
+}

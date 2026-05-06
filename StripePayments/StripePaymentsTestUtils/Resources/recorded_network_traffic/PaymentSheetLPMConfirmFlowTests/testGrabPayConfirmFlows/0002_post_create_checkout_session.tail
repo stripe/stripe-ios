@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=AkuuCtPx4jxtltU9N%2B0fD2fjuKcA7T5xvFkZD2Lt5NsjS8EOve9wwUUXbk6Rb%2F4aTuWZjbrFmSTMLmlQe75sZOAqKhMIpOYzdD6X%2BgX8doY4g%2BIV%2BSiqqW82Uj8FKf0aZgjAESZHvvUTacvx8aPu9ep3v4CysnqxWnGCtITguZRYBxmdHh3Yzy9YT%2BtYrrtpiKYfze6NTNxY0L3i%2F4eDnMNAiZohIA9szRrQ3%2BMCwj8%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: 5e6d85195783ea86a545d2aad1881fb4
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:35:04 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: 30a960d3296e638cd1c62a5e7b98fbd9
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=dvlO5OQzO3ZTlWt0kDL5wFqvvYhDaD1zzYNRwSVKroEV%2B0DmEQ%2FaxrFWegVVLUQbzWwEPOaDGdDSm0ftKPRt0iTYwYfD2893Nu%2BKtaDsoXbj8iM7LeIxJDmGG%2FUfAh5VNtC3RbyHw1J6Q%2BJlvdDibt1eqOrr34rLq%2B7%2FdEeOk0fE96KSiCofesOSnX6zoBIpXPmMg6sWTHZ7vUvYg8OOScXqRS3JsbKAv0OXIE6zHgc%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Tue, 05 May 2026 03:16:29 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 
-{"id":"cs_test_a1nCJSboI6baPxqfjm7hGUIpJgvM7LQbt17svQL4gjKJjuATl9pnSjjRe0","client_secret":"cs_test_a1nCJSboI6baPxqfjm7hGUIpJgvM7LQbt17svQL4gjKJjuATl9pnSjjRe0_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51H7oXMAOnZToJom1hqiSvNGsUVTrG1SaXRSBon9xcEp0yDFAxEh5biA4n0ty6paEsD5Mo5ps1b7Taj9WAHQzjup800m8A8Nc3u"}
+{"id":"cs_test_a1NN2cc5oUWPSQ526aW5LEV26GfRBvUNku18q3GGtISkEt8NAr3YIlBaO3","client_secret":"cs_test_a1NN2cc5oUWPSQ526aW5LEV26GfRBvUNku18q3GGtISkEt8NAr3YIlBaO3_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51H7oXMAOnZToJom1hqiSvNGsUVTrG1SaXRSBon9xcEp0yDFAxEh5biA4n0ty6paEsD5Mo5ps1b7Taj9WAHQzjup800m8A8Nc3u"}

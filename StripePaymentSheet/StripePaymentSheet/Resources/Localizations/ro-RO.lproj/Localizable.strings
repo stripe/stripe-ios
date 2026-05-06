@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Detaliile cardului nu pot fi modificate.";
 
+"Card number. Supported cards include %@" = "Numărul cardului. Cardurile acceptate includ %@";
+
 "Change" = "Modificare";
 
 "Choose a card brand" = "Alegeți o marcă de carduri";
@@ -305,5 +307,3 @@
 "Your IBAN should start with a two-letter country code." = "Codul dvs. IBAN trebuie să înceapă cu un cod de țară format din două litere.";
 
 "iDEAL Bank" = "iDEAL Bank";
-
-"Card number. Supported cards include %@" = "Numărul cardului. Cardurile acceptate includ %@";
