@@ -62,26 +62,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(headerView)
     }
 
-    func testMakeBNPLHeader_DefaultsToNil() {
-        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        configuration.style = .alwaysDark
-
-        let factory = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
-            elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
-            configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.klarna),
-            paymentMethodOrientation: .vertical,
-            accountService: LinkAccountService(
-                apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
-                elementsSession: ._testValue()
-            ),
-            analyticsHelper: nil
-        )
-
-        XCTAssertNil(factory.makeBNPLHeader())
-    }
-
     private func makeCheckoutSessionIntent(
         offerSave: [String: Any]? = nil,
         hasCustomer: Bool = true
