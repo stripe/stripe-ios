@@ -30,21 +30,22 @@ enum MandateVariant {
             }
         }
 
-        let terms = {
-            if case .updated(true) = self {
-                return formatText.removeTrailingDots()
-            }
-            return String(format: formatText, merchant).removeTrailingDots()
-        }()
+        let terms = switch self {
+        case .original, .updated(false):
+            String(format: formatText, merchant).removeTrailingDots()
+        case .updated(true):
+            formatText.removeTrailingDots()
+        }
 
-        if case .updated(true) = self {
+        switch self {
+        case .updated(true):
             let links = [
                 "link": URL(string: "https://link.com")!,
                 "terms": URL(string: "https://link.com/terms")!,
                 "privacy": URL(string: "https://link.com/privacy")!,
             ]
             return STPStringUtils.applyLinksToString(template: terms, links: links)
-        } else {
+        case .original, .updated(false):
             return NSAttributedString(string: terms)
         }
     }
