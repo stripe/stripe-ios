@@ -63,12 +63,16 @@ jobs:
       - name: Collect recorded snapshots
         run: |
           mkdir -p recorded-snapshots
-          find . -path "*/.snapshot-baselines" -prune -o \
-               -path "*/ReferenceImages_64/*" -name "*.png" -print | while read f; do
-            rel=$(echo "$f" | sed 's|.*/ReferenceImages_64/||')
-            mkdir -p "recorded-snapshots/$(dirname "$rel")"
-            cp "$f" "recorded-snapshots/$rel"
-          done
+          RECORD_DIR="${TMPDIR:-/tmp}snapshot-records"
+          if [ -d "$RECORD_DIR" ]; then
+            find "$RECORD_DIR" -name "*.png" | while read f; do
+              rel="${f#$RECORD_DIR/}"
+              mkdir -p "recorded-snapshots/$(dirname "$rel")"
+              cp "$f" "recorded-snapshots/$rel"
+            done
+          else
+            echo "::warning::No recorded snapshots found at $RECORD_DIR"
+          fi
 
       - name: Generate diff report
         id: diff
