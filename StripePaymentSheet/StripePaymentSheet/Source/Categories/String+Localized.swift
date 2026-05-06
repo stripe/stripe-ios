@@ -578,4 +578,43 @@ extension String.Localized {
             "Disclaimer shown when the customer selects the merchant's currency, meaning their bank will handle any currency conversion"
         )
     }
+
+    static var subtotal: String {
+        STPLocalizedString(
+            "Subtotal",
+            "Label for the subtotal row in an order summary, before tax/shipping/discounts."
+        )
+    }
+
+    static var shipping: String {
+        STPLocalizedString(
+            "Shipping",
+            "Label for the shipping cost row in an order summary."
+        )
+    }
+
+    static var tax: String {
+        STPLocalizedString(
+            "Tax",
+            "Label for the tax row in an order summary."
+        )
+    }
+
+    static var discount: String {
+        STPLocalizedString(
+            "Discount",
+            "Label for the discount row in an order summary, applied as a negative amount."
+        )
+    }
+
+    static func lineItemLabel(name: String, quantity: Int) -> String {
+        String(
+            format: STPLocalizedString(
+                "%1$@ ×%2$d",
+                "Order summary line item showing name and quantity, e.g. 'Shirt ×3'."
+            ),
+            name,
+            quantity
+        )
+    }
 }
