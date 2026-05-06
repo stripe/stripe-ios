@@ -503,9 +503,11 @@ import UIKit
         case .guest:
             return "guest"
         case .new:
-            return customerId ?? "new"
+            return "new"
         case .returning:
-            return customerId ?? "returning"
+            return "returning"
+        case .customID:
+            return settings.customerId ?? ""
         }
     }
 
@@ -626,6 +628,7 @@ import UIKit
             await MainActor.run {
                 self.settings = settings
                 self.appearance = appearance
+                self.customerId = settings.customerId
                 self.loadLastSavedCustomer()
             }
         }
@@ -1356,6 +1359,10 @@ extension PlaygroundController {
     }
 
     func loadLastSavedCustomer() {
+        if settings.customerMode == .customID {
+            self.customerId = settings.customerId
+            return
+        }
         if let customerIdData = UserDefaults.standard.value(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey) as? Data {
             do {
                 self.customerId = try JSONDecoder().decode(String.self, from: customerIdData)
