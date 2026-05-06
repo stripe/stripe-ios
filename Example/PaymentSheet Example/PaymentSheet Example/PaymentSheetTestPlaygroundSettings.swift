@@ -356,6 +356,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum PaymentMethodRemoveLast: String, PickerEnum {
         static var enumName: String { "PaymentMethodRemoveLast" }
 
+        case unset
         case enabled
         case disabled
     }
@@ -392,6 +393,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     enum PaymentMethodSetAsDefault: String, PickerEnum {
         static let enumName: String = "PaymentMethodSetAsDefault"
+        case unset
         case enabled
         case disabled
     }
