@@ -13,7 +13,7 @@ import UIKit
  Subclass of UITextView that allows for links to be opened on tap when the text is un-selectable.
  */
 @objc(STP_Internal_LinkOpeningTextView)
-@_spi(STP) public class LinkOpeningTextView: UITextView {
+@_spi(STP) open class LinkOpeningTextView: UITextView {
     private var isTextSelectable = true
 
     /*

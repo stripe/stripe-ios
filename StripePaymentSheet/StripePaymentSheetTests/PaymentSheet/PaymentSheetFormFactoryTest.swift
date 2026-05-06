@@ -35,6 +35,52 @@ class MockElement: Element {
 }
 
 class PaymentSheetFormFactoryTest: XCTestCase {
+    private func extractBNPLHeaderView(from subtitle: SubtitleElement) -> BNPLFormHeaderView? {
+        if let headerView = subtitle.view as? BNPLFormHeaderView {
+            return headerView
+        }
+        return subtitle.view.subviews.compactMap { $0 as? BNPLFormHeaderView }.first
+    }
+
+    func testMakeKlarnaHeader_DefaultsToLegacyHeader() {
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
+            elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
+            configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
+            paymentMethod: .stripe(.klarna),
+            paymentMethodOrientation: .vertical,
+            accountService: LinkAccountService(
+                apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
+                elementsSession: ._testValue()
+            ),
+            analyticsHelper: nil
+        )
+
+        let header = factory.makeKlarnaHeader()
+        let headerView = extractBNPLHeaderView(from: header)
+
+        XCTAssertNil(headerView)
+    }
+
+    func testMakeBNPLHeader_DefaultsToNil() {
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.style = .alwaysDark
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
+            elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
+            configuration: .paymentElement(configuration),
+            paymentMethod: .stripe(.klarna),
+            paymentMethodOrientation: .vertical,
+            accountService: LinkAccountService(
+                apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
+                elementsSession: ._testValue()
+            ),
+            analyticsHelper: nil
+        )
+
+        XCTAssertNil(factory.makeBNPLHeader())
+    }
 
     private func makeCheckoutSessionIntent(
         offerSave: [String: Any]? = nil,
