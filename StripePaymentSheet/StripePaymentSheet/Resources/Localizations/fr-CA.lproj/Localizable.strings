@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Vous ne pouvez pas modifier les informations de la carte.";
 
+"Card number. Supported cards include %@" = "Numéro de carte. Les cartes prises en charge comprennent %@";
+
 "Change" = "Modifier";
 
 "Choose a card brand" = "Choisissez une marque de carte";

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
@@ -43,13 +44,16 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var analyticPayload: [String: Any] { get }
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
-    var resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout? { get }
     var opensCardScannerAutomatically: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
-    var enableAttestationOnConfirmation: Bool { get }
+    func resolveLayout() -> PaymentSheet.PaymentMethodLayout.ResolvedLayout
 }
 
 extension PaymentElementConfiguration {
+    func resolvedLinkBrand(elementsSession: STPElementsSession) -> LinkBrand {
+        // `link.brand` is an explicit client override; `nil` means defer to the elements session response.
+        link.brand ?? elementsSession.linkBrand ?? .link
+    }
 
     /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
     func requiresBillingDetailCollection() -> Bool {
@@ -108,5 +112,7 @@ extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
         set {}
     }
 
-    var resolvedPaymentMethodLayout: PaymentSheet.PaymentMethodLayout.ResolvedLayout? { .vertical }
+    func resolveLayout() -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
+        .vertical
+    }
 }

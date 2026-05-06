@@ -51,7 +51,7 @@ extension RowButton {
             if #available(iOS 15.0, *) {
                 label.minimumContentSizeCategory = .large
             }
-            label.textColor = appearance.colors.primary // TODO(porter) use secondary action color
+            label.textColor = appearance.colors.primary
             label.adjustsFontSizeToFitWidth = true
             label.adjustsFontForContentSizeCategory = true
             label.minimumScaleFactor = 0.9
@@ -65,7 +65,7 @@ extension RowButton {
             if accessoryType == .update {
                 imageView.tintColor = appearance.colors.icon
             } else {
-                imageView.tintColor = appearance.colors.primary // TODO(porter) use secondary action color
+                imageView.tintColor = appearance.colors.primary
             }
             imageView.contentMode = .scaleAspectFit
             imageView.isAccessibilityElement = false

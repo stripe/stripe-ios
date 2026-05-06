@@ -53,6 +53,7 @@ class AddPaymentMethodViewController: UIViewController {
     private let intent: Intent
     private let elementsSession: STPElementsSession
     private let configuration: PaymentElementConfiguration
+    private let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
@@ -66,7 +67,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, headerView: nil, analyticsHelper: analyticsHelper, paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
+        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, paymentMethodOrientation: paymentMethodOrientation, headerView: nil, analyticsHelper: analyticsHelper, paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
         previousCustomerInput = nil
         return pmFormVC
@@ -104,6 +105,7 @@ class AddPaymentMethodViewController: UIViewController {
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout = .horizontal,
         previousCustomerInput: IntentConfirmParams? = nil,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         formCache: PaymentMethodFormCache,
@@ -120,6 +122,7 @@ class AddPaymentMethodViewController: UIViewController {
         }
         stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         self.configuration = configuration
+        self.paymentMethodOrientation = paymentMethodOrientation
         self.intent = intent
         self.elementsSession = elementsSession
         self.previousCustomerInput = previousCustomerInput
@@ -193,6 +196,7 @@ class AddPaymentMethodViewController: UIViewController {
                 previousCustomerInput: previousCustomerInput,
                 formCache: formCache,
                 configuration: configuration,
+                paymentMethodOrientation: paymentMethodOrientation,
                 headerView: nil,
                 analyticsHelper: analyticsHelper,
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,

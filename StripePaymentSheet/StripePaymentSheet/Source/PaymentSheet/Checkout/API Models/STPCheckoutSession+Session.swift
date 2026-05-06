@@ -10,16 +10,11 @@ import Foundation
 extension STPCheckoutSession: Checkout.Session {
     var id: String { stripeId }
 
-    var selectedShippingOption: Checkout.ShippingOption? {
-        guard let id = selectedShippingOptionId else { return nil }
-        return shippingOptions.first(where: { $0.id == id })
-    }
-
-    var billingAddress: Checkout.AddressUpdate? {
+    var billingAddress: Checkout.ContactAddress? {
         billingAddressOverride
     }
 
-    var shippingAddress: Checkout.AddressUpdate? {
+    var shippingAddress: Checkout.ContactAddress? {
         shippingAddressOverride
     }
 }

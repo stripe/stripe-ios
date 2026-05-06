@@ -19,12 +19,14 @@ final class PaymentSheetLoader {
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
         let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+        let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
 
         init(
             intent: Intent,
             elementsSession: STPElementsSession,
             savedPaymentMethods: [STPPaymentMethod],
             paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+            paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
             paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil
         ) {
             self.intent = intent
@@ -32,6 +34,7 @@ final class PaymentSheetLoader {
             self.savedPaymentMethods = savedPaymentMethods
             self.paymentMethodTypes = paymentMethodTypes
             self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+            self.paymentMethodOrientation = paymentMethodOrientation
         }
     }
 
@@ -224,10 +227,10 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes,
+                paymentMethodOrientation: configuration.resolveLayout(),
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper
             )
             let confirmationChallenge = ConfirmationChallenge(
-                enableAttestation: configuration.enableAttestationOnConfirmation,
                 elementsSession: elementsSession,
                 stripeAttest: configuration.apiClient.stripeAttest
             )

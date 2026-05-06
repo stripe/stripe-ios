@@ -7,7 +7,7 @@
 
 import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 @_spi(STP) @testable import StripeUICore
 import UIKit
 // ☠️ WARNING: These snapshots do not have capsule corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
@@ -90,10 +90,19 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     private func verify(
         _ view: Checkout.CurrencySelectorView,
         darkMode: Bool = false,
+        width: CGFloat = 320,
         file: StaticString = #filePath,
         line: UInt = #line
     ) {
-        verifySelectorSnapshotView(view, darkMode: darkMode, file: file, line: line)
+        view.autosizeHeight(width: width)
+
+        let window = UIWindow(frame: CGRect(origin: .zero, size: view.frame.size))
+        window.overrideUserInterfaceStyle = darkMode ? .dark : .light
+        window.isHidden = false
+        window.addAndPinSubview(view)
+        window.layoutIfNeeded()
+
+        STPSnapshotVerifyView(view, file: file, line: line)
     }
 
     @MainActor

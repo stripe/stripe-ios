@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=cNMV3vUJMKdTsMwWYg87fVhRvLCw8MAVLY2Pt%2FVbA92%2BvKcCBz%2FP5zfTwUYAqCZi5M4d6L2e3cs4xZU7dHMgR1%2B%2BNhIhFwxkN77tmkcWLUZ2d%2FVUuyEGvvQWD5MS0D8JWAmWF9YVpI%2BVR8%2Bzm%2BO%2FDotPwhGXut8R2aeqkbZI5y8bdCS9xM3%2BX%2FtUyizHfP7PzOIR%2BK4lt7495O2d6pp%2FysuU5r9WTQreWOU1z4mOIvA%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: b837f421b554aebf5deb229ba805ab12
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:39:21 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: 95a4050841daf30374177556881d8362
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=QIR3Bo2YdWfbJGKslym0yR38%2FspA1XviCxKLwiwe8yYYwp6GeWif85SarlXcqFgXkxcjYEH%2FYS2CNIWwtgUf9ezMBIaF%2Fckcr1Fh4n1gXR5pSZ0bydrKoZ%2BsrHKoZahxSCtXl0OY3EXbrrfJEanNruehtE%2BhRUr0r7sgIHXJRutjWccvW%2Fva9hoEKqOcJQJ0r7gJWWa5ead%2Bm2w35juljQqx%2FzsMeOLEnJX8VGHmtBE%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Tue, 05 May 2026 03:20:39 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000
 
-{"id":"cs_test_a1F2u0NKt9D59PQ3lQGWjEL8P6w097Kuv5Lbh4KSzOEtTIWD6JFRQYfRkc","client_secret":"cs_test_a1F2u0NKt9D59PQ3lQGWjEL8P6w097Kuv5Lbh4KSzOEtTIWD6JFRQYfRkc_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51GvAY5HNG4o8pO5lDEegY72rkF1TMiMyuTxSFJsmsH7U0KjTwmEf2VuXHVHecil64QA8za8Um2uSsFsfrG0BkzFo00sb1uhblF"}
+{"id":"cs_test_a1WJSIvd5tBw505j2qKjLWRWZPlIDXuwOvVHFLwydX85Xr88yYe6V2u5WG","client_secret":"cs_test_a1WJSIvd5tBw505j2qKjLWRWZPlIDXuwOvVHFLwydX85Xr88yYe6V2u5WG_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51GvAY5HNG4o8pO5lDEegY72rkF1TMiMyuTxSFJsmsH7U0KjTwmEf2VuXHVHecil64QA8za8Um2uSsFsfrG0BkzFo00sb1uhblF"}

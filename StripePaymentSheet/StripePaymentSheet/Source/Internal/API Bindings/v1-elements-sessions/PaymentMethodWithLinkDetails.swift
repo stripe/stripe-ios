@@ -7,6 +7,8 @@
 
 import Foundation
 
+@_spi(STP) import StripeCore
+
 class PaymentMethodWithLinkDetails: NSObject, STPAPIResponseDecodable {
     let paymentMethod: STPPaymentMethod
     let isLinkOrigin: Bool
@@ -49,8 +51,9 @@ class PaymentMethodWithLinkDetails: NSObject, STPAPIResponseDecodable {
             }
         }
 
-        if let linkDetails, linkDetails.type.isUnsupportedAsSavedPaymentMethod {
-            // This is a Link payment method, but we don't support the type yet. We can't render them, so hide them.
+        if let linkDetails, linkDetails.type.isUnparsed {
+            // TODO(jkelle): We'll be able to render these with the `display` metadata
+            // coming in https://docs.google.com/document/d/1x834BjHYro9-bDoAVaqgHm7LDPDwzpk4z_5BvxYwwtU/
             return nil
         }
 
@@ -60,16 +63,5 @@ class PaymentMethodWithLinkDetails: NSObject, STPAPIResponseDecodable {
             linkDetails: linkDetails,
             allResponseFields: response
         )
-    }
-}
-
-private extension ConsumerPaymentDetails.DetailsType {
-    var isUnsupportedAsSavedPaymentMethod: Bool {
-        switch self {
-        case .card, .bankAccount:
-            false
-        case .unparsable:
-            true
-        }
     }
 }

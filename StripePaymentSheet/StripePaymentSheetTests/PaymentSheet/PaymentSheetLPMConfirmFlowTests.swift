@@ -10,7 +10,7 @@ import SafariServices
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CheckoutSessionsPreview) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
+@testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import SwiftUI
@@ -646,7 +646,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage, .setupIntent],
             currency: "USD",
             intentPaymentMethodType: .card,
-            linkFundingSources: [.card],
+            linkFundingSources: [ParsedEnum(.card)],
             makeLinkPaymentMethod: { apiClient in
                 let params = STPPaymentMethodParams._testCardValue(email: "paymentsheet-link-card-confirm-flows@example.com")
                 params.card?.expMonth = 12
@@ -668,7 +668,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             intentKinds: [.paymentIntent, .paymentIntentWithSetupFutureUsage, .paymentIntentWithPMOSetupFutureUsage],
             currency: "USD",
             intentPaymentMethodType: .USBankAccount,
-            linkFundingSources: [.bankAccount],
+            linkFundingSources: [ParsedEnum(.bankAccount)],
             makeLinkPaymentMethod: { apiClient in
                 try await apiClient.createPaymentMethod(
                     with: ._testUSBankAccountValue(
@@ -975,7 +975,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         for (description, intent) in intents {
 
             func makeFormVC(previousCustomerInput: IntentConfirmParams?) -> PaymentMethodFormViewController {
-                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
+                return PaymentMethodFormViewController(type: .stripe(paymentMethodType), intent: intent, elementsSession: ._testValue(intent: intent, allowsSetAsDefaultPM: allowsSetAsDefaultPM), previousCustomerInput: previousCustomerInput, formCache: .init(), configuration: configuration, paymentMethodOrientation: .vertical, headerView: nil, analyticsHelper: ._testValue(), delegate: self)
             }
             // Make the form
             let formVC = makeFormVC(previousCustomerInput: nil)
@@ -1440,7 +1440,7 @@ extension PaymentSheetLPMConfirmFlowTests {
         amount: Int? = nil,
         intentPaymentMethodType: STPPaymentMethodType,
         merchantCountry: MerchantCountry = .US,
-        linkFundingSources: Set<LinkSettings.FundingSource>,
+        linkFundingSources: Set<ParsedEnum<LinkSettings.FundingSource>>,
         makeLinkPaymentMethod: (STPAPIClient) async throws -> STPPaymentMethod
     ) async throws {
         // Initialize PaymentSheet at least once to set the correct payment_user_agent for this process:

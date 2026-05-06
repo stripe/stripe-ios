@@ -1,0 +1,26 @@
+{
+  "alternatives": [
+    {
+      "alternative_missing_identifiers": [
+        "mt_pp"
+      ],
+      "original_missing_identifiers": [
+        "mt_nic"
+      ]
+    }
+  ],
+  "identifiers": [
+    {
+      "regulation": "eu_carf",
+      "type": "de_stn"
+    },
+    {
+      "regulation": "eu_carf",
+      "type": "mt_nic"
+    },
+    {
+      "regulation": "eu_mica",
+      "type": "mt_nic"
+    }
+  ]
+}

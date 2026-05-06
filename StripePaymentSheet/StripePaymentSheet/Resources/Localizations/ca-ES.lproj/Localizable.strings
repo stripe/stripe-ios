@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "Les dades de la targeta no es poden canviar.";
 
+"Card number. Supported cards include %@" = "Número de targeta. Les targetes admeses inclouen %@";
+
 "Change" = "Canvia";
 
 "Choose a card brand" = "Trieu una marca de targeta";

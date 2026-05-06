@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=LtTFARo6IE%2BO63WV1hG%2FrmPJT2ffPzHUezX7UQUOC0EnveMHMcblBbxQ7HrgwMqmxcKAfrSAF%2FQZSRsmpjIxr1TjrcLKTDJ0nHJD0JbhjQs2bwwnTMB%2BIraVqfAUWiNBeTX7p3%2BYfYcR%2FA%2FekxjyGMd7S%2FGC%2BtmqtMAgmy%2BZju%2Bps0t73EmsbmImhCnR4aY8drCUhv6yAlEwxriaHzHugfKL5U9HKkzTdFJ03yq4uec%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: bd0f847fbb27aa01d445d2f6a2d350d6
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:41:12 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: d09d30ec861c37d0e0983b86fdd2351b
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=Iw%2FyTyJ1ScGN0ZC4gUeWgwkK9pWtuZlf2%2BIVDQlOVfRHU6gxmmhCSv%2FHYdbaS8cQ9jK41OB%2FuqCymCYYIEf9ZISu8TX6VsW8KWylPh0Rzh2pfnlTqI%2Fkg7ossFaD1vqK2BhU3cAR7aZ8bx%2B%2BIUsNhxjrV5HE5j01BOiCXQbnUuSCfr7PtOtKNL46o%2BOrq8qsUP4jlpRHvq1cL20tsEGl%2FcnCr%2BrKTdeVyrHBQQQ8oFI%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Tue, 05 May 2026 03:22:36 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000
 
-{"id":"cs_test_a1vEx3OZ3YQ3LBfJFROagd5piFg9SUGGKmtZR18iv3anqGPdPVJQVSryqX","client_secret":"cs_test_a1vEx3OZ3YQ3LBfJFROagd5piFg9SUGGKmtZR18iv3anqGPdPVJQVSryqX_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51NpEAWBgCYKNuUnnoBpaJZQYWOO6UpLtcioKggla08zpvDDy0cjfGKZdl5BsU8Gm5ilJNCqT7laCsqvyc0LndskG00pnPnJSpD"}
+{"id":"cs_test_a16cueH9daxiQfLAMflj618k8JsegXR1ky8XGxEwEIinCxeCgN3vKWTZoH","client_secret":"cs_test_a16cueH9daxiQfLAMflj618k8JsegXR1ky8XGxEwEIinCxeCgN3vKWTZoH_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51NpEAWBgCYKNuUnnoBpaJZQYWOO6UpLtcioKggla08zpvDDy0cjfGKZdl5BsU8Gm5ilJNCqT7laCsqvyc0LndskG00pnPnJSpD"}
