@@ -8,6 +8,7 @@ MINOR
 
 ### PaymentSheet
 * [Added] Added support for new and upcoming payment methods in native Link, such as UPI, Pix, and Crypto
+* [Fixed] Changed `@_spi(STP)` exposure of `LinkAppearance` and `VerifyKYCResult` to `@_spi(CryptoOnrampAlpha)`.
 
 ## 25.13.0 2026-05-04
 ### PaymentSheet
