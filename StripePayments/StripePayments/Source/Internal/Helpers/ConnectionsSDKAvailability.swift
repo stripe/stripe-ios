@@ -90,6 +90,8 @@ import UIKit
 }
 
 final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
+    required init() {}
+
     func presentFinancialConnectionsSheet(
         apiClient: STPAPIClient,
         clientSecret: String,
