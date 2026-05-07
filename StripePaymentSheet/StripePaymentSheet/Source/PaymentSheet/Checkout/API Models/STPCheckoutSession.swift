@@ -591,18 +591,6 @@ extension STPCheckoutSession {
         return Checkout.Amount(amount: formatted, minorUnitsAmount: minorUnits)
     }
 
-    /// Computes the minor-unit divisor for a currency (e.g. 100 for USD, 1 for JPY).
-    static func computedMinorUnitsAmountDivisor(currency: String?) -> Int {
-        // Build a 1.00 amount in the currency and read the resulting decimal.
-        // For zero-decimal currencies the result is 1.
-        let one = NSDecimalNumber.stp_decimalNumber(withAmount: 100, currency: currency)
-        let multiplier = one.doubleValue
-        if multiplier > 0, multiplier <= 100, multiplier.truncatingRemainder(dividingBy: 1) == 0 {
-            return Int(100.0 / multiplier)
-        }
-        return 100
-    }
-
     // MARK: Line Items
 
     static func parseLineItems(from dict: [AnyHashable: Any], defaultCurrency: String?) -> [Checkout.LineItem] {
