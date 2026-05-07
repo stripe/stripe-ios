@@ -5,6 +5,7 @@
 //  Created by Michael Liberatore on 4/23/26.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
