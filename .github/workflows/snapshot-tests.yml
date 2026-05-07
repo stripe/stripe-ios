@@ -48,7 +48,11 @@ jobs:
             "com.apple.CoreSimulator.SimRuntime.iOS-16-4"
 
       - name: Run snapshot tests (record mode)
-        run: ruby ci_scripts/snapshots.rb --record --ci
+        run: |
+          # Record mode causes FBSnapshotTestCase to "fail" each test after
+          # saving the reference image. We allow this exit code and verify
+          # snapshots were actually written in the next step.
+          ruby ci_scripts/snapshots.rb --record --ci || true
 
       - name: Install ImageMagick
         run: brew install imagemagick
@@ -57,19 +61,20 @@ jobs:
         run: |
           mkdir -p recorded-snapshots
           RECORD_DIR="/tmp/snapshot-records"
-          echo "Looking for snapshots in: $RECORD_DIR"
-          if [ -d "$RECORD_DIR" ]; then
-            find "$RECORD_DIR" -name "*.png" | while read f; do
-              rel="${f#$RECORD_DIR/}"
-              mkdir -p "recorded-snapshots/$(dirname "$rel")"
-              cp "$f" "recorded-snapshots/$rel"
-            done
-            echo "Collected $(find recorded-snapshots -name '*.png' | wc -l | xargs) snapshots"
-          else
-            echo "::warning::No recorded snapshots found at $RECORD_DIR"
-            # Try to find where they ended up
-            echo "Searching for snapshot-records directories..."
-            find /tmp /var/folders -name "snapshot-records" -type d 2>/dev/null || true
+          if [ ! -d "$RECORD_DIR" ]; then
+            echo "::error::No recorded snapshots found at $RECORD_DIR"
+            exit 1
+          fi
+          find "$RECORD_DIR" -name "*.png" | while read f; do
+            rel="${f#$RECORD_DIR/}"
+            mkdir -p "recorded-snapshots/$(dirname "$rel")"
+            cp "$f" "recorded-snapshots/$rel"
+          done
+          COUNT=$(find recorded-snapshots -name '*.png' | wc -l | xargs)
+          echo "Collected $COUNT snapshots"
+          if [ "$COUNT" -eq 0 ]; then
+            echo "::error::Snapshot recording produced no images"
+            exit 1
           fi
 
       - name: Generate diff report
