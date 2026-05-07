@@ -759,7 +759,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         actionSheet.popoverPresentationController?.sourceRect = sourceRect
 
         actionSheet.addAction(UIAlertAction(
-            title: STPLocalizedString("Log out of Link", "Title of the logout action."),
+            title: String.Localized.log_out_of_brand(context.configuration.resolvedLinkBrand(elementsSession: context.elementsSession)),
             style: .destructive,
             handler: { [weak self] _ in
                 self?.coordinator?.logout(cancel: true)
