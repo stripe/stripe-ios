@@ -37,10 +37,8 @@ jobs:
       - name: Install iOS 16.4 runtime
         run: |
           if ! xcrun simctl list runtimes | grep -q "iOS 16.4"; then
-            curl -L -o /tmp/iOS_16.4_Simulator_Runtime.dmg \
-              "https://download.developer.apple.com/Developer_Tools/iOS_16.4_Simulator_Runtime/iOS_16.4_Simulator_Runtime.dmg"
-            xcrun simctl runtime add /tmp/iOS_16.4_Simulator_Runtime.dmg
-            rm -f /tmp/iOS_16.4_Simulator_Runtime.dmg
+            brew install xcodes
+            xcodes runtimes install "iOS 16.4"
           fi
 
       - name: Create simulator
