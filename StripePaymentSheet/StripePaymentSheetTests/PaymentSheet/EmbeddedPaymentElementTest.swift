@@ -406,7 +406,7 @@ class EmbeddedPaymentElementTest: XCTestCase {
             paymentOption: .new(confirmParams: confirmParams),
             mandateText: nil,
             currency: "usd",
-            iconStyle: .filled,
+            iconStyle: configuration.appearance.iconStyle,
             linkBrand: .onelink
         )
 
