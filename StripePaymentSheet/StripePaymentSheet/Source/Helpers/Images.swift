@@ -90,6 +90,7 @@ enum Image: String, CaseIterable, ImageMaker {
     case onelink_logo = "onelink_logo"
     case link_logo_bw = "link_logo_bw"
     case link_logo_knockout = "link_logo_knockout"
+    case onelink_logo_knockout = "onelink_logo_knockout"
     case link_icon = "link_icon"
     case link_logo_tintable = "link_logo_tintable"
     case onelink_logo_bw = "onelink_logo_bw"
@@ -133,6 +134,15 @@ extension LinkBrand {
             return Image.link_logo.makeImage(template: false)
         case .onelink:
             return Image.onelink_logo.makeImage(template: false)
+        }
+    }
+
+    var paymentSheetKnockoutLogoImage: UIImage {
+        switch self {
+        case .link, .unparsable:
+            return Image.link_logo_knockout.makeImage(template: false)
+        case .onelink:
+            return Image.onelink_logo_knockout.makeImage(template: false)
         }
     }
 }
