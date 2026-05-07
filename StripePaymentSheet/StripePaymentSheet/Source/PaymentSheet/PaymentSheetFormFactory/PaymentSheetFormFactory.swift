@@ -844,7 +844,7 @@ extension PaymentSheetFormFactory {
 
     private var bnplHeaderStyle: PaymentSheet.UserInterfaceStyle {
         guard case .paymentElement(let configuration, _) = configuration else {
-            stpAssertionFailure("BNPL headers are only supported for PaymentSheet and EmbeddedPaymentElement.")
+            stpAssertionFailure("BNPL headers are only supported for PaymentSheet/FlowController/EmbeddedPaymentElement and not CustomerSheet.")
             return .automatic
         }
         return configuration.style

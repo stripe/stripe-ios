@@ -12,19 +12,15 @@ import XCTest
 @MainActor
 final class BNPLFormHeaderViewTests: STPSnapshotTestCase {
     func testDefaultAppearance() {
-        let (headerView, _, window) = makeHeaderView()
+        let (headerView, _, _) = makeHeaderView()
 
         verify(headerView)
-
-        window.isHidden = true
     }
 
     func testAlwaysDarkStyleSnapshot() {
-        let (headerView, _, window) = makeHeaderView(style: .alwaysDark)
+        let (headerView, _, _) = makeHeaderView(style: .alwaysDark)
 
         verify(headerView)
-
-        window.isHidden = true
     }
 
     func testCustomAppearance() {
@@ -33,15 +29,13 @@ final class BNPLFormHeaderViewTests: STPSnapshotTestCase {
         appearance.colors.primary = .systemGreen
         appearance.colors.text = .systemBrown
 
-        let (headerView, _, window) = makeHeaderView(appearance: appearance)
+        let (headerView, _, _) = makeHeaderView(appearance: appearance)
 
         verify(headerView)
-
-        window.isHidden = true
     }
 
     func testAlwaysDarkStyle_AppliesToHeaderAndInfoModal() throws {
-        let (headerView, rootViewController, window) = makeHeaderView(style: .alwaysDark)
+        let (headerView, rootViewController, _) = makeHeaderView(style: .alwaysDark)
 
         XCTAssertEqual(headerView.overrideUserInterfaceStyle, .dark)
 
@@ -57,12 +51,10 @@ final class BNPLFormHeaderViewTests: STPSnapshotTestCase {
         let infoModal = try XCTUnwrap(rootViewController.presentedViewController as? PMMEInfoModal)
         infoModal.loadViewIfNeeded()
         XCTAssertEqual(infoModal.overrideUserInterfaceStyle, .dark)
-
-        window.isHidden = true
     }
 
     func testAlwaysLightStyle_AppliesToHeaderAndInfoModal() throws {
-        let (headerView, rootViewController, window) = makeHeaderView(style: .alwaysLight)
+        let (headerView, rootViewController, _) = makeHeaderView(style: .alwaysLight)
 
         XCTAssertEqual(headerView.overrideUserInterfaceStyle, .light)
 
@@ -78,8 +70,6 @@ final class BNPLFormHeaderViewTests: STPSnapshotTestCase {
         let infoModal = try XCTUnwrap(rootViewController.presentedViewController as? PMMEInfoModal)
         infoModal.loadViewIfNeeded()
         XCTAssertEqual(infoModal.overrideUserInterfaceStyle, .light)
-
-        window.isHidden = true
     }
 
     private func makeHeaderView(
@@ -103,6 +93,7 @@ final class BNPLFormHeaderViewTests: STPSnapshotTestCase {
         UIView.setAnimationsEnabled(false)
         addTeardownBlock {
             UIView.setAnimationsEnabled(true)
+            window.isHidden = true
         }
 
         rootViewController.view.addSubview(headerView)
