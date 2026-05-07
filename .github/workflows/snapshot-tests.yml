@@ -81,11 +81,9 @@ jobs:
 
       - name: Generate diff report
         id: diff
-        env:
-          SNAPSHOT_MANIFEST: snapshot-deploy/manifest.txt
         run: |
-          chmod +x SnapshotTool/scripts/generate_diff_report.sh
-          if ./SnapshotTool/scripts/generate_diff_report.sh \
+          if ruby SnapshotTool/scripts/snapshot_tool.rb generate_diff \
+              --manifest snapshot-deploy/manifest.txt \
               recorded-snapshots .snapshot-baselines snapshot-deploy; then
             echo "has_changes=false" >> "$GITHUB_OUTPUT"
           else
@@ -137,13 +135,11 @@ jobs:
       - name: Post PR comment
         if: steps.diff.outputs.has_changes == 'true' && steps.deploy.outputs.url && github.event_name == 'pull_request'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          SNAPSHOT_REPORT_URL: ${{ steps.deploy.outputs.report_url }}
         run: |
-          chmod +x SnapshotTool/scripts/post_pr_comment.sh
-          export GITHUB_REPOSITORY="${{ github.repository }}"
-          export GITHUB_TOKEN="$GH_TOKEN"
-          export SNAPSHOT_REPORT_URL="${{ steps.deploy.outputs.report_url }}"
-          ./SnapshotTool/scripts/post_pr_comment.sh \
+          ruby SnapshotTool/scripts/snapshot_tool.rb post_pr_comment \
             snapshot-deploy/manifest.txt \
             recorded-snapshots \
             "${{ steps.deploy.outputs.url }}" \
