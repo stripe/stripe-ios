@@ -408,10 +408,10 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
         }()
 
         // Tax
-        let tax: Checkout.Tax = {
-            let amounts: [Checkout.TaxAmount]? = publicTaxAmounts.isEmpty ? nil : publicTaxAmounts
-            return Checkout.Tax(status: .unknown, taxAmounts: amounts)
-        }()
+        let tax = Checkout.Tax(
+            status: .unknown,
+            taxAmounts: publicTaxAmounts.isEmpty ? nil : publicTaxAmounts
+        )
 
         // Saved payment methods offer save / setup_future_usage
         let savedPaymentMethodsOfferSave = STPCheckoutSessionSavedPaymentMethodsOfferSave.decodedObject(
@@ -788,7 +788,7 @@ extension STPCheckoutSession {
         let displayName = (dict["display_name"] as? String)
             ?? (couponDict?["name"] as? String)
             ?? (couponDict?["id"] as? String)
-            ?? "Discount"
+            ?? String.Localized.discount
         return Checkout.DiscountAmount(
             amount: makeAmount(amountValue, currency: currency),
             displayName: displayName,
@@ -814,7 +814,7 @@ extension STPCheckoutSession {
                   let inclusive = dict["inclusive"] as? Bool else { return nil }
             let displayName = (dict["display_name"] as? String)
                 ?? ((dict["tax_rate"] as? [AnyHashable: Any])?["display_name"] as? String)
-                ?? "Tax"
+                ?? String.Localized.tax
             return Checkout.TaxAmount(
                 amount: makeAmount(amountInt, currency: currency),
                 inclusive: inclusive,

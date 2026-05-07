@@ -6,6 +6,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripePayments
 
 // MARK: - Session Protocol
 
