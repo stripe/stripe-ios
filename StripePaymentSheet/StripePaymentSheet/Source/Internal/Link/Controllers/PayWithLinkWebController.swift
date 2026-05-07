@@ -132,7 +132,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
             let linkPopupParams = try LinkURLGenerator.linkParams(configuration: self.context.configuration, intent: self.context.intent, elementsSession: self.context.elementsSession)
             let linkPopupUrl = try LinkURLGenerator.url(
                 params: linkPopupParams,
-                brand: context.configuration.resolvedLinkBrand(elementsSession: context.elementsSession)
+                brand: context.linkBrand
             )
 
             let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in

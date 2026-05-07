@@ -88,7 +88,7 @@ extension PayWithLinkViewController {
                     isSettingUp: isSettingUp || context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
                     merchantName: context.configuration.merchantDisplayName,
                     sellerName: context.intent.sellerDetails?.businessName,
-                    brand: context.configuration.resolvedLinkBrand(elementsSession: context.elementsSession)
+                    brand: context.linkBrand
                 )
             default:
                 return nil
