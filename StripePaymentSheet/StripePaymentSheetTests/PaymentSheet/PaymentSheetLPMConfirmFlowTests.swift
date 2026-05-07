@@ -399,12 +399,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
     }
 
     func testSavedSEPA() async throws {
+        // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: MerchantCountry.US.publishableKey)
 
         // Confirm saved SEPA with every confirm variation
         // Use a fresh customer per intent kind to avoid lock contention on the Customer object
         // from async server-side processing (mandate creation, PM attachment) across iterations.
         for intentKind in [IntentKind.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent] {
+            // Create customer session for confirmation token support
             let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
                 customerID: nil,
                 merchantCountry: "us",
@@ -412,6 +414,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
             )
             let customer = customerAndCustomerSession.customer
 
+            // Create a SEPA payment method and attach it to the customer via a confirmed SetupIntent
             let savedSepaPM = try await apiClient.createPaymentMethod(with: ._testSEPA())
             _ = try await STPTestingAPIClient.shared.fetchSetupIntent(
                 types: ["sepa_debit"],
@@ -446,11 +449,14 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
 
             for (description, intent) in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .SEPADebit, merchantCountry: .US, customer: customer, apiClient: apiClient) {
 
+                // Create elements session with customer configuration for proper ephemeral keys
                 let elementsSession: STPElementsSession
                 switch intent {
                 case .paymentIntent, .setupIntent:
+                    // For regular intents, use test value
                     elementsSession = ._testValue(intent: intent)
                 case .deferredIntent(let intentConfig):
+                    // For deferred intents, create real elements session with customer config
                     elementsSession = try await apiClient.retrieveDeferredElementsSession(
                         withIntentConfig: intentConfig,
                         clientDefaultPaymentMethod: nil,
@@ -461,6 +467,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
                 }
 
                 let e = expectation(description: "")
+                // Confirm the intent with the form details
                 let paymentHandler = STPPaymentHandler(apiClient: apiClient)
                 PaymentSheet.confirm(
                     configuration: configuration,
