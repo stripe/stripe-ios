@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 
 extension STPCheckoutSession: Checkout.Session {
     var id: String { stripeId }
