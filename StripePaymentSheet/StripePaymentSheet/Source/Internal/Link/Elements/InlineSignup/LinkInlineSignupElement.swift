@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -37,6 +38,7 @@ final class LinkInlineSignupElement: Element {
 
     convenience init(
         configuration: PaymentElementConfiguration,
+        brand: LinkBrand,
         linkAccount: PaymentSheetLinkAccount?,
         country: String?,
         showCheckbox: Bool,
@@ -48,6 +50,7 @@ final class LinkInlineSignupElement: Element {
     ) {
         self.init(viewModel: LinkInlineSignupViewModel(
             configuration: configuration,
+            brand: brand,
             showCheckbox: showCheckbox,
             accountService: accountService,
             allowsDefaultOptIn: allowsDefaultOptIn,

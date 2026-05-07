@@ -195,6 +195,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             intent: loadResult.intent,
             elementsSession: loadResult.elementsSession,
             configuration: configuration,
+            paymentMethodOrientation: loadResult.paymentMethodOrientation,
             previousCustomerInput: previousConfirmParams,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,

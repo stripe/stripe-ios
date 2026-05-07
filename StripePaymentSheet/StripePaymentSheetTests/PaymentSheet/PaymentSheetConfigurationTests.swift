@@ -178,6 +178,18 @@ class PaymentSheetConfigurationTests: XCTestCase {
         configuration.allowedCountries = []
         XCTAssertTrue(configuration.allowedCountries.isEmpty)
     }
+
+    // MARK: - resolveLayout
+
+    func testResolveLayout_explicit() {
+        var config = PaymentSheet.Configuration()
+
+        config.paymentMethodLayout = .horizontal
+        XCTAssertEqual(config.resolveLayout(), .horizontal)
+
+        config.paymentMethodLayout = .vertical
+        XCTAssertEqual(config.resolveLayout(), .vertical)
+    }
 }
 
 extension STPElementsSession {

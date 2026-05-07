@@ -23,6 +23,7 @@ extension PayWithLinkViewController {
             let viewController = LinkSignUpViewController(
                 accountService: accountService,
                 linkAccount: linkAccount,
+                brand: context.configuration.resolvedLinkBrand(elementsSession: context.elementsSession),
                 country: context.elementsSession.countryCode,
                 defaultBillingDetails: context.configuration.defaultBillingDetails
             )
