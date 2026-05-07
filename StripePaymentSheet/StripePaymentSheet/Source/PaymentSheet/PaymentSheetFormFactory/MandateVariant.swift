@@ -40,9 +40,9 @@ enum MandateVariant {
         switch self {
         case .updated(true):
             let links = [
-                "link": URL(string: "https://link.com")!,
-                "terms": URL(string: "https://link.com/terms")!,
-                "privacy": URL(string: "https://link.com/privacy")!,
+                "link": brand.websiteURL,
+                "terms": brand.termsURL,
+                "privacy": brand.privacyURL,
             ]
             return STPStringUtils.applyLinksToString(template: terms, links: links)
         case .original, .updated(false):

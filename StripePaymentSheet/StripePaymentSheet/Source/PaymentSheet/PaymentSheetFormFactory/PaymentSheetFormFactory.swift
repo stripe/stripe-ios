@@ -583,9 +583,10 @@ extension PaymentSheetFormFactory {
     static func makeBankMandateText(
         isSettingUp: Bool,
         merchantName: String,
-        sellerName: String?
+        sellerName: String?,
+        brand: LinkBrand
     ) -> NSAttributedString {
-        let links = ["terms": URL(string: "https://link.com/terms/ach-authorization")!]
+        let links = ["terms": brand.achAuthorizationURL]
 
         let string = if let sellerName, isSettingUp {
             String(
@@ -903,6 +904,7 @@ extension PaymentSheetFormFactory {
             isPaymentIntent: isPaymentIntent,
             sellerName: sellerName,
             isSettingUp: isSettingUp || forceSaveFutureUseBehavior,
+            linkBrand: linkBrand,
             appearance: configuration.appearance
         )
 
