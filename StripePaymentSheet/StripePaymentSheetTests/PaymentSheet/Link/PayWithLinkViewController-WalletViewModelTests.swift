@@ -421,6 +421,7 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: paymentSheetConfiguration,
+                linkBrand: .link,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,

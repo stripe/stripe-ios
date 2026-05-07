@@ -481,35 +481,35 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             (integrationShape: .flowController, paymentOption: saved, result: .completed, expected: "mc_custom_payment_savedpm_success"),
             (integrationShape: .flowController, paymentOption: savedWithCardArt, result: .completed, expected: "mc_custom_payment_savedpm_success"),
             (integrationShape: .flowController, paymentOption: .applePay, result: .completed, expected: "mc_custom_payment_applepay_success"),
-            (integrationShape: .flowController, paymentOption: .link(option: .wallet), result: .completed, expected: "mc_custom_payment_link_success"),
+            (integrationShape: .flowController, paymentOption: .link(option: .wallet(brand: .link)), result: .completed, expected: "mc_custom_payment_link_success"),
             (integrationShape: .flowController, paymentOption: .new(confirmParams: .init(type: .stripe(.cashApp))), result: .failed(error: error), expected: "mc_custom_payment_newpm_failure"),
             (integrationShape: .flowController, paymentOption: saved, result: .failed(error: error), expected: "mc_custom_payment_savedpm_failure"),
             (integrationShape: .flowController, paymentOption: savedWithCardArt, result: .failed(error: error), expected: "mc_custom_payment_savedpm_failure"),
             (integrationShape: .flowController, paymentOption: .applePay, result: .failed(error: error), expected: "mc_custom_payment_applepay_failure"),
-            (integrationShape: .flowController, paymentOption: .link(option: .wallet), result: .failed(error: error), expected: "mc_custom_payment_link_failure"),
+            (integrationShape: .flowController, paymentOption: .link(option: .wallet(brand: .link)), result: .failed(error: error), expected: "mc_custom_payment_link_failure"),
 
             (integrationShape: .complete, paymentOption: new, result: .completed, expected: "mc_complete_payment_newpm_success"),
             (integrationShape: .complete, paymentOption: saved, result: .completed, expected: "mc_complete_payment_savedpm_success"),
             (integrationShape: .complete, paymentOption: savedWithCardArt, result: .completed, expected: "mc_complete_payment_savedpm_success"),
             (integrationShape: .complete, paymentOption: .applePay, result: .completed, expected: "mc_complete_payment_applepay_success"),
-            (integrationShape: .complete, paymentOption: .link(option: .wallet), result: .completed, expected: "mc_complete_payment_link_success"),
+            (integrationShape: .complete, paymentOption: .link(option: .wallet(brand: .link)), result: .completed, expected: "mc_complete_payment_link_success"),
             (integrationShape: .complete, paymentOption: .new(confirmParams: .init(type: .stripe(.cashApp))), result: .failed(error: error), expected: "mc_complete_payment_newpm_failure"),
             (integrationShape: .complete, paymentOption: saved, result: .failed(error: error), expected: "mc_complete_payment_savedpm_failure"),
             (integrationShape: .complete, paymentOption: savedWithCardArt, result: .failed(error: error), expected: "mc_complete_payment_savedpm_failure"),
             (integrationShape: .complete, paymentOption: .applePay, result: .failed(error: error), expected: "mc_complete_payment_applepay_failure"),
-            (integrationShape: .complete, paymentOption: .link(option: .wallet), result: .failed(error: error), expected: "mc_complete_payment_link_failure"),
+            (integrationShape: .complete, paymentOption: .link(option: .wallet(brand: .link)), result: .failed(error: error), expected: "mc_complete_payment_link_failure"),
 
             (integrationShape: .embedded, paymentOption: new, result: .completed, expected: "mc_embedded_payment_success"),
             (integrationShape: .embedded, paymentOption: saved, result: .completed, expected: "mc_embedded_payment_success"),
             (integrationShape: .embedded, paymentOption: savedWithCardArt, result: .completed, expected: "mc_embedded_payment_success"),
             (integrationShape: .embedded, paymentOption: .applePay, result: .completed, expected: "mc_embedded_payment_success"),
-            (integrationShape: .embedded, paymentOption: .link(option: .wallet), result: .completed, expected: "mc_embedded_payment_success"),
+            (integrationShape: .embedded, paymentOption: .link(option: .wallet(brand: .link)), result: .completed, expected: "mc_embedded_payment_success"),
 
             (integrationShape: .embedded, paymentOption: .new(confirmParams: .init(type: .stripe(.cashApp))), result: .failed(error: error), expected: "mc_embedded_payment_failure"),
             (integrationShape: .embedded, paymentOption: saved, result: .failed(error: error), expected: "mc_embedded_payment_failure"),
             (integrationShape: .embedded, paymentOption: savedWithCardArt, result: .failed(error: error), expected: "mc_embedded_payment_failure"),
             (integrationShape: .embedded, paymentOption: .applePay, result: .failed(error: error), expected: "mc_embedded_payment_failure"),
-            (integrationShape: .embedded, paymentOption: .link(option: .wallet), result: .failed(error: error), expected: "mc_embedded_payment_failure"),
+            (integrationShape: .embedded, paymentOption: .link(option: .wallet(brand: .link)), result: .failed(error: error), expected: "mc_embedded_payment_failure"),
 
         ]
 
@@ -594,7 +594,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertLessThan(analyticsClient._testLogHistory.last!["duration"] as! Double, 1.0)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "apple_pay")
 
-        sut.logConfirmButtonTapped(paymentOption: .link(option: .wallet))
+        sut.logConfirmButtonTapped(paymentOption: .link(option: .wallet(brand: .link)))
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_confirm_button_tapped")
         XCTAssertLessThan(analyticsClient._testLogHistory.last!["duration"] as! Double, 1.0)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "link")

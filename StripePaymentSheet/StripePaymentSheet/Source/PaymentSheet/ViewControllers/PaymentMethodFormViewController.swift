@@ -38,6 +38,7 @@ class PaymentMethodFormViewController: UIViewController {
                 case .signupAndPay(let account, let phoneNumber, let legalName):
                     return .link(
                         option: .signUp(
+                            brand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
                             account: account,
                             phoneNumber: phoneNumber,
                             consentAction: linkInlineSignupElement.viewModel.consentAction,

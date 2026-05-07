@@ -335,6 +335,7 @@ import UIKit
             linkMode: nil,
             billingDetails: billingDetails,
             eligibleForIncentive: false,
+            linkSettings: .init(useAttestationEndpoints: nil, brand: resolvedLinkBrand),
             clientAttributionMetadata: nil
         )
     }

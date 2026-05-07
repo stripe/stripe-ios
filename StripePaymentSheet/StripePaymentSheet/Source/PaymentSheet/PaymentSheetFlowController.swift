@@ -103,7 +103,7 @@ extension PaymentSheet {
         var linkUIAnalyticsValue: String? {
             if case .link(let option) = self {
                 switch option {
-                case .withPaymentDetails(let account, _, _, _):
+                case .withPaymentDetails(_, let account, _, _, _):
                     if account.hasCompletedSMSVerification {
                         // This was a returning user who logged in
                         return "native-returning"
@@ -214,13 +214,13 @@ extension PaymentSheet {
                     billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
                 case .link(let option):
-                    if case let .signUp(_, _, _, _, confirmParams) = option {
+                    if case let .signUp(_, _, _, _, _, confirmParams) = option {
                         labels = Labels(
                             label: confirmParams.expandedPaymentSheetLabel(brand: linkBrand),
                             sublabel: confirmParams.paymentSheetSublabel
                         )
                     } else {
-                        labels = Labels(label: linkBrand.displayName, sublabel: option.paymentSheetSubLabel(brand: linkBrand))
+                        labels = Labels(label: option.brand.displayName, sublabel: option.displayPaymentSheetSubLabel())
                     }
                     label = option.paymentSheetLabel(brand: linkBrand)
                     paymentMethodType = option.paymentMethodType
@@ -978,7 +978,7 @@ extension PaymentOption {
             switch confirmOption {
             case .wallet, .signUp, .withPaymentMethod:
                 return nil
-            case .withPaymentDetails(_, let paymentDetails, _, _):
+            case .withPaymentDetails(_, _, let paymentDetails, _, _):
                 return paymentDetails.stripeID
             }
         case .applePay, .new, .external:
