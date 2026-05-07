@@ -25,30 +25,23 @@ jobs:
           ref: snapshot-baselines
           path: .snapshot-baselines
 
-      - name: Select Xcode
+      - name: Select Xcode 16.4
         run: |
-          # Use the latest Xcode 26.x to match Bitrise CI environment
-          XCODE_PATH=$(ls -d /Applications/Xcode_26*.app 2>/dev/null | sort -V | tail -1)
+          XCODE_PATH=$(ls -d /Applications/Xcode_16.4*.app 2>/dev/null | sort -V | tail -1)
           if [ -z "$XCODE_PATH" ]; then
-            # Fall back to latest available Xcode
-            XCODE_PATH=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1)
+            XCODE_PATH=$(ls -d /Applications/Xcode_16*.app 2>/dev/null | sort -V | tail -1)
           fi
           echo "Using $XCODE_PATH"
           sudo xcode-select -s "$XCODE_PATH"
 
+      - name: Install iOS 16.4 runtime
+        run: xcrun simctl runtime add 'com.apple.CoreSimulator.SimRuntime.iOS-16-4' 2>/dev/null || true
+
       - name: Create simulator
         run: |
-          # Create an iPhone 12 mini with the available iOS runtime
-          RUNTIME=$(xcrun simctl list runtimes -j | python3 -c "
-          import json, sys
-          data = json.load(sys.stdin)
-          for r in reversed(data['runtimes']):
-              if 'iOS' in r['name'] and r['isAvailable']:
-                  print(r['identifier'])
-                  sys.exit(0)
-          ")
-          echo "Using runtime: $RUNTIME"
-          xcrun simctl create "iPhone 12 mini" "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini" "$RUNTIME"
+          xcrun simctl create "iPhone 12 mini" \
+            "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini" \
+            "com.apple.CoreSimulator.SimRuntime.iOS-16-4"
 
       - name: Run snapshot tests (record mode)
         run: ruby ci_scripts/snapshots.rb --record --ci
