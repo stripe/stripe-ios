@@ -350,9 +350,6 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             customer = nil
         }
 
-        // Compute the divisor used for amount decoding everywhere below.
-        let minorUnitsAmountDivisor = Self.computedMinorUnitsAmountDivisor(currency: currency)
-
         // Status (type + payment status)
         let paymentStatus = Checkout.PaymentStatus.paymentStatus(from: rawPaymentStatus)
         let status: Checkout.Status? = {
@@ -369,7 +366,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
             Checkout.TaxAmount(
                 amount: makeAmount($0.amount, currency: currency),
                 inclusive: $0.inclusive,
-                displayName: $0.taxRate?.displayName ?? "Tax"
+                displayName: $0.taxRate?.displayName ?? String.Localized.tax
             )
         }
 
