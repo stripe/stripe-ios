@@ -150,6 +150,7 @@ class EmbeddedFormViewController: UIViewController {
             previousCustomerInput: previousCustomerInput,
             formCache: formCache,
             configuration: configuration,
+            paymentMethodOrientation: .vertical,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
             isLinkUI: false,

@@ -120,7 +120,7 @@ final class PayWithLinkButton: UIControl {
         linkView.font = UIFont.systemFont(ofSize: 20, weight: .medium)
             .scaled(withTextStyle: .callout, maximumPointSize: 21)
 
-        let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link)
+        let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link(brand: brand))
 
         // Create the Link logo attachment
         let linkImage = primaryLinkLogoImage
@@ -136,13 +136,13 @@ final class PayWithLinkButton: UIControl {
         linkAttachment.bounds = CGRect(x: 0, y: -linkY, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
 
         // Add a spacer before the Link logo and after the Link logo
-        let range = payWithLinkString.mutableString.range(of: "Link")
+        let range = payWithLinkString.mutableString.range(of: brand.displayName)
         if range.location != NSNotFound {
             payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location + range.length)
             payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location)
 
             // Add the Link attachment
-            payWithLinkString.replaceOccurrences(of: "Link", with: linkAttachment)
+            payWithLinkString.replaceOccurrences(of: brand.displayName, with: linkAttachment)
         }
 
         linkView.attributedText = payWithLinkString
@@ -449,7 +449,7 @@ private extension PayWithLinkButton {
         }
 
         // To use Xcode SwiftUI Previews, comment out the following `accessibilityLabel` setter:
-        accessibilityLabel = String.Localized.pay_with_link
+        accessibilityLabel = String.Localized.pay_with_link(brand: brand)
 
         switch linkAccountState {
         case .hasCard(let last4, let brand):

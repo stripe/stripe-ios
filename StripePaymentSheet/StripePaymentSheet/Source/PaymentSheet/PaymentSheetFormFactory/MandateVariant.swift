@@ -15,19 +15,27 @@ enum MandateVariant {
     // The updated mandate that describes reuse of the payment method by the merchant and optional Link signup.
     case updated(shouldSignUpToLink: Bool)
 
-    func create(forMerchant merchant: String) -> NSAttributedString {
+    func create(forMerchant merchant: String, brand: LinkBrand) -> NSAttributedString {
         let formatText = switch self {
         case .original:
             String.Localized.by_providing_your_card_information_text
         case .updated(let shouldSaveToLink):
             if shouldSaveToLink {
-                String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant_and_link
+                String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant_and_link(
+                    merchantDisplayName: merchant,
+                    brand: brand
+                )
             } else {
                 String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant
             }
         }
 
-        let terms = String(format: formatText, merchant).removeTrailingDots()
+        let terms = {
+            if case .updated(true) = self {
+                return formatText.removeTrailingDots()
+            }
+            return String(format: formatText, merchant).removeTrailingDots()
+        }()
 
         if case .updated(true) = self {
             let links = [

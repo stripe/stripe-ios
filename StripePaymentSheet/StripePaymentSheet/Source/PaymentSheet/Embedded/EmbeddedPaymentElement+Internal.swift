@@ -68,6 +68,7 @@ extension EmbeddedPaymentElement {
             appearance: configuration.appearance,
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession),
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider,
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,

@@ -139,7 +139,7 @@ extension Element {
     /// Forces validation errors to be displayed on all TextFieldElements in this element's hierarchy
     public func showAllValidationErrors() {
         for element in getAllUnwrappedSubElements() {
-            if let textFieldElement = element as? TextFieldElement {
+            if let textFieldElement = element as? TextFieldElement, !textFieldElement.view.isHidden {
                 textFieldElement.showValidationErrors()
             }
         }

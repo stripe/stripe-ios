@@ -381,7 +381,10 @@ extension PaymentSheet {
         /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        @MainActor @_spi(CheckoutSessionsPreview) public static func create(
+        @_spi(STP)
+        @_spi(ReactNativeSDK)
+        @MainActor
+        public static func create(
             checkout: Checkout,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
@@ -657,7 +660,10 @@ extension PaymentSheet {
         /// - Parameter checkout: The Checkout instance whose session has been updated.
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
         /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
-        @MainActor @_spi(CheckoutSessionsPreview) public func update(
+        @_spi(STP)
+        @_spi(ReactNativeSDK)
+        @MainActor
+        public func update(
             checkout: Checkout,
             completion: @escaping (Error?) -> Void
         ) {
@@ -735,7 +741,8 @@ extension PaymentSheet {
                 intent: viewController.loadResult.intent,
                 elementsSession: viewController.loadResult.elementsSession,
                 savedPaymentMethods: viewController.savedPaymentMethods, // Note: not using load result!
-                paymentMethodTypes: viewController.loadResult.paymentMethodTypes
+                paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
+                paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation
             )
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
@@ -788,10 +795,7 @@ extension PaymentSheet {
             previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
-            // Resolve automatic layout
-            var configuration = configuration
-            let resolvedPaymentMethodLayout = configuration.resolveLayout()
-            switch resolvedPaymentMethodLayout {
+            switch loadResult.paymentMethodOrientation {
             case .horizontal:
                 controller = PaymentSheetFlowControllerViewController(
                     configuration: configuration,

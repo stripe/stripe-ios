@@ -1,7 +1,13 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### CryptoOnramp (Alpha)
+* [Added] Added API models for upcoming EU support. 
+* [Added] Added `birthCountry`, `birthCity`, and `nationalities` properties to `KycInfo`, required for EU customers.
+
+### PaymentSheet
+* [Added] Added support for new and upcoming payment methods in native Link, such as UPI, Pix, and Crypto
 
 ## 25.13.0 2026-05-04
 ### PaymentSheet

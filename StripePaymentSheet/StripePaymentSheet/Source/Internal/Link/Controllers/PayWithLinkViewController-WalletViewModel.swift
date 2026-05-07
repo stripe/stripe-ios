@@ -255,7 +255,7 @@ extension PayWithLinkViewController {
 
             linkAccount.updatePaymentDetails(
                 id: paymentMethod.stripeID,
-                updateParams: UpdatePaymentDetailsParams(isDefault: true, details: nil),
+                updateParams: UpdatePaymentDetailsParams(isDefault: true),
                 clientAttributionMetadata: clientAttributionMetadata
             ) { [self] result in
                 if case let .success(updatedPaymentDetails) = result {
@@ -311,7 +311,7 @@ extension PayWithLinkViewController {
 
             linkAccount.updatePaymentDetails(
                 id: id,
-                updateParams: UpdatePaymentDetailsParams(details: .card(expiryDate: expiryDate)),
+                updateParams: UpdatePaymentDetailsParams(metadata: .card(expiryDate: expiryDate)),
                 clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )
