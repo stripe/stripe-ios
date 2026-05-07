@@ -56,7 +56,7 @@ jobs:
       - name: Collect recorded snapshots
         run: |
           mkdir -p recorded-snapshots
-          RECORD_DIR="/tmp/snapshot-records"
+          RECORD_DIR="/tmp/snapshot-records_64"
           if [ ! -d "$RECORD_DIR" ]; then
             echo "::error::No recorded snapshots found at $RECORD_DIR"
             exit 1
