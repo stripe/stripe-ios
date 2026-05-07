@@ -330,7 +330,7 @@ public final class Checkout: ObservableObject {
             stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
             throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
         }
-        guard currentSession.status == .open else {
+        guard currentSession.status?.type == .open else {
             throw CheckoutError.sessionNotOpen
         }
         return currentSession
@@ -343,7 +343,7 @@ public final class Checkout: ObservableObject {
             stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
             throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
         }
-        guard currentSession.status == .open else {
+        guard currentSession.status?.type == .open else {
             throw CheckoutError.sessionNotOpen
         }
         guard integrationDelegate?.isSheetPresented != true else {

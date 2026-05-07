@@ -21,7 +21,7 @@ extension STPCheckoutSession {
             let details = shippingAddressDetails(from: shipping)
             configuration.shippingDetails = { details }
         }
-        configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? customerEmail
+        configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? email
     }
 
     /// Populates empty fields in the embedded configuration with checkout-collected addresses.
@@ -34,7 +34,7 @@ extension STPCheckoutSession {
             let details = shippingAddressDetails(from: shipping)
             configuration.shippingDetails = { details }
         }
-        configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? customerEmail
+        configuration.defaultBillingDetails.email = configuration.defaultBillingDetails.email ?? email
     }
 
     private func shippingAddressDetails(from shipping: Checkout.ContactAddress) -> AddressViewController.AddressDetails {

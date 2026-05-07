@@ -44,7 +44,7 @@ extension PaymentSheet {
                 paymentMethodOptions = paymentOptions
                 params.clientAttributionMetadata = clientAttributionMetadata
                 // Ensure email is set on the payment method — fall back to the checkout session's customer email
-                if params.billingDetails?.email == nil, let customerEmail = checkoutSession.customerEmail {
+                if params.billingDetails?.email == nil, let customerEmail = checkoutSession.email {
                     params.nonnil_billingDetails.email = customerEmail
                 }
                 paymentMethod = try await configuration.apiClient.createPaymentMethod(with: params)

@@ -367,10 +367,10 @@ extension STPApplePayContext {
             paymentRequest.paymentSummaryItems = paymentSummaryItems
         } else if case .checkoutSession(let session) = intent,
                   !session.lineItems.isEmpty,
-                  let totals = session.totals {
+                  let total = session.total {
             paymentRequest.paymentSummaryItems = STPApplePayContext.makeApplePayPaymentSummaryItems(
                 lineItems: session.lineItems,
-                totals: totals,
+                total: total,
                 totalLabel: label,
                 currency: intent.currency
             )

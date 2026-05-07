@@ -121,7 +121,7 @@ enum Intent {
                 stpAssertionFailure("Received CheckoutSession in unknown mode")
                 return nil
             case .payment:
-                return session.totals?.total
+                return session.total?.total.minorUnitsAmount
             case .setup:
                 return nil
             case .subscription:
