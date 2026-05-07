@@ -7,6 +7,7 @@ MINOR
 * [Added] Added `birthCountry`, `birthCity`, and `nationalities` properties to `KycInfo`, required for EU customers.
 
 ### PaymentSheet
+* [Added] Added support for new and upcoming payment methods in native Link, such as UPI, Pix, and Crypto
 * [Changed] Changed `@_spi(STP)` exposure of `LinkAppearance`, `VerifyKYCResult`, `PaymentSheetImageLibrary.bankIconCode(for:)`, and `PaymentSheetImageLibrary.bankIcon(for:iconStyle:)` to `@_spi(CryptoOnrampAlpha)`.
 
 ## 25.13.0 2026-05-04

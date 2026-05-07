@@ -29,6 +29,7 @@ class PaymentSheetFormFactory {
     let showLinkInlineCardSignup: Bool
     let linkAccount: PaymentSheetLinkAccount?
     let linkAppearance: LinkAppearance?
+    let linkBrand: LinkBrand
     let accountService: LinkAccountServiceProtocol?
     let previousCustomerInput: IntentConfirmParams?
 
@@ -122,6 +123,14 @@ class PaymentSheetFormFactory {
                 return .unknown
             }
         }()
+        let linkBrand: LinkBrand = {
+            switch configuration {
+            case .paymentElement(let configuration, _):
+                return configuration.resolvedLinkBrand(elementsSession: elementsSession)
+            case .customerSheet:
+                return .link
+            }
+        }()
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
                   paymentMethodOrientation: paymentMethodOrientation,
@@ -145,6 +154,7 @@ class PaymentSheetFormFactory {
                   analyticsHelper: analyticsHelper,
                   paymentMethodIncentive: elementsSession.incentive,
                   linkAppearance: linkAppearance,
+                  linkBrand: linkBrand,
                   sellerName: intent.sellerDetails?.businessName,
                   previousLinkInlineSignupAction: previousLinkInlineSignupAction,
                   cardFundingFilter: configuration.cardFundingFilter(for: elementsSession)
@@ -175,6 +185,7 @@ class PaymentSheetFormFactory {
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?,
         linkAppearance: LinkAppearance? = nil,
+        linkBrand: LinkBrand = .link,
         sellerName: String? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil,
         cardFundingFilter: CardFundingFilter = .default
@@ -207,6 +218,7 @@ class PaymentSheetFormFactory {
         self.analyticsHelper = analyticsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
         self.linkAppearance = linkAppearance
+        self.linkBrand = linkBrand
         self.sellerName = sellerName
         self.previousLinkInlineSignupAction = previousLinkInlineSignupAction
         self.cardFundingFilter = cardFundingFilter

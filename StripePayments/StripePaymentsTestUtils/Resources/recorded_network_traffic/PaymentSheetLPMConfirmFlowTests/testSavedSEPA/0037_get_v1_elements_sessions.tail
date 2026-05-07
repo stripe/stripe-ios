@@ -1,22 +1,22 @@
 GET
-https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_USWAblb5T8yMz5pYiQtfMxBr8CHKZBoeMPXfwspvhG0M2Cd&deferred_intent%5Bamount%5D=1099&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bpayment_method_types%5D%5B0%5D=sepa_debit&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=.*&mobile_app_id=.*&type=deferred_intent$
+https:\/\/api\.stripe\.com\/v1\/elements\/sessions\?customer_session_client_secret=cuss_secret_UTP5davdLptNos6xhk5JcHfI8GN96QnImY3wKje3lv6Yy5g&deferred_intent%5Bamount%5D=1099&deferred_intent%5Bcapture_method%5D=automatic&deferred_intent%5Bcurrency%5D=eur&deferred_intent%5Bmode%5D=payment&deferred_intent%5Bsetup_future_usage%5D=off_session&key=pk_test_ErsyMEOTudSjQR8hh0VrQr5X008sBXGOu6&locale=.*&mobile_app_id=.*&type=deferred_intent$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=QUexOo5DiAAQD8T9xyANFjaLdkgIvMLys1xR9zicQX2C9vQlIOBEzQeL8zjXT6doT_ULvsjNu__R7Hjz
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=w6xN7MsDxpF39DIBRqL1-jYi58h9ESWjzPMVDZg8KX0B0zodbVfUXCV8MYV12-UdMicHl7LH2udngyLT; report-to csp
 Server: nginx
 x-wc: 3c3
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=QUexOo5DiAAQD8T9xyANFjaLdkgIvMLys1xR9zicQX2C9vQlIOBEzQeL8zjXT6doT_ULvsjNu__R7Hjz&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=w6xN7MsDxpF39DIBRqL1-jYi58h9ESWjzPMVDZg8KX0B0zodbVfUXCV8MYV12-UdMicHl7LH2udngyLT&t=1"
 Cache-Control: no-cache, no-store
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 x-stripe-routing-context-priority-tier: api-testmode
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=QUexOo5DiAAQD8T9xyANFjaLdkgIvMLys1xR9zicQX2C9vQlIOBEzQeL8zjXT6doT_ULvsjNu__R7Hjz&t=1"}],"include_subdomains":true}
-request-id: req_KMOARdPZPB0FSq
-Content-Length: 21897
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=w6xN7MsDxpF39DIBRqL1-jYi58h9ESWjzPMVDZg8KX0B0zodbVfUXCV8MYV12-UdMicHl7LH2udngyLT&t=1"}],"include_subdomains":true}
+request-id: req_6MJAQtVfIqBPta
+Content-Length: 18205
 Vary: Origin
-Date: Tue, 05 May 2026 05:03:24 GMT
+Date: Thu, 07 May 2026 13:48:10 GMT
 stripe-version: 2020-08-27
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
@@ -29,7 +29,7 @@ Content-Type: application/json
     "object" : "payment_method_preference",
     "type" : "deferred_intent",
     "ordered_payment_method_types" : [
-      "sepa_debit"
+      "card"
     ]
   },
   "capability_enabled_card_networks" : [
@@ -137,10 +137,8 @@ Content-Type: application/json
     "link_disable_auth_partner_ua_check" : false,
     "abstracted_adaptive_pricing_should_show_markup_disclosure_percentage" : false,
     "elements_easel_disable_optimizations_check" : false,
-    "elements_enable_passive_captcha" : true,
+    "elements_enable_passive_captcha" : false,
     "distinctly_link_payment_element_opt_out_merchant_blocklist" : false,
-    "link_ewcs_email_and_cookie_lookup_enabled" : true,
-    "enable_custom_checkout_apple_pay_on_chrome" : true,
     "elements_enable_new_google_places_api" : true,
     "elements_enable_express_checkout_button_demo_pay" : false,
     "elements_enable_installments_on_deferred_intents" : true,
@@ -182,6 +180,7 @@ Content-Type: application/json
     "elements_enable_mx_card_installments" : true,
     "elements_easel_disable_appearance_api_per_element_options" : true,
     "elements_enable_easel_for_pi_killswitch" : false,
+    "link_enable_link_session_key_shipping_addresses" : false,
     "elements_enable_google_pay_webview_heuristics" : true,
     "elements_spm_messages" : false,
     "elements_easel_disable_session_summary" : false,
@@ -212,16 +211,12 @@ Content-Type: application/json
     "enable_checkout_session_update_customer" : false
   },
   "merchant_logo_url" : null,
-  "session_id" : "elements_session_104c4be5Sd3",
+  "session_id" : "elements_session_1GbeZZhzt3l",
   "card_installments_enabled" : false,
   "account_id" : "acct_1G6m1pFY0qyl6XeW",
-  "config_id" : "55da3417-014f-4654-a6f8-b14b637128bb",
+  "config_id" : "af1a0c77-fff7-4823-8604-1f8ef98b40a3",
   "merchant_currency" : "usd",
   "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
-  "sepa_debit_info" : {
-    "creditor_id" : "DE16ZZZ00001941136",
-    "creditor_name" : "Stripe Payments Europe Ltd."
-  },
   "card_brand_choice" : {
     "eligible" : false,
     "preferred_networks" : [
@@ -237,19 +232,19 @@ Content-Type: application/json
   "external_payment_method_data" : null,
   "custom_payment_method_data" : null,
   "meta_pay_signed_container_context" : null,
-  "apple_pay_preference" : "disabled",
-  "payment_method_configuration_id" : null,
+  "apple_pay_preference" : "enabled",
+  "payment_method_configuration_id" : "pmc_1JwXxwFY0qyl6XeWe0tY6hZ0",
   "merchant_country" : "US",
-  "google_pay_preference" : "disabled",
+  "google_pay_preference" : "enabled",
   "paypal_express_config" : {
     "client_id" : null,
     "client_token" : null,
     "paypal_merchant_id" : null
   },
   "experiments_data" : {
-    "arb_id" : "22f9fc03-9afb-4ad6-9b1e-9597b4d2450b",
+    "arb_id" : "4dc70334-7fa2-47b6-9e0e-2ab5f7b3ddfe",
     "experiment_metadata" : {
-      "seed" : "58d0ec97782ec2fb8acbf9cc5abb8ca73bac1ac4eab40b951ed9264343e1c666",
+      "seed" : "314421480f78ffbfe40642e2b9ce389413756ea021290bc6299c5422cb42b259",
       "semi_dominant_payment_methods" : [
 
       ],
@@ -279,7 +274,6 @@ Content-Type: application/json
       "ocs_mobile_horizontal_mode" : "control",
       "link_ce_conversion_brand_change" : "control",
       "link_dl_pe_inline_entrypoint_aa" : "control",
-      "link_ewcs_clover_latency" : "control",
       "link_ce_conversion_unrecognized_post_entry_aa" : "control",
       "link_ce_conversion_ncdv_aa" : "control",
       "connections_elements_variable_incentives_for_ibp_recurring_payments" : "control",
@@ -320,9 +314,9 @@ Content-Type: application/json
         "link_not_specified_in_payment_method_types"
       ],
       "payment_element_passthrough_mode" : [
+        "automatic_payment_methods_enabled",
         "link_not_enabled_on_payment_config",
-        "not_gated_into_enable_m2_passthrough_mode",
-        "does_not_include_card_in_payment_method_types"
+        "not_gated_into_enable_m2_passthrough_mode"
       ]
     },
     "link_sign_up_opt_in_initial_value" : false,
@@ -365,60 +359,14 @@ Content-Type: application/json
     "link_mobile_disable_signup" : false,
     "link_popup_smart_defaults_enabled" : false
   },
-  "passive_captcha" : {
-    "site_key" : "20000000-ffff-ffff-ffff-000000000002",
-    "token_timeout_seconds" : 1770,
-    "rqdata" : null
-  },
+  "passive_captcha" : null,
   "payment_method_specs" : [
     {
-      "async" : true,
+      "async" : false,
+      "type" : "card",
       "fields" : [
-        {
-          "type" : "name",
-          "api_path" : {
-            "v1" : "billing_details[name]"
-          }
-        },
-        {
-          "type" : "email",
-          "api_path" : {
-            "v1" : "billing_details[email]"
-          }
-        },
-        {
-          "for" : "phone",
-          "type" : "placeholder"
-        },
-        {
-          "type" : "iban",
-          "api_path" : {
-            "v1" : "sepa_debit[iban]"
-          }
-        },
-        {
-          "type" : "billing_address",
-          "allowed_country_codes" : null
-        },
-        {
-          "type" : "sepa_mandate"
-        }
-      ],
-      "selector_icon" : {
-        "light_theme_png" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-sepa@3x-2f1a402961484c52aa2880acad84afcb.png",
-        "light_theme_svg" : "https:\/\/js.stripe.com\/v3\/fingerprinted\/img\/payment-methods\/icon-pm-sepa-debit-e88864f53237730b8cd73f85cf8bbadf.svg"
-      },
-      "type" : "sepa_debit",
-      "next_action_spec" : {
-        "confirm_response_status_specs" : {
-          "succeeded" : {
-            "type" : "finished"
-          },
-          "processing" : {
-            "type" : "finished"
-          }
-        }
-      }
+
+      ]
     }
   ],
   "prefill_selectors" : {
@@ -430,105 +378,33 @@ Content-Type: application/json
     }
   },
   "unactivated_payment_method_types" : [
-    "sepa_debit"
+
   ],
   "unverified_payment_methods_on_domain" : [
-
+    "apple_pay"
   ],
   "order" : null,
   "link_purchase_protections_data" : {
     "type" : null,
     "is_eligible" : false
   },
-  "apple_pay_merchant_token_webhook_url" : null,
+  "apple_pay_merchant_token_webhook_url" : "https:\/\/pm-hooks.stripe.com\/apple_pay\/merchant_token\/pDq7tf9uieoQWMVJixFwuOve\/acct_1G6m1pFY0qyl6XeW\/",
   "customer" : {
-    "email" : "email@email.com",
+    "email" : null,
     "payment_methods" : [
-      {
-        "object" : "payment_method",
-        "sepa_debit" : {
-          "fingerprint" : "TadlYGPrD03gCeZx",
-          "country" : "AT",
-          "last4" : "3201",
-          "bank_code" : "19043",
-          "generated_from" : {
-            "setup_attempt" : null,
-            "charge" : null
-          },
-          "branch_code" : ""
-        },
-        "id" : "pm_1TTb8NFY0qyl6XeWBkjEps9H",
-        "billing_details" : {
-          "email" : "email@email.com",
-          "phone" : "555-555-5555",
-          "tax_id" : null,
-          "name" : "Isaac Asimov",
-          "address" : {
-            "state" : null,
-            "country" : "GB",
-            "line2" : null,
-            "city" : "London",
-            "line1" : "Stripe, 7th Floor The Bower Warehouse",
-            "postal_code" : "EC1V 9NR"
-          }
-        },
-        "livemode" : false,
-        "created" : 1777957383,
-        "allow_redisplay" : "unspecified",
-        "shared_payment_granted_token" : null,
-        "customer" : "cus_USWAmZQGdcyRYd",
-        "type" : "sepa_debit",
-        "customer_account" : null
-      }
+
     ],
     "payment_methods_with_link_details" : [
-      {
-        "payment_method" : {
-          "object" : "payment_method",
-          "sepa_debit" : {
-            "fingerprint" : "TadlYGPrD03gCeZx",
-            "country" : "AT",
-            "last4" : "3201",
-            "bank_code" : "19043",
-            "generated_from" : {
-              "setup_attempt" : null,
-              "charge" : null
-            },
-            "branch_code" : ""
-          },
-          "id" : "pm_1TTb8NFY0qyl6XeWBkjEps9H",
-          "billing_details" : {
-            "email" : "email@email.com",
-            "phone" : "555-555-5555",
-            "tax_id" : null,
-            "name" : "Isaac Asimov",
-            "address" : {
-              "state" : null,
-              "country" : "GB",
-              "line2" : null,
-              "city" : "London",
-              "line1" : "Stripe, 7th Floor The Bower Warehouse",
-              "postal_code" : "EC1V 9NR"
-            }
-          },
-          "livemode" : false,
-          "created" : 1777957383,
-          "allow_redisplay" : "unspecified",
-          "shared_payment_granted_token" : null,
-          "customer" : "cus_USWAmZQGdcyRYd",
-          "type" : "sepa_debit",
-          "customer_account" : null
-        },
-        "is_link_origin" : false,
-        "link_payment_details" : null
-      }
+
     ],
-    "card_art" : null,
+    "card_art" : [
+
+    ],
     "default_payment_method" : null,
     "customer_session" : {
       "object" : "customer_session",
-      "api_key_expiry" : 1777960987,
-      "id" : "cuss_1TTb8NFY0qyl6XeWTTBAokVz",
+      "api_key_expiry" : 1778165288,
+      "id" : "cuss_1TUSHYFY0qyl6XeWv4DRTFAq",
       "livemode" : false,
       "components" : {
         "customer_sheet" : {
@@ -569,8 +445,8 @@ Content-Type: application/json
           }
         }
       },
-      "customer" : "cus_USWAmZQGdcyRYd",
-      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLEZBTHJCT20xcThYZVRENGlPUEhrdW84bDJjd1BNNko_004yHaliGx"
+      "customer" : "cus_UTP534Zgrk96LK",
+      "api_key" : "ek_test_YWNjdF8xRzZtMXBGWTBxeWw2WGVXLHBTZVRlU3BYWmo3cU44N2VNQTlsR2NReUxqMDR5Z3c_00CQJFkKsT"
     }
   },
   "klarna_express_config" : {
@@ -586,7 +462,9 @@ Content-Type: application/json
   },
   "business_name" : "CI Stuff",
   "ordered_payment_method_types_and_wallets" : [
-    "sepa_debit"
+    "card",
+    "apple_pay",
+    "google_pay"
   ],
   "customer_error" : null
 }

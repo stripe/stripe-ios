@@ -40,6 +40,7 @@ final class LinkInlineSignupViewModel {
     private let country: String?
 
     let configuration: PaymentElementConfiguration
+    let brand: LinkBrand
 
     let mode: Mode
 
@@ -395,6 +396,7 @@ final class LinkInlineSignupViewModel {
 
     init(
         configuration: PaymentElementConfiguration,
+        brand: LinkBrand,
         showCheckbox: Bool,
         accountService: LinkAccountServiceProtocol,
         allowsDefaultOptIn: Bool,
@@ -405,6 +407,7 @@ final class LinkInlineSignupViewModel {
         analyticsHelper: PaymentSheetAnalyticsHelper? = nil
     ) {
         self.configuration = configuration
+        self.brand = brand
         self.accountService = accountService
         self.analyticsHelper = analyticsHelper
         self.linkAccount = linkAccount
