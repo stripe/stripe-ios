@@ -133,7 +133,8 @@ final class LinkLegalTermsView: UIView {
             }
             return LinkUI.inlineLogo(
                 withScale: 1.3,
-                forFont: LinkUI.font(forTextStyle: .caption)
+                forFont: LinkUI.font(forTextStyle: .caption),
+                brand: brand
             )
         }()
 
