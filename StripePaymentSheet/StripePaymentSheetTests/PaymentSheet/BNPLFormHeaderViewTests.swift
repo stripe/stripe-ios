@@ -12,7 +12,7 @@ import UIKit
 final class BNPLFormHeaderViewTests: XCTestCase {
 
     func testAlwaysDarkStyle_AppliesToHeaderAndInfoModal() throws {
-        let (headerView, rootViewController, window) = makeHeaderView(style: .alwaysDark)
+        let (headerView, rootViewController, _) = makeHeaderView(style: .alwaysDark)
 
         XCTAssertEqual(headerView.overrideUserInterfaceStyle, .dark)
 
@@ -28,12 +28,10 @@ final class BNPLFormHeaderViewTests: XCTestCase {
         let infoModal = try XCTUnwrap(rootViewController.presentedViewController as? PMMEInfoModal)
         infoModal.loadViewIfNeeded()
         XCTAssertEqual(infoModal.overrideUserInterfaceStyle, .dark)
-
-        window.isHidden = true
     }
 
     func testAlwaysLightStyle_AppliesToHeaderAndInfoModal() throws {
-        let (headerView, rootViewController, window) = makeHeaderView(style: .alwaysLight)
+        let (headerView, rootViewController, _) = makeHeaderView(style: .alwaysLight)
 
         XCTAssertEqual(headerView.overrideUserInterfaceStyle, .light)
 
@@ -49,8 +47,6 @@ final class BNPLFormHeaderViewTests: XCTestCase {
         let infoModal = try XCTUnwrap(rootViewController.presentedViewController as? PMMEInfoModal)
         infoModal.loadViewIfNeeded()
         XCTAssertEqual(infoModal.overrideUserInterfaceStyle, .light)
-
-        window.isHidden = true
     }
 
     private func makeHeaderView(
@@ -71,6 +67,7 @@ final class BNPLFormHeaderViewTests: XCTestCase {
         UIView.setAnimationsEnabled(false)
         addTeardownBlock {
             UIView.setAnimationsEnabled(true)
+            window.isHidden = true
         }
 
         rootViewController.view.addSubview(headerView)
