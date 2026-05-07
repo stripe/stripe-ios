@@ -22,6 +22,9 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "Add new payment method" = "Add new payment method";
 
+/* Label for a button that confirms the user agrees to and accepts a declaration */
+"Agree and accept" = "Agree and accept";
+
 /* Title shown above a view allowing the customer to add a US bank account. */
 "Add US bank account" = "Add US bank account";
 
@@ -188,6 +191,9 @@ with the transaction. */
 
 /* Label shown in the payment type picker describing a card payment */
 "Debit or credit card" = "Debit or credit card";
+
+/* Title label for a screen showing CRS/CARF tax declarations */
+"Declarations" = "Declarations";
 
 /* Label for identifying the default payment method. */
 "Default" = "Default";

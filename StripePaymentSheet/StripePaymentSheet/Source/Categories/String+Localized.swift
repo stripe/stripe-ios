@@ -741,6 +741,14 @@ extension String.Localized {
         STPLocalizedString("Confirm your information", "Title label for a know-your-customer (KYC) verification screen")
     }
 
+    static var declarations: String {
+        STPLocalizedString("Declarations", "Title label for a screen showing CRS/CARF tax declarations")
+    }
+
+    static var agree_and_accept: String {
+        STPLocalizedString("Agree and accept", "Label for a button that confirms the user agrees to and accepts a declaration")
+    }
+
     static var last_4_digits_of_ssn: String {
         STPLocalizedString("Last 4 digits of SSN", "Label for displaying the last 4 digits of the user's social security number")
     }
