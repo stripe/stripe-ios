@@ -141,21 +141,11 @@ extension PayWithLinkViewController {
                 return
             }
 
-            guard let updateDetails = createUpdateDetails(for: params) else {
-                stpAssertionFailure("Update details are expected to be not `nil` when `updatePaymentMethod()` is called.")
-                return
-            }
+            let updateParams = createUpdateDetails(for: params)
 
             paymentMethodEditElement.view.endEditing(true)
             paymentMethodEditElement.view.isUserInteractionEnabled = false
             updateButton.update(status: .processing)
-
-            // When updating a payment method that is not the default and you send isDefault=false to the server you get
-            // "Can't unset payment details when it's not the default", so send nil instead of false
-            let updateParams = UpdatePaymentDetailsParams(
-                isDefault: params.setAsDefault ? true : nil,
-                details: updateDetails
-            )
 
             let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
 
@@ -202,19 +192,25 @@ extension PayWithLinkViewController {
             errorView.setHiddenIfNecessary(error == nil)
         }
 
-        private func createUpdateDetails(for params: LinkPaymentMethodFormElement.Params) -> UpdatePaymentDetailsParams.DetailsType? {
+        private func createUpdateDetails(for params: LinkPaymentMethodFormElement.Params) -> UpdatePaymentDetailsParams {
+            var metadata: UpdatePaymentDetailsParams.PaymentMethodMetadata?
             switch paymentMethod.type.value {
             case .card:
-                return .card(
+                metadata = .card(
                     expiryDate: params.expiryDate,
-                    billingDetails: params.billingDetails,
                     preferredNetwork: params.preferredNetwork
                 )
-            case .bankAccount:
-                return .bankAccount(billingDetails: params.billingDetails)
-            case nil: // don't allow updating payment method types the SDK doesn't know about
-                return nil
+            case .bankAccount, nil:
+                break
             }
+
+            // When updating a payment method that is not the default and you send isDefault=false to the server you get
+            // "Can't unset payment details when it's not the default", so send nil instead of false
+            return UpdatePaymentDetailsParams(
+                billingDetails: params.billingDetails,
+                isDefault: params.setAsDefault ? true : nil,
+                metadata: metadata
+            )
         }
     }
 

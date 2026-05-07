@@ -1,6 +1,9 @@
 /* Order summary line item showing name and quantity, e.g. 'Shirt ×3'. */
 "%1$@ ×%2$d" = "%1$@ ×%2$d";
 
+/* Message shown in a confirmation prompt when removing a saved payment method. */
+"%@ will no longer be saved to your wallet." = "%@ will no longer be saved to your wallet.";
+
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Add";
 
@@ -30,12 +33,6 @@
 
 /* Text on a screen asking the user to approve a payment */
 "Approve payment" = "Approve payment";
-
-/* Title of confirmation prompt when removing a saved card. */
-"Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
-
-/* Title of confirmation prompt when removing a linked bank account. */
-"Are you sure you want to remove this linked account?" = "Are you sure you want to remove this linked account?";
 
 /* Text for back button */
 "Back" = "Back";
@@ -353,11 +350,21 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Label title for Przelewy24 Bank */
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
+/* Title of confirmation prompt when removing a saved payment method. */
+"Remove %@" = "Remove %@";
+
+/* Title for confirmation alert to remove a bank account */
+"Remove bank?" = "Remove bank?";
+
 /* Title for confirmation alert to remove a card */
 "Remove card?" = "Remove card?";
 
 /* Title for a button that when tapped removes a linked bank account. */
 "Remove linked account" = "Remove linked account";
+
+/* Title for a button that when tapped removes a payment method.
+   Title for confirmation prompt when removing a saved payment method without a display label. */
+"Remove payment method" = "Remove payment method";
 
 /* A button used for saving a new payment method
    Label on a button that when tapped, updates a card brand. */
