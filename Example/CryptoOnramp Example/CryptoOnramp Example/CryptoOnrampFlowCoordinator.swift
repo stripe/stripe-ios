@@ -54,7 +54,9 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     /// Begins the flow for an existing user.
-    /// - Parameter kycInfoCollectionMode: The KYC info screen collection mode to use if KYC needs to be collected.
+    /// - Parameters:
+    ///   - kycInfoCollectionMode: The KYC info screen collection mode to use if KYC needs to be collected.
+    ///   - coordinator: The CryptoOnramp coordinator to use when retrieving customer compliance requirements.
     func startForExistingUser(
         kycInfoCollectionMode: KYCInfoView.CollectionMode = .original,
         coordinator: CryptoOnrampCoordinator
@@ -82,6 +84,7 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     /// Advances to the next step of the flow post-registration.
+    /// - Parameter coordinator: The CryptoOnramp coordinator to use when refreshing customer state and retrieving compliance requirements.
     func advanceAfterRegistration(coordinator: CryptoOnrampCoordinator) {
         Task {
             await refreshCustomerInfoAndPushNext(coordinator: coordinator)
@@ -89,7 +92,10 @@ final class CryptoOnrampFlowCoordinator: ObservableObject {
     }
 
     /// Advances to the next step of the flow post-KYC info collection.
-    /// - Parameter collectedKYCLevel: The KYC level collected by the KYC info view.
+    /// - Parameters:
+    ///   - collectedKYCLevel: The KYC level collected by the KYC info view.
+    ///   - isEUCustomer: Whether the user's region is EU.
+    ///   - coordinator: The CryptoOnramp coordinator to use when retrieving compliance identifier requirements.
     func advanceAfterKyc(
         collectedKYCLevel: KYCLevel,
         isEUCustomer: Bool,
