@@ -135,10 +135,10 @@ jobs:
       - name: Post PR comment
         if: steps.diff.outputs.has_changes == 'true' && steps.deploy.outputs.url && github.event_name == 'pull_request'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SNAPSHOT_REPORT_URL: ${{ steps.deploy.outputs.report_url }}
         run: |
+          GITHUB_TOKEN="$GH_TOKEN" GITHUB_REPOSITORY="${{ github.repository }}" \
           ruby SnapshotTool/scripts/snapshot_tool.rb post_pr_comment \
             snapshot-deploy/manifest.txt \
             recorded-snapshots \
