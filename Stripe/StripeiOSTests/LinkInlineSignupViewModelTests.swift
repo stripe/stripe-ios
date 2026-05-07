@@ -356,6 +356,7 @@ extension LinkInlineSignupViewModelTests {
 
         return LinkInlineSignupViewModel(
             configuration: PaymentSheet.Configuration(),
+            brand: .link,
             showCheckbox: showCheckbox,
             accountService: MockAccountService(shouldFailLookup: shouldFailLookup),
             allowsDefaultOptIn: allowsDefaultOptIn,

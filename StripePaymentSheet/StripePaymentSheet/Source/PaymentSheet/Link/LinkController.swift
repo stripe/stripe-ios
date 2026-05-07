@@ -49,6 +49,13 @@ import UIKit
         case canceled
     }
 
+    @frozen @_spi(STP) public enum PaymentMethodResult {
+        /// The user selected a payment method. The associated value is the resulting `STPPaymentMethod`.
+        case completed(STPPaymentMethod)
+        /// The user dismissed the flow without selecting a payment method.
+        case canceled
+    }
+
     @frozen @_spi(STP) public enum AuthorizationResult {
         /// Authorization was consented by the user.
         case consented
@@ -408,6 +415,81 @@ import UIKit
 
             self?.internalPaymentOption = .link(option: confirmOption)
             completion(true)
+        }
+    }
+
+    /// Presents the full Link payment method selection flow, handling lookup, authentication or signup,
+    /// wallet display, and payment method creation in a single call.
+    ///
+    /// Under the hood, this method:
+    /// 1. Looks up the consumer by email, unless an authenticated session for that email already exists.
+    /// 2. Presents the Link sheet, routing to signup, OTP verification, or the wallet based on account state.
+    ///    If `phoneNumber` is provided, it is prefilled in the signup form.
+    /// 3. Once the user selects a payment method, converts the selection to an `STPPaymentMethod`.
+    ///
+    /// - Parameter email: The email address to look up and associate with the Link account.
+    /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
+    /// - Parameter supportedPaymentMethodTypes: The payment method types to support. If `nil`, all available types are shown.
+    /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
+    /// - Parameter completion: A closure called with `.success(.completed(paymentMethod))` on selection,
+    ///   `.success(.canceled)` if the user dismisses the flow, or `.failure(error)` on API or network errors.
+    @_spi(STP) public func present(
+        email: String,
+        phoneNumber: String? = nil,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
+        from presentingViewController: UIViewController,
+        completion: @escaping (Result<PaymentMethodResult, Error>) -> Void
+    ) {
+        let alreadyAuthenticated = linkAccount?.sessionState == .verified
+            && linkAccount?.email.lowercased() == email.lowercased()
+
+        let presentWallet = { [weak self] in
+            guard let self else { return }
+            var configuration = self.configuration
+            configuration.defaultBillingDetails.email = email
+            if let phoneNumber {
+                configuration.defaultBillingDetails.phone = phoneNumber
+            }
+
+            presentingViewController.presentNativeLink(
+                selectedPaymentDetailsID: nil,
+                configuration: configuration,
+                intent: self.intent,
+                elementsSession: self.elementsSession,
+                analyticsHelper: self.analyticsHelper,
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                linkAppearance: self.appearance,
+                linkConfiguration: self.linkConfiguration,
+                shouldShowSecondaryCta: false
+            ) { [weak self] confirmOption, _ in
+                guard let self else { return }
+                guard let confirmOption else {
+                    completion(.success(.canceled))
+                    return
+                }
+                self.internalPaymentOption = .link(option: confirmOption)
+                self.createPaymentMethod { result in
+                    switch result {
+                    case .success(let paymentMethod):
+                        completion(.success(.completed(paymentMethod)))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
+            }
+        }
+
+        if alreadyAuthenticated {
+            presentWallet()
+        } else {
+            lookupConsumer(with: email) { result in
+                switch result {
+                case .failure(let error):
+                    completion(.failure(error))
+                case .success:
+                    presentWallet()
+                }
+            }
         }
     }
 
@@ -1143,6 +1225,44 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                 switch result {
                 case .success:
                     continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Presents the full Link payment method selection flow, handling lookup, authentication or signup,
+    /// wallet display, and payment method creation in a single call.
+    ///
+    /// Under the hood, this method:
+    /// 1. Looks up the consumer by email.
+    /// 2. Presents the Link sheet, routing to signup, OTP verification, or the wallet based on account state.
+    ///    If `phoneNumber` is provided, it is prefilled in the signup form.
+    /// 3. Once the user selects a payment method, converts the selection to an `STPPaymentMethod`.
+    ///
+    /// - Parameter email: The email address to look up and associate with the Link account.
+    /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
+    /// - Parameter supportedPaymentMethodTypes: The payment method types to support. If `nil`, all available types are shown.
+    /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
+    /// - Returns: `.completed(paymentMethod)` on selection, or `.canceled` if the user dismisses the flow.
+    /// - Throws: An error if the lookup or payment method creation fails.
+    func present(
+        email: String,
+        phoneNumber: String? = nil,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
+        from presentingViewController: UIViewController
+    ) async throws -> PaymentMethodResult {
+        try await withCheckedThrowingContinuation { continuation in
+            present(
+                email: email,
+                phoneNumber: phoneNumber,
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                from: presentingViewController
+            ) { result in
+                switch result {
+                case .success(let paymentMethodResult):
+                    continuation.resume(returning: paymentMethodResult)
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }

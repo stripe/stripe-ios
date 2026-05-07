@@ -42,6 +42,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
     private let dataSource: NetworkingLinkLoginWarmupDataSource
     weak var delegate: NetworkingLinkLoginWarmupViewControllerDelegate?
+    private var linkBrand: LinkBrand { dataSource.manifest.brand ?? .link }
 
     private lazy var warmupFooterView: NetworkingLinkLoginWarmupFooterView = {
         let secondaryButtonTitle: String
@@ -55,10 +56,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
         }
         return PaneLayoutView.createFooterView(
             primaryButtonConfiguration: PaneLayoutView.ButtonConfiguration(
-                title: STPLocalizedString(
-                    "Continue with Link",
-                    "A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider)."
-                ),
+                title: String.Localized.continue_with_link(brand: linkBrand),
                 accessibilityIdentifier: "link_continue_button",
                 action: { [weak self] in
                     self?.didSelectContinue()
@@ -95,14 +93,8 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                     style: .circle,
                     appearance: dataSource.manifest.appearance
                 ),
-                title: STPLocalizedString(
-                    "Continue with Link",
-                    "The title of a screen where users are informed that they can sign-in-to Link."
-                ),
-                subtitle: STPLocalizedString(
-                    "Use information you previously saved with your Link account.",
-                    "The subtitle/description of a screen where users are informed that they can sign-in-to Link."
-                ),
+                title: String.Localized.continue_with_link(brand: linkBrand),
+                subtitle: String.Localized.use_information_you_previously_saved_with_your_brand_account(brand: linkBrand),
                 contentView: NetworkingLinkLoginWarmupBodyView(
                     // `email` should always be non-null, and since the email is only used as a visual, it's not worth to throw an error if it is null
                     email: dataSource.email ?? "you"

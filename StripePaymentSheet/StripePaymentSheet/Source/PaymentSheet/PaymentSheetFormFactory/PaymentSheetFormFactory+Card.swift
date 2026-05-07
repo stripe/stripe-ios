@@ -143,6 +143,7 @@ extension PaymentSheetFormFactory {
             let signupOptInInitialValue = signupOptInInitialValue || previouslyHadLinkSignupSelected
             let inlineSignupElement = LinkInlineSignupElement(
                 configuration: configuration,
+                brand: linkBrand,
                 linkAccount: linkAccount,
                 country: countryCode,
                 showCheckbox: !shouldDisplaySaveCheckbox,
@@ -189,14 +190,19 @@ extension PaymentSheetFormFactory {
         let variant: MandateVariant = forceSaveFutureUseBehavior
             ? .updated(shouldSignUpToLink: shouldSignUpToLink)
             : .original
-        let mandateText = Self.makeMandateText(variant: variant, merchantName: configuration.merchantDisplayName)
+        let mandateText = Self.makeMandateText(
+            variant: variant,
+            merchantName: configuration.merchantDisplayName,
+            brand: linkBrand
+        )
         return makeMandate(mandateText: mandateText)
     }
 
     static func makeMandateText(
         variant: MandateVariant,
-        merchantName: String
+        merchantName: String,
+        brand: LinkBrand = .link
     ) -> NSAttributedString {
-        return variant.create(forMerchant: merchantName)
+        return variant.create(forMerchant: merchantName, brand: brand)
     }
 }

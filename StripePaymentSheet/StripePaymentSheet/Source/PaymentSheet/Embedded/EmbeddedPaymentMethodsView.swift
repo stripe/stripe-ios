@@ -114,6 +114,7 @@ class EmbeddedPaymentMethodsView: UIView {
         appearance: PaymentSheet.Appearance,
         shouldShowApplePay: Bool,
         shouldShowLink: Bool,
+        linkBrand: LinkBrand = .link,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         mandateProvider: MandateTextProvider,
         shouldShowMandate: Bool = true,
@@ -164,7 +165,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowLink {
-            let linkRowButton = RowButton.makeForLink(appearance: appearance, isEmbedded: true) { [weak self] rowButton in
+            let linkRowButton = RowButton.makeForLink(appearance: appearance, linkBrand: linkBrand, isEmbedded: true) { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             }
