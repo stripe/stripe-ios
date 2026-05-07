@@ -13,9 +13,6 @@ import Foundation
 @_spi(ReactNativeSDK)
 extension Checkout {
     /// A read-only representation of a Stripe Checkout Session.
-    ///
-    /// Mirrors the web JS Checkout `Session` object. Recurring/subscription-specific
-    /// fields are intentionally omitted from this surface.
     public protocol Session {
         /// The ID of the Checkout Session.
         var id: String { get }

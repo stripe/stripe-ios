@@ -12,10 +12,6 @@ import Foundation
 
 /// A CheckoutSession represents a session for a customer to complete a payment.
 ///
-/// The exposed surface mirrors the web JS `Session` object. Internal-only fields
-/// (e.g. expanded `PaymentIntent` / `SetupIntent`, `clientSecret`, etc.) remain on this
-/// concrete class for use by the SDK.
-///
 /// - seealso: https://stripe.com/docs/api/checkout/sessions/object
 class STPCheckoutSession: NSObject {
 
@@ -26,8 +22,6 @@ class STPCheckoutSession: NSObject {
 
     /// The client secret of the CheckoutSession. Used for embedded or custom UI modes.
     let clientSecret: String?
-
-    // MARK: - Web-aligned `Session` fields
 
     /// The business name configured in the Business Public Details settings of your account.
     let businessName: String?
