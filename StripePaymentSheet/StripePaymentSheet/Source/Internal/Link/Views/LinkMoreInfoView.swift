@@ -23,7 +23,7 @@ final class LinkMoreInfoView: UIView {
     }
     private lazy var logoView: UIImageView = {
         let imageView: UIImageView
-        imageView = DynamicImageView(dynamicImage: Image.link_logo_knockout.makeImage(template: false), pairedColor: theme.colors.componentBackground)
+        imageView = DynamicImageView(dynamicImage: brand.paymentSheetKnockoutLogoImage, pairedColor: theme.colors.componentBackground)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.isAccessibilityElement = true
