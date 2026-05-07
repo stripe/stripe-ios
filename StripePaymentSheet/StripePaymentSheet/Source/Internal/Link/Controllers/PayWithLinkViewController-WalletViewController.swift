@@ -57,7 +57,8 @@ extension PayWithLinkViewController {
             compact: viewModel.shouldUseCompactConfirmButton,
             linkAppearance: viewModel.linkAppearance,
             didTapWhenDisabled: { [weak self] in
-                self?.cardDetailsRecollectionSection.showAllValidationErrors()
+                guard let self, self.viewModel.shouldShowRecollectionSection else { return }
+                self.cardDetailsRecollectionSection.showAllValidationErrors()
             }
         ) { [weak self] in
             guard let self else {
@@ -757,7 +758,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         paymentPicker.setAddButtonIsLoading(true)
         coordinator?.startFinancialConnections { [weak self] result in
             let completion = {
-                self?.confirmButton.update(status: .enabled)
+                self?.confirmButton.update(status: self?.viewModel.confirmButtonStatus ?? .disabled)
                 self?.paymentPicker.setAddButtonIsLoading(false)
             }
 
@@ -774,7 +775,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         let newPaymentVC = PayWithLinkViewController.NewPaymentViewController(
             linkAccount: linkAccount,
             context: context,
-            isAddingFirstPaymentMethod: false
+            isAddingFirstPaymentMethod: viewModel.paymentMethods.isEmpty
         )
 
         bottomSheetController?.pushContentViewController(newPaymentVC)
