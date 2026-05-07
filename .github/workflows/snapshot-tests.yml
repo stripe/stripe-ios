@@ -51,11 +51,7 @@ jobs:
           xcrun simctl create "iPhone 12 mini" "com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini" "$RUNTIME"
 
       - name: Run snapshot tests (record mode)
-        run: |
-          # Record mode causes all tests to "fail" (expected — they report
-          # "Reference image is now saved"). We ignore the exit code here
-          # and rely on the diff step to determine actual pass/fail.
-          ruby ci_scripts/snapshots.rb --record --ci || true
+        run: ruby ci_scripts/snapshots.rb --record --ci
 
       - name: Install ImageMagick
         run: brew install imagemagick
