@@ -20,6 +20,7 @@ import UIKit
 
     private var payWithLinkContinuation: CheckedContinuation<Void, Swift.Error>?
     private var paymentMethodId: String?
+    private var fetchedLinkBrand: LinkBrand?
     private var instantDebitsOnlyAuthenticationSessionManager: InstantDebitsOnlyAuthenticationSessionManager? {
         willSet {
             instantDebitsOnlyAuthenticationSessionManager?.cancel()
@@ -54,7 +55,7 @@ import UIKit
     }
 
     private var resolvedLinkBrand: LinkBrand {
-        configuration.link.brand ?? .link
+        .onelink
     }
 
     /// The parent view controller to present
@@ -228,14 +229,15 @@ import UIKit
                     case .success(let successResult):
                         switch successResult {
                         case .success(let details):
-                            self.continueWithPaymentMethod(details.paymentMethodID)
+                            Task { [weak self] in
+                                await self?.continueWithPaymentMethod(details.paymentMethodID)
+                            }
                         case.canceled:
                             self.continueWithFailure(Error.canceled)
                         }
                     case .failure(let error):
                         self.continueWithFailure(error)
                     }
-                    self.payWithLinkContinuation = nil
                 }
         }
     }
@@ -372,7 +374,9 @@ import UIKit
         switch result {
         case .completed(let result):
             if case let .instantDebits(linkedBank) = result {
-                continueWithPaymentMethod(linkedBank.paymentMethod.id)
+                Task { [weak self] in
+                    await self?.continueWithPaymentMethod(linkedBank.paymentMethod.id)
+                }
             } else {
                 continueWithFailure(Error.canceled)
             }
@@ -383,14 +387,58 @@ import UIKit
         }
     }
 
-    private func continueWithPaymentMethod(_ paymentMethodId: String) {
+    private func continueWithPaymentMethod(_ paymentMethodId: String) async {
+        await fetchLinkBrandIfNeeded()
         self.paymentMethodId = paymentMethodId
-        payWithLinkContinuation?.resume(returning: ())
+        let continuation = payWithLinkContinuation
+        payWithLinkContinuation = nil
+        continuation?.resume(returning: ())
     }
 
     private func continueWithFailure(_ error: Swift.Error) {
         paymentMethodId = nil
-        payWithLinkContinuation?.resume(throwing: error)
+        let continuation = payWithLinkContinuation
+        payWithLinkContinuation = nil
+        continuation?.resume(throwing: error)
+    }
+
+    private func fetchLinkBrandIfNeeded() async {
+        guard configuration.link.brand == nil, fetchedLinkBrand == nil else {
+            return
+        }
+
+        do {
+            let linkBrand: LinkBrand?
+            switch mode {
+            case .paymentIntentClientSecret(let clientSecret):
+                let (_, elementsSession) = try await configuration.apiClient.retrieveElementsSession(
+                    paymentIntentClientSecret: clientSecret,
+                    clientDefaultPaymentMethod: nil,
+                    configuration: configuration
+                )
+                linkBrand = elementsSession.linkBrand
+            case .setupIntentClientSecret(let clientSecret):
+                let (_, elementsSession) = try await configuration.apiClient.retrieveElementsSession(
+                    setupIntentClientSecret: clientSecret,
+                    clientDefaultPaymentMethod: nil,
+                    configuration: configuration
+                )
+                linkBrand = elementsSession.linkBrand
+            case .deferredIntent(let intentConfiguration):
+                let elementsSession = try await configuration.apiClient.retrieveDeferredElementsSession(
+                    withIntentConfig: intentConfiguration,
+                    clientDefaultPaymentMethod: nil,
+                    configuration: configuration
+                )
+                linkBrand = elementsSession.linkBrand
+            case .checkoutSession:
+                linkBrand = nil
+            }
+
+            fetchedLinkBrand = linkBrand
+        } catch {
+            // Fall back to the explicit override or Link if the elements session lookup fails.
+        }
     }
 
     private func generateManifest(continuation: CheckedContinuation<Manifest, Swift.Error>,

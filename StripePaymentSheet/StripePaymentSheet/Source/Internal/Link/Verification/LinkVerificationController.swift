@@ -7,6 +7,7 @@
 //
 
 import UIKit
+@_spi(STP) import StripeCore
 
 /// Standalone verification controller.
 final class LinkVerificationController {
@@ -22,6 +23,7 @@ final class LinkVerificationController {
     init(
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount,
+        brand: LinkBrand = .link,
         configuration: PaymentElementConfiguration,
         appearance: LinkAppearance? = nil,
         allowLogoutInDialog: Bool = false,
@@ -33,6 +35,7 @@ final class LinkVerificationController {
         self.verificationViewController = LinkVerificationViewController(
             mode: mode,
             linkAccount: linkAccount,
+            brand: brand,
             appearance: appearance,
             allowLogoutInDialog: allowLogoutInDialog,
             consentViewModel: consentViewModel

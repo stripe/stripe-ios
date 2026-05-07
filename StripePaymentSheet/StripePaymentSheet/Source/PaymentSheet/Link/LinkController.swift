@@ -354,6 +354,7 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .inlineLogin,
             linkAccount: linkAccount,
+            brand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
             configuration: configuration,
             appearance: appearance
         )
@@ -808,6 +809,7 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .inlineLogin,
             linkAccount: linkAccount,
+            brand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
             configuration: configuration,
             appearance: appearance,
             consentViewModel: consentViewModel

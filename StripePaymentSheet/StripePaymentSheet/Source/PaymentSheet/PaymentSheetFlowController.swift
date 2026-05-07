@@ -196,18 +196,18 @@ extension PaymentSheet {
                         labels = Labels(label: linkedBank.bankName ?? .Localized.bank, sublabel: sublabel)
                     } else {
                         labels = Labels(
-                            label: paymentMethod.expandedPaymentSheetLabel(brand: linkBrand),
-                            sublabel: paymentMethod.paymentSheetSublabel(brand: linkBrand)
+                            label: expandedPaymentSheetLabel(for: paymentMethod, brand: linkBrand),
+                            sublabel: paymentSheetSublabel(for: paymentMethod, brand: linkBrand)
                         )
                     }
-                    label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams, brand: linkBrand)
+                    label = paymentOptionLabel(for: paymentMethod, confirmParams: confirmParams, brand: linkBrand)
                     paymentMethodType = paymentMethod.type.identifier
                     billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
                 case .new(let confirmParams):
                     label = confirmParams.paymentSheetLabel(brand: linkBrand)
                     labels = Labels(
-                        label: confirmParams.expandedPaymentSheetLabel(brand: linkBrand),
+                        label: expandedPaymentSheetLabel(for: confirmParams, brand: linkBrand),
                         sublabel: confirmParams.paymentSheetSublabel
                     )
                     paymentMethodType = confirmParams.paymentMethodType.identifier
@@ -216,13 +216,13 @@ extension PaymentSheet {
                 case .link(let option):
                     if case let .signUp(_, _, _, _, confirmParams) = option {
                         labels = Labels(
-                            label: confirmParams.expandedPaymentSheetLabel(brand: linkBrand),
+                            label: expandedPaymentSheetLabel(for: confirmParams, brand: linkBrand),
                             sublabel: confirmParams.paymentSheetSublabel
                         )
                     } else {
                         labels = Labels(label: linkBrand.displayName, sublabel: option.paymentSheetSubLabel(brand: linkBrand))
                     }
-                    label = option.paymentSheetLabel(brand: linkBrand)
+                    label = paymentSheetLabel(for: option, brand: linkBrand)
                     paymentMethodType = option.paymentMethodType
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = option.shippingAddress

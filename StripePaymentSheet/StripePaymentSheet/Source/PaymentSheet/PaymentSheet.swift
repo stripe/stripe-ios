@@ -193,6 +193,7 @@ public class PaymentSheet {
                         let verificationController = LinkVerificationController(
                             mode: .inlineLogin,
                             linkAccount: linkAccount,
+                            brand: self.configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession),
                             configuration: self.configuration
                         )
 

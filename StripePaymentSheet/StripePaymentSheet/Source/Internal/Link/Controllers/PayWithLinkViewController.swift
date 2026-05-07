@@ -814,6 +814,7 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                     let verificationController = LinkVerificationController(
                         mode: .modal,
                         linkAccount: account,
+                        brand: self.context.configuration.resolvedLinkBrand(elementsSession: self.context.elementsSession),
                         configuration: self.context.configuration
                     )
                     verificationController.present(from: self) { result in

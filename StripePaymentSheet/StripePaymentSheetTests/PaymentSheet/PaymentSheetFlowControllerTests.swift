@@ -302,7 +302,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         paymentMethod.linkPaymentDetails = nil
 
         XCTAssertEqual(paymentMethod.paymentSheetLabel(brand: .onelink), "Onelink")
-        XCTAssertEqual(paymentMethod.expandedPaymentSheetLabel(brand: .onelink), "Onelink")
+        XCTAssertEqual(expandedPaymentSheetLabel(for: paymentMethod, brand: .onelink), "Onelink")
     }
 
     func testPaymentOptionDisplayData_SavedLinkFallbackUsesOnelinkLabels() {
