@@ -272,29 +272,11 @@ final class SelfieScanningView: UIView {
                     sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
                 }
             }
-        case .saving(let images, consentHTMLText: let consentText):
+        case .saving(let images, consentHTMLText: _):
             scannedImageScrollView.isHidden = false
             rebuildImageHStack(with: images)
-
-            do {
-                consentCheckboxButton.setAttributedText(
-                    try NSAttributedString.createHtmlString(
-                        htmlText: consentText,
-                        style: Styling.consentHTMLStyle
-                    )
-                )
-                consentCheckboxButton.isEnabled = false
-                retakeSelfieIcon.tintColor = IdentityUI.iconColor
-                retakeSelfieStack.isHidden = false
-                retakeSelfieButton.isEnabled = false
-                consentCheckboxButton.isHidden = false
-            } catch {
-                // Keep the consent checkbox hidden and treat this case the same
-                // as if the user did not give consent.
-                if let sheetController = sheetController {
-                    sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
-                }
-            }
+            retakeSelfieStack.isHidden = true
+            consentCheckboxButton.isHidden = true
         }
     }
 

@@ -361,6 +361,21 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
         wait(for: [exp], timeout: 1)
     }
 
+    func testNextViewControllerBiometricConsentPrecedesSelfie() throws {
+        let exp = expectation(
+            description: "testNextViewControllerBiometricConsentPrecedesSelfie"
+        )
+        try nextViewController(
+            missingRequirements: [.biometricConsent, .face],
+            completion: { nextVC in
+                XCTAssertIs(nextVC, BiometricConsentViewController.self)
+                exp.fulfill()
+            }
+        )
+
+        wait(for: [exp], timeout: 1)
+    }
+
     func testDelegateChain() {
         let mockNavigationController = IdentityFlowNavigationController(
             rootViewController: UIViewController(nibName: nil, bundle: nil)
