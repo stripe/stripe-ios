@@ -21,7 +21,7 @@ extension LinkVerificationView {
         private let brand: LinkBrand
 
         private lazy var logoView: UIImageView = {
-            let logoView = UIImageView(image: Image.link_logo.makeImage(template: false))
+            let logoView = UIImageView(image: brand.paymentSheetLogoImage)
             logoView.translatesAutoresizingMaskIntoConstraints = false
             logoView.isAccessibilityElement = true
             logoView.accessibilityTraits = .header

@@ -18,7 +18,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
     private let brand: LinkBrand
 
     private lazy var logoView: UIImageView = {
-        let imageView = UIImageView(image: Image.link_logo.makeImage(template: false))
+        let imageView = UIImageView(image: brand.paymentSheetLogoImage)
         imageView.tintColor = .linkIconBrand
         imageView.isAccessibilityElement = true
         imageView.accessibilityTraits = .header

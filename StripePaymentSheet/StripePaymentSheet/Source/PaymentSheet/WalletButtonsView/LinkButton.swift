@@ -7,6 +7,7 @@
 
 @_spi(STP) import StripeUICore
 import SwiftUI
+@_spi(STP) import StripeCore
 
 @available(iOS 16.0, *)
 struct LinkButton: View {
@@ -26,16 +27,19 @@ struct LinkButton: View {
     private let height: CGFloat
     private let cornerRadius: CGFloat
     private let borderColor: UIColor
+    private let brand: LinkBrand
 
     init(
         height: CGFloat = Constants.defaultButtonHeight,
         cornerRadius: CGFloat = Constants.defaultButtonHeight / 2,
+        brand: LinkBrand = .link,
         viewModel: LinkButtonViewModel = LinkButtonViewModel(),
         borderColor: UIColor,
         action: @escaping () -> Void
     ) {
         self.height = height
         self.cornerRadius = cornerRadius
+        self.brand = brand
         self.borderColor = borderColor
         self._viewModel = StateObject(wrappedValue: viewModel)
         self.action = action
@@ -71,7 +75,7 @@ struct LinkButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: scaledContentSpacing) {
-                SwiftUI.Image(uiImage: Image.link_logo.makeImage(template: false))
+                SwiftUI.Image(uiImage: brand.paymentSheetLogoImage)
                     .resizable()
                     .scaledToFit()
                     .frame(height: scaledContentHeight)
