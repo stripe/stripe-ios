@@ -403,8 +403,10 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public func retrieveMissingIdentifiers() async throws -> ComplianceIdentifierRequirements {
         do {
             let identifiers = try await apiClient.retrieveMissingIdentifiers(linkAccountInfo: linkAccountInfo)
+            analyticsClient.log(.identifierRequirementsRetrieved)
             return identifiers
         } catch {
+            analyticsClient.log(.errorOccurred(during: .retrieveMissingIdentifiers, errorMessage: error.localizedDescription))
             throw error
         }
     }
@@ -412,32 +414,38 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public func submitIdentifiers(_ identifiers: [ComplianceIdentifier]) async throws -> SubmitIdentifiersResult {
         do {
             let result = try await apiClient.submitIdentifiers(identifiers: identifiers, linkAccountInfo: linkAccountInfo)
+            analyticsClient.log(.identifiersSubmitted(valid: result.valid))
             return result
         } catch {
+            analyticsClient.log(.errorOccurred(during: .submitIdentifiers, errorMessage: error.localizedDescription))
             throw error
         }
     }
 
     @MainActor
     public func presentCRSCARFDeclaration(from viewController: UIViewController) async throws -> CRSCARFDeclarationResult {
+        analyticsClient.log(.crsCarfDeclarationStarted)
         do {
             let linkAccountInfo = try await self.linkAccountInfo
             let declaration = try await apiClient.retrieveCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
-            let result: CRSCARFDeclarationResult = switch try await linkController.presentCRSCARFDeclaration(
+            let result = try await linkController.presentCRSCARFDeclaration(
                 text: declaration.text,
                 appearance: appearance,
                 from: viewController,
                 onConfirm: { [apiClient] in
                     try await apiClient.confirmCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
                 }
-            ) {
+            )
+
+            switch result {
             case .confirmed:
-                .confirmed
+                analyticsClient.log(.crsCarfDeclarationCompleted)
+                return .confirmed
             case .canceled:
-                .canceled
+                return .canceled
             }
-            return result
         } catch {
+            analyticsClient.log(.errorOccurred(during: .presentCRSCARFDeclaration, errorMessage: error.localizedDescription))
             throw error
         }
     }
