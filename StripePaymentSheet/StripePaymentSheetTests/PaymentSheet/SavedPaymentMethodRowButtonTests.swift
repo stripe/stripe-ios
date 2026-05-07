@@ -169,8 +169,9 @@ final class SavedPaymentMethodRowButtonTests: XCTestCase {
 
         XCTAssertEqual(sut.rowButton.label.text, "Onelink")
         XCTAssertEqual(sut.rowButton.sublabel.text, "•••• 4242")
+        let accessibilityLabel = (sut.rowButton.accessibilityElements?.first as? UIView)?.accessibilityLabel
         XCTAssertEqual(
-            sut.rowButton.accessibilityHelperView.accessibilityLabel,
+            accessibilityLabel,
             paymentMethod.paymentSheetAccessibilityLabel
         )
     }
