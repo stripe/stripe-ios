@@ -48,11 +48,7 @@ jobs:
             "com.apple.CoreSimulator.SimRuntime.iOS-16-4"
 
       - name: Run snapshot tests (record mode)
-        run: |
-          # Record mode causes FBSnapshotTestCase to "fail" each test after
-          # saving the reference image. We allow this exit code and verify
-          # snapshots were actually written in the next step.
-          ruby ci_scripts/snapshots.rb --record --ci || true
+        run: ruby ci_scripts/snapshots.rb --record --ci
 
       - name: Install ImageMagick
         run: brew install imagemagick

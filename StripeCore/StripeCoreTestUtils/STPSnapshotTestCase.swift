@@ -16,6 +16,15 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         recordMode = true
     }
 
+    // FBSnapshotTestCase intentionally fails tests in record mode after saving.
+    // Since we always record and compare externally, suppress those failures.
+    open override func record(_ issue: XCTIssue) {
+        if recordMode && issue.compactDescription.contains("record mode") {
+            return
+        }
+        super.record(issue)
+    }
+
     open override func getReferenceImageDirectory(withDefault dir: String?) -> String {
         return ProcessInfo.processInfo.environment["SNAPSHOT_RECORD_DIR"] ?? "/tmp/snapshot-records"
     }
