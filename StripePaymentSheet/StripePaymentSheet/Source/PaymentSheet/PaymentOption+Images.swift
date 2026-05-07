@@ -60,8 +60,8 @@ extension PaymentOption {
         case .new:
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
             return UIImage()
-        case .link:
-            return Image.link_logo.makeImage()
+        case .link(let linkConfirmOption):
+            return linkConfirmOption.brand.paymentSheetLogoImage
         case .external:
             assertionFailure("This shouldn't be called - we don't show EPMs in the saved PM collection view")
             return UIImage()
@@ -108,20 +108,20 @@ extension STPPaymentMethod {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle, brand: LinkBrand = .link) -> UIImage {
         switch type {
         case .card:
             return (isLinkPaymentMethod || isLinkPassthroughMode)
-                ? Image.link_logo.makeImage()
+                ? brand.paymentSheetLogoImage
                 : calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .USBankAccount:
             return isLinkPassthroughMode
-                ? Image.link_logo.makeImage()
+                ? brand.paymentSheetLogoImage
                 : PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle)
         case .SEPADebit:
             return Image.carousel_sepa.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
         case .link:
-            return Image.link_logo.makeImage()
+            return brand.paymentSheetLogoImage
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()
