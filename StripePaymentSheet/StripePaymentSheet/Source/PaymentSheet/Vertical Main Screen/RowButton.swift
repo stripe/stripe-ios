@@ -580,12 +580,6 @@ extension RowButton {
             didTap: didTap
         )
         button.accessibilityHelperView.accessibilityLabel = {
-            if paymentMethod.isLinkPassthroughMode {
-                if let badgeText {
-                    return "\(linkBrand.displayName), \(badgeText)"
-                }
-                return linkBrand.displayName
-            }
             if let badgeText {
                 if let accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel {
                     return "\(accessibilityLabel), \(badgeText)"

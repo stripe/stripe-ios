@@ -157,4 +157,22 @@ final class SavedPaymentMethodRowButtonTests: XCTestCase {
         XCTAssertEqual(sut.rowButton.sublabel.text, "Onelink")
     }
 
+    func testLinkPassthroughPreservesFundingDetailsInAccessibilityLabel() {
+        let paymentMethod = STPPaymentMethod._testCard()
+        paymentMethod.isLinkPassthroughMode = true
+
+        let sut = SavedPaymentMethodRowButton(
+            paymentMethod: paymentMethod,
+            appearance: appearance,
+            linkBrand: .onelink
+        )
+
+        XCTAssertEqual(sut.rowButton.label.text, "Onelink")
+        XCTAssertEqual(sut.rowButton.sublabel.text, "•••• 4242")
+        XCTAssertEqual(
+            sut.rowButton.accessibilityHelperView.accessibilityLabel,
+            paymentMethod.paymentSheetAccessibilityLabel
+        )
+    }
+
 }

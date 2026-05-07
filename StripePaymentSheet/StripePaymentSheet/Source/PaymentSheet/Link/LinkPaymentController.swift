@@ -15,14 +15,8 @@ import UIKit
 /// `LinkPaymentController` encapsulates the Link payment flow, allowing you to let your customers pay with their Link account.
 /// This feature is currently invite-only. To accept payments, [use the Mobile Payment Element.](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet)
 @_spi(LinkOnly) public class LinkPaymentController: NSObject {
-    private struct LoadContext {
-        let elementsSession: STPElementsSession?
-        let linkBrand: LinkBrand
-    }
-
     private let mode: PaymentSheet.InitializationMode
     private let configuration: PaymentSheet.Configuration
-    private var loadContext: LoadContext?
 
     private var payWithLinkContinuation: CheckedContinuation<Void, Swift.Error>?
     private var paymentMethodId: String?
@@ -60,7 +54,7 @@ import UIKit
     }
 
     private var resolvedLinkBrand: LinkBrand {
-        loadContext?.linkBrand ?? configuration.link.brand ?? .link
+        configuration.link.brand ?? .link
     }
 
     /// The parent view controller to present
@@ -138,8 +132,6 @@ import UIKit
     /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
-        _ = await loadContextIfNeeded()
-
         guard FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable else {
             return try await presentWebFlow(from: presentingViewController)
         }
@@ -399,60 +391,6 @@ import UIKit
     private func continueWithFailure(_ error: Swift.Error) {
         paymentMethodId = nil
         payWithLinkContinuation?.resume(throwing: error)
-    }
-
-    @MainActor
-    private func loadContextIfNeeded() async -> LoadContext {
-        if let loadContext {
-            return loadContext
-        }
-
-        let resolvedFromOverride = configuration.link.brand.map { LoadContext(elementsSession: nil, linkBrand: $0) }
-        if let resolvedFromOverride {
-            loadContext = resolvedFromOverride
-            return resolvedFromOverride
-        }
-
-        do {
-            let elementsSession: STPElementsSession?
-            switch mode {
-            case .paymentIntentClientSecret(let clientSecret):
-                let (_, session) = try await configuration.apiClient.retrieveElementsSession(
-                    paymentIntentClientSecret: clientSecret,
-                    clientDefaultPaymentMethod: nil,
-                    configuration: configuration
-                )
-                elementsSession = session
-            case .setupIntentClientSecret(let clientSecret):
-                let (_, session) = try await configuration.apiClient.retrieveElementsSession(
-                    setupIntentClientSecret: clientSecret,
-                    clientDefaultPaymentMethod: nil,
-                    configuration: configuration
-                )
-                elementsSession = session
-            case .deferredIntent(let intentConfiguration):
-                elementsSession = try await configuration.apiClient.retrieveDeferredElementsSession(
-                    withIntentConfig: intentConfiguration,
-                    clientDefaultPaymentMethod: nil,
-                    configuration: configuration
-                )
-            case .checkoutSession:
-                elementsSession = nil
-            }
-
-            let resolved = LoadContext(
-                elementsSession: elementsSession,
-                linkBrand: configuration.link.brand ?? elementsSession?.linkBrand ?? .link
-            )
-            loadContext = resolved
-            return resolved
-        } catch {
-            // Headless Link can still proceed without this secondary fetch; fallback remains `.link`
-            // unless the merchant explicitly set `configuration.link.brand`.
-            let fallback = LoadContext(elementsSession: nil, linkBrand: .link)
-            loadContext = fallback
-            return fallback
-        }
     }
 
     private func generateManifest(continuation: CheckedContinuation<Manifest, Swift.Error>,
