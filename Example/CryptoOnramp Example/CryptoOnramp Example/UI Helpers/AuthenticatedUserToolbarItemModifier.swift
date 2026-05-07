@@ -31,7 +31,6 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
 
     @Environment(\.isLoading) private var isLoading
     @State private var isPresentingUpdateAddress = false
-    @State private var isPresentingEUComplianceTest = false
     @State private var alert: Alert?
     @State private var customerInformationTextToCopy: String?
 
@@ -56,9 +55,6 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
                     verifyKYC(updatedAddress: address)
                 }
             }
-        }
-        .sheet(isPresented: $isPresentingEUComplianceTest) {
-            EUComplianceTestView(coordinator: coordinator)
         }
         .alert(
             alert?.title ?? "Error",
@@ -90,12 +86,6 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
                             checkCustomerInformation()
                         } label: {
                             Label("Check Customer Information…", systemImage: "person.text.rectangle")
-                        }
-
-                        Button {
-                            isPresentingEUComplianceTest = true
-                        } label: {
-                            Label("EU Compliance Test…", systemImage: "doc.badge.gearshape")
                         }
 
                         Divider()
