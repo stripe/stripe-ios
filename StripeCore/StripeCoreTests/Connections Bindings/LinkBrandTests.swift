@@ -21,6 +21,7 @@ final class LinkBrandTests: XCTestCase {
 
     func testLegalURLs_forOnelinkBrand() {
         XCTAssertEqual(LinkBrand.onelink.websiteURL.absoluteString, "https://onelink.com")
+        XCTAssertEqual(LinkBrand.onelink.checkoutURL.absoluteString, "https://checkout.onelink.com/")
         XCTAssertEqual(LinkBrand.onelink.termsURL.absoluteString, "https://onelink.com/terms")
         XCTAssertEqual(LinkBrand.onelink.privacyURL.absoluteString, "https://onelink.com/privacy")
         XCTAssertEqual(LinkBrand.onelink.achAuthorizationURL.absoluteString, "https://onelink.com/terms/ach-authorization")

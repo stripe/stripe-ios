@@ -32,6 +32,15 @@ import Foundation
         }
     }
 
+    @_spi(STP) public var checkoutURL: URL {
+        switch self {
+        case .link, .unparsable:
+            return URL(string: "https://checkout.link.com/")!
+        case .onelink:
+            return URL(string: "https://checkout.onelink.com/")!
+        }
+    }
+
     @_spi(STP) public var termsURL: URL {
         switch self {
         case .link, .unparsable:
