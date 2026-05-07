@@ -442,8 +442,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
         }()
         let currencyOptions = Self.makeCurrencyOptions(
             from: localizedPricesMetas,
-            exchangeRateMeta: exchangeRateMeta,
-            sessionCurrency: currency
+            exchangeRateMeta: exchangeRateMeta
         )
 
         // Tax context for automatic-tax address source.
@@ -770,13 +769,6 @@ extension STPCheckoutSession {
 
     // MARK: Discounts
 
-    /// Internal-only parser used by some legacy callers/tests. Returns the public
-    /// ``Checkout/DiscountAmount`` collection.
-    static func parseDiscounts(from dict: [AnyHashable: Any]) -> [Checkout.DiscountAmount] {
-        let currency = dict["currency"] as? String
-        return parseDiscountAmounts(from: dict, currency: currency)
-    }
-
     static func parseDiscountAmounts(from dict: [AnyHashable: Any], currency: String?) -> [Checkout.DiscountAmount] {
         let lineItemGroup = dict["line_item_group"] as? [AnyHashable: Any]
         let discountAmounts = lineItemGroup?["discount_amounts"] as? [[AnyHashable: Any]] ?? []
@@ -835,8 +827,7 @@ extension STPCheckoutSession {
 
     static func makeCurrencyOptions(
         from metas: [STPCheckoutSessionLocalizedPriceMeta],
-        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?,
-        sessionCurrency: String?
+        exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
     ) -> [Checkout.CurrencyOption]? {
         guard !metas.isEmpty else { return nil }
         return metas.map { meta -> Checkout.CurrencyOption in

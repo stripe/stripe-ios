@@ -6,6 +6,13 @@
 @testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
+private extension STPCheckoutSession {
+    static func parseDiscounts(from dict: [AnyHashable: Any]) -> [Checkout.DiscountAmount] {
+        let currency = dict["currency"] as? String
+        return parseDiscountAmounts(from: dict, currency: currency)
+    }
+}
+
 final class STPCheckoutSessionDiscountTests: XCTestCase {
 
     // MARK: - Valid discount with coupon + promotion code
