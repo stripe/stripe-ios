@@ -180,8 +180,8 @@ extension PaymentSheet {
                 }
             }
 
-            init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, cardArtEnabled: Bool = false, linkBrand: LinkBrand = .link) {
-                image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle, cardArtEnabled: cardArtEnabled)
+            init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, linkBrand: LinkBrand = .link) {
+                image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle)
                 switch paymentOption {
                 case .applePay:
                     label = String.Localized.apple_pay
@@ -772,7 +772,6 @@ extension PaymentSheet {
                     paymentOption: selectedPaymentOption,
                     currency: intent.currency,
                     iconStyle: configuration.appearance.iconStyle,
-                    cardArtEnabled: configuration.appearance.cardArtEnabled,
                     linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
                 )
             } else {

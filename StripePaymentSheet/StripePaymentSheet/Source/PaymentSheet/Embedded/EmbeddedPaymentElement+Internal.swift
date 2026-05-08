@@ -367,9 +367,9 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
 // MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData
 
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
-    init(paymentOption: PaymentOption, mandateText: NSAttributedString?, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, cardArtEnabled: Bool = false, linkBrand: LinkBrand = .link) {
+    init(paymentOption: PaymentOption, mandateText: NSAttributedString?, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, linkBrand: LinkBrand = .link) {
         self.mandateText = mandateText
-        self.image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle, cardArtEnabled: cardArtEnabled) // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
+        self.image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle) // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
         switch paymentOption {
         case .applePay:
             label = String.Localized.apple_pay

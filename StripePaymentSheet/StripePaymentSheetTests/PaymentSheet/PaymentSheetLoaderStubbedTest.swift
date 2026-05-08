@@ -780,30 +780,17 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
     // MARK: - hasCardArt
 
-    func testHasCardArt_enabledWithCardArt() {
+    func testHasCardArt_withCardArt() {
         let pm = STPPaymentMethod._testCardWithCardArt()
-        var appearance = PaymentSheet.Appearance()
-        appearance.cardArtEnabled = true
-        XCTAssertTrue(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm], appearance: appearance))
+        XCTAssertTrue(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm]))
     }
 
-    func testHasCardArt_disabledWithCardArt() {
-        let pm = STPPaymentMethod._testCardWithCardArt()
-        var appearance = PaymentSheet.Appearance()
-        appearance.cardArtEnabled = false
-        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm], appearance: appearance))
-    }
-
-    func testHasCardArt_enabledWithoutCardArt() {
+    func testHasCardArt_withoutCardArt() {
         let pm = STPPaymentMethod._testCard()
-        var appearance = PaymentSheet.Appearance()
-        appearance.cardArtEnabled = true
-        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm], appearance: appearance))
+        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm]))
     }
 
     func testHasCardArt_emptyPaymentMethods() {
-        var appearance = PaymentSheet.Appearance()
-        appearance.cardArtEnabled = true
-        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [], appearance: appearance))
+        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: []))
     }
 }

@@ -254,7 +254,7 @@ final class PaymentSheetLoader {
             // TODO: Revisit overall pre-loading approach to make this work for other payment methods
             if let defaultPaymentMethod = paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                case .saved(let stpPaymentMethod) = defaultPaymentMethod {
-                stpPaymentMethod.preloadCardArtImage(cardArtEnabled: configuration.appearance.cardArtEnabled)
+                stpPaymentMethod.preloadCardArtImage()
             }
             loadTimings.logEnd("makeViewModels")
 
@@ -268,7 +268,7 @@ final class PaymentSheetLoader {
                 paymentMethodOrientation: loadResult.paymentMethodOrientation,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate,
-                hasCardArt: hasCardArt(savedPaymentMethods: filteredSavedPaymentMethods, appearance: configuration.appearance),
+                hasCardArt: hasCardArt(savedPaymentMethods: filteredSavedPaymentMethods),
                 didLinkLookupTimeOut: didLinkLookupTimeOut
             )
             return (loadResult, confirmationChallenge)
@@ -278,9 +278,9 @@ final class PaymentSheetLoader {
         }
     }
 
-    /// Returns `true` if the card art feature is enabled and at least one saved card has a card art image URL.
-    static func hasCardArt(savedPaymentMethods: [STPPaymentMethod], appearance: PaymentSheet.Appearance) -> Bool {
-        appearance.cardArtEnabled && savedPaymentMethods.contains { $0.type == .card && $0.card?.cardArt?.artImage?.url != nil }
+    /// Returns `true` if at least one saved card has a card art image URL.
+    static func hasCardArt(savedPaymentMethods: [STPPaymentMethod]) -> Bool {
+        savedPaymentMethods.contains { $0.type == .card && $0.card?.cardArt?.artImage?.url != nil }
     }
 
     // MARK: - Helper methods that load things
