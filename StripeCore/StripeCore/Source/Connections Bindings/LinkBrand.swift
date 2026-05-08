@@ -121,14 +121,6 @@ import Foundation
             components.scheme = "https"
             components.host = "support.onelink.com"
             return components.url ?? url
-        case "stripe.com", "www.stripe.com":
-            if components.path == "/legal/end-users", components.fragment == "linked-financial-account-terms" {
-                return URL(string: "https://onelink.com/terms#financial-connections-terms")!
-            }
-            if components.path == "/privacy" {
-                return privacyURL
-            }
-            return url
         default:
             return url
         }

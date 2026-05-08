@@ -38,10 +38,6 @@ final class LinkBrandTests: XCTestCase {
             LinkBrand.onelink.brandAwareLegalSupportURL(for: URL(string: "https://support.link.co/questions/foo")!).absoluteString,
             "https://support.onelink.com/questions/foo"
         )
-        XCTAssertEqual(
-            LinkBrand.onelink.brandAwareLegalSupportURL(for: URL(string: "https://stripe.com/legal/end-users#linked-financial-account-terms")!).absoluteString,
-            "https://onelink.com/terms#financial-connections-terms"
-        )
     }
 
     func testBrandAwareLegalSupportURL_forLinkLeavesURLUnchanged() {
