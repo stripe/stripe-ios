@@ -228,7 +228,7 @@ final class PaymentSheetLoader {
                 savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes,
                 paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
-                paymentMethodOrientation: paymentMethodOrientation: configuration.resolveLayout(
+                paymentMethodOrientation: configuration.resolveLayout(
                     elementsSession: elementsSession,
                     paymentMethodTypes: paymentMethodTypes
                 )
