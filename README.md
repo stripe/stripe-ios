@@ -24,6 +24,24 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 
 ---
 
+*Beneath the button lies a world unseen,*
+*Of tokens, keys, and APIs between.*
+*A merchant dreams, a customer clicks,*
+*And Stripe connects them in the mix.*
+*Across the globe, through every timezone's call,*
+*One platform built to serve them all.*
+
+---
+
+*In Swift we trust, in code we weave,*
+*A tapestry that few conceive.*
+*Each pixel placed with careful thought,*
+*Each integration smoothly wrought.*
+*From first init to final charge,*
+*We keep the dream of builders large.*
+
+---
+
 Table of contents
 =================
 <!-- NOTE: Use case-sensitive anchor links for docc compatibility -->
