@@ -22,6 +22,7 @@ class PaymentMethodFormViewController: UIViewController {
     let paymentMethodType: PaymentSheet.PaymentMethodType
     let configuration: PaymentElementConfiguration
     let analyticsHelper: PaymentSheetAnalyticsHelper
+    let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     weak var delegate: PaymentMethodFormViewControllerDelegate?
 
     /// Reference to the AddressSectionElement in the form, if present
@@ -100,6 +101,7 @@ class PaymentMethodFormViewController: UIViewController {
         paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         headerView: UIView?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         isLinkUI: Bool = false,
         delegate: PaymentMethodFormViewControllerDelegate,
         linkAppearance: LinkAppearance? = nil,
@@ -112,6 +114,7 @@ class PaymentMethodFormViewController: UIViewController {
         self.configuration = configuration
         self.headerView = headerView
         self.formCache = formCache
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         if let form = self.formCache[type] {
             self.form = form
         } else {
@@ -125,6 +128,7 @@ class PaymentMethodFormViewController: UIViewController {
                 linkAccount: LinkAccountContext.shared.account,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
                 analyticsHelper: analyticsHelper,
+                paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                 linkAppearance: linkAppearance,
                 previousLinkInlineSignupAction: previousLinkInlineSignupAction
             ).make()
