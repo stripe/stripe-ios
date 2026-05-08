@@ -8,7 +8,7 @@
 import Foundation
 
 /// The result after a user performs KYC verification.
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 public enum VerifyKYCResult {
 
     /// The user confirmed that displayed KYC information is accurate and up-to-date.

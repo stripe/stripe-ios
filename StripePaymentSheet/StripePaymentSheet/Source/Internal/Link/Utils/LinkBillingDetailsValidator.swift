@@ -100,7 +100,7 @@ class LinkBillingDetailsValidator {
         )
 
         let updateParams = UpdatePaymentDetailsParams(
-            details: .card(billingDetails: billingDetails)
+            billingDetails: billingDetails
         )
 
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)

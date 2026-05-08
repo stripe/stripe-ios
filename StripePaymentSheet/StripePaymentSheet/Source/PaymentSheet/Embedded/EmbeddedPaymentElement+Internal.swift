@@ -68,6 +68,7 @@ extension EmbeddedPaymentElement {
             appearance: configuration.appearance,
             shouldShowApplePay: shouldShowApplePay,
             shouldShowLink: shouldShowLink,
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession),
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             mandateProvider: mandateProvider,
             shouldShowMandate: configuration.embeddedViewDisplaysMandateText,
@@ -75,6 +76,7 @@ extension EmbeddedPaymentElement {
             customer: configuration.customer,
             currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             analyticsHelper: analyticsHelper,
             delegate: delegate
         )
@@ -97,6 +99,7 @@ extension EmbeddedPaymentElement {
         elementsSession: STPElementsSession,
         savedPaymentMethods: [STPPaymentMethod],
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
         formCache: PaymentMethodFormCache,
         delegate: EmbeddedFormViewControllerDelegate
     ) -> EmbeddedFormViewController? {
@@ -112,6 +115,7 @@ extension EmbeddedPaymentElement {
             paymentMethodType: paymentMethodType,
             previousPaymentOption: previousPaymentOption,
             analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
             formCache: formCache,
             delegate: delegate
         )
@@ -142,6 +146,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             formCache: formCache,
             delegate: self
         )
@@ -219,6 +224,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             paymentMethodType: paymentMethodType,
             previousPaymentOption: nil,
             analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             formCache: .init(),  // Use a fresh form cache to ensure forms aren't re-added to a different view controller's hierarchy
             delegate: self
         )

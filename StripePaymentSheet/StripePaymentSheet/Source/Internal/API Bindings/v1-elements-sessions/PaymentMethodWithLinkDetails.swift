@@ -51,9 +51,8 @@ class PaymentMethodWithLinkDetails: NSObject, STPAPIResponseDecodable {
             }
         }
 
-        if let linkDetails, linkDetails.type.isUnparsed {
-            // TODO(jkelle): We'll be able to render these with the `display` metadata
-            // coming in https://docs.google.com/document/d/1x834BjHYro9-bDoAVaqgHm7LDPDwzpk4z_5BvxYwwtU/
+        if let linkDetails, linkDetails.type.isUnparsed, linkDetails.display == nil {
+            // This is a Link payment method with an unknown type and no display metadata. We can't render it.
             return nil
         }
 

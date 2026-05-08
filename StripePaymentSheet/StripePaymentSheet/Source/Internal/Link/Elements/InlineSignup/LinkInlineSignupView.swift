@@ -44,6 +44,7 @@ final class LinkInlineSignupView: UIView {
 
     private(set) lazy var checkboxElement = CheckboxElement(
         mode: viewModel.mode,
+        brand: viewModel.brand,
         merchantName: viewModel.configuration.merchantDisplayName,
         appearance: viewModel.configuration.appearance,
         borderColor: borderColor
@@ -100,6 +101,7 @@ final class LinkInlineSignupView: UIView {
         }
         let legalView = LinkLegalTermsView(textAlignment: .left,
                                            mode: viewModel.mode,
+                                           brand: viewModel.brand,
                                            delegate: self)
 
         legalView.font = theme.fonts.caption

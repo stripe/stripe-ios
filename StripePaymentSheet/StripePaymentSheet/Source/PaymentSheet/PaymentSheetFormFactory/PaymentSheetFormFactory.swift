@@ -29,6 +29,7 @@ class PaymentSheetFormFactory {
     let showLinkInlineCardSignup: Bool
     let linkAccount: PaymentSheetLinkAccount?
     let linkAppearance: LinkAppearance?
+    let linkBrand: LinkBrand
     let accountService: LinkAccountServiceProtocol?
     let previousCustomerInput: IntentConfirmParams?
 
@@ -49,6 +50,7 @@ class PaymentSheetFormFactory {
     let sellerName: String?
     let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
     let cardFundingFilter: CardFundingFilter
+    let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
 
     var shouldDisplaySaveCheckbox: Bool {
@@ -94,6 +96,7 @@ class PaymentSheetFormFactory {
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         linkAppearance: LinkAppearance? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
@@ -122,6 +125,14 @@ class PaymentSheetFormFactory {
                 return .unknown
             }
         }()
+        let linkBrand: LinkBrand = {
+            switch configuration {
+            case .paymentElement(let configuration, _):
+                return configuration.resolvedLinkBrand(elementsSession: elementsSession)
+            case .customerSheet:
+                return .link
+            }
+        }()
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
                   paymentMethodOrientation: paymentMethodOrientation,
@@ -143,8 +154,10 @@ class PaymentSheetFormFactory {
                   signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
+                  paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                   paymentMethodIncentive: elementsSession.incentive,
                   linkAppearance: linkAppearance,
+                  linkBrand: linkBrand,
                   sellerName: intent.sellerDetails?.businessName,
                   previousLinkInlineSignupAction: previousLinkInlineSignupAction,
                   cardFundingFilter: configuration.cardFundingFilter(for: elementsSession)
@@ -173,8 +186,10 @@ class PaymentSheetFormFactory {
         signupOptInInitialValue: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         paymentMethodIncentive: PaymentMethodIncentive?,
         linkAppearance: LinkAppearance? = nil,
+        linkBrand: LinkBrand = .link,
         sellerName: String? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil,
         cardFundingFilter: CardFundingFilter = .default
@@ -205,8 +220,10 @@ class PaymentSheetFormFactory {
         self.signupOptInInitialValue = signupOptInInitialValue
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
         self.linkAppearance = linkAppearance
+        self.linkBrand = linkBrand
         self.sellerName = sellerName
         self.previousLinkInlineSignupAction = previousLinkInlineSignupAction
         self.cardFundingFilter = cardFundingFilter

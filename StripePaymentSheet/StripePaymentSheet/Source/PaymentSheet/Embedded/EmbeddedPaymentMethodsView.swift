@@ -30,7 +30,6 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
 
 /// The view for an embedded payment element
 class EmbeddedPaymentMethodsView: UIView {
-
     /// Return the default size to let Auto Layout manage the height.
     /// Overriding intrinsicContentSize values and setting `invalidIntrinsicContentSize` forces force SwiftUI to update layout immediately,
     /// resulting in abrupt, non-animated height changes.
@@ -41,6 +40,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
     private let currency: String?
+    private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     private(set) var previousSelectedRowButton: RowButton? {
         didSet {
             guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
@@ -114,6 +114,7 @@ class EmbeddedPaymentMethodsView: UIView {
         appearance: PaymentSheet.Appearance,
         shouldShowApplePay: Bool,
         shouldShowLink: Bool,
+        linkBrand: LinkBrand = .link,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         mandateProvider: MandateTextProvider,
         shouldShowMandate: Bool = true,
@@ -121,6 +122,7 @@ class EmbeddedPaymentMethodsView: UIView {
         customer: PaymentSheet.CustomerConfiguration? = nil,
         currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
@@ -129,6 +131,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.shouldShowMandate = shouldShowMandate
         self.customer = customer
         self.currency = currency
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
         self.delegate = delegate
@@ -164,7 +167,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowLink {
-            let linkRowButton = RowButton.makeForLink(appearance: appearance, isEmbedded: true) { [weak self] rowButton in
+            let linkRowButton = RowButton.makeForLink(appearance: appearance, linkBrand: linkBrand, isEmbedded: true) { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             }

@@ -365,6 +365,15 @@ extension STPApplePayContext {
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
+        } else if case .checkoutSession(let session) = intent,
+                  !session.lineItems.isEmpty,
+                  let totals = session.totals {
+            paymentRequest.paymentSummaryItems = STPApplePayContext.makeApplePayPaymentSummaryItems(
+                lineItems: session.lineItems,
+                totals: totals,
+                totalLabel: label,
+                currency: intent.currency
+            )
         } else {
             // Automatically configure paymentSummaryItems.
             if let amount = intent.amount {
