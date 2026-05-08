@@ -58,7 +58,7 @@ class LinkSheetNavigationBar: SheetNavigationBar {
         return super.leftmostElement
     }
 
-    init(isTestMode: Bool, appearance: PaymentSheet.Appearance, brand: LinkBrand = .link, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
+    init(isTestMode: Bool, appearance: PaymentSheet.Appearance, brand: LinkBrand, shouldLogPaymentSheetAnalyticsOnDismissal: Bool = true) {
         self.brand = brand
         super.init(
             isTestMode: isTestMode,

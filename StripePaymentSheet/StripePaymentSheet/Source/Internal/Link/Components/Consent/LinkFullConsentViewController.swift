@@ -136,6 +136,7 @@ extension LinkFullConsentViewController {
         let navBar = LinkSheetNavigationBar(
             isTestMode: false,
             appearance: LinkUI.appearance,
+            brand: .link,
             shouldLogPaymentSheetAnalyticsOnDismissal: false
         )
         navBar.setStyle(.close(showAdditionalButton: false))

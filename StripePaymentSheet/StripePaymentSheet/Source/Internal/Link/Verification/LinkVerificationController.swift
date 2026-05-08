@@ -23,7 +23,7 @@ final class LinkVerificationController {
     init(
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount,
-        brand: LinkBrand = .link,
+        brand: LinkBrand,
         configuration: PaymentElementConfiguration,
         appearance: LinkAppearance? = nil,
         allowLogoutInDialog: Bool = false,

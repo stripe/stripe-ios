@@ -90,7 +90,7 @@ class LinkEmailElement: Element {
         }
     }
 
-    public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsAppearance = .default, brand: LinkBrand = .link) {
+    public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsAppearance = .default, brand: LinkBrand) {
         self.theme = theme
 
         if showLogo {
