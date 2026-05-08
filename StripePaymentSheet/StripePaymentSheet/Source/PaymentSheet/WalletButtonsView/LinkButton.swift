@@ -5,9 +5,9 @@
 //  Created by Mat Schmid on 6/9/25.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import SwiftUI
-@_spi(STP) import StripeCore
 
 @available(iOS 16.0, *)
 struct LinkButton: View {
