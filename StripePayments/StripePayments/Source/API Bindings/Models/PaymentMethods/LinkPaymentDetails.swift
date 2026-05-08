@@ -116,7 +116,7 @@ import Foundation
         case .bankAccount(let bankAccountDetails):
             return "••••\(bankAccountDetails.last4)"
         case .generic(let genericDetails):
-            return genericDetails.sublabel ?? genericDetails.label
+            return genericDetails.formattedDisplayText
         }
     }
 }

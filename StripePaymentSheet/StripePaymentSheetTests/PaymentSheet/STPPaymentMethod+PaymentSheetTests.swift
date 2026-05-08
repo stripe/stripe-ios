@@ -19,7 +19,7 @@ class STPPPaymentMethodPaymentSheetTests: XCTestCase {
         )
 
         XCTAssertEqual(genericDetails.formattedDisplayText, "Pix 000••••••••")
-        XCTAssertEqual(LinkPaymentDetails.generic(genericDetails).formattedLast4, "000••••••••")
+        XCTAssertEqual(LinkPaymentDetails.generic(genericDetails).formattedLast4, "Pix 000••••••••")
 
         let paymentMethod = STPPaymentMethod._testLink()
         paymentMethod.linkPaymentDetails = .generic(genericDetails)
