@@ -61,7 +61,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         XCTAssertNil(headerView)
     }
-
     private func makeCheckoutSessionIntent(
         offerSave: [String: Any]? = nil,
         hasCustomer: Bool = true

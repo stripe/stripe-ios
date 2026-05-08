@@ -14,7 +14,6 @@ import OHHTTPStubsSwift
 import XCTest
 
 class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
-
     // Test publishable keys
     static let usPublishableKey = "pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C"
     static let frenchPublishableKey = "pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt"
@@ -56,17 +55,49 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             appearance: appearance
         )
 
-        // When: Creating the element
-        mockAnalyticsClient.reset()
-        let result = await PaymentMethodMessagingElement.create(
-            configuration: configuration,
-            downloadManager: downloadManager,
-            analyticsClient: mockAnalyticsClient
+        // When: Loading the response and initializing the element
+        let apiResponse: PaymentMethodMessagingElement.APIResponse
+        do {
+            apiResponse = try await PaymentMethodMessagingElement.get(configuration: configuration)
+        } catch {
+            XCTFail("Expected PMME API request to succeed, got \(error)")
+            return
+        }
+        let promotions = apiResponse.paymentSheetPromotionContents()
+
+        XCTAssertEqual(
+            promotions["afterpay_clearpay"],
+            PaymentMethodMessagingPromotionsHelper.PromotionContent(
+                promotion: "Pay in 4 interest-free payments of $12.50.",
+                learnMoreText: "See plans",
+                infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&title=See%20plans")!
+            )
+        )
+        XCTAssertEqual(
+            promotions["affirm"],
+            PaymentMethodMessagingPromotionsHelper.PromotionContent(
+                promotion: "Pay in 4 interest-free payments of $12.50.",
+                learnMoreText: "See if you qualify",
+                infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=affirm&title=See%20if%20you%20qualify")!
+            )
+        )
+        XCTAssertEqual(
+            promotions["klarna"],
+            PaymentMethodMessagingPromotionsHelper.PromotionContent(
+                promotion: "Pay now, or in 4 interest-free payments of $12.50.",
+                learnMoreText: "See plans",
+                infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=See%20plans")!
+            )
         )
 
-        // Then: Verify success and correct ViewData
-        guard case .success(let pmme) = result else {
-            XCTFail("Expected success, got \(result)")
+        let analyticsHelper = PMMEAnalyticsHelper(configuration: configuration, analyticsClient: mockAnalyticsClient)
+        guard let pmme = try? await PaymentMethodMessagingElement(
+            apiResponse: apiResponse,
+            configuration: configuration,
+            analyticsHelper: analyticsHelper,
+            downloadManager: downloadManager
+        ) else {
+            XCTFail("Expected to initialize PaymentMethodMessagingElement from PMME API response")
             return
         }
 
@@ -99,14 +130,6 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
 
         assertViewDataEqual(actualViewData, expectedViewData)
-
-        // Verify analytics events
-        assertAnalyticsLogged(
-            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadSucceeded, .paymentMethodMessagingElementInit],
-            configuration: configuration,
-            paymentMethods: "afterpay_clearpay,affirm,klarna",
-            contentType: "multi_partner"
-        )
     }
 
     func testCreate_connectedAccount_singlePartner() async {
@@ -121,21 +144,40 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             appearance: appearance
         )
 
-        // When: Creating the element
-        mockAnalyticsClient.reset()
-        let result = await PaymentMethodMessagingElement.create(
-            configuration: configuration,
-            downloadManager: downloadManager,
-            analyticsClient: mockAnalyticsClient
+        // When: Loading the response and initializing the element
+        let apiResponse: PaymentMethodMessagingElement.APIResponse
+        do {
+            apiResponse = try await PaymentMethodMessagingElement.get(configuration: configuration)
+        } catch {
+            XCTFail("Expected PMME API request to succeed, got \(error)")
+            return
+        }
+        let promotions = apiResponse.paymentSheetPromotionContents()
+
+        XCTAssertEqual(
+            promotions,
+            [
+                "affirm": PaymentMethodMessagingPromotionsHelper.PromotionContent(
+                    promotion: "Pay in 4 interest-free payments of $12.50.",
+                    learnMoreText: "See if you qualify",
+                    infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=affirm&title=See%20if%20you%20qualify")!
+                ),
+            ]
         )
 
-        // Then: Verify success with single partner
-        // It should be Affirm only, becuase that is what is enabled in the connected account, even though all are enabled
-        guard case .success(let pmme) = result else {
-            XCTFail("Expected success, got \(result)")
+        let analyticsHelper = PMMEAnalyticsHelper(configuration: configuration, analyticsClient: mockAnalyticsClient)
+        guard let pmme = try? await PaymentMethodMessagingElement(
+            apiResponse: apiResponse,
+            configuration: configuration,
+            analyticsHelper: analyticsHelper,
+            downloadManager: downloadManager
+        ) else {
+            XCTFail("Expected to initialize PaymentMethodMessagingElement from PMME API response")
             return
         }
 
+        // Then: Verify success with single partner
+        // It should be Affirm only, becuase that is what is enabled in the connected account, even though all are enabled
         let actualViewData = pmme.viewData
 
         let expectedViewData = PaymentMethodMessagingElement.ViewData(
@@ -153,14 +195,6 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
 
         assertViewDataEqual(actualViewData, expectedViewData)
-
-        // Verify analytics events
-        assertAnalyticsLogged(
-            events: [.paymentMethodMessagingElementLoadStarted, .paymentMethodMessagingElementLoadSucceeded, .paymentMethodMessagingElementInit],
-            configuration: configuration,
-            paymentMethods: "affirm",
-            contentType: "single_partner"
-        )
     }
 
     func testCreate_multiPartner_alwaysDark() async {
@@ -602,6 +636,81 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
     }
 
+    func testPaymentSheetPromotionContents_logsUnexpectedResponseAnalytics() {
+        let apiResponse = PaymentMethodMessagingElement.APIResponse(
+            content: .init(
+                images: [],
+                promotion: nil,
+                inlinePartnerPromotion: nil,
+                learnMore: nil,
+                legalDisclosure: nil,
+                summary: nil
+            ),
+            paymentPlanGroups: [
+                .init(
+                    type: "klarna",
+                    content: .init(
+                        images: [],
+                        promotion: nil,
+                        inlinePartnerPromotion: nil,
+                        learnMore: .init(message: "See plans", url: URL(string: "https://example.com/klarna")!),
+                        legalDisclosure: nil,
+                        summary: .init(message: "Valid summary", url: nil)
+                    )
+                ),
+                .init(
+                    type: "affirm",
+                    content: .init(
+                        images: [],
+                        promotion: nil,
+                        inlinePartnerPromotion: nil,
+                        learnMore: nil,
+                        legalDisclosure: nil,
+                        summary: nil
+                    )
+                ),
+            ]
+        )
+
+        mockAnalyticsClient.reset()
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
+        let promotions = apiResponse.paymentSheetPromotionContents(
+            apiClient: apiClient,
+            analyticsClient: mockAnalyticsClient
+        )
+
+        XCTAssertEqual(
+            promotions,
+            [
+                "klarna": PaymentMethodMessagingPromotionsHelper.PromotionContent(
+                    promotion: "Valid summary",
+                    learnMoreText: "See plans",
+                    infoUrl: URL(string: "https://example.com/klarna")!
+                ),
+            ]
+        )
+        XCTAssertEqual(
+            STPAssertTestUtil.lastAssertMessage,
+            "Received invalid PMME payment_plan_group for PaymentSheet promotion type 'affirm'; required fields: summary.message, learn_more.message, learn_more.url."
+        )
+
+        let unexpectedResponseEvents = mockAnalyticsClient.loggedAnalytics.compactMap { analytic in
+            analytic as? ErrorAnalytic
+        }.filter { analytic in
+            analytic.event == .unexpectedPMMEError
+        }
+
+        XCTAssertEqual(unexpectedResponseEvents.count, 1)
+        XCTAssertEqual(
+            unexpectedResponseEvents.compactMap { $0.params["failure_reason"] as? String },
+            ["missing_required_promotion_fields"]
+        )
+        XCTAssertEqual(
+            unexpectedResponseEvents.compactMap { $0.params["payment_method_type"] as? String },
+            ["affirm"]
+        )
+    }
+
     func testCreate_localeFrench() async {
         // Given: A configuration with French locale
         let appearance = PaymentMethodMessagingElement.Appearance()
@@ -887,4 +996,5 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         }
         return image
     }
+
 }

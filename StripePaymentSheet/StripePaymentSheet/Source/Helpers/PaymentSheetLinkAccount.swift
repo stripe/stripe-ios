@@ -720,24 +720,16 @@ extension ParsedEnum where E == LinkSettings.FundingSource {
 // MARK: UpdatePaymentDetailsParams
 
 struct UpdatePaymentDetailsParams {
-    enum DetailsType {
+    enum PaymentMethodMetadata {
         case card(
             expiryDate: CardExpiryDate? = nil,
-            billingDetails: STPPaymentMethodBillingDetails? = nil,
             preferredNetwork: String? = nil
         )
-        case bankAccount(
-            billingDetails: STPPaymentMethodBillingDetails
-        )
     }
 
-    let isDefault: Bool?
-    let details: DetailsType?
-
-    init(isDefault: Bool? = nil, details: DetailsType? = nil) {
-        self.isDefault = isDefault
-        self.details = details
-    }
+    var billingDetails: STPPaymentMethodBillingDetails?
+    var isDefault: Bool?
+    var metadata: PaymentMethodMetadata?
 }
 
 protocol PaymentSheetLinkAccountDelegate {

@@ -199,7 +199,8 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             previousCustomerInput: previousConfirmParams,
             paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper
         )
         self.analyticsHelper = analyticsHelper
 
