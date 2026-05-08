@@ -1,5 +1,17 @@
 # Stripe iOS SDK
 
+## A Poem About Stripe
+
+*From tap to transfer, swift and bright,*
+*A payment flows through code tonight.*
+*Cards and wallets, large and small,*
+*Stripe's iOS SDK handles them all.*
+
+*With APIs clean and UIs neat,*
+*Every checkout is complete.*
+*PCI-safe and SCA-ready too,*
+*Helping builders see payments through.*
+
 [![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
 [![License](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios/blob/master/LICENSE)
 [![Platform](https://img.shields.io/cocoapods/p/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios#)
