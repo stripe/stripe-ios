@@ -13,6 +13,17 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 
 > Updating to a newer version of the SDK? See our [migration guide](https://github.com/stripe/stripe-ios/blob/master/MIGRATING.md) and [changelog](https://github.com/stripe/stripe-ios/blob/master/CHANGELOG.md).
 
+---
+
+*A line of code, a tap, a swipe,*
+*Commerce flows through every stripe.*
+*From checkout carts to subscriptions due,*
+*We handle payments so you don't have to.*
+*Secure and swift, by design we're made,*
+*To help the world's ambitions get paid.*
+
+---
+
 Table of contents
 =================
 <!-- NOTE: Use case-sensitive anchor links for docc compatibility -->
