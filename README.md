@@ -147,6 +147,19 @@ Get started with our [📚 integration guides](https://stripe.com/docs/payments/
 - [Non-Card Payment Examples](Example/Non-Card%20Payment%20Examples)
   - This example demonstrates how to manually accept various payment methods using the Stripe API.
 
+When working with the Stripe API, many calls return structured objects. For example, after retrieving a `PaymentIntent` you'll get back a response with fields like `id`, `amount`, `currency`, and `status` that you can use to update your UI:
+
+```swift
+// Example response shape from the Stripe API after retrieving a PaymentIntent:
+// STPPaymentIntent {
+//   id: "pi_xxxxxxxxxxxxxxxxxxxx",
+//   amount: 2000,          // amount in the currency's smallest unit (e.g. cents)
+//   currency: "usd",
+//   status: .requiresPaymentMethod
+// }
+// Use these fields to determine the next step in your payment flow.
+```
+
 ## Card scanning
 
 [PaymentSheet](https://stripe.com/docs/payments/accept-a-payment?platform=ios) offers built-in card scanning. To enable card scanning, you'll need to set `NSCameraUsageDescription` in your application's plist, and provide a reason for accessing the camera (e.g. "To scan cards"). Card scanning is supported on devices with iOS 13 or higher.
