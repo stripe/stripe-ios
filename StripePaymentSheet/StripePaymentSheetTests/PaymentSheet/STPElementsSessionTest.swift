@@ -789,7 +789,7 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: true)
         XCTAssertNotNil(customer)
         let pm = customer?.paymentMethods.first
         XCTAssertNotNil(pm?.card?.cardArt)
@@ -808,7 +808,7 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: true)
         XCTAssertNotNil(customer)
         XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
     }
@@ -818,7 +818,7 @@ class STPElementsSessionTest: XCTestCase {
             "payment_methods": [testCardJSON],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: true)
         XCTAssertNotNil(customer)
         XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
     }
@@ -838,7 +838,7 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: true)
         let pms = customer?.paymentMethods
         XCTAssertEqual(pms?.count, 2)
         XCTAssertEqual(pms?[0].card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/visa")
@@ -856,7 +856,7 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: true)
         let pms = customer?.paymentMethods
         XCTAssertEqual(pms?.count, 2)
         XCTAssertNotNil(pms?[0].card?.cardArt)
@@ -870,7 +870,7 @@ class STPElementsSessionTest: XCTestCase {
             "card_art": [] as [[AnyHashable: Any]],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false, includeCardArt: true)
         XCTAssertNotNil(customer)
         XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
     }
@@ -908,7 +908,7 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true, includeCardArt: true)
         XCTAssertNotNil(customer)
         let pm = customer?.paymentMethods.first
         XCTAssertNotNil(pm?.card?.cardArt)
@@ -926,7 +926,7 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true, includeCardArt: true)
         XCTAssertNotNil(customer)
         XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
     }
@@ -946,7 +946,7 @@ class STPElementsSessionTest: XCTestCase {
             ],
             "customer_session": customerSessionJSON,
         ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true, includeCardArt: true)
         let pms = customer?.paymentMethods
         XCTAssertEqual(pms?.count, 2)
         XCTAssertEqual(pms?[0].card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/visa")
