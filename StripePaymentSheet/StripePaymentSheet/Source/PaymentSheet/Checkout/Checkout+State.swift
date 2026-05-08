@@ -26,7 +26,7 @@ extension Checkout {
 extension Checkout.State {
     /// The most recent session data, regardless of whether a mutation or refresh is in flight.
     ///
-    /// In the ``Checkout/State.loading(_:)`` state the session may be stale
+    /// In the ``Checkout/State/loading(_:)`` state the session may be stale
     /// until the in-flight operation completes.
     public var session: Checkout.Session {
         switch self {
