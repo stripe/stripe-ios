@@ -71,7 +71,7 @@ extension PaymentSheet {
 
             // 3. Call confirm API
             let response = try await configuration.apiClient.confirmCheckoutSession(
-                sessionId: checkoutSession.stripeId,
+                sessionId: checkoutSession.id,
                 paymentMethod: paymentMethod.stripeId,
                 expectedAmount: expectedAmount,
                 expectedPaymentMethodType: paymentMethodType.identifier,

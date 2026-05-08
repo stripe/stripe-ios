@@ -838,7 +838,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     return
                 }
                 // Verify CheckoutSession properties
-                XCTAssertEqual(checkoutSession.stripeId, checkoutSessionId)
+                XCTAssertEqual(checkoutSession.id, checkoutSessionId)
                 XCTAssertEqual(checkoutSession.mode, .setup)
                 XCTAssertEqual(checkoutSession.status?.type, .open)
                 XCTAssertEqual(checkoutSession.status?.paymentStatus, .noPaymentRequired)

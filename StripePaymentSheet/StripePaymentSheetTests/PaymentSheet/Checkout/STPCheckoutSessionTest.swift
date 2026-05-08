@@ -61,7 +61,7 @@ class STPCheckoutSessionTest: XCTestCase {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
 
-        XCTAssertEqual(session.stripeId, "cs_test_a1b2c3d4e5f6g7h8i9j0")
+        XCTAssertEqual(session.id, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
         XCTAssertEqual(session.total?.total.minorUnitsAmount, 2686)
         XCTAssertEqual(session.total?.subtotal.minorUnitsAmount, 2000)
@@ -206,7 +206,7 @@ class STPCheckoutSessionTest: XCTestCase {
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: minimalJson)
 
         XCTAssertNotNil(session, "Should decode with all required fields")
-        XCTAssertEqual(session?.stripeId, "cs_test_minimal")
+        XCTAssertEqual(session?.id, "cs_test_minimal")
         XCTAssertNil(session?.status)  // status is nullable, should be nil when missing
         XCTAssertEqual(session?.mode, .payment)
         XCTAssertTrue(session?.livemode ?? false)

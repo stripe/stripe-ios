@@ -411,7 +411,7 @@ final class CheckoutUnitTests: XCTestCase {
             name: "Jane Doe",
             address: .init(country: "US")
         )
-        (checkout.state.session as! STPCheckoutSession).billingAddressOverride = billingUpdate
+        (checkout.state.session as! STPCheckoutSession).billingAddress = billingUpdate
 
         // Simulate a confirm response
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()

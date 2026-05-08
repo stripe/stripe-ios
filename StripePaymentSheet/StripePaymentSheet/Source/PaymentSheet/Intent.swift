@@ -28,7 +28,7 @@ enum Intent {
         case .paymentIntent(let intent): intent.stripeId
         case .setupIntent(let intent): intent.stripeID
         case .deferredIntent: nil
-        case .checkoutSession(let session): session.stripeId
+        case .checkoutSession(let session): session.id
         }
     }
 

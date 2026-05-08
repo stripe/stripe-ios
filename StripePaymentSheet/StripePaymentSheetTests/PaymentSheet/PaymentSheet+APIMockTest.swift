@@ -299,7 +299,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         // In non-passthrough mode, Link payment details are converted to params and
         // a new payment method is created before calling checkout session confirm
-        stubCheckoutSessionConfirm(sessionId: checkoutSession.stripeId)
+        stubCheckoutSessionConfirm(sessionId: checkoutSession.id)
         stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
 
         let configuration = MockParams.configurationWithCustomer(pk: MockParams.publicKey)
@@ -374,7 +374,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         stubCreatePaymentMethodExpecting(allowRedisplay: "always")
         stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             savePaymentMethod: true
         )
 
@@ -407,7 +407,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         stubCreatePaymentMethodExpecting(allowRedisplay: "unspecified")
         stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             savePaymentMethod: false
         )
 
@@ -439,7 +439,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         stubCreatePaymentMethodExpecting(allowRedisplay: "unspecified")
         stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             savePaymentMethod: nil
         )
 
@@ -474,7 +474,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         stubCreatePaymentMethodExpecting(allowRedisplay: "limited")
         stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             savePaymentMethod: false
         )
 
@@ -513,7 +513,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         stubCreatePaymentMethodExpecting(allowRedisplay: "limited")
         stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             savePaymentMethod: nil
         )
 
@@ -548,7 +548,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         stubCreatePaymentMethodExpecting(allowRedisplay: "always")
         stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             savePaymentMethod: true
         )
 

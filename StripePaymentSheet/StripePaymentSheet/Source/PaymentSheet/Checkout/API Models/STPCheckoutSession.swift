@@ -18,7 +18,7 @@ class STPCheckoutSession: NSObject {
     // MARK: - Identifiers
 
     /// The Stripe ID of the CheckoutSession.
-    let stripeId: String
+    let id: String
 
     /// The client secret of the CheckoutSession. Used for embedded or custom UI modes.
     let clientSecret: String?
@@ -151,10 +151,10 @@ class STPCheckoutSession: NSObject {
     let allResponseFields: [AnyHashable: Any]
 
     /// Client-side billing address override.
-    var billingAddressOverride: Checkout.ContactAddress?
+    var billingAddress: Checkout.ContactAddress?
 
     /// Client-side shipping address override.
-    var shippingAddressOverride: Checkout.ContactAddress?
+    var shippingAddress: Checkout.ContactAddress?
 
     /// Called by confirm handlers with the updated session after a successful confirm.
     var onConfirmed: ((STPCheckoutSession) -> Void)?
@@ -210,7 +210,7 @@ class STPCheckoutSession: NSObject {
     override var description: String {
         let props: [String] = [
             String(format: "%@: %p", NSStringFromClass(STPCheckoutSession.self), self),
-            "stripeId = \(stripeId)",
+            "id = \(id)",
             "total = \(String(describing: total))",
             "clientSecret = <redacted>",
             "currency = \(String(describing: currency))",
@@ -234,7 +234,7 @@ class STPCheckoutSession: NSObject {
     }
 
     private init(
-        stripeId: String,
+        id: String,
         clientSecret: String?,
         businessName: String?,
         currency: String?,
@@ -273,7 +273,7 @@ class STPCheckoutSession: NSObject {
         automaticTaxAddressSource: String?,
         allResponseFields: [AnyHashable: Any]
     ) {
-        self.stripeId = stripeId
+        self.id = id
         self.clientSecret = clientSecret
         self.businessName = businessName
         self.currency = currency
@@ -322,7 +322,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
     @objc
     class func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
-              let stripeId = dict["session_id"] as? String,
+              let id = dict["session_id"] as? String,
               let livemode = dict["livemode"] as? Bool,
               let rawMode = dict["mode"] as? String,
               let rawPaymentStatus = dict["payment_status"] as? String,
@@ -487,7 +487,7 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
         let email = (dict["customer_email"] as? String) ?? customer?.email
 
         return STPCheckoutSession(
-            stripeId: stripeId,
+            id: id,
             clientSecret: clientSecret,
             businessName: businessName,
             currency: currency,

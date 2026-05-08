@@ -9,20 +9,10 @@ import Foundation
 @_spi(STP) import StripePayments
 
 extension STPCheckoutSession: Checkout.Session {
-    var id: String { stripeId }
-
-    var billingAddress: Checkout.ContactAddress? {
-        billingAddressOverride
-    }
-
     var minorUnitsAmountDivisor: Int? {
         guard let currency else { return nil }
         let oneMinorUnitInMajor = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency)
         return Int(truncating: NSDecimalNumber(value: 1).dividing(by: oneMinorUnitInMajor))
-    }
-
-    var shippingAddress: Checkout.ContactAddress? {
-        shippingAddressOverride
     }
 }
 
