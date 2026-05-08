@@ -2,15 +2,20 @@
 
 ## A Poem About Stripe
 
-*From tap to transfer, swift and bright,*
-*A payment flows through code tonight.*
-*Cards and wallets, large and small,*
-*Stripe's iOS SDK handles them all.*
+*In lines of code, a vision grew,*
+*To make commerce simple, fast, and true.*
+*From shopping cart to confirmation page,*
+*Stripe powers the internet's commerce stage.*
 
-*With APIs clean and UIs neat,*
-*Every checkout is complete.*
-*PCI-safe and SCA-ready too,*
-*Helping builders see payments through.*
+*Seven colored lines upon the mark,*
+*A beacon for developers in the dark.*
+*With every token, every key,*
+*Unlocking global economy.*
+
+*So here's to builders, dreamers all,*
+*Who answer innovation's call—*
+*With Stripe beside them, watch them soar,*
+*Creating things not seen before.*
 
 [![CocoaPods](https://img.shields.io/cocoapods/v/Stripe.svg?style=flat)](http://cocoapods.org/?q=author%3Astripe%20name%3Astripe)
 [![License](https://img.shields.io/cocoapods/l/Stripe.svg?style=flat)](https://github.com/stripe/stripe-ios/blob/master/LICENSE)
