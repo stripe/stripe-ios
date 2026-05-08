@@ -114,6 +114,50 @@ extension STPPaymentMethod {
 
         return updatedLine1 || updatedLine2 || updatedCity || updatedState || updatedCountry || updatedPostalCode
     }
+
+    func paymentOptionLabel(confirmParams: IntentConfirmParams?, brand: LinkBrand) -> String {
+        if let instantDebitsLinkedBank = confirmParams?.instantDebitsLinkedBank {
+            return "••••\(instantDebitsLinkedBank.last4 ?? "")"
+        } else {
+            return paymentSheetLabel(brand: brand)
+        }
+    }
+
+    func expandedPaymentSheetLabel(brand: LinkBrand) -> String {
+        switch type {
+        case .card:
+            if isLinkPaymentMethod || isLinkPassthroughMode {
+                return brand.displayName
+            } else if let card {
+                return STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand) ?? STPPaymentMethodType.card.displayName
+            } else {
+                return STPPaymentMethodType.card.displayName
+            }
+        case .USBankAccount:
+            if isLinkPassthroughMode {
+                return brand.displayName
+            } else {
+                return usBankAccount?.bankName ?? type.displayName
+            }
+        case .link:
+            return brand.displayName
+        default:
+            return type.displayName
+        }
+    }
+
+    func paymentSheetSublabel(brand: LinkBrand) -> String? {
+        switch type {
+        case .card:
+            return linkPaymentDetailsFormattedString ?? paymentSheetLabel(brand: brand)
+        case .USBankAccount:
+            return paymentSheetLabel(brand: brand)
+        case .link:
+            return linkPaymentDetailsFormattedString
+        default:
+            return nil
+        }
+    }
 }
 
 private extension LinkPaymentDetails {
@@ -134,48 +178,4 @@ private func makeCardAccessibilityLabel(cardBrand: STPCardBrand, last4: String) 
     let last4Spaced = last4.map { String($0) }.joined(separator: " ")
     let localized = String.Localized.card_brand_ending_in_last_4
     return String(format: localized, brand, last4Spaced)
-}
-
-func paymentOptionLabel(for paymentMethod: STPPaymentMethod, confirmParams: IntentConfirmParams?, brand: LinkBrand) -> String {
-    if let instantDebitsLinkedBank = confirmParams?.instantDebitsLinkedBank {
-        return "••••\(instantDebitsLinkedBank.last4 ?? "")"
-    } else {
-        return paymentMethod.paymentSheetLabel(brand: brand)
-    }
-}
-
-func expandedPaymentSheetLabel(for paymentMethod: STPPaymentMethod, brand: LinkBrand) -> String {
-    switch paymentMethod.type {
-    case .card:
-        if paymentMethod.isLinkPaymentMethod || paymentMethod.isLinkPassthroughMode {
-            return brand.displayName
-        } else if let card = paymentMethod.card {
-            return STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand) ?? STPPaymentMethodType.card.displayName
-        } else {
-            return STPPaymentMethodType.card.displayName
-        }
-    case .USBankAccount:
-        if paymentMethod.isLinkPassthroughMode {
-            return brand.displayName
-        } else {
-            return paymentMethod.usBankAccount?.bankName ?? paymentMethod.type.displayName
-        }
-    case .link:
-        return brand.displayName
-    default:
-        return paymentMethod.type.displayName
-    }
-}
-
-func paymentSheetSublabel(for paymentMethod: STPPaymentMethod, brand: LinkBrand) -> String? {
-    switch paymentMethod.type {
-    case .card:
-        return paymentMethod.linkPaymentDetailsFormattedString ?? paymentMethod.paymentSheetLabel(brand: brand)
-    case .USBankAccount:
-        return paymentMethod.paymentSheetLabel(brand: brand)
-    case .link:
-        return paymentMethod.linkPaymentDetailsFormattedString
-    default:
-        return nil
-    }
 }

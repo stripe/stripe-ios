@@ -177,6 +177,27 @@ final class IntentConfirmParams {
         }
     }
 
+    func expandedPaymentSheetLabel(brand: LinkBrand) -> String {
+        switch paymentMethodType {
+        case .stripe(let stpPaymentMethodType):
+            switch stpPaymentMethodType {
+            case .card:
+                let cardBrand = STPCardValidator.brand(for: paymentMethodParams.card)
+                return STPCardBrandUtilities.stringFrom(cardBrand) ?? STPPaymentMethodType.card.displayName
+            case .USBankAccount:
+                // Use linked bank name if available, otherwise fallback to generic display name for bank
+                return financialConnectionsLinkedBank?.displayName ?? STPPaymentMethodType.USBankAccount.displayName
+            default:
+                // For all other payment method types just use the default label
+                return paymentSheetLabel
+            }
+        case .external:
+            return paymentSheetLabel
+        case .instantDebits, .linkCardBrand:
+            return brand.displayName
+        }
+    }
+
     func setAllowRedisplayForCheckoutSession(merchantWillSavePaymentMethod: Bool) {
         switch saveForFutureUseCheckboxState {
         case .selected:
@@ -192,27 +213,6 @@ final class IntentConfirmParams {
         } else if savePaymentMethodConsentBehavior == .customerSheetWithCustomerSession {
             paymentMethodParams.allowRedisplay = .always
         }
-    }
-}
-
-func expandedPaymentSheetLabel(for confirmParams: IntentConfirmParams, brand: LinkBrand) -> String {
-    switch confirmParams.paymentMethodType {
-    case .stripe(let stpPaymentMethodType):
-        switch stpPaymentMethodType {
-        case .card:
-            let cardBrand = STPCardValidator.brand(for: confirmParams.paymentMethodParams.card)
-            return STPCardBrandUtilities.stringFrom(cardBrand) ?? STPPaymentMethodType.card.displayName
-        case .USBankAccount:
-            // Use linked bank name if available, otherwise fallback to generic display name for bank
-            return confirmParams.financialConnectionsLinkedBank?.displayName ?? STPPaymentMethodType.USBankAccount.displayName
-        default:
-            // For all other payment method types just use the default label
-            return confirmParams.paymentSheetLabel
-        }
-    case .external:
-        return confirmParams.paymentSheetLabel
-    case .instantDebits, .linkCardBrand:
-        return brand.displayName
     }
 }
 

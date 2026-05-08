@@ -138,15 +138,15 @@ extension PaymentSheet.LinkConfirmOption {
             return nil
         }
     }
-}
 
-func paymentSheetLabel(for option: PaymentSheet.LinkConfirmOption, brand: LinkBrand) -> String {
-    switch option {
-    case .wallet, .withPaymentDetails:
-        return brand.displayName
-    case .signUp(_, _, _, _, let intentConfirmParams):
-        return intentConfirmParams.paymentSheetLabel(brand: brand)
-    case .withPaymentMethod(let paymentMethod):
-        return paymentMethod.paymentSheetLabel(brand: brand)
+    func paymentSheetLabel(brand: LinkBrand) -> String {
+        switch self {
+        case .wallet, .withPaymentDetails:
+            return brand.displayName
+        case .signUp(_, _, _, _, let intentConfirmParams):
+            return intentConfirmParams.paymentSheetLabel(brand: brand)
+        case .withPaymentMethod(let paymentMethod):
+            return paymentMethod.paymentSheetLabel(brand: brand)
+        }
     }
 }
