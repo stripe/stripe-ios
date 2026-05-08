@@ -52,6 +52,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             amount: 5000,
             currency: "usd",
             apiClient: apiClient,
+            locale: "en-US",
             appearance: appearance
         )
 
@@ -141,6 +142,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             amount: 5000,
             currency: "usd",
             apiClient: connectedAPIClient,
+            locale: "en-US",
             appearance: appearance
         )
 
@@ -204,6 +206,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             amount: 5000,
             currency: "usd",
             apiClient: apiClient,
+            locale: "en-US",
             appearance: appearance
         )
 
@@ -272,6 +275,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             amount: 5000,
             currency: "usd",
             apiClient: apiClient,
+            locale: "en-US",
             appearance: appearance
         )
 
@@ -340,6 +344,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             amount: 5000,
             currency: "usd",
             apiClient: apiClient,
+            locale: "en-US",
             appearance: appearance
         )
         configuration.paymentMethodTypes = [.klarna]
@@ -392,6 +397,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             amount: 5000,
             currency: "gel",  // Georgian Lari - supported by Stripe but not PMME
             apiClient: apiClient,
+            locale: "en-US",
             appearance: appearance
         )
 
@@ -437,6 +443,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             amount: 5000,
             currency: "usd",
             apiClient: apiClient,
+            locale: "en-US",
             appearance: appearance
         )
         configuration.countryCode = "ZZ"  // Invalid country code
@@ -480,6 +487,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             amount: -1000,
             currency: "usd",
             apiClient: apiClient,
+            locale: "en-US",
             appearance: appearance
         )
 
@@ -515,6 +523,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             amount: 5000,
             currency: "usd",
             apiClient: invalidAPIClient,
+            locale: "en-US",
             appearance: appearance
         )
 
@@ -554,6 +563,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             amount: 5000,
             currency: "usd",
             apiClient: apiClient,
+            locale: "en-US",
             appearance: appearance
         )
         configuration.countryCode = "FR"
@@ -590,6 +600,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             amount: 5000,
             currency: "eur",
             apiClient: frenchAPIClient,
+            locale: "en-US",
             appearance: appearance
         )
         configuration.countryCode = "FR"
@@ -783,6 +794,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
             amount: 5000,
             currency: "gbp",
             apiClient: ukAPIClient,
+            locale: "en-US",
             countryCode: "GB",
             appearance: appearance
         )
