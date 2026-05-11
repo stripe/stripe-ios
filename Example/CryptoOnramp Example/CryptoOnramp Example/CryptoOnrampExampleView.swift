@@ -11,7 +11,7 @@ import SwiftUI
 @_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 import StripePaymentSheet
 
 /// The main content view of the example CryptoOnramp app.

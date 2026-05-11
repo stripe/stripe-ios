@@ -50,6 +50,7 @@ class PaymentSheetFormFactory {
     let sellerName: String?
     let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
     let cardFundingFilter: CardFundingFilter
+    let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
 
     var shouldDisplaySaveCheckbox: Bool {
@@ -95,6 +96,7 @@ class PaymentSheetFormFactory {
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         linkAppearance: LinkAppearance? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
@@ -152,6 +154,7 @@ class PaymentSheetFormFactory {
                   signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
+                  paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                   paymentMethodIncentive: elementsSession.incentive,
                   linkAppearance: linkAppearance,
                   linkBrand: linkBrand,
@@ -183,6 +186,7 @@ class PaymentSheetFormFactory {
         signupOptInInitialValue: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         paymentMethodIncentive: PaymentMethodIncentive?,
         linkAppearance: LinkAppearance? = nil,
         linkBrand: LinkBrand = .link,
@@ -216,6 +220,7 @@ class PaymentSheetFormFactory {
         self.signupOptInInitialValue = signupOptInInitialValue
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
         self.linkAppearance = linkAppearance
         self.linkBrand = linkBrand
@@ -578,9 +583,10 @@ extension PaymentSheetFormFactory {
     static func makeBankMandateText(
         isSettingUp: Bool,
         merchantName: String,
-        sellerName: String?
+        sellerName: String?,
+        brand: LinkBrand
     ) -> NSAttributedString {
-        let links = ["terms": URL(string: "https://link.com/terms/ach-authorization")!]
+        let links = ["terms": brand.achAuthorizationURL]
 
         let string = if let sellerName, isSettingUp {
             String(
@@ -898,6 +904,7 @@ extension PaymentSheetFormFactory {
             isPaymentIntent: isPaymentIntent,
             sellerName: sellerName,
             isSettingUp: isSettingUp || forceSaveFutureUseBehavior,
+            linkBrand: linkBrand,
             appearance: configuration.appearance
         )
 

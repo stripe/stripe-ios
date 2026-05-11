@@ -124,7 +124,10 @@ private extension STPPaymentMethod {
             let bankAccount = LinkPaymentDetails.BankDetails(from: bankDetails, paymentDetailsID: paymentDetails.stripeID)
             self.linkPaymentDetails = .bankAccount(bankAccount)
         case .unparsable:
-            break
+            guard let genericDetails = LinkPaymentDetails.Generic(from: paymentDetails, paymentDetailsID: paymentDetails.stripeID) else {
+                break
+            }
+            self.linkPaymentDetails = .generic(genericDetails)
         }
     }
 }
@@ -148,6 +151,19 @@ private extension LinkPaymentDetails.Card {
             expYear: cardDetails.expiryYear,
             last4: cardDetails.last4,
             brand: cardDetails.stpBrand
+        )
+    }
+}
+
+private extension LinkPaymentDetails.Generic {
+    init?(from paymentDetails: ConsumerPaymentDetails, paymentDetailsID: String) {
+        guard let display = paymentDetails.display else {
+            return nil
+        }
+        self = .init(
+            id: paymentDetailsID,
+            label: display.label,
+            sublabel: display.sublabel
         )
     }
 }

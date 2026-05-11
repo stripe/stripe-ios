@@ -137,7 +137,7 @@ import UIKit
             paymentMethodPreview = .init(
                 paymentMethodType: type,
                 icon: iconForPaymentDetails(selectedPaymentDetails),
-                label: STPPaymentMethodType.link.displayName,
+                label: configuration.resolvedLinkBrand(elementsSession: elementsSession).displayName,
                 sublabel: selectedPaymentDetails.linkPaymentDetailsFormattedString
             )
         }
@@ -354,6 +354,7 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .inlineLogin,
             linkAccount: linkAccount,
+            brand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
             configuration: configuration,
             appearance: appearance
         )
@@ -720,7 +721,11 @@ import UIKit
     ) async throws -> CRSCARFDeclarationResult {
         return try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
-                let declarationViewController = CRSCARFDeclarationViewController(text: text, appearance: appearance)
+                let declarationViewController = CRSCARFDeclarationViewController(
+                    text: text,
+                    appearance: appearance,
+                    brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                )
                 declarationViewController.onResult = { [weak declarationViewController] result in
                     declarationViewController?.onResult = nil
 
@@ -808,6 +813,7 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .inlineLogin,
             linkAccount: linkAccount,
+            brand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
             configuration: configuration,
             appearance: appearance,
             consentViewModel: consentViewModel

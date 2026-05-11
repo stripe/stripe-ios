@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
@@ -44,6 +45,20 @@ extension PaymentSheet {
 // MARK: - Helpers
 
 extension PaymentSheet.LinkConfirmOption {
+    func paymentSheetSubLabel(brand: LinkBrand) -> String? {
+        guard let sublabel = paymentSheetSubLabel else {
+            return nil
+        }
+
+        switch sublabel {
+        // Suppress the redundant sublabel both for the resolved brand name and for
+        // the legacy "Link" fallback that some lower-level paths can still return.
+        case brand.displayName, STPPaymentMethodType.link.displayName:
+            return nil
+        default:
+            return sublabel
+        }
+    }
 
     var account: PaymentSheetLinkAccount? {
         switch self {
@@ -55,17 +70,6 @@ extension PaymentSheet.LinkConfirmOption {
             return nil
         case .withPaymentDetails(let account, _, _, _):
             return account
-        }
-    }
-
-    var paymentSheetLabel: String {
-        switch self {
-        case .wallet, .withPaymentDetails:
-            return STPPaymentMethodType.link.displayName
-        case .signUp(_, _, _, _, let intentConfirmParams):
-            return intentConfirmParams.paymentMethodParams.paymentSheetLabel
-        case .withPaymentMethod(let paymentMethod):
-            return paymentMethod.paymentSheetLabel
         }
     }
 
@@ -133,6 +137,17 @@ extension PaymentSheet.LinkConfirmOption {
             return .signupAndPay(account: account, phoneNumber: phoneNumber, legalName: legalName)
         case .wallet, .withPaymentDetails, .withPaymentMethod:
             return nil
+        }
+    }
+
+    func paymentSheetLabel(brand: LinkBrand) -> String {
+        switch self {
+        case .wallet, .withPaymentDetails:
+            return brand.displayName
+        case .signUp(_, _, _, _, let intentConfirmParams):
+            return intentConfirmParams.paymentSheetLabel(brand: brand)
+        case .withPaymentMethod(let paymentMethod):
+            return paymentMethod.paymentSheetLabel(brand: brand)
         }
     }
 }

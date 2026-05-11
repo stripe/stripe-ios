@@ -198,6 +198,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 customerID: configuration.customer?.id,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: false,
@@ -222,7 +223,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
             paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper
         )
         super.init(nibName: nil, bundle: nil)
         self.savedPaymentOptionsViewController.delegate = self

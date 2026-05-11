@@ -18,6 +18,7 @@ final class VerifyKYCContentViewController: UIViewController, BottomSheetContent
         let navigationBar = LinkSheetNavigationBar(
             isTestMode: false,
             appearance: .default,
+            brand: .link,
             shouldLogPaymentSheetAnalyticsOnDismissal: false
         )
         navigationBar.setStyle(.close(showAdditionalButton: false))

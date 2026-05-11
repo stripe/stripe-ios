@@ -155,6 +155,13 @@ extension String.Localized {
         )
     }
 
+    static var payment_method_details_cannot_be_changed: String {
+        STPLocalizedString(
+            "Payment method details cannot be changed.",
+            "Text on a screen that indicates payment method details cannot be changed."
+        )
+    }
+
     static var sepa_debit_details_cannot_be_changed: String {
         STPLocalizedString(
             "SEPA debit details cannot be changed.",

@@ -30,7 +30,6 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
 
 /// The view for an embedded payment element
 class EmbeddedPaymentMethodsView: UIView {
-
     /// Return the default size to let Auto Layout manage the height.
     /// Overriding intrinsicContentSize values and setting `invalidIntrinsicContentSize` forces force SwiftUI to update layout immediately,
     /// resulting in abrupt, non-animated height changes.
@@ -41,6 +40,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
     private let currency: String?
+    private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     private(set) var previousSelectedRowButton: RowButton? {
         didSet {
             guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
@@ -79,6 +79,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private let shouldShowMandate: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let incentive: PaymentMethodIncentive?
+    private let linkBrand: LinkBrand
     /// A bit hacky; this is the mandate text for the given payment method, *regardless* of whether it is shown in the view.
     /// It'd be better if the source of truth of mandate text was not the view and instead an independent `func mandateText(...) -> NSAttributedString` function, but this is hard b/c US Bank Account doesn't show mandate in certain states.
     var mandateText: NSAttributedString? {
@@ -122,6 +123,7 @@ class EmbeddedPaymentMethodsView: UIView {
         customer: PaymentSheet.CustomerConfiguration? = nil,
         currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
@@ -130,8 +132,10 @@ class EmbeddedPaymentMethodsView: UIView {
         self.shouldShowMandate = shouldShowMandate
         self.customer = customer
         self.currency = currency
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
+        self.linkBrand = linkBrand
         self.delegate = delegate
         self.rowButtons = []
         super.init(frame: .zero)
@@ -228,7 +232,7 @@ class EmbeddedPaymentMethodsView: UIView {
         // The user has to scroll through all the payment method options before checking out, so all of the lpms are visible
         let visiblePaymentMethods: [String] = rowButtons.filter { !$0.type.isSaved }.compactMap { $0.type.analyticsIdentifier }
         let hiddenPaymentMethods: [String] = []
-        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .vertical)
+        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods)
     }
 
     private var previousHeight: CGFloat?
@@ -481,6 +485,7 @@ class EmbeddedPaymentMethodsView: UIView {
             appearance: appearance,
             accessoryView: accessoryButton,
             isEmbedded: true,
+            linkBrand: linkBrand,
             didTap: { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(
                     .stripeId(savedPaymentMethod.stripeId),

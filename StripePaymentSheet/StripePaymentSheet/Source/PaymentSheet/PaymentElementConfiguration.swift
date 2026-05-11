@@ -46,7 +46,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var linkPaymentMethodsOnly: Bool { get set }
     var opensCardScannerAutomatically: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
-    func resolveLayout() -> PaymentSheet.PaymentMethodLayout.ResolvedLayout
+    func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout
 }
 
 extension PaymentElementConfiguration {
@@ -112,7 +112,7 @@ extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
         set {}
     }
 
-    func resolveLayout() -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
+    func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
         .vertical
     }
 }

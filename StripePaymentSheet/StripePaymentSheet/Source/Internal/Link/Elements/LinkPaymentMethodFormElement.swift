@@ -76,7 +76,9 @@ final class LinkPaymentMethodFormElement: Element {
         // This matches the object that was returned by CardDetailsEditView, but won't work
         // with `collectionMode: .all`, because extra fields won't match what expected by Link.
         let billingDetails = STPPaymentMethodBillingDetails()
-        billingDetails.name = billingAddressSection?.name?.text ?? nameOnCardElement?.text
+        billingDetails.name = billingAddressSection?.name?.text
+            ?? nameOnCardElement?.text
+            ?? paymentMethod.billingAddress?.name
         billingDetails.nonnil_address.country = billingAddressSection?.selectedCountryCode
         billingDetails.nonnil_address.line1 = billingAddressSection?.line1?.text
         billingDetails.nonnil_address.line2 = billingAddressSection?.line2?.text

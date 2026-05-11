@@ -102,8 +102,9 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.buttons["Confirm"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
-        // Reload w/ same customer
-        reload(app, settings: settings)
+        // Reload w/ same customer (retry to avoid lock contention on the customer object)
+        sleep(2)
+        reload(app, settings: settings, maxRetries: 5)
         // This time, expect SEPA to be pre-selected as the default
         XCTAssert(paymentMethodButton.label.hasPrefix("••••3201, sepa_debit"))
 
@@ -118,8 +119,9 @@ class PaymentSheetStandardLPMUITwoTests: PaymentSheetStandardLPMUICase {
         app.buttons["Continue"].tap()
         XCTAssertTrue(app.staticTexts["Success!"].waitForExistence(timeout: 10.0))
 
-        // Reload w/ same customer
-        reload(app, settings: settings)
+        // Reload w/ same customer (retry to avoid lock contention on the customer object)
+        sleep(2)
+        reload(app, settings: settings, maxRetries: 5)
         // If you present the flowcontroller and see the mandate...
         XCTAssert(paymentMethodButton.label.hasPrefix("••••3201, sepa_debit"))
         paymentMethodButton.waitForExistenceAndTap()

@@ -213,4 +213,36 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["dimensions-integration_shape"] as? String, "flowcontroller")
         XCTAssertEqual(payload["dimensions-has_spms"] as? String, "false")
     }
+    func testPaymentMethodMessagingPromotionsExperiment() {
+        let experimentsData = ExperimentsData(
+            arbId: "arb_id_123",
+            experimentAssignments: [
+                PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment
+            ],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(
+            experimentsData: experimentsData,
+            customer: nil
+        )
+
+        let experiment = PaymentMethodMessagingPromotionsExperiment(
+            elementsSession: elementsSession,
+            selectedPaymentMethodType: "klarna",
+            promotionDisplayedSuccessfully: true,
+            layout: "vertical"
+        )
+
+        XCTAssertEqual(experiment.name, PaymentMethodMessagingPromotionsExperiment.experimentName)
+        XCTAssertEqual(experiment.arbId, "arb_id_123")
+        XCTAssertEqual(experiment.group, .treatment)
+        XCTAssertEqual(
+            experiment.dimensions,
+            [
+                "selected_payment_method_type": "klarna",
+                "promotion_displayed_successfully": "true",
+                "in_app_elements_layout": "vertical",
+            ]
+        )
+    }
 }

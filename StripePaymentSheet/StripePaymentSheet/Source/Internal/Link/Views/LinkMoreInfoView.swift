@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
@@ -26,14 +27,16 @@ final class LinkMoreInfoView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.isAccessibilityElement = true
-        imageView.accessibilityLabel = STPPaymentMethodType.link.displayName
+        imageView.accessibilityLabel = brand.displayName
         return imageView
     }()
 
     private let theme: ElementsAppearance
+    private let brand: LinkBrand
 
-    init(theme: ElementsAppearance = .default) {
+    init(theme: ElementsAppearance = .default, brand: LinkBrand = .link) {
         self.theme = theme
+        self.brand = brand
         super.init(frame: .zero)
         let stackView = UIStackView(arrangedSubviews: [logoView])
         stackView.axis = .horizontal

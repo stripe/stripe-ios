@@ -5,6 +5,7 @@
 //  Created by Mat Schmid on 8/23/25.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -136,9 +137,10 @@ extension LinkFullConsentViewController {
         let navBar = LinkSheetNavigationBar(
             isTestMode: false,
             appearance: LinkUI.appearance,
+            brand: .link,
             shouldLogPaymentSheetAnalyticsOnDismissal: false
         )
-        navBar.setStyle(.close(showAdditionalButton: false))
+        navBar.setStyle(SheetNavigationBar.Style.close(showAdditionalButton: false))
         navBar.delegate = self
         return navBar
     }
