@@ -60,6 +60,9 @@ public final class Checkout: ObservableObject {
     /// Default timeout used by ``awaitPendingOperations(timeout:)``.
     nonisolated static let defaultPendingOperationsTimeout: TimeInterval = 30
 
+    /// Timeout enforced on the merchant's closure in ``runServerUpdate(_:)``.
+    nonisolated static let serverUpdateTimeout: TimeInterval = 20
+
     /// The single state writer. Publishes `.loading` if any op is queued, else `.loaded`.
     func setSession(_ session: Checkout.Session) {
         state = pendingOperations.isEmpty ? .loaded(session) : .loading(session)
@@ -292,6 +295,36 @@ public final class Checkout: ObservableObject {
                 self.setSession(session)
                 self.delegate?.checkout(self, didChangeState: self.state)
             }
+        }
+    }
+
+    // MARK: - Server Updates
+
+    /// Runs an async function that calls your server to update the Checkout Session,
+    /// then automatically refreshes ``state`` with the latest session data.
+    ///
+    /// A 20-second timeout is enforced. If `updateFunction` doesn't complete
+    /// within 20 seconds, this method throws ``CheckoutError/timedOut``.
+    ///
+    /// - Parameter updateFunction: An async throwing function that makes a request
+    ///   to your server to update the Checkout Session.
+    /// - Throws: ``CheckoutError`` if the function times out, the session is not
+    ///   open, or the refresh fails.
+    public func runServerUpdate(
+        _ updateFunction: @escaping () async throws -> Void
+    ) async throws {
+        try requireOpenSession()
+        try await enqueueSessionUpdate {
+            let result = await withTimeout(Self.serverUpdateTimeout) {
+                try await updateFunction()
+            }
+            if case .failure(let error) = result {
+                if error is TimeoutError {
+                    throw CheckoutError.timedOut
+                }
+                throw CheckoutError.apiError(message: error.localizedDescription)
+            }
+            try await self.refreshSession()
         }
     }
 

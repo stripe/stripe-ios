@@ -146,7 +146,64 @@ final class CheckoutUnitTests: XCTestCase {
         }
     }
 
-    // MARK: - Address Override Tests
+    // MARK: - runServerUpdate Tests
+
+    func testRunServerUpdateRequiresOpenSession() async {
+        let checkout = makeCheckoutWithClosedSession()
+
+        do {
+            try await checkout.runServerUpdate { }
+            XCTFail("Expected CheckoutError.sessionNotOpen")
+        } catch let error as CheckoutError {
+            guard case .sessionNotOpen = error else {
+                XCTFail("Expected .sessionNotOpen, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+    func testRunServerUpdateThrowsWhenSheetPresented() async {
+        let checkout = makeCheckoutWithOpenSession()
+        let integrationDelegate = MockCheckoutIntegrationDelegate()
+        integrationDelegate.isSheetPresented = true
+        checkout.integrationDelegate = integrationDelegate
+
+        do {
+            try await checkout.runServerUpdate { }
+            XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
+        } catch let error as CheckoutError {
+            guard case .sheetCurrentlyPresented = error else {
+                XCTFail("Expected .sheetCurrentlyPresented, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+    func testRunServerUpdateWrapsClosureError() async {
+        let checkout = makeCheckoutWithOpenSession()
+        let expectedMessage = "Server returned 500"
+
+        do {
+            try await checkout.runServerUpdate {
+                throw NSError(domain: "test", code: 500, userInfo: [NSLocalizedDescriptionKey: expectedMessage])
+            }
+            XCTFail("Expected CheckoutError.apiError")
+        } catch let error as CheckoutError {
+            guard case .apiError(let message) = error else {
+                XCTFail("Expected .apiError, got \(error)")
+                return
+            }
+            XCTAssertEqual(message, expectedMessage)
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+// MARK: - Address Override Tests
 
     func testUpdateBillingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
         let checkout = makeCheckoutWithOpenSession()
