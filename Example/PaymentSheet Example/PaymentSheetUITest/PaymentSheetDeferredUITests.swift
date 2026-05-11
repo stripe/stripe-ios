@@ -37,7 +37,7 @@ class PaymentSheetDeferredUITests: PaymentSheetUITestCase {
         // there are no hidden pms
         XCTAssertNil(initialDisplayedPaymentMethodsEvent.map { $0["hidden_payment_methods"] } as? [String])
         XCTAssertEqual(
-            initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_layout"] },
+            initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_orientation"] },
             "horizontal"
         )
         XCTAssertEqual(analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false || $0[string: "event"]?.contains("attest") ?? false || $0[string: "event"]?.starts(with: "link") ?? false) }).last?[string: "selected_lpm"], "card")

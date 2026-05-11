@@ -217,11 +217,16 @@ extension PaymentSheet {
 
         /// Resolves `.automatic` to `.horizontal` or `.vertical`.
         /// For non-automatic layouts, returns self.
-        func resolveLayout() -> PaymentMethodLayout.ResolvedLayout {
+        func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentMethodLayout.ResolvedLayout {
             switch paymentMethodLayout {
             case .horizontal: return .horizontal
             case .vertical: return .vertical
-            case .automatic: return .vertical // Default to vertical. Will be updated with ship recommendation in a different PR.
+            case .automatic:
+                if elementsSession.forceVerticalPaymentMethodLayout {
+                    return .vertical
+                } else {
+                    return paymentMethodTypes.count >= 3 ? .vertical : .horizontal
+                }
             }
         }
 
