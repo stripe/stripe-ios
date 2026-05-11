@@ -968,9 +968,8 @@ class STPElementsSessionTest: XCTestCase {
             "payment_methods_with_link_details": [linkWrappedUnknownPM(linkPMJSON)],
             "customer_session": customerSessionJSON,
         ]
-        
+
         let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true, includeCardArt: true)
-        
         XCTAssertEqual(customer?.paymentMethods.count, 1)
         let paymentMethod = try XCTUnwrap(customer?.paymentMethods.first)
         XCTAssertEqual(paymentMethod.type, .link)
