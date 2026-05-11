@@ -133,11 +133,12 @@ class FCLiteUITests: XCTestCase {
         // Continue with Link
         let continueWithLinkButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Continue with Link'") // Link signup pane
         let continueWithLinkButton = app.webViews.firstMatch.buttons.containing(continueWithLinkButtonPredicate).firstMatch
-        XCTAssertTrue(continueWithLinkButton.waitForExistenceAndTap(timeout: 10.0))
-
         // Success bank
         let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Disputed'") // Institution Picker
         let paymentSuccessBankButton = app.webViews.firstMatch.buttons.containing(paymentSuccessBankButtonPredicate).firstMatch
+        XCTAssertTrue(continueWithLinkButton.waitForExistence(timeout: 10.0))
+        continueWithLinkButton.forceTapElement()
+        XCTAssertTrue(paymentSuccessBankButton.waitForExistence(timeout: 10.0))
         XCTAssertTrue(paymentSuccessBankButton.waitForExistenceAndTap(timeout: 10.0))
 
         // Connect account - wait for button to appear, then tap via coordinate
