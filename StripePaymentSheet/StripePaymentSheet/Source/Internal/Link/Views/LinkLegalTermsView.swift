@@ -103,10 +103,7 @@ final class LinkLegalTermsView: UIView {
     private func formattedLegalText() -> NSAttributedString? {
         let string: String? = {
             if isStandalone {
-                return STPLocalizedString(
-                    "By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
-                    "Legal text shown when creating a Link account."
-                )
+                return String.Localized.by_continuing_you_agree_to_the_terms_and_privacy_policy
             }
             switch mode {
             case .checkbox:

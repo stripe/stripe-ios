@@ -641,6 +641,10 @@ extension String.Localized {
         }
     }
 
+    static var by_continuing_you_agree_to_the_terms_and_privacy_policy: String {
+        existingLinkLocalizedString("By continuing you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.")
+    }
+
     static func by_providing_phone_number_and_email_you_agree_to_create_a_brand_account(brand: LinkBrand) -> String {
         switch brand {
         case .link, .unparsable:
