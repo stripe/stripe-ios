@@ -221,7 +221,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
                     [
                         "amount": 250,
                         "coupon": [
-                            "id": "coupon_no_name",
+                            "id": "coupon_no_id",
                             "percent_off": 5.0,
                         ] as [String: Any],
                     ] as [String: Any],
@@ -231,6 +231,6 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
 
         let discounts = STPCheckoutSession.parseDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
-        XCTAssertEqual(discounts[0].displayName, "coupon_no_name")
+        XCTAssertEqual(discounts[0].displayName, "coupon_no_id")
     }
 }
