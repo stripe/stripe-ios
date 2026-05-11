@@ -137,8 +137,10 @@ class FCLiteUITests: XCTestCase {
         let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Disputed'") // Institution Picker
         let paymentSuccessBankButton = app.webViews.firstMatch.buttons.containing(paymentSuccessBankButtonPredicate).firstMatch
         XCTAssertTrue(continueWithLinkButton.waitForExistence(timeout: 10.0))
-        continueWithLinkButton.forceTapElement()
-        XCTAssertTrue(paymentSuccessBankButton.waitForExistence(timeout: 10.0))
+        advancePrimaryCTA(
+            continueButton: continueWithLinkButton,
+            nextPaneElement: paymentSuccessBankButton
+        )
         XCTAssertTrue(paymentSuccessBankButton.waitForExistenceAndTap(timeout: 10.0))
 
         // Connect account - wait for button to appear, then tap via coordinate
@@ -175,5 +177,25 @@ class FCLiteUITests: XCTestCase {
 
         // Primary button is at the bottom center of the webview (roughly 95% down, centered)
         app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.95)).tap()
+    }
+
+    private func advancePrimaryCTA(
+        continueButton: XCUIElement,
+        nextPaneElement: XCUIElement
+    ) {
+        if app.keyboards.firstMatch.exists || app.toolbars.buttons["Done"].exists {
+            app.typeText(XCUIKeyboardKey.return.rawValue)
+            if nextPaneElement.waitForExistence(timeout: 2.0) {
+                return
+            }
+        }
+
+        if continueButton.waitForExistenceAndTap(timeout: 2.0),
+           nextPaneElement.waitForExistence(timeout: 2.0) {
+            return
+        }
+
+        tapPrimaryButton()
+        XCTAssertTrue(nextPaneElement.waitForExistence(timeout: 10.0))
     }
 }
