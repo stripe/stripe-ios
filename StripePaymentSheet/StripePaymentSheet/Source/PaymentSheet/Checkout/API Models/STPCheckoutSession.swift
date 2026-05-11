@@ -375,7 +375,6 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
                   let totalValue = summary["total"] as? Int else {
                 return nil
             }
-            // Aggregate inclusive vs exclusive tax from internal taxAmounts.
             let taxInclusiveValue = internalTaxAmounts.filter { $0.inclusive }.reduce(0) { $0 + $1.amount }
             let taxExclusiveValue = internalTaxAmounts.filter { !$0.inclusive }.reduce(0) { $0 + $1.amount }
             let shippingValue = Self.parseSelectedShippingAmount(from: dict)
@@ -385,22 +384,10 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
 
             return Checkout.Total(
                 subtotal: makeAmount(subtotal, currency: currency),
-                taxExclusive: makeAmount(
-                    (summary["tax_exclusive"] as? Int) ?? taxExclusiveValue,
-                    currency: currency
-                ),
-                taxInclusive: makeAmount(
-                    (summary["tax_inclusive"] as? Int) ?? taxInclusiveValue,
-                    currency: currency
-                ),
-                shippingRate: makeAmount(
-                    (summary["shipping_rate"] as? Int) ?? shippingValue,
-                    currency: currency
-                ),
-                discount: makeAmount(
-                    (summary["discount"] as? Int) ?? discountValue,
-                    currency: currency
-                ),
+                taxExclusive: makeAmount(taxExclusiveValue, currency: currency),
+                taxInclusive: makeAmount(taxInclusiveValue, currency: currency),
+                shippingRate: makeAmount(shippingValue, currency: currency),
+                discount: makeAmount(discountValue, currency: currency),
                 total: makeAmount(totalValue, currency: currency),
                 appliedBalance: makeAmount(appliedBalanceValue, currency: currency),
                 balanceAppliedToNextInvoice: balanceAppliedToNextInvoice
