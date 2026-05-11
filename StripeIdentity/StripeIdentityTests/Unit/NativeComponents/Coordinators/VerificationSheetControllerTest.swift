@@ -977,7 +977,7 @@ extension VerificationSheetControllerTest {
                             .init(
                                 rect: faceRect,
                                 score: score
-                            )
+                            ),
                         ]
                     ),
                     cameraProperties: nil,
@@ -1002,7 +1002,7 @@ extension VerificationSheetControllerTest {
     }
 
     fileprivate func makeStripeFile(id: String) throws -> StripeFile {
-        let data = """
+        let data = Data("""
         {
           "created": 0,
           "id": "\(id)",
@@ -1010,7 +1010,7 @@ extension VerificationSheetControllerTest {
           "size": 1,
           "type": "jpg"
         }
-        """.data(using: .utf8)!
+        """.utf8)
         return try JSONDecoder().decode(StripeFile.self, from: data)
     }
 }
