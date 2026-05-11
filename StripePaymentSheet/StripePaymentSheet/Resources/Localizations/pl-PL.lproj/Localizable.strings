@@ -1,3 +1,7 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "Metoda płatności %@ nie będzie już dłużej zapisana w Twoim portfelu.";
+
 "+ Add" = "+ Dodaj";
 
 "Add US bank account" = "Dodaj rachunek bankowy w Stanach Zjednoczonych";
@@ -17,10 +21,6 @@
 "Add your payment information" = "Dodaj informacje o płatności";
 
 "Approve payment" = "Zatwierdź płatność";
-
-"Are you sure you want to remove this card?" = "Czy na pewno chcesz usunąć tę kartę?";
-
-"Are you sure you want to remove this linked account?" = "Czy na pewno chcesz usunąć to połączone konto?";
 
 "Back" = "Wstecz";
 
@@ -54,7 +54,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Kontynuując, wyrażasz zgodę na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Kontynuując, wyrażasz zgodę na zapisywanie swoich danych na potrzeby przyszłych zakupów w firmie %@ i <link>Link</link> zgodnie z <terms>warunkami</terms> i <privacy>polityką prywatnością</privacy> Link.";
+"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Kontynuując, wyrażasz zgodę na zachowanie danych do przyszłych zakupów w %1$@ i <link>%2$@</link> zgodnie z <terms>warunkami</terms> i <privacy>polityką prywatności</privacy> %2$@.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Kontynuując, wyrażasz zgodę na zapisywanie swoich danych na potrzeby przyszłych zakupów w firmie %@.";
 
@@ -64,19 +64,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Kontynuując, wyrażasz zgodę na obciążenie przez %1$@ Twojego konta Cash App kwotą tej płatności oraz przyszłych płatności zgodnie z warunkami %2$@ do momentu wycofania zgody. To ustawienie można zmienić w dowolnym momencie w ustawieniach Cash App.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dołączając do Link, wyrażasz zgodę na <terms>Warunki</terms> i <privacy>Politykę prywatności</privacy>.";
+"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dołączając do %@, akceptujesz <terms>Warunki</terms> i <privacy>Politykę prywatności</privacy>.";
 
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając numer telefonu i adres e-mail, użytkownik wyraża zgodę na utworzenie konta Link podlegającego <terms>Warunkom</terms> i <privacy>Polityce prywatności</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Podając dane swojego konta bankowego i potwierdzając tę płatność, wyrażasz zgodę na niniejsze żądanie polecenia zapłaty oraz <terms>umowę o świadczenie usług polecenia zapłaty</terms>, a także upoważniasz Stripe Payments Australia Pty Ltd ACN 160 180 343, numer identyfikacyjny użytkownika polecenia zapłaty 507156 („Stripe”) do obciążenia Twojego konta za pośrednictwem systemu Bulk Electronic Clearing System (BECS) w imieniu %@ („Sprzedawca”) na wszelkie kwoty, o których Sprzedawca poinformuje Cię oddzielnie. Zaświadczasz, że jest posiadaczem wyżej wymienionego konta lub jego upoważnionym sygnatariuszem.";
+"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając numer telefonu i adres e-mail, wyrażasz zgodę na utworzenie konta %1$@ zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> %1$@.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Poprzez podanie danych karty wyrażasz zgodę na obciążanie przez %@ Twojej karty kwotami przyszłych płatności zgodnie z obowiązującymi warunkami.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając swój adres e-mail, zgadzasz się na utworzenie konta Link i zapisanie danych do płatności w Link, zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> Link.";
+"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając adres e-mail, wyrażasz zgodę na utworzenie konta %1$@ i zapisanie informacji o płatności w %1$@ zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> %1$@.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Podając dane płatności i potwierdzając tę płatność, upoważniasz (A) %@ i Stripe, naszego dostawcę usług płatności, do wysłania instrukcji do Twojego banku w celu obciążenia Twojego konta oraz (B) Twój bank do obciążenia Twojego konta zgodnie z tymi instrukcjami. W ramach swoich praw jesteś uprawniony(-a) do otrzymania zwrotu od Twojego banku zgodnie z zasadami i warunkami umowy z bankiem. Zwrot należy odebrać w ciągu 8 tygodni, licząc od daty obciążenia konta. Twoje prawa są wyjaśnione w oświadczeniu, które możesz otrzymać z banku. Wyrażasz zgodę na otrzymywanie powiadomień w przypadku przyszłych obciążeń do 2 dni przed ich wystąpieniem.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając swój numer telefonu, zgadzasz się na utworzenie konta Link i zapisanie danych do płatności w Link, zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> Link.";
+"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając numer telefonu, wyrażasz zgodę na utworzenie konta %1$@ i zapisanie informacji o płatności w %1$@ zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> %1$@.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Zapisując swoje konto bankowe dla %@, zgadzasz się na autoryzowanie płatności zgodnie z <terms>tymi warunkami</terms>.";
 
@@ -89,6 +87,8 @@
 "Cancel and pay another way" = "Anuluj i skorzystaj z innej metody zapłaty";
 
 "Card details cannot be changed." = "Nie można zmienić szczegółów karty.";
+
+"Card number. Supported cards include %@" = "Numer karty. Obsługiwane karty obejmują %@";
 
 "Change" = "Zmień";
 
@@ -116,7 +116,7 @@
 
 "Continue another way" = "Kontynuuj w inny sposób";
 
-"Create an account with Link for faster checkout across the web" = "Utwórz konto w usłudze Link, aby przyspieszyć finalizację transakcji online";
+"Create an account with %@ for faster checkout across the web" = "Utwórz konto z %@, aby przyspieszyć finalizację transakcji online";
 
 "Debit or credit card" = "Karta debetowa lub kredytowa";
 
@@ -125,6 +125,8 @@
 "Default payment method" = "Domyślna metoda płatności";
 
 "Did you mean %@? %@." = "Czy chodziło Ci o: %1$@? %2$@.";
+
+"Discount" = "Rabat";
 
 "EPS Bank" = "Bank EPS";
 
@@ -148,7 +150,7 @@
 
 "Log in or sign up" = "Zaloguj się lub zarejestruj";
 
-"Log out of Link" = "Wyloguj się z Link";
+"Log out of %@" = "Wyloguj się z %@";
 
 "Manage SEPA debit" = "Zarządzaj poleceniem zapłaty SEPA";
 
@@ -196,19 +198,23 @@
 
 "Pay faster at %@ and thousands of businesses." = "Płać szybciej w %@ i tysiącach innych firm.";
 
+"Pay faster everywhere %@ is accepted." = "Płać szybciej wszędzie tam, gdzie akceptowana jest usługa %@.";
+
 "Pay faster everywhere Link is accepted." = "Płać szybciej wszędzie tam, gdzie usługa Link jest akceptowana.";
 
 "Pay over time with %@" = "Zapłać później, korzystając z %@";
 
 "Pay over time with Affirm" = "Zapłać później za pomocą Affirm";
 
-"Pay with Link" = "Zapłać za pomocą Link";
+"Pay with %@" = "Zapłać z wykorzystaniem metody %@";
 
 "Pay with your bank account in just a few steps." = "Zapłać za pomocą konta bankowego w kilku krokach.";
 
 "Payment" = "Płatność";
 
 "Payment failed" = "Płatność się nie powiodła";
+
+"Payment method details cannot be changed." = "Nie można zmienić szczegółów metody płatności.";
 
 "Payment methods" = "Metody płatności";
 
@@ -222,9 +228,17 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
+"Remove %@" = "Usuń %@";
+
+"Remove bank?" = "Usunąć bank?";
+
 "Remove card?" = "Usunąć kartę?";
 
 "Remove linked account" = "Usuń podłączone konto";
+
+"Remove payment method" = "Usuń metodę płatności";
+
+"Remove payment method?" = "Usunąć metodę płatności?";
 
 "SEPA debit details cannot be changed." = "Nie można zmienić szczegółów polecenia zapłaty SEPA.";
 
@@ -236,7 +250,7 @@
 
 "Save for future payments" = "Zapisz do przyszłych płatności";
 
-"Save my info for faster checkout with Link" = "Zapisz moje informacje w celu szybszej finalizacji z Link";
+"Save my info for faster checkout with %@" = "Zapisz moje dane do szybszej finalizacji za pomocą %@";
 
 "Save payment details to %@ for future purchases" = "Zapisz informacje o płatności dla %@ do wykorzystania przy przyszłych zakupach";
 
@@ -244,7 +258,7 @@
 
 "Save your bank account in just a few steps." = "Zapisz konto bankowe w kilku krokach.";
 
-"Save your info for secure 1-click checkout with Link" = "Zapisz informacje do bezpiecznej finalizacji jednym kliknięciem z Link";
+"Save your info for secure 1-click checkout with %@" = "Zapisz informacje do bezpiecznej finalizacji jednym kliknięciem dzięki %@";
 
 "Saved" = "Zapisano";
 
@@ -266,19 +280,19 @@
 
 "Simple, secure one-click payments" = "Łatwe, bezpieczne płatności jednym kliknięciem";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Coś poszło nie tak podczas łączenia konta.\nSpróbuj ponownie później.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe wpłaci 0,01 USD na Twoje konto w ciągu 1–2 dni roboczych. Następnie otrzymasz wiadomość e-mail z instrukcjami dotyczącymi zakończenia zapisywania konta za pomocą %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe wpłaci 0,01 USD na Twoje konto w ciągu 1-2 dni roboczych. Następnie otrzymasz wiadomość e-mail z instrukcjami dotyczącymi zakończenia płatności na rzecz %@.";
+
+"Subtotal" = "Suma częściowa";
 
 "Tap to close" = "Dotknij, aby zamknąć";
 
 "Tap to expand" = "Dotknij, aby rozwinąć";
 
-"The IBAN you entered is incomplete." = "Podany IBAN jest niepełny.";
+"Tax" = "Podatek";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Podany numer IBAN jest nieprawidłowy, a „%@” nie jest obsługiwanym kodem kraju.";
+"The IBAN you entered is incomplete." = "Podany IBAN jest niepełny.";
 
 "The provided verification code has expired." = "Podany kod weryfikacyjny jest nieaktualny.";
 

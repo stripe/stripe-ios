@@ -26,7 +26,7 @@
 
 "Continue linking your account" = "Forsett å koble til bankkontoen din";
 
-"Continue with Link" = "Fortsett med Link";
+"Continue with %@" = "Fortsett med %@";
 
 "Email address" = "E-postadresse";
 
@@ -110,7 +110,7 @@
 
 "Try searching another bank or %@" = "Prøv å søke en annen bank eller %@";
 
-"Use information you previously saved with your Link account." = "Bruk informasjon du tidligere har lagret i Link-kontoen din.";
+"Use information you previously saved with your %@ account." = "Bruk informasjon du tidligere har lagret på %@-kontoen din.";
 
 "Use test account" = "Bruk testkonto";
 
@@ -150,11 +150,11 @@
 
 "Your account numbers don't match." = "Kontonumrene dine samsvarer ikke.";
 
-"Your account was connected, but couldn't be saved to Link." = "Kontoen din ble koblet til, men kunne ikke lagres med Link.";
+"Your account was connected, but couldn't be saved to %@." = "Kontoen din ble koblet til, men kan ikke lagres hos %@";
 
 "Your account was connected." = "Kontoen din ble koblet til.";
 
-"Your accounts were connected, but couldn't be saved to Link." = "Kontoene dine ble koblet til, men de kunne ikke lagres med Link.";
+"Your accounts were connected, but couldn't be saved to %@." = "Kontoene dine ble koblet til, men kan ikke lagres hos %@";
 
 "Your accounts were connected." = "Kontoene dine ble koblet til.";
 

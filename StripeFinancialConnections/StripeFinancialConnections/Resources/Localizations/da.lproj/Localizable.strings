@@ -26,7 +26,7 @@
 
 "Continue linking your account" = "Fortsæt med at linke din konto";
 
-"Continue with Link" = "Fortsæt med Link";
+"Continue with %@" = "Fortsæt med %@";
 
 "Email address" = "E-mailadresse";
 
@@ -110,7 +110,7 @@
 
 "Try searching another bank or %@" = "Prøv at søge efter en anden bank, eller %@.";
 
-"Use information you previously saved with your Link account." = "Brug oplysninger, du tidligere har gemt på din Link-konto.";
+"Use information you previously saved with your %@ account." = "Brug oplysninger, du tidligere har gemt på din %@-konto.";
 
 "Use test account" = "Brug testkonto";
 
@@ -150,11 +150,11 @@
 
 "Your account numbers don't match." = "Dine kontonumre stemmer ikke overens.";
 
-"Your account was connected, but couldn't be saved to Link." = "Din konto blev tilsluttet, men den kunne ikke gemmes på Link.";
+"Your account was connected, but couldn't be saved to %@." = "Din konto blev tilknyttet, men kunne ikke gemmes på %@.";
 
 "Your account was connected." = "Din konto blev tilsluttet.";
 
-"Your accounts were connected, but couldn't be saved to Link." = "Dine konti blev tilsluttet, men de kunne ikke gemmes på Link.";
+"Your accounts were connected, but couldn't be saved to %@." = "Dine konti blev tilknyttet, men kunne ikke gemmes på %@.";
 
 "Your accounts were connected." = "Dine konti blev tilsluttet.";
 

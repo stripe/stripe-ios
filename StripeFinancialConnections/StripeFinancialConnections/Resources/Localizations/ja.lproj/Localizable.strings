@@ -26,7 +26,7 @@
 
 "Continue linking your account" = "口座の関連付けを続行する";
 
-"Continue with Link" = "Link で続行";
+"Continue with %@" = "%@ で続ける";
 
 "Email address" = "メールアドレス";
 
@@ -110,7 +110,7 @@
 
 "Try searching another bank or %@" = "別の銀行を検索してみてください。あるいは、%@";
 
-"Use information you previously saved with your Link account." = "Link アカウントにすでに保存されている情報を使用します。";
+"Use information you previously saved with your %@ account." = "%@ アカウントに以前保存した情報を使用します。";
 
 "Use test account" = "テストアカウントを使用";
 
@@ -150,11 +150,11 @@
 
 "Your account numbers don't match." = "口座番号が一致しません。";
 
-"Your account was connected, but couldn't be saved to Link." = "口座は連結されましたが、Link に保存できませんでした。";
+"Your account was connected, but couldn't be saved to %@." = "アカウントは連結されましたが、%@ に保存できませんでした。";
 
 "Your account was connected." = "口座が連結されました。";
 
-"Your accounts were connected, but couldn't be saved to Link." = "口座は連結されましたが、Link に保存できませんでした。";
+"Your accounts were connected, but couldn't be saved to %@." = "いくつかのアカウントは連結されましたが、%@ に保存できませんでした。";
 
 "Your accounts were connected." = "口座が連結されました。";
 

@@ -26,7 +26,7 @@
 
 "Continue linking your account" = "Continue linking your account";
 
-"Continue with Link" = "Continue with Link";
+"Continue with %@" = "Continue with %@";
 
 "Email address" = "Email address";
 
@@ -110,7 +110,7 @@
 
 "Try searching another bank or %@" = "Try searching another bank or %@";
 
-"Use information you previously saved with your Link account." = "Use information you previously saved with your Link account.";
+"Use information you previously saved with your %@ account." = "Use information you previously saved with your %@ account.";
 
 "Use test account" = "Use test account";
 
@@ -150,11 +150,11 @@
 
 "Your account numbers don't match." = "Your account numbers don't match.";
 
-"Your account was connected, but couldn't be saved to Link." = "Your account was connected, but couldn't be saved to Link.";
+"Your account was connected, but couldn't be saved to %@." = "Your account was connected, but couldn't be saved to %@.";
 
 "Your account was connected." = "Your account was connected.";
 
-"Your accounts were connected, but couldn't be saved to Link." = "Your accounts were connected, but couldn't be saved to Link.";
+"Your accounts were connected, but couldn't be saved to %@." = "Your accounts were connected, but couldn't be saved to %@.";
 
 "Your accounts were connected." = "Your accounts were connected.";
 

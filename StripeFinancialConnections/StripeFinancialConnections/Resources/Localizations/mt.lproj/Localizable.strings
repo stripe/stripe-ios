@@ -26,7 +26,7 @@
 
 "Continue linking your account" = "Kompli orbot il-kont tiegħek";
 
-"Continue with Link" = "Kompli b'Link";
+"Continue with %@" = "Kompli b’%@";
 
 "Email address" = "L-indirizz tal-email";
 
@@ -110,7 +110,7 @@
 
 "Try searching another bank or %@" = "Ipprova fittex bank ieħor jew %@.";
 
-"Use information you previously saved with your Link account." = "Uża l-informazzjoni li erfajt qabel fil-kont Link tiegħek.";
+"Use information you previously saved with your %@ account." = "Uża l-informazzjoni li kont issejvjajt fuq il-kont tiegħek %@.";
 
 "Use test account" = "Uża l-kont ta' prova";
 
@@ -150,11 +150,11 @@
 
 "Your account numbers don't match." = "In-numri tal-kontijiet tiegħek ma jaqblux.";
 
-"Your account was connected, but couldn't be saved to Link." = "Il-kont tiegħek intrabat, imma ma stajniex nerfgħuh ma' Link.";
+"Your account was connected, but couldn't be saved to %@." = "Il-kont tiegħek kien konness, imma ma setax jiġi ssejvjat għal %@.";
 
 "Your account was connected." = "Il-kont tiegħek intrabat.";
 
-"Your accounts were connected, but couldn't be saved to Link." = "Il-kontijiet tiegħek intrabtu, imma ma stajniex nerfgħuhom ma' Link.";
+"Your accounts were connected, but couldn't be saved to %@." = "Il-kontijiet tiegħek kienu konnessi, iżda ma setgħux jiġu ssejvjati għal %@.";
 
 "Your accounts were connected." = "Il-kontijiet tiegħek intrabtu.";
 

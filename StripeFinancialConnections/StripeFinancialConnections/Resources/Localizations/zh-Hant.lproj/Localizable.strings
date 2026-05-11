@@ -26,8 +26,6 @@
 
 "Continue linking your account" = "繼續關聯您的帳戶";
 
-"Continue with Link" = "繼續使用 Link";
-
 "Email address" = "電郵地址";
 
 "Enter bank details" = "輸入銀行資訊";
@@ -110,8 +108,6 @@
 
 "Try searching another bank or %@" = "嘗試搜尋另一銀行或%@";
 
-"Use information you previously saved with your Link account." = "使用您之前在 Link 帳戶中儲存的資訊。";
-
 "Use test account" = "使用測試帳戶";
 
 "Use test code" = "使用測試碼";
@@ -134,11 +130,7 @@
 
 "Your account numbers don't match." = "您的帳號不匹配。";
 
-"Your account was connected, but couldn't be saved to Link." = "您的帳戶已關聯至，但無法儲存到 Link。";
-
 "Your account was connected." = "您的帳戶已關聯。";
-
-"Your accounts were connected, but couldn't be saved to Link." = "您的帳戶已關聯，但無法儲存到 Link。";
 
 "Your accounts were connected." = "您的帳戶已關聯。";
 

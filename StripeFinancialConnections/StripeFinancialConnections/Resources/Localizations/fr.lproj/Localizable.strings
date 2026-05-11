@@ -26,7 +26,7 @@
 
 "Continue linking your account" = "Poursuivre l'association de votre compte";
 
-"Continue with Link" = "Continuer avec Link";
+"Continue with %@" = "Continuer avec %@";
 
 "Email address" = "Adresse e-mail";
 
@@ -110,7 +110,7 @@
 
 "Try searching another bank or %@" = "Essayez de chercher une autre banque ou %@";
 
-"Use information you previously saved with your Link account." = "Utilisez les informations précédemment enregistrées avec votre compte Link.";
+"Use information you previously saved with your %@ account." = "Utilisez les informations précédemment sauvegardées dans votre compte %@.";
 
 "Use test account" = "Utiliser le compte de test";
 
@@ -150,11 +150,11 @@
 
 "Your account numbers don't match." = "Vos numéros de compte ne correspondent pas.";
 
-"Your account was connected, but couldn't be saved to Link." = "Votre compte a été connecté, mais n'a pas pu être enregistré dans Link.";
+"Your account was connected, but couldn't be saved to %@." = "Votre compte a été connecté, mais les informations n’ont pas pu être sauvegardées dans %@.";
 
 "Your account was connected." = "Votre compte a été connecté.";
 
-"Your accounts were connected, but couldn't be saved to Link." = "Vos comptes ont été connectés, mais n'ont pas pu être enregistrés dans Link.";
+"Your accounts were connected, but couldn't be saved to %@." = "Vos comptes ont été connectés, mais les informations n’ont pas pu être sauvegardées dans %@.";
 
 "Your accounts were connected." = "Vos comptes ont été connectés.";
 

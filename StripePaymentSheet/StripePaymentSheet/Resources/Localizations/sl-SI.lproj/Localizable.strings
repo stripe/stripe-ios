@@ -1,3 +1,7 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "%@ ne bo več shranjeno v vaši denarnici.";
+
 "+ Add" = "+ Dodaj";
 
 "Add US bank account" = "Dodaj bančni račun v ZDA";
@@ -17,10 +21,6 @@
 "Add your payment information" = "Dodajte podatke o plačilu";
 
 "Approve payment" = "Odobrite plačilo";
-
-"Are you sure you want to remove this card?" = "Ali res želite odstraniti to kartico?";
-
-"Are you sure you want to remove this linked account?" = "Ali res želite odstraniti ta povezan račun?";
 
 "Back" = "Nazaj";
 
@@ -54,7 +54,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če nadaljujete postopek, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Z nadaljevanjem se strinjate, da se vaši podatki shranijo za prihodnje nakupe pri %@ in <link>Link</link> glede na povezavo <terms>pogoji</terms> in <privacy>zasebnost</privacy>.";
+"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Z nadaljevanjem se strinjate, da se vaši podatki shranijo za prihodnje nakupe z %1$@ in <link>%2$@</link> v skladu s <terms>pogoji</terms> in <privacy>zasebnostjo</privacy> %2$@.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Z nadaljevanjem se strinjate, da se vaši podatki shranijo za prihodnje nakupe pri %@.";
 
@@ -64,19 +64,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Če nadaljujete, pooblaščate podjetje %1$@, da bremeni vaš račun za Cash App s tem plačilom in prihodnjimi plačili v skladu s pogoji podjetja %2$@ do preklica tega pooblastila. To lahko kadar koli spremenite v nastavitvah aplikacije Cash App.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Če se pridružite storitvi Link, se strinjate s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy>.";
+"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "S pridružitvijo %@ se strinjate s <terms>Pogoji</terms> in <privacy>Pravilnikom o zasebnosti</privacy>.";
 
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Z navedbo telefonske številke in e-poštnega naslova se strinjate z ustvarjanjem računa v storitvi Link v skladu s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy> storitve Link.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Če vnesete podatke svojega bančnega računa in potrdite to plačilo, se strinjate s to zahtevo za direktno bremenitev in <terms>Pogodba o storitvi direktne obremenitve</terms> ter pooblaščate podjetje Stripe Payments Australia Pty Ltd ACN s številko direktne obremenitve 160 180 343 in identifikacijsko številko uporabnika 507156 (»Stripe«), da prek Sistema za elektronski paketni kliring (BECS) bremeni vaš račun v imenu podjetja %@ (»trgovec«) za zneske, o katerih vas je trgovec ločeno obvestil. Potrjujete, da ste imetnik računa ali pooblaščeni podpisnik za zgoraj navedeni račun.";
+"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Z navedbo telefonske številke in e-pošte se strinjate, da boste ustvarili račun %1$@ v skladu s <terms>Pogoji</terms> in <privacy>Pravilnikom o zasebnosti</privacy> %1$@.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "S posredovanjem podatkov o svoji kartici dovoljujete, da %@ bremeni vašo kartico za prihodnja plačila v skladu z njihovimi pogoji.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Če navedete svoj e-poštni naslov, se strinjate z ustvarjanjem računa Link in shranjevanjem podatkov o plačilu v storitev Link v skladu s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy> storitve Link.";
+"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Z navedbo svojega e-poštnega naslova se strinjate, da boste ustvarili račun %1$@ in shranili plačilne podatke na %1$@ v skladu s <terms>Pogoji</terms> in <privacy>Pravilnikom o zasebnosti</privacy> %1$@.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Z navedbo podatkov o plačilu in potrditvijo tega plačila pooblaščate (A) podjetje %@ in družbo Stripe, našega ponudnika plačilnih storitev, da posreduje navodila vaši banki za bremenitev vašega računa, in (B) vašo banko, da bremeni vaš račun v skladu s temi navodili. Vaše pravice vključujejo tudi pravico do povračila denarnih sredstev s strani vaše banke v skladu s pogoji in določili vaše pogodbe z banko. Povračilo denarnih sredstev morate zahtevati v 8 tednih od dneva bremenitve vašega računa. Vaše pravice so podrobno opisane na izpisku, ki ga lahko pridobite v banki. Strinjate se s prejemom obvestil za prihodnje bremenitve največ 2 dni pred njihovo izvedbo.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Če navedete svojo telefonsko številko, se strinjate z ustvarjanjem računa Link in shranjevanjem podatkov o plačilu v storitev Link v skladu s <terms>pogoji</terms> in <privacy>pravilnikom o zasebnosti</privacy> storitve Link.";
+"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Z navedbo svoje telefonske številke se strinjate, da boste ustvarili račun %1$@ in shranite plačilne podatke na %1$@ v skladu s <terms>Pogoji</terms> in <privacy>Pravilnikom o zasebnosti</privacy> %1$@.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Če shranite bančni račun za %@, se strinjate z odobritvijo plačil v skladu s <terms>temi pogoji</terms>.";
 
@@ -118,7 +116,7 @@
 
 "Continue another way" = "Nadaljuj na drug način";
 
-"Create an account with Link for faster checkout across the web" = "Ustvarite račun v storitvi Link za hitrejšo izvedbo plačila na spletu";
+"Create an account with %@ for faster checkout across the web" = "Ustvarite račun z %@ za hitrejše plačilo na spletu";
 
 "Debit or credit card" = "Debetna ali kreditna kartica";
 
@@ -127,6 +125,8 @@
 "Default payment method" = "Privzeti način plačila";
 
 "Did you mean %@? %@." = "Ali ste mislili %1$@? %2$@.";
+
+"Discount" = "Popust";
 
 "EPS Bank" = "Banka EPS";
 
@@ -150,7 +150,7 @@
 
 "Log in or sign up" = "Vpis ali prijava";
 
-"Log out of Link" = "Odjava iz storitve Link";
+"Log out of %@" = "Odjavite se iz %@";
 
 "Manage SEPA debit" = "Upravljanje obremenitve SEPA";
 
@@ -198,19 +198,23 @@
 
 "Pay faster at %@ and thousands of businesses." = "Plačajte hitreje pri podjetju %@ in več tisoč podjetjih.";
 
+"Pay faster everywhere %@ is accepted." = "Plačujte hitreje povsod, kjer sprejemajo %@.";
+
 "Pay faster everywhere Link is accepted." = "Plačujte hitreje povsod, kjer je sprejeta storitev Link.";
 
 "Pay over time with %@" = "Uporabite %@ za poznejše plačilo";
 
 "Pay over time with Affirm" = "Uporabite Affirm za poznejše plačilo";
 
-"Pay with Link" = "Za plačilo uporabi Link";
+"Pay with %@" = "Za plačilo uporabi %@";
 
 "Pay with your bank account in just a few steps." = "Z bančnim računom lahko plačate v le nekaj korakih.";
 
 "Payment" = "Plačilo";
 
 "Payment failed" = "Plačilo ni uspelo";
+
+"Payment method details cannot be changed." = "Podrobnosti o načinu plačila ni mogoče spremeniti.";
 
 "Payment methods" = "Načini plačila";
 
@@ -224,9 +228,17 @@
 
 "Przelewy24 Bank" = "Banka Przelewy24";
 
+"Remove %@" = "Odstranite %@";
+
+"Remove bank?" = "Želite odstraniti banko?";
+
 "Remove card?" = "Ali želite odstranit kartico?";
 
 "Remove linked account" = "Odstrani povezan račun";
+
+"Remove payment method" = "Odstranite način plačila";
+
+"Remove payment method?" = "Želite odstraniti način plačila?";
 
 "SEPA debit details cannot be changed." = "Podrobnosti obremenitve SEPA ni mogoče spremeniti.";
 
@@ -238,7 +250,7 @@
 
 "Save for future payments" = "Shrani za prihodnja plačila";
 
-"Save my info for faster checkout with Link" = "Shrani moje podatke za hitrejšo izvedbo plačila s storitvijo Link";
+"Save my info for faster checkout with %@" = "Shrani moje podatke za hitrejši nakup z %@";
 
 "Save payment details to %@ for future purchases" = "Shranite podatke o plačilu podjetju %@ za prihodnja plačila";
 
@@ -246,7 +258,7 @@
 
 "Save your bank account in just a few steps." = "Shranite svoj bančni v le nekaj korakih.";
 
-"Save your info for secure 1-click checkout with Link" = "Shranite svoje podatke za varno izvedbo plačila z enim klikom s storitvijo Link";
+"Save your info for secure 1-click checkout with %@" = "Shranite svoje podatke za varno izvedbo plačila z enim klikom z %@";
 
 "Saved" = "Shranjeno";
 
@@ -268,19 +280,19 @@
 
 "Simple, secure one-click payments" = "Enostavna in varna plačila z enim klikom";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Pri povezovanju vašega računa je prišlo do napake.\nPoskusite znova pozneje.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe bo v 1–2 delovnih dneh na vaš račun nakazal znesek v višini 0,01 USD. Nato boste prejeli e-poštno sporočilo z navodili za dokončanje shranjevanja bančnega računa pri podjetju %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe bo v 1–2 delovnih dneh na vaš račun nakazal znesek v višini 0,01 USD. Nato boste prejeli e-poštno sporočilo z navodili za dokončanje plačila podjetju %@.";
+
+"Subtotal" = "Vmesni seštevek";
 
 "Tap to close" = "Tapnite, da zaprete";
 
 "Tap to expand" = "Tapnite, da razširite";
 
-"The IBAN you entered is incomplete." = "Vnesena koda IBAN ni popolna.";
+"Tax" = "Davek";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Vnesena koda IBAN ni veljavna. »%@« ni podprta koda države.";
+"The IBAN you entered is incomplete." = "Vnesena koda IBAN ni popolna.";
 
 "The provided verification code has expired." = "Navedena potrditvena koda je potekla.";
 

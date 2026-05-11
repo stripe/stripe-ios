@@ -1,3 +1,7 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "%@ gemmes ikke længere i din wallet.";
+
 "+ Add" = "+ Tilføj";
 
 "Add US bank account" = "Tilføj amerikansk bankkonto";
@@ -17,10 +21,6 @@
 "Add your payment information" = "Tilføj dine betalingsoplysninger";
 
 "Approve payment" = "Godkend betaling";
-
-"Are you sure you want to remove this card?" = "Er du sikker på, at du vil fjerne dette kort?";
-
-"Are you sure you want to remove this linked account?" = "Er du sikker på, at du vil fjerne denne linket konto?";
 
 "Back" = "Tilbage";
 
@@ -54,7 +54,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at fortsætte accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Ved at fortsætte accepterer du at gemme dine oplysninger til senere køb hos %@ og <link>Link</link> ifølge Links <terms>vilkår</terms> og <privacy>privatlivspolitik</privacy>.";
+"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Ved at fortsætte accepterer du at gemme dine oplysninger til fremtidige køb med %1$@ og <link>%2$@</link> i henhold til %2$@ <terms>vilkår</terms> og <privacy>privatlivspolitik</privacy>.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Ved at fortsætte accepterer du at gemme dine oplysninger til senere køb med %@.";
 
@@ -64,19 +64,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ved at fortsætte giver du %1$@ tilladelse til at debitere din Cash App-konto for denne betaling og fremtidige betalinger i overensstemmelse med %2$@s vilkår, indtil denne tilladelse tilbagekaldes. Du kan til enhver tid ændre dette i dine Cash App-indstillinger.";
 
-"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved at tilmelde dig Link accepterer du <terms>vilkårene</terms> og <privacy>privatlivspolitikken</privacy>.";
+"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved at tilmelde dig %@ accepterer du <terms>vilkårene</terms> og <privacy>privatlivspolitikken</privacy>.";
 
-"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved at angive dit telefonnummer og din e-mailadresse accepterer du at oprette en Link-konto underlagt Links <terms>Vilkår</terms> og <privacy>Privatlivspolitik</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ved at angive dine bankkontooplysninger og bekræfte denne betaling accepterer du denne anmodning om direkte debitering og <terms>serviceaftalen for anmodning om direkte debitering</terms> og giver Stripe Payments Australia Pty Ltd ACN 160 180 343 bruger-id-nummer 507156 (\"Stripe\") tilladelse til at debitere din konto via Bulk Electronic Clearing System (BECS) på vegne af %@ (\"forhandleren\") for alle beløb, der kommunikeres separat til dig af forhandleren. Du bekræfter, at du enten er kontohaver eller autoriseret underskriver på den konto, der er angivet ovenfor.";
+"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved at angive telefonnummer og e-mail accepterer du at oprette en %1$@-konto, som er underlagt <terms>vilkårene</terms> og <privacy>privatlivspolitikken</privacy> for %1$@.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Ved at angive dine kortoplysninger tillader du %@ at opkræve dit kort for denne betaling i overensstemmelse med dennes vilkår.";
 
-"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Når du angiver din e-mail, accepterer du at oprette en Link-konto og gemme dine betalingsoplysninger på Link i henhold til Links <terms>Vilkår</terms> og <privacy>Privatlivspolitik</privacy>.";
+"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved at angive din e-mail accepterer du at oprette en %1$@-konto og gemme dine betalingsoplysninger på %1$@ i henhold til %1$@ <terms>vilkår</terms> og <privacy>privatlivspolitik</privacy>.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ved at give dine betalingsoplysninger og bekræfte denne betaling giver du (A) %@ og Stripe, vores betalingstjenesteudbyder, tilladelse til at sende instruktioner til din bank om at debitere din konto og (B) din bank til at debitere din konto i overensstemmelse med disse instruktioner. Som en del af dine rettigheder har du ret til en refusion fra din bank under vilkårene og betingelserne i din aftale med din bank. Der skal kræves refusion inden for 8 uger fra den dato, hvor din konto blev debiteret. Dine rettigheder forklares i en erklæring, som du kan få fra din bank. Du accepterer at modtage underretninger om fremtidig debitering op til to dage før de opstår.";
 
-"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Når du angiver dit telefonnummer, accepterer du at oprette en Link-konto og gemme dine betalingsoplysninger på Link i henhold til Links <terms>Vilkår</terms> og <privacy>Privatlivspolitik</privacy>.";
+"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved at angive dit telefonnummer accepterer du at oprette en %1$@-konto og gemme dine betalingsoplysninger på %1$@ i henhold til %1$@ <terms>vilkår</terms> og <privacy>privatlivspolitik</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ved at gemme din bankkonto for %@ accepterer du at godkende betalinger i henhold til <terms>disse vilkår</terms>.";
 
@@ -118,7 +116,7 @@
 
 "Continue another way" = "Fortsæt på en anden måde";
 
-"Create an account with Link for faster checkout across the web" = "Opret en konto med Link for gøre betaling hurtigere på hele internettet";
+"Create an account with %@ for faster checkout across the web" = "Opret en konto med %@, så du kan betale hurtigere på internettet";
 
 "Debit or credit card" = "Debet- eller kreditkort";
 
@@ -127,6 +125,8 @@
 "Default payment method" = "Standardbetalingsmetode";
 
 "Did you mean %@? %@." = "Mente du %1$@? %2$@.";
+
+"Discount" = "Rabat";
 
 "EPS Bank" = "EPS Bank";
 
@@ -150,7 +150,7 @@
 
 "Log in or sign up" = "Log på, eller tilmeld dig";
 
-"Log out of Link" = "Log ud af Link";
+"Log out of %@" = "Log ud af %@?";
 
 "Manage SEPA debit" = "Administrer SEPA-debet";
 
@@ -198,19 +198,23 @@
 
 "Pay faster at %@ and thousands of businesses." = "Betal hurtigere hos %@ og tusinder af virksomheder.";
 
+"Pay faster everywhere %@ is accepted." = "Betal hurtigere alle steder, hvor %@ accepteres.";
+
 "Pay faster everywhere Link is accepted." = "Betal hurtigere alle steder, hvor Link accepteres.";
 
 "Pay over time with %@" = "Betal over tid med %@";
 
 "Pay over time with Affirm" = "Betal over tid med Affirm";
 
-"Pay with Link" = "Betal med Link";
+"Pay with %@" = "Betal med %@";
 
 "Pay with your bank account in just a few steps." = "Betal med din bankkonto i blot få trin.";
 
 "Payment" = "Betaling";
 
 "Payment failed" = "Betalingen mislykkedes";
+
+"Payment method details cannot be changed." = "Oplysninger om betalingsmetode kan ikke ændres.";
 
 "Payment methods" = "Betalingsmetoder";
 
@@ -224,9 +228,17 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
+"Remove %@" = "Fjern %@";
+
+"Remove bank?" = "Vil du fjerne banken?";
+
 "Remove card?" = "Vil du fjerne kortet?";
 
 "Remove linked account" = "Fjern linket konto";
+
+"Remove payment method" = "Fjern betalingsmetode";
+
+"Remove payment method?" = "Fjern betalingsmetode?";
 
 "SEPA debit details cannot be changed." = "SEPA-debetdetaljer kan ikke ændres.";
 
@@ -238,7 +250,7 @@
 
 "Save for future payments" = "Gem til fremtidige betalinger";
 
-"Save my info for faster checkout with Link" = "Gem mine oplysninger for hurtigere betaling med Link";
+"Save my info for faster checkout with %@" = "Gem mine oplysninger, så jeg kan betale hurtigere med %@";
 
 "Save payment details to %@ for future purchases" = "Gem betalingsoplysninger for %@ til senere køb";
 
@@ -246,7 +258,7 @@
 
 "Save your bank account in just a few steps." = "Gem din bankkonto med blot nogle få trin.";
 
-"Save your info for secure 1-click checkout with Link" = "Gem dine oplysninger om sikker betaling med 1 klik med Link";
+"Save your info for secure 1-click checkout with %@" = "Gem dine oplysninger, så du kan foretage sikker betaling med ét klik med %@";
 
 "Saved" = "Gemt";
 
@@ -268,19 +280,19 @@
 
 "Simple, secure one-click payments" = "Enkle og trygge betalinger med ét klik";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Noget gik galt, da du tilknyttede din konto.\nPrøv igen senere.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe vil sætte 0,01 USD ind på din konto i løbet af 1-2 hverdage. Derefter modtager du en e-mail med instruktioner til at fuldføre lagring af din bankkonto hos %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe vil sætte 0,01 USD ind på din konto i løbet af 1-2 hverdage. Derefter modtager du en e-mail med instruktioner til at fuldføre betalingen til %@.";
+
+"Subtotal" = "Subtotal";
 
 "Tap to close" = "Tryk for at lukke";
 
 "Tap to expand" = "Tryk for at udvide";
 
-"The IBAN you entered is incomplete." = "Det indtastede IBAN-nummer er ufuldstændigt.";
+"Tax" = "Moms";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Det IBAN, du har indtastet, er ugyldigt, \"%@\" er ikke en understøttet landekode.";
+"The IBAN you entered is incomplete." = "Det indtastede IBAN-nummer er ufuldstændigt.";
 
 "The provided verification code has expired." = "Den angivne verifikationskode er udløbet.";
 

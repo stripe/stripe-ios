@@ -26,7 +26,7 @@
 
 "Continue linking your account" = "Doorgaan met het koppelen van je rekening";
 
-"Continue with Link" = "Doorgaan met Link";
+"Continue with %@" = "Doorgaan met %@";
 
 "Email address" = "E-mailadres";
 
@@ -110,7 +110,7 @@
 
 "Try searching another bank or %@" = "Zoek naar een andere bank of %@";
 
-"Use information you previously saved with your Link account." = "Gebruik informatie die je eerder hebt opgeslagen met je Link-account.";
+"Use information you previously saved with your %@ account." = "Gebruik gegevens die je eerder hebt opgeslagen met je %@-account.";
 
 "Use test account" = "Testaccount gebruiken";
 
@@ -150,11 +150,11 @@
 
 "Your account numbers don't match." = "Je rekeningnummers komen niet overeen.";
 
-"Your account was connected, but couldn't be saved to Link." = "Je rekening is gekoppeld, maar kan niet worden opgeslagen met Link.";
+"Your account was connected, but couldn't be saved to %@." = "Je account is gekoppeld, maar kan niet worden opgeslagen naar %@.";
 
 "Your account was connected." = "Je rekening is gekoppeld.";
 
-"Your accounts were connected, but couldn't be saved to Link." = "Je rekeningen zijn gekoppeld, maar kunnen niet worden opgeslagen met Link.";
+"Your accounts were connected, but couldn't be saved to %@." = "Je accounts zijn gekoppeld, maar kunnen niet worden opgeslagen naar %@.";
 
 "Your accounts were connected." = "Je rekeningen zijn gekoppeld.";
 
