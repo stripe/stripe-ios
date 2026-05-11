@@ -17,10 +17,10 @@ import UIKit
 @MainActor @_spi(STP) @_spi(LinkControllerPreview) public class LinkController: ObservableObject {
 
     /// Represents the payment method currently selected by the user.
-    @_spi(STP) public struct PaymentMethodPreview {
+    @_spi(STP) @_spi(LinkControllerPreview) public struct PaymentMethodPreview {
 
         /// Represents the type of selected payment method.
-        @_spi(STP) public enum PaymentMethodType {
+        @_spi(STP) @_spi(LinkControllerPreview) public enum PaymentMethodType {
 
             /// The user chose a card-based payment method, such as a debit or credit card.
             case card
@@ -30,16 +30,16 @@ import UIKit
         }
 
         /// The type of the selected payment method.
-        @_spi(STP) public let paymentMethodType: PaymentMethodType
+        @_spi(STP) @_spi(LinkControllerPreview) public let paymentMethodType: PaymentMethodType
 
         /// The Link icon to render in your screen.
-        @_spi(STP) public let icon: UIImage
+        @_spi(STP) @_spi(LinkControllerPreview) public let icon: UIImage
 
         /// The Link label to render in your screen.
-        @_spi(STP) public let label: String
+        @_spi(STP) @_spi(LinkControllerPreview) public let label: String
 
         /// Details about the selected Link payment method. This will typically render the display name of the payment method followed by the last four digits, e.g. `Visa Credit •••• 4242`.
-        @_spi(STP) public let sublabel: String?
+        @_spi(STP) @_spi(LinkControllerPreview) public let sublabel: String?
     }
 
     @frozen @_spi(STP) public enum VerificationResult {
@@ -131,7 +131,7 @@ import UIKit
     @Published @_spi(STP) public private(set) var linkAccount: PaymentSheetLinkAccount?
 
     /// A preview of the currently selected Link payment method.
-    @Published @_spi(STP) public private(set) var paymentMethodPreview: PaymentMethodPreview?
+    @Published @_spi(STP) @_spi(LinkControllerPreview) public private(set) var paymentMethodPreview: PaymentMethodPreview?
 
     private var resolvedLinkBrand: LinkBrand {
         linkAccount?.linkBrand ?? LinkAccountContext.shared.account?.linkBrand ?? initialLinkBrand
@@ -456,7 +456,7 @@ import UIKit
     /// 1. Looks up the consumer by email, unless an authenticated session for that email already exists.
     /// 2. Presents the Link sheet, routing to signup, OTP verification, or the wallet based on account state.
     ///    If `phoneNumber` is provided, it is prefilled in the signup form.
-    /// 3. Once the user selects a payment method, converts the selection to an `STPPaymentMethod`.
+    /// 3. Once the user selects a payment method, creates and returns an `STPPaymentMethod`.
     ///
     /// - Parameter email: The email address to look up and associate with the Link account.
     /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
@@ -1275,7 +1275,7 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
 }
 
 @_spi(LinkControllerPreview) public extension LinkController {
-
+    
     /// Creates a `LinkController` for the specified `mode`.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
@@ -1296,6 +1296,9 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
             }
         }
     }
+}
+
+@_spi(STP) @_spi(LinkControllerPreview) public extension LinkController {
 
     /// Presents the full Link payment method selection flow, handling lookup, authentication or signup,
     /// wallet display, and payment method creation in a single call.
@@ -1304,14 +1307,14 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     /// 1. Looks up the consumer by email.
     /// 2. Presents the Link sheet, routing to signup, OTP verification, or the wallet based on account state.
     ///    If `phoneNumber` is provided, it is prefilled in the signup form.
-    /// 3. Once the user selects a payment method, converts the selection to an `STPPaymentMethod`.
+    /// 3. Once the user selects a payment method, creates and returns an `STPPaymentMethod`.
     ///
     /// - Parameter email: The email address to look up and associate with the Link account.
     /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
     /// - Parameter supportedPaymentMethodTypes: The payment method types to support. If `nil`, all available types are shown.
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Returns: `.completed(paymentMethod)` on selection, or `.canceled` if the user dismisses the flow.
-    /// - Throws: An error if the lookup or payment method creation fails.
+    /// - Throws: An error if the lookup fails or payment method creation fails.
     func present(
         email: String,
         phoneNumber: String? = nil,
