@@ -1,5 +1,14 @@
 /* Body for selfie warmup page */
-"A few photos will be taken automatically on the next step to verify it's you" = "A few photos will be taken automatically on the next step to verify it's you";
+"Follow the instructions to take selfies to compare against the image on your photo ID." = "Follow the instructions to take selfies to compare against the image on your photo ID.";
+
+/* Title for the optional training consent section on the selfie warmup page */
+"Help us improve verifications" = "Help us improve verifications";
+
+/* Button text to allow the optional training consent choice */
+"Allow" = "Allow";
+
+/* Button text to decline the optional training consent choice */
+"Decline" = "Decline";
 
 /* Title for accepted types of ids */
 "Accepted forms of ID include" = "Accepted forms of ID include";
