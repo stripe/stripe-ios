@@ -52,14 +52,14 @@ class StringExtensionsTests: XCTestCase {
 
     func testBrandedLocalizedStrings_useProvidedBrandDisplayName() {
         XCTAssertEqual(String.Localized.continue_with_link(brand: .link), "Continue with Link")
-        XCTAssertEqual(String.Localized.continue_with_link(brand: .onelink), "Continue with Onelink")
+        XCTAssertEqual(String.Localized.continue_with_link(brand: .onelink), "Continue with Link")
         XCTAssertEqual(
             String.Localized.use_information_you_previously_saved_with_your_brand_account(brand: .onelink),
-            "Use information you previously saved with your Onelink account."
+            "Use information you previously saved with your Link account."
         )
         XCTAssertEqual(
             String.Localized.your_account_was_connected_but_could_not_be_saved_to_brand(brand: .onelink),
-            "Your account was connected, but couldn't be saved to Onelink."
+            "Your account was connected, but couldn't be saved to Link."
         )
     }
 }
