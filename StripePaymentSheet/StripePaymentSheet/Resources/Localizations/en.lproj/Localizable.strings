@@ -332,6 +332,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Text on a screen that indicates a payment has failed */
 "Payment failed" = "Payment failed";
 
+/* Text on a screen that indicates payment method details cannot be changed. */
+"Payment method details cannot be changed." = "Payment method details cannot be changed.";
+
 /* Title for a section listing one or more payment methods. */
 "Payment methods" = "Payment methods";
 
@@ -365,6 +368,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* Title for a button that when tapped removes a payment method.
    Title for confirmation prompt when removing a saved payment method without a display label. */
 "Remove payment method" = "Remove payment method";
+
+/* Title for confirmation alert to remove a payment method */
+"Remove payment method?" = "Remove payment method?";
 
 /* A button used for saving a new payment method
    Label on a button that when tapped, updates a card brand. */

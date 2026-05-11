@@ -510,7 +510,7 @@ private extension LinkPaymentDetails {
         switch self {
         case .card:
             return false
-        case .bankAccount:
+        case .bankAccount, .generic:
             return true
         }
     }
