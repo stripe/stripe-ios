@@ -92,7 +92,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = LinkUI.font(forTextStyle: .title)
         label.textColor = .linkTextPrimary
-        label.text = "Declarations"
+        label.text = String.Localized.declarations
         label.numberOfLines = 0
         return label
     }()
@@ -126,7 +126,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     }()
 
     private lazy var confirmButton = ConfirmButton.makeLinkButton(
-        callToAction: .custom(title: "Agree and accept"),
+        callToAction: .custom(title: String.Localized.agree_and_accept),
         showProcessingLabel: false,
         linkAppearance: appearance
     ) { [weak self] in

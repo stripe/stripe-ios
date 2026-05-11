@@ -31,6 +31,9 @@
 /* Title shown above a form where the customer can enter payment information like credit card details, email, billing address, etc. */
 "Add your payment information" = "Add your payment information";
 
+/* Label for a button that confirms the user agrees to and accepts a declaration */
+"Agree and accept" = "Agree and accept";
+
 /* Text on a screen asking the user to approve a payment */
 "Approve payment" = "Approve payment";
 
@@ -185,6 +188,9 @@ with the transaction. */
 
 /* Label shown in the payment type picker describing a card payment */
 "Debit or credit card" = "Debit or credit card";
+
+/* Title label for a screen showing CRS/CARF tax declarations */
+"Declarations" = "Declarations";
 
 /* Label for identifying the default payment method. */
 "Default" = "Default";
