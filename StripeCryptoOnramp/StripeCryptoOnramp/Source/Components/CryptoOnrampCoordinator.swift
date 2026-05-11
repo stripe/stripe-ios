@@ -12,7 +12,7 @@ import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeIdentity
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
@@ -80,6 +80,30 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter info: The KYC info to attach to the Link user.
     /// Throws if an authenticated Link user is not available, the user has already attached KYC info, or an API error occurs.
     func attachKYCInfo(info: KycInfo) async throws
+
+    /// Retrieves compliance identifiers still required for MiCA and CRS/CARF compliance.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Returns: The missing compliance identifier requirements.
+    /// Throws if an authenticated Link user is not available, KYC information has not yet been collected, or an API error occurs.
+    func retrieveMissingIdentifiers() async throws -> ComplianceIdentifierRequirements
+
+    /// Submits compliance identifiers for MiCA and CRS/CARF compliance.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter identifiers: The compliance identifiers to submit.
+    /// - Returns: A result describing whether the identifiers were accepted, and what remains missing or invalid if not.
+    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    func submitIdentifiers(_ identifiers: [ComplianceIdentifier]) async throws -> SubmitIdentifiersResult
+
+    /// Presents the CRS/CARF declaration for review and records acceptance if the user confirms.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter viewController: The view controller from which to present the declaration.
+    /// - Returns: A `CRSCARFDeclarationResult` indicating whether the user confirmed or canceled.
+    /// Throws if an authenticated Link user is not available, EU identifiers have not been submitted, or an API error occurs.
+    @MainActor
+    func presentCRSCARFDeclaration(from viewController: UIViewController) async throws -> CRSCARFDeclarationResult
 
     /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.
     ///
@@ -372,6 +396,48 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.kycInfoSubmitted)
         } catch {
             analyticsClient.log(.errorOccurred(during: .attachKycInfo, errorMessage: error.localizedDescription))
+            throw error
+        }
+    }
+
+    public func retrieveMissingIdentifiers() async throws -> ComplianceIdentifierRequirements {
+        do {
+            let identifiers = try await apiClient.retrieveMissingIdentifiers(linkAccountInfo: linkAccountInfo)
+            return identifiers
+        } catch {
+            throw error
+        }
+    }
+
+    public func submitIdentifiers(_ identifiers: [ComplianceIdentifier]) async throws -> SubmitIdentifiersResult {
+        do {
+            let result = try await apiClient.submitIdentifiers(identifiers: identifiers, linkAccountInfo: linkAccountInfo)
+            return result
+        } catch {
+            throw error
+        }
+    }
+
+    @MainActor
+    public func presentCRSCARFDeclaration(from viewController: UIViewController) async throws -> CRSCARFDeclarationResult {
+        do {
+            let linkAccountInfo = try await self.linkAccountInfo
+            let declaration = try await apiClient.retrieveCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
+            let result: CRSCARFDeclarationResult = switch try await linkController.presentCRSCARFDeclaration(
+                text: declaration.text,
+                appearance: appearance,
+                from: viewController,
+                onConfirm: { [apiClient] in
+                    try await apiClient.confirmCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
+                }
+            ) {
+            case .confirmed:
+                .confirmed
+            case .canceled:
+                .canceled
+            }
+            return result
+        } catch {
             throw error
         }
     }

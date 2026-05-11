@@ -867,6 +867,14 @@ private extension LinkPaymentDetails {
             return makeCardRemovalMessage(brand: cardDetails.brand, last4: cardDetails.last4)
         case .bankAccount(let bankDetails):
             return makeBankAccountRemovalMessage(last4: bankDetails.last4)
+        case .generic(let genericDetails):
+            return (
+                title: STPLocalizedString(
+                    "Remove payment method?",
+                    "Title for confirmation alert to remove a payment method"
+                ),
+                message: genericDetails.formattedDisplayText
+            )
         }
     }
 }

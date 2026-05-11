@@ -881,6 +881,22 @@ class STPElementsSessionTest: XCTestCase {
         return ["payment_method": pmJSON]
     }
 
+    private func linkWrappedUnknownPM(_ pmJSON: [AnyHashable: Any]) -> [AnyHashable: Any] {
+        return [
+            "payment_method": pmJSON,
+            "is_link_origin": true,
+            "link_payment_details": [
+                "id": "csmrpd_test_pix_123",
+                "type": "PIX",
+                "display": [
+                    "label": "Pix",
+                    "sublabel": "000••••••••",
+                ],
+                "is_default": false,
+            ],
+        ]
+    }
+
     func testMergeCardArt_linkFormat_matchingId() {
         let response: [AnyHashable: Any] = [
             "payment_methods_with_link_details": [linkWrappedPM(testCardJSON)],
@@ -935,5 +951,34 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(pms?.count, 2)
         XCTAssertEqual(pms?[0].card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/visa")
         XCTAssertEqual(pms?[1].card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/amex")
+    }
+
+    func testDecodeUnknownLinkSavedPaymentMethodWithDisplayMetadata() throws {
+        let linkPMJSON: [AnyHashable: Any] = [
+            "id": "pm_link_pix_123",
+            "type": "link",
+            "created": "12345",
+            "billing_details": [
+                "address": [
+                    "country": "BR",
+                ],
+            ],
+        ]
+        let response: [AnyHashable: Any] = [
+            "payment_methods_with_link_details": [linkWrappedUnknownPM(linkPMJSON)],
+            "customer_session": customerSessionJSON,
+        ]
+
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
+
+        XCTAssertEqual(customer?.paymentMethods.count, 1)
+        let paymentMethod = try XCTUnwrap(customer?.paymentMethods.first)
+        XCTAssertEqual(paymentMethod.type, .link)
+        XCTAssertTrue(paymentMethod.isLinkPaymentMethod)
+        guard case .generic(let genericDetails) = paymentMethod.linkPaymentDetails else {
+            return XCTFail("Expected generic Link payment details")
+        }
+        XCTAssertEqual(genericDetails.label, "Pix")
+        XCTAssertEqual(genericDetails.sublabel, "000••••••••")
     }
 }
