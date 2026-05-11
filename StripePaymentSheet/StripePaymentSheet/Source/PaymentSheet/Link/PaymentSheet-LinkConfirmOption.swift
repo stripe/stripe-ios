@@ -48,6 +48,16 @@ extension PaymentSheet {
 // MARK: - Helpers
 
 extension PaymentSheet.LinkConfirmOption {
+    var brand: LinkBrand {
+        switch self {
+        case .wallet(let brand),
+             .signUp(let brand, _, _, _, _, _),
+             .withPaymentMethod(let brand, _),
+             .withPaymentDetails(let brand, _, _, _, _):
+            return brand
+        }
+    }
+
     func paymentSheetSubLabel(brand: LinkBrand) -> String? {
         guard let sublabel = paymentSheetSubLabel else {
             return nil
@@ -69,7 +79,7 @@ extension PaymentSheet.LinkConfirmOption {
         }
         // Suppress the redundant sublabel both for the resolved brand name and for
         // the legacy Link label that some lower-level paths can still return.
-        guard sublabel != brand.displayName, sublabel != LinkBrand.link.displayName else {
+        guard sublabel != self.brand.displayName, sublabel != LinkBrand.link.displayName else {
             return nil
         }
         return sublabel
@@ -159,9 +169,9 @@ extension PaymentSheet.LinkConfirmOption {
         switch self {
         case .wallet, .withPaymentDetails:
             return brand.displayName
-        case .signUp(_, _, _, _, let intentConfirmParams):
+        case .signUp(_, _, _, _, _, let intentConfirmParams):
             return intentConfirmParams.paymentSheetLabel(brand: brand)
-        case .withPaymentMethod(let paymentMethod):
+        case .withPaymentMethod(_, let paymentMethod):
             return paymentMethod.paymentSheetLabel(brand: brand)
         }
     }
