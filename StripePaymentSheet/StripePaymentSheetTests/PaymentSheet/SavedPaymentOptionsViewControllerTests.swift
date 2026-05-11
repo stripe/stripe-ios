@@ -196,7 +196,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
         XCTAssertEqual(removalMessage.title, "Remove payment method?")
         XCTAssertEqual(removalMessage.message, "Pix 000••••••••")
     }
-    
+
     func testPaymentOptionCell_usesProvidedLinkBrandForLinkLabel() {
         let cell = SavedPaymentMethodCollectionView.PaymentOptionCell(frame: .zero)
 

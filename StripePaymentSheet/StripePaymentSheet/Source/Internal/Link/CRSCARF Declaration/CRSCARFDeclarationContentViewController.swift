@@ -7,6 +7,7 @@
 
 @_spi(STP) import StripeUICore
 import UIKit
+@_spi(STP) import StripeCore
 
 /// The content view of `CRSCARFDeclarationViewController`, which displays CRS/CARF declaration text with a confirmation button.
 final class CRSCARFDeclarationContentViewController: UIViewController, BottomSheetContentViewController {
@@ -17,6 +18,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         let navigationBar = LinkSheetNavigationBar(
             isTestMode: false,
             appearance: .default,
+            brand: brand,
             shouldLogPaymentSheetAnalyticsOnDismissal: false
         )
         navigationBar.setStyle(.close(showAdditionalButton: false))
@@ -30,6 +32,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
 
     private let text: String
     private let appearance: LinkAppearance
+    private let brand: LinkBrand
 
     /// Closure called when a user confirms or cancels the declaration.
     var onResult: ((LinkController.CRSCARFDeclarationResult) -> Void)?
@@ -38,9 +41,10 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     /// - Parameters:
     ///   - text: The declaration text to display.
     ///   - appearance: Determines the colors, corner radius, and height of the confirmation button.
-    init(text: String, appearance: LinkAppearance) {
+    init(text: String, appearance: LinkAppearance, brand: LinkBrand) {
         self.text = text
         self.appearance = appearance
+        self.brand = brand
         super.init(nibName: nil, bundle: nil)
     }
 

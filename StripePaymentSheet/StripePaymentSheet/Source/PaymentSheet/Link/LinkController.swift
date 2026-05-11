@@ -721,7 +721,11 @@ import UIKit
     ) async throws -> CRSCARFDeclarationResult {
         return try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
-                let declarationViewController = CRSCARFDeclarationViewController(text: text, appearance: appearance)
+                let declarationViewController = CRSCARFDeclarationViewController(
+                    text: text,
+                    appearance: appearance,
+                    brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                )
                 declarationViewController.onResult = { [weak declarationViewController] result in
                     declarationViewController?.onResult = nil
 
