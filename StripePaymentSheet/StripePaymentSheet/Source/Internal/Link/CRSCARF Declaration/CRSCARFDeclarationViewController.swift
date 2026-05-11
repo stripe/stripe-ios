@@ -5,8 +5,8 @@
 //  Created by Michael Liberatore on 4/23/26.
 //
 
-import UIKit
 @_spi(STP) import StripeCore
+import UIKit
 
 /// Container view controller that displays the CRS/CARF declaration in a Link-styled bottom sheet.
 final class CRSCARFDeclarationViewController: BottomSheetViewController {

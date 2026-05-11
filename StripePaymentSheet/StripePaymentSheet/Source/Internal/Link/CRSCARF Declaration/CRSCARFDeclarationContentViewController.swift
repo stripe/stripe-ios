@@ -5,9 +5,9 @@
 //  Created by Michael Liberatore on 4/23/26.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
-@_spi(STP) import StripeCore
 
 /// The content view of `CRSCARFDeclarationViewController`, which displays CRS/CARF declaration text with a confirmation button.
 final class CRSCARFDeclarationContentViewController: UIViewController, BottomSheetContentViewController {
