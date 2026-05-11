@@ -11,27 +11,35 @@ import Foundation
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
 extension String.Localized {
-    private static func existingLinkLocalizedString(_ key: String) -> String {
-        STPLocalizationUtils.localizedStripeString(
-            forKey: key,
-            bundleLocator: StripeFinancialConnectionsBundleLocator.self
+    @_spi(STP) public static func continue_with_link(brand _: LinkBrand) -> String {
+        STPLocalizedString(
+            "Continue with Link",
+            """
+            A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
+               The title of a screen where users are informed that they can sign-in-to Link.
+            """
         )
     }
 
-    @_spi(STP) public static func continue_with_link(brand _: LinkBrand) -> String {
-        existingLinkLocalizedString("Continue with Link")
-    }
-
     @_spi(STP) public static func use_information_you_previously_saved_with_your_brand_account(brand _: LinkBrand) -> String {
-        existingLinkLocalizedString("Use information you previously saved with your Link account.")
+        STPLocalizedString(
+            "Use information you previously saved with your Link account.",
+            "The subtitle/description of a screen where users are informed that they can sign-in-to Link."
+        )
     }
 
     @_spi(STP) public static func your_account_was_connected_but_could_not_be_saved_to_brand(brand _: LinkBrand) -> String {
-        existingLinkLocalizedString("Your account was connected, but couldn't be saved to Link.")
+        STPLocalizedString(
+            "Your account was connected, but couldn't be saved to Link.",
+            "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments."
+        )
     }
 
     @_spi(STP) public static func your_accounts_were_connected_but_could_not_be_saved_to_brand(brand _: LinkBrand) -> String {
-        existingLinkLocalizedString("Your accounts were connected, but couldn't be saved to Link.")
+        STPLocalizedString(
+            "Your accounts were connected, but couldn't be saved to Link.",
+            "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments."
+        )
     }
 
     static var learn_more: String {
