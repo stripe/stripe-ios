@@ -794,7 +794,7 @@ extension PayWithLinkViewController.WalletViewController: LinkPaymentMethodPicke
         actionSheet.popoverPresentationController?.sourceRect = sourceRect
 
         actionSheet.addAction(UIAlertAction(
-            title: String.Localized.log_out_of_brand(context.configuration.resolvedLinkBrand(elementsSession: context.elementsSession)),
+            title: String.Localized.log_out_of_brand(context.linkBrand),
             style: .destructive,
             handler: { [weak self] _ in
                 self?.coordinator?.logout(cancel: true)

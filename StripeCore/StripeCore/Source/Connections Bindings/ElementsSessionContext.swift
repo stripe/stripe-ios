@@ -24,9 +24,11 @@ import Foundation
 
     @_spi(STP) public struct LinkSettings {
         @_spi(STP) public let useAttestationEndpoints: Bool?
+        @_spi(STP) public let brand: LinkBrand?
 
-        @_spi(STP) public init(useAttestationEndpoints: Bool?) {
+        @_spi(STP) public init(useAttestationEndpoints: Bool?, brand: LinkBrand? = nil) {
             self.useAttestationEndpoints = useAttestationEndpoints
+            self.brand = brand
         }
     }
 

@@ -164,7 +164,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
     }
 
     func testPaymentOptionDisplayData_LinkLabels() {
-        let linkOption = PaymentSheet.LinkConfirmOption.wallet
+        let linkOption = PaymentSheet.LinkConfirmOption.wallet(brand: .link)
         let paymentOption = PaymentSheet.PaymentOption.link(option: linkOption)
         let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
             paymentOption: paymentOption,
@@ -178,7 +178,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
     }
 
     func testPaymentOptionDisplayData_OnelinkLabels() {
-        let linkOption = PaymentSheet.LinkConfirmOption.wallet
+        let linkOption = PaymentSheet.LinkConfirmOption.wallet(brand: .onelink)
         let paymentOption = PaymentSheet.PaymentOption.link(option: linkOption)
         let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
             paymentOption: paymentOption,
@@ -216,6 +216,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         cardParams.number = "4242424242424242"
         confirmParams.paymentMethodParams.card = cardParams
         let linkOption = PaymentSheet.LinkConfirmOption.signUp(
+            brand: .onelink,
             account: makeSUT(),
             phoneNumber: nil,
             consentAction: .implied_v0,
@@ -346,6 +347,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let paymentDetails = makePaymentDetailsStub(nickname: "Visa Credit")
 
         let linkOption = PaymentSheet.LinkConfirmOption.withPaymentDetails(
+            brand: .link,
             account: linkAccount,
             paymentDetails: paymentDetails,
             confirmationExtras: nil,
@@ -372,6 +374,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let paymentDetails = makeBankAccountPaymentDetailsStub(nickname: "My Checking")
 
         let linkOption = PaymentSheet.LinkConfirmOption.withPaymentDetails(
+            brand: .link,
             account: linkAccount,
             paymentDetails: paymentDetails,
             confirmationExtras: nil,
