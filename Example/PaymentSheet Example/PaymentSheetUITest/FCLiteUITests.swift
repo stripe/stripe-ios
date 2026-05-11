@@ -133,8 +133,7 @@ class FCLiteUITests: XCTestCase {
         // Continue with Link
         let continueWithLinkButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Continue with Link'") // Link signup pane
         let continueWithLinkButton = app.webViews.firstMatch.buttons.containing(continueWithLinkButtonPredicate).firstMatch
-        XCTAssertTrue(continueWithLinkButton.waitForExistence(timeout: 10.0))
-        app.typeText(XCUIKeyboardKey.return.rawValue) // Enter key will continue to the next screen
+        XCTAssertTrue(continueWithLinkButton.waitForExistenceAndTap(timeout: 10.0))
 
         // Success bank
         let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Disputed'") // Institution Picker
