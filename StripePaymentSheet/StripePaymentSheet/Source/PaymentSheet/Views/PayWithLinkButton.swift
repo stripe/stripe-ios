@@ -135,14 +135,15 @@ final class PayWithLinkButton: UIControl {
         let linkY = (linkTextSpacing) * linkLogoHeight
         linkAttachment.bounds = CGRect(x: 0, y: -linkY, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
 
-        // Add a spacer before the Link logo and after the Link logo
-        let range = payWithLinkString.mutableString.range(of: brand.displayName)
+        // The localized string still contains the Link token even when the displayed logo is branded.
+        let linkToken = LinkBrand.link.displayName
+        let range = payWithLinkString.mutableString.range(of: linkToken)
         if range.location != NSNotFound {
             payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location + range.length)
             payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location)
 
             // Add the Link attachment
-            payWithLinkString.replaceOccurrences(of: brand.displayName, with: linkAttachment)
+            payWithLinkString.replaceOccurrences(of: linkToken, with: linkAttachment)
         }
 
         linkView.attributedText = payWithLinkString
