@@ -10,40 +10,6 @@ import Foundation
 @_spi(STP) public struct TimeoutError: Error {}
 @_spi(STP) public struct UnexpectedNilError: Error {}
 
-/// Runs an operation with a timeout.
-/// - Parameters:
-///   - timeout: The maximum time interval to wait for each operation to complete
-///   - operation: Operation to run with timeout
-/// - Returns: A Result that contains either the operation's value or its error
-///
-/// - Important:
-///     Cancellation does not propagate to unstructured Tasks e.g. created with `Task { }`.
-///     If you need to cancel the inner task, you must explicitly call `.cancel()` on it.
-///   - ✅ Structured tasks (e.g. calling async functions directly) are automatically canceled on timeout:
-///     ```
-///     withTimeout(5.0) {
-///         await someAsyncFunction()  // This is canceled if timeout occurs (i.e. Task.isCancelled can be true inside the method)
-///     }
-///     ```
-///   - ❌ Unstructured Tasks within operations are not automatically canceled:
-///     ```
-///     withTimeout(5.0) {
-///         await Task {
-///             await someAsyncFunction() // Inner Task is NOT canceled - Task.isCancelled is never true
-///         }.value
-///         // You must cancel the task yourself when `withTimeout` throws a `TimeoutError`
-///     }
-///     ```
-@_spi(STP) @discardableResult public func withTimeout<T>(
-    _ timeout: TimeInterval,
-    _ operation: @escaping () async throws -> T
-) async -> Result<T, Error> {
-    let task = Task<T, Error> {
-        return try await withTimeout(timeout) { try await operation() }
-    }
-    return await task.result
-}
-
 /// Runs two operations in parallel with individual timeouts.
 /// - Parameters:
 ///   - timeout: The maximum time interval to wait for each operation to complete
@@ -81,6 +47,40 @@ import Foundation
         return try await withTimeout(timeout) { try await operation2() }
     }
     return await (task1.result, task2.result)
+}
+
+/// Runs an operation with a timeout.
+/// - Parameters:
+///   - timeout: The maximum time interval to wait for each operation to complete
+///   - operation: Operation to run with timeout
+/// - Returns: A Result that contains either the operation's value or its error
+///
+/// - Important:
+///     Cancellation does not propagate to unstructured Tasks e.g. created with `Task { }`.
+///     If you need to cancel the inner task, you must explicitly call `.cancel()` on it.
+///   - ✅ Structured tasks (e.g. calling async functions directly) are automatically canceled on timeout:
+///     ```
+///     withTimeout(5.0) {
+///         await someAsyncFunction()  // This is canceled if timeout occurs (i.e. Task.isCancelled can be true inside the method)
+///     }
+///     ```
+///   - ❌ Unstructured Tasks within operations are not automatically canceled:
+///     ```
+///     withTimeout(5.0) {
+///         await Task {
+///             await someAsyncFunction() // Inner Task is NOT canceled - Task.isCancelled is never true
+///         }.value
+///         // You must cancel the task yourself when `withTimeout` throws a `TimeoutError`
+///     }
+///     ```
+@_spi(STP) @discardableResult public func withTimeout<T>(
+    _ timeout: TimeInterval,
+    _ operation: @escaping () async throws -> T
+) async -> Result<T, Error> {
+    let task = Task<T, Error> {
+        return try await withTimeout(timeout) { try await operation() }
+    }
+    return await task.result
 }
 
 /// Runs a singular operation with a timeout
