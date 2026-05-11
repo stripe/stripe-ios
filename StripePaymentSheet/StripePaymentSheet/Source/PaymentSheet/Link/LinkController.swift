@@ -14,7 +14,7 @@ import UIKit
 @_spi(STP) import StripeUICore
 
 /// A controller that presents a Link sheet to collect a customer's payment method.
-@MainActor @_spi(STP) public class LinkController: ObservableObject {
+@MainActor @_spi(STP) @_spi(LinkControllerPreview) public class LinkController: ObservableObject {
 
     /// Represents the payment method currently selected by the user.
     @_spi(STP) public struct PaymentMethodPreview {
@@ -49,7 +49,7 @@ import UIKit
         case canceled
     }
 
-    @frozen @_spi(STP) public enum PaymentMethodResult {
+    @frozen @_spi(STP) @_spi(LinkControllerPreview) public enum PaymentMethodResult {
         /// The user selected a payment method. The associated value is the resulting `STPPaymentMethod`.
         case completed(STPPaymentMethod)
         /// The user dismissed the flow without selecting a payment method.
@@ -90,7 +90,7 @@ import UIKit
         }
     }
 
-    @_spi(STP) public enum Mode {
+    @_spi(STP) @_spi(LinkControllerPreview) public enum Mode {
         case payment
         case paymentAndSetupFutureUse
         case setup
@@ -267,6 +267,24 @@ import UIKit
                 completion(.failure(error))
             }
         }
+    }
+
+    /// Creates a `LinkController` for the specified `mode`.
+    ///
+    /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
+    /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
+    /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
+    @_spi(LinkControllerPreview) public static func create(
+        apiClient: STPAPIClient = .shared,
+        mode: LinkController.Mode,
+        completion: @escaping (Result<LinkController, Error>) -> Void
+    ) {
+        self.create(
+            apiClient: apiClient,
+            mode: mode,
+            linkConfiguration: nil,
+            completion: completion
+        )
     }
 
     /// Looks up whether the provided email is associated with an existing Link consumer.
@@ -446,7 +464,7 @@ import UIKit
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter completion: A closure called with `.success(.completed(paymentMethod))` on selection,
     ///   `.success(.canceled)` if the user dismisses the flow, or `.failure(error)` on API or network errors.
-    @_spi(STP) public func present(
+    @_spi(STP) @_spi(LinkControllerPreview) public func present(
         email: String,
         phoneNumber: String? = nil,
         supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
@@ -1248,6 +1266,30 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                 switch result {
                 case .success:
                     continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+}
+
+@_spi(LinkControllerPreview) public extension LinkController {
+
+    /// Creates a `LinkController` for the specified `mode`.
+    ///
+    /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
+    /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
+    /// - Returns: A `LinkController` if successful, or throws an error if the creation failed.
+    static func create(
+        apiClient: STPAPIClient = .shared,
+        mode: LinkController.Mode
+    ) async throws -> LinkController {
+        return try await withCheckedThrowingContinuation { continuation in
+            create(apiClient: apiClient, mode: mode) { result in
+                switch result {
+                case .success(let controller):
+                    continuation.resume(returning: controller)
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }
