@@ -7,7 +7,7 @@
 
 @testable@_spi(STP) import StripeCore
 import StripeCoreTestUtils
-@_spi(STP) @testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
@@ -394,6 +394,23 @@ class EmbeddedPaymentElementTest: XCTestCase {
         XCTAssertTrue(delegatePaymentOption?.mandateText?.string.contains("Amazon Pay") ?? false)
 
         await fulfillment(of: [rowSelectionBehaviorExpectation])
+    }
+
+    func testPaymentOptionDisplayData_linkCardBrandUsesOnelinkLabel() {
+        let confirmParams = IntentConfirmParams(type: .linkCardBrand)
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card = cardParams
+
+        let displayData = EmbeddedPaymentElement.PaymentOptionDisplayData(
+            paymentOption: .new(confirmParams: confirmParams),
+            mandateText: nil,
+            currency: "usd",
+            iconStyle: configuration.appearance.iconStyle,
+            linkBrand: .onelink
+        )
+
+        XCTAssertEqual(displayData.label, "Onelink")
     }
 
     func testClearPaymentOptionAfterSelection() async throws {

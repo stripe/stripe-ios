@@ -552,7 +552,7 @@ extension RowButton {
         return button
     }
 
-    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, linkBrand: LinkBrand = .link, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         let savedPaymentMethodRowImage = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle)
@@ -565,15 +565,15 @@ extension RowButton {
             imageView.image = savedPaymentMethodRowImage
         }
         let text = paymentMethod.isLinkPassthroughMode
-            ? STPPaymentMethodType.link.displayName
-            : paymentMethod.paymentSheetLabel
+            ? linkBrand.displayName
+            : paymentMethod.paymentSheetLabel(brand: linkBrand)
 
         let button = RowButton.create(
             appearance: appearance,
             type: .saved(paymentMethod: paymentMethod),
             imageView: imageView,
             text: text,
-            subtext: paymentMethod.linkSpecificSublabel ?? subtext,
+            subtext: paymentMethod.linkSpecificSublabel(brand: linkBrand) ?? subtext,
             badgeText: badgeText,
             accessoryView: accessoryView,
             isEmbedded: isEmbedded,
@@ -670,14 +670,14 @@ extension PaymentSheet.Appearance {
 
 private extension STPPaymentMethod {
 
-    var linkSpecificSublabel: String? {
+    func linkSpecificSublabel(brand: LinkBrand) -> String? {
         if let linkPaymentDetails {
             return linkPaymentDetails.sublabel
         }
         if isLinkPassthroughMode {
-            // We render "Link" as the label, so use the original label
+            // We render the Link brand as the label, so use the original label
             // as the sublabel.
-            return paymentSheetLabel
+            return paymentSheetLabel(brand: brand)
         }
         return nil
     }

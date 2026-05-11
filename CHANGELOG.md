@@ -4,6 +4,7 @@ MINOR
 ## X.Y.Z - changes pending release
 ### PaymentSheet
 * [Fixed] Fixed a crash due to parameter packs being unsupported.
+* [Changed] When paymentMethodLayout is set to automatic, the layout is now horizontal when there are 2 or fewer payment methods available.
 
 ### CryptoOnramp (Alpha)
 * [Added] Added API models for upcoming EU support. 
