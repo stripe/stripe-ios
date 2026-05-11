@@ -21,6 +21,7 @@ final class LinkControllerPreviewAPITests: XCTestCase {
 
             Task { @MainActor in
                 let controller = try await LinkController.create(mode: .payment)
+                _ = controller.paymentMethodPreview
 
                 controller.present(
                     email: "jenny.rosen@example.com",
