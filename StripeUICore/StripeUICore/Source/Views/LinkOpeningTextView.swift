@@ -13,7 +13,7 @@ import UIKit
  Subclass of UITextView that allows for links to be opened on tap when the text is un-selectable.
  */
 @objc(STP_Internal_LinkOpeningTextView)
-class LinkOpeningTextView: UITextView {
+@_spi(STP) public class LinkOpeningTextView: UITextView {
     private var isTextSelectable = true
 
     /*
@@ -23,7 +23,7 @@ class LinkOpeningTextView: UITextView {
      but track internally whether the user should be able to select text in
      the view using `isTextSelectable`.
      */
-    override var isSelectable: Bool {
+    public override var isSelectable: Bool {
         get {
             return isTextSelectable
         }
@@ -38,7 +38,7 @@ class LinkOpeningTextView: UITextView {
      - The text should be selectable.
      - The user tapped on a link.
      */
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
         // Only override the default behavior if the view should not be selectable
         guard !isTextSelectable else {
             return super.point(inside: point, with: event)

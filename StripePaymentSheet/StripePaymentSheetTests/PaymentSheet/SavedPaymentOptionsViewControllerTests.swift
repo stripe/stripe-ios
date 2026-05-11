@@ -3,6 +3,7 @@
 //  StripePaymentSheetTests
 //
 
+@_spi(STP) import StripePayments
 @testable import StripePaymentSheet
 import XCTest
 
@@ -178,6 +179,22 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
         let removalMessage = coBrandedCard.removalMessage
 
         XCTAssertEqual(removalMessage.message, "Cartes Bancaires •••• 4242")
+    }
+
+    func testRemovalMessage_LinkGenericPaymentMethod() {
+        let paymentMethod = STPPaymentMethod._testLink()
+        paymentMethod.linkPaymentDetails = .generic(
+            LinkPaymentDetails.Generic(
+                id: "csmrpd_123",
+                label: "Pix",
+                sublabel: "000••••••••"
+            )
+        )
+
+        let removalMessage = paymentMethod.removalMessage
+
+        XCTAssertEqual(removalMessage.title, "Remove payment method?")
+        XCTAssertEqual(removalMessage.message, "Pix 000••••••••")
     }
 
     // MARK: Helpers

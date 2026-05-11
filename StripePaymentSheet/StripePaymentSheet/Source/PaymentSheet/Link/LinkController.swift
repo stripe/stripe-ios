@@ -49,12 +49,26 @@ import UIKit
         case canceled
     }
 
+    @frozen @_spi(STP) public enum PaymentMethodResult {
+        /// The user selected a payment method. The associated value is the resulting `STPPaymentMethod`.
+        case completed(STPPaymentMethod)
+        /// The user dismissed the flow without selecting a payment method.
+        case canceled
+    }
+
     @frozen @_spi(STP) public enum AuthorizationResult {
         /// Authorization was consented by the user.
         case consented
         /// Authorization was denied by the user.
         case denied
         /// The authorization flow was canceled by the user.
+        case canceled
+    }
+
+    @frozen @_spi(STP) public enum CRSCARFDeclarationResult {
+        /// The user accepted the declaration.
+        case confirmed
+        /// The user dismissed the declaration without accepting.
         case canceled
     }
 
@@ -93,7 +107,7 @@ import UIKit
     private let requestSurface: LinkRequestSurface
 
     private lazy var linkAccountService: LinkAccountServiceProtocol = {
-        LinkAccountService(elementsSession: elementsSession)
+        LinkAccountService(apiClient: apiClient, elementsSession: elementsSession)
     }()
 
     private var selectedPaymentDetails: ConsumerPaymentDetails? {
@@ -208,6 +222,7 @@ import UIKit
         Task {
             do {
                 var configuration = PaymentSheet.Configuration()
+                configuration.apiClient = apiClient
                 if let appearance = appearance {
                     configuration.style = appearance.style
                 }
@@ -359,15 +374,15 @@ import UIKit
     ///
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
-    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
+    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil`, all available types are supported.
     /// - Parameter collectName: Whether or not we should collect the user's name and attach it to the billing details.
     /// - Parameter completion: A closure that is called when the user has selected a payment method or canceled the sheet. If the user selects a payment method, the `paymentMethodPreview` will be updated accordingly.
     @_spi(STP) public func collectPaymentMethod(
         from presentingViewController: UIViewController,
         with email: String?,
-        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         collectName: Bool = false,
-        completion: @escaping () -> Void
+        completion: @escaping (_ didSelectPaymentMethod: Bool) -> Void
     ) {
         var configuration = self.configuration
         configuration.defaultBillingDetails.email = email
@@ -394,12 +409,87 @@ import UIKit
                 if shouldClearSelection {
                     self?.internalPaymentOption = nil
                 }
-                completion()
+                completion(false)
                 return
             }
 
             self?.internalPaymentOption = .link(option: confirmOption)
-            completion()
+            completion(true)
+        }
+    }
+
+    /// Presents the full Link payment method selection flow, handling lookup, authentication or signup,
+    /// wallet display, and payment method creation in a single call.
+    ///
+    /// Under the hood, this method:
+    /// 1. Looks up the consumer by email, unless an authenticated session for that email already exists.
+    /// 2. Presents the Link sheet, routing to signup, OTP verification, or the wallet based on account state.
+    ///    If `phoneNumber` is provided, it is prefilled in the signup form.
+    /// 3. Once the user selects a payment method, converts the selection to an `STPPaymentMethod`.
+    ///
+    /// - Parameter email: The email address to look up and associate with the Link account.
+    /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
+    /// - Parameter supportedPaymentMethodTypes: The payment method types to support. If `nil`, all available types are shown.
+    /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
+    /// - Parameter completion: A closure called with `.success(.completed(paymentMethod))` on selection,
+    ///   `.success(.canceled)` if the user dismisses the flow, or `.failure(error)` on API or network errors.
+    @_spi(STP) public func present(
+        email: String,
+        phoneNumber: String? = nil,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
+        from presentingViewController: UIViewController,
+        completion: @escaping (Result<PaymentMethodResult, Error>) -> Void
+    ) {
+        let alreadyAuthenticated = linkAccount?.sessionState == .verified
+            && linkAccount?.email.lowercased() == email.lowercased()
+
+        let presentWallet = { [weak self] in
+            guard let self else { return }
+            var configuration = self.configuration
+            configuration.defaultBillingDetails.email = email
+            if let phoneNumber {
+                configuration.defaultBillingDetails.phone = phoneNumber
+            }
+
+            presentingViewController.presentNativeLink(
+                selectedPaymentDetailsID: nil,
+                configuration: configuration,
+                intent: self.intent,
+                elementsSession: self.elementsSession,
+                analyticsHelper: self.analyticsHelper,
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                linkAppearance: self.appearance,
+                linkConfiguration: self.linkConfiguration,
+                shouldShowSecondaryCta: false
+            ) { [weak self] confirmOption, _ in
+                guard let self else { return }
+                guard let confirmOption else {
+                    completion(.success(.canceled))
+                    return
+                }
+                self.internalPaymentOption = .link(option: confirmOption)
+                self.createPaymentMethod { result in
+                    switch result {
+                    case .success(let paymentMethod):
+                        completion(.success(.completed(paymentMethod)))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
+            }
+        }
+
+        if alreadyAuthenticated {
+            presentWallet()
+        } else {
+            lookupConsumer(with: email) { result in
+                switch result {
+                case .failure(let error):
+                    completion(.failure(error))
+                case .success:
+                    presentWallet()
+                }
+            }
         }
     }
 
@@ -610,6 +700,56 @@ import UIKit
         }
     }
 
+    /// Presents the CRS/CARF declaration to the user.
+    ///
+    /// This method presents a bottom sheet displaying the provided declaration text for user review.
+    /// The user can confirm the declaration or cancel.
+    ///
+    /// - Parameters:
+    ///   - text: The declaration text to display to the user.
+    ///   - appearance: Appearance configuration for the declaration UI.
+    ///   - viewController: The view controller from which to present the declaration flow.
+    ///   - onConfirm: An async closure called when the user confirms. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
+    /// - Returns: A `CRSCARFDeclarationResult` indicating whether the user confirmed or canceled.
+    /// Throws any error thrown by the `onConfirm` handler.
+    @_spi(STP) public func presentCRSCARFDeclaration(
+        text: String,
+        appearance: LinkAppearance,
+        from viewController: UIViewController,
+        onConfirm: @escaping (() async throws -> Void)
+    ) async throws -> CRSCARFDeclarationResult {
+        return try await withCheckedThrowingContinuation { continuation in
+            Task { @MainActor in
+                let declarationViewController = CRSCARFDeclarationViewController(text: text, appearance: appearance)
+                declarationViewController.onResult = { [weak declarationViewController] result in
+                    declarationViewController?.onResult = nil
+
+                    let dismissAndResumeWithResult = { continuationResult in
+                        declarationViewController?.dismiss(animated: true) {
+                            continuation.resume(with: continuationResult)
+                        }
+                    }
+
+                    switch result {
+                    case .canceled:
+                        dismissAndResumeWithResult(.success(result))
+                    case .confirmed:
+                        Task {
+                            do {
+                                try await onConfirm()
+                                dismissAndResumeWithResult(.success(result))
+                            } catch {
+                                dismissAndResumeWithResult(.failure(error))
+                            }
+                        }
+                    }
+                }
+
+                viewController.presentAsBottomSheet(declarationViewController, appearance: .init())
+            }
+        }
+    }
+
     /// Logs out the current Link user, if any.
     @_spi(STP) public func logOut(completion: @escaping (Result<Void, Error>) -> Void) {
         func clearLinkAccountContextAndComplete() {
@@ -756,7 +896,7 @@ import UIKit
             }
         )
 
-        let result = try await PaymentSheetLoader.load(
+        let (result, _) = try await PaymentSheetLoader.load(
             mode: .deferredIntent(intentConfiguration),
             configuration: configuration,
             analyticsHelper: analyticsHelper,
@@ -1020,13 +1160,13 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     ///
     /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
     /// - Parameter email: The email address to pre-fill in the Link sheet. If `nil`, the email field will be empty.
-    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. Defaults to all available types.
+    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil`, all available types are supported.
     /// - Parameter collectName: Whether or not we should collect the user's name and attach it to the billing details.
     /// - Returns: A `PaymentMethodDisplayData` if the user selected a payment method, or `nil` otherwise.
     func collectPaymentMethod(
         from presentingViewController: UIViewController,
         with email: String?,
-        supportedPaymentMethodTypes: [LinkPaymentMethodType] = LinkPaymentMethodType.allCases,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         collectName: Bool = false
     ) async -> LinkController.PaymentMethodPreview? {
         return await withCheckedContinuation { continuation in
@@ -1036,9 +1176,9 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                     with: email,
                     supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                     collectName: collectName
-                ) { [weak self] in
+                ) { [weak self] didSelectPaymentMethod in
                     guard let self else { return }
-                    continuation.resume(returning: self.paymentMethodPreview)
+                    continuation.resume(returning: didSelectPaymentMethod ? self.paymentMethodPreview : nil)
                 }
             }
         }
@@ -1085,6 +1225,44 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
                 switch result {
                 case .success:
                     continuation.resume(returning: ())
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
+    }
+
+    /// Presents the full Link payment method selection flow, handling lookup, authentication or signup,
+    /// wallet display, and payment method creation in a single call.
+    ///
+    /// Under the hood, this method:
+    /// 1. Looks up the consumer by email.
+    /// 2. Presents the Link sheet, routing to signup, OTP verification, or the wallet based on account state.
+    ///    If `phoneNumber` is provided, it is prefilled in the signup form.
+    /// 3. Once the user selects a payment method, converts the selection to an `STPPaymentMethod`.
+    ///
+    /// - Parameter email: The email address to look up and associate with the Link account.
+    /// - Parameter phoneNumber: Optional phone number in E.164 format to prefill during signup.
+    /// - Parameter supportedPaymentMethodTypes: The payment method types to support. If `nil`, all available types are shown.
+    /// - Parameter presentingViewController: The view controller from which to present the Link sheet.
+    /// - Returns: `.completed(paymentMethod)` on selection, or `.canceled` if the user dismisses the flow.
+    /// - Throws: An error if the lookup or payment method creation fails.
+    func present(
+        email: String,
+        phoneNumber: String? = nil,
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
+        from presentingViewController: UIViewController
+    ) async throws -> PaymentMethodResult {
+        try await withCheckedThrowingContinuation { continuation in
+            present(
+                email: email,
+                phoneNumber: phoneNumber,
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
+                from: presentingViewController
+            ) { result in
+                switch result {
+                case .success(let paymentMethodResult):
+                    continuation.resume(returning: paymentMethodResult)
                 case .failure(let error):
                     continuation.resume(throwing: error)
                 }

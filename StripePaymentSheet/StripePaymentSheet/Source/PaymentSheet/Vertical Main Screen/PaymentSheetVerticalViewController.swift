@@ -110,10 +110,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
     var defaultPaymentMethod: STPPaymentMethod?
 
     private lazy var savedPaymentMethodManager: SavedPaymentMethodManager = {
-        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+        SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: intent)
     }()
-
-    var confirmationChallenge: ConfirmationChallenge?
 
     // MARK: - UI properties
 
@@ -355,24 +353,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         })
     }
 
-    // MARK: - PaymentSheetViewControllerProtocol
-
-    func setReloading(_ isReloading: Bool) {
-        // Freeze the UI and show a spinner on the primary button while we reload the intent.
-        // If you add new UI, make sure it's also disabled/hidden during reloading.
-        self.isReloading = isReloading
-        isUserInteractionEnabled = !isBusy
-        if isReloading {
-            view.endEditing(true)
-        }
-        updatePrimaryButton()
-    }
-
-    func setReloadError(_ error: Swift.Error) {
-        self.error = error
-        updateError()
-    }
-
     /// Returns the default selected row in the vertical list - the previous payment option, the last VC's selection, or the customer's default.
     func calculateInitialSelection() -> RowButtonType? {
         if let previousPaymentOption {
@@ -479,7 +459,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             isFirstCardCoBranded: savedPaymentMethods.first?.isCoBrandedCard ?? false,
             isCBCEligible: loadResult.elementsSession.isCardBrandChoiceEligible,
             allowsRemovalOfLastSavedPaymentMethod: loadResult.elementsSession.paymentMethodRemoveLast(configuration: configuration),
-            allowsPaymentMethodRemoval: loadResult.elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+            allowsPaymentMethodRemoval: loadResult.intent.allowsPaymentMethodRemoval(elementsSession: loadResult.elementsSession),
             allowsPaymentMethodUpdate: loadResult.elementsSession.paymentMethodUpdateForPaymentSheet
         )
         return VerticalPaymentMethodListViewController(
@@ -488,12 +468,14 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: shouldShowApplePayInList,
             shouldShowLink: shouldShowLinkInList,
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             overrideHeaderView: makeWalletHeaderView(),
             appearance: configuration.appearance,
             currency: loadResult.intent.currency,
             amount: loadResult.intent.amount,
             incentive: loadResult.elementsSession.incentive,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             delegate: self
         )
     }
@@ -513,6 +495,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             options: walletOptions,
             appearance: configuration.appearance,
             applePayButtonType: configuration.applePay?.buttonType ?? .plain,
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
             isPaymentIntent: intent.isPaymentIntent,
             delegate: self
         )
@@ -532,7 +515,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         paymentContainerView.directionalLayoutMargins = .zero
 
         // One stack view contains all our subviews
-        let views: [UIView] = [paymentContainerView, mandateView, errorLabel].compactMap { $0 }
+        let views: [UIView] = [paymentContainerView, mandateView, errorLabel]
         for view in views {
             stackView.addArrangedSubview(view)
         }
@@ -585,7 +568,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             intent: intent,
             elementsSession: elementsSession,
             analyticsHelper: analyticsHelper,
-            confirmationChallenge: confirmationChallenge,
             callback: { [weak self] confirmOption, _ in
                 guard let self else { return }
                 self.linkConfirmOption = confirmOption
@@ -796,7 +778,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
                                                                                billingDetailsCollectionConfiguration: configuration.billingDetailsCollectionConfiguration,
                                                                                hostedSurface: .paymentSheet,
                                                                                cardBrandFilter: configuration.cardBrandFilter,
-                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet(),
+                                                                               canRemove: elementsSession.paymentMethodRemoveLast(configuration: configuration) && intent.allowsPaymentMethodRemoval(elementsSession: elementsSession),
                                                                                canUpdate: elementsSession.paymentMethodUpdateForPaymentSheet,
                                                                                isCBCEligible: paymentMethod.isCoBrandedCard && elementsSession.isCardBrandChoiceEligible,
                                                                                allowsSetAsDefaultPM: elementsSession.paymentMethodSetAsDefaultForPaymentSheet,
@@ -815,6 +797,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
 
         let vc = VerticalSavedPaymentMethodsViewController(
             configuration: configuration,
+            intent: intent,
             selectedPaymentMethod: selectedPaymentOption?.savedPaymentMethod,
             paymentMethods: savedPaymentMethods,
             elementsSession: elementsSession,
@@ -991,8 +974,10 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             previousCustomerInput: previousCustomerInput,
             formCache: formCache,
             configuration: configuration,
+            paymentMethodOrientation: loadResult.paymentMethodOrientation,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             isLinkUI: false,
             delegate: self,
             previousLinkInlineSignupAction: previousLinkInlineSignupAction
@@ -1010,6 +995,7 @@ extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewContr
             elementsSession: elementsSession,
             configuration: .paymentElement(configuration),
             paymentMethod: paymentMethodType,
+            paymentMethodOrientation: loadResult.paymentMethodOrientation,
             previousCustomerInput: nil,
             linkAccount: LinkAccountContext.shared.account,
             accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),

@@ -3,22 +3,24 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=BhXFUS2TDGLxHGTl5HGcIMeVo1Kwftt6LMdRdVHYHVzpiNGQ2MYjJLc11VyxYkJtuNqimZxRn4gaD0Ou
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=T0jxEKVhkS1SXt8s6dERkY0XWMI8TQWZBHIK0SF6v2lWB4BEhw3-ydKz9cJ5DQx8VO6NizOMzgGo_kaU
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=T0jxEKVhkS1SXt8s6dERkY0XWMI8TQWZBHIK0SF6v2lWB4BEhw3-ydKz9cJ5DQx8VO6NizOMzgGo_kaU&t=1"
+x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=T0jxEKVhkS1SXt8s6dERkY0XWMI8TQWZBHIK0SF6v2lWB4BEhw3-ydKz9cJ5DQx8VO6NizOMzgGo_kaU&t=1"}],"include_subdomains":true}
+request-id: req_m1rwGeGXbmV9pw
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_xhQhVvo6llNOjp
-Content-Length: 532
+Content-Length: 572
 Vary: Origin
-Date: Mon, 16 Mar 2026 18:35:19 GMT
-original-request: req_xhQhVvo6llNOjp
+Date: Tue, 05 May 2026 03:16:42 GMT
+original-request: req_m1rwGeGXbmV9pw
 stripe-version: 2020-08-27
-idempotency-key: 2e0fe152-1199-4064-ad96-39c7d976d7ff
+idempotency-key: ed1261a4-6b33-4c06-9408-b2dab8221d09
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -31,7 +33,7 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[name]=Foo&cl
     "bic" : null,
     "bank" : null
   },
-  "id" : "pm_1TBfz1FY0qyl6XeWxGgisvjK",
+  "id" : "pm_1TTZTSFY0qyl6XeWKE1AeO88",
   "billing_details" : {
     "email" : null,
     "phone" : null,
@@ -47,9 +49,10 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[name]=Foo&cl
     }
   },
   "livemode" : false,
-  "created" : 1773686119,
+  "created" : 1777951002,
   "allow_redisplay" : "unspecified",
-  "type" : "ideal",
+  "shared_payment_granted_token" : null,
   "customer" : null,
+  "type" : "ideal",
   "customer_account" : null
 }

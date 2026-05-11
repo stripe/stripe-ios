@@ -40,8 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Платете сега или платете по-късно чрез Klarna";
 
-"Buy using a UPI ID" = "Купуване с помощта на UPI ID";
-
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Потвърждавайки плащането си в PayPal, разрешавате на %@ да таксува Вашия PayPal акаунт при бъдещи плащания съгласно условията му.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Продължавайки към Amazon Pay, разрешавате на %@ да таксува Вашия акаунт в Amazon Pay за бъдещи плащания съгласно условията му.";
@@ -92,6 +90,8 @@
 
 "Card details cannot be changed." = "Данните на картата не могат да бъдат променяни.";
 
+"Card number. Supported cards include %@" = "Номер на банкова карта. Поддържаните карти включват %@";
+
 "Change" = "Промяна";
 
 "Choose a card brand" = "Изберете марка на банкова карта";
@@ -131,6 +131,8 @@
 "EPS Bank" = "Банка EPS";
 
 "Enter address manually" = "Ръчно въвеждане на адрес";
+
+"Exchange rate and fees of your bank may apply." = "Обменният курс и таксите на вашата банка може да се прилагат.";
 
 "FPX Bank" = "Банка FPX";
 
@@ -179,8 +181,6 @@
 "Only card brand can be changed." = "Може да се променя само марката на картата.";
 
 "Open to see more information." = "Искам да видя повече информация.";
-
-"Open your UPI app to approve your payment within %@" = "Отворете Вашето UPI приложение, за да одобрите плащане си в рамките на %@";
 
 "Or" = "Или";
 

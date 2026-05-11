@@ -71,7 +71,9 @@ module ChangelogUtils
     previous_parts = parse_version(previous_version)
     next_parts = parse_version(next_version)
 
-    raise "Expected #{next_version} to be newer than #{previous_version}." unless next_parts > previous_parts
+    # Compare semantic version parts left-to-right and require the next version to be strictly newer.
+    comparison = next_parts <=> previous_parts
+    raise "Expected #{next_version} to be newer than #{previous_version}." unless comparison == 1
 
     return 'MAJOR' if next_parts[0] > previous_parts[0]
     return 'MINOR' if next_parts[1] > previous_parts[1]

@@ -15,10 +15,10 @@ import XCTest
 
 class PollingViewTests: XCTestCase {
 
-    func testPollingViewModelUPI(){
-        let pollingViewModel = PollingViewModel(paymentMethodType: .UPI)
+    func testPollingViewModelBLIK() {
+        let pollingViewModel = PollingViewModel(paymentMethodType: .blik)
         let deadlineInterval = pollingViewModel.deadline.timeIntervalSinceNow
-        XCTAssertTrue(deadlineInterval > (60 * 5) - 0.5 && deadlineInterval <= (60 * 5), "The deadline is not within the specified range")
-        XCTAssertEqual(pollingViewModel.CTA, .Localized.open_upi_app)
+        XCTAssertTrue(deadlineInterval > 60 - 0.5 && deadlineInterval <= 60, "The deadline is not within the specified range")
+        XCTAssertEqual(pollingViewModel.CTA, .Localized.blik_confirm_payment)
     }
 }

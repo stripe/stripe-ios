@@ -79,7 +79,7 @@ enum Intent {
         case .paymentIntent(let paymentIntent):
             return paymentIntent.paymentMethodOptions?.card?.requireCvcRecollection ?? false
         case .setupIntent, .checkoutSession:
-            // TODO(porter) Figure out CVC recollection flag during confirmation work
+            // CheckoutSession does not yet support CVC recollection
             return false
         }
     }
@@ -139,8 +139,17 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        case .setupIntent, .checkoutSession:
-            // TODO(porter) Figure out SFU string during confirmation work
+        case .checkoutSession(let checkoutSession):
+            switch checkoutSession.mode {
+            case .payment:
+                return checkoutSession.setupFutureUsage
+            case .setup:
+                return nil
+            case .subscription, .unknown:
+                stpAssertionFailure("subscription and unknown not implemented")
+                return nil
+            }
+        case .setupIntent:
             return nil
         }
     }
@@ -157,8 +166,9 @@ enum Intent {
                 return !setupFutureUsageValues.isEmpty
             }
             return nil
-        case .setupIntent, .checkoutSession:
-            // TODO(porter) Figure out PMO+SFU during confirmation work
+        case .checkoutSession(let checkoutSession):
+            return checkoutSession.isPaymentMethodOptionsSetupFutureUsageSet
+        case .setupIntent:
             return nil
         }
     }
@@ -183,12 +193,26 @@ enum Intent {
             }
         case .checkoutSession(let checkoutSession):
             switch checkoutSession.mode {
-            case .payment, .subscription, .unknown:
-                // TODO(porter) Figure out SFU during confirmation work
-                return false
+            case .payment:
+                guard let setupFutureUsage = checkoutSession.setupFutureUsage(for: paymentMethodType) else {
+                    return false
+                }
+                return setupFutureUsage != "none"
             case .setup:
                 return true
+            case .subscription, .unknown:
+                stpAssertionFailure("subscription and unknown not implemented")
+                return false
             }
+        }
+    }
+
+    func allowsPaymentMethodRemoval(elementsSession: STPElementsSession) -> Bool {
+        switch self {
+        case .checkoutSession(let checkoutSession):
+            return checkoutSession.customer?.canDetachPaymentMethod ?? false
+        case .paymentIntent, .setupIntent, .deferredIntent:
+            return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         }
     }
 }

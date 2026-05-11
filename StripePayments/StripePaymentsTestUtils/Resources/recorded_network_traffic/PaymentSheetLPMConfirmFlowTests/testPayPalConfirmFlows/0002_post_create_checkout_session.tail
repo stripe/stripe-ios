@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=n%2BCAyLSu28tefttWqZ0RsKnPekninsQwsOduzV2yYLNY7mHcvUkKfELptfbGP5PH3dzm7MOhFPozDImmD8MXBmtmuv70gWAScbY7NgrD%2FSgYfKaaozmIqoWFzQc%2FhEJqy2PiiORVkW0wcAMuhmMchmt4zm%2BkkB%2FgJowojX8uIBIUf6jvYJGqjS2CRPQq4FD0WWRAgCfLBHWeh3qw%2FseFaF%2BkHBLTai7gCy7OatreA%2FM%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: 76ca46483077295e9f1746afefc076f1
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:39:47 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: 7a872edbc0d37267c8aeeb13fe91450f
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=ceD5S%2BUTuA1QKoiErMBvk%2BBiJYTn35eVhXZjUPbAmTxzuZnJAvN%2BVXC%2F4zBhwQVYIKt6gU0pw1ApQjRjwsEyTv3fXttuQAG8OLHu6%2Bw2RJUIomkwwXrI8vwVJQ%2BmRHd%2BPX2YV7SW38rl7oaOIMtAHOrQzo6eEt%2BlccJ46Rwk0TJAlp%2BaFRb9Xd4RjcO9CVffolwuX2szxbodNW8bgvbctbrj0o7YbqDoqn3BSthhPk4%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Tue, 05 May 2026 03:21:17 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000
 
-{"id":"cs_test_a11pDpj7NdvcHaFG69mpwkylSMFGKvBEbECyS66VaM8SADEUGJILzcXxtD","client_secret":"cs_test_a11pDpj7NdvcHaFG69mpwkylSMFGKvBEbECyS66VaM8SADEUGJILzcXxtD_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt"}
+{"id":"cs_test_a1dFQRkhxWld0coD4Onop3BRwsepbjccqmKV5I3tpxisQpJxmjBE8XxOXT","client_secret":"cs_test_a1dFQRkhxWld0coD4Onop3BRwsepbjccqmKV5I3tpxisQpJxmjBE8XxOXT_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51JtgfQKG6vc7r7YCU0qQNOkDaaHrEgeHgGKrJMNfuWwaKgXMLzPUA1f8ZlCNPonIROLOnzpUnJK1C1xFH3M3Mz8X00Q6O4GfUt"}

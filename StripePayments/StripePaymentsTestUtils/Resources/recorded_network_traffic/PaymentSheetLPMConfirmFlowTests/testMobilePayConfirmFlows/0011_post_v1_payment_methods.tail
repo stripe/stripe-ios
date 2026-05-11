@@ -3,31 +3,33 @@ https:\/\/api\.stripe\.com\/v1\/payment_methods$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=arV12wJglFUhQW-8ze6vTY4-9bpjwrJxJOAC681RdQkeeKgSb3-ymKjeeVCTSdpInVBaKDi5O-fEZblE
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=3QQp8THVsC76MPvJVenvxZgLAU-HdQl3eq0MfZIeo7nOY7vUXn2oD4YlPMvv4O0yuQ07Ohjyj9ZSCdew
 Server: nginx
 Cache-Control: no-cache, no-store
-x-wc: ABGHIJ
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=3QQp8THVsC76MPvJVenvxZgLAU-HdQl3eq0MfZIeo7nOY7vUXn2oD4YlPMvv4O0yuQ07Ohjyj9ZSCdew&t=1"
+x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=3QQp8THVsC76MPvJVenvxZgLAU-HdQl3eq0MfZIeo7nOY7vUXn2oD4YlPMvv4O0yuQ07Ohjyj9ZSCdew&t=1"}],"include_subdomains":true}
+request-id: req_iFCHTWSod4kNGE
 x-stripe-routing-context-priority-tier: api-testmode
-request-id: req_pGy5iihOceC7oQ
-Content-Length: 516
+Content-Length: 556
 Vary: Origin
-Date: Mon, 16 Mar 2026 18:38:57 GMT
-original-request: req_pGy5iihOceC7oQ
+Date: Tue, 05 May 2026 03:20:19 GMT
+original-request: req_iFCHTWSod4kNGE
 stripe-version: 2020-08-27
-idempotency-key: 51131d68-6e4b-413d-b615-996740f4cd44
+idempotency-key: 0a7d78bf-af16-4479-baf0-1b9e71553c0b
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
 Content-Type: application/json
-X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%40example\.com&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_intent_creation_flow]=standard&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=mobilepay
+X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%40example\.com&client_attribution_metadata\[checkout_session_id]=cs_test_a1SORqiBC2ut6fIwepjKnOgi2zKVC6mnLmFb1FmPai4AeQCb2VzgZ4pGmS&client_attribution_metadata\[client_session_id]=.*&client_attribution_metadata\[elements_session_config_id]=.*&client_attribution_metadata\[merchant_integration_source]=elements&client_attribution_metadata\[merchant_integration_subtype]=mobile&client_attribution_metadata\[merchant_integration_version]=.*&client_attribution_metadata\[payment_method_selection_flow]=automatic&guid=.*&muid=.*&payment_user_agent=.*&sid=.*&type=mobilepay
 
 {
   "object" : "payment_method",
-  "id" : "pm_1TBg2XKG6vc7r7YCUOJhujAl",
+  "id" : "pm_1TTZWxKG6vc7r7YCyvccqMyE",
   "billing_details" : {
     "email" : "test@example.com",
     "phone" : null,
@@ -46,9 +48,10 @@ X-Stripe-Mock-Request: allow_redisplay=unspecified&billing_details\[email]=test%
   "mobilepay" : {
 
   },
-  "created" : 1773686337,
+  "created" : 1777951219,
   "allow_redisplay" : "unspecified",
-  "type" : "mobilepay",
+  "shared_payment_granted_token" : null,
   "customer" : null,
+  "type" : "mobilepay",
   "customer_account" : null
 }

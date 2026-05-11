@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=26wMjek%2FjWCHC0xcB7O0PewndH49%2Fs4VqezIk6%2FabqeR7JmFWFKARCGolq9amcbUqc01kkaROHqcIrmoERCfKnaMVuTNtqs5yQ%2FS6jeSNCIaA1Ey4JfgPiBZzu6Q92jpwlXCFr0tDTrpdCX3XCygdv1%2FzTYjiLRStNleme522JLoVAJs8MnEX%2B2nqzOhg2QONU2X5b%2FBZGh81J3rrUJpQ7m6wnCIJ0ZJsLNm93WE%2FKY%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: f3854700a09276caa92f9896f6636e6a
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:47:18 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: 9ca6ee6ccb52dca50c20f7a896ad1baf
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=PLddIqcWBpzlF31r9SRABU7GkZ69yQkibRWJGnBYOko%2FjUFmmmW3UX3%2Fm30mbofZ2i%2BlkvMCvvwG4lesrh%2BrhPdaAg7PycZYbNskVJoQSz9DV5V2nOJboAmc7VHbof6SBWQhoE93RHQthtzJSy7%2BgeghmzPYfbkBBeT%2FgGsPa5%2BAu1jzdj2pzGPKZ8SQhuO4hFyjoVKWPMq%2F%2BPyV9ST4i0mxxwnnHp2qCIHH6osGUj4%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Tue, 05 May 2026 03:29:41 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000
 
-{"id":"cs_test_a13WmtHVwaPvozO1HZMt6z3g4tccIPWTymKgRCg5cjQEd134M8maWzxovE","client_secret":"cs_test_a13WmtHVwaPvozO1HZMt6z3g4tccIPWTymKgRCg5cjQEd134M8maWzxovE_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51KmkHbGoesj9fw9QAZJlz1qY4dns8nFmLKc7rXiWKAIj8QU7NPFPwSY1h8mqRaFRKQ9njs9pVJoo2jhN6ZKSDA4h00mjcbGF7b"}
+{"id":"cs_test_a1qfZOAQ8iltPuT0mrfJXrWkW8fvdeMROnlK802jf7dD9LmIe1sIT8VCtt","client_secret":"cs_test_a1qfZOAQ8iltPuT0mrfJXrWkW8fvdeMROnlK802jf7dD9LmIe1sIT8VCtt_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51KmkHbGoesj9fw9QAZJlz1qY4dns8nFmLKc7rXiWKAIj8QU7NPFPwSY1h8mqRaFRKQ9njs9pVJoo2jhN6ZKSDA4h00mjcbGF7b"}

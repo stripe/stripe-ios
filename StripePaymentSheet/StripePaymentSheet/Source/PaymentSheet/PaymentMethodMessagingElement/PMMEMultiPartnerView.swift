@@ -23,9 +23,10 @@ class PMMEMultiPartnerView: UIView {
     private let mainStack = UIStackView()
 
     private lazy var promotionTextView: UITextView = {
-        let textView = UITextView()
+        let textView = LinkOpeningTextView()
         textView.isScrollEnabled = false
         textView.isEditable = false
+        textView.isSelectable = false
         textView.backgroundColor = .clear
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0

@@ -15,7 +15,7 @@ enum SelectedPaymentSource {
     case link
 
     /// Apple Pay was selected as the payment method.
-    case applePay(StripeAPI.PaymentMethod)
+    case applePay(StripeAPI.PaymentMethod, KycInfo?)
 
     var analyticsValue: String {
         switch self {

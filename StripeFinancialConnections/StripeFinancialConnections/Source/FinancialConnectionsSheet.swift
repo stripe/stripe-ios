@@ -73,9 +73,11 @@ final public class FinancialConnectionsSheet {
         }
 
         public var style: UserInterfaceStyle
+        @_spi(STP) public var linkBrand: LinkBrand?
 
         public init(style: UserInterfaceStyle = .automatic) {
             self.style = style
+            self.linkBrand = nil
         }
     }
 

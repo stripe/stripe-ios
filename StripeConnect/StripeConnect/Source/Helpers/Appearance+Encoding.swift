@@ -20,11 +20,28 @@ extension Appearance {
         dict.mergeAssertingOnOverwrites(typography.asDictionary(traitCollection: traitCollection))
         dict.mergeAssertingOnOverwrites(buttonPrimary.asDictionary(keyPrefix: "buttonPrimary"))
         dict.mergeAssertingOnOverwrites(buttonSecondary.asDictionary(keyPrefix: "buttonSecondary"))
+        dict.mergeAssertingOnOverwrites(buttonDanger.asDictionary(keyPrefix: "buttonDanger"))
+        dict["buttonPaddingX"] = buttonDefaults.paddingHorizontal?.pxString
+        dict["buttonPaddingY"] = buttonDefaults.paddingVertical?.pxString
+        if let buttonLabelTypography = buttonDefaults.labelTypography {
+            dict.mergeAssertingOnOverwrites(buttonLabelTypography.asDictionary(keyPrefix: "buttonLabel", using: traitCollection))
+        }
+
         dict.mergeAssertingOnOverwrites(badgeNeutral.asDictionary(keyPrefix: "badgeNeutral"))
         dict.mergeAssertingOnOverwrites(badgeSuccess.asDictionary(keyPrefix: "badgeSuccess"))
         dict.mergeAssertingOnOverwrites(badgeWarning.asDictionary(keyPrefix: "badgeWarning"))
         dict.mergeAssertingOnOverwrites(badgeDanger.asDictionary(keyPrefix: "badgeDanger"))
+        dict["badgePaddingX"] = badgeDefaults.paddingHorizontal?.pxString
+        dict["badgePaddingY"] = badgeDefaults.paddingVertical?.pxString
+        if let labelTypography = badgeDefaults.labelTypography {
+            dict.mergeAssertingOnOverwrites(labelTypography.asDictionary(keyPrefix: "badgeLabel", using: traitCollection))
+        }
+
         dict.mergeAssertingOnOverwrites(cornerRadius.asDictionary())
+        dict.mergeAssertingOnOverwrites(form.asDictionary(traitCollection: traitCollection))
+        dict["tableRowPaddingY"] = tableRowPaddingY?.pxString
+        dict.mergeAssertingOnOverwrites(actionPrimaryStyle.asDictionary(keyPrefix: "actionPrimary"))
+        dict.mergeAssertingOnOverwrites(actionSecondaryStyle.asDictionary(keyPrefix: "actionSecondary"))
 
         dict["spacingUnit"] = spacingUnit?.pxString
 
@@ -153,6 +170,26 @@ extension Appearance.Typography.Style {
             dict["\(keyPrefix)FontSize"] = UIFontMetrics.default.scaledValue(for: fontSize, compatibleWith: traitCollection).pxString
         }
         dict["\(keyPrefix)FontWeight"] = weight?.cssValue
+        dict["\(keyPrefix)TextTransform"] = textTransform?.rawValue
+        return dict
+    }
+}
+
+@available(iOS 15, *)
+extension Appearance.Form {
+    func asDictionary(traitCollection: UITraitCollection) -> [String: String] {
+        var dict: [String: String] = [:]
+        dict["formPlaceholderTextColor"] = colorPlaceholder?.resolvedColor(with: traitCollection).cssRgbValue
+        dict["inputFieldPaddingX"] = horizontalPadding?.pxString
+        dict["inputFieldPaddingY"] = verticalPadding?.pxString
+        return dict
+    }
+}
+
+@available(iOS 15, *)
+extension Appearance.Action {
+    func asDictionary(keyPrefix: String) -> [String: String] {
+        var dict: [String: String] = [:]
         dict["\(keyPrefix)TextTransform"] = textTransform?.rawValue
         return dict
     }

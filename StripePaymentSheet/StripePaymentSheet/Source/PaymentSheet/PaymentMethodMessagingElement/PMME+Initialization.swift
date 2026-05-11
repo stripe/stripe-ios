@@ -118,7 +118,7 @@ extension PaymentMethodMessagingElement {
     private static func assertAndLogMissingField(_ missingField: String, apiClient: STPAPIClient) {
         stpAssertionFailure("Missing expected field from API response: \(missingField)")
         let error = PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
-        let errorAnalytic = ErrorAnalytic(event: .unexpectedPMMEError, error: error, additionalNonPIIParams: ["missing_field": "info_url"])
+        let errorAnalytic = ErrorAnalytic(event: .unexpectedPMMEError, error: error, additionalNonPIIParams: ["missing_field": missingField])
         STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
     }
 
@@ -136,9 +136,11 @@ extension PaymentMethodMessagingElement {
                     //     since the device interface style may change at any time
                     //     and we don't want to have to re-fetch the images
                     taskGroup.addTask {
-                        async let lightImage = downloadManager.downloadImage(url: image.lightThemePng.url)
-                        async let darkImage = downloadManager.downloadImage(url: image.darkThemePng.url)
-                        let (light, dark) = try await (lightImage, darkImage)
+                        let lightImageTask = Task { try await downloadManager.downloadImage(url: image.lightThemePng.url) }
+                        let darkImageTask = Task { try await downloadManager.downloadImage(url: image.darkThemePng.url) }
+                        defer { lightImageTask.cancel(); darkImageTask.cancel() }
+                        let light = try await lightImageTask.value
+                        let dark = try await darkImageTask.value
                         return (
                             index: i,
                             iconSet: LogoSet(

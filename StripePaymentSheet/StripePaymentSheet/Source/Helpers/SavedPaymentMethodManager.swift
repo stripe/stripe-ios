@@ -18,6 +18,7 @@ final class SavedPaymentMethodManager {
 
     let configuration: PaymentElementConfiguration
     let elementsSession: STPElementsSession
+    let intent: Intent
 
     private lazy var ephemeralKey: String? = {
         guard let ephemeralKey = configuration.customer?.ephemeralKeySecret(basedOn: elementsSession) else {
@@ -31,9 +32,10 @@ final class SavedPaymentMethodManager {
         return ephemeralKey
     }()
 
-    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession) {
+    init(configuration: PaymentElementConfiguration, elementsSession: STPElementsSession, intent: Intent) {
         self.configuration = configuration
         self.elementsSession = elementsSession
+        self.intent = intent
     }
 
     func update(paymentMethod: STPPaymentMethod,
@@ -48,36 +50,46 @@ final class SavedPaymentMethodManager {
     }
 
     func detach(paymentMethod: STPPaymentMethod) {
-        guard let ephemeralKey else {
-            return
-        }
-
-        if let customerAccessProvider = configuration.customer?.customerAccessProvider,
-           case .customerSession(let customerSessionClientSecret) = customerAccessProvider,
-           let customerId = configuration.customer?.id {
-            if paymentMethod.type == .card {
-                configuration.apiClient.detachPaymentMethodRemoveDuplicates(
+        switch intent {
+        case .checkoutSession(let checkoutSession):
+            Task {
+                try? await configuration.apiClient.detachPaymentMethod(
                     paymentMethod.stripeId,
-                    customerId: customerId,
-                    fromCustomerUsing: ephemeralKey,
-                    withCustomerSessionClientSecret: customerSessionClientSecret
-                ) { (_) in
-                    // no-op
+                    fromCheckoutSession: checkoutSession.stripeId
+                )
+            }
+        case .paymentIntent, .setupIntent, .deferredIntent:
+            guard let ephemeralKey else {
+                return
+            }
+
+            if let customerAccessProvider = configuration.customer?.customerAccessProvider,
+               case .customerSession(let customerSessionClientSecret) = customerAccessProvider,
+               let customerId = configuration.customer?.id {
+                if paymentMethod.type == .card {
+                    configuration.apiClient.detachPaymentMethodRemoveDuplicates(
+                        paymentMethod.stripeId,
+                        customerId: customerId,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: customerSessionClientSecret
+                    ) { (_) in
+                        // no-op
+                    }
+                } else {
+                    configuration.apiClient.detachPaymentMethod(
+                        paymentMethod.stripeId,
+                        fromCustomerUsing: ephemeralKey,
+                        withCustomerSessionClientSecret: customerSessionClientSecret) { (_) in
+                            // no-op
+                        }
                 }
             } else {
                 configuration.apiClient.detachPaymentMethod(
                     paymentMethod.stripeId,
-                    fromCustomerUsing: ephemeralKey,
-                    withCustomerSessionClientSecret: customerSessionClientSecret) { (_) in
+                    fromCustomerUsing: ephemeralKey
+                ) { (_) in
                     // no-op
                 }
-            }
-        } else {
-            configuration.apiClient.detachPaymentMethod(
-                paymentMethod.stripeId,
-                fromCustomerUsing: ephemeralKey
-            ) { (_) in
-                // no-op
             }
         }
     }

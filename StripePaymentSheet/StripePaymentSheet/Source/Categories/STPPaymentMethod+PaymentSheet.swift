@@ -107,6 +107,10 @@ extension STPPaymentMethod {
             return nil
         }
 
+        if case .generic(let genericDetails) = linkPaymentDetails {
+            return genericDetails.formattedDisplayText
+        }
+
         let components = [linkPaymentDetails.label, linkPaymentDetails.sublabel].compactMap { $0 }
         return components.joined(separator: " ")
     }
@@ -157,6 +161,8 @@ private extension LinkPaymentDetails {
             return makeCardAccessibilityLabel(cardBrand: cardDetails.brand, last4: cardDetails.last4)
         case .bankAccount(let bankDetails):
             return String(format: String.Localized.bank_name_account_ending_in_last_4, bankDetails.bankName, bankDetails.last4)
+        case .generic(let genericDetails):
+            return genericDetails.formattedDisplayText
         }
     }
 }

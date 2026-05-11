@@ -37,7 +37,9 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private var savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?
     private var shouldShowApplePay: Bool
     private var shouldShowLink: Bool
+    private var linkBrand: LinkBrand
     private var paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+    private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -55,12 +57,14 @@ class VerticalPaymentMethodListViewController: UIViewController {
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         shouldShowApplePay: Bool,
         shouldShowLink: Bool,
+        linkBrand: LinkBrand = .link,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         overrideHeaderView: UIView?,
         appearance: PaymentSheet.Appearance,
         currency: String?,
         amount: Int?,
         incentive: PaymentMethodIncentive?,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         delegate: VerticalPaymentMethodListViewControllerDelegate
     ) {
         self.appearance = appearance
@@ -73,7 +77,9 @@ class VerticalPaymentMethodListViewController: UIViewController {
         self.savedPaymentMethodAccessoryType = savedPaymentMethodAccessoryType
         self.shouldShowApplePay = shouldShowApplePay
         self.shouldShowLink = shouldShowLink
+        self.linkBrand = linkBrand
         self.paymentMethodTypes = paymentMethodTypes
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
 
         super.init(nibName: nil, bundle: nil)
         self.renderContent()
@@ -141,7 +147,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         let link: RowButton? = {
             guard shouldShowLink else { return nil }
             let selection = RowButtonType.link
-            let rowButton = RowButton.makeForLink(appearance: appearance) { [weak self] in
+            let rowButton = RowButton.makeForLink(appearance: appearance, linkBrand: linkBrand) { [weak self] in
                 self?.didTap(rowButton: $0, selection: .link)
             }
             if initialSelection == selection {
@@ -256,7 +262,6 @@ class VerticalPaymentMethodListViewController: UIViewController {
         self.incentive = incentive
         self.refreshContent()
     }
-
     static func makeSectionLabel(text: String, appearance: PaymentSheet.Appearance) -> UILabel {
         let label = UILabel()
         label.font = appearance.scaledFont(for: appearance.font.base.regular, style: .subheadline, maximumPointSize: 25)

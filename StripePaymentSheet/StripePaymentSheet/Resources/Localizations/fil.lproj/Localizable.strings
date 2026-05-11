@@ -40,8 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Bumili ngayon o magbayad sa ibang pagkakataon gamit ang Klarna";
 
-"Buy using a UPI ID" = "Bumili gamit ang isang UPI ID";
-
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Sa pagkumpirma sa iyong pagbabayad sa PayPal, pinapayagan mo ang %@ na singilin ang iyong PayPal account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Sa pagpapatuloy sa Amazon Pay, pinahihintulutan mo ang %@ na singilin ang iyong Amazon Pay account para sa mga pagbabayad sa hinaharap alinsunod sa kanilang mga tuntunin.";
@@ -92,6 +90,8 @@
 
 "Card details cannot be changed." = "Hindi puwedeng baguhin ang mga detalye ng kard.";
 
+"Card number. Supported cards include %@" = "Numero ng card. Kabilang sa mga suportadong card ang %@";
+
 "Change" = "Palitan";
 
 "Choose a card brand" = "Pumili ng tatak ng card";
@@ -131,6 +131,8 @@
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Manwal na ilagay ang address";
+
+"Exchange rate and fees of your bank may apply." = "Maaaring mag-apply ang rate ng palitan at mga bayarin sa iyong bangko.";
 
 "FPX Bank" = "FPX Bank";
 
@@ -179,8 +181,6 @@
 "Only card brand can be changed." = "Ang brand ng kard lamang ang puwedeng palitan.";
 
 "Open to see more information." = "Buksan upang makita ang karagdagang impormasyon.";
-
-"Open your UPI app to approve your payment within %@" = "Buksan ang iyong UPI app para aprubahan ang iyong pagbabayad sa loob ng  %@";
 
 "Or" = "O";
 

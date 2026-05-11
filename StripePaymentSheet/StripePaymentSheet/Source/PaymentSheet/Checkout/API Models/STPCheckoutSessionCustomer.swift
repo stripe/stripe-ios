@@ -17,6 +17,9 @@ struct STPCheckoutSessionCustomer {
     /// Saved payment methods for this customer.
     let paymentMethods: [STPPaymentMethod]
 
+    /// Whether the customer can detach saved payment methods via payment pages.
+    let canDetachPaymentMethod: Bool
+
     /// Customer email address.
     let email: String?
 
@@ -39,6 +42,7 @@ struct STPCheckoutSessionCustomer {
         return STPCheckoutSessionCustomer(
             id: id,
             paymentMethods: paymentMethods,
+            canDetachPaymentMethod: dict["can_detach_payment_method"] as? Bool ?? false,
             email: dict["email"] as? String,
             name: dict["name"] as? String,
             phone: dict["phone"] as? String

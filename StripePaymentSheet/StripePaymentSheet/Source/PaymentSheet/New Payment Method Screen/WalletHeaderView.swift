@@ -10,6 +10,8 @@ import Foundation
 import PassKit
 import UIKit
 
+@_spi(STP) import StripeCore
+@_spi(STP) import StripePayments
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
@@ -59,10 +61,11 @@ extension PaymentSheetViewController {
         private let appearance: PaymentSheet.Appearance
         private let applePayButtonType: PKPaymentButtonType
         private let isPaymentIntent: Bool
+        let linkBrand: LinkBrand
         private var stackView = UIStackView()
 
         private lazy var payWithLinkButton: PayWithLinkButton = {
-            let button = PayWithLinkButton()
+            let button = PayWithLinkButton(brand: linkBrand)
             if appearance.cornerRadius == nil, LiquidGlassDetector.isEnabledInMerchantApp {
                 button.ios26_applyCapsuleCornerConfiguration()
             } else {
@@ -109,11 +112,13 @@ extension PaymentSheetViewController {
         init(options: WalletOptions,
              appearance: PaymentSheet.Appearance,
              applePayButtonType: PKPaymentButtonType = .plain,
+             linkBrand: LinkBrand = .link,
              isPaymentIntent: Bool = true,
              delegate: WalletHeaderViewDelegate?) {
             self.options = options
             self.appearance = appearance
             self.applePayButtonType = applePayButtonType
+            self.linkBrand = linkBrand
             self.isPaymentIntent = isPaymentIntent
             self.delegate = delegate
             super.init(frame: .zero)

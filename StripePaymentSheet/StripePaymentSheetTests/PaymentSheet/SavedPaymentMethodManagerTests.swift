@@ -32,7 +32,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         var configuration = configuration
         configuration.customer = .init(id: "cus_test123", ephemeralKeySecret: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: ._testCardValue())
+        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: ._testCardValue(), intent: ._testValue())
         let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
                            with: STPPaymentMethodUpdateParams())
 
@@ -60,7 +60,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
             ],
         ])
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: ._testValue())
         let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
                            with: STPPaymentMethodUpdateParams())
 
@@ -77,7 +77,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let expectation = stubDetachPaymentMethod(paymentMethod: STPPaymentMethod.stubbedPaymentMethod(),
                                                   ephemeralKey: ephemeralKey)
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: ._testValue(paymentMethodTypes: ["card"]))
+        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: ._testValue(paymentMethodTypes: ["card"]), intent: ._testValue())
         sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [expectation], timeout: 5.0)
@@ -106,10 +106,36 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
                                              ],
                                          ])
 
-        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession)
+        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: elementsSession, intent: ._testValue())
         sut.detach(paymentMethod: paymentMethod)
 
         wait(for: [listPaymentMethodsExpectation, detachExpectation], timeout: 5.0)
+    }
+
+    func testDetachPaymentMethod_checkoutSession() {
+        let checkoutSessionId = "cs_test_checkout_session"
+        let detachExpectation = stubCheckoutSessionDetachPaymentMethod(
+            checkoutSessionId: checkoutSessionId,
+            paymentMethodId: paymentMethod.stripeId
+        )
+
+        let checkoutSessionJSON: [String: Any] = [
+            "session_id": checkoutSessionId,
+            "livemode": false,
+            "mode": "payment",
+            "payment_status": "unpaid",
+            "payment_method_types": ["card"],
+        ]
+        let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: checkoutSessionJSON)!
+
+        let sut = SavedPaymentMethodManager(
+            configuration: configuration,
+            elementsSession: ._testValue(paymentMethodTypes: ["card"]),
+            intent: .checkoutSession(checkoutSession)
+        )
+        sut.detach(paymentMethod: paymentMethod)
+
+        wait(for: [detachExpectation], timeout: 5.0)
     }
 }
 
@@ -157,6 +183,42 @@ extension SavedPaymentMethodManagerTests {
                            ephemeralKey: ephemeralKey,
                            httpMethod: "GET",
                            responseObject: STPPaymentMethod.paymentMethodsJson)
+    }
+
+    func stubCheckoutSessionDetachPaymentMethod(
+        checkoutSessionId: String,
+        paymentMethodId: String
+    ) -> XCTestExpectation {
+        let exp = expectation(description: "POST payment_pages/\(checkoutSessionId) detaches payment method")
+
+        stub { urlRequest in
+            guard urlRequest.url?.absoluteString.contains("/payment_pages/\(checkoutSessionId)") == true,
+                  urlRequest.httpMethod == "POST",
+                  let body = urlRequest.httpBodyOrBodyStream,
+                  let bodyString = String(data: body, encoding: .utf8)
+            else {
+                return false
+            }
+
+            return bodyString.contains("payment_method_to_detach=\(paymentMethodId)")
+        } response: { _ in
+            DispatchQueue.main.async {
+                exp.fulfill()
+            }
+            return HTTPStubsResponse(
+                jsonObject: [
+                    "session_id": checkoutSessionId,
+                    "livemode": false,
+                    "mode": "payment",
+                    "payment_status": "unpaid",
+                    "payment_method_types": ["card"],
+                ],
+                statusCode: 200,
+                headers: nil
+            )
+        }
+
+        return exp
     }
 }
 

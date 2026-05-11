@@ -6,15 +6,15 @@
 //
 
 @_spi(STP) import StripePayments
-@_spi(CheckoutSessionsPreview) @_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 15.0, *)
 struct CheckoutCartPaymentButton: View {
-    let checkout: Checkout
+    @ObservedObject var checkout: Checkout
     let onDismiss: () -> Void
 
-    private var session: Checkout.Session? { checkout.session }
+    private var session: Checkout.Session { checkout.state.session }
 
     @State private var paymentResult: PaymentSheetResult?
 
@@ -73,7 +73,7 @@ struct CheckoutCartPaymentButton: View {
                     HStack {
                         Text("Checkout")
                         Spacer()
-                        if let totals = session?.totals, let currency = session?.currency {
+                        if let totals = session.totals, let currency = session.currency {
                             Text(formatCartCurrency(amount: totals.total, currency: currency))
                         }
                     }
@@ -97,8 +97,6 @@ struct CheckoutCartPaymentButton: View {
     private func makePaymentSheet() -> PaymentSheet {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "payments-example://stripe-redirect"
-        configuration.billingDetailsCollectionConfiguration.email = .always
-        configuration.defaultBillingDetails.email = "jenny@example.com"
         return PaymentSheet(checkout: checkout, configuration: configuration)
     }
 }

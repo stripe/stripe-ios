@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "Ofullständigt telefonnummer";
 
-"Invalid UPI ID" = "Ogiltigt UPI ID";
-
 "Island" = "Ö";
 
 "Last" = "Efternamn";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "Det angivna clearingnumret (sort code) är ogiltigt.";
 
 "Town or city" = "Stad";
-
-"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Det gick inte att analysera telefonnumret";
 

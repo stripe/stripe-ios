@@ -428,11 +428,11 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 case .applePay:
                     let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.applePay()
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
-                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: "apple_pay")
+                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(paymentOptionSelection: paymentOptionSelection)
                         self.error = error
                         self.updateUI(animated: true)
                     } onSuccess: {
-                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: "apple_pay")
+                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(paymentOptionSelection: paymentOptionSelection)
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
                             self.csCompletion?(.selected(paymentOptionSelection))
                         }
@@ -440,17 +440,17 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
 
                 case .saved(let paymentMethod, _):
                     let paymentOptionSelection = CustomerSheet.PaymentOptionSelection.paymentMethod(paymentMethod)
-                    let type = STPPaymentMethod.string(from: paymentMethod.type)
                     var syncDefaultEnabled: Bool?
                     if case .customerSession = self.customerSheetDataSource.dataSource {
                         syncDefaultEnabled = self.paymentMethodSyncDefault
                     }
+                    let cardArtEnabled = configuration.appearance.cardArtEnabled
                     setSelectablePaymentMethodAnimateButton(paymentOptionSelection: paymentOptionSelection) { error in
-                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(type: type, syncDefaultEnabled: syncDefaultEnabled)
+                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(paymentOptionSelection: paymentOptionSelection, cardArtEnabled: cardArtEnabled, syncDefaultEnabled: syncDefaultEnabled)
                         self.error = error
                         self.updateUI(animated: true)
                     } onSuccess: {
-                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(type: type, syncDefaultEnabled: syncDefaultEnabled)
+                        STPAnalyticsClient.sharedClient.logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(paymentOptionSelection: paymentOptionSelection, cardArtEnabled: cardArtEnabled, syncDefaultEnabled: syncDefaultEnabled)
                         self.delegate?.savedPaymentMethodsViewControllerDidFinish(self) {
                             self.csCompletion?(.selected(paymentOptionSelection))
                         }

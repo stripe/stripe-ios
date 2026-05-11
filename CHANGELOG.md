@@ -1,11 +1,56 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
-## X.Y.Z - changes pending release 
+## X.Y.Z - changes pending release
+### PaymentSheet
+* [Fixed] Fixed a crash due to parameter packs being unsupported.
+
+### CryptoOnramp (Alpha)
+* [Added] Added API models for upcoming EU support. 
+* [Added] Added `birthCountry`, `birthCity`, and `nationalities` properties to `KycInfo`, required for EU customers.
+* [Added] Added `CryptoOnrampCoordinator` APIs for EU support: `retrieveMissingIdentifiers()`, `submitIdentifiers(_:)`, and `presentCRSCARFDeclaration(from:)`.
+
+### PaymentSheet
+* [Fixed] Changed `@_spi(STP)` exposure of `LinkAppearance` and `VerifyKYCResult` to `@_spi(CryptoOnrampAlpha)`.
+
+## 25.13.0 2026-05-04
+### PaymentSheet
+* [Fixed] Fixed an issue where `paymentMethodOrder` did not apply to custom payment methods due to case-sensitive matching.
+
+## 25.12.0 2026-04-27
+### Identity
+* [Improved] Improved StripeIdentity analytics with richer error details and screen/camera context to help debug verification flows.
+
+### All
+* [Removed] Removed UPI support across the SDK.
+
+### PaymentSheet
+* [Fixed] Fixed an issue where `LinkController` used the shared `STPAPIClient` instead of the `apiClient` specified in the caller, affecting apps using multiple API client instances.
+* [Fixed] Card brand images next to the card number field are now exposed to screen readers via the field's accessibility label (WCAG 2.2 § 1.1.1).
+
+### Connect
+* [Changed] [#66351](https://github.com/stripe/stripe-ios/pull/6351) Theming tokens in connect embedded components is now GA.
+
+### CryptoOnramp (Alpha)
+* [Fixed] Fixed an issue (#6363) in which StripeCryptoOnramp was not properly exposed via Swift Package Manager.
+
+## 25.11.0 2026-04-13
+### PaymentSheet
+* [Added] Added support for Pay by Bank payments (GA in GB, private preview in EU).
+
+### Identity
+* [Changed] Updated the Identity example app playground to use the latest VerificationSession API and request parameters.
+
+## 25.10.0 2026-04-06
+### AddressElement
+* [Added] Added state dropdown support for BR.
+ 
 ### Payments
 * [Fixed] Fixed an issue introduced in 25.8.0 where manually closing a webview 3ds2 challenge after failing the challenge and before it's automatically dismissed could result in a succeeded result.
-* [Fixed] Fixed a crash due to parameter packs being unsupported.
 * [Fixed] Improved loading times for integrations that have Link disabled.
+
+### Connect
+* [Added] [#6201](https://github.com/stripe/stripe-ios/pull/6201) Added the types for new theming tokens in Connect Embedded Components and mapped them to the corresponding variable in ConnectJS
 
 ## 25.9.0 2026-03-24
 ### PaymentSheet

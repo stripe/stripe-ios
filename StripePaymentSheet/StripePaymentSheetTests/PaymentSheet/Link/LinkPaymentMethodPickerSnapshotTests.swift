@@ -58,7 +58,7 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
 
         let picker = LinkPaymentMethodPicker()
         picker.dataSource = mockDataSource
-        picker.supportedPaymentMethodTypes = [.card]
+        picker.supportedPaymentMethodTypes = [ParsedEnum(.card)]
         picker.layoutSubviews()
         picker.setExpanded(true, animated: false)
 
@@ -110,6 +110,19 @@ class LinkPaymentMethodPickerSnapshotTests: STPSnapshotTestCase {
         let picker = LinkPaymentMethodPicker()
         picker.dataSource = mockDataSource
         picker.layoutSubviews()
+
+        verify(picker)
+    }
+
+    func testUnknownPaymentMethodWithDisplayMetadata() {
+        let paymentMethods = LinkStubs.paymentMethods()
+        let mockDataSource = MockDataSource(paymentMethods: paymentMethods)
+        mockDataSource.selectedIndex = LinkStubs.PaymentMethodIndices.unknownWithDisplay
+
+        let picker = LinkPaymentMethodPicker()
+        picker.dataSource = mockDataSource
+        picker.layoutSubviews()
+        picker.setExpanded(true, animated: false)
 
         verify(picker)
     }

@@ -40,8 +40,6 @@
 
 "Buy now or pay later with Klarna" = "Kjøp nå eller betal senere med Klarna";
 
-"Buy using a UPI ID" = "Kjøp med UPI-ID";
-
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved å bekrefte betalingen med PayPal, tillater du %@ å belaste PayPal for fremtidige betalinger i samsvar med vilkårene deres.";
 
 "By continuing to Amazon Pay, you allow %@ to charge your Amazon Pay account for future payments in accordance with their terms." = "Ved å fortsette til Amazon Pay, tillater du %@ å belaste Amazon Pay-kontoen din for fremtidige betalinger i samsvar med vilkårene deres.";
@@ -92,6 +90,8 @@
 
 "Card details cannot be changed." = "Kortopplysninger kan ikke endres.";
 
+"Card number. Supported cards include %@" = "Kortnummer. Støttede kort inkluderer %@";
+
 "Change" = "Endre";
 
 "Choose a card brand" = "Velg et kortmerke";
@@ -131,6 +131,8 @@
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Skriv inn adresse manuelt";
+
+"Exchange rate and fees of your bank may apply." = "Bankens vekslingskurs og gebyrer kan påløpe.";
 
 "FPX Bank" = "FPX Bank";
 
@@ -179,8 +181,6 @@
 "Only card brand can be changed." = "Bare kortmerket kan endres.";
 
 "Open to see more information." = "Åpne for å se mer informasjon.";
-
-"Open your UPI app to approve your payment within %@" = "Åpne UPI-appen for å godkjenne betalingen innen %@";
 
 "Or" = "Eller";
 

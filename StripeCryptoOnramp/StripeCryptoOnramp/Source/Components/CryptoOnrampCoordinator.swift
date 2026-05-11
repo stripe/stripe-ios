@@ -12,7 +12,7 @@ import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeIdentity
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
@@ -81,6 +81,30 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, the user has already attached KYC info, or an API error occurs.
     func attachKYCInfo(info: KycInfo) async throws
 
+    /// Retrieves compliance identifiers still required for MiCA and CRS/CARF compliance.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Returns: The missing compliance identifier requirements.
+    /// Throws if an authenticated Link user is not available, KYC information has not yet been collected, or an API error occurs.
+    func retrieveMissingIdentifiers() async throws -> ComplianceIdentifierRequirements
+
+    /// Submits compliance identifiers for MiCA and CRS/CARF compliance.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter identifiers: The compliance identifiers to submit.
+    /// - Returns: A result describing whether the identifiers were accepted, and what remains missing or invalid if not.
+    /// Throws if an authenticated Link user is not available, or an API error occurs.
+    func submitIdentifiers(_ identifiers: [ComplianceIdentifier]) async throws -> SubmitIdentifiersResult
+
+    /// Presents the CRS/CARF declaration for review and records acceptance if the user confirms.
+    /// Requires an authenticated Link user.
+    ///
+    /// - Parameter viewController: The view controller from which to present the declaration.
+    /// - Returns: A `CRSCARFDeclarationResult` indicating whether the user confirmed or canceled.
+    /// Throws if an authenticated Link user is not available, EU identifiers have not been submitted, or an API error occurs.
+    @MainActor
+    func presentCRSCARFDeclaration(from viewController: UIViewController) async throws -> CRSCARFDeclarationResult
+
     /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.
     ///
     /// - Parameters:
@@ -113,11 +137,12 @@ protocol CryptoOnrampCoordinatorProtocol {
     ///
     /// - Parameters:
     ///   - type: The payment method type to collect. For `.card`, `.bankAccount`, and `.cardAndBankAccount`, this presents Link. For `.applePay(paymentRequest:)`, this presents Apple Pay using the provided `PKPaymentRequest`.
+    ///     If the caller wants Apple Pay billing name and/or address returned in `.completed`, the provided `PKPaymentRequest` must request `.name` and/or `.postalAddress` in `requiredBillingContactFields`.
     ///   - viewController: The view controller from which to present the UI.
-    /// - Returns: A `PaymentMethodDisplayData` describing the user’s selection, or `nil` if the user cancels.
+    /// - Returns: A `CollectPaymentMethodResult` describing the user’s selection.
     /// Throws an error if presentation or payment method collection fails.
     @MainActor
-    func collectPaymentMethod(type: PaymentMethodType, from viewController: UIViewController) async throws -> PaymentMethodDisplayData?
+    func collectPaymentMethod(type: PaymentMethodType, from viewController: UIViewController) async throws -> CollectPaymentMethodResult
 
     /// Creates a crypto payment token for the payment method currently selected on the coordinator.
     /// Call after a successful `collectPaymentMethod(...)`.
@@ -173,6 +198,14 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let appearance: LinkAppearance
     private let analyticsClient: CryptoOnrampAnalyticsClient
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
+
+    /// Apple Pay payment source created by `didCreatePaymentMethod` but not yet committed.
+    ///
+    /// Apple Pay can create the payment method before the sheet reports final success. Keep it here
+    /// until `didCompleteWith(.success)`, then promote it to `selectedPaymentSource`. Cancellation
+    /// or failure leaves the existing selection untouched; this value is cleared when the Apple Pay
+    /// attempt starts, completes, or the user logs out.
+    private var pendingApplePayPaymentSource: SelectedPaymentSource?
     private var selectedPaymentSource: SelectedPaymentSource?
     private let cryptoCustomerState: CryptoCustomerState
 
@@ -367,6 +400,48 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         }
     }
 
+    public func retrieveMissingIdentifiers() async throws -> ComplianceIdentifierRequirements {
+        do {
+            let identifiers = try await apiClient.retrieveMissingIdentifiers(linkAccountInfo: linkAccountInfo)
+            return identifiers
+        } catch {
+            throw error
+        }
+    }
+
+    public func submitIdentifiers(_ identifiers: [ComplianceIdentifier]) async throws -> SubmitIdentifiersResult {
+        do {
+            let result = try await apiClient.submitIdentifiers(identifiers: identifiers, linkAccountInfo: linkAccountInfo)
+            return result
+        } catch {
+            throw error
+        }
+    }
+
+    @MainActor
+    public func presentCRSCARFDeclaration(from viewController: UIViewController) async throws -> CRSCARFDeclarationResult {
+        do {
+            let linkAccountInfo = try await self.linkAccountInfo
+            let declaration = try await apiClient.retrieveCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
+            let result: CRSCARFDeclarationResult = switch try await linkController.presentCRSCARFDeclaration(
+                text: declaration.text,
+                appearance: appearance,
+                from: viewController,
+                onConfirm: { [apiClient] in
+                    try await apiClient.confirmCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
+                }
+            ) {
+            case .confirmed:
+                .confirmed
+            case .canceled:
+                .canceled
+            }
+            return result
+        } catch {
+            throw error
+        }
+    }
+
     public func verifyKYCInfo(updatedAddress: Address? = nil, from viewController: UIViewController) async throws -> VerifyKYCResult {
         analyticsClient.log(.kycInfoVerificationStarted)
         do {
@@ -457,7 +532,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public func collectPaymentMethod(
         type: PaymentMethodType,
         from viewController: UIViewController
-    ) async throws -> PaymentMethodDisplayData? {
+    ) async throws -> CollectPaymentMethodResult {
         analyticsClient.log(.collectPaymentMethodStarted(paymentMethodType: type.analyticsValue))
 
         switch type {
@@ -468,7 +543,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             }
 
             guard let supportedPaymentMethodTypes = type.linkPaymentMethodType else {
-                return nil
+                throw Error.invalidSelectedPaymentSource
             }
 
             guard let result = await linkController.collectPaymentMethod(
@@ -477,8 +552,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 collectName: type.requiresNameCollection
             ) else {
-                selectedPaymentSource = nil
-                return nil
+                return .canceled
             }
 
             let preview = PaymentMethodDisplayData(
@@ -489,14 +563,15 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             )
             selectedPaymentSource = .link
             analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
-            return preview
+            return .completed(displayData: preview, kycInfo: nil)
         case .applePay(let paymentRequest):
-            // This presents Apple Pay and fills `applePayPaymentMethod` + `paymentMethodPreview` in the delegate.
+            // This presents Apple Pay and promotes the pending payment source on success.
+            pendingApplePayPaymentSource = nil
             do {
                 let status = try await presentApplePay(using: paymentRequest, from: viewController)
                 switch status {
                 case .success:
-                    guard case let .applePay(paymentMethod) = selectedPaymentSource else {
+                    guard case let .applePay(paymentMethod, kycInfo) = selectedPaymentSource else {
                         analyticsClient.log(.errorOccurred(during: .collectPaymentMethod, errorMessage: "No payment method selected"))
                         throw Error.invalidSelectedPaymentSource
                     }
@@ -520,12 +595,13 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     )
 
                     analyticsClient.log(.collectPaymentMethodCompleted(paymentMethodType: type.analyticsValue))
-                    return paymentMethodPreview
+
+                    return .completed(displayData: paymentMethodPreview, kycInfo: kycInfo)
                 case .canceled:
-                    selectedPaymentSource = nil
-                    return nil
+                    return .canceled
                 }
             } catch {
+                pendingApplePayPaymentSource = nil
                 analyticsClient.log(.errorOccurred(during: .collectPaymentMethod, errorMessage: error.localizedDescription))
                 throw error
             }
@@ -547,7 +623,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                         overridePublishableKey: platformApiClient.publishableKey
                     )
                     return paymentMethod.stripeId
-                case .applePay(let paymentMethod):
+                case .applePay(let paymentMethod, _):
                     return paymentMethod.id
                 }
             }()
@@ -627,6 +703,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
 
     public func logOut() async throws {
         do {
+            pendingApplePayPaymentSource = nil
+            selectedPaymentSource = nil
             try await linkController.logOut()
             analyticsClient.log(.userLoggedOut)
         } catch {
@@ -645,7 +723,7 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
         didCreatePaymentMethod paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment
     ) async throws -> String {
-        selectedPaymentSource = .applePay(paymentMethod)
+        pendingApplePayPaymentSource = .applePay(paymentMethod, KycInfo(payment: paymentInformation))
 
         return STPApplePayContext.COMPLETE_WITHOUT_CONFIRMING_INTENT
     }
@@ -653,7 +731,12 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
     public func applePayContext(_ context: STPApplePayContext, didCompleteWith status: STPApplePayContext.PaymentStatus, error: Swift.Error?) {
         switch status {
         case .success:
-            applePayCompletionContinuation?.resume(returning: .success)
+            if let pendingApplePayPaymentSource {
+                selectedPaymentSource = pendingApplePayPaymentSource
+                applePayCompletionContinuation?.resume(returning: .success)
+            } else {
+                applePayCompletionContinuation?.resume(throwing: ApplePayPaymentStatus.Error.applePayFallbackError)
+            }
         case .userCancellation:
             applePayCompletionContinuation?.resume(returning: .canceled)
         case .error:
@@ -662,6 +745,7 @@ extension CryptoOnrampCoordinator: ApplePayContextDelegate {
             applePayCompletionContinuation?.resume(throwing: error ?? ApplePayPaymentStatus.Error.applePayFallbackError)
         }
 
+        pendingApplePayPaymentSource = nil
         applePayCompletionContinuation = nil
     }
 }

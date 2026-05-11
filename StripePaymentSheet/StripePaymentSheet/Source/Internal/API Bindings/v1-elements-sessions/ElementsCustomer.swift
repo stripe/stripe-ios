@@ -56,6 +56,17 @@ struct ElementsCustomer: Equatable, Hashable {
             return nil
         }
 
+        // Build card art lookup for post-deserialization assignment
+        var cardArtByPaymentMethodId: [String: STPPaymentMethodCardArt] = [:]
+        if let cardArtArray = response["card_art"] as? [[AnyHashable: Any]] {
+            for artJSON in cardArtArray {
+                if let paymentMethodId = artJSON["payment_method"] as? String,
+                    let cardArt = STPPaymentMethodCardArt.decodedObject(fromAPIResponse: artJSON) {
+                    cardArtByPaymentMethodId[paymentMethodId] = cardArt
+                }
+            }
+        }
+
         var paymentMethods: [STPPaymentMethod] = []
         for json in paymentMethodsArray {
             if enableLinkInSPM {
@@ -66,11 +77,13 @@ struct ElementsCustomer: Equatable, Hashable {
                     } else {
                         paymentMethod.isLinkPassthroughMode = paymentMethodWithLinkDetails.isLinkOrigin
                     }
+                    paymentMethod.card?.cardArt = cardArtByPaymentMethodId[paymentMethod.stripeId]
                     paymentMethods.append(paymentMethod)
                 }
             } else {
                 if let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: json) {
                     paymentMethod.isLinkPassthroughMode = paymentMethod.card?.wallet?.type == .link
+                    paymentMethod.card?.cardArt = cardArtByPaymentMethodId[paymentMethod.stripeId]
                     paymentMethods.append(paymentMethod)
                 }
             }
@@ -111,7 +124,10 @@ private extension STPPaymentMethod {
             let bankAccount = LinkPaymentDetails.BankDetails(from: bankDetails, paymentDetailsID: paymentDetails.stripeID)
             self.linkPaymentDetails = .bankAccount(bankAccount)
         case .unparsable:
-            break
+            guard let genericDetails = LinkPaymentDetails.Generic(from: paymentDetails, paymentDetailsID: paymentDetails.stripeID) else {
+                break
+            }
+            self.linkPaymentDetails = .generic(genericDetails)
         }
     }
 }
@@ -135,6 +151,19 @@ private extension LinkPaymentDetails.Card {
             expYear: cardDetails.expiryYear,
             last4: cardDetails.last4,
             brand: cardDetails.stpBrand
+        )
+    }
+}
+
+private extension LinkPaymentDetails.Generic {
+    init?(from paymentDetails: ConsumerPaymentDetails, paymentDetailsID: String) {
+        guard let display = paymentDetails.display else {
+            return nil
+        }
+        self = .init(
+            id: paymentDetailsID,
+            label: display.label,
+            sublabel: display.sublabel
         )
     }
 }

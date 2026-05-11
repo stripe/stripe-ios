@@ -39,6 +39,20 @@ struct AppearanceSettings: View {
                 } header: {
                     Text("Select a preset")
                 }
+
+                Section {
+                    NavigationLink {
+                        CustomThemeSettingsView(componentManager: componentManager)
+                    } label: {
+                        Text("Edit custom theme values")
+                            .font(.body)
+                            .foregroundColor(.primary)
+                    }
+                } header: {
+                    Text("Custom Theme")
+                } footer: {
+                    Text("Choose your own values for the appearance.")
+                }
             }
             .listStyle(.insetGrouped)
             .navigationTitle("Configure Appearance")
@@ -54,7 +68,7 @@ struct AppearanceSettings: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
                         AppSettings.shared.appearanceInfo = selectedAppearance
-                        componentManager.update(appearance: selectedAppearance.appearance)
+                        componentManager.update(appearance: AppSettings.shared.appearanceInfo.appearance)
                         dismiss()
                     } label: {
                         Text("Save")

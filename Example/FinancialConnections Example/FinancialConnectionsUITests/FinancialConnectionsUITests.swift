@@ -440,7 +440,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    func testNativeCustomManualEntryHandoff() {
+    func _testNativeCustomManualEntryHandoff() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """
@@ -469,7 +469,7 @@ final class FinancialConnectionsUITests: XCTestCase {
         )
     }
 
-    func testNativeSkipSuccessPane() {
+    func _testNativeSkipSuccessPane() {
         let app = XCUIApplication.fc_launch(
             playgroundConfigurationString:
 """

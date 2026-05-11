@@ -26,7 +26,7 @@ extension STPElementsSession {
         supportsLink && (linkFundingSources?.contains(.card) ?? false) || linkPassthroughModeEnabled
     }
 
-    var linkFundingSources: Set<LinkSettings.FundingSource>? {
+    var linkFundingSources: Set<ParsedEnum<LinkSettings.FundingSource>>? {
         linkSettings?.fundingSources
     }
 
