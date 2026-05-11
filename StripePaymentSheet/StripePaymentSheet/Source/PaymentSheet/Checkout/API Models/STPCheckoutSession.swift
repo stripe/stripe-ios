@@ -573,14 +573,14 @@ extension STPCheckoutSession {
     // MARK: Amounts
 
     /// Builds a ``Checkout/Amount`` from a minor-unit value plus the session currency.
-    static func makeAmount(_ minorUnits: Int, currency: String?) -> Checkout.Amount {
+    static func makeAmount(_ minorUnitsAmount: Int, currency: String?) -> Checkout.Amount {
         let formatted: String
         if let currency, !currency.isEmpty {
-            formatted = String.localizedAmountDisplayString(for: minorUnits, currency: currency)
+            formatted = String.localizedAmountDisplayString(for: minorUnitsAmount, currency: currency)
         } else {
-            formatted = "\(minorUnits)"
+            formatted = "\(minorUnitsAmount)"
         }
-        return Checkout.Amount(amount: formatted, minorUnitsAmount: minorUnits)
+        return Checkout.Amount(amount: formatted, minorUnitsAmount: minorUnitsAmount)
     }
 
     // MARK: Line Items
