@@ -13,7 +13,7 @@ import UIKit
 import XCTest
 
 @_spi(STP)@testable import StripeCore
-@_spi(AppearanceAPIAdditionsPreview) @testable import StripePaymentSheet
+@_spi(AppearanceAPIAdditionsPreview) @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP)@testable import StripeUICore
 
 class PaymentSheetSnapshotTests: STPSnapshotTestCase {
@@ -605,9 +605,25 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
         verify(paymentSheet.bottomSheetViewController.view!)
     }
 
-    func testPaymentMethodLayoutAutomatic() {
+    func testPaymentMethodLayoutAutomaticVertical() {
         configuration.paymentMethodLayout = .automatic
-        stubNewCustomerResponse()
+        stubNewCustomerResponseWithAutomaticLayout(paymentMethodTypes: [.card, .USBankAccount, .afterpayClearpay])
+        preparePaymentSheet()
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentMethodLayoutAutomaticHorizontal() {
+        configuration.paymentMethodLayout = .automatic
+        stubNewCustomerResponseWithAutomaticLayout(paymentMethodTypes: [.card, .USBankAccount])
+        preparePaymentSheet()
+        presentPaymentSheet(darkMode: false)
+        verify(paymentSheet.bottomSheetViewController.view!)
+    }
+
+    func testPaymentMethodLayoutAutomaticForceVertical() {
+        configuration.paymentMethodLayout = .automatic
+        stubNewCustomerResponseWithAutomaticLayout(paymentMethodTypes: [.card, .USBankAccount], forceVertical: true)
         preparePaymentSheet()
         presentPaymentSheet(darkMode: false)
         verify(paymentSheet.bottomSheetViewController.view!)
@@ -1190,6 +1206,21 @@ class PaymentSheetSnapshotTests: STPSnapshotTestCase {
 
     private func stubNewCustomerResponse() {
         stubSessions(fileMock: .elementsSessionsPaymentMethod_savedPM_200)
+        StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
+        stubCustomers()
+        stubConsumerSession()
+    }
+
+    private func stubNewCustomerResponseWithAutomaticLayout(paymentMethodTypes: [STPPaymentMethodType], forceVertical: Bool = false) {
+        stubSessions(
+            fileMock: .elementsSessionsPaymentMethod_savedPM_automaticLayout_200,
+            responseCallback: { data in
+                var template = String(data: data, encoding: .utf8)!
+                template = template.replacingOccurrences(of: "[PAYMENT_METHOD_TYPES]", with: paymentMethodTypes.map { "\"\($0.identifier)\"" }.joined(separator: ","))
+                template = template.replacingOccurrences(of: "[FLAG]", with: forceVertical.description)
+                return template.data(using: .utf8)!
+            }
+        )
         StubbedBackend.stubPaymentMethods(paymentMethodTypes: [])
         stubCustomers()
         stubConsumerSession()

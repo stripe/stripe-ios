@@ -46,13 +46,12 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var linkPaymentMethodsOnly: Bool { get set }
     var opensCardScannerAutomatically: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
-    func resolveLayout() -> PaymentSheet.PaymentMethodLayout.ResolvedLayout
+    func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout
 }
 
 extension PaymentElementConfiguration {
     func resolvedLinkBrand(elementsSession: STPElementsSession) -> LinkBrand {
-        // `link.brand` is an explicit client override; `nil` means defer to the elements session response.
-        link.brand ?? elementsSession.linkBrand ?? .link
+        link.effectiveBrand(elementsSession: elementsSession)
     }
 
     /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
@@ -104,6 +103,13 @@ extension PaymentElementConfiguration {
     }
 }
 
+private extension PaymentSheet.LinkConfiguration {
+    func effectiveBrand(elementsSession: STPElementsSession) -> LinkBrand {
+        // `brand` is an explicit client override; `nil` means defer to the elements session response.
+        brand ?? elementsSession.linkBrand ?? .link
+    }
+}
+
 extension PaymentSheet.Configuration: PaymentElementConfiguration {}
 extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
     // Stubbed out w/ Embedded Payment Element
@@ -112,7 +118,7 @@ extension EmbeddedPaymentElement.Configuration: PaymentElementConfiguration {
         set {}
     }
 
-    func resolveLayout() -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
+    func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout {
         .vertical
     }
 }

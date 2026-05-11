@@ -103,7 +103,7 @@ extension PaymentSheet {
         var linkUIAnalyticsValue: String? {
             if case .link(let option) = self {
                 switch option {
-                case .withPaymentDetails(let account, _, _, _):
+                case .withPaymentDetails(_, let account, _, _, _):
                     if account.hasCompletedSMSVerification {
                         // This was a returning user who logged in
                         return "native-returning"
@@ -180,7 +180,7 @@ extension PaymentSheet {
                 }
             }
 
-            init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, cardArtEnabled: Bool = false) {
+            init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, cardArtEnabled: Bool = false, linkBrand: LinkBrand = .link) {
                 image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle, cardArtEnabled: cardArtEnabled)
                 switch paymentOption {
                 case .applePay:
@@ -195,25 +195,34 @@ extension PaymentSheet {
                         let sublabel = linkedBank.last4.flatMap { "••••\($0)" }
                         labels = Labels(label: linkedBank.bankName ?? .Localized.bank, sublabel: sublabel)
                     } else {
-                        labels = Labels(label: paymentMethod.expandedPaymentSheetLabel, sublabel: paymentMethod.paymentSheetSublabel)
+                        labels = Labels(
+                            label: paymentMethod.expandedPaymentSheetLabel(brand: linkBrand),
+                            sublabel: paymentMethod.paymentSheetSublabel(brand: linkBrand)
+                        )
                     }
-                    label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams)
+                    label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams, brand: linkBrand)
                     paymentMethodType = paymentMethod.type.identifier
                     billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
                 case .new(let confirmParams):
-                    label = confirmParams.paymentSheetLabel
-                    labels = Labels(label: confirmParams.expandedPaymentSheetLabel, sublabel: confirmParams.paymentSheetSublabel)
+                    label = confirmParams.paymentSheetLabel(brand: linkBrand)
+                    labels = Labels(
+                        label: confirmParams.expandedPaymentSheetLabel(brand: linkBrand),
+                        sublabel: confirmParams.paymentSheetSublabel
+                    )
                     paymentMethodType = confirmParams.paymentMethodType.identifier
                     billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
                 case .link(let option):
-                    if case let .signUp(_, _, _, _, confirmParams) = option {
-                        labels = Labels(label: confirmParams.expandedPaymentSheetLabel, sublabel: confirmParams.paymentSheetSublabel)
+                    if case let .signUp(_, _, _, _, _, confirmParams) = option {
+                        labels = Labels(
+                            label: confirmParams.expandedPaymentSheetLabel(brand: linkBrand),
+                            sublabel: confirmParams.paymentSheetSublabel
+                        )
                     } else {
-                        labels = Labels(label: STPPaymentMethodType.link.displayName, sublabel: option.paymentSheetSubLabel)
+                        labels = Labels(label: option.brand.displayName, sublabel: option.displayPaymentSheetSubLabel())
                     }
-                    label = option.paymentSheetLabel
+                    label = option.paymentSheetLabel(brand: linkBrand)
                     paymentMethodType = option.paymentMethodType
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = option.shippingAddress
@@ -742,6 +751,7 @@ extension PaymentSheet {
                 elementsSession: viewController.loadResult.elementsSession,
                 savedPaymentMethods: viewController.savedPaymentMethods, // Note: not using load result!
                 paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
+                paymentMethodMessagingPromotionsHelper: viewController.loadResult.paymentMethodMessagingPromotionsHelper,
                 paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation
             )
             self.viewController = Self.makeViewController(
@@ -758,7 +768,13 @@ extension PaymentSheet {
         /// Updates the published paymentOption property based on the current state
         func updatePaymentOption() {
             if let selectedPaymentOption = internalPaymentOption {
-                paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency, iconStyle: configuration.appearance.iconStyle, cardArtEnabled: configuration.appearance.cardArtEnabled)
+                paymentOption = PaymentOptionDisplayData(
+                    paymentOption: selectedPaymentOption,
+                    currency: intent.currency,
+                    iconStyle: configuration.appearance.iconStyle,
+                    cardArtEnabled: configuration.appearance.cardArtEnabled,
+                    linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                )
             } else {
                 paymentOption = nil
             }
@@ -962,7 +978,7 @@ extension PaymentOption {
             switch confirmOption {
             case .wallet, .signUp, .withPaymentMethod:
                 return nil
-            case .withPaymentDetails(_, let paymentDetails, _, _):
+            case .withPaymentDetails(_, _, let paymentDetails, _, _):
                 return paymentDetails.stripeID
             }
         case .applePay, .new, .external:

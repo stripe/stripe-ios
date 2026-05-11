@@ -70,6 +70,7 @@ extension PayWithLinkNewPaymentViewControllerSnapshotTests {
                 intent: intent,
                 elementsSession: ._testValue(intent: intent),
                 configuration: config,
+                linkBrand: .link,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
                 initiallySelectedPaymentDetailsID: nil,

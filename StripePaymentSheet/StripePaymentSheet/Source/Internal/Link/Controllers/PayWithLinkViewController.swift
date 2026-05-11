@@ -82,6 +82,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         let intent: Intent
         let elementsSession: STPElementsSession
         let configuration: PaymentElementConfiguration
+        let linkBrand: LinkBrand
         let shouldOfferApplePay: Bool
         let shouldFinishOnClose: Bool
         let shouldShowSecondaryCta: Bool
@@ -114,16 +115,14 @@ final class PayWithLinkViewController: BottomSheetViewController {
         /// Returns the supported payment details types for the current Link account, filtered by the supportedPaymentMethodTypes.
         /// Returns [.card] as fallback if no types are supported after filtering.
         func getSupportedPaymentDetailsTypes(linkAccount: PaymentSheetLinkAccount) -> Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> {
-            let allSupportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: elementsSession)
+            var allSupportedPaymentDetailsTypes = linkAccount.supportedPaymentDetailsTypes(for: elementsSession)
 
-            // TODO(jkelle): Modify this line once we want to render PMs we don't have explicit support for (#6432).
-            // Remove the `allCases` default for `nil` filter types.
-            // https://docs.google.com/document/d/1x834BjHYro9-bDoAVaqgHm7LDPDwzpk4z_5BvxYwwtU
-            let supportedPaymentDetailsTypes = supportedPaymentMethodTypes?.detailsTypes ?? Set(ConsumerPaymentDetails.DetailsType.allCases.map(ParsedEnum.init))
-            let filteredSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes.intersection(supportedPaymentDetailsTypes)
+            if let supportedPaymentDetailsTypes = supportedPaymentMethodTypes?.detailsTypes {
+                allSupportedPaymentDetailsTypes = allSupportedPaymentDetailsTypes.intersection(supportedPaymentDetailsTypes)
+            }
 
-            if !filteredSupportedPaymentDetailsTypes.isEmpty {
-                return filteredSupportedPaymentDetailsTypes
+            if !allSupportedPaymentDetailsTypes.isEmpty {
+                return allSupportedPaymentDetailsTypes
             } else {
                 // Card is the default payment method type when no other type is available.
                 return [ParsedEnum(.card)]
@@ -149,6 +148,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             intent: Intent,
             elementsSession: STPElementsSession,
             configuration: PaymentElementConfiguration,
+            linkBrand: LinkBrand,
             shouldOfferApplePay: Bool,
             shouldFinishOnClose: Bool,
             shouldShowSecondaryCta: Bool = true,
@@ -163,6 +163,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.intent = intent
             self.elementsSession = elementsSession
             self.configuration = configuration
+            self.linkBrand = linkBrand
             self.shouldOfferApplePay = shouldOfferApplePay
             self.shouldFinishOnClose = shouldFinishOnClose
             self.shouldShowSecondaryCta = shouldShowSecondaryCta
@@ -227,6 +228,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: configuration,
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
@@ -480,31 +482,22 @@ private extension PayWithLinkViewController {
         paymentDetails: [ConsumerPaymentDetails]
     ) {
         let viewController: BottomSheetContentViewController
-        if paymentDetails.isEmpty {
-            // Check if only bank accounts are supported - if so, launch Financial Connections directly
-            let supportedTypes = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
-            if supportedTypes == [ParsedEnum(.bankAccount)] {
-                startFinancialConnections { [weak self] result in
-                    guard let self else { return }
-                    switch result {
-                    case .completed:
-                        self.loadAndPresentWallet()
-                    case .canceled:
-                        self.cancel(shouldReturnToPaymentSheet: false)
-                    case .failed(let error):
-                        self.finish(withResult: .failed(error: error), deferredIntentConfirmationType: nil)
-                    }
+        // Check if only bank accounts are supported - if so, launch Financial Connections directly
+        let supportedTypes = context.getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
+        if paymentDetails.isEmpty && supportedTypes == [ParsedEnum(.bankAccount)] {
+            startFinancialConnections { [weak self] result in
+                guard let self else { return }
+                switch result {
+                case .completed:
+                    self.loadAndPresentWallet()
+                case .canceled:
+                    self.cancel(shouldReturnToPaymentSheet: false)
+                case .failed(let error):
+                    self.finish(withResult: .failed(error: error), deferredIntentConfirmationType: nil)
                 }
-                // Show a loading view while Financial Connections is being prepared
-                viewController = LoaderViewController(context: context)
-            } else {
-                let addPaymentMethodVC = NewPaymentViewController(
-                    linkAccount: linkAccount,
-                    context: context,
-                    isAddingFirstPaymentMethod: true
-                )
-                viewController = addPaymentMethodVC
             }
+            // Show a loading view while Financial Connections is being prepared
+            viewController = LoaderViewController(context: context)
         } else {
             let walletViewController = WalletViewController(
                 linkAccount: linkAccount,
@@ -554,6 +547,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         }
 
         let confirmOption = PaymentSheet.LinkConfirmOption.withPaymentDetails(
+            brand: context.linkBrand,
             account: linkAccount,
             paymentDetails: paymentDetails,
             confirmationExtras: confirmationExtras,
@@ -656,10 +650,14 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             style: .automatic,
             elementsSessionContext: ElementsSessionContext(
                 linkSettings: context.elementsSession.linkSettings.map {
-                    ElementsSessionContext.LinkSettings(useAttestationEndpoints: $0.useAttestationEndpoints)
+                    ElementsSessionContext.LinkSettings(
+                        useAttestationEndpoints: $0.useAttestationEndpoints,
+                        brand: context.linkBrand
+                    )
                 },
                 clientAttributionMetadata: clientAttributionMetadata
             ),
+            brand: context.linkBrand,
             onEvent: nil,
             from: self,
             completion: { result in
@@ -702,6 +700,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             elementsSession: context.elementsSession,
             with: PaymentOption.link(
                 option: .withPaymentDetails(
+                    brand: context.linkBrand,
                     account: linkAccount,
                     paymentDetails: paymentDetails,
                     confirmationExtras: confirmationExtras,
@@ -770,7 +769,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             // If we're launched from FlowController, then just finish with a wallet confirm option.
             // The wallet confirm option will trigger Link at the time of confirmation, where we can
             // use the web flow without issue.
-            payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: .wallet)
+            payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: .wallet(brand: context.linkBrand))
             return
         }
         isBailingToWebFlow = true
@@ -825,6 +824,7 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                     let verificationController = LinkVerificationController(
                         mode: .modal,
                         linkAccount: account,
+                        brand: self.context.linkBrand,
                         configuration: self.context.configuration
                     )
                     verificationController.present(from: self) { result in

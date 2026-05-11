@@ -204,7 +204,10 @@ struct LogInSignUpView: View {
                     isLoading.wrappedValue = false
                     switch authorizationResult {
                     case .consented:
-                        flowCoordinator.startForExistingUser(kycInfoCollectionMode: kycInfoCollectionMode)
+                        flowCoordinator.startForExistingUser(
+                            kycInfoCollectionMode: kycInfoCollectionMode,
+                            coordinator: coordinator
+                        )
                     case .denied:
                         alert = Alert(title: "Authorization Denied", message: "Authorization was denied.")
                     case .canceled:

@@ -10,7 +10,14 @@ import Foundation
 extension APIClient {
     func fetchCustomerInfo() async throws -> CustomerInformationResponse {
         guard let token = authTokenWithLAI else { throw APIError.missingAuthTokenWithLAI }
-        return try await request("v1/customer_info", bearerToken: token)
+        return try await request(
+            "v1/customer_info",
+            bearerToken: token,
+            headers: [
+                // Makes `kyc_region` available in the response.
+                "Stripe-Feature": "identifier_type_lifecycle=v1",
+            ]
+        )
     }
 
     func fetchCustomerWallets() async throws -> CustomerWalletsResponse {

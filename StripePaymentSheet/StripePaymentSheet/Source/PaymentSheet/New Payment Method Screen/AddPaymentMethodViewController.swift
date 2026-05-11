@@ -56,6 +56,7 @@ class AddPaymentMethodViewController: UIViewController {
     private let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     private let linkAppearance: LinkAppearance?
     private let isLinkUI: Bool
     var previousCustomerInput: IntentConfirmParams?
@@ -66,7 +67,7 @@ class AddPaymentMethodViewController: UIViewController {
 
     // MARK: - Views
     private lazy var paymentMethodFormViewController: PaymentMethodFormViewController = {
-        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, paymentMethodOrientation: paymentMethodOrientation, headerView: nil, analyticsHelper: analyticsHelper, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
+        let pmFormVC = PaymentMethodFormViewController(type: selectedPaymentMethodType, intent: intent, elementsSession: elementsSession, previousCustomerInput: previousCustomerInput, formCache: formCache, configuration: configuration, paymentMethodOrientation: paymentMethodOrientation, headerView: nil, analyticsHelper: analyticsHelper, paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper, isLinkUI: isLinkUI, delegate: self, linkAppearance: linkAppearance)
         // Only use the previous customer input in the very first load, to avoid overwriting customer input
         previousCustomerInput = nil
         return pmFormVC
@@ -109,6 +110,7 @@ class AddPaymentMethodViewController: UIViewController {
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         formCache: PaymentMethodFormCache,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         isLinkUI: Bool = false,
         delegate: AddPaymentMethodViewControllerDelegate? = nil,
         linkAppearance: LinkAppearance? = nil
@@ -128,6 +130,7 @@ class AddPaymentMethodViewController: UIViewController {
         self.delegate = delegate
         self.formCache = formCache
         self.analyticsHelper = analyticsHelper
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.isLinkUI = isLinkUI
         self.linkAppearance = linkAppearance
         super.init(nibName: nil, bundle: nil)
@@ -174,7 +177,7 @@ class AddPaymentMethodViewController: UIViewController {
         }
         // These LPMs are not visible without without scrolling in the horizontal carousel
         let hiddenPaymentMethods: [String] = paymentMethodTypes.compactMap { $0.identifier }.filter { !visiblePaymentMethods.contains($0) }
-        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .horizontal)
+        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods)
     }
 
     // MARK: - Private
@@ -196,6 +199,7 @@ class AddPaymentMethodViewController: UIViewController {
                 paymentMethodOrientation: paymentMethodOrientation,
                 headerView: nil,
                 analyticsHelper: analyticsHelper,
+                paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                 isLinkUI: isLinkUI,
                 delegate: self,
                 linkAppearance: linkAppearance

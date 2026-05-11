@@ -65,6 +65,13 @@ import UIKit
         case canceled
     }
 
+    @frozen @_spi(STP) public enum CRSCARFDeclarationResult {
+        /// The user accepted the declaration.
+        case confirmed
+        /// The user dismissed the declaration without accepting.
+        case canceled
+    }
+
     /// Errors specific incorrect integrations with LinkController
     @_spi(STP) public enum IntegrationError: LocalizedError {
         case noPaymentMethodSelected
@@ -94,6 +101,7 @@ import UIKit
     private let elementsSession: STPElementsSession
     private let intent: Intent
     private let configuration: PaymentElementConfiguration
+    private let linkBrand: LinkBrand
     private let appearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -107,7 +115,7 @@ import UIKit
         guard case .link(let confirmOption) = internalPaymentOption else {
             return nil
         }
-        guard case .withPaymentDetails(_, let paymentDetails, _, _) = confirmOption else {
+        guard case .withPaymentDetails(_, _, let paymentDetails, _, _) = confirmOption else {
             return nil
         }
         return paymentDetails
@@ -130,7 +138,7 @@ import UIKit
             paymentMethodPreview = .init(
                 paymentMethodType: type,
                 icon: iconForPaymentDetails(selectedPaymentDetails),
-                label: STPPaymentMethodType.link.displayName,
+                label: linkBrand.displayName,
                 sublabel: selectedPaymentDetails.linkPaymentDetailsFormattedString
             )
         }
@@ -155,6 +163,7 @@ import UIKit
         elementsSession: STPElementsSession,
         intent: Intent,
         configuration: PaymentElementConfiguration,
+        linkBrand: LinkBrand,
         appearance: LinkAppearance?,
         linkConfiguration: LinkConfiguration?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
@@ -165,6 +174,7 @@ import UIKit
         self.elementsSession = elementsSession
         self.intent = intent
         self.configuration = configuration
+        self.linkBrand = linkBrand
         self.appearance = appearance
         self.linkConfiguration = linkConfiguration
         self.analyticsHelper = analyticsHelper
@@ -238,6 +248,7 @@ import UIKit
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
                     configuration: configuration,
+                    linkBrand: configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession),
                     appearance: appearance,
                     linkConfiguration: linkConfiguration,
                     analyticsHelper: analyticsHelper,
@@ -347,6 +358,7 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .inlineLogin,
             linkAccount: linkAccount,
+            brand: linkBrand,
             configuration: configuration,
             appearance: appearance
         )
@@ -693,6 +705,60 @@ import UIKit
         }
     }
 
+    /// Presents the CRS/CARF declaration to the user.
+    ///
+    /// This method presents a bottom sheet displaying the provided declaration text for user review.
+    /// The user can confirm the declaration or cancel.
+    ///
+    /// - Parameters:
+    ///   - text: The declaration text to display to the user.
+    ///   - appearance: Appearance configuration for the declaration UI.
+    ///   - viewController: The view controller from which to present the declaration flow.
+    ///   - onConfirm: An async closure called when the user confirms. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
+    /// - Returns: A `CRSCARFDeclarationResult` indicating whether the user confirmed or canceled.
+    /// Throws any error thrown by the `onConfirm` handler.
+    @_spi(STP) public func presentCRSCARFDeclaration(
+        text: String,
+        appearance: LinkAppearance,
+        from viewController: UIViewController,
+        onConfirm: @escaping (() async throws -> Void)
+    ) async throws -> CRSCARFDeclarationResult {
+        return try await withCheckedThrowingContinuation { continuation in
+            Task { @MainActor in
+                let declarationViewController = CRSCARFDeclarationViewController(
+                    text: text,
+                    appearance: appearance,
+                    brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                )
+                declarationViewController.onResult = { [weak declarationViewController] result in
+                    declarationViewController?.onResult = nil
+
+                    let dismissAndResumeWithResult = { continuationResult in
+                        declarationViewController?.dismiss(animated: true) {
+                            continuation.resume(with: continuationResult)
+                        }
+                    }
+
+                    switch result {
+                    case .canceled:
+                        dismissAndResumeWithResult(.success(result))
+                    case .confirmed:
+                        Task {
+                            do {
+                                try await onConfirm()
+                                dismissAndResumeWithResult(.success(result))
+                            } catch {
+                                dismissAndResumeWithResult(.failure(error))
+                            }
+                        }
+                    }
+                }
+
+                viewController.presentAsBottomSheet(declarationViewController, appearance: .init())
+            }
+        }
+    }
+
     /// Logs out the current Link user, if any.
     @_spi(STP) public func logOut(completion: @escaping (Result<Void, Error>) -> Void) {
         func clearLinkAccountContextAndComplete() {
@@ -751,6 +817,7 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .inlineLogin,
             linkAccount: linkAccount,
+            brand: linkBrand,
             configuration: configuration,
             appearance: appearance,
             consentViewModel: consentViewModel
