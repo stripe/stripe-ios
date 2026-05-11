@@ -304,7 +304,7 @@ public final class Checkout: ObservableObject {
     /// then automatically refreshes ``state`` with the latest session data.
     ///
     /// A 20-second timeout is enforced. If `updateFunction` doesn't complete
-    /// within 20 seconds, this method throws ``CheckoutError/timedOut``.
+    /// within 20 seconds, this method throws ``CheckoutError.timedOut``.
     ///
     /// - Parameter updateFunction: An async throwing function that makes a request
     ///   to your server to update the Checkout Session.
