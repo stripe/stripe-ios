@@ -87,7 +87,8 @@ extension PayWithLinkViewController {
                 return PaymentSheetFormFactory.makeBankMandateText(
                     isSettingUp: isSettingUp || context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
                     merchantName: context.configuration.merchantDisplayName,
-                    sellerName: context.intent.sellerDetails?.businessName
+                    sellerName: context.intent.sellerDetails?.businessName,
+                    brand: context.configuration.resolvedLinkBrand(elementsSession: context.elementsSession)
                 )
             default:
                 return nil
@@ -255,7 +256,7 @@ extension PayWithLinkViewController {
 
             linkAccount.updatePaymentDetails(
                 id: paymentMethod.stripeID,
-                updateParams: UpdatePaymentDetailsParams(isDefault: true, details: nil),
+                updateParams: UpdatePaymentDetailsParams(isDefault: true),
                 clientAttributionMetadata: clientAttributionMetadata
             ) { [self] result in
                 if case let .success(updatedPaymentDetails) = result {
@@ -311,7 +312,7 @@ extension PayWithLinkViewController {
 
             linkAccount.updatePaymentDetails(
                 id: id,
-                updateParams: UpdatePaymentDetailsParams(details: .card(expiryDate: expiryDate)),
+                updateParams: UpdatePaymentDetailsParams(metadata: .card(expiryDate: expiryDate)),
                 clientAttributionMetadata: clientAttributionMetadata,
                 completion: completion
             )

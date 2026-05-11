@@ -117,6 +117,8 @@ private extension LinkPaymentDetails {
             return .Localized.manage_card
         case .bankAccount:
             return .Localized.manage_bank_account
+        case .generic:
+            return .Localized.manage_payment_method
         }
     }
 
@@ -126,6 +128,8 @@ private extension LinkPaymentDetails {
             return .Localized.card_details_cannot_be_changed
         case .bankAccount:
             return .Localized.bank_account_details_cannot_be_changed
+        case .generic:
+            return .Localized.payment_method_details_cannot_be_changed
         }
     }
 }

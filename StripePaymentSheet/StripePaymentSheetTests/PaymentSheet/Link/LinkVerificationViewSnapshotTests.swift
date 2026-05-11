@@ -8,14 +8,21 @@
 
 import StripeCoreTestUtils
 import UIKit
+import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
 class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
+    func testHeader_usesProvidedBrandForAccessibilityLabel() {
+        let sut = LinkVerificationView.Header(brand: .onelink)
+        let logoView = sut.subviews.compactMap { $0 as? UIImageView }.first
+
+        XCTAssertEqual(logoView?.accessibilityLabel, "Onelink")
+    }
 
     func testModal() {
         let sut = makeSUT(mode: .modal)

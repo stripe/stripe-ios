@@ -27,4 +27,169 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
             )
         }
     }
+
+    // MARK: - Display metadata decoding
+
+    func test_decodingUnknownTypeWithDisplayMetadata() throws {
+        let json: [String: Any] = [
+            "id": "csmrpd_test_123",
+            "type": "CRYPTO",
+            "is_default": false,
+            "display": [
+                "icon": [
+                    "default": "https://cdn.stripe.com/crypto.png"
+                ],
+                "label": "Stablecoin",
+                "sublabel": "Wallet •••2",
+            ],
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+        let details = try decoder.decode(ConsumerPaymentDetails.self, from: data)
+
+        if case .unparsable(let rawValue) = details.details {
+            XCTAssertEqual(rawValue, "CRYPTO")
+        } else {
+            XCTFail("Expected .unparsable case")
+        }
+
+        XCTAssertNotNil(details.display)
+        XCTAssertEqual(details.display?.label, "Stablecoin")
+        XCTAssertEqual(details.display?.sublabel, "Wallet •••2")
+        XCTAssertEqual(details.display?.icon?.main, URL(string: "https://cdn.stripe.com/crypto.png"))
+    }
+
+    func test_decodingUnknownTypeWithoutDisplayMetadata() throws {
+        let json: [String: Any] = [
+            "id": "csmrpd_test_456",
+            "type": "UNKNOWN_TYPE",
+            "is_default": false,
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+        let details = try decoder.decode(ConsumerPaymentDetails.self, from: data)
+
+        if case .unparsable(let rawValue) = details.details {
+            XCTAssertEqual(rawValue, "UNKNOWN_TYPE")
+        } else {
+            XCTFail("Expected .unparsable case")
+        }
+
+        XCTAssertNil(details.display)
+    }
+
+    func test_decodingKnownTypeWithDisplayMetadata() throws {
+        let json: [String: Any] = [
+            "id": "csmrpd_test_789",
+            "type": "CARD",
+            "is_default": true,
+            "cardDetails": [
+                "expYear": 30,
+                "expMonth": 12,
+                "brand": "visa",
+                "networks": ["visa"],
+                "last4": "4242",
+                "funding": "CREDIT",
+            ],
+            "display": [
+                "label": "Visa Credit",
+                "sublabel": "•••• 4242",
+            ],
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+        let details = try decoder.decode(ConsumerPaymentDetails.self, from: data)
+
+        if case .card(let card) = details.details {
+            XCTAssertEqual(card.last4, "4242")
+        } else {
+            XCTFail("Expected .card case")
+        }
+
+        // Display metadata is available even for known types
+        XCTAssertNotNil(details.display)
+        XCTAssertEqual(details.display?.label, "Visa Credit")
+    }
+
+    func test_decodingDisplayMetadataWithOptionalFields() throws {
+        let json: [String: Any] = [
+            "id": "csmrpd_test_abc",
+            "type": "SEPA",
+            "is_default": false,
+            "display": [
+                "label": "SEPA Direct Debit",
+            ],
+        ]
+        let data = try JSONSerialization.data(withJSONObject: json)
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+
+        let details = try decoder.decode(ConsumerPaymentDetails.self, from: data)
+
+        XCTAssertNotNil(details.display)
+        XCTAssertEqual(details.display?.label, "SEPA Direct Debit")
+        XCTAssertNil(details.display?.sublabel)
+        XCTAssertNil(details.display?.icon)
+    }
+
+    func test_unknownTypeWithBillingCountryInAllowedCountriesIsSupported() throws {
+        let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: ["CRYPTO"])
+        let linkAccount = LinkStubs.account()
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
+
+        let details = ConsumerPaymentDetails(
+            stripeID: "csmrpd_test_country_match",
+            details: .unparsable(rawValue: "CRYPTO"),
+            billingAddress: BillingAddress(countryCode: "US"),
+            billingEmailAddress: nil,
+            nickname: nil,
+            display: .init(label: "Stablecoin", sublabel: "Wallet •••2", icon: nil),
+            isDefault: false
+        )
+
+        XCTAssertTrue(
+            details.isSupported(
+                linkAccount: linkAccount,
+                elementsSession: elementsSession,
+                configuration: configuration,
+                cardBrandFilter: .default,
+                cardFundingFilter: .default
+            )
+        )
+    }
+
+    func test_unknownTypeWithoutBillingCountryIsNotSupportedWhenAllowedCountriesAreFiltered() throws {
+        let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession(linkFundingSources: ["CRYPTO"])
+        let linkAccount = LinkStubs.account()
+        var configuration = PaymentSheet.Configuration()
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["US"]
+
+        let details = ConsumerPaymentDetails(
+            stripeID: "csmrpd_test_missing_country",
+            details: .unparsable(rawValue: "CRYPTO"),
+            billingAddress: nil,
+            billingEmailAddress: nil,
+            nickname: nil,
+            display: .init(label: "Stablecoin", sublabel: "Wallet •••2", icon: nil),
+            isDefault: false
+        )
+
+        XCTAssertFalse(
+            details.isSupported(
+                linkAccount: linkAccount,
+                elementsSession: elementsSession,
+                configuration: configuration,
+                cardBrandFilter: .default,
+                cardFundingFilter: .default
+            )
+        )
+    }
+
 }

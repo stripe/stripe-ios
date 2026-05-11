@@ -13,6 +13,10 @@ import Foundation
 
 extension STPPaymentMethod {
     var paymentSheetLabel: String {
+        return paymentSheetLabel(brand: .link)
+    }
+
+    func paymentSheetLabel(brand: LinkBrand) -> String {
         switch type {
         case .card:
             // Link payment details here are for Link card brand
@@ -24,7 +28,7 @@ extension STPPaymentMethod {
             // The missing space is not an oversight, but on purpose
             return "••••\(usBankAccount?.last4 ?? "")"
         case .link:
-            return linkPaymentDetails?.label ?? type.displayName
+            return linkPaymentDetails?.label ?? brand.displayName
         default:
             return type.displayName
         }
@@ -60,51 +64,13 @@ extension STPPaymentMethod {
         }
     }
 
-    func paymentOptionLabel(confirmParams: IntentConfirmParams?) -> String {
-        if let instantDebitsLinkedBank = confirmParams?.instantDebitsLinkedBank {
-            return "••••\(instantDebitsLinkedBank.last4 ?? "")"
-        } else {
-            return paymentSheetLabel
-        }
-    }
-
-    var expandedPaymentSheetLabel: String {
-        switch type {
-        case .card:
-            if isLinkPaymentMethod || isLinkPassthroughMode {
-                return STPPaymentMethodType.link.displayName
-            } else if let card {
-                return STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand) ?? STPPaymentMethodType.card.displayName
-            } else {
-                return STPPaymentMethodType.card.displayName
-            }
-        case .USBankAccount:
-            if isLinkPassthroughMode {
-                return STPPaymentMethodType.link.displayName
-            } else {
-                return usBankAccount?.bankName ?? type.displayName
-            }
-        default:
-            return type.displayName
-        }
-    }
-
-    var paymentSheetSublabel: String? {
-        switch type {
-        case .card:
-            return linkPaymentDetailsFormattedString ?? paymentSheetLabel
-        case .USBankAccount:
-            return paymentSheetLabel
-        case .link:
-            return linkPaymentDetailsFormattedString
-        default:
-            return nil
-        }
-    }
-
     var linkPaymentDetailsFormattedString: String? {
         guard let linkPaymentDetails else {
             return nil
+        }
+
+        if case .generic(let genericDetails) = linkPaymentDetails {
+            return genericDetails.formattedDisplayText
         }
 
         let components = [linkPaymentDetails.label, linkPaymentDetails.sublabel].compactMap { $0 }
@@ -148,6 +114,50 @@ extension STPPaymentMethod {
 
         return updatedLine1 || updatedLine2 || updatedCity || updatedState || updatedCountry || updatedPostalCode
     }
+
+    func paymentOptionLabel(confirmParams: IntentConfirmParams?, brand: LinkBrand) -> String {
+        if let instantDebitsLinkedBank = confirmParams?.instantDebitsLinkedBank {
+            return "••••\(instantDebitsLinkedBank.last4 ?? "")"
+        } else {
+            return paymentSheetLabel(brand: brand)
+        }
+    }
+
+    func expandedPaymentSheetLabel(brand: LinkBrand) -> String {
+        switch type {
+        case .card:
+            if isLinkPaymentMethod || isLinkPassthroughMode {
+                return brand.displayName
+            } else if let card {
+                return STPCardBrandUtilities.stringFrom(card.preferredDisplayBrand) ?? STPPaymentMethodType.card.displayName
+            } else {
+                return STPPaymentMethodType.card.displayName
+            }
+        case .USBankAccount:
+            if isLinkPassthroughMode {
+                return brand.displayName
+            } else {
+                return usBankAccount?.bankName ?? type.displayName
+            }
+        case .link:
+            return brand.displayName
+        default:
+            return type.displayName
+        }
+    }
+
+    func paymentSheetSublabel(brand: LinkBrand) -> String? {
+        switch type {
+        case .card:
+            return linkPaymentDetailsFormattedString ?? paymentSheetLabel(brand: brand)
+        case .USBankAccount:
+            return paymentSheetLabel(brand: brand)
+        case .link:
+            return linkPaymentDetailsFormattedString
+        default:
+            return nil
+        }
+    }
 }
 
 private extension LinkPaymentDetails {
@@ -157,6 +167,8 @@ private extension LinkPaymentDetails {
             return makeCardAccessibilityLabel(cardBrand: cardDetails.brand, last4: cardDetails.last4)
         case .bankAccount(let bankDetails):
             return String(format: String.Localized.bank_name_account_ending_in_last_4, bankDetails.bankName, bankDetails.last4)
+        case .generic(let genericDetails):
+            return genericDetails.formattedDisplayText
         }
     }
 }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripeCoreTestUtils
@@ -82,6 +83,30 @@ final class LinkPaymentMethodFormElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testBillingDetailsUpdateParamsPreserveExistingNameWhenNameIsAutomatic() {
+        let sut = makeSUT(
+            isDefault: false,
+            isBillingDetailsUpdateFlow: true,
+            requestFullAddress: true,
+            billingAddress: BillingAddress(
+                name: "Jane Doe",
+                line1: "510 Townsend St.",
+                city: "San Francisco",
+                state: "CA",
+                postalCode: "94103",
+                countryCode: "US"
+            )
+        )
+
+        guard let params = sut.params else {
+            XCTFail("Expected valid params")
+            return
+        }
+
+        let name = params.billingDetails.value(forKey: "name") as? String
+        XCTAssertEqual(name, "Jane Doe")
+    }
+
     func verify(
         _ element: LinkPaymentMethodFormElement,
         identifier: String? = nil,
@@ -103,6 +128,7 @@ extension LinkPaymentMethodFormElementSnapshotTests {
         requestPhone: Bool = false,
         requestEmail: Bool = false,
         requestFullAddress: Bool = false,
+        billingAddress: BillingAddress? = nil,
         networks: [String] = ["visa"]
     ) -> LinkPaymentMethodFormElement {
         let paymentMethod = ConsumerPaymentDetails(
@@ -118,7 +144,7 @@ extension LinkPaymentMethodFormElementSnapshotTests {
                     checks: nil
                 )
             ),
-            billingAddress: nil,
+            billingAddress: billingAddress,
             billingEmailAddress: nil,
             nickname: nil,
             isDefault: isDefault

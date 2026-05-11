@@ -3,6 +3,7 @@
 //  StripePaymentSheetTests
 //
 
+@_spi(STP) import StripePayments
 @testable import StripePaymentSheet
 import XCTest
 
@@ -180,6 +181,37 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
         XCTAssertEqual(removalMessage.message, "Cartes Bancaires •••• 4242")
     }
 
+    func testRemovalMessage_LinkGenericPaymentMethod() {
+        let paymentMethod = STPPaymentMethod._testLink()
+        paymentMethod.linkPaymentDetails = .generic(
+            LinkPaymentDetails.Generic(
+                id: "csmrpd_123",
+                label: "Pix",
+                sublabel: "000••••••••"
+            )
+        )
+
+        let removalMessage = paymentMethod.removalMessage
+
+        XCTAssertEqual(removalMessage.title, "Remove payment method?")
+        XCTAssertEqual(removalMessage.message, "Pix 000••••••••")
+    }
+
+    func testPaymentOptionCell_usesProvidedLinkBrandForLinkLabel() {
+        let cell = SavedPaymentMethodCollectionView.PaymentOptionCell(frame: .zero)
+
+        cell.setViewModel(
+            .link,
+            cbcEligible: false,
+            allowsPaymentMethodRemoval: false,
+            allowsPaymentMethodUpdate: false,
+            linkBrand: .onelink
+        )
+
+        XCTAssertEqual(cell.label.text, "Onelink")
+        XCTAssertEqual(cell.selectableRectangle.accessibilityLabel, "Onelink")
+    }
+
     // MARK: Helpers
     func _testCanEditPaymentMethods(removePM: Bool,
                                     removeLastPM: Bool,
@@ -190,6 +222,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
         let configuration = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123",
                                                                             showApplePay: true,
                                                                             showLink: true,
+                                                                            linkBrand: .link,
                                                                             removeSavedPaymentMethodMessage: nil,
                                                                             merchantDisplayName: "abc",
                                                                             isCVCRecollectionEnabled: true,

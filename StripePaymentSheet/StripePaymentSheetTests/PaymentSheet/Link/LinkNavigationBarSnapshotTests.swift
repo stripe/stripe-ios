@@ -59,7 +59,7 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
     }
 
     func testBackStyleThenTruncatingTitle() {
-        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance, brand: .link)
         sut.setStyle(.back(showAdditionalButton: false))
         sut.title = "Test title that is pretty long and should wrap"
         verify(sut)
@@ -86,7 +86,7 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
     }
 
     func testCloseStyleThenTruncatingTitle() {
-        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance, brand: .link)
         sut.setStyle(.close(showAdditionalButton: false))
         sut.title = "Test title that is pretty long and should wrap"
         verify(sut)
@@ -132,7 +132,7 @@ extension LinkNavigationBarSnapshotTests {
     }
 
     fileprivate func makeSUT(title: String? = nil) -> LinkSheetNavigationBar {
-        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance, brand: .link)
         sut.title = title
         return sut
     }

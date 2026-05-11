@@ -21,6 +21,8 @@ extension SavedPaymentMethodFormFactory {
             return makeLinkCard(cardDetails: cardDetails, configuration: configuration)
         case .bankAccount(let bankDetails):
             return makeLinkBankAccount(bankAccount: bankDetails, configuration: configuration)
+        case .generic(let genericDetails):
+            return makeGenericLinkPaymentMethod(genericDetails: genericDetails, configuration: configuration)
         default:
             fatalError("Cannot make payment method form for Link payment method.")
         }
@@ -90,6 +92,26 @@ extension SavedPaymentMethodFormFactory {
 
         return FormElement(
             elements: [bankAccountElement],
+            theme: configuration.appearance.asElementsTheme
+        )
+    }
+
+    private func makeGenericLinkPaymentMethod(
+        genericDetails: LinkPaymentDetails.Generic,
+        configuration: UpdatePaymentMethodViewController.Configuration
+    ) -> PaymentMethodElement {
+        let textField = TextFieldElement.NameConfiguration(
+            defaultValue: genericDetails.formattedDisplayText,
+            editConfiguration: .readOnly
+        ).makeElement(theme: configuration.appearance.asElementsTheme)
+
+        let section = SectionElement(
+            elements: [textField],
+            theme: configuration.appearance.asElementsTheme
+        )
+
+        return FormElement(
+            elements: [section],
             theme: configuration.appearance.asElementsTheme
         )
     }

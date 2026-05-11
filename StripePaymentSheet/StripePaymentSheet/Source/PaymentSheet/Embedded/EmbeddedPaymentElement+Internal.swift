@@ -76,6 +76,7 @@ extension EmbeddedPaymentElement {
             customer: configuration.customer,
             currency: loadResult.intent.currency,
             incentive: loadResult.elementsSession.incentive,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             analyticsHelper: analyticsHelper,
             delegate: delegate
         )
@@ -98,6 +99,7 @@ extension EmbeddedPaymentElement {
         elementsSession: STPElementsSession,
         savedPaymentMethods: [STPPaymentMethod],
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
         formCache: PaymentMethodFormCache,
         delegate: EmbeddedFormViewControllerDelegate
     ) -> EmbeddedFormViewController? {
@@ -113,6 +115,7 @@ extension EmbeddedPaymentElement {
             paymentMethodType: paymentMethodType,
             previousPaymentOption: previousPaymentOption,
             analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
             formCache: formCache,
             delegate: delegate
         )
@@ -143,6 +146,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             formCache: formCache,
             delegate: self
         )
@@ -220,6 +224,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
             paymentMethodType: paymentMethodType,
             previousPaymentOption: nil,
             analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
             formCache: .init(),  // Use a fresh form cache to ensure forms aren't re-added to a different view controller's hierarchy
             delegate: self
         )
@@ -362,7 +367,7 @@ extension EmbeddedPaymentElement: VerticalSavedPaymentMethodsViewControllerDeleg
 // MARK: - EmbeddedPaymentElement.PaymentOptionDisplayData
 
 extension EmbeddedPaymentElement.PaymentOptionDisplayData {
-    init(paymentOption: PaymentOption, mandateText: NSAttributedString?, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, cardArtEnabled: Bool = false) {
+    init(paymentOption: PaymentOption, mandateText: NSAttributedString?, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, cardArtEnabled: Bool = false, linkBrand: LinkBrand = .link) {
         self.mandateText = mandateText
         self.image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle, cardArtEnabled: cardArtEnabled) // TODO: https://jira.corp.stripe.com/browse/MOBILESDK-2604 Refactor this!
         switch paymentOption {
@@ -372,17 +377,17 @@ extension EmbeddedPaymentElement.PaymentOptionDisplayData {
             billingDetails = nil
             shippingDetails = nil
         case .saved(let paymentMethod, let confirmParams):
-            label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams)
+            label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams, brand: linkBrand)
             paymentMethodType = paymentMethod.type.identifier
             billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
             shippingDetails = nil
         case .new(let confirmParams):
-            label = confirmParams.paymentSheetLabel
+            label = confirmParams.paymentSheetLabel(brand: linkBrand)
             paymentMethodType = confirmParams.paymentMethodType.identifier
             billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
             shippingDetails = nil
         case .link(let option):
-            label = option.paymentSheetLabel
+            label = option.paymentSheetLabel(brand: linkBrand)
             paymentMethodType = STPPaymentMethodType.link.identifier
             billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
             shippingDetails = option.shippingAddress

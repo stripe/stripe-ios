@@ -205,6 +205,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return paymentMethods.map { paymentMethod in
             let button = SavedPaymentMethodRowButton(paymentMethod: paymentMethod,
                                                      appearance: configuration.appearance,
+                                                     linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
                                                      showDefaultPMBadge: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId))
             button.delegate = self
             return button
@@ -474,6 +475,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         let isDefaultPaymentMethod = isDefaultPaymentMethod(paymentMethodId: updatedPaymentMethod.stripeId)
         let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod,
                                                     appearance: configuration.appearance,
+                                                    linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
                                                     showDefaultPMBadge: isDefaultPaymentMethod,
                                                     previousSelectedState: selectedState ?? oldButton.previousSelectedState,
                                                     currentState: oldButton.state)
@@ -510,7 +512,7 @@ private extension LinkPaymentDetails {
         switch self {
         case .card:
             return false
-        case .bankAccount:
+        case .bankAccount, .generic:
             return true
         }
     }

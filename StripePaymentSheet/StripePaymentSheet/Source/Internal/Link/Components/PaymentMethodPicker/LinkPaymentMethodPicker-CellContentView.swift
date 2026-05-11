@@ -17,6 +17,7 @@ extension LinkPaymentMethodPicker {
         struct Constants {
             static let contentSpacing: CGFloat = 12
             static let iconSize: CGSize = CardBrandView.targetIconSize
+            static let genericIconCornerRadius: CGFloat = 3.0
             static let maxFontSize: CGFloat = 20
         }
 
@@ -27,6 +28,7 @@ extension LinkPaymentMethodPicker {
                     cardBrandView.setCardBrand(STPCard.brand(from: card.brand))
                     bankIconView.isHidden = true
                     cardBrandView.isHidden = false
+                    genericIconView.isHidden = true
                     primaryLabel.text = paymentMethod?.paymentSheetLabel
                     let hasDisplayName = card.displayName(with: paymentMethod?.nickname) != nil
                     secondaryLabel.text = hasDisplayName ? card.secondaryName : nil
@@ -35,12 +37,34 @@ extension LinkPaymentMethodPicker {
                     bankIconView.image = makeBankIcon(for: bankAccount.iconCode)
                     cardBrandView.isHidden = true
                     bankIconView.isHidden = false
+                    genericIconView.isHidden = true
                     primaryLabel.text = bankAccount.displayName(with: paymentMethod?.nickname)
                     secondaryLabel.text = "•••• \(bankAccount.last4)"
                     secondaryLabel.isHidden = false
-                case .none, .unparsable:
+                case .unparsable:
+                    guard let display = paymentMethod?.display else {
+                        cardBrandView.isHidden = true
+                        bankIconView.isHidden = true
+                        genericIconView.isHidden = true
+                        primaryLabel.text = nil
+                        secondaryLabel.text = nil
+                        secondaryLabel.isHidden = true
+                        break
+                    }
                     cardBrandView.isHidden = true
                     bankIconView.isHidden = true
+                    genericIconView.isHidden = false
+                    genericIconView.image = createGenericPaymentMethodIcon()
+                    if let iconUrl = display.icon?.main {
+                        loadRemoteIcon(from: iconUrl)
+                    }
+                    primaryLabel.text = display.label
+                    secondaryLabel.text = display.sublabel
+                    secondaryLabel.isHidden = display.sublabel == nil || display.sublabel?.isEmpty == true
+                case .none:
+                    cardBrandView.isHidden = true
+                    bankIconView.isHidden = true
+                    genericIconView.isHidden = true
                     primaryLabel.text = nil
                     secondaryLabel.text = nil
                     secondaryLabel.isHidden = true
@@ -51,6 +75,14 @@ extension LinkPaymentMethodPicker {
         private lazy var bankIconView: UIImageView = {
             let iconView = UIImageView()
             iconView.contentMode = .scaleAspectFit
+            return iconView
+        }()
+
+        private lazy var genericIconView: UIImageView = {
+            let iconView = UIImageView()
+            iconView.contentMode = .scaleAspectFit
+            iconView.clipsToBounds = true
+            iconView.layer.cornerRadius = Constants.genericIconCornerRadius
             return iconView
         }()
 
@@ -75,9 +107,11 @@ extension LinkPaymentMethodPicker {
             let view = UIView()
             bankIconView.translatesAutoresizingMaskIntoConstraints = false
             cardBrandView.translatesAutoresizingMaskIntoConstraints = false
+            genericIconView.translatesAutoresizingMaskIntoConstraints = false
 
             view.addSubview(bankIconView)
             view.addSubview(cardBrandView)
+            view.addSubview(genericIconView)
 
             let cardBrandSize = cardBrandView.size(for: Constants.iconSize)
             let width = max(Constants.iconSize.width, cardBrandSize.width)
@@ -105,6 +139,17 @@ extension LinkPaymentMethodPicker {
 
                 cardBrandView.widthAnchor.constraint(equalToConstant: cardBrandSize.width),
                 cardBrandView.heightAnchor.constraint(equalToConstant: cardBrandSize.height),
+
+                genericIconView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor),
+                genericIconView.topAnchor.constraint(greaterThanOrEqualTo: view.topAnchor),
+                genericIconView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor),
+                genericIconView.bottomAnchor.constraint(lessThanOrEqualTo: view.bottomAnchor),
+                genericIconView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                genericIconView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+
+                // generic payment method icons will be squares, so use the largest dimension of our icon size
+                genericIconView.widthAnchor.constraint(equalToConstant: max(Constants.iconSize.width, Constants.iconSize.height)),
+                genericIconView.heightAnchor.constraint(equalTo: genericIconView.widthAnchor),
             ])
 
             return view
@@ -143,22 +188,21 @@ extension LinkPaymentMethodPicker {
             if let institutionIcon = PaymentSheetImageLibrary.bankInstitutionIcon(for: bankName) {
                 return institutionIcon
             }
-            return createGenericBankIcon()
+            return createGenericPaymentMethodIcon()
         }
 
-        private func createGenericBankIcon() -> UIImage {
+        private func createGenericPaymentMethodIcon() -> UIImage {
             let icon = PaymentSheetImageLibrary.linkBankIcon()
             let iconColor: UIColor = .linkIconPrimary
             let backgroundColor: UIColor = .linkSurfaceTertiary
 
             let iconSize: CGSize = .init(width: 16, height: 16)
             let backgroundSize: CGSize = .init(width: 24, height: 24)
-            let cornerRadius: CGFloat = 3.0
 
             let renderer = UIGraphicsImageRenderer(size: backgroundSize)
             return renderer.image { _ in
                 let rect = CGRect(origin: .zero, size: backgroundSize)
-                let path = UIBezierPath(roundedRect: rect, cornerRadius: cornerRadius)
+                let path = UIBezierPath(roundedRect: rect, cornerRadius: Constants.genericIconCornerRadius)
 
                 backgroundColor.setFill()
                 path.fill()
@@ -173,11 +217,35 @@ extension LinkPaymentMethodPicker {
             }
         }
 
+        private func loadRemoteIcon(from url: URL) {
+            let placeholder = createGenericPaymentMethodIcon()
+            genericIconView.image = DownloadManager.sharedManager.downloadImage(
+                url: url,
+                placeholder: placeholder,
+                updateHandler: { [weak self] image in
+                    DispatchQueue.main.async {
+                        self?.genericIconView.image = image
+                    }
+                }
+            )
+        }
+
         private func refreshBankIconIfNeeded() {
             guard case .bankAccount(let bankAccount) = paymentMethod?.details else {
                 return
             }
             bankIconView.image = makeBankIcon(for: bankAccount.iconCode)
+        }
+
+        private func refreshGenericIconIfNeeded() {
+            guard case .unparsable = paymentMethod?.details else {
+                return
+            }
+            if let iconUrl = paymentMethod?.display?.icon?.main {
+                loadRemoteIcon(from: iconUrl)
+            } else {
+                genericIconView.image = createGenericPaymentMethodIcon()
+            }
         }
 
         // UIImages need to be manually updated when the system theme changes.
@@ -188,6 +256,7 @@ extension LinkPaymentMethodPicker {
                 return
             }
             refreshBankIconIfNeeded()
+            refreshGenericIconIfNeeded()
         }
         #endif
     }
