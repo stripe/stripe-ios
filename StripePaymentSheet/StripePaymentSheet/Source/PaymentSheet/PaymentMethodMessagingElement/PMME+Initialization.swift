@@ -118,7 +118,7 @@ extension PaymentMethodMessagingElement {
     private static func assertAndLogMissingField(_ missingField: String, apiClient: STPAPIClient) {
         stpAssertionFailure("Missing expected field from API response: \(missingField)")
         let error = PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI
-        let errorAnalytic = ErrorAnalytic(event: .unexpectedPMMEError, error: error, additionalNonPIIParams: ["missing_field": "info_url"])
+        let errorAnalytic = ErrorAnalytic(event: .unexpectedPMMEError, error: error, additionalNonPIIParams: ["missing_field": missingField])
         STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic, apiClient: apiClient)
     }
 

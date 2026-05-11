@@ -12,7 +12,7 @@ import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeIdentity
 @_spi(STP) import StripePayments
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
