@@ -818,15 +818,10 @@ extension STPCheckoutSession {
     ) -> [Checkout.CurrencyOption]? {
         guard !metas.isEmpty else { return nil }
         return metas.map { meta -> Checkout.CurrencyOption in
-            let conversion: Checkout.CurrencyConversion?
-            if let exchangeRateMeta,
-               meta.currency.lowercased() == exchangeRateMeta.localizedCurrency.lowercased() {
-                conversion = Checkout.CurrencyConversion(
-                    fxRate: exchangeRateMeta.exchangeRate,
-                    sourceCurrency: exchangeRateMeta.sellCurrency
-                )
-            } else {
-                conversion = nil
+            // Conversion details are only attached to the converted (localized) currency option.
+            let conversion: Checkout.CurrencyConversion? = exchangeRateMeta.flatMap { rate in
+                guard meta.currency.lowercased() == rate.localizedCurrency.lowercased() else { return nil }
+                return Checkout.CurrencyConversion(fxRate: rate.exchangeRate, sourceCurrency: rate.sellCurrency)
             }
             return Checkout.CurrencyOption(
                 amount: makeAmount(meta.total, currency: meta.currency),
