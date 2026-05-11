@@ -9,7 +9,7 @@ import Foundation
 
 @_spi(STP) import StripeCore
 
-@_spi(STP) public enum LinkPaymentMethodType: String, CaseIterable {
+@_spi(STP) @_spi(LinkControllerPreview) public enum LinkPaymentMethodType: String, CaseIterable {
     case card = "CARD"
     case bankAccount = "BANK_ACCOUNT"
 }
