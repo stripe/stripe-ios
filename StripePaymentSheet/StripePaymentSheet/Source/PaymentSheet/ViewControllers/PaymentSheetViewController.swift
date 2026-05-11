@@ -162,6 +162,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 customerID: configuration.customer?.id,
                 showApplePay: false,
                 showLink: false,
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,

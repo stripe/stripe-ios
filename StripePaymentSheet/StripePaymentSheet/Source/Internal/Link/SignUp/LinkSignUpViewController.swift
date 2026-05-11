@@ -67,7 +67,7 @@ final class LinkSignUpViewController: UIViewController {
     }()
 
     private lazy var emailElement = {
-        let element = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: theme)
+        let element = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: theme, brand: .link)
         element.indicatorTintColor = .linkIconBrand
         return element
     }()

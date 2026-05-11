@@ -79,6 +79,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private let shouldShowMandate: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let incentive: PaymentMethodIncentive?
+    private let linkBrand: LinkBrand
     /// A bit hacky; this is the mandate text for the given payment method, *regardless* of whether it is shown in the view.
     /// It'd be better if the source of truth of mandate text was not the view and instead an independent `func mandateText(...) -> NSAttributedString` function, but this is hard b/c US Bank Account doesn't show mandate in certain states.
     var mandateText: NSAttributedString? {
@@ -134,6 +135,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
+        self.linkBrand = linkBrand
         self.delegate = delegate
         self.rowButtons = []
         super.init(frame: .zero)
@@ -483,6 +485,7 @@ class EmbeddedPaymentMethodsView: UIView {
             appearance: appearance,
             accessoryView: accessoryButton,
             isEmbedded: true,
+            linkBrand: linkBrand,
             didTap: { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(
                     .stripeId(savedPaymentMethod.stripeId),

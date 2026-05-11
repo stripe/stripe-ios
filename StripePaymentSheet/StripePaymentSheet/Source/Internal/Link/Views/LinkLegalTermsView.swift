@@ -32,10 +32,12 @@ final class LinkLegalTermsView: UIView {
         static let lineHeight: CGFloat = 1.0
     }
 
-    private let links: [String: URL] = [
-        "terms": URL(string: "https://link.co/terms")!,
-        "privacy": URL(string: "https://link.co/privacy")!,
-    ]
+    private var links: [String: URL] {
+        [
+            "terms": brand.termsURL,
+            "privacy": brand.privacyURL,
+        ]
+    }
 
     weak var delegate: LinkLegalTermsViewDelegate?
     private let mode: LinkInlineSignupViewModel.Mode

@@ -5,7 +5,7 @@
 //  Created by Nick Porter on 6/13/25.
 //
 
-@testable import StripeCore
+@_spi(STP) @testable import StripeCore
 @testable @_spi(STP) import StripePayments
 @testable @_spi(AppearanceAPIAdditionsPreview) @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
@@ -177,6 +177,63 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         XCTAssertNil(displayData.labels.sublabel)
     }
 
+    func testPaymentOptionDisplayData_OnelinkLabels() {
+        let linkOption = PaymentSheet.LinkConfirmOption.wallet
+        let paymentOption = PaymentSheet.PaymentOption.link(option: linkOption)
+        let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
+            paymentOption: paymentOption,
+            currency: "usd",
+            iconStyle: .filled,
+            linkBrand: .onelink
+        )
+
+        XCTAssertEqual(displayData.label, "Onelink")
+        XCTAssertEqual(displayData.labels.label, "Onelink")
+        XCTAssertNil(displayData.labels.sublabel)
+    }
+
+    func testPaymentOptionDisplayData_NewLinkCardBrandUsesOnelinkLabel() {
+        let confirmParams = IntentConfirmParams(type: .linkCardBrand)
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card = cardParams
+
+        let paymentOption = PaymentSheet.PaymentOption.new(confirmParams: confirmParams)
+        let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
+            paymentOption: paymentOption,
+            currency: "usd",
+            iconStyle: .filled,
+            linkBrand: .onelink
+        )
+
+        XCTAssertEqual(displayData.label, "Onelink")
+        XCTAssertEqual(displayData.labels.label, "Onelink")
+    }
+
+    func testPaymentOptionDisplayData_LinkSignUpUsesOnelinkLabel() {
+        let confirmParams = IntentConfirmParams(type: .linkCardBrand)
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        confirmParams.paymentMethodParams.card = cardParams
+        let linkOption = PaymentSheet.LinkConfirmOption.signUp(
+            account: makeSUT(),
+            phoneNumber: nil,
+            consentAction: .implied_v0,
+            legalName: nil,
+            intentConfirmParams: confirmParams
+        )
+        let paymentOption = PaymentSheet.PaymentOption.link(option: linkOption)
+        let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
+            paymentOption: paymentOption,
+            currency: "usd",
+            iconStyle: .filled,
+            linkBrand: .onelink
+        )
+
+        XCTAssertEqual(displayData.label, "Onelink")
+        XCTAssertEqual(displayData.labels.label, "Onelink")
+    }
+
     func testPaymentOptionDisplayData_ExternalPaymentMethodLabels() {
         // Create an external payment method (e.g., PayPal)
         let externalPaymentMethod = ExternalPaymentMethod(
@@ -238,6 +295,48 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         // Test labels for saved Link payment method - display name is nil on fixture so should show "Link"
         XCTAssertEqual(displayData.labels.label, "Link")
         XCTAssertEqual(displayData.labels.sublabel, "TEST DISPLAY NAME •••• 4242")
+    }
+
+    func testPaymentSheetLabel_SavedLinkFallbackUsesOnelinkBrand() {
+        let paymentMethod = STPPaymentMethod._testLink()
+        paymentMethod.linkPaymentDetails = nil
+
+        XCTAssertEqual(paymentMethod.paymentSheetLabel(brand: .onelink), "Onelink")
+        XCTAssertEqual(paymentMethod.expandedPaymentSheetLabel(brand: .onelink), "Onelink")
+    }
+
+    func testPaymentOptionDisplayData_SavedLinkFallbackUsesOnelinkLabels() {
+        let paymentMethod = STPPaymentMethod._testLink()
+        paymentMethod.linkPaymentDetails = nil
+
+        let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: nil)
+        let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
+            paymentOption: paymentOption,
+            currency: "usd",
+            iconStyle: .filled,
+            linkBrand: .onelink
+        )
+
+        XCTAssertEqual(displayData.label, "Onelink")
+        XCTAssertEqual(displayData.labels.label, "Onelink")
+        XCTAssertNil(displayData.labels.sublabel)
+    }
+
+    func testPaymentOptionDisplayData_SavedLinkPassthroughUsesOnelinkLabel() {
+        let paymentMethod = STPPaymentMethod._testCard()
+        paymentMethod.isLinkPassthroughMode = true
+
+        let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: nil)
+        let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
+            paymentOption: paymentOption,
+            currency: "usd",
+            iconStyle: .filled,
+            linkBrand: .onelink
+        )
+
+        XCTAssertEqual(displayData.label, "•••• 4242")
+        XCTAssertEqual(displayData.labels.label, "Onelink")
+        XCTAssertEqual(displayData.labels.sublabel, "•••• 4242")
     }
 
     func testPaymentOptionDisplayData_LinkWithPaymentDetailsLabels() {

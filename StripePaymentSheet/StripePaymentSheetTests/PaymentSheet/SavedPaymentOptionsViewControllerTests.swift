@@ -197,6 +197,21 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
         XCTAssertEqual(removalMessage.message, "Pix 000••••••••")
     }
 
+    func testPaymentOptionCell_usesProvidedLinkBrandForLinkLabel() {
+        let cell = SavedPaymentMethodCollectionView.PaymentOptionCell(frame: .zero)
+
+        cell.setViewModel(
+            .link,
+            cbcEligible: false,
+            allowsPaymentMethodRemoval: false,
+            allowsPaymentMethodUpdate: false,
+            linkBrand: .onelink
+        )
+
+        XCTAssertEqual(cell.label.text, "Onelink")
+        XCTAssertEqual(cell.selectableRectangle.accessibilityLabel, "Onelink")
+    }
+
     // MARK: Helpers
     func _testCanEditPaymentMethods(removePM: Bool,
                                     removeLastPM: Bool,
@@ -207,6 +222,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
         let configuration = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123",
                                                                             showApplePay: true,
                                                                             showLink: true,
+                                                                            linkBrand: .link,
                                                                             removeSavedPaymentMethodMessage: nil,
                                                                             merchantDisplayName: "abc",
                                                                             isCVCRecollectionEnabled: true,
