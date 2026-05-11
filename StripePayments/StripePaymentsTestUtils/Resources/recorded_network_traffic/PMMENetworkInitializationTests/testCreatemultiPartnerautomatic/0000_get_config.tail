@@ -570,7 +570,7 @@ x-content-type-options: nosniff
           }
         ],
         "summary" : {
-          "message" : "Pay now, or in 4 interest-free payments of $12.50.",
+          "message" : "Pay now, in 4 interest-free payments of $12.50, or over 3 months.",
           "url" : null
         }
       },
