@@ -38,7 +38,7 @@ extension STPApplePayContext {
         }
 
         let shipping = total.shippingRate.minorUnitsAmount
-        let tax = total.taxExclusive.minorUnitsAmount + total.taxInclusive.minorUnitsAmount
+        let tax = total.taxExclusive.minorUnitsAmount
         let discount = total.discount.minorUnitsAmount
 
         // Skip the breakdown rows when there's nothing to break down — line items already sum to the total.
