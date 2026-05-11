@@ -82,6 +82,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         let intent: Intent
         let elementsSession: STPElementsSession
         let configuration: PaymentElementConfiguration
+        let linkBrand: LinkBrand
         let shouldOfferApplePay: Bool
         let shouldFinishOnClose: Bool
         let shouldShowSecondaryCta: Bool
@@ -147,6 +148,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             intent: Intent,
             elementsSession: STPElementsSession,
             configuration: PaymentElementConfiguration,
+            linkBrand: LinkBrand,
             shouldOfferApplePay: Bool,
             shouldFinishOnClose: Bool,
             shouldShowSecondaryCta: Bool = true,
@@ -161,6 +163,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
             self.intent = intent
             self.elementsSession = elementsSession
             self.configuration = configuration
+            self.linkBrand = linkBrand
             self.shouldOfferApplePay = shouldOfferApplePay
             self.shouldFinishOnClose = shouldFinishOnClose
             self.shouldShowSecondaryCta = shouldShowSecondaryCta
@@ -225,6 +228,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: configuration,
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
@@ -543,6 +547,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
         }
 
         let confirmOption = PaymentSheet.LinkConfirmOption.withPaymentDetails(
+            brand: context.linkBrand,
             account: linkAccount,
             paymentDetails: paymentDetails,
             confirmationExtras: confirmationExtras,
@@ -645,10 +650,14 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             style: .automatic,
             elementsSessionContext: ElementsSessionContext(
                 linkSettings: context.elementsSession.linkSettings.map {
-                    ElementsSessionContext.LinkSettings(useAttestationEndpoints: $0.useAttestationEndpoints)
+                    ElementsSessionContext.LinkSettings(
+                        useAttestationEndpoints: $0.useAttestationEndpoints,
+                        brand: context.linkBrand
+                    )
                 },
                 clientAttributionMetadata: clientAttributionMetadata
             ),
+            brand: context.linkBrand,
             onEvent: nil,
             from: self,
             completion: { result in
@@ -691,6 +700,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             elementsSession: context.elementsSession,
             with: PaymentOption.link(
                 option: .withPaymentDetails(
+                    brand: context.linkBrand,
                     account: linkAccount,
                     paymentDetails: paymentDetails,
                     confirmationExtras: confirmationExtras,
@@ -759,7 +769,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             // If we're launched from FlowController, then just finish with a wallet confirm option.
             // The wallet confirm option will trigger Link at the time of confirmation, where we can
             // use the web flow without issue.
-            payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: .wallet)
+            payWithLinkDelegate?.payWithLinkViewControllerDidFinish(self, confirmOption: .wallet(brand: context.linkBrand))
             return
         }
         isBailingToWebFlow = true
@@ -814,7 +824,7 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                     let verificationController = LinkVerificationController(
                         mode: .modal,
                         linkAccount: account,
-                        brand: self.context.configuration.resolvedLinkBrand(elementsSession: self.context.elementsSession),
+                        brand: self.context.linkBrand,
                         configuration: self.context.configuration
                     )
                     verificationController.present(from: self) { result in

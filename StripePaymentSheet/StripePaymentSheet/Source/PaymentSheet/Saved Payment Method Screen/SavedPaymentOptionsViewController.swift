@@ -187,7 +187,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         case .applePay:
             return .applePay
         case .link:
-            return .link(option: .wallet)
+            return .link(option: .wallet(brand: configuration.linkBrand))
         case let .saved(paymentMethod):
             return .saved(paymentMethod: paymentMethod, confirmParams: selectedPaymentOptionIntentConfirmParams)
         }

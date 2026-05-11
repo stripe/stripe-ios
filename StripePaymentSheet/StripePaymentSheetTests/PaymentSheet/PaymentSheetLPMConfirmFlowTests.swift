@@ -1500,6 +1500,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     elementsSession: ._testValue(intent: intent, linkFundingSources: linkFundingSources),
                     paymentOption: .link(
                         option: .withPaymentMethod(
+                            brand: .link,
                             paymentMethod: linkPaymentMethod
                         )
                     ),

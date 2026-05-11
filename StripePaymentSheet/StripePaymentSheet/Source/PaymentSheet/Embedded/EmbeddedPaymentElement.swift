@@ -417,7 +417,7 @@ public final class EmbeddedPaymentElement {
         case .applePay:
             return .applePay
         case .link:
-            return .link(option: .wallet)
+            return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)))
         case let .new(paymentMethodType: paymentMethodType):
             let params = IntentConfirmParams(type: paymentMethodType)
             params.setDefaultBillingDetailsIfNecessary(for: configuration)

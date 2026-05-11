@@ -398,7 +398,7 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        let paymentMethodLogoImage = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        let paymentMethodLogoImage = PaymentOption.link(option: .wallet(brand: linkBrand)).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
                         paymentMethodLogo.image = paymentMethodLogoImage
                         paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
                         paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height

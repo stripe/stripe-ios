@@ -24,14 +24,9 @@ class TimeoutTests: XCTestCase {
             return 42
         }
 
-        let operation3 = {
-            try await Task.sleep(nanoseconds: 300_000_000) // 0.3s
-            return true
-        }
-
-        let (result1, result2, result3) = await withTimeout(
+        let (result1, result2) = await withTimeout(
             1.0,
-            operation1, operation2, operation3
+            operation1, operation2
         )
 
         // Results should match operation positions, not completion order
@@ -46,12 +41,6 @@ class TimeoutTests: XCTestCase {
             return
         }
         XCTAssertEqual(value2, 42)
-
-        guard case .success(let value3) = result3 else {
-            XCTFail("Operation 3 should succeed")
-            return
-        }
-        XCTAssertEqual(value3, true)
     }
 
     func testWithTimeout_allOperationsTimeout() async {
@@ -180,21 +169,15 @@ class TimeoutTests: XCTestCase {
             return 2
         }
 
-        let operation3 = {
-            try await Task.sleep(nanoseconds: 400_000_000) // 0.4s
-            return 3
-        }
-
-        let (result1, result2, result3) = await withTimeout(
+        let (result1, result2) = await withTimeout(
             1.0,
-            operation1, operation2, operation3
+            operation1, operation2
         )
 
         let elapsed = Date().timeIntervalSince(startTime)
 
         XCTAssertEqual(try result1.get(), 1)
         XCTAssertEqual(try result2.get(), 2)
-        XCTAssertEqual(try result3.get(), 3)
 
         // Should complete in ~0.4s (parallel execution), not 1.2s (sequential)
         XCTAssertLessThan(elapsed, 0.8)

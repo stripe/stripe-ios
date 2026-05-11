@@ -65,7 +65,7 @@ extension PayWithLinkViewController {
             let navBar = LinkSheetNavigationBar(
                 isTestMode: false,
                 appearance: LinkUI.appearance,
-                brand: context.configuration.resolvedLinkBrand(elementsSession: context.elementsSession),
+                brand: context.linkBrand,
                 shouldLogPaymentSheetAnalyticsOnDismissal: false
             )
             navBar.title = navigationTitle

@@ -23,6 +23,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         existingConsumer: FinancialConnectionsConsumer?,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
+        brand: LinkBrand?,
         onEvent: ((StripeCore.FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void
@@ -33,6 +34,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         case .alwaysLight: configuration.style = .alwaysLight
         case .alwaysDark: configuration.style = .alwaysDark
         }
+        configuration.linkBrand = brand ?? elementsSessionContext?.linkSettings?.brand
 
         let financialConnectionsSheet = FinancialConnectionsSheet(
             financialConnectionsSessionClientSecret: clientSecret,
