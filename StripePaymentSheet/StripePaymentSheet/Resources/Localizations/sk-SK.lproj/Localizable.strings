@@ -20,6 +20,8 @@
 
 "Add your payment information" = "Pridajte svoje informácie o platbe";
 
+"Agree and accept" = "Súhlasím a prijímam";
+
 "Approve payment" = "Schváliť platbu";
 
 "Back" = "Späť";
@@ -54,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Pokračovaním súhlasíte s uložením svojich informácií pre budúce nákupy v spoločnosti %1$@ a <link>%2$@</link> podľa <terms>podmienok</terms> a <privacy>zásad ochrany osobných údajov</privacy> spoločnosti %2$@.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Pokračovaním súhlasíte s uložením svojich údajov pre budúce nákupy v spoločnosti %@ a <link>službe Link</link> podľa <terms>podmienok</terms> a <privacy>zásad ochrany osobných údajov</privacy> služby Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Pokračovaním súhlasíte s uložením svojich údajov pre budúce nákupy v spoločnosti %@.";
 
@@ -64,17 +66,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračovaním oprávňujete spoločnosť %1$@, aby zaúčtovala túto platbu a budúce platby na debet vášho účtu Cash App v súlade s podmienkami spoločnosti %2$@, až do odvolania tohto oprávnenia. Toto oprávnenie môžete kedykoľvek zmeniť v nastaveniach aplikácie Cash App.";
 
-"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pripojením sa k spoločnosti %@ súhlasíte s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy>.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pripojením k službe Link súhlasíte s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy>.";
 
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím telefónneho čísla a e-mailu súhlasíte s vytvorením účtu %1$@, ktorý podlieha <terms>podmienkam</terms> a <privacy>zásadám ochrany osobných údajov</privacy> spoločnosti %1$@.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím telefónneho čísla a e-mailu súhlasíte s vytvorením účtu Link, ktoré podlieha <terms>podmienkam</terms> a <privacy>zásadám ochrany osobných údajov</privacy> služby Link.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Poskytnutím informácií o karte povolíte spoločnosti %@ účtovať na vašej karte budúce platby v súlade s ich podmienkami.";
 
-"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím e-mailu súhlasíte s vytvorením účtu %1$@ a s uložením platobných údajov na %1$@ v súlade s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy> %1$@.";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím svojho e-mailu súhlasíte s vytvorením účtu Link a s uložením svojich platobných informácií do služby Link podľa <terms>podmienok</terms> a <privacy>zásad ochrany osobných údajov</privacy> služby Link.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Poskytnutím informácií o platbe a potvrdením tejto platby splnomocňujete (A) spoločnosti %@ a Stripe, nášho poskytovateľa platobných služieb, na posielanie platobných príkazov do vašej banky na odpísanie finančných prostriedkov z vášho účtu a (B) vašu banku na odpísanie finančných prostriedkov z vášho účtu v súlade s pokynmi. V rámci vašich práv máte právo na refundáciu od vašej banky podľa zmluvných podmienok uvedených v zmluve s vašou bankou. Refundáciu si musíte vyžiadať do 8 týždňov odo dňa, kedy boli finančné prostriedky odpísané z vášho účtu. Vaše práva sú vysvetlené vo vyhlásení, ktoré môžete získať od svojej banky. Súhlasíte s tým, že budete dostávať oznámenia o budúcich debetných platbách až 2 dni pred ich uskutočnením.";
 
-"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím telefónneho čísla súhlasíte s vytvorením účtu %1$@ a s uložením platobných informácií na %1$@ v súlade s <terms>podmienkami</terms> a <privacy>zásadami ochrany osobných údajov</privacy> %1$@.";
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím svojho telefónneho čísla súhlasíte s vytvorením účtu Link a s uložením svojich platobných informácií do služby Link podľa <terms>podmienok</terms> a <privacy>zásad ochrany osobných údajov</privacy> služby Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Uložením bankového účtu pre spoločnosť %@ súhlasíte s autorizáciou platieb podľa <terms>týchto podmienok</terms>.";
 
@@ -116,9 +118,11 @@
 
 "Continue another way" = "Pokračovať iným spôsobom";
 
-"Create an account with %@ for faster checkout across the web" = "Vytvorte si účet pomocou %@ na rýchlejšiu platbu na internete";
+"Create an account with Link for faster checkout across the web" = "Vytvorte si účet pomocou služby Link pre rýchlejšiu platbu na internete";
 
 "Debit or credit card" = "Debetná alebo kreditná karta";
+
+"Declarations" = "Vyhlásenia";
 
 "Default" = "Predvolené";
 
@@ -150,7 +154,7 @@
 
 "Log in or sign up" = "Prihlásiť sa alebo zaregistrovať";
 
-"Log out of %@" = "Odhlásiť sa z %@";
+"Log out of Link" = "Odhlásiť sa zo služby Link";
 
 "Manage SEPA debit" = "Spravovať SEPA inkaso";
 
@@ -198,15 +202,13 @@
 
 "Pay faster at %@ and thousands of businesses." = "Plaťte rýchlejšie u obchodníka %@ a tisícov ďalších spoločností.";
 
-"Pay faster everywhere %@ is accepted." = "Plaťte rýchlejšie všade tam, kde je akceptovaná služba %@.";
-
 "Pay faster everywhere Link is accepted." = "Plaťte rýchlejšie všade tam, kde je akceptovaná služba Link.";
 
 "Pay over time with %@" = "Zaplatiť postupne pomocou %@";
 
 "Pay over time with Affirm" = "Zaplaťte postupne pomocou služby Affirm";
 
-"Pay with %@" = "Zaplaťte s %@";
+"Pay with Link" = "Zaplatiť pomocou služby Link";
 
 "Pay with your bank account in just a few steps." = "Zaplaťte pomocou bankového účtu v niekoľkých jednoduchých krokoch.";
 
@@ -250,7 +252,7 @@
 
 "Save for future payments" = "Uložiť pre budúce platby";
 
-"Save my info for faster checkout with %@" = "Uloženie mojich informácií pre rýchlejšiu platbu pomocou %@";
+"Save my info for faster checkout with Link" = "Uložiť moje údaje pre rýchlejšiu platbu so službou Link";
 
 "Save payment details to %@ for future purchases" = "Uložiť údaje o platbe na %@ pre budúce nákupy";
 
@@ -258,7 +260,7 @@
 
 "Save your bank account in just a few steps." = "Uložte svoj bankový účet v niekoľkých krokoch.";
 
-"Save your info for secure 1-click checkout with %@" = "Uložte si údaje pre bezpečnú platbu jedným kliknutím pomocou %@";
+"Save your info for secure 1-click checkout with Link" = "Uložte svoje údaje pre bezpečnú platbu jedným kliknutím pomocou služby Link";
 
 "Saved" = "Uložené";
 

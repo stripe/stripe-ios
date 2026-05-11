@@ -20,6 +20,8 @@
 
 "Add your payment information" = "Ödeme bilgilerinizi ekleyin";
 
+"Agree and accept" = "Kabul et ve onayla";
+
 "Approve payment" = "Ödemeyi onaylayın";
 
 "Back" = "Geri";
@@ -54,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Devam ettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
-"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Devam ederek, %1$@ ve <link>%2$@</link> ile gelecekteki satın alımlar için bilgilerinizi %2$@ <terms>koşulları</terms> ve <privacy>gizlilik</privacy> şartları uyarınca kaydetmeyi kabul etmiş olursunuz.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Devam ederek, bilgilerinizi gelecekteki %@ ve <link>Link satın alımları için</link> Link <terms>koşulları</terms> ve <privacy>gizlilik kuralları</privacy> uyarınca kaydetmeyi kabul etmiş olursunuz.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Devam ederek, bilgilerinizi gelecekteki %@ satın alımları için kaydetmeyi kabul etmiş olursunuz.";
 
@@ -64,17 +66,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Devam ederek %1$@ şirketinin bu ödeme ve gelecekteki ödemeler için Cash Uygulaması hesabınızı %2$@ şirketinin şartlarına uygun olarak borçlandırmasına izin vermiş olursunuz. Bu durum, izin iptal edilene kadar geçerli olur. İstediğiniz zaman Cash Uygulamasının Ayarlarından bu izni değiştirebilirsiniz.";
 
-"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "%@’e katılarak <terms>Koşulları</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link'e katılarak <terms>Hükümleri</terms> ve <privacy>Gizlilik Politikasını</privacy> kabul etmiş olursunuz.";
 
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefon numarası ve e-posta adresini sağlayarak, %1$@ <terms>Koşulları</terms> ve <privacy>Gizlilik Politikası</privacy> kapsamındaki bir %1$@ hesabı oluşturmayı kabul etmiş olursunuz.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefon numarası ve e-posta adresi vererek Link <terms>Şartları</terms> ve <privacy>Gizlilik Politikası</privacy>'na tabi bir Link hesabı oluşturmayı kabul etmiş olursunuz.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Kart bilgilerinizi sağlayarak %@ işletmesinin gelecekteki ödemeler için kartınızı kendi şartlarına uygun olarak ücretlendirmesine izin vermiş olursunuz.";
 
-"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "E-posta adresinizi sağlayarak, %1$@ hesabı oluşturmayı ve ödeme bilgilerinizi %1$@ <terms>Koşulları</terms> ve <privacy>Gizlilik Politikasına</privacy> göre %1$@’e kaydetmeyi kabul etmiş olursunuz.";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "E-postanızı vererek Link <terms>Şartları</terms> ve <privacy>Gizlilik Politikası</privacy> uyarınca bir Link hesabı oluşturmayı ve ödeme bilgilerinizi Link'e kaydetmeyi kabul edersiniz.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ödeme bilgilerinizi sağlayarak ve bu ödemeyi onaylayarak, (A) %@ ve ödeme hizmeti sağlayıcımız Stripe'a hesabınızdan ödeme tahsilatı yapması için bankanıza talimatlar göndermesi ve (B) bankanıza bu talimatlara uygun olarak hesabınızdan ödeme tahsilatı yapması için yetki verirsiniz. Haklarınızın bir parçası olarak, bankanızla yaptığınız sözleşmenin hüküm ve koşulları uyarınca bankanızdan geri ödeme alma hakkına sahipsiniz. Geri ödeme, hesabınızdan ödeme tahsilatı yapıldığı tarihten itibaren 8 hafta içinde talep edilmelidir. Haklarınız, bankanızdan alabileceğiniz bir hesap özetinde açıklanmaktadır. Tahakkuk etmeden 2 gün öncesine kadar gelecekteki ödeme tahsilatları için bildirim almayı da kabul edersiniz.";
 
-"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefon numaranızı vererek %1$@ hesabı oluşturmayı ve ödeme bilgilerinizi %1$@ <terms>Koşulları</terms> ve <privacy>Gizlilik Politikasına</privacy> göre %1$@’e kaydetmeyi kabul etmiş olursunuz.";
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefon numaranızı vererek Link <terms>Şartları</terms> ve <privacy>Gizlilik Politikası</privacy> uyarınca bir Link hesabı oluşturmayı ve ödeme bilgilerinizi Link'e kaydetmeyi kabul edersiniz.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@ için banka hesabınızı kaydettiğinizde ödemeleri <terms>bu koşullara</terms> göre yetkilendirmeyi kabul etmiş olursunuz.";
 
@@ -116,9 +118,11 @@
 
 "Continue another way" = "Başka bir yöntemle devam et";
 
-"Create an account with %@ for faster checkout across the web" = "Web genelinde daha hızlı ödeme için %@ ile bir hesap oluşturun";
+"Create an account with Link for faster checkout across the web" = "Web genelinde daha hızlı ödeme yapmak için Link ile bir hesap oluşturun";
 
 "Debit or credit card" = "Bankamatik ya da kredi kartı";
+
+"Declarations" = "Beyanlar";
 
 "Default" = "Varsayılan";
 
@@ -150,7 +154,7 @@
 
 "Log in or sign up" = "Oturum açın veya kaydolun";
 
-"Log out of %@" = "%@ oturumu kapatılsın mı?";
+"Log out of Link" = "Link'ten çıkış yap";
 
 "Manage SEPA debit" = "SEPA bankamatik hesabını yönet";
 
@@ -198,15 +202,13 @@
 
 "Pay faster at %@ and thousands of businesses." = "%@ ve binlerce işletmede daha hızlı ödeme yapın.";
 
-"Pay faster everywhere %@ is accepted." = "%@ kabul edildiği her yerde daha hızlı ödeme yapın.";
-
 "Pay faster everywhere Link is accepted." = "Link'in kabul edildiği her yerde daha hızlı ödeme yapın.";
 
 "Pay over time with %@" = "%@ ile zaman içinde ödeyin";
 
 "Pay over time with Affirm" = "Affirm ile zaman içinde ödeyin";
 
-"Pay with %@" = "%@ ile öde";
+"Pay with Link" = "Link ile öde";
 
 "Pay with your bank account in just a few steps." = "Sadece birkaç adımda banka hesabınız ile ödeyin.";
 
@@ -250,7 +252,7 @@
 
 "Save for future payments" = "Gelecekteki ödemeler için kaydedilsin";
 
-"Save my info for faster checkout with %@" = "%@ ile daha hızlı ödeme yapmak için bilgilerimi kaydet";
+"Save my info for faster checkout with Link" = "Link ile daha hızlı ödeme için bilgilerimi kaydet";
 
 "Save payment details to %@ for future purchases" = "Ödeme bilgilerini gelecekteki satın almalar için %@ işletmesine kaydet";
 
@@ -258,7 +260,7 @@
 
 "Save your bank account in just a few steps." = "Banka hesabınızı birkaç adımda kaydedin.";
 
-"Save your info for secure 1-click checkout with %@" = "%@ ile güvenli tek tıkla ödeme için bilgilerini kaydet";
+"Save your info for secure 1-click checkout with Link" = "Link ile tek tıklamayla güvenli ödeme yapmak için bilgilerinizi kaydedin";
 
 "Saved" = "Kaydedildi";
 

@@ -26,7 +26,7 @@
 
 "Continue linking your account" = "Lanjutkan menautkan rekening Anda";
 
-"Continue with %@" = "Lanjutkan dengan %@";
+"Continue with Link" = "Lanjutkan dengan Link";
 
 "Email address" = "Alamat email";
 
@@ -110,7 +110,7 @@
 
 "Try searching another bank or %@" = "Coba cari bank lain atau %@";
 
-"Use information you previously saved with your %@ account." = "Gunakan informasi yang sebelumnya disimpan dengan akun %@ Anda.";
+"Use information you previously saved with your Link account." = "Gunakan informasi yang sebelumnya disimpan dengan akun Link Anda.";
 
 "Use test account" = "Gunakan rekening percobaan";
 
@@ -150,11 +150,11 @@
 
 "Your account numbers don't match." = "Nomor rekening Anda tidak sama.";
 
-"Your account was connected, but couldn't be saved to %@." = "Akun Anda telah dihubungkan, tetapi tidak dapat disimpan ke %@.";
+"Your account was connected, but couldn't be saved to Link." = "Rekening Anda terhubung, tetapi tidak dapat disimpan ke Link.";
 
 "Your account was connected." = "Akun Anda telah terhubung.";
 
-"Your accounts were connected, but couldn't be saved to %@." = "Akun Anda telah dihubungkan, tetapi tidak dapat disimpan ke %@.";
+"Your accounts were connected, but couldn't be saved to Link." = "Rekening Anda terhubung, tetapi tidak dapat disimpan ke Link.";
 
 "Your accounts were connected." = "Akun Anda telah terhubung.";
 

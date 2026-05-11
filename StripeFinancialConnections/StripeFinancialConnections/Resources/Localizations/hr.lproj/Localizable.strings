@@ -26,7 +26,7 @@
 
 "Continue linking your account" = "Nastavite s povezivanjem vašeg računa";
 
-"Continue with %@" = "Nastavite s %@";
+"Continue with Link" = "Nastavi s Linkom";
 
 "Email address" = "Adresa e-pošte";
 
@@ -110,7 +110,7 @@
 
 "Try searching another bank or %@" = "Pokušajte potražiti drugu banku ili %@";
 
-"Use information you previously saved with your %@ account." = "Upotrijebite podatke koje ste prethodno spremili na svojem računu %@.";
+"Use information you previously saved with your Link account." = "Upotrijebite podatke koje ste prethodno spremili sa svojim Link računom.";
 
 "Use test account" = "Koristi testni račun";
 
@@ -150,11 +150,11 @@
 
 "Your account numbers don't match." = "Vaši brojevi računa se ne podudaraju.";
 
-"Your account was connected, but couldn't be saved to %@." = "Vaš je račun bio povezan, ali se nije mogao spremiti na %@.";
+"Your account was connected, but couldn't be saved to Link." = "Vaš je račun povezan, ali nije mogao biti spremljen u Link.";
 
 "Your account was connected." = "Vaš račun je povezan.";
 
-"Your accounts were connected, but couldn't be saved to %@." = "Vaši su računi bili povezani, ali se nisu mogli spremiti na %@.";
+"Your accounts were connected, but couldn't be saved to Link." = "Vaši su računi povezani, ali se nisu mogli spremiti u Link.";
 
 "Your accounts were connected." = "Vaši su računi povezani.";
 

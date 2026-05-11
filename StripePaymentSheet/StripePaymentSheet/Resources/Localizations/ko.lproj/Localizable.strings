@@ -20,6 +20,8 @@
 
 "Add your payment information" = "결제 정보를 추가하세요.";
 
+"Agree and accept" = "동의 및 수락";
+
 "Approve payment" = "결제 승인";
 
 "Back" = "뒤로";
@@ -54,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "계속하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
-"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "계속 진행하시면, %2$@의 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 따라 향후 %1$@ 및 <link>%2$@</link>에서 구매 시 귀하의 정보를 저장하는 데 동의하는 것으로 간주됩니다.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "계속 진행하시면, 향후 구매 시 사용하기 위해 귀하의 정보를 %@ 및 <link>Link</link> 에 Link <terms>약관</terms> 및 <privacy>개인정보 보호</privacy>에 따라 저장하시는 데 동의하시는 것입니다.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "계속 진행하시면, 향후 구매 시 사용하기 위해 귀하의 정보를 %@에 저장하는 데 동의하시는 것입니다.";
 
@@ -64,17 +66,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "계속하면 이 승인이 취소될 때까지 %2$@의 약관에 따라 이 결제 및 향후 결제에 대해 %1$@이(가) Cash App 계좌에서 인출하도록 승인하는 것입니다. 이는 Cash App 설정에서 언제든지 변경할 수 있습니다.";
 
-"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "%@에 가입하시면 귀하는 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것으로 간주됩니다.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link에 참여하면 <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 동의하는 것입니다.";
 
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "전화번호와 이메일을 제공하시면 귀하는 %1$@ <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 따라 %1$@ 계정을 생성하는 데 동의하는 것으로 간주됩니다.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "전화번호와 이메일 주소를 제공하면 Link <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 따라 Link 계정을 생성하는 데 동의하는 것입니다.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "카드 정보를 제공하면 %@에서 향후 결제에 대해 해당 약관에 따라 귀하의 카드에 대금을 청구할 수 있습니다.";
 
-"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "이메일 주소를 제공하시면 귀하는 %1$@ <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 따라 %1$@ 계정을 생성하고 결제 정보를 %1$@에 저장하는 데 동의하는 것으로 간주됩니다.";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link의 <terms>약관</terms> 및 <privacy>개인정보처리방침</privacy>에 따라, 이메일을 제공하면 Link 계정을 생성하고 Link에 결제 정보를 저장하게 됩니다.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "결제 정보를 제공하고 이 결제를 확인하면 (A) %@ 및 결제 서비스 공급업체 Stripe가 은행에 계좌 출금에 관련한 지침을 전송하고 (B) 은행이 해당 지침에 따라 출금하도록 승인하는 것입니다. 귀하의 권리 중 일부로, 은행에 대한 이용 약관 동의 하에 은행에서 환불을 받을 자격을 부여받게 됩니다. 환불은 계좌에서 출금이 이루어진 날짜로부터 8주 이내에 요청해야 합니다. 귀하의 권리는 은행에서 받으시는 명세서에 설명되어 있습니다. 귀하는 향후 출금 시 최대 2일 전에 알림을 받겠다고 동의하는 것입니다.";
 
-"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "전화번호를 제공하시면 귀하는 %1$@ <terms>약관</terms> 및 <privacy>개인정보정책</privacy>에 따라 %1$@ 계정을 생성하고 결제 정보를 %1$@에 저장하는 데 동의하는 것으로 간주됩니다.";
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link의 <terms>약관</terms> 및 <privacy>개인정보처리방침</privacy>에 따라, 전화번호를 제공하면 Link 계정을 생성하고 Link에 결제 정보를 저장하게 됩니다.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "%@에 대해 귀하의 은행 계좌를 저장하면 <terms>해당 약관</terms>에 따라 결제를 승인하는 데 동의하는 것입니다.";
 
@@ -116,9 +118,11 @@
 
 "Continue another way" = "다른 방식으로 계속";
 
-"Create an account with %@ for faster checkout across the web" = "%@ 계정을 생성하여 웹 전반에서 더 빠르게 체크아웃하세요";
+"Create an account with Link for faster checkout across the web" = "Link 계정을 생성하여 웹 전반에서 더 빠르게 체크아웃하세요";
 
 "Debit or credit card" = "직불 또는 신용 카드";
+
+"Declarations" = "신고";
 
 "Default" = "기본값";
 
@@ -150,7 +154,7 @@
 
 "Log in or sign up" = "로그인 또는 등록";
 
-"Log out of %@" = "%@에서 로그아웃";
+"Log out of Link" = "Link 로그아웃";
 
 "Manage SEPA debit" = "SEPA 자동 이체 관리";
 
@@ -198,15 +202,13 @@
 
 "Pay faster at %@ and thousands of businesses." = "%@사를 비롯하여 수많은 비즈니스에서 더 빠르게 결제할 수 있습니다.";
 
-"Pay faster everywhere %@ is accepted." = "%@가 허용되는 모든 곳에서 더 빠르게 결제하십시오.";
-
 "Pay faster everywhere Link is accepted." = "Link가 허용되는 모든 곳에서 더 빠르게 결제하십시오.";
 
 "Pay over time with %@" = "%@으로 할부 결제";
 
 "Pay over time with Affirm" = "Affirm으로 할부 결제";
 
-"Pay with %@" = "%@(으)로 결제";
+"Pay with Link" = "Link로 결제";
 
 "Pay with your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌로 결제하십시오.";
 
@@ -250,7 +252,7 @@
 
 "Save for future payments" = "향후 결제에 사용하도록 저장";
 
-"Save my info for faster checkout with %@" = "%@로 체크아웃을 빠르게 진행하기 위해 내 정보 저장";
+"Save my info for faster checkout with Link" = "Link로 더 빠르게 체크아웃할 수 있도록 내 정보 저장";
 
 "Save payment details to %@ for future purchases" = "향후 구매를 위해 결제 세부사항 %@에 저장";
 
@@ -258,7 +260,7 @@
 
 "Save your bank account in just a few steps." = "몇 단계의 간단한 절차를 통해 은행 계좌를 저장하십시오.";
 
-"Save your info for secure 1-click checkout with %@" = "%@를 통해 안전한 원클릭 체크아웃를 위해 정보를 저장합니다";
+"Save your info for secure 1-click checkout with Link" = "Link로 안전한 원클릭 결제를 위해 사용자 정보 저장";
 
 "Saved" = "저장함";
 

@@ -20,6 +20,8 @@
 
 "Add your payment information" = "Tambahkan informasi pembayaran Anda";
 
+"Agree and accept" = "Setuju dan terima";
+
 "Approve payment" = "Setujui pembayaran";
 
 "Back" = "Kembali";
@@ -54,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan melanjutkan, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Dengan melanjutkan, berarti Anda setuju untuk menyimpan informasi Anda untuk pembelian mendatang dengan %1$@ dan <link>%2$@</link> sesuai dengan <terms>ketentuan</terms> dan <privacy>privasi</privacy> %2$@.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Dengan melanjutkan, Anda menyetujui informasi Anda disimpan untuk pembelian di masa mendatang dengan %@ dan <link>Link</link> sesuai dengan <terms>ketentuan</terms> dan <privacy>privasi</privacy> Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Dengan melanjutkan, Anda setuju untuk menyimpan informasi Anda untuk pembelian di masa mendatang dengan %@.";
 
@@ -64,17 +66,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Dengan melanjutkan, berarti Anda memberi %1$@ otorisasi untuk mendebit akun Cash App Anda bagi pembayaran ini dan pembayaran mendatang sesuai dengan ketentuan %2$@, hingga otorisasi ini dicabut. Anda dapat mengubahnya kapan saja di Pengaturan Cash App.";
 
-"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan bergabung dengan %@, berarti Anda menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan bergabung ke Link, Anda berarti menyetujui <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy>.";
 
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon dan email, berarti Anda setuju untuk membuat akun %1$@ yang tunduk pada <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> %1$@.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon dan email, berarti Anda menyetujui pembuatan akun Link yang tunduk pada <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> Link.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Dengan memberikan informasi kartu, Anda berarti mengizinkan %@ mengenakan charge pada kartu Anda untuk pembayaran mendatang sesuai dengan ketentuan mereka.";
 
-"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan email, berarti Anda setuju untuk membuat akun %1$@ dan menyimpan info pembayaran Anda ke %1$@, sesuai dengan <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> %1$@.";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan email, berarti Anda menyetujui pembuatan akun Link serta penyimpanan informasi pembayaran pada Link, sesuai dengan <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> Link.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Dengan memberikan informasi pembayaran dan mengonfirmasi pembayaran ini, berarti Anda mengotorisasi (A) %@ dan Stripe, penyedia layanan pembayaran kami, untuk mengirim instruksi kepada bank untuk mendebit rekening Anda dan (B) kepada bank untuk mendebit rekening Anda sesuai instruksi itu. Sebagai bagian dari hak Anda, Anda berhak mendapat pengembalian dana dari bank berdasarkan ketentuan dan persyaratan perjanjian Anda dengan bank. Pengembalian dana harus diklaim dalam waktu 8 minggu sejak tanggal pendebitan rekening Anda. Hak Anda dijelaskan dalam pernyataan yang dapat Anda peroleh dari bank Anda. Anda setuju untuk menerima notifikasi pendebitan di masa mendatang hingga 2 hari sebelum dilakukan.";
 
-"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon, berarti Anda setuju untuk membuat akun %1$@ dan menyimpan info pembayaran Anda ke %1$@, sesuai dengan <terms>Ketentuan</terms> dan </privacy>Kebijakan Privasi<privacy> %1$@.";
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Dengan memberikan nomor telepon, berarti Anda menyetujui pembuatan akun Link serta penyimpanan informasi pembayaran pada Link, sesuai dengan <terms>Ketentuan</terms> dan <privacy>Kebijakan Privasi</privacy> Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Dengan menyimpan rekening bank Anda untuk %@, Anda berarti setuju untuk mengotorisasi pembayaran sesuai dengan <terms>ketentuan-ketentuan berikut</terms>.";
 
@@ -116,9 +118,11 @@
 
 "Continue another way" = "Lanjutkan dengan cara lain";
 
-"Create an account with %@ for faster checkout across the web" = "Buat akun dengan %@ agar checkout lebih cepat di seluruh web";
+"Create an account with Link for faster checkout across the web" = "Buat rekening dengan Link untuk checkout yang lebih cepat di seluruh web";
 
 "Debit or credit card" = "Kartu debit atau kredit";
+
+"Declarations" = "Deklarasi";
 
 "Default" = "Default";
 
@@ -150,7 +154,7 @@
 
 "Log in or sign up" = "Masuk atau daftar";
 
-"Log out of %@" = "Keluar dari %@";
+"Log out of Link" = "Keluar dari Link";
 
 "Manage SEPA debit" = "Kelola debit SEPA";
 
@@ -198,15 +202,13 @@
 
 "Pay faster at %@ and thousands of businesses." = "Bayar lebih cepat di %@ dan ribuan bisnis.";
 
-"Pay faster everywhere %@ is accepted." = "Bayar lebih cepat di mana saja %@ diterima.";
-
 "Pay faster everywhere Link is accepted." = "Bayar lebih cepat di mana saja Link diterima.";
 
 "Pay over time with %@" = "Bayar dengan jangka waktu dengan %@";
 
 "Pay over time with Affirm" = "Bayar seiring waktu dengan Affirm";
 
-"Pay with %@" = "Bayar dengan %@";
+"Pay with Link" = "Bayar dengan Link";
 
 "Pay with your bank account in just a few steps." = "Bayar dengan rekening bank Anda hanya dalam beberapa langkah.";
 
@@ -250,7 +252,7 @@
 
 "Save for future payments" = "Simpan untuk pembayaran mendatang";
 
-"Save my info for faster checkout with %@" = "Simpan info saya untuk checkout lebih cepat dengan %@";
+"Save my info for faster checkout with Link" = "Simpan info saya untuk checkout lebih cepat dengan Link";
 
 "Save payment details to %@ for future purchases" = "Simpan detail pembayaran pada %@ untuk pembelian mendatang";
 
@@ -258,7 +260,7 @@
 
 "Save your bank account in just a few steps." = "Simpan rekening bank Anda hanya dalam beberapa langkah.";
 
-"Save your info for secure 1-click checkout with %@" = "Simpan info Anda untuk checkout sekali klik yang aman dengan %@";
+"Save your info for secure 1-click checkout with Link" = "Simpan info Anda untuk checkout aman dengan 1 klik dengan Link";
 
 "Saved" = "Disimpan";
 

@@ -20,6 +20,8 @@
 
 "Add your payment information" = "Προσθέστε τα στοιχεία πληρωμής σας";
 
+"Agree and accept" = "Συμφωνία και αποδοχή";
+
 "Approve payment" = "Έγκριση πληρωμής";
 
 "Back" = "Πίσω";
@@ -54,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Εάν συνεχίσετε, συμφωνείτε να εξουσιοδοτείτε πληρωμές με βάση <terms>αυτούς τους όρους</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Αν συνεχίσετε, συμφωνείτε να αποθηκεύουμε τα στοιχεία σας για μελλοντικές αγορές με %1$@ και <link>%2$@</link> σύμφωνα με τους <terms>όρους</terms> και την <privacy>πολιτική απορρήτου</privacy> του %2$@.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Συνεχίζοντας, συμφωνείτε να αποθηκεύσετε τις πληροφορίες σας για μελλοντικές αγορές με το %@ και <link>Link</link> σύμφωνα με τους <terms>όρους</terms> και το <privacy>απόρρητο</privacy> του Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Συνεχίζοντας, συμφωνείτε να αποθηκεύσετε τις πληροφορίες σας για μελλοντικές αγορές με το %@.";
 
@@ -64,17 +66,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Συνεχίζοντας, εξουσιοδοτείτε την %1$@ να χρεώσει τον λογαριασμό σας Cash App για αυτήν την πληρωμή και μελλοντικές πληρωμές σύμφωνα με τους όρους της %2$@, μέχρι να ανακληθεί αυτή η εξουσιοδότηση. Μπορείτε να αλλάξετε αυτήν την επιλογή οποιαδήποτε στιγμή στις ρυθμίσεις Cash App.";
 
-"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Αν εγγραφείτε στην πλατφόρμα %@, συμφωνείτε με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy>.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Με την εγγραφή σας στο Link, συμφωνείτε με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy>.";
 
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Με την παροχή αριθμού τηλεφώνου και email, συμφωνείτε να δημιουργήσετε έναν λογαριασμό %1$@ που υπόκειται στους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy> του %1$@.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Αν παράσχετε αριθμό τηλεφώνου και email, συμφωνείτε να δημιουργηθεί ένας λογαριασμός Link που υπόκειται στους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy> του Link.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Με την παροχή των στοιχείων της κάρτας σας, επιτρέπετε στην %@ να χρεώνει την κάρτα σας για μελλοντικές πληρωμές σύμφωνα με τους όρους της.";
 
-"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Με την παροχή του email σας, συμφωνείτε να δημιουργήσετε έναν λογαριασμό %1$@ και να αποθηκεύσετε τα στοιχεία πληρωμής σας σε %1$@, σύμφωνα με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy> του %1$@.";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Αν παράσχετε το email σας, συμφωνείτε να δημιουργηθεί ένας λογαριασμός στο Link και να αποθηκευτούν τα στοιχεία πληρωμής σας στο Link, σύμφωνα με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy> του Link.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Με την παροχή των στοιχείων πληρωμής σας και επιβεβαιώνοντας αυτήν την πληρωμή, εξουσιοδοτείτε (A) την %@ και την Stripe, τον πάροχο υπηρεσιών πληρωμών μας, να στείλουν οδηγίες στην τράπεζά σας προκειμένου να χρεώσει τον λογαριασμό σας και (B) την τράπεζά σας προκειμένου να χρεώσει τον λογαριασμό σας, σύμφωνα με τις οδηγίες αυτές. Στο πλαίσιο των δικαιωμάτων σας, δικαιούστε επιστροφή από την τράπεζά σας με βάση τους όρους και τις προϋποθέσεις που διατυπώνονται στη σύμβαση με την τράπεζά σας. Η αξίωση για επιστροφή πρέπει να υποβληθεί εντός 8 εβδομάδων από την ημερομηνία χρέωσης του λογαριασμού σας. Τα δικαιώματά σας επεξηγούνται σε αναλυτική κατάσταση, την οποία μπορείτε να εξασφαλίσετε από την τράπεζά σας. Συμφωνείτε να λαμβάνετε ειδοποιήσεις για μελλοντικές χρεώσεις έως και 2 ημέρες προτού προκύψουν.";
 
-"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Με την παροχή του αριθμού τηλεφώνου σας, συμφωνείτε να δημιουργήσετε έναν λογαριασμό %1$@ και να αποθηκεύσετε τα στοιχεία πληρωμής σας σε %1$@, σύμφωνα με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy> του %1$@.";
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Αν παράσχετε τον αριθμό τηλεφώνου σας, συμφωνείτε να δημιουργηθεί ένας λογαριασμός στο Link και να αποθηκευτούν τα στοιχεία πληρωμής σας στο Link, σύμφωνα με τους <terms>Όρους</terms> και την <privacy>Πολιτική απορρήτου</privacy> του Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Αποθηκεύοντας τον τραπεζικό λογαριασμό σας για την %@, συμφωνείτε να εξουσιοδοτείτε πληρωμές σύμφωνα με <terms>αυτούς τους όρους</terms>.";
 
@@ -116,9 +118,11 @@
 
 "Continue another way" = "Συνέχεια με άλλο τρόπο";
 
-"Create an account with %@ for faster checkout across the web" = "Δημιουργήστε λογαριασμό με το %@ για ταχύτερη ολοκλήρωση αγοράς σε όλο το διαδίκτυο";
+"Create an account with Link for faster checkout across the web" = "Δημιουργήστε λογαριασμό με το Link για ταχύτερη ολοκλήρωση αγοράς σε όλο το διαδίκτυο";
 
 "Debit or credit card" = "Χρεωστική ή πιστωτική κάρτα";
+
+"Declarations" = "Δηλώσεις";
 
 "Default" = "Προεπιλογή";
 
@@ -150,7 +154,7 @@
 
 "Log in or sign up" = "Σύνδεση ή εγγραφή";
 
-"Log out of %@" = "Αποσύνδεση από %@";
+"Log out of Link" = "Αποσύνδεση από το Link";
 
 "Manage SEPA debit" = "Διαχείριση χρέωσης SEPA";
 
@@ -198,15 +202,13 @@
 
 "Pay faster at %@ and thousands of businesses." = "Ταχύτερες πληρωμές στην %@ και σε χιλιάδες επιχειρήσεις.";
 
-"Pay faster everywhere %@ is accepted." = "Πληρώστε ταχύτερα οπουδήποτε γίνεται δεκτό το %@.";
-
 "Pay faster everywhere Link is accepted." = "Πληρώστε γρηγορότερα όπου γίνεται δεκτό το Link.";
 
 "Pay over time with %@" = "Πληρωμή σταδιακά με %@";
 
 "Pay over time with Affirm" = "Πληρωμή σταδιακά με Affirm";
 
-"Pay with %@" = "Πληρωμή με %@";
+"Pay with Link" = "Πληρωμή με το Link";
 
 "Pay with your bank account in just a few steps." = "Πληρώστε με τον τραπεζικό λογαριασμό σας με λίγα μόνο βήματα.";
 
@@ -250,7 +252,7 @@
 
 "Save for future payments" = "Αποθήκευση για μελλοντικές πληρωμές";
 
-"Save my info for faster checkout with %@" = "Αποθήκευση των στοιχείων μου για ταχύτερη ολοκλήρωση αγοράς με %@";
+"Save my info for faster checkout with Link" = "Αποθήκευση των στοιχείων μου για ταχύτερη ολοκλήρωση αγοράς με το Link";
 
 "Save payment details to %@ for future purchases" = "Αποθήκευση στοιχείων πληρωμής στην %@ για μελλοντικές αγορές";
 
@@ -258,7 +260,7 @@
 
 "Save your bank account in just a few steps." = "Αποθηκεύστε τον τραπεζικό λογαριασμό σας με λίγα μόνο βήματα.";
 
-"Save your info for secure 1-click checkout with %@" = "Αποθηκεύστε τα στοιχεία σας για ασφαλή ολοκλήρωση αγοράς με 1 κλικ μέσω του %@";
+"Save your info for secure 1-click checkout with Link" = "Αποθήκευση των στοιχείων σας για ασφαλή ολοκλήρωση αγοράς με 1 κλικ μέσω Link";
 
 "Saved" = "Αποθηκεύτηκε";
 

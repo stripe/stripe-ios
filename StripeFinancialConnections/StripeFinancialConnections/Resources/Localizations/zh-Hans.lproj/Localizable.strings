@@ -26,7 +26,7 @@
 
 "Continue linking your account" = "继续关联您的账户";
 
-"Continue with %@" = "继续使用 %@";
+"Continue with Link" = "继续使用 Link";
 
 "Email address" = "邮件地址";
 
@@ -110,7 +110,7 @@
 
 "Try searching another bank or %@" = "尝试搜索另一银行或%@";
 
-"Use information you previously saved with your %@ account." = "使用您之前在 %@ 账户中保存的信息。";
+"Use information you previously saved with your Link account." = "使用您之前在 Link 账户中保存的信息。";
 
 "Use test account" = "使用测试账户";
 
@@ -150,11 +150,11 @@
 
 "Your account numbers don't match." = "您的账号不匹配。";
 
-"Your account was connected, but couldn't be saved to %@." = "您的账户已关联，但无法保存至 %@。";
+"Your account was connected, but couldn't be saved to Link." = "您的账户已关联至，但无法保存到 Link。";
 
 "Your account was connected." = "您的账户已关联。";
 
-"Your accounts were connected, but couldn't be saved to %@." = "您的账户已关联，但无法保存至 %@。";
+"Your accounts were connected, but couldn't be saved to Link." = "您的账户已关联，但无法保存到 Link。";
 
 "Your accounts were connected." = "您的账户已关联。";
 

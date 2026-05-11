@@ -20,6 +20,8 @@
 
 "Add your payment information" = "Ajoutez vos informations de paiement";
 
+"Agree and accept" = "Accepter et consentir";
+
 "Approve payment" = "Autoriser le paiement";
 
 "Back" = "Retour";
@@ -54,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "En continuant, vous autorisez les paiements conformément à <terms>ces conditions</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "En continuant, vous acceptez d’enregistrer vos informations pour de futurs achats avec %1$@ et <link>%2$@</link> selon les <terms>conditions</terms> et la <privacy>politique de confidentialité</privacy> de %2$@.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "En continuant, vous acceptez d'enregistrer vos renseignements pour des achats futurs avec %@ et <link>Link</link> selon les <terms>Conditions de service</terms> et la <privacy>Politique de confidentialité</privacy> de Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "En continuant, vous acceptez d'enregistrer vos renseignements pour de futurs achats avec %@.";
 
@@ -64,17 +66,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "En continuant, vous autorisez %1$@ à débiter votre compte Cash App pour ce paiement et les prochains paiements, conformément aux conditions de %2$@, jusqu'à la révocation de cette autorisation. Vous pouvez modifier ceci à tout moment dans les paramètres de Cash App.";
 
-"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En rejoignant %@, vous acceptez les <terms>conditions</terms> et la <privacy>politique de confidentialité</privacy>.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En rejoignant Link, vous acceptez les <terms>Conditions</terms> et la <privacy>Politique de confidentialité</privacy>.";
 
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En fournissant votre numéro de téléphone et votre adresse de courriel, vous acceptez de créer un compte %1$@ soumis aux <terms>conditions</terms> et à la <privacy>politique de confidentialité</privacy> de %1$@.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En indiquant votre numéro de téléphone et votre adresse de courriel, vous acceptez de créer un compte Link, conformément aux <terms>Conditions</terms> et à la <privacy>Politique de confidentialité</privacy> de Link.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "En fournissant vos informations de carte, vous autorisez %@ à débiter votre carte pour les paiements à venir, conformément à ses conditions.";
 
-"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En fournissant votre adresse de courriel, vous acceptez de créer un compte %1$@ et d’enregistrer vos informations de paiement à %1$@, selon les <terms>conditions</terms> et la <privacy>politique de confidentialité</privacy> de %1$@.";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En fournissant votre adresse de courriel, vous acceptez de créer un compte Link et d'enregistrer vos informations de paiement sur Link, conformément aux <terms>Conditions</terms> et à la <privacy>Politique de confidentialité</privacy> de Link.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "En fournissant vos informations de paiement et en confirmant ce paiement, vous autorisez (A) %@ et Stripe, notre prestataire de services de paiement, à donner à votre institution financière l'instruction de débiter votre compte, et (B) votre institution financièire à débiter votre compte conformément à ces instructions. Vous bénéficiez d'un droit de remboursement par votre institution financière selon les conditions décrites dans la convention que vous avez passée avec elle. Toute demande de remboursement doit être présentée dans les 8 semaines suivant la date de débit de votre compte. Vos droits sont précisés dans une déclaration que vous pouvez obtenir auprès de votre institution financière. Vous acceptez de recevoir des notifications concernant les débits futurs jusqu'à 2 jours avant leur réalisation.";
 
-"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En fournissant votre numéro de téléphone, vous acceptez de créer un compte %1$@ et d’enregistrer vos informations de paiement à %1$@, selon les <terms>conditions</terms> et la <privacy>politique de confidentialité</privacy> de %1$@.";
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "En fournissant votre numéro de téléphone, vous acceptez de créer un compte Link et d'enregistrer vos informations de paiement sur Link, conformément aux <terms>Conditions</terms> et à la <privacy>Politique de confidentialité</privacy> de Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "En enregistrant votre compte bancaire pour %@, vous autorisez les paiements conformément à <terms>ces conditions</terms>.";
 
@@ -116,9 +118,11 @@
 
 "Continue another way" = "Autre mode de paiement";
 
-"Create an account with %@ for faster checkout across the web" = "Créez un compte avec %@ pour un paiement plus rapide sur le web";
+"Create an account with Link for faster checkout across the web" = "Créez un compte avec Link pour un paiement plus rapide sur le Web";
 
 "Debit or credit card" = "Carte de débit ou de crédit";
+
+"Declarations" = "Déclarations";
 
 "Default" = "Par défaut";
 
@@ -150,7 +154,7 @@
 
 "Log in or sign up" = "Connexion ou inscription";
 
-"Log out of %@" = "Déconnexion de %@";
+"Log out of Link" = "Déconnexion de Link with Stripe";
 
 "Manage SEPA debit" = "Gérer le prélèvement SEPA";
 
@@ -198,15 +202,13 @@
 
 "Pay faster at %@ and thousands of businesses." = "Payez plus rapidement après du marchand %@ et de milliers d'autres entreprises.";
 
-"Pay faster everywhere %@ is accepted." = "Payez plus rapidement partout où [ %s] est accepté.";
-
 "Pay faster everywhere Link is accepted." = "Payez plus rapidement vos achats partout où Link est accepté.";
 
 "Pay over time with %@" = "Payer par versements échelonnés avec %@";
 
 "Pay over time with Affirm" = "Payer par versements échelonnés avec Affirm";
 
-"Pay with %@" = "Payer avec %@";
+"Pay with Link" = "Payer avec Link";
 
 "Pay with your bank account in just a few steps." = "Payez avec votre compte bancaire en quelques étapes.";
 
@@ -250,7 +252,7 @@
 
 "Save for future payments" = "Enregistrer pour les prochains achats";
 
-"Save my info for faster checkout with %@" = "Enregistrer mes informations pour un paiement plus rapide avec %@";
+"Save my info for faster checkout with Link" = "Enregistrer mes informations pour payer plus rapidement avec Link";
 
 "Save payment details to %@ for future purchases" = "Enregistrer les informations de paiement sur %@ pour vos prochains achats";
 
@@ -258,7 +260,7 @@
 
 "Save your bank account in just a few steps." = "Enregistrez votre compte bancaire en quelques clics.";
 
-"Save your info for secure 1-click checkout with %@" = "Enregistrez vos informations pour un paiement sécurisé en un clic avec %@";
+"Save your info for secure 1-click checkout with Link" = "Enregistrer mes informations pour payer en un clic de façon sécurisée avec Link";
 
 "Saved" = "Enregistré";
 

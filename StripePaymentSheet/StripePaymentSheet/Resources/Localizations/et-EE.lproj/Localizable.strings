@@ -20,6 +20,8 @@
 
 "Add your payment information" = "Lisage makseteave";
 
+"Agree and accept" = "Nõustu ja aktsepteeri";
+
 "Approve payment" = "Kinnitage makse";
 
 "Back" = "Tagasi";
@@ -54,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Jätkates nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Jätkates nõustute, et teie andmed salvestatakse tulevaste ostude jaoks teenustes %1$@ ja <link>%2$@</link> vastavalt %2$@ <terms>tingimustele</terms> ja <privacy>privaatsuseeskirjadele</privacy>.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Jätkates nõustute salvestama oma andmed tulevaste ostude jaoks %@ ja <link>Link</link> vastavalt Linki <terms>tingimustele</terms> ja <privacy>privaatsusele</privacy>.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Jätkates nõustute salvestama oma teabe tulevaste ostude jaoks %@.";
 
@@ -64,17 +66,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Jätkamisel volitate %1$@ debiteerima teie Cash Appi kontot selle makse ja tulevaste maksete eest vastavalt ettevõtte %2$@ tingimustele, kuni see volitus tühistatakse. Saate seda igal ajal oma Cash rakenduse seadetes muuta.";
 
-"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Liitudes %@, nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link liitudes nõustute <terms>tingimuste</terms> ja <privacy>privaatsuseeskirjadega</privacy>.";
 
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefoninumbri ja e-posti aadressi andmisega nõustute looma %1$@ konto, mis sõltub %1$@ <terms>tingimustest</terms> ja <privacy>privaatsuseeskirjadest</privacy>.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Telefoninumbri ja e-posti aadressi esitamisega nõustute Linki konto loomisega vastavalt Linki <terms>tingimustele</terms> ja <privacy>privaatsuseeskirjadele</privacy>.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Kaarditeavet esitades, lubate ettevõttel %@ oma kaarti tulevasteks makseteks nende kehtestatud tingimustel debiteerida.";
 
-"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "E-posti aadressi andmisega nõustute looma %1$@ konto ja salvestama makseandmed %1$@ vastavalt %1$@ <terms>tingimustele</terms> ja <privacy>privaatsuseeskirjadele</privacy>.";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Oma e-posti aadressi esitamisega nõustute looma Linki konto ja salvestama oma makseteabe Linki, mille suhtes kehtivad Linki <terms>tingimused</terms> ja <privacy>privaatsuseeskirjad</privacy>.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Makseteabe esitamise ja käesoleva makse kinnitamisega volitatate (A) ettevõtet %@ ja Stripe'i, meie makseteenuse osutajat, saatma teie panka juhiseid teie konto debiteerimiseks ning (B) oma panka nende juhiste alusel teie kontot debiteerima. Vastavalt teie õigustele, pangaga sõlmitud lepingule ja panga üldtingimustele on teil õigus saada pangalt tagasimakset. Tagasimakse taotlus tuleb esitada 8 nädala jooksul alates teie konto debiteerimise kuupäevast. Teie õigusi selgitatakse avalduses, mille saate oma pangast. Nõustute saama teavitusi tulevaste debiteerimiste kohta kaks päeva enne nende toimumist.";
 
-"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Sisestades oma telefoninumbri, nõustute looma %1$@ konto ja salvestama makseandmed %1$@ vastavalt %1$@ <terms>tingimustele</terms> ja <privacy>privaatsuseeskirjadele</privacy>.";
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Oma telefoninumbri esitamisega nõustute looma Linki konto ja salvestama oma makseteabe Linki, mille suhtes kehtivad Linki <terms>tingimused</terms> ja <privacy>privaatsuseeskirjad</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Salvestades oma pangakonto %@, nõustute maksete autoriseerimisega vastavalt nendele <terms>tingimustele</terms>.";
 
@@ -116,9 +118,11 @@
 
 "Continue another way" = "Jätka muul viisil";
 
-"Create an account with %@ for faster checkout across the web" = "Loo konto %@-iga, et veebis kiiremini makse lõpule viia";
+"Create an account with Link for faster checkout across the web" = "Looge Linki konto, et veebis kiiremini maksta";
 
 "Debit or credit card" = "Deebet- või krediitkaart";
+
+"Declarations" = "Deklaratsioonid";
 
 "Default" = "Vaikimisi";
 
@@ -150,7 +154,7 @@
 
 "Log in or sign up" = "Logi sisse või registreeru";
 
-"Log out of %@" = "Logi %@st välja";
+"Log out of Link" = "Logi Link välja";
 
 "Manage SEPA debit" = "SEPA deebeti haldamine";
 
@@ -198,15 +202,13 @@
 
 "Pay faster at %@ and thousands of businesses." = "Makske kiiremini kaupleja %@ lehel ja tuhandetel teistel saitidel.";
 
-"Pay faster everywhere %@ is accepted." = "Maksa kiiremini kõikjal, kus %@ on aktsepteeritud.";
-
 "Pay faster everywhere Link is accepted." = "Makske kiiremini kõikjal, kus Link on aktsepteeritud.";
 
 "Pay over time with %@" = "Maksa aja jooksul makseviisiga %@";
 
 "Pay over time with Affirm" = "Maksa Affirmi järelmaksuga";
 
-"Pay with %@" = "Maksa %@-ga";
+"Pay with Link" = "Maksa Linkiga";
 
 "Pay with your bank account in just a few steps." = "Pangakontoga maksmine vaid mõne sammuga.";
 
@@ -250,7 +252,7 @@
 
 "Save for future payments" = "Salvestage tulevasteks makseteks";
 
-"Save my info for faster checkout with %@" = "Salvesta minu info kiiremaks väljamakseks %@";
+"Save my info for faster checkout with Link" = "Salvesta minu andmed kiiremaks makse lõpuleviimiseks Linkiga";
 
 "Save payment details to %@ for future purchases" = "Salvesta makseandmed %@ tulevaste ostude jaoks";
 
@@ -258,7 +260,7 @@
 
 "Save your bank account in just a few steps." = "Salvestage oma pangakonto vaid mõne lihtsa sammuga.";
 
-"Save your info for secure 1-click checkout with %@" = "Salvesta oma info turvaliseks ühe kliki makse lõpuleviimiseks %@";
+"Save your info for secure 1-click checkout with Link" = "Salvesta oma teave, et võimaldada turvaline ühe klõpsuga makse lõpuleviimine Linkiga";
 
 "Saved" = "Salvestatud";
 

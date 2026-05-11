@@ -20,6 +20,8 @@
 
 "Add your payment information" = "Je betaalgegevens toevoegen";
 
+"Agree and accept" = "Akkoord en accepteren";
+
 "Approve payment" = "Betaling goedkeuren";
 
 "Back" = "Terug";
@@ -54,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je doorgaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
-"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Als je doorgaat, ga je ermee akkoord dat je gegevens worden opgeslagen voor toekomstige aankopen bij %1$@ en <link>%2$@</link> volgens de <terms>voorwaarden</terms> en <privacy>privacy</privacy> van %2$@.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Door verder te gaan, ga je ermee akkoord dat jouw informatie wordt opgeslagen voor toekomstige aankopen bij %@ en <link>Link</link> volgens Link <terms>voorwaarden</terms> en <privacy>privacy</privacy>.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Door verder te gaan, ga je ermee akkoord jouw informatie op te slaan voor toekomstige aankopen bij %@.";
 
@@ -64,17 +66,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Als je doorgaat, geef je %1$@ toestemming om deze betaling en toekomstige betalingen in rekening te brengen op je Cash App-account, in overeenstemming met de voorwaarden van %2$@, totdat je deze toestemming intrekt. Je kunt dit op elk moment wijzigen via je Cash App-instellingen.";
 
-"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je aan te melden bij %@, ga je akkoord met de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy>.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door Link te gebruiken ga je akkoord met de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy>.";
 
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je telefoonnummer en e-mailadres te verstrekken, ga je ermee akkoord een %1$@-account te maken waarop de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> van %1$@ van toepassing zijn.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je telefoonnummer en e-mailadres te verstrekken, ga je ermee akkoord dat er een Link-account wordt gemaakt dat onderhevig is aan de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> van Link.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Door je kaartgegevens te verstrekken geef je %@ toestemming om toekomstige betalingen af te schrijven van je betaalkaart in overeenstemming met hun voorwaarden.";
 
-"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je e-mailadres te verstrekken, ga je akkoord met het maken van een %1$@-account en het opslaan van je betaalgegevens naar %1$@, volgens de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> %1$@.";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je e-mailadres te verstrekken, ga je ermee akkoord dat er een Link-account wordt gemaakt en dat je betaalgegevens worden opgeslagen naar Link, volgens de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> van Link.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Door je betaalgegevens op te geven en deze betaling te bevestigen geef je toestemming aan (A) %@ en Stripe, onze betaaldienstverlener, een opdracht te sturen aan je bank om je rekening te debiteren en aan (B) je bank om je rekening te debiteren conform deze opdracht. Je hebt het recht op terugbetaling door je bank conform de met je bank overeengekomen voorwaarden. Een verzoek tot terugbetaling moet worden ingediend binnen 8 weken vanaf de datum waarop je rekening is gedebiteerd. Je rechten worden uitgelegd in een verklaring die je kunt opvragen bij je bank. Je stemt ermee in dat je minstens 2 dagen voor de uitvoering van toekomstige debiteringen hierover op de hoogte wordt gesteld.";
 
-"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je telefoonnummer te verstrekken, ga je ermee akkoord dat je een %1$@-account maakt en je betaalgegevens opslaat naar %1$@, volgens de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> van %1$@.";
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Door je telefoonnummer te verstrekken, ga je ermee akkoord dat er een Link-account wordt gemaakt en dat je betaalgegevens worden opgeslagen naar Link, volgens de <terms>voorwaarden</terms> en het <privacy>privacybeleid</privacy> van Link.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Als je je bankrekening voor %@ opslaat, ga je ermee akkoord betalingen in overeenstemming met <terms>deze voorwaarden</terms> te autoriseren.";
 
@@ -116,9 +118,11 @@
 
 "Continue another way" = "Op een andere manier doorgaan";
 
-"Create an account with %@ for faster checkout across the web" = "Maak een account aan bij %@ om sneller te kunnen afrekenen op internet.";
+"Create an account with Link for faster checkout across the web" = "Maak een account aan bij Link om sneller te kunnen afrekenen op het internet.";
 
 "Debit or credit card" = "Debitcard of creditcard";
+
+"Declarations" = "Verklaringen";
 
 "Default" = "Standaard";
 
@@ -150,7 +154,7 @@
 
 "Log in or sign up" = "Aanmelden of registreren";
 
-"Log out of %@" = "Afmelden bij %@";
+"Log out of Link" = "Afmelden bij Link";
 
 "Manage SEPA debit" = "SEPA-incasso beheren";
 
@@ -198,15 +202,13 @@
 
 "Pay faster at %@ and thousands of businesses." = "Reken sneller af bij %@ en duizenden andere bedrijven.";
 
-"Pay faster everywhere %@ is accepted." = "Betaal sneller, overal waar %@ wordt geaccepteerd.";
-
 "Pay faster everywhere Link is accepted." = "Betaal sneller, overal waar Link wordt geaccepteerd.";
 
 "Pay over time with %@" = "Betalen in termijnen met %@";
 
 "Pay over time with Affirm" = "Betalen in termijnen met Affirm";
 
-"Pay with %@" = "Betalen met %@";
+"Pay with Link" = "Betalen met Link";
 
 "Pay with your bank account in just a few steps." = "Betaal in een paar stappen met je bankrekening.";
 
@@ -250,7 +252,7 @@
 
 "Save for future payments" = "Opslaan voor toekomstige betalingen";
 
-"Save my info for faster checkout with %@" = "Bewaar mijn gegevens, zodat ik sneller met %@ kan afrekenen";
+"Save my info for faster checkout with Link" = "Bewaar mijn gegevens, zodat ik sneller met Link kan afrekenen";
 
 "Save payment details to %@ for future purchases" = "Betaalgegevens opslaan naar %@ voor toekomstige aankopen";
 
@@ -258,7 +260,7 @@
 
 "Save your bank account in just a few steps." = "Sla je bankrekening in een paar stappen op.";
 
-"Save your info for secure 1-click checkout with %@" = "Bewaar je gegevens zodat je veilig met één klik kunt afrekenen met %@";
+"Save your info for secure 1-click checkout with Link" = "Bewaar je gegevens zodat je veilig met één klik kunt afrekenen met Link";
 
 "Saved" = "Opgeslagen";
 

@@ -26,7 +26,7 @@
 
 "Continue linking your account" = "Jatka tilisi linkittämistä";
 
-"Continue with %@" = "Jatka kohteella %@";
+"Continue with Link" = "Jatka Link-palvelulla";
 
 "Email address" = "Sähköpostiosoite";
 
@@ -110,7 +110,7 @@
 
 "Try searching another bank or %@" = "Yritä hakea toista pankkia tai %@";
 
-"Use information you previously saved with your %@ account." = "Käytä aiemmin tallennettuja tietoja %@-tililläsi.";
+"Use information you previously saved with your Link account." = "Käytä Link-tilille aiemmin tallennettuja tietoja.";
 
 "Use test account" = "Käytä testitiliä";
 
@@ -150,11 +150,11 @@
 
 "Your account numbers don't match." = "Tilinumerot eivät täsmää.";
 
-"Your account was connected, but couldn't be saved to %@." = "Tiliäsi yhdistettiin, mutta sitä ei voitu tallentaa kohteeseen %@.";
+"Your account was connected, but couldn't be saved to Link." = "Tilisi on yhdistetty, mutta sitä ei voitu tallentaa Link-palveluun.";
 
 "Your account was connected." = "Tilisi on yhdistetty.";
 
-"Your accounts were connected, but couldn't be saved to %@." = "Tilisi yhdistettiin, mutta niitä ei voitu tallentaa kohteeseen %@.";
+"Your accounts were connected, but couldn't be saved to Link." = "Tilisi on yhdistetty, mutta niitä ei voitu tallentaa Link-palveluun.";
 
 "Your accounts were connected." = "Tilisi on yhdistetty.";
 

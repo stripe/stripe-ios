@@ -20,6 +20,8 @@
 
 "Add your payment information" = "Pievienot maksājuma informāciju";
 
+"Agree and accept" = "Piekrītu un pieņemu";
+
 "Approve payment" = "Apstiprināt maksājumu";
 
 "Back" = "Atpakaļ";
@@ -54,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Turpinot, jūs piekrītat autorizēt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Turpinot, jūs piekrītat saglabāt savu informāciju turpmākiem pirkumiem ar %1$@ un <link>%2$@</link> saskaņā ar %2$@ <terms>Noteikumi</terms> un <privacy>Konfidencialitāte</privacy>.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Turpinot jūs piekrītat saglabāt savu informāciju turpmākiem pirkumiem ar %@ un <link>Saite</link> saskaņā ar saites <terms>noteikumiem</terms> un <privacy>privātumu</privacy>.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Turpinot jūs piekrītat saglabāt savu informāciju turpmākiem pirkumiem ar %@.";
 
@@ -64,17 +66,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Turpinot, jūs atļaujat %1$@ iekasēt no jūsu Cash App konta par šo un turpmākiem maksājumiem saskaņā ar %2$@ noteikumiem, līdz šī atļauja netiek atsaukta. To varat mainīt jebkurā laikā Cash App iestatījumos.";
 
-"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pievienojoties %@, jūs piekrītat <terms>Noteikumi</terms> un <privacy>Konfidencialitātes politika</privacy>.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pievienojoties Link, jūs piekrītat <terms>noteikumiem</terms> un <privacy>konfidencialitātes politikai</privacy>.";
 
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot tālruņa numuru un e-pasta adresi, jūs piekrītat izveidot %1$@ kontu saskaņā ar %1$@ <terms>Noteikumi</terms> un <privacy>Konfidencialitātes politika</privacy>.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot tālruņa numuru un e-pastu, jūs piekrītat izveidot Link kontu atbilstoši Link <terms>noteikumiem</terms> un <privacy>Konfidencialitātes politikai</privacy>.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Norādot savas kartes informāciju, jūs atļaujat uzņēmumam %@ saskaņā ar viņu noteikumiem iekasēt no jūsu kartes turpmākus maksājumus.";
 
-"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot savu e-pasta adresi, jūs piekrītat izveidot %1$@ kontu un saglabāt maksājuma informāciju %1$@ saskaņā ar %1$@ <terms>Noteikumi</terms> un <privacy>Konfidencialitātes politika</privacy>.";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot savu e-pastu, es piekrītu izveidot Link kontu un saglabāt savu maksājuma informāciju Link, ievērojot Link <terms>noteikumus</terms> un <privacy>Konfidencialitātes politiku</privacy>.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Norādot savu maksājuma informāciju un apstiprinot šo maksājumu, jūs pilnvarojat A) %@ un Stripe (mūsu maksājumu pakalpojumu sniedzēju) nosūtīt rīkojumu jūsu bankai debetēt jūsu kontu un B) jūsu banku debetēt jūsu kontu saskaņā ar šo rīkojumu. Jums ir tiesības pieprasīt naudas līdzekļu atmaksu no jūsu bankas saskaņā ar jūsu bankas konta apkalpošanas līguma noteikumiem un nosacījumiem. Naudas līdzekļu atmaksa jāpieprasa astoņu nedēļu laikā, sākot no jūsu konta debetēšanas datuma. Jūsu tiesības ir paskaidrotas paziņojumā, kuru varat saņemt savā bankā. Jūs piekrītat saņemt paziņojumus par turpmākajiem debeta darījumiem vismaz divas dienas pirms to veikšanas.";
 
-"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot savu tālruņa numuru, jūs piekrītat izveidot %1$@ kontu un saglabāt maksājuma informāciju %1$@ saskaņā ar %1$@ <terms>Noteikumi</terms> un <privacy>Konfidencialitātes politika</privacy>.";
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Norādot savu tālruņa numuru, es piekrītu izveidot Link kontu un saglabāt savu maksājuma informāciju Link, ievērojot Link <terms>noteikumus</terms> un <privacy>Konfidencialitātes politiku</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Saglabājot savu bankas kontu %@, jūs piekrītat apstiprināt maksājumus saskaņā ar <terms>šiem noteikumiem</terms>.";
 
@@ -116,9 +118,11 @@
 
 "Continue another way" = "Turpināt ar citu veidu";
 
-"Create an account with %@ for faster checkout across the web" = "Izveidojiet kontu vietnē %@, lai ātrāk norēķinātos tīmeklī";
+"Create an account with Link for faster checkout across the web" = "Izveidojiet kontu Link, lai varētu ātrāk veikt apmaksu visā tīmeklī";
 
 "Debit or credit card" = "Debetkarte vai kredītkarte";
+
+"Declarations" = "Deklarācijas";
 
 "Default" = "Noklusējuma";
 
@@ -150,7 +154,7 @@
 
 "Log in or sign up" = "Pieteikties vai reģistrēties";
 
-"Log out of %@" = "Vai iziet no %@?";
+"Log out of Link" = "Izrakstīties no Link";
 
 "Manage SEPA debit" = "Pārvaldīt SEPA debetu";
 
@@ -198,15 +202,13 @@
 
 "Pay faster at %@ and thousands of businesses." = "Maksājiet ātrāk %@ un tūkstošiem citos uzņēmumos.";
 
-"Pay faster everywhere %@ is accepted." = "Maksājiet ātrāk visur, kur pieņem %@.";
-
 "Pay faster everywhere Link is accepted." = "Maksājiet ātrāk visur, kur tiek pieņemta saite.";
 
 "Pay over time with %@" = "Maksāt pakāpeniski ar %@";
 
 "Pay over time with Affirm" = "Maksājiet pakāpeniski ar Affirm";
 
-"Pay with %@" = "Maksāt ar %@";
+"Pay with Link" = "Maksāt ar Link";
 
 "Pay with your bank account in just a few steps." = "Maksājiet ar savu bankas kontu, izpildot tikai dažus soļus";
 
@@ -250,7 +252,7 @@
 
 "Save for future payments" = "Saglabāt nākotnes maksājumiem";
 
-"Save my info for faster checkout with %@" = "Saglabāt manu informāciju, lai ātrāk norēķinātos ar %@";
+"Save my info for faster checkout with Link" = "Saglabāt manu informāciju, lai varētu norēķināties ar Link";
 
 "Save payment details to %@ for future purchases" = "Saglabāt maksājuma informāciju %@ turpmākiem pirkumiem";
 
@@ -258,7 +260,7 @@
 
 "Save your bank account in just a few steps." = "Saglabājiet savu bankas kontu, izpildot tikai dažus soļus.";
 
-"Save your info for secure 1-click checkout with %@" = "Saglabājiet savu informāciju, lai droši norēķinātos ar 1 klikšķi ar %@";
+"Save your info for secure 1-click checkout with Link" = "Saglabāt jūsu informāciju, lai nodrošinātu norēķināšanos Link ar 1 klikšķi";
 
 "Saved" = "Saglabāts";
 

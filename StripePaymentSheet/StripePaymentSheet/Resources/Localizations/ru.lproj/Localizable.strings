@@ -20,6 +20,8 @@
 
 "Add your payment information" = "Укажите платежные данные";
 
+"Agree and accept" = "Согласиться и принять";
+
 "Approve payment" = "Подтвердить платеж";
 
 "Back" = "Назад";
@@ -54,7 +56,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Продолжая, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
 
-"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Продолжая, вы соглашаетесь сохранить свои данные для будущих покупок с помощью %1$@ и <link>%2$@</link> согласно <terms>Условиям</terms> и <privacy>Политике конфиденциальности</privacy> %2$@.";
+"By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Продолжая, вы соглашаетесь сохранить свою информацию для будущих покупок через %@ и <link>Link</link> в соответствии с <terms>условиями</terms> и <privacy>политикой конфиденциальности</privacy> Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Продолжая, вы соглашаетесь сохранить вашу информацию для будущих покупок через %@.";
 
@@ -64,17 +66,17 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Продолжая, вы уполномочиваете компанию %1$@ списывать с вашего счета Cash App суммы в соответствии с этим, а также будущими платежами согласно условиям компании %2$@, пока это разрешение не будет отозвано. Отозвать разрешение можно в любой момент в настройках приложения Cash App.";
 
-"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Присоединяясь к %@, вы принимаете <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
+"By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Регистрируясь в Link, вы принимаете соответствующие <terms>Условия</terms> и <privacy>Политику конфиденциальности</privacy>.";
 
-"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя номер телефона и электронный адрес, вы соглашаетесь создать учетную запись %1$@, на которую распространяются <terms>Условия</terms> и <privacy>Политика конфиденциальности</privacy> %1$@.";
+"By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя номер телефона и электронный адрес, вы соглашаетесь создать учетную запись Link, на которую распространяются <terms>Условия использования</terms> и <privacy>Условия конфиденциальности</privacy> Link.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Указывая реквизиты карты, вы разрешаете компании %@ списывать средства с карты в рамках будущих платежей в соответствии с условиями компании.";
 
-"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Указывая адрес электронной почты, вы соглашаетесь создать учетную запись %1$@ и сохранить свои платежные реквизиты в %1$@ согласно <terms>Условиям</terms> и <privacy>Политике конфиденциальности</privacy> %1$@.";
+"By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой электронный адрес, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Указав свои платежные данные и подтвердив платеж, вы уполномочиваете (A) %@ и Stripe, нашего поставщика платежных услуг, на отправку вашему банку инструкций на списание средств с вашего счета и (B) ваш банк на списание средств с вашего счета согласно данным инструкциям. Вы имеете право на возврат средств от вашего банка согласно положениям и условиям Вашего соглашения с банком. Подать заявку на возврат средств следует в течение 8 недель с даты списания средств с вашего счета. Ваши права объясняются в выписке, которую вы можете получить в своем банке. Вы даете согласие на получение уведомлений о будущих дебетованиях в срок до 2 дней до их поступления.";
 
-"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой номер телефона, вы соглашаетесь создать учетную запись %1$@ и сохранить свои платежные реквизиты в %1$@ согласно <terms>Условиям</terms> и <privacy>Политике конфиденциальности</privacy> %1$@.";
+"By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставляя свой номер телефона, вы соглашаетесь создать учетную запись Link и сохранить свои платежные реквизиты в Link в соответствии с <terms>Условиями</terms> и <privacy>Политикой конфиденциальности</privacy>.";
 
 "By saving your bank account for %@ you agree to authorize payments pursuant to <terms>these terms</terms>." = "Сохраняя реквизиты своего банковского счета у %@, вы соглашаетесь авторизовать платежи в соответствии с <terms>этими условиями</terms>.";
 
@@ -116,9 +118,11 @@
 
 "Continue another way" = "Продолжить другим способом";
 
-"Create an account with %@ for faster checkout across the web" = "Создание учетной записи в %@ для ускоренного оформления заказов в интернете";
+"Create an account with Link for faster checkout across the web" = "Создайте учетную запись в Link для более быстрого оформления заказов в Интернете";
 
 "Debit or credit card" = "Дебетовая или кредитная карта";
+
+"Declarations" = "Заявления";
 
 "Default" = "По умолчанию";
 
@@ -150,7 +154,7 @@
 
 "Log in or sign up" = "Войдите или зарегистрируйтесь";
 
-"Log out of %@" = "Выйти из %@";
+"Log out of Link" = "Выйти из Link";
 
 "Manage SEPA debit" = "Управление дебетованием SEPA";
 
@@ -198,15 +202,13 @@
 
 "Pay faster at %@ and thousands of businesses." = "Ускоренная оплата продавцу %@ и тысячам других предприятий.";
 
-"Pay faster everywhere %@ is accepted." = "Платите быстрее везде, где принимают %@.";
-
 "Pay faster everywhere Link is accepted." = "Платите быстрее везде, где принимают Link.";
 
 "Pay over time with %@" = "Оплатить в рассрочку с помощью %@";
 
 "Pay over time with Affirm" = "Оплатить в рассрочку через систему Affirm";
 
-"Pay with %@" = "Оплатить с помощью %@";
+"Pay with Link" = "Оплатить с помощью Link";
 
 "Pay with your bank account in just a few steps." = "Платите с использованием своего банковского счета в несколько простых действий.";
 
@@ -250,7 +252,7 @@
 
 "Save for future payments" = "Сохранить данные для будущих платежей";
 
-"Save my info for faster checkout with %@" = "Сохранить данные для ускоренной процедуры выписки с помощью %@";
+"Save my info for faster checkout with Link" = "Сохранить мои данные для ускоренного оформления покупок с помощью Link";
 
 "Save payment details to %@ for future purchases" = "Сохранить реквизиты платежа в адрес %@ для будущих покупок";
 
@@ -258,7 +260,7 @@
 
 "Save your bank account in just a few steps." = "Сохраните реквизиты своего банковского счета всего за несколько шагов.";
 
-"Save your info for secure 1-click checkout with %@" = "Сохраните свои данные для безопасного оформления покупок одним щелчком с помощью %@";
+"Save your info for secure 1-click checkout with Link" = "Сохраните свои данные в Link для безопасного оформления покупок нажатием одной кнопки";
 
 "Saved" = "Сохранено";
 
