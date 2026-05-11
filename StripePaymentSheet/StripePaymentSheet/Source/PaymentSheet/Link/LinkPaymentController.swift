@@ -55,7 +55,7 @@ import UIKit
     }
 
     private var resolvedLinkBrand: LinkBrand {
-        .onelink
+        configuration.link.brand ?? fetchedLinkBrand ?? .link
     }
 
     /// The parent view controller to present
