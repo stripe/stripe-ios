@@ -728,16 +728,6 @@ extension STPCheckoutSession {
                 deliveryEstimate: deliveryEstimate
             )
         }
-        if let id = dict["shipping_rate"] as? String {
-            let currency = defaultCurrency ?? "usd"
-            return Checkout.ShippingOption(
-                id: id,
-                displayName: nil,
-                amount: makeAmount(0, currency: currency),
-                currency: currency,
-                deliveryEstimate: nil
-            )
-        }
         return nil
     }
 
