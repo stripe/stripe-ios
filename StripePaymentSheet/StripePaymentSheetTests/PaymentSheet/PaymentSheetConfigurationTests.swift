@@ -183,12 +183,35 @@ class PaymentSheetConfigurationTests: XCTestCase {
 
     func testResolveLayout_explicit() {
         var config = PaymentSheet.Configuration()
+        let elementsSession = STPElementsSession._testValue()
+        let paymentMethodTypes: [PaymentSheet.PaymentMethodType] = [.stripe(.card), .stripe(.USBankAccount), .stripe(.afterpayClearpay)]
 
         config.paymentMethodLayout = .horizontal
-        XCTAssertEqual(config.resolveLayout(), .horizontal)
+        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes), .horizontal)
 
         config.paymentMethodLayout = .vertical
-        XCTAssertEqual(config.resolveLayout(), .vertical)
+        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes), .vertical)
+    }
+
+    func testResolveLayout_automatic_fewPaymentMethods() {
+        var config = PaymentSheet.Configuration()
+        config.paymentMethodLayout = .automatic
+        let elementsSession = STPElementsSession._testValue()
+
+        // 1 PM → horizontal
+        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card)]), .horizontal)
+        // 2 PMs → horizontal
+        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]), .horizontal)
+        // 3 PMs → vertical
+        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount), .stripe(.afterpayClearpay)]), .vertical)
+    }
+
+    func testResolveLayout_automatic_forceVertical() {
+        var config = PaymentSheet.Configuration()
+        config.paymentMethodLayout = .automatic
+        // forceVerticalPaymentMethodLayout flag set → vertical even with few PMs
+        let elementsSession = STPElementsSession._testValue(flags: ["elements_mobile_force_vertical_payment_method_layout": true])
+        XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]), .vertical)
     }
 }
 

@@ -112,7 +112,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
             2
         )
         XCTAssertEqual(
-            initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_layout"] },
+            initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_orientation"] },
             "vertical"
         )
 
