@@ -18,19 +18,19 @@ extension String.Localized {
         )
     }
 
-    @_spi(STP) public static func continue_with_link(brand: LinkBrand) -> String {
+    @_spi(STP) public static func continue_with_link(brand _: LinkBrand) -> String {
         existingLinkLocalizedString("Continue with Link")
     }
 
-    @_spi(STP) public static func use_information_you_previously_saved_with_your_brand_account(brand: LinkBrand) -> String {
+    @_spi(STP) public static func use_information_you_previously_saved_with_your_brand_account(brand _: LinkBrand) -> String {
         existingLinkLocalizedString("Use information you previously saved with your Link account.")
     }
 
-    @_spi(STP) public static func your_account_was_connected_but_could_not_be_saved_to_brand(brand: LinkBrand) -> String {
+    @_spi(STP) public static func your_account_was_connected_but_could_not_be_saved_to_brand(brand _: LinkBrand) -> String {
         existingLinkLocalizedString("Your account was connected, but couldn't be saved to Link.")
     }
 
-    @_spi(STP) public static func your_accounts_were_connected_but_could_not_be_saved_to_brand(brand: LinkBrand) -> String {
+    @_spi(STP) public static func your_accounts_were_connected_but_could_not_be_saved_to_brand(brand _: LinkBrand) -> String {
         existingLinkLocalizedString("Your accounts were connected, but couldn't be saved to Link.")
     }
 

@@ -79,7 +79,7 @@ extension String.Localized {
         STPLocalizedString("Bank account", "Title for collected bank account information")
     }
 
-    static func pay_with_link(brand: LinkBrand) -> String {
+    static func pay_with_link(brand _: LinkBrand) -> String {
         existingLinkLocalizedString("Pay with Link")
     }
 
@@ -485,7 +485,7 @@ extension String.Localized {
         )
     }
 
-    static func pay_faster_everywhere_brand_is_accepted(brand: LinkBrand) -> String {
+    static func pay_faster_everywhere_brand_is_accepted(brand _: LinkBrand) -> String {
         existingLinkLocalizedString("Pay faster everywhere Link is accepted.")
     }
 
@@ -519,7 +519,7 @@ extension String.Localized {
 
     static func by_continuing_you_agree_to_save_your_information_to_merchant_and_link(
         merchantDisplayName: String,
-        brand: LinkBrand
+        brand _: LinkBrand
     ) -> String {
         String(
             format: existingLinkLocalizedString(
@@ -529,15 +529,15 @@ extension String.Localized {
         )
     }
 
-    static func create_an_account_with_brand_for_faster_checkout_across_the_web(brand: LinkBrand) -> String {
+    static func create_an_account_with_brand_for_faster_checkout_across_the_web(brand _: LinkBrand) -> String {
         existingLinkLocalizedString("Create an account with Link for faster checkout across the web")
     }
 
-    static func save_my_info_for_faster_checkout(with brand: LinkBrand) -> String {
+    static func save_my_info_for_faster_checkout(with _: LinkBrand) -> String {
         existingLinkLocalizedString("Save my info for faster checkout with Link")
     }
 
-    static func save_your_info_for_secure_1_click_checkout(with brand: LinkBrand) -> String {
+    static func save_your_info_for_secure_1_click_checkout(with _: LinkBrand) -> String {
         existingLinkLocalizedString("Save your info for secure 1-click checkout with Link")
     }
 
@@ -545,19 +545,19 @@ extension String.Localized {
         existingLinkLocalizedString("Log out of Link")
     }
 
-    static func by_joining_brand_you_agree_to_the_terms_and_privacy_policy(brand: LinkBrand) -> String {
+    static func by_joining_brand_you_agree_to_the_terms_and_privacy_policy(brand _: LinkBrand) -> String {
         existingLinkLocalizedString("By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.")
     }
 
-    static func by_providing_phone_number_and_email_you_agree_to_create_a_brand_account(brand: LinkBrand) -> String {
+    static func by_providing_phone_number_and_email_you_agree_to_create_a_brand_account(brand _: LinkBrand) -> String {
         existingLinkLocalizedString("By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.")
     }
 
-    static func by_providing_your_email_you_agree_to_create_a_brand_account_and_save_your_payment_info(brand: LinkBrand) -> String {
+    static func by_providing_your_email_you_agree_to_create_a_brand_account_and_save_your_payment_info(brand _: LinkBrand) -> String {
         existingLinkLocalizedString("By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.")
     }
 
-    static func by_providing_your_phone_number_you_agree_to_create_a_brand_account_and_save_your_payment_info(brand: LinkBrand) -> String {
+    static func by_providing_your_phone_number_you_agree_to_create_a_brand_account_and_save_your_payment_info(brand _: LinkBrand) -> String {
         existingLinkLocalizedString("By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.")
     }
 
