@@ -13,7 +13,7 @@ import UIKit
 @_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 
-/// A controller that presents a Link sheet to collect a customer's payment method.
+/// A controller that presents the Link flow to collect and create a customer's payment method.
 @MainActor @_spi(STP) @_spi(LinkControllerPreview) public class LinkController: ObservableObject {
 
     /// Represents the payment method currently selected by the user.
