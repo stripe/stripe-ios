@@ -149,7 +149,6 @@ extension SavedPaymentMethodCollectionView {
         var allowsSetAsDefaultPM: Bool = false
         var needsVerticalPaddingForBadge: Bool = false
         var showDefaultPMBadge: Bool = false
-        var cardArtEnabled: Bool = false
         var linkBrand: LinkBrand = .link
 
         /// Indicates whether the cell for a saved payment method should display the edit icon.
@@ -266,7 +265,7 @@ extension SavedPaymentMethodCollectionView {
         }()
 
         // MARK: - Internal Methods
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false, cardArtEnabled: Bool = false, linkBrand: LinkBrand = .link) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false, linkBrand: LinkBrand = .link) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             selectableRectangle.isHidden = false
@@ -277,7 +276,6 @@ extension SavedPaymentMethodCollectionView {
             self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
             self.needsVerticalPaddingForBadge = needsVerticalPaddingForBadge
             self.showDefaultPMBadge = showDefaultPMBadge
-            self.cardArtEnabled = cardArtEnabled
             self.linkBrand = linkBrand
             update()
         }
@@ -360,7 +358,7 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
                         let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
-                        if let cardArtURL = paymentMethod.cardArtCDNURL(cardArtEnabled: cardArtEnabled) {
+                        if let cardArtURL = paymentMethod.cardArtCDNURL() {
                             if paymentMethodLogo.tag != cardArtURL.hashValue {
                                 paymentMethodLogo.tag = cardArtURL.hashValue
                                 paymentMethodLogo.image = STPImageLibrary.cardBrandChoiceImage()
