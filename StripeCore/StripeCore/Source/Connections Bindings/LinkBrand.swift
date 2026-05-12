@@ -10,7 +10,7 @@ import Foundation
 @_spi(STP) @frozen public enum LinkBrand: String, SafeEnumCodable, Equatable {
     case link = "link"
     // Keep the backend-facing raw value unchanged until the rollout is ready.
-    case onelink = "notlink"
+    case onelink = "onelink"
     case unparsable
 
     /// Brand names are proper nouns, so keep the source-of-truth user-facing value here.

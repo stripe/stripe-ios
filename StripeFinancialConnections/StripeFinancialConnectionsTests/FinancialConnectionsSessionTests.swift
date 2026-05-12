@@ -81,7 +81,7 @@ final class FinancialConnectionsSessionTests: XCTestCase {
     }
 
     func testSynchronizeParsesNotlinkBrand() throws {
-        let synchronize = try makeSynchronize(brandValue: "notlink")
+        let synchronize = try makeSynchronize(brandValue: "onelink")
 
         XCTAssertEqual(synchronize.manifest.brand, .onelink)
         XCTAssertEqual(synchronize.manifest.appearance.logo, .onelink_logo)
