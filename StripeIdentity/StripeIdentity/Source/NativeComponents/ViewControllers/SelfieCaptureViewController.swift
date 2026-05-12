@@ -154,10 +154,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         case .saving(_, let faceCaptureData):
             return .saving(
                 .init(
-                    state: .saving(
-                        faceCaptureData.toArray.map { UIImage(cgImage: $0.image) },
-                        consentHTMLText: apiConfig.trainingConsentText
-                    ),
+                    state: .saving(UIImage(cgImage: faceCaptureData.last.image)),
                     instructionalText: SelfieCaptureViewController.scannedInstructionText
                 )
             )
@@ -321,6 +318,9 @@ extension SelfieCaptureViewController {
     func saveDataAndTransitionToNextScreen(
         faceCaptureData: FaceCaptureData
     ) {
+        if case .scanning = imageScanningSession.state {
+            imageScanningSession.stopScanning()
+        }
         imageScanningSession.setStateSaving(
             expectedClassification: .empty,
             capturedData: faceCaptureData

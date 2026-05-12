@@ -86,10 +86,7 @@ final class SelfieScanningView: UIView {
                 openURLHandler: (URL) -> Void,
                 retakeSelfieHandler: () -> Void
             )
-            case saving(
-                [UIImage],
-                consentHTMLText: String
-            )
+            case saving(UIImage)
         }
 
         let state: State
@@ -129,6 +126,24 @@ final class SelfieScanningView: UIView {
         view.backgroundColor = .white
         view.alpha = 0
         return view
+    }()
+
+    private let capturedImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.isHidden = true
+        imageView.isAccessibilityElement = true
+        imageView.accessibilityLabel = STPLocalizedString(
+            "Selfie",
+            "Accessibility label of captured selfie images"
+        )
+        return imageView
+    }()
+
+    private let capturedImageBlurView: UIVisualEffectView = {
+        let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        blurView.isHidden = true
+        return blurView
     }()
 
     // MARK: Scanned Images
@@ -220,6 +235,9 @@ final class SelfieScanningView: UIView {
 
         // Reset values
         cameraPreviewView.isHidden = true
+        capturedImageView.isHidden = true
+        capturedImageView.image = nil
+        capturedImageBlurView.isHidden = true
         previewContainerView.isHidden = true
         scannedImageScrollView.isHidden = true
 
@@ -272,9 +290,11 @@ final class SelfieScanningView: UIView {
                     sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
                 }
             }
-        case .saving(let images, consentHTMLText: _):
-            scannedImageScrollView.isHidden = false
-            rebuildImageHStack(with: images)
+        case .saving(let image):
+            previewContainerView.isHidden = false
+            capturedImageView.image = image
+            capturedImageView.isHidden = false
+            capturedImageBlurView.isHidden = false
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
         }
@@ -310,6 +330,8 @@ extension SelfieScanningView {
         vStack.addArrangedSubview(consentCheckboxButton)
 
         previewContainerView.contentView.addAndPinSubview(cameraPreviewView)
+        previewContainerView.contentView.addAndPinSubview(capturedImageView)
+        previewContainerView.contentView.addAndPinSubview(capturedImageBlurView)
         previewContainerView.contentView.addAndPinSubview(flashOverlayView)
 
         // Add some bottom margin so the scroll indicator doesn't overlay on

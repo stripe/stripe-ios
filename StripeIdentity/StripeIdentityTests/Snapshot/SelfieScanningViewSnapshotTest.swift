@@ -78,10 +78,7 @@ final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
     func testSaving() {
         verifyView(
             with: .init(
-                state: .saving(
-                    Array(repeating: SelfieScanningViewSnapshotTest.mockImage, count: 3),
-                    consentHTMLText: SelfieScanningViewSnapshotTest.consentText
-                ),
+                state: .saving(SelfieScanningViewSnapshotTest.mockImage),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )
         )
