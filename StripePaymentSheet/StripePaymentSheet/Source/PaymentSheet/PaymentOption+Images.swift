@@ -338,24 +338,32 @@ extension STPPaymentMethodCard {
 
 extension UIImage {
     func rounded(radius: CGFloat) -> UIImage {
+        guard size.width > 0 && size.height > 0 else {
+            return self
+        }
         let rect = CGRect(origin: .zero, size: size)
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        UIBezierPath(roundedRect: rect, cornerRadius: radius).addClip()
-        draw(in: rect)
-        return UIGraphicsGetImageFromCurrentImageContext()!
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { _ in
+            UIBezierPath(roundedRect: rect, cornerRadius: radius).addClip()
+            draw(in: rect)
+        }
     }
 
     func roundedWithBorder(radius: CGFloat, borderWidth: CGFloat = 1, borderColor: UIColor = UIColor.black.withAlphaComponent(0.2)) -> UIImage {
+        guard size.width > 0 && size.height > 0 else {
+            return self
+        }
         let rect = CGRect(origin: .zero, size: size)
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        let path = UIBezierPath(roundedRect: rect, cornerRadius: radius)
-        path.addClip()
-        draw(in: rect)
-        let borderRect = rect.insetBy(dx: borderWidth / 2, dy: borderWidth / 2)
-        let borderPath = UIBezierPath(roundedRect: borderRect, cornerRadius: radius - borderWidth / 2)
-        borderColor.setStroke()
-        borderPath.lineWidth = borderWidth
-        borderPath.stroke()
-        return UIGraphicsGetImageFromCurrentImageContext()!
+        let renderer = UIGraphicsImageRenderer(size: size)
+        return renderer.image { _ in
+            let path = UIBezierPath(roundedRect: rect, cornerRadius: radius)
+            path.addClip()
+            draw(in: rect)
+            let borderRect = rect.insetBy(dx: borderWidth / 2, dy: borderWidth / 2)
+            let borderPath = UIBezierPath(roundedRect: borderRect, cornerRadius: radius - borderWidth / 2)
+            borderColor.setStroke()
+            borderPath.lineWidth = borderWidth
+            borderPath.stroke()
+        }
     }
 }

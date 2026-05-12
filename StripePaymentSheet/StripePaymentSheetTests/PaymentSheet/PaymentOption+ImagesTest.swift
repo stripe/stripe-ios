@@ -9,6 +9,46 @@ import XCTest
 
 final class PaymentOptionImagesTest: XCTestCase {
 
+    // MARK: - UIImage.rounded / roundedWithBorder
+
+    func testRounded_returnsOriginalImageForZeroSize() {
+        let emptyImage = UIImage()
+        XCTAssertEqual(emptyImage.size, .zero)
+        let result = emptyImage.rounded(radius: 3)
+        // Should return self without crashing
+        XCTAssertEqual(result.size, .zero)
+    }
+
+    func testRounded_appliesCornerRadiusForValidImage() {
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 10, height: 10))
+        let image = renderer.image { ctx in
+            UIColor.red.setFill()
+            ctx.fill(CGRect(x: 0, y: 0, width: 10, height: 10))
+        }
+        let result = image.rounded(radius: 3)
+        XCTAssertEqual(result.size.width, 10, accuracy: 0.01)
+        XCTAssertEqual(result.size.height, 10, accuracy: 0.01)
+    }
+
+    func testRoundedWithBorder_returnsOriginalImageForZeroSize() {
+        let emptyImage = UIImage()
+        XCTAssertEqual(emptyImage.size, .zero)
+        let result = emptyImage.roundedWithBorder(radius: 3)
+        // Should return self without crashing
+        XCTAssertEqual(result.size, .zero)
+    }
+
+    func testRoundedWithBorder_appliesBorderForValidImage() {
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 10, height: 10))
+        let image = renderer.image { ctx in
+            UIColor.blue.setFill()
+            ctx.fill(CGRect(x: 0, y: 0, width: 10, height: 10))
+        }
+        let result = image.roundedWithBorder(radius: 3, borderWidth: 1)
+        XCTAssertEqual(result.size.width, 10, accuracy: 0.01)
+        XCTAssertEqual(result.size.height, 10, accuracy: 0.01)
+    }
+
     // MARK: - STPPaymentMethod.cardArtURL
 
     func testCardArtURL_nilWhenNoCardArt() {

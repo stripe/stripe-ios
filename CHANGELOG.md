@@ -2,6 +2,8 @@ The next release's version bump will so far be:
 PATCH
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Fixed] Fixed a crash when opening PaymentSheet with a saved payment method whose image has zero size (e.g. due to a failed download).
 
 ## 25.14.0 2026-05-11
 ### PaymentSheet
