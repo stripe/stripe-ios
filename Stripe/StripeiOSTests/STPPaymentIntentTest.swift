@@ -520,6 +520,125 @@ class STPPaymentIntentTest: XCTestCase {
         XCTAssertEqual((paymentIntent?.allResponseFields["metadata"] as? [String: String])?["order_id"], "12345")
     }
 
+    // MARK: - PaymentIntent Status Transitions Tests
+
+    func testDecodedObjectFromAPIResponseWithAllStatuses() {
+        // Verify that all known status strings decode correctly
+        let statusMappings: [(String, STPPaymentIntentStatus)] = [
+            ("requires_payment_method", .requiresPaymentMethod),
+            ("requires_confirmation", .requiresConfirmation),
+            ("requires_action", .requiresAction),
+            ("processing", .processing),
+            ("requires_capture", .requiresCapture),
+            ("canceled", .canceled),
+            ("succeeded", .succeeded),
+        ]
+
+        for (statusString, expectedStatus) in statusMappings {
+            let json: [String: Any] = [
+                "id": "pi_status_test_\(statusString)",
+                "object": "payment_intent",
+                "client_secret": "pi_status_test_\(statusString)_secret_abc123",
+                "amount": 5000,
+                "currency": "eur",
+                "status": statusString,
+                "livemode": false,
+                "created": 1_700_000_000,
+                "payment_method_types": ["card", "ideal"],
+            ]
+
+            let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: json)
+            XCTAssertNotNil(paymentIntent, "Should decode PI with status: \(statusString)")
+            XCTAssertEqual(
+                paymentIntent?.status,
+                expectedStatus,
+                "Status mismatch for string: \(statusString)"
+            )
+            XCTAssertEqual(paymentIntent?.amount, 5000)
+            XCTAssertEqual(paymentIntent?.currency, "eur")
+            XCTAssertEqual(
+                paymentIntent?.paymentMethodTypes,
+                [STPPaymentMethodType.card, STPPaymentMethodType.iDEAL]
+            )
+        }
+    }
+
+    func testDecodedObjectFromAPIResponseWithUnknownStatus() {
+        let json: [String: Any] = [
+            "id": "pi_unknown_status",
+            "object": "payment_intent",
+            "client_secret": "pi_unknown_status_secret_abc123",
+            "amount": 1000,
+            "currency": "usd",
+            "status": "some_future_status",
+            "livemode": true,
+            "created": 1_700_000_000,
+            "payment_method_types": ["card"],
+        ]
+
+        let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: json)
+        XCTAssertNotNil(paymentIntent, "Should decode PI with unknown status")
+        XCTAssertEqual(paymentIntent?.status, .unknown)
+        XCTAssertTrue(paymentIntent?.livemode ?? false)
+    }
+
+    func testDecodedObjectFromAPIResponseWithMultipleCurrencies() {
+        // Verify that different currency values are preserved correctly
+        let currencies = ["usd", "eur", "gbp", "jpy", "aud", "cad"]
+
+        for currency in currencies {
+            let json: [String: Any] = [
+                "id": "pi_currency_\(currency)",
+                "object": "payment_intent",
+                "client_secret": "pi_currency_\(currency)_secret_xyz",
+                "amount": 9999,
+                "currency": currency,
+                "status": "succeeded",
+                "livemode": false,
+                "created": 1_700_000_000,
+                "payment_method_types": ["card"],
+            ]
+
+            let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: json)
+            XCTAssertNotNil(paymentIntent, "Should decode PI with currency: \(currency)")
+            XCTAssertEqual(
+                paymentIntent?.currency,
+                currency,
+                "Currency mismatch for: \(currency)"
+            )
+        }
+    }
+
+    func testDecodedObjectFromAPIResponseWithCaptureMethod() {
+        let captureMethods: [(String, STPPaymentIntentCaptureMethod)] = [
+            ("automatic", .automatic),
+            ("manual", .manual),
+        ]
+
+        for (captureString, expectedMethod) in captureMethods {
+            let json: [String: Any] = [
+                "id": "pi_capture_\(captureString)",
+                "object": "payment_intent",
+                "client_secret": "pi_capture_\(captureString)_secret_xyz",
+                "amount": 3000,
+                "currency": "usd",
+                "status": "requires_capture",
+                "capture_method": captureString,
+                "livemode": false,
+                "created": 1_700_000_000,
+                "payment_method_types": ["card"],
+            ]
+
+            let paymentIntent = STPPaymentIntent.decodedObject(fromAPIResponse: json)
+            XCTAssertNotNil(paymentIntent, "Should decode PI with capture method: \(captureString)")
+            XCTAssertEqual(
+                paymentIntent?.captureMethod,
+                expectedMethod,
+                "Capture method mismatch for: \(captureString)"
+            )
+        }
+    }
+
     func testRedactedPaymentIntentConsistency() {
         // Test that all ways of creating a redacted PI result in isRedacted = true
         let testCases: [[String: Any]] = [
