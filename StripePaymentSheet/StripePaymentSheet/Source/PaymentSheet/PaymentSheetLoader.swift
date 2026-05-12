@@ -222,20 +222,9 @@ final class PaymentSheetLoader {
                 paymentMethodTypes: paymentMethodTypes
             )
 
-            let loadResult = LoadResult(
-                intent: intent,
+            let paymentMethodOrientation = configuration.resolveLayout(
                 elementsSession: elementsSession,
-                savedPaymentMethods: filteredSavedPaymentMethods,
-                paymentMethodTypes: paymentMethodTypes,
-                paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
-                paymentMethodOrientation: configuration.resolveLayout(
-                    elementsSession: elementsSession,
-                    paymentMethodTypes: paymentMethodTypes
-                )
-            )
-            let confirmationChallenge = ConfirmationChallenge(
-                elementsSession: elementsSession,
-                stripeAttest: configuration.apiClient.stripeAttest
+                paymentMethodTypes: paymentMethodTypes
             )
 
             // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
@@ -249,6 +238,19 @@ final class PaymentSheetLoader {
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
 
+            // Log card art experiment exposure
+            if let cardArtExperiment = CardArtExperiment.create(
+                elementsSession: elementsSession,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                paymentMethodTypes: paymentMethodTypes,
+                savedPaymentMethods: filteredSavedPaymentMethods,
+                paymentMethodOrientation: paymentMethodOrientation,
+                selectedPaymentOption: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex)
+            ) {
+                analyticsHelper.logExposure(experiment: cardArtExperiment)
+            }
+
             // Temporary band-aid for pre-loading card art: fire-and-forget fetch to warm the in-meory cache for PS.FC
             // and embedded PaymentOptionDisplayData APIs.
             // TODO: Revisit overall pre-loading approach to make this work for other payment methods
@@ -257,6 +259,19 @@ final class PaymentSheetLoader {
                 stpPaymentMethod.preloadCardArtImage()
             }
             loadTimings.logEnd("makeViewModels")
+
+            let loadResult = LoadResult(
+                intent: intent,
+                elementsSession: elementsSession,
+                savedPaymentMethods: filteredSavedPaymentMethods,
+                paymentMethodTypes: paymentMethodTypes,
+                paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+                paymentMethodOrientation: paymentMethodOrientation
+            )
+            let confirmationChallenge = ConfirmationChallenge(
+                elementsSession: elementsSession,
+                stripeAttest: configuration.apiClient.stripeAttest
+            )
 
             // Send load finished analytic
             // ⚠️ Important: Log load succeeded at the very end, to ensure it measures the entire amount of time this method took.
