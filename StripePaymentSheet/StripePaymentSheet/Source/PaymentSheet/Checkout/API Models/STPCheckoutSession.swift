@@ -727,6 +727,7 @@ extension STPCheckoutSession {
         guard let dict else { return nil }
         let minimum = parseDeliveryBound(dict["minimum"] as? [AnyHashable: Any])
         let maximum = parseDeliveryBound(dict["maximum"] as? [AnyHashable: Any])
+        // If neither bound parsed, there's nothing useful to show — don't hand back an empty estimate.
         guard minimum != nil || maximum != nil else { return nil }
         return Checkout.DeliveryEstimate(minimum: minimum, maximum: maximum)
     }
