@@ -9,6 +9,13 @@
 @testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
 
+extension Checkout.Amount {
+    /// Test helper for constructing a ``Checkout/Amount`` from a minor-units integer.
+    static func testValue(_ minorUnits: Int, currency: String = "usd") -> Checkout.Amount {
+        return STPCheckoutSession.makeAmount(minorUnits, currency: currency)
+    }
+}
+
 enum CheckoutTestHelpers {
     static func makeOpenSessionJSON() -> [AnyHashable: Any] {
         [

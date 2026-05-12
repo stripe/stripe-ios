@@ -8,7 +8,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_billingFillsEmptyFields() {
         let session = CheckoutTestHelpers.makeOpenSession()
-        session.billingAddressOverride = Checkout.ContactAddress(
+        session.billingAddress = Checkout.ContactAddress(
             name: "Jane Doe",
             address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
         )
@@ -26,7 +26,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_billingConfigTakesPrecedence() {
         let session = CheckoutTestHelpers.makeOpenSession()
-        session.billingAddressOverride = Checkout.ContactAddress(
+        session.billingAddress = Checkout.ContactAddress(
             name: "Override Name",
             address: .init(country: "GB", line1: "Override Line1")
         )
@@ -44,7 +44,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_shippingApplied() {
         let session = CheckoutTestHelpers.makeOpenSession()
-        session.shippingAddressOverride = Checkout.ContactAddress(
+        session.shippingAddress = Checkout.ContactAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
@@ -65,7 +65,7 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_shippingNotOverriddenWhenConfigHasShipping() {
         let session = CheckoutTestHelpers.makeOpenSession()
-        session.shippingAddressOverride = Checkout.ContactAddress(
+        session.shippingAddress = Checkout.ContactAddress(
             name: "Override",
             address: .init(country: "GB")
         )
@@ -118,11 +118,11 @@ final class CheckoutAddressMergingTests: XCTestCase {
 
     func testApplyAddressOverrides_embeddedBillingAndShipping() {
         let session = CheckoutTestHelpers.makeOpenSession()
-        session.billingAddressOverride = Checkout.ContactAddress(
+        session.billingAddress = Checkout.ContactAddress(
             name: "Jane Doe",
             address: .init(country: "US", line1: "123 Main St", city: "SF", state: "CA", postalCode: "94105")
         )
-        session.shippingAddressOverride = Checkout.ContactAddress(
+        session.shippingAddress = Checkout.ContactAddress(
             name: "John Smith",
             address: .init(country: "US", line1: "456 Oak Ave", city: "LA", state: "CA", postalCode: "90001")
         )
