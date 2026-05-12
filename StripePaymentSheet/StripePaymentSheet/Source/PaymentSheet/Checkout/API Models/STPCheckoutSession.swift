@@ -605,8 +605,8 @@ extension STPCheckoutSession {
         let unitAmount: Checkout.Amount? = (price?["unit_amount"] as? Int).map {
             makeAmount($0, currency: currency)
         }
-        let unitAmountDecimal: Checkout.DecimalAmount? = parseDecimalAmount(
-            price?["unit_amount_decimal"],
+        let unitAmountDecimal = parseDecimalAmount(
+            price?["unit_amount_decimal"] as? String,
             currency: currency
         )
         let subtotal = makeOptionalAmount(dict["subtotal"], currency: currency)
@@ -643,16 +643,8 @@ extension STPCheckoutSession {
         )
     }
 
-    private static func parseDecimalAmount(_ value: Any?, currency: String?) -> Checkout.DecimalAmount? {
-        let decimal: Decimal?
-        switch value {
-        case let v as Decimal: decimal = v
-        case let v as Double: decimal = Decimal(v)
-        case let v as Int: decimal = Decimal(v)
-        case let v as String: decimal = Decimal(string: v)
-        default: decimal = nil
-        }
-        guard let decimal else { return nil }
+    private static func parseDecimalAmount(_ value: String?, currency: String?) -> Checkout.DecimalAmount? {
+        guard let value, let decimal = Decimal(string: value) else { return nil }
         let intValue = NSDecimalNumber(decimal: decimal).intValue
         return Checkout.DecimalAmount(
             amount: makeAmount(intValue, currency: currency).amount,
@@ -661,8 +653,8 @@ extension STPCheckoutSession {
     }
 
     private static func makeOptionalAmount(_ value: Any?, currency: String?) -> Checkout.Amount? {
-        guard let int = value as? Int else { return nil }
-        return makeAmount(int, currency: currency)
+        guard let amount = value as? Int else { return nil }
+        return makeAmount(amount, currency: currency)
     }
 
     private static func parseAdjustableQuantity(from dict: [AnyHashable: Any]?) -> Checkout.AdjustableQuantity? {
