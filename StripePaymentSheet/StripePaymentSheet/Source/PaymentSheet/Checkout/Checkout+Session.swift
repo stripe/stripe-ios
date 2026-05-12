@@ -29,7 +29,8 @@ extension Checkout {
         var currency: String? { get }
 
         /// The currency options available on the Checkout Session when adaptive pricing is active.
-        var currencyOptions: [Checkout.CurrencyOption]? { get }
+        /// Empty when adaptive pricing is not active.
+        var currencyOptions: [Checkout.CurrencyOption] { get }
 
         /// The aggregate amounts calculated per discount for all line items.
         var discountAmounts: [Checkout.DiscountAmount] { get }

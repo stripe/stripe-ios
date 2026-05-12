@@ -29,8 +29,8 @@ class STPCheckoutSession: NSObject {
     /// Three-letter ISO currency code, in lowercase.
     let currency: String?
 
-    /// Currency options available when adaptive pricing is active.
-    let currencyOptions: [Checkout.CurrencyOption]?
+    /// Currency options available when adaptive pricing is active. Empty when not active.
+    let currencyOptions: [Checkout.CurrencyOption]
 
     /// Aggregate discount amounts calculated per discount for all line items.
     let discountAmounts: [Checkout.DiscountAmount]
@@ -238,7 +238,7 @@ class STPCheckoutSession: NSObject {
         clientSecret: String?,
         businessName: String?,
         currency: String?,
-        currencyOptions: [Checkout.CurrencyOption]?,
+        currencyOptions: [Checkout.CurrencyOption],
         discountAmounts: [Checkout.DiscountAmount],
         email: String?,
         lineItems: [Checkout.LineItem],
@@ -815,8 +815,7 @@ extension STPCheckoutSession {
     static func makeCurrencyOptions(
         from metas: [STPCheckoutSessionLocalizedPriceMeta],
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta?
-    ) -> [Checkout.CurrencyOption]? {
-        guard !metas.isEmpty else { return nil }
+    ) -> [Checkout.CurrencyOption] {
         return metas.map { meta -> Checkout.CurrencyOption in
             // Conversion details are only attached to the converted (localized) currency option.
             let conversion: Checkout.CurrencyConversion? = exchangeRateMeta.flatMap { rate in
