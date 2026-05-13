@@ -43,12 +43,6 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Private Properties
 
-    /// Concrete accessor for internal use where `STPCheckoutSession`-specific
-    /// properties (e.g. `allResponseFields`) are needed.
-    private var stpSession: STPCheckoutSession? {
-        state.session as? STPCheckoutSession
-    }
-
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
     private let clientSecret: String
@@ -62,6 +56,11 @@ public final class Checkout: ObservableObject {
     /// Sets the session on `state`, using `.loading` if another operation is in flight.
     private func setSession(_ session: Checkout.Session) {
         state = sessionUpdateCount > 0 ? .loading(session) : .loaded(session)
+    }
+
+    /// Wraps an `STPCheckoutSession` in a `Checkout.Session` and sets it on `state`.
+    private func setStpSession(_ stpSession: STPCheckoutSession) {
+        setSession(Checkout.Session(stpSession))
     }
 
     // MARK: - Initialization
@@ -91,7 +90,7 @@ public final class Checkout: ObservableObject {
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
-            self.state = .loaded(checkoutSession)
+            self.state = .loaded(Checkout.Session(checkoutSession))
             checkoutSession.onConfirmed = { [weak self] response in
                 self?.updateSession(response)
             }
@@ -110,7 +109,7 @@ public final class Checkout: ObservableObject {
         self.clientSecret = clientSecret
         self.configuration = configuration
         self.apiClient = apiClient
-        self.state = .loaded(session)
+        self.state = .loaded(Checkout.Session(session))
         session.onConfirmed = { [weak self] response in
             self?.updateSession(response)
         }
@@ -214,7 +213,7 @@ public final class Checkout: ObservableObject {
             }
         } else {
             currentSession.billingAddress = contactAddress
-            setSession(currentSession)
+            setStpSession(currentSession)
             delegate?.checkout(self, didChangeState: state)
         }
     }
@@ -250,7 +249,7 @@ public final class Checkout: ObservableObject {
             }
         } else {
             currentSession.shippingAddress = contactAddress
-            setSession(currentSession)
+            setStpSession(currentSession)
             delegate?.checkout(self, didChangeState: state)
         }
     }
@@ -289,15 +288,16 @@ public final class Checkout: ObservableObject {
     ///   preserved but before state is published. Use this to set client-side properties
     ///   (e.g. address overrides) that should be visible to the delegate and observers.
     func updateSession(_ newSession: STPCheckoutSession, applyOverrides: ((STPCheckoutSession) -> Void)? = nil) {
+        let currentStpSession = state.session.stpSession
         // Preserve client-side address overrides on the new session.
-        newSession.billingAddress = stpSession?.billingAddress
-        newSession.shippingAddress = stpSession?.shippingAddress
+        newSession.billingAddress = currentStpSession.billingAddress
+        newSession.shippingAddress = currentStpSession.shippingAddress
         applyOverrides?(newSession)
         newSession.onConfirmed = { [weak self] response in
             self?.updateSession(response)
         }
-        let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
-        setSession(newSession)
+        let changed = currentStpSession.allResponseFields as NSDictionary != newSession.allResponseFields as NSDictionary
+        setStpSession(newSession)
         if changed {
             delegate?.checkout(self, didChangeState: state)
         }
@@ -326,10 +326,7 @@ public final class Checkout: ObservableObject {
     /// Used by mutations triggered from inside the presented sheet (e.g. currency selection).
     @discardableResult
     private func requireOpenSessionForInSheetUpdate() throws -> STPCheckoutSession {
-        guard let currentSession = stpSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
-            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
-        }
+        let currentSession = state.session.stpSession
         guard currentSession.status?.type == .open else {
             throw CheckoutError.sessionNotOpen
         }
@@ -339,10 +336,7 @@ public final class Checkout: ObservableObject {
     /// Validates that the session is open and no sheet is presented.
     @discardableResult
     private func requireOpenSession() throws -> STPCheckoutSession {
-        guard let currentSession = stpSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
-            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
-        }
+        let currentSession = state.session.stpSession
         guard currentSession.status?.type == .open else {
             throw CheckoutError.sessionNotOpen
         }

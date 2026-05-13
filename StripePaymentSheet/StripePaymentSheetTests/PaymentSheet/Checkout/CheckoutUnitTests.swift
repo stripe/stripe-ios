@@ -394,7 +394,7 @@ final class CheckoutUnitTests: XCTestCase {
         let confirmResponse = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
 
         // Invoke the onConfirmed closure as the confirm call sites do
-        let stpSession = checkout.state.session as! STPCheckoutSession
+        let stpSession = checkout.state.session.stpSession
         stpSession.onConfirmed?(confirmResponse)
 
         // Verify session was updated with the confirm response data
@@ -411,7 +411,7 @@ final class CheckoutUnitTests: XCTestCase {
             name: "Jane Doe",
             address: .init(country: "US")
         )
-        (checkout.state.session as! STPCheckoutSession).billingAddress = billingUpdate
+        checkout.state.session.stpSession.billingAddress = billingUpdate
 
         // Simulate a confirm response
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
@@ -419,7 +419,7 @@ final class CheckoutUnitTests: XCTestCase {
         updatedJSON["payment_status"] = "paid"
         let confirmResponse = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
 
-        let stpSession = checkout.state.session as! STPCheckoutSession
+        let stpSession = checkout.state.session.stpSession
         stpSession.onConfirmed?(confirmResponse)
 
         // Address overrides should be carried over to the new session
@@ -438,12 +438,12 @@ final class CheckoutUnitTests: XCTestCase {
         firstResponse["payment_status"] = "paid"
         let firstConfirm = STPCheckoutSession.decodedObject(fromAPIResponse: firstResponse)!
 
-        (checkout.state.session as! STPCheckoutSession).onConfirmed?(firstConfirm)
+        checkout.state.session.stpSession.onConfirmed?(firstConfirm)
         XCTAssertEqual(checkout.state.session.status?.type, .complete)
 
         // The new session should also have onConfirmed set,
         // so a second invocation still works
-        let secondSession = checkout.state.session as! STPCheckoutSession
+        let secondSession = checkout.state.session.stpSession
         XCTAssertNotNil(secondSession.onConfirmed)
     }
 

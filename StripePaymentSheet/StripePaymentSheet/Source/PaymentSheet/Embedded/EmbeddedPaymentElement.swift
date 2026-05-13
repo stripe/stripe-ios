@@ -108,10 +108,7 @@ public final class EmbeddedPaymentElement {
         checkout: Checkout,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-            throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
-        }
+        let stpSession = checkout.state.session.stpSession
         if checkout.state.isLoading {
             let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.create(checkout:configuration:)."
             assertionFailure(message)
@@ -176,10 +173,7 @@ public final class EmbeddedPaymentElement {
     public func update(
         checkout: Checkout
     ) async -> UpdateResult {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-            return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
-        }
+        let stpSession = checkout.state.session.stpSession
         if checkout.state.isLoading {
             let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.update(checkout:)."
             assertionFailure(message)

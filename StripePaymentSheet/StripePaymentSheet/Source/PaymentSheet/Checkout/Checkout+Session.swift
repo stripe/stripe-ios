@@ -2,75 +2,88 @@
 //  Checkout+Session.swift
 //  StripePaymentSheet
 //
-//  Created by Nick Porter on 3/9/26.
-//
 
 import Foundation
 @_spi(STP) import StripePayments
 
-// MARK: - Session Protocol
+// MARK: - Session
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension Checkout {
     /// A read-only representation of a Stripe Checkout Session.
-    public protocol Session {
+    public final class Session {
+        // MARK: - Public Properties
+
         /// The ID of the Checkout Session.
-        var id: String { get }
+        public var id: String { stpSession.id }
 
         /// Billing details of the customer.
-        var billingAddress: Checkout.ContactAddress? { get }
+        public var billingAddress: Checkout.ContactAddress? {
+            get { stpSession.billingAddress }
+        }
 
         /// The business name as configured in the Business Public Details settings of
         /// your Stripe account.
-        var businessName: String? { get }
+        public var businessName: String? { stpSession.businessName }
 
         /// Three-letter ISO 4217 currency code in lowercase (e.g. `"usd"`).
-        var currency: String? { get }
+        public var currency: String? { stpSession.currency }
 
         /// The currency options available on the Checkout Session when adaptive pricing is active.
         /// Empty when adaptive pricing is not active.
-        var currencyOptions: [Checkout.CurrencyOption] { get }
+        public var currencyOptions: [Checkout.CurrencyOption] { stpSession.currencyOptions }
 
         /// The aggregate amounts calculated per discount for all line items.
-        var discountAmounts: [Checkout.DiscountAmount] { get }
+        public var discountAmounts: [Checkout.DiscountAmount] { stpSession.discountAmounts }
 
         /// The customer's email address.
-        var email: String? { get }
+        public var email: String? { stpSession.email }
 
         /// The line items the customer is purchasing.
-        var lineItems: [Checkout.LineItem] { get }
+        public var lineItems: [Checkout.LineItem] { stpSession.lineItems }
 
         /// `true` if this object exists in live mode, `false` for test mode.
-        var livemode: Bool { get }
+        public var livemode: Bool { stpSession.livemode }
 
         /// The factor used to convert between minor and major currency units. For USD this
         /// is `100`; for JPY this is `1`. `nil` when the session has no currency (e.g. setup mode).
-        var minorUnitsAmountDivisor: Int? { get }
+        public var minorUnitsAmountDivisor: Int? { stpSession.minorUnitsAmountDivisor }
 
         /// Payment methods attached to the customer.
-        var savedPaymentMethods: [STPPaymentMethod] { get }
+        public var savedPaymentMethods: [STPPaymentMethod] { stpSession.savedPaymentMethods }
 
         /// The selected shipping option, if any.
-        var shipping: Checkout.SelectedShipping? { get }
+        public var shipping: Checkout.SelectedShipping? { stpSession.shipping }
 
         /// Shipping address of the customer.
-        var shippingAddress: Checkout.ContactAddress? { get }
+        public var shippingAddress: Checkout.ContactAddress? {
+            get { stpSession.shippingAddress }
+        }
 
         /// The list of shipping options that can be selected.
-        var shippingOptions: [Checkout.ShippingOption] { get }
+        public var shippingOptions: [Checkout.ShippingOption] { stpSession.shippingOptions }
 
         /// Status of the Checkout Session.
         ///
         /// `nil` if the server did not return a status. When non-nil, ``Status.paymentStatus``
         /// is populated from the top-level payment status.
-        var status: Checkout.Status? { get }
+        public var status: Checkout.Status? { stpSession.status }
 
         /// Details about the tax computation status and aggregated tax amounts.
-        var tax: Checkout.Tax { get }
+        public var tax: Checkout.Tax { stpSession.tax }
 
         /// Tax and discount details for the computed total amount.
-        var total: Checkout.Total? { get }
+        public var total: Checkout.Total? { stpSession.total }
+
+        // MARK: - Internal
+
+        /// The underlying API model. Used internally for properties not exposed on the public API.
+        let stpSession: STPCheckoutSession
+
+        init(_ stpSession: STPCheckoutSession) {
+            self.stpSession = stpSession
+        }
     }
 }
 

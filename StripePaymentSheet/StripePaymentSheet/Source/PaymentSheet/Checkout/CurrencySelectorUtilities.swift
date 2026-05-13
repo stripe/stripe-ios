@@ -98,13 +98,13 @@ enum CurrencySelectorUtilities {
     static func adaptivePricingData(
         from session: Checkout.Session?
     ) -> (session: STPCheckoutSession, exchangeRateMeta: STPCheckoutSessionExchangeRateMeta, currency: String)? {
-        guard let session = session as? STPCheckoutSession,
-              session.adaptivePricingActive,
-              !session.localizedPricesMetas.isEmpty,
-              let exchangeRateMeta = session.exchangeRateMeta,
-              let currency = session.currency
+        guard let stpSession = session?.stpSession,
+              stpSession.adaptivePricingActive,
+              !stpSession.localizedPricesMetas.isEmpty,
+              let exchangeRateMeta = stpSession.exchangeRateMeta,
+              let currency = stpSession.currency
         else { return nil }
-        return (session, exchangeRateMeta, currency)
+        return (stpSession, exchangeRateMeta, currency)
     }
 
     // MARK: - Flag emoji

@@ -2,13 +2,15 @@
 //  STPCheckoutSession+Session.swift
 //  StripePaymentSheet
 //
-//  Created by Nick Porter on 3/9/26.
-//
 
 import Foundation
 @_spi(STP) import StripePayments
 
-extension STPCheckoutSession: Checkout.Session {
+// MARK: - Convenience
+
+extension STPCheckoutSession {
+    /// The factor used to convert between minor and major currency units. For USD this
+    /// is `100`; for JPY this is `1`. `nil` when the session has no currency (e.g. setup mode).
     var minorUnitsAmountDivisor: Int? {
         guard let currency else { return nil }
         let oneMinorUnitInMajor = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency)

@@ -111,9 +111,7 @@ public class PaymentSheet {
     @_spi(ReactNativeSDK)
     @MainActor
     public convenience init(checkout: Checkout, configuration: Configuration) {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-        }
+        let stpSession = checkout.state.session.stpSession
         var config = configuration
         stpSession.applyAddressOverrides(to: &config)
         self.init(
