@@ -324,6 +324,7 @@ public final class Checkout: ObservableObject {
                 }
                 throw CheckoutError.apiError(message: error.localizedDescription)
             }
+            try self.requireOpenSession()
             try await self.refreshSession()
         }
     }

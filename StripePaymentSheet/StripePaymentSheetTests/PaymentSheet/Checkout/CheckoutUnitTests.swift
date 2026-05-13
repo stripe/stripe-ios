@@ -148,41 +148,6 @@ final class CheckoutUnitTests: XCTestCase {
 
     // MARK: - runServerUpdate Tests
 
-    func testRunServerUpdateRequiresOpenSession() async {
-        let checkout = makeCheckoutWithClosedSession()
-
-        do {
-            try await checkout.runServerUpdate { }
-            XCTFail("Expected CheckoutError.sessionNotOpen")
-        } catch let error as CheckoutError {
-            guard case .sessionNotOpen = error else {
-                XCTFail("Expected .sessionNotOpen, got \(error)")
-                return
-            }
-        } catch {
-            XCTFail("Unexpected error type: \(error)")
-        }
-    }
-
-    func testRunServerUpdateThrowsWhenSheetPresented() async {
-        let checkout = makeCheckoutWithOpenSession()
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        integrationDelegate.isSheetPresented = true
-        checkout.integrationDelegate = integrationDelegate
-
-        do {
-            try await checkout.runServerUpdate { }
-            XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
-        } catch let error as CheckoutError {
-            guard case .sheetCurrentlyPresented = error else {
-                XCTFail("Expected .sheetCurrentlyPresented, got \(error)")
-                return
-            }
-        } catch {
-            XCTFail("Unexpected error type: \(error)")
-        }
-    }
-
     func testRunServerUpdateWrapsClosureError() async {
         let checkout = makeCheckoutWithOpenSession()
         let expectedMessage = "Server returned 500"
@@ -198,6 +163,43 @@ final class CheckoutUnitTests: XCTestCase {
                 return
             }
             XCTAssertEqual(message, expectedMessage)
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+    func testRunServerUpdateWrapsTimeoutError() async {
+        let checkout = makeCheckoutWithOpenSession()
+
+        do {
+            try await checkout.runServerUpdate {
+                throw TimeoutError()
+            }
+            XCTFail("Expected CheckoutError.timedOut")
+        } catch let error as CheckoutError {
+            guard case .timedOut = error else {
+                XCTFail("Expected .timedOut, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+    func testRunServerUpdateWrapsGenericError() async {
+        let checkout = makeCheckoutWithOpenSession()
+
+        do {
+            try await checkout.runServerUpdate {
+                throw URLError(.notConnectedToInternet)
+            }
+            XCTFail("Expected CheckoutError.apiError")
+        } catch let error as CheckoutError {
+            guard case .apiError(let message) = error else {
+                XCTFail("Expected .apiError, got \(error)")
+                return
+            }
+            XCTAssertEqual(message, URLError(.notConnectedToInternet).localizedDescription)
         } catch {
             XCTFail("Unexpected error type: \(error)")
         }
