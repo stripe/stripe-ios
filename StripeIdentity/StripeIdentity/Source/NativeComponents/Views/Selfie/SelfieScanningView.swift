@@ -22,6 +22,7 @@ final class SelfieScanningView: UIView {
         static var labelFont: UIFont {
             IdentityUI.instructionsFont
         }
+        static let preferredPreviewHeightToWidthRatio: CGFloat = 4 / 3
 
         static let flashAnimationDuration: TimeInterval = 0.2
         static let flashOverlayAlpha: CGFloat = 0.8
@@ -128,7 +129,7 @@ final class SelfieScanningView: UIView {
     private let vStack: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.alignment = .fill
+        stackView.alignment = .center
         stackView.spacing = Styling.labelBottomPadding
         return stackView
     }()
@@ -425,6 +426,14 @@ extension SelfieScanningView {
                 equalTo: widthAnchor,
                 constant: -(Styling.contentInsets.leading + Styling.contentInsets.trailing)
             ),
+            {
+                let constraint = previewContainerView.heightAnchor.constraint(
+                    equalTo: previewContainerView.widthAnchor,
+                    multiplier: Styling.preferredPreviewHeightToWidthRatio
+                )
+                constraint.priority = .defaultHigh
+                return constraint
+            }(),
             // Set insets for label
             widthAnchor.constraint(
                 equalTo: instructionLabelView.widthAnchor,
