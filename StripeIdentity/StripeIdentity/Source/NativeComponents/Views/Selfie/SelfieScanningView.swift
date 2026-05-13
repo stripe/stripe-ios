@@ -17,8 +17,6 @@ final class SelfieScanningView: UIView {
     struct Styling {
         static let contentInsets = IdentityFlowView.Style.defaultContentViewInsets
 
-        static let viewWidthToContainerHeightRatio = IdentityUI.documentCameraPreviewAspectRatio
-
         static let labelBottomPadding = IdentityUI.scanningViewLabelBottomPadding
         static let labelMinHeightNumberOfLines = IdentityUI.scanningViewLabelMinHeightNumberOfLines
         static var labelFont: UIFont {
@@ -130,7 +128,7 @@ final class SelfieScanningView: UIView {
     private let vStack: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
-        stackView.alignment = .center
+        stackView.alignment = .fill
         stackView.spacing = Styling.labelBottomPadding
         return stackView
     }()
@@ -410,6 +408,10 @@ extension SelfieScanningView {
     fileprivate func installConstraints() {
         scannedImageHStack.translatesAutoresizingMaskIntoConstraints = false
         scannedImageScrollView.setContentHuggingPriority(.required, for: .horizontal)
+        previewContainerView.setContentHuggingPriority(.defaultLow, for: .vertical)
+        previewContainerView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        instructionLabelView.setContentHuggingPriority(.required, for: .vertical)
+        instructionLabelView.setContentCompressionResistancePriority(.required, for: .vertical)
 
         // Adjusts to keep padding visually the same while accounting for scroll
         // indicator margin
@@ -419,16 +421,10 @@ extension SelfieScanningView {
         )
 
         NSLayoutConstraint.activate([
-            // Set the container to the same height as the document scanning preview, but as a square
-            widthAnchor.constraint(
-                equalTo: previewContainerView.widthAnchor,
-                multiplier: Styling.viewWidthToContainerHeightRatio,
-                constant: Styling.contentInsets.leading + Styling.contentInsets.trailing
-            ),
             previewContainerView.widthAnchor.constraint(
-                equalTo: previewContainerView.heightAnchor
+                equalTo: widthAnchor,
+                constant: -(Styling.contentInsets.leading + Styling.contentInsets.trailing)
             ),
-
             // Set insets for label
             widthAnchor.constraint(
                 equalTo: instructionLabelView.widthAnchor,
