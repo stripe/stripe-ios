@@ -196,7 +196,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
         webView?.configuration.userContentController.removeScriptMessageHandler(forName: "onError")
     }
 
-    @objc private func closeButtonTapped() {
+    @objc func closeButtonTapped() {
         closeButton.isEnabled = false
         self.completion(.failure(ChallengeError.userCanceled))
         switch intentType {
@@ -210,7 +210,7 @@ class IntentConfirmationChallengeViewController: UIViewController {
     }
 
     // MARK: - Handlers
-    private func handleReady() {
+    func handleReady() {
         STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeWebViewLoaded(duration: Date().timeIntervalSince(startTime), captchaVendorName: stripeJs?.captchaVendorName)
         DispatchQueue.main.async {
             UIView.animate(withDuration: 0.3) {
@@ -221,13 +221,13 @@ class IntentConfirmationChallengeViewController: UIViewController {
         }
     }
 
-    private func handleSuccess() {
+    func handleSuccess() {
         STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeSuccess(duration: Date().timeIntervalSince(startTime), captchaVendorName: stripeJs?.captchaVendorName)
         cleanup()
         completion(.success(()))
     }
 
-    private func handleError(_ error: Error) {
+    func handleError(_ error: Error) {
         STPAnalyticsClient.sharedClient.logIntentConfirmationChallengeError(error: error, duration: Date().timeIntervalSince(startTime), captchaVendorName: stripeJs?.captchaVendorName)
         cleanup()
         completion(.failure(error))
