@@ -125,7 +125,8 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                 .init(
                     state: .videoPreview(
                         imageScanningSession.cameraSession,
-                        showFlashAnimation: collectedSamples.count == 1
+                        showFlashAnimation: collectedSamples.count == 1,
+                        statusText: collectedSamples.isEmpty ? nil : .holdStill
                     ),
                     instructionalText: collectedSamples.isEmpty
                         ? SelfieCaptureViewController.initialInstructionText
@@ -154,7 +155,10 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
         case .saving(_, let faceCaptureData):
             return .saving(
                 .init(
-                    state: .saving(UIImage(cgImage: faceCaptureData.last.image)),
+                    state: .saving(
+                        UIImage(cgImage: faceCaptureData.last.image),
+                        statusText: .uploading
+                    ),
                     instructionalText: SelfieCaptureViewController.scannedInstructionText
                 )
             )

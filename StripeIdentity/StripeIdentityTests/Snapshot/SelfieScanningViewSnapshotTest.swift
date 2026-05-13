@@ -39,7 +39,11 @@ final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
     func testCameraSession() {
         verifyView(
             with: .init(
-                state: .videoPreview(mockCameraSession, showFlashAnimation: false),
+                state: .videoPreview(
+                    mockCameraSession,
+                    showFlashAnimation: false,
+                    statusText: nil
+                ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )
         )
@@ -78,7 +82,10 @@ final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
     func testSaving() {
         verifyView(
             with: .init(
-                state: .saving(SelfieScanningViewSnapshotTest.mockImage),
+                state: .saving(
+                    SelfieScanningViewSnapshotTest.mockImage,
+                    statusText: .uploading
+                ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )
         )

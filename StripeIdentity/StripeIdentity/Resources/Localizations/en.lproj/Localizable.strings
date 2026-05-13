@@ -10,6 +10,9 @@
 /* Button text to decline the optional training consent choice */
 "Decline" = "Decline";
 
+/* Status text displayed over the selfie viewfinder while capturing selfies */
+"Hold still" = "Hold still";
+
 /* Title for accepted types of ids */
 "Accepted forms of ID include" = "Accepted forms of ID include";
 
@@ -286,6 +289,9 @@
 /* Title of document upload screen */
 "Upload your photo ID" = "Upload your photo ID";
 
+/* Status text displayed over the blurred selfie while uploading */
+"Uploading" = "Uploading";
+
 /* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
 "Uploading back %@ photo" = "Uploading back %@ photo";
 
@@ -316,4 +322,3 @@
 
 /* Text for message of warning alert */
 "Your selfie images have not been saved. Do you want to leave?" = "Your selfie images have not been saved. Do you want to leave?";
-

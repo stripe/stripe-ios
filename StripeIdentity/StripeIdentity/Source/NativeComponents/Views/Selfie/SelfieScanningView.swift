@@ -73,11 +73,35 @@ final class SelfieScanningView: UIView {
     }
 
     struct ViewModel {
+        enum StatusText {
+            case holdStill
+            case uploading
+
+            var text: String {
+                switch self {
+                case .holdStill:
+                    return STPLocalizedString(
+                        "Hold still",
+                        "Status text displayed over the selfie viewfinder while capturing selfies"
+                    )
+                case .uploading:
+                    return STPLocalizedString(
+                        "Uploading",
+                        "Status text displayed over the blurred selfie while uploading"
+                    )
+                }
+            }
+        }
+
         enum State {
             /// Display an empty container when waiting for camera permission prompt
             case blank
             /// Live video feed from the camera while taking selfies
-            case videoPreview(CameraSessionProtocol, showFlashAnimation: Bool)
+            case videoPreview(
+                CameraSessionProtocol,
+                showFlashAnimation: Bool,
+                statusText: StatusText?
+            )
             /// Display scanned selfie images
             case scanned(
                 [UIImage],
@@ -86,7 +110,7 @@ final class SelfieScanningView: UIView {
                 openURLHandler: (URL) -> Void,
                 retakeSelfieHandler: () -> Void
             )
-            case saving(UIImage)
+            case saving(UIImage, statusText: StatusText)
         }
 
         let state: State
@@ -144,6 +168,32 @@ final class SelfieScanningView: UIView {
         let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
         blurView.isHidden = true
         return blurView
+    }()
+
+    private let statusLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16)
+        label.textColor = .white
+        label.adjustsFontForContentSizeCategory = true
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.layer.shadowOffset = CGSize(width: 0, height: 1)
+        label.layer.shadowRadius = 4
+        label.layer.shadowOpacity = 0.35
+        return label
+    }()
+
+    private let statusLabelContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(
+            red: 0x21 / 255,
+            green: 0x25 / 255,
+            blue: 0x2C / 255,
+            alpha: 0.6
+        )
+        view.layer.cornerRadius = 8
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
     // MARK: Scanned Images
@@ -238,6 +288,7 @@ final class SelfieScanningView: UIView {
         capturedImageView.isHidden = true
         capturedImageView.image = nil
         capturedImageBlurView.isHidden = true
+        statusLabelContainerView.isHidden = true
         previewContainerView.isHidden = true
         scannedImageScrollView.isHidden = true
 
@@ -248,12 +299,15 @@ final class SelfieScanningView: UIView {
             retakeSelfieStack.isHidden = true
             previewContainerView.isHidden = false
 
-        case .videoPreview(let cameraSession, let showFlashAnimation):
+        case .videoPreview(let cameraSession, let showFlashAnimation, let statusText):
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
             previewContainerView.isHidden = false
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
+            if let statusText {
+                configureStatusLabel(statusText)
+            }
             if showFlashAnimation {
                 animateFlash()
             }
@@ -290,11 +344,12 @@ final class SelfieScanningView: UIView {
                     sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
                 }
             }
-        case .saving(let image):
+        case .saving(let image, let statusText):
             previewContainerView.isHidden = false
             capturedImageView.image = image
             capturedImageView.isHidden = false
             capturedImageBlurView.isHidden = false
+            configureStatusLabel(statusText)
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
         }
@@ -333,6 +388,11 @@ extension SelfieScanningView {
         previewContainerView.contentView.addAndPinSubview(capturedImageView)
         previewContainerView.contentView.addAndPinSubview(capturedImageBlurView)
         previewContainerView.contentView.addAndPinSubview(flashOverlayView)
+        previewContainerView.contentView.addSubview(statusLabelContainerView)
+        statusLabelContainerView.addAndPinSubview(
+            statusLabel,
+            insets: .init(top: 8, leading: 8, bottom: 8, trailing: 8)
+        )
 
         // Add some bottom margin so the scroll indicator doesn't overlay on
         // top of the scanned images
@@ -396,7 +456,23 @@ extension SelfieScanningView {
                 constraint.priority = .defaultHigh
                 return constraint
             }(),
+            statusLabelContainerView.centerXAnchor.constraint(
+                equalTo: previewContainerView.contentView.centerXAnchor
+            ),
+            statusLabelContainerView.bottomAnchor.constraint(
+                equalTo: previewContainerView.contentView.bottomAnchor,
+                constant: -40
+            ),
+            statusLabelContainerView.widthAnchor.constraint(
+                lessThanOrEqualTo: previewContainerView.contentView.widthAnchor,
+                multiplier: 0.8
+            ),
         ])
+    }
+
+    fileprivate func configureStatusLabel(_ statusText: ViewModel.StatusText) {
+        statusLabel.text = statusText.text
+        statusLabelContainerView.isHidden = false
     }
 
     fileprivate func rebuildImageHStack(with images: [UIImage]) {
