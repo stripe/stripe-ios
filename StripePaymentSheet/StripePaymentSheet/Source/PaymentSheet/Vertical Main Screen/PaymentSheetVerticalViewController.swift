@@ -21,7 +21,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         if let linkConfirmOption {
             return .link(option: linkConfirmOption)
         } else if isLinkWalletButtonSelected {
-            return .link(option: .wallet)
+            return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)))
         } else if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
             // If we're showing the list, use its selection:
             switch paymentMethodListViewController.currentSelection {
@@ -30,7 +30,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             case .applePay:
                 return .applePay
             case .link:
-                return .link(option: .wallet)
+                return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)))
             case .new(paymentMethodType: let paymentMethodType):
                 let params = IntentConfirmParams(type: paymentMethodType)
                 params.setDefaultBillingDetailsIfNecessary(for: configuration)
@@ -548,7 +548,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         guard elementsSession.enableFlowControllerRUX(for: configuration) else {
             return false
         }
-        guard case .link(.wallet) = selectedPaymentOption else {
+        guard case .link(let confirmOption) = selectedPaymentOption, case .wallet = confirmOption else {
             return false
         }
         return isFlowController
@@ -613,7 +613,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             }
         }
 
-        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods, paymentMethodLayout: .vertical)
+        analyticsHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: visiblePaymentMethods, hiddenPaymentMethods: hiddenPaymentMethods)
     }
 
     // MARK: - PaymentSheetViewControllerProtocol

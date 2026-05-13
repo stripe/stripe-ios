@@ -87,7 +87,8 @@ extension PayWithLinkViewController {
                 return PaymentSheetFormFactory.makeBankMandateText(
                     isSettingUp: isSettingUp || context.elementsSession.forceSaveFutureUseBehaviorAndNewMandateText,
                     merchantName: context.configuration.merchantDisplayName,
-                    sellerName: context.intent.sellerDetails?.businessName
+                    sellerName: context.intent.sellerDetails?.businessName,
+                    brand: context.linkBrand
                 )
             default:
                 return nil

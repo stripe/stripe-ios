@@ -27,30 +27,25 @@ final class STPPaymentMethodCardArtImageTest: APIStubbedTestCase {
 
     // MARK: - STPPaymentMethod.cardArtImage
 
-    func testCardArtImage_returnsNilWhenCardArtDisabled() {
-        let pm = STPPaymentMethod._testCardWithCardArt()
-        XCTAssertNil(pm.cachedCardArtImage(cardArtEnabled: false, downloadManager: downloadManager))
-    }
-
     func testCardArtImage_returnsNilWhenNoCardArt() {
         let pm = STPPaymentMethod._testCard()
-        XCTAssertNil(pm.cachedCardArtImage(cardArtEnabled: true, downloadManager: downloadManager))
+        XCTAssertNil(pm.cachedCardArtImage(downloadManager: downloadManager))
     }
 
     func testCardArtImage_returnsNilWhenImageNotCached() {
         let pm = STPPaymentMethod._testCardWithCardArt()
-        XCTAssertNil(pm.cachedCardArtImage(cardArtEnabled: true, downloadManager: downloadManager))
+        XCTAssertNil(pm.cachedCardArtImage(downloadManager: downloadManager))
     }
 
     func testCardArtImage_returnsImageWhenCached() {
         let pm = STPPaymentMethod._testCardWithCardArt()
-        let cardArtURL = pm.cardArtCDNURL(cardArtEnabled: true)!
+        let cardArtURL = pm.cardArtCDNURL()!
 
         // Pre-seed the URL cache so downloadImage returns the real image
         let imageData = generateUIImage(size: CGSize(width: 100, height: 26)).pngData()!
         seedURLCache(url: cardArtURL, data: imageData)
 
-        let result = pm.cachedCardArtImage(cardArtEnabled: true, downloadManager: downloadManager)
+        let result = pm.cachedCardArtImage(downloadManager: downloadManager)
         XCTAssertNotNil(result)
 
         // The returned image should be the same as the one we created

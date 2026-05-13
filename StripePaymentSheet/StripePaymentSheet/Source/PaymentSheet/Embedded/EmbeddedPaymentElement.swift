@@ -55,7 +55,13 @@ public final class EmbeddedPaymentElement {
         guard let _paymentOption else {
             return nil
         }
-        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText, currency: intent.currency, iconStyle: configuration.appearance.iconStyle, cardArtEnabled: configuration.appearance.cardArtEnabled)
+        return .init(
+            paymentOption: _paymentOption,
+            mandateText: embeddedPaymentMethodsView.mandateText,
+            currency: intent.currency,
+            iconStyle: configuration.appearance.iconStyle,
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+        )
     }
 
     /// An asynchronous failable initializer
@@ -410,7 +416,7 @@ public final class EmbeddedPaymentElement {
         case .applePay:
             return .applePay
         case .link:
-            return .link(option: .wallet)
+            return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)))
         case let .new(paymentMethodType: paymentMethodType):
             let params = IntentConfirmParams(type: paymentMethodType)
             params.setDefaultBillingDetailsIfNecessary(for: configuration)

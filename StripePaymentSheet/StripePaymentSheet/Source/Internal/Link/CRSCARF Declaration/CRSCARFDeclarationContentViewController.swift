@@ -5,6 +5,7 @@
 //  Created by Michael Liberatore on 4/23/26.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -17,6 +18,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         let navigationBar = LinkSheetNavigationBar(
             isTestMode: false,
             appearance: .default,
+            brand: brand,
             shouldLogPaymentSheetAnalyticsOnDismissal: false
         )
         navigationBar.setStyle(.close(showAdditionalButton: false))
@@ -30,6 +32,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
 
     private let text: String
     private let appearance: LinkAppearance
+    private let brand: LinkBrand
 
     /// Closure called when a user confirms or cancels the declaration.
     var onResult: ((LinkController.CRSCARFDeclarationResult) -> Void)?
@@ -38,9 +41,10 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     /// - Parameters:
     ///   - text: The declaration text to display.
     ///   - appearance: Determines the colors, corner radius, and height of the confirmation button.
-    init(text: String, appearance: LinkAppearance) {
+    init(text: String, appearance: LinkAppearance, brand: LinkBrand) {
         self.text = text
         self.appearance = appearance
+        self.brand = brand
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -88,7 +92,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = LinkUI.font(forTextStyle: .title)
         label.textColor = .linkTextPrimary
-        label.text = "Declarations"
+        label.text = String.Localized.declarations
         label.numberOfLines = 0
         return label
     }()
@@ -122,7 +126,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     }()
 
     private lazy var confirmButton = ConfirmButton.makeLinkButton(
-        callToAction: .custom(title: "Agree and accept"),
+        callToAction: .custom(title: String.Localized.agree_and_accept),
         showProcessingLabel: false,
         linkAppearance: appearance
     ) { [weak self] in

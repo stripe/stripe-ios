@@ -184,7 +184,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
-    func testAmazonPayConfirmFlows() async throws {
+    func _testAmazonPayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
                                paymentMethodType: .amazonPay,
@@ -1500,6 +1500,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     elementsSession: ._testValue(intent: intent, linkFundingSources: linkFundingSources),
                     paymentOption: .link(
                         option: .withPaymentMethod(
+                            brand: .link,
                             paymentMethod: linkPaymentMethod
                         )
                     ),

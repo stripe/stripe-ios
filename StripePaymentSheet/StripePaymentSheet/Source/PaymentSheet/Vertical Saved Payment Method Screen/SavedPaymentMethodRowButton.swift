@@ -53,6 +53,7 @@ final class SavedPaymentMethodRowButton: UIView {
     // MARK: - Private properties
 
     private let appearance: PaymentSheet.Appearance
+    private let linkBrand: LinkBrand
 
     private var isEditing: Bool {
         switch state {
@@ -74,7 +75,14 @@ final class SavedPaymentMethodRowButton: UIView {
     }()
 
     private(set) lazy var rowButton: RowButton = {
-        let button: RowButton = .makeForSavedPaymentMethod(paymentMethod: paymentMethod, appearance: appearance, badgeText: badgeText, accessoryView: chevronButton, didTap: handleRowButtonTapped)
+        let button: RowButton = .makeForSavedPaymentMethod(
+            paymentMethod: paymentMethod,
+            appearance: appearance,
+            badgeText: badgeText,
+            accessoryView: chevronButton,
+            linkBrand: linkBrand,
+            didTap: handleRowButtonTapped
+        )
 
         return button
     }()
@@ -85,11 +93,13 @@ final class SavedPaymentMethodRowButton: UIView {
 
     init(paymentMethod: STPPaymentMethod,
          appearance: PaymentSheet.Appearance,
+         linkBrand: LinkBrand = .link,
          showDefaultPMBadge: Bool = false,
          previousSelectedState: State = .unselected,
          currentState: State = .unselected) {
         self.paymentMethod = paymentMethod
         self.appearance = appearance
+        self.linkBrand = linkBrand
         self.showDefaultPMBadge = showDefaultPMBadge
         self.previousSelectedState = previousSelectedState
         self.state = currentState

@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+@_spi(STP)
+import StripeCore
+
 @_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
@@ -48,15 +51,25 @@ struct KYCInfoView: View {
         }
     }
 
+    private enum Residence: String, CaseIterable, Identifiable {
+        case us = "US"
+        case eu = "EU"
+
+        var id: String {
+            rawValue
+        }
+    }
+
     /// The coordinator to use to submit KYC information.
     let coordinator: CryptoOnrampCoordinator
 
-    /// Closure called when KYC submission succeeds with the level collected by this view.
-    let onCompleted: (KYCLevel) -> Void
+    /// Closure called when KYC submission succeeds with the collected level and whether the user selected EU residence.
+    let onCompleted: (_ collectedKYCLevel: KYCLevel, _ isEUCustomer: Bool) -> Void
 
     /// Controls which variant of KYC data collection this form performs.
     let collectionMode: CollectionMode
 
+    @State private var residence: Residence = .us
     @State private var firstName: String = ""
     @State private var lastName: String = ""
     @State private var idNumber: String = ""
@@ -66,6 +79,9 @@ struct KYCInfoView: View {
     @State private var state: String = ""
     @State private var postalCode: String = ""
     @State private var country: String = "US"
+    @State private var birthCountry: String = ""
+    @State private var birthCity: String = ""
+    @State private var nationalities: String = ""
     @State private var dateOfBirth: Date?
     @State private var errorMessage: String?
 
@@ -76,13 +92,13 @@ struct KYCInfoView: View {
     @FocusState private var focusedField: Field?
 
     private enum Field {
-        case firstName, lastName, idNumber, addressLine1, addressLine2, city, state, postalCode, country
+        case firstName, lastName, idNumber, addressLine1, addressLine2, city, state, postalCode, country, birthCountry, birthCity, nationalities
     }
 
     init(
         coordinator: CryptoOnrampCoordinator,
         collectionMode: CollectionMode = .original,
-        onCompleted: @escaping (KYCLevel) -> Void
+        onCompleted: @escaping (_ collectedKYCLevel: KYCLevel, _ isEUCustomer: Bool) -> Void
     ) {
         self.coordinator = coordinator
         self.onCompleted = onCompleted
@@ -95,17 +111,23 @@ struct KYCInfoView: View {
             return true
         }
 
+        let isDateOfBirthOrIdNumberMissing = collectionMode.requiresDateOfBirthAndIdNumber
+            && (dateOfBirth == nil || (residence == .us && idNumber.isEmpty))
+        let isEUInfoMissing = residence == .eu
+            && (birthCountry.isEmpty || birthCity.isEmpty || nationalities.isEmpty)
+
         if collectionMode.requiresLevel0Fields {
             return firstName.isEmpty
                 || lastName.isEmpty
                 || addressLine1.isEmpty
                 || city.isEmpty
-                || state.isEmpty
+                || (residence == .us && state.isEmpty)
                 || postalCode.isEmpty
                 || country.isEmpty
-                || (collectionMode.requiresDateOfBirthAndIdNumber && (idNumber.isEmpty || dateOfBirth == nil))
+                || isDateOfBirthOrIdNumberMissing
+                || isEUInfoMissing
         } else {
-            return idNumber.isEmpty || dateOfBirth == nil
+            return dateOfBirth == nil || (residence == .us && idNumber.isEmpty) || isEUInfoMissing
         }
     }
 
@@ -130,7 +152,7 @@ struct KYCInfoView: View {
         case .original, .kycLevel1StepUp:
             return .level1
         case .kycLevel0:
-            return (dateOfBirth != nil && !idNumber.isEmpty) ? .level1 : .level0
+            return (dateOfBirth != nil && (!idNumber.isEmpty || residence == .eu)) ? .level1 : .level0
         }
     }
 
@@ -163,6 +185,15 @@ struct KYCInfoView: View {
                 .foregroundColor(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
 
+                FormField("Residence") {
+                    Picker("Residence", selection: $residence) {
+                        ForEach(Residence.allCases) { residence in
+                            Text(residence.rawValue).tag(residence)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                }
+
                 if collectionMode.requiresLevel0Fields {
                     FormField(title("First Name", required: true)) {
                         makeTextField(
@@ -183,13 +214,15 @@ struct KYCInfoView: View {
                     }
                 }
 
-                FormField(title("Social Security Number", required: collectionMode.requiresDateOfBirthAndIdNumber)) {
-                    makeTextField(
-                        "Enter your SSN",
-                        text: $idNumber,
-                        field: .idNumber,
-                        keyboardType: .numberPad
-                    )
+                if residence == .us {
+                    FormField(title("Social Security Number", required: collectionMode.requiresDateOfBirthAndIdNumber)) {
+                        makeTextField(
+                            "Enter your SSN",
+                            text: $idNumber,
+                            field: .idNumber,
+                            keyboardType: .numberPad
+                        )
+                    }
                 }
 
                 FormField(title("Date of Birth", required: collectionMode.requiresDateOfBirthAndIdNumber)) {
@@ -209,6 +242,35 @@ struct KYCInfoView: View {
                                     .frame(maxWidth: .infinity)
                             }
                         }
+                    }
+                }
+
+                if residence == .eu {
+                    FormField(title("Birth Country", required: true)) {
+                        makeTextField(
+                            "Country code",
+                            text: $birthCountry,
+                            field: .birthCountry,
+                            autocapitalization: .allCharacters
+                        )
+                    }
+
+                    FormField(title("Birth City", required: true)) {
+                        makeTextField(
+                            "Enter your city of birth",
+                            text: $birthCity,
+                            field: .birthCity,
+                            autocapitalization: .words
+                        )
+                    }
+
+                    FormField(title("Nationalities", required: true)) {
+                        makeTextField(
+                            "Country codes separated by commas",
+                            text: $nationalities,
+                            field: .nationalities,
+                            autocapitalization: .allCharacters
+                        )
                     }
                 }
 
@@ -240,7 +302,7 @@ struct KYCInfoView: View {
                         )
                     }
 
-                    FormField(title("State/Province", required: true)) {
+                    FormField(title("State/Province", required: residence == .us)) {
                         makeTextField(
                             "Enter your state or province",
                             text: $state,
@@ -283,6 +345,22 @@ struct KYCInfoView: View {
         }
         .navigationTitle("KYC Information")
         .navigationBarTitleDisplayMode(.inline)
+        .onChange(of: residence) { newResidence in
+            switch newResidence {
+            case .us:
+                if country.isEmpty {
+                    country = "US"
+                }
+                birthCountry = ""
+                birthCity = ""
+                nationalities = ""
+            case .eu:
+                if country.uppercased() == "US" {
+                    country = ""
+                }
+                idNumber = ""
+            }
+        }
     }
 
     private func submitKYCInfo() {
@@ -297,7 +375,7 @@ struct KYCInfoView: View {
                     line1: addressLine1.isEmpty ? nil : addressLine1,
                     line2: addressLine2.isEmpty ? nil : addressLine2,
                     postalCode: postalCode,
-                    state: state
+                    state: state.isEmpty ? nil : state
                 )
             } else {
                 nil
@@ -318,7 +396,10 @@ struct KYCInfoView: View {
             lastName: collectionMode.requiresLevel0Fields ? lastName : nil,
             idNumber: idNumber.isEmpty ? nil : idNumber,
             address: address,
-            dateOfBirth: dateOfBirth
+            dateOfBirth: dateOfBirth,
+            birthCountry: residence == .eu ? birthCountry.uppercased().nonEmpty : nil,
+            birthCity: residence == .eu ? birthCity.nonEmpty : nil,
+            nationalities: residence == .eu ? normalizedNationalities : nil
         )
 
         Task {
@@ -326,7 +407,7 @@ struct KYCInfoView: View {
                 try await coordinator.attachKYCInfo(info: kycInfo)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    onCompleted(collectedKYCLevel)
+                    onCompleted(collectedKYCLevel, residence == .eu)
                 }
             } catch {
                 await MainActor.run {
@@ -350,22 +431,31 @@ struct KYCInfoView: View {
             .keyboardType(keyboardType)
             .focused($focusedField, equals: field)
     }
+
+    private var normalizedNationalities: [String]? {
+        let values = nationalities
+            .components(separatedBy: ",")
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines).uppercased() }
+            .filter { !$0.isEmpty }
+
+        return values.isEmpty ? nil : values
+    }
 }
 
 #Preview("Original") {
     PreviewWrapperView { coordinator in
-        KYCInfoView(coordinator: coordinator, collectionMode: .original) { _ in }
+        KYCInfoView(coordinator: coordinator, collectionMode: .original) { _, _ in }
     }
 }
 
 #Preview("Level 0") {
     PreviewWrapperView { coordinator in
-        KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel0) { _ in }
+        KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel0) { _, _ in }
     }
 }
 
 #Preview("Level 1 Step Up") {
     PreviewWrapperView { coordinator in
-        KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel1StepUp) { _ in }
+        KYCInfoView(coordinator: coordinator, collectionMode: .kycLevel1StepUp) { _, _ in }
     }
 }

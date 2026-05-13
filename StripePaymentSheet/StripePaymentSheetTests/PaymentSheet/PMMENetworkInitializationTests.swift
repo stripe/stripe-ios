@@ -85,7 +85,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(
             promotions["klarna"],
             PaymentMethodMessagingPromotionsHelper.PromotionContent(
-                promotion: "Pay now, or in 4 interest-free payments of $12.50.",
+                promotion: "Pay now, in 4 interest-free payments of $12.50, or over 3 months.",
                 learnMoreText: "See plans",
                 infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=See%20plans")!
             )

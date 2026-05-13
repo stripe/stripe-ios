@@ -90,6 +90,8 @@ import UIKit
 }
 
 final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
+    required init() {}
+
     func presentFinancialConnectionsSheet(
         apiClient: STPAPIClient,
         clientSecret: String,
@@ -97,6 +99,7 @@ final class StubbedConnectionsSDKInterface: FinancialConnectionsSDKInterface {
         existingConsumer: FinancialConnectionsConsumer?,
         style: FinancialConnectionsStyle,
         elementsSessionContext: ElementsSessionContext?,
+        brand: LinkBrand?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
         from presentingViewController: UIViewController,
         completion: @escaping (FinancialConnectionsSDKResult) -> Void

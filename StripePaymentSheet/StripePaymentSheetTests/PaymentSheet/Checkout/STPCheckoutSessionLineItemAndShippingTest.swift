@@ -26,15 +26,13 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
         XCTAssertEqual(first.id, "li_1abc")
         XCTAssertEqual(first.name, "Widget")
         XCTAssertEqual(first.quantity, 2)
-        XCTAssertEqual(first.unitAmount, 750)
-        XCTAssertEqual(first.currency, "usd")
+        XCTAssertEqual(first.unitAmount?.minorUnitsAmount, 750)
 
         let second = session.lineItems[1]
         XCTAssertEqual(second.id, "li_2def")
         XCTAssertEqual(second.name, "Gadget")
         XCTAssertEqual(second.quantity, 1)
-        XCTAssertEqual(second.unitAmount, 500)
-        XCTAssertEqual(second.currency, "usd")
+        XCTAssertEqual(second.unitAmount?.minorUnitsAmount, 500)
     }
 
     func testDecodedObjectWithNoLineItems() {
@@ -63,13 +61,13 @@ class STPCheckoutSessionLineItemAndShippingTest: XCTestCase {
         let standard = session.shippingOptions[0]
         XCTAssertEqual(standard.id, "shr_standard")
         XCTAssertEqual(standard.displayName, "Standard Shipping")
-        XCTAssertEqual(standard.amount, 500)
+        XCTAssertEqual(standard.amount.minorUnitsAmount, 500)
         XCTAssertEqual(standard.currency, "usd")
 
         let express = session.shippingOptions[1]
         XCTAssertEqual(express.id, "shr_express")
         XCTAssertEqual(express.displayName, "Express Shipping")
-        XCTAssertEqual(express.amount, 1500)
+        XCTAssertEqual(express.amount.minorUnitsAmount, 1500)
         XCTAssertEqual(express.currency, "usd")
     }
 

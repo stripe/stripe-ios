@@ -91,6 +91,7 @@ private extension WalletViewControllerTests {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: configuration,
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
                 initiallySelectedPaymentDetailsID: nil,

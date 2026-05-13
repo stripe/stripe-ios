@@ -178,7 +178,7 @@ class FormMandateProviderTests: XCTestCase {
 
         XCTAssertEqual(
             result.string,
-            "By continuing, you agree to save your information for future purchases with Test Merchant and Onelink according to Onelink terms and privacy."
+            "By continuing, you agree to save your information for future purchases with Test Merchant and Link according to Link terms and privacy."
         )
     }
 

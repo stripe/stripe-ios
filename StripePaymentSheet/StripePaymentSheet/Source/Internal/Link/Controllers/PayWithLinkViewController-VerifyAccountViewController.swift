@@ -18,7 +18,11 @@ extension PayWithLinkViewController {
         private var isUsingWebviewFallback: Bool = false
 
         private lazy var verificationVC: LinkVerificationViewController = {
-            let vc = LinkVerificationViewController(mode: .embedded, linkAccount: linkAccount)
+            let vc = LinkVerificationViewController(
+                mode: .embedded,
+                linkAccount: linkAccount,
+                brand: context.linkBrand
+            )
             vc.delegate = self
             vc.view.backgroundColor = .clear
             return vc

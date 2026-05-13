@@ -5,6 +5,7 @@
 //  Created by Yuki Tokuhiro on 10/13/23.
 //
 
+@_spi(STP) @testable import StripeCore
 import StripeCoreTestUtils
 @_spi(STP) @testable import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
@@ -38,7 +39,7 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             STPPaymentMethod._testUSBankAccount(),
             STPPaymentMethod._testSEPA(),
         ]
-        let config = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123", showApplePay: true, showLink: true, removeSavedPaymentMethodMessage: nil, merchantDisplayName: "Test Merchant", isCVCRecollectionEnabled: false, isTestMode: false, allowsRemovalOfLastSavedPaymentMethod: false, allowsRemovalOfPaymentMethods: true, allowsSetAsDefaultPM: showDefaultPMBadge, allowsUpdatePaymentMethod: false)
+        let config = SavedPaymentOptionsViewController.Configuration(customerID: "cus_123", showApplePay: true, showLink: true, linkBrand: .link, removeSavedPaymentMethodMessage: nil, merchantDisplayName: "Test Merchant", isCVCRecollectionEnabled: false, isTestMode: false, allowsRemovalOfLastSavedPaymentMethod: false, allowsRemovalOfPaymentMethods: true, allowsSetAsDefaultPM: showDefaultPMBadge, allowsUpdatePaymentMethod: false)
         let intent = Intent.deferredIntent(intentConfig: .init(mode: .payment(amount: 0, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic), confirmHandler: { _, _ in return "" }))
         let sut = SavedPaymentOptionsViewController(
             savedPaymentMethods: paymentMethods,
@@ -92,6 +93,7 @@ final class SavedPaymentOptionsViewControllerSnapshotTests: STPSnapshotTestCase 
             customerID: "cus_123",
             showApplePay: false,
             showLink: false,
+            linkBrand: .link,
             removeSavedPaymentMethodMessage: nil,
             merchantDisplayName: "Test Merchant",
             isCVCRecollectionEnabled: true,

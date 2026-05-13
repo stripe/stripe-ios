@@ -101,6 +101,7 @@ import UIKit
     private let elementsSession: STPElementsSession
     private let intent: Intent
     private let configuration: PaymentElementConfiguration
+    private let linkBrand: LinkBrand
     private let appearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -114,7 +115,7 @@ import UIKit
         guard case .link(let confirmOption) = internalPaymentOption else {
             return nil
         }
-        guard case .withPaymentDetails(_, let paymentDetails, _, _) = confirmOption else {
+        guard case .withPaymentDetails(_, _, let paymentDetails, _, _) = confirmOption else {
             return nil
         }
         return paymentDetails
@@ -137,7 +138,7 @@ import UIKit
             paymentMethodPreview = .init(
                 paymentMethodType: type,
                 icon: iconForPaymentDetails(selectedPaymentDetails),
-                label: STPPaymentMethodType.link.displayName,
+                label: linkBrand.displayName,
                 sublabel: selectedPaymentDetails.linkPaymentDetailsFormattedString
             )
         }
@@ -162,6 +163,7 @@ import UIKit
         elementsSession: STPElementsSession,
         intent: Intent,
         configuration: PaymentElementConfiguration,
+        linkBrand: LinkBrand,
         appearance: LinkAppearance?,
         linkConfiguration: LinkConfiguration?,
         analyticsHelper: PaymentSheetAnalyticsHelper,
@@ -172,6 +174,7 @@ import UIKit
         self.elementsSession = elementsSession
         self.intent = intent
         self.configuration = configuration
+        self.linkBrand = linkBrand
         self.appearance = appearance
         self.linkConfiguration = linkConfiguration
         self.analyticsHelper = analyticsHelper
@@ -245,6 +248,7 @@ import UIKit
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
                     configuration: configuration,
+                    linkBrand: configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession),
                     appearance: appearance,
                     linkConfiguration: linkConfiguration,
                     analyticsHelper: analyticsHelper,
@@ -354,6 +358,7 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .inlineLogin,
             linkAccount: linkAccount,
+            brand: linkBrand,
             configuration: configuration,
             appearance: appearance
         )
@@ -720,7 +725,11 @@ import UIKit
     ) async throws -> CRSCARFDeclarationResult {
         return try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
-                let declarationViewController = CRSCARFDeclarationViewController(text: text, appearance: appearance)
+                let declarationViewController = CRSCARFDeclarationViewController(
+                    text: text,
+                    appearance: appearance,
+                    brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                )
                 declarationViewController.onResult = { [weak declarationViewController] result in
                     declarationViewController?.onResult = nil
 
@@ -808,6 +817,7 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .inlineLogin,
             linkAccount: linkAccount,
+            brand: linkBrand,
             configuration: configuration,
             appearance: appearance,
             consentViewModel: consentViewModel

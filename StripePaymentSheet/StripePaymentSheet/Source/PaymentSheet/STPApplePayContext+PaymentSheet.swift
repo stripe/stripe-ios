@@ -188,7 +188,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
         // 4. Call confirm API with the Apple Pay payment method
         let response = try await context.apiClient.confirmCheckoutSession(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             paymentMethod: paymentMethod.id,
             expectedAmount: expectedAmount,
             expectedPaymentMethodType: STPPaymentMethodType.card.identifier,
@@ -367,10 +367,10 @@ extension STPApplePayContext {
             paymentRequest.paymentSummaryItems = paymentSummaryItems
         } else if case .checkoutSession(let session) = intent,
                   !session.lineItems.isEmpty,
-                  let totals = session.totals {
+                  let total = session.total {
             paymentRequest.paymentSummaryItems = STPApplePayContext.makeApplePayPaymentSummaryItems(
                 lineItems: session.lineItems,
-                totals: totals,
+                total: total,
                 totalLabel: label,
                 currency: intent.currency
             )

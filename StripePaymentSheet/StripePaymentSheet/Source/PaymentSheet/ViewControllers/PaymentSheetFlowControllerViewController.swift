@@ -31,7 +31,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             if let linkConfirmOption {
                 return .link(option: linkConfirmOption)
             } else if isHackyLinkButtonSelected {
-                return .link(option: .wallet)
+                return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)))
             } else if let paymentOption = addPaymentMethodViewController.paymentOption {
                 return paymentOption
             } else if let paymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
@@ -198,6 +198,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 customerID: configuration.customer?.id,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: false,
