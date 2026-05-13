@@ -77,7 +77,7 @@ struct CheckoutCartContentView: View {
                                 Text(item.name)
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text(formatCartCurrency(amount: item.unitAmount, currency: item.currency))
+                                Text(item.unitAmount?.amount ?? "")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
 
@@ -111,7 +111,10 @@ struct CheckoutCartContentView: View {
                                 }
                             }
                             Spacer()
-                            Text(formatCartCurrency(amount: item.unitAmount * item.quantity, currency: item.currency))
+                            Text(formatCartCurrency(
+                                amount: (item.unitAmount?.minorUnitsAmount ?? 0) * item.quantity,
+                                currency: checkout.state.session.currency
+                            ))
                                 .font(.headline)
                         }
                         .padding()
@@ -150,10 +153,10 @@ struct CheckoutCartContentView: View {
                         }) {
                             HStack {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(option.displayName)
+                                    Text(option.displayName ?? "Shipping")
                                         .font(.body)
                                         .foregroundColor(.primary)
-                                    Text(formatCartCurrency(amount: option.amount, currency: option.currency))
+                                    Text(option.amount.amount)
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
                                 }
@@ -438,8 +441,9 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var orderSummarySection: some View {
-        if let totals = checkout.state.session.totals {
+        if let total = checkout.state.session.total {
             let currency = checkout.state.session.currency
+            let taxAmount = total.taxExclusive.minorUnitsAmount + total.taxInclusive.minorUnitsAmount
             VStack(alignment: .leading, spacing: 16) {
                 Text("Order Summary")
                     .font(.title2).bold()
@@ -450,35 +454,35 @@ struct CheckoutCartContentView: View {
                         Text("Subtotal")
                             .foregroundColor(.secondary)
                         Spacer()
-                        Text(formatCartCurrency(amount: totals.subtotal, currency: currency))
+                        Text(formatCartCurrency(amount: total.subtotal.minorUnitsAmount, currency: currency))
                             .foregroundColor(.primary)
                     }
-                    if totals.discount > 0 {
+                    if total.discount.minorUnitsAmount > 0 {
                         HStack {
                             Text("Discount")
                                 .foregroundColor(.green)
                             Spacer()
-                            Text("-" + formatCartCurrency(amount: totals.discount, currency: currency))
+                            Text("-" + formatCartCurrency(amount: total.discount.minorUnitsAmount, currency: currency))
                                 .foregroundColor(.green)
                         }
                     }
 
-                    if totals.shipping > 0 {
+                    if total.shippingRate.minorUnitsAmount > 0 {
                         HStack {
                             Text("Shipping")
                                 .foregroundColor(.secondary)
                             Spacer()
-                            Text(formatCartCurrency(amount: totals.shipping, currency: currency))
+                            Text(formatCartCurrency(amount: total.shippingRate.minorUnitsAmount, currency: currency))
                                 .foregroundColor(.primary)
                         }
                     }
 
-                    if totals.tax > 0 {
+                    if taxAmount > 0 {
                         HStack {
                             Text("Tax")
                                 .foregroundColor(.secondary)
                             Spacer()
-                            Text(formatCartCurrency(amount: totals.tax, currency: currency))
+                            Text(formatCartCurrency(amount: taxAmount, currency: currency))
                                 .foregroundColor(.primary)
                         }
                     }
@@ -490,7 +494,7 @@ struct CheckoutCartContentView: View {
                         Text("Total")
                             .font(.title3).bold()
                         Spacer()
-                        Text(formatCartCurrency(amount: totals.total, currency: currency))
+                        Text(formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency))
                             .font(.title3).bold()
                     }
                 }
@@ -508,10 +512,10 @@ struct CheckoutCartContentView: View {
         guard !options.isEmpty else {
             return nil
         }
-        guard let shippingAmount = checkout.state.session.totals?.shipping else {
+        guard let shippingAmount = checkout.state.session.total?.shippingRate.minorUnitsAmount else {
             return lastSelectedShippingOptionId
         }
-        let matchingOptions = options.filter { $0.amount == shippingAmount }
+        let matchingOptions = options.filter { $0.amount.minorUnitsAmount == shippingAmount }
         if matchingOptions.count == 1 {
             return matchingOptions[0].id
         }
@@ -519,7 +523,7 @@ struct CheckoutCartContentView: View {
     }
 
     private var appliedPromotionCode: String? {
-        checkout.state.session.discounts.first(where: { $0.promotionCode != nil })?.promotionCode
+        checkout.state.session.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
     }
 
     // MARK: - Actions

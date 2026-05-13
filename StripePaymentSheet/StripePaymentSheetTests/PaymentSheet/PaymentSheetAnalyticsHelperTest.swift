@@ -396,8 +396,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func testLogSavedPMScreenOptionSelected() {
         func _createHelper(integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape) -> PaymentSheetAnalyticsHelper {
-            var configuration = PaymentSheet.Configuration()
-            configuration.appearance.cardArtEnabled = true
+            let configuration = PaymentSheet.Configuration()
             let sut = PaymentSheetAnalyticsHelper(integrationShape: integrationShape, configuration: configuration, analyticsClient: analyticsClient)
             return sut
         }
@@ -523,7 +522,6 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         for (integrationShape, paymentOption, result, expected) in testcases {
             var config = PaymentSheet.Configuration()
             config.customPaymentMethodConfiguration = cpmConfig
-            config.appearance.cardArtEnabled = true
 
             let sut = PaymentSheetAnalyticsHelper(
                 integrationShape: integrationShape,
@@ -586,7 +584,6 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func testLogConfirmButtonTapped() {
         var configuration = PaymentSheet.Configuration()
-        configuration.appearance.cardArtEnabled = true
 
         let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: configuration, analyticsClient: analyticsClient)
         sut.logFormShown(paymentMethodTypeIdentifier: "card")

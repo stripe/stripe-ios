@@ -498,7 +498,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_CheckoutSession_SingleLineItem() {
         let lineItems: [Checkout.LineItem] = [
-            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: 2345, currency: "usd"),
+            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: .testValue(2345)),
         ]
         let intent = Intent._testCheckoutSession(
             mode: .payment,
@@ -519,8 +519,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_CheckoutSession_MultipleLineItemsWithQuantity() {
         let lineItems: [Checkout.LineItem] = [
-            .init(id: "li_1", name: "Widget", quantity: 3, unitAmount: 1000, currency: "usd"),
-            .init(id: "li_2", name: "Gadget", quantity: 1, unitAmount: 500, currency: "usd"),
+            .init(id: "li_1", name: "Widget", quantity: 3, unitAmount: .testValue(1000)),
+            .init(id: "li_2", name: "Gadget", quantity: 1, unitAmount: .testValue(500)),
         ]
         let intent = Intent._testCheckoutSession(
             mode: .payment,
@@ -542,8 +542,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_CheckoutSession_WithBreakdownRows() {
         let lineItems: [Checkout.LineItem] = [
-            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: 2000, currency: "usd"),
-            .init(id: "li_2", name: "Gadget", quantity: 2, unitAmount: 500, currency: "usd"),
+            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: .testValue(2000)),
+            .init(id: "li_2", name: "Gadget", quantity: 2, unitAmount: .testValue(500)),
         ]
         // subtotal = 3000, shipping = 500, tax = 200, discount = 100 -> total = 3600
         let intent = Intent._testCheckoutSession(
@@ -578,7 +578,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_CheckoutSession_OmitsBreakdownWhenZero() {
         let lineItems: [Checkout.LineItem] = [
-            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: 2345, currency: "usd"),
+            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: .testValue(2345)),
         ]
         let intent = Intent._testCheckoutSession(
             mode: .payment,
@@ -619,7 +619,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         config.applePay = applePay
 
         let lineItems: [Checkout.LineItem] = [
-            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: 2345, currency: "usd"),
+            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: .testValue(2345)),
         ]
         let intent = Intent._testCheckoutSession(
             mode: .payment,

@@ -266,7 +266,7 @@ final class PaymentSheetAnalyticsHelper {
         }
         var params: [String: Any] = [:]
         if case .saved(let paymentMethod) = option {
-            params["has_card_art"] = hasCardArt(cardArtEnabled: configuration.appearance.cardArtEnabled, paymentMethod: paymentMethod)
+            params["has_card_art"] = hasCardArt(paymentMethod: paymentMethod)
         }
         log(event: event, selectedLPM: selectedLPM, params: params)
     }
@@ -351,7 +351,7 @@ final class PaymentSheetAnalyticsHelper {
         let duration = getDuration(for: .formShown)
         var params: [String: Any] = [:]
         if case .saved(let paymentMethod, _) = paymentOption {
-            params["has_card_art"] = hasCardArt(cardArtEnabled: configuration.appearance.cardArtEnabled, paymentMethod: paymentMethod)
+            params["has_card_art"] = hasCardArt(paymentMethod: paymentMethod)
         }
         log(
             event: .paymentSheetConfirmButtonTapped,
@@ -420,7 +420,7 @@ final class PaymentSheetAnalyticsHelper {
         var params: [String: Any] = [:]
         if case .saved(let paymentMethod, _) = paymentOption {
             params["is_saved_payment_method"] = true
-            params["has_card_art"] = hasCardArt(cardArtEnabled: configuration.appearance.cardArtEnabled, paymentMethod: paymentMethod)
+            params["has_card_art"] = hasCardArt(paymentMethod: paymentMethod)
         } else {
             params["is_saved_payment_method"] = false
         }
@@ -544,8 +544,8 @@ extension PaymentSheetAnalyticsHelper {
 
 // MARK: - Card art helper
 extension PaymentSheetAnalyticsHelper {
-    func hasCardArt(cardArtEnabled: Bool, paymentMethod: STPPaymentMethod) -> Bool {
-        return cardArtEnabled && paymentMethod.card?.cardArt?.artImage?.url != nil
+    func hasCardArt(paymentMethod: STPPaymentMethod) -> Bool {
+        return paymentMethod.card?.cardArt?.artImage?.url != nil
     }
 }
 

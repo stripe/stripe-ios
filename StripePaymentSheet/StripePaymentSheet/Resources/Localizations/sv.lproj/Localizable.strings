@@ -1,3 +1,7 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "%@ kommer inte längre att sparas i din plånbok.";
+
 "+ Add" = "+ Lägg till";
 
 "Add US bank account" = "Lägg till amerikanskt bankkonto";
@@ -16,11 +20,9 @@
 
 "Add your payment information" = "Lägg till betalningsinformation";
 
+"Agree and accept" = "Godkänn och acceptera";
+
 "Approve payment" = "Godkänn betalning";
-
-"Are you sure you want to remove this card?" = "Är du säker på att du vill ta bort kortet?";
-
-"Are you sure you want to remove this linked account?" = "Är du säker på att du vill ta bort det länkade kontot?";
 
 "Back" = "Tillbaka";
 
@@ -67,8 +69,6 @@
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att registrera dig på Link, godkänner du våra <terms>villkor</terms> och vår <privacy>integritetspolicy</privacy>.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att tillhandahålla ditt telefonnummer och din e-postadress godkänner du att skapa ett Link-konto som omfattas av Links <terms>villkor</terms> och <privacy>integritetspolicy</privacy>.";
-
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Genom att uppge dina bankkontouppgifter och bekräfta denna betalning godkänner du denna begäran om autogiro och <villkor>tjänsteavtalet för begäran om autogiro</villkor>, och godkänner Stripe Payments Australia Pty Ltd ACN 160 180 343 Användar-ID för autogiro 507156 (”Stripe”) att debitera ditt konto genom det elektroniska clearingsystemet i bulk (BECS) för %@ (”Handlaren”) för eventuella belopp som meddelas separat till dig av Handlaren. Du intygar att du antingen är kontoinnehavare eller behörig firmatecknare på kontot som anges ovan.";
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Genom att tillhandahålla kortinformationen ger du %@ tillåtelse att debitera ditt kort för framtida betalningar enligt deras villkor.";
 
@@ -122,11 +122,15 @@
 
 "Debit or credit card" = "Bank- eller kreditkort";
 
+"Declarations" = "Deklarationer";
+
 "Default" = "Standard";
 
 "Default payment method" = "Standardmetod för betalning";
 
 "Did you mean %@? %@." = "Menade du %1$@? %2$@.";
+
+"Discount" = "Rabatt";
 
 "EPS Bank" = "EPS Bank";
 
@@ -212,6 +216,8 @@
 
 "Payment failed" = "Betalningen misslyckades";
 
+"Payment method details cannot be changed." = "Uppgifter om betalningsmetod kan inte ändras.";
+
 "Payment methods" = "Betalningsmetoder";
 
 "Please choose a valid payment method." = "Välj en giltig betalningsmetod.";
@@ -224,9 +230,17 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
+"Remove %@" = "Ta bort %@";
+
+"Remove bank?" = "Ta bort bank?";
+
 "Remove card?" = "Ta bort kort?";
 
 "Remove linked account" = "Ta bort länkat konto";
+
+"Remove payment method" = "Ta bort betalningsmetod";
+
+"Remove payment method?" = "Ta bort betalningsmetod?";
 
 "SEPA debit details cannot be changed." = "Uppgifter för SEPA-debitering kan inte ändras.";
 
@@ -268,19 +282,19 @@
 
 "Simple, secure one-click payments" = "Enkla och säkra betalningar med ett klick";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Något gick fel när ditt konto skulle länkas.\nFörsök igen senare.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe kommer att sätta in 0,01 USD på ditt konto om 1–2 arbetsdagar. Därefter får du ett e-postmeddelande med instruktioner om hur du slutför sparandet av ditt bankkonto hos %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe sätter in 0,01 USD på ditt konto inom 1–2 arbetsdagar. Sedan får du ett e-postmeddelande med instruktioner för att slutföra betalningen till %@.";
+
+"Subtotal" = "Delsumma";
 
 "Tap to close" = "Klicka för att stänga";
 
 "Tap to expand" = "Klicka för att utvidga";
 
-"The IBAN you entered is incomplete." = "Angivet IBAN är ofullständigt.";
+"Tax" = "Skatt";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "IBAN-numret du angav är ogiltigt, \"%@\" är inte en landskod som stöds.";
+"The IBAN you entered is incomplete." = "Angivet IBAN är ofullständigt.";
 
 "The provided verification code has expired." = "Den angivna verifieringskoden har förfallit.";
 

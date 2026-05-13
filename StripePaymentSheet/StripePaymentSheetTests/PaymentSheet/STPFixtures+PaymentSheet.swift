@@ -344,8 +344,8 @@ extension Intent {
                     "name": item.name,
                     "quantity": item.quantity,
                     "price": [
-                        "unit_amount": item.unitAmount,
-                        "currency": item.currency,
+                        "unit_amount": item.unitAmount?.minorUnitsAmount ?? 0,
+                        "currency": currency.lowercased(),
                     ],
                 ]
             }

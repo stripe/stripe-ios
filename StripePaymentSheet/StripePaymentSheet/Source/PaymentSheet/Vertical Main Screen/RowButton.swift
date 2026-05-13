@@ -65,12 +65,7 @@ class RowButton: UIView, EventHandler {
     }
 
     var imageViewSize: CGSize {
-        if appearance.cardArtEnabled {
-            // When card art is enabled, allow images to grow in width to 30px
-            return CGSize(width: 30, height: 20)
-        } else {
-            return CGSize(width: 24, height: 20)
-        }
+        return CGSize(width: 30, height: 20)
     }
 
     // MARK: Internal properties
@@ -556,14 +551,10 @@ extension RowButton {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         let savedPaymentMethodRowImage = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle)
-        if appearance.cardArtEnabled {
-            imageView.setImage(with: paymentMethod.cardArtCDNURL(cardArtEnabled: appearance.cardArtEnabled),
-                               processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
-                               fallbackImage: savedPaymentMethodRowImage,
-                               shimmeringImage: STPImageLibrary.cardBrandChoiceImage())
-        } else {
-            imageView.image = savedPaymentMethodRowImage
-        }
+        imageView.setImage(with: paymentMethod.cardArtCDNURL(),
+                           processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
+                           fallbackImage: savedPaymentMethodRowImage,
+                           shimmeringImage: STPImageLibrary.cardBrandChoiceImage())
         let text = paymentMethod.isLinkPassthroughMode
             ? linkBrand.displayName
             : paymentMethod.paymentSheetLabel(brand: linkBrand)
