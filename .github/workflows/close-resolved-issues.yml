@@ -1,0 +1,34 @@
+name: Close GitHub Issue on Jira Resolution
+on:
+  repository_dispatch:
+    types: [jira-issue-resolved]
+
+jobs:
+  close-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Close GitHub Issue
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const issueNumber = context.payload.client_payload.issue_number;
+            const jiraKey    = context.payload.client_payload.jira_key;
+            const jiraUrl    = `https://jira.corp.stripe.com/browse/${jiraKey}`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: issueNumber,
+              body: `This issue has been resolved internally (${jiraKey}). Closing — please reopen if you're still experiencing this or have follow-up questions!`
+            });
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo:  context.repo.repo,
+              issue_number: issueNumber,
+              state: 'closed',
+              state_reason: 'completed'
+            });
