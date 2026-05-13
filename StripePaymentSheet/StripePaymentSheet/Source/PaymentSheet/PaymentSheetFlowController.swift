@@ -399,7 +399,7 @@ extension PaymentSheet {
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
             guard let stpSession = checkout.stpSession else {
-                stpAssertionFailure("Missing STPCheckoutSession on Checkout")
+                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
                 completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
                 return
             }
@@ -679,7 +679,7 @@ extension PaymentSheet {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
             guard let stpSession = checkout.stpSession else {
-                stpAssertionFailure("Missing STPCheckoutSession on Checkout")
+                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
                 completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
                 return
             }

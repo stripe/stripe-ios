@@ -332,8 +332,8 @@ public final class Checkout: ObservableObject {
     @discardableResult
     private func requireOpenSessionForInSheetUpdate() throws -> STPCheckoutSession {
         guard let currentSession = stpSession else {
-            stpAssertionFailure("Missing STPCheckoutSession on Checkout")
-            throw CheckoutError.apiError(message: "Missing underlying checkout session")
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
+            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
         }
         guard currentSession.status?.type == .open else {
             throw CheckoutError.sessionNotOpen
@@ -345,8 +345,8 @@ public final class Checkout: ObservableObject {
     @discardableResult
     private func requireOpenSession() throws -> STPCheckoutSession {
         guard let currentSession = stpSession else {
-            stpAssertionFailure("Missing STPCheckoutSession on Checkout")
-            throw CheckoutError.apiError(message: "Missing underlying checkout session")
+            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
+            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
         }
         guard currentSession.status?.type == .open else {
             throw CheckoutError.sessionNotOpen

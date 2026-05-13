@@ -112,7 +112,7 @@ public class PaymentSheet {
     @MainActor
     public convenience init(checkout: Checkout, configuration: Configuration) {
         guard let stpSession = checkout.stpSession else {
-            fatalError("Missing STPCheckoutSession on Checkout")
+            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
         }
         var config = configuration
         stpSession.applyAddressOverrides(to: &config)

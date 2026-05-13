@@ -13,7 +13,7 @@ import Foundation
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension Checkout {
-    /// A read-only snapshot of a Stripe Checkout Session.
+    /// A read-only representation of a Stripe Checkout Session.
     public final class Session {
         /// The ID of the Checkout Session.
         public let id: String
