@@ -8,69 +8,107 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-// MARK: - Session Protocol
+// MARK: - Session
 
 @_spi(STP)
 @_spi(ReactNativeSDK)
 extension Checkout {
-    /// A read-only representation of a Stripe Checkout Session.
-    public protocol Session {
+    /// A read-only snapshot of a Stripe Checkout Session.
+    public final class Session {
         /// The ID of the Checkout Session.
-        var id: String { get }
+        public let id: String
 
         /// Billing details of the customer.
-        var billingAddress: Checkout.ContactAddress? { get }
+        public let billingAddress: Checkout.ContactAddress?
 
         /// The business name as configured in the Business Public Details settings of
         /// your Stripe account.
-        var businessName: String? { get }
+        public let businessName: String?
 
         /// Three-letter ISO 4217 currency code in lowercase (e.g. `"usd"`).
-        var currency: String? { get }
+        public let currency: String?
 
         /// The currency options available on the Checkout Session when adaptive pricing is active.
         /// Empty when adaptive pricing is not active.
-        var currencyOptions: [Checkout.CurrencyOption] { get }
+        public let currencyOptions: [Checkout.CurrencyOption]
 
         /// The aggregate amounts calculated per discount for all line items.
-        var discountAmounts: [Checkout.DiscountAmount] { get }
+        public let discountAmounts: [Checkout.DiscountAmount]
 
         /// The customer's email address.
-        var email: String? { get }
+        public let email: String?
 
         /// The line items the customer is purchasing.
-        var lineItems: [Checkout.LineItem] { get }
+        public let lineItems: [Checkout.LineItem]
 
         /// `true` if this object exists in live mode, `false` for test mode.
-        var livemode: Bool { get }
+        public let livemode: Bool
 
         /// The factor used to convert between minor and major currency units. For USD this
         /// is `100`; for JPY this is `1`. `nil` when the session has no currency (e.g. setup mode).
-        var minorUnitsAmountDivisor: Int? { get }
+        public let minorUnitsAmountDivisor: Int?
 
         /// Payment methods attached to the customer.
-        var savedPaymentMethods: [STPPaymentMethod] { get }
+        public let savedPaymentMethods: [STPPaymentMethod]
 
         /// The selected shipping option, if any.
-        var shipping: Checkout.SelectedShipping? { get }
+        public let shipping: Checkout.SelectedShipping?
 
         /// Shipping address of the customer.
-        var shippingAddress: Checkout.ContactAddress? { get }
+        public let shippingAddress: Checkout.ContactAddress?
 
         /// The list of shipping options that can be selected.
-        var shippingOptions: [Checkout.ShippingOption] { get }
+        public let shippingOptions: [Checkout.ShippingOption]
 
         /// Status of the Checkout Session.
         ///
         /// `nil` if the server did not return a status. When non-nil, ``Status.paymentStatus``
         /// is populated from the top-level payment status.
-        var status: Checkout.Status? { get }
+        public let status: Checkout.Status?
 
         /// Details about the tax computation status and aggregated tax amounts.
-        var tax: Checkout.Tax { get }
+        public let tax: Checkout.Tax
 
         /// Tax and discount details for the computed total amount.
-        var total: Checkout.Total? { get }
+        public let total: Checkout.Total?
+
+        init(
+            id: String,
+            billingAddress: Checkout.ContactAddress?,
+            businessName: String?,
+            currency: String?,
+            currencyOptions: [Checkout.CurrencyOption],
+            discountAmounts: [Checkout.DiscountAmount],
+            email: String?,
+            lineItems: [Checkout.LineItem],
+            livemode: Bool,
+            minorUnitsAmountDivisor: Int?,
+            savedPaymentMethods: [STPPaymentMethod],
+            shipping: Checkout.SelectedShipping?,
+            shippingAddress: Checkout.ContactAddress?,
+            shippingOptions: [Checkout.ShippingOption],
+            status: Checkout.Status?,
+            tax: Checkout.Tax,
+            total: Checkout.Total?
+        ) {
+            self.id = id
+            self.billingAddress = billingAddress
+            self.businessName = businessName
+            self.currency = currency
+            self.currencyOptions = currencyOptions
+            self.discountAmounts = discountAmounts
+            self.email = email
+            self.lineItems = lineItems
+            self.livemode = livemode
+            self.minorUnitsAmountDivisor = minorUnitsAmountDivisor
+            self.savedPaymentMethods = savedPaymentMethods
+            self.shipping = shipping
+            self.shippingAddress = shippingAddress
+            self.shippingOptions = shippingOptions
+            self.status = status
+            self.tax = tax
+            self.total = total
+        }
     }
 }
 

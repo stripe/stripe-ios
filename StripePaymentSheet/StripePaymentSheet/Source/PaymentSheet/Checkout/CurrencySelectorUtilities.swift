@@ -96,9 +96,9 @@ enum CurrencySelectorUtilities {
     /// Returns the adaptive pricing data needed to show a currency selector,
     /// or `nil` if adaptive pricing is not available for the given session.
     static func adaptivePricingData(
-        from session: Checkout.Session?
+        from session: STPCheckoutSession?
     ) -> (session: STPCheckoutSession, exchangeRateMeta: STPCheckoutSessionExchangeRateMeta, currency: String)? {
-        guard let session = session as? STPCheckoutSession,
+        guard let session,
               session.adaptivePricingActive,
               !session.localizedPricesMetas.isEmpty,
               let exchangeRateMeta = session.exchangeRateMeta,

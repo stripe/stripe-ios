@@ -108,8 +108,8 @@ public final class EmbeddedPaymentElement {
         checkout: Checkout,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
+        guard let stpSession = checkout.stpSession else {
+            stpAssertionFailure("Missing STPCheckoutSession on Checkout")
             throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
         }
         if checkout.state.isLoading {
@@ -176,8 +176,8 @@ public final class EmbeddedPaymentElement {
     public func update(
         checkout: Checkout
     ) async -> UpdateResult {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
+        guard let stpSession = checkout.stpSession else {
+            stpAssertionFailure("Missing STPCheckoutSession on Checkout")
             return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
         }
         if checkout.state.isLoading {

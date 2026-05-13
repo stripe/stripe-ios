@@ -313,7 +313,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         )
 
-        let initialSession = try XCTUnwrap(checkout.state.session as? STPCheckoutSession)
+        let initialSession = try XCTUnwrap(checkout.stpSession)
 
         // Session loads with the localized currency (EUR for DE)
         XCTAssertEqual(initialSession.currency, "eur")
@@ -324,7 +324,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         // Switch to USD
         try await checkout.selectCurrency("usd")
 
-        let updatedSession = try XCTUnwrap(checkout.state.session as? STPCheckoutSession)
+        let updatedSession = try XCTUnwrap(checkout.stpSession)
         XCTAssertEqual(updatedSession.currency, "usd")
         XCTAssertEqual(updatedSession.total?.total.minorUnitsAmount, 2000)
         XCTAssertNotEqual(updatedSession.total?.total.minorUnitsAmount, eurTotal, "USD total should differ from EUR total")

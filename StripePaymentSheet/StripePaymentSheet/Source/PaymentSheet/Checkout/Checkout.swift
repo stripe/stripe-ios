@@ -41,13 +41,14 @@ public final class Checkout: ObservableObject {
     /// A delegate notified when the session state changes.
     public weak var delegate: CheckoutDelegate?
 
-    // MARK: - Private Properties
+    // MARK: - Internal Properties
 
-    /// Concrete accessor for internal use where `STPCheckoutSession`-specific
-    /// properties (e.g. `allResponseFields`) are needed.
-    private var stpSession: STPCheckoutSession? {
-        state.session as? STPCheckoutSession
-    }
+    /// The underlying `STPCheckoutSession` backing the current public ``state``.
+    ///
+    /// Internal callers that need `STPCheckoutSession`-specific data (e.g.
+    /// `allResponseFields`, address overrides, the expanded intent objects)
+    /// should read this rather than casting from `state.session`.
+    private(set) var stpSession: STPCheckoutSession?
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
@@ -60,8 +61,10 @@ public final class Checkout: ObservableObject {
     private var sessionUpdateCount = 0
 
     /// Sets the session on `state`, using `.loading` if another operation is in flight.
-    private func setSession(_ session: Checkout.Session) {
-        state = sessionUpdateCount > 0 ? .loading(session) : .loaded(session)
+    private func setSession(_ session: STPCheckoutSession) {
+        stpSession = session
+        let publicSession = session.makePublicSession()
+        state = sessionUpdateCount > 0 ? .loading(publicSession) : .loaded(publicSession)
     }
 
     // MARK: - Initialization
@@ -91,7 +94,8 @@ public final class Checkout: ObservableObject {
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
-            self.state = .loaded(checkoutSession)
+            self.stpSession = checkoutSession
+            self.state = .loaded(checkoutSession.makePublicSession())
             checkoutSession.onConfirmed = { [weak self] response in
                 self?.updateSession(response)
             }
@@ -110,7 +114,8 @@ public final class Checkout: ObservableObject {
         self.clientSecret = clientSecret
         self.configuration = configuration
         self.apiClient = apiClient
-        self.state = .loaded(session)
+        self.stpSession = session
+        self.state = .loaded(session.makePublicSession())
         session.onConfirmed = { [weak self] response in
             self?.updateSession(response)
         }
@@ -315,7 +320,7 @@ public final class Checkout: ObservableObject {
         state = .loading(state.session)
         defer {
             sessionUpdateCount -= 1
-            if case .loading(let session) = state {
+            if case .loading = state, let session = stpSession {
                 setSession(session)
             }
         }
@@ -327,8 +332,8 @@ public final class Checkout: ObservableObject {
     @discardableResult
     private func requireOpenSessionForInSheetUpdate() throws -> STPCheckoutSession {
         guard let currentSession = stpSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
-            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
+            stpAssertionFailure("Missing STPCheckoutSession on Checkout")
+            throw CheckoutError.apiError(message: "Missing underlying checkout session")
         }
         guard currentSession.status?.type == .open else {
             throw CheckoutError.sessionNotOpen
@@ -340,8 +345,8 @@ public final class Checkout: ObservableObject {
     @discardableResult
     private func requireOpenSession() throws -> STPCheckoutSession {
         guard let currentSession = stpSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
-            throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
+            stpAssertionFailure("Missing STPCheckoutSession on Checkout")
+            throw CheckoutError.apiError(message: "Missing underlying checkout session")
         }
         guard currentSession.status?.type == .open else {
             throw CheckoutError.sessionNotOpen
