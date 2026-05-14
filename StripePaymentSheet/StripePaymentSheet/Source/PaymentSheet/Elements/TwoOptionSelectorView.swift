@@ -16,6 +16,7 @@ struct TwoOptionSelectorItem: Equatable {
 
 // MARK: - TwoOptionSelectorViewDelegate
 
+@MainActor
 protocol TwoOptionSelectorViewDelegate: AnyObject {
     func twoOptionSelectorView(_ view: TwoOptionSelectorView, didSelectItemWithId id: String)
 }
@@ -39,7 +40,7 @@ final class TwoOptionSelectorView: UIView {
     private let trackView = UIView()
     private let buttonsStackView = UIStackView()
     private let selectionIndicatorView = UIView()
-    private let captionLabel = UILabel()
+    private(set) var captionLabel = UILabel()
     private var leftButton = UIButton(type: .system)
     private var rightButton = UIButton(type: .system)
 
@@ -100,10 +101,17 @@ final class TwoOptionSelectorView: UIView {
         trackView.addSubview(buttonsStackView)
         mainStackView.addArrangedSubview(trackView)
 
+        // Priority 999 on horizontal constraints so they break gracefully during
+        // zero-width sizing passes (e.g. SwiftUI's fixedSize measuring).
+        let leading = buttonsStackView.leadingAnchor.constraint(equalTo: trackView.leadingAnchor, constant: trackPadding)
+        leading.priority = UILayoutPriority(999)
+        let trailing = buttonsStackView.trailingAnchor.constraint(equalTo: trackView.trailingAnchor, constant: -trackPadding)
+        trailing.priority = UILayoutPriority(999)
+
         NSLayoutConstraint.activate([
             buttonsStackView.topAnchor.constraint(equalTo: trackView.topAnchor, constant: trackPadding),
-            buttonsStackView.leadingAnchor.constraint(equalTo: trackView.leadingAnchor, constant: trackPadding),
-            buttonsStackView.trailingAnchor.constraint(equalTo: trackView.trailingAnchor, constant: -trackPadding),
+            leading,
+            trailing,
             buttonsStackView.bottomAnchor.constraint(equalTo: trackView.bottomAnchor, constant: -trackPadding),
         ])
 

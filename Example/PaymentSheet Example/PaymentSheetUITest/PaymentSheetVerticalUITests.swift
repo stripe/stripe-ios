@@ -112,7 +112,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
             2
         )
         XCTAssertEqual(
-            initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_layout"] },
+            initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_orientation"] },
             "vertical"
         )
 
@@ -232,6 +232,9 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         // TODO(porter) Use the vertical mode to save cards when ready
         setupCards(cards: ["5555555555554444"], settings: settings)
 
+        // Scroll down slightly to reveal flow controller:
+        app.swipeUp(velocity: 100)
+
         // Exercise edge case w/ FC and 3+ PMs. Delete the selected card and tap out of the screen
         app.buttons["flowController"].waitForExistenceAndTap()
         app.buttons["Payment method"].waitForExistenceAndTap()
@@ -300,8 +303,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         XCTAssertTrue(app.buttons["Card"].waitForExistence(timeout: 5.0))
         // Verify there's no more Saved section
         XCTAssertFalse(app.staticTexts["Saved"].waitForExistence(timeout: 0.1))
-        // Verify primary button is enabled b/c Apple Pay should be selected
-        XCTAssertTrue(app.buttons["Continue"].isEnabled)
+        // Verify primary button isn't enabled b/c there is no selected PM
+        XCTAssertFalse(app.buttons["Set up"].isEnabled)
     }
 
     private func setupCards(cards: [String], settings: PaymentSheetTestPlaygroundSettings) {
@@ -413,7 +416,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
             app.buttons["Card"].waitForExistenceAndTap()
             let numberField = app.textFields["Card number"]
             numberField.waitForExistenceAndTap()
-            app.typeText("4")
+            numberField.typeText("4")
             // ...and tapping to the main screen and back should preserve the card form
             app.buttons["Back"].waitForExistenceAndTap()
             app.buttons["Klarna"].waitForExistenceAndTap()
@@ -431,7 +434,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         // PaymentSheet.FlowController + Vertical
         app.buttons["flowController"].waitForExistenceAndTap()
-        app.buttons["Payment method"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Payment method"].waitForExistenceAndTap(timeout: 10))
         _testVerticalPreservesFormDetails()
     }
 

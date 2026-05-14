@@ -173,7 +173,7 @@ public class CustomerSheet {
         customerSheetDataSource.loadPaymentMethodInfo { result in
             switch result {
             case .success((let savedPaymentMethods, let selectedPaymentMethodOption, let elementsSession)):
-                self.confirmationChallenge = ConfirmationChallenge(enableAttestation: self.configuration.enableAttestationOnConfirmation, elementsSession: elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
+                self.confirmationChallenge = ConfirmationChallenge(elementsSession: elementsSession, stripeAttest: self.configuration.apiClient.stripeAttest)
                 let merchantSupportedPaymentMethodTypes = customerSheetDataSource.merchantSupportedPaymentMethodTypes(elementsSession: elementsSession)
                 let paymentMethodRemove = customerSheetDataSource.paymentMethodRemove(elementsSession: elementsSession)
                 let paymentMethodRemoveIsPartial = customerSheetDataSource.paymentMethodRemoveIsPartial(elementsSession: elementsSession)
@@ -373,6 +373,7 @@ extension CustomerSheet {
                 guard let matchingPaymentMethod = paymentMethods.first(where: { $0.stripeId == paymentMethodId }) else {
                     return nil
                 }
+                matchingPaymentMethod.preloadCardArtImage()
                 return CustomerSheet.PaymentOptionSelection.paymentMethod(matchingPaymentMethod)
             default:
                 return nil

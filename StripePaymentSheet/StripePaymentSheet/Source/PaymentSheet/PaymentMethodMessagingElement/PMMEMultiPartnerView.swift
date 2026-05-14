@@ -22,17 +22,8 @@ class PMMEMultiPartnerView: UIView {
     private let logoStack = UIStackView()
     private let mainStack = UIStackView()
 
-    private lazy var promotionTextView: UITextView = {
-        let textView = UITextView()
-        textView.isScrollEnabled = false
-        textView.isEditable = false
-        textView.backgroundColor = .clear
-        textView.textContainerInset = .zero
-        textView.textContainer.lineFragmentPadding = 0
-        textView.clipsToBounds = false
-        textView.adjustsFontForContentSizeCategory = true
-        textView.linkTextAttributes = [.foregroundColor: appearance.linkTextColor]
-        return textView
+    private lazy var promotionTextView: PMMEPromotionTextView = {
+        PMMEPromotionTextView(foregroundColor: appearance.linkTextColor)
     }()
 
     // With the default font, padding between logos is 8

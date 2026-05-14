@@ -55,7 +55,7 @@ final class SavedPaymentMethodManager {
             Task {
                 try? await configuration.apiClient.detachPaymentMethod(
                     paymentMethod.stripeId,
-                    fromCheckoutSession: checkoutSession.stripeId
+                    fromCheckoutSession: checkoutSession.id
                 )
             }
         case .paymentIntent, .setupIntent, .deferredIntent:

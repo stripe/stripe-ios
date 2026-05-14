@@ -1,3 +1,7 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "%@ gemmes ikke længere i din wallet.";
+
 "+ Add" = "+ Tilføj";
 
 "Add US bank account" = "Tilføj amerikansk bankkonto";
@@ -16,11 +20,9 @@
 
 "Add your payment information" = "Tilføj dine betalingsoplysninger";
 
+"Agree and accept" = "Acceptér";
+
 "Approve payment" = "Godkend betaling";
-
-"Are you sure you want to remove this card?" = "Er du sikker på, at du vil fjerne dette kort?";
-
-"Are you sure you want to remove this linked account?" = "Er du sikker på, at du vil fjerne denne linket konto?";
 
 "Back" = "Tilbage";
 
@@ -39,8 +41,6 @@
 "Buy now or pay later with Clearpay" = "Køb nu eller betal senere med Clearpay";
 
 "Buy now or pay later with Klarna" = "Køb nu eller betal senere med Klarna";
-
-"Buy using a UPI ID" = "Køb ved hjælp af et UPI ID";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Ved at bekræfte din betaling med PayPal, tillader du %@ at debitere din PayPal-konto for fremtidige betalinger i overensstemmelse med deres vilkår.";
 
@@ -70,8 +70,6 @@
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ved at angive dit telefonnummer og din e-mailadresse accepterer du at oprette en Link-konto underlagt Links <terms>Vilkår</terms> og <privacy>Privatlivspolitik</privacy>.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ved at angive dine bankkontooplysninger og bekræfte denne betaling accepterer du denne anmodning om direkte debitering og <terms>serviceaftalen for anmodning om direkte debitering</terms> og giver Stripe Payments Australia Pty Ltd ACN 160 180 343 bruger-id-nummer 507156 (\"Stripe\") tilladelse til at debitere din konto via Bulk Electronic Clearing System (BECS) på vegne af %@ (\"forhandleren\") for alle beløb, der kommunikeres separat til dig af forhandleren. Du bekræfter, at du enten er kontohaver eller autoriseret underskriver på den konto, der er angivet ovenfor.";
-
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Ved at angive dine kortoplysninger tillader du %@ at opkræve dit kort for denne betaling i overensstemmelse med dennes vilkår.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Når du angiver din e-mail, accepterer du at oprette en Link-konto og gemme dine betalingsoplysninger på Link i henhold til Links <terms>Vilkår</terms> og <privacy>Privatlivspolitik</privacy>.";
@@ -91,6 +89,8 @@
 "Cancel and pay another way" = "Annuller, og betal på en anden måde";
 
 "Card details cannot be changed." = "Kortoplysninger kan ikke ændres.";
+
+"Card number. Supported cards include %@" = "Kortnummer. Understøttede kort omfatter %@";
 
 "Change" = "Skift";
 
@@ -122,15 +122,21 @@
 
 "Debit or credit card" = "Debet- eller kreditkort";
 
+"Declarations" = "Erklæringer";
+
 "Default" = "Standard";
 
 "Default payment method" = "Standardbetalingsmetode";
 
 "Did you mean %@? %@." = "Mente du %1$@? %2$@.";
 
+"Discount" = "Rabat";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Indtast adresse manuelt";
+
+"Exchange rate and fees of your bank may apply." = "Din banks vekselkurs og gebyrer kan være gældende.";
 
 "FPX Bank" = "FPX Bank";
 
@@ -180,8 +186,6 @@
 
 "Open to see more information." = "Åbn for at se flere oplysninger.";
 
-"Open your UPI app to approve your payment within %@" = "Åbn din UPI-app for at godkende din betaling i %@";
-
 "Or" = "Eller";
 
 "Or pay using" = "Eller betal med";
@@ -212,6 +216,8 @@
 
 "Payment failed" = "Betalingen mislykkedes";
 
+"Payment method details cannot be changed." = "Oplysninger om betalingsmetode kan ikke ændres.";
+
 "Payment methods" = "Betalingsmetoder";
 
 "Please choose a valid payment method." = "Vælg en gyldig betalingsmetode.";
@@ -224,9 +230,17 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
+"Remove %@" = "Fjern %@";
+
+"Remove bank?" = "Vil du fjerne banken?";
+
 "Remove card?" = "Vil du fjerne kortet?";
 
 "Remove linked account" = "Fjern linket konto";
+
+"Remove payment method" = "Fjern betalingsmetode";
+
+"Remove payment method?" = "Fjern betalingsmetode?";
 
 "SEPA debit details cannot be changed." = "SEPA-debetdetaljer kan ikke ændres.";
 
@@ -268,19 +282,19 @@
 
 "Simple, secure one-click payments" = "Enkle og trygge betalinger med ét klik";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Noget gik galt, da du tilknyttede din konto.\nPrøv igen senere.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe vil sætte 0,01 USD ind på din konto i løbet af 1-2 hverdage. Derefter modtager du en e-mail med instruktioner til at fuldføre lagring af din bankkonto hos %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe vil sætte 0,01 USD ind på din konto i løbet af 1-2 hverdage. Derefter modtager du en e-mail med instruktioner til at fuldføre betalingen til %@.";
+
+"Subtotal" = "Subtotal";
 
 "Tap to close" = "Tryk for at lukke";
 
 "Tap to expand" = "Tryk for at udvide";
 
-"The IBAN you entered is incomplete." = "Det indtastede IBAN-nummer er ufuldstændigt.";
+"Tax" = "Moms";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Det IBAN, du har indtastet, er ugyldigt, \"%@\" er ikke en understøttet landekode.";
+"The IBAN you entered is incomplete." = "Det indtastede IBAN-nummer er ufuldstændigt.";
 
 "The provided verification code has expired." = "Den angivne verifikationskode er udløbet.";
 

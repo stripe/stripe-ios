@@ -1,0 +1,39 @@
+//
+//  STPPaymentMethodPayByBankTests.swift
+//  StripeiOSTests
+//
+//  Created by Joyce Qin on 3/16/26
+//
+
+@testable import Stripe
+import StripeCoreTestUtils
+import XCTest
+
+class STPPaymentMethodPayByBankTests: XCTestCase {
+
+    static let payByBankPaymentIntentClientSecret = "pi_3TBdzVGoesj9fw9Q02JPHHQc_secret_NDNsHku6A1x1TNaAfVA4rhU6d"
+
+    func _retrievePayByBankJSON(_ completion: @escaping ([AnyHashable: Any]?) -> Void) {
+        let client = STPAPIClient(publishableKey: STPTestingGBPublishableKey)
+        client.retrievePaymentIntent(
+            withClientSecret: Self.payByBankPaymentIntentClientSecret,
+            expand: ["payment_method"]
+        ) { paymentIntent, _ in
+            let payByBankJson = paymentIntent?.paymentMethod?.payByBank?.allResponseFields
+            XCTAssertNotNil(payByBankJson)
+            completion(payByBankJson ?? [:])
+        }
+    }
+
+    func testObjectDecoding() {
+        let retrieveJSON = XCTestExpectation(description: "Retrieve JSON")
+
+        _retrievePayByBankJSON({ json in
+            let payByBank = STPPaymentMethodPayByBank.decodedObject(fromAPIResponse: json)
+            XCTAssertNotNil(payByBank, "Failed to decode JSON")
+            retrieveJSON.fulfill()
+        })
+
+        wait(for: [retrieveJSON], timeout: STPTestingNetworkRequestTimeout)
+    }
+}

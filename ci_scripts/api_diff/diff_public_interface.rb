@@ -8,9 +8,16 @@ NO_SEVERITY = 'none'.freeze
 DIFF_OUTPUT_PATH = 'diff_result.txt'.freeze
 SEVERITY_OUTPUT_PATH = 'api_change_severity.txt'.freeze
 
+def normalize_line(line)
+  spi_attrs = line.scan(/@_spi\([^)]+\)/).sort
+  result = line.gsub(/@_spi\([^)]+\)/, 'SPI_PLACEHOLDER')
+  spi_attrs.each { |attr| result = result.sub('SPI_PLACEHOLDER', attr) }
+  result
+end
+
 def sorted_diff_lines(old_path, new_path)
-  old_lines = File.readlines(old_path).sort
-  new_lines = File.readlines(new_path).sort
+  old_lines = File.readlines(old_path).map { |l| normalize_line(l) }.sort
+  new_lines = File.readlines(new_path).map { |l| normalize_line(l) }.sort
 
   old_temp = Tempfile.new(['sorted_old', File.extname(old_path)])
   new_temp = Tempfile.new(['sorted_new', File.extname(new_path)])

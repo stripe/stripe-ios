@@ -1,3 +1,7 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "%@ will no longer be saved to your wallet.";
+
 "+ Add" = "+ Add";
 
 "Add US bank account" = "Add US bank account";
@@ -16,11 +20,9 @@
 
 "Add your payment information" = "Add your payment information";
 
+"Agree and accept" = "Agree and accept";
+
 "Approve payment" = "Approve payment";
-
-"Are you sure you want to remove this card?" = "Are you sure you want to remove this card?";
-
-"Are you sure you want to remove this linked account?" = "Are you sure you want to remove this linked account?";
 
 "Back" = "Back";
 
@@ -39,8 +41,6 @@
 "Buy now or pay later with Clearpay" = "Buy now or pay later with Clearpay";
 
 "Buy now or pay later with Klarna" = "Buy now or pay later with Klarna";
-
-"Buy using a UPI ID" = "Buy using a UPI ID";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms.";
 
@@ -70,8 +70,6 @@
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing phone number and email address, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above.";
-
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
@@ -91,6 +89,8 @@
 "Cancel and pay another way" = "Cancel and pay another way";
 
 "Card details cannot be changed." = "Card details cannot be changed.";
+
+"Card number. Supported cards include %@" = "Card number. Supported cards include %@";
 
 "Change" = "Change";
 
@@ -122,15 +122,21 @@
 
 "Debit or credit card" = "Debit or credit card";
 
+"Declarations" = "Declarations";
+
 "Default" = "Default";
 
 "Default payment method" = "Default payment method";
 
 "Did you mean %@? %@." = "Did you mean %1$@? %2$@.";
 
+"Discount" = "Discount";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Enter address manually";
+
+"Exchange rate and fees of your bank may apply." = "Exchange rate and fees of your bank may apply.";
 
 "FPX Bank" = "FPX Bank";
 
@@ -180,8 +186,6 @@
 
 "Open to see more information." = "Open to see more information.";
 
-"Open your UPI app to approve your payment within %@" = "Open your UPI app to approve your payment within %@";
-
 "Or" = "Or";
 
 "Or pay using" = "Or pay using";
@@ -212,6 +216,8 @@
 
 "Payment failed" = "Payment failed";
 
+"Payment method details cannot be changed." = "Payment method details cannot be changed.";
+
 "Payment methods" = "Payment methods";
 
 "Please choose a valid payment method." = "Please choose a valid payment method.";
@@ -224,9 +230,17 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
+"Remove %@" = "Remove %@";
+
+"Remove bank?" = "Remove bank?";
+
 "Remove card?" = "Remove card?";
 
 "Remove linked account" = "Remove linked account";
+
+"Remove payment method" = "Remove payment method";
+
+"Remove payment method?" = "Remove payment method?";
 
 "SEPA debit details cannot be changed." = "SEPA debit details cannot be changed.";
 
@@ -268,19 +282,19 @@
 
 "Simple, secure one-click payments" = "Simple, secure one-click payments";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Something went wrong when linking your account.\nPlease try again later.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@.";
+
+"Subtotal" = "Subtotal";
 
 "Tap to close" = "Tap to close";
 
 "Tap to expand" = "Tap to expand";
 
-"The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
+"Tax" = "Tax";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "The IBAN you entered is invalid. \"%@\" is not a supported country code.";
+"The IBAN you entered is incomplete." = "The IBAN you entered is incomplete.";
 
 "The provided verification code has expired." = "The provided verification code has expired.";
 

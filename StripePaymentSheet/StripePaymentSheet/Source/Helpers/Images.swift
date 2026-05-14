@@ -7,7 +7,9 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 // TODO(yuki|https://jira.corp.stripe.com/browse/MOBILESDK-309): Refactor STPImageLibrary's images to live here as well
 
@@ -48,6 +50,7 @@ enum Image: String, CaseIterable, ImageMaker {
     case pm_type_multibanco = "icon-pm-multibanco"
     case pm_type_oxxo = "icon-pm-oxxo"
     case pm_type_p24 = "icon-pm-p24"
+    case pm_type_paybybank = "icon-pm-paybybank"
     case pm_type_paynow = "icon-pm-paynow"
     case pm_type_paypal = "icon-pm-paypal"
     case pm_type_paypay = "icon-pm-paypay"
@@ -59,7 +62,6 @@ enum Image: String, CaseIterable, ImageMaker {
     case pm_type_sunbit = "icon-pm-sunbit"
     case pm_type_swish = "icon-pm-swish"
     case pm_type_twint = "icon-pm-twint"
-    case pm_type_upi = "icon-pm-upi"
     case pm_type_zip = "icon-pm-zip"
 
     // Icons/symbols
@@ -85,10 +87,14 @@ enum Image: String, CaseIterable, ImageMaker {
     case icon_link_error = "icon_link_error"
     case icon_link_warning_circle = "icon_link_warning_circle"
     case link_logo = "link_logo"
+    case onelink_logo = "onelink_logo"
     case link_logo_bw = "link_logo_bw"
     case link_logo_knockout = "link_logo_knockout"
+    case onelink_logo_knockout = "onelink_logo_knockout"
     case link_icon = "link_icon"
     case link_logo_tintable = "link_logo_tintable"
+    case onelink_logo_tintable = "onelink_logo_tintable"
+    case onelink_logo_bw = "onelink_logo_bw"
 
     // ShopPay
     case shoppay_logo_bw = "shoppay_logo_bw"
@@ -109,7 +115,7 @@ enum Image: String, CaseIterable, ImageMaker {
     // Affirm Images
     case affirm_copy = "affirm_mark"
 
-    // Polling / UPI
+    // Polling
     case polling_error = "polling_error_icon"
 
     // Mandates
@@ -120,4 +126,33 @@ enum Image: String, CaseIterable, ImageMaker {
 
     // KYC Refresh
     case iconEditOutline = "icon_edit_outline"
+}
+
+extension LinkBrand {
+    var paymentSheetLogoImage: UIImage {
+        switch self {
+        case .link, .unparsable:
+            return Image.link_logo.makeImage(template: false)
+        case .onelink:
+            return Image.onelink_logo.makeImage(template: false)
+        }
+    }
+
+    var paymentSheetKnockoutLogoImage: UIImage {
+        switch self {
+        case .link, .unparsable:
+            return Image.link_logo_knockout.makeImage(template: false)
+        case .onelink:
+            return Image.onelink_logo_knockout.makeImage(template: false)
+        }
+    }
+
+    var paymentSheetTintableLogoImage: UIImage {
+        switch self {
+        case .link, .unparsable:
+            return Image.link_logo_tintable.makeImage(template: true)
+        case .onelink:
+            return Image.onelink_logo_tintable.makeImage(template: true)
+        }
+    }
 }

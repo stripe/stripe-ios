@@ -8,7 +8,7 @@
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripeCoreTestUtils
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 @testable @_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
@@ -20,13 +20,13 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let checkoutSessionId = checkoutSessionResponse.id
 
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
+        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: false)
 
         // Verify checkout session fields
-        XCTAssertEqual(checkoutSession.stripeId, checkoutSessionId)
+        XCTAssertEqual(checkoutSession.id, checkoutSessionId)
         XCTAssertEqual(checkoutSession.mode, .payment)
-        XCTAssertEqual(checkoutSession.status, .open)
-        XCTAssertEqual(checkoutSession.paymentStatus, .unpaid)
+        XCTAssertEqual(checkoutSession.status?.type, .open)
+        XCTAssertEqual(checkoutSession.status?.paymentStatus, .unpaid)
         XCTAssertEqual(checkoutSession.currency, "usd")
         XCTAssertFalse(checkoutSession.livemode)
         XCTAssertTrue(checkoutSession.paymentMethodTypes.contains(.card))
@@ -45,8 +45,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
 
         // 2. Init the checkout session to get the actual amount
-        let initResponse = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
-        let expectedAmount = initResponse.totals?.total ?? 0
+        let initResponse = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId, adaptivePricingAllowed: false)
+        let expectedAmount = initResponse.total?.total.minorUnitsAmount ?? 0
 
         // 3. Create a payment method with test card and billing email
         let cardParams = STPPaymentMethodCardParams()
@@ -68,9 +68,60 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // 5. Verify response
-        XCTAssertEqual(response.status, .complete)
-        XCTAssertEqual(response.paymentStatus, .paid)
+        XCTAssertEqual(response.status?.type, .complete)
+        XCTAssertEqual(response.status?.paymentStatus, .paid)
         XCTAssertNotNil(response.paymentIntent)
+    }
+
+    // MARK: - Adaptive Pricing
+
+    func testInitCheckoutSessionPaymentWithAdaptivePricing() async throws {
+        // Fetch a checkout session with adaptive pricing enabled and DE customer location
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
+            adaptivePricingEnabled: true,
+            customerEmailLocation: "DE"
+        )
+        let checkoutSessionId = checkoutSessionResponse.id
+
+        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
+
+        // Verify standard checkout session fields
+        XCTAssertEqual(checkoutSession.id, checkoutSessionId)
+        XCTAssertEqual(checkoutSession.mode, .payment)
+        XCTAssertEqual(checkoutSession.status?.type, .open)
+        XCTAssertFalse(checkoutSession.livemode)
+
+        // Verify adaptive pricing is active and currency is localized to EUR
+        XCTAssertTrue(checkoutSession.adaptivePricingActive)
+        XCTAssertEqual(checkoutSession.currency, "eur")
+        XCTAssertNotNil(checkoutSession.exchangeRateMeta)
+        XCTAssertFalse(checkoutSession.localizedPricesMetas.isEmpty)
+    }
+
+    func testInitCheckoutSessionPaymentWithAdaptivePricingDisabled() async throws {
+        // Same session config as above (adaptive pricing enabled on backend, DE location)
+        // but client passes adaptivePricingAllowed: false
+        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
+            adaptivePricingEnabled: true,
+            customerEmailLocation: "DE"
+        )
+        let checkoutSessionId = checkoutSessionResponse.id
+
+        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
+        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: false)
+
+        // Verify standard checkout session fields
+        XCTAssertEqual(checkoutSession.id, checkoutSessionId)
+        XCTAssertEqual(checkoutSession.mode, .payment)
+        XCTAssertEqual(checkoutSession.status?.type, .open)
+        XCTAssertFalse(checkoutSession.livemode)
+
+        // Adaptive pricing should NOT be active; currency stays as integration currency (USD)
+        XCTAssertFalse(checkoutSession.adaptivePricingActive)
+        XCTAssertEqual(checkoutSession.currency, "usd")
+        XCTAssertNil(checkoutSession.exchangeRateMeta)
+        XCTAssertTrue(checkoutSession.localizedPricesMetas.isEmpty)
     }
 
     // MARK: - Setup Mode
@@ -81,13 +132,13 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let checkoutSessionId = checkoutSessionResponse.id
 
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId)
+        let checkoutSession = try await apiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: false)
 
         // Verify checkout session fields
-        XCTAssertEqual(checkoutSession.stripeId, checkoutSessionId)
+        XCTAssertEqual(checkoutSession.id, checkoutSessionId)
         XCTAssertEqual(checkoutSession.mode, .setup)
-        XCTAssertEqual(checkoutSession.status, .open)
-        XCTAssertEqual(checkoutSession.paymentStatus, .noPaymentRequired)
+        XCTAssertEqual(checkoutSession.status?.type, .open)
+        XCTAssertEqual(checkoutSession.status?.paymentStatus, .noPaymentRequired)
         XCTAssertEqual(checkoutSession.currency, "usd")
         XCTAssertFalse(checkoutSession.livemode)
         XCTAssertTrue(checkoutSession.paymentMethodTypes.contains(.card))
@@ -106,7 +157,7 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
 
         // 2. Init the checkout session
-        _ = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId)
+        _ = try await apiClient.initCheckoutSession(checkoutSessionId: sessionId, adaptivePricingAllowed: false)
 
         // 3. Create a payment method with test card and billing email
         let cardParams = STPPaymentMethodCardParams()
@@ -128,8 +179,8 @@ final class STPAPIClientCheckoutSessionTest: STPNetworkStubbingTestCase {
         )
 
         // 5. Verify response
-        XCTAssertEqual(response.status, .complete)
-        XCTAssertEqual(response.paymentStatus, .noPaymentRequired)
+        XCTAssertEqual(response.status?.type, .complete)
+        XCTAssertEqual(response.status?.paymentStatus, .noPaymentRequired)
         XCTAssertNotNil(response.setupIntent)
     }
 }

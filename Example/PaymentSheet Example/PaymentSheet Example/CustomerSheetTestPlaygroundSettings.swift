@@ -82,6 +82,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
 
         case US
         case FR
+        case custom
     }
     enum PreferredNetworksEnabled: String, PickerEnum {
         static let enumName: String = "Preferred Networks (CBC)"
@@ -155,13 +156,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
         case allowVisa
     }
 
-    enum EnableAttestationOnConfirmation: String, PickerEnum {
-        static var enumName: String { "Enable attestation on confirmation" }
-
-        case on
-        case off
-    }
-
     enum OpensCardScannerAutomatically: String, PickerEnum {
         static let enumName: String = "opensCardScannerAutomatically"
         case on
@@ -175,7 +169,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var applePay: ApplePay
     var headerTextForSelectionScreen: String?
     var defaultBillingAddress: DefaultBillingAddress
-    var enableAttestationOnConfirmation: EnableAttestationOnConfirmation
     var autoreload: Autoreload
 
     var attachDefaults: BillingDetailsAttachDefaults
@@ -193,6 +186,10 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var cardBrandAcceptance: CardBrandAcceptance
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
 
+    // For testing purposes only; keys should typically not be defined on the client
+    var customSecretKey: String?
+    var customPublishableKey: String?
+
     static func defaultValues() -> CustomerSheetTestPlaygroundSettings {
         return CustomerSheetTestPlaygroundSettings(customerMode: .new,
                                                    customerId: nil,
@@ -201,7 +198,6 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    applePay: .on,
                                                    headerTextForSelectionScreen: nil,
                                                    defaultBillingAddress: .off,
-                                                   enableAttestationOnConfirmation: .on,
                                                    autoreload: .on,
                                                    attachDefaults: .off,
                                                    collectName: .automatic,
@@ -216,7 +212,9 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    paymentMethodAllowRedisplayFilters: .always,
                                                    paymentMethodSyncDefault: .disabled,
                                                    cardBrandAcceptance: .all,
-                                                   opensCardScannerAutomatically: .off)
+                                                   opensCardScannerAutomatically: .off,
+                                                   customSecretKey: nil,
+                                                   customPublishableKey: nil)
     }
 
     var base64Data: String {

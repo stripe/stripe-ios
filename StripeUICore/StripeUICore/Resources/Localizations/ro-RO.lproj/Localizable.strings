@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "Număr de telefon incomplet";
 
-"Invalid UPI ID" = "ID UPI nevalid";
-
 "Island" = "Insulă";
 
 "Last" = "Nume de familie";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "Codul de identificare a băncii pe care l-ați introdus nu este valid.";
 
 "Town or city" = "Municipalitate sau oraș";
-
-"UPI ID" = "ID UPI";
 
 "Unable to parse phone number" = "Nu se poate analiza numărul de telefon";
 

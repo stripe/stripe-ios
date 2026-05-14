@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "Nepilnīgs tālruņa numurs";
 
-"Invalid UPI ID" = "Nederīgs UPI ID";
-
 "Island" = "Sala";
 
 "Last" = "Uzvārds";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "Jūsu ievadītais bankas filiāles kods nav derīgs.";
 
 "Town or city" = "Ciems vai pilsēta";
-
-"UPI ID" = "UPI ID";
 
 "Unable to parse phone number" = "Neizdevās parsēt tālruņa numuru";
 

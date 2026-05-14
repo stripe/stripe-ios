@@ -35,7 +35,32 @@ class MockElement: Element {
 }
 
 class PaymentSheetFormFactoryTest: XCTestCase {
+    private func extractBNPLHeaderView(from subtitle: SubtitleElement) -> BNPLFormHeaderView? {
+        if let headerView = subtitle.view as? BNPLFormHeaderView {
+            return headerView
+        }
+        return subtitle.view.subviews.compactMap { $0 as? BNPLFormHeaderView }.first
+    }
 
+    func testMakeKlarnaHeader_DefaultsToLegacyHeader() {
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
+            elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
+            configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
+            paymentMethod: .stripe(.klarna),
+            paymentMethodOrientation: .vertical,
+            accountService: LinkAccountService(
+                apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
+                elementsSession: ._testValue()
+            ),
+            analyticsHelper: nil
+        )
+
+        let header = factory.makeKlarnaHeader()
+        let headerView = extractBNPLHeaderView(from: header)
+
+        XCTAssertNil(headerView)
+    }
     private func makeCheckoutSessionIntent(
         offerSave: [String: Any]? = nil,
         hasCustomer: Bool = true
@@ -1849,6 +1874,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             elementsSession: ._testValue(paymentMethodTypes: ["fpx", "card"]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.cardPresent), // A payment method that doesn't have LUXE specs and in-code form definition
+            paymentMethodOrientation: .vertical,
             accountService: LinkAccountService._testValue(),
             analyticsHelper: ._testValue(analyticsClient: analyticsClient)
         )
@@ -1881,6 +1907,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: false),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
+                paymentMethodOrientation: .vertical,
                 linkAccount: PaymentSheetLinkAccount(
                     email: "example@example.com",
                     session: nil,
@@ -1928,6 +1955,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: false),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
+                paymentMethodOrientation: .vertical,
                 linkAccount: PaymentSheetLinkAccount(
                     email: "example@example.com",
                     session: nil,
@@ -1973,6 +2001,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: true),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
+                paymentMethodOrientation: .vertical,
                 linkAccount: PaymentSheetLinkAccount(
                     email: "example@example.com",
                     session: nil,
@@ -2018,6 +2047,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: true),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
+                paymentMethodOrientation: .vertical,
                 linkAccount: PaymentSheetLinkAccount(
                     email: "example@example.com",
                     session: nil,
@@ -2063,6 +2093,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
+                paymentMethodOrientation: .vertical,
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
             ).make()
@@ -2109,6 +2140,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
+                paymentMethodOrientation: .vertical,
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
             ).make()
@@ -2146,6 +2178,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.iDEAL),
+                paymentMethodOrientation: .vertical,
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
             ).make()
@@ -2821,6 +2854,57 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertTrue(paypalForm_setup_paymentOption.didDisplayMandate)
     }
 
+    func testCheckoutSessionSetupFutureUsage_appliesMandateBehavior() {
+        func makeCheckoutSessionPayPalForm(
+            setupFutureUsage: String? = nil,
+            paymentMethodOptions: [String: Any]? = nil,
+            previousCustomerInput: IntentConfirmParams? = nil
+        ) -> PaymentMethodElement {
+            var json: [String: Any] = [
+                "session_id": "cs_test_paypal",
+                "object": "checkout.session",
+                "livemode": false,
+                "mode": "payment",
+                "payment_status": "unpaid",
+                "payment_method_types": ["paypal"],
+                "customer": ["id": "cus_123"],
+            ]
+            if let setupFutureUsage {
+                json["setup_future_usage"] = setupFutureUsage
+            }
+            if let paymentMethodOptions {
+                json["payment_method_options"] = paymentMethodOptions
+            }
+            let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
+            return PaymentSheetFormFactory(
+                intent: .checkoutSession(checkoutSession),
+                elementsSession: ._testValue(paymentMethodTypes: ["paypal"]),
+                configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
+                paymentMethod: .stripe(.payPal),
+                previousCustomerInput: previousCustomerInput
+            ).make()
+        }
+
+        let paymentForm = makeCheckoutSessionPayPalForm()
+        guard let paymentOption = paymentForm.updateParams(params: IntentConfirmParams(type: .stripe(.payPal))) else {
+            XCTFail("payment option should be non-nil")
+            return
+        }
+        XCTAssertFalse(paymentOption.didDisplayMandate)
+
+        var setupFutureUsageForm = makeCheckoutSessionPayPalForm(
+            setupFutureUsage: "off_session",
+            previousCustomerInput: paymentOption
+        )
+        XCTAssertNil(setupFutureUsageForm.updateParams(params: IntentConfirmParams(type: .stripe(.payPal))))
+        sendEventToSubviews(.viewDidAppear, from: setupFutureUsageForm.view)
+        guard let setupFutureUsageOption = setupFutureUsageForm.updateParams(params: IntentConfirmParams(type: .stripe(.payPal))) else {
+            XCTFail("payment option should be non-nil")
+            return
+        }
+        XCTAssertTrue(setupFutureUsageOption.didDisplayMandate)
+    }
+
     // MARK: - Helpers
 
     func addressSpecProvider(countries: [String]) -> AddressSpecProvider {
@@ -3011,28 +3095,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             return element is PaymentMethodElementWrapper<AddressSectionElement>
         }
         XCTAssertTrue(hasBillingAddress, "BLIK form should contain billing address section when address collection is .full")
-    }
-
-    func testMakeUPI_withAllowedCountries() {
-        var configuration = PaymentSheet.Configuration()
-        configuration.billingDetailsCollectionConfiguration.address = .full
-        configuration.billingDetailsCollectionConfiguration.allowedCountries = ["IN", "US"]
-
-        let factory = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.UPI]),
-            elementsSession: ._testCardValue(),
-            configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.UPI)
-        )
-
-        let form = factory.makeUPI()
-        XCTAssertNotNil(form)
-
-        // Verify form contains billing address section when address collection is .full
-        let hasBillingAddress = form.elements.contains { element in
-            return element is PaymentMethodElementWrapper<AddressSectionElement>
-        }
-        XCTAssertTrue(hasBillingAddress, "UPI form should contain billing address section when address collection is .full")
     }
 
     // MARK: - Saved Payment Method Country Filtering Tests

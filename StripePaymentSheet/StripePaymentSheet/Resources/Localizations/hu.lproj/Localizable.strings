@@ -1,3 +1,7 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "A(z) %@ a továbbiakban nem lesz mentve a pénztárcájában.";
+
 "+ Add" = "+ Hozzáadás";
 
 "Add US bank account" = "Amerikai bankszámla hozzáadása";
@@ -16,11 +20,9 @@
 
 "Add your payment information" = "Fizetési adatok megadása";
 
+"Agree and accept" = "Beleegyezés és elfogadás";
+
 "Approve payment" = "Fizetés jóváhagyása";
-
-"Are you sure you want to remove this card?" = "Biztosan törli ezt a kártyát?";
-
-"Are you sure you want to remove this linked account?" = "Biztosan törli ezt a kapcsolt számlát?";
 
 "Back" = "Vissza";
 
@@ -39,8 +41,6 @@
 "Buy now or pay later with Clearpay" = "Vegye meg most, vagy fizessen később Clearpayjel";
 
 "Buy now or pay later with Klarna" = "Vegye meg most, vagy fizessen később Klarnával";
-
-"Buy using a UPI ID" = "Vásárlás UPI-azonosítóval";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "A fizetés megerősítésével a PayPalon engedélyezi, hogy a(z) %@ a feltételeinek megfelelően a jövőbeni kifizetésekkel megterhelje a PayPal számláját.";
 
@@ -90,6 +90,8 @@
 
 "Card details cannot be changed." = "A kártyai adatai nem módosíthatók.";
 
+"Card number. Supported cards include %@" = "Kártyaszám. A támogatott kártyák közé tartozik: %@";
+
 "Change" = "Módosítás";
 
 "Choose a card brand" = "Válasszon kártyatípust";
@@ -120,15 +122,21 @@
 
 "Debit or credit card" = "Betéti vagy hitelkártya";
 
+"Declarations" = "Nyilatkozatok";
+
 "Default" = "Alapértelmezett";
 
 "Default payment method" = "Alapértelmezett fizetési mód";
 
 "Did you mean %@? %@." = "Erre gondolt: %1$@? %2$@.";
 
+"Discount" = "Engedmény";
+
 "EPS Bank" = "EPS Bank";
 
 "Enter address manually" = "Cím megadása kézzel";
+
+"Exchange rate and fees of your bank may apply." = "Átváltási árfolyam és banki díjak merülhetnek fel.";
 
 "FPX Bank" = "FPX Bank";
 
@@ -178,8 +186,6 @@
 
 "Open to see more information." = "Nyissa meg további adatok megtekintéséhez.";
 
-"Open your UPI app to approve your payment within %@" = "Nyissa meg az UPI-alkalmazását a fizetés jóváhagyásához %@ belül";
-
 "Or" = "vagy";
 
 "Or pay using" = "Vagy fizetés a következővel:";
@@ -210,6 +216,8 @@
 
 "Payment failed" = "A fizetés nem sikerült";
 
+"Payment method details cannot be changed." = "A fizetési mód adatai nem módosíthatók.";
+
 "Payment methods" = "Fizetési módok";
 
 "Please choose a valid payment method." = "Válasszon érvényes fizetési módot.";
@@ -222,9 +230,17 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
+"Remove %@" = "%@ eltávolítása";
+
+"Remove bank?" = "Bank eltávolítása?";
+
 "Remove card?" = "Kártya eltávolítása?";
 
 "Remove linked account" = "Kapcsolt számla törlése";
+
+"Remove payment method" = "Fizetés mód eltávolítása";
+
+"Remove payment method?" = "Eltávolítja a fizetési módot?";
 
 "SEPA debit details cannot be changed." = "A SEPA beszedés adatai nem módosíthatók.";
 
@@ -266,19 +282,19 @@
 
 "Simple, secure one-click payments" = "Egyszerű, biztonságos, egykattintásos fizetés";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Valami hiba történt a fiók összekapcsolásakor.\nKérjük, próbálja meg újra később.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "A Stripe 1-2 munkanapon belül egy 0,01 dollár összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a bankszámlája mentéséről a(z) %@ vállalkozáshoz.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "A Stripe néhány munkanapon belül egy 0,01 $ összegű utalást fog küldeni a bankszámlájára. Ezután e-mailben megkapja az útmutatást a fizetés befejezéséhez a(z) %@ felé.";
+
+"Subtotal" = "Részösszeg";
 
 "Tap to close" = "Koppintson a bezáráshoz";
 
 "Tap to expand" = "Koppintson a kinyitáshoz";
 
-"The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
+"Tax" = "Adó";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "A megadott IBAN érvénytelen, a \"%@\" nem támogatott országkód.";
+"The IBAN you entered is incomplete." = "A beírt IBAN-szám hiányos.";
 
 "The provided verification code has expired." = "A megadott ellenőrző kód lejárt.";
 

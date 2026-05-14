@@ -22,7 +22,6 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     let formCache: PaymentMethodFormCache = .init()
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let loadResult: PaymentSheetLoader.LoadResult
-    var confirmationChallenge: ConfirmationChallenge?
     var savedPaymentMethods: [STPPaymentMethod] {
         return savedPaymentOptionsViewController.savedPaymentMethods
     }
@@ -32,7 +31,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             if let linkConfirmOption {
                 return .link(option: linkConfirmOption)
             } else if isHackyLinkButtonSelected {
-                return .link(option: .wallet)
+                return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)))
             } else if let paymentOption = addPaymentMethodViewController.paymentOption {
                 return paymentOption
             } else if let paymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
@@ -153,6 +152,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             options: walletOptions,
             appearance: configuration.appearance,
             applePayButtonType: configuration.applePay?.buttonType ?? .plain,
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
             isPaymentIntent: intent.isPaymentIntent,
             delegate: self
         )
@@ -198,6 +198,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 customerID: configuration.customer?.id,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: false,
@@ -218,10 +219,12 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             intent: intent,
             elementsSession: elementsSession,
             configuration: configuration,
+            paymentMethodOrientation: loadResult.paymentMethodOrientation,
             previousCustomerInput: previousConfirmParams, // Restore the customer's previous new payment method input
             paymentMethodTypes: loadResult.paymentMethodTypes,
             formCache: formCache,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper
         )
         super.init(nibName: nil, bundle: nil)
         self.savedPaymentOptionsViewController.delegate = self
@@ -286,8 +289,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
-            analyticsHelper: analyticsHelper,
-            confirmationChallenge: confirmationChallenge
+            analyticsHelper: analyticsHelper
         ) { [weak self] confirmOption, _ in
             guard let self else { return }
             self.linkConfirmOption = confirmOption

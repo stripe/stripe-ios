@@ -34,7 +34,7 @@ StripeCryptoOnramp helps you build a headless crypto onramp flow in your iOS app
 
 **Wallets and payment methods**:
 - Register crypto wallet addresses with `registerWalletAddress(walletAddress:network:)`
-- Collect payment methods via Link (card, bank account) or Apple Pay with `collectPaymentMethod(type:from:)`
+- Collect payment methods via Link (card, bank account) or Apple Pay with `collectPaymentMethod(type:from:)`. To receive partial `KycInfo` from Apple Pay, configure the provided `PKPaymentRequest` to request Apple Pay billing `.name` and/or `.postalAddress`.
 - Create crypto payment tokens with `createCryptoPaymentToken()`
 
 **Checkout handling**: 

@@ -19,23 +19,23 @@ extension UIApplication {
             .sorted { firstWindow, _ in firstWindow.isKeyWindow }
         return windows.first
         #else
-        return activeScene?.windows.first { $0.isKeyWindow }
+        return activeOrFirstScene?.windows.first { $0.isKeyWindow }
         #endif
     }
 
-    /// Returns the currently active `UIWindowScene` in the foreground.
+    /// Returns a `UIWindowScene` suitable for reading traits or finding key windows.
     ///
-    /// This function searches through all scenes connected to the shared application,
-    /// filters for those of type `UIWindowScene`, and returns the first one whose
-    /// activation state is `.foregroundActive`.
-    ///
-    /// - Returns: The `UIWindowScene` instance that is currently active and in the foreground,
-    ///            or `nil` if there is no such scene.
-    var activeScene: UIWindowScene? {
-        let activeScene = UIApplication.shared.connectedScenes
+    /// Prefers a scene with `activationState == .foregroundActive`, but falls back to any
+    /// connected `UIWindowScene` (e.g. when the scene is `.foregroundInactive` during app
+    /// transitions). Logs an error only when no `UIWindowScene` exists at all.
+    var activeOrFirstScene: UIWindowScene? {
+        let windowScenes = UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
-            .first(where: { $0.activationState == .foregroundActive })
-        if activeScene == nil {
+
+        let scene = windowScenes.first(where: { $0.activationState == .foregroundActive })
+            ?? windowScenes.first
+
+        if scene == nil {
             let errorAnalytic = ErrorAnalytic(
                 event: .unexpectedPaymentSheetError,
                 error: Error.missingActiveScene
@@ -43,7 +43,7 @@ extension UIApplication {
             STPAnalyticsClient.sharedClient.log(analytic: errorAnalytic)
             stpAssertionFailure("Couldn't find active scene!")
         }
-        return activeScene
+        return scene
     }
     enum Error: Swift.Error {
        case missingActiveScene

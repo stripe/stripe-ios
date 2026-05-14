@@ -9,7 +9,7 @@
 import Foundation
 import XCTest
 
-@testable@_spi(STP) import StripeCore
+@testable@_spi(STP) @_spi(ReactNativeSDK) import StripeCore
 
 final class AnalyticsClientV2Test: XCTestCase {
     let client = AnalyticsClientV2(
@@ -65,6 +65,20 @@ final class AnalyticsClientV2Test: XCTestCase {
         XCTAssertNotNil(platformInfo?["install"] as? String)
         XCTAssertNotNil(platformInfo?["app_bundle_id"] as? String)
 
+        // React Native analytics fields are nil by default (set by RN SDK at runtime)
+        XCTAssertNil(commonPayload["react_native_is_new_architecture"])
+        XCTAssertNil(commonPayload["react_native_version"])
+
+        // When set, they should appear in the payload
+        ReactNativeAnalytics.isNewArchitecture = true
+        ReactNativeAnalytics.reactNativeVersion = "0.76.0"
+        let payloadWithRN = client.makeCommonPayload()
+        XCTAssertEqual(payloadWithRN["react_native_is_new_architecture"] as? Bool, true)
+        XCTAssertEqual(payloadWithRN["react_native_version"] as? String, "0.76.0")
+
+        // Clean up
+        ReactNativeAnalytics.isNewArchitecture = nil
+        ReactNativeAnalytics.reactNativeVersion = nil
     }
 
     func testPayloadFromAnalytic() {

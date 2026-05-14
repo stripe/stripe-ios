@@ -70,8 +70,6 @@
 
 "Incomplete phone number" = "Número de telèfon incomplet";
 
-"Invalid UPI ID" = "ID d'UPI no vàlid";
-
 "Island" = "Illa";
 
 "Last" = "Cognom";
@@ -125,8 +123,6 @@
 "The sort code you entered is invalid." = "El codi d'ordenació que heu introduït no és vàlid.";
 
 "Town or city" = "Municipi o ciutat";
-
-"UPI ID" = "ID d'UPI";
 
 "Unable to parse phone number" = "No s'ha pogut analitzar el número de telèfon";
 

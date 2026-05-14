@@ -20,7 +20,7 @@ final class ConsumerSession: Decodable {
     let unredactedPhoneNumber: String?
     let phoneNumberCountry: String?
     let verificationSessions: [VerificationSession]
-    let supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>
+    let supportedPaymentDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>>
     let mobileFallbackWebviewParams: MobileFallbackWebviewParams?
     let currentAuthenticationLevel: AuthenticationLevel?
     let minimumAuthenticationLevel: AuthenticationLevel?
@@ -32,7 +32,7 @@ final class ConsumerSession: Decodable {
         unredactedPhoneNumber: String?,
         phoneNumberCountry: String?,
         verificationSessions: [VerificationSession],
-        supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType>,
+        supportedPaymentDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>>,
         mobileFallbackWebviewParams: MobileFallbackWebviewParams?,
         currentAuthenticationLevel: AuthenticationLevel? = nil,
         minimumAuthenticationLevel: AuthenticationLevel? = nil
@@ -70,7 +70,7 @@ final class ConsumerSession: Decodable {
         self.unredactedPhoneNumber = try container.decodeIfPresent(String.self, forKey: .unredactedPhoneNumber)
         self.phoneNumberCountry = try container.decodeIfPresent(String.self, forKey: .phoneNumberCountry)
         self.verificationSessions = try container.decodeIfPresent([ConsumerSession.VerificationSession].self, forKey: .verificationSessions) ?? []
-        self.supportedPaymentDetailsTypes = try container.decodeIfPresent(Set<ConsumerPaymentDetails.DetailsType>.self, forKey: .supportedPaymentDetailsTypes) ?? []
+        self.supportedPaymentDetailsTypes = try container.decodeIfPresent(Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>>.self, forKey: .supportedPaymentDetailsTypes) ?? []
         self.mobileFallbackWebviewParams = try container.decodeIfPresent(MobileFallbackWebviewParams.self, forKey: .mobileFallbackWebviewParams)
         self.currentAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .currentAuthenticationLevel)
         self.minimumAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .minimumAuthenticationLevel)
@@ -372,7 +372,7 @@ extension ConsumerSession {
 
     func listPaymentDetails(
         with apiClient: STPAPIClient = STPAPIClient.shared,
-        supportedPaymentDetailsTypes: [ConsumerPaymentDetails.DetailsType],
+        supportedPaymentDetailsTypes: [ParsedEnum<ConsumerPaymentDetails.DetailsType>],
         requestSurface: LinkRequestSurface = .default,
         completion: @escaping (Result<[ConsumerPaymentDetails], Error>) -> Void
     ) {

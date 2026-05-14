@@ -18,10 +18,6 @@
 
 "Approve payment" = "批准付款";
 
-"Are you sure you want to remove this card?" = "您確定要移除此卡嗎？";
-
-"Are you sure you want to remove this linked account?" = "您確定要移除這個關聯的帳戶嗎？";
-
 "Back" = "上一步";
 
 "Bank" = "銀行";
@@ -39,8 +35,6 @@
 "Buy now or pay later with Clearpay" = "用 Clearpay 先買後付";
 
 "Buy now or pay later with Klarna" = "用 Klarna 先買後付";
-
-"Buy using a UPI ID" = "用 UPI ID 購買";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "確認您的 PayPal 付款，即表示您允許 %@ 按照他們的條款從您的 PayPal 扣取未來款項。";
 
@@ -152,8 +146,6 @@
 
 "Only card brand can be changed." = "只可更改金融卡品牌。";
 
-"Open your UPI app to approve your payment within %@" = "請在 %@內打開您的 UPI 應用程式來批准付款";
-
 "Or" = "或";
 
 "Or pay using" = "或用以下方式支付";
@@ -197,6 +189,8 @@
 "Remove card?" = "移除卡？";
 
 "Remove linked account" = "移除關聯帳戶";
+
+"Remove payment method" = "移除支付方式";
 
 "SEPA debit details cannot be changed." = "無法更改 SEPA 借記詳情。";
 

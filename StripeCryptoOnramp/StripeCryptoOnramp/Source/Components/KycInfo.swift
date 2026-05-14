@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import PassKit
+@_spi(STP) import StripePayments
 
 /// Represents KYC information required for crypto operations.
 @_spi(CryptoOnrampAlpha)
@@ -58,6 +60,15 @@ public struct KycInfo: Equatable {
     /// The customer’s date of birth.
     public var dateOfBirth: DateOfBirth?
 
+    /// The two-letter country code of the customer’s country of birth (ISO 3166-1 alpha-2), if collected. Required for EU customers.
+    public var birthCountry: String?
+
+    /// The customer’s city of birth, if collected. Required for EU customers.
+    public var birthCity: String?
+
+    /// The two-letter country codes of the customer’s nationalities (ISO 3166-1 alpha-2), if collected. Required for EU customers.
+    public var nationalities: [String]?
+
     /// Creates a new instance of `KycInfo`.
     /// - Parameters:
     ///   - firstName: The customer’s first name, if collected.
@@ -65,17 +76,86 @@ public struct KycInfo: Equatable {
     ///   - idNumber: The number associated with the customer’s id.
     ///   - address: The address of the customer, if collected.
     ///   - dateOfBirth: The customer’s date of birth.
+    ///   - birthCountry: The two-letter country code of the customer’s country of birth (ISO 3166-1 alpha-2), if collected. Required for EU customers.
+    ///   - birthCity: The customer’s city of birth, if collected. Required for EU customers.
+    ///   - nationalities: The two-letter country codes of the customer’s nationalities (ISO 3166-1 alpha-2), if collected. Required for EU customers.
     public init(
         firstName: String?,
         lastName: String?,
         idNumber: String?,
         address: Address?,
-        dateOfBirth: DateOfBirth?
+        dateOfBirth: DateOfBirth?,
+        birthCountry: String? = nil,
+        birthCity: String? = nil,
+        nationalities: [String]? = nil
     ) {
         self.firstName = firstName
         self.lastName = lastName
         self.idNumber = idNumber
         self.address = address
         self.dateOfBirth = dateOfBirth
+        self.birthCountry = birthCountry
+        self.birthCity = birthCity
+        self.nationalities = nationalities
+    }
+}
+
+extension KycInfo {
+
+    /// Creates a `KycInfo` from Apple Pay billing information.
+    /// Returns `nil` if the `PKPayment` does not contain any usable billing name or address fields.
+    /// - Parameter payment: The Apple Pay payment whose billing information should be converted.
+    init?(payment: PKPayment) {
+        guard let billingContact = payment.billingContact else {
+            return nil
+        }
+
+        let firstName: String? = {
+            guard let givenName = billingContact.name?.givenName else {
+                return nil
+            }
+
+            let trimmedGivenName = givenName.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmedGivenName.isEmpty else {
+                return nil
+            }
+
+            return trimmedGivenName
+        }()
+
+        let lastName: String? = {
+            guard let familyName = billingContact.name?.familyName else {
+                return nil
+            }
+
+            let trimmedFamilyName = familyName.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !trimmedFamilyName.isEmpty else {
+                return nil
+            }
+
+            return trimmedFamilyName
+        }()
+
+        let address: Address? = {
+            guard billingContact.postalAddress != nil else {
+                return nil
+            }
+
+            let stpAddress = STPAddress(pkContact: billingContact)
+            let address = Address(address: stpAddress)
+            return address.isEmpty ? nil : address
+        }()
+
+        guard firstName != nil || lastName != nil || address != nil else {
+            return nil
+        }
+
+        self.init(
+            firstName: firstName,
+            lastName: lastName,
+            idNumber: nil,
+            address: address,
+            dateOfBirth: nil
+        )
     }
 }

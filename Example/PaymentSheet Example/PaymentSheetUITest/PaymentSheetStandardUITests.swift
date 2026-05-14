@@ -204,13 +204,14 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         loadPlayground(app, settings)
 
         app.buttons["Apple Pay, apple_pay"].waitForExistenceAndTap(timeout: 30) // Should default to Apple Pay
+        // filter out async passive captcha and attestation logs
+        let filteredAnalytics = analyticsLog.filter({ !($0[string: "event"]?.starts(with: "elements.captcha.passive") ?? false) && !($0[string: "event"]?.contains("attest") ?? false) })
         XCTAssertEqual(
-            // filter out async passive captcha and attestation logs
-            analyticsLog.map({ $0[string: "event"] }).filter({ !($0?.starts(with: "elements.captcha.passive") ?? false) && !($0?.contains("attest") ?? false) }),
+            filteredAnalytics.map({ $0[string: "event"] }),
             ["mc_load_started", "mc_load_succeeded", "mc_custom_init_customer_applepay", "mc_custom_sheet_savedpm_show"]
         )
         // `mc_load_succeeded` event `selected_lpm` should be "apple_pay", the default payment method.
-        XCTAssertEqual(analyticsLog[1][string: "selected_lpm"], "apple_pay")
+        XCTAssertEqual(filteredAnalytics[1][string: "selected_lpm"], "apple_pay")
         app.buttons["+ Add"].waitForExistenceAndTap()
         XCTAssertTrue(app.staticTexts["Card information"].waitForExistence(timeout: 2))
 
@@ -395,43 +396,6 @@ class PaymentSheetStandardUITests: PaymentSheetUITestCase {
         let successText = app.staticTexts["Payment status view"]
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
         XCTAssertNotNil(successText.label.range(of: "Success!"))
-    }
-
-    func testUPIPaymentMethodPolling() throws {
-        var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
-        settings.layout = .horizontal
-        settings.customerMode = .new
-        settings.customerKeyType = .legacy
-        settings.merchantCountryCode = .IN
-        settings.currency = .inr
-        settings.apmsEnabled = .off
-        loadPlayground(app, settings)
-
-        app.buttons["Present PaymentSheet"].tap()
-
-        let payButton = app.buttons["Pay ₹50.99"]
-        XCTAssertTrue(payButton.waitForExistence(timeout: 10))
-        guard let upi = scroll(collectionView: app.collectionViews.firstMatch, toFindCellWithId: "UPI") else {
-            XCTFail()
-            return
-        }
-        upi.tap()
-
-        XCTAssertFalse(payButton.isEnabled)
-        let upi_id = app.textFields["UPI ID"]
-        upi_id.tap()
-        upi_id.typeText("payment.pending@stripeupi")
-        upi_id.typeText(XCUIKeyboardKey.return.rawValue)
-
-        payButton.tap()
-
-        let approvePaymentText = app.staticTexts["Approve payment"]
-        XCTAssertTrue(approvePaymentText.waitForExistence(timeout: 10.0))
-
-        // UPI Specific CTA
-        let predicate = NSPredicate(format: "label BEGINSWITH 'Open your UPI app to approve your payment within'")
-        let upiCTAText = XCUIApplication().staticTexts.element(matching: predicate)
-        XCTAssertTrue(upiCTAText.waitForExistence(timeout: 10.0))
     }
 
     func testBLIKPaymentMethodPolling() throws {

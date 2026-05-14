@@ -5,6 +5,7 @@
 //  Created by Ramon Torres on 11/12/21.
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -292,9 +293,10 @@ extension LinkUI {
 
     static func inlineLogo(
         withScale scale: CGFloat,
-        forFont font: UIFont
+        forFont font: UIFont,
+        brand: LinkBrand = .link
     ) -> NSTextAttachment {
-        let iconImage = Image.link_logo_tintable.makeImage(template: true)
+        let iconImage = brand.paymentSheetTintableLogoImage
         let iconImageAttachment = NSTextAttachment()
 
         let contentHeight = font.capHeight * scale

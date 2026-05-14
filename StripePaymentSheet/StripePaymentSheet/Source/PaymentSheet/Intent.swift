@@ -28,7 +28,7 @@ enum Intent {
         case .paymentIntent(let intent): intent.stripeId
         case .setupIntent(let intent): intent.stripeID
         case .deferredIntent: nil
-        case .checkoutSession(let session): session.stripeId
+        case .checkoutSession(let session): session.id
         }
     }
 
@@ -79,7 +79,7 @@ enum Intent {
         case .paymentIntent(let paymentIntent):
             return paymentIntent.paymentMethodOptions?.card?.requireCvcRecollection ?? false
         case .setupIntent, .checkoutSession:
-            // TODO(porter) Figure out CVC recollection flag during confirmation work
+            // CheckoutSession does not yet support CVC recollection
             return false
         }
     }
@@ -121,7 +121,7 @@ enum Intent {
                 stpAssertionFailure("Received CheckoutSession in unknown mode")
                 return nil
             case .payment:
-                return session.totals?.total
+                return session.total?.total.minorUnitsAmount
             case .setup:
                 return nil
             case .subscription:
@@ -139,8 +139,17 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        case .setupIntent, .checkoutSession:
-            // TODO(porter) Figure out SFU string during confirmation work
+        case .checkoutSession(let checkoutSession):
+            switch checkoutSession.mode {
+            case .payment:
+                return checkoutSession.setupFutureUsage
+            case .setup:
+                return nil
+            case .subscription, .unknown:
+                stpAssertionFailure("subscription and unknown not implemented")
+                return nil
+            }
+        case .setupIntent:
             return nil
         }
     }
@@ -157,8 +166,9 @@ enum Intent {
                 return !setupFutureUsageValues.isEmpty
             }
             return nil
-        case .setupIntent, .checkoutSession:
-            // TODO(porter) Figure out PMO+SFU during confirmation work
+        case .checkoutSession(let checkoutSession):
+            return checkoutSession.isPaymentMethodOptionsSetupFutureUsageSet
+        case .setupIntent:
             return nil
         }
     }
@@ -183,11 +193,16 @@ enum Intent {
             }
         case .checkoutSession(let checkoutSession):
             switch checkoutSession.mode {
-            case .payment, .subscription, .unknown:
-                // TODO(porter) Figure out SFU during confirmation work
-                return false
+            case .payment:
+                guard let setupFutureUsage = checkoutSession.setupFutureUsage(for: paymentMethodType) else {
+                    return false
+                }
+                return setupFutureUsage != "none"
             case .setup:
                 return true
+            case .subscription, .unknown:
+                stpAssertionFailure("subscription and unknown not implemented")
+                return false
             }
         }
     }

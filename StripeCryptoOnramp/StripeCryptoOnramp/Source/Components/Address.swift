@@ -89,3 +89,21 @@ public struct Address: Equatable, Decodable {
         state = address.state
     }
 }
+
+extension Address {
+
+    var isEmpty: Bool {
+        !Self.hasContent(city)
+            && !Self.hasContent(country)
+            && !Self.hasContent(line1)
+            && !Self.hasContent(line2)
+            && !Self.hasContent(postalCode)
+            && !Self.hasContent(state)
+    }
+
+    private static func hasContent(_ value: String?) -> Bool {
+        guard let value else { return false }
+        return !value.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+}

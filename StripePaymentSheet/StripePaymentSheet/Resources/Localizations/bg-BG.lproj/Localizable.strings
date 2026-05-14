@@ -1,3 +1,7 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "%@ вече няма да се запазват в портфейла Ви.";
+
 "+ Add" = "+ Добавяне";
 
 "Add US bank account" = "Добавяне на банкова сметка в САЩ";
@@ -16,11 +20,9 @@
 
 "Add your payment information" = "Добавете своята информация за плащането";
 
+"Agree and accept" = "Съгласявам се и приемам";
+
 "Approve payment" = "Одобряване на плащането";
-
-"Are you sure you want to remove this card?" = "Сигурни ли сте, че желаете да премахнете тази банкова карта?";
-
-"Are you sure you want to remove this linked account?" = "Сигурни ли сте, че желаете да премахнете този свързан акаунт?";
 
 "Back" = "Назад";
 
@@ -39,8 +41,6 @@
 "Buy now or pay later with Clearpay" = "Платете сега или платете по-късно чрез Clearpay";
 
 "Buy now or pay later with Klarna" = "Платете сега или платете по-късно чрез Klarna";
-
-"Buy using a UPI ID" = "Купуване с помощта на UPI ID";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Потвърждавайки плащането си в PayPal, разрешавате на %@ да таксува Вашия PayPal акаунт при бъдещи плащания съгласно условията му.";
 
@@ -70,8 +70,6 @@
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Предоставяйки телефонен номер и имейл, се съгласявате да създадете акаунт в Link в съответствие с <terms>Условията</terms> и <privacy>Правилата за защита на личните данни</privacy> на Link.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "С предоставянето на данните за банковата си сметка и потвърждаването на това плащане вие се съгласявате с това искане за директен дебит и с <terms>договора за обслужване за искания за директен дебит</terms> и упълномощавате Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 („Stripe“) да дебитира сметката ви чрез системата за масов електронен (BECS) от името на %@ („Търговец“) за всички суми, които Търговецът ви съобщи отделно. Удостоверявате, че сте титуляр на сметката или упълномощено лице за подписване за сметката, посочена по-горе.";
-
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Предоставяйки информацията за Вашата карта, позволявате на %@ да дебитира картата Ви при бъдещи плащания съгласно условията им.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "С предоставяне на имейла си, Вие давате съгласието си за създаване на акаунт в Link и запазване на разплащателната Ви информация в Link съгласно <terms>Условията</terms> и <privacy>Правилата за защита на личните данни</privacy>на Link.";
@@ -91,6 +89,8 @@
 "Cancel and pay another way" = "Анулиране или плащане по друг начин";
 
 "Card details cannot be changed." = "Данните на картата не могат да бъдат променяни.";
+
+"Card number. Supported cards include %@" = "Номер на банкова карта. Поддържаните карти включват %@";
 
 "Change" = "Промяна";
 
@@ -122,15 +122,21 @@
 
 "Debit or credit card" = "Дебитна или кредитна карта";
 
+"Declarations" = "Декларации";
+
 "Default" = "По подразбиране";
 
 "Default payment method" = "Начин на плащане по подразбиране";
 
 "Did you mean %@? %@." = "Имахте предвид %1$@? %2$@.";
 
+"Discount" = "Отстъпка";
+
 "EPS Bank" = "Банка EPS";
 
 "Enter address manually" = "Ръчно въвеждане на адрес";
+
+"Exchange rate and fees of your bank may apply." = "Обменният курс и таксите на вашата банка може да се прилагат.";
 
 "FPX Bank" = "Банка FPX";
 
@@ -180,8 +186,6 @@
 
 "Open to see more information." = "Искам да видя повече информация.";
 
-"Open your UPI app to approve your payment within %@" = "Отворете Вашето UPI приложение, за да одобрите плащане си в рамките на %@";
-
 "Or" = "Или";
 
 "Or pay using" = "Или платете чрез";
@@ -212,6 +216,8 @@
 
 "Payment failed" = "Неуспешно плащане";
 
+"Payment method details cannot be changed." = "Детайлите за начина на плащане не могат да бъдат променяни.";
+
 "Payment methods" = "Начини на плащане";
 
 "Please choose a valid payment method." = "Моля, изберете валиден начин на плащане.";
@@ -224,9 +230,17 @@
 
 "Przelewy24 Bank" = "Банка Przelewy24";
 
+"Remove %@" = "Премахване на %@";
+
+"Remove bank?" = "Премахване на банка?";
+
 "Remove card?" = "Премахване на банковата карта?";
 
 "Remove linked account" = "Премахване на свързан акаунт";
+
+"Remove payment method" = "Премахване на начин на плащане";
+
+"Remove payment method?" = "Премахване на метод за плащане?";
 
 "SEPA debit details cannot be changed." = "Данните на SEPA дебит не могат да бъдат променяни.";
 
@@ -268,19 +282,19 @@
 
 "Simple, secure one-click payments" = "Лесни и сигурни плащания с едно щракане";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Нещо се обърка при свързването на профила ви.\nМоля, опитайте отново по-късно.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "В рамките на 1-2 работни дни Stripe ще депозира в сметката Ви сума от 0,01 USD. След това ще получите имейл с инструкции за завършване на запазването на банковата ви сметка с %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "В рамките на 1-2 работни дни Stripe ще депозира в сметката Ви сума от 0.01 USD. След това ще получите имейл с инструкции за завършване на плащането към %@.";
+
+"Subtotal" = "Междинна сума";
 
 "Tap to close" = "Докоснете, за да затворите";
 
 "Tap to expand" = "Докоснете, за да разширите";
 
-"The IBAN you entered is incomplete." = "Въведеният IBAN е непълен.";
+"Tax" = "Данък";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Въведеният IBAN е невалиден, \"%@\" не е поддържан код на държава.";
+"The IBAN you entered is incomplete." = "Въведеният IBAN е непълен.";
 
 "The provided verification code has expired." = "Предоставеният код за потвърждаване е изтекъл.";
 

@@ -1,3 +1,7 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "Metoda płatności %@ nie będzie już dłużej zapisana w Twoim portfelu.";
+
 "+ Add" = "+ Dodaj";
 
 "Add US bank account" = "Dodaj rachunek bankowy w Stanach Zjednoczonych";
@@ -16,11 +20,9 @@
 
 "Add your payment information" = "Dodaj informacje o płatności";
 
+"Agree and accept" = "Wyraź zgodę i zaakceptuj";
+
 "Approve payment" = "Zatwierdź płatność";
-
-"Are you sure you want to remove this card?" = "Czy na pewno chcesz usunąć tę kartę?";
-
-"Are you sure you want to remove this linked account?" = "Czy na pewno chcesz usunąć to połączone konto?";
 
 "Back" = "Wstecz";
 
@@ -39,8 +41,6 @@
 "Buy now or pay later with Clearpay" = "Kup teraz lub zapłać później za pomocą Clearpay";
 
 "Buy now or pay later with Klarna" = "Kup teraz lub zapłać później z Klarna";
-
-"Buy using a UPI ID" = "Kup za pomocą UPI ID";
 
 "By confirming your payment with PayPal, you allow %@ to charge your PayPal account for future payments in accordance with their terms." = "Zatwierdzając płatność z PayPal, zezwalasz %@ na obciążenie Twojego konta PayPal przyszłymi płatnościami zgodnie z ich warunkami.";
 
@@ -70,8 +70,6 @@
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając numer telefonu i adres e-mail, użytkownik wyraża zgodę na utworzenie konta Link podlegającego <terms>Warunkom</terms> i <privacy>Polityce prywatności</privacy>.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Podając dane swojego konta bankowego i potwierdzając tę płatność, wyrażasz zgodę na niniejsze żądanie polecenia zapłaty oraz <terms>umowę o świadczenie usług polecenia zapłaty</terms>, a także upoważniasz Stripe Payments Australia Pty Ltd ACN 160 180 343, numer identyfikacyjny użytkownika polecenia zapłaty 507156 („Stripe”) do obciążenia Twojego konta za pośrednictwem systemu Bulk Electronic Clearing System (BECS) w imieniu %@ („Sprzedawca”) na wszelkie kwoty, o których Sprzedawca poinformuje Cię oddzielnie. Zaświadczasz, że jest posiadaczem wyżej wymienionego konta lub jego upoważnionym sygnatariuszem.";
-
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Poprzez podanie danych karty wyrażasz zgodę na obciążanie przez %@ Twojej karty kwotami przyszłych płatności zgodnie z obowiązującymi warunkami.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Podając swój adres e-mail, zgadzasz się na utworzenie konta Link i zapisanie danych do płatności w Link, zgodnie z <terms>Warunkami</terms> i <privacy>Polityką prywatności</privacy> Link.";
@@ -91,6 +89,8 @@
 "Cancel and pay another way" = "Anuluj i skorzystaj z innej metody zapłaty";
 
 "Card details cannot be changed." = "Nie można zmienić szczegółów karty.";
+
+"Card number. Supported cards include %@" = "Numer karty. Obsługiwane karty obejmują %@";
 
 "Change" = "Zmień";
 
@@ -122,15 +122,21 @@
 
 "Debit or credit card" = "Karta debetowa lub kredytowa";
 
+"Declarations" = "Deklaracje";
+
 "Default" = "Domyślne";
 
 "Default payment method" = "Domyślna metoda płatności";
 
 "Did you mean %@? %@." = "Czy chodziło Ci o: %1$@? %2$@.";
 
+"Discount" = "Rabat";
+
 "EPS Bank" = "Bank EPS";
 
 "Enter address manually" = "Wprowadź adres ręcznie";
+
+"Exchange rate and fees of your bank may apply." = "Mogą mieć zastosowanie kurs wymiany i opłaty z Twojego banku.";
 
 "FPX Bank" = "FPX Bank";
 
@@ -180,8 +186,6 @@
 
 "Open to see more information." = "Otwórz, aby zobaczyć więcej informacji.";
 
-"Open your UPI app to approve your payment within %@" = "Otwórz aplikację UPI, aby zatwierdzić płatność w %@";
-
 "Or" = "Lub";
 
 "Or pay using" = "Lub zapłać, korzystając z";
@@ -212,6 +216,8 @@
 
 "Payment failed" = "Płatność się nie powiodła";
 
+"Payment method details cannot be changed." = "Nie można zmienić szczegółów metody płatności.";
+
 "Payment methods" = "Metody płatności";
 
 "Please choose a valid payment method." = "Wybierz prawidłową metodę płatności.";
@@ -224,9 +230,17 @@
 
 "Przelewy24 Bank" = "Przelewy24 Bank";
 
+"Remove %@" = "Usuń %@";
+
+"Remove bank?" = "Usunąć bank?";
+
 "Remove card?" = "Usunąć kartę?";
 
 "Remove linked account" = "Usuń podłączone konto";
+
+"Remove payment method" = "Usuń metodę płatności";
+
+"Remove payment method?" = "Usunąć metodę płatności?";
 
 "SEPA debit details cannot be changed." = "Nie można zmienić szczegółów polecenia zapłaty SEPA.";
 
@@ -268,19 +282,19 @@
 
 "Simple, secure one-click payments" = "Łatwe, bezpieczne płatności jednym kliknięciem";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Coś poszło nie tak podczas łączenia konta.\nSpróbuj ponownie później.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe wpłaci 0,01 USD na Twoje konto w ciągu 1–2 dni roboczych. Następnie otrzymasz wiadomość e-mail z instrukcjami dotyczącymi zakończenia zapisywania konta za pomocą %@.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe wpłaci 0,01 USD na Twoje konto w ciągu 1-2 dni roboczych. Następnie otrzymasz wiadomość e-mail z instrukcjami dotyczącymi zakończenia płatności na rzecz %@.";
+
+"Subtotal" = "Suma częściowa";
 
 "Tap to close" = "Dotknij, aby zamknąć";
 
 "Tap to expand" = "Dotknij, aby rozwinąć";
 
-"The IBAN you entered is incomplete." = "Podany IBAN jest niepełny.";
+"Tax" = "Podatek";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Podany numer IBAN jest nieprawidłowy, a „%@” nie jest obsługiwanym kodem kraju.";
+"The IBAN you entered is incomplete." = "Podany IBAN jest niepełny.";
 
 "The provided verification code has expired." = "Podany kod weryfikacyjny jest nieaktualny.";
 

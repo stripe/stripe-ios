@@ -169,4 +169,17 @@ class FormMandateProviderTests: XCTestCase {
         XCTAssertNil(result)
     }
 
+    func testMakeMandateText_usesProvidedBrandName() {
+        let result = PaymentSheetFormFactory.makeMandateText(
+            variant: .updated(shouldSignUpToLink: true),
+            merchantName: "Test Merchant",
+            brand: .onelink
+        )
+
+        XCTAssertEqual(
+            result.string,
+            "By continuing, you agree to save your information for future purchases with Test Merchant and Link according to Link terms and privacy."
+        )
+    }
+
 }

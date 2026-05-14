@@ -20,6 +20,8 @@ final class PaymentSheetAnalyticsHelper {
     // Vars set later as PaymentSheet successfully loads, etc.
     var intent: Intent?
     var elementsSession: STPElementsSession?
+    /// Resolved once `logLoadSucceeded` is called; nil before that.
+    private(set) var paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout?
     private var startTimes: [TimeMeasurement: Date] = [:]
 
     enum IntegrationShape {
@@ -134,6 +136,7 @@ final class PaymentSheetAnalyticsHelper {
         elementsSession: STPElementsSession,
         defaultPaymentMethod: SavedPaymentOptionsViewController.Selection?,
         orderedPaymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         loadTimings: PaymentSheetLoader.LoadTimings,
         isUpdate: Bool,
         hasCardArt: Bool,
@@ -141,6 +144,7 @@ final class PaymentSheetAnalyticsHelper {
     ) {
         self.intent = intent
         self.elementsSession = elementsSession
+        self.paymentMethodOrientation = paymentMethodOrientation
         let defaultPaymentMethodAnalyticsValue: String = {
             switch defaultPaymentMethod {
             case .applePay:
@@ -212,13 +216,8 @@ final class PaymentSheetAnalyticsHelper {
         log(event: event)
     }
 
-    enum PaymentMethodLayout: String {
-        case horizontal
-        case vertical
-    }
-
-    func logInitialDisplayedPaymentMethods(visiblePaymentMethods: [String], hiddenPaymentMethods: [String], paymentMethodLayout: PaymentMethodLayout) {
-        var params: [String: Any] = ["payment_method_layout": paymentMethodLayout.rawValue]
+    func logInitialDisplayedPaymentMethods(visiblePaymentMethods: [String], hiddenPaymentMethods: [String]) {
+        var params: [String: Any] = [:]
         if !visiblePaymentMethods.isEmpty {
             params["visible_payment_methods"] = visiblePaymentMethods
         }
@@ -265,7 +264,11 @@ final class PaymentSheetAnalyticsHelper {
         guard let event else {
             return
         }
-        log(event: event, selectedLPM: selectedLPM)
+        var params: [String: Any] = [:]
+        if case .saved(let paymentMethod) = option {
+            params["has_card_art"] = hasCardArt(paymentMethod: paymentMethod)
+        }
+        log(event: event, selectedLPM: selectedLPM, params: params)
     }
 
     func logNewPaymentMethodSelected(paymentMethodTypeIdentifier: String) {
@@ -346,12 +349,17 @@ final class PaymentSheetAnalyticsHelper {
 
     func logConfirmButtonTapped(paymentOption: PaymentOption) {
         let duration = getDuration(for: .formShown)
+        var params: [String: Any] = [:]
+        if case .saved(let paymentMethod, _) = paymentOption {
+            params["has_card_art"] = hasCardArt(paymentMethod: paymentMethod)
+        }
         log(
             event: .paymentSheetConfirmButtonTapped,
             duration: duration,
             selectedLPM: paymentOption.paymentMethodTypeAnalyticsValue,
             linkContext: paymentOption.linkContextAnalyticsValue,
-            linkUI: paymentOption.linkUIAnalyticsValue
+            linkUI: paymentOption.linkUIAnalyticsValue,
+            params: params
         )
     }
 
@@ -410,6 +418,12 @@ final class PaymentSheetAnalyticsHelper {
             }
         }()
         var params: [String: Any] = [:]
+        if case .saved(let paymentMethod, _) = paymentOption {
+            params["is_saved_payment_method"] = true
+            params["has_card_art"] = hasCardArt(paymentMethod: paymentMethod)
+        } else {
+            params["is_saved_payment_method"] = false
+        }
         if case let .new(confirmParams) = paymentOption {
             if let setAsDefault = confirmParams.setAsDefaultPM {
                 params["set_as_default"] = setAsDefault
@@ -492,6 +506,7 @@ final class PaymentSheetAnalyticsHelper {
         additionalParams["payment_method_options_setup_future_usage"] = intent?.isPaymentMethodOptionsSetupFutureUsageSet
         additionalParams["elements_session_config_id"] = elementsSession?.configID
         additionalParams["is_confirmation_tokens"] = intent?.intentConfig?.confirmationTokenConfirmHandler != nil
+        additionalParams["payment_method_orientation"] = paymentMethodOrientation?.rawValue
         if event.shouldLogFcSdkAvailability {
             additionalParams["fc_sdk_availability"] = FinancialConnectionsSDKAvailability.analyticsValue
         }
@@ -524,6 +539,13 @@ extension PaymentSheetAnalyticsHelper {
         }
 
         return Date().roundedTimeIntervalSince(startTime)
+    }
+}
+
+// MARK: - Card art helper
+extension PaymentSheetAnalyticsHelper {
+    func hasCardArt(paymentMethod: STPPaymentMethod) -> Bool {
+        return paymentMethod.card?.cardArt?.artImage?.url != nil
     }
 }
 

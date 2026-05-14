@@ -63,6 +63,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                             height: flowController.configuration.appearance.primaryButton.height,
                             // TODO (iOS 26): Respect cornerRadius = nil
                             cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius,
+                            brand: flowController.configuration.resolvedLinkBrand(elementsSession: flowController.elementsSession),
                             borderColor: flowController.configuration.appearance.colors.componentBorder,
                             action: completion
                         )
@@ -252,7 +253,7 @@ fileprivate extension PaymentSheet.FlowController {
         let elementsSession = STPElementsSession(allResponseFields: [:], sessionID: "", configID: "", orderedPaymentMethodTypes: [], orderedPaymentMethodTypesAndWallets: ["card", "link", "apple_pay"], unactivatedPaymentMethodTypes: [], countryCode: nil, merchantCountryCode: nil, merchantLogoUrl: nil, linkSettings: nil, experimentsData: nil, flags: [:], paymentMethodSpecs: nil, cardBrandChoice: nil, isApplePayEnabled: true, externalPaymentMethods: [], customPaymentMethods: [], passiveCaptchaData: nil, customer: nil)
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 10, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [])
+        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [], paymentMethodOrientation: .vertical)
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
         return PaymentSheet.FlowController(configuration: psConfig, loadResult: loadResult, analyticsHelper: analyticsHelper)
     }

@@ -272,6 +272,7 @@ extension LinkInlineSignupElementSnapshotTests {
 
         let viewModel = LinkInlineSignupViewModel(
             configuration: configuration,
+            brand: .link,
             showCheckbox: showCheckbox,
             accountService: MockAccountService(),
             allowsDefaultOptIn: allowsDefaultOptIn,

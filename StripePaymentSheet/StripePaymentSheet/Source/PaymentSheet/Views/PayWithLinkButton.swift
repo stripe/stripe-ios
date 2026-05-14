@@ -44,6 +44,17 @@ final class PayWithLinkButton: UIControl {
         }
     }
 
+    let brand: LinkBrand
+
+    var primaryLinkLogoImage: UIImage {
+        switch brand {
+        case .link, .unparsable:
+            return Image.link_logo_bw.makeImage(template: false)
+        case .onelink:
+            return Image.onelink_logo_bw.makeImage(template: false)
+        }
+    }
+
     var cornerRadius: CGFloat = ElementsUI.defaultCornerRadius {
         didSet {
             setNeedsLayout()
@@ -109,10 +120,10 @@ final class PayWithLinkButton: UIControl {
         linkView.font = UIFont.systemFont(ofSize: 20, weight: .medium)
             .scaled(withTextStyle: .callout, maximumPointSize: 21)
 
-        let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link)
+        let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link(brand: brand))
 
         // Create the Link logo attachment
-        let linkImage = Image.link_logo_bw.makeImage(template: false)
+        let linkImage = primaryLinkLogoImage
         let linkAttachment = NSTextAttachment(image: linkImage)
 
         let linkLogoRatio = linkImage.size.width / linkImage.size.height
@@ -124,14 +135,19 @@ final class PayWithLinkButton: UIControl {
         let linkY = (linkTextSpacing) * linkLogoHeight
         linkAttachment.bounds = CGRect(x: 0, y: -linkY, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
 
-        // Add a spacer before the Link logo and after the Link logo
-        let range = payWithLinkString.mutableString.range(of: "Link")
-        if range.location != NSNotFound {
-            payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location + range.length)
-            payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location)
+        // Prefer the current brand token, but still swap in the logo if the localized
+        // string falls back to the legacy "Link" copy during rollout.
+        let brandTokenToReplace = [brand.displayName, LinkBrand.link.displayName].first { token in
+            payWithLinkString.mutableString.range(of: token).location != NSNotFound
+        }
+        if let brandTokenToReplace,
+           let range = payWithLinkString.string.range(of: brandTokenToReplace) {
+            let nsRange = NSRange(range, in: payWithLinkString.string)
+            payWithLinkString.insert(Self.makeSpacerString(width: 1), at: nsRange.location + nsRange.length)
+            payWithLinkString.insert(Self.makeSpacerString(width: 1), at: nsRange.location)
 
-            // Add the Link attachment
-            payWithLinkString.replaceOccurrences(of: "Link", with: linkAttachment)
+            // Add the brand attachment
+            payWithLinkString.replaceOccurrences(of: brandTokenToReplace, with: linkAttachment)
         }
 
         linkView.attributedText = payWithLinkString
@@ -151,7 +167,7 @@ final class PayWithLinkButton: UIControl {
 
     private lazy var emailSeparatorView: UIView = Self.makeSeparatorView()
     private lazy var emailStackView: UIStackView = {
-        let logoView = Self.makeLogoView()
+        let logoView = makeLogoView()
         let stackView = UIStackView(arrangedSubviews: [
             logoView,
             emailSeparatorView,
@@ -180,7 +196,7 @@ final class PayWithLinkButton: UIControl {
     }()
 
     private lazy var cardStackView: UIStackView = {
-        let logoView = Self.makeLogoView()
+        let logoView = makeLogoView()
         let stackView = UIStackView(arrangedSubviews: [
             logoView,
             cardBrandSeparatorView,
@@ -214,7 +230,8 @@ final class PayWithLinkButton: UIControl {
         return .noValidAccount
     }
 
-    init() {
+    init(brand: LinkBrand = .link) {
+        self.brand = brand
         super.init(frame: CGRect(origin: .zero, size: Constants.defaultSize))
         isAccessibilityElement = true
         self.linkAccount = LinkAccountContext.shared.account
@@ -260,14 +277,22 @@ private extension PayWithLinkButton {
         return NSAttributedString(attachment: spacerAttachment)
     }
 
-    static func makeLogoView() -> UIImageView {
-        let logoView = UIImageView(image: Image.link_logo_bw.makeImage(template: false))
+    static func logoSize(for image: UIImage) -> CGSize {
+        let height = Constants.logoSize.height
+        let width = ceil(height * (image.size.width / max(image.size.height, 1)))
+        return CGSize(width: width, height: height)
+    }
+
+    func makeLogoView() -> UIImageView {
+        let image = primaryLinkLogoImage
+        let logoSize = Self.logoSize(for: image)
+        let logoView = UIImageView(image: image)
         logoView.translatesAutoresizingMaskIntoConstraints = false
-        logoView.contentMode = .scaleAspectFill
+        logoView.contentMode = .scaleAspectFit
 
         NSLayoutConstraint.activate([
-            logoView.widthAnchor.constraint(equalToConstant: Constants.logoSize.width),
-            logoView.heightAnchor.constraint(equalToConstant: Constants.logoSize.height),
+            logoView.widthAnchor.constraint(equalToConstant: logoSize.width),
+            logoView.heightAnchor.constraint(equalToConstant: logoSize.height),
         ])
 
         return logoView
@@ -429,7 +454,7 @@ private extension PayWithLinkButton {
         }
 
         // To use Xcode SwiftUI Previews, comment out the following `accessibilityLabel` setter:
-        accessibilityLabel = String.Localized.pay_with_link
+        accessibilityLabel = String.Localized.pay_with_link(brand: brand)
 
         switch linkAccountState {
         case .hasCard(let last4, let brand):

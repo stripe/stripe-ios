@@ -39,8 +39,6 @@ import Foundation
     case netBanking
     /// An OXXO payment method.
     @objc(STPPaymentMethodTypeOXXO) case OXXO
-    /// A UPI payment method.
-    case UPI
     /// A PayPal payment method. :nodoc:
     case payPal
     /// An AfterpayClearpay payment method
@@ -98,6 +96,8 @@ import Foundation
     case payPay
     /// A Wero payment method
     case wero
+    /// A Pay by Bank payment method
+    case payByBank
     /// An unknown type.
     case unknown
 
@@ -128,8 +128,6 @@ import Foundation
             return STPLocalizedString("NetBanking", "Payment Method type brand name")
         case .OXXO:
             return STPLocalizedString("OXXO", "Payment Method type brand name")
-        case .UPI:
-            return STPLocalizedString("UPI", "Payment Method type brand name")
         case .payPal:
             return STPLocalizedString("PayPal", "Payment Method type brand name")
         case .afterpayClearpay:
@@ -194,6 +192,8 @@ import Foundation
             return "PayPay"
         case .wero:
             return "Wero"
+        case .payByBank:
+            return "Pay by Bank"
         case .cardPresent,
             .unknown:
             return STPLocalizedString("Unknown", "Default missing source type label")
@@ -233,8 +233,6 @@ import Foundation
             return "netbanking"
         case .OXXO:
             return "oxxo"
-        case .UPI:
-            return "upi"
         case .payPal:
             return "paypal"
         case .afterpayClearpay:
@@ -293,6 +291,8 @@ import Foundation
             return "paypay"
         case .wero:
             return "wero"
+        case .payByBank:
+            return "pay_by_bank"
         }
     }
 

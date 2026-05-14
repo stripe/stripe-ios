@@ -143,7 +143,7 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
     }
 
     func test_confirmButtonStatus_whenSelectedCardIsNotSupported() throws {
-        let sut = try makeSUT(supportedPaymentDetailsTypes: [.bankAccount], linkFundingSources: ["BANK_ACCOUNT"])
+        let sut = try makeSUT(supportedPaymentDetailsTypes: [ParsedEnum(.bankAccount)], linkFundingSources: ["BANK_ACCOUNT"])
         sut.selectedPaymentMethodIndex = LinkStubs.PaymentMethodIndices.card
         XCTAssertEqual(
             sut.confirmButtonStatus,
@@ -159,7 +159,7 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
     }
 
     func test_defaultLogic_whenDefaultCardIsNotSupportedItShouldStillBeSelected() throws {
-        let sut = try makeSUT(supportedPaymentDetailsTypes: [.bankAccount], linkFundingSources: ["BANK_ACCOUNT"])
+        let sut = try makeSUT(supportedPaymentDetailsTypes: [ParsedEnum(.bankAccount)], linkFundingSources: ["BANK_ACCOUNT"])
 
         XCTAssertEqual(
             sut.selectedPaymentMethodIndex,
@@ -171,7 +171,7 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
     func test_defaultLogic_whenNotSupportedCardIsOnlyOption() throws {
         let paymentMethods = Array(LinkStubs.paymentMethods()[0..<1])
         let sut = try makeSUT(paymentMethods: paymentMethods,
-                              supportedPaymentDetailsTypes: [.bankAccount],
+                              supportedPaymentDetailsTypes: [ParsedEnum(.bankAccount)],
                               linkFundingSources: ["BANK_ACCOUNT"])
         XCTAssertEqual(
             sut.selectedPaymentMethodIndex,
@@ -180,8 +180,18 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
         )
     }
 
+    func test_supportedPaymentMethodTypes_whenFilterIsNil_usesAllCasesAtIntersection() throws {
+        let sut = try makeSUT(
+            supportedPaymentDetailsTypes: [ParsedEnum(.bankAccount)],
+            supportedPaymentMethodTypes: nil,
+            linkFundingSources: ["BANK_ACCOUNT"]
+        )
+
+        XCTAssertEqual(sut.supportedPaymentMethodTypes, [ParsedEnum(.bankAccount)])
+    }
+
     func test_cardBrandFiltering_passThroughEnabled() throws {
-        let sut = try makeSUT(supportedPaymentDetailsTypes: [.card],
+        let sut = try makeSUT(supportedPaymentDetailsTypes: [ParsedEnum(.card)],
                               linkFundingSources: ["CARD"],
                               cardBrandAcceptance: .disallowed(brands: [.visa]),
                               linkPassthroughModeEnabled: true)
@@ -203,7 +213,7 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
     }
 
     func test_cardBrandFiltering_ignoredWhenPassThroughDisabled() throws {
-        let sut = try makeSUT(supportedPaymentDetailsTypes: [.card],
+        let sut = try makeSUT(supportedPaymentDetailsTypes: [ParsedEnum(.card)],
                               linkFundingSources: ["CARD"],
                               cardBrandAcceptance: .disallowed(brands: [.visa]),
                               linkPassthroughModeEnabled: false)
@@ -228,7 +238,7 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
     func test_cardFundingFiltering_debitOnly() throws {
         let sut = try makeSUT(
-            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             linkFundingSources: ["CARD", "BANK_ACCOUNT"],
             allowedCardFundingTypes: .debit
         )
@@ -260,7 +270,7 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
     func test_cardFundingFiltering_creditOnly() throws {
         let sut = try makeSUT(
-            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             linkFundingSources: ["CARD", "BANK_ACCOUNT"],
             allowedCardFundingTypes: .credit
         )
@@ -280,7 +290,7 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
     func test_cardFundingFiltering_prepaidOnly() throws {
         let sut = try makeSUT(
-            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             linkFundingSources: ["CARD", "BANK_ACCOUNT"],
             allowedCardFundingTypes: .prepaid
         )
@@ -306,7 +316,7 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
     func test_cardFundingFiltering_debitAndCredit() throws {
         let sut = try makeSUT(
-            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             linkFundingSources: ["CARD", "BANK_ACCOUNT"],
             allowedCardFundingTypes: [.debit, .credit]
         )
@@ -332,7 +342,7 @@ class PayWithLinkViewController_WalletViewModelTests: XCTestCase {
 
     func test_cardFundingFiltering_allFundingTypes() throws {
         let sut = try makeSUT(
-            supportedPaymentDetailsTypes: [.card, .bankAccount],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
             linkFundingSources: ["CARD", "BANK_ACCOUNT"],
             allowedCardFundingTypes: .all
         )
@@ -367,7 +377,8 @@ extension PayWithLinkViewController_WalletViewModelTests {
 
     func makeSUT(
         paymentMethods: [ConsumerPaymentDetails] = LinkStubs.paymentMethods(),
-        supportedPaymentDetailsTypes: Set<ConsumerPaymentDetails.DetailsType> = [.card, .bankAccount],
+        supportedPaymentDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [ParsedEnum(.card), ParsedEnum(.bankAccount)],
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
         linkFundingSources: [String] = ["CARD"],
         cardBrandAcceptance: PaymentSheet.CardBrandAcceptance = .all,
         allowedCardFundingTypes: PaymentSheet.CardFundingType = .all,
@@ -410,11 +421,13 @@ extension PayWithLinkViewController_WalletViewModelTests {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: paymentSheetConfiguration,
+                linkBrand: .link,
                 shouldOfferApplePay: false,
                 shouldFinishOnClose: false,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
                 initiallySelectedPaymentDetailsID: nil,
                 callToAction: nil,
+                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 analyticsHelper: ._testValue()
             ),
             paymentMethods: paymentMethods

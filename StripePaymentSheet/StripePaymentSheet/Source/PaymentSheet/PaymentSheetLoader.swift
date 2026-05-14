@@ -18,6 +18,24 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+        let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+        let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
+
+        init(
+            intent: Intent,
+            elementsSession: STPElementsSession,
+            savedPaymentMethods: [STPPaymentMethod],
+            paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+            paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+            paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
+        ) {
+            self.intent = intent
+            self.elementsSession = elementsSession
+            self.savedPaymentMethods = savedPaymentMethods
+            self.paymentMethodTypes = paymentMethodTypes
+            self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+            self.paymentMethodOrientation = paymentMethodOrientation
+        }
     }
 
     enum IntegrationShape {
@@ -41,12 +59,12 @@ final class PaymentSheetLoader {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
         isUpdate: Bool = false,
-        completion: @escaping (Result<LoadResult, Error>) -> Void
+        completion: @escaping (Result<(LoadResult, ConfirmationChallenge), Error>) -> Void
     ) {
         Task { @MainActor in
             do {
-                let loadResult = try await load(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, integrationShape: integrationShape, isUpdate: isUpdate)
-                completion(.success(loadResult))
+                let (loadResult, confirmationChallenge) = try await load(mode: mode, configuration: configuration, analyticsHelper: analyticsHelper, integrationShape: integrationShape, isUpdate: isUpdate)
+                completion(.success((loadResult, confirmationChallenge)))
             } catch {
                 completion(.failure(error))
             }
@@ -62,7 +80,7 @@ final class PaymentSheetLoader {
         analyticsHelper: PaymentSheetAnalyticsHelper,
         integrationShape: IntegrationShape,
         isUpdate: Bool = false
-    ) async throws -> LoadResult {
+    ) async throws -> (LoadResult, ConfirmationChallenge) {
         let loadTimings: LoadTimings = .init(loadingStartDate: Date())
         loadTimings.logStart("logLoadStarted")
         analyticsHelper.logLoadStarted(isUpdate: isUpdate)
@@ -197,10 +215,15 @@ final class PaymentSheetLoader {
             let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
             let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
-            let loadResult = LoadResult(
+            let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(elementsSession: elementsSession)
+            paymentMethodMessagingPromotionsHelper.prefetchIfNeeded(
                 intent: intent,
+                configuration: configuration,
+                paymentMethodTypes: paymentMethodTypes
+            )
+
+            let paymentMethodOrientation = configuration.resolveLayout(
                 elementsSession: elementsSession,
-                savedPaymentMethods: filteredSavedPaymentMethods,
                 paymentMethodTypes: paymentMethodTypes
             )
 
@@ -214,7 +237,41 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
+
+            // Log card art experiment exposure
+            if let cardArtExperiment = CardArtExperiment.create(
+                elementsSession: elementsSession,
+                configuration: configuration,
+                analyticsHelper: analyticsHelper,
+                paymentMethodTypes: paymentMethodTypes,
+                savedPaymentMethods: filteredSavedPaymentMethods,
+                paymentMethodOrientation: paymentMethodOrientation,
+                selectedPaymentOption: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex)
+            ) {
+                analyticsHelper.logExposure(experiment: cardArtExperiment)
+            }
+
+            // Temporary band-aid for pre-loading card art: fire-and-forget fetch to warm the in-meory cache for PS.FC
+            // and embedded PaymentOptionDisplayData APIs.
+            // TODO: Revisit overall pre-loading approach to make this work for other payment methods
+            if let defaultPaymentMethod = paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
+               case .saved(let stpPaymentMethod) = defaultPaymentMethod {
+                stpPaymentMethod.preloadCardArtImage()
+            }
             loadTimings.logEnd("makeViewModels")
+
+            let loadResult = LoadResult(
+                intent: intent,
+                elementsSession: elementsSession,
+                savedPaymentMethods: filteredSavedPaymentMethods,
+                paymentMethodTypes: paymentMethodTypes,
+                paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+                paymentMethodOrientation: paymentMethodOrientation
+            )
+            let confirmationChallenge = ConfirmationChallenge(
+                elementsSession: elementsSession,
+                stripeAttest: configuration.apiClient.stripeAttest
+            )
 
             // Send load finished analytic
             // ⚠️ Important: Log load succeeded at the very end, to ensure it measures the entire amount of time this method took.
@@ -223,21 +280,22 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                 orderedPaymentMethodTypes: paymentMethodTypes,
+                paymentMethodOrientation: loadResult.paymentMethodOrientation,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate,
-                hasCardArt: hasCardArt(savedPaymentMethods: filteredSavedPaymentMethods, appearance: configuration.appearance),
+                hasCardArt: hasCardArt(savedPaymentMethods: filteredSavedPaymentMethods),
                 didLinkLookupTimeOut: didLinkLookupTimeOut
             )
-            return loadResult
+            return (loadResult, confirmationChallenge)
         } catch {
             analyticsHelper.logLoadFailed(error: error, loadTimings: loadTimings, isUpdate: isUpdate)
             throw error
         }
     }
 
-    /// Returns `true` if the card art feature is enabled and at least one saved card has a card art image URL.
-    static func hasCardArt(savedPaymentMethods: [STPPaymentMethod], appearance: PaymentSheet.Appearance) -> Bool {
-        appearance.cardArtEnabled && savedPaymentMethods.contains { $0.type == .card && $0.card?.cardArt?.artImage?.url != nil }
+    /// Returns `true` if at least one saved card has a card art image URL.
+    static func hasCardArt(savedPaymentMethods: [STPPaymentMethod]) -> Bool {
+        savedPaymentMethods.contains { $0.type == .card && $0.card?.cardArt?.artImage?.url != nil }
     }
 
     // MARK: - Helper methods that load things

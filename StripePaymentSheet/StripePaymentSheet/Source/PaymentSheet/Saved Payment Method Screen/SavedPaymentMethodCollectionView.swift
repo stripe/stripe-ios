@@ -112,6 +112,10 @@ extension SavedPaymentMethodCollectionView {
             return label
         }()
 
+        lazy var paymentMethodLogoHeightConstraint: NSLayoutConstraint = {
+             paymentMethodLogo.heightAnchor.constraint(equalToConstant: paymentMethodLogoSize.height)
+        }()
+
         fileprivate var viewModel: SavedPaymentOptionsViewController.Selection?
 
         var isRemovingPaymentMethods: Bool = false {
@@ -145,7 +149,7 @@ extension SavedPaymentMethodCollectionView {
         var allowsSetAsDefaultPM: Bool = false
         var needsVerticalPaddingForBadge: Bool = false
         var showDefaultPMBadge: Bool = false
-        var cardArtEnabled: Bool = false
+        var linkBrand: LinkBrand = .link
 
         /// Indicates whether the cell for a saved payment method should display the edit icon.
         /// True if payment methods can be removed or edited
@@ -205,8 +209,7 @@ extension SavedPaymentMethodCollectionView {
                     equalTo: selectableRectangle.centerYAnchor),
                 paymentMethodLogo.widthAnchor.constraint(
                     equalToConstant: paymentMethodLogoSize.width),
-                paymentMethodLogo.heightAnchor.constraint(
-                    equalToConstant: paymentMethodLogoSize.height),
+                paymentMethodLogoHeightConstraint,
 
                 plus.centerXAnchor.constraint(equalTo: selectableRectangle.centerXAnchor),
                 plus.centerYAnchor.constraint(equalTo: selectableRectangle.centerYAnchor),
@@ -262,7 +265,7 @@ extension SavedPaymentMethodCollectionView {
         }()
 
         // MARK: - Internal Methods
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false, cardArtEnabled: Bool = false) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false, linkBrand: LinkBrand = .link) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             selectableRectangle.isHidden = false
@@ -273,7 +276,7 @@ extension SavedPaymentMethodCollectionView {
             self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
             self.needsVerticalPaddingForBadge = needsVerticalPaddingForBadge
             self.showDefaultPMBadge = showDefaultPMBadge
-            self.cardArtEnabled = cardArtEnabled
+            self.linkBrand = linkBrand
             update()
         }
 
@@ -349,16 +352,38 @@ extension SavedPaymentMethodCollectionView {
                         } else if let linkPaymentDetails = paymentMethod.linkPaymentDetails {
                             label.text = linkPaymentDetails.formattedLast4
                         } else {
-                            label.text = paymentMethod.paymentSheetLabel
+                            label.text = paymentMethod.paymentSheetLabel(brand: linkBrand)
                         }
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
-                        let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
-                        if cardArtEnabled {
-                            paymentMethodLogo.setImage(with: paymentMethod.cardArtCDNURL(height: 40), fallbackImage: paymentMethodCellImage)
+                        let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(
+                            overrideUserInterfaceStyle: overrideUserInterfaceStyle,
+                            iconStyle: appearance.iconStyle,
+                            brand: linkBrand
+                        )
+                        if let cardArtURL = paymentMethod.cardArtCDNURL() {
+                            if paymentMethodLogo.tag != cardArtURL.hashValue {
+                                paymentMethodLogo.tag = cardArtURL.hashValue
+                                paymentMethodLogo.image = STPImageLibrary.cardBrandChoiceImage()
+                                paymentMethodLogoHeightConstraint.constant = CGFloat(STPPaymentMethod.cardArtHeight)
+                                paymentMethodLogo.addShimmer()
+                            }
+                            Task {
+                                let image = try? await DownloadManager.sharedManager.downloadImage(url: cardArtURL)
+                                guard paymentMethodLogo.tag == cardArtURL.hashValue else { return }
+                                paymentMethodLogo.removeShimmer()
+                                if let image {
+                                    paymentMethodLogo.image = image.roundedWithBorder(radius: 3)
+                                    paymentMethodLogoHeightConstraint.constant = CGFloat(STPPaymentMethod.cardArtHeight)
+                                } else {
+                                    paymentMethodLogo.image = paymentMethodCellImage
+                                    paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
+                                }
+                            }
                         } else {
                             paymentMethodLogo.image = paymentMethodCellImage
+                            paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         }
                     case .applePay:
                         // TODO (cleanup) - get this from PaymentOptionDisplayData?
@@ -366,13 +391,19 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.image = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        let paymentMethodLogoImage = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogo.image = paymentMethodLogoImage
+                        paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
+                        paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                     case .link:
-                        label.text = STPPaymentMethodType.link.displayName
+                        label.text = linkBrand.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        paymentMethodLogo.image = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        let paymentMethodLogoImage = PaymentOption.link(option: .wallet(brand: linkBrand)).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogo.image = paymentMethodLogoImage
+                        paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
+                        paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         paymentMethodLogo.tintColor = UIColor.linkIconBrand.resolvedContrastingColor(
                             forBackgroundColor: appearance.colors.componentBackground
                         )
@@ -384,6 +415,7 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityLabel = String.Localized.add_new_payment_method
                         selectableRectangle.accessibilityIdentifier = "+ Add"
                         paymentMethodLogo.isHidden = true
+                        paymentMethodLogo.tag = 0
                         plus.isHidden = false
                         plus.setNeedsDisplay()
                     }

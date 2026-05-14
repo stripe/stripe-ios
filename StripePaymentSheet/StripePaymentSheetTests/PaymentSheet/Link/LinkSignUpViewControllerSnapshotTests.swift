@@ -61,7 +61,7 @@ extension LinkSignUpViewControllerSnapshotTests {
 
     func makeSUT(email: String?, suggestedEmail: String? = nil) throws -> LinkSignUpViewController {
         let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession()
-        let session = email == nil ? LinkStubs.consumerSession(supportedPaymentDetailsTypes: [.card]) : nil
+        let session = email == nil ? LinkStubs.consumerSession(supportedPaymentDetailsTypes: [ParsedEnum(.card)]) : nil
 
         let linkAccount = PaymentSheetLinkAccount(
             email: email ?? "",
@@ -76,6 +76,7 @@ extension LinkSignUpViewControllerSnapshotTests {
         return LinkSignUpViewController(
             accountService: LinkAccountService(elementsSession: elementsSession),
             linkAccount: linkAccount,
+            brand: .link,
             defaultBillingDetails: nil
         )
     }

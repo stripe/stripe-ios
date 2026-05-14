@@ -74,6 +74,7 @@ extension PaymentMethodMessagingElement {
             let inlinePartnerPromotion: Message?
             let learnMore: Message?
             let legalDisclosure: Message?
+            let summary: Message?
         }
 
         struct Image: Decodable {
@@ -95,6 +96,7 @@ extension PaymentMethodMessagingElement {
         }
 
         struct PaymentPlanGroup: Decodable {
+            let type: String
             let content: Content
         }
     }
