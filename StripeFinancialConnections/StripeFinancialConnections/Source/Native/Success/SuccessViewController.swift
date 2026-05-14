@@ -18,6 +18,9 @@ final class SuccessViewController: UIViewController {
 
     private let dataSource: SuccessDataSource
     weak var delegate: SuccessViewControllerDelegate?
+    private var linkBrand: LinkBrand {
+        PresentationManager.shared.configuration.linkBrand ?? dataSource.manifest.brand ?? .link
+    }
 
     init(dataSource: SuccessDataSource) {
         self.dataSource = dataSource
@@ -47,7 +50,7 @@ final class SuccessViewController: UIViewController {
                 // manual entry has "0" linked accounts count
                 isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
                 showSaveToLinkFailedNotice: showSaveToLinkFailedNotice,
-                brand: dataSource.manifest.brand ?? .link
+                brand: linkBrand
             ),
             appearance: dataSource.manifest.appearance
         )
