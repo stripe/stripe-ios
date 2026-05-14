@@ -123,9 +123,9 @@ extension PaymentSheetFormFactory {
         case .country(let spec):
             return makeCountry(countryCodes: spec.allowedCountryCodes, apiPath: spec.apiPath?["v1"])
         case .affirm_header:
-            return SubtitleElement(view: AffirmCopyLabel(theme: theme), isHorizontalMode: paymentMethodOrientation == .horizontal)
+            return makeAffirmHeader()
         case .klarna_header:
-            return makeCopyLabel(text: .Localized.buy_now_or_pay_later_with_klarna)
+            return makeKlarnaHeader()
         case .klarna_country(let spec):
             return makeKlarnaCountry(apiPath: spec.apiPath?["v1"])!
         case .au_becs_bsb_number(let spec):
