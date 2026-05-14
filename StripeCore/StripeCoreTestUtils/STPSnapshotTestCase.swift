@@ -17,8 +17,8 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
 
     open override func setUp() {
         super.setUp()
+        recordMode = true
         let deviceModel = ProcessInfo.processInfo.environment["SIMULATOR_MODEL_IDENTIFIER"]!
-        recordMode = ProcessInfo.processInfo.environment["STP_RECORD_SNAPSHOTS"] != nil
         guard deviceModel == TEST_DEVICE_MODEL,
               [TEST_DEVICE_OS_VERSION, TEST_DEVICE_OS_VERSION_26_1].contains(UIDevice.current.systemVersion)
         else {
@@ -26,6 +26,17 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
             XCTFail("You must run snapshot tests on \(TEST_DEVICE_MODEL) running \(TEST_DEVICE_OS_VERSION) or \(TEST_DEVICE_OS_VERSION_26_1). You are running these tests on a \(deviceModel) on \(UIDevice.current.systemVersion).")
             return
         }
+    }
+
+    open override func getReferenceImageDirectory(withDefault dir: String?) -> String {
+        return ProcessInfo.processInfo.environment["SNAPSHOT_RECORD_DIR"] ?? "/tmp/snapshot-records"
+    }
+
+    open override func record(_ issue: XCTIssue) {
+        if recordMode && issue.compactDescription.contains("record mode") {
+            return
+        }
+        super.record(issue)
     }
 
     var isIOS26_1: Bool {

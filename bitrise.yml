@@ -29,6 +29,7 @@ pipelines:
     workflows:
       lint-tests:
         abort_on_fail: true
+      update-snapshots: {}
       framework-tests: {}
       framework-tests-ios-26: {}
       test-builds-xcode-16: {}
@@ -75,6 +76,20 @@ pipelines:
       deploy-dry-run: {}
       pod-lint-tests: {}
 workflows:
+  update-snapshots:
+    steps:
+    - script@1:
+        title: Install ImageMagick
+        inputs:
+        - content: brew install imagemagick
+    - script@1:
+        title: Record and update snapshots
+        inputs:
+        - content: ruby ci_scripts/update_snapshots.rb
+    before_run:
+    - prep_all
+    envs:
+    - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
   check-docs:
     steps:
     - script@1:
