@@ -17,6 +17,8 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthenticationContext {
+    var presentingVC: UIViewController = UIViewController()
+
     func testCallConfirmAfterpay_Redirect_thenCanceled() {
         let nextActionData = """
               {
@@ -476,7 +478,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                 "type": "use_stripe_sdk",
                 "use_stripe_sdk": {
                   "type": "intent_confirmation_challenge",
-                  "stripe_js": {"captcha_vendor_name": "hcaptcha"}
+                  "stripe_js": {"captcha_vendor_name": "arkose"}
                 }
               }
             """
@@ -517,6 +519,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         params.paymentMethodParams = STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)
 
         let mockPresenter = StubbedCaptchaPresentingViewController()
+        presentingVC = mockPresenter
         let presentedExpectation = expectation(description: "IntentConfirmationChallengeViewController presented")
         mockPresenter.onPresent = { vc in
             if #available(iOS 14.0, *), vc is IntentConfirmationChallengeViewController {
@@ -524,11 +527,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             }
         }
 
-        paymentHandler.confirmPaymentIntent(
-            params: params,
-            authenticationContext: StubbedCaptchaAuthContext(presenter: mockPresenter)
-        ) { _, _, _ in }
-
+        paymentHandler.confirmPaymentIntent(params: params, authenticationContext: self) { _, _, _ in }
         wait(for: [presentedExpectation], timeout: 5.0)
     }
 
@@ -640,7 +639,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
 }
 extension STPPaymentHandlerStubbedMockedFilesTests {
     func authenticationPresentingViewController() -> UIViewController {
-        return UIViewController()
+        return presentingVC
     }
 }
 
@@ -654,18 +653,6 @@ private class StubbedCaptchaPresentingViewController: UIViewController {
     ) {
         onPresent?(viewControllerToPresent)
         completion?()
-    }
-}
-
-private class StubbedCaptchaAuthContext: NSObject, STPAuthenticationContext {
-    private let presenter: UIViewController
-
-    init(presenter: UIViewController) {
-        self.presenter = presenter
-    }
-
-    func authenticationPresentingViewController() -> UIViewController {
-        return presenter
     }
 }
 
