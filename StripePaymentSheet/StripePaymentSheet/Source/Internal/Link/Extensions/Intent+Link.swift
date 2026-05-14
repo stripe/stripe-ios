@@ -42,16 +42,13 @@ extension STPElementsSession {
         for linkAccount: PaymentSheetLinkAccount,
         savedPaymentMethods: [STPPaymentMethod]
     ) -> Bool {
-        let shouldSuppressForCustomerSessionSavedPaymentMethods =
-            !savedPaymentMethods.isEmpty
-
-        return self.supportsLink &&
+        self.supportsLink &&
         linkAccount.sessionState == .requiresVerification &&
         !linkAccount.hasStartedSMSVerification &&
         linkAccount.useMobileEndpoints &&
         self.linkSettings?.suppress2FAModal != true &&
         linkAccount.currentSession?.mobileFallbackWebviewParams?.webviewRequirementType != .required &&
-        !shouldSuppressForCustomerSessionSavedPaymentMethods
+        savedPaymentMethods.isEmpty
     }
 
     var linkFlags: [String: Bool] {
