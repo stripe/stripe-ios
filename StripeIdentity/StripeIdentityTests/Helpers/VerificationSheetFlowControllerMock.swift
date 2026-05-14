@@ -31,6 +31,7 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     )
     private(set) var transitionedWithStaticContentResult: Result<StripeAPI.VerificationPage, Error>?
     private(set) var transitionedWithUpdateDataResult: Result<StripeAPI.VerificationPageData, Error>?
+    private(set) var didTransitionToFallbackUrlScreen = false
 
     private(set) var replacedWithViewController: UIViewController?
 
@@ -84,6 +85,13 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
         sheetController: StripeIdentity.VerificationSheetControllerProtocol
     ) {
         // no-op
+    }
+
+    func transitionToFallbackUrlScreen(
+        staticContentResult: Result<StripeAPI.VerificationPage, Error>,
+        sheetController: VerificationSheetControllerProtocol
+    ) {
+        didTransitionToFallbackUrlScreen = true
     }
 
     func transitionToErrorScreen(

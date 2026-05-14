@@ -118,6 +118,17 @@ final class SelfieScanningView: UIView {
 
         let state: State
         let instructionalText: String
+        let havingTroubleHandler: (() -> Void)?
+
+        init(
+            state: State,
+            instructionalText: String,
+            havingTroubleHandler: (() -> Void)? = nil
+        ) {
+            self.state = state
+            self.instructionalText = instructionalText
+            self.havingTroubleHandler = havingTroubleHandler
+        }
 
         var instructionalLabelViewModel: BottomAlignedLabel.ViewModel {
             return .init(
@@ -149,7 +160,12 @@ final class SelfieScanningView: UIView {
         label.adjustsFontForContentSizeCategory = true
         label.isAccessibilityElement = true
         label.accessibilityTraits = .link
+        label.isUserInteractionEnabled = true
         label.isHidden = true
+        label.addGestureRecognizer(UITapGestureRecognizer(
+            target: self,
+            action: #selector(didTapHavingTrouble)
+        ))
         return label
     }()
 
@@ -272,6 +288,9 @@ final class SelfieScanningView: UIView {
     /// Called when the user taps on retake selfie button
     private var retakeSelfieHandler: (() -> Void)?
 
+    /// Called when the user taps on the "Having Trouble?" link
+    private var havingTroubleHandler: (() -> Void)?
+
     // MARK: Init
 
     init() {
@@ -292,6 +311,7 @@ final class SelfieScanningView: UIView {
     func configure(with viewModel: ViewModel, sheetController: VerificationSheetControllerProtocol?) {
 
         instructionLabelView.configure(from: viewModel.instructionalLabelViewModel)
+        havingTroubleHandler = viewModel.havingTroubleHandler
 
         let isCurrentlyShowingScanned = !scannedImageScrollView.isHidden
 
@@ -311,13 +331,13 @@ final class SelfieScanningView: UIView {
             consentCheckboxButton.isHidden = true
             retakeSelfieStack.isHidden = true
             previewContainerView.isHidden = false
-            havingTroubleLabel.isHidden = false
+            havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
 
         case .videoPreview(let cameraSession, let showFlashAnimation, let statusText):
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
             previewContainerView.isHidden = false
-            havingTroubleLabel.isHidden = false
+            havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
             if let statusText {
@@ -581,6 +601,10 @@ extension SelfieScanningView {
 
     @objc fileprivate func didTapRetakeSelfie() {
         retakeSelfieHandler?()
+    }
+
+    @objc fileprivate func didTapHavingTrouble() {
+        havingTroubleHandler?()
     }
 }
 

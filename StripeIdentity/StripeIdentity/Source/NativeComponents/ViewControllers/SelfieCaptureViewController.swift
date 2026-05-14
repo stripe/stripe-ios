@@ -116,7 +116,10 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
             return .scan(
                 .init(
                     state: .blank,
-                    instructionalText: SelfieCaptureViewController.initialInstructionText
+                    instructionalText: SelfieCaptureViewController.initialInstructionText,
+                    havingTroubleHandler: { [weak self] in
+                        self?.sheetController?.transitionToFallbackUrl()
+                    }
                 )
             )
         case .scanning(_, let collectedSamples):
@@ -130,7 +133,10 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                     ),
                     instructionalText: collectedSamples.isEmpty
                         ? SelfieCaptureViewController.initialInstructionText
-                        : SelfieCaptureViewController.capturingInstructionText
+                        : SelfieCaptureViewController.capturingInstructionText,
+                    havingTroubleHandler: { [weak self] in
+                        self?.sheetController?.transitionToFallbackUrl()
+                    }
                 )
             )
         case .scanned(_, let faceCaptureData):

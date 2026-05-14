@@ -59,6 +59,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     var transitionedToSelfieCapture: Bool = false
     var transitionedToSelfieCaptureTrainingConsent: Bool?
     var transitionedToDocumentCapture: Bool = false
+    var transitionedToFallbackUrl: Bool = false
 
     var completeOption: CompleteOptionView.CompleteOption?
 
@@ -200,6 +201,10 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
 
     func transitionToDocumentCapture() {
         self.transitionedToDocumentCapture = true
+    }
+
+    func transitionToFallbackUrl() {
+        self.transitionedToFallbackUrl = true
     }
 
 }
