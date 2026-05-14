@@ -478,7 +478,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
                 "type": "use_stripe_sdk",
                 "use_stripe_sdk": {
                   "type": "intent_confirmation_challenge",
-                  "stripe_js": {"captcha_vendor_name": "hcaptcha"}
+                  "stripe_js": {"captcha_vendor_name": "arkose"}
                 }
               }
             """
