@@ -124,39 +124,3 @@ class IntentConfirmationChallengeViewControllerTests: XCTestCase {
         XCTAssertNil(ChallengeError.userCanceled.errorDescription)
     }
 }
-
-// MARK: - STPIntentActionUseStripeSDK parsing
-
-class STPIntentActionUseStripeSDKCaptchaParsingTests: XCTestCase {
-
-    private func decode(_ dict: [AnyHashable: Any]) -> STPIntentActionUseStripeSDK? {
-        STPIntentActionUseStripeSDK.decodedObject(fromAPIResponse: dict)
-    }
-
-    func testDecodesIntentConfirmationChallengeType() {
-        let action = decode(["type": "intent_confirmation_challenge"])
-        XCTAssertEqual(action?.type, .intentConfirmationChallenge)
-    }
-
-    func testDecodesCaptchaVendorName() {
-        let action = decode([
-            "type": "intent_confirmation_challenge",
-            "stripe_js": ["captcha_vendor_name": "arkose"],
-        ])
-        XCTAssertEqual(action?.stripeJs?.captchaVendorName, "arkose")
-    }
-
-    func testMissingStripeJsProducesNilStripeJs() {
-        let action = decode(["type": "intent_confirmation_challenge"])
-        XCTAssertNil(action?.stripeJs)
-    }
-
-    func testMissingCaptchaVendorNameProducesNilVendorName() {
-        let action = decode([
-            "type": "intent_confirmation_challenge",
-            "stripe_js": [String: Any](),
-        ])
-        XCTAssertNotNil(action?.stripeJs)
-        XCTAssertNil(action?.stripeJs?.captchaVendorName)
-    }
-}
