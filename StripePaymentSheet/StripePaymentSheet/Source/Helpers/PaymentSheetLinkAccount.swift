@@ -25,6 +25,8 @@ struct LinkPMDisplayDetails {
 }
 
 @_spi(STP) public class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
+    @_spi(STP) public static var forcedConsumerLinkBrandForTesting: LinkBrand?
+
     @_spi(STP) public enum SessionState: String {
         case requiresSignUp
         case requiresVerification
@@ -83,7 +85,13 @@ struct LinkPMDisplayDetails {
     private let initialLinkBrand: LinkBrand?
 
     var linkBrand: LinkBrand? {
-        currentSession?.linkBrand ?? initialLinkBrand
+        guard currentSession != nil else {
+            return initialLinkBrand
+        }
+        guard sessionState == .verified else {
+            return initialLinkBrand
+        }
+        return Self.forcedConsumerLinkBrandForTesting ?? currentSession?.linkBrand ?? initialLinkBrand
     }
 
     var paymentSheetLinkAccountDelegate: PaymentSheetLinkAccountDelegate?

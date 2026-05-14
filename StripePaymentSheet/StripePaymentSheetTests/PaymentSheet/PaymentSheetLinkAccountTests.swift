@@ -18,6 +18,10 @@ import OHHTTPStubsSwift
 @testable@_spi(STP) import StripePaymentsUI
 
 final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
+    override func tearDown() {
+        PaymentSheetLinkAccount.forcedConsumerLinkBrandForTesting = nil
+        super.tearDown()
+    }
 
     func testMakePaymentMethodParams() {
         let sut = makeSUT()
@@ -176,7 +180,16 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
     }
 
     func testLinkBrand_prefersSessionBrandOverInitialBrand() {
-        let session = LinkStubs.consumerSession()
+        let session = ConsumerSession(
+            clientSecret: "client_secret",
+            emailAddress: "user@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: "(555) 555-5555",
+            phoneNumberCountry: "US",
+            verificationSessions: [.init(type: .sms, state: .verified)],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
+            mobileFallbackWebviewParams: nil
+        )
         session.linkBrand = .onelink
 
         let sut = PaymentSheetLinkAccount(
@@ -191,6 +204,62 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         )
 
         XCTAssertEqual(sut.linkBrand, .onelink)
+    }
+
+    func testLinkBrand_forceOnelinkConsumerOnlyAppliesAfterConsumerSessionExists() {
+        PaymentSheetLinkAccount.forcedConsumerLinkBrandForTesting = .onelink
+
+        let signedOutAccount = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: nil,
+            publishableKey: nil,
+            linkBrand: .link,
+            displayablePaymentDetails: nil,
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        XCTAssertEqual(signedOutAccount.linkBrand, .link)
+
+        let unverifiedSession = LinkStubs.consumerSession()
+        unverifiedSession.linkBrand = .link
+        let unverifiedAccount = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: unverifiedSession,
+            publishableKey: nil,
+            linkBrand: .link,
+            displayablePaymentDetails: nil,
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        XCTAssertEqual(unverifiedAccount.linkBrand, .link)
+
+        let verifiedSession = ConsumerSession(
+            clientSecret: "client_secret",
+            emailAddress: "user@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: "(555) 555-5555",
+            phoneNumberCountry: "US",
+            verificationSessions: [.init(type: .sms, state: .verified)],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
+            mobileFallbackWebviewParams: nil
+        )
+        verifiedSession.linkBrand = .link
+        let verifiedAccount = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: verifiedSession,
+            publishableKey: nil,
+            linkBrand: .link,
+            displayablePaymentDetails: nil,
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        XCTAssertEqual(verifiedAccount.linkBrand, .onelink)
     }
 }
 

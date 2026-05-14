@@ -136,7 +136,7 @@ import UIKit
     private var currentTaxRate: (String, Double)?
 
     var linkConfiguration: PaymentSheet.LinkConfiguration {
-        let brand: LinkBrand? = settings.linkBrand == .onelink ? .onelink : nil
+        let brand: LinkBrand? = settings.forceOnelink == .on ? .onelink : nil
 
         switch settings.linkDisplay {
         case .automatic:
@@ -645,6 +645,7 @@ import UIKit
         self.settings = settings
         self.appearance = appearance
         self.currentlyRenderedSettings = .defaultValues()
+        updateForcedConsumerLinkBrand(settings)
 
         $settings.removeDuplicates().sink { [weak self] newValue in
             if newValue.autoreload == .on {
@@ -668,6 +669,8 @@ import UIKit
 
             let enableFcLite = newValue.fcLiteEnabled == .on
             FinancialConnectionsSDKAvailability.localFcLiteOverride = enableFcLite
+
+            self?.updateForcedConsumerLinkBrand(newValue)
         }.store(in: &subscribers)
 
         // Listen for analytics
@@ -679,6 +682,11 @@ import UIKit
         if let v = self.rootViewController.view.window!.ambiguousView() {
             print(v)
         }
+    }
+
+    private func updateForcedConsumerLinkBrand(_ settings: PaymentSheetTestPlaygroundSettings) {
+        PaymentSheetLinkAccount.forcedConsumerLinkBrandForTesting =
+            settings.forceOnelinkConsumer == .on ? .onelink : nil
     }
 
     func buildPaymentSheet() {

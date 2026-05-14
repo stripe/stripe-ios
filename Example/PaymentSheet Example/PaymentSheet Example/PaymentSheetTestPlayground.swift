@@ -53,7 +53,8 @@ struct PaymentSheetTestPlayground: View {
             }
             SearchableSettingView(setting: $playgroundController.settings.linkPassthroughMode, searchText: searchText)
             SearchableSettingView(setting: $playgroundController.settings.linkDisplay, searchText: searchText)
-            SearchableSettingView(setting: $playgroundController.settings.linkBrand, searchText: searchText)
+            SearchableSettingView(setting: $playgroundController.settings.forceOnelink, searchText: searchText)
+            SearchableSettingView(setting: $playgroundController.settings.forceOnelinkConsumer, searchText: searchText)
         }
         SearchableSettingView(setting: $playgroundController.settings.userOverrideCountry, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.externalPaymentMethods, searchText: searchText)
