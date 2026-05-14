@@ -82,7 +82,7 @@ workflows:
     - script@1:
         title: Record and update snapshots
         inputs:
-        - content: ruby ci_scripts/update_snapshots.rb
+        - content: ruby ci_scripts/record_snapshots.rb --commit
     - deploy-to-bitrise-io@2: {}
     - script@1:
         title: Push snapshot changes

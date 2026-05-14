@@ -1,13 +1,15 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# update_snapshots.rb
+# record_snapshots.rb
 #
 # Records snapshot tests, compares against the existing reference images using
-# a pixel-difference threshold, and commits+pushes only meaningful changes.
+# a pixel-difference threshold, and updates only meaningful changes.
 #
 # Usage:
-#   ruby ci_scripts/update_snapshots.rb [--dry-run]
+#   ruby ci_scripts/record_snapshots.rb           # Record, compare, update reference images
+#   ruby ci_scripts/record_snapshots.rb --commit  # Also commit (for CI)
+#   ruby ci_scripts/record_snapshots.rb --dry-run # Show what would change without updating
 #
 # Requires: ImageMagick (brew install imagemagick)
 
@@ -18,15 +20,19 @@ SCRIPT_DIR = __dir__
 ROOT_DIR = File.expand_path('..', SCRIPT_DIR)
 Dir.chdir(ROOT_DIR)
 
+DEVICE_MODEL = 'iPhone 12 mini'
+OS_VERSION = '16.4'
 RECORD_DIR = '/tmp/snapshot-records'
 REFERENCE_DIR = File.join(ROOT_DIR, 'Tests/ReferenceImages_64')
 DIFF_THRESHOLD = 0.1 # percentage of pixels that must differ
 FUZZ = '5%' # per-pixel color tolerance before counting as different
 
+commit = false
 dry_run = false
 OptionParser.new do |opts|
-  opts.banner = 'Usage: update_snapshots.rb [--dry-run]'
-  opts.on('--dry-run', 'Show what would change without committing') { dry_run = true }
+  opts.banner = "Usage: record_snapshots.rb [options]"
+  opts.on('--commit', 'Commit changes (for CI)') { commit = true }
+  opts.on('--dry-run', 'Show what would change without updating') { dry_run = true }
 end.parse!
 
 def require_imagemagick!
@@ -45,22 +51,26 @@ end
 
 require_imagemagick!
 
-# Step 0: Skip if the last commit is already a snapshot update from CI.
-# This prevents infinite loops when snapshots have minor flakiness that
-# passes the threshold. Safe because CI rebases on the latest branch tip
-# before pushing, so any human commits are already included in the recording.
-last_commit_author = `git log -1 --format='%an'`.strip
-last_commit_message = `git log -1 --format='%s'`.strip
-if last_commit_author == 'Bitrise CI' && last_commit_message == 'Update snapshot reference images'
-  puts '==> Last commit is a snapshot update — skipping to avoid loop.'
-  exit 0
+# Skip if the last commit is already a snapshot update from CI (prevents infinite loops)
+if commit
+  last_commit_author = `git log -1 --format='%an'`.strip
+  last_commit_message = `git log -1 --format='%s'`.strip
+  if last_commit_author == 'Bitrise CI' && last_commit_message == 'Update snapshot reference images'
+    puts '==> Last commit is a snapshot update — skipping to avoid loop.'
+    exit 0
+  end
 end
 
 # Step 1: Record snapshots
 puts '==> Recording snapshots...'
 FileUtils.rm_rf(RECORD_DIR)
 FileUtils.rm_rf("#{RECORD_DIR}_64")
-system('ruby', 'ci_scripts/snapshots.rb', exception: true)
+
+system('./ci_scripts/test.rb', '--only-snapshot-tests',
+       '--scheme', 'AllStripeFrameworks',
+       '--device', DEVICE_MODEL,
+       '--version', OS_VERSION,
+       exception: true)
 
 # FBSnapshotTestCase appends _64 for 64-bit architecture
 actual_record_dir = if Dir.exist?("#{RECORD_DIR}_64")
@@ -95,6 +105,7 @@ if changed_files.empty? && added_files.empty?
 end
 
 puts "==> Found #{changed_files.size} modified, #{added_files.size} added"
+(changed_files + added_files).each { |f| puts "  #{f}" }
 
 # Step 3: Generate diff images (white background, red changed pixels)
 DIFF_DIR = '/tmp/snapshot-diffs'
@@ -119,9 +130,9 @@ if deploy_dir && !changed_files.empty?
   puts "==> Diff images zipped to #{zip_path}"
 end
 
-# Generate HTML report with inline base64 diff images
-html_report_dir = ENV['BITRISE_HTML_REPORT_DIR']
-if html_report_dir && !changed_files.empty?
+# Generate HTML report
+html_report_dir = ENV['BITRISE_HTML_REPORT_DIR'] || '/tmp/snapshot-report'
+if !changed_files.empty?
   require 'base64'
   report_dir = File.join(html_report_dir, 'snapshot-diffs')
   FileUtils.mkdir_p(report_dir)
@@ -170,9 +181,15 @@ if html_report_dir && !changed_files.empty?
     </html>
   HTML
 
-  File.write(File.join(report_dir, 'index.html'), html)
-  puts "==> HTML report saved to #{report_dir}"
+  report_path = File.join(report_dir, 'index.html')
+  File.write(report_path, html)
+  puts "==> HTML report: #{report_path}"
+
+  # Open locally if not in CI
+  system('open', report_path) unless ENV['CI'] || ENV['BITRISE_IO']
 end
+
+exit 0 if dry_run
 
 # Step 4: Copy changed files to reference directory
 (changed_files + added_files).each do |rel_path|
@@ -182,13 +199,11 @@ end
   FileUtils.cp(src, dst)
 end
 
-if dry_run
-  puts '==> Dry run — would commit these files:'
-  (changed_files + added_files).each { |f| puts "  #{f}" }
-  exit 0
-end
+puts '==> Reference images updated.'
 
-# Step 5: Commit (but don't push — that happens in a separate Bitrise step after deploy)
+exit 0 unless commit
+
+# Step 5: Commit
 puts '==> Committing snapshot changes...'
 (changed_files + added_files).each do |rel_path|
   system('git', 'add', File.join('Tests/ReferenceImages_64', rel_path))
@@ -197,4 +212,4 @@ end
 message = "Update snapshot reference images\n\n#{changed_files.size} modified, #{added_files.size} added"
 system('git', 'commit', '-m', message, exception: true)
 
-puts '==> Done. Run push_snapshots.rb to push.'
+puts '==> Done.'
