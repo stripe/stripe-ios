@@ -12,62 +12,61 @@ import UIKit
 extension Checkout.CurrencySelectorView {
     /// Appearance configuration for ``Checkout.CurrencySelectorView``.
     public struct Appearance {
-        /// Corner radius of the currency selector container.
-        /// Default: `8.0`
+
+        // MARK: - Dimensions
+
+        /// Height of the selector track. Default is `36`.
+        public var height: CGFloat = 36.0
+
+        /// Corner radius applied to the track and the selected currency pill. Default is `8`.
         public var cornerRadius: CGFloat = 8.0
 
-        /// Font for the currency option labels (e.g., "🇬🇧 £12.99").
-        /// Default: `.systemFont(ofSize: 14, weight: .medium)`
-        public var titleFont: UIFont = .systemFont(ofSize: 14, weight: .medium)
+        /// Border width for the track and pill outlines. Default is `0.5`.
+        public var borderWidth: CGFloat = 0.5
 
-        /// Font for the exchange rate disclosure text below the selector.
-        /// Default: `.systemFont(ofSize: 12, weight: .regular)`
-        public var subtitleFont: UIFont = .systemFont(ofSize: 12, weight: .regular)
+        // MARK: - Colors
 
-        /// Background color of the selector track.
-        /// Default: `.secondarySystemBackground`
-        public var backgroundColor: UIColor = .secondarySystemBackground
+        /// Border color for the track and pill. Default is `.separator`.
+        public var border: UIColor = .separator
 
-        /// Background color of the selected currency pill.
-        /// Default: `.systemBackground`
-        public var selectedColor: UIColor = .systemBackground
+        /// Background color of the selector track. Default is `.secondarySystemBackground`.
+        public var background: UIColor = .secondarySystemBackground
 
-        /// Text color for the selected currency option.
-        /// Default: `.label`
-        public var selectedTextColor: UIColor = .label
+        /// Background color of the selected currency pill. Default is `.systemBackground`.
+        public var selectedBackground: UIColor = .systemBackground
 
-        /// Text color for the unselected currency option.
-        /// Default: `.secondaryLabel`
-        public var unselectedTextColor: UIColor = .secondaryLabel
+        // MARK: - Typography
 
-        /// Border color for the track and pill.
-        /// Default: `.separator`
-        public var borderColor: UIColor = .separator
+        /// The base font used throughout the selector. Weights are derived automatically.
+        /// Default is `.systemFont(ofSize: 14, weight: .medium)`.
+        public var font: UIFont = .systemFont(ofSize: 14, weight: .medium)
 
-        /// Text color for the exchange rate disclosure caption.
-        /// Default: `.secondaryLabel`
-        public var captionColor: UIColor = .secondaryLabel
+        /// Multiplier applied to all font sizes. For example, `1.2` makes text 20% larger.
+        /// Must be greater than 0. Default is `1.0`.
+        public var sizeScaleFactor: CGFloat = 1.0 {
+            willSet {
+                if newValue <= 0.0 {
+                    assertionFailure("sizeScaleFactor must be a value greater than zero")
+                }
+            }
+        }
 
-        /// Color for error messages displayed below the selector.
-        /// Default: `.systemRed`
-        public var dangerColor: UIColor = .systemRed
+        // MARK: - Text Colors
+
+        /// Text color used for primary content. Default is `.label`.
+        public var text: UIColor = .label
+
+        /// Text color for the currently selected currency option. Default is `.label`.
+        public var selectedText: UIColor = .label
+
+        /// Text color for the unselected currency option and caption text. Default is `.secondaryLabel`.
+        public var textSecondary: UIColor = .secondaryLabel
+
+        /// Color for error messages shown below the selector. Default is `.systemRed`.
+        public var danger: UIColor = .systemRed
 
         /// Creates an appearance with default values.
         public init() {}
 
-        /// Bridges this appearance to a `PaymentSheet.Appearance` for internal
-        /// `TwoOptionSelectorView` reuse.
-        func asPaymentSheetAppearance() -> PaymentSheet.Appearance {
-            var ps = PaymentSheet.Appearance()
-            ps.cornerRadius = cornerRadius
-            ps.colors.background = backgroundColor
-            ps.colors.componentBackground = selectedColor
-            ps.colors.componentText = selectedTextColor
-            ps.colors.textSecondary = unselectedTextColor
-            ps.colors.componentBorder = borderColor
-            ps.colors.danger = dangerColor
-            ps.font.base = titleFont
-            return ps
-        }
     }
 }

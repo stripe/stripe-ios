@@ -50,8 +50,14 @@ extension Checkout {
         private var sessionCancellable: AnyCancellable?
         private var lastSelectedCurrency: String?
         private let containerStackView = UIStackView()
+        private let errorFontSize: CGFloat = 11
+
         private lazy var errorLabel: UILabel = {
-            let label = ElementsUI.makeErrorLabel(theme: appearance.asPaymentSheetAppearance().asElementsTheme)
+            let errorFontSize = errorFontSize * appearance.sizeScaleFactor
+            let label = ElementsUI.makeErrorLabel(
+                font: appearance.font.withSize(errorFontSize),
+                textColor: appearance.danger
+            )
             label.setHiddenIfNecessary(true)
             return label
         }()
@@ -159,17 +165,13 @@ extension Checkout {
                 flagPrefixProvider: checkout.flagImageManager.flagIcon
             )
 
-            let psAppearance = appearance.asPaymentSheetAppearance()
             let newSelector = TwoOptionSelectorView(
                 leftItem: left,
                 rightItem: right,
                 selectedItemId: currency.apiValue,
-                appearance: psAppearance
+                appearance: appearance
             )
             newSelector.delegate = self
-
-            newSelector.captionLabel.font = appearance.subtitleFont
-            newSelector.captionLabel.textColor = appearance.captionColor
 
             newSelector.translatesAutoresizingMaskIntoConstraints = false
             containerStackView.insertArrangedSubview(newSelector, at: 0)
@@ -190,8 +192,6 @@ extension Checkout {
                 exchangeRateMeta: exchangeRateMeta
             )
             selectorView?.updateCaption(caption)
-            selectorView?.captionLabel.font = appearance.subtitleFont
-            selectorView?.captionLabel.textColor = appearance.captionColor
         }
 
         private func tearDown() {
