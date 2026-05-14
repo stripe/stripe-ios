@@ -21,6 +21,7 @@ Dir.chdir(ROOT_DIR)
 RECORD_DIR = '/tmp/snapshot-records'
 REFERENCE_DIR = File.join(ROOT_DIR, 'Tests/ReferenceImages_64')
 DIFF_THRESHOLD = 0.1 # percentage of pixels that must differ
+FUZZ = '5%' # per-pixel color tolerance before counting as different
 
 dry_run = false
 OptionParser.new do |opts|
@@ -35,7 +36,7 @@ def require_imagemagick!
 end
 
 def significant_difference?(file_a, file_b)
-  num_diff = `compare -metric AE -fuzz 5% '#{file_a}' '#{file_b}' /dev/null 2>&1`.strip.to_i
+  num_diff = `compare -metric AE -fuzz #{FUZZ} '#{file_a}' '#{file_b}' /dev/null 2>&1`.strip.to_i
   total_pixels = `identify -format '%[fx:w*h]' '#{file_a}' 2>/dev/null`.strip.to_i
   return true if total_pixels == 0
 
@@ -105,7 +106,7 @@ changed_files.each do |rel_path|
   recorded_file = File.join(actual_record_dir, rel_path)
   diff_file = File.join(DIFF_DIR, rel_path)
   FileUtils.mkdir_p(File.dirname(diff_file))
-  system('compare', '-fuzz', '5%',
+  system('compare', '-fuzz', FUZZ,
          reference_file, recorded_file,
          '-highlight-color', 'Red', '-lowlight-color', 'White', '-compose', 'Src',
          diff_file, [:err] => '/dev/null')
@@ -159,7 +160,7 @@ if html_report_dir && !changed_files.empty?
       .images { display: flex; gap: 12px; flex-wrap: wrap; }
       .images > div { text-align: center; }
       .images p { font-size: 11px; color: #999; margin-bottom: 4px; }
-      .images img { max-width: 300px; border: 1px solid #444; border-radius: 4px; }
+      .images img { border: 1px solid #444; border-radius: 4px; image-rendering: pixelated; }
     </style>
     </head>
     <body>
