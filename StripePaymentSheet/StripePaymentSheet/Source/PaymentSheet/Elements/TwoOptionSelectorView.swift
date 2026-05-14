@@ -10,7 +10,7 @@ import UIKit
 /// A single item in a `TwoOptionSelectorView`.
 struct TwoOptionSelectorItem: Equatable {
     let id: String
-    let displayText: String
+    let displayText: NSAttributedString
     let accessibilityIdentifier: String
 }
 
@@ -41,8 +41,8 @@ final class TwoOptionSelectorView: UIView {
     private let buttonsStackView = UIStackView()
     private let selectionIndicatorView = UIView()
     private(set) var captionLabel = UILabel()
-    private var leftButton = UIButton(type: .system)
-    private var rightButton = UIButton(type: .system)
+    private var leftButton = UIButton(type: .custom)
+    private var rightButton = UIButton(type: .custom)
 
     private let trackPadding: CGFloat = 3
 
@@ -156,7 +156,7 @@ final class TwoOptionSelectorView: UIView {
     }
 
     private func configureButton(_ button: UIButton, item: TwoOptionSelectorItem) {
-        button.setTitle(item.displayText, for: .normal)
+        button.setAttributedTitle(item.displayText, for: .normal)
         button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
         button.contentEdgeInsets = UIEdgeInsets(top: 7, left: 16, bottom: 7, right: 16)
         button.backgroundColor = .clear
@@ -166,12 +166,10 @@ final class TwoOptionSelectorView: UIView {
 
     private func updateButtonStyles(animated: Bool) {
         let isLeftSelected = leftItem.id == selectedItemId
+        let font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
 
-        leftButton.setTitleColor(isLeftSelected ? appearance.colors.componentText : appearance.colors.textSecondary, for: .normal)
-        rightButton.setTitleColor(!isLeftSelected ? appearance.colors.componentText : appearance.colors.textSecondary, for: .normal)
-
-        leftButton.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
-        rightButton.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+        applyTitleColor(to: leftButton, item: leftItem, color: isLeftSelected ? appearance.colors.componentText : appearance.colors.textSecondary, font: font)
+        applyTitleColor(to: rightButton, item: rightItem, color: !isLeftSelected ? appearance.colors.componentText : appearance.colors.textSecondary, font: font)
         indicatorLeadingConstraint?.isActive = false
         indicatorTrailingConstraint?.isActive = false
 
@@ -191,6 +189,15 @@ final class TwoOptionSelectorView: UIView {
                 self.layoutIfNeeded()
             }
         }
+    }
+
+    private func applyTitleColor(to button: UIButton, item: TwoOptionSelectorItem, color: UIColor, font: UIFont) {
+        let styled = NSMutableAttributedString(attributedString: item.displayText)
+        styled.addAttributes(
+            [.foregroundColor: color, .font: font],
+            range: NSRange(location: 0, length: styled.length)
+        )
+        button.setAttributedTitle(styled, for: .normal)
     }
 
     // MARK: - Caption

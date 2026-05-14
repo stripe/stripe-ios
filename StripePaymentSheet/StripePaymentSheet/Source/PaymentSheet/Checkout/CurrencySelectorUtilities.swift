@@ -30,9 +30,12 @@ enum CurrencySelectorUtilities {
 
     /// Local currency on the left, integration (merchant) currency on the right.
     /// Uses `exchangeRateMeta` for stable ordering that doesn't change on reload.
+    ///
+    /// - Parameter flagPrefixProvider: Returns an attributed flag icon for each currency code.
     static func buildSelectorItems(
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
-        localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
+        localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
+        flagPrefixProvider: (String) -> NSAttributedString = { _ in NSAttributedString() }
     ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
         let localCurrency = CurrencyCode(exchangeRateMeta.localizedCurrency)
         let integrationCurrency = CurrencyCode(exchangeRateMeta.integrationCurrency)
@@ -40,20 +43,27 @@ enum CurrencySelectorUtilities {
         let localMeta = localizedPricesMetas.first { CurrencyCode($0.currency) == localCurrency }
         let integrationMeta = localizedPricesMetas.first { CurrencyCode($0.currency) == integrationCurrency }
 
-        let left = localMeta.map { makeSelectorItem(currency: CurrencyCode($0.currency), total: $0.total) }
-            ?? makeSelectorItem(currency: localCurrency, total: 0)
-        let right = integrationMeta.map { makeSelectorItem(currency: CurrencyCode($0.currency), total: $0.total) }
-            ?? makeSelectorItem(currency: integrationCurrency, total: 0)
+        let left = localMeta.map {
+            makeSelectorItem(currency: CurrencyCode($0.currency), total: $0.total, flagPrefix: flagPrefixProvider(localCurrency.apiValue))
+        } ?? makeSelectorItem(currency: localCurrency, total: 0, flagPrefix: flagPrefixProvider(localCurrency.apiValue))
+
+        let right = integrationMeta.map {
+            makeSelectorItem(currency: CurrencyCode($0.currency), total: $0.total, flagPrefix: flagPrefixProvider(integrationCurrency.apiValue))
+        } ?? makeSelectorItem(currency: integrationCurrency, total: 0, flagPrefix: flagPrefixProvider(integrationCurrency.apiValue))
 
         return (left: left, right: right)
     }
 
-    static func makeSelectorItem(currency: CurrencyCode, total: Int) -> TwoOptionSelectorItem {
-        let flag = flagEmoji(for: currency)
+    static func makeSelectorItem(currency: CurrencyCode, total: Int, flagPrefix: NSAttributedString) -> TwoOptionSelectorItem {
         let amount = String.localizedAmountDisplayString(for: total, currency: currency.displayValue)
+        let displayText = NSMutableAttributedString(attributedString: flagPrefix)
+        if displayText.length > 0 {
+            displayText.append(NSAttributedString(string: "  "))
+        }
+        displayText.append(NSAttributedString(string: amount))
         return TwoOptionSelectorItem(
             id: currency.apiValue,
-            displayText: "\(flag) \(amount)",
+            displayText: displayText,
             accessibilityIdentifier: "currency_option_\(currency.apiValue)"
         )
     }
