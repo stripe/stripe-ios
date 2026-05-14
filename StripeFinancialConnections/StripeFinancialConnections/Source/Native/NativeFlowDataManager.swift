@@ -190,6 +190,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
 
     private func didUpdateManifest() {
         apiClient.isLinkWithStripe = manifest.isLinkWithStripe == true
+        PresentationManager.shared.updateLinkBrandFromBackend(manifest.brand)
         analyticsClient.setAdditionalParameters(fromManifest: manifest)
     }
 }

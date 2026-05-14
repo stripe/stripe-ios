@@ -412,7 +412,7 @@ public final class EmbeddedPaymentElement {
         case .applePay:
             return .applePay
         case .link:
-            return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)))
+            return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)))
         case let .new(paymentMethodType: paymentMethodType):
             let params = IntentConfirmParams(type: paymentMethodType)
             params.setDefaultBillingDetailsIfNecessary(for: configuration)
@@ -440,6 +440,7 @@ public final class EmbeddedPaymentElement {
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
     internal var confirmationChallenge: ConfirmationChallenge?
+    internal var linkAccountObserver: LinkAccountContextObserver?
 
     internal init(
         configuration: Configuration,
@@ -459,6 +460,13 @@ public final class EmbeddedPaymentElement {
         self.containerView.needsUpdateSuperviewHeight = { [weak self] in
             guard let self else { return }
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
+        }
+        self.linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: true)
+                self.informDelegateIfPaymentOptionUpdated()
+            }
         }
         self.lastUpdatedPaymentOption = paymentOption
     }

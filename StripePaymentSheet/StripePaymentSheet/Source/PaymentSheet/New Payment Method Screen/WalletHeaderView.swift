@@ -61,8 +61,17 @@ extension PaymentSheetViewController {
         private let appearance: PaymentSheet.Appearance
         private let applePayButtonType: PKPaymentButtonType
         private let isPaymentIntent: Bool
-        let linkBrand: LinkBrand
+        private let linkBrandProvider: () -> LinkBrand
+        private var linkBrand: LinkBrand {
+            didSet {
+                guard oldValue != linkBrand else {
+                    return
+                }
+                payWithLinkButton.brand = linkBrand
+            }
+        }
         private var stackView = UIStackView()
+        private var linkAccountObserver: LinkAccountContextObserver?
 
         private lazy var payWithLinkButton: PayWithLinkButton = {
             let button = PayWithLinkButton(brand: linkBrand)
@@ -113,17 +122,24 @@ extension PaymentSheetViewController {
              appearance: PaymentSheet.Appearance,
              applePayButtonType: PKPaymentButtonType = .plain,
              linkBrand: LinkBrand = .link,
+             linkBrandProvider: (() -> LinkBrand)? = nil,
              isPaymentIntent: Bool = true,
              delegate: WalletHeaderViewDelegate?) {
             self.options = options
             self.appearance = appearance
             self.applePayButtonType = applePayButtonType
             self.linkBrand = linkBrand
+            self.linkBrandProvider = linkBrandProvider ?? { linkBrand }
             self.isPaymentIntent = isPaymentIntent
             self.delegate = delegate
             super.init(frame: .zero)
 
             buildAndPinStackView()
+            linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.syncLinkBrand()
+                }
+            }
 
             updateSeparatorLabel()
         }
@@ -138,6 +154,10 @@ extension PaymentSheetViewController {
 
         @objc func handleTapPayWithLink() {
             delegate?.walletHeaderViewPayWithLinkTapped(self)
+        }
+
+        private func syncLinkBrand() {
+            linkBrand = linkBrandProvider()
         }
 
         private func buildAndPinStackView() {

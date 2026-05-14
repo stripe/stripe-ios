@@ -54,6 +54,13 @@ extension PaymentElementConfiguration {
         link.effectiveBrand(elementsSession: elementsSession)
     }
 
+    func resolvedLinkBrand(elementsSession: STPElementsSession, linkAccount: PaymentSheetLinkAccount?) -> LinkBrand {
+        if let brand = link.brand {
+            return brand
+        }
+        return linkAccount?.linkBrand ?? elementsSession.linkBrand ?? .link
+    }
+
     /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
     func requiresBillingDetailCollection() -> Bool {
         return billingDetailsCollectionConfiguration.name == .always

@@ -24,6 +24,7 @@ final class ConsumerSession: Decodable {
     let mobileFallbackWebviewParams: MobileFallbackWebviewParams?
     let currentAuthenticationLevel: AuthenticationLevel?
     let minimumAuthenticationLevel: AuthenticationLevel?
+    var linkBrand: LinkBrand?
 
     init(
         clientSecret: String,
@@ -35,7 +36,8 @@ final class ConsumerSession: Decodable {
         supportedPaymentDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>>,
         mobileFallbackWebviewParams: MobileFallbackWebviewParams?,
         currentAuthenticationLevel: AuthenticationLevel? = nil,
-        minimumAuthenticationLevel: AuthenticationLevel? = nil
+        minimumAuthenticationLevel: AuthenticationLevel? = nil,
+        linkBrand: LinkBrand? = nil
     ) {
         self.clientSecret = clientSecret
         self.emailAddress = emailAddress
@@ -47,6 +49,7 @@ final class ConsumerSession: Decodable {
         self.mobileFallbackWebviewParams = mobileFallbackWebviewParams
         self.currentAuthenticationLevel = currentAuthenticationLevel
         self.minimumAuthenticationLevel = minimumAuthenticationLevel
+        self.linkBrand = linkBrand
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -60,6 +63,7 @@ final class ConsumerSession: Decodable {
         case mobileFallbackWebviewParams = "mobile_fallback_webview_params"
         case currentAuthenticationLevel
         case minimumAuthenticationLevel
+        case linkBrand = "link_brand"
     }
 
     init(from decoder: Decoder) throws {
@@ -74,6 +78,7 @@ final class ConsumerSession: Decodable {
         self.mobileFallbackWebviewParams = try container.decodeIfPresent(MobileFallbackWebviewParams.self, forKey: .mobileFallbackWebviewParams)
         self.currentAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .currentAuthenticationLevel)
         self.minimumAuthenticationLevel = try container.decodeIfPresent(AuthenticationLevel.self, forKey: .minimumAuthenticationLevel)
+        self.linkBrand = try container.decodeIfPresent(LinkBrand.self, forKey: .linkBrand)
     }
 
 }

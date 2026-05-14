@@ -74,10 +74,12 @@ final public class FinancialConnectionsSheet {
 
         public var style: UserInterfaceStyle
         @_spi(STP) public var linkBrand: LinkBrand?
+        var hasExplicitLinkBrandOverride: Bool
 
         public init(style: UserInterfaceStyle = .automatic) {
             self.style = style
             self.linkBrand = nil
+            self.hasExplicitLinkBrandOverride = false
         }
     }
 

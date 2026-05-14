@@ -144,6 +144,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
                 switch result {
                 case .success(let response):
+                    PresentationManager.shared.updateLinkBrandFromBackend(response.linkBrand)
                     if let consumerSession = response.consumerSession, let publishableKey = response.publishableKey {
                         self.delegate?.networkingLinkLoginWarmupViewControllerDidFindConsumerSession(
                             self,

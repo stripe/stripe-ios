@@ -84,6 +84,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
             ).observe { lookupResult in
                 switch lookupResult {
                 case .success(let response):
+                    PresentationManager.shared.updateLinkBrandFromBackend(response.linkBrand)
                     let result = ConsentAcquiredResult(
                         manifest: manifest,
                         consumerSession: response.consumerSession,

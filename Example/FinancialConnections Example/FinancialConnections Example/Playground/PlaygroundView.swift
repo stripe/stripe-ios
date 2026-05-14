@@ -131,9 +131,9 @@ struct PlaygroundView: View {
                         if !(viewModel.integrationType.wrappedValue == .standalone
                             && viewModel.experience.wrappedValue == .financialConnections) {
                             HStack {
-                                Text("Link brand")
+                                Text("Force onelink")
                                     .font(.subheadline)
-                                Picker("Link brand", selection: viewModel.linkBrand) {
+                                Picker("Force onelink", selection: viewModel.linkBrand) {
                                     ForEach(PlaygroundConfiguration.LinkBrand.allCases) {
                                         Text($0.displayName)
                                             .tag($0)

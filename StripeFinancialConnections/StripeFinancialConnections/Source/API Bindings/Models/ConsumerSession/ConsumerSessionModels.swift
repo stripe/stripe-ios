@@ -47,6 +47,15 @@ struct LookupConsumerSessionResponse: Decodable {
     let accountId: String?
     let publishableKey: String?
     let consumerSession: ConsumerSessionData?
+    let linkBrand: LinkBrand?
+
+    private enum CodingKeys: String, CodingKey {
+        case exists
+        case accountId = "account_id"
+        case publishableKey = "publishable_key"
+        case consumerSession = "consumer_session"
+        case linkBrand = "link_brand"
+    }
 }
 
 struct LinkSignUpResponse: Decodable {

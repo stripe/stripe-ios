@@ -188,6 +188,7 @@ final class LinkLoginViewController: UIViewController {
 
                 switch result {
                 case .success(let response):
+                    PresentationManager.shared.updateLinkBrandFromBackend(response.linkBrand)
                     if response.exists {
                         if response.consumerSession != nil {
                             self.delegate?.linkLoginViewController(self, foundReturningUserWith: response)

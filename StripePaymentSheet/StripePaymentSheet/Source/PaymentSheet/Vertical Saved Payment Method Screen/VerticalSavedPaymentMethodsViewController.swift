@@ -44,6 +44,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
     private let paymentMethodUpdate: Bool
     private let isCBCEligible: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private var linkAccountObserver: LinkAccountContextObserver?
 
     private var updateViewController: UpdatePaymentMethodViewController?
     private var defaultPaymentMethod: STPPaymentMethod?
@@ -205,7 +206,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         return paymentMethods.map { paymentMethod in
             let button = SavedPaymentMethodRowButton(paymentMethod: paymentMethod,
                                                      appearance: configuration.appearance,
-                                                     linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+                                                     linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
                                                      showDefaultPMBadge: isDefaultPaymentMethod(paymentMethodId: paymentMethod.stripeId))
             button.delegate = self
             return button
@@ -224,6 +225,11 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = configuration.appearance.colors.background
         configuration.style.configure(self)
+        linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.syncLinkBrand()
+            }
+        }
 
         view.addAndPinSubview(stackView, insets: configuration.appearance.formInsets)
 
@@ -231,6 +237,11 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
         let minHeightConstraint = view.heightAnchor.constraint(greaterThanOrEqualToConstant: 200 - SheetNavigationBar.height(appearance: configuration.appearance))
         minHeightConstraint.priority = .defaultHigh
         minHeightConstraint.isActive = true
+    }
+
+    private func syncLinkBrand() {
+        let resolvedLinkBrand = configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
+        paymentMethodRows.forEach { $0.updateLinkBrand(resolvedLinkBrand) }
     }
 
     private func navigationBarStyle() -> SheetNavigationBar.Style {
@@ -475,7 +486,7 @@ extension VerticalSavedPaymentMethodsViewController: UpdatePaymentMethodViewCont
         let isDefaultPaymentMethod = isDefaultPaymentMethod(paymentMethodId: updatedPaymentMethod.stripeId)
         let newButton = SavedPaymentMethodRowButton(paymentMethod: updatedPaymentMethod,
                                                     appearance: configuration.appearance,
-                                                    linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+                                                    linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
                                                     showDefaultPMBadge: isDefaultPaymentMethod,
                                                     previousSelectedState: selectedState ?? oldButton.previousSelectedState,
                                                     currentState: oldButton.state)

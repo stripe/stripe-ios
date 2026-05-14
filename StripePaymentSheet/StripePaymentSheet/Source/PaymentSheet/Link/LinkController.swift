@@ -101,7 +101,7 @@ import UIKit
     private let elementsSession: STPElementsSession
     private let intent: Intent
     private let configuration: PaymentElementConfiguration
-    private let linkBrand: LinkBrand
+    private let initialLinkBrand: LinkBrand
     private let appearance: LinkAppearance?
     private let linkConfiguration: LinkConfiguration?
     private let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -123,24 +123,7 @@ import UIKit
 
     private var internalPaymentOption: PaymentOption? {
         didSet {
-            guard let selectedPaymentDetails else {
-                paymentMethodPreview = nil
-                return
-            }
-
-            let type: PaymentMethodPreview.PaymentMethodType = switch selectedPaymentDetails.details {
-            case .card, .unparsable:
-                .card
-            case .bankAccount:
-                .bankAccount
-            }
-
-            paymentMethodPreview = .init(
-                paymentMethodType: type,
-                icon: iconForPaymentDetails(selectedPaymentDetails),
-                label: linkBrand.displayName,
-                sublabel: selectedPaymentDetails.linkPaymentDetailsFormattedString
-            )
+            updatePaymentMethodPreview()
         }
     }
 
@@ -149,6 +132,10 @@ import UIKit
 
     /// A preview of the currently selected Link payment method.
     @Published @_spi(STP) public private(set) var paymentMethodPreview: PaymentMethodPreview?
+
+    private var resolvedLinkBrand: LinkBrand {
+        linkAccount?.linkBrand ?? LinkAccountContext.shared.account?.linkBrand ?? initialLinkBrand
+    }
 
     @_spi(STP) public var elementsSessionID: String {
         elementsSession.sessionID
@@ -174,7 +161,7 @@ import UIKit
         self.elementsSession = elementsSession
         self.intent = intent
         self.configuration = configuration
-        self.linkBrand = linkBrand
+        self.initialLinkBrand = linkBrand
         self.appearance = appearance
         self.linkConfiguration = linkConfiguration
         self.analyticsHelper = analyticsHelper
@@ -204,6 +191,27 @@ import UIKit
         case .unparsable:
             return Self.linkIcon
         }
+    }
+
+    private func updatePaymentMethodPreview() {
+        guard let selectedPaymentDetails else {
+            paymentMethodPreview = nil
+            return
+        }
+
+        let type: PaymentMethodPreview.PaymentMethodType = switch selectedPaymentDetails.details {
+        case .card, .unparsable:
+            .card
+        case .bankAccount:
+            .bankAccount
+        }
+
+        paymentMethodPreview = .init(
+            paymentMethodType: type,
+            icon: iconForPaymentDetails(selectedPaymentDetails),
+            label: resolvedLinkBrand.displayName,
+            sublabel: selectedPaymentDetails.linkPaymentDetailsFormattedString
+        )
     }
 
     /// Creates a `LinkController` for the specified `mode`.
@@ -248,7 +256,7 @@ import UIKit
                     elementsSession: loadResult.elementsSession,
                     intent: loadResult.intent,
                     configuration: configuration,
-                    linkBrand: configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession),
+                    linkBrand: configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession, linkAccount: LinkAccountContext.shared.account),
                     appearance: appearance,
                     linkConfiguration: linkConfiguration,
                     analyticsHelper: analyticsHelper,
@@ -358,7 +366,7 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .inlineLogin,
             linkAccount: linkAccount,
-            brand: linkBrand,
+            brand: resolvedLinkBrand,
             configuration: configuration,
             appearance: appearance
         )
@@ -728,7 +736,7 @@ import UIKit
                 let declarationViewController = CRSCARFDeclarationViewController(
                     text: text,
                     appearance: appearance,
-                    brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                    brand: resolvedLinkBrand
                 )
                 declarationViewController.onResult = { [weak declarationViewController] result in
                     declarationViewController?.onResult = nil
@@ -796,6 +804,7 @@ import UIKit
             email: linkAccount.email,
             session: consumerSession,
             publishableKey: linkAccount.publishableKey,
+            linkBrand: linkAccount.linkBrand,
             displayablePaymentDetails: linkAccount.displayablePaymentDetails,
             apiClient: linkAccount.apiClient,
             useMobileEndpoints: linkAccount.useMobileEndpoints,
@@ -817,7 +826,7 @@ import UIKit
         let verificationController = LinkVerificationController(
             mode: .inlineLogin,
             linkAccount: linkAccount,
-            brand: linkBrand,
+            brand: resolvedLinkBrand,
             configuration: configuration,
             appearance: appearance,
             consentViewModel: consentViewModel
@@ -979,6 +988,7 @@ import UIKit
         DispatchQueue.main.async { [weak self] in
             let linkAccount = notification.object as? PaymentSheetLinkAccount
             self?.linkAccount = linkAccount
+            self?.updatePaymentMethodPreview()
         }
     }
 

@@ -127,9 +127,9 @@ final class PlaygroundConfiguration {
         var displayName: String {
             switch self {
             case .link:
-                return "Link"
+                return "off"
             case .onelink:
-                return "Onelink"
+                return "on"
             }
         }
     }

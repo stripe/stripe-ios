@@ -942,7 +942,6 @@ extension PlaygroundController {
                     return "intent id: \(intentID ?? "")"
                 }()
                 print("✅ Test playground finished loading with \(idDescription) and customer id: \(self.customerId ?? "") ")
-
                 switch self.settings.uiStyle {
                 case .paymentSheet:
                     self.buildPaymentSheet()

@@ -138,11 +138,11 @@ extension STPAPIClient {
             return nil
         }()
 
-        post(
+        postWithResponse(
             resource: useMobileEndpoints ? mobileEndpoint : legacyEndpoint,
             parameters: mutableParameters,
             ephemeralKeySecret: publishableKey
-        ) { (result: Result<ConsumerSession.LookupResponse, Error>) in
+        ) { (result: Result<ConsumerSession.LookupResponse, Error>, _: HTTPURLResponse?) in
             Task { @MainActor in
                 // If there's an assertion error, send it to StripeAttest
                 if useMobileEndpoints,
@@ -337,10 +337,15 @@ extension STPAPIClient {
         parameters: [String: Any],
         completion: @escaping (Result<ConsumerSession, Error>) -> Void
     ) {
-        post(
+        postWithResponseData(
             resource: endpoint,
             parameters: parameters
-        ) { (result: Result<SessionResponse, Error>) in
+        ) { (result: Result<SessionResponse, Error>, _: HTTPURLResponse?, data: Data?) in
+            let rawLinkBrand = self.extractLinkBrand(from: data)
+            if case .success(let sessionResponse) = result,
+               let rawLinkBrand {
+                sessionResponse.consumerSession.linkBrand = LinkBrand(rawValue: rawLinkBrand) ?? .unparsable
+            }
             completion(result.map { $0.consumerSession })
         }
     }
@@ -395,7 +400,9 @@ extension STPAPIClient {
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(),
             parameters: parameters,
-            completion: completion
+            completion: { result in
+                completion(result)
+            }
         )
     }
 
@@ -726,8 +733,112 @@ extension STPAPIClient {
             resource: endpoint,
             parameters: parameters,
             consumerPublishableKey: consumerPublishableKey,
-            completion: completion
+            completion: { (result: Result<EmptyResponse, Error>) in
+                completion(result)
+            }
         )
+    }
+}
+
+private extension STPAPIClient {
+    func postWithResponseData<T: Decodable>(
+        resource: String,
+        parameters: [String: Any],
+        ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil,
+        completion: @escaping (Result<T, Error>, HTTPURLResponse?, Data?) -> Void
+    ) {
+        let url = apiURL.appendingPathComponent(resource)
+        var request = configuredRequest(for: url)
+        let formData = URLEncoder.queryString(from: parameters).data(using: .utf8)
+        request.httpBody = formData
+        request.setValue(
+            String(format: "%lu", UInt(formData?.count ?? 0)),
+            forHTTPHeaderField: "Content-Length"
+        )
+        request.setValue(
+            "application/x-www-form-urlencoded",
+            forHTTPHeaderField: "Content-Type"
+        )
+        request.httpMethod = "POST"
+        for (k, v) in authorizationHeader(using: ephemeralKeySecret ?? consumerPublishableKey) {
+            request.setValue(v, forHTTPHeaderField: k)
+        }
+        if consumerPublishableKey != nil {
+            request.setValue(nil, forHTTPHeaderField: "Stripe-Account")
+        }
+
+        urlSession.stp_performDataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                let httpResponse = response as? HTTPURLResponse
+                let result: Result<T, Error> = STPAPIClient.decodeResponse(
+                    data: data,
+                    error: error,
+                    response: response,
+                    request: request
+                )
+                completion(result, httpResponse, data)
+            }
+        }
+    }
+
+    func postWithResponse<T: Decodable>(
+        resource: String,
+        parameters: [String: Any],
+        ephemeralKeySecret: String? = nil,
+        consumerPublishableKey: String? = nil,
+        completion: @escaping (Result<T, Error>, HTTPURLResponse?) -> Void
+    ) {
+        let url = apiURL.appendingPathComponent(resource)
+        var request = configuredRequest(for: url)
+        let formData = URLEncoder.queryString(from: parameters).data(using: .utf8)
+        request.httpBody = formData
+        request.setValue(
+            String(format: "%lu", UInt(formData?.count ?? 0)),
+            forHTTPHeaderField: "Content-Length"
+        )
+        request.setValue(
+            "application/x-www-form-urlencoded",
+            forHTTPHeaderField: "Content-Type"
+        )
+        request.httpMethod = "POST"
+        for (k, v) in authorizationHeader(using: ephemeralKeySecret ?? consumerPublishableKey) {
+            request.setValue(v, forHTTPHeaderField: k)
+        }
+        if consumerPublishableKey != nil {
+            request.setValue(nil, forHTTPHeaderField: "Stripe-Account")
+        }
+
+        urlSession.stp_performDataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                let httpResponse = response as? HTTPURLResponse
+                let result: Result<T, Error> = STPAPIClient.decodeResponse(
+                    data: data,
+                    error: error,
+                    response: response,
+                    request: request
+                )
+                completion(result, httpResponse)
+            }
+        }
+    }
+
+    func extractLinkBrand(from data: Data?) -> String? {
+        guard let data,
+              let jsonObject = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+            return nil
+        }
+
+        if let rawLinkBrand = jsonObject["link_brand"] as? String {
+            return rawLinkBrand
+        }
+
+        if let consumerSession = jsonObject["consumer_session"] as? [String: Any],
+           let rawLinkBrand = consumerSession["link_brand"] as? String {
+            return rawLinkBrand
+        }
+
+        return nil
     }
 }
 

@@ -99,6 +99,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        linkAccount: PaymentSheetLinkAccount? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
         alwaysUseEphemeralSession: Bool = false
     ) {
@@ -107,7 +108,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: configuration,
-                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
                 callToAction: callToAction,
                 alwaysUseEphemeralSession: alwaysUseEphemeralSession
             )

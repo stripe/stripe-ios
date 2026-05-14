@@ -174,6 +174,24 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         }
         waitForExpectations(timeout: 5)
     }
+
+    func testLinkBrand_prefersSessionBrandOverInitialBrand() {
+        let session = LinkStubs.consumerSession()
+        session.linkBrand = .onelink
+
+        let sut = PaymentSheetLinkAccount(
+            email: "user@example.com",
+            session: session,
+            publishableKey: nil,
+            linkBrand: .link,
+            displayablePaymentDetails: nil,
+            apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        XCTAssertEqual(sut.linkBrand, .onelink)
+    }
 }
 
 class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {

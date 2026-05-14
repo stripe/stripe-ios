@@ -81,7 +81,7 @@ final class FinancialConnectionsSessionTests: XCTestCase {
     }
 
     func testSynchronizeParsesNotlinkBrand() throws {
-        let synchronize = try makeSynchronize(brandValue: "notlink")
+        let synchronize = try makeSynchronize(brandValue: "onelink")
 
         XCTAssertEqual(synchronize.manifest.brand, .onelink)
         XCTAssertEqual(synchronize.manifest.appearance.logo, .onelink_logo)
@@ -92,6 +92,12 @@ final class FinancialConnectionsSessionTests: XCTestCase {
 
         XCTAssertEqual(synchronize.manifest.brand, .unparsable)
         XCTAssertEqual(synchronize.manifest.appearance.logo, .stripe_logo)
+    }
+
+    func testLookupConsumerSessionParsesLinkBrand() throws {
+        let response = try makeLookupConsumerSessionResponse(brandValue: "onelink")
+
+        XCTAssertEqual(response.linkBrand, .onelink)
     }
 
     func testLinkThemeWithoutBrandPreservesExistingLinkBranding() {
@@ -135,6 +141,40 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         switch result {
         case .success(let synchronize):
             return synchronize
+        case .failure(let error):
+            throw error
+        }
+    }
+
+    private func makeLookupConsumerSessionResponse(brandValue: String?) throws -> LookupConsumerSessionResponse {
+        var payload: [String: Any] = [
+            "exists": true,
+            "account_id": "las_123",
+            "publishable_key": "pk_test_123",
+            "consumer_session": [
+                "client_secret": "css_123",
+                "email_address": "test@example.com",
+                "redacted_formatted_phone_number": "+1••• ••• ••12",
+                "verification_sessions": [],
+            ],
+        ]
+        payload["link_brand"] = brandValue
+
+        let data = try JSONSerialization.data(withJSONObject: payload)
+        let response = HTTPURLResponse(
+            url: URL(string: "https://api.stripe.com/v1/connections/link_account_sessions/consumer_sessions")!,
+            statusCode: 200,
+            httpVersion: nil,
+            headerFields: ["request-id": "req_123"]
+        )
+        let result: Result<LookupConsumerSessionResponse, Error> = STPAPIClient.decodeResponse(
+            data: data,
+            error: nil,
+            response: response
+        )
+        switch result {
+        case .success(let lookupResponse):
+            return lookupResponse
         case .failure(let error):
             throw error
         }

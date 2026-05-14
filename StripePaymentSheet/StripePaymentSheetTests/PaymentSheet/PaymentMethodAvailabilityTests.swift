@@ -38,6 +38,49 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .link)
     }
 
+    func testResolvedLinkBrand_withLinkAccount_usesLookupBrandBeforeElementsSessionBrand() {
+        let elementsSession = STPElementsSession._testValue(
+            linkSettings: ._testValue(brand: .link)
+        )
+        let configuration = PaymentSheet.Configuration()
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "test@example.com",
+            session: nil,
+            publishableKey: nil,
+            linkBrand: .onelink,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        XCTAssertEqual(
+            configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
+            .onelink
+        )
+    }
+
+    func testResolvedLinkBrand_withLinkAccount_stillPrefersConfigurationOverride() {
+        let elementsSession = STPElementsSession._testValue(
+            linkSettings: ._testValue(brand: .link)
+        )
+        var configuration = PaymentSheet.Configuration()
+        configuration.link = .init(brand: .link)
+        let linkAccount = PaymentSheetLinkAccount(
+            email: "test@example.com",
+            session: nil,
+            publishableKey: nil,
+            linkBrand: .onelink,
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
+
+        XCTAssertEqual(
+            configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
+            .link
+        )
+    }
+
     func testIsLinkEnabled_supportsLinkFalse_linkNotPresent() {
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: ["card"],
