@@ -7,7 +7,6 @@
 
 import StripePaymentSheet
 import SwiftUI
-import UIKit
 
 // MARK: - PaymentSheetTestPlayground
 @available(iOS 15.0, *)
