@@ -242,15 +242,13 @@ private extension PayWithLinkButton {
 
     static let logoAspectRatioConstraintIdentifier = "PayWithLinkButton.logoAspectRatio"
     static let logoHeightConstraintIdentifier = "PayWithLinkButton.logoHeight"
+    static let inlineLogoFontSizeBoost: CGFloat = 0.1
+    static let inlineLogoVerticalSpacing: CGFloat = 0.073 // the total top+bottom space outside the Link logo
 
     static func makeSpacerString(width: CGFloat) -> NSAttributedString {
         let spacerAttachment = NSTextAttachment()
         spacerAttachment.bounds = CGRect(x: 0, y: 0, width: width, height: 0)
         return NSAttributedString(attachment: spacerAttachment)
-    }
-
-    static func logoHeight(for heightScale: CGFloat) -> CGFloat {
-        return Constants.logoSize.height * heightScale
     }
 
     static func logoAspectRatio(for image: UIImage) -> CGFloat {
@@ -262,9 +260,9 @@ private extension PayWithLinkButton {
 
         let linkImage = primaryLinkLogoImage
         let linkAttachment = NSTextAttachment(image: linkImage)
-        let linkLogoRatio = linkImage.size.width / linkImage.size.height
-        let linkTextSpacing = 0.073
-        let linkLogoHeight = (font.capHeight + (font.pointSize * 0.1)) * (1.0 + linkTextSpacing)
+        let linkLogoRatio = Self.logoAspectRatio(for: linkImage)
+        let linkTextSpacing = Self.inlineLogoVerticalSpacing
+        let linkLogoHeight = (font.capHeight + (font.pointSize * Self.inlineLogoFontSizeBoost)) * (1.0 + linkTextSpacing)
         let linkY = linkTextSpacing * linkLogoHeight
         linkAttachment.bounds = CGRect(x: 0, y: -linkY, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
 
@@ -306,7 +304,7 @@ private extension PayWithLinkButton {
             logoView.removeConstraint(aspectRatioConstraint)
         }
 
-        let height = Self.logoHeight(for: 1.0)
+        let height = Constants.logoSize.height
         if let heightConstraint = logoView.constraints.first(where: {
             $0.identifier == Self.logoHeightConstraintIdentifier
         }) {
@@ -361,7 +359,6 @@ private extension PayWithLinkButton {
             cardStackView.centerXAnchor.constraint(equalTo: layoutMarginsGuide.centerXAnchor),
 
         ])
-
     }
 
     func updateUI() {
