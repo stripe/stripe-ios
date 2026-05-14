@@ -203,7 +203,6 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         XCTAssertFalse(
             elementsSession.shouldShowLink2FABeforePaymentSheet(
                 for: makeLinkAccountRequiringVerification(),
-                merchantProvidedEmail: true,
                 savedPaymentMethods: [STPPaymentMethod._testCard()]
             )
         )
@@ -218,23 +217,7 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         XCTAssertTrue(
             elementsSession.shouldShowLink2FABeforePaymentSheet(
                 for: makeLinkAccountRequiringVerification(),
-                merchantProvidedEmail: true,
                 savedPaymentMethods: []
-            )
-        )
-    }
-
-    func testShouldShowLink2FABeforePaymentSheet_doesNotSuppressWithoutMerchantProvidedEmail() {
-        let elementsSession = STPElementsSession._testValue(
-            paymentMethodTypes: ["card", "link"],
-            customerSessionData: mobilePaymentElementCustomerSessionData
-        )
-
-        XCTAssertTrue(
-            elementsSession.shouldShowLink2FABeforePaymentSheet(
-                for: makeLinkAccountRequiringVerification(),
-                merchantProvidedEmail: false,
-                savedPaymentMethods: [STPPaymentMethod._testCard()]
             )
         )
     }

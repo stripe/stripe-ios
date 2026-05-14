@@ -192,7 +192,6 @@ public class PaymentSheet {
                     if let linkAccount = LinkAccountContext.shared.account,
                        loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(
                            for: linkAccount,
-                           merchantProvidedEmail: self.configuration.defaultBillingDetails.email != nil,
                            savedPaymentMethods: loadResult.savedPaymentMethods
                        ) {
                         let verificationController = LinkVerificationController(

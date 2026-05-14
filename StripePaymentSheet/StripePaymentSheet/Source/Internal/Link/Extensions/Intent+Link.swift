@@ -40,11 +40,9 @@ extension STPElementsSession {
 
     func shouldShowLink2FABeforePaymentSheet(
         for linkAccount: PaymentSheetLinkAccount,
-        merchantProvidedEmail: Bool,
         savedPaymentMethods: [STPPaymentMethod]
     ) -> Bool {
         let shouldSuppressForCustomerSessionSavedPaymentMethods =
-            merchantProvidedEmail &&
             !savedPaymentMethods.isEmpty
 
         return self.supportsLink &&
