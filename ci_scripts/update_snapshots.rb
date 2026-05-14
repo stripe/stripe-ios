@@ -60,7 +60,7 @@ end
 puts '==> Recording snapshots...'
 FileUtils.rm_rf(RECORD_DIR)
 FileUtils.rm_rf("#{RECORD_DIR}_64")
-system('ruby', 'ci_scripts/snapshots.rb', '--record', exception: true)
+system('ruby', 'ci_scripts/snapshots.rb', exception: true)
 
 # FBSnapshotTestCase appends _64 for 64-bit architecture
 actual_record_dir = if Dir.exist?("#{RECORD_DIR}_64")
