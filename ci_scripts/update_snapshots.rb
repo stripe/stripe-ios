@@ -114,6 +114,8 @@ end
 
 puts "==> Pushing to #{branch}..."
 system('git', 'remote', 'set-url', 'origin', 'git@github.com:stripe/stripe-ios.git')
+system('git', 'fetch', 'origin', branch, [:out, :err] => '/dev/null')
+system('git', 'rebase', "origin/#{branch}", exception: true)
 system('git', 'push', 'origin', "HEAD:#{branch}", exception: true)
 
 puts '==> Done.'
