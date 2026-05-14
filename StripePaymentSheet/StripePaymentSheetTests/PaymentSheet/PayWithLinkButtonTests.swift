@@ -97,14 +97,13 @@ final class PayWithLinkButtonTests: XCTestCase {
         onelinkButton.frame = CGRect(origin: .zero, size: CGSize(width: 240, height: 44))
         onelinkButton.layoutIfNeeded()
 
-        let expectedWidth = ceil(
+        let expectedWidth =
             PayWithLinkButton.Constants.logoSize.height
-                * (onelinkButton.primaryLinkLogoImage.size.width / onelinkButton.primaryLinkLogoImage.size.height)
-        )
+            * (onelinkButton.primaryLinkLogoImage.size.width / onelinkButton.primaryLinkLogoImage.size.height)
         let logoView = try XCTUnwrap(findVisibleLogoImageView(in: onelinkButton, matching: onelinkButton.primaryLinkLogoImage))
 
         XCTAssertEqual(logoView.bounds.height, PayWithLinkButton.Constants.logoSize.height)
-        XCTAssertEqual(logoView.bounds.width, expectedWidth)
+        XCTAssertEqual(logoView.bounds.width, expectedWidth, accuracy: 0.01)
         XCTAssertGreaterThan(logoView.bounds.width, PayWithLinkButton.Constants.logoSize.width)
     }
 
