@@ -114,8 +114,63 @@ end
 deploy_dir = ENV['BITRISE_DEPLOY_DIR']
 if deploy_dir && !changed_files.empty?
   zip_path = File.join(deploy_dir, 'snapshot-diffs.zip')
-  system('zip', '-r', '-j', zip_path, DIFF_DIR, [:out] => '/dev/null')
+  system('zip', '-r', zip_path, DIFF_DIR, [:out] => '/dev/null')
   puts "==> Diff images zipped to #{zip_path}"
+end
+
+# Generate HTML report with inline base64 diff images
+html_report_dir = ENV['BITRISE_HTML_REPORT_DIR']
+if html_report_dir && !changed_files.empty?
+  require 'base64'
+  report_dir = File.join(html_report_dir, 'snapshot-diffs')
+  FileUtils.mkdir_p(report_dir)
+
+  rows = changed_files.map do |rel_path|
+    diff_file = File.join(DIFF_DIR, rel_path)
+    old_file = File.join(REFERENCE_DIR, rel_path)
+    new_file = File.join(actual_record_dir, rel_path)
+    name = File.basename(rel_path)
+
+    diff_b64 = File.exist?(diff_file) ? Base64.strict_encode64(File.binread(diff_file)) : ''
+    old_b64 = File.exist?(old_file) ? Base64.strict_encode64(File.binread(old_file)) : ''
+    new_b64 = File.exist?(new_file) ? Base64.strict_encode64(File.binread(new_file)) : ''
+
+    <<~ROW
+      <div class="item">
+        <h3>#{name}</h3>
+        <div class="images">
+          <div><p>Before</p><img src="data:image/png;base64,#{old_b64}"></div>
+          <div><p>After</p><img src="data:image/png;base64,#{new_b64}"></div>
+          <div><p>Diff</p><img src="data:image/png;base64,#{diff_b64}"></div>
+        </div>
+      </div>
+    ROW
+  end.join
+
+  html = <<~HTML
+    <!DOCTYPE html>
+    <html>
+    <head>
+    <style>
+      body { font-family: -apple-system, sans-serif; background: #1a1a1a; color: #eee; padding: 20px; }
+      h2 { margin-bottom: 16px; }
+      .item { background: #2a2a2a; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+      .item h3 { font-size: 14px; margin-bottom: 12px; word-break: break-all; }
+      .images { display: flex; gap: 12px; flex-wrap: wrap; }
+      .images > div { text-align: center; }
+      .images p { font-size: 11px; color: #999; margin-bottom: 4px; }
+      .images img { max-width: 300px; border: 1px solid #444; border-radius: 4px; }
+    </style>
+    </head>
+    <body>
+    <h2>Snapshot Diffs — #{changed_files.size} changed</h2>
+    #{rows}
+    </body>
+    </html>
+  HTML
+
+  File.write(File.join(report_dir, 'index.html'), html)
+  puts "==> HTML report saved to #{report_dir}"
 end
 
 # Step 4: Copy changed files to reference directory
