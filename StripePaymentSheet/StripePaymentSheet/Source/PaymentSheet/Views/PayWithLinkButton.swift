@@ -135,15 +135,19 @@ final class PayWithLinkButton: UIControl {
         let linkY = (linkTextSpacing) * linkLogoHeight
         linkAttachment.bounds = CGRect(x: 0, y: -linkY, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
 
-        // The localized string still contains the Link token even when the displayed logo is branded.
-        let linkToken = LinkBrand.link.displayName
-        let range = payWithLinkString.mutableString.range(of: linkToken)
-        if range.location != NSNotFound {
-            payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location + range.length)
-            payWithLinkString.insert(Self.makeSpacerString(width: 1), at: range.location)
+        // Prefer the current brand token, but still swap in the logo if the localized
+        // string falls back to the legacy "Link" copy during rollout.
+        let brandTokenToReplace = [brand.displayName, LinkBrand.link.displayName].first { token in
+            payWithLinkString.mutableString.range(of: token).location != NSNotFound
+        }
+        if let brandTokenToReplace,
+           let range = payWithLinkString.string.range(of: brandTokenToReplace) {
+            let nsRange = NSRange(range, in: payWithLinkString.string)
+            payWithLinkString.insert(Self.makeSpacerString(width: 1), at: nsRange.location + nsRange.length)
+            payWithLinkString.insert(Self.makeSpacerString(width: 1), at: nsRange.location)
 
-            // Add the Link attachment
-            payWithLinkString.replaceOccurrences(of: linkToken, with: linkAttachment)
+            // Add the brand attachment
+            payWithLinkString.replaceOccurrences(of: brandTokenToReplace, with: linkAttachment)
         }
 
         linkView.attributedText = payWithLinkString

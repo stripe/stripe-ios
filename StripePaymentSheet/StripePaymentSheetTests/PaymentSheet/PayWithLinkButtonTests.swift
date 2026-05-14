@@ -53,6 +53,19 @@ final class PayWithLinkButtonTests: XCTestCase {
         XCTAssertEqual(onelinkButton.accessibilityLabel, "Pay with Link")
     }
 
+    func testOnelinkButtonReplacesBrandTextWithLogoAttachment() throws {
+        let onelinkButton = PayWithLinkButton(brand: .onelink)
+        onelinkButton.frame = CGRect(origin: .zero, size: CGSize(width: 240, height: 44))
+        onelinkButton.layoutIfNeeded()
+
+        let label = try XCTUnwrap(findVisibleAttributedLabel(in: onelinkButton))
+        let renderedString = label.attributedText?.string ?? ""
+
+        XCTAssertFalse(renderedString.contains(LinkBrand.link.displayName))
+        XCTAssertFalse(renderedString.contains(LinkBrand.onelink.displayName))
+        XCTAssertTrue(renderedString.contains("\u{FFFC}"))
+    }
+
     func testLocalizedBrandStrings_useProvidedBrandDisplayName() {
         XCTAssertEqual(String.Localized.pay_with_link(brand: .link), "Pay with Link")
         XCTAssertEqual(String.Localized.pay_with_link(brand: .onelink), "Pay with Link")
@@ -111,6 +124,22 @@ final class PayWithLinkButtonTests: XCTestCase {
         for subview in view.subviews where !subview.isHidden {
             if let imageView = findVisibleLogoImageView(in: subview, matching: image) {
                 return imageView
+            }
+        }
+
+        return nil
+    }
+
+    private func findVisibleAttributedLabel(in view: UIView) -> UILabel? {
+        if let label = view as? UILabel,
+           !view.isHidden,
+           label.attributedText != nil {
+            return label
+        }
+
+        for subview in view.subviews where !subview.isHidden {
+            if let label = findVisibleAttributedLabel(in: subview) {
+                return label
             }
         }
 

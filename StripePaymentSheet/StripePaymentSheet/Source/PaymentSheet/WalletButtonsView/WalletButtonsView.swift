@@ -63,6 +63,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                             height: flowController.configuration.appearance.primaryButton.height,
                             // TODO (iOS 26): Respect cornerRadius = nil
                             cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius,
+                            brand: flowController.configuration.resolvedLinkBrand(elementsSession: flowController.elementsSession),
                             borderColor: flowController.configuration.appearance.colors.componentBorder,
                             action: completion
                         )
