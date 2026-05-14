@@ -107,8 +107,13 @@ end
 message = "Update snapshot reference images\n\n#{changed_files.size} modified, #{added_files.size} added"
 system('git', 'commit', '-m', message, exception: true)
 
-branch = `git rev-parse --abbrev-ref HEAD`.strip
+branch = ENV['BITRISE_GIT_BRANCH'] || `git rev-parse --abbrev-ref HEAD`.strip
+if branch == 'HEAD'
+  abort 'Error: Could not determine branch name. Set BITRISE_GIT_BRANCH.'
+end
+
 puts "==> Pushing to #{branch}..."
-system('git', 'push', 'origin', branch, exception: true)
+system('git', 'remote', 'set-url', 'origin', 'git@github.com:stripe/stripe-ios.git')
+system('git', 'push', 'origin', "HEAD:#{branch}", exception: true)
 
 puts '==> Done.'
