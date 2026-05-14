@@ -21,7 +21,7 @@ ROOT_DIR = File.expand_path('..', SCRIPT_DIR)
 Dir.chdir(ROOT_DIR)
 
 DEVICE_MODEL = 'iPhone 12 mini'
-OS_VERSION = '16.4'
+DEFAULT_VERSIONS = ['16.4']
 RECORD_DIR = '/tmp/snapshot-records'
 REFERENCE_DIR = File.join(ROOT_DIR, 'Tests/ReferenceImages_64')
 DIFF_THRESHOLD = 0.1 # percentage of pixels that must differ
@@ -29,11 +29,15 @@ FUZZ = '5%' # per-pixel color tolerance before counting as different
 
 commit = false
 dry_run = false
+versions = []
 OptionParser.new do |opts|
   opts.banner = "Usage: record_snapshots.rb [options]"
   opts.on('--commit', 'Commit changes (for CI)') { commit = true }
   opts.on('--dry-run', 'Show what would change without updating') { dry_run = true }
+  opts.on('--version VERSION', 'iOS version to record (can be specified multiple times)') { |v| versions << v }
 end.parse!
+
+versions = DEFAULT_VERSIONS if versions.empty?
 
 def require_imagemagick!
   unless system('command', '-v', 'compare', [:out, :err] => '/dev/null')
@@ -61,40 +65,48 @@ if commit
   end
 end
 
-# Step 1: Record snapshots
-puts '==> Recording snapshots...'
-FileUtils.rm_rf(RECORD_DIR)
-FileUtils.rm_rf("#{RECORD_DIR}_64")
+# Maps rel_path -> recorded absolute path for changed/added files
+changed_files = {}
+added_files = {}
+FileUtils.rm_rf('/tmp/snapshot-all-recorded')
 
-system('./ci_scripts/test.rb', '--only-snapshot-tests',
-       '--scheme', 'AllStripeFrameworks',
-       '--device', DEVICE_MODEL,
-       '--version', OS_VERSION,
-       exception: true)
+versions.each do |os_version|
+  puts "==> Recording snapshots (iOS #{os_version})..."
+  FileUtils.rm_rf(RECORD_DIR)
+  FileUtils.rm_rf("#{RECORD_DIR}_64")
 
-# FBSnapshotTestCase appends _64 for 64-bit architecture
-actual_record_dir = if Dir.exist?("#{RECORD_DIR}_64")
-                     "#{RECORD_DIR}_64"
-                   elsif Dir.exist?(RECORD_DIR)
-                     RECORD_DIR
-                   else
-                     abort "Error: No snapshots recorded (expected #{RECORD_DIR} or #{RECORD_DIR}_64)"
-                   end
+  system('./ci_scripts/test.rb', '--only-snapshot-tests',
+         '--scheme', 'AllStripeFrameworks',
+         '--device', DEVICE_MODEL,
+         '--version', os_version,
+         exception: true)
 
-# Step 2: Compare and collect meaningful changes
-puts '==> Comparing against reference images...'
-changed_files = []
-added_files = []
+  # FBSnapshotTestCase appends _64 for 64-bit architecture
+  actual_record_dir = if Dir.exist?("#{RECORD_DIR}_64")
+                       "#{RECORD_DIR}_64"
+                     elsif Dir.exist?(RECORD_DIR)
+                       RECORD_DIR
+                     else
+                       abort "Error: No snapshots recorded (expected #{RECORD_DIR} or #{RECORD_DIR}_64)"
+                     end
 
-Dir.glob("#{actual_record_dir}/**/*.png").each do |recorded_file|
-  rel_path = recorded_file.sub("#{actual_record_dir}/", '')
-  reference_file = File.join(REFERENCE_DIR, rel_path)
+  puts "==> Comparing against reference images (iOS #{os_version})..."
 
-  if !File.exist?(reference_file)
-    added_files << rel_path
-  elsif !FileUtils.compare_file(reference_file, recorded_file)
-    if significant_difference?(reference_file, recorded_file)
-      changed_files << rel_path
+  Dir.glob("#{actual_record_dir}/**/*.png").each do |recorded_file|
+    rel_path = recorded_file.sub("#{actual_record_dir}/", '')
+    reference_file = File.join(REFERENCE_DIR, rel_path)
+
+    # Copy to a persistent location (temp dir is cleared between versions)
+    persistent_copy = File.join('/tmp/snapshot-all-recorded', rel_path)
+    FileUtils.mkdir_p(File.dirname(persistent_copy))
+    FileUtils.cp(recorded_file, persistent_copy)
+
+    if !File.exist?(reference_file)
+      added_files[rel_path] = persistent_copy
+    elsif !FileUtils.compare_file(reference_file, recorded_file)
+      if significant_difference?(reference_file, recorded_file)
+        changed_files[rel_path] = persistent_copy
+      end
     end
   end
 end
@@ -105,16 +117,15 @@ if changed_files.empty? && added_files.empty?
 end
 
 puts "==> Found #{changed_files.size} modified, #{added_files.size} added"
-(changed_files + added_files).each { |f| puts "  #{f}" }
+(changed_files.keys + added_files.keys).each { |f| puts "  #{f}" }
 
 # Step 3: Generate diff images (white background, red changed pixels)
 DIFF_DIR = '/tmp/snapshot-diffs'
 FileUtils.rm_rf(DIFF_DIR)
 FileUtils.mkdir_p(DIFF_DIR)
 
-changed_files.each do |rel_path|
+changed_files.each do |rel_path, recorded_file|
   reference_file = File.join(REFERENCE_DIR, rel_path)
-  recorded_file = File.join(actual_record_dir, rel_path)
   diff_file = File.join(DIFF_DIR, rel_path)
   FileUtils.mkdir_p(File.dirname(diff_file))
   system('compare', '-fuzz', FUZZ,
@@ -137,15 +148,14 @@ if !changed_files.empty?
   report_dir = File.join(html_report_dir, 'snapshot-diffs')
   FileUtils.mkdir_p(report_dir)
 
-  rows = changed_files.map do |rel_path|
+  rows = changed_files.map do |rel_path, recorded_file|
     diff_file = File.join(DIFF_DIR, rel_path)
     old_file = File.join(REFERENCE_DIR, rel_path)
-    new_file = File.join(actual_record_dir, rel_path)
     name = File.basename(rel_path)
 
     diff_b64 = File.exist?(diff_file) ? Base64.strict_encode64(File.binread(diff_file)) : ''
     old_b64 = File.exist?(old_file) ? Base64.strict_encode64(File.binread(old_file)) : ''
-    new_b64 = File.exist?(new_file) ? Base64.strict_encode64(File.binread(new_file)) : ''
+    new_b64 = File.exist?(recorded_file) ? Base64.strict_encode64(File.binread(recorded_file)) : ''
 
     <<~ROW
       <div class="item">
@@ -192,11 +202,10 @@ end
 exit 0 if dry_run
 
 # Step 4: Copy changed files to reference directory
-(changed_files + added_files).each do |rel_path|
-  src = File.join(actual_record_dir, rel_path)
+(changed_files.merge(added_files)).each do |rel_path, recorded_file|
   dst = File.join(REFERENCE_DIR, rel_path)
   FileUtils.mkdir_p(File.dirname(dst))
-  FileUtils.cp(src, dst)
+  FileUtils.cp(recorded_file, dst)
 end
 
 puts '==> Reference images updated.'
@@ -205,7 +214,7 @@ exit 0 unless commit
 
 # Step 5: Commit
 puts '==> Committing snapshot changes...'
-(changed_files + added_files).each do |rel_path|
+(changed_files.keys + added_files.keys).each do |rel_path|
   system('git', 'add', File.join('Tests/ReferenceImages_64', rel_path))
 end
 
