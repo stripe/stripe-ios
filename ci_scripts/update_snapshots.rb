@@ -188,7 +188,7 @@ if dry_run
   exit 0
 end
 
-# Step 4: Commit and push
+# Step 5: Commit (but don't push — that happens in a separate Bitrise step after deploy)
 puts '==> Committing snapshot changes...'
 (changed_files + added_files).each do |rel_path|
   system('git', 'add', File.join('Tests/ReferenceImages_64', rel_path))
@@ -197,15 +197,4 @@ end
 message = "Update snapshot reference images\n\n#{changed_files.size} modified, #{added_files.size} added"
 system('git', 'commit', '-m', message, exception: true)
 
-branch = ENV['BITRISE_GIT_BRANCH'] || `git rev-parse --abbrev-ref HEAD`.strip
-if branch == 'HEAD'
-  abort 'Error: Could not determine branch name. Set BITRISE_GIT_BRANCH.'
-end
-
-puts "==> Pushing to #{branch}..."
-system('git', 'remote', 'set-url', 'origin', 'git@github.com:stripe/stripe-ios.git')
-system('git', 'fetch', 'origin', branch, [:out, :err] => '/dev/null')
-system('git', 'rebase', "origin/#{branch}", exception: true)
-system('git', 'push', 'origin', "HEAD:#{branch}", exception: true)
-
-puts '==> Done.'
+puts '==> Done. Run push_snapshots.rb to push.'

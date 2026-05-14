@@ -88,6 +88,10 @@ workflows:
         inputs:
         - content: ruby ci_scripts/update_snapshots.rb
     - deploy-to-bitrise-io@2: {}
+    - script@1:
+        title: Push snapshot changes
+        inputs:
+        - content: ruby ci_scripts/push_snapshots.rb
     before_run:
     - prep_all
     envs:
