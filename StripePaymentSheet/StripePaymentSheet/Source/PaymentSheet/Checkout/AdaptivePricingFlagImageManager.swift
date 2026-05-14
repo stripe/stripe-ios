@@ -48,10 +48,10 @@ final class AdaptivePricingFlagImageManager {
         let localCountry = Self.countryCode(for: local)
         let integrationCountry = Self.countryCode(for: integration)
 
-        async let localResult = downloadFlagImage(countryCode: localCountry)
-        async let integrationResult = downloadFlagImage(countryCode: integrationCountry)
+        let localResult = await downloadFlagImage(countryCode: localCountry)
+        let integrationResult = await downloadFlagImage(countryCode: integrationCountry)
 
-        switch await (localResult, integrationResult) {
+        switch (localResult, integrationResult) {
         case (.success(let localImage), .success(let integrationImage)):
             imagesByCurrencyCode = [
                 local.apiValue: localImage,
