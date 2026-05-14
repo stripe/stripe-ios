@@ -44,6 +44,17 @@ end
 
 require_imagemagick!
 
+# Step 0: Skip if the last commit is already a snapshot update from CI.
+# This prevents infinite loops when snapshots have minor flakiness that
+# passes the threshold. Safe because CI rebases on the latest branch tip
+# before pushing, so any human commits are already included in the recording.
+last_commit_author = `git log -1 --format='%an'`.strip
+last_commit_message = `git log -1 --format='%s'`.strip
+if last_commit_author == 'Bitrise CI' && last_commit_message == 'Update snapshot reference images'
+  puts '==> Last commit is a snapshot update — skipping to avoid loop.'
+  exit 0
+end
+
 # Step 1: Record snapshots
 puts '==> Recording snapshots...'
 FileUtils.rm_rf(RECORD_DIR)
