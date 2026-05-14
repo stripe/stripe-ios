@@ -159,10 +159,15 @@ extension Checkout {
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
             currency: CurrencySelectorUtilities.CurrencyCode
         ) {
+            let defaultTraits = UITraitCollection(preferredContentSizeCategory: .large)
+            let footnoteSize = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .footnote, compatibleWith: defaultTraits).pointSize
+            let flagFont = appearance.font.withSize(footnoteSize * appearance.sizeScaleFactor)
             let (left, right) = CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
                 localizedPricesMetas: session.localizedPricesMetas,
-                flagPrefixProvider: checkout.flagImageManager.flagIcon
+                flagPrefixProvider: { [weak checkout] currency in
+                    checkout?.flagImageManager.flagIcon(for: currency, font: flagFont) ?? NSAttributedString()
+                }
             )
 
             let newSelector = TwoOptionSelectorView(

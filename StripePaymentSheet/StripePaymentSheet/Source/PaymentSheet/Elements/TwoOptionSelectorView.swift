@@ -92,22 +92,36 @@ final class TwoOptionSelectorView: UIView {
 
     // MARK: - Setup
 
+    private func trackAndPillCornerRadii() -> (track: CGFloat, pill: CGFloat) {
+        let h = appearance.height
+        let bw = appearance.borderWidth
+        let maxTrack = max((h - bw) / 2, 0)
+        let track = min(appearance.cornerRadius, maxTrack)
+        let innerH = h - 2 * trackPadding
+        let maxPill = innerH / 2
+        let pill = max(0, min(track - trackPadding, maxPill))
+        return (track, pill)
+    }
+
     private func setupViews() {
         mainStackView.axis = .vertical
         mainStackView.spacing = 6
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainStackView)
 
+        let (trackCornerRadius, pillCornerRadius) = trackAndPillCornerRadii()
+
         // Track background
         trackView.backgroundColor = appearance.trackBackground
         trackView.layer.borderWidth = appearance.borderWidth
-        trackView.layer.cornerRadius = appearance.cornerRadius
+        trackView.layer.cornerRadius = trackCornerRadius
+        trackView.layer.cornerCurve = .circular
         trackView.clipsToBounds = false
 
         // Selection indicator pill
         selectionIndicatorView.backgroundColor = appearance.pillBackground
-        selectionIndicatorView.layer.cornerRadius = max(appearance.cornerRadius - trackPadding, 0)
-        selectionIndicatorView.layer.borderWidth = appearance.borderWidth
+        selectionIndicatorView.layer.cornerRadius = pillCornerRadius
+        selectionIndicatorView.layer.cornerCurve = .circular
 
         buttonsStackView.axis = .horizontal
         buttonsStackView.spacing = 0
@@ -172,9 +186,7 @@ final class TwoOptionSelectorView: UIView {
     }
 
     private func updateBorderColors() {
-        let borderColor = appearance.borderColor.cgColor
-        trackView.layer.borderColor = borderColor
-        selectionIndicatorView.layer.borderColor = borderColor
+        trackView.layer.borderColor = appearance.borderColor.cgColor
     }
 
     private func configureButton(_ button: UIButton, item: TwoOptionSelectorItem) {

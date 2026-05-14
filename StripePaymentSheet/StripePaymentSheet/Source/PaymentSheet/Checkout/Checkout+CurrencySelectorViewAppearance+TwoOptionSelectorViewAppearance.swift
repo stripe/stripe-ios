@@ -11,7 +11,7 @@ extension Checkout.CurrencySelectorView.Appearance: TwoOptionSelectorViewAppeara
     var trackBackground: UIColor { background }
     var pillBackground: UIColor { selectedBackground }
     var selectedTextColor: UIColor { selectedText }
-    var unselectedTextColor: UIColor { textSecondary }
+    var unselectedTextColor: UIColor { text }
     var borderColor: UIColor { border }
     var captionColor: UIColor { textSecondary }
 }

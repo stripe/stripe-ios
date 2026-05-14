@@ -7,6 +7,12 @@
 /* Text for a button that, when tapped, displays another screen where the customer can add payment method details */
 "+ Add" = "+ Add";
 
+/* Exchange rate with conversion fee disclosure, e.g. '1 GBP = 1.2871 USD (includes 4% conversion fee).' */
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee).";
+
+/* Exchange rate caption, e.g. '1 GBP = 1.2871 USD' */
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 /* Title shown above a card entry form */
 "Add a card" = "Add a card";
 

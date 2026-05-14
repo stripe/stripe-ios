@@ -18,11 +18,11 @@ extension Checkout.CurrencySelectorView {
         /// Height of the selector track. Default is `36`.
         public var height: CGFloat = 36.0
 
-        /// Corner radius applied to the track and the selected currency pill. Default is `8`.
-        public var cornerRadius: CGFloat = 8.0
+        /// Corner radius applied to the track and the selected currency pill. Default is `18` (capsule).
+        public var cornerRadius: CGFloat = 18.0
 
-        /// Border width for the track and pill outlines. Default is `0.5`.
-        public var borderWidth: CGFloat = 0.5
+        /// Border width for the track and pill outlines. Default is `0`.
+        public var borderWidth: CGFloat = 0
 
         // MARK: - Colors
 
@@ -59,7 +59,7 @@ extension Checkout.CurrencySelectorView {
         /// Text color for the currently selected currency option. Default is `.label`.
         public var selectedText: UIColor = .label
 
-        /// Text color for the unselected currency option and caption text. Default is `.secondaryLabel`.
+        /// Text color for caption text. Default is `.secondaryLabel`.
         public var textSecondary: UIColor = .secondaryLabel
 
         /// Color for error messages shown below the selector. Default is `.systemRed`.

@@ -55,12 +55,12 @@ enum CurrencySelectorUtilities {
     }
 
     static func makeSelectorItem(currency: CurrencyCode, total: Int, flagPrefix: NSAttributedString) -> TwoOptionSelectorItem {
-        let amount = String.localizedAmountDisplayString(for: total, currency: currency.displayValue)
         let displayText = NSMutableAttributedString(attributedString: flagPrefix)
         if displayText.length > 0 {
-            displayText.append(NSAttributedString(string: "  "))
+            // U+2009 THIN SPACE: slightly wider than a single space alone, narrower than two spaces.
+            displayText.append(NSAttributedString(string: " \u{2009}"))
         }
-        displayText.append(NSAttributedString(string: amount))
+        displayText.append(NSAttributedString(string: currency.displayValue))
         return TwoOptionSelectorItem(
             id: currency.apiValue,
             displayText: displayText,
@@ -85,20 +85,43 @@ enum CurrencySelectorUtilities {
     }
 
     static func formatExchangeRate(from meta: STPCheckoutSessionExchangeRateMeta) -> String {
-        let sellCurrency = CurrencyCode(meta.sellCurrency).displayValue
-        let buyCurrency = CurrencyCode(meta.buyCurrency).displayValue
+        let localCurrency = CurrencyCode(meta.localizedCurrency).displayValue
+        let integrationCurrency = CurrencyCode(meta.integrationCurrency).displayValue
 
         let formattedRate: String
         if let rateDouble = Double(meta.exchangeRate) {
+            let inverse = 1.0 / rateDouble
             let formatter = NumberFormatter()
             formatter.minimumFractionDigits = 2
             formatter.maximumFractionDigits = 4
-            formattedRate = formatter.string(from: NSNumber(value: rateDouble)) ?? meta.exchangeRate
+            formattedRate = formatter.string(from: NSNumber(value: inverse)) ?? meta.exchangeRate
         } else {
             formattedRate = meta.exchangeRate
         }
 
-        return "1 \(sellCurrency) = \(formattedRate) \(buyCurrency)"
+        if meta.conversionMarkupBps > 0 {
+            let feePercent = formatConversionFeePercent(bps: meta.conversionMarkupBps)
+            return .Localized.exchangeRateWithConversionFee(
+                localCurrency: localCurrency,
+                rate: formattedRate,
+                integrationCurrency: integrationCurrency,
+                feePercent: feePercent
+            )
+        }
+
+        return .Localized.exchangeRate(
+            localCurrency: localCurrency,
+            rate: formattedRate,
+            integrationCurrency: integrationCurrency
+        )
+    }
+
+    private static func formatConversionFeePercent(bps: Int) -> String {
+        let percent = Double(bps) / 100.0
+        if percent.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(format: "%.0f", percent)
+        }
+        return String(format: "%g", percent)
     }
 
     // MARK: - Availability
