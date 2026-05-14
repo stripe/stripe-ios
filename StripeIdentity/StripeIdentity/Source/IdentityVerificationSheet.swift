@@ -31,8 +31,7 @@ final public class IdentityVerificationSheet {
         /// displayed in both light and dark modes, if the app supports it. Use a
         /// dynamic UIImage to support different images in light vs dark mode.
         public var brandLogo: UIImage
-        /// Optional accent color for the native flow's tint-based UI, including
-        /// primary action buttons.
+        /// Optional background color for the native flow's primary action buttons.
         public var brandColor: UIColor?
 
         /// Initializes a Configuration.
@@ -40,7 +39,7 @@ final public class IdentityVerificationSheet {
         ///   - brandLogo: An image of your customer-facing business logo.
         ///     The recommended image size is 32 x 32 points. The image will be
         ///     displayed in both light and dark modes, if the app supports it.
-        ///   - brandColor: Optional accent color for the native flow's tint-based UI.
+        ///   - brandColor: Optional background color for the native flow's primary action buttons.
         public init(
             brandLogo: UIImage,
             brandColor: UIColor? = nil

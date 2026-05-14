@@ -19,6 +19,7 @@ final class VerificationSheetFlowControllerMock: VerificationSheetFlowController
     var uncollectedFields: Set<StripeAPI.VerificationPageFieldType>
     var isFinishedCollecting = false
     var analyticsLastScreen: IdentityFlowViewController?
+    var brandColor: UIColor?
 
     var visitedIndividualWelcomePage = false
 

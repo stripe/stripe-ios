@@ -26,6 +26,7 @@ protocol VerificationSheetFlowControllerProtocol: AnyObject {
     var delegate: VerificationSheetFlowControllerDelegate? { get set }
 
     var navigationController: UINavigationController { get }
+    var brandColor: UIColor? { get }
 
     var documentUploader: DocumentUploaderProtocol? { get }
     var visitedIndividualWelcomePage: Bool { get }
@@ -112,9 +113,6 @@ final class VerificationSheetFlowController: NSObject {
             rootViewController: LoadingViewController()
         )
         navigationController.identityDelegate = self
-        if let brandColor {
-            navigationController.view.tintColor = brandColor
-        }
         return navigationController
     }()
 }
