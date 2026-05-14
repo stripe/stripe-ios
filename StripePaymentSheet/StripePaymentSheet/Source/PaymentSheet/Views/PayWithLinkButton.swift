@@ -119,38 +119,7 @@ final class PayWithLinkButton: UIControl {
         linkView.translatesAutoresizingMaskIntoConstraints = false
         linkView.font = UIFont.systemFont(ofSize: 20, weight: .medium)
             .scaled(withTextStyle: .callout, maximumPointSize: 21)
-
-        let payWithLinkString = NSMutableAttributedString(string: String.Localized.pay_with_link(brand: brand))
-
-        // Create the Link logo attachment
-        let linkImage = primaryLinkLogoImage
-        let linkAttachment = NSTextAttachment(image: linkImage)
-
-        let linkLogoRatio = linkImage.size.width / linkImage.size.height
-
-        let linkTextSpacing = 0.073 // the total top+bottom space outside the Link logo
-
-        let linkLogoHeight = (linkView.font.capHeight + (linkView.font.pointSize * 0.1)) *
-        (1.0 + linkTextSpacing)
-        let linkY = (linkTextSpacing) * linkLogoHeight
-        linkAttachment.bounds = CGRect(x: 0, y: -linkY, width: linkLogoHeight * linkLogoRatio, height: linkLogoHeight)
-
-        // Prefer the current brand token, but still swap in the logo if the localized
-        // string falls back to the legacy "Link" copy during rollout.
-        let brandTokenToReplace = [brand.displayName, LinkBrand.link.displayName].first { token in
-            payWithLinkString.mutableString.range(of: token).location != NSNotFound
-        }
-        if let brandTokenToReplace,
-           let range = payWithLinkString.string.range(of: brandTokenToReplace) {
-            let nsRange = NSRange(range, in: payWithLinkString.string)
-            payWithLinkString.insert(Self.makeSpacerString(width: 1), at: nsRange.location + nsRange.length)
-            payWithLinkString.insert(Self.makeSpacerString(width: 1), at: nsRange.location)
-
-            // Add the brand attachment
-            payWithLinkString.replaceOccurrences(of: brandTokenToReplace, with: linkAttachment)
-        }
-
-        linkView.attributedText = payWithLinkString
+        linkView.attributedText = makePayWithLinkAttributedText(for: linkView.font)
         return linkView
     }()
 
