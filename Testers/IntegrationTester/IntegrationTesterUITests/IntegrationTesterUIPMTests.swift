@@ -68,9 +68,8 @@ class IntegrationTesterUIPMTests: IntegrationTesterUITests {
             mastercardButton.forceTapElement()
 
             let payButton = applePay.buttons["Pay with Passcode"]
-            if payButton.waitForExistence(timeout: 5.0) {
-                payButton.forceTapElement()
-            }
+            XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+            payButton.forceTapElement()
         }
 
         let statusView = app.staticTexts["Payment status view"]
