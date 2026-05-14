@@ -39,7 +39,8 @@ FBSnapshotVerifyViewWithPixelOptions(view__, identifier__, FBSnapshotTestCaseDef
 }
 
 - (NSString *)getReferenceImageDirectoryWithDefault:(NSString *)dir {
-    return @"/tmp/snapshot-records";
+    NSString *envDir = NSProcessInfo.processInfo.environment[@"SNAPSHOT_RECORD_DIR"];
+    return envDir ?: @"/tmp/snapshot-records";
 }
 
 - (void)recordIssue:(XCTIssue *)issue {
