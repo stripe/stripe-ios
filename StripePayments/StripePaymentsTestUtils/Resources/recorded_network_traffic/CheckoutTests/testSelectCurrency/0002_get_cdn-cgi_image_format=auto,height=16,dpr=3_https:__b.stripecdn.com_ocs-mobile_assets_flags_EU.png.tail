@@ -1,0 +1,25 @@
+GET
+https:\/\/img\.stripecdn\.com\/cdn-cgi\/image\/format=auto,height=16,dpr=3\/https:\/\/b\.stripecdn\.com\/ocs-mobile\/assets\/flags\/EU\.png$
+200
+image/png;base64
+Content-Type: image/png
+Etag: "cfGKNndTUpM8bz-PcPTZmdgjSgI7V4lueYBcHeb1reDQ:f9ac62458d12cc36d1f72cdabe32d6fe"
+Last-Modified: Wed, 13 May 2026 23:27:21 GMT
+content-security-policy: default-src 'none'; navigate-to 'none'; form-action 'none'; img-src data:; style-src 'unsafe-inline';
+Age: 34016
+Via: 1.1 2eaa79fbb5efbb9ba1be5c5f5e4bd52e.cloudfront.net (CloudFront)
+Server: cloudflare
+Priority: u=4;i=?0,cf-chb=(37;u=2;i=?0 384;u=4;i=?0)
+cf-cache-status: HIT
+Cache-Control: public, max-age=31536000
+Date: Thu, 14 May 2026 15:07:06 GMT
+cf-resized: internal=ok/m q=0 n=525+0 c=0+1 v=2026.5.2 l=807 f=false c2=0 wv=2026.4.0
+Content-Length: 807
+Strict-Transport-Security: max-age=31556926; includeSubDomains; preload
+warning: cf-images 299 "dpr > 2 is not recommended"
+x-content-type-options: nosniff
+cf-ray: 9fbacf867d71b3ad-DEN
+Vary: Accept
+Accept-Ranges: bytes
+
+iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAABDlBMVEVHcExDRYtDRYtDRYtDRYxDRItDRYtDRYtDRYtDRYtDRYtFRotFRotERYtERYtBRYtDRItDRItARIpCR4tERoxERopERo1DRY1DRYxDRYxDRYxDRYtDRYtDRYtDRolFRYpCRYpCRYxCRYpCRYtERI1DRYtDRYtDRYtDRYtDRYtDRYtCRYtCRYtDRYtCRIv81mn+12lBRIs8P4zryWz/22hISYpJSYo5PY1HSIr/3Wf/2Wiij3qjkHnryGxNTYmnk3mikHmDd4BKSoqFeX+Dd3+di3v61Gm0nnaEd3/71WmdjHv71mn61WlBQ4s7P4z+2GlLS4nqyGxLS4pHR4tHSIuxm3dAQ4yynHdAQ4tAQox5x7p+AAAALXRSTlMACfbrCPO9vLvIuhQTam4EFBMEFBQpFAQEa29saAgoFW0oaQgpwcD08sa/xr8jxD4nAAABm0lEQVR42uWW13qCQBCFN1GjMb333tsAi4jYe9d0ou//IqEluDAbuMidc3eGOX7D7O8OhExr7ERnQkR01ynf2LuKzIaIyPXSpll/OfeEBACWjW8RcoLVS5BOg4Q8SCyQfaz+JS/LpeIAeXRK5rF+8ilRTJWxrh7IDVKflkVBEAsK4ogRTy1Vh2Abnl8VsCRbwRog0+7WqhKUzJZyIFkS+AbIfHW0XiujF8tyIfemOxK4BtruZIVsv04HoCgg/UquQe1qgiBoDdU+uAnJMQxrPeMnmxWKSuwdqq2+1vz8AFT6DWCMpd6ovIM7BFNKDFeE5UenKgXmWOiI5YoE8ePNkyB+vHkSwI8vzxpMfjDDRN5tyeHH15In7760zY/vb+bNu2O1+NFZns2xji2uuAfH8PxDOwThDaj8C29U/ive9r1EQ+M9svkZB+Ht8uzw46EdMViDB5cfYGm3DDHeRebnyoxb/KrkcGXEHVnGLmMOV0YckO0Ekh6w/LiRXCXkOB5+oSTPzBW0eP4YbmXdH645W279KMxSvFiZ2q+GbzTpOS9GBmZ8AAAAAElFTkSuQmCC

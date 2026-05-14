@@ -24,11 +24,10 @@ final class AdaptivePricingFlagImageManager {
 
     private var imagesByCurrencyCode: [String: UIImage]?
 
-    init(
-        downloadManager: DownloadManager = .sharedManager,
-        analyticsClient: STPAnalyticsClient = .sharedClient
-    ) {
-        self.downloadManager = downloadManager
+    init(analyticsClient: STPAnalyticsClient = .sharedClient) {
+        self.downloadManager = DownloadManager(
+            urlSessionConfiguration: StripeAPIConfiguration.sharedUrlSessionConfiguration
+        )
         self.analyticsClient = analyticsClient
     }
 

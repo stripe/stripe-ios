@@ -1,26 +1,26 @@
 POST
-https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1X7B49UWbWarzQtcI9li8s1ywLtPzSrvEiMbxRBrnGmJHV9hi6lrAcHzY\/init$
+https:\/\/api\.stripe\.com\/v1\/payment_pages\/cs_test_a1foY3LgKN3du5tGp9VdY7RcPqcCVg69gduWiD3FVUVfxqaNh1Os0xz53P\/init$
 200
 application/json
 access-control-allow-methods: GET, HEAD, PUT, PATCH, POST, DELETE
-content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=EXTakXa8xP26DjGieDcRSEXo5uPpZJrGd1qg-P-5SP4KU4766A_qyL7Lt_NPz94EKJdEdJdMwE2wmPwX; report-to csp
+content-security-policy: base-uri 'none'; default-src 'none'; form-action 'none'; frame-ancestors 'none'; img-src 'self'; script-src 'self' 'report-sample'; style-src 'self'; worker-src 'none'; upgrade-insecure-requests; report-uri https://q.stripe.com/csp-violation?q=K6SP-iF9_neJpHjeifbb8EBFDuceX7qaMiNXHlXYBuyOg7gJZHk4qTeqkEHQ4f-TP2MeqC-BiHXZnPXj; report-to csp
 Server: nginx
 Cache-Control: no-cache, no-store
-reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=EXTakXa8xP26DjGieDcRSEXo5uPpZJrGd1qg-P-5SP4KU4766A_qyL7Lt_NPz94EKJdEdJdMwE2wmPwX&t=1"
+reporting-endpoints: csp="https://q.stripe.com/csp-report-v2?q=K6SP-iF9_neJpHjeifbb8EBFDuceX7qaMiNXHlXYBuyOg7gJZHk4qTeqkEHQ4f-TP2MeqC-BiHXZnPXj&t=1"
 x-wc: 3c3
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 Access-Control-Allow-Origin: *
 stripe-should-retry: false
 x-stripe-priority-routing-enabled: true
-report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=EXTakXa8xP26DjGieDcRSEXo5uPpZJrGd1qg-P-5SP4KU4766A_qyL7Lt_NPz94EKJdEdJdMwE2wmPwX&t=1"}],"include_subdomains":true}
-request-id: req_U9uWeCZpNHcqPM
+report-to: {"group":"csp","max_age":8640,"endpoints":[{"url":"https://q.stripe.com/csp-report-v2?q=K6SP-iF9_neJpHjeifbb8EBFDuceX7qaMiNXHlXYBuyOg7gJZHk4qTeqkEHQ4f-TP2MeqC-BiHXZnPXj&t=1"}],"include_subdomains":true}
+request-id: req_FgOOFd9njmdvSw
 x-stripe-routing-context-priority-tier: api-testmode
-Content-Length: 30917
+Content-Length: 30920
 Vary: Origin
-Date: Thu, 14 May 2026 14:11:56 GMT
-original-request: req_U9uWeCZpNHcqPM
+Date: Thu, 14 May 2026 15:07:08 GMT
+original-request: req_FgOOFd9njmdvSw
 stripe-version: 2020-08-27
-idempotency-key: 0728f53a-023d-42ba-b371-79a62dcc2af0
+idempotency-key: 83b8b1d3-79cf-458e-9f1d-92f11e21e6c9
 access-control-expose-headers: Request-Id, Stripe-Manage-Version, Stripe-Should-Retry, X-Stripe-External-Auth-Required, X-Stripe-Privileged-Session-Required
 access-control-max-age: 300
 access-control-allow-credentials: true
@@ -60,7 +60,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
   "blocked_billing_address_countries" : [
 
   ],
-  "id" : "ppage_1TWzzTFY0qyl6XeWKCXxaltk",
+  "id" : "ppage_1TX0qrFY0qyl6XeWecsxHkbQ",
   "subscription_settings" : null,
   "consent" : null,
   "application" : null,
@@ -74,14 +74,14 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
     "is_using_subscription_threshold_fx_rate_behavior" : null,
     "integration_currency" : "usd",
     "integration_custom_amount_info" : null,
-    "active_presentment_currency" : "eur",
+    "active_presentment_currency" : "usd",
     "integration_amount" : 2000,
     "local_currency_options" : [
       {
-        "amount" : 1779,
+        "amount" : 1781,
         "currency" : "eur",
         "conversion_markup_bps" : 400,
-        "presentment_exchange_rate" : "0.8895",
+        "presentment_exchange_rate" : "0.8905",
         "reference_rate_info" : null
       }
     ]
@@ -91,7 +91,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
   },
   "capture_method" : "automatic_async",
   "statement_descriptor" : "mobile",
-  "session_id" : "cs_test_a1X7B49UWbWarzQtcI9li8s1ywLtPzSrvEiMbxRBrnGmJHV9hi6lrAcHzY",
+  "session_id" : "cs_test_a1foY3LgKN3du5tGp9VdY7RcPqcCVg69gduWiD3FVUVfxqaNh1Os0xz53P",
   "shipping_address_collection" : null,
   "konbini_confirmation_number" : null,
   "setup_future_usage" : null,
@@ -180,7 +180,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
     "payment_method_configuration_details" : null
   },
   "token_notification_url" : "https:\/\/pm-hooks.stripe.com\/apple_pay\/merchant_token\/pDq7tf9uieoQWMVJixFwuOve\/acct_1G6m1pFY0qyl6XeW\/",
-  "init_checksum" : "vinoTCLddRrjBgwL7HXXB0bh2ZHPLuqe",
+  "init_checksum" : "s8U7nhL9S8KWIvOe062fsHo4j6GQSL0X",
   "tax_exclusion_from_total_is_allowed" : false,
   "bnpl_link_experiment_payment_method_type" : null,
   "tax_meta" : {
@@ -275,7 +275,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
     "conecs" : false,
     "jcb" : true,
     "visa" : true,
-    "cartes_bancaires" : true,
+    "cartes_bancaires" : false,
     "pulse" : false,
     "discover" : true,
     "star" : false,
@@ -331,14 +331,14 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
     "expand" : [
 
     ],
-    "checkout_session_id" : "cs_test_a1X7B49UWbWarzQtcI9li8s1ywLtPzSrvEiMbxRBrnGmJHV9hi6lrAcHzY",
+    "checkout_session_id" : "cs_test_a1foY3LgKN3du5tGp9VdY7RcPqcCVg69gduWiD3FVUVfxqaNh1Os0xz53P",
     "locale" : "en-US",
     "mobile_app_id" : "com.stripe.StripeiOSTestHostApp",
     "type" : "deferred_intent",
     "deferred_intent" : {
-      "amount" : 1779,
+      "amount" : 2000,
       "capture_method" : "automatic_async",
-      "currency" : "eur",
+      "currency" : "usd",
       "payment_method_types" : [
         "card"
       ],
@@ -350,7 +350,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
   ],
   "billing_address_collection" : null,
   "experiments_data" : {
-    "event_id" : "cf348720-e764-4123-bbfb-ff7ec53dc241",
+    "event_id" : "be067e97-ed9d-4e27-aa30-b513a1a4a142",
     "experiment_metadata" : {
       "ocs_buyer_xp_cpl_lpm_holdback" : {
         "heldback_special_wallets" : [
@@ -377,7 +377,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
       "ocs_buyer_xp_cpl_link_signup_in_form" : "control",
       "ocs_buyer_xp_remove_name_field_guac_related_pms" : "control",
       "link_risk_based_disable_auto_prompting_checkout" : "control",
-      "checkout_es_la_locale_fallback" : "treatment",
+      "checkout_es_la_locale_fallback" : "control",
       "ocs_buyer_xp_cpl_continue_button_wording" : "control",
       "cpl_guacamole" : "control",
       "ocs_buyer_xp_cpl_lpm_content_simplification" : "control",
@@ -575,10 +575,10 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
       "enable_checkout_session_update_customer" : false
     },
     "merchant_logo_url" : null,
-    "session_id" : "elements_session_1PMWexnwboq",
+    "session_id" : "elements_session_1Ov53ANqHqv",
     "card_installments_enabled" : false,
     "account_id" : "acct_1G6m1pFY0qyl6XeW",
-    "config_id" : "91f0bb8c-46cf-4d30-bb44-5d3e5b57ef4a",
+    "config_id" : "9842be39-027b-4a1f-a87b-6add9b063a38",
     "merchant_currency" : "usd",
     "merchant_id" : "acct_1G6m1pFY0qyl6XeW",
     "card_brand_choice" : {
@@ -587,7 +587,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
         "cartes_bancaires"
       ],
       "supported_cobranded_networks" : {
-        "cartes_bancaires" : true
+        "cartes_bancaires" : false
       }
     },
     "shipping_address_settings" : {
@@ -606,9 +606,9 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
       "paypal_merchant_id" : null
     },
     "experiments_data" : {
-      "arb_id" : "4050cd20-ecd7-4a48-aec7-9b9d1b6a5f5e",
+      "arb_id" : "b69581eb-4e58-409b-8c8c-21daf52dce38",
       "experiment_metadata" : {
-        "seed" : "198386b5a82d1673c0560fd3f22744f749650f965774de1a724092130c5e1723",
+        "seed" : "42a636b5a51c6a750671547a7aa925be72dc32bf4e6f4b78d7a0789f23f9887a",
         "semi_dominant_payment_methods" : [
 
         ],
@@ -623,7 +623,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
       "experiment_assignments" : {
         "ocs_mobile_horizontal_mode_aa" : "control",
         "link_ce_conversion_cookie_aa" : "control",
-        "ff_elements_test_frontend_eff" : "control",
+        "ff_elements_test_frontend_eff" : "treatment",
         "ocs_buyer_xp_elements_link_opt_in_on_payment_select" : "control",
         "elements_hcaptcha_init_timeout" : "control",
         "paypal_payment_handler" : "control",
@@ -774,7 +774,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
     ],
     "customer_error" : null
   },
-  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1X7B49UWbWarzQtcI9li8s1ywLtPzSrvEiMbxRBrnGmJHV9hi6lrAcHzY#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
+  "stripe_hosted_url" : "https:\/\/checkout.stripe.com\/c\/pay\/cs_test_a1foY3LgKN3du5tGp9VdY7RcPqcCVg69gduWiD3FVUVfxqaNh1Os0xz53P#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blpxYHZxWkB3dnxIQEpRcGFWb1RXPW1tNVN3VHcwXTU1PXZHXUJKcDMnKSdjd2poVmB3c2B3Jz9xd3BgKSdnZGZuYndqcGthRmppancnPycmY2NjY2NjJyknaWR8anBxUXx1YCc%2FJ3Zsa2JpYFpscWBoJyknYGtkZ2lgVWlkZmBtamlhYHd2Jz9xd3BgeCUl",
   "prefilled" : null,
   "redirect_on_completion" : null,
   "blob" : null,
@@ -796,7 +796,7 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
     "google_pay"
   ],
   "state" : "active",
-  "currency" : "eur",
+  "currency" : "usd",
   "subscription_data" : null,
   "customer_managed_saved_payment_methods_offer_save" : null,
   "card_brand_choice" : {
@@ -805,42 +805,42 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
       "cartes_bancaires"
     ],
     "supported_cobranded_networks" : {
-      "cartes_bancaires" : true
+      "cartes_bancaires" : false
     }
   },
   "shipping" : null,
   "crypto_in_link_ui_enabled" : false,
-  "rqdata" : "yoUpt\/VaXvA3cV09D6ZbBvv4gRd1YGop0fyHIoSP9LNL4fuwjSHzqJ1JAyhLtUa2f\/RWF6+CtxlmKE+v5Nydk9W2vZxp9Oj0zCx25XjWvrZCtfDrocdeT5lK+IwropryhtF5uUcWn0wu+4+KAN96Ugc7GjgtDStPrAKVWoeaacKlj+LVHEmeqnt67w4lKexkckrDnFAljb9nvS0cfO10WIXRihqaUrjHlxVe1ZahWHsLgPN+IMubklymV2J3J7nqfP3ONX96C54pdHb1I9tmPmF5dh+wCR0jpK8DWQ3hFAnY7DLOYF6AzCJekA==iWDDQZ+XY0RBwxp+",
+  "rqdata" : "WHy4Il0e\/SkdJxIoZLNtRYntwS6Lih9TxwcN1YaONHjynobxA1DnxUTP\/tFd90WNV7rnGmmv9\/mFhPtC0JImSyKm7sJwDQdd5vC756W3JDSpHpZzVJwS3erC8gKFtnGBz+YKeyMCUrvXHOlGi1E\/loSK43O9oCHHTRWm2wajl2y2p+I6coqQ7a1ypUVV6IgPbwQAkiEqwjYApVJLz3k26jYPQp\/7+hvKdYNc\/3QsdiMfa3tbUUNmHu9LB8GOLNjYwRGEDfqyRIetqiXiOuWe9caVwkJ5MGB15A0m5oLGQbF73AlSh53nYzURzw==oYFdTJcabigW3RJ7",
   "total_summary" : {
-    "due" : 1779,
-    "subtotal" : 1779,
-    "total" : 1779
+    "due" : 2000,
+    "subtotal" : 2000,
+    "total" : 2000
   },
   "on_behalf_of" : null,
   "cross_sell_group" : null,
   "site_key" : "20000000-ffff-ffff-ffff-000000000002",
   "checkout_multistep_ui" : false,
-  "eid" : "6162CE87-DB19-4DFC-8BC8-22FAACD345EE",
+  "eid" : "42733978-8E3F-4820-B132-C2A4A0146A3A",
   "line_item_group" : {
-    "total" : 1779,
+    "total" : 2000,
     "line_items" : [
       {
-        "id" : "li_1TWzzTFY0qyl6XeWHp3qrUMY",
+        "id" : "li_1TX0qrFY0qyl6XeWhH23051h",
         "description" : null,
         "discount_amounts" : [
 
         ],
         "quantity" : 1,
         "is_removable" : false,
-        "total" : 1779,
+        "total" : 2000,
         "tax_amounts" : [
 
         ],
-        "subtotal" : 1779,
+        "subtotal" : 2000,
         "cross_sell_from" : null,
         "object" : "item",
         "price" : {
-          "id" : "price_1TWzzTFY0qyl6XeWEe5gwpNA",
+          "id" : "price_1TX0qrFY0qyl6XeWvf1RqVRk",
           "livemode" : false,
           "active" : false,
           "product" : {
@@ -864,12 +864,12 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
           "custom_unit_amount" : null,
           "transform_quantity" : null,
           "type" : "one_time",
-          "unit_amount" : 1779,
-          "unit_amount_decimal" : "1779",
+          "unit_amount" : 2000,
+          "unit_amount_decimal" : "2000",
           "object" : "price",
           "billing_scheme" : "per_unit",
           "recurring" : null,
-          "currency" : "eur",
+          "currency" : "usd",
           "tiers_mode" : null
         },
         "adjustable_quantity" : null,
@@ -882,21 +882,21 @@ X-Stripe-Mock-Request: adaptive_pricing\[allowed]=true&browser_locale=.*&browser
     "applied_credits" : [
 
     ],
-    "subtotal" : 1779,
+    "subtotal" : 2000,
     "discount_amounts" : [
 
     ],
-    "currency" : "eur",
+    "currency" : "usd",
     "tax_amounts" : [
 
     ],
-    "due" : 1779
+    "due" : 2000
   },
   "managed_payments" : {
     "enabled" : false
   },
   "name_collection" : null,
   "payment_intent" : null,
-  "config_id" : "230af2b3-0f32-4246-957b-e414f3834ac6",
+  "config_id" : "6ba1fd69-8ddd-4f74-9abe-cc5066ce57ec",
   "is_sandbox_merchant" : false
 }
