@@ -95,7 +95,23 @@ end
 
 puts "==> Found #{changed_files.size} modified, #{added_files.size} added"
 
-# Step 3: Copy changed files to reference directory
+# Step 3: Generate diff images (white background, red changed pixels)
+DIFF_DIR = ENV['BITRISE_DEPLOY_DIR'] || '/tmp/snapshot-diffs'
+FileUtils.mkdir_p(DIFF_DIR)
+
+changed_files.each do |rel_path|
+  reference_file = File.join(REFERENCE_DIR, rel_path)
+  recorded_file = File.join(actual_record_dir, rel_path)
+  diff_file = File.join(DIFF_DIR, rel_path)
+  FileUtils.mkdir_p(File.dirname(diff_file))
+  system('compare', '-fuzz', '5%',
+         reference_file, recorded_file,
+         '-highlight-color', 'Red', '-lowlight-color', 'White', '-compose', 'Src',
+         diff_file, [:err] => '/dev/null')
+end
+puts "==> Diff images saved to #{DIFF_DIR}"
+
+# Step 4: Copy changed files to reference directory
 (changed_files + added_files).each do |rel_path|
   src = File.join(actual_record_dir, rel_path)
   dst = File.join(REFERENCE_DIR, rel_path)

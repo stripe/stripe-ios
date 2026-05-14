@@ -87,6 +87,7 @@ workflows:
         title: Record and update snapshots
         inputs:
         - content: ruby ci_scripts/update_snapshots.rb
+    - deploy-to-bitrise-io@2: {}
     before_run:
     - prep_all
     envs:
