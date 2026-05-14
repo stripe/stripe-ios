@@ -4,6 +4,9 @@
 /* Title for the optional training consent section on the selfie warmup page */
 "Help us improve verifications" = "Help us improve verifications";
 
+/* Link text displayed under the selfie viewfinder */
+"Having Trouble?" = "Having Trouble?";
+
 /* Button text to allow the optional training consent choice */
 "Allow" = "Allow";
 

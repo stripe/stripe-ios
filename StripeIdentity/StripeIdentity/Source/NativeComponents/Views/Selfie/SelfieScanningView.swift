@@ -23,6 +23,10 @@ final class SelfieScanningView: UIView {
             IdentityUI.instructionsFont
         }
         static let preferredPreviewHeightToWidthRatio: CGFloat = 4 / 3
+        static let troubleLinkTopPadding: CGFloat = 12
+        static var troubleLinkFont: UIFont {
+            IdentityUI.preferredFont(forTextStyle: .body).withSize(12)
+        }
 
         static let flashAnimationDuration: TimeInterval = 0.2
         static let flashOverlayAlpha: CGFloat = 0.8
@@ -139,6 +143,15 @@ final class SelfieScanningView: UIView {
 
     // MARK: Camera Preview
     private let previewContainerView = CameraPreviewContainerView()
+
+    private lazy var havingTroubleLabel: UILabel = {
+        let label = UILabel()
+        label.adjustsFontForContentSizeCategory = true
+        label.isAccessibilityElement = true
+        label.accessibilityTraits = .link
+        label.isHidden = true
+        return label
+    }()
 
     /// Camera preview
     private let cameraPreviewView = CameraPreviewView()
@@ -289,6 +302,7 @@ final class SelfieScanningView: UIView {
         capturedImageBlurView.isHidden = true
         statusLabelContainerView.isHidden = true
         previewContainerView.isHidden = true
+        havingTroubleLabel.isHidden = true
         scannedImageScrollView.isHidden = true
 
         switch viewModel.state {
@@ -297,11 +311,13 @@ final class SelfieScanningView: UIView {
             consentCheckboxButton.isHidden = true
             retakeSelfieStack.isHidden = true
             previewContainerView.isHidden = false
+            havingTroubleLabel.isHidden = false
 
         case .videoPreview(let cameraSession, let showFlashAnimation, let statusText):
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
             previewContainerView.isHidden = false
+            havingTroubleLabel.isHidden = false
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
             if let statusText {
@@ -365,6 +381,7 @@ final class SelfieScanningView: UIView {
             self.consentCheckboxButton.theme = Styling.consentCheckboxTheme(
                 tintColor: self.tintColor
             )
+            self.configureHavingTroubleLabel()
         }
     }
 
@@ -379,6 +396,7 @@ extension SelfieScanningView {
 
         vStack.addArrangedSubview(instructionLabelView)
         vStack.addArrangedSubview(previewContainerView)
+        vStack.addArrangedSubview(havingTroubleLabel)
         vStack.addArrangedSubview(scannedImageScrollView)
         vStack.addArrangedSubview(retakeSelfieStack)
         vStack.addArrangedSubview(consentCheckboxButton)
@@ -420,6 +438,8 @@ extension SelfieScanningView {
             Styling.consentTopPadding - Styling.scannedImageScrollIndicatorMargin,
             after: scannedImageScrollView
         )
+        vStack.setCustomSpacing(Styling.troubleLinkTopPadding, after: previewContainerView)
+        configureHavingTroubleLabel()
 
         NSLayoutConstraint.activate([
             previewContainerView.widthAnchor.constraint(
@@ -444,6 +464,10 @@ extension SelfieScanningView {
             widthAnchor.constraint(
                 equalTo: consentCheckboxButton.widthAnchor,
                 constant: Styling.contentInsets.leading + Styling.contentInsets.trailing
+            ),
+            havingTroubleLabel.widthAnchor.constraint(
+                lessThanOrEqualTo: widthAnchor,
+                constant: -(Styling.contentInsets.leading + Styling.contentInsets.trailing)
             ),
 
             // Make scroll view's content full-height
@@ -478,6 +502,20 @@ extension SelfieScanningView {
     fileprivate func configureStatusLabel(_ statusText: ViewModel.StatusText) {
         statusLabel.text = statusText.text
         statusLabelContainerView.isHidden = false
+    }
+
+    fileprivate func configureHavingTroubleLabel() {
+        havingTroubleLabel.attributedText = NSAttributedString(
+            string: STPLocalizedString(
+                "Having Trouble?",
+                "Link text displayed under the selfie viewfinder"
+            ),
+            attributes: [
+                .font: Styling.troubleLinkFont,
+                .foregroundColor: IdentityUI.secondaryLabelColor,
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+            ]
+        )
     }
 
     fileprivate func rebuildImageHStack(with images: [UIImage]) {
