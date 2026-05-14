@@ -18,6 +18,9 @@ final class SuccessViewController: UIViewController {
 
     private let dataSource: SuccessDataSource
     weak var delegate: SuccessViewControllerDelegate?
+    private var linkBrand: LinkBrand {
+        PresentationManager.shared.configuration.linkBrand ?? dataSource.manifest.brand ?? .link
+    }
 
     init(dataSource: SuccessDataSource) {
         self.dataSource = dataSource
@@ -46,7 +49,8 @@ final class SuccessViewController: UIViewController {
             subtitle: dataSource.customSuccessPaneSubCaption ?? CreateSubtitleText(
                 // manual entry has "0" linked accounts count
                 isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
-                showSaveToLinkFailedNotice: showSaveToLinkFailedNotice
+                showSaveToLinkFailedNotice: showSaveToLinkFailedNotice,
+                brand: linkBrand
             ),
             appearance: dataSource.manifest.appearance
         )
@@ -211,19 +215,14 @@ private func CreateIconView(appearance: FinancialConnectionsAppearance) -> UIVie
 
 private func CreateSubtitleText(
     isLinkingOneAccount: Bool,
-    showSaveToLinkFailedNotice: Bool
+    showSaveToLinkFailedNotice: Bool,
+    brand: LinkBrand
 ) -> String {
     if showSaveToLinkFailedNotice {
         if isLinkingOneAccount {
-            return STPLocalizedString(
-                "Your account was connected, but couldn't be saved to Link.",
-                "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments."
-            )
+            return String.Localized.your_account_was_connected_but_could_not_be_saved_to_brand(brand: brand)
         } else { // multiple bank accounts
-            return STPLocalizedString(
-                "Your accounts were connected, but couldn't be saved to Link.",
-                "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments."
-            )
+            return String.Localized.your_accounts_were_connected_but_could_not_be_saved_to_brand(brand: brand)
         }
     } else if isLinkingOneAccount {
         return STPLocalizedString(

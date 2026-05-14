@@ -184,6 +184,17 @@ extension STPElementsSession: STPAPIResponseDecodable {
         let applePayPreference = response["apple_pay_preference"] as? String
         let isApplePayEnabled = applePayPreference != "disabled"
         let flags = response["flags"] as? [String: Bool] ?? [:]
+        let experimentsData = ExperimentsData.decodedObject(
+            fromAPIResponse: response["experiments_data"] as? [AnyHashable: Any]
+        )
+
+        let cardArtExperimentInTreatment: Bool = {
+            guard let group = experimentsData?.experimentAssignments[CardArtExperiment.experimentName] else {
+                return false
+            }
+            return group == .treatment
+        }()
+
         let customer: ElementsCustomer? = {
             let customerDataKey = "customer"
             guard response[customerDataKey] != nil, !(response[customerDataKey] is NSNull) else {
@@ -191,7 +202,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             }
             let enableLinkInSPM = flags["elements_enable_link_spm"] ?? false
             guard let customerJSON = response[customerDataKey] as? [AnyHashable: Any],
-                  let decoded = ElementsCustomer.decoded(fromAPIResponse: customerJSON, enableLinkInSPM: enableLinkInSPM) else {
+                  let decoded = ElementsCustomer.decoded(fromAPIResponse: customerJSON, enableLinkInSPM: enableLinkInSPM, includeCardArt: cardArtExperimentInTreatment) else {
                 STPAnalyticsClient.sharedClient.logPaymentSheetEvent(event: .paymentSheetElementsSessionCustomerDeserializeFailed)
                 return nil
             }
@@ -257,9 +268,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: response["link_settings"] as? [AnyHashable: Any]
             ),
-            experimentsData: ExperimentsData.decodedObject(
-                fromAPIResponse: response["experiments_data"] as? [AnyHashable: Any]
-            ),
+            experimentsData: experimentsData,
             flags: flags,
             paymentMethodSpecs: response["payment_method_specs"] as? [[AnyHashable: Any]],
             cardBrandChoice: cardBrandChoice,
@@ -394,6 +403,10 @@ extension STPElementsSession {
     /// When `false`, `CardFundingFilter` should act as a no-op and accept all card funding types.
     var isCardFundingFilteringEnabled: Bool {
         flags["elements_mobile_card_funding_filtering"] == true
+    }
+
+    var forceVerticalPaymentMethodLayout: Bool {
+        flags["elements_mobile_force_vertical_payment_method_layout"] == true
     }
 }
 

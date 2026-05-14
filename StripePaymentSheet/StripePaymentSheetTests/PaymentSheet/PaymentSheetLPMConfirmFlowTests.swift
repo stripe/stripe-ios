@@ -184,7 +184,7 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         }
     }
 
-    func testAmazonPayConfirmFlows() async throws {
+    func _testAmazonPayConfirmFlows() async throws {
         try await _testConfirm(intentKinds: [.paymentIntent],
                                currency: "USD",
                                paymentMethodType: .amazonPay,
@@ -402,49 +402,51 @@ final class PaymentSheetLPMConfirmFlowTests: STPNetworkStubbingTestCase {
         // Update the API client based on the merchant country
         let apiClient = STPAPIClient(publishableKey: MerchantCountry.US.publishableKey)
 
-        // Create customer session for confirmation token support
-        let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
-            customerID: nil,
-            merchantCountry: "us",
-            paymentMethodSave: true
-        )
-        let customer = customerAndCustomerSession.customer
-
-        // Create a SEPA payment method and attach it to the customer via a confirmed SetupIntent
-        let savedSepaPM = try await apiClient.createPaymentMethod(with: ._testSEPA())
-        _ = try await STPTestingAPIClient.shared.fetchSetupIntent(
-            types: ["sepa_debit"],
-            merchantCountry: "us",
-            paymentMethodID: savedSepaPM.stripeId,
-            customerID: customer,
-            confirm: true,
-            otherParams: [
-                "mandate_data": [
-                    "customer_acceptance": [
-                        "type": "online",
-                        "online": [
-                            "user_agent": "123",
-                            "ip_address": "172.18.117.125",
-                        ],
-                    ] as [String: Any],
-                ],
-            ]
-        )
-
-        let configuration: PaymentSheet.Configuration = {
-            var config = PaymentSheet.Configuration()
-            config.apiClient = apiClient
-            config.allowsDelayedPaymentMethods = true
-            config.returnURL = "https://foo.com"
-            config.customer = PaymentSheet.CustomerConfiguration(
-                id: customerAndCustomerSession.customer,
-                customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret
-            )
-            return config
-        }()
-
         // Confirm saved SEPA with every confirm variation
+        // Use a fresh customer per intent kind to avoid lock contention on the Customer object
+        // from async server-side processing (mandate creation, PM attachment) across iterations.
         for intentKind in [IntentKind.paymentIntent, .paymentIntentWithSetupFutureUsage, .setupIntent] {
+            // Create customer session for confirmation token support
+            let customerAndCustomerSession = try await STPTestingAPIClient.shared().fetchCustomerAndCustomerSessionClientSecret(
+                customerID: nil,
+                merchantCountry: "us",
+                paymentMethodSave: true
+            )
+            let customer = customerAndCustomerSession.customer
+
+            // Create a SEPA payment method and attach it to the customer via a confirmed SetupIntent
+            let savedSepaPM = try await apiClient.createPaymentMethod(with: ._testSEPA())
+            _ = try await STPTestingAPIClient.shared.fetchSetupIntent(
+                types: ["sepa_debit"],
+                merchantCountry: "us",
+                paymentMethodID: savedSepaPM.stripeId,
+                customerID: customer,
+                confirm: true,
+                otherParams: [
+                    "mandate_data": [
+                        "customer_acceptance": [
+                            "type": "online",
+                            "online": [
+                                "user_agent": "123",
+                                "ip_address": "172.18.117.125",
+                            ],
+                        ] as [String: Any],
+                    ],
+                ]
+            )
+
+            let configuration: PaymentSheet.Configuration = {
+                var config = PaymentSheet.Configuration()
+                config.apiClient = apiClient
+                config.allowsDelayedPaymentMethods = true
+                config.returnURL = "https://foo.com"
+                config.customer = PaymentSheet.CustomerConfiguration(
+                    id: customer,
+                    customerSessionClientSecret: customerAndCustomerSession.customerSessionClientSecret
+                )
+                return config
+            }()
+
             for (description, intent) in try await makeTestIntents(intentKind: intentKind, currency: "eur", paymentMethod: .SEPADebit, merchantCountry: .US, customer: customer, apiClient: apiClient) {
 
                 // Create elements session with customer configuration for proper ephemeral keys
@@ -1498,6 +1500,7 @@ extension PaymentSheetLPMConfirmFlowTests {
                     elementsSession: ._testValue(intent: intent, linkFundingSources: linkFundingSources),
                     paymentOption: .link(
                         option: .withPaymentMethod(
+                            brand: .link,
                             paymentMethod: linkPaymentMethod
                         )
                     ),

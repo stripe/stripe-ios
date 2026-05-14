@@ -76,6 +76,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         static var linkPaymentOption: PaymentSheet.PaymentOption {
             let exampleBillingEmail = "test@example.com"
             return .link(option: .withPaymentDetails(
+                brand: .link,
                 account: .init(
                     email: exampleBillingEmail,
                     session: .init(
@@ -184,6 +185,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
             elementsSession: elementsSession,
             paymentOption: .link(
                 option: .withPaymentDetails(
+                    brand: .link,
                     account: .init(
                         email: "test@example.com",
                         session: .init(
@@ -263,6 +265,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         // We're in payment method mode, so the PaymentOption is Link
         let paymentOption: PaymentOption = .link(
             option: .signUp(
+                brand: .link,
                 account: .init(
                     email: "email@email.com",
                     session: nil,
@@ -299,7 +302,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         // In non-passthrough mode, Link payment details are converted to params and
         // a new payment method is created before calling checkout session confirm
-        stubCheckoutSessionConfirm(sessionId: checkoutSession.stripeId)
+        stubCheckoutSessionConfirm(sessionId: checkoutSession.id)
         stubLinkLogout(consumerSessionClientSecret: "cs_xxx")
 
         let configuration = MockParams.configurationWithCustomer(pk: MockParams.publicKey)
@@ -311,6 +314,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         // Create Link payment option with payment details
         let paymentOption: PaymentOption = .link(
             option: .withPaymentDetails(
+                brand: .link,
                 account: .init(
                     email: "test@example.com",
                     session: .init(
@@ -374,7 +378,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         stubCreatePaymentMethodExpecting(allowRedisplay: "always")
         stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             savePaymentMethod: true
         )
 
@@ -407,7 +411,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         stubCreatePaymentMethodExpecting(allowRedisplay: "unspecified")
         stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             savePaymentMethod: false
         )
 
@@ -439,7 +443,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         stubCreatePaymentMethodExpecting(allowRedisplay: "unspecified")
         stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             savePaymentMethod: nil
         )
 
@@ -474,7 +478,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         stubCreatePaymentMethodExpecting(allowRedisplay: "limited")
         stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             savePaymentMethod: false
         )
 
@@ -513,7 +517,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         stubCreatePaymentMethodExpecting(allowRedisplay: "limited")
         stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             savePaymentMethod: nil
         )
 
@@ -548,7 +552,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
 
         stubCreatePaymentMethodExpecting(allowRedisplay: "always")
         stubCheckoutSessionConfirm(
-            sessionId: checkoutSession.stripeId,
+            sessionId: checkoutSession.id,
             savePaymentMethod: true
         )
 

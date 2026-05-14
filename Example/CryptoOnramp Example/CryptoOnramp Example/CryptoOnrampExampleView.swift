@@ -11,7 +11,7 @@ import SwiftUI
 @_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 import StripePaymentSheet
 
 /// The main content view of the example CryptoOnramp app.
@@ -81,14 +81,29 @@ struct CryptoOnrampExampleView: View {
                                 email: email,
                                 selectedScopes: scopes
                             ) {
-                                flowCoordinator.advanceAfterRegistration()
+                                flowCoordinator.advanceAfterRegistration(coordinator: coordinator)
                             }
                         case let .kycInfo(collectionMode):
                             KYCInfoView(
                                 coordinator: coordinator,
                                 collectionMode: collectionMode
-                            ) { collectedKYCLevel in
-                                flowCoordinator.advanceAfterKyc(collectedKYCLevel: collectedKYCLevel)
+                            ) { collectedKYCLevel, isEUCustomer in
+                                flowCoordinator.advanceAfterKyc(
+                                    collectedKYCLevel: collectedKYCLevel,
+                                    isEUCustomer: isEUCustomer,
+                                    coordinator: coordinator
+                                )
+                            }
+                        case let .complianceIdentifiers(requirements):
+                            ComplianceIdentifiersEntryView(
+                                coordinator: coordinator,
+                                requirements: requirements
+                            ) {
+                                flowCoordinator.advanceAfterIdentifiers()
+                            }
+                        case .crsCarfDeclaration:
+                            CRSCARFDeclarationPresentingView(coordinator: coordinator) {
+                                flowCoordinator.advanceAfterCRSCARFDeclaration()
                             }
                         case .identity:
                             IdentityVerificationView(coordinator: coordinator) {

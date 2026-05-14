@@ -108,7 +108,7 @@ extension PaymentSheet.Appearance: @retroactive Codable {
     private enum CodingKeys: String, CodingKey {
         // Top-level properties
         case cornerRadius, borderWidth, selectedBorderWidth, sheetCornerRadius
-        case sectionSpacing, verticalModeRowPadding, iconStyle, cardArtEnabled
+        case sectionSpacing, verticalModeRowPadding, iconStyle
         case textFieldInsets, formInsets, navigationBarStyle
 
         // Font properties
@@ -161,7 +161,6 @@ extension PaymentSheet.Appearance: @retroactive Codable {
             }
         }()
         self.verticalModeRowPadding = try container.decode(CGFloat.self, forKey: .verticalModeRowPadding)
-        self.cardArtEnabled = try container.decodeIfPresent(Bool.self, forKey: .cardArtEnabled) ?? false
 
         // Font properties - will need to be expanded if more options are added to the playground
         self.font.sizeScaleFactor = try container.decode(CGFloat.self, forKey: .fontSizeScaleFactor)
@@ -296,7 +295,7 @@ extension PaymentSheet.Appearance: @retroactive Codable {
         try container.encode(sheetCornerRadius, forKey: .sheetCornerRadius)
         try container.encode(sectionSpacing, forKey: .sectionSpacing)
         try container.encode(verticalModeRowPadding, forKey: .verticalModeRowPadding)
-        try container.encode(cardArtEnabled, forKey: .cardArtEnabled)
+
         try container.encode(CodableNavigationBarStyle(navigationBarStyle), forKey: .navigationBarStyle)
 
         let iconStyleString =

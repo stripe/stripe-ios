@@ -19,6 +19,7 @@ extension LinkInlineSignupView {
         weak var delegate: ElementDelegate?
 
         private let mode: LinkInlineSignupViewModel.Mode
+        private let brand: LinkBrand
         private let merchantName: String
         private let appearance: PaymentSheet.Appearance
         /// Controls the stroke color of the checkbox
@@ -49,29 +50,11 @@ extension LinkInlineSignupView {
             let text = {
                 switch mode {
                 case .signupOptIn:
-                    return STPLocalizedString(
-                        "Create an account with Link for faster checkout across the web",
-                        """
-                        Label for a checkbox that when checked allows the payment information
-                        to be saved and used in future checkout sessions.
-                        """
-                    )
+                    return String.Localized.create_an_account_with_brand_for_faster_checkout_across_the_web(brand: brand)
                 case .checkbox, .checkboxWithDefaultOptIn:
-                    return STPLocalizedString(
-                        "Save my info for faster checkout with Link",
-                        """
-                        Label for a checkbox that when checked allows the payment information
-                        to be saved and used in future checkout sessions.
-                        """
-                    )
+                    return String.Localized.save_my_info_for_faster_checkout(with: brand)
                 case .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
-                    return STPLocalizedString(
-                        "Save your info for secure 1-click checkout with Link",
-                        """
-                        Label for a checkbox that when checked allows the payment information
-                        to be saved and used in future checkout sessions.
-                        """
-                    )
+                    return String.Localized.save_your_info_for_secure_1_click_checkout(with: brand)
                 }
             }()
 
@@ -81,14 +64,15 @@ extension LinkInlineSignupView {
                 }
                 return LinkUI.inlineLogo(
                     withScale: 1.3,
-                    forFont: appearance.asElementsTheme.fonts.footnoteEmphasis
+                    forFont: appearance.asElementsTheme.fonts.footnoteEmphasis,
+                    brand: brand
                 )
             }()
 
             let result: NSAttributedString = {
                 if let leadingIcon {
-                    // Handle the case with a Link logo
-                    let linkRange = (text as NSString).range(of: "Link")
+                    // Handle the case with a leading brand logo
+                    let linkRange = (text as NSString).range(of: brand.displayName)
                     if linkRange.location != NSNotFound {
                         let mutableResult = NSMutableAttributedString(string: text)
 
@@ -99,8 +83,7 @@ extension LinkInlineSignupView {
                             textStyle: .caption
                         )
 
-                        // Replace "Link" with the icon
-                        let attachmentString = NSAttributedString(attachment: leadingIcon)
+                        // Replace the brand name with the icon
                         mutableResult.replaceCharacters(in: linkRange, with: NSAttributedString(attachment: leadingIcon))
 
                         mutableResult.addAttributes(
@@ -149,11 +132,13 @@ extension LinkInlineSignupView {
 
         init(
             mode: LinkInlineSignupViewModel.Mode,
+            brand: LinkBrand,
             merchantName: String,
             appearance: PaymentSheet.Appearance,
             borderColor: UIColor
         ) {
             self.mode = mode
+            self.brand = brand
             self.merchantName = merchantName
             self.appearance = appearance
             self.borderColor = borderColor

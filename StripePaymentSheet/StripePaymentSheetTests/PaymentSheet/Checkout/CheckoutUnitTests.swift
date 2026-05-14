@@ -36,7 +36,7 @@ final class CheckoutUnitTests: XCTestCase {
             XCTFail("Expected .loaded state after init with session")
             return
         }
-        XCTAssertEqual(checkout.state.session.status, .open)
+        XCTAssertEqual(checkout.state.session.status?.type, .open)
         XCTAssertFalse(checkout.state.isLoading)
     }
 
@@ -423,6 +423,9 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(session.totalTaxAmount, 1000)
         XCTAssertEqual(session.taxAmounts.first?.taxRate?.displayName, "Sales Tax")
         XCTAssertEqual(session.taxAmounts.first?.taxRate?.jurisdiction, "NY")
+        XCTAssertEqual(session.tax.taxAmounts?.count, 1)
+        XCTAssertEqual(session.tax.taxAmounts?.first?.amount.minorUnitsAmount, 1000)
+        XCTAssertEqual(session.tax.taxAmounts?.first?.displayName, "Sales Tax")
 
         // Verify address collection settings
         XCTAssertTrue(session.requiresBillingAddress)
@@ -430,9 +433,10 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(session.allowedShippingCountries, ["US", "CA", "GB"])
 
         // Verify totals
-        XCTAssertNotNil(session.totals)
-        XCTAssertEqual(session.totals?.subtotal, 20000)
-        XCTAssertEqual(session.totals?.total, 21000)
+        XCTAssertNotNil(session.total)
+        XCTAssertEqual(session.total?.subtotal.minorUnitsAmount, 20000)
+        XCTAssertEqual(session.total?.total.minorUnitsAmount, 21000)
+        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 1000)
     }
 
     // MARK: - onConfirmed Tests
@@ -453,8 +457,8 @@ final class CheckoutUnitTests: XCTestCase {
         stpSession.onConfirmed?(confirmResponse)
 
         // Verify session was updated with the confirm response data
-        XCTAssertEqual(checkout.state.session.status, .complete)
-        XCTAssertEqual(checkout.state.session.paymentStatus, .paid)
+        XCTAssertEqual(checkout.state.session.status?.type, .complete)
+        XCTAssertEqual(checkout.state.session.status?.paymentStatus, .paid)
         XCTAssertTrue(delegate.didChangeStateCalled)
     }
 
@@ -466,7 +470,7 @@ final class CheckoutUnitTests: XCTestCase {
             name: "Jane Doe",
             address: .init(country: "US")
         )
-        (checkout.state.session as! STPCheckoutSession).billingAddressOverride = billingUpdate
+        (checkout.state.session as! STPCheckoutSession).billingAddress = billingUpdate
 
         // Simulate a confirm response
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
@@ -494,7 +498,7 @@ final class CheckoutUnitTests: XCTestCase {
         let firstConfirm = STPCheckoutSession.decodedObject(fromAPIResponse: firstResponse)!
 
         (checkout.state.session as! STPCheckoutSession).onConfirmed?(firstConfirm)
-        XCTAssertEqual(checkout.state.session.status, .complete)
+        XCTAssertEqual(checkout.state.session.status?.type, .complete)
 
         // The new session should also have onConfirmed set,
         // so a second invocation still works
@@ -507,7 +511,7 @@ final class CheckoutUnitTests: XCTestCase {
     func testStateSessionAlwaysReturnsSession() {
         let checkout = makeCheckoutWithOpenSession()
         XCTAssertNotNil(checkout.state.session)
-        XCTAssertEqual(checkout.state.session.status, .open)
+        XCTAssertEqual(checkout.state.session.status?.type, .open)
     }
 
     func testStateIsLoadingReturnsFalseForLoaded() {

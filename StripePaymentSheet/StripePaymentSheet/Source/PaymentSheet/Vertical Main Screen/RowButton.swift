@@ -65,12 +65,7 @@ class RowButton: UIView, EventHandler {
     }
 
     var imageViewSize: CGSize {
-        if appearance.cardArtEnabled {
-            // When card art is enabled, allow images to grow in width to 30px
-            return CGSize(width: 30, height: 20)
-        } else {
-            return CGSize(width: 24, height: 20)
-        }
+        return CGSize(width: 30, height: 20)
     }
 
     // MARK: Internal properties
@@ -535,40 +530,41 @@ extension RowButton {
         return RowButton.create(appearance: appearance, type: .applePay, imageView: imageView, text: String.Localized.apple_pay, isEmbedded: isEmbedded, didTap: didTap)
     }
 
-    static func makeForLink(appearance: PaymentSheet.Appearance, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForLink(
+        appearance: PaymentSheet.Appearance,
+        linkBrand: LinkBrand,
+        isEmbedded: Bool = false,
+        didTap: @escaping DidTapClosure
+    ) -> RowButton {
         let imageView = UIImageView(image: Image.link_icon.makeImage())
         imageView.contentMode = .scaleAspectFit
         var subtext = String.Localized.link_subtitle_text
         if let linkAccount = LinkAccountContext.shared.account, linkAccount.isRegistered {
             subtext = linkAccount.email
         }
-        let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: STPPaymentMethodType.link.displayName, subtext: subtext, isEmbedded: isEmbedded, didTap: didTap)
-        button.accessibilityHelperView.accessibilityLabel = String.Localized.pay_with_link
+        let button = RowButton.create(appearance: appearance, type: .link, imageView: imageView, text: linkBrand.displayName, subtext: subtext, isEmbedded: isEmbedded, didTap: didTap)
+        button.accessibilityHelperView.accessibilityLabel = String.Localized.pay_with_link(brand: linkBrand)
         return button
     }
 
-    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, didTap: @escaping DidTapClosure) -> RowButton {
+    static func makeForSavedPaymentMethod(paymentMethod: STPPaymentMethod, appearance: PaymentSheet.Appearance, subtext: String? = nil, badgeText: String? = nil, accessoryView: UIView? = nil, isEmbedded: Bool = false, linkBrand: LinkBrand = .link, didTap: @escaping DidTapClosure) -> RowButton {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         let savedPaymentMethodRowImage = paymentMethod.makeSavedPaymentMethodRowImage(iconStyle: appearance.iconStyle)
-        if appearance.cardArtEnabled {
-            imageView.setImage(with: paymentMethod.cardArtCDNURL(cardArtEnabled: appearance.cardArtEnabled),
-                               processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
-                               fallbackImage: savedPaymentMethodRowImage,
-                               shimmeringImage: STPImageLibrary.cardBrandChoiceImage())
-        } else {
-            imageView.image = savedPaymentMethodRowImage
-        }
+        imageView.setImage(with: paymentMethod.cardArtCDNURL(),
+                           processOnDownloadedImage: { $0.roundedWithBorder(radius: 3) },
+                           fallbackImage: savedPaymentMethodRowImage,
+                           shimmeringImage: STPImageLibrary.cardBrandChoiceImage())
         let text = paymentMethod.isLinkPassthroughMode
-            ? STPPaymentMethodType.link.displayName
-            : paymentMethod.paymentSheetLabel
+            ? linkBrand.displayName
+            : paymentMethod.paymentSheetLabel(brand: linkBrand)
 
         let button = RowButton.create(
             appearance: appearance,
             type: .saved(paymentMethod: paymentMethod),
             imageView: imageView,
             text: text,
-            subtext: paymentMethod.linkSpecificSublabel ?? subtext,
+            subtext: paymentMethod.linkSpecificSublabel(brand: linkBrand) ?? subtext,
             badgeText: badgeText,
             accessoryView: accessoryView,
             isEmbedded: isEmbedded,
@@ -665,14 +661,14 @@ extension PaymentSheet.Appearance {
 
 private extension STPPaymentMethod {
 
-    var linkSpecificSublabel: String? {
+    func linkSpecificSublabel(brand: LinkBrand) -> String? {
         if let linkPaymentDetails {
             return linkPaymentDetails.sublabel
         }
         if isLinkPassthroughMode {
-            // We render "Link" as the label, so use the original label
+            // We render the Link brand as the label, so use the original label
             // as the sublabel.
-            return paymentSheetLabel
+            return paymentSheetLabel(brand: brand)
         }
         return nil
     }

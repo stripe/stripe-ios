@@ -797,7 +797,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     return
                 }
                 // Verify CheckoutSession properties
-                XCTAssertEqual(loadedSession.stripeId, checkoutSessionId)
+                XCTAssertEqual(loadedSession.id, checkoutSessionId)
                 // Verify elements session is loaded
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 // Verify payment methods are loaded
@@ -838,10 +838,10 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     return
                 }
                 // Verify CheckoutSession properties
-                XCTAssertEqual(checkoutSession.stripeId, checkoutSessionId)
+                XCTAssertEqual(checkoutSession.id, checkoutSessionId)
                 XCTAssertEqual(checkoutSession.mode, .setup)
-                XCTAssertEqual(checkoutSession.status, .open)
-                XCTAssertEqual(checkoutSession.paymentStatus, .noPaymentRequired)
+                XCTAssertEqual(checkoutSession.status?.type, .open)
+                XCTAssertEqual(checkoutSession.status?.paymentStatus, .noPaymentRequired)
                 // Verify elements session is loaded
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 // Verify payment methods are loaded

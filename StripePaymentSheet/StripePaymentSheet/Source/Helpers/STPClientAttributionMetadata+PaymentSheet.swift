@@ -38,7 +38,7 @@ extension STPClientAttributionMetadata {
             // CheckoutSession: Stripe owns the intent lifecycle, so omit `paymentIntentCreationFlow`
             // to match web's hosted Checkout behavior.
             return .init(elementsSessionConfigId: elementsSessionConfigId,
-                         checkoutSessionId: session.stripeId,
+                         checkoutSessionId: session.id,
                          paymentIntentCreationFlow: nil,
                          paymentMethodSelectionFlow: .automatic)
         }

@@ -112,7 +112,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
             2
         )
         XCTAssertEqual(
-            initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_layout"] },
+            initialDisplayedPaymentMethodsEvent.map { $0[string: "payment_method_orientation"] },
             "vertical"
         )
 
@@ -434,7 +434,8 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
 
         // PaymentSheet.FlowController + Vertical
         app.buttons["flowController"].waitForExistenceAndTap()
-        app.buttons["Payment method"].waitForExistenceAndTap()
+        XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Payment method"].waitForExistenceAndTap(timeout: 10))
         _testVerticalPreservesFormDetails()
     }
 

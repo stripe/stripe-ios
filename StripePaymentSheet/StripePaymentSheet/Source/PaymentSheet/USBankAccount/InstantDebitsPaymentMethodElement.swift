@@ -40,6 +40,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
     private let incentive: PaymentMethodIncentive?
     private let isSettingUp: Bool
     private let sellerName: String?
+    private let linkBrand: LinkBrand
 
     weak var delegate: ElementDelegate?
     var view: UIView {
@@ -55,7 +56,8 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
             attributedString: PaymentSheetFormFactory.makeBankMandateText(
                 isSettingUp: isSettingUp,
                 merchantName: configuration.merchantDisplayName,
-                sellerName: sellerName
+                sellerName: sellerName,
+                brand: linkBrand
             )
         )
         let style = NSMutableParagraphStyle()
@@ -191,11 +193,13 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         isPaymentIntent: Bool,
         sellerName: String?,
         isSettingUp: Bool,
+        linkBrand: LinkBrand,
         appearance: PaymentSheet.Appearance = .default
     ) {
         let theme = appearance.asElementsTheme
 
         self.configuration = configuration
+        self.linkBrand = linkBrand
         self.linkedBankInfoView = BankAccountInfoView(frame: .zero, appearance: appearance, incentive: incentive)
         self.linkedBankInfoSectionElement = SectionElement(
             title: String.Localized.bank_account_sentence_case,
@@ -214,7 +218,7 @@ final class InstantDebitsPaymentMethodElement: ContainerElement {
         self.theme = theme
         self.promoDisclaimerElement = incentive.flatMap {
             let label = ElementsUI.makeNoticeTextField(theme: theme)
-            label.attributedText = $0.promoDisclaimerText(with: theme, isPaymentIntent: isPaymentIntent)
+            label.attributedText = $0.promoDisclaimerText(with: theme, isPaymentIntent: isPaymentIntent, brand: linkBrand)
             label.textContainerInset = .zero
             label.textContainer.lineFragmentPadding = 0
             return StaticElement(view: label)
@@ -363,7 +367,8 @@ private extension PaymentMethodIncentive {
 
     func promoDisclaimerText(
         with appearance: ElementsAppearance,
-        isPaymentIntent: Bool
+        isPaymentIntent: Bool,
+        brand: LinkBrand
     ) -> NSAttributedString {
         let baseString = if isPaymentIntent {
             STPLocalizedString(
@@ -380,7 +385,7 @@ private extension PaymentMethodIncentive {
         let string = String(format: baseString, displayText)
 
         let links = [
-            "terms": URL(string: "https://link.com/promotion-terms")!,
+            "terms": brand.promotionTermsURL,
         ]
 
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)

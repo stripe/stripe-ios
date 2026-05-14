@@ -18,10 +18,6 @@
 
 "Approve payment" = "批准付款";
 
-"Are you sure you want to remove this card?" = "您確定要移除此卡嗎？";
-
-"Are you sure you want to remove this linked account?" = "您確定要移除這個關聯的帳戶嗎？";
-
 "Back" = "上一步";
 
 "Bank" = "銀行";
@@ -193,6 +189,8 @@
 "Remove card?" = "移除卡？";
 
 "Remove linked account" = "移除關聯帳戶";
+
+"Remove payment method" = "移除支付方式";
 
 "SEPA debit details cannot be changed." = "無法更改 SEPA 借記詳情。";
 

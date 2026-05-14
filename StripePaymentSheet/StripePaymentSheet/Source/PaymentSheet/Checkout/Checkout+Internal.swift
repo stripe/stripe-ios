@@ -32,8 +32,8 @@ extension Checkout {
     ///   (e.g. address overrides) that should be visible to the delegate and observers.
     func updateSession(_ newSession: STPCheckoutSession, applyOverrides: ((STPCheckoutSession) -> Void)? = nil) {
         // Preserve client-side address overrides on the new session.
-        newSession.billingAddressOverride = stpSession?.billingAddressOverride
-        newSession.shippingAddressOverride = stpSession?.shippingAddressOverride
+        newSession.billingAddress = stpSession?.billingAddress
+        newSession.shippingAddress = stpSession?.shippingAddress
         applyOverrides?(newSession)
         newSession.onConfirmed = { [weak self] response in
             self?.updateSession(response)

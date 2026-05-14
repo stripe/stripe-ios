@@ -44,7 +44,7 @@ public final class Checkout: ObservableObject {
     // MARK: - Private Properties
 
     /// Concrete accessor for internal use where `STPCheckoutSession`-specific
-    /// properties (e.g. `allResponseFields`, `billingAddressOverride`) are needed.
+    /// properties (e.g. `allResponseFields`, `billingAddress`) are needed.
     var stpSession: STPCheckoutSession? {
         state.session as? STPCheckoutSession
     }
@@ -241,18 +241,18 @@ public final class Checkout: ObservableObject {
     ) async throws {
         let currentSession = try requireOpenSession()
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
-        guard currentSession.billingAddressOverride != contactAddress else { return }
+        guard currentSession.billingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "billing") {
             try await enqueueSessionUpdate {
                 try await self.performAPIUpdate(.setTaxRegion(address), applyOverrides: { session in
                     // Set the local address override on the refreshed session after a successful API call.
-                    session.billingAddressOverride = contactAddress
+                    session.billingAddress = contactAddress
                 })
             }
         } else {
             try await enqueueSessionUpdate { @MainActor in
                 guard let session = self.stpSession else { return }
-                session.billingAddressOverride = contactAddress
+                session.billingAddress = contactAddress
                 self.setSession(session)
                 self.delegate?.checkout(self, didChangeState: self.state)
             }
@@ -280,18 +280,18 @@ public final class Checkout: ObservableObject {
     ) async throws {
         let currentSession = try requireOpenSession()
         let contactAddress = ContactAddress(name: name, phone: phone, address: address)
-        guard currentSession.shippingAddressOverride != contactAddress else { return }
+        guard currentSession.shippingAddress != contactAddress else { return }
         if currentSession.shouldSendTaxRegion(for: "shipping") {
             try await enqueueSessionUpdate {
                 try await self.performAPIUpdate(.setTaxRegion(address), applyOverrides: { session in
                     // Set the local address override on the refreshed session after a successful API call.
-                    session.shippingAddressOverride = contactAddress
+                    session.shippingAddress = contactAddress
                 })
             }
         } else {
             try await enqueueSessionUpdate { @MainActor in
                 guard let session = self.stpSession else { return }
-                session.shippingAddressOverride = contactAddress
+                session.shippingAddress = contactAddress
                 self.setSession(session)
                 self.delegate?.checkout(self, didChangeState: self.state)
             }

@@ -398,8 +398,7 @@ extension CustomerSavedPaymentMethodsCollectionViewController: UICollectionViewD
         cell.setViewModel(viewModel.toSavedPaymentOptionsViewControllerSelection(),
                           cbcEligible: cbcEligible,
                           allowsPaymentMethodRemoval: configuration.paymentMethodRemove,
-                          allowsPaymentMethodUpdate: configuration.paymentMethodUpdate,
-                          cardArtEnabled: appearance.cardArtEnabled)
+                          allowsPaymentMethodUpdate: configuration.paymentMethodUpdate)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance

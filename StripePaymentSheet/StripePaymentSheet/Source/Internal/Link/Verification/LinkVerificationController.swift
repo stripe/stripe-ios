@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 import UIKit
 
 /// Standalone verification controller.
@@ -22,6 +23,7 @@ final class LinkVerificationController {
     init(
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount,
+        brand: LinkBrand,
         configuration: PaymentElementConfiguration,
         appearance: LinkAppearance? = nil,
         allowLogoutInDialog: Bool = false,
@@ -33,6 +35,7 @@ final class LinkVerificationController {
         self.verificationViewController = LinkVerificationViewController(
             mode: mode,
             linkAccount: linkAccount,
+            brand: brand,
             appearance: appearance,
             allowLogoutInDialog: allowLogoutInDialog,
             consentViewModel: consentViewModel

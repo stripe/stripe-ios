@@ -70,10 +70,8 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         verify(rowButton)
     }
 
-    func testPaymentMethodRowButton_cardArtEnabled() {
-        var appearance = PaymentSheet.Appearance()
-        appearance.cardArtEnabled =  true
-
+    func testPaymentMethodRowButton_cardArt() {
+        let appearance = PaymentSheet.Appearance()
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,
             hasSavedCard: false,
@@ -195,11 +193,10 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         verify(rowButton, identifier: "non_embedded_unaffected")
     }
 
-    func testEmbeddedPaymentMethod_cardArtEnabled() {
+    func testEmbeddedPaymentMethod_cardArt() {
         for style in PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style.allCases {
             var appearance = PaymentSheet.Appearance()
             appearance.embeddedPaymentElement.row.style = style
-            appearance.cardArtEnabled = true
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.card),
                 hasSavedCard: false,

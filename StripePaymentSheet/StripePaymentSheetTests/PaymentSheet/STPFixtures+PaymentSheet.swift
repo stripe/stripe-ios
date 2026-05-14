@@ -299,7 +299,12 @@ extension Intent {
     static func _testCheckoutSession(
         mode: Checkout.Mode = .payment,
         amount: Int? = 2345,
-        currency: String = "USD"
+        currency: String = "USD",
+        lineItems: [Checkout.LineItem] = [],
+        subtotal: Int? = nil,
+        shippingAmount: Int = 0,
+        taxAmount: Int = 0,
+        discountAmount: Int = 0
     ) -> Intent {
         let modeParam = switch mode {
         case .payment: "payment"
@@ -326,10 +331,52 @@ extension Intent {
         if let amount {
             json["total_summary"] = [
                 "due": amount,
-                "subtotal": amount,
+                "subtotal": subtotal ?? amount,
                 "total": amount,
             ]
         }
+
+        var lineItemGroup: [String: Any] = [:]
+        if !lineItems.isEmpty {
+            lineItemGroup["line_items"] = lineItems.map { item -> [String: Any] in
+                return [
+                    "id": item.id,
+                    "name": item.name,
+                    "quantity": item.quantity,
+                    "price": [
+                        "unit_amount": item.unitAmount?.minorUnitsAmount ?? 0,
+                        "currency": currency.lowercased(),
+                    ],
+                ]
+            }
+        }
+        if shippingAmount != 0 {
+            lineItemGroup["shipping_rate"] = [
+                "id": "shr_test",
+                "display_name": "Standard",
+                "amount": shippingAmount,
+                "currency": currency.lowercased(),
+            ]
+        }
+        if taxAmount != 0 {
+            lineItemGroup["tax_amounts"] = [[
+                "amount": taxAmount,
+                "inclusive": false,
+                "taxable_amount": (subtotal ?? amount ?? 0),
+            ], ]
+        }
+        if discountAmount != 0 {
+            lineItemGroup["discount_amounts"] = [[
+                "amount": discountAmount,
+                "coupon": [
+                    "id": "coupon_test",
+                ],
+            ], ]
+        }
+        if !lineItemGroup.isEmpty {
+            json["line_item_group"] = lineItemGroup
+        }
+
         let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
         return .checkoutSession(checkoutSession)
     }

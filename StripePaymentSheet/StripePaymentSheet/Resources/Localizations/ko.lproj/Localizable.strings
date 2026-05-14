@@ -1,3 +1,7 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "%@은(는) 더 이상 간편결제에 저장되지 않습니다.";
+
 "+ Add" = "+ 추가";
 
 "Add US bank account" = "미국 은행 계좌 추가";
@@ -16,11 +20,9 @@
 
 "Add your payment information" = "결제 정보를 추가하세요.";
 
+"Agree and accept" = "동의 및 수락";
+
 "Approve payment" = "결제 승인";
-
-"Are you sure you want to remove this card?" = "이 카드를 삭제하시겠습니까?";
-
-"Are you sure you want to remove this linked account?" = "연결된 해당 계좌를 삭제하시겠습니까?";
 
 "Back" = "뒤로";
 
@@ -120,11 +122,15 @@
 
 "Debit or credit card" = "직불 또는 신용 카드";
 
+"Declarations" = "신고";
+
 "Default" = "기본값";
 
 "Default payment method" = "기본 결제 방식";
 
 "Did you mean %@? %@." = "%1$@을(를) 의미하는 건가요? %2$@.";
+
+"Discount" = "할인";
 
 "EPS Bank" = "EPS 은행";
 
@@ -210,6 +216,8 @@
 
 "Payment failed" = "결제 실패";
 
+"Payment method details cannot be changed." = "결제 방식 세부사항은 변경할 수 없습니다.";
+
 "Payment methods" = "결제 방식";
 
 "Please choose a valid payment method." = "유효한 결제 방식을 선택해 주십시오.";
@@ -222,9 +230,17 @@
 
 "Przelewy24 Bank" = "Przelewy24 은행";
 
+"Remove %@" = "%@ 제거";
+
+"Remove bank?" = "은행을 제거하시겠습니까?";
+
 "Remove card?" = "카드를 삭제하시겠습니까?";
 
 "Remove linked account" = "연결된 계좌 제거";
+
+"Remove payment method" = "결제 방식 삭제";
+
+"Remove payment method?" = "결제 방식을 삭제하시겠습니까?";
 
 "SEPA debit details cannot be changed." = "SEPA 자동 이체 세부사항은 설정되면 변경할 수 없습니다.";
 
@@ -266,19 +282,19 @@
 
 "Simple, secure one-click payments" = "간단하고 안전한 원클릭 결제";
 
-"Something went wrong when linking your account.\nPlease try again later." = "계정을 연결하는 동안 문제가 발생했습니다.\n나중에 다시 시도해 주십시오.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe는 영업일 기준 1~2일 후에 계좌에 0.01$를 예금할 예정입니다. 이후 %@에 은행 계좌 저장을 완료하라는 지침이 포함된 이메일이 전송됩니다.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe에서 영업일 기준 1~2일 후에 계좌로 0.01$를 입금할 예정입니다. 그런 다음 %@에 대한 결제를 완료하기 위한 지침이 포함된 이메일을 전송할 것입니다.";
+
+"Subtotal" = "소계";
 
 "Tap to close" = "탭하여 닫기";
 
 "Tap to expand" = "탭하여 확장";
 
-"The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
+"Tax" = "세금";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "입력한 IBAN이 유효하지 않습니다. \"%@\"은(는) 지원되는 국가 코드가 아닙니다.";
+"The IBAN you entered is incomplete." = "입력한 IBAN이 불완전합니다.";
 
 "The provided verification code has expired." = "제공된 확인 코드가 만료되었습니다.";
 

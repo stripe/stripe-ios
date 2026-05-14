@@ -654,7 +654,7 @@ extension PaymentSheet {
                     linkController.present(from: authenticationContext.authenticationPresentingViewController(),
                                            completion: completion)
                 }
-            case .signUp(let linkAccount, let phoneNumberFromSignup, let consentAction, let legalName, let intentConfirmParams):
+            case .signUp(_, let linkAccount, let phoneNumberFromSignup, let consentAction, let legalName, let intentConfirmParams):
                 let billingDetails = intentConfirmParams.paymentMethodParams.billingDetails
                 let countryCode = billingDetails?.address?.country ?? elementsSession.countryCode
 
@@ -685,9 +685,9 @@ extension PaymentSheet {
                         confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState)
                     }
                 }
-            case .withPaymentMethod(let paymentMethod):
+            case .withPaymentMethod(_, let paymentMethod):
                 confirmWithPaymentMethod(paymentMethod, nil, .hidden, clientAttributionMetadata) // from Link web controller
-            case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras, _):
+            case .withPaymentDetails(_, let linkAccount, let paymentDetails, let confirmationExtras, _):
                 let saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState = .hidden // we don't show a save-to-merchant checkbox in Link VC
                 let allowRedisplay = paymentDetails.computeAllowRedisplay(
                     elementsSession: elementsSession,

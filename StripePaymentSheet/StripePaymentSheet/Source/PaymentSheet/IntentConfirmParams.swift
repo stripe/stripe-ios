@@ -38,33 +38,16 @@ final class IntentConfirmParams {
     var instantDebitsLinkedBank: InstantDebitsLinkedBank?
 
     var paymentSheetLabel: String {
-        if let last4 = (financialConnectionsLinkedBank?.last4 ?? instantDebitsLinkedBank?.last4) {
-            return "••••\(last4)"
-        } else {
-            return paymentMethodParams.paymentSheetLabel
-        }
+        return paymentSheetLabel(brand: .link)
     }
 
-    var expandedPaymentSheetLabel: String {
-        switch paymentMethodType {
-        case .stripe(let stpPaymentMethodType):
-            switch stpPaymentMethodType {
-            case .card:
-                let brand = STPCardValidator.brand(for: paymentMethodParams.card)
-                return STPCardBrandUtilities.stringFrom(brand) ?? STPPaymentMethodType.card.displayName
-            case .USBankAccount:
-                // Use linked bank name if available, otherwise fallback to generic display name for bank
-                return financialConnectionsLinkedBank?.displayName ?? STPPaymentMethodType.USBankAccount.displayName
-            default:
-                // For all other payment method types just use the default label
-                return paymentSheetLabel
-            }
-        case .external:
-            return paymentSheetLabel
-        case .instantDebits:
-            return STPPaymentMethodType.link.displayName
-        case .linkCardBrand:
-            return STPPaymentMethodType.link.displayName
+    func paymentSheetLabel(brand: LinkBrand) -> String {
+        if let last4 = (financialConnectionsLinkedBank?.last4 ?? instantDebitsLinkedBank?.last4) {
+            return "••••\(last4)"
+        } else if paymentMethodType == .instantDebits || paymentMethodType == .linkCardBrand {
+            return brand.displayName
+        } else {
+            return paymentMethodParams.paymentSheetLabel
         }
     }
 
@@ -191,6 +174,27 @@ final class IntentConfirmParams {
                 // PaymentMethod won't be attached to customer
                 paymentMethodParams.allowRedisplay = .unspecified
             }
+        }
+    }
+
+    func expandedPaymentSheetLabel(brand: LinkBrand) -> String {
+        switch paymentMethodType {
+        case .stripe(let stpPaymentMethodType):
+            switch stpPaymentMethodType {
+            case .card:
+                let cardBrand = STPCardValidator.brand(for: paymentMethodParams.card)
+                return STPCardBrandUtilities.stringFrom(cardBrand) ?? STPPaymentMethodType.card.displayName
+            case .USBankAccount:
+                // Use linked bank name if available, otherwise fallback to generic display name for bank
+                return financialConnectionsLinkedBank?.displayName ?? STPPaymentMethodType.USBankAccount.displayName
+            default:
+                // For all other payment method types just use the default label
+                return paymentSheetLabel
+            }
+        case .external:
+            return paymentSheetLabel
+        case .instantDebits, .linkCardBrand:
+            return brand.displayName
         }
     }
 

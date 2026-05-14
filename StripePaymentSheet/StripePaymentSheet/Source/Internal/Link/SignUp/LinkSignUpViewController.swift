@@ -33,6 +33,7 @@ final class LinkSignUpViewController: UIViewController {
 
     private let viewModel: LinkSignUpViewModel
     private let defaultBillingDetails: PaymentSheet.BillingDetails?
+    private let brand: LinkBrand
     private let theme = LinkUI.appearance.asElementsTheme
 
     private lazy var selectionBehavior: SelectionBehavior = {
@@ -61,15 +62,12 @@ final class LinkSignUpViewController: UIViewController {
         label.adjustsFontForContentSizeCategory = true
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.text = STPLocalizedString(
-            "Pay faster everywhere Link is accepted.",
-            "Subtitle for the Link signup screen"
-        )
+        label.text = String.Localized.pay_faster_everywhere_brand_is_accepted(brand: brand)
         return label
     }()
 
     private lazy var emailElement = {
-        let element = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: theme)
+        let element = LinkEmailElement(defaultValue: viewModel.emailAddress, showLogo: false, theme: theme, brand: .link)
         element.indicatorTintColor = .linkIconBrand
         return element
     }()
@@ -107,7 +105,7 @@ final class LinkSignUpViewController: UIViewController {
     )
 
     private lazy var legalTermsView: LinkLegalTermsView = {
-        let legalTermsView = LinkLegalTermsView(textAlignment: .center, isStandalone: true)
+        let legalTermsView = LinkLegalTermsView(textAlignment: .center, brand: brand, isStandalone: true)
         legalTermsView.tintColor = .linkTextBrand
         legalTermsView.delegate = self
         return legalTermsView
@@ -171,6 +169,7 @@ final class LinkSignUpViewController: UIViewController {
     init(
         accountService: LinkAccountServiceProtocol,
         linkAccount: PaymentSheetLinkAccount?,
+        brand: LinkBrand = .link,
         country: String? = nil,
         defaultBillingDetails: PaymentSheet.BillingDetails?
     ) {
@@ -181,6 +180,7 @@ final class LinkSignUpViewController: UIViewController {
             country: country ?? defaultBillingDetails?.address.country
         )
         self.defaultBillingDetails = defaultBillingDetails
+        self.brand = brand
         super.init(nibName: nil, bundle: nil)
     }
 
