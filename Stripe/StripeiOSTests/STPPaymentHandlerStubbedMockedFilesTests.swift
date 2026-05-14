@@ -17,8 +17,6 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthenticationContext {
-    var presentingVC: UIViewController = UIViewController()
-
     func testCallConfirmAfterpay_Redirect_thenCanceled() {
         let nextActionData = """
               {
@@ -519,7 +517,6 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         params.paymentMethodParams = STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)
 
         let mockPresenter = StubbedCaptchaPresentingViewController()
-        presentingVC = mockPresenter
         let presentedExpectation = expectation(description: "IntentConfirmationChallengeViewController presented")
         mockPresenter.onPresent = { vc in
             if #available(iOS 14.0, *), vc is IntentConfirmationChallengeViewController {
@@ -527,7 +524,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
             }
         }
 
-        paymentHandler.confirmPaymentIntent(params: params, authenticationContext: self) { _, _, _ in }
+        paymentHandler.confirmPaymentIntent(params: params, authenticationContext: mockPresenter) { _, _, _ in }
         wait(for: [presentedExpectation], timeout: 5.0)
     }
 
@@ -639,12 +636,14 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
 }
 extension STPPaymentHandlerStubbedMockedFilesTests {
     func authenticationPresentingViewController() -> UIViewController {
-        return presentingVC
+        return UIViewController()
     }
 }
 
-private class StubbedCaptchaPresentingViewController: UIViewController {
+private class StubbedCaptchaPresentingViewController: UIViewController, STPAuthenticationContext {
     var onPresent: ((UIViewController) -> Void)?
+
+    func authenticationPresentingViewController() -> UIViewController { self }
 
     override func present(
         _ viewControllerToPresent: UIViewController,
