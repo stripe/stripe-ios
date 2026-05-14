@@ -78,6 +78,7 @@ pipelines:
 workflows:
   update-snapshots:
     steps:
+    - activate-ssh-key@4: {}
     - script@1:
         title: Install ImageMagick
         inputs:
