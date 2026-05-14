@@ -89,6 +89,7 @@ workflows:
         inputs:
         - content: ruby ci_scripts/push_snapshots.rb
     before_run:
+    - install-runtime-16
     - prep_all
     envs:
     - DEFAULT_TEST_DEVICE: platform=iOS Simulator,name=iPhone 12 mini,OS=16.4
