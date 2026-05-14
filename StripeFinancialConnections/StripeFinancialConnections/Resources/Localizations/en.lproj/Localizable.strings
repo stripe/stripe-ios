@@ -48,6 +48,10 @@
    The placeholder is a Stripe brand name and should not be translated. */
 "Continue with %@" = "Continue with %@";
 
+/* A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
+   The title of a screen where users are informed that they can sign-in-to Link. */
+"Continue with Link" = "Continue with Link";
+
 /* The title of a user-input-field that appears when a user is signing up to Link (a payment service). It instructs user to type an email address. */
 "Email address" = "Email address";
 
@@ -183,6 +187,9 @@
 /* The subtitle/description of a screen where users are informed that they can sign in to the Link brand. The placeholder is a Stripe brand name and should not be translated. */
 "Use information you previously saved with your %@ account." = "Use information you previously saved with your %@ account.";
 
+/* The subtitle/description of a screen where users are informed that they can sign-in-to Link. */
+"Use information you previously saved with your Link account." = "Use information you previously saved with your Link account.";
+
 /* Label for a button shown to a user who is in test mode, which will give them the option to autofill mock account credentials. */
 "Use test account" = "Use test account";
 
@@ -243,11 +250,17 @@
 /* The subtitle/description of the success screen when the user's single connected account could not be saved to the Link brand. The placeholder is a Stripe brand name and should not be translated. */
 "Your account was connected, but couldn't be saved to %@." = "Your account was connected, but couldn't be saved to %@.";
 
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments. */
+"Your account was connected, but couldn't be saved to Link." = "Your account was connected, but couldn't be saved to Link.";
+
 /* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments. */
 "Your account was connected." = "Your account was connected.";
 
 /* The subtitle/description of the success screen when the user's connected accounts could not be saved to the Link brand. The placeholder is a Stripe brand name and should not be translated. */
 "Your accounts were connected, but couldn't be saved to %@." = "Your accounts were connected, but couldn't be saved to %@.";
+
+/* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments. */
+"Your accounts were connected, but couldn't be saved to Link." = "Your accounts were connected, but couldn't be saved to Link.";
 
 /* The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank accounts to an application. Now that the bank accounts are connected (or linked), the user will be able to use those bank accounts for payments. */
 "Your accounts were connected." = "Your accounts were connected.";
