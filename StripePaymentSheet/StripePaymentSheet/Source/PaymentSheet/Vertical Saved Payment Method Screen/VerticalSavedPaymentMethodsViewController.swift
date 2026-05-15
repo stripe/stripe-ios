@@ -230,6 +230,7 @@ class VerticalSavedPaymentMethodsViewController: UIViewController {
                 self?.syncLinkBrand()
             }
         }
+        _ = linkAccountObserver
 
         view.addAndPinSubview(stackView, insets: configuration.appearance.formInsets)
 

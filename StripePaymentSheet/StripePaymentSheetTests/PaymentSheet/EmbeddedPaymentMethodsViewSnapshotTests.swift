@@ -1421,7 +1421,7 @@ extension PaymentSheetLinkAccount {
     ) -> PaymentSheetLinkAccount {
         var session: ConsumerSession?
         if isRegistered {
-            session = ConsumerSession(
+            session = ConsumerSession.make(
                 clientSecret: "client_secret",
                 emailAddress: email,
                 redactedFormattedPhoneNumber: "+1********55",

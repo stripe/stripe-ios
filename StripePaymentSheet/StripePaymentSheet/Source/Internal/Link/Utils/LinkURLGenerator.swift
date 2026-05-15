@@ -124,7 +124,7 @@ class LinkURLGenerator {
     }
 
     static func url(params: LinkURLParams) throws -> URL {
-        var components = URLComponents(string: "https://checkout.link.com/")!
+        var components = URLComponents(url: checkoutURL)!
         components.fragment = try params.toURLEncodedBase64()
         guard let url = components.url else {
             throw LinkURLGeneratorError.urlCreationFailed

@@ -371,6 +371,7 @@ class SavedPaymentOptionsViewController: UIViewController {
                     self?.syncLinkBrand()
                 }
             }
+            _ = linkAccountObserver
         }
         view.addAndPinSubview(stackView)
     }

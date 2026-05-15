@@ -471,6 +471,7 @@ public final class EmbeddedPaymentElement {
                 self.informDelegateIfPaymentOptionUpdated()
             }
         }
+        _ = self.linkAccountObserver
         self.lastUpdatedPaymentOption = paymentOption
     }
 }

@@ -333,6 +333,7 @@ extension PaymentSheet {
                     self?.updatePaymentOption()
                 }
             }
+            _ = self.linkAccountObserver
 
             updatePaymentOption()
         }

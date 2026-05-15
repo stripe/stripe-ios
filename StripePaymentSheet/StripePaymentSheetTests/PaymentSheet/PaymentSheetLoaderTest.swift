@@ -23,6 +23,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         super.setUp()
         self.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         LinkAccountContext.shared.account = nil
+        StubbedBackend.stubLookup()
     }
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()

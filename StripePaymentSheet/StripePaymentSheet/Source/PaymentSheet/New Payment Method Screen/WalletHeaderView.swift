@@ -140,6 +140,7 @@ extension PaymentSheetViewController {
                     self?.syncLinkBrand()
                 }
             }
+            _ = linkAccountObserver
 
             updateSeparatorLabel()
         }

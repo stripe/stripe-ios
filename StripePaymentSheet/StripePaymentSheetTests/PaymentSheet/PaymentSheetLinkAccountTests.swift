@@ -105,7 +105,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
     }
 
     func testMeetsMinimumAuthenticationLevel_meets() {
-        let session = ConsumerSession(
+        let session = ConsumerSession.make(
             clientSecret: "secret",
             emailAddress: "user@example.com",
             redactedFormattedPhoneNumber: "(***) *** **55",
@@ -121,7 +121,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
     }
 
     func testMeetsMinimumAuthenticationLevel_doesNotMeet() {
-        let session = ConsumerSession(
+        let session = ConsumerSession.make(
             clientSecret: "secret",
             emailAddress: "user@example.com",
             redactedFormattedPhoneNumber: "(***) *** **55",
@@ -180,16 +180,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
     }
 
     func testLinkBrand_prefersSessionBrandOverInitialBrand() {
-        let session = ConsumerSession(
-            clientSecret: "client_secret",
-            emailAddress: "user@example.com",
-            redactedFormattedPhoneNumber: "(***) *** **55",
-            unredactedPhoneNumber: "(555) 555-5555",
-            phoneNumberCountry: "US",
-            verificationSessions: [.init(type: .sms, state: .verified)],
-            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
-            mobileFallbackWebviewParams: nil
-        )
+        let session = makeVerifiedSession()
         session.linkBrand = .onelink
 
         let sut = PaymentSheetLinkAccount(
@@ -237,16 +228,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
 
         XCTAssertEqual(unverifiedAccount.linkBrand, .link)
 
-        let verifiedSession = ConsumerSession(
-            clientSecret: "client_secret",
-            emailAddress: "user@example.com",
-            redactedFormattedPhoneNumber: "(***) *** **55",
-            unredactedPhoneNumber: "(555) 555-5555",
-            phoneNumberCountry: "US",
-            verificationSessions: [.init(type: .sms, state: .verified)],
-            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
-            mobileFallbackWebviewParams: nil
-        )
+        let verifiedSession = makeVerifiedSession()
         verifiedSession.linkBrand = .link
         let verifiedAccount = PaymentSheetLinkAccount(
             email: "user@example.com",
@@ -272,7 +254,7 @@ class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {
 
     func refreshLinkSession(completion: @escaping (Result<ConsumerSession, Error>) -> Void) {
         // Return a fake session with a "good" key
-        let stubSession = ConsumerSession(
+        let stubSession = ConsumerSession.make(
             clientSecret: "unexpired_key",
             emailAddress: "user@example.com",
             redactedFormattedPhoneNumber: "(***) *** **55",
@@ -288,6 +270,20 @@ class PaymentSheetLinkAccountDelegateStub: PaymentSheetLinkAccountDelegate {
 }
 
 extension PaymentSheetLinkAccountTests {
+    func makeVerifiedSession() -> ConsumerSession {
+        return ConsumerSession.make(
+            clientSecret: "client_secret",
+            emailAddress: "user@example.com",
+            redactedFormattedPhoneNumber: "(***) *** **55",
+            unredactedPhoneNumber: "(555) 555-5555",
+            phoneNumberCountry: "US",
+            verificationSessions: [.init(type: .sms, state: .verified)],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card), ParsedEnum(.bankAccount)],
+            mobileFallbackWebviewParams: nil,
+            currentAuthenticationLevel: .twoFactorAuth,
+            minimumAuthenticationLevel: .oneFactorAuth
+        )
+    }
 
     func makePaymentDetailsStub() -> ConsumerPaymentDetails {
         return ConsumerPaymentDetails(

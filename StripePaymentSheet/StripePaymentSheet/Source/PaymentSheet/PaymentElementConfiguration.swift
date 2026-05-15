@@ -50,10 +50,6 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
 }
 
 extension PaymentElementConfiguration {
-    func resolvedLinkBrand(elementsSession: STPElementsSession) -> LinkBrand {
-        link.effectiveBrand(elementsSession: elementsSession)
-    }
-
     func resolvedLinkBrand(elementsSession: STPElementsSession, linkAccount: PaymentSheetLinkAccount?) -> LinkBrand {
         if let brand = link.brand {
             return brand
@@ -107,13 +103,6 @@ extension PaymentElementConfiguration {
             return .automatic
         }
         return termsDisplay
-    }
-}
-
-private extension PaymentSheet.LinkConfiguration {
-    func effectiveBrand(elementsSession: STPElementsSession) -> LinkBrand {
-        // `brand` is an explicit client override; `nil` means defer to the elements session response.
-        brand ?? elementsSession.linkBrand ?? .link
     }
 }
 

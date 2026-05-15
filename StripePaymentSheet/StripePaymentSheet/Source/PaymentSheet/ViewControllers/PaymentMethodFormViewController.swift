@@ -151,6 +151,7 @@ class PaymentMethodFormViewController: UIViewController {
                     self?.syncLinkInlineSignupBrand()
                 }
             }
+            _ = linkAccountObserver
             syncLinkInlineSignupBrand()
         }
         view.addAndPinSubview(formStackView)

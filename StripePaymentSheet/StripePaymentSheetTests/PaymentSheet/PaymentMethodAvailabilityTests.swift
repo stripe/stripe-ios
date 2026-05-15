@@ -312,7 +312,7 @@ private extension PaymentMethodAvailabilityTests {
     }
 
     func makeLinkAccountRequiringVerification() -> PaymentSheetLinkAccount {
-        let consumerSession = ConsumerSession(
+        let consumerSession = ConsumerSession.make(
             clientSecret: "client_secret",
             emailAddress: "test@example.com",
             redactedFormattedPhoneNumber: "+1********55",

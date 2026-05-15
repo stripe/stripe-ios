@@ -26,32 +26,6 @@ final class ConsumerSession: Decodable {
     let minimumAuthenticationLevel: AuthenticationLevel?
     var linkBrand: LinkBrand?
 
-    init(
-        clientSecret: String,
-        emailAddress: String,
-        redactedFormattedPhoneNumber: String,
-        unredactedPhoneNumber: String?,
-        phoneNumberCountry: String?,
-        verificationSessions: [VerificationSession],
-        supportedPaymentDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>>,
-        mobileFallbackWebviewParams: MobileFallbackWebviewParams?,
-        currentAuthenticationLevel: AuthenticationLevel? = nil,
-        minimumAuthenticationLevel: AuthenticationLevel? = nil,
-        linkBrand: LinkBrand? = nil
-    ) {
-        self.clientSecret = clientSecret
-        self.emailAddress = emailAddress
-        self.redactedFormattedPhoneNumber = redactedFormattedPhoneNumber
-        self.unredactedPhoneNumber = unredactedPhoneNumber
-        self.phoneNumberCountry = phoneNumberCountry
-        self.verificationSessions = verificationSessions
-        self.supportedPaymentDetailsTypes = supportedPaymentDetailsTypes
-        self.mobileFallbackWebviewParams = mobileFallbackWebviewParams
-        self.currentAuthenticationLevel = currentAuthenticationLevel
-        self.minimumAuthenticationLevel = minimumAuthenticationLevel
-        self.linkBrand = linkBrand
-    }
-
     private enum CodingKeys: String, CodingKey {
         case clientSecret
         case emailAddress
