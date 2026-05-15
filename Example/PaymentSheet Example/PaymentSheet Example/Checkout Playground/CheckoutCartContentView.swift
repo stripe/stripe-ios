@@ -422,22 +422,7 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var currencySelectorSection: some View {
-        let appearance: Checkout.CurrencySelectorView.Appearance = {
-            var appearance = Checkout.CurrencySelectorView.Appearance()
-            appearance.height = 40
-            appearance.cornerRadius = 12
-            appearance.borderWidth = 0.5
-            appearance.background = UIColor.systemBackground
-            appearance.selectedBackground = UIColor.tintColor
-            appearance.border = UIColor.separator.withAlphaComponent(0.3)
-            appearance.font = .systemFont(ofSize: 15, weight: .semibold)
-            appearance.sizeScaleFactor = 1.0
-            appearance.text = .label
-            appearance.selectedText = .white
-            appearance.textSecondary = UIColor.secondaryLabel
-            return appearance
-        }()
-        Checkout.CurrencySelectorElement(checkout: checkout, appearance: appearance)
+        Checkout.CurrencySelectorElement(checkout: checkout)
             .padding(.horizontal)
     }
 
