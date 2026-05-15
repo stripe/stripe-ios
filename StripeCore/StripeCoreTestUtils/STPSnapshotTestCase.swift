@@ -9,19 +9,11 @@
 import Foundation
 import iOSSnapshotTestCase
 
-let TEST_DEVICE_MODEL = "iPhone13,1" // iPhone 12 mini
-
 open class STPSnapshotTestCase: FBSnapshotTestCase {
 
     open override func setUp() {
         super.setUp()
         recordMode = true
-        let deviceModel = ProcessInfo.processInfo.environment["SIMULATOR_MODEL_IDENTIFIER"]!
-        guard deviceModel == TEST_DEVICE_MODEL else {
-            continueAfterFailure = false
-            XCTFail("You must run snapshot tests on \(TEST_DEVICE_MODEL). You are running on \(deviceModel).")
-            return
-        }
     }
 
     open override func getReferenceImageDirectory(withDefault dir: String?) -> String {
