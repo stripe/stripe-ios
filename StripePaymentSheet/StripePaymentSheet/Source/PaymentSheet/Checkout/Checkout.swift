@@ -32,7 +32,7 @@ public final class Checkout: ObservableObject {
     /// The current state of the checkout session.
     ///
     /// After initialization this is always ``State.loaded(_:)``. It transitions to
-    /// ``State.loading(_:)`` while a mutation or refresh is in flight.
+    /// ``State.loading(_:)`` while a mutation is in flight.
     @Published public private(set) var state: State
 
     /// The configuration supplied at initialization.
@@ -125,7 +125,7 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Pending Operations
 
-    /// Waits for all in-flight session updates (refresh, mutations, etc.) to complete.
+    /// Waits for all in-flight session updates (mutations, etc.) to complete.
     ///
     /// - Returns immediately if no operations are pending.
     /// - Waits for the operations pending when this method is called; operations
@@ -153,24 +153,6 @@ public final class Checkout: ObservableObject {
         }
         if case .failure(let error) = result {
             throw error is TimeoutError ? CheckoutError.timedOut : error
-        }
-    }
-
-    // MARK: - Session
-
-    /// Refreshes the session by fetching the latest copy from Stripe.
-    ///
-    /// Call this after making server-side changes to the Checkout Session so
-    /// the local ``state`` stays in sync with Stripe.
-    ///
-    /// - Throws: ``CheckoutError`` if checkout UI is currently presented or the
-    ///   latest session cannot be fetched.
-    public func refresh() async throws {
-        guard integrationDelegate?.isSheetPresented != true else {
-            throw CheckoutError.sheetCurrentlyPresented
-        }
-        try await enqueueSessionUpdate {
-            try await self.refreshSession()
         }
     }
 
