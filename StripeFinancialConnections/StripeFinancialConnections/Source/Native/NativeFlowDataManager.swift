@@ -35,6 +35,7 @@ protocol NativeFlowDataManager: AnyObject {
     var consumerPublishableKey: String? { get set }
     var linkBrand: LinkBrand? { get set }
     var effectiveLinkBrand: LinkBrand { get }
+    var effectiveAppearance: FinancialConnectionsAppearance { get }
     var saveToLinkWithStripeSucceeded: Bool? { get set }
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
     var customSuccessPaneCaption: String? { get set }
@@ -132,6 +133,15 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
             return brand
         }
         return linkBrand ?? configuration.linkBrand ?? manifest.brand ?? .link
+    }
+    var effectiveAppearance: FinancialConnectionsAppearance {
+        let resolvedBrand: LinkBrand? = {
+            if configuration.hasExplicitLinkBrandOverride {
+                return configuration.linkBrand
+            }
+            return linkBrand ?? configuration.linkBrand ?? manifest.brand
+        }()
+        return FinancialConnectionsAppearance(theme: manifest.theme, brand: resolvedBrand)
     }
 
     init(

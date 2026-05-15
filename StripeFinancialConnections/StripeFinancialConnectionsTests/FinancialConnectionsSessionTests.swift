@@ -81,7 +81,14 @@ final class FinancialConnectionsSessionTests: XCTestCase {
     }
 
     func testSynchronizeParsesNotlinkBrand() throws {
-        let synchronize = try makeSynchronize(brandValue: "onelink")
+        let synchronize = try makeSynchronize(brandValue: "notlink")
+
+        XCTAssertEqual(synchronize.manifest.brand, .onelink)
+        XCTAssertEqual(synchronize.manifest.appearance.logo, .onelink_logo)
+    }
+
+    func testSynchronizeParsesLinkBrandAlias() throws {
+        let synchronize = try makeSynchronize(linkBrandValue: "notlink")
 
         XCTAssertEqual(synchronize.manifest.brand, .onelink)
         XCTAssertEqual(synchronize.manifest.appearance.logo, .onelink_logo)
@@ -95,7 +102,7 @@ final class FinancialConnectionsSessionTests: XCTestCase {
     }
 
     func testLookupConsumerSessionParsesLinkBrand() throws {
-        let response = try makeLookupConsumerSessionResponse(brandValue: "onelink")
+        let response = try makeLookupConsumerSessionResponse(brandValue: "notlink")
 
         XCTAssertEqual(response.linkBrand, .onelink)
     }
@@ -120,6 +127,18 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         var manifest = payload?["manifest"] as? [String: Any]
 
         manifest?["brand"] = brandValue
+        payload?["manifest"] = manifest
+
+        let data = try JSONSerialization.data(withJSONObject: payload ?? [:])
+        return try decode(data: data)
+    }
+
+    private func makeSynchronize(linkBrandValue: String?) throws -> FinancialConnectionsSynchronize {
+        var payload = try JSONSerialization.jsonObject(with: FinancialConnectionsSynchronizeMock.synchronize.data()) as? [String: Any]
+        var manifest = payload?["manifest"] as? [String: Any]
+
+        manifest?.removeValue(forKey: "brand")
+        manifest?["link_brand"] = linkBrandValue
         payload?["manifest"] = manifest
 
         let data = try JSONSerialization.data(withJSONObject: payload ?? [:])

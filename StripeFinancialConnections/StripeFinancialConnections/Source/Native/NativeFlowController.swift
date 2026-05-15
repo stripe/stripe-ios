@@ -113,7 +113,7 @@ class NativeFlowController {
         }
         if showConfirmationAlert {
             let closeConfirmationViewController = CloseConfirmationViewController(
-                appearance: dataManager.manifest.appearance,
+                appearance: dataManager.effectiveAppearance,
                 didSelectClose: {
                     finishClosingAuthFlow()
                 }
@@ -164,7 +164,7 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    appearance: self.dataManager.manifest.appearance,
+                    appearance: self.dataManager.effectiveAppearance,
                     isTestMode: self.dataManager.manifest.isTestMode
                 )
             }
@@ -219,7 +219,7 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    appearance: dataManager.manifest.appearance,
+                    appearance: dataManager.effectiveAppearance,
                     isTestMode: self.dataManager.manifest.isTestMode
                 )
                 self.navigationController.pushViewController(viewController, animated: animated)
@@ -1713,7 +1713,7 @@ private func CreatePaneViewController(
             let terminalErrorViewController = TerminalErrorViewController(
                 error: terminalError,
                 allowManualEntry: dataManager.manifest.allowManualEntry,
-                appearance: dataManager.manifest.appearance
+                appearance: dataManager.effectiveAppearance
             )
             terminalErrorViewController.delegate = nativeFlowController
             viewController = terminalErrorViewController
