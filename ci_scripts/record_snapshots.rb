@@ -95,11 +95,27 @@ versions.each do |os_version|
     scheme = 'AllStripeFrameworks-iOS26'
   end
 
-  system('./ci_scripts/test.rb', '--only-snapshot-tests',
-         '--scheme', scheme,
-         '--device', DEVICE_MODEL,
-         '--version', os_version,
-         exception: true)
+  unless system('./ci_scripts/test.rb', '--only-snapshot-tests',
+                '--scheme', scheme,
+                '--device', DEVICE_MODEL,
+                '--version', os_version)
+    puts "==> Tests failed for iOS #{os_version}. Inspecting failures..."
+    system('ruby', 'ci_scripts/run_tests.rb', '--failures')
+
+    # Copy xcresult to deploy dir for upload
+    deploy_dir = ENV['BITRISE_DEPLOY_DIR']
+    if deploy_dir
+      xcresult = Dir.glob('/tmp/stripe-ios-test-results.xcresult').first ||
+                 Dir.glob('build-ci-tests/Logs/Test/*.xcresult').max_by { |f| File.mtime(f) }
+      if xcresult
+        dest = File.join(deploy_dir, "snapshot-test-failure-ios#{os_version}.xcresult.zip")
+        system('zip', '-r', dest, xcresult, [:out] => '/dev/null')
+        puts "==> xcresult saved to #{dest}"
+      end
+    end
+
+    abort "Snapshot tests failed on iOS #{os_version}"
+  end
 
   # FBSnapshotTestCase appends _64 for 64-bit architecture
   actual_record_dir = if Dir.exist?("#{RECORD_DIR}_64")
