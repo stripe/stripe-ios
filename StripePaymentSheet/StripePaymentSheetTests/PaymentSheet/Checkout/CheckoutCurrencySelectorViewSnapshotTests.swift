@@ -107,6 +107,14 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         verify(view, darkMode: true)
     }
 
+    func testShowAmount() async {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.showAmount = true
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        verify(view)
+    }
+
     func testFullyCustomized() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
         appearance.height = 44

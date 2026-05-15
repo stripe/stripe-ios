@@ -165,6 +165,7 @@ extension Checkout {
             let (left, right) = CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
                 localizedPricesMetas: session.localizedPricesMetas,
+                showAmount: appearance.showAmount,
                 flagPrefixProvider: { [weak checkout] currency in
                     checkout?.flagImageManager.flagIcon(for: currency, font: flagFont) ?? NSAttributedString()
                 }

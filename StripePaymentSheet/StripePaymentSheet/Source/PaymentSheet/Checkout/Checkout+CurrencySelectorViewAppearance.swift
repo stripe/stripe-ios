@@ -65,6 +65,12 @@ extension Checkout.CurrencySelectorView {
         /// Color for error messages shown below the selector. Default is `.systemRed`.
         public var danger: UIColor = .systemRed
 
+        // MARK: - Content
+
+        /// When `true`, displays the formatted currency amount next to each currency code
+        /// (e.g. "USD $12.00" instead of just "USD"). Default is `false`.
+        public var showAmount: Bool = false
+
         /// Creates an appearance with default values.
         public init() {}
 
