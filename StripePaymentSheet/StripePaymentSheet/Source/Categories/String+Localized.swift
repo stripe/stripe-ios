@@ -272,6 +272,13 @@ extension String.Localized {
         )
     }
 
+    static var open_upi_app: String {
+        STPLocalizedString(
+            "Open your UPI app to approve your payment within %@",
+            "Countdown timer text on a screen asking the user to approve a payment"
+        )
+    }
+
     static var payment_failed: String {
         STPLocalizedString(
             "Payment failed",

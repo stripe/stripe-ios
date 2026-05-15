@@ -52,6 +52,9 @@ import Foundation
     /// Contains details describing the microdeposits verification flow for US Bank Account payments
     case verifyWithMicrodeposits
 
+    /// The action type for UPI payment methods. The customer must complete the transaction in their banking app within 5 minutes.
+    case upiAwaitNotification
+
     /// Contains instructions for authenticating a payment by redirecting your customer to Cash App.
     case cashAppRedirectToApp
 
@@ -93,6 +96,8 @@ import Foundation
             self = .BLIKAuthorize
         case "verify_with_microdeposits":
             self = .verifyWithMicrodeposits
+        case "upi_await_notification":
+            self = .upiAwaitNotification
         case "cashapp_handle_redirect_or_display_qr_code":
             self = .cashAppRedirectToApp
         case "paynow_display_qr_code":
@@ -131,6 +136,8 @@ import Foundation
             return "boleto_display_details"
         case .verifyWithMicrodeposits:
             return "verify_with_microdeposits"
+        case .upiAwaitNotification:
+            return "upi_await_notification"
         case .cashAppRedirectToApp:
             return "cashapp_handle_redirect_or_display_qr_code"
         case .konbiniDisplayDetails:
@@ -245,6 +252,8 @@ public class STPIntentAction: NSObject {
             if let verifyWithMicrodeposits = verifyWithMicrodeposits {
                 props.append("verifyWithMicrodeposits = \(verifyWithMicrodeposits)")
             }
+        case .upiAwaitNotification:
+            props.append("upiAwaitNotification != nil")
         case .cashAppRedirectToApp:
             if let cashAppRedirectToApp = cashAppRedirectToApp {
                 props.append("cashAppRedirectToApp = \(cashAppRedirectToApp)")
@@ -396,6 +405,8 @@ extension STPIntentAction: STPAPIResponseDecodable {
             if verifyWithMicrodeposits == nil {
                 type = .unknown
             }
+        case .upiAwaitNotification:
+            break  // no additional details
         case .cashAppRedirectToApp:
             cashAppRedirectToApp = STPIntentActionCashAppRedirectToApp.decodedObject(
                 fromAPIResponse: dict["cashapp_handle_redirect_or_display_qr_code"] as? [AnyHashable: Any]

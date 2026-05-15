@@ -186,6 +186,7 @@ extension EmbeddedComponentManager {
             case threeDSecure2
             case threeDSecure2Eap
             case twint
+            case upi
             case usBankAccount
             case visaCheckout
             case wechat
