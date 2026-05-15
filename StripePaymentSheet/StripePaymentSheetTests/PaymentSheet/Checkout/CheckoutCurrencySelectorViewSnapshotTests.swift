@@ -107,9 +107,9 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         verify(view, darkMode: true)
     }
 
-    func testShowAmount() async {
+    func testLabelContentAmount() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
-        appearance.showAmount = true
+        appearance.labelContent = .amount
 
         let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
         verify(view)

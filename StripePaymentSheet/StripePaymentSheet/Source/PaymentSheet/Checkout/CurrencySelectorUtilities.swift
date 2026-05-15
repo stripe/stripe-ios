@@ -35,7 +35,7 @@ enum CurrencySelectorUtilities {
     static func buildSelectorItems(
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
         localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
-        showAmount: Bool = false,
+        labelContent: Checkout.CurrencySelectorView.Appearance.LabelContent = .currencyCode,
         flagPrefixProvider: (String) -> NSAttributedString = { _ in NSAttributedString() }
     ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
         let localCurrency = CurrencyCode(exchangeRateMeta.localizedCurrency)
@@ -45,25 +45,27 @@ enum CurrencySelectorUtilities {
         let integrationMeta = localizedPricesMetas.first { CurrencyCode($0.currency) == integrationCurrency }
 
         let left = localMeta.map {
-            makeSelectorItem(currency: CurrencyCode($0.currency), total: $0.total, showAmount: showAmount, flagPrefix: flagPrefixProvider(localCurrency.apiValue))
-        } ?? makeSelectorItem(currency: localCurrency, total: 0, showAmount: showAmount, flagPrefix: flagPrefixProvider(localCurrency.apiValue))
+            makeSelectorItem(currency: CurrencyCode($0.currency), total: $0.total, labelContent: labelContent, flagPrefix: flagPrefixProvider(localCurrency.apiValue))
+        } ?? makeSelectorItem(currency: localCurrency, total: 0, labelContent: labelContent, flagPrefix: flagPrefixProvider(localCurrency.apiValue))
 
         let right = integrationMeta.map {
-            makeSelectorItem(currency: CurrencyCode($0.currency), total: $0.total, showAmount: showAmount, flagPrefix: flagPrefixProvider(integrationCurrency.apiValue))
-        } ?? makeSelectorItem(currency: integrationCurrency, total: 0, showAmount: showAmount, flagPrefix: flagPrefixProvider(integrationCurrency.apiValue))
+            makeSelectorItem(currency: CurrencyCode($0.currency), total: $0.total, labelContent: labelContent, flagPrefix: flagPrefixProvider(integrationCurrency.apiValue))
+        } ?? makeSelectorItem(currency: integrationCurrency, total: 0, labelContent: labelContent, flagPrefix: flagPrefixProvider(integrationCurrency.apiValue))
 
         return (left: left, right: right)
     }
 
-    static func makeSelectorItem(currency: CurrencyCode, total: Int, showAmount: Bool = false, flagPrefix: NSAttributedString) -> TwoOptionSelectorItem {
+    static func makeSelectorItem(currency: CurrencyCode, total: Int, labelContent: Checkout.CurrencySelectorView.Appearance.LabelContent = .currencyCode, flagPrefix: NSAttributedString) -> TwoOptionSelectorItem {
         let displayText = NSMutableAttributedString(attributedString: flagPrefix)
         if displayText.length > 0 {
             displayText.append(NSAttributedString(string: " \u{2009}"))
         }
-        displayText.append(NSAttributedString(string: currency.displayValue))
-        if showAmount, total > 0 {
+        switch labelContent {
+        case .currencyCode:
+            displayText.append(NSAttributedString(string: currency.displayValue))
+        case .amount:
             let formattedAmount = String.localizedAmountDisplayString(for: total, currency: currency.apiValue)
-            displayText.append(NSAttributedString(string: " \(formattedAmount)"))
+            displayText.append(NSAttributedString(string: formattedAmount))
         }
         return TwoOptionSelectorItem(
             id: currency.apiValue,

@@ -67,9 +67,16 @@ extension Checkout.CurrencySelectorView {
 
         // MARK: - Content
 
-        /// When `true`, displays the formatted currency amount next to each currency code
-        /// (e.g. "USD $12.00" instead of just "USD"). Default is `false`.
-        public var showAmount: Bool = false
+        /// Controls what content is displayed in each currency option's label.
+        public enum LabelContent {
+            /// Displays only the currency code (e.g. "USD").
+            case currencyCode
+            /// Displays the formatted amount (e.g. "$12.00").
+            case amount
+        }
+
+        /// Controls what is displayed in each currency option's label. Default is `.currencyCode`.
+        public var labelContent: LabelContent = .currencyCode
 
         /// Creates an appearance with default values.
         public init() {}
