@@ -809,7 +809,10 @@ extension PaymentSheet {
                     paymentOption: selectedPaymentOption,
                     currency: intent.currency,
                     iconStyle: configuration.appearance.iconStyle,
-                    linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                    linkBrand: configuration.resolvedLinkBrand(
+                        elementsSession: elementsSession,
+                        linkAccount: LinkAccountContext.shared.account
+                    )
                 )
             } else {
                 paymentOption = nil

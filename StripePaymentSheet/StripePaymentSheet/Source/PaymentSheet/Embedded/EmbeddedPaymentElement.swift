@@ -60,7 +60,10 @@ public final class EmbeddedPaymentElement {
             mandateText: embeddedPaymentMethodsView.mandateText,
             currency: intent.currency,
             iconStyle: configuration.appearance.iconStyle,
-            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+            linkBrand: configuration.resolvedLinkBrand(
+                elementsSession: elementsSession,
+                linkAccount: LinkAccountContext.shared.account
+            )
         )
     }
 

@@ -560,7 +560,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                           allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                           needsVerticalPaddingForBadge: hasDefault,
                           showDefaultPMBadge: isDefaultPaymentMethod(savedPaymentMethodId: viewModel.savedPaymentMethod?.stripeId),
-                          linkBrand: configuration.linkBrand)
+                          linkBrand: currentLinkBrand)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
