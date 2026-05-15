@@ -49,6 +49,7 @@ import UIKit
         case canceled
     }
 
+    /// The result of presenting Link to collect a payment method.
     @frozen @_spi(STP) @_spi(LinkControllerPreview) public enum PaymentMethodResult {
         /// The user selected a payment method. The associated value is the resulting `STPPaymentMethod`.
         case completed(STPPaymentMethod)
@@ -90,6 +91,7 @@ import UIKit
         }
     }
 
+    /// The intent for which the `LinkController` collects a payment method.
     @_spi(STP) @_spi(LinkControllerPreview) public enum Mode {
         case payment
         case paymentAndSetupFutureUse
