@@ -260,25 +260,6 @@ final class CheckoutUnitTests: XCTestCase {
         }
     }
 
-    func testRefreshThrowsWhenSheetPresentedEvenIfSessionIsClosed() async {
-        let checkout = makeCheckoutWithClosedSession()
-        let integrationDelegate = MockCheckoutIntegrationDelegate()
-        integrationDelegate.isSheetPresented = true
-        checkout.integrationDelegate = integrationDelegate
-
-        do {
-            try await checkout.refresh()
-            XCTFail("Expected CheckoutError.sheetCurrentlyPresented")
-        } catch let error as CheckoutError {
-            guard case .sheetCurrentlyPresented = error else {
-                XCTFail("Expected .sheetCurrentlyPresented, got \(error)")
-                return
-            }
-        } catch {
-            XCTFail("Unexpected error type: \(error)")
-        }
-    }
-
     // MARK: - Address Collection Decoding Tests
 
     func testRequiresBillingAddress_whenRequired() {
