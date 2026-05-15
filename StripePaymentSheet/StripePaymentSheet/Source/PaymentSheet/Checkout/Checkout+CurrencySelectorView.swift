@@ -50,12 +50,10 @@ extension Checkout {
         private var sessionCancellable: AnyCancellable?
         private var lastSelectedCurrency: String?
         private let containerStackView = UIStackView()
-        private let errorFontSize: CGFloat = 11
-
         private lazy var errorLabel: UILabel = {
-            let errorFontSize = errorFontSize * appearance.sizeScaleFactor
+            let subtitleSize: CGFloat = 12 * appearance.sizeScaleFactor
             let label = ElementsUI.makeErrorLabel(
-                font: appearance.font.withSize(errorFontSize),
+                font: appearance.font.withSize(subtitleSize),
                 textColor: appearance.danger
             )
             label.setHiddenIfNecessary(true)
