@@ -156,9 +156,7 @@ extension Checkout {
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
             currency: CurrencySelectorUtilities.CurrencyCode
         ) {
-            let defaultTraits = UITraitCollection(preferredContentSizeCategory: .large)
-            let footnoteSize = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .footnote, compatibleWith: defaultTraits).pointSize
-            let flagFont = appearance.font.withSize(footnoteSize * appearance.sizeScaleFactor)
+            let flagFont = scaledFont(for: appearance.font, style: .footnote)
             let (left, right) = CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
                 localizedPricesMetas: session.localizedPricesMetas,
