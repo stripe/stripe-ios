@@ -146,7 +146,66 @@ final class CheckoutUnitTests: XCTestCase {
         }
     }
 
-    // MARK: - Address Override Tests
+    // MARK: - runServerUpdate Tests
+
+    func testRunServerUpdateWrapsClosureError() async {
+        let checkout = makeCheckoutWithOpenSession()
+        let expectedMessage = "Server returned 500"
+
+        do {
+            try await checkout.runServerUpdate {
+                throw NSError(domain: "test", code: 500, userInfo: [NSLocalizedDescriptionKey: expectedMessage])
+            }
+            XCTFail("Expected CheckoutError.apiError")
+        } catch let error as CheckoutError {
+            guard case .apiError(let message) = error else {
+                XCTFail("Expected .apiError, got \(error)")
+                return
+            }
+            XCTAssertEqual(message, expectedMessage)
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+    func testRunServerUpdateWrapsTimeoutError() async {
+        let checkout = makeCheckoutWithOpenSession()
+
+        do {
+            try await checkout.runServerUpdate {
+                throw TimeoutError()
+            }
+            XCTFail("Expected CheckoutError.timedOut")
+        } catch let error as CheckoutError {
+            guard case .timedOut = error else {
+                XCTFail("Expected .timedOut, got \(error)")
+                return
+            }
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+    func testRunServerUpdateWrapsGenericError() async {
+        let checkout = makeCheckoutWithOpenSession()
+
+        do {
+            try await checkout.runServerUpdate {
+                throw URLError(.notConnectedToInternet)
+            }
+            XCTFail("Expected CheckoutError.apiError")
+        } catch let error as CheckoutError {
+            guard case .apiError(let message) = error else {
+                XCTFail("Expected .apiError, got \(error)")
+                return
+            }
+            XCTAssertEqual(message, URLError(.notConnectedToInternet).localizedDescription)
+        } catch {
+            XCTFail("Unexpected error type: \(error)")
+        }
+    }
+
+// MARK: - Address Override Tests
 
     func testUpdateBillingAddress_noTax_setsLocallyAndNotifiesDelegate() async throws {
         let checkout = await makeCheckoutWithOpenSession()
