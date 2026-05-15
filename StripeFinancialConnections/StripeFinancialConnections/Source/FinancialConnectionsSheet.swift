@@ -330,7 +330,8 @@ final public class FinancialConnectionsSheet {
                 clientSecret: existingConsumer.clientSecret,
                 emailAddress: existingConsumer.emailAddress,
                 redactedFormattedPhoneNumber: existingConsumer.redactedFormattedPhoneNumber,
-                verificationSessions: verificationSessions
+                verificationSessions: verificationSessions,
+                linkBrand: existingConsumer.linkBrand
             )
             financialConnectionsApiClient.isLinkWithStripe = true
             financialConnectionsApiClient.consumerSession = consumerSession

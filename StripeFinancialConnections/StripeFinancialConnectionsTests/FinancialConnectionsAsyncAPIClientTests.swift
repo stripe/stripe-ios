@@ -81,7 +81,8 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
             clientSecret: "clientSecret",
             emailAddress: "emailAddress",
             redactedFormattedPhoneNumber: "redactedFormattedPhoneNumber",
-            verificationSessions: []
+            verificationSessions: [],
+            linkBrand: nil
         )
         apiClient.consumerSession = unverifiedConsumerSession
         XCTAssertNil(apiClient.consumerPublishableKeyProvider(canUseConsumerKey: true))
@@ -95,7 +96,8 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
                     type: .sms,
                     state: .verified
                 ),
-            ]
+            ],
+            linkBrand: nil
         )
         apiClient.consumerSession = verifiedConsumerSession
         XCTAssertEqual(apiClient.consumerPublishableKeyProvider(canUseConsumerKey: true), consumerPublishableKey)
