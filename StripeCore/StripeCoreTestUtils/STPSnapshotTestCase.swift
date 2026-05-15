@@ -11,7 +11,6 @@ import iOSSnapshotTestCase
 
 let TEST_DEVICE_MODEL = "iPhone13,1" // iPhone 12 mini
 let TEST_DEVICE_OS_VERSION = "16.4"
-let TEST_DEVICE_OS_VERSION_26_1 = "26.1"
 
 open class STPSnapshotTestCase: FBSnapshotTestCase {
 
@@ -19,11 +18,9 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         super.setUp()
         recordMode = true
         let deviceModel = ProcessInfo.processInfo.environment["SIMULATOR_MODEL_IDENTIFIER"]!
-        guard deviceModel == TEST_DEVICE_MODEL,
-              [TEST_DEVICE_OS_VERSION, TEST_DEVICE_OS_VERSION_26_1].contains(UIDevice.current.systemVersion)
-        else {
+        guard deviceModel == TEST_DEVICE_MODEL else {
             continueAfterFailure = false
-            XCTFail("You must run snapshot tests on \(TEST_DEVICE_MODEL) running \(TEST_DEVICE_OS_VERSION) or \(TEST_DEVICE_OS_VERSION_26_1). You are running these tests on a \(deviceModel) on \(UIDevice.current.systemVersion).")
+            XCTFail("You must run snapshot tests on \(TEST_DEVICE_MODEL). You are running on \(deviceModel).")
             return
         }
     }
@@ -39,15 +36,13 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         super.record(issue)
     }
 
-    var isIOS26_1: Bool {
-        let isiOS26_1 = UIDevice.current.systemVersion == TEST_DEVICE_OS_VERSION_26_1
+    var isIOS26: Bool {
+        let majorVersion = UIDevice.current.systemVersion.split(separator: ".").first.flatMap { Int($0) } ?? 0
         #if compiler(>=6.2.1)
-        let isXcode26_1 = true
+        return majorVersion >= 26
         #else
-        let isXcode26_1 = false
-        Swift.assert(!isiOS26_1, "Running iOS 26 on Xcode 16 is possible but an error because iOS 26 specific code won't be compiled")
+        return false
         #endif
-        return isiOS26_1 && isXcode26_1
     }
 
     // Calls FBSnapshotVerifyView with a default 2% per-pixel color differentiation, as M1 and Intel machines render shadows differently.
@@ -61,9 +56,8 @@ open class STPSnapshotTestCase: FBSnapshotTestCase {
         file: StaticString = #file,
         line: UInt = #line
     ) {
-        // Append "iOS26" to snapshot filename if testing on iOS 26
         let ios26Identifier = identifier.map { "\($0)_iOS26" } ?? "iOS26"
-        let identifier = isIOS26_1 ? ios26Identifier : identifier
+        let identifier = isIOS26 ? ios26Identifier : identifier
 
         if let autoSizingHeightForWidth {
             view.autosizeHeight(width: autoSizingHeightForWidth)
