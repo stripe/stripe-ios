@@ -118,7 +118,7 @@ final class PlaygroundConfiguration {
 
     enum LinkBrand: String, CaseIterable, Identifiable, Hashable {
         case link = "link"
-        case onelink = "notlink"
+        case onelink = "onelink"
 
         var id: String {
             return rawValue
@@ -127,9 +127,9 @@ final class PlaygroundConfiguration {
         var displayName: String {
             switch self {
             case .link:
-                return "off"
+                return "Link"
             case .onelink:
-                return "on"
+                return "Onelink"
             }
         }
     }

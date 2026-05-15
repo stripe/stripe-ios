@@ -329,7 +329,6 @@ extension NetworkingLinkSignupViewController: LinkSignupFormViewDelegate {
 
                 switch result {
                 case .success(let response):
-                    PresentationManager.shared.updateLinkBrandFromBackend(response.linkBrand)
                     if response.exists {
                         self.dataSource.analyticsClient.log(
                             eventName: "networking.returning_consumer",

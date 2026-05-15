@@ -87,24 +87,11 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         XCTAssertEqual(synchronize.manifest.appearance.logo, .onelink_logo)
     }
 
-    func testSynchronizeParsesLinkBrandAlias() throws {
-        let synchronize = try makeSynchronize(linkBrandValue: "notlink")
-
-        XCTAssertEqual(synchronize.manifest.brand, .onelink)
-        XCTAssertEqual(synchronize.manifest.appearance.logo, .onelink_logo)
-    }
-
     func testSynchronizeParsesUnknownBrandAsUnparsable() throws {
         let synchronize = try makeSynchronize(brandValue: "random_brand")
 
         XCTAssertEqual(synchronize.manifest.brand, .unparsable)
         XCTAssertEqual(synchronize.manifest.appearance.logo, .stripe_logo)
-    }
-
-    func testLookupConsumerSessionParsesLinkBrand() throws {
-        let response = try makeLookupConsumerSessionResponse(brandValue: "notlink")
-
-        XCTAssertEqual(response.linkBrand, .onelink)
     }
 
     func testLinkThemeWithoutBrandPreservesExistingLinkBranding() {
@@ -133,18 +120,6 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         return try decode(data: data)
     }
 
-    private func makeSynchronize(linkBrandValue: String?) throws -> FinancialConnectionsSynchronize {
-        var payload = try JSONSerialization.jsonObject(with: FinancialConnectionsSynchronizeMock.synchronize.data()) as? [String: Any]
-        var manifest = payload?["manifest"] as? [String: Any]
-
-        manifest?.removeValue(forKey: "brand")
-        manifest?["link_brand"] = linkBrandValue
-        payload?["manifest"] = manifest
-
-        let data = try JSONSerialization.data(withJSONObject: payload ?? [:])
-        return try decode(data: data)
-    }
-
     private func decode(data: Data) throws -> FinancialConnectionsSynchronize {
         let response = HTTPURLResponse(
             url: URL(string: "https://api.stripe.com/v1/financial_connections/sessions/synchronize")!,
@@ -160,40 +135,6 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         switch result {
         case .success(let synchronize):
             return synchronize
-        case .failure(let error):
-            throw error
-        }
-    }
-
-    private func makeLookupConsumerSessionResponse(brandValue: String?) throws -> LookupConsumerSessionResponse {
-        var payload: [String: Any] = [
-            "exists": true,
-            "account_id": "las_123",
-            "publishable_key": "pk_test_123",
-            "consumer_session": [
-                "client_secret": "css_123",
-                "email_address": "test@example.com",
-                "redacted_formatted_phone_number": "+1••• ••• ••12",
-                "verification_sessions": [],
-            ],
-        ]
-        payload["link_brand"] = brandValue
-
-        let data = try JSONSerialization.data(withJSONObject: payload)
-        let response = HTTPURLResponse(
-            url: URL(string: "https://api.stripe.com/v1/connections/link_account_sessions/consumer_sessions")!,
-            statusCode: 200,
-            httpVersion: nil,
-            headerFields: ["request-id": "req_123"]
-        )
-        let result: Result<LookupConsumerSessionResponse, Error> = STPAPIClient.decodeResponse(
-            data: data,
-            error: nil,
-            response: response
-        )
-        switch result {
-        case .success(let lookupResponse):
-            return lookupResponse
         case .failure(let error):
             throw error
         }

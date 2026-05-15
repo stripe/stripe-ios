@@ -19,8 +19,7 @@ protocol NetworkingLinkLoginWarmupViewControllerDelegate: AnyObject {
     func networkingLinkLoginWarmupViewControllerDidFindConsumerSession(
         _ viewController: NetworkingLinkLoginWarmupViewController,
         consumerSession: ConsumerSessionData,
-        consumerPublishableKey: String,
-        linkBrand: LinkBrand?
+        consumerPublishableKey: String
     )
     func networkingLinkLoginWarmupViewControllerDidSelectCancel(
         _ viewController: NetworkingLinkLoginWarmupViewController
@@ -44,7 +43,7 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
     private let dataSource: NetworkingLinkLoginWarmupDataSource
     weak var delegate: NetworkingLinkLoginWarmupViewControllerDelegate?
     private var linkBrand: LinkBrand {
-        dataSource.linkBrand
+        PresentationManager.shared.configuration.linkBrand ?? dataSource.manifest.brand ?? .link
     }
 
     private lazy var warmupFooterView: NetworkingLinkLoginWarmupFooterView = {
@@ -145,13 +144,11 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
                 switch result {
                 case .success(let response):
-                    PresentationManager.shared.updateLinkBrandFromBackend(response.linkBrand)
                     if let consumerSession = response.consumerSession, let publishableKey = response.publishableKey {
                         self.delegate?.networkingLinkLoginWarmupViewControllerDidFindConsumerSession(
                             self,
                             consumerSession: consumerSession,
-                            consumerPublishableKey: publishableKey,
-                            linkBrand: response.linkBrand
+                            consumerPublishableKey: publishableKey
                         )
                         self.delegate?.networkingLinkLoginWarmupViewControllerDidSelectContinue(self)
                     } else {

@@ -33,9 +33,6 @@ protocol NativeFlowDataManager: AnyObject {
     var accountNumberLast4: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }
     var consumerPublishableKey: String? { get set }
-    var linkBrand: LinkBrand? { get set }
-    var effectiveLinkBrand: LinkBrand { get }
-    var effectiveAppearance: FinancialConnectionsAppearance { get }
     var saveToLinkWithStripeSucceeded: Bool? { get set }
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
     var customSuccessPaneCaption: String? { get set }
@@ -49,7 +46,6 @@ protocol NativeFlowDataManager: AnyObject {
         billingEmail: String?,
         clientAttributionMetadata: STPClientAttributionMetadata?
     ) -> Future<FinancialConnectionsPaymentDetails>
-    func updateLinkBrandFromBackend(_ brand: LinkBrand?)
     func resetState(withNewManifest newManifest: FinancialConnectionsSessionManifest)
     func completeFinancialConnectionsSession(terminalError: String?) -> Future<StripeAPI.FinancialConnectionsSession>
 }
@@ -127,22 +123,6 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
             apiClient.consumerPublishableKey = consumerPublishableKey
         }
     }
-    var linkBrand: LinkBrand?
-    var effectiveLinkBrand: LinkBrand {
-        if configuration.hasExplicitLinkBrandOverride, let brand = configuration.linkBrand {
-            return brand
-        }
-        return linkBrand ?? configuration.linkBrand ?? manifest.brand ?? .link
-    }
-    var effectiveAppearance: FinancialConnectionsAppearance {
-        let resolvedBrand: LinkBrand? = {
-            if configuration.hasExplicitLinkBrandOverride {
-                return configuration.linkBrand
-            }
-            return linkBrand ?? configuration.linkBrand ?? manifest.brand
-        }()
-        return FinancialConnectionsAppearance(theme: manifest.theme, brand: resolvedBrand)
-    }
 
     init(
         manifest: FinancialConnectionsSessionManifest,
@@ -208,15 +188,8 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         manifest = newManifest
     }
 
-    func updateLinkBrandFromBackend(_ brand: LinkBrand?) {
-        guard let brand else { return }
-        linkBrand = brand
-        PresentationManager.shared.updateLinkBrandFromBackend(brand)
-    }
-
     private func didUpdateManifest() {
         apiClient.isLinkWithStripe = manifest.isLinkWithStripe == true
-        updateLinkBrandFromBackend(manifest.brand)
         analyticsClient.setAdditionalParameters(fromManifest: manifest)
     }
 }

@@ -113,7 +113,7 @@ class NativeFlowController {
         }
         if showConfirmationAlert {
             let closeConfirmationViewController = CloseConfirmationViewController(
-                appearance: dataManager.effectiveAppearance,
+                appearance: dataManager.manifest.appearance,
                 didSelectClose: {
                     finishClosingAuthFlow()
                 }
@@ -164,7 +164,7 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    appearance: self.dataManager.effectiveAppearance,
+                    appearance: self.dataManager.manifest.appearance,
                     isTestMode: self.dataManager.manifest.isTestMode
                 )
             }
@@ -219,7 +219,7 @@ extension NativeFlowController {
                         reducedBranding: self.dataManager.reducedBranding,
                         merchantLogo: self.dataManager.merchantLogo
                     ),
-                    appearance: dataManager.effectiveAppearance,
+                    appearance: dataManager.manifest.appearance,
                     isTestMode: self.dataManager.manifest.isTestMode
                 )
                 self.navigationController.pushViewController(viewController, animated: animated)
@@ -713,7 +713,6 @@ extension NativeFlowController: ConsentViewControllerDelegate {
         dataManager.manifest = result.manifest
         dataManager.consumerSession = result.consumerSession
         dataManager.consumerPublishableKey = result.consumerPublishableKey
-        dataManager.updateLinkBrandFromBackend(result.linkBrand)
 
         let nextPane = result.nextPane
         if nextPane == .networkingLinkLoginWarmup {
@@ -1112,12 +1111,10 @@ extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate 
     func networkingLinkLoginWarmupViewControllerDidFindConsumerSession(
         _ viewController: NetworkingLinkLoginWarmupViewController,
         consumerSession: ConsumerSessionData,
-        consumerPublishableKey: String,
-        linkBrand: LinkBrand?
+        consumerPublishableKey: String
     ) {
         dataManager.consumerSession = consumerSession
         dataManager.consumerPublishableKey = consumerPublishableKey
-        dataManager.updateLinkBrandFromBackend(linkBrand)
     }
 
     func networkingLinkLoginWarmupViewControllerDidSelectContinue(
@@ -1332,7 +1329,6 @@ extension NativeFlowController: LinkLoginViewControllerDelegate {
         _ viewController: LinkLoginViewController,
         foundReturningUserWith lookupConsumerSessionResponse: LookupConsumerSessionResponse
     ) {
-        dataManager.updateLinkBrandFromBackend(lookupConsumerSessionResponse.linkBrand)
         dataManager.consumerPublishableKey = lookupConsumerSessionResponse.publishableKey
         dataManager.consumerSession = lookupConsumerSessionResponse.consumerSession
         pushPane(.networkingLinkVerification, animated: true)
@@ -1685,8 +1681,7 @@ private func CreatePaneViewController(
             clientSecret: dataManager.clientSecret,
             analyticsClient: dataManager.analyticsClient,
             nextPaneOrDrawerOnSecondaryCta: parameters?.nextPaneOrDrawerOnSecondaryCta,
-            elementsSessionContext: dataManager.elementsSessionContext,
-            linkBrand: dataManager.effectiveLinkBrand
+            elementsSessionContext: dataManager.elementsSessionContext
         )
         let networkingLinkWarmupViewController = NetworkingLinkLoginWarmupViewController(
             dataSource: networkingLinkWarmupDataSource,
@@ -1713,7 +1708,7 @@ private func CreatePaneViewController(
             let terminalErrorViewController = TerminalErrorViewController(
                 error: terminalError,
                 allowManualEntry: dataManager.manifest.allowManualEntry,
-                appearance: dataManager.effectiveAppearance
+                appearance: dataManager.manifest.appearance
             )
             terminalErrorViewController.delegate = nativeFlowController
             viewController = terminalErrorViewController

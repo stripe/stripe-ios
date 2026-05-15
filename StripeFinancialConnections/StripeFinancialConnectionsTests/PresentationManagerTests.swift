@@ -63,43 +63,4 @@ class PresentationManagerTests: XCTestCase {
         XCTAssertFalse(linkAppearance.logoTintColor.isEqual(UIColor.clear))
         XCTAssertFalse(stripeAppearance.logoTintColor.isEqual(UIColor.clear))
     }
-
-    func testBackendBrandUpdateIsAppliedWithoutExplicitOverride() {
-        PresentationManager.shared.updateLinkBrandFromBackend(.onelink)
-
-        XCTAssertEqual(PresentationManager.shared.configuration.linkBrand, .onelink)
-    }
-
-    func testBackendBrandUpdateDoesNotOverrideExplicitClientBrand() {
-        var configuration = FinancialConnectionsSheet.Configuration()
-        configuration.linkBrand = .link
-        configuration.hasExplicitLinkBrandOverride = true
-        PresentationManager.shared.configuration = configuration
-
-        PresentationManager.shared.updateLinkBrandFromBackend(.onelink)
-
-        XCTAssertEqual(PresentationManager.shared.configuration.linkBrand, .link)
-    }
-
-    func testBackendBrandUpdateOverridesInitialSeededBrandWhenNoExplicitOverrideExists() {
-        var configuration = FinancialConnectionsSheet.Configuration()
-        configuration.linkBrand = .link
-        configuration.hasExplicitLinkBrandOverride = false
-        PresentationManager.shared.configuration = configuration
-
-        PresentationManager.shared.updateLinkBrandFromBackend(.onelink)
-
-        XCTAssertEqual(PresentationManager.shared.configuration.linkBrand, .onelink)
-    }
-
-    func testLinkBrandSeedDoesNotBehaveLikeExplicitOverride() {
-        var configuration = FinancialConnectionsSheet.Configuration()
-        configuration.linkBrand = .link
-        PresentationManager.shared.configuration = configuration
-
-        PresentationManager.shared.updateLinkBrandFromBackend(.onelink)
-
-        XCTAssertEqual(PresentationManager.shared.configuration.linkBrand, .onelink)
-        XCTAssertFalse(PresentationManager.shared.configuration.hasExplicitLinkBrandOverride)
-    }
 }

@@ -34,8 +34,7 @@ public class FinancialConnectionsSDKImplementation: FinancialConnectionsSDKInter
         case .alwaysLight: configuration.style = .alwaysLight
         case .alwaysDark: configuration.style = .alwaysDark
         }
-        configuration.hasExplicitLinkBrandOverride = (brand == .onelink)
-        configuration.linkBrand = (brand == .onelink) ? .onelink : elementsSessionContext?.linkSettings?.brand
+        configuration.linkBrand = brand ?? elementsSessionContext?.linkSettings?.brand
 
         let financialConnectionsSheet = FinancialConnectionsSheet(
             financialConnectionsSessionClientSecret: clientSecret,
