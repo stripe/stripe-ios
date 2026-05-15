@@ -713,6 +713,7 @@ extension NativeFlowController: ConsentViewControllerDelegate {
         dataManager.manifest = result.manifest
         dataManager.consumerSession = result.consumerSession
         dataManager.consumerPublishableKey = result.consumerPublishableKey
+        dataManager.updateLinkBrandFromBackend(result.linkBrand)
 
         let nextPane = result.nextPane
         if nextPane == .networkingLinkLoginWarmup {
@@ -1111,10 +1112,12 @@ extension NativeFlowController: NetworkingLinkLoginWarmupViewControllerDelegate 
     func networkingLinkLoginWarmupViewControllerDidFindConsumerSession(
         _ viewController: NetworkingLinkLoginWarmupViewController,
         consumerSession: ConsumerSessionData,
-        consumerPublishableKey: String
+        consumerPublishableKey: String,
+        linkBrand: LinkBrand?
     ) {
         dataManager.consumerSession = consumerSession
         dataManager.consumerPublishableKey = consumerPublishableKey
+        dataManager.updateLinkBrandFromBackend(linkBrand)
     }
 
     func networkingLinkLoginWarmupViewControllerDidSelectContinue(
@@ -1329,6 +1332,7 @@ extension NativeFlowController: LinkLoginViewControllerDelegate {
         _ viewController: LinkLoginViewController,
         foundReturningUserWith lookupConsumerSessionResponse: LookupConsumerSessionResponse
     ) {
+        dataManager.updateLinkBrandFromBackend(lookupConsumerSessionResponse.linkBrand)
         dataManager.consumerPublishableKey = lookupConsumerSessionResponse.publishableKey
         dataManager.consumerSession = lookupConsumerSessionResponse.consumerSession
         pushPane(.networkingLinkVerification, animated: true)
@@ -1681,7 +1685,8 @@ private func CreatePaneViewController(
             clientSecret: dataManager.clientSecret,
             analyticsClient: dataManager.analyticsClient,
             nextPaneOrDrawerOnSecondaryCta: parameters?.nextPaneOrDrawerOnSecondaryCta,
-            elementsSessionContext: dataManager.elementsSessionContext
+            elementsSessionContext: dataManager.elementsSessionContext,
+            linkBrand: dataManager.effectiveLinkBrand
         )
         let networkingLinkWarmupViewController = NetworkingLinkLoginWarmupViewController(
             dataSource: networkingLinkWarmupDataSource,

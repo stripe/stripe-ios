@@ -13,6 +13,7 @@ protocol NetworkingLinkLoginWarmupDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var email: String? { get }
     var hasConsumerSession: Bool { get }
+    var linkBrand: LinkBrand { get }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse>
     func disableNetworking() -> Future<FinancialConnectionsSessionManifest>
@@ -30,6 +31,7 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
     let analyticsClient: FinancialConnectionsAnalyticsClient
     private let nextPaneOrDrawerOnSecondaryCta: String?
     private let elementsSessionContext: ElementsSessionContext?
+    let linkBrand: LinkBrand
 
     var email: String? {
         manifest.accountholderCustomerEmailAddress ?? elementsSessionContext?.prefillDetails?.email
@@ -45,7 +47,8 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
         clientSecret: String,
         analyticsClient: FinancialConnectionsAnalyticsClient,
         nextPaneOrDrawerOnSecondaryCta: String?,
-        elementsSessionContext: ElementsSessionContext?
+        elementsSessionContext: ElementsSessionContext?,
+        linkBrand: LinkBrand
     ) {
         self.manifest = manifest
         self.apiClient = apiClient
@@ -53,6 +56,7 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
         self.analyticsClient = analyticsClient
         self.nextPaneOrDrawerOnSecondaryCta = nextPaneOrDrawerOnSecondaryCta
         self.elementsSessionContext = elementsSessionContext
+        self.linkBrand = linkBrand
     }
 
     func lookupConsumerSession() -> Future<LookupConsumerSessionResponse> {

@@ -26,6 +26,7 @@ struct ConsentAcquiredResult {
     var manifest: FinancialConnectionsSessionManifest
     var consumerSession: ConsumerSessionData?
     var consumerPublishableKey: String?
+    var linkBrand: LinkBrand? = nil
 
     var nextPane: FinancialConnectionsSessionManifest.NextPane {
         // If we have a consumer session, then provide the returning-user experience
@@ -88,7 +89,8 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
                     let result = ConsentAcquiredResult(
                         manifest: manifest,
                         consumerSession: response.consumerSession,
-                        consumerPublishableKey: response.publishableKey
+                        consumerPublishableKey: response.publishableKey,
+                        linkBrand: response.linkBrand
                     )
                     promise.resolve(with: result)
                 case .failure:
