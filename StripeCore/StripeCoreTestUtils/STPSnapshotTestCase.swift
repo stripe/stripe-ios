@@ -10,7 +10,6 @@ import Foundation
 import iOSSnapshotTestCase
 
 let TEST_DEVICE_MODEL = "iPhone13,1" // iPhone 12 mini
-let TEST_DEVICE_OS_VERSION = "16.4"
 
 open class STPSnapshotTestCase: FBSnapshotTestCase {
 
