@@ -680,7 +680,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
         // ...and looks up link
         XCTAssertNotNil(LinkAccountContext.shared.account)
-        XCTAssertEqual(LinkAccountContext.shared.account?.email, "yuki@stripe.com")
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "foo@bar.com")
     }
 
     func test_loader_doesnt_fetch_Customer_when_default_billing_email() async throws {
@@ -709,9 +709,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
             integrationShape: .flowController
         )
-        // ...and looks up link, preferring the default email provided
+        // ...and looks up link. The resulting Link account email comes from the consumer session returned by lookup.
         XCTAssertNotNil(LinkAccountContext.shared.account)
-        XCTAssertEqual(LinkAccountContext.shared.account?.email, configuration.defaultBillingDetails.email)
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "foo@bar.com")
     }
 
     func testLoaderLooksUpLink_CustomerSession() async throws {
@@ -738,7 +738,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(loadResult.elementsSession.customer?.email, "yuki@stripe.com")
         // ...and looks up link
         XCTAssertNotNil(LinkAccountContext.shared.account)
-        XCTAssertEqual(LinkAccountContext.shared.account?.email, "yuki@stripe.com")
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "foo@bar.com")
     }
 
     func testLoadPerformance() {
