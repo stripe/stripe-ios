@@ -1,51 +1,37 @@
 //
-//  BNPLFormHeaderViewTests.swift
+//  BNPLFormHeaderViewSnapshotTests.swift
 //  StripePaymentSheetTests
 //
 
+import StripeCoreTestUtils
 import UIKit
 import XCTest
 
 @_spi(STP) @testable import StripePaymentSheet
 
 @MainActor
-final class BNPLFormHeaderViewTests: XCTestCase {
-    func testAlwaysDarkStyle_AppliesToHeaderAndInfoModal() throws {
-        let (headerView, rootViewController, _) = makeHeaderView(style: .alwaysDark)
+final class BNPLFormHeaderViewSnapshotTests: STPSnapshotTestCase {
+    func testDefaultAppearance() {
+        let (headerView, _, _) = makeHeaderView()
 
-        XCTAssertEqual(headerView.overrideUserInterfaceStyle, .dark)
-
-        let didHandleTap = headerView.textView(
-            UITextView(),
-            shouldInteractWith: headerView.infoUrl,
-            in: NSRange(location: 0, length: 0),
-            interaction: .invokeDefaultAction
-        )
-
-        XCTAssertFalse(didHandleTap)
-
-        let infoModal = try XCTUnwrap(rootViewController.presentedViewController as? PMMEInfoModal)
-        infoModal.loadViewIfNeeded()
-        XCTAssertEqual(infoModal.overrideUserInterfaceStyle, .dark)
+        verify(headerView)
     }
 
-    func testAlwaysLightStyle_AppliesToHeaderAndInfoModal() throws {
-        let (headerView, rootViewController, _) = makeHeaderView(style: .alwaysLight)
+    func testAlwaysDarkStyleSnapshot() {
+        let (headerView, _, _) = makeHeaderView(style: .alwaysDark)
 
-        XCTAssertEqual(headerView.overrideUserInterfaceStyle, .light)
+        verify(headerView)
+    }
 
-        let didHandleTap = headerView.textView(
-            UITextView(),
-            shouldInteractWith: headerView.infoUrl,
-            in: NSRange(location: 0, length: 0),
-            interaction: .invokeDefaultAction
-        )
+    func testCustomAppearance() {
+        var appearance = PaymentSheet.Appearance.default
+        appearance.colors.background = .systemYellow.withAlphaComponent(0.15)
+        appearance.colors.primary = .systemGreen
+        appearance.colors.text = .systemBrown
 
-        XCTAssertFalse(didHandleTap)
+        let (headerView, _, _) = makeHeaderView(appearance: appearance)
 
-        let infoModal = try XCTUnwrap(rootViewController.presentedViewController as? PMMEInfoModal)
-        infoModal.loadViewIfNeeded()
-        XCTAssertEqual(infoModal.overrideUserInterfaceStyle, .light)
+        verify(headerView)
     }
 
     private func makeHeaderView(
@@ -82,5 +68,15 @@ final class BNPLFormHeaderViewTests: XCTestCase {
         rootViewController.view.layoutIfNeeded()
 
         return (headerView, rootViewController, window)
+    }
+
+    private func verify(
+        _ view: UIView,
+        identifier: String? = nil,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        view.autosizeHeight(width: 320)
+        STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
 }
