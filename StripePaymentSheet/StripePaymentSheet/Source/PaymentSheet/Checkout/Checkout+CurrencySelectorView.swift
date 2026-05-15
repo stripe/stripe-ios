@@ -51,9 +51,8 @@ extension Checkout {
         private var lastSelectedCurrency: String?
         private let containerStackView = UIStackView()
         private lazy var errorLabel: UILabel = {
-            let subtitleSize: CGFloat = 12 * appearance.sizeScaleFactor
             let label = ElementsUI.makeErrorLabel(
-                font: appearance.font.withSize(subtitleSize),
+                font: scaledFont(for: appearance.font, style: .caption1),
                 textColor: appearance.danger
             )
             label.setHiddenIfNecessary(true)
@@ -219,6 +218,13 @@ extension Checkout {
             errorLabel.text = nil
             errorLabel.setHiddenIfNecessary(true)
             invalidateIntrinsicContentSize()
+        }
+
+        private func scaledFont(for font: UIFont, style: UIFont.TextStyle) -> UIFont {
+            let defaultTraitCollection = UITraitCollection(preferredContentSizeCategory: .large)
+            let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style, compatibleWith: defaultTraitCollection)
+            let customFont = font.withSize(fontDescriptor.pointSize * appearance.sizeScaleFactor)
+            return UIFontMetrics.default.scaledFont(for: customFont, maximumPointSize: 20)
         }
     }
 }

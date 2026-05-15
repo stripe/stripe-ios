@@ -62,7 +62,6 @@ final class TwoOptionSelectorView: UIView {
     private var rightButton = UIButton(type: .custom)
 
     private let trackPadding: CGFloat = 3
-    private let captionFontSize: CGFloat = 12
 
     private var indicatorLeadingConstraint: NSLayoutConstraint?
     private var indicatorTrailingConstraint: NSLayoutConstraint?
@@ -150,8 +149,7 @@ final class TwoOptionSelectorView: UIView {
         heightConstraint.priority = UILayoutPriority(999)
         heightConstraint.isActive = true
 
-        let subtitleSize = captionFontSize * appearance.sizeScaleFactor
-        captionLabel.font = appearance.font.withSize(subtitleSize)
+        captionLabel.font = scaledFont(for: appearance.font, style: .caption1)
         captionLabel.textColor = appearance.captionColor
         captionLabel.numberOfLines = 0
         captionLabel.isHidden = true
