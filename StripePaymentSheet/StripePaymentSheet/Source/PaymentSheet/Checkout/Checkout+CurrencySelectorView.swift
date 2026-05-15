@@ -140,7 +140,7 @@ extension Checkout {
 
             clearError()
 
-            // Build the selector after inital sesison loading, after that just update the caption
+            // Build the selector after initial session load; subsequent updates only change the caption
             if selectorView == nil {
                 buildSelectorView(session: session, exchangeRateMeta: exchangeRateMeta, currency: currency)
             }
@@ -155,7 +155,8 @@ extension Checkout {
         ) {
             let (left, right) = CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
-                localizedPricesMetas: session.localizedPricesMetas
+                localizedPricesMetas: session.localizedPricesMetas,
+                flagPrefixProvider: checkout.flagImageManager.flagIcon
             )
 
             let psAppearance = appearance.asPaymentSheetAppearance()

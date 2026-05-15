@@ -52,6 +52,7 @@ public final class Checkout: ObservableObject {
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
+    let flagImageManager = AdaptivePricingFlagImageManager()
     let clientSecret: String
     let apiClient: STPAPIClient
 
@@ -98,6 +99,7 @@ public final class Checkout: ObservableObject {
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
+            await flagImageManager.prefetchFlagImages(for: checkoutSession)
             self.stpSession = checkoutSession
             self.state = .loaded(checkoutSession.makePublicSession())
             checkoutSession.onConfirmed = { [weak self] response in
@@ -114,10 +116,11 @@ public final class Checkout: ObservableObject {
         configuration: Configuration = Configuration(),
         session: STPCheckoutSession,
         apiClient: STPAPIClient = .shared
-    ) {
+    ) async {
         self.clientSecret = clientSecret
         self.configuration = configuration
         self.apiClient = apiClient
+        await flagImageManager.prefetchFlagImages(for: session)
         self.stpSession = session
         self.state = .loaded(session.makePublicSession())
         session.onConfirmed = { [weak self] response in

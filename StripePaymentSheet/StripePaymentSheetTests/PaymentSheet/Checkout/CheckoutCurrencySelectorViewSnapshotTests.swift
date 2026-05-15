@@ -15,24 +15,25 @@ import UIKit
 // @iOS26
 final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
 
-    func testDefaultAppearance_localCurrencySelected() {
-        let view = makeCurrencySelectorView(selectedCurrency: "gbp")
+    func testDefaultAppearance_localCurrencySelected() async {
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp")
         verify(view)
     }
 
-    func testDefaultAppearance_integrationCurrencySelected() {
-        let view = makeCurrencySelectorView(selectedCurrency: "usd")
+    func testDefaultAppearance_integrationCurrencySelected() async {
+        let view = await makeCurrencySelectorView(selectedCurrency: "usd")
         verify(view)
     }
 
-    func testDarkMode() {
-        let view = makeCurrencySelectorView(selectedCurrency: "gbp")
+    func testDarkMode() async {
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp")
         verify(view, darkMode: true)
     }
 
-    func testCustomAppearance() {
+    func testCustomAppearance() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
         appearance.cornerRadius = 16.0
+        appearance.titleFont = .systemFont(ofSize: 40, weight: .bold)
         appearance.backgroundColor = .systemBlue.withAlphaComponent(0.1)
         appearance.selectedColor = .systemBlue
         appearance.selectedTextColor = .white
@@ -40,26 +41,26 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         appearance.borderColor = .systemBlue
         appearance.captionColor = .systemBlue.withAlphaComponent(0.6)
 
-        let view = makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
         verify(view)
     }
 
-    func testDisabledState() {
-        let view = makeCurrencySelectorView(selectedCurrency: "gbp")
+    func testDisabledState() async {
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp")
         view.isEnabled = false
         verify(view)
     }
 
-    func testErrorState() {
-        let view = makeCurrencySelectorView(selectedCurrency: "gbp")
+    func testErrorState() async {
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp")
         view.showError("Something went wrong. Please try again.")
         view.setNeedsLayout()
         view.layoutIfNeeded()
         verify(view)
     }
 
-    func testErrorState_darkMode() {
-        let view = makeCurrencySelectorView(selectedCurrency: "gbp")
+    func testErrorState_darkMode() async {
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp")
         view.showError("Something went wrong. Please try again.")
         view.setNeedsLayout()
         view.layoutIfNeeded()
@@ -72,10 +73,9 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     private func makeCurrencySelectorView(
         selectedCurrency: String = "usd",
         appearance: Checkout.CurrencySelectorView.Appearance = .init()
-    ) -> Checkout.CurrencySelectorView {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
+    ) async -> Checkout.CurrencySelectorView {
         let session = makeSession(selectedCurrency: selectedCurrency)
-        checkout.updateSession(session)
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
 
         let view = Checkout.CurrencySelectorView(checkout: checkout, appearance: appearance)
 
