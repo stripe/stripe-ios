@@ -635,16 +635,10 @@ import UIKit
         // Enable experimental payment methods.
         //        PaymentSheet.supportedPaymentMethods += [.link]
 
-        // Hack to ensure we don't force the native flow unless we're in a UI test
-        if ProcessInfo.processInfo.environment["UITesting"] == nil {
-            UserDefaults.standard.removeObject(forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
-        } else {
-            // This makes the Financial Connections SDK use the native UI instead of webview. Native is much easier to test.
-            UserDefaults.standard.set(true, forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
-        }
         self.settings = settings
         self.appearance = appearance
         self.currentlyRenderedSettings = .defaultValues()
+        updateFinancialConnectionsNativeOverride(settings)
         updateForcedConsumerLinkBrand(settings)
 
         $settings.removeDuplicates().sink { [weak self] newValue in
@@ -670,6 +664,7 @@ import UIKit
             let enableFcLite = newValue.fcLiteEnabled == .on
             FinancialConnectionsSDKAvailability.localFcLiteOverride = enableFcLite
 
+            self?.updateFinancialConnectionsNativeOverride(newValue)
             self?.updateForcedConsumerLinkBrand(newValue)
         }.store(in: &subscribers)
 
@@ -687,6 +682,19 @@ import UIKit
     private func updateForcedConsumerLinkBrand(_ settings: PaymentSheetTestPlaygroundSettings) {
         PaymentSheetLinkAccount.forcedConsumerLinkBrandForTesting =
             settings.forceOnelinkConsumer == .on ? .onelink : nil
+    }
+
+    private func updateFinancialConnectionsNativeOverride(_ settings: PaymentSheetTestPlaygroundSettings) {
+        let shouldForceNative =
+            settings.forceFCNative == .on
+            || ProcessInfo.processInfo.environment["UITesting"] != nil
+
+        if shouldForceNative {
+            // This makes the Financial Connections SDK use the native UI instead of webview.
+            UserDefaults.standard.set(true, forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE")
+        }
     }
 
     func buildPaymentSheet() {

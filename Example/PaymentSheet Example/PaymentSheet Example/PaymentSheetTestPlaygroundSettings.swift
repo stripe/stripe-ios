@@ -333,6 +333,13 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
 
+    enum ForceFCNative: String, PickerEnum {
+        static var enumName: String { "Force FC native" }
+
+        case on
+        case off
+    }
+
     enum AllowsDelayedPMs: String, PickerEnum {
         static var enumName: String { "allowsDelayedPMs" }
 
@@ -764,6 +771,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var linkDisplay: LinkDisplay
     var forceOnelink: ForceOnelink
     var forceOnelinkConsumer: ForceOnelinkConsumer
+    var forceFCNative: ForceFCNative
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
@@ -837,6 +845,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             linkDisplay: .automatic,
             forceOnelink: .off,
             forceOnelinkConsumer: .off,
+            forceFCNative: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,

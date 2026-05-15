@@ -73,6 +73,7 @@ struct PaymentSheetTestPlayground: View {
         SearchableSettingView(setting: $playgroundController.settings.shakeAmbiguousViews, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.instantDebitsIncentives, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.fcLiteEnabled, searchText: searchText)
+        SearchableSettingView(setting: $playgroundController.settings.forceFCNative, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.opensCardScannerAutomatically, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.termsDisplay, searchText: searchText)
     }
