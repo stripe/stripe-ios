@@ -215,7 +215,10 @@ final class PaymentSheetLoader {
             let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
             let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
-            let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(elementsSession: elementsSession)
+            let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(
+                elementsSession: elementsSession,
+                analyticsHelper: analyticsHelper
+            )
             paymentMethodMessagingPromotionsHelper.prefetchIfNeeded(
                 intent: intent,
                 configuration: configuration,

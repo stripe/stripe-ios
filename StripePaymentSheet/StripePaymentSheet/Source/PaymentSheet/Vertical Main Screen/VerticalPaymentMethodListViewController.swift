@@ -304,10 +304,18 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private func paymentMethodMessagingConfiguration(
         for paymentMethodType: PaymentSheet.PaymentMethodType
     ) -> RowButton.PaymentMethodMessagingConfiguration {
-        guard paymentMethodMessagingPromotionsHelper?.shouldUsePaymentMethodMessagingRow(for: paymentMethodType) == true else {
+        guard paymentMethodMessagingPromotionsHelper?.shouldUsePaymentMethodMessagingRow(
+            for: paymentMethodType,
+            layout: PaymentSheetAnalyticsHelper.PaymentMethodLayout.vertical.rawValue
+        ) == true else {
             return .disabled
         }
-        return .enabled(content: paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType))
+        return .enabled(
+            content: paymentMethodMessagingPromotionsHelper?.promotion(
+                for: paymentMethodType,
+                layout: PaymentSheetAnalyticsHelper.PaymentMethodLayout.vertical.rawValue
+            )
+        )
     }
 
     // PMM data is not always available on initial load/display of the RowButton, so we use this to populate PMM content ad hoc
@@ -315,7 +323,10 @@ class VerticalPaymentMethodListViewController: UIViewController {
         guard rowButton.isPaymentMethodMessagingCapable,
               !rowButton.hasPaymentMethodMessagingContent,
               let paymentMethodType = rowButton.type.paymentMethodType,
-              let content = paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType) else {
+              let content = paymentMethodMessagingPromotionsHelper?.promotion(
+                for: paymentMethodType,
+                layout: PaymentSheetAnalyticsHelper.PaymentMethodLayout.vertical.rawValue
+              ) else {
             return
         }
         rowButton.populatePaymentMethodMessagingIfNeeded(content)

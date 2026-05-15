@@ -2793,6 +2793,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
             configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
             paymentMethod: .stripe(.klarna),
+            paymentMethodOrientation: .vertical,
             accountService: LinkAccountService(
                 apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
                 elementsSession: ._testValue()
@@ -2819,6 +2820,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.klarna),
+            paymentMethodOrientation: .vertical,
             accountService: LinkAccountService(
                 apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
                 elementsSession: ._testValue()

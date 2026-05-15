@@ -30,23 +30,31 @@ final class PaymentMethodMessagingPromotionsHelper {
     }
 
     private let elementsSession: STPElementsSession?
-    let experiment: PaymentMethodMessagingPromotionsExperiment
+    private let analyticsHelper: PaymentSheetAnalyticsHelper?
+    private let experiment: PaymentMethodMessagingPromotionsExperiment
 
     private let lock = NSLock()
     private var fetchState: FetchState
     private var fetchTask: Task<Void, Never>?
 
-    init(elementsSession: STPElementsSession) {
+    init(
+        elementsSession: STPElementsSession,
+        analyticsHelper: PaymentSheetAnalyticsHelper
+    ) {
         self.elementsSession = elementsSession
+        self.analyticsHelper = analyticsHelper
         self.experiment = PaymentMethodMessagingPromotionsExperiment(elementsSession: elementsSession)
         self.fetchState = experiment.isInTreatment ? .idle : .completed([:])
+        logExposure()
     }
 
     init(
         experiment: PaymentMethodMessagingPromotionsExperiment,
+        analyticsHelper: PaymentSheetAnalyticsHelper? = nil,
         prefetchedPromotionContents: [String: PromotionContent]
     ) {
         self.elementsSession = nil
+        self.analyticsHelper = analyticsHelper
         self.experiment = experiment
         self.fetchState = .completed(prefetchedPromotionContents)
     }
@@ -60,7 +68,7 @@ final class PaymentMethodMessagingPromotionsHelper {
         configuration: PaymentElementConfiguration,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     ) {
-        guard experiment.isInTreatment else {
+        guard isTreatmentEnabled() else {
             setFetchState(.completed([:]))
             return
         }
@@ -90,28 +98,77 @@ final class PaymentMethodMessagingPromotionsHelper {
         }
     }
 
-    func shouldUsePaymentMethodMessagingRow(for paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {
-        guard experiment.isInTreatment else {
+    func shouldUsePaymentMethodMessagingRow(
+        for paymentMethodType: PaymentSheet.PaymentMethodType,
+        layout: String? = nil
+    ) -> Bool {
+        guard isTreatmentEnabled(
+            selectedPaymentMethodType: Self.paymentMethodIdentifier(for: paymentMethodType),
+            layout: layout
+        ) else {
             return false
         }
         return Self.paymentMethodIdentifier(for: paymentMethodType) != nil
     }
 
-    func promotion(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromotionContent? {
-        guard experiment.isInTreatment else {
+    func promotion(
+        for paymentMethodType: PaymentSheet.PaymentMethodType,
+        layout: String? = nil
+    ) -> PromotionContent? {
+        guard isTreatmentEnabled(
+            selectedPaymentMethodType: Self.paymentMethodIdentifier(for: paymentMethodType),
+            layout: layout
+        ) else {
             return nil
         }
         guard let identifier = Self.paymentMethodIdentifier(for: paymentMethodType) else {
             return nil
         }
         guard case .completed(let contentsByPaymentMethodType) = getFetchState() else {
+            logExposure(
+                selectedPaymentMethodType: identifier,
+                promotionDisplayedSuccessfully: false,
+                layout: layout
+            )
             return nil
         }
-        return contentsByPaymentMethodType[identifier]
+        let promotionContent = contentsByPaymentMethodType[identifier]
+        logExposure(
+            selectedPaymentMethodType: identifier,
+            promotionDisplayedSuccessfully: promotionContent != nil,
+            layout: layout
+        )
+        return promotionContent
     }
 
     func completeLoading(with contents: [String: PromotionContent]) {
         setFetchState(.completed(contents))
+    }
+
+    private func isTreatmentEnabled(
+        selectedPaymentMethodType: String? = nil,
+        layout: String? = nil
+    ) -> Bool {
+        logExposure(
+            selectedPaymentMethodType: selectedPaymentMethodType,
+            layout: layout
+        )
+        return experiment.isInTreatment
+    }
+
+    private func logExposure(
+        selectedPaymentMethodType: String? = nil,
+        promotionDisplayedSuccessfully: Bool? = nil,
+        layout: String? = nil
+    ) {
+        let experiment = PaymentMethodMessagingPromotionsExperiment(
+            arbId: experiment.arbId,
+            group: experiment.group,
+            selectedPaymentMethodType: selectedPaymentMethodType,
+            promotionDisplayedSuccessfully: promotionDisplayedSuccessfully,
+            layout: layout
+        )
+        analyticsHelper?.logExposure(experiment: experiment)
     }
 
     private func beginLoadingIfIdle() -> Bool {
