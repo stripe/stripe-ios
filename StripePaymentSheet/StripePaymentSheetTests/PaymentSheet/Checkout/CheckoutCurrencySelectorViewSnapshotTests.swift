@@ -115,6 +115,22 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         verify(view)
     }
 
+    func testTextSecondaryClampsLowAlpha() async {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.textSecondary = UIColor.red.withAlphaComponent(0.1)
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        verify(view)
+    }
+
+    func testTextSecondaryClampsFullyTransparent() async {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.textSecondary = .clear
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        verify(view)
+    }
+
     func testFullyCustomized() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
         appearance.height = 44

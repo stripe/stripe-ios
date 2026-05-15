@@ -60,7 +60,14 @@ extension Checkout.CurrencySelectorView {
         public var selectedText: UIColor = .label
 
         /// Text color for caption text. Default is `.secondaryLabel`.
-        public var textSecondary: UIColor = .secondaryLabel
+        /// Alpha values below 0.5 are clamped to 0.5 to keep regulatory text legible.
+        public var textSecondary: UIColor = .secondaryLabel {
+            didSet {
+                if textSecondary.cgColor.alpha < 0.5 {
+                    textSecondary = textSecondary.withAlphaComponent(0.5)
+                }
+            }
+        }
 
         /// Color for error messages shown below the selector. Default is `.systemRed`.
         public var danger: UIColor = .systemRed
