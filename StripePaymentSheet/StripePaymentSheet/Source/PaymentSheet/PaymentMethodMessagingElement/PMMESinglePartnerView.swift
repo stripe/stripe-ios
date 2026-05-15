@@ -17,18 +17,8 @@ class PMMESinglePartnerView: UIView {
     private let infoUrl: URL
     private let appearance: PaymentMethodMessagingElement.Appearance
 
-    private lazy var promotionTextView: UITextView = {
-        let textView = LinkOpeningTextView()
-        textView.isScrollEnabled = false
-        textView.isEditable = false
-        textView.isSelectable = false
-        textView.backgroundColor = .clear
-        textView.textContainerInset = .zero
-        textView.textContainer.lineFragmentPadding = 0
-        textView.clipsToBounds = false
-        textView.adjustsFontForContentSizeCategory = true
-        textView.linkTextAttributes = [.foregroundColor: appearance.linkTextColor]
-        return textView
+    private lazy var promotionTextView: PMMEPromotionTextView = {
+        PMMEPromotionTextView(foregroundColor: appearance.linkTextColor)
     }()
 
     // Needs to be set on the appropriate view to take effect
