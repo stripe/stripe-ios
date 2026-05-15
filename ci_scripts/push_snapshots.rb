@@ -3,9 +3,12 @@
 
 # push_snapshots.rb
 #
-# Pushes the snapshot commit created by update_snapshots.rb.
+# Pushes the snapshot commit created by record_snapshots.rb.
 # Run this AFTER deploy-to-bitrise-io so artifacts are uploaded
 # before the push triggers a new build.
+#
+# Bitrise clones at the PR merge commit, so we can't simply rebase.
+# Instead we fetch the branch tip, cherry-pick our commit onto it, and push.
 
 SCRIPT_DIR = __dir__
 ROOT_DIR = File.expand_path('..', SCRIPT_DIR)
@@ -23,10 +26,13 @@ if branch == 'HEAD'
   abort 'Error: Could not determine branch name. Set BITRISE_GIT_BRANCH.'
 end
 
+snapshot_commit = `git rev-parse HEAD`.strip
+
 puts "==> Pushing snapshot update to #{branch}..."
 system('git', 'remote', 'set-url', 'origin', 'git@github.com:stripe/stripe-ios.git')
 system('git', 'fetch', 'origin', branch, [:out, :err] => '/dev/null')
-system('git', 'rebase', "origin/#{branch}", exception: true)
+system('git', 'checkout', "origin/#{branch}", [:out, :err] => '/dev/null', exception: true)
+system('git', 'cherry-pick', snapshot_commit, exception: true)
 system('git', 'push', 'origin', "HEAD:#{branch}", exception: true)
 
 puts '==> Done.'
