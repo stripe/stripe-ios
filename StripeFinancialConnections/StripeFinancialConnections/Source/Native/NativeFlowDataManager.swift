@@ -113,6 +113,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
                 consumerSession = oldValue
             }
             apiClient.consumerSession = consumerSession
+            PresentationManager.shared.consumerLinkBrand = consumerSession?.linkBrand
         }
     }
     var consumerPublishableKey: String? {
@@ -153,6 +154,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         // Use consumer properties from the API client, if available.
         self.consumerSession = apiClient.consumerSession
         self.consumerPublishableKey = apiClient.consumerPublishableKey
+        PresentationManager.shared.consumerLinkBrand = self.consumerSession?.linkBrand
         didUpdateManifest()
     }
 

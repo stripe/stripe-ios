@@ -13,6 +13,7 @@ class PresentationManagerTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         PresentationManager.shared.configuration = .init()
+        PresentationManager.shared.consumerLinkBrand = nil
     }
 
     func testConfigurationIsApplied() {
@@ -38,6 +39,14 @@ class PresentationManagerTests: XCTestCase {
         PresentationManager.shared.configuration = configuration
 
         let appearance = FinancialConnectionsAppearance(theme: .light, brand: nil)
+
+        XCTAssertEqual(appearance.logo, .onelink_logo)
+    }
+
+    func testConsumerSessionBrandOverridesManifestBrandForAppearanceResolution() {
+        PresentationManager.shared.consumerLinkBrand = .onelink
+
+        let appearance = FinancialConnectionsAppearance(theme: .light, brand: .link)
 
         XCTAssertEqual(appearance.logo, .onelink_logo)
     }

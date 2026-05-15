@@ -13,6 +13,15 @@ struct ConsumerSessionData: Decodable {
     let emailAddress: String
     let redactedFormattedPhoneNumber: String
     let verificationSessions: [VerificationSession]
+    let linkBrand: LinkBrand? = nil
+
+    private enum CodingKeys: String, CodingKey {
+        case clientSecret
+        case emailAddress
+        case redactedFormattedPhoneNumber
+        case verificationSessions
+        case linkBrand = "link_brand"
+    }
 
     /// A consumer session is considered verified if the `state == .verified` or the `type == .signUp`.
     var isVerified: Bool {

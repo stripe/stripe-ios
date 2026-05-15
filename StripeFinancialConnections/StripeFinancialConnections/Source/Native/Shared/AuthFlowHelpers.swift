@@ -110,20 +110,6 @@ final class AuthFlowHelpers {
     }
 
     private static func resolvedLinkBrand(_ manifestBrand: LinkBrand?) -> LinkBrand {
-        switch PresentationManager.shared.configuration.linkBrand {
-        case .link:
-            return .link
-        case .onelink:
-            return .onelink
-        case .unparsable, .none:
-            switch manifestBrand {
-            case .link:
-                return .link
-            case .onelink:
-                return .onelink
-            case .unparsable, .none:
-                return .link
-            }
-        }
+        PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: manifestBrand) ?? .link
     }
 }

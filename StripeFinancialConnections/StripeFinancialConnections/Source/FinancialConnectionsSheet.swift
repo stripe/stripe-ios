@@ -167,6 +167,7 @@ final public class FinancialConnectionsSheet {
         analyticsClient.addClass(toProductUsageIfNecessary: FinancialConnectionsSheet.self)
         APIVersion.configureFinancialConnectionsAPIVersion(apiClient: apiClient)
         PresentationManager.shared.configuration = configuration
+        PresentationManager.shared.consumerLinkBrand = nil
     }
 
     // MARK: - Public
