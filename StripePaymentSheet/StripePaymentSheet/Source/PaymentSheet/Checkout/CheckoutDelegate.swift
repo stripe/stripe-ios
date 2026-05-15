@@ -8,12 +8,17 @@
 
 import Foundation
 
-/// Receives updates when a ``Checkout`` session changes.
+/// Receives updates when the underlying ``Checkout`` session data changes.
+///
+/// This delegate is not called for every loading-state transition. A callback may
+/// receive `.loading` when fresh session data arrives while another operation is
+/// still queued, and no matching `.loaded` callback is guaranteed when the queue
+/// drains. Observe ``Checkout/state`` directly for every loading/loaded transition.
 @_spi(STP)
 @_spi(ReactNativeSDK)
 @MainActor
 public protocol CheckoutDelegate: AnyObject {
-    /// Tells the delegate that the checkout state changed.
+    /// Tells the delegate that the checkout session data changed.
     /// - Parameters:
     ///   - checkout: The instance whose state changed.
     ///   - state: The new state.
