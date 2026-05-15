@@ -30,6 +30,13 @@ ci_scripts/run_tests.rb --all
 # Record snapshot reference images (tests will fail during recording)
 ci_scripts/run_tests.rb --record-snapshots --test StripePaymentSheetTests/SomeSnapshotTest
 
+# Record snapshots for a class annotated with // @iOS26 (must record on BOTH iOS 16.4 and iOS 26.1)
+# Step 1: Record on iOS 16.4 (the default simulator)
+ci_scripts/run_tests.rb --record-snapshots --test StripePaymentSheetTests/SomeSnapshotTest
+# Step 2: Record on iOS 26.1 (find the device ID for an iPhone running iOS 26.1, then pass it via env var)
+DEVICE_ID_FROM_USER_SETTINGS=$(xcrun simctl list devices available | grep "iPhone.*26.1" | head -1 | sed -n 's/.*(\([A-F0-9-]*\)).*/\1/p') \
+  ci_scripts/run_tests.rb --record-snapshots --test StripePaymentSheetTests/SomeSnapshotTest
+
 # Record network responses (tests will fail during recording)
 ci_scripts/run_tests.rb --record-network --test StripePaymentsTests/STPCardFunctionalTest
 
@@ -161,3 +168,44 @@ Run `bundle install && bundle exec fastlane stripeios_tests` initially to instal
 
 ### Special Testing Notes
 - Legacy iOS versions: Separate fastlane lanes for iOS 13-16 compatibility testing
+
+### Snapshot Tests and the `// @iOS26` Annotation
+
+Some snapshot test classes are annotated with `// @iOS26` (placed on the line immediately before the `class` declaration). This indicates that the UI differs between iOS 16 and iOS 26, and snapshots must be recorded and maintained for **both** iOS versions.
+
+**How to identify `// @iOS26` test classes:**
+```swift
+// @iOS26
+final class MySnapshotTests: STPSnapshotTestCase {
+    ...
+}
+```
+
+**When updating snapshots for a `// @iOS26` class, you MUST record on both simulators:**
+
+1. **iOS 16.4** (default — handled automatically by `run_tests.rb`):
+   ```bash
+   ci_scripts/run_tests.rb --record-snapshots --test StripePaymentSheetTests/MySnapshotTests
+   ```
+
+2. **iOS 26.1** (requires a simulator running iOS 26.1):
+   ```bash
+   # Find an available iOS 26.1 simulator device ID
+   IOS26_DEVICE_ID=$(xcrun simctl list devices available | grep "iPhone.*26.1" | head -1 | sed -n 's/.*(\([A-F0-9-]*\)).*/\1/p')
+
+   # Boot it if needed
+   xcrun simctl boot "$IOS26_DEVICE_ID"
+
+   # Record snapshots using that simulator
+   DEVICE_ID_FROM_USER_SETTINGS="$IOS26_DEVICE_ID" \
+     ci_scripts/run_tests.rb --record-snapshots --test StripePaymentSheetTests/MySnapshotTests
+   ```
+
+**If no iOS 26.1 simulator is available**, create one first:
+```bash
+xcrun simctl create "iPhone 16 Pro (iOS 26.1)" \
+  com.apple.CoreSimulator.SimDeviceType.iPhone-16-Pro \
+  com.apple.CoreSimulator.SimRuntime.iOS-26-1
+```
+
+> **Note:** For classes *without* the `// @iOS26` annotation, only iOS 16.4 snapshots are needed. The `// @iOS26` annotation signals that both iOS versions have distinct reference images.
