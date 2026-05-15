@@ -120,7 +120,7 @@ extension Checkout {
             stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
             throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
         }
-        guard currentSession.status == .open else {
+        guard currentSession.status?.type == .open else {
             throw CheckoutError.sessionNotOpen
         }
         return currentSession
@@ -133,7 +133,7 @@ extension Checkout {
             stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: state.session))")
             throw CheckoutError.apiError(message: "Unexpected session type: expected STPCheckoutSession")
         }
-        guard currentSession.status == .open else {
+        guard currentSession.status?.type == .open else {
             throw CheckoutError.sessionNotOpen
         }
         guard integrationDelegate?.isSheetPresented != true else {
