@@ -518,4 +518,47 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertFalse(Intent.checkoutSession(session).isSetupFutureUsageSet(for: .payPal))
     }
 
+    // MARK: - TaxStatus Tests
+
+    func testTaxStatus_automaticRequiresLocationInputs_usesTaxContextAddressSource() {
+        let taxMeta: [String: Any] = [
+            "computation_type": "automatic",
+            "status": "requires_location_inputs",
+        ]
+        let shipping = makeCheckoutSession([
+            "tax_meta": taxMeta,
+            "tax_context": ["automatic_tax_address_source": "session.shipping"],
+        ])
+        XCTAssertEqual(shipping.tax.status, .requiresShippingAddress)
+
+        let billing = makeCheckoutSession([
+            "tax_meta": taxMeta,
+            "tax_context": ["automatic_tax_address_source": "session.billing"],
+        ])
+        XCTAssertEqual(billing.tax.status, .requiresBillingAddress)
+
+        let missingSource = makeCheckoutSession(["tax_meta": taxMeta])
+        XCTAssertEqual(missingSource.tax.status, .requiresBillingAddress)
+    }
+
+    func testTaxStatus_automaticFailed_returnsUnknown() {
+        let session = makeCheckoutSession([
+            "tax_meta": [
+                "computation_type": "automatic",
+                "status": "failed",
+            ],
+        ])
+        XCTAssertEqual(session.tax.status, .unknown)
+    }
+
+    func testTaxStatus_nonAutomaticComputationType_isReady() {
+        let session = makeCheckoutSession([
+            "tax_meta": [
+                "computation_type": "dynamic",
+                "status": "requires_location_inputs",
+            ],
+        ])
+        XCTAssertEqual(session.tax.status, .ready)
+    }
+
 }

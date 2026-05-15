@@ -6,7 +6,9 @@
 //
 
 @testable @_spi(STP) import StripeCore
+@testable @_spi(STP) import StripePayments
 @testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsTestUtils
 import XCTest
 
 final class PaymentMethodAvailabilityTests: XCTestCase {
@@ -191,6 +193,34 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         let isLinkSignupEnabled = PaymentSheet.isLinkSignupEnabled(elementsSession: elementsSession, configuration: configuration)
         XCTAssertFalse(isLinkSignupEnabled, "Link inline signup should be disabled for linkSignupOptInFeatureEnabled if no email was provided")
     }
+
+    func testShouldShowLink2FABeforePaymentSheet_suppressesForMerchantEmailCustomerSessionWithSavedPaymentMethods() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card", "link"],
+            customerSessionData: mobilePaymentElementCustomerSessionData
+        )
+
+        XCTAssertFalse(
+            elementsSession.shouldShowLink2FABeforePaymentSheet(
+                for: makeLinkAccountRequiringVerification(),
+                savedPaymentMethods: [STPPaymentMethod._testCard()]
+            )
+        )
+    }
+
+    func testShouldShowLink2FABeforePaymentSheet_doesNotSuppressWithoutSavedPaymentMethods() {
+        let elementsSession = STPElementsSession._testValue(
+            paymentMethodTypes: ["card", "link"],
+            customerSessionData: mobilePaymentElementCustomerSessionData
+        )
+
+        XCTAssertTrue(
+            elementsSession.shouldShowLink2FABeforePaymentSheet(
+                for: makeLinkAccountRequiringVerification(),
+                savedPaymentMethods: []
+            )
+        )
+    }
 }
 
 extension LinkSettings {
@@ -218,6 +248,45 @@ extension LinkSettings {
             attestationStateSyncEnabled: nil,
             linkSupportedPaymentMethodsOnboardingEnabled: linkSupportedPaymentMethodsOnboardingEnabled,
             allResponseFields: [:]
+        )
+    }
+}
+
+private extension PaymentMethodAvailabilityTests {
+    var mobilePaymentElementCustomerSessionData: [String: Any] {
+        [
+            "mobile_payment_element": [
+                "enabled": true,
+                "features": [
+                    "payment_method_save": "enabled",
+                    "payment_method_remove": "enabled",
+                ],
+            ],
+            "customer_sheet": [
+                "enabled": false,
+            ],
+        ]
+    }
+
+    func makeLinkAccountRequiringVerification() -> PaymentSheetLinkAccount {
+        let consumerSession = ConsumerSession(
+            clientSecret: "client_secret",
+            emailAddress: "test@example.com",
+            redactedFormattedPhoneNumber: "+1********55",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil
+        )
+
+        return PaymentSheetLinkAccount(
+            email: consumerSession.emailAddress,
+            session: consumerSession,
+            publishableKey: "pk_123",
+            displayablePaymentDetails: nil,
+            useMobileEndpoints: true,
+            canSyncAttestationState: false
         )
     }
 }

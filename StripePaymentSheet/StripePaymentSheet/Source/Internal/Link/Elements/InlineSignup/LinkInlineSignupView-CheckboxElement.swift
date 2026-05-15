@@ -64,7 +64,8 @@ extension LinkInlineSignupView {
                 }
                 return LinkUI.inlineLogo(
                     withScale: 1.3,
-                    forFont: appearance.asElementsTheme.fonts.footnoteEmphasis
+                    forFont: appearance.asElementsTheme.fonts.footnoteEmphasis,
+                    brand: brand
                 )
             }()
 
