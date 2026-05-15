@@ -52,7 +52,7 @@ extension Checkout {
         private let containerStackView = UIStackView()
         private lazy var errorLabel: UILabel = {
             let label = ElementsUI.makeErrorLabel(
-                font: scaledFont(for: appearance.font, style: .caption1),
+                font: appearance.scaledFont(for: appearance.font, style: .caption1),
                 textColor: appearance.danger
             )
             label.setHiddenIfNecessary(true)
@@ -156,7 +156,7 @@ extension Checkout {
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
             currency: CurrencySelectorUtilities.CurrencyCode
         ) {
-            let flagFont = scaledFont(for: appearance.font, style: .footnote)
+            let flagFont = appearance.scaledFont(for: appearance.font, style: .footnote)
             let (left, right) = CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
                 localizedPricesMetas: session.localizedPricesMetas,
@@ -218,12 +218,6 @@ extension Checkout {
             invalidateIntrinsicContentSize()
         }
 
-        private func scaledFont(for font: UIFont, style: UIFont.TextStyle) -> UIFont {
-            let defaultTraitCollection = UITraitCollection(preferredContentSizeCategory: .large)
-            let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style, compatibleWith: defaultTraitCollection)
-            let customFont = font.withSize(fontDescriptor.pointSize * appearance.sizeScaleFactor)
-            return UIFontMetrics.default.scaledFont(for: customFont, maximumPointSize: 20)
-        }
     }
 }
 

@@ -31,6 +31,15 @@ protocol TwoOptionSelectorViewAppearance {
     var captionColor: UIColor { get }
 }
 
+extension TwoOptionSelectorViewAppearance {
+    func scaledFont(for font: UIFont, style: UIFont.TextStyle) -> UIFont {
+        let defaultTraitCollection = UITraitCollection(preferredContentSizeCategory: .large)
+        let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style, compatibleWith: defaultTraitCollection)
+        let customFont = font.withSize(fontDescriptor.pointSize * sizeScaleFactor)
+        return UIFontMetrics.default.scaledFont(for: customFont, maximumPointSize: 20)
+    }
+}
+
 // MARK: - TwoOptionSelectorViewDelegate
 
 @MainActor
@@ -149,7 +158,7 @@ final class TwoOptionSelectorView: UIView {
         heightConstraint.priority = UILayoutPriority(999)
         heightConstraint.isActive = true
 
-        captionLabel.font = scaledFont(for: appearance.font, style: .caption1)
+        captionLabel.font = appearance.scaledFont(for: appearance.font, style: .caption1)
         captionLabel.textColor = appearance.captionColor
         captionLabel.numberOfLines = 0
         captionLabel.isHidden = true
@@ -189,7 +198,7 @@ final class TwoOptionSelectorView: UIView {
 
     private func configureButton(_ button: UIButton, item: TwoOptionSelectorItem) {
         button.setAttributedTitle(item.displayText, for: .normal)
-        button.titleLabel?.font = scaledFont(for: appearance.font.medium, style: .footnote)
+        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote)
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         button.backgroundColor = .clear
         button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
@@ -198,7 +207,7 @@ final class TwoOptionSelectorView: UIView {
 
     private func updateButtonStyles(animated: Bool) {
         let isLeftSelected = leftItem.id == selectedItemId
-        let font = scaledFont(for: appearance.font.medium, style: .footnote)
+        let font = appearance.scaledFont(for: appearance.font.medium, style: .footnote)
 
         applyTitleColor(to: leftButton, item: leftItem, color: isLeftSelected ? appearance.selectedTextColor : appearance.unselectedTextColor, font: font)
         applyTitleColor(to: rightButton, item: rightItem, color: !isLeftSelected ? appearance.selectedTextColor : appearance.unselectedTextColor, font: font)
@@ -230,15 +239,6 @@ final class TwoOptionSelectorView: UIView {
             range: NSRange(location: 0, length: styled.length)
         )
         button.setAttributedTitle(styled, for: .normal)
-    }
-
-    // MARK: - Font Scaling
-
-    private func scaledFont(for font: UIFont, style: UIFont.TextStyle) -> UIFont {
-        let defaultTraitCollection = UITraitCollection(preferredContentSizeCategory: .large)
-        let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style, compatibleWith: defaultTraitCollection)
-        let customFont = font.withSize(fontDescriptor.pointSize * appearance.sizeScaleFactor)
-        return UIFontMetrics.default.scaledFont(for: customFont, maximumPointSize: 20)
     }
 
     // MARK: - Caption

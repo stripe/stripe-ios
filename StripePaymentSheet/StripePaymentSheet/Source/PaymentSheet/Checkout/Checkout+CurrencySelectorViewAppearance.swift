@@ -44,9 +44,10 @@ extension Checkout.CurrencySelectorView {
         /// Multiplier applied to all font sizes. For example, `1.2` makes text 20% larger.
         /// Must be greater than 0. Default is `1.0`.
         public var sizeScaleFactor: CGFloat = 1.0 {
-            willSet {
-                if newValue <= 0.0 {
+            didSet {
+                if sizeScaleFactor <= 0.0 {
                     assertionFailure("sizeScaleFactor must be a value greater than zero")
+                    sizeScaleFactor = 1.0
                 }
             }
         }
@@ -63,6 +64,7 @@ extension Checkout.CurrencySelectorView {
         /// Alpha values below 0.5 are clamped to 0.5 to keep regulatory text legible.
         public var textSecondary: UIColor = .secondaryLabel {
             didSet {
+                // Re-assignment in didSet is safe for value types (no recursion).
                 if textSecondary.cgColor.alpha < 0.5 {
                     textSecondary = textSecondary.withAlphaComponent(0.5)
                 }
