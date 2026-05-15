@@ -764,8 +764,8 @@ workflows:
     steps:
     - script@1:
         inputs:
-        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (16.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
-        title: Warm up emulator (iPhone 12 mini, OS=16.4)
+        - content: IOS_SIMULATOR_UDID=`xcrun xctrace list devices 2>&1 | grep "iPhone 12 mini Simulator\ (26.4)" | awk -F " " '{print $NF}' | tr -d "()" |tail -1` && open -a "simulator" --args -CurrentDeviceUDID $IOS_SIMULATOR_UDID
+        title: Warm up emulator (iPhone 12 mini, OS=26.4.1)
     - xcode-test@6:
         inputs:
         - destination: $DEFAULT_TEST_DEVICE
@@ -777,8 +777,9 @@ workflows:
         - xcodebuild_options: -parallel-testing-enabled YES -maximum-parallel-testing-workers 2
     - deploy-to-bitrise-io@2: {}
     before_run:
-    - install-runtime-16
     - prep_all
+    envs:
+    - DEFAULT_TEST_DEVICE: $DEFAULT_TEST_DEVICE_26_4_1
     meta:
       bitrise.io:
         stack: osx-xcode-26.4.x
