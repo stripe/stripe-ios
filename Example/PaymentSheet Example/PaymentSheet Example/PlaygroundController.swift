@@ -921,6 +921,7 @@ extension PlaygroundController {
                             clientSecret: checkoutSessionClientSecret,
                             configuration: checkoutConfiguration
                         )
+                        self.checkout?.delegate = self
                     } catch {
                         self.checkout = nil
                         print("Failed to load checkout session: \(error)")
@@ -1382,6 +1383,29 @@ extension AddressViewController.AddressDetails {
         postalAddress.country = address.country
 
         return [name, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
+    }
+}
+
+// MARK: - CheckoutDelegate
+
+extension PlaygroundController: CheckoutDelegate {
+    func checkout(_ checkout: Checkout, didChangeState state: Checkout.State) {
+        switch settings.uiStyle {
+        case .embedded:
+            Task { @MainActor in
+                _ = await embeddedPlaygroundViewController?.embeddedPaymentElement?.update(checkout: checkout)
+            }
+        case .flowController:
+            paymentSheetFlowController?.update(checkout: checkout) { [weak self] error in
+                if let error {
+                    print("PaymentSheet.FlowController.update(checkout:) failed: \(error)")
+                    self?.fail(error: error)
+                }
+            }
+        case .paymentSheet:
+            // PaymentSheet waits for pending Checkout updates and resnapshots the session when presenting.
+            break
+        }
     }
 }
 

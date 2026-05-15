@@ -433,6 +433,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         _testVerticalPreservesFormDetails()
 
         // PaymentSheet.FlowController + Vertical
+        app.swipeUp(velocity: 100)
         app.buttons["flowController"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Payment method"].waitForExistenceAndTap(timeout: 10))
