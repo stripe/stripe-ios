@@ -87,15 +87,17 @@ versions.each do |os_version|
   FileUtils.rm_rf(RECORD_DIR)
   FileUtils.rm_rf("#{RECORD_DIR}_64")
 
-  # For iOS 26+, only run tests marked with // @iOS26
+  # For iOS 26+, only run tests marked with // @iOS26 (test plan handles filtering)
   major = os_version.split('.').first.to_i
   scheme = 'AllStripeFrameworks'
+  extra_args = ['--only-snapshot-tests']
   if major >= 26
     system('ruby', 'ci_scripts/generate_ios26_testplan.rb', exception: true)
     scheme = 'AllStripeFrameworks-iOS26'
+    extra_args = [] # test plan already selects the right tests
   end
 
-  unless system('./ci_scripts/test.rb', '--only-snapshot-tests',
+  unless system('./ci_scripts/test.rb', *extra_args,
                 '--scheme', scheme,
                 '--device', DEVICE_MODEL,
                 '--version', os_version)
