@@ -55,8 +55,6 @@ struct LinkURLParams: Encodable {
 }
 
 class LinkURLGenerator {
-    static let checkoutURL = URL(string: "https://checkout.link.com/")!
-
     static func linkParams(configuration: PaymentElementConfiguration, intent: Intent, elementsSession: STPElementsSession) throws -> LinkURLParams {
         guard let publishableKey = configuration.apiClient.publishableKey ?? STPAPIClient.shared.publishableKey else {
             throw LinkURLGeneratorError.noPublishableKey
@@ -124,7 +122,7 @@ class LinkURLGenerator {
     }
 
     static func url(params: LinkURLParams) throws -> URL {
-        var components = URLComponents(string: checkoutURL)!
+        var components = URLComponents(string: "https://checkout.link.com/")!
         components.fragment = try params.toURLEncodedBase64()
         guard let url = components.url else {
             throw LinkURLGeneratorError.urlCreationFailed
