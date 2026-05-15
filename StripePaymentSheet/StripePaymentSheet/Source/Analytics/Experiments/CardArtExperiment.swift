@@ -26,6 +26,7 @@ struct CardArtExperiment: LoggableExperiment {
             "saved_card_payment_method_with_card_art_count": String(savedCardPaymentMethodWithCardArtCount),
             "selected_payment_method_type": selectedPaymentMethodType,
             "selected_payment_method_has_card_art": selectedPaymentMethodHasCardArt.description,
+            "is_using_customer_session": isUsingCustomerSession ? "true" : "false",
         ]
     }
 
@@ -33,6 +34,7 @@ struct CardArtExperiment: LoggableExperiment {
     private let walletPaymentMethodTypes: [String]
     private let integrationShape: String
     private let layout: String
+    private let isUsingCustomerSession: Bool
     private let savedPaymentMethodCount: Int
     private let savedCardPaymentMethodCount: Int
     private let savedCardPaymentMethodWithCardArtCount: Int
@@ -46,6 +48,7 @@ struct CardArtExperiment: LoggableExperiment {
         walletPaymentMethodTypes: [String],
         integrationShape: String,
         layout: String,
+        isUsingCustomerSession: Bool,
         savedPaymentMethodCount: Int,
         savedCardPaymentMethodCount: Int,
         savedCardPaymentMethodWithCardArtCount: Int,
@@ -58,6 +61,7 @@ struct CardArtExperiment: LoggableExperiment {
         self.walletPaymentMethodTypes = walletPaymentMethodTypes
         self.integrationShape = integrationShape
         self.layout = layout
+        self.isUsingCustomerSession = isUsingCustomerSession
         self.savedPaymentMethodCount = savedPaymentMethodCount
         self.savedCardPaymentMethodCount = savedCardPaymentMethodCount
         self.savedCardPaymentMethodWithCardArtCount = savedCardPaymentMethodWithCardArtCount
@@ -99,6 +103,7 @@ struct CardArtExperiment: LoggableExperiment {
             walletPaymentMethodTypes: walletTypes,
             integrationShape: analyticsHelper.integrationShape.analyticsValue,
             layout: paymentMethodOrientation.rawValue,
+            isUsingCustomerSession: elementsSession.customer != nil,
             savedPaymentMethodCount: savedPaymentMethods.count,
             savedCardPaymentMethodCount: savedPaymentMethods.filter { $0.type == .card }.count,
             savedCardPaymentMethodWithCardArtCount: savedPaymentMethods.filter { $0.type == .card && $0.cardArtCDNURL() != nil }.count,
