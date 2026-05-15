@@ -269,6 +269,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             url: url,
             pane: .networkingLinkSignupPane,
             analyticsClient: dataSource.analyticsClient,
+            linkBrand: dataSource.manifest.link_brand,
             handleURL: { urlHost, _ in
                 if urlHost == "legal-details-notice", let legalDetailsNotice {
                     let legalDetailsNoticeViewController = LegalDetailsNoticeViewController(

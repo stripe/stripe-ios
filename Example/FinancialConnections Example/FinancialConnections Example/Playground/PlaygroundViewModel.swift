@@ -63,13 +63,13 @@ final class PlaygroundViewModel: ObservableObject {
         )
     }
 
-    var linkBrand: Binding<PlaygroundConfiguration.LinkBrand> {
+    var forceOnelink: Binding<PlaygroundConfiguration.ForceOnelink> {
         Binding(
             get: {
-                self.playgroundConfiguration.linkBrand
+                self.playgroundConfiguration.forceOnelink
             },
             set: {
-                self.playgroundConfiguration.linkBrand = $0
+                self.playgroundConfiguration.forceOnelink = $0
                 self.objectWillChange.send()
             }
         )
@@ -380,7 +380,7 @@ final class PlaygroundViewModel: ObservableObject {
                     stripeAccount: self.playgroundConfiguration.merchant.stripeAccount,
                     setupPlaygroundResponseJSON: setupPlaygroundResponse,
                     style: self.playgroundConfiguration.style,
-                    linkBrand: self.playgroundConfiguration.linkBrand,
+                    forceOnelink: self.playgroundConfiguration.forceOnelink,
                     onEvent: { event in
                         if self.liveEvents.wrappedValue == true {
                             let message = "\(event.name.rawValue); \(event.metadata.dictionary)"
@@ -685,7 +685,7 @@ private func PresentFinancialConnectionsSheet(
     stripeAccount: String?,
     setupPlaygroundResponseJSON: [String: String],
     style: PlaygroundConfiguration.Style,
-    linkBrand: PlaygroundConfiguration.LinkBrand,
+    forceOnelink: PlaygroundConfiguration.ForceOnelink,
     onEvent: @escaping (FinancialConnectionsEvent) -> Void,
     completionHandler: @escaping (HostControllerResult) -> Void
 ) {
@@ -727,7 +727,7 @@ private func PresentFinancialConnectionsSheet(
     let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)
     var configuration = FinancialConnectionsSheet.Configuration()
     configuration.style = style.configurationValue
-    configuration.linkBrand = linkBrand == .onelink ? .onelink : nil
+    configuration.linkBrand = forceOnelink == .on ? .onelink : nil
     let financialConnectionsSheet = FinancialConnectionsSheet(
         financialConnectionsSessionClientSecret: clientSecret,
         // disable app-to-app for UI tests
@@ -842,7 +842,7 @@ private func PresentPaymentSheet(
     case .alwaysDark: configuration.style = .alwaysDark
     }
 
-    if config.linkBrand == .onelink {
+    if config.forceOnelink == .on {
         configuration.link.brand = .onelink
     }
 

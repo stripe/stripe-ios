@@ -17,6 +17,7 @@ protocol NetworkingOTPDataSource: AnyObject {
     var analyticsClient: FinancialConnectionsAnalyticsClient { get }
     var isTestMode: Bool { get }
     var appearance: FinancialConnectionsAppearance { get }
+    var linkBrand: LinkBrand? { get }
     var pane: FinancialConnectionsSessionManifest.NextPane { get }
 
     func startVerificationSession() -> Future<ConsumerSessionResponse>
@@ -46,6 +47,10 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
 
     var appearance: FinancialConnectionsAppearance {
         manifest.appearance
+    }
+
+    var linkBrand: LinkBrand? {
+        manifest.link_brand
     }
 
     init(

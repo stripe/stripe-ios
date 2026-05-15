@@ -108,6 +108,7 @@ final class AccountPickerViewController: UIViewController {
                                 url: url,
                                 pane: .accountPicker,
                                 analyticsClient: self.dataSource.analyticsClient,
+                                linkBrand: self.dataSource.manifest.link_brand,
                                 handleURL: { _, _ in }
                             )
                         }

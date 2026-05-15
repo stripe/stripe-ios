@@ -181,6 +181,7 @@ class ConsentViewController: UIViewController {
             url: url,
             pane: .consent,
             analyticsClient: dataSource.analyticsClient,
+            linkBrand: dataSource.manifest.link_brand,
             handleURL: { urlHost, nextPaneOrDrawerOnSecondaryCta in
                 guard let urlHost, let address = StripeSchemeAddress(rawValue: urlHost) else {
                     self.dataSource

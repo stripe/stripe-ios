@@ -36,6 +36,7 @@ final class AuthFlowHelpers {
         url: URL,
         pane: FinancialConnectionsSessionManifest.NextPane,
         analyticsClient: FinancialConnectionsAnalyticsClient,
+        linkBrand: LinkBrand? = nil,
         handleURL: (_ urlHost: String?, _ nextPaneOrDrawerOnSecondaryCta: String?) -> Void
     ) {
         let internalLinkToPaneId: [String: String] = [
@@ -68,14 +69,14 @@ final class AuthFlowHelpers {
         if url.scheme == "stripe" {
             handleURL(url.host, nextPaneOrDrawerOnSecondaryCta)
         } else {
-            let brand = PresentationManager.shared.configuration.linkBrand ?? .link
-            SFSafariViewController.present(url: brand.brandAwareLegalSupportURL(for: url))
+            SFSafariViewController.present(url: resolvedLinkBrand(linkBrand).brandAwareLegalSupportURL(for: url))
         }
     }
 
     static func networkingOTPErrorMessage(
         fromError error: Error,
-        otpType: String
+        otpType: String,
+        linkBrand: LinkBrand? = nil
     ) -> String? {
         if
             let error = error as? StripeError,
@@ -92,7 +93,7 @@ final class AuthFlowHelpers {
                 let trailingMessage = (otpType == "EMAIL") ? STPLocalizedString("Click “Resend code” and try again, or %@.", "Text as part of an error message that shows up when user entered an invalid one-time-passcode (OTP). '%@' will be replaced by text with a link: 'contact us'") : STPLocalizedString("Try again, or %@.", "Text as part of an error message that shows up when user entered an invalid one-time-passcode (OTP). '%@' will be replaced by text with a link: 'contact us'")
 
                 let contactUsText = STPLocalizedString("contact us", "A link/button inside of text that can be tapped to visit a support website. This link will be embedded inside of larger text: 'It looks like the verification code you provided is not valid anymore. Try again, or contact us.'")
-                let contactUsUrlString = (PresentationManager.shared.configuration.linkBrand ?? .link).supportContactURL.absoluteString
+                let contactUsUrlString = resolvedLinkBrand(linkBrand).supportContactURL.absoluteString
                 let contactUsWithUrlText = "[\(contactUsText)](\(contactUsUrlString))"
 
                 return leadingMessage + " " + String(format: trailingMessage, contactUsWithUrlText)
@@ -106,5 +107,23 @@ final class AuthFlowHelpers {
 
     static func formatRedactedPhoneNumber(_ redactedPhoneNumber: String) -> String {
         return redactedPhoneNumber.replacingOccurrences(of: "*", with: "•")
+    }
+
+    private static func resolvedLinkBrand(_ manifestBrand: LinkBrand?) -> LinkBrand {
+        switch PresentationManager.shared.configuration.linkBrand {
+        case .link:
+            return .link
+        case .onelink:
+            return .onelink
+        case .unparsable, .none:
+            switch manifestBrand {
+            case .link:
+                return .link
+            case .onelink:
+                return .onelink
+            case .unparsable, .none:
+                return .link
+            }
+        }
     }
 }

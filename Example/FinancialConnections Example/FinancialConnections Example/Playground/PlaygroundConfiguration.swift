@@ -116,9 +116,9 @@ final class PlaygroundConfiguration {
 
     // MARK: - Link Brand
 
-    enum LinkBrand: String, CaseIterable, Identifiable, Hashable {
-        case link = "link"
-        case onelink = "onelink"
+    enum ForceOnelink: String, CaseIterable, Identifiable, Hashable {
+        case on = "on"
+        case off = "off"
 
         var id: String {
             return rawValue
@@ -126,26 +126,31 @@ final class PlaygroundConfiguration {
 
         var displayName: String {
             switch self {
-            case .link:
-                return "Link"
-            case .onelink:
-                return "Onelink"
+            case .on:
+                return "On"
+            case .off:
+                return "Off"
             }
         }
     }
 
     private static let linkBrandKey = "link_brand"
 
-    var linkBrand: LinkBrand {
+    var forceOnelink: ForceOnelink {
         get {
             if
                 let linkBrandString = configurationStore[Self.linkBrandKey] as? String,
-                let linkBrand = LinkBrand(rawValue: linkBrandString)
+                let forceOnelink = ForceOnelink(rawValue: linkBrandString)
             {
-                return linkBrand
-            } else {
-                return .link
+                return forceOnelink
             }
+
+            // Backward compatibility for older stored values.
+            if linkBrandString == "onelink" {
+                return .on
+            }
+
+            return .off
         }
         set {
             configurationStore[Self.linkBrandKey] = newValue.rawValue
@@ -603,11 +608,13 @@ final class PlaygroundConfiguration {
 
         if
             let linkBrandString = dictionary[Self.linkBrandKey] as? String,
-            let linkBrand = LinkBrand(rawValue: linkBrandString)
+            let forceOnelink = ForceOnelink(rawValue: linkBrandString)
         {
-            self.linkBrand = linkBrand
+            self.forceOnelink = forceOnelink
+        } else if dictionary[Self.linkBrandKey] as? String == "onelink" {
+            self.forceOnelink = .on
         } else {
-            self.linkBrand = .link
+            self.forceOnelink = .off
         }
 
         if

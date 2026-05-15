@@ -127,6 +127,7 @@ class IDConsentContentViewController: UIViewController {
             url: url,
             pane: .idConsentContent,
             analyticsClient: dataSource.analyticsClient,
+            linkBrand: dataSource.manifest.link_brand,
             handleURL: { urlHost, _ in
                 guard let urlHost, let address = StripeSchemeAddress(rawValue: urlHost) else {
                     self.dataSource

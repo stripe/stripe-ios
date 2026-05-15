@@ -183,7 +183,11 @@ final class NetworkingOTPView: UIView {
                     self.delegate?.networkingOTPViewDidConfirmVerification(self)
                 case .failure(let error):
                     let isTerminal: Bool
-                    if let errorMessage = AuthFlowHelpers.networkingOTPErrorMessage(fromError: error, otpType: self.dataSource.otpType) {
+                    if let errorMessage = AuthFlowHelpers.networkingOTPErrorMessage(
+                        fromError: error,
+                        otpType: self.dataSource.otpType,
+                        linkBrand: self.dataSource.linkBrand
+                    ) {
                         self.dataSource
                             .analyticsClient
                             .logExpectedError(

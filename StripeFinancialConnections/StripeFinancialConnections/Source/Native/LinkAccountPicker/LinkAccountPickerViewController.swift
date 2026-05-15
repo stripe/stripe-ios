@@ -558,6 +558,7 @@ final class LinkAccountPickerViewController: UIViewController {
             url: url,
             pane: .linkAccountPicker,
             analyticsClient: self.dataSource.analyticsClient,
+            linkBrand: dataSource.manifest.link_brand,
             handleURL: { _, _ in }
         )
     }

@@ -82,7 +82,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let allowManualEntry: Bool
     let appVerificationEnabled: Bool?
     let assignmentEventId: String?
-    let brand: LinkBrand?
+    let link_brand: LinkBrand?
     let businessName: String?
     let cancelUrl: String?
     let consentAcquiredAt: String?
@@ -114,7 +114,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let theme: Theme?
 
     var appearance: FinancialConnectionsAppearance {
-        FinancialConnectionsAppearance(theme: theme, brand: brand)
+        FinancialConnectionsAppearance(theme: theme, brand: link_brand)
     }
 
     var shouldAttachLinkedPaymentMethod: Bool {
@@ -141,7 +141,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
 extension FinancialConnectionsSessionManifest {
     init(
         allowManualEntry: Bool,
-        brand: LinkBrand? = nil,
+        link_brand: LinkBrand? = nil,
         consentRequired: Bool,
         customManualEntryHandling: Bool,
         disableLinkMoreAccounts: Bool,
@@ -171,7 +171,7 @@ extension FinancialConnectionsSessionManifest {
             allowManualEntry: allowManualEntry,
             appVerificationEnabled: nil,
             assignmentEventId: nil,
-            brand: brand,
+            link_brand: link_brand,
             businessName: nil,
             cancelUrl: nil,
             consentAcquiredAt: nil,
