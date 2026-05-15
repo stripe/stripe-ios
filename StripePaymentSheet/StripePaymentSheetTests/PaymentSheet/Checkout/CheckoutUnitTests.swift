@@ -149,7 +149,7 @@ final class CheckoutUnitTests: XCTestCase {
     // MARK: - runServerUpdate Tests
 
     func testRunServerUpdateWrapsClosureError() async {
-        let checkout = makeCheckoutWithOpenSession()
+        let checkout = await makeCheckoutWithOpenSession()
         let expectedMessage = "Server returned 500"
 
         do {
@@ -169,7 +169,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testRunServerUpdateWrapsTimeoutError() async {
-        let checkout = makeCheckoutWithOpenSession()
+        let checkout = await makeCheckoutWithOpenSession()
 
         do {
             try await checkout.runServerUpdate {
@@ -187,7 +187,7 @@ final class CheckoutUnitTests: XCTestCase {
     }
 
     func testRunServerUpdateWrapsGenericError() async {
-        let checkout = makeCheckoutWithOpenSession()
+        let checkout = await makeCheckoutWithOpenSession()
 
         do {
             try await checkout.runServerUpdate {
