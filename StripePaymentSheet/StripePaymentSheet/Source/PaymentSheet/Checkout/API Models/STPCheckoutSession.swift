@@ -398,14 +398,23 @@ extension STPCheckoutSession: STPAPIResponseDecodable {
         let taxStatus: Checkout.TaxStatus = {
             let taxMeta = dict["tax_meta"] as? [String: Any]
             let computationType = taxMeta?["computation_type"] as? String
-            if computationType == "automatic" {
-                let status = taxMeta?["status"] as? String
-                if status == "requires_location_inputs" {
-                    let hasShippingCollection = dict["shipping_address_collection"] != nil
-                    return hasShippingCollection ? .requiresShippingAddress : .requiresBillingAddress
-                }
+            guard computationType == "automatic" else {
+                return .ready
             }
-            return .ready
+
+            let status = taxMeta?["status"] as? String
+            switch status {
+            case "complete":
+                return .ready
+            case "requires_location_inputs":
+                let taxContext = dict["tax_context"] as? [String: Any]
+                let addressSource = taxContext?["automatic_tax_address_source"] as? String
+                return addressSource == "session.shipping" ? .requiresShippingAddress : .requiresBillingAddress
+            case "failed":
+                return .unknown
+            default:
+                return .ready
+            }
         }()
         let tax = Checkout.Tax(
             status: taxStatus,
