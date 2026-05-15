@@ -18,7 +18,7 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         )
         let configuration = PaymentSheet.Configuration()
 
-        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .onelink)
+        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: nil), .onelink)
     }
 
     func testResolvedLinkBrand_prefersConfigurationOverride() {
@@ -28,17 +28,17 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
         var configuration = PaymentSheet.Configuration()
         configuration.link = .init(brand: .onelink)
 
-        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .onelink)
+        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: nil), .onelink)
     }
 
     func testResolvedLinkBrand_defaultsToLinkWhenElementsSessionHasNoBrand() {
         let elementsSession = STPElementsSession._testValue()
         let configuration = PaymentSheet.Configuration()
 
-        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession), .link)
+        XCTAssertEqual(configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: nil), .link)
     }
 
-    func testResolvedLinkBrand_withLinkAccount_usesLookupBrandBeforeElementsSessionBrand() {
+    func testResolvedLinkBrand_withSignedOutLinkAccount_fallsBackToElementsSessionBrand() {
         let elementsSession = STPElementsSession._testValue(
             linkSettings: ._testValue(brand: .link)
         )
@@ -47,7 +47,6 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
             email: "test@example.com",
             session: nil,
             publishableKey: nil,
-            linkBrand: .onelink,
             displayablePaymentDetails: nil,
             useMobileEndpoints: false,
             canSyncAttestationState: false
@@ -55,7 +54,7 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
 
         XCTAssertEqual(
             configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
-            .onelink
+            .link
         )
     }
 
@@ -69,7 +68,6 @@ final class PaymentMethodAvailabilityTests: XCTestCase {
             email: "test@example.com",
             session: nil,
             publishableKey: nil,
-            linkBrand: .onelink,
             displayablePaymentDetails: nil,
             useMobileEndpoints: false,
             canSyncAttestationState: false

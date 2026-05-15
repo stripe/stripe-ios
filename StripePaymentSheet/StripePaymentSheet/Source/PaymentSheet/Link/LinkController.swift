@@ -804,7 +804,6 @@ import UIKit
             email: linkAccount.email,
             session: consumerSession,
             publishableKey: linkAccount.publishableKey,
-            linkBrand: linkAccount.linkBrand,
             displayablePaymentDetails: linkAccount.displayablePaymentDetails,
             apiClient: linkAccount.apiClient,
             useMobileEndpoints: linkAccount.useMobileEndpoints,

@@ -82,16 +82,12 @@ struct LinkPMDisplayDetails {
 
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
-    private let initialLinkBrand: LinkBrand?
 
     var linkBrand: LinkBrand? {
-        guard currentSession != nil else {
-            return initialLinkBrand
-        }
         guard sessionState == .verified else {
-            return initialLinkBrand
+            return nil
         }
-        return Self.forcedConsumerLinkBrandForTesting ?? currentSession?.linkBrand ?? initialLinkBrand
+        return Self.forcedConsumerLinkBrandForTesting ?? currentSession?.linkBrand
     }
 
     var paymentSheetLinkAccountDelegate: PaymentSheetLinkAccountDelegate?
@@ -152,7 +148,6 @@ struct LinkPMDisplayDetails {
         email: String,
         session: ConsumerSession?,
         publishableKey: String?,
-        linkBrand: LinkBrand? = nil,
         displayablePaymentDetails: ConsumerSession.DisplayablePaymentDetails?,
         apiClient: STPAPIClient = .shared,
         useMobileEndpoints: Bool,
@@ -163,7 +158,6 @@ struct LinkPMDisplayDetails {
         self.email = email
         self.currentSession = session
         self.publishableKey = publishableKey
-        self.initialLinkBrand = linkBrand
         self.displayablePaymentDetails = displayablePaymentDetails
         self.apiClient = apiClient
         self.useMobileEndpoints = useMobileEndpoints
