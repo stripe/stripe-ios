@@ -13,7 +13,7 @@ struct ConsumerSessionData: Decodable {
     let emailAddress: String
     let redactedFormattedPhoneNumber: String
     let verificationSessions: [VerificationSession]
-    let linkBrand: LinkBrand? = nil
+    let linkBrand: LinkBrand?
 
     private enum CodingKeys: String, CodingKey {
         case clientSecret
