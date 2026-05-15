@@ -86,6 +86,9 @@
 /* Text providing link to terms for ACH payments */
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>.";
 
+/* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to the Link brand. The first placeholder is a merchant name. The second placeholder is a Stripe brand name and should not be translated. */
+"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>.";
+
 /* Text displayed below a credit card entry form when the card will be saved with the merchant and saved to Link. */
 "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>.";
 
@@ -101,8 +104,14 @@
 /* Cash App mandate text */
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "By continuing, you authorize %1$@ to debit your Cash App account for this payment and future payments in accordance with %2$@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings.";
 
+/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
+
 /* Legal text shown when creating a Link account. */
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
+
+/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 /* Legal text shown when creating a Link account. */
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
@@ -113,11 +122,17 @@
 /* Text displayed below a credit card entry form when the card will be saved to make future payments. */
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms.";
 
+/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
+
 /* Legal text shown when creating a Link account. */
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 /* SEPA mandate text */
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur.";
+
+/* Legal text shown when creating an account with the Link brand. The placeholder is a Stripe brand name and should not be translated. */
+"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
 
 /* Legal text shown when creating a Link account. */
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.";
@@ -183,6 +198,9 @@ with the transaction. */
 /* Label for CPF/CPNJ (Brazil tax ID) field */
 "CPF/CPNJ" = "CPF/CPNJ";
 
+/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+"Create an account with %@ for faster checkout across the web" = "Create an account with %@ for faster checkout across the web";
+
 /* Label for a checkbox that when checked allows the payment information
 to be saved and used in future checkout sessions. */
 "Create an account with Link for faster checkout across the web" = "Create an account with Link for faster checkout across the web";
@@ -240,6 +258,9 @@ to be saved and used in future checkout sessions. */
 
 /* Title for a button that indicates a user can log in or sign up. */
 "Log in or sign up" = "Log in or sign up";
+
+/* Title of the logout action. The placeholder is a Stripe brand name and should not be translated. */
+"Log out of %@" = "Log out of %@";
 
 /* Title of the logout action. */
 "Log out of Link" = "Log out of Link";
@@ -315,6 +336,9 @@ Pay faster at {Merchant Name} and thousands of businesses
 e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 "Pay faster at %@ and thousands of businesses." = "Pay faster at %@ and thousands of businesses.";
 
+/* Subtitle for the Link signup screen. The placeholder is a Stripe brand name and should not be translated. */
+"Pay faster everywhere %@ is accepted." = "Pay faster everywhere %@ is accepted.";
+
 /* Subtitle for the Link signup screen */
 "Pay faster everywhere Link is accepted." = "Pay faster everywhere Link is accepted.";
 
@@ -323,6 +347,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 
 /* Promotional text for Affirm, displayed in a button that lets the customer pay with Affirm */
 "Pay over time with Affirm" = "Pay over time with Affirm";
+
+/* Text for the 'Pay with Link' button. The placeholder is a Stripe brand name and should not be translated. */
+"Pay with %@" = "Pay with %@";
 
 /* Text for the 'Pay with Link' button. 'Link' is a Stripe brand, please do not translate the word 'Link'. */
 "Pay with Link" = "Pay with Link";
@@ -389,6 +416,9 @@ e.g, 'Pay faster at Example, Inc. and thousands of businesses.' */
 /* The label of a switch indicating whether to save the payment method for future payments. */
 "Save for future payments" = "Save for future payments";
 
+/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+"Save my info for faster checkout with %@" = "Save my info for faster checkout with %@";
+
 /* Label for a checkbox that when checked allows the payment information
 to be saved and used in future checkout sessions. */
 "Save my info for faster checkout with Link" = "Save my info for faster checkout with Link";
@@ -401,6 +431,9 @@ to be saved and used in future checkout sessions. */
 
 /* US Bank Account copy title for Mobile payment element form */
 "Save your bank account in just a few steps." = "Save your bank account in just a few steps.";
+
+/* Label for a checkbox that when checked allows payment information to be saved and used in future checkout sessions. The placeholder is a Stripe brand name and should not be translated. */
+"Save your info for secure 1-click checkout with %@" = "Save your info for secure 1-click checkout with %@";
 
 /* Label for a checkbox that when checked allows the payment information
 to be saved and used in future checkout sessions. */
