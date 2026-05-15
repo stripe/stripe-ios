@@ -352,5 +352,6 @@ import Foundation
     case adaptivePricingCurrencySelectorInit = "elements.adaptive_pricing.currency_selector_init"
     case adaptivePricingCurrencyToggled = "elements.adaptive_pricing.currency_toggled"
     case adaptivePricingCurrencyToggledFailed = "elements.adaptive_pricing.currency_toggled.failed"
+    case adaptivePricingFlagImageLoadFailed = "elements.adaptive_pricing.flag_image_load.failed"
 
 }

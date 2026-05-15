@@ -15,7 +15,7 @@ import XCTest
 final class CheckoutPendingOperationsTests: XCTestCase {
 
     func testEnqueueSessionUpdateSerializesOperationsAndKeepsLoadingUntilDrained() async throws {
-        let checkout = makeCheckoutWithOpenSession()
+        let checkout = await makeCheckoutWithOpenSession()
         let firstGate = CheckoutPendingOperationsTestGate()
         var events: [String] = []
 
@@ -54,7 +54,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
     }
 
     func testAwaitPendingOperationsWaitsForQueuedWork() async throws {
-        let checkout = makeCheckoutWithOpenSession()
+        let checkout = await makeCheckoutWithOpenSession()
         let gate = CheckoutPendingOperationsTestGate()
         var waiterCompleted = false
 
@@ -91,7 +91,7 @@ final class CheckoutPendingOperationsTests: XCTestCase {
     }
 
     func testAwaitPendingOperationsTimesOutWithoutCancelingQueuedWork() async throws {
-        let checkout = makeCheckoutWithOpenSession()
+        let checkout = await makeCheckoutWithOpenSession()
         let gate = CheckoutPendingOperationsTestGate()
 
         let operationTask = Task { @MainActor in
@@ -128,9 +128,9 @@ final class CheckoutPendingOperationsTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeCheckoutWithOpenSession() -> Checkout {
+    private func makeCheckoutWithOpenSession() async -> Checkout {
         let session = CheckoutTestHelpers.makeOpenSession()
-        return Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
+        return await Checkout(clientSecret: "cs_test_123_secret_abc", session: session)
     }
 
     private func waitUntil(
