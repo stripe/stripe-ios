@@ -76,21 +76,11 @@ final class AdaptivePricingFlagImageManager {
     func flagIcon(for currency: String) -> NSAttributedString {
         let code = CurrencyCode(currency)
         if let image = imagesByCurrencyCode?[code.apiValue] {
-            return Self.imageAttachment(for: image)
+            let font = UIFont.preferredFont(forTextStyle: .footnote)
+            return .attributedStringForImage(image.withRenderingMode(.alwaysOriginal), font: font, additionalScale: 1.5)
         }
         let emoji = CurrencySelectorUtilities.flagEmoji(for: code)
         return NSAttributedString(string: emoji)
-    }
-
-    private static func imageAttachment(for image: UIImage) -> NSAttributedString {
-        let attachment = NSTextAttachment()
-        attachment.image = image.withRenderingMode(.alwaysOriginal)
-        let imageHeight: CGFloat = 14
-        let imageWidth = imageHeight * (image.size.width / image.size.height)
-        let font = UIFont.preferredFont(forTextStyle: .footnote)
-        let yOffset = (font.capHeight - imageHeight) / 2
-        attachment.bounds = CGRect(x: 0, y: yOffset, width: imageWidth, height: imageHeight)
-        return NSAttributedString(attachment: attachment)
     }
 
     // MARK: - Private helpers
