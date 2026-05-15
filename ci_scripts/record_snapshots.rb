@@ -168,7 +168,7 @@ changed_files.each do |rel_path, recorded_file|
   FileUtils.mkdir_p(File.dirname(diff_file))
   system('compare', '-fuzz', FUZZ,
          reference_file, recorded_file,
-         '-highlight-color', 'Red', '-lowlight-color', 'White', '-compose', 'Src',
+         '-highlight-color', 'Red', '-lowlight-color', 'Black', '-compose', 'Src',
          diff_file, [:err] => '/dev/null')
 end
 
