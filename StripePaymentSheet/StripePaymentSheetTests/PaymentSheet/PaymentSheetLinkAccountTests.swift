@@ -179,7 +179,7 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         waitForExpectations(timeout: 5)
     }
 
-    func testLinkBrand_prefersSessionBrandOverInitialBrand() {
+    func testLinkBrand_usesVerifiedSessionBrand() {
         let session = makeVerifiedSession()
         session.linkBrand = .onelink
 
@@ -187,7 +187,6 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
             email: "user@example.com",
             session: session,
             publishableKey: nil,
-            linkBrand: .link,
             displayablePaymentDetails: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
             useMobileEndpoints: false,
@@ -197,21 +196,20 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
         XCTAssertEqual(sut.linkBrand, .onelink)
     }
 
-    func testLinkBrand_forceOnelinkConsumerOnlyAppliesAfterConsumerSessionExists() {
+    func testLinkBrand_forceOnelinkConsumerOnlyAppliesAfterVerifiedConsumerSessionExists() {
         PaymentSheetLinkAccount.forcedConsumerLinkBrandForTesting = .onelink
 
         let signedOutAccount = PaymentSheetLinkAccount(
             email: "user@example.com",
             session: nil,
             publishableKey: nil,
-            linkBrand: .link,
             displayablePaymentDetails: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
             useMobileEndpoints: false,
             canSyncAttestationState: false
         )
 
-        XCTAssertEqual(signedOutAccount.linkBrand, .link)
+        XCTAssertNil(signedOutAccount.linkBrand)
 
         let unverifiedSession = LinkStubs.consumerSession()
         unverifiedSession.linkBrand = .link
@@ -219,14 +217,13 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
             email: "user@example.com",
             session: unverifiedSession,
             publishableKey: nil,
-            linkBrand: .link,
             displayablePaymentDetails: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
             useMobileEndpoints: false,
             canSyncAttestationState: false
         )
 
-        XCTAssertEqual(unverifiedAccount.linkBrand, .link)
+        XCTAssertNil(unverifiedAccount.linkBrand)
 
         let verifiedSession = makeVerifiedSession()
         verifiedSession.linkBrand = .link
@@ -234,7 +231,6 @@ final class PaymentSheetLinkAccountTests: APIStubbedTestCase {
             email: "user@example.com",
             session: verifiedSession,
             publishableKey: nil,
-            linkBrand: .link,
             displayablePaymentDetails: nil,
             apiClient: STPAPIClient(publishableKey: STPTestingDefaultPublishableKey),
             useMobileEndpoints: false,
