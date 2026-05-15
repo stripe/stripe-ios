@@ -11,9 +11,15 @@ import UIKit
 /// Handles applying the current style configuration to each view controller presented.
 class PresentationManager {
     static let shared = PresentationManager()
+    static let linkBrandDidChangeNotification = Notification.Name("com.stripe.financialconnections.linkBrandDidChange")
 
     var configuration: FinancialConnectionsSheet.Configuration = .init()
-    var consumerLinkBrand: LinkBrand?
+    var consumerLinkBrand: LinkBrand? {
+        didSet {
+            guard consumerLinkBrand != oldValue else { return }
+            NotificationCenter.default.post(name: Self.linkBrandDidChangeNotification, object: nil)
+        }
+    }
 
     func resolvedLinkBrand(manifestLinkBrand: LinkBrand?) -> LinkBrand? {
         switch configuration.linkBrand {

@@ -145,8 +145,7 @@ final class PlaygroundConfiguration {
                 return forceOnelink
             }
 
-            // Backward compatibility for older stored values.
-            if linkBrandString == "onelink" {
+            if configurationStore[Self.linkBrandKey] as? String == "onelink" {
                 return .on
             }
 

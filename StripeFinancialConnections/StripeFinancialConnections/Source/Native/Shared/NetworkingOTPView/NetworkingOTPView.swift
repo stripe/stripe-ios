@@ -258,7 +258,8 @@ private struct NetowrkingOTPViewRepresentable: UIViewRepresentable {
                 clientSecret: "cs_123",
                 emailAddress: "email@email.com",
                 redactedFormattedPhoneNumber: "(•••) ••• ••55",
-                verificationSessions: []
+                verificationSessions: [],
+                linkBrand: nil
             ),
             apiClient: FinancialConnectionsAsyncAPIClient(apiClient: .shared),
             analyticsClient: FinancialConnectionsAnalyticsClient()

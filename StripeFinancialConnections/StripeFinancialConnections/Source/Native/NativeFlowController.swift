@@ -65,6 +65,16 @@ class NativeFlowController {
             name: UIApplication.didEnterBackgroundNotification,
             object: nil
         )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(linkBrandDidChange),
+            name: PresentationManager.linkBrandDidChangeNotification,
+            object: nil
+        )
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
     func startFlow() {
@@ -143,11 +153,47 @@ class NativeFlowController {
                     .paneFromViewController(navigationController.topViewController)
             )
     }
+
+    @objc private func linkBrandDidChange() {
+        refreshNavigationBranding()
+    }
 }
 
 // MARK: - Core Navigation Helpers
 
 extension NativeFlowController {
+    private func refreshNavigationBranding() {
+        let appearance = dataManager.manifest.appearance
+        let isTestMode = dataManager.manifest.isTestMode
+
+        navigationController.viewControllers.forEach { viewController in
+            FinancialConnectionsNavigationController.configureNavigationItemForNative(
+                viewController.navigationItem,
+                closeItem: navigationBarCloseBarButtonItem,
+                shouldHideLogo: ShouldHideLogoInNavigationBar(
+                    forViewController: viewController,
+                    reducedBranding: dataManager.reducedBranding,
+                    merchantLogo: dataManager.merchantLogo
+                ),
+                appearance: appearance,
+                isTestMode: isTestMode
+            )
+        }
+
+        if let presentedViewController = navigationController.presentedViewController {
+            FinancialConnectionsNavigationController.configureNavigationItemForNative(
+                presentedViewController.navigationItem,
+                closeItem: navigationBarCloseBarButtonItem,
+                shouldHideLogo: ShouldHideLogoInNavigationBar(
+                    forViewController: presentedViewController,
+                    reducedBranding: dataManager.reducedBranding,
+                    merchantLogo: dataManager.merchantLogo
+                ),
+                appearance: appearance,
+                isTestMode: isTestMode
+            )
+        }
+    }
 
     private func setNavigationControllerViewControllers(
         _ viewControllers: [UIViewController],
