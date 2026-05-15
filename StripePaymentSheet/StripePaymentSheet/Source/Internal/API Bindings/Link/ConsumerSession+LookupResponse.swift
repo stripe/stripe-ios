@@ -36,12 +36,10 @@ extension ConsumerSession {
         }
 
         let responseType: ResponseType
-        let rawLinkBrand: String?
         let linkBrand: LinkBrand?
 
-        init(_ responseType: ResponseType, rawLinkBrand: String? = nil, linkBrand: LinkBrand? = nil) {
+        init(_ responseType: ResponseType, linkBrand: LinkBrand? = nil) {
             self.responseType = responseType
-            self.rawLinkBrand = rawLinkBrand
             self.linkBrand = linkBrand
         }
 
@@ -49,7 +47,7 @@ extension ConsumerSession {
             case exists
             case errorMessage
             case suggestedEmail
-            case linkBrand = "link_brand"
+            case linkBrand
         }
 
         convenience init(from decoder: Decoder) throws {
@@ -67,7 +65,7 @@ extension ConsumerSession {
                 let suggestedEmail = try container.decodeIfPresent(String.self, forKey: .suggestedEmail)
                 responseType = .notFound(errorMessage: errorMessage, suggestedEmail: suggestedEmail)
             }
-            self.init(responseType, rawLinkBrand: rawLinkBrand, linkBrand: linkBrand)
+            self.init(responseType, linkBrand: linkBrand)
         }
     }
 }

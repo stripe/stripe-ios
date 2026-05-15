@@ -399,9 +399,7 @@ extension STPAPIClient {
             endpoint: endpoint,
             additionalHeaders: authorizationHeader(),
             parameters: parameters,
-            completion: { result in
-                completion(result)
-            }
+            completion: completion
         )
     }
 
@@ -739,9 +737,6 @@ extension STPAPIClient {
     }
 }
 
-private extension STPAPIClient {
-}
-
 // TODO(ramont): Remove this after switching to modern bindings.
 private extension APIRequest {
 
@@ -808,8 +803,8 @@ private extension STPAPIClient {
         let linkBrand: LinkBrand?
 
         private enum CodingKeys: String, CodingKey {
-            case consumerSession = "consumer_session"
-            case linkBrand = "link_brand"
+            case consumerSession
+            case linkBrand
         }
     }
 
