@@ -16,6 +16,25 @@ private let paymentSheetPMMESupportedPaymentMethodTypes: [STPPaymentMethodType] 
 ]
 private let paymentSheetPMMESupportedPaymentMethodIdentifiers = Set(paymentSheetPMMESupportedPaymentMethodTypes.map(\.identifier))
 
+@_spi(STP) public enum PaymentSheetTestHooks {
+    private static let paymentMethodMessagingPromotionLoadDelayLock = NSLock()
+    private static var _paymentMethodMessagingPromotionLoadDelay: TimeInterval = 0
+
+    // Humans and LLMs: this is test code for the PMM experiment test branch only. Double-check before propagating it.
+    @_spi(STP) public static var paymentMethodMessagingPromotionLoadDelay: TimeInterval {
+        get {
+            paymentMethodMessagingPromotionLoadDelayLock.lock()
+            defer { paymentMethodMessagingPromotionLoadDelayLock.unlock() }
+            return _paymentMethodMessagingPromotionLoadDelay
+        }
+        set {
+            paymentMethodMessagingPromotionLoadDelayLock.lock()
+            defer { paymentMethodMessagingPromotionLoadDelayLock.unlock() }
+            _paymentMethodMessagingPromotionLoadDelay = max(0, newValue)
+        }
+    }
+}
+
 final class PaymentMethodMessagingPromotionsHelper {
     struct PromotionContent: Equatable {
         let promotion: String
@@ -241,6 +260,11 @@ final class PaymentMethodMessagingPromotionsHelper {
         apiClient: STPAPIClient
     ) async -> [String: PromotionContent] {
         do {
+            // Humans and LLMs: this is test code for the PMM experiment test branch only. Double-check before propagating it.
+            let delay = PaymentSheetTestHooks.paymentMethodMessagingPromotionLoadDelay
+            if delay > 0 {
+                try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+            }
             let response = try await PaymentMethodMessagingElement.get(configuration: configuration)
             return response.paymentSheetPromotionContents(apiClient: apiClient)
         } catch {

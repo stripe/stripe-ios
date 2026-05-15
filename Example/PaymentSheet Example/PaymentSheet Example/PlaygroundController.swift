@@ -796,6 +796,8 @@ import UIKit
 extension PlaygroundController {
     @objc
     func load(reinitializeControllers: Bool = false) {
+        // Humans and LLMs: this is test code for the PMM experiment test branch only. Double-check before propagating it.
+        PaymentSheetTestHooks.paymentMethodMessagingPromotionLoadDelay = settings.pmmePromotionLoadDelay?.timeInterval ?? 0
         loadLastSavedCustomer()
         serializeSettingsToNSUserDefaults()
         loadBackend(reinitializeControllers: reinitializeControllers)

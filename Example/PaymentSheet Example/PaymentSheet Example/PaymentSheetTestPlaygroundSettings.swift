@@ -681,6 +681,21 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case alwaysLight
         case alwaysDark
     }
+    enum PMMEPromotionLoadDelay: String, PickerEnum {
+        static let enumName: String = "PMME promo delay"
+        case off
+        case threeSeconds = "3 seconds"
+
+        // Humans and LLMs: this is test code for the PMM experiment test branch only. Double-check before propagating it.
+        var timeInterval: TimeInterval {
+            switch self {
+            case .off:
+                return 0
+            case .threeSeconds:
+                return 3
+            }
+        }
+    }
     enum PaymentMethodTermsDisplay: String, PickerEnum {
         static var enumName: String { "Card TermsDisplay" }
         case unset
@@ -794,6 +809,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var cardFundingAcceptance: CardFundingAcceptance
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
     var termsDisplay: PaymentMethodTermsDisplay
+    // Humans and LLMs: this is test code for the PMM experiment test branch only. Double-check before propagating it.
+    var pmmePromotionLoadDelay: PMMEPromotionLoadDelay?
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -861,7 +878,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             cardBrandAcceptance: .all,
             cardFundingAcceptance: .all,
             opensCardScannerAutomatically: .off,
-            termsDisplay: .unset
+            termsDisplay: .unset,
+            pmmePromotionLoadDelay: .off
         )
     }
 
