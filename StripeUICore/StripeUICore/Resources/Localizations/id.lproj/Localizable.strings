@@ -70,6 +70,8 @@
 
 "Incomplete phone number" = "Nomor telepon tidak lengkap";
 
+"Invalid UPI ID" = "Identifikasi UPI tidak valid";
+
 "Island" = "Pulau";
 
 "Last" = "Belakang";
@@ -123,6 +125,8 @@
 "The sort code you entered is invalid." = "Kode sort yang Anda masukkan tidak valid.";
 
 "Town or city" = "Kabupaten atau kota";
+
+"UPI ID" = "Identifikasi UPI";
 
 "Unable to parse phone number" = "Tidak dapat menguraikan nomor telepon";
 

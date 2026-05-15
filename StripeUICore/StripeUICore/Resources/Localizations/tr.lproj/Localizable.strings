@@ -70,6 +70,8 @@
 
 "Incomplete phone number" = "Eksik telefon numarası";
 
+"Invalid UPI ID" = "Geçersiz UPI Numarası";
+
 "Island" = "Ada";
 
 "Last" = "Soyadı";
@@ -123,6 +125,8 @@
 "The sort code you entered is invalid." = "Girdiğiniz banka/şube kodu geçersiz.";
 
 "Town or city" = "Kasaba veya şehir";
+
+"UPI ID" = "UPI Numarası";
 
 "Unable to parse phone number" = "Telefon numaranızı ayrıştırılamadı";
 

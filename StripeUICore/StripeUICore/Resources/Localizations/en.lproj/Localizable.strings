@@ -108,6 +108,8 @@ Label of an address field */
 /* Error description for incomplete phone number */
 "Incomplete phone number" = "Incomplete phone number";
 
+"Invalid UPI ID" = "Invalid UPI ID";
+
 /* Label of an address field */
 "Island" = "Island";
 
@@ -191,6 +193,8 @@ Label of an address field */
 
 /* Label of an address field */
 "Town or city" = "Town or city";
+
+"UPI ID" = "UPI ID";
 
 /* Error string when we can't parse a phone number */
 "Unable to parse phone number" = "Unable to parse phone number";
