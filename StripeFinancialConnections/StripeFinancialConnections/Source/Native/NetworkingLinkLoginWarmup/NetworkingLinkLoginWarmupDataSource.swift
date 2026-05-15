@@ -32,7 +32,9 @@ final class NetworkingLinkLoginWarmupDataSourceImplementation: NetworkingLinkLog
     private let elementsSessionContext: ElementsSessionContext?
 
     var email: String? {
-        manifest.accountholderCustomerEmailAddress ?? elementsSessionContext?.prefillDetails?.email
+        apiClient.consumerSession?.emailAddress
+            ?? manifest.accountholderCustomerEmailAddress
+            ?? elementsSessionContext?.prefillDetails?.email
     }
 
     var hasConsumerSession: Bool {

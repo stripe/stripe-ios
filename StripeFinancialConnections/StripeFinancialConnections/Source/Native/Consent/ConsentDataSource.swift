@@ -44,7 +44,7 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
     private let elementsSessionContext: ElementsSessionContext?
 
     var email: String? {
-        elementsSessionContext?.prefillDetails?.email
+        apiClient.consumerSession?.emailAddress ?? elementsSessionContext?.prefillDetails?.email
     }
 
     init(
@@ -67,7 +67,23 @@ final class ConsentDataSourceImplementation: ConsentDataSource {
 
     func markConsentAcquired() -> Future<ConsentAcquiredResult> {
         return apiClient.markConsentAcquired(clientSecret: clientSecret).chained { [weak self] manifest in
-            guard let self, manifest.shouldLookupConsumerSession, let email else {
+            guard let self else {
+                let result = ConsentAcquiredResult(manifest: manifest)
+                return Promise(value: result)
+            }
+
+            if let consumerSession = apiClient.consumerSession,
+                let consumerPublishableKey = apiClient.consumerPublishableKey
+            {
+                let result = ConsentAcquiredResult(
+                    manifest: manifest,
+                    consumerSession: consumerSession,
+                    consumerPublishableKey: consumerPublishableKey
+                )
+                return Promise(value: result)
+            }
+
+            guard manifest.shouldLookupConsumerSession, let email else {
                 let result = ConsentAcquiredResult(manifest: manifest)
                 return Promise(value: result)
             }
