@@ -52,9 +52,8 @@ public final class Checkout: ObservableObject {
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
     let flagImageManager = AdaptivePricingFlagImageManager()
-
-    private let clientSecret: String
-    private let apiClient: STPAPIClient
+    let clientSecret: String
+    let apiClient: STPAPIClient
 
     /// Number of session mutations or refreshes currently in flight.
     /// Used by `withSessionUpdateGuard` to keep state as `.loading`

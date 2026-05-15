@@ -33,6 +33,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     func testCustomAppearance() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
         appearance.cornerRadius = 16.0
+        appearance.titleFont = .systemFont(ofSize: 40, weight: .bold)
         appearance.backgroundColor = .systemBlue.withAlphaComponent(0.1)
         appearance.selectedColor = .systemBlue
         appearance.selectedTextColor = .white
