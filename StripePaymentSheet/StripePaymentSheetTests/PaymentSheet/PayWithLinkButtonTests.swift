@@ -15,7 +15,7 @@ final class PayWithLinkButtonTests: XCTestCase {
         let consumerSessionClientSecret: String?
     }
 
-    func testWalletHeaderViewStoresProvidedBrand() {
+    func testWalletHeaderViewUsesProvidedBrandForPayWithLinkButton() throws {
         let header = PaymentSheetViewController.WalletHeaderView(
             options: [.link],
             appearance: .default,
@@ -23,7 +23,10 @@ final class PayWithLinkButtonTests: XCTestCase {
             delegate: nil
         )
 
-        XCTAssertEqual(header.linkBrand, .onelink)
+        let button = try XCTUnwrap(
+            findPayWithLinkButton(in: header)
+        )
+        XCTAssertEqual(button.accessibilityLabel, "Pay with Onelink")
     }
 
     func testBrandUsesDistinctPrimaryLinkLogoAsset() {
@@ -123,6 +126,20 @@ final class PayWithLinkButtonTests: XCTestCase {
         for subview in view.subviews where !subview.isHidden {
             if let imageView = findVisibleLogoImageView(in: subview, matching: image) {
                 return imageView
+            }
+        }
+
+        return nil
+    }
+
+    private func findPayWithLinkButton(in view: UIView) -> PayWithLinkButton? {
+        if let button = view as? PayWithLinkButton {
+            return button
+        }
+
+        for subview in view.subviews {
+            if let button = findPayWithLinkButton(in: subview) {
+                return button
             }
         }
 

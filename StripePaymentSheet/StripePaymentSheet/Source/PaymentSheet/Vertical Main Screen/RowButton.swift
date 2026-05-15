@@ -197,6 +197,19 @@ class RowButton: UIView, EventHandler {
         }
     }
 
+    func setLabel(text: String) {
+        guard label.text != text else {
+            return
+        }
+        label.text = text
+        accessibilityIdentifier = text
+        accessibilityHelperView.accessibilityIdentifier = text
+    }
+
+    func setPrimaryAccessibilityLabel(_ text: String?) {
+        accessibilityHelperView.accessibilityLabel = text
+    }
+
     func setKeyContent(alpha: CGFloat) {
         [imageView, label, sublabel].compactMap { $0 }.forEach {
             $0.alpha = alpha

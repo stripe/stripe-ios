@@ -58,13 +58,13 @@ extension PaymentSheet.LinkConfirmOption {
         }
     }
 
-    func displayPaymentSheetSubLabel() -> String? {
+    func displayPaymentSheetSubLabel(brand: LinkBrand) -> String? {
         guard let sublabel = paymentSheetSubLabel else {
             return nil
         }
         // Suppress the redundant sublabel both for the resolved brand name and for
         // the legacy Link label that some lower-level paths can still return.
-        guard sublabel != self.brand.displayName, sublabel != LinkBrand.link.displayName else {
+        guard sublabel != brand.displayName, sublabel != LinkBrand.link.displayName else {
             return nil
         }
         return sublabel
