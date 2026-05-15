@@ -74,12 +74,14 @@ versions.each do |os_version|
   puts "==> Recording snapshots (iOS #{os_version})..."
 
   # Ensure the simulator exists for this version
-  runtime = "com.apple.CoreSimulator.SimRuntime.iOS-#{os_version.tr('.', '-')}"
-  device_type = 'com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini'
   existing = `xcrun simctl list devices "#{DEVICE_MODEL}" available`.strip
   unless existing.include?(os_version)
-    puts "    Creating #{DEVICE_MODEL} simulator for iOS #{os_version}..."
-    system('xcrun', 'simctl', 'create', DEVICE_MODEL, device_type, runtime)
+    # Runtime IDs use major.minor only (e.g., iOS-26-4 for 26.4.1)
+    major_minor = os_version.split('.')[0..1].join('-')
+    runtime = "com.apple.CoreSimulator.SimRuntime.iOS-#{major_minor}"
+    device_type = 'com.apple.CoreSimulator.SimDeviceType.iPhone-12-mini'
+    puts "    Creating #{DEVICE_MODEL} simulator for iOS #{os_version} (runtime: #{runtime})..."
+    system('xcrun', 'simctl', 'create', DEVICE_MODEL, device_type, runtime, exception: true)
   end
 
   FileUtils.rm_rf(RECORD_DIR)
