@@ -32,11 +32,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.currencyCode, "USD")
             XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
             XCTAssertEqual(sut.countryCode, "GB")
-#if compiler(>=5.9)
-            if #available(macOS 14.0, iOS 17.0, *) {
-                XCTAssertEqual(sut.applePayLaterAvailability, .available)
-            }
-#endif
         }
     }
 
@@ -50,11 +45,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.currencyCode, "USD")
             XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
             XCTAssertEqual(sut.countryCode, "GB")
-#if compiler(>=5.9)
-            if #available(macOS 14.0, iOS 17.0, *) {
-                XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
-            }
-#endif
         }
     }
 
@@ -70,11 +60,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.currencyCode, "USD")
             XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
             XCTAssertEqual(sut.countryCode, "GB")
-#if compiler(>=5.9)
-            if #available(macOS 14.0, iOS 17.0, *) {
-                XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
-            }
-#endif
         }
     }
 
@@ -90,11 +75,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.currencyCode, "USD")
             XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
             XCTAssertEqual(sut.countryCode, "GB")
-#if compiler(>=5.9)
-            if #available(macOS 14.0, iOS 17.0, *) {
-                XCTAssertEqual(sut.applePayLaterAvailability, .available)
-            }
-#endif
         }
     }
 
@@ -108,11 +88,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.currencyCode, "USD")
             XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
             XCTAssertEqual(sut.countryCode, "GB")
-#if compiler(>=5.9)
-            if #available(macOS 14.0, iOS 17.0, *) {
-                XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
-            }
-#endif
         }
     }
 
@@ -129,11 +104,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
             XCTAssertEqual(sut.countryCode, "GB")
             XCTAssertEqual(sut.supportedNetworks, StripeAPI.supportedPKPaymentNetworks())
-            if #available(macOS 14.0, iOS 17.0, *) {
-                XCTAssertEqual(sut.applePayLaterAvailability, .available)
-            }
-            }
         }
+    }
 
     func testCreatePaymentRequest_brandAcceptance_disallowedBrands() {
         var configuration = configuration
@@ -148,11 +120,8 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
             XCTAssertEqual(sut.countryCode, "GB")
             XCTAssertEqual(sut.supportedNetworks, [.masterCard, .maestro, .discover])
-            if #available(macOS 14.0, iOS 17.0, *) {
-                XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
-            }
-            }
         }
+    }
 
     func testCreatePaymentRequest_brandAcceptance_allowedBrands() {
         var configuration = configuration
@@ -167,9 +136,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
             XCTAssertEqual(sut.countryCode, "GB")
             XCTAssertEqual(sut.supportedNetworks, [.visa])
-            if #available(macOS 14.0, iOS 17.0, *) {
-                XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
-            }
         }
     }
 
@@ -399,11 +365,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.currencyCode, "USD")
         XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
         XCTAssertEqual(sut.countryCode, "GB")
-#if compiler(>=5.9)
-        if #available(macOS 14.0, iOS 17.0, *) {
-            XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
-        }
-#endif
     }
 
     func testCreatePaymentRequest_ConfirmationTokenWithPMOSetupFutureUsage() {
@@ -432,11 +393,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.currencyCode, "USD")
         XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
         XCTAssertEqual(sut.countryCode, "GB")
-#if compiler(>=5.9)
-        if #available(macOS 14.0, iOS 17.0, *) {
-            XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
-        }
-#endif
     }
 
     // MARK: - CheckoutSession Tests
@@ -449,11 +405,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.currencyCode, "USD")
         XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
         XCTAssertEqual(sut.countryCode, "GB")
-#if compiler(>=5.9)
-        if #available(macOS 14.0, iOS 17.0, *) {
-            XCTAssertEqual(sut.applePayLaterAvailability, .available)
-        }
-#endif
     }
 
     func testCreatePaymentRequest_CheckoutSession_SetupMode() {
@@ -464,11 +415,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.currencyCode, "USD")
         XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
         XCTAssertEqual(sut.countryCode, "GB")
-#if compiler(>=5.9)
-        if #available(macOS 14.0, iOS 17.0, *) {
-            XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
-        }
-#endif
     }
 
     func testCreatePaymentRequest_CheckoutSession_SetupMode_WithZeroAmount() {
@@ -480,11 +426,6 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.currencyCode, "USD")
         XCTAssertEqual(sut.merchantIdentifier, "merchant_id")
         XCTAssertEqual(sut.countryCode, "GB")
-#if compiler(>=5.9)
-        if #available(macOS 14.0, iOS 17.0, *) {
-            XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
-        }
-#endif
     }
 
     // MARK: - CheckoutSession Line Items Tests
@@ -634,21 +575,3 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
         XCTAssertEqual(sut.paymentSummaryItems[0].amount, NSDecimalNumber(string: "9.99"))
     }
 }
-
-#if compiler(>=5.9)
-@available(macOS 14.0, iOS 17.0, *)
-extension PKPaymentRequest.ApplePayLaterAvailability: Equatable {
-    public static func == (lhs: PKPaymentRequest.ApplePayLaterAvailability, rhs: PKPaymentRequest.ApplePayLaterAvailability) -> Bool {
-        switch (lhs, rhs) {
-        case (.available, .available):
-            return true
-        case (.unavailable(.itemIneligible), .unavailable(.itemIneligible)):
-            return true
-        case (.unavailable(.recurringTransaction), .unavailable(.recurringTransaction)):
-            return true
-        default:
-            return false
-        }
-    }
-}
-#endif
