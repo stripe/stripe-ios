@@ -338,10 +338,10 @@ class ECEIntegrationTests: XCTestCase {
         ]
 
         for testCase in testCases {
-            let message = MockWKScriptMessage(name: testCase.name, body: testCase.body)
+            let message = MockScriptMessage(name: testCase.name, body: testCase.body)
 
             do {
-                let response = try await eceViewController.handleMessage(message: message)
+                let response = try await eceViewController.handleMessage(name: message.name, body: message.body)
                 if testCase.expectedError {
                     XCTFail("Expected error for message: \(testCase.name)")
                 } else {
@@ -514,13 +514,9 @@ class ECEIntegrationTests: XCTestCase {
             ],
         ]
 
-        _ = try await eceViewController.userContentController(
-            WKUserContentController(),
-            didReceive: MockWKScriptMessage(
-                name: "calculateShipping",
-                body: ["shippingAddress": firstAddress]
-            ), replyHandler: { _, _ in
-            }
+        _ = try await eceViewController.handleMessage(
+            name: "calculateShipping",
+            body: ["shippingAddress": firstAddress]
         )
 
         // Second address change
@@ -534,13 +530,9 @@ class ECEIntegrationTests: XCTestCase {
             ],
         ]
 
-        _ = try await eceViewController.userContentController(
-            WKUserContentController(),
-            didReceive: MockWKScriptMessage(
-                name: "calculateShipping",
-                body: ["shippingAddress": secondAddress]
-            ), replyHandler: { _, _ in
-            }
+        _ = try await eceViewController.handleMessage(
+            name: "calculateShipping",
+            body: ["shippingAddress": secondAddress]
         )
 
         // Then

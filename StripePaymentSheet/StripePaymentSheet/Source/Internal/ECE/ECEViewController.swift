@@ -342,7 +342,7 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
 
         Task {
             do {
-                let response = try await handleMessage(message: message)
+                let response = try await handleMessage(name: message.name, body: message.body)
                 replyHandler(response, nil)
             } catch {
                 replyHandler(nil, error.localizedDescription)
@@ -350,8 +350,7 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
         }
     }
 
-    func handleMessage(message: WKScriptMessage) async throws -> Any? {
-        let messageBody = message.body
+    func handleMessage(name: String, body messageBody: Any) async throws -> Any? {
         guard let expressCheckoutDelegate = expressCheckoutWebviewDelegate else {
             throw BridgeError("ExpressCheckoutWebviewDelegate not set")
         }
@@ -359,7 +358,7 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
             throw BridgeError("Invalid message format \(messageBody)")
         }
 
-        switch message.name {
+        switch name {
         case "calculateShipping":
             if let shippingAddress = messageDict["shippingAddress"] as? [String: Any] {
                 return try await expressCheckoutDelegate.eceView(self, didReceiveShippingAddressChange: shippingAddress)
@@ -389,7 +388,7 @@ extension ECEViewController: WKScriptMessageHandlerWithReply {
             }
 
         default:
-            throw BridgeError("Unknown message type: \(message.name)")
+            throw BridgeError("Unknown message type: \(name)")
         }
     }
 }

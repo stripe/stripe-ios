@@ -78,7 +78,7 @@ class ECEViewControllerTests: XCTestCase {
                 "country": "US",
             ],
         ]
-        let message = MockWKScriptMessage(
+        let message = MockScriptMessage(
             name: "calculateShipping",
             body: ["shippingAddress": shippingAddress]
         )
@@ -90,7 +90,7 @@ class ECEViewControllerTests: XCTestCase {
         ]
 
         // When
-        let response = try await sut.handleMessage(message: message)
+        let response = try await sut.handleMessage(name: message.name, body: message.body)
 
         // Then
         XCTAssertNotNil(response)
@@ -105,7 +105,7 @@ class ECEViewControllerTests: XCTestCase {
     func testHandleMessage_CalculateShippingRateChange() async throws {
         // Given
         let shippingRate: [String: Any] = ["id": "rate1", "displayName": "Express", "amount": 1000]
-        let message = MockWKScriptMessage(
+        let message = MockScriptMessage(
             name: "calculateShippingRateChange",
             body: ["shippingRate": shippingRate]
         )
@@ -117,7 +117,7 @@ class ECEViewControllerTests: XCTestCase {
         ]
 
         // When
-        let response = try await sut.handleMessage(message: message)
+        let response = try await sut.handleMessage(name: message.name, body: message.body)
 
         // Then
         XCTAssertNotNil(response)
@@ -135,7 +135,7 @@ class ECEViewControllerTests: XCTestCase {
             "billingDetails": ["email": "test@example.com", "name": "Test User"],
             "shippingAddress": ["address1": "123 Main St"],
         ]
-        let message = MockWKScriptMessage(
+        let message = MockScriptMessage(
             name: "confirmPayment",
             body: ["paymentDetails": paymentDetails]
         )
@@ -146,7 +146,7 @@ class ECEViewControllerTests: XCTestCase {
         ]
 
         // When
-        let response = try await sut.handleMessage(message: message)
+        let response = try await sut.handleMessage(name: message.name, body: message.body)
 
         // Then
         XCTAssertNotNil(response)
@@ -161,14 +161,14 @@ class ECEViewControllerTests: XCTestCase {
 
     func testHandleMessage_InvalidMessageFormat() async {
         // Given
-        let message = MockWKScriptMessage(
+        let message = MockScriptMessage(
             name: "calculateShipping",
             body: "invalid body" // Not a dictionary
         )
 
         // When/Then
         do {
-            _ = try await sut.handleMessage(message: message)
+            _ = try await sut.handleMessage(name: message.name, body: message.body)
             XCTFail("Should have thrown an error")
         } catch {
             XCTAssertTrue(error.localizedDescription.contains("Invalid message format"))
@@ -178,14 +178,14 @@ class ECEViewControllerTests: XCTestCase {
     func testHandleMessage_MissingDelegate() async {
         // Given
         sut.expressCheckoutWebviewDelegate = nil
-        let message = MockWKScriptMessage(
+        let message = MockScriptMessage(
             name: "calculateShipping",
             body: ["shippingAddress": [:]]
         )
 
         // When/Then
         do {
-            _ = try await sut.handleMessage(message: message)
+            _ = try await sut.handleMessage(name: message.name, body: message.body)
             XCTFail("Should have thrown an error")
         } catch {
             XCTAssertTrue(error.localizedDescription.contains("ExpressCheckoutWebviewDelegate not set"))
