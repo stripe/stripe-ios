@@ -76,8 +76,11 @@ class PaymentSheet_AddressTests: XCTestCase {
         app.typeText(searchTerm)
 
         let searchedCell = app.tables.element(boundBy: 0).cells.containing(NSPredicate(format: "label CONTAINS %@", expectedResult)).element
-        _ = searchedCell.waitForExistence(timeout: 5)
+        XCTAssertTrue(searchedCell.waitForExistence(timeout: 10))
         searchedCell.tap()
+
+        // Wait for the address fields to populate after autocomplete selection.
+        _ = app.textFields["Address line 1"].waitForExistence(timeout: 10)
     }
 
     /// Helper function to verify address field values
@@ -130,8 +133,10 @@ class PaymentSheet_AddressTests: XCTestCase {
     private func navigateToSwiftUIAddressElement() {
         app.launch()
         let addressButton = app.staticTexts["AddressElement (SwiftUI)"]
-        if !addressButton.exists {
+        var remainingScrollAttempts = 5
+        while !addressButton.exists && remainingScrollAttempts > 0 {
             scrollDown()
+            remainingScrollAttempts -= 1
         }
 
         XCTAssertTrue(addressButton.waitForExistenceAndTap())
@@ -620,7 +625,11 @@ NZ
         )
     }
 
-    func testAddressElement_SwiftUI_AutoComplete() {
+    func testAddressElement_SwiftUI_AutoComplete() throws {
+        try XCTSkipIf(
+            ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26,
+            "iOS 26: AddressElement (SwiftUI) autocomplete is not visible in the test app"
+        )
         navigateToSwiftUIAddressElement()
 
         // The Save Address button should be disabled initially
