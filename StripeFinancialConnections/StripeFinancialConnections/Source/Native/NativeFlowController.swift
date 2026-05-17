@@ -155,7 +155,9 @@ class NativeFlowController {
     }
 
     @objc private func linkBrandDidChange() {
-        refreshNavigationBranding()
+        DispatchQueue.main.async { [weak self] in
+            self?.refreshNavigationBranding()
+        }
     }
 }
 
@@ -180,6 +182,9 @@ extension NativeFlowController {
             )
         }
 
+        navigationController.navigationBar.setNeedsLayout()
+        navigationController.navigationBar.layoutIfNeeded()
+
         if let presentedViewController = navigationController.presentedViewController {
             FinancialConnectionsNavigationController.configureNavigationItemForNative(
                 presentedViewController.navigationItem,
@@ -192,6 +197,8 @@ extension NativeFlowController {
                 appearance: appearance,
                 isTestMode: isTestMode
             )
+            navigationController.navigationBar.setNeedsLayout()
+            navigationController.navigationBar.layoutIfNeeded()
         }
     }
 

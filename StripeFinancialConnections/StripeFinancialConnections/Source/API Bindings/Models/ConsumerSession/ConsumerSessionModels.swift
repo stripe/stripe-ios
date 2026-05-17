@@ -28,6 +28,16 @@ struct ConsumerSessionData: Decodable {
         verificationSessions.contains(where: { $0.state == .verified })
         || verificationSessions.contains(where: { $0.type == .signUp })
     }
+
+    func overridingLinkBrand(_ linkBrand: LinkBrand?) -> ConsumerSessionData {
+        ConsumerSessionData(
+            clientSecret: clientSecret,
+            emailAddress: emailAddress,
+            redactedFormattedPhoneNumber: redactedFormattedPhoneNumber,
+            verificationSessions: verificationSessions,
+            linkBrand: linkBrand ?? self.linkBrand
+        )
+    }
 }
 
 struct VerificationSession: Decodable {
@@ -71,4 +81,14 @@ struct AttachLinkConsumerToLinkAccountSessionResponse: Decodable {
 
 struct ConsumerSessionResponse: Decodable {
     let consumerSession: ConsumerSessionData
+    let linkBrand: LinkBrand?
+
+    var resolvedConsumerSession: ConsumerSessionData {
+        consumerSession.overridingLinkBrand(linkBrand)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case consumerSession
+        case linkBrand = "link_brand"
+    }
 }

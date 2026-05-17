@@ -21,8 +21,24 @@ class PresentationManager {
         }
     }
 
+    /// Updates `consumerLinkBrand` from a consumer session, but only when the session is
+    /// verified and carries a non-nil brand. Unverified sessions (e.g. from
+    /// `startVerificationSession`) must not clear a brand set by a prior `confirm_verification`.
+    func setConsumerLinkBrand(from consumerSession: ConsumerSessionData?) {
+        guard consumerSession?.isVerified == true, let brand = consumerSession?.linkBrand else {
+            return
+        }
+        consumerLinkBrand = brand
+    }
+
+    /// Explicitly resets the consumer brand. Call this at the start of a new FC session so
+    /// a stale brand from a previous presentation does not bleed in.
+    func resetConsumerLinkBrand() {
+        consumerLinkBrand = nil
+    }
+
     func resolvedLinkBrand(manifestLinkBrand: LinkBrand?) -> LinkBrand? {
-        switch configuration.linkBrand {
+        switch consumerLinkBrand {
         case .link:
             return .link
         case .onelink:
@@ -31,7 +47,7 @@ class PresentationManager {
             break
         }
 
-        switch consumerLinkBrand {
+        switch configuration.linkBrand {
         case .link:
             return .link
         case .onelink:

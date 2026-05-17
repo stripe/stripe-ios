@@ -113,7 +113,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
                 consumerSession = oldValue
             }
             apiClient.consumerSession = consumerSession
-            PresentationManager.shared.consumerLinkBrand = consumerSession?.linkBrand
+            PresentationManager.shared.setConsumerLinkBrand(from: consumerSession)
         }
     }
     var consumerPublishableKey: String? {
@@ -154,7 +154,9 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         // Use consumer properties from the API client, if available.
         self.consumerSession = apiClient.consumerSession
         self.consumerPublishableKey = apiClient.consumerPublishableKey
-        PresentationManager.shared.consumerLinkBrand = self.consumerSession?.linkBrand
+        // Reset brand for each new FC session before setting from the initial consumer state.
+        PresentationManager.shared.resetConsumerLinkBrand()
+        PresentationManager.shared.setConsumerLinkBrand(from: self.consumerSession)
         didUpdateManifest()
     }
 

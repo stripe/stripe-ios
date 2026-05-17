@@ -154,6 +154,30 @@ class FinancialConnectionsAsyncAPIClientTests: XCTestCase {
         XCTAssertEqual(encodedBillingAddress?["country_code"] as? String, "US")
     }
 
+    func testConsumerSessionResponseUsesTopLevelLinkBrandOverride() throws {
+        let payload = """
+        {
+          "consumer_session": {
+            "client_secret": "cs_test",
+            "email_address": "user@example.com",
+            "redacted_formatted_phone_number": "(•••) ••• ••55",
+            "verification_sessions": [
+              {
+                "type": "SMS",
+                "state": "VERIFIED"
+              }
+            ]
+          },
+          "link_brand": "onelink"
+        }
+        """
+
+        let response = try StripeJSONDecoder().decode(ConsumerSessionResponse.self, from: Data(payload.utf8))
+
+        XCTAssertEqual(response.linkBrand, .onelink)
+        XCTAssertEqual(response.resolvedConsumerSession.linkBrand, .onelink)
+    }
+
     func testApplyAttestationParameters() async {
         // Mark API client as testmode to use a mock assertion
         mockApiClient.publishableKey = "pk_test"

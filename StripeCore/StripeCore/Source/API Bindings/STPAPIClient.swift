@@ -560,9 +560,9 @@ extension STPAPIClient {
             } else {
                 // Return decoding error directly
                 return .failure(error)
-            }
         }
     }
+}
 
     /// Decodes request data to see if it can be parsed as a Stripe error.
     static func decodeStripeErrorResponse(

@@ -31,12 +31,14 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     let analyticsClient: FinancialConnectionsAnalyticsClient
     private let customEmailType: String?
     private let connectionsMerchantName: String?
-    private let apiClient: any FinancialConnectionsAPI
+    private var apiClient: any FinancialConnectionsAPI
     private let manifest: FinancialConnectionsSessionManifest
     weak var delegate: NetworkingOTPDataSourceDelegate?
 
     private var consumerSession: ConsumerSessionData {
         didSet {
+            apiClient.consumerSession = consumerSession
+            PresentationManager.shared.setConsumerLinkBrand(from: consumerSession)
             delegate?.networkingOTPDataSource(self, didUpdateConsumerSession: consumerSession)
         }
     }
@@ -71,6 +73,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         self.consumerSession = consumerSession
         self.apiClient = apiClient
         self.analyticsClient = analyticsClient
+        self.apiClient.consumerSession = consumerSession
     }
 
     func startVerificationSession() -> Future<ConsumerSessionResponse> {
@@ -80,7 +83,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
             connectionsMerchantName: connectionsMerchantName,
             consumerSessionClientSecret: consumerSession.clientSecret
         ).chained { [weak self] consumerSessionResponse in
-            self?.consumerSession = consumerSessionResponse.consumerSession
+            self?.consumerSession = consumerSessionResponse.resolvedConsumerSession
             return Promise(value: consumerSessionResponse)
         }
     }
@@ -91,7 +94,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
             otpType: otpType,
             consumerSessionClientSecret: consumerSession.clientSecret
         ).chained { [weak self] consumerSessionResponse in
-            self?.consumerSession = consumerSessionResponse.consumerSession
+            self?.consumerSession = consumerSessionResponse.resolvedConsumerSession
             return Promise(value: consumerSessionResponse)
         }
     }
