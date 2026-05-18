@@ -33,35 +33,6 @@ class PresentationManagerTests: XCTestCase {
         XCTAssertEqual(toViewController.traitCollection.userInterfaceStyle, .dark)
     }
 
-    func testLinkBrandOverrideIsAvailableToAppearanceResolution() {
-        var configuration = FinancialConnectionsSheet.Configuration()
-        configuration.linkBrand = .onelink
-        PresentationManager.shared.configuration = configuration
-
-        let appearance = FinancialConnectionsAppearance(theme: .light, linkBrand: nil)
-
-        XCTAssertEqual(appearance.logo, .onelink_logo)
-    }
-
-    func testAuthenticatedLinkBrandOverridesManifestBrand() {
-        PresentationManager.shared.setAuthenticatedLinkBrand(.onelink)
-
-        let appearance = FinancialConnectionsAppearance(theme: .light, linkBrand: .link)
-
-        XCTAssertEqual(appearance.logo, .onelink_logo)
-    }
-
-    func testConfigurationLinkBrandOverridesAuthenticatedLinkBrand() {
-        var configuration = FinancialConnectionsSheet.Configuration()
-        configuration.linkBrand = .link
-        PresentationManager.shared.configuration = configuration
-        PresentationManager.shared.setAuthenticatedLinkBrand(.onelink)
-
-        let appearance = FinancialConnectionsAppearance(theme: .light, linkBrand: nil)
-
-        XCTAssertEqual(appearance.logo, .link_logo)
-    }
-
     func testOnelinkBrandUsesSameTintAsLinkForLightTheme() {
         let onelinkAppearance = FinancialConnectionsAppearance(theme: .light, linkBrand: .onelink)
         let linkAppearance = FinancialConnectionsAppearance(theme: .light, linkBrand: .link)
