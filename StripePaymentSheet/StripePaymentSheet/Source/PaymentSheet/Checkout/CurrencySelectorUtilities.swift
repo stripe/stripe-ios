@@ -60,17 +60,20 @@ enum CurrencySelectorUtilities {
         if displayText.length > 0 {
             displayText.append(NSAttributedString(string: " \u{2009}"))
         }
+        let accessibilityLabel: String
         switch labelContent {
         case .currencyCode:
             displayText.append(NSAttributedString(string: currency.displayValue))
+            accessibilityLabel = currency.displayValue
         case .amount:
             let formattedAmount = String.localizedAmountDisplayString(for: total, currency: currency.apiValue)
             displayText.append(NSAttributedString(string: formattedAmount))
+            accessibilityLabel = "\(formattedAmount) \(currency.displayValue)"
         }
         return TwoOptionSelectorItem(
             id: currency.apiValue,
             displayText: displayText,
-            accessibilityLabel: "\(amount) \(currency.displayValue)",
+            accessibilityLabel: accessibilityLabel,
             accessibilityIdentifier: "currency_option_\(currency.apiValue)"
         )
     }
