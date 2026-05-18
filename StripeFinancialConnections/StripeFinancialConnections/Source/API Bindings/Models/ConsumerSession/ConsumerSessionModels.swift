@@ -69,33 +69,3 @@ struct ConsumerSessionConfirmVerificationResponse: Decodable {
     let consumerSession: ConsumerSessionData
     let linkBrand: LinkBrand
 }
-
-extension LinkSignUpResponse {
-    private enum CodingKeys: String, CodingKey {
-        case accountId
-        case publishableKey
-        case consumerSession
-        case linkBrand
-    }
-
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.accountId = try container.decode(String.self, forKey: .accountId)
-        self.publishableKey = try container.decode(String.self, forKey: .publishableKey)
-        self.consumerSession = try container.decode(ConsumerSessionData.self, forKey: .consumerSession)
-        self.linkBrand = try container.decode(LinkBrand.self, forKey: .linkBrand)
-    }
-}
-
-extension ConsumerSessionConfirmVerificationResponse {
-    private enum CodingKeys: String, CodingKey {
-        case consumerSession
-        case linkBrand
-    }
-
-    init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.consumerSession = try container.decode(ConsumerSessionData.self, forKey: .consumerSession)
-        self.linkBrand = try container.decode(LinkBrand.self, forKey: .linkBrand)
-    }
-}

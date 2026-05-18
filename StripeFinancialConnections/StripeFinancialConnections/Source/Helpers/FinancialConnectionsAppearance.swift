@@ -78,18 +78,16 @@ struct FinancialConnectionsAppearance: Equatable {
         theme: FinancialConnectionsSessionManifest.Theme?,
         linkBrand: LinkBrand?
     ) -> ResolvedBrand {
-        switch PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: linkBrand) {
-        case .link:
-            return .link
-        case .onelink:
-            return .onelink
-        case .unparsable, .none:
-            switch theme {
-            case .linkLight:
+        switch theme {
+        case .linkLight:
+            switch PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: linkBrand) {
+            case .onelink:
+                return .onelink
+            case .link, .unparsable, .none:
                 return .link
-            case .light, .dashboardLight, .unparsable, .none:
-                return .stripe
             }
+        case .light, .dashboardLight, .unparsable, .none:
+            return .stripe
         }
     }
 

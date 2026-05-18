@@ -316,7 +316,7 @@ final public class FinancialConnectionsSheet {
             }
         }
 
-        let financialConnectionsApiClient: any FinancialConnectionsAPI = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
+        var financialConnectionsApiClient: any FinancialConnectionsAPI = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
 
         if let existingConsumer {
             let verificationSessions = existingConsumer.verificationSessions.map { verificationSession in

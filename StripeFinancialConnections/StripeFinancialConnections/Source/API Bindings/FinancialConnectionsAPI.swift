@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-protocol FinancialConnectionsAPI: AnyObject {
+protocol FinancialConnectionsAPI {
     typealias SaveAccountsToNetworkAndLinkResponse = (
         manifest: FinancialConnectionsSessionManifest,
         customSuccessPaneMessage: String?
