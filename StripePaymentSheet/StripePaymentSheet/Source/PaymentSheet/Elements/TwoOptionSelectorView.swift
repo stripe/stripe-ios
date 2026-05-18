@@ -213,10 +213,10 @@ final class TwoOptionSelectorView: UIView {
 
         applyTitleColor(to: leftButton, item: leftItem, color: isLeftSelected ? appearance.selectedTextColor : appearance.unselectedTextColor, font: font)
         applyTitleColor(to: rightButton, item: rightItem, color: !isLeftSelected ? appearance.selectedTextColor : appearance.unselectedTextColor, font: font)
-      
+
         leftButton.accessibilityTraits = isLeftSelected ? [.button, .selected] : .button
         rightButton.accessibilityTraits = !isLeftSelected ? [.button, .selected] : .button
-      
+
         indicatorLeadingConstraint?.isActive = false
         indicatorTrailingConstraint?.isActive = false
 
