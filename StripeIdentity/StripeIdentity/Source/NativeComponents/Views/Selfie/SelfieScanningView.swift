@@ -636,8 +636,9 @@ private final class CaptureTickMarksView: UIView {
         static let tickCount = 68
         static let tickLength: CGFloat = 11
         static let tickWidth: CGFloat = 2
-        static let diameterToWidthRatio: CGFloat = 0.64
-        static let centerYRatio: CGFloat = 0.43
+        static let horizontalDiameterToWidthRatio: CGFloat = 0.64
+        static let verticalDiameterToHeightRatio: CGFloat = 0.58
+        static let centerYRatio: CGFloat = 0.42
         static let tickColor = UIColor.white.withAlphaComponent(0.96)
         static let shadowColor = UIColor.black.withAlphaComponent(0.35)
         static let shadowOffset = CGSize(width: 0, height: 1)
@@ -656,7 +657,8 @@ private final class CaptureTickMarksView: UIView {
             return
         }
 
-        let radius = bounds.width * Styling.diameterToWidthRatio / 2
+        let horizontalRadius = bounds.width * Styling.horizontalDiameterToWidthRatio / 2
+        let verticalRadius = bounds.height * Styling.verticalDiameterToHeightRatio / 2
         let center = CGPoint(
             x: bounds.midX,
             y: bounds.height * Styling.centerYRatio
@@ -673,15 +675,24 @@ private final class CaptureTickMarksView: UIView {
 
         for index in 0..<Styling.tickCount {
             let angle = (CGFloat(index) / CGFloat(Styling.tickCount)) * .pi * 2
-            let unitX = cos(angle)
-            let unitY = sin(angle)
+            let cosAngle = cos(angle)
+            let sinAngle = sin(angle)
             let startPoint = CGPoint(
-                x: center.x + unitX * radius,
-                y: center.y + unitY * radius
+                x: center.x + cosAngle * horizontalRadius,
+                y: center.y + sinAngle * verticalRadius
+            )
+            let normal = CGVector(
+                dx: cosAngle / horizontalRadius,
+                dy: sinAngle / verticalRadius
+            )
+            let normalLength = sqrt((normal.dx * normal.dx) + (normal.dy * normal.dy))
+            let unitNormal = CGVector(
+                dx: normal.dx / normalLength,
+                dy: normal.dy / normalLength
             )
             let endPoint = CGPoint(
-                x: center.x + unitX * (radius + Styling.tickLength),
-                y: center.y + unitY * (radius + Styling.tickLength)
+                x: startPoint.x + unitNormal.dx * Styling.tickLength,
+                y: startPoint.y + unitNormal.dy * Styling.tickLength
             )
 
             context.move(to: startPoint)
