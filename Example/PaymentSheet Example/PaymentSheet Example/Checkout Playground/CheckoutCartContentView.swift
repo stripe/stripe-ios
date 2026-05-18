@@ -651,7 +651,7 @@ struct CheckoutCartSheet: View {
     var body: some View {
         NavigationView {
             ZStack {
-                Color(UIColor.systemBackground)
+                Color(UIColor.systemGroupedBackground)
                     .ignoresSafeArea()
 
                 CheckoutCartContentView(
