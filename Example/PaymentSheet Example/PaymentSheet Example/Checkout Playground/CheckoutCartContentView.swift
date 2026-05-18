@@ -12,6 +12,7 @@ import SwiftUI
 @available(iOS 15.0, *)
 struct CheckoutCartContentView: View {
     @ObservedObject var checkout: Checkout
+    var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
     @Binding var isLoading: Bool
     @Binding var errorMessage: String?
 
@@ -422,7 +423,7 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var currencySelectorSection: some View {
-        Checkout.CurrencySelectorElement(checkout: checkout)
+        Checkout.CurrencySelectorElement(checkout: checkout, appearance: currencySelectorAppearance)
             .padding(.horizontal)
     }
 
@@ -643,17 +644,19 @@ struct CheckoutCartContentView: View {
 struct CheckoutCartSheet: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var checkout: Checkout
+    var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
     @State private var isLoading = false
     @State private var errorMessage: String?
 
     var body: some View {
         NavigationView {
             ZStack {
-                Color(UIColor.systemGroupedBackground)
+                Color(UIColor.systemBackground)
                     .ignoresSafeArea()
 
                 CheckoutCartContentView(
                     checkout: checkout,
+                    currencySelectorAppearance: currencySelectorAppearance,
                     isLoading: $isLoading,
                     errorMessage: $errorMessage
                 )
