@@ -588,6 +588,7 @@ import UIKit
     var paymentMethodTypes: [String]?
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
+    var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
     var currentDataTask: URLSessionDataTask?
 
     var checkoutEndpoint: String {
@@ -759,11 +760,19 @@ import UIKit
     }
     func checkoutSessionSettingsTapped() {
         if #available(iOS 15.0, *) {
-            let vc = UIHostingController(rootView: CheckoutSessionPlaygroundView(viewModel: settings, doneAction: { updatedSettings in
-                self.settings = updatedSettings
-                self.rootViewController.dismiss(animated: true, completion: nil)
-                self.load(reinitializeControllers: true)
-            }))
+            let appearanceBinding = Binding(
+                get: { self.currencySelectorAppearance },
+                set: { self.currencySelectorAppearance = $0 }
+            )
+            let vc = UIHostingController(rootView: CheckoutSessionPlaygroundView(
+                viewModel: settings,
+                currencySelectorAppearance: appearanceBinding,
+                doneAction: { updatedSettings in
+                    self.settings = updatedSettings
+                    self.rootViewController.dismiss(animated: true, completion: nil)
+                    self.load(reinitializeControllers: true)
+                }
+            ))
             rootViewController.present(vc, animated: true, completion: nil)
         }
     }
@@ -1082,9 +1091,8 @@ extension PlaygroundController {
             body["display_shipping_rates"] = settings.csDisplayShippingRates == .on
             body["adjustable_quantity"] = settings.csAdjustableQuantity == .on
             body["use_manual_capture"] = settings.csManualCapture == .on
-            if let email = settings.csCustomerEmail, !email.isEmpty {
-                body["customer_email"] = email
-            }
+            let email = settings.csCustomerEmail ?? "test@example.com"
+            body["customer_email"] = email.isEmpty ? "test@example.com" : email
             if let pmc = settings.csPaymentMethodConfiguration, !pmc.isEmpty {
                 body["payment_method_configuration"] = pmc
             }

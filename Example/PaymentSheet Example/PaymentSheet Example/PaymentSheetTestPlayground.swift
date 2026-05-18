@@ -651,7 +651,7 @@ struct PaymentSheetButtons: View {
         }
         .sheet(isPresented: $showingCart) {
             if #available(iOS 15.0, *), let checkout = playgroundController.checkout {
-                CheckoutCartSheet(checkout: checkout)
+                CheckoutCartSheet(checkout: checkout, currencySelectorAppearance: playgroundController.currencySelectorAppearance)
             }
         }
     }
