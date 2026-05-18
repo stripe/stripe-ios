@@ -412,7 +412,7 @@ extension PaymentSheet {
                     completion(.failure(error))
                     return
                 }
-                guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+                guard let stpSession = checkout.stpSession else {
                     stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
                     completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
                     return
@@ -704,7 +704,7 @@ extension PaymentSheet {
                     completion(error)
                     return
                 }
-                guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+                guard let stpSession = checkout.stpSession else {
                     stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
                     self.failUpdate(updateID)
                     completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))

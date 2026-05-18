@@ -111,7 +111,7 @@ public class PaymentSheet {
     @_spi(ReactNativeSDK)
     @MainActor
     public convenience init(checkout: Checkout, configuration: Configuration) {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+        guard let stpSession = checkout.stpSession else {
             fatalError("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
         }
         var config = configuration
@@ -173,9 +173,7 @@ public class PaymentSheet {
                     completion(.failed(error: error))
                     return
                 }
-                if let stpSession = checkout.state.session as? STPCheckoutSession {
-                    // Checkout refreshes replace `state.session` with a new STPCheckoutSession,
-                    // so resnapshot after pending updates instead of using the session captured at init.
+                if let stpSession = checkout.stpSession {
                     loadMode = .checkoutSession(stpSession)
                     stpSession.applyAddressOverrides(to: &self.configuration)
                 }

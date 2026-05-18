@@ -130,7 +130,7 @@ extension Checkout {
         /// on subsequent changes. Hides the view if AP data is unavailable.
         private func handleSessionUpdate() {
             guard let (session, exchangeRateMeta, rawCurrency) =
-                    CurrencySelectorUtilities.adaptivePricingData(from: checkout.state.session)
+                    CurrencySelectorUtilities.adaptivePricingData(from: checkout.stpSession)
             else {
                 tearDown()
                 return

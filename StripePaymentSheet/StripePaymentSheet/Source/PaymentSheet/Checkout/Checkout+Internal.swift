@@ -61,11 +61,11 @@ extension Checkout {
         }
 
         pendingOperations.append(operation)
-        setSession(state.session)
+        if let session = stpSession { setSession(session) }
 
         defer {
             pendingOperations.removeAll { $0 == operation }
-            setSession(state.session)
+            if let session = stpSession { setSession(session) }
         }
         try await operation.value
     }
