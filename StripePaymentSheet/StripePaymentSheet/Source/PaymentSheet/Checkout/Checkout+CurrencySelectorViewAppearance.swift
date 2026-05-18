@@ -15,11 +15,11 @@ extension Checkout.CurrencySelectorView {
 
         // MARK: - Dimensions
 
-        /// Height of the selector track. Default is `36`.
-        public var height: CGFloat = 36.0
+        /// Height of the selector track. Default is `32`.
+        public var height: CGFloat = 32.0
 
-        /// Corner radius applied to the track and the selected currency pill. Default is `18` (capsule).
-        public var cornerRadius: CGFloat = 18.0
+        /// Corner radius applied to the track and the selected currency pill. Default is `16` (capsule).
+        public var cornerRadius: CGFloat = 16.0
 
         /// Border width for the track and pill outlines. Default is `0`.
         public var borderWidth: CGFloat = 0
@@ -29,11 +29,13 @@ extension Checkout.CurrencySelectorView {
         /// Border color for the track and pill. Default is `.separator`.
         public var border: UIColor = .separator
 
-        /// Background color of the selector track. Default is `.secondarySystemBackground`.
-        public var background: UIColor = .secondarySystemBackground
+        /// Background color of the selector track. Default is `.tertiarySystemFill`.
+        public var background: UIColor = .tertiarySystemFill
 
-        /// Background color of the selected currency pill. Default is `.systemBackground`.
-        public var selectedBackground: UIColor = .systemBackground
+        /// Background color of the selected currency pill. Default is white in light mode and `.tertiaryLabel` in dark mode.
+        public var selectedBackground: UIColor = UIColor { traits in
+            traits.userInterfaceStyle == .dark ? .tertiaryLabel : .white
+        }
 
         // MARK: - Typography
 
