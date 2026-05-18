@@ -117,8 +117,8 @@ final class PlaygroundConfiguration {
     // MARK: - Link Brand
 
     enum LinkBrand: String, CaseIterable, Identifiable, Hashable {
-        case link = "link"
-        case onelink = "onelink"
+        case on = "on"
+        case off = "off"
 
         var id: String {
             return rawValue
@@ -126,10 +126,10 @@ final class PlaygroundConfiguration {
 
         var displayName: String {
             switch self {
-            case .link:
-                return "Link"
-            case .onelink:
-                return "Onelink"
+            case .on:
+                return "on"
+            case .off:
+                return "off"
             }
         }
     }
@@ -138,13 +138,21 @@ final class PlaygroundConfiguration {
 
     var linkBrand: LinkBrand {
         get {
-            if
-                let linkBrandString = configurationStore[Self.linkBrandKey] as? String,
-                let linkBrand = LinkBrand(rawValue: linkBrandString)
-            {
+            guard let linkBrandString = configurationStore[Self.linkBrandKey] as? String else {
+                return .off
+            }
+
+            if let linkBrand = LinkBrand(rawValue: linkBrandString) {
                 return linkBrand
-            } else {
-                return .link
+            }
+
+            switch linkBrandString {
+            case "link":
+                return .on
+            case "onelink":
+                return .off
+            default:
+                return .off
             }
         }
         set {
@@ -607,7 +615,14 @@ final class PlaygroundConfiguration {
         {
             self.linkBrand = linkBrand
         } else {
-            self.linkBrand = .link
+            switch dictionary[Self.linkBrandKey] as? String {
+            case "link":
+                self.linkBrand = .on
+            case "onelink":
+                self.linkBrand = .off
+            default:
+                self.linkBrand = .off
+            }
         }
 
         if

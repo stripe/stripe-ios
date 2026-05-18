@@ -727,7 +727,7 @@ private func PresentFinancialConnectionsSheet(
     let isUITest = (ProcessInfo.processInfo.environment["UITesting"] != nil)
     var configuration = FinancialConnectionsSheet.Configuration()
     configuration.style = style.configurationValue
-    configuration.linkBrand = linkBrand == .onelink ? .onelink : nil
+    configuration.linkBrand = linkBrand == .off ? .onelink : nil
     let financialConnectionsSheet = FinancialConnectionsSheet(
         financialConnectionsSessionClientSecret: clientSecret,
         // disable app-to-app for UI tests
@@ -842,7 +842,7 @@ private func PresentPaymentSheet(
     case .alwaysDark: configuration.style = .alwaysDark
     }
 
-    if config.linkBrand == .onelink {
+    if config.linkBrand == .off {
         configuration.link.brand = .onelink
     }
 

@@ -11,6 +11,7 @@ import UIKit
 struct TwoOptionSelectorItem: Equatable {
     let id: String
     let displayText: NSAttributedString
+    let accessibilityLabel: String
     let accessibilityIdentifier: String
 }
 
@@ -161,6 +162,7 @@ final class TwoOptionSelectorView: UIView {
         button.contentEdgeInsets = UIEdgeInsets(top: 7, left: 16, bottom: 7, right: 16)
         button.backgroundColor = .clear
         button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        button.accessibilityLabel = item.accessibilityLabel
         button.accessibilityIdentifier = item.accessibilityIdentifier
     }
 
@@ -170,6 +172,9 @@ final class TwoOptionSelectorView: UIView {
 
         applyTitleColor(to: leftButton, item: leftItem, color: isLeftSelected ? appearance.colors.componentText : appearance.colors.textSecondary, font: font)
         applyTitleColor(to: rightButton, item: rightItem, color: !isLeftSelected ? appearance.colors.componentText : appearance.colors.textSecondary, font: font)
+
+        leftButton.accessibilityTraits = isLeftSelected ? [.button, .selected] : .button
+        rightButton.accessibilityTraits = !isLeftSelected ? [.button, .selected] : .button
         indicatorLeadingConstraint?.isActive = false
         indicatorTrailingConstraint?.isActive = false
 
@@ -227,6 +232,7 @@ final class TwoOptionSelectorView: UIView {
         if notifyDelegate {
             delegate?.twoOptionSelectorView(self, didSelectItemWithId: itemId)
         }
+        UIAccessibility.post(notification: .layoutChanged, argument: itemId == leftItem.id ? leftButton : rightButton)
     }
 
 #if !os(visionOS)

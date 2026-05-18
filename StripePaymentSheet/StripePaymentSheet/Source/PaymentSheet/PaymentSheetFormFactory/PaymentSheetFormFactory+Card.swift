@@ -148,6 +148,9 @@ extension PaymentSheetFormFactory {
                 country: countryCode,
                 showCheckbox: !shouldDisplaySaveCheckbox,
                 accountService: accountService,
+                resolvedLinkBrand: { [configuration, linkBrand] linkAccount in
+                    configuration.link.brand ?? linkAccount?.linkBrand ?? linkBrand
+                },
                 allowsDefaultOptIn: allowsLinkDefaultOptIn,
                 signupOptInFeatureEnabled: signupOptInFeatureEnabled,
                 signupOptInInitialValue: signupOptInInitialValue,

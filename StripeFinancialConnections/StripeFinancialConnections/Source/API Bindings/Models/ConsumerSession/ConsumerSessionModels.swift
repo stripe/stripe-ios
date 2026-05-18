@@ -53,6 +53,7 @@ struct LinkSignUpResponse: Decodable {
     let accountId: String
     let publishableKey: String
     let consumerSession: ConsumerSessionData
+    let linkBrand: LinkBrand
 }
 
 struct AttachLinkConsumerToLinkAccountSessionResponse: Decodable {
@@ -60,6 +61,41 @@ struct AttachLinkConsumerToLinkAccountSessionResponse: Decodable {
     let clientSecret: String
 }
 
-struct ConsumerSessionResponse: Decodable {
+struct ConsumerSessionStartVerificationResponse: Decodable {
     let consumerSession: ConsumerSessionData
+}
+
+struct ConsumerSessionConfirmVerificationResponse: Decodable {
+    let consumerSession: ConsumerSessionData
+    let linkBrand: LinkBrand
+}
+
+extension LinkSignUpResponse {
+    private enum CodingKeys: String, CodingKey {
+        case accountId
+        case publishableKey
+        case consumerSession
+        case linkBrand
+    }
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.accountId = try container.decode(String.self, forKey: .accountId)
+        self.publishableKey = try container.decode(String.self, forKey: .publishableKey)
+        self.consumerSession = try container.decode(ConsumerSessionData.self, forKey: .consumerSession)
+        self.linkBrand = try container.decode(LinkBrand.self, forKey: .linkBrand)
+    }
+}
+
+extension ConsumerSessionConfirmVerificationResponse {
+    private enum CodingKeys: String, CodingKey {
+        case consumerSession
+        case linkBrand
+    }
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.consumerSession = try container.decode(ConsumerSessionData.self, forKey: .consumerSession)
+        self.linkBrand = try container.decode(LinkBrand.self, forKey: .linkBrand)
+    }
 }

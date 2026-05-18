@@ -316,7 +316,7 @@ final public class FinancialConnectionsSheet {
             }
         }
 
-        var financialConnectionsApiClient: any FinancialConnectionsAPI = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
+        let financialConnectionsApiClient: any FinancialConnectionsAPI = FinancialConnectionsAsyncAPIClient(apiClient: apiClient)
 
         if let existingConsumer {
             let verificationSessions = existingConsumer.verificationSessions.map { verificationSession in
@@ -334,6 +334,7 @@ final public class FinancialConnectionsSheet {
             financialConnectionsApiClient.isLinkWithStripe = true
             financialConnectionsApiClient.consumerSession = consumerSession
             financialConnectionsApiClient.consumerPublishableKey = existingConsumer.publishableKey
+            financialConnectionsApiClient.authenticatedLinkBrand = existingConsumer.linkBrand
         }
 
         hostController = HostController(

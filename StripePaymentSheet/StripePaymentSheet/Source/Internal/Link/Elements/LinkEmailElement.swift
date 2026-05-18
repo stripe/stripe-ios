@@ -90,6 +90,10 @@ class LinkEmailElement: Element {
         }
     }
 
+    func updateBrand(_ brand: LinkBrand) {
+        infoView?.updateBrand(brand)
+    }
+
     public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsAppearance = .default, brand: LinkBrand) {
         self.theme = theme
 

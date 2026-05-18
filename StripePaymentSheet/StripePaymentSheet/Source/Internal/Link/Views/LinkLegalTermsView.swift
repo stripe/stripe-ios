@@ -41,7 +41,7 @@ final class LinkLegalTermsView: UIView {
 
     weak var delegate: LinkLegalTermsViewDelegate?
     private let mode: LinkInlineSignupViewModel.Mode
-    private let brand: LinkBrand
+    private var brand: LinkBrand
     /// If true, we're in a separate Link VC (instead of the inline PS one)
     private let isStandalone: Bool
     private let emailWasPrefilled: Bool
@@ -98,6 +98,14 @@ final class LinkLegalTermsView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func updateBrand(_ brand: LinkBrand) {
+        guard self.brand != brand else {
+            return
+        }
+        self.brand = brand
+        textView.attributedText = formattedLegalText()
     }
 
     private func formattedLegalText() -> NSAttributedString? {
