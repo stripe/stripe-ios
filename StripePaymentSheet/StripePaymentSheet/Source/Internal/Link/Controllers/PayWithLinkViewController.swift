@@ -630,7 +630,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             clientSecret: consumerSession.clientSecret,
             emailAddress: consumerSession.emailAddress,
             redactedFormattedPhoneNumber: consumerSession.redactedFormattedPhoneNumber,
-            verificationSessions: verificationSessions
+            verificationSessions: verificationSessions,
+            linkBrand: consumerSession.linkBrand
         )
 
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
@@ -668,7 +669,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             ),
             // Only `.onelink` should be treated as an explicit client override for FC.
             // A `.link` selection should behave like no override so backend brand updates can still win.
-            brand: context.configuration.link.brand == .onelink ? .onelink : nil,
+            linkBrand: context.configuration.link.brand == .onelink ? .onelink : nil,
             onEvent: nil,
             from: self,
             completion: { result in

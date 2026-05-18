@@ -8,7 +8,7 @@
 import Foundation
 @_spi(STP) import StripeCore
 
-protocol FinancialConnectionsAPI {
+protocol FinancialConnectionsAPI: AnyObject {
     typealias SaveAccountsToNetworkAndLinkResponse = (
         manifest: FinancialConnectionsSessionManifest,
         customSuccessPaneMessage: String?
@@ -19,6 +19,7 @@ protocol FinancialConnectionsAPI {
     var isLinkWithStripe: Bool { get set }
     var consumerPublishableKey: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }
+    var authenticatedLinkBrand: LinkBrand? { get set }
 
     func completeAssertion(
         possibleError: Error?,
@@ -159,13 +160,13 @@ protocol FinancialConnectionsAPI {
         customEmailType: String?,
         connectionsMerchantName: String?,
         consumerSessionClientSecret: String
-    ) -> Future<ConsumerSessionResponse>
+    ) -> Future<ConsumerSessionStartVerificationResponse>
 
     func consumerSessionConfirmVerification(
         otpCode: String,
         otpType: String,
         consumerSessionClientSecret: String
-    ) -> Future<ConsumerSessionResponse>
+    ) -> Future<ConsumerSessionConfirmVerificationResponse>
 
     func markLinkVerified(
         clientSecret: String
