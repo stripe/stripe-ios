@@ -148,9 +148,9 @@ final class PlaygroundConfiguration {
 
             switch linkBrandString {
             case "link":
-                return .on
-            case "onelink":
                 return .off
+            case "onelink":
+                return .on
             default:
                 return .off
             }
@@ -617,9 +617,9 @@ final class PlaygroundConfiguration {
         } else {
             switch dictionary[Self.linkBrandKey] as? String {
             case "link":
-                self.linkBrand = .on
-            case "onelink":
                 self.linkBrand = .off
+            case "onelink":
+                self.linkBrand = .on
             default:
                 self.linkBrand = .off
             }
