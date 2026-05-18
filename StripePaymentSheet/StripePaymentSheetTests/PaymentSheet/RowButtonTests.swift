@@ -9,79 +9,44 @@ import XCTest
 @_spi(STP) @testable import StripePaymentSheet
 
 final class RowButtonTests: XCTestCase {
-    func testPaymentMethodMessagingRowWithoutContentStartsCollapsed() {
+    func testPaymentMethodMessagingRowCanStartWithoutContent() throws {
+        let sublabel = PMMERowSublabelView(appearance: .default, content: nil)
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .stripe(.affirm),
             hasSavedCard: false,
+            sublabel: sublabel,
             appearance: .default,
             shouldAnimateOnPress: false,
             didTap: { _ in }
         )
 
-        XCTAssertFalse(rowButton.isPaymentMethodMessagingCapable)
-        XCTAssertFalse(rowButton.hasPaymentMethodMessagingContent)
-        XCTAssertEqual((rowButton.sublabel as? UILabel)?.text, String.Localized.pay_over_time_with_affirm)
+        XCTAssertTrue(rowButton.sublabel === sublabel)
+        XCTAssertFalse(sublabel.hasContent)
+        XCTAssertFalse(sublabel.isExpanded)
+        XCTAssertTrue(sublabel.promotionTextView.isHidden)
     }
 
-    func testPopulatePaymentMethodMessagingIfNeeded_expandsForSelectedRows() {
-        let rowButton = RowButton.makeForPaymentMethodType(
-            paymentMethodType: .stripe(.affirm),
-            hasSavedCard: false,
-            paymentMethodMessaging: .enabled(content: nil),
+    func testPlainSublabelHelperHidesAndShowsLabel() throws {
+        let sublabel = RowButton.makePlainSublabel(
+            text: RowButton.makeLinkPlainSublabelText(),
             appearance: .default,
-            shouldAnimateOnPress: false,
-            didTap: { _ in }
+            isEmbedded: false
         )
-        let content = RowButton.PaymentMethodMessagingContent(
-            promotion: "Split your purchase into monthly payments.",
-            learnMoreText: "Learn more",
-            infoUrl: URL(string: "https://example.com/affirm")!
-        )
+        let rowButton = RowButton.makeForLink(appearance: .default, sublabel: sublabel, linkBrand: .link) { _ in }
         let animationsWereEnabled = UIView.areAnimationsEnabled
         UIView.setAnimationsEnabled(false)
         defer { UIView.setAnimationsEnabled(animationsWereEnabled) }
 
-        rowButton.isSelected = true
-        rowButton.populatePaymentMethodMessagingIfNeeded(content)
+        sublabel.setRowButtonPlainSublabelText(nil, animated: false) {
+            rowButton.didUpdateSublabelLayout()
+        }
+        XCTAssertNil(sublabel.text)
+        XCTAssertTrue(sublabel.isHidden)
 
-        let textView = rowButton.sublabel as? UITextView
-        XCTAssertTrue(rowButton.hasPaymentMethodMessagingContent)
-        XCTAssertEqual(textView?.text, "Split your purchase into monthly payments. Learn more")
-        XCTAssertFalse(textView?.isHidden ?? true)
-    }
-
-    func testPopulatePaymentMethodMessagingIfNeeded_showsContentWhenRowIsNewlySelected() {
-        let rowButton = RowButton.makeForPaymentMethodType(
-            paymentMethodType: .stripe(.affirm),
-            hasSavedCard: false,
-            paymentMethodMessaging: .enabled(content: nil),
-            appearance: .default,
-            shouldAnimateOnPress: false,
-            didTap: { _ in }
-        )
-        let content = RowButton.PaymentMethodMessagingContent(
-            promotion: "Split your purchase into monthly payments.",
-            learnMoreText: "Learn more",
-            infoUrl: URL(string: "https://example.com/affirm")!
-        )
-        let animationsWereEnabled = UIView.areAnimationsEnabled
-        UIView.setAnimationsEnabled(false)
-        defer { UIView.setAnimationsEnabled(animationsWereEnabled) }
-
-        let textView = rowButton.sublabel as? UITextView
-
-        XCTAssertTrue(rowButton.isPaymentMethodMessagingCapable)
-        XCTAssertFalse(rowButton.hasPaymentMethodMessagingContent)
-        XCTAssertTrue(textView?.isHidden ?? false)
-
-        rowButton.populatePaymentMethodMessagingIfNeeded(content)
-
-        XCTAssertTrue(rowButton.hasPaymentMethodMessagingContent)
-        XCTAssertEqual(textView?.text, "Split your purchase into monthly payments. Learn more")
-        XCTAssertTrue(textView?.isHidden ?? false)
-
-        rowButton.isSelected = true
-
-        XCTAssertFalse(textView?.isHidden ?? true)
+        sublabel.setRowButtonPlainSublabelText("Updated subtitle", animated: false) {
+            rowButton.didUpdateSublabelLayout()
+        }
+        XCTAssertEqual(sublabel.text, "Updated subtitle")
+        XCTAssertFalse(sublabel.isHidden)
     }
 }

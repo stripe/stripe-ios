@@ -75,9 +75,18 @@ final class SavedPaymentMethodRowButton: UIView {
     }()
 
     private(set) lazy var rowButton: RowButton = {
+        let sublabel = RowButton.makePlainSublabel(
+            text: RowButton.makeSavedPaymentMethodPlainSublabelText(
+                paymentMethod: paymentMethod,
+                linkBrand: linkBrand
+            ),
+            appearance: appearance,
+            isEmbedded: false
+        )
         let button: RowButton = .makeForSavedPaymentMethod(
             paymentMethod: paymentMethod,
             appearance: appearance,
+            sublabel: sublabel,
             badgeText: badgeText,
             accessoryView: chevronButton,
             linkBrand: linkBrand,

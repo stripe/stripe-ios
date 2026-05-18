@@ -165,7 +165,17 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
         XCTAssertEqual(["Apple Pay", "Link", "SEPA Debit"], sut_no_cards.rowButtons.map { $0.label.text })
     }
 
-    func testBNPLPromotionRow_UsesLegacySubtitleUntilMessagingIsPopulated() {
+    func testBNPLPromotionRow_UsesPrefetchedPMMESummary() throws {
+        let helper = PaymentMethodMessagingPromotionsHelper(
+            experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
+            prefetchedPromotionContents: [
+                STPPaymentMethodType.affirm.identifier: .init(
+                    promotion: "Split your purchase into monthly payments.",
+                    learnMoreText: "Learn more",
+                    infoUrl: URL(string: "https://example.com/affirm")!
+                ),
+            ]
+        )
         let sut = VerticalPaymentMethodListViewController(
             initialSelection: nil,
             savedPaymentMethods: [],
@@ -178,15 +188,66 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             currency: "USD",
             amount: 1099,
             incentive: nil,
+            paymentMethodMessagingPromotionsHelper: helper,
             delegate: self
         )
 
         let affirmButton = sut.getRowButton(accessibilityIdentifier: "Affirm")
-        let sublabel = affirmButton.sublabel as? UILabel
+        let sublabel = try XCTUnwrap(affirmButton.sublabel as? PMMERowSublabelView)
 
-        XCTAssertFalse(affirmButton.isPaymentMethodMessagingCapable)
-        XCTAssertEqual(sublabel?.text, String.Localized.pay_over_time_with_affirm)
-        XCTAssertFalse(sublabel?.isHidden ?? true)
+        XCTAssertEqual(affirmButton.label.text, "Affirm")
+        XCTAssertTrue(sublabel.hasContent)
+        XCTAssertEqual(sublabel.promotionTextView.text, "Split your purchase into monthly payments. Learn more")
+    }
+
+    func testBNPLPromotionRow_RetapShowsLateLoadedPMMContent() throws {
+        let helper = PaymentMethodMessagingPromotionsHelper(
+            experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
+            prefetchedPromotionContents: [:]
+        )
+        let sut = VerticalPaymentMethodListViewController(
+            initialSelection: nil,
+            savedPaymentMethods: [],
+            paymentMethodTypes: [.stripe(.affirm)],
+            shouldShowApplePay: false,
+            shouldShowLink: false,
+            savedPaymentMethodAccessoryType: .edit,
+            overrideHeaderView: nil,
+            appearance: .default,
+            currency: "USD",
+            amount: 1099,
+            incentive: nil,
+            paymentMethodMessagingPromotionsHelper: helper,
+            delegate: self
+        )
+        let animationsWereEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(animationsWereEnabled) }
+        let affirmButton = sut.getRowButton(accessibilityIdentifier: "Affirm")
+        let sublabel = try XCTUnwrap(affirmButton.sublabel as? PMMERowSublabelView)
+
+        XCTAssertFalse(sublabel.hasContent)
+        XCTAssertTrue(sublabel.promotionTextView.isHidden)
+
+        shouldSelectPaymentMethodReturnValue = true
+        sut.didTap(rowButton: affirmButton, selection: .new(paymentMethodType: .stripe(.affirm)))
+        XCTAssertTrue(affirmButton.isSelected)
+        XCTAssertTrue(sublabel.promotionTextView.isHidden)
+
+        helper.completeLoading(with: [
+            STPPaymentMethodType.affirm.identifier: .init(
+                promotion: "Split your purchase into monthly payments.",
+                learnMoreText: "Learn more",
+                infoUrl: URL(string: "https://example.com/affirm")!
+            ),
+        ])
+
+        sut.didTap(rowButton: affirmButton, selection: .new(paymentMethodType: .stripe(.affirm)))
+
+        XCTAssertTrue(sublabel.hasContent)
+        XCTAssertTrue(sublabel.isExpanded)
+        XCTAssertEqual(sublabel.promotionTextView.text, "Split your purchase into monthly payments. Learn more")
+        XCTAssertFalse(sublabel.promotionTextView.isHidden)
     }
 
 }

@@ -63,6 +63,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,
             hasSavedCard: false,
+            sublabel: makePaymentMethodTypeSublabel(paymentMethodType: .instantDebits, appearance: .default, isEmbedded: false),
             promoText: nil,
             appearance: .default,
             shouldAnimateOnPress: false,
@@ -76,6 +77,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,
             hasSavedCard: false,
+            sublabel: makePaymentMethodTypeSublabel(paymentMethodType: .instantDebits, appearance: appearance, isEmbedded: false),
             promoText: nil,
             appearance: appearance,
             shouldAnimateOnPress: false,
@@ -88,6 +90,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,
             hasSavedCard: false,
+            sublabel: makePaymentMethodTypeSublabel(paymentMethodType: .instantDebits, appearance: .default, isEmbedded: false),
             promoText: "$5",
             appearance: .default,
             shouldAnimateOnPress: false,
@@ -156,6 +159,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.card),
                 hasSavedCard: false,
+                sublabel: makePaymentMethodTypeSublabel(paymentMethodType: .stripe(.card), appearance: appearance, isEmbedded: true),
                 appearance: appearance,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
@@ -172,6 +176,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .stripe(.card),
             hasSavedCard: false,
+            sublabel: makePaymentMethodTypeSublabel(paymentMethodType: .stripe(.card), appearance: appearance, isEmbedded: false),
             appearance: appearance,
             shouldAnimateOnPress: false,
             isEmbedded: false,
@@ -192,6 +197,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.klarna),
                 hasSavedCard: false,
+                sublabel: makePaymentMethodTypeSublabel(paymentMethodType: .stripe(.klarna), appearance: appearance, isEmbedded: true),
                 appearance: appearance,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
@@ -208,6 +214,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .stripe(.card),
             hasSavedCard: false,
+            sublabel: makePaymentMethodTypeSublabel(paymentMethodType: .stripe(.card), appearance: appearance, isEmbedded: false),
             appearance: appearance,
             shouldAnimateOnPress: false,
             isEmbedded: false,
@@ -223,6 +230,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.card),
                 hasSavedCard: false,
+                sublabel: makePaymentMethodTypeSublabel(paymentMethodType: .stripe(.card), appearance: appearance, isEmbedded: true),
                 appearance: appearance,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
@@ -256,30 +264,57 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         imageView.contentMode = .scaleAspectFit
 
         if isEmbedded {
+            let sublabel = PMMERowSublabelView(
+                appearance: appearance,
+                content: RowButton.PaymentMethodMessagingContent(
+                    promotion: "Split your purchase into monthly payments.",
+                    learnMoreText: "Learn more",
+                    infoUrl: URL(string: "https://example.com/affirm")!
+                )
+            )
             return RowButtonFlatWithRadioView(
                 appearance: appearance,
                 type: .new(paymentMethodType: .stripe(.affirm)),
                 imageView: imageView,
                 text: "Affirm",
-                promotionText: "Split your purchase into monthly payments.",
-                learnMoreText: "Learn more",
-                infoUrl: URL(string: "https://example.com/affirm")!,
+                sublabel: sublabel,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
                 didTap: { _ in }
             )
         }
 
+        let sublabel = PMMERowSublabelView(
+            appearance: appearance,
+            content: RowButton.PaymentMethodMessagingContent(
+                promotion: "Split your purchase into monthly payments.",
+                learnMoreText: "Learn more",
+                infoUrl: URL(string: "https://example.com/affirm")!
+            )
+        )
         return RowButtonFloating(
             appearance: appearance,
             type: .new(paymentMethodType: .stripe(.affirm)),
             imageView: imageView,
             text: "Affirm",
-            promotionText: "Split your purchase into monthly payments.",
-            learnMoreText: "Learn more",
-            infoUrl: URL(string: "https://example.com/affirm")!,
+            sublabel: sublabel,
             shouldAnimateOnPress: false,
             didTap: { _ in }
+        )
+    }
+
+    private func makePaymentMethodTypeSublabel(
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        appearance: PaymentSheet.Appearance,
+        isEmbedded: Bool
+    ) -> UILabel {
+        return RowButton.makePlainSublabel(
+            text: RowButton.makePaymentMethodTypePlainSublabelText(
+                paymentMethodType: paymentMethodType,
+                currency: nil
+            ),
+            appearance: appearance,
+            isEmbedded: isEmbedded
         )
     }
 }

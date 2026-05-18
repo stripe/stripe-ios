@@ -152,6 +152,58 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
         XCTAssertEqual(embeddedView.mandateText?.string, expectedPayPal)
     }
 
+    func testEmbeddedPaymentMethodsView_retapShowsLateLoadedPMMContent() throws {
+        let helper = PaymentMethodMessagingPromotionsHelper(
+            experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
+            prefetchedPromotionContents: [:]
+        )
+        let embeddedView = EmbeddedPaymentMethodsView(
+            initialSelectedRowType: nil,
+            initialSelectedRowChangeButtonState: nil,
+            paymentMethodTypes: [.stripe(.affirm)],
+            savedPaymentMethod: nil,
+            appearance: .default,
+            shouldShowApplePay: false,
+            shouldShowLink: false,
+            savedPaymentMethodAccessoryType: .none,
+            mandateProvider: MockMandateProvider { _ in nil },
+            shouldShowMandate: true,
+            savedPaymentMethods: [],
+            customer: nil,
+            currency: nil,
+            incentive: nil,
+            paymentMethodMessagingPromotionsHelper: helper,
+            analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
+        )
+        let animationsWereEnabled = UIView.areAnimationsEnabled
+        UIView.setAnimationsEnabled(false)
+        defer { UIView.setAnimationsEnabled(animationsWereEnabled) }
+        let affirmButton = embeddedView.getRowButton(accessibilityIdentifier: "Affirm")
+        let sublabel = try XCTUnwrap(affirmButton.sublabel as? PMMERowSublabelView)
+
+        XCTAssertFalse(sublabel.hasContent)
+        XCTAssertTrue(sublabel.promotionTextView.isHidden)
+
+        embeddedView.didTap(rowButton: affirmButton)
+        XCTAssertTrue(affirmButton.isSelected)
+        XCTAssertTrue(sublabel.promotionTextView.isHidden)
+
+        helper.completeLoading(with: [
+            STPPaymentMethodType.affirm.identifier: .init(
+                promotion: "Split your purchase into monthly payments.",
+                learnMoreText: "Learn more",
+                infoUrl: URL(string: "https://example.com/affirm")!
+            ),
+        ])
+
+        embeddedView.didTap(rowButton: affirmButton)
+
+        XCTAssertTrue(sublabel.hasContent)
+        XCTAssertTrue(sublabel.isExpanded)
+        XCTAssertEqual(sublabel.promotionTextView.text, "Split your purchase into monthly payments. Learn more")
+        XCTAssertFalse(sublabel.promotionTextView.isHidden)
+    }
+
 }
 
 private class MockEmbeddedPaymentMethodsViewDelegate: EmbeddedPaymentMethodsViewDelegate {
