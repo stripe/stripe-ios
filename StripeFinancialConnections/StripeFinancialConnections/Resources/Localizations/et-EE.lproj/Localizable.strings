@@ -26,6 +26,8 @@
 
 "Continue linking your account" = "Konto linkimisege jätkamine";
 
+"Continue with %@" = "Jätka %@";
+
 "Continue with Link" = "Jätka Linkiga";
 
 "Email address" = "E-posti aadress";
@@ -110,6 +112,8 @@
 
 "Try searching another bank or %@" = "Proovige otsida mõnda muud panka või %@";
 
+"Use information you previously saved with your %@ account." = "Kasuta infot, mille salvestasid varem oma %@ kontoga.";
+
 "Use information you previously saved with your Link account." = "Kasutage teavet, mille olete varem oma Linki kontole salvestanud.";
 
 "Use test account" = "Kasuta testkontot";
@@ -150,9 +154,13 @@
 
 "Your account numbers don't match." = "Teie kontonumbrid ei ühti.";
 
+"Your account was connected, but couldn't be saved to %@." = "Teie konto oli ühendatud, kuid seda ei saanud salvestada %@.";
+
 "Your account was connected, but couldn't be saved to Link." = "Teie konto on ühendatud, kuid seda ei õnnestunud Linki salvestada.";
 
 "Your account was connected." = "Teie konto on ühendatud.";
+
+"Your accounts were connected, but couldn't be saved to %@." = "Teie kontod olid ühendatud, kuid neid ei saanud salvestada %@.";
 
 "Your accounts were connected, but couldn't be saved to Link." = "Teie kontod on ühendatud, kuid neid ei õnnestunud Linki salvestada.";
 
