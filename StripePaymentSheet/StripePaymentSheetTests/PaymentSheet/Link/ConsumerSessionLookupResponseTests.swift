@@ -15,7 +15,7 @@ final class ConsumerSessionLookupResponseTests: XCTestCase {
           "exists": false,
           "error_message": "No consumer found",
           "suggested_email": "user@example.com",
-          "link_brand": "notlink"
+          "link_brand": "onelink"
         }
         """
 
