@@ -21,7 +21,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
         if let linkConfirmOption {
             return .link(option: linkConfirmOption)
         } else if isLinkWalletButtonSelected {
-            return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)))
+            return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)))
         } else if let paymentMethodListViewController, children.contains(paymentMethodListViewController) {
             // If we're showing the list, use its selection:
             switch paymentMethodListViewController.currentSelection {
@@ -30,7 +30,7 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             case .applePay:
                 return .applePay
             case .link:
-                return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)))
+                return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)))
             case .new(paymentMethodType: let paymentMethodType):
                 let params = IntentConfirmParams(type: paymentMethodType)
                 params.setDefaultBillingDetailsIfNecessary(for: configuration)
@@ -468,7 +468,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             paymentMethodTypes: paymentMethodTypes,
             shouldShowApplePay: shouldShowApplePayInList,
             shouldShowLink: shouldShowLinkInList,
-            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
+            linkBrandProvider: { [configuration, elementsSession] in
+                configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
+            },
             savedPaymentMethodAccessoryType: savedPaymentMethodAccessoryType,
             overrideHeaderView: makeWalletHeaderView(),
             appearance: configuration.appearance,
@@ -495,7 +498,10 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             options: walletOptions,
             appearance: configuration.appearance,
             applePayButtonType: configuration.applePay?.buttonType ?? .plain,
-            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
+            linkBrandProvider: { [configuration, elementsSession] in
+                configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
+            },
             isPaymentIntent: intent.isPaymentIntent,
             delegate: self
         )

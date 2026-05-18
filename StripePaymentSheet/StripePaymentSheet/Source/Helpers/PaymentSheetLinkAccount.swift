@@ -25,6 +25,8 @@ struct LinkPMDisplayDetails {
 }
 
 @_spi(STP) public class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
+    @_spi(STP) public static var forcedConsumerLinkBrandForTesting: LinkBrand?
+
     @_spi(STP) public enum SessionState: String {
         case requiresSignUp
         case requiresVerification
@@ -80,6 +82,13 @@ struct LinkPMDisplayDetails {
 
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
+
+    var linkBrand: LinkBrand? {
+        guard sessionState == .verified else {
+            return nil
+        }
+        return Self.forcedConsumerLinkBrandForTesting ?? currentSession?.linkBrand
+    }
 
     var paymentSheetLinkAccountDelegate: PaymentSheetLinkAccountDelegate?
 
@@ -534,6 +543,7 @@ struct LinkPMDisplayDetails {
     }
 
     func logout() {
+        LinkAccountContext.shared.account = nil
         guard let session = currentSession else {
             return
         }

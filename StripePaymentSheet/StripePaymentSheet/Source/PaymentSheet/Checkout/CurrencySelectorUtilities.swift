@@ -70,6 +70,7 @@ enum CurrencySelectorUtilities {
         return TwoOptionSelectorItem(
             id: currency.apiValue,
             displayText: displayText,
+            accessibilityLabel: "\(amount) \(currency.displayValue)",
             accessibilityIdentifier: "currency_option_\(currency.apiValue)"
         )
     }

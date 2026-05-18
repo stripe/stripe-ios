@@ -95,7 +95,10 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             options: walletOptions,
             appearance: configuration.appearance,
             applePayButtonType: configuration.applePay?.buttonType ?? .plain,
-            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
+            linkBrandProvider: { [configuration, elementsSession] in
+                configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
+            },
             isPaymentIntent: intent.isPaymentIntent,
             delegate: self
         )
@@ -162,7 +165,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                 customerID: configuration.customer?.id,
                 showApplePay: false,
                 showLink: false,
-                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: isCVCRecollectionEnabled,
@@ -177,7 +180,10 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
             appearance: configuration.appearance,
             elementsSession: elementsSession,
             cbcEligible: elementsSession.isCardBrandChoiceEligible,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            linkBrandProvider: { [configuration, elementsSession] in
+                configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
+            }
         )
 
         // Restore the customer's previous payment method.

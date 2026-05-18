@@ -31,7 +31,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             if let linkConfirmOption {
                 return .link(option: linkConfirmOption)
             } else if isHackyLinkButtonSelected {
-                return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)))
+                return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)))
             } else if let paymentOption = addPaymentMethodViewController.paymentOption {
                 return paymentOption
             } else if let paymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
@@ -152,7 +152,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             options: walletOptions,
             appearance: configuration.appearance,
             applePayButtonType: configuration.applePay?.buttonType ?? .plain,
-            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+            linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
+            linkBrandProvider: { [configuration, elementsSession] in
+                configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
+            },
             isPaymentIntent: intent.isPaymentIntent,
             delegate: self
         )
@@ -198,7 +201,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
                 customerID: configuration.customer?.id,
                 showApplePay: isApplePayEnabled,
                 showLink: isLinkEnabled,
-                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
                 isCVCRecollectionEnabled: false,
@@ -213,7 +216,10 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             appearance: configuration.appearance,
             elementsSession: elementsSession,
             cbcEligible: elementsSession.isCardBrandChoiceEligible,
-            analyticsHelper: analyticsHelper
+            analyticsHelper: analyticsHelper,
+            linkBrandProvider: { [configuration, elementsSession] in
+                configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
+            }
         )
         self.addPaymentMethodViewController = AddPaymentMethodViewController(
             intent: intent,
