@@ -68,8 +68,8 @@ final class AuthFlowHelpers {
         if url.scheme == "stripe" {
             handleURL(url.host, nextPaneOrDrawerOnSecondaryCta)
         } else {
-            let brand = PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: nil) ?? .link
-            SFSafariViewController.present(url: brand.brandAwareLegalSupportURL(for: url))
+            let linkBrand = PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: nil) ?? .link
+            SFSafariViewController.present(url: linkBrand.brandAwareLegalSupportURL(for: url))
         }
     }
 

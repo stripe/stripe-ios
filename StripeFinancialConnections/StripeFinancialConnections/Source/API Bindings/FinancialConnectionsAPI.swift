@@ -160,13 +160,13 @@ protocol FinancialConnectionsAPI: AnyObject {
         customEmailType: String?,
         connectionsMerchantName: String?,
         consumerSessionClientSecret: String
-    ) -> Future<ConsumerSessionResponse>
+    ) -> Future<ConsumerSessionStartVerificationResponse>
 
     func consumerSessionConfirmVerification(
         otpCode: String,
         otpType: String,
         consumerSessionClientSecret: String
-    ) -> Future<ConsumerSessionResponse>
+    ) -> Future<ConsumerSessionConfirmVerificationResponse>
 
     func markLinkVerified(
         clientSecret: String

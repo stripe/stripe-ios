@@ -210,16 +210,16 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         customEmailType: String?,
         connectionsMerchantName: String?,
         consumerSessionClientSecret: String
-    ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionResponse> {
-        return Promise<StripeFinancialConnections.ConsumerSessionResponse>()
+    ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionStartVerificationResponse> {
+        return Promise<StripeFinancialConnections.ConsumerSessionStartVerificationResponse>()
     }
 
     func consumerSessionConfirmVerification(
         otpCode: String,
         otpType: String,
         consumerSessionClientSecret: String
-    ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionResponse> {
-        return Promise<StripeFinancialConnections.ConsumerSessionResponse>()
+    ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionConfirmVerificationResponse> {
+        return Promise<StripeFinancialConnections.ConsumerSessionConfirmVerificationResponse>()
     }
 
     func linkAccountSignUp(

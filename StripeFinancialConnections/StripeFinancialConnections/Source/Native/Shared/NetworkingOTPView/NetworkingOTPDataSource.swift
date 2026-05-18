@@ -19,8 +19,8 @@ protocol NetworkingOTPDataSource: AnyObject {
     var appearance: FinancialConnectionsAppearance { get }
     var pane: FinancialConnectionsSessionManifest.NextPane { get }
 
-    func startVerificationSession() -> Future<ConsumerSessionResponse>
-    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse>
+    func startVerificationSession() -> Future<ConsumerSessionStartVerificationResponse>
+    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionConfirmVerificationResponse>
 }
 
 final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
@@ -68,7 +68,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         self.analyticsClient = analyticsClient
     }
 
-    func startVerificationSession() -> Future<ConsumerSessionResponse> {
+    func startVerificationSession() -> Future<ConsumerSessionStartVerificationResponse> {
         return apiClient.consumerSessionStartVerification(
             otpType: otpType,
             customEmailType: customEmailType,
@@ -80,7 +80,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
         }
     }
 
-    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionResponse> {
+    func confirmVerificationSession(otpCode: String) -> Future<ConsumerSessionConfirmVerificationResponse> {
         return apiClient.consumerSessionConfirmVerification(
             otpCode: otpCode,
             otpType: otpType,

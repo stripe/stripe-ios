@@ -79,7 +79,7 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(elementsSession.linkBrand, .link)
     }
 
-    func testDecodedObjectFromAPIResponseMapping_linkBrandOnelink() {
+    func testDecodedObjectFromAPIResponseMapping_linkBrandNotlink() {
         var elementsSessionJson = STPTestUtils.jsonNamed("ElementsSession")!
         elementsSessionJson[jsonDict: "link_settings"]?["link_brand"] = "notlink"
 

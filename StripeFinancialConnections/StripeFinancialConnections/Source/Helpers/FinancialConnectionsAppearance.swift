@@ -50,9 +50,9 @@ struct FinancialConnectionsAppearance: Equatable {
 
     init(
         theme: FinancialConnectionsSessionManifest.Theme?,
-        brand: LinkBrand? = nil
+        linkBrand: LinkBrand? = nil
     ) {
-        let resolvedBrand = Self.resolveBrand(theme: theme, brand: brand)
+        let resolvedBrand = Self.resolveLinkBrand(theme: theme, linkBrand: linkBrand)
 
         switch theme {
         case .linkLight:
@@ -74,11 +74,11 @@ struct FinancialConnectionsAppearance: Equatable {
         }
     }
 
-    private static func resolveBrand(
+    private static func resolveLinkBrand(
         theme: FinancialConnectionsSessionManifest.Theme?,
-        brand: LinkBrand?
+        linkBrand: LinkBrand?
     ) -> ResolvedBrand {
-        switch PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: brand) {
+        switch PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: linkBrand) {
         case .link:
             return .link
         case .onelink:

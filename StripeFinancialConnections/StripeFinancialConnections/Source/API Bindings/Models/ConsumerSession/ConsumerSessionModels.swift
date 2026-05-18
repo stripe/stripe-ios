@@ -53,7 +53,7 @@ struct LinkSignUpResponse: Decodable {
     let accountId: String
     let publishableKey: String
     let consumerSession: ConsumerSessionData
-    let linkBrand: LinkBrand?
+    let linkBrand: LinkBrand
 }
 
 struct AttachLinkConsumerToLinkAccountSessionResponse: Decodable {
@@ -61,9 +61,13 @@ struct AttachLinkConsumerToLinkAccountSessionResponse: Decodable {
     let clientSecret: String
 }
 
-struct ConsumerSessionResponse: Decodable {
+struct ConsumerSessionStartVerificationResponse: Decodable {
     let consumerSession: ConsumerSessionData
-    let linkBrand: LinkBrand?
+}
+
+struct ConsumerSessionConfirmVerificationResponse: Decodable {
+    let consumerSession: ConsumerSessionData
+    let linkBrand: LinkBrand
 }
 
 extension LinkSignUpResponse {
@@ -72,7 +76,6 @@ extension LinkSignUpResponse {
         case publishableKey
         case consumerSession
         case linkBrand
-        case brand
     }
 
     init(from decoder: any Decoder) throws {
@@ -80,22 +83,19 @@ extension LinkSignUpResponse {
         self.accountId = try container.decode(String.self, forKey: .accountId)
         self.publishableKey = try container.decode(String.self, forKey: .publishableKey)
         self.consumerSession = try container.decode(ConsumerSessionData.self, forKey: .consumerSession)
-        self.linkBrand = try container.decodeIfPresent(LinkBrand.self, forKey: .linkBrand)
-            ?? container.decodeIfPresent(LinkBrand.self, forKey: .brand)
+        self.linkBrand = try container.decode(LinkBrand.self, forKey: .linkBrand)
     }
 }
 
-extension ConsumerSessionResponse {
+extension ConsumerSessionConfirmVerificationResponse {
     private enum CodingKeys: String, CodingKey {
         case consumerSession
         case linkBrand
-        case brand
     }
 
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.consumerSession = try container.decode(ConsumerSessionData.self, forKey: .consumerSession)
-        self.linkBrand = try container.decodeIfPresent(LinkBrand.self, forKey: .linkBrand)
-            ?? container.decodeIfPresent(LinkBrand.self, forKey: .brand)
+        self.linkBrand = try container.decode(LinkBrand.self, forKey: .linkBrand)
     }
 }

@@ -80,7 +80,7 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         )
     }
 
-    func testSynchronizeParsesOnelinkBrand() throws {
+    func testSynchronizeParsesNotlinkBrand() throws {
         let synchronize = try makeSynchronize(brandValue: "notlink")
 
         XCTAssertEqual(synchronize.manifest.linkBrand, .onelink)
@@ -103,7 +103,7 @@ final class FinancialConnectionsSessionTests: XCTestCase {
     }
 
     func testExplicitBrandOverridesLogoWithoutChangingThemeColors() {
-        let manifest = makeManifest(theme: .light, brand: .onelink)
+        let manifest = makeManifest(theme: .light, linkBrand: .onelink)
 
         XCTAssertEqual(manifest.appearance.logo, .onelink_logo)
         XCTAssertTrue(manifest.appearance.colors.primary.isEqual(FinancialConnectionsAppearance.Colors.stripe.primary))
@@ -142,24 +142,48 @@ final class FinancialConnectionsSessionTests: XCTestCase {
 
     private func makeManifest(
         theme: FinancialConnectionsSessionManifest.Theme,
-        brand: LinkBrand? = nil
+        linkBrand: LinkBrand? = nil
     ) -> FinancialConnectionsSessionManifest {
         FinancialConnectionsSessionManifest(
+            accountholderCustomerEmailAddress: nil,
+            accountholderIsLinkConsumer: nil,
+            accountholderPhoneNumber: nil,
+            accountholderToken: nil,
+            accountDisconnectionMethod: nil,
+            activeAuthSession: nil,
+            activeInstitution: nil,
             allowManualEntry: false,
-            linkBrand: brand,
+            appVerificationEnabled: nil,
+            assignmentEventId: nil,
+            linkBrand: linkBrand,
+            businessName: nil,
+            cancelUrl: nil,
+            consentAcquiredAt: nil,
             consentRequired: false,
             customManualEntryHandling: false,
             disableLinkMoreAccounts: false,
+            displayText: nil,
+            experimentAssignments: nil,
+            features: nil,
+            hostedAuthUrl: nil,
             id: "fcsess_123",
+            initialInstitution: nil,
             instantVerificationDisabled: false,
             institutionSearchDisabled: false,
+            isEndUserFacing: nil,
+            isLinkWithStripe: nil,
+            isNetworkingUserFlow: nil,
+            isStripeDirect: nil,
             livemode: false,
             manualEntryMode: .automatic,
             manualEntryUsesMicrodeposits: false,
             nextPane: .consent,
+            paymentMethodType: nil,
             permissions: [],
             product: "external_api",
             singleAccount: false,
+            skipSuccessPane: nil,
+            successUrl: nil,
             theme: theme
         )
     }
