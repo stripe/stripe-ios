@@ -87,6 +87,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
             consumerSessionClientSecret: consumerSession.clientSecret
         ).chained { [weak self] consumerSessionResponse in
             self?.consumerSession = consumerSessionResponse.consumerSession
+            self?.apiClient.authenticatedLinkBrand = consumerSessionResponse.linkBrand
             return Promise(value: consumerSessionResponse)
         }
     }

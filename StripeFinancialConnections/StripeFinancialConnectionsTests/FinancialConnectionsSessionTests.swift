@@ -62,7 +62,7 @@ final class FinancialConnectionsSessionTests: XCTestCase {
     func testSynchronizeWithoutBrandPreservesExistingStripeBranding() throws {
         let synchronize = try FinancialConnectionsSynchronizeMock.synchronize.make()
 
-        XCTAssertNil(synchronize.manifest.brand)
+        XCTAssertNil(synchronize.manifest.linkBrand)
         XCTAssertEqual(synchronize.manifest.theme, .light)
         XCTAssertEqual(synchronize.manifest.appearance.logo, .stripe_logo)
         XCTAssertTrue(
@@ -73,31 +73,31 @@ final class FinancialConnectionsSessionTests: XCTestCase {
     func testSynchronizeParsesLinkBrand() throws {
         let synchronize = try makeSynchronize(brandValue: "link")
 
-        XCTAssertEqual(synchronize.manifest.brand, .link)
+        XCTAssertEqual(synchronize.manifest.linkBrand, .link)
         XCTAssertEqual(synchronize.manifest.appearance.logo, .link_logo)
         XCTAssertTrue(
             synchronize.manifest.appearance.colors.primary.isEqual(FinancialConnectionsAppearance.Colors.stripe.primary)
         )
     }
 
-    func testSynchronizeParsesNotlinkBrand() throws {
+    func testSynchronizeParsesOnelinkBrand() throws {
         let synchronize = try makeSynchronize(brandValue: "notlink")
 
-        XCTAssertEqual(synchronize.manifest.brand, .onelink)
+        XCTAssertEqual(synchronize.manifest.linkBrand, .onelink)
         XCTAssertEqual(synchronize.manifest.appearance.logo, .onelink_logo)
     }
 
     func testSynchronizeParsesUnknownBrandAsUnparsable() throws {
         let synchronize = try makeSynchronize(brandValue: "random_brand")
 
-        XCTAssertEqual(synchronize.manifest.brand, .unparsable)
+        XCTAssertEqual(synchronize.manifest.linkBrand, .unparsable)
         XCTAssertEqual(synchronize.manifest.appearance.logo, .stripe_logo)
     }
 
     func testLinkThemeWithoutBrandPreservesExistingLinkBranding() {
         let manifest = makeManifest(theme: .linkLight)
 
-        XCTAssertNil(manifest.brand)
+        XCTAssertNil(manifest.linkBrand)
         XCTAssertEqual(manifest.appearance.logo, .link_logo)
         XCTAssertTrue(manifest.appearance.colors.primary.isEqual(FinancialConnectionsAppearance.Colors.link.primary))
     }
@@ -113,7 +113,7 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         var payload = try JSONSerialization.jsonObject(with: FinancialConnectionsSynchronizeMock.synchronize.data()) as? [String: Any]
         var manifest = payload?["manifest"] as? [String: Any]
 
-        manifest?["brand"] = brandValue
+        manifest?["link_brand"] = brandValue
         payload?["manifest"] = manifest
 
         let data = try JSONSerialization.data(withJSONObject: payload ?? [:])
@@ -146,7 +146,7 @@ final class FinancialConnectionsSessionTests: XCTestCase {
     ) -> FinancialConnectionsSessionManifest {
         FinancialConnectionsSessionManifest(
             allowManualEntry: false,
-            brand: brand,
+            linkBrand: brand,
             consentRequired: false,
             customManualEntryHandling: false,
             disableLinkMoreAccounts: false,

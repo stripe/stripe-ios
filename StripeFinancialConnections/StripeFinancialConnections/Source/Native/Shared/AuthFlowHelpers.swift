@@ -68,7 +68,7 @@ final class AuthFlowHelpers {
         if url.scheme == "stripe" {
             handleURL(url.host, nextPaneOrDrawerOnSecondaryCta)
         } else {
-            let brand = PresentationManager.shared.configuration.linkBrand ?? .link
+            let brand = PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: nil) ?? .link
             SFSafariViewController.present(url: brand.brandAwareLegalSupportURL(for: url))
         }
     }
@@ -92,7 +92,9 @@ final class AuthFlowHelpers {
                 let trailingMessage = (otpType == "EMAIL") ? STPLocalizedString("Click “Resend code” and try again, or %@.", "Text as part of an error message that shows up when user entered an invalid one-time-passcode (OTP). '%@' will be replaced by text with a link: 'contact us'") : STPLocalizedString("Try again, or %@.", "Text as part of an error message that shows up when user entered an invalid one-time-passcode (OTP). '%@' will be replaced by text with a link: 'contact us'")
 
                 let contactUsText = STPLocalizedString("contact us", "A link/button inside of text that can be tapped to visit a support website. This link will be embedded inside of larger text: 'It looks like the verification code you provided is not valid anymore. Try again, or contact us.'")
-                let contactUsUrlString = (PresentationManager.shared.configuration.linkBrand ?? .link).supportContactURL.absoluteString
+                let contactUsUrlString = (PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: nil) ?? .link)
+                    .supportContactURL
+                    .absoluteString
                 let contactUsWithUrlText = "[\(contactUsText)](\(contactUsUrlString))"
 
                 return leadingMessage + " " + String(format: trailingMessage, contactUsWithUrlText)

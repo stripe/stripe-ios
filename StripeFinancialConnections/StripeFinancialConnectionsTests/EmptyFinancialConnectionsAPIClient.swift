@@ -15,6 +15,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     var isLinkWithStripe: Bool = false
     var consumerPublishableKey: String?
     var consumerSession: StripeFinancialConnections.ConsumerSessionData?
+    var authenticatedLinkBrand: LinkBrand?
 
     func completeAssertion(
         possibleError: Error?,

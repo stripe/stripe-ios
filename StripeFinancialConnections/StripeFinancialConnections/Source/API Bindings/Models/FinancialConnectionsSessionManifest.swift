@@ -82,7 +82,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let allowManualEntry: Bool
     let appVerificationEnabled: Bool?
     let assignmentEventId: String?
-    let brand: LinkBrand?
+    let linkBrand: LinkBrand?
     let businessName: String?
     let cancelUrl: String?
     let consentAcquiredAt: String?
@@ -114,7 +114,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
     let theme: Theme?
 
     var appearance: FinancialConnectionsAppearance {
-        FinancialConnectionsAppearance(theme: theme, brand: brand)
+        FinancialConnectionsAppearance(theme: theme, brand: linkBrand)
     }
 
     var shouldAttachLinkedPaymentMethod: Bool {
@@ -141,7 +141,7 @@ struct FinancialConnectionsSessionManifest: Decodable {
 extension FinancialConnectionsSessionManifest {
     init(
         allowManualEntry: Bool,
-        brand: LinkBrand? = nil,
+        linkBrand: LinkBrand? = nil,
         consentRequired: Bool,
         customManualEntryHandling: Bool,
         disableLinkMoreAccounts: Bool,
@@ -171,7 +171,7 @@ extension FinancialConnectionsSessionManifest {
             allowManualEntry: allowManualEntry,
             appVerificationEnabled: nil,
             assignmentEventId: nil,
-            brand: brand,
+            linkBrand: linkBrand,
             businessName: nil,
             cancelUrl: nil,
             consentAcquiredAt: nil,
@@ -202,5 +202,97 @@ extension FinancialConnectionsSessionManifest {
             successUrl: nil,
             theme: theme
         )
+    }
+}
+
+extension FinancialConnectionsSessionManifest {
+    private enum CodingKeys: String, CodingKey {
+        case accountholderCustomerEmailAddress
+        case accountholderIsLinkConsumer
+        case accountholderPhoneNumber
+        case accountholderToken
+        case accountDisconnectionMethod
+        case activeAuthSession
+        case activeInstitution
+        case allowManualEntry
+        case appVerificationEnabled
+        case assignmentEventId
+        case linkBrand
+        case brand
+        case businessName
+        case cancelUrl
+        case consentAcquiredAt
+        case consentRequired
+        case customManualEntryHandling
+        case disableLinkMoreAccounts
+        case displayText
+        case experimentAssignments
+        case features
+        case hostedAuthUrl
+        case id
+        case initialInstitution
+        case instantVerificationDisabled
+        case institutionSearchDisabled
+        case isEndUserFacing
+        case isLinkWithStripe
+        case isNetworkingUserFlow
+        case isStripeDirect
+        case livemode
+        case manualEntryMode
+        case manualEntryUsesMicrodeposits
+        case nextPane
+        case paymentMethodType
+        case permissions
+        case product
+        case singleAccount
+        case skipSuccessPane
+        case successUrl
+        case theme
+    }
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.accountholderCustomerEmailAddress = try container.decodeIfPresent(String.self, forKey: .accountholderCustomerEmailAddress)
+        self.accountholderIsLinkConsumer = try container.decodeIfPresent(Bool.self, forKey: .accountholderIsLinkConsumer)
+        self.accountholderPhoneNumber = try container.decodeIfPresent(String.self, forKey: .accountholderPhoneNumber)
+        self.accountholderToken = try container.decodeIfPresent(String.self, forKey: .accountholderToken)
+        self.accountDisconnectionMethod = try container.decodeIfPresent(AccountDisconnectionMethod.self, forKey: .accountDisconnectionMethod)
+        self.activeAuthSession = try container.decodeIfPresent(FinancialConnectionsAuthSession.self, forKey: .activeAuthSession)
+        self.activeInstitution = try container.decodeIfPresent(FinancialConnectionsInstitution.self, forKey: .activeInstitution)
+        self.allowManualEntry = try container.decode(Bool.self, forKey: .allowManualEntry)
+        self.appVerificationEnabled = try container.decodeIfPresent(Bool.self, forKey: .appVerificationEnabled)
+        self.assignmentEventId = try container.decodeIfPresent(String.self, forKey: .assignmentEventId)
+        self.linkBrand = try container.decodeIfPresent(LinkBrand.self, forKey: .linkBrand)
+            ?? container.decodeIfPresent(LinkBrand.self, forKey: .brand)
+        self.businessName = try container.decodeIfPresent(String.self, forKey: .businessName)
+        self.cancelUrl = try container.decodeIfPresent(String.self, forKey: .cancelUrl)
+        self.consentAcquiredAt = try container.decodeIfPresent(String.self, forKey: .consentAcquiredAt)
+        self.consentRequired = try container.decode(Bool.self, forKey: .consentRequired)
+        self.customManualEntryHandling = try container.decode(Bool.self, forKey: .customManualEntryHandling)
+        self.disableLinkMoreAccounts = try container.decode(Bool.self, forKey: .disableLinkMoreAccounts)
+        self.displayText = try container.decodeIfPresent(DisplayText.self, forKey: .displayText)
+        self.experimentAssignments = try container.decodeIfPresent([String: String].self, forKey: .experimentAssignments)
+        self.features = try container.decodeIfPresent([String: Bool].self, forKey: .features)
+        self.hostedAuthUrl = try container.decodeIfPresent(String.self, forKey: .hostedAuthUrl)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.initialInstitution = try container.decodeIfPresent(FinancialConnectionsInstitution.self, forKey: .initialInstitution)
+        self.instantVerificationDisabled = try container.decode(Bool.self, forKey: .instantVerificationDisabled)
+        self.institutionSearchDisabled = try container.decode(Bool.self, forKey: .institutionSearchDisabled)
+        self.isEndUserFacing = try container.decodeIfPresent(Bool.self, forKey: .isEndUserFacing)
+        self.isLinkWithStripe = try container.decodeIfPresent(Bool.self, forKey: .isLinkWithStripe)
+        self.isNetworkingUserFlow = try container.decodeIfPresent(Bool.self, forKey: .isNetworkingUserFlow)
+        self.isStripeDirect = try container.decodeIfPresent(Bool.self, forKey: .isStripeDirect)
+        self.livemode = try container.decode(Bool.self, forKey: .livemode)
+        self.manualEntryMode = try container.decode(ManualEntryMode.self, forKey: .manualEntryMode)
+        self.manualEntryUsesMicrodeposits = try container.decode(Bool.self, forKey: .manualEntryUsesMicrodeposits)
+        self.nextPane = try container.decode(NextPane.self, forKey: .nextPane)
+        self.paymentMethodType = try container.decodeIfPresent(FinancialConnectionsPaymentMethodType.self, forKey: .paymentMethodType)
+        self.permissions = try container.decode([StripeAPI.FinancialConnectionsAccount.Permissions].self, forKey: .permissions)
+        self.product = try container.decode(String.self, forKey: .product)
+        self.singleAccount = try container.decode(Bool.self, forKey: .singleAccount)
+        self.skipSuccessPane = try container.decodeIfPresent(Bool.self, forKey: .skipSuccessPane)
+        self.successUrl = try container.decodeIfPresent(String.self, forKey: .successUrl)
+        self.theme = try container.decodeIfPresent(Theme.self, forKey: .theme)
     }
 }

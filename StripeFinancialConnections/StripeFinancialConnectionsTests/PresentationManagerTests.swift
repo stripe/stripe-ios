@@ -13,6 +13,7 @@ class PresentationManagerTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         PresentationManager.shared.configuration = .init()
+        PresentationManager.shared.setAuthenticatedLinkBrand(nil)
     }
 
     func testConfigurationIsApplied() {
@@ -40,6 +41,25 @@ class PresentationManagerTests: XCTestCase {
         let appearance = FinancialConnectionsAppearance(theme: .light, brand: nil)
 
         XCTAssertEqual(appearance.logo, .onelink_logo)
+    }
+
+    func testAuthenticatedLinkBrandOverridesManifestBrand() {
+        PresentationManager.shared.setAuthenticatedLinkBrand(.onelink)
+
+        let appearance = FinancialConnectionsAppearance(theme: .light, brand: .link)
+
+        XCTAssertEqual(appearance.logo, .onelink_logo)
+    }
+
+    func testConfigurationLinkBrandOverridesAuthenticatedLinkBrand() {
+        var configuration = FinancialConnectionsSheet.Configuration()
+        configuration.linkBrand = .link
+        PresentationManager.shared.configuration = configuration
+        PresentationManager.shared.setAuthenticatedLinkBrand(.onelink)
+
+        let appearance = FinancialConnectionsAppearance(theme: .light, brand: nil)
+
+        XCTAssertEqual(appearance.logo, .link_logo)
     }
 
     func testOnelinkBrandUsesSameTintAsLinkForLightTheme() {

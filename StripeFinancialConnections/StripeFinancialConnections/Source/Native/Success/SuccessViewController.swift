@@ -19,7 +19,7 @@ final class SuccessViewController: UIViewController {
     private let dataSource: SuccessDataSource
     weak var delegate: SuccessViewControllerDelegate?
     private var linkBrand: LinkBrand {
-        PresentationManager.shared.configuration.linkBrand ?? dataSource.manifest.brand ?? .link
+        PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: dataSource.manifest.linkBrand) ?? .link
     }
 
     init(dataSource: SuccessDataSource) {

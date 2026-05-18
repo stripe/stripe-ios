@@ -53,6 +53,7 @@ struct LinkSignUpResponse: Decodable {
     let accountId: String
     let publishableKey: String
     let consumerSession: ConsumerSessionData
+    let linkBrand: LinkBrand?
 }
 
 struct AttachLinkConsumerToLinkAccountSessionResponse: Decodable {
@@ -62,4 +63,39 @@ struct AttachLinkConsumerToLinkAccountSessionResponse: Decodable {
 
 struct ConsumerSessionResponse: Decodable {
     let consumerSession: ConsumerSessionData
+    let linkBrand: LinkBrand?
+}
+
+extension LinkSignUpResponse {
+    private enum CodingKeys: String, CodingKey {
+        case accountId
+        case publishableKey
+        case consumerSession
+        case linkBrand
+        case brand
+    }
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.accountId = try container.decode(String.self, forKey: .accountId)
+        self.publishableKey = try container.decode(String.self, forKey: .publishableKey)
+        self.consumerSession = try container.decode(ConsumerSessionData.self, forKey: .consumerSession)
+        self.linkBrand = try container.decodeIfPresent(LinkBrand.self, forKey: .linkBrand)
+            ?? container.decodeIfPresent(LinkBrand.self, forKey: .brand)
+    }
+}
+
+extension ConsumerSessionResponse {
+    private enum CodingKeys: String, CodingKey {
+        case consumerSession
+        case linkBrand
+        case brand
+    }
+
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.consumerSession = try container.decode(ConsumerSessionData.self, forKey: .consumerSession)
+        self.linkBrand = try container.decodeIfPresent(LinkBrand.self, forKey: .linkBrand)
+            ?? container.decodeIfPresent(LinkBrand.self, forKey: .brand)
+    }
 }

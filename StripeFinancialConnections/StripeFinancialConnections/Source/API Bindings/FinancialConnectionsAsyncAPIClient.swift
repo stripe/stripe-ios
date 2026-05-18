@@ -42,6 +42,11 @@ final class FinancialConnectionsAsyncAPIClient {
             }
         }
     }
+    var authenticatedLinkBrand: LinkBrand? {
+        didSet {
+            PresentationManager.shared.setAuthenticatedLinkBrand(authenticatedLinkBrand)
+        }
+    }
 
     private lazy var logger = FinancialConnectionsAPIClientLogger()
 
