@@ -42,7 +42,8 @@ final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
                 state: .videoPreview(
                     mockCameraSession,
                     showFlashAnimation: false,
-                    statusText: nil
+                    statusText: nil,
+                    showCaptureGuideShadow: false
                 ),
                 instructionalText: SelfieScanningViewSnapshotTest.mockText
             )

@@ -28,12 +28,6 @@ final class CameraPreviewContainerView: UIView {
                 shadowRadius: 5
             ),
         ]
-        static let captureShadow = ShadowConfiguration(
-            shadowColor: UIColor(red: 0.235, green: 0.259, blue: 0.341, alpha: 1),
-            shadowOffset: CGSize(width: 0, height: 10),
-            shadowOpacity: 0.20,
-            shadowRadius: 18
-        )
     }
 
     // MARK: Corner Radius
@@ -47,12 +41,6 @@ final class CameraPreviewContainerView: UIView {
         didSet {
             contentView.layer.cornerRadius = cornerRadius.rawValue
             updateShadowBounds()
-        }
-    }
-
-    var isCaptureShadowEnabled: Bool = false {
-        didSet {
-            captureShadowLayer.isHidden = !isCaptureShadowEnabled
         }
     }
 
@@ -75,13 +63,6 @@ final class CameraPreviewContainerView: UIView {
         config.applyTo(layer: layer)
         return layer
     }
-
-    private let captureShadowLayer: CALayer = {
-        let layer = CALayer()
-        Styling.captureShadow.applyTo(layer: layer)
-        layer.isHidden = true
-        return layer
-    }()
 
     // MARK: - Init
 
@@ -120,12 +101,11 @@ final class CameraPreviewContainerView: UIView {
 
 extension CameraPreviewContainerView {
     fileprivate func installShadowLayers() {
-        layer.addSublayer(captureShadowLayer)
         shadowLayers.forEach { layer.addSublayer($0) }
     }
 
     fileprivate func updateShadowBounds() {
-        ([captureShadowLayer] + shadowLayers).forEach { layer in
+        shadowLayers.forEach { layer in
             layer.shadowPath =
                 UIBezierPath(
                     roundedRect: bounds,

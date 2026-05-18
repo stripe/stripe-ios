@@ -103,7 +103,8 @@ final class SelfieScanningView: UIView {
             case videoPreview(
                 CameraSessionProtocol,
                 showFlashAnimation: Bool,
-                statusText: StatusText?
+                statusText: StatusText?,
+                showCaptureGuideShadow: Bool
             )
             /// Display scanned selfie images
             case scanned(
@@ -198,7 +199,7 @@ final class SelfieScanningView: UIView {
         return blurView
     }()
 
-    private let captureTickMarksView: UIView = {
+    private let captureTickMarksView: CaptureTickMarksView = {
         let view = CaptureTickMarksView()
         view.backgroundColor = .clear
         view.isHidden = true
@@ -329,9 +330,9 @@ final class SelfieScanningView: UIView {
         capturedImageView.image = nil
         capturedImageBlurView.isHidden = true
         captureTickMarksView.isHidden = true
+        captureTickMarksView.showsCenteredShadow = false
         statusLabelContainerView.isHidden = true
         previewContainerView.isHidden = true
-        previewContainerView.isCaptureShadowEnabled = false
         havingTroubleLabel.isHidden = true
         scannedImageScrollView.isHidden = true
 
@@ -343,19 +344,17 @@ final class SelfieScanningView: UIView {
             previewContainerView.isHidden = false
             havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
 
-        case .videoPreview(let cameraSession, let showFlashAnimation, let statusText):
+        case .videoPreview(let cameraSession, let showFlashAnimation, let statusText, let showCaptureGuideShadow):
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
             previewContainerView.isHidden = false
             havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
+            captureTickMarksView.isHidden = false
+            captureTickMarksView.showsCenteredShadow = showCaptureGuideShadow
             if let statusText {
                 configureStatusLabel(statusText)
-                if case .holdStill = statusText {
-                    captureTickMarksView.isHidden = false
-                    previewContainerView.isCaptureShadowEnabled = true
-                }
             }
             if showFlashAnimation {
                 animateFlash()
@@ -643,6 +642,14 @@ private final class CaptureTickMarksView: UIView {
         static let shadowColor = UIColor.black.withAlphaComponent(0.35)
         static let shadowOffset = CGSize(width: 0, height: 1)
         static let shadowBlur: CGFloat = 4
+        static let centeredShadowColor = UIColor.black.withAlphaComponent(0.22)
+        static let centeredShadowPadding: CGFloat = 8
+    }
+
+    var showsCenteredShadow: Bool = false {
+        didSet {
+            setNeedsDisplay()
+        }
     }
 
     override func layoutSubviews() {
@@ -663,6 +670,20 @@ private final class CaptureTickMarksView: UIView {
             x: bounds.midX,
             y: bounds.height * Styling.centerYRatio
         )
+
+        if showsCenteredShadow {
+            let ovalRect = CGRect(
+                x: center.x - horizontalRadius - Styling.centeredShadowPadding,
+                y: center.y - verticalRadius - Styling.centeredShadowPadding,
+                width: (horizontalRadius + Styling.centeredShadowPadding) * 2,
+                height: (verticalRadius + Styling.centeredShadowPadding) * 2
+            )
+            let shadowPath = UIBezierPath(rect: bounds)
+            shadowPath.append(UIBezierPath(ovalIn: ovalRect))
+            shadowPath.usesEvenOddFillRule = true
+            Styling.centeredShadowColor.setFill()
+            shadowPath.fill()
+        }
 
         context.setLineWidth(Styling.tickWidth)
         context.setLineCap(.round)

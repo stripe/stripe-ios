@@ -129,7 +129,8 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                     state: .videoPreview(
                         imageScanningSession.cameraSession,
                         showFlashAnimation: collectedSamples.count == 1,
-                        statusText: collectedSamples.isEmpty ? nil : .holdStill
+                        statusText: collectedSamples.isEmpty ? nil : .holdStill,
+                        showCaptureGuideShadow: isFaceCenteredInCaptureGuide
                     ),
                     instructionalText: collectedSamples.isEmpty
                         ? SelfieCaptureViewController.initialInstructionText
@@ -204,6 +205,9 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 
     /// This timer will be nil if it's time to take another sample from the camera feed
     private var sampleTimer: Timer?
+
+    /// Whether the most recent selfie scanner output had a valid centered face.
+    private var isFaceCenteredInCaptureGuide = false
 
     // MARK: Init
 
@@ -389,6 +393,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
     }
 
     func imageScanningSessionDidReset(_ scanningSession: SelfieImageScanningSession) {
+        isFaceCenteredInCaptureGuide = false
         selfieUploader.reset()
     }
 
@@ -405,6 +410,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         _ scanningSession: SelfieImageScanningSession,
         willStartScanningForClassification classification: EmptyClassificationType
     ) {
+        isFaceCenteredInCaptureGuide = false
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.selfieCaptureView)
 
@@ -452,9 +458,11 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
 
         // If no valid face was found, update state to scanning
         guard scannerOutput.isValid else {
+            isFaceCenteredInCaptureGuide = false
             scanningSession.updateScanningState(collectedSamples)
             return
         }
+        isFaceCenteredInCaptureGuide = true
 
         // Update the number of collected samples
         collectedSamples.append(
