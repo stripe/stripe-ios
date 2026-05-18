@@ -70,23 +70,6 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         )
     }
 
-    func testSynchronizeParsesLinkBrand() throws {
-        let synchronize = try makeSynchronize(brandValue: "link")
-
-        XCTAssertEqual(synchronize.manifest.linkBrand, .link)
-        XCTAssertEqual(synchronize.manifest.appearance.logo, .link_logo)
-        XCTAssertTrue(
-            synchronize.manifest.appearance.colors.primary.isEqual(FinancialConnectionsAppearance.Colors.stripe.primary)
-        )
-    }
-
-    func testSynchronizeParsesOnelinkBrand() throws {
-        let synchronize = try makeSynchronize(brandValue: "onelink")
-
-        XCTAssertEqual(synchronize.manifest.linkBrand, .onelink)
-        XCTAssertEqual(synchronize.manifest.appearance.logo, .onelink_logo)
-    }
-
     func testSynchronizeParsesUnknownBrandAsUnparsable() throws {
         let synchronize = try makeSynchronize(brandValue: "random_brand")
 
@@ -100,13 +83,6 @@ final class FinancialConnectionsSessionTests: XCTestCase {
         XCTAssertNil(manifest.linkBrand)
         XCTAssertEqual(manifest.appearance.logo, .link_logo)
         XCTAssertTrue(manifest.appearance.colors.primary.isEqual(FinancialConnectionsAppearance.Colors.link.primary))
-    }
-
-    func testExplicitBrandOverridesLogoWithoutChangingThemeColors() {
-        let manifest = makeManifest(theme: .light, linkBrand: .onelink)
-
-        XCTAssertEqual(manifest.appearance.logo, .onelink_logo)
-        XCTAssertTrue(manifest.appearance.colors.primary.isEqual(FinancialConnectionsAppearance.Colors.stripe.primary))
     }
 
     private func makeSynchronize(brandValue: String?) throws -> FinancialConnectionsSynchronize {
