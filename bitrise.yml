@@ -20,12 +20,28 @@ app:
     FASTLANE_LANE: ios integration_all
 trigger_map:
 - push_branch: master
-  pipeline: main-trigger-pipeline
+  pipeline: push-main-pipeline
 - pull_request_source_branch: releases/*
   pipeline: releases-trigger-pipeline
 - pull_request_source_branch: '*'
   pipeline: main-trigger-pipeline
 pipelines:
+  push-main-pipeline:
+    workflows:
+      lint-tests:
+        abort_on_fail: true
+      framework-tests: {}
+      framework-tests-ios-26: {}
+      test-builds-xcode-26-1: {}
+      install-tests: {}
+      size-report: {}
+      ui-tests-paymentsheet:
+        parallel: 4
+      ui-tests-connect: {}
+      ui-tests-crypto: {}
+      integration-all: {}
+      lokalise-upload: {}
+
   main-trigger-pipeline:
     workflows:
       lint-tests:
