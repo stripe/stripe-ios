@@ -159,21 +159,34 @@ extension PaymentSheetUITestCase {
 
         addApplePayContactIfNeeded(applePay)
 
-        let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
+        if ProcessInfo.processInfo.operatingSystemVersion.majorVersion >= 26 {
+            let cardNeedingBillingPredicate = NSPredicate(format: "label CONTAINS 'Add Billing Address'")
+            let cardNeedingBilling = applePay.buttons.matching(cardNeedingBillingPredicate).firstMatch
+            if cardNeedingBilling.waitForExistence(timeout: 4.0) {
+                cardNeedingBilling.tap()
+                addApplePayBillingIfNeeded(applePay)
+            }
 
-        let cardButton = applePay.buttons.containing(predicate).firstMatch
-        XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
-        cardButton.forceTapElement()
+            let payButton = applePay.buttons["Pay with Passcode"]
+            XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+            payButton.forceTapElement()
+        } else {
+            let predicate = NSPredicate(format: "label CONTAINS 'Simulated Card - AmEx, ‪•••• 1234‬'")
 
-        addApplePayBillingIfNeeded(applePay)
+            let cardButton = applePay.buttons.containing(predicate).firstMatch
+            XCTAssertTrue(cardButton.waitForExistence(timeout: 10.0))
+            cardButton.forceTapElement()
 
-        let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
-        XCTAssertTrue(cardSelectionButton.waitForExistence(timeout: 10.0))
-        cardSelectionButton.forceTapElement()
+            addApplePayBillingIfNeeded(applePay)
 
-        let payButton = applePay.buttons["Pay with Passcode"]
-        XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
-        payButton.forceTapElement()
+            let cardSelectionButton = applePay.buttons["Simulated Card - AmEx, ‪•••• 1234‬"].firstMatch
+            XCTAssertTrue(cardSelectionButton.waitForExistence(timeout: 10.0))
+            cardSelectionButton.forceTapElement()
+
+            let payButton = applePay.buttons["Pay with Passcode"]
+            XCTAssertTrue(payButton.waitForExistence(timeout: 10.0))
+            payButton.forceTapElement()
+        }
 
         let successText = app.staticTexts["Success!"]
         //      This actually takes upwards of 20 seconds sometimes, especially in the deferred flow :/
@@ -210,7 +223,12 @@ extension PaymentSheetUITestCase {
             zipCell.tap()
             zipCell.typeText("95014")
 
-            applePay.buttons["Done"].tap()
+            let billingDone = applePay.navigationBars["Billing Address"].buttons["Done"]
+            if billingDone.exists {
+                billingDone.tap()
+            } else {
+                applePay.buttons["Done"].firstMatch.tap()
+            }
         }
     }
 
@@ -222,8 +240,8 @@ extension PaymentSheetUITestCase {
             XCTAssertTrue(applePay.staticTexts["Select An Email Address"].waitForExistence(timeout: 4.0))
             applePay.buttons.matching(identifier: "Add Email Address").element(boundBy: 1).tap()
             applePay.typeText("test@example.com")
-            // Hit the checkmark done button in the top right
-            applePay.buttons["Done"].tap()
+            // Hit the checkmark done button in the top right.
+            applePay.buttons["Done"].firstMatch.tap()
         }
     }
 
