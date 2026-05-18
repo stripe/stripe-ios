@@ -36,6 +36,43 @@ final class SelfieWarmupViewControllerTest: XCTestCase {
 
         // Verify transitioned to selfie capture
         XCTAssertTrue(mockSheetController.transitionedToSelfieCapture)
+        XCTAssertNil(mockSheetController.transitionedToSelfieCaptureTrainingConsent)
+    }
+
+    func testTapAllowCapturesTrainingConsent() {
+        let vc = try! SelfieWarmupViewController(
+            sheetController: mockSheetController,
+            trainingConsentText: SelfieWarmupViewControllerTest.mockVerificationPage.selfie?
+                .trainingConsentText
+        )
+
+        XCTAssertEqual(vc.flowViewModel.buttons.count, 2)
+
+        vc.flowViewModel.buttons.first?.didTap()
+
+        XCTAssertTrue(mockSheetController.transitionedToSelfieCapture)
+        XCTAssertEqual(
+            mockSheetController.transitionedToSelfieCaptureTrainingConsent,
+            true
+        )
+    }
+
+    func testTapDeclineCapturesTrainingConsent() {
+        let vc = try! SelfieWarmupViewController(
+            sheetController: mockSheetController,
+            trainingConsentText: SelfieWarmupViewControllerTest.mockVerificationPage.selfie?
+                .trainingConsentText
+        )
+
+        XCTAssertEqual(vc.flowViewModel.buttons.count, 2)
+
+        vc.flowViewModel.buttons.last?.didTap()
+
+        XCTAssertTrue(mockSheetController.transitionedToSelfieCapture)
+        XCTAssertEqual(
+            mockSheetController.transitionedToSelfieCaptureTrainingConsent,
+            false
+        )
     }
 
 }
@@ -151,6 +188,17 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
             withValue: "camera_session"
         )
         XCTAssert(analytic: analytic, hasMetadata: "camera_event_kind", withValue: "runtime_error")
+    }
+
+    func testHavingTroubleTransitionsToFallbackUrl() {
+        let vc = makeViewController()
+
+        guard case .scan(let viewModel) = vc.selfieCaptureViewModel else {
+            return XCTFail("Expected selfie capture view model to be in scan state")
+        }
+        viewModel.havingTroubleHandler?()
+
+        XCTAssertTrue(mockSheetController.transitionedToFallbackUrl)
     }
 }
 

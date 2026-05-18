@@ -17,12 +17,15 @@ final class SelfieScanningView: UIView {
     struct Styling {
         static let contentInsets = IdentityFlowView.Style.defaultContentViewInsets
 
-        static let viewWidthToContainerHeightRatio = IdentityUI.documentCameraPreviewAspectRatio
-
         static let labelBottomPadding = IdentityUI.scanningViewLabelBottomPadding
         static let labelMinHeightNumberOfLines = IdentityUI.scanningViewLabelMinHeightNumberOfLines
         static var labelFont: UIFont {
             IdentityUI.instructionsFont
+        }
+        static let preferredPreviewHeightToWidthRatio: CGFloat = 4 / 3
+        static let troubleLinkTopPadding: CGFloat = 12
+        static var troubleLinkFont: UIFont {
+            IdentityUI.preferredFont(forTextStyle: .body).withSize(12)
         }
 
         static let flashAnimationDuration: TimeInterval = 0.2
@@ -73,11 +76,35 @@ final class SelfieScanningView: UIView {
     }
 
     struct ViewModel {
+        enum StatusText {
+            case holdStill
+            case uploading
+
+            var text: String {
+                switch self {
+                case .holdStill:
+                    return STPLocalizedString(
+                        "Hold still",
+                        "Status text displayed over the selfie viewfinder while capturing selfies"
+                    )
+                case .uploading:
+                    return STPLocalizedString(
+                        "Uploading",
+                        "Status text displayed over the blurred selfie while uploading"
+                    )
+                }
+            }
+        }
+
         enum State {
             /// Display an empty container when waiting for camera permission prompt
             case blank
             /// Live video feed from the camera while taking selfies
-            case videoPreview(CameraSessionProtocol, showFlashAnimation: Bool)
+            case videoPreview(
+                CameraSessionProtocol,
+                showFlashAnimation: Bool,
+                statusText: StatusText?
+            )
             /// Display scanned selfie images
             case scanned(
                 [UIImage],
@@ -86,14 +113,22 @@ final class SelfieScanningView: UIView {
                 openURLHandler: (URL) -> Void,
                 retakeSelfieHandler: () -> Void
             )
-            case saving(
-                [UIImage],
-                consentHTMLText: String
-            )
+            case saving(UIImage, statusText: StatusText)
         }
 
         let state: State
         let instructionalText: String
+        let havingTroubleHandler: (() -> Void)?
+
+        init(
+            state: State,
+            instructionalText: String,
+            havingTroubleHandler: (() -> Void)? = nil
+        ) {
+            self.state = state
+            self.instructionalText = instructionalText
+            self.havingTroubleHandler = havingTroubleHandler
+        }
 
         var instructionalLabelViewModel: BottomAlignedLabel.ViewModel {
             return .init(
@@ -120,6 +155,20 @@ final class SelfieScanningView: UIView {
     // MARK: Camera Preview
     private let previewContainerView = CameraPreviewContainerView()
 
+    private lazy var havingTroubleLabel: UILabel = {
+        let label = UILabel()
+        label.adjustsFontForContentSizeCategory = true
+        label.isAccessibilityElement = true
+        label.accessibilityTraits = .link
+        label.isUserInteractionEnabled = true
+        label.isHidden = true
+        label.addGestureRecognizer(UITapGestureRecognizer(
+            target: self,
+            action: #selector(didTapHavingTrouble)
+        ))
+        return label
+    }()
+
     /// Camera preview
     private let cameraPreviewView = CameraPreviewView()
 
@@ -128,6 +177,50 @@ final class SelfieScanningView: UIView {
         let view = UIView()
         view.backgroundColor = .white
         view.alpha = 0
+        return view
+    }()
+
+    private let capturedImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.isHidden = true
+        imageView.isAccessibilityElement = true
+        imageView.accessibilityLabel = STPLocalizedString(
+            "Selfie",
+            "Accessibility label of captured selfie images"
+        )
+        return imageView
+    }()
+
+    private let capturedImageBlurView: UIVisualEffectView = {
+        let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        blurView.isHidden = true
+        return blurView
+    }()
+
+    private let statusLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16)
+        label.textColor = .white
+        label.adjustsFontForContentSizeCategory = true
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.layer.shadowOffset = CGSize(width: 0, height: 1)
+        label.layer.shadowRadius = 4
+        label.layer.shadowOpacity = 0.35
+        return label
+    }()
+
+    private let statusLabelContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(
+            red: 0x21 / 255,
+            green: 0x25 / 255,
+            blue: 0x2C / 255,
+            alpha: 0.6
+        )
+        view.layer.cornerRadius = 8
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
 
@@ -195,6 +288,9 @@ final class SelfieScanningView: UIView {
     /// Called when the user taps on retake selfie button
     private var retakeSelfieHandler: (() -> Void)?
 
+    /// Called when the user taps on the "Having Trouble?" link
+    private var havingTroubleHandler: (() -> Void)?
+
     // MARK: Init
 
     init() {
@@ -215,12 +311,18 @@ final class SelfieScanningView: UIView {
     func configure(with viewModel: ViewModel, sheetController: VerificationSheetControllerProtocol?) {
 
         instructionLabelView.configure(from: viewModel.instructionalLabelViewModel)
+        havingTroubleHandler = viewModel.havingTroubleHandler
 
         let isCurrentlyShowingScanned = !scannedImageScrollView.isHidden
 
         // Reset values
         cameraPreviewView.isHidden = true
+        capturedImageView.isHidden = true
+        capturedImageView.image = nil
+        capturedImageBlurView.isHidden = true
+        statusLabelContainerView.isHidden = true
         previewContainerView.isHidden = true
+        havingTroubleLabel.isHidden = true
         scannedImageScrollView.isHidden = true
 
         switch viewModel.state {
@@ -229,13 +331,18 @@ final class SelfieScanningView: UIView {
             consentCheckboxButton.isHidden = true
             retakeSelfieStack.isHidden = true
             previewContainerView.isHidden = false
+            havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
 
-        case .videoPreview(let cameraSession, let showFlashAnimation):
+        case .videoPreview(let cameraSession, let showFlashAnimation, let statusText):
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
             previewContainerView.isHidden = false
+            havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
+            if let statusText {
+                configureStatusLabel(statusText)
+            }
             if showFlashAnimation {
                 animateFlash()
             }
@@ -272,29 +379,14 @@ final class SelfieScanningView: UIView {
                     sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
                 }
             }
-        case .saving(let images, consentHTMLText: let consentText):
-            scannedImageScrollView.isHidden = false
-            rebuildImageHStack(with: images)
-
-            do {
-                consentCheckboxButton.setAttributedText(
-                    try NSAttributedString.createHtmlString(
-                        htmlText: consentText,
-                        style: Styling.consentHTMLStyle
-                    )
-                )
-                consentCheckboxButton.isEnabled = false
-                retakeSelfieIcon.tintColor = IdentityUI.iconColor
-                retakeSelfieStack.isHidden = false
-                retakeSelfieButton.isEnabled = false
-                consentCheckboxButton.isHidden = false
-            } catch {
-                // Keep the consent checkbox hidden and treat this case the same
-                // as if the user did not give consent.
-                if let sheetController = sheetController {
-                    sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
-                }
-            }
+        case .saving(let image, let statusText):
+            previewContainerView.isHidden = false
+            capturedImageView.image = image
+            capturedImageView.isHidden = false
+            capturedImageBlurView.isHidden = false
+            configureStatusLabel(statusText)
+            retakeSelfieStack.isHidden = true
+            consentCheckboxButton.isHidden = true
         }
     }
 
@@ -309,6 +401,7 @@ final class SelfieScanningView: UIView {
             self.consentCheckboxButton.theme = Styling.consentCheckboxTheme(
                 tintColor: self.tintColor
             )
+            self.configureHavingTroubleLabel()
         }
     }
 
@@ -323,12 +416,20 @@ extension SelfieScanningView {
 
         vStack.addArrangedSubview(instructionLabelView)
         vStack.addArrangedSubview(previewContainerView)
+        vStack.addArrangedSubview(havingTroubleLabel)
         vStack.addArrangedSubview(scannedImageScrollView)
         vStack.addArrangedSubview(retakeSelfieStack)
         vStack.addArrangedSubview(consentCheckboxButton)
 
         previewContainerView.contentView.addAndPinSubview(cameraPreviewView)
+        previewContainerView.contentView.addAndPinSubview(capturedImageView)
+        previewContainerView.contentView.addAndPinSubview(capturedImageBlurView)
         previewContainerView.contentView.addAndPinSubview(flashOverlayView)
+        previewContainerView.contentView.addSubview(statusLabelContainerView)
+        statusLabelContainerView.addAndPinSubview(
+            statusLabel,
+            insets: .init(top: 8, leading: 8, bottom: 8, trailing: 8)
+        )
 
         // Add some bottom margin so the scroll indicator doesn't overlay on
         // top of the scanned images
@@ -346,6 +447,10 @@ extension SelfieScanningView {
     fileprivate func installConstraints() {
         scannedImageHStack.translatesAutoresizingMaskIntoConstraints = false
         scannedImageScrollView.setContentHuggingPriority(.required, for: .horizontal)
+        previewContainerView.setContentHuggingPriority(.defaultLow, for: .vertical)
+        previewContainerView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        instructionLabelView.setContentHuggingPriority(.required, for: .vertical)
+        instructionLabelView.setContentCompressionResistancePriority(.required, for: .vertical)
 
         // Adjusts to keep padding visually the same while accounting for scroll
         // indicator margin
@@ -353,18 +458,22 @@ extension SelfieScanningView {
             Styling.consentTopPadding - Styling.scannedImageScrollIndicatorMargin,
             after: scannedImageScrollView
         )
+        vStack.setCustomSpacing(Styling.troubleLinkTopPadding, after: previewContainerView)
+        configureHavingTroubleLabel()
 
         NSLayoutConstraint.activate([
-            // Set the container to the same height as the document scanning preview, but as a square
-            widthAnchor.constraint(
-                equalTo: previewContainerView.widthAnchor,
-                multiplier: Styling.viewWidthToContainerHeightRatio,
-                constant: Styling.contentInsets.leading + Styling.contentInsets.trailing
-            ),
             previewContainerView.widthAnchor.constraint(
-                equalTo: previewContainerView.heightAnchor
+                equalTo: widthAnchor,
+                constant: -(Styling.contentInsets.leading + Styling.contentInsets.trailing)
             ),
-
+            {
+                let constraint = previewContainerView.heightAnchor.constraint(
+                    equalTo: previewContainerView.widthAnchor,
+                    multiplier: Styling.preferredPreviewHeightToWidthRatio
+                )
+                constraint.priority = .defaultHigh
+                return constraint
+            }(),
             // Set insets for label
             widthAnchor.constraint(
                 equalTo: instructionLabelView.widthAnchor,
@@ -375,6 +484,10 @@ extension SelfieScanningView {
             widthAnchor.constraint(
                 equalTo: consentCheckboxButton.widthAnchor,
                 constant: Styling.contentInsets.leading + Styling.contentInsets.trailing
+            ),
+            havingTroubleLabel.widthAnchor.constraint(
+                lessThanOrEqualTo: widthAnchor,
+                constant: -(Styling.contentInsets.leading + Styling.contentInsets.trailing)
             ),
 
             // Make scroll view's content full-height
@@ -392,7 +505,37 @@ extension SelfieScanningView {
                 constraint.priority = .defaultHigh
                 return constraint
             }(),
+            statusLabelContainerView.centerXAnchor.constraint(
+                equalTo: previewContainerView.contentView.centerXAnchor
+            ),
+            statusLabelContainerView.bottomAnchor.constraint(
+                equalTo: previewContainerView.contentView.bottomAnchor,
+                constant: -40
+            ),
+            statusLabelContainerView.widthAnchor.constraint(
+                lessThanOrEqualTo: previewContainerView.contentView.widthAnchor,
+                multiplier: 0.8
+            ),
         ])
+    }
+
+    fileprivate func configureStatusLabel(_ statusText: ViewModel.StatusText) {
+        statusLabel.text = statusText.text
+        statusLabelContainerView.isHidden = false
+    }
+
+    fileprivate func configureHavingTroubleLabel() {
+        havingTroubleLabel.attributedText = NSAttributedString(
+            string: STPLocalizedString(
+                "Having Trouble?",
+                "Link text displayed under the selfie viewfinder"
+            ),
+            attributes: [
+                .font: Styling.troubleLinkFont,
+                .foregroundColor: IdentityUI.secondaryLabelColor,
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+            ]
+        )
     }
 
     fileprivate func rebuildImageHStack(with images: [UIImage]) {
@@ -458,6 +601,10 @@ extension SelfieScanningView {
 
     @objc fileprivate func didTapRetakeSelfie() {
         retakeSelfieHandler?()
+    }
+
+    @objc fileprivate func didTapHavingTrouble() {
+        havingTroubleHandler?()
     }
 }
 

@@ -7,7 +7,9 @@
 //
 
 @_spi(STP) import StripeCore
+@_spi(STP) import StripeUICore
 import StripeCoreTestUtils
+import UIKit
 import Vision
 import XCTest
 
@@ -43,6 +45,15 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             flowController.navigationController.viewControllers.first as Any,
             LoadingViewController.self
         )
+    }
+
+    func testBrandColorAppliesToPrimaryButtonBackground() {
+        let brandColor = UIColor(red: 0.25, green: 0.70, blue: 0.46, alpha: 1)
+        let configuration = Button.Configuration.identityPrimary(
+            backgroundColor: brandColor
+        )
+
+        XCTAssertEqual(configuration.backgroundColor, brandColor)
     }
 
     // Tests the navigation stack between screen transitions
@@ -354,6 +365,21 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             missingRequirements: [.face],
             completion: { nextVC in
                 XCTAssertIs(nextVC, SelfieWarmupViewController.self)
+                exp.fulfill()
+            }
+        )
+
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testNextViewControllerBiometricConsentPrecedesSelfie() throws {
+        let exp = expectation(
+            description: "testNextViewControllerBiometricConsentPrecedesSelfie"
+        )
+        try nextViewController(
+            missingRequirements: [.biometricConsent, .face],
+            completion: { nextVC in
+                XCTAssertIs(nextVC, BiometricConsentViewController.self)
                 exp.fulfill()
             }
         )
