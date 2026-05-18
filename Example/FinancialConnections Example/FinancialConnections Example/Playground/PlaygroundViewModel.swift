@@ -842,7 +842,7 @@ private func PresentPaymentSheet(
     case .alwaysDark: configuration.style = .alwaysDark
     }
 
-    if config.linkBrand == .off {
+    if config.linkBrand == .on {
         configuration.link.brand = .onelink
     }
 
