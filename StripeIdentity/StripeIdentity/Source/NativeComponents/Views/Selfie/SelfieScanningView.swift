@@ -198,6 +198,14 @@ final class SelfieScanningView: UIView {
         return blurView
     }()
 
+    private let captureTickMarksView: UIView = {
+        let view = CaptureTickMarksView()
+        view.backgroundColor = .clear
+        view.isHidden = true
+        view.isUserInteractionEnabled = false
+        return view
+    }()
+
     private let statusLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
@@ -320,8 +328,10 @@ final class SelfieScanningView: UIView {
         capturedImageView.isHidden = true
         capturedImageView.image = nil
         capturedImageBlurView.isHidden = true
+        captureTickMarksView.isHidden = true
         statusLabelContainerView.isHidden = true
         previewContainerView.isHidden = true
+        previewContainerView.isCaptureShadowEnabled = false
         havingTroubleLabel.isHidden = true
         scannedImageScrollView.isHidden = true
 
@@ -342,6 +352,10 @@ final class SelfieScanningView: UIView {
             cameraPreviewView.session = cameraSession
             if let statusText {
                 configureStatusLabel(statusText)
+                if case .holdStill = statusText {
+                    captureTickMarksView.isHidden = false
+                    previewContainerView.isCaptureShadowEnabled = true
+                }
             }
             if showFlashAnimation {
                 animateFlash()
@@ -424,6 +438,7 @@ extension SelfieScanningView {
         previewContainerView.contentView.addAndPinSubview(cameraPreviewView)
         previewContainerView.contentView.addAndPinSubview(capturedImageView)
         previewContainerView.contentView.addAndPinSubview(capturedImageBlurView)
+        previewContainerView.contentView.addAndPinSubview(captureTickMarksView)
         previewContainerView.contentView.addAndPinSubview(flashOverlayView)
         previewContainerView.contentView.addSubview(statusLabelContainerView)
         statusLabelContainerView.addAndPinSubview(
@@ -613,5 +628,66 @@ extension SelfieScanningView: CheckboxButtonDelegate {
     func checkboxButton(_ checkboxButton: CheckboxButton, shouldOpen url: URL) -> Bool {
         openURLHandler?(url)
         return false
+    }
+}
+
+private final class CaptureTickMarksView: UIView {
+    struct Styling {
+        static let tickCount = 68
+        static let tickLength: CGFloat = 11
+        static let tickWidth: CGFloat = 2
+        static let diameterToWidthRatio: CGFloat = 0.64
+        static let centerYRatio: CGFloat = 0.43
+        static let tickColor = UIColor.white.withAlphaComponent(0.96)
+        static let shadowColor = UIColor.black.withAlphaComponent(0.35)
+        static let shadowOffset = CGSize(width: 0, height: 1)
+        static let shadowBlur: CGFloat = 4
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setNeedsDisplay()
+    }
+
+    override func draw(_ rect: CGRect) {
+        guard let context = UIGraphicsGetCurrentContext(),
+              bounds.width > 0,
+              bounds.height > 0 else {
+            return
+        }
+
+        let radius = bounds.width * Styling.diameterToWidthRatio / 2
+        let center = CGPoint(
+            x: bounds.midX,
+            y: bounds.height * Styling.centerYRatio
+        )
+
+        context.setLineWidth(Styling.tickWidth)
+        context.setLineCap(.round)
+        context.setStrokeColor(Styling.tickColor.cgColor)
+        context.setShadow(
+            offset: Styling.shadowOffset,
+            blur: Styling.shadowBlur,
+            color: Styling.shadowColor.cgColor
+        )
+
+        for index in 0..<Styling.tickCount {
+            let angle = (CGFloat(index) / CGFloat(Styling.tickCount)) * .pi * 2
+            let unitX = cos(angle)
+            let unitY = sin(angle)
+            let startPoint = CGPoint(
+                x: center.x + unitX * radius,
+                y: center.y + unitY * radius
+            )
+            let endPoint = CGPoint(
+                x: center.x + unitX * (radius + Styling.tickLength),
+                y: center.y + unitY * (radius + Styling.tickLength)
+            )
+
+            context.move(to: startPoint)
+            context.addLine(to: endPoint)
+        }
+
+        context.strokePath()
     }
 }
