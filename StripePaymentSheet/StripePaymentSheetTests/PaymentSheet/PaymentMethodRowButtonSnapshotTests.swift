@@ -308,11 +308,9 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         appearance: PaymentSheet.Appearance,
         isEmbedded: Bool
     ) -> UILabel {
-        return RowButton.makePlainSublabel(
-            text: RowButton.makePaymentMethodTypePlainSublabelText(
-                paymentMethodType: paymentMethodType,
-                currency: nil
-            ),
+        return RowButton.makePaymentMethodTypePlainSublabel(
+            paymentMethodType: paymentMethodType,
+            currency: nil,
             appearance: appearance,
             isEmbedded: isEmbedded
         )

@@ -303,7 +303,10 @@ class EmbeddedPaymentMethodsView: UIView {
 
     // MARK: Tap handling
     func didTap(rowButton: RowButton) {
-        populatePaymentMethodMessagingIfAvailable(for: rowButton)
+        (rowButton.sublabel as? PMMERowSublabelView)?.populateIfNeeded(
+            for: rowButton.type.paymentMethodType,
+            using: paymentMethodMessagingPromotionsHelper
+        )
         self.selectedRowButton = rowButton
         delegate?.embeddedPaymentMethodsViewDidTapPaymentMethodRow()
         analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: rowButton.type.analyticsIdentifier)
@@ -508,7 +511,6 @@ class EmbeddedPaymentMethodsView: UIView {
                 self?.didTap(rowButton: rowButton)
             }
         )
-        configureSublabel(sublabel, for: savedPaymentMethodButton)
         return savedPaymentMethodButton
     }
 
@@ -539,43 +541,25 @@ class EmbeddedPaymentMethodsView: UIView {
                 self?.didTap(rowButton: rowButton)
             }
         )
-        configureSublabel(sublabel, for: rowButton)
+        if let sublabel = sublabel as? PMMERowSublabelView {
+            sublabel.onLayoutNeedsUpdate = { [weak rowButton] in
+                rowButton?.didUpdateSublabelLayout()
+            }
+        }
         return rowButton
     }
 
     private func makeApplePayRowButton(didTap: @escaping RowButton.DidTapClosure) -> RowButton {
-        let sublabel = RowButton.makePlainSublabel(text: nil, appearance: appearance, isEmbedded: true)
-        let rowButton = RowButton.makeForApplePay(appearance: appearance, sublabel: sublabel, isEmbedded: true, didTap: didTap)
-        configureSublabel(sublabel, for: rowButton)
-        return rowButton
+        return RowButton.makeApplePayRowButton(appearance: appearance, isEmbedded: true, didTap: didTap)
     }
 
     private func makeLinkRowButton(didTap: @escaping RowButton.DidTapClosure) -> RowButton {
-        let sublabel = RowButton.makePlainSublabel(
-            text: RowButton.makeLinkPlainSublabelText(),
+        return RowButton.makeLinkRowButton(
             appearance: appearance,
-            isEmbedded: true
-        )
-        let rowButton = RowButton.makeForLink(
-            appearance: appearance,
-            sublabel: sublabel,
             linkBrand: linkBrand,
             isEmbedded: true,
             didTap: didTap
         )
-        configureSublabel(sublabel, for: rowButton)
-        return rowButton
-    }
-
-    private func populatePaymentMethodMessagingIfAvailable(for rowButton: RowButton) {
-        // RowButton is variant-agnostic; PMME-specific loading happens only when the sublabel is the PMME view.
-        guard let sublabel = rowButton.sublabel as? PMMERowSublabelView,
-              !sublabel.hasContent,
-              let paymentMethodType = rowButton.type.paymentMethodType,
-              let content = paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethodType) else {
-            return
-        }
-        sublabel.populateIfNeeded(content)
     }
 
     func updateSelectedRowPlainSublabel(_ text: String?, animated: Bool = true) {
@@ -583,15 +567,6 @@ class EmbeddedPaymentMethodsView: UIView {
             return
         }
         updatePlainSublabel(for: selectedRowButton, text: text, animated: animated)
-    }
-
-    private func configureSublabel(_ sublabel: UIView, for rowButton: RowButton) {
-        // Only the PMME sublabel needs to notify the row when expansion changes its layout.
-        if let sublabel = sublabel as? PMMERowSublabelView {
-            sublabel.onLayoutNeedsUpdate = { [weak rowButton] in
-                rowButton?.didUpdateSublabelLayout()
-            }
-        }
     }
 
     private func makeSublabel(paymentMethodType: PaymentSheet.PaymentMethodType, isEmbedded: Bool) -> UIView {
@@ -602,8 +577,9 @@ class EmbeddedPaymentMethodsView: UIView {
         if shouldUsePaymentMethodMessaging(for: paymentMethodType) {
             return PMMERowSublabelView(appearance: appearance, content: nil)
         }
-        return RowButton.makePlainSublabel(
-            text: RowButton.makePaymentMethodTypePlainSublabelText(paymentMethodType: paymentMethodType, currency: currency),
+        return RowButton.makePaymentMethodTypePlainSublabel(
+            paymentMethodType: paymentMethodType,
+            currency: currency,
             appearance: appearance,
             isEmbedded: isEmbedded
         )

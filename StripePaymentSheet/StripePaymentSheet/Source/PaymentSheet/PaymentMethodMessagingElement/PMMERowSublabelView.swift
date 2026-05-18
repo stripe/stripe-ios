@@ -66,6 +66,17 @@ final class PMMERowSublabelView: UIView {
         updateExpandedState()
     }
 
+    func populateIfNeeded(
+        for paymentMethodType: PaymentSheet.PaymentMethodType?,
+        using promotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    ) {
+        guard let paymentMethodType,
+              let content = promotionsHelper?.promotion(for: paymentMethodType) else {
+            return
+        }
+        populateIfNeeded(content)
+    }
+
     private func updateExpandedState() {
         setExpanded(isRowSelected && hasContent)
     }

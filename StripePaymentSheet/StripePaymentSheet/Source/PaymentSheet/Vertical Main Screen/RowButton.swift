@@ -474,6 +474,36 @@ extension RowButton {
         return sublabel
     }
 
+    static func makePaymentMethodTypePlainSublabel(
+        paymentMethodType: PaymentSheet.PaymentMethodType,
+        currency: String?,
+        appearance: PaymentSheet.Appearance,
+        isEmbedded: Bool
+    ) -> UILabel {
+        let text: String? = {
+            switch paymentMethodType {
+            case .stripe(.klarna):
+                return String.Localized.buy_now_or_pay_later_with_klarna
+            case .stripe(.afterpayClearpay):
+                if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
+                    return String.Localized.buy_now_or_pay_later_with_clearpay
+                } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+                    return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
+                } else {
+                    return String.Localized.buy_now_or_pay_later_with_afterpay
+                }
+            case .stripe(.affirm):
+                return String.Localized.pay_over_time_with_affirm
+            case .external(let externalPaymentOption):
+                return externalPaymentOption.displaySubtext
+            default:
+                return nil
+            }
+        }()
+
+        return makePlainSublabel(text: text, appearance: appearance, isEmbedded: isEmbedded)
+    }
+
     static func makeRowButtonDefaultBadgeLabel(badgeText: String?, appearance: PaymentSheet.Appearance) -> UILabel? {
         guard let badgeText else { return nil }
         let defaultBadge = UILabel()
@@ -556,6 +586,20 @@ extension RowButton {
         )
     }
 
+    static func makeApplePayRowButton(
+        appearance: PaymentSheet.Appearance,
+        isEmbedded: Bool = false,
+        didTap: @escaping DidTapClosure
+    ) -> RowButton {
+        let sublabel = makePlainSublabel(text: nil, appearance: appearance, isEmbedded: isEmbedded)
+        return makeForApplePay(
+            appearance: appearance,
+            sublabel: sublabel,
+            isEmbedded: isEmbedded,
+            didTap: didTap
+        )
+    }
+
     static func makeForLink(
         appearance: PaymentSheet.Appearance,
         sublabel: UIView,
@@ -576,6 +620,26 @@ extension RowButton {
         )
         button.accessibilityHelperView.accessibilityLabel = String.Localized.pay_with_link(brand: linkBrand)
         return button
+    }
+
+    static func makeLinkRowButton(
+        appearance: PaymentSheet.Appearance,
+        linkBrand: LinkBrand,
+        isEmbedded: Bool = false,
+        didTap: @escaping DidTapClosure
+    ) -> RowButton {
+        let sublabel = makePlainSublabel(
+            text: makeLinkPlainSublabelText(),
+            appearance: appearance,
+            isEmbedded: isEmbedded
+        )
+        return makeForLink(
+            appearance: appearance,
+            sublabel: sublabel,
+            linkBrand: linkBrand,
+            isEmbedded: isEmbedded,
+            didTap: didTap
+        )
     }
 
     static func makeForSavedPaymentMethod(
@@ -623,30 +687,6 @@ extension RowButton {
             return paymentMethod.paymentSheetAccessibilityLabel
         }()
         return button
-    }
-
-    static func makePaymentMethodTypePlainSublabelText(
-        paymentMethodType: PaymentSheet.PaymentMethodType,
-        currency: String?
-    ) -> String? {
-        switch paymentMethodType {
-        case .stripe(.klarna):
-            return String.Localized.buy_now_or_pay_later_with_klarna
-        case .stripe(.afterpayClearpay):
-            if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
-                return String.Localized.buy_now_or_pay_later_with_clearpay
-            } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
-                return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
-            } else {
-                return String.Localized.buy_now_or_pay_later_with_afterpay
-            }
-        case .stripe(.affirm):
-            return String.Localized.pay_over_time_with_affirm
-        case .external(let externalPaymentOption):
-            return externalPaymentOption.displaySubtext
-        default:
-            return nil
-        }
     }
 
     static func makeLinkPlainSublabelText() -> String {
