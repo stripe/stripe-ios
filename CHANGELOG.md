@@ -1,8 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
 
+## 25.15.0 2026-05-18
 ## 25.14.0 2026-05-11
 ### PaymentSheet
 * [Fixed] Fixed a crash due to parameter packs being unsupported.
