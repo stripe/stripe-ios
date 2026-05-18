@@ -37,7 +37,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             } else if let paymentOption = savedPaymentOptionsViewController.selectedPaymentOption {
                 // If no valid payment option from adding, fallback on any saved payment method
                 return paymentOption
-            } else if isApplePayEnabled {
+            } else if shouldShowApplePayInSavedPaymentOptions {
                 return .applePay
             }
             return nil
@@ -91,6 +91,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
     private var mode: Mode
     private let isApplePayEnabled: Bool
     private let isLinkEnabled: Bool
+    private let shouldShowApplePayInSavedPaymentOptions: Bool
+    private let shouldShowLinkInSavedPaymentOptions: Bool
     private let couldShowLinkInHeader: Bool
     private var isHackyLinkButtonSelected: Bool = false
     var linkConfirmOption: PaymentSheet.LinkConfirmOption?
@@ -172,6 +174,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         configuration: PaymentSheet.Configuration,
         loadResult: PaymentSheetLoader.LoadResult,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        walletButtonsViewState: PaymentSheet.WalletButtonsViewState = .hidden,
         previousPaymentOption: PaymentOption? = nil
     ) {
         self.loadResult = loadResult
@@ -179,7 +182,9 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
         self.elementsSession = loadResult.elementsSession
         self.isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
         self.isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
-        self.couldShowLinkInHeader = isLinkEnabled && !isApplePayEnabled
+        self.shouldShowApplePayInSavedPaymentOptions = isApplePayEnabled && PaymentSheetVerticalViewController.walletButtonsViewAllowsExpressType(.applePay, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
+        self.shouldShowLinkInSavedPaymentOptions = isLinkEnabled && PaymentSheetVerticalViewController.walletButtonsViewAllowsExpressType(.link, walletButtonsViewState: walletButtonsViewState, configuration: configuration)
+        self.couldShowLinkInHeader = shouldShowLinkInSavedPaymentOptions && !shouldShowApplePayInSavedPaymentOptions
         self.configuration = configuration
         self.analyticsHelper = analyticsHelper
 
@@ -191,7 +196,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
 
         // Default to saved payment selection mode, as long as we aren't restoring a customer's previous new payment method input
         // and they have saved PMs or Apple Pay or Link is enabled
-        self.mode = (previousConfirmParams == nil) && (loadResult.savedPaymentMethods.count > 0 || isApplePayEnabled || isLinkEnabled)
+        self.mode = (previousConfirmParams == nil) && (loadResult.savedPaymentMethods.count > 0 || shouldShowApplePayInSavedPaymentOptions || shouldShowLinkInSavedPaymentOptions)
                 ? .selectingSaved
                 : .addingNew
 
@@ -199,8 +204,8 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             savedPaymentMethods: loadResult.savedPaymentMethods,
             configuration: .init(
                 customerID: configuration.customer?.id,
-                showApplePay: isApplePayEnabled,
-                showLink: isLinkEnabled,
+                showApplePay: shouldShowApplePayInSavedPaymentOptions,
+                showLink: shouldShowLinkInSavedPaymentOptions,
                 linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account),
                 removeSavedPaymentMethodMessage: configuration.removeSavedPaymentMethodMessage,
                 merchantDisplayName: configuration.merchantDisplayName,
