@@ -30,7 +30,7 @@ final class NetworkingOTPDataSourceImplementation: NetworkingOTPDataSource {
     let analyticsClient: FinancialConnectionsAnalyticsClient
     private let customEmailType: String?
     private let connectionsMerchantName: String?
-    private let apiClient: any FinancialConnectionsAPI
+    private var apiClient: any FinancialConnectionsAPI
     private let manifest: FinancialConnectionsSessionManifest
     weak var delegate: NetworkingOTPDataSourceDelegate?
 
