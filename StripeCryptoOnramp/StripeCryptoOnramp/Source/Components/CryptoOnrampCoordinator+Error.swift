@@ -174,7 +174,7 @@ public extension CryptoOnrampCoordinator {
 
         public var userFacingMessage: String {
             if isAppAttestationError {
-                return "This app couldn't be verified. Please try again later."
+                return "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists."
             } else if let apiUserMessage {
                 return apiUserMessage
             }
