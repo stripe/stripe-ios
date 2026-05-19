@@ -5,6 +5,7 @@
 //  Created by Mat Schmid on 6/4/25.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import SwiftUI
 
@@ -19,11 +20,13 @@ struct LinkInlineVerificationView: View {
     }
 
     @StateObject private var viewModel: LinkInlineVerificationViewModel
+    private let brand: LinkBrand
     private var onComplete: () -> Void
 
     init(
         account: PaymentSheetLinkAccount,
         appearance: PaymentSheet.Appearance,
+        brand: LinkBrand = .link,
         onComplete: @escaping () -> Void
     ) {
         self._viewModel = StateObject(
@@ -32,6 +35,7 @@ struct LinkInlineVerificationView: View {
                 appearance: appearance
             )
         )
+        self.brand = brand
         self.onComplete = onComplete
     }
 
@@ -43,7 +47,7 @@ struct LinkInlineVerificationView: View {
     var body: some View {
         VStack(spacing: LinkUI.contentSpacing) {
             HStack(spacing: Constants.contentSpacing) {
-                SwiftUI.Image(uiImage: Image.link_logo.makeImage())
+                SwiftUI.Image(uiImage: brand.paymentSheetLogoImage)
                     .resizable()
                     .scaledToFit()
                     .frame(height: Constants.logoHeight)
@@ -149,7 +153,7 @@ enum Stubs {
         unredactedPhoneNumber: "+17070707070",
         phoneNumberCountry: "US",
         verificationSessions: [],
-        supportedPaymentDetailsTypes: [.card],
+        supportedPaymentDetailsTypes: [ParsedEnum(.card)],
         mobileFallbackWebviewParams: nil
     )
 

@@ -644,7 +644,8 @@ extension PaymentSheet {
             case .wallet:
                 let useNativeLink = deviceCanUseNativeLink(elementsSession: elementsSession, configuration: configuration)
                 if useNativeLink {
-                    let linkController = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: true, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
+                    // logPayment is false because callers of PaymentSheet.confirm() are responsible for logging the payment result.
+                    let linkController = PayWithNativeLinkController(mode: .full, intent: intent, elementsSession: elementsSession, configuration: configuration, logPayment: false, analyticsHelper: analyticsHelper, confirmationChallenge: confirmationChallenge)
                     linkController.presentAsBottomSheet(from: authenticationContext.authenticationPresentingViewController(), shouldOfferApplePay: false, shouldFinishOnClose: false, completion: { result, confirmationType, _ in
                         completion(result, confirmationType)
                     })
@@ -653,7 +654,7 @@ extension PaymentSheet {
                     linkController.present(from: authenticationContext.authenticationPresentingViewController(),
                                            completion: completion)
                 }
-            case .signUp(let linkAccount, let phoneNumberFromSignup, let consentAction, let legalName, let intentConfirmParams):
+            case .signUp(_, let linkAccount, let phoneNumberFromSignup, let consentAction, let legalName, let intentConfirmParams):
                 let billingDetails = intentConfirmParams.paymentMethodParams.billingDetails
                 let countryCode = billingDetails?.address?.country ?? elementsSession.countryCode
 
@@ -684,9 +685,9 @@ extension PaymentSheet {
                         confirmWithPaymentMethodParams(intentConfirmParams.paymentMethodParams, linkAccount, intentConfirmParams.saveForFutureUseCheckboxState)
                     }
                 }
-            case .withPaymentMethod(let paymentMethod):
+            case .withPaymentMethod(_, let paymentMethod):
                 confirmWithPaymentMethod(paymentMethod, nil, .hidden, clientAttributionMetadata) // from Link web controller
-            case .withPaymentDetails(let linkAccount, let paymentDetails, let confirmationExtras, _):
+            case .withPaymentDetails(_, let linkAccount, let paymentDetails, let confirmationExtras, _):
                 let saveForFutureUseCheckboxState: IntentConfirmParams.SaveForFutureUseCheckboxState = .hidden // we don't show a save-to-merchant checkbox in Link VC
                 let allowRedisplay = paymentDetails.computeAllowRedisplay(
                     elementsSession: elementsSession,
@@ -964,10 +965,10 @@ private extension ConsumerPaymentDetails {
     func expectedPaymentMethodTypeForPassthroughMode(
         _ elementsSession: STPElementsSession
     ) -> String? {
-        switch type {
+        switch type.value {
         case .card:
             return "card"
-        case .unparsable:
+        case nil:
             return nil
         case .bankAccount:
             return elementsSession.useCardPaymentMethodTypeForIBP ? "card" : "bank_account"

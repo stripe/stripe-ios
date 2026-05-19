@@ -58,6 +58,11 @@ class FloatingPlaceholderTextFieldView: UIView {
         }
     }
 
+    override var accessibilityIdentifier: String? {
+        get { return textField.accessibilityIdentifier }
+        set { assertionFailure() } // swiftlint:disable:this unused_setter_value
+    }
+
     override var accessibilityValue: String? {
         get { return textField.accessibilityValue }
         set { assertionFailure() } // swiftlint:disable:this unused_setter_value

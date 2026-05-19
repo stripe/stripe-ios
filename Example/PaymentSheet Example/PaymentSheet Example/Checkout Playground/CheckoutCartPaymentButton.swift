@@ -6,7 +6,7 @@
 //
 
 @_spi(STP) import StripePayments
-@_spi(CheckoutSessionsPreview) @_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 15.0, *)
@@ -73,8 +73,8 @@ struct CheckoutCartPaymentButton: View {
                     HStack {
                         Text("Checkout")
                         Spacer()
-                        if let totals = session.totals, let currency = session.currency {
-                            Text(formatCartCurrency(amount: totals.total, currency: currency))
+                        if let total = session.total, let currency = session.currency {
+                            Text(formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency))
                         }
                     }
                     .font(.headline)

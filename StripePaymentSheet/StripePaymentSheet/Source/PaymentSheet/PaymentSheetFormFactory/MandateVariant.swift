@@ -15,28 +15,37 @@ enum MandateVariant {
     // The updated mandate that describes reuse of the payment method by the merchant and optional Link signup.
     case updated(shouldSignUpToLink: Bool)
 
-    func create(forMerchant merchant: String) -> NSAttributedString {
+    func create(forMerchant merchant: String, brand: LinkBrand) -> NSAttributedString {
         let formatText = switch self {
         case .original:
             String.Localized.by_providing_your_card_information_text
         case .updated(let shouldSaveToLink):
             if shouldSaveToLink {
-                String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant_and_link
+                String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant_and_link(
+                    merchantDisplayName: merchant,
+                    brand: brand
+                )
             } else {
                 String.Localized.by_continuing_you_agree_to_save_your_information_to_merchant
             }
         }
 
-        let terms = String(format: formatText, merchant).removeTrailingDots()
+        let terms = switch self {
+        case .original, .updated(false):
+            String(format: formatText, merchant).removeTrailingDots()
+        case .updated(true):
+            formatText.removeTrailingDots()
+        }
 
-        if case .updated(true) = self {
+        switch self {
+        case .updated(true):
             let links = [
-                "link": URL(string: "https://link.com")!,
-                "terms": URL(string: "https://link.com/terms")!,
-                "privacy": URL(string: "https://link.com/privacy")!,
+                "link": brand.websiteURL,
+                "terms": brand.termsURL,
+                "privacy": brand.privacyURL,
             ]
             return STPStringUtils.applyLinksToString(template: terms, links: links)
-        } else {
+        case .original, .updated(false):
             return NSAttributedString(string: terms)
         }
     }

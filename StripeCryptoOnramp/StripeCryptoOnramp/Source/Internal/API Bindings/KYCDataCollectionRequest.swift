@@ -31,6 +31,9 @@ struct KYCDataCollectionRequest: Encodable {
         case zip
         case country
         case dob
+        case birthCountry = "birth_country"
+        case birthCity = "birth_city"
+        case nationalities
     }
 
     func encode(to encoder: Encoder) throws {
@@ -59,5 +62,14 @@ struct KYCDataCollectionRequest: Encodable {
         try container.encodeIfPresent(kycInfo.address?.postalCode, forKey: .zip)
         try container.encodeIfPresent(kycInfo.address?.country, forKey: .country)
         try container.encodeIfPresent(kycInfo.dateOfBirth, forKey: .dob)
+        try container.encodeIfPresent(kycInfo.birthCountry, forKey: .birthCountry)
+        try container.encodeIfPresent(kycInfo.birthCity, forKey: .birthCity)
+
+        let nationalities = kycInfo.nationalities?
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+        if let nationalities, !nationalities.isEmpty {
+            try container.encode(nationalities, forKey: .nationalities)
+        }
     }
 }

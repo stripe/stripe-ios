@@ -15,25 +15,25 @@ extension STPAnalyticsClient {
     }
 
     // PM selection & Confirmation
-    func logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(paymentOptionSelection: CustomerSheet.PaymentOptionSelection, cardArtEnabled: Bool = false, syncDefaultEnabled: Bool? = nil) {
-        let params = csConfirmedSavedPMParams(paymentOptionSelection: paymentOptionSelection, cardArtEnabled: cardArtEnabled, syncDefaultEnabled: syncDefaultEnabled)
+    func logCSSelectPaymentMethodScreenConfirmedSavedPMSuccess(paymentOptionSelection: CustomerSheet.PaymentOptionSelection, syncDefaultEnabled: Bool? = nil) {
+        let params = csConfirmedSavedPMParams(paymentOptionSelection: paymentOptionSelection, syncDefaultEnabled: syncDefaultEnabled)
         self.logPaymentSheetEvent(event: .cs_select_payment_method_screen_confirmed_savedpm_success,
                                   params: params)
     }
-    func logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(paymentOptionSelection: CustomerSheet.PaymentOptionSelection, cardArtEnabled: Bool = false, syncDefaultEnabled: Bool? = nil) {
-        let params = csConfirmedSavedPMParams(paymentOptionSelection: paymentOptionSelection, cardArtEnabled: cardArtEnabled, syncDefaultEnabled: syncDefaultEnabled)
+    func logCSSelectPaymentMethodScreenConfirmedSavedPMFailure(paymentOptionSelection: CustomerSheet.PaymentOptionSelection, syncDefaultEnabled: Bool? = nil) {
+        let params = csConfirmedSavedPMParams(paymentOptionSelection: paymentOptionSelection, syncDefaultEnabled: syncDefaultEnabled)
         self.logPaymentSheetEvent(event: .cs_select_payment_method_screen_confirmed_savedpm_failure,
                                   params: params)
     }
 
-    private func csConfirmedSavedPMParams(paymentOptionSelection: CustomerSheet.PaymentOptionSelection, cardArtEnabled: Bool, syncDefaultEnabled: Bool?) -> [String: Any] {
+    private func csConfirmedSavedPMParams(paymentOptionSelection: CustomerSheet.PaymentOptionSelection, syncDefaultEnabled: Bool?) -> [String: Any] {
         var params: [String: Any] = [:]
         switch paymentOptionSelection {
         case .applePay:
             params["payment_method_type"] = "apple_pay"
         case .paymentMethod(let paymentMethod, _):
             params["payment_method_type"] = STPPaymentMethod.string(from: paymentMethod.type) ?? "unknown"
-            params["has_card_art"] = cardArtEnabled && paymentMethod.card?.cardArt?.artImage?.url != nil
+            params["has_card_art"] = paymentMethod.card?.cardArt?.artImage?.url != nil
         }
         if let syncDefaultEnabled {
             params["sync_default_enabled"] = syncDefaultEnabled

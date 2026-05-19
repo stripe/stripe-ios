@@ -195,6 +195,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
                 orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)],
+                paymentMethodOrientation: .vertical,
                 loadTimings: .init(),
                 isUpdate: false,
                 hasCardArt: false,
@@ -230,6 +231,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             elementsSession: ._testCardValue(),
             defaultPaymentMethod: nil,
             orderedPaymentMethodTypes: [.stripe(.card)],
+            paymentMethodOrientation: .vertical,
             loadTimings: .init(),
             isUpdate: false,
             hasCardArt: true,
@@ -291,7 +293,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // PI with SFU and PMO SFU
         var loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -309,7 +311,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // PI with SFU and no PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -328,7 +330,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // Deferred PI with SFU and PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -346,7 +348,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             ),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // Deferred PI with SFU and no PMO SFU
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -361,7 +363,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: ._testSetupIntent(),
             elementsSession: ._testDefaultCardValue(defaultPaymentMethod: STPPaymentMethod._testCard().stripeId, paymentMethods: [testCardJSON, testUSBankAccountJSON]),
             defaultPaymentMethod: .saved(paymentMethod: STPPaymentMethod._testCard()),
-            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
         // SI
         loadSucceededPayload = analyticsClient._testLogHistory[1]
@@ -386,7 +388,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func testLogInitialDisplayedPaymentMethods() {
         let paymentSheetHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
-        paymentSheetHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: ["card", "paypal", "alma", "p24"], hiddenPaymentMethods: ["eps"], paymentMethodLayout: .vertical)
+        paymentSheetHelper.logInitialDisplayedPaymentMethods(visiblePaymentMethods: ["card", "paypal", "alma", "p24"], hiddenPaymentMethods: ["eps"])
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_initial_displayed_payment_methods")
         XCTAssertEqual(analyticsClient._testLogHistory.last!["visible_payment_methods"] as? [String], ["card", "paypal", "alma", "p24"])
         XCTAssertEqual(analyticsClient._testLogHistory.last!["hidden_payment_methods"] as? [String], ["eps"])
@@ -394,8 +396,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func testLogSavedPMScreenOptionSelected() {
         func _createHelper(integrationShape: PaymentSheetAnalyticsHelper.IntegrationShape) -> PaymentSheetAnalyticsHelper {
-            var configuration = PaymentSheet.Configuration()
-            configuration.appearance.cardArtEnabled = true
+            let configuration = PaymentSheet.Configuration()
             let sut = PaymentSheetAnalyticsHelper(integrationShape: integrationShape, configuration: configuration, analyticsClient: analyticsClient)
             return sut
         }
@@ -481,35 +482,35 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             (integrationShape: .flowController, paymentOption: saved, result: .completed, expected: "mc_custom_payment_savedpm_success"),
             (integrationShape: .flowController, paymentOption: savedWithCardArt, result: .completed, expected: "mc_custom_payment_savedpm_success"),
             (integrationShape: .flowController, paymentOption: .applePay, result: .completed, expected: "mc_custom_payment_applepay_success"),
-            (integrationShape: .flowController, paymentOption: .link(option: .wallet), result: .completed, expected: "mc_custom_payment_link_success"),
+            (integrationShape: .flowController, paymentOption: .link(option: .wallet(brand: .link)), result: .completed, expected: "mc_custom_payment_link_success"),
             (integrationShape: .flowController, paymentOption: .new(confirmParams: .init(type: .stripe(.cashApp))), result: .failed(error: error), expected: "mc_custom_payment_newpm_failure"),
             (integrationShape: .flowController, paymentOption: saved, result: .failed(error: error), expected: "mc_custom_payment_savedpm_failure"),
             (integrationShape: .flowController, paymentOption: savedWithCardArt, result: .failed(error: error), expected: "mc_custom_payment_savedpm_failure"),
             (integrationShape: .flowController, paymentOption: .applePay, result: .failed(error: error), expected: "mc_custom_payment_applepay_failure"),
-            (integrationShape: .flowController, paymentOption: .link(option: .wallet), result: .failed(error: error), expected: "mc_custom_payment_link_failure"),
+            (integrationShape: .flowController, paymentOption: .link(option: .wallet(brand: .link)), result: .failed(error: error), expected: "mc_custom_payment_link_failure"),
 
             (integrationShape: .complete, paymentOption: new, result: .completed, expected: "mc_complete_payment_newpm_success"),
             (integrationShape: .complete, paymentOption: saved, result: .completed, expected: "mc_complete_payment_savedpm_success"),
             (integrationShape: .complete, paymentOption: savedWithCardArt, result: .completed, expected: "mc_complete_payment_savedpm_success"),
             (integrationShape: .complete, paymentOption: .applePay, result: .completed, expected: "mc_complete_payment_applepay_success"),
-            (integrationShape: .complete, paymentOption: .link(option: .wallet), result: .completed, expected: "mc_complete_payment_link_success"),
+            (integrationShape: .complete, paymentOption: .link(option: .wallet(brand: .link)), result: .completed, expected: "mc_complete_payment_link_success"),
             (integrationShape: .complete, paymentOption: .new(confirmParams: .init(type: .stripe(.cashApp))), result: .failed(error: error), expected: "mc_complete_payment_newpm_failure"),
             (integrationShape: .complete, paymentOption: saved, result: .failed(error: error), expected: "mc_complete_payment_savedpm_failure"),
             (integrationShape: .complete, paymentOption: savedWithCardArt, result: .failed(error: error), expected: "mc_complete_payment_savedpm_failure"),
             (integrationShape: .complete, paymentOption: .applePay, result: .failed(error: error), expected: "mc_complete_payment_applepay_failure"),
-            (integrationShape: .complete, paymentOption: .link(option: .wallet), result: .failed(error: error), expected: "mc_complete_payment_link_failure"),
+            (integrationShape: .complete, paymentOption: .link(option: .wallet(brand: .link)), result: .failed(error: error), expected: "mc_complete_payment_link_failure"),
 
             (integrationShape: .embedded, paymentOption: new, result: .completed, expected: "mc_embedded_payment_success"),
             (integrationShape: .embedded, paymentOption: saved, result: .completed, expected: "mc_embedded_payment_success"),
             (integrationShape: .embedded, paymentOption: savedWithCardArt, result: .completed, expected: "mc_embedded_payment_success"),
             (integrationShape: .embedded, paymentOption: .applePay, result: .completed, expected: "mc_embedded_payment_success"),
-            (integrationShape: .embedded, paymentOption: .link(option: .wallet), result: .completed, expected: "mc_embedded_payment_success"),
+            (integrationShape: .embedded, paymentOption: .link(option: .wallet(brand: .link)), result: .completed, expected: "mc_embedded_payment_success"),
 
             (integrationShape: .embedded, paymentOption: .new(confirmParams: .init(type: .stripe(.cashApp))), result: .failed(error: error), expected: "mc_embedded_payment_failure"),
             (integrationShape: .embedded, paymentOption: saved, result: .failed(error: error), expected: "mc_embedded_payment_failure"),
             (integrationShape: .embedded, paymentOption: savedWithCardArt, result: .failed(error: error), expected: "mc_embedded_payment_failure"),
             (integrationShape: .embedded, paymentOption: .applePay, result: .failed(error: error), expected: "mc_embedded_payment_failure"),
-            (integrationShape: .embedded, paymentOption: .link(option: .wallet), result: .failed(error: error), expected: "mc_embedded_payment_failure"),
+            (integrationShape: .embedded, paymentOption: .link(option: .wallet(brand: .link)), result: .failed(error: error), expected: "mc_embedded_payment_failure"),
 
         ]
 
@@ -521,7 +522,6 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         for (integrationShape, paymentOption, result, expected) in testcases {
             var config = PaymentSheet.Configuration()
             config.customPaymentMethodConfiguration = cpmConfig
-            config.appearance.cardArtEnabled = true
 
             let sut = PaymentSheetAnalyticsHelper(
                 integrationShape: integrationShape,
@@ -529,7 +529,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
                 analyticsClient: analyticsClient
             )
             sut.intent = ._testValue()
-            sut.elementsSession = ._testValue(paymentMethodTypes: ["card"], externalPaymentMethodTypes: [], linkMode: .linkCardBrand, linkFundingSources: [.card], linkUseAttestation: true, linkSuppress2FA: true)
+            sut.elementsSession = ._testValue(paymentMethodTypes: ["card"], externalPaymentMethodTypes: [], linkMode: .linkCardBrand, linkFundingSources: [ParsedEnum(.card)], linkUseAttestation: true, linkSuppress2FA: true)
             sut.logPayment(
                 paymentOption: paymentOption,
                 result: result,
@@ -572,7 +572,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: ._testDeferredIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testCardValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)], loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
         sut.logPayment(
             paymentOption: .applePay,
@@ -584,7 +584,6 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
 
     func testLogConfirmButtonTapped() {
         var configuration = PaymentSheet.Configuration()
-        configuration.appearance.cardArtEnabled = true
 
         let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: configuration, analyticsClient: analyticsClient)
         sut.logFormShown(paymentMethodTypeIdentifier: "card")
@@ -594,7 +593,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertLessThan(analyticsClient._testLogHistory.last!["duration"] as! Double, 1.0)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "apple_pay")
 
-        sut.logConfirmButtonTapped(paymentOption: .link(option: .wallet))
+        sut.logConfirmButtonTapped(paymentOption: .link(option: .wallet(brand: .link)))
         XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "mc_confirm_button_tapped")
         XCTAssertLessThan(analyticsClient._testLogHistory.last!["duration"] as! Double, 1.0)
         XCTAssertEqual(analyticsClient._testLogHistory.last!["selected_lpm"] as? String, "link")
@@ -713,7 +712,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: regularIntent,
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)], loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
 
         let regularEvent = analyticsClient._testLogHistory.last!
@@ -729,7 +728,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: deferredIntent,
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)], loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
 
         let deferredEvent = analyticsClient._testLogHistory.last!
@@ -752,7 +751,7 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
             intent: sptIntent,
             elementsSession: ._testValue(),
             defaultPaymentMethod: nil,
-            orderedPaymentMethodTypes: [.stripe(.card)], loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
+            orderedPaymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical, loadTimings: .init(), isUpdate: false, hasCardArt: false, didLinkLookupTimeOut: nil
         )
 
         let sptEvent = analyticsClient._testLogHistory.last!
@@ -760,34 +759,72 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(sptEvent["is_spt"] as? Bool, true, "SPT intent with preparePaymentMethodHandler should have is_spt = true")
     }
 
-    // MARK: - Adaptive Pricing
+    // MARK: - payment_method_orientation analytics
 
-    func testLogAdaptivePricingEvents() {
-        let sut = PaymentSheetAnalyticsHelper(
-            integrationShape: .complete,
-            configuration: PaymentSheet.Configuration(),
-            analyticsClient: analyticsClient
+    func testPaymentMethodOrientationAbsentBeforeLoad() {
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        sut.logShow(showingSavedPMList: false)
+        XCTAssertNil(analyticsClient._testLogHistory.last!["payment_method_orientation"])
+    }
+
+    func testPaymentMethodOrientationPresentAfterLoad() {
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadSucceeded(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            defaultPaymentMethod: nil,
+            orderedPaymentMethodTypes: [.stripe(.card)],
+            paymentMethodOrientation: .horizontal,
+            loadTimings: .init(),
+            isUpdate: false,
+            hasCardArt: false,
+            didLinkLookupTimeOut: nil
         )
+
         analyticsClient._testLogHistory.removeAll()
+        sut.logShow(showingSavedPMList: false)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["payment_method_orientation"] as? String, "horizontal")
+    }
 
-        // Init with is_standalone_element param
-        sut.logAdaptivePricingCurrencySelectorInit(isStandaloneElement: false)
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "elements.adaptive_pricing.currency_selector_init")
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["is_standalone_element"] as? Bool, false)
+    func testPaymentMethodOrientationVertical() {
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadSucceeded(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            defaultPaymentMethod: nil,
+            orderedPaymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount), .stripe(.afterpayClearpay)],
+            paymentMethodOrientation: .vertical,
+            loadTimings: .init(),
+            isUpdate: false,
+            hasCardArt: false,
+            didLinkLookupTimeOut: nil
+        )
 
-        sut.logAdaptivePricingCurrencySelectorInit(isStandaloneElement: true)
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["is_standalone_element"] as? Bool, true)
+        analyticsClient._testLogHistory.removeAll()
+        sut.logShow(showingSavedPMList: false)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["payment_method_orientation"] as? String, "vertical")
+    }
 
-        // Toggled
-        sut.logAdaptivePricingCurrencyToggled()
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "elements.adaptive_pricing.currency_toggled")
+    func testPaymentMethodOrientationHorizontal() {
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        sut.logLoadStarted(isUpdate: false)
+        sut.logLoadSucceeded(
+            intent: ._testValue(),
+            elementsSession: ._testCardValue(),
+            defaultPaymentMethod: nil,
+            orderedPaymentMethodTypes: [.stripe(.card)],
+            paymentMethodOrientation: .horizontal,
+            loadTimings: .init(),
+            isUpdate: false,
+            hasCardArt: false,
+            didLinkLookupTimeOut: nil
+        )
 
-        // Toggled failed serializes error
-        let error = NSError(domain: "test_domain", code: 42)
-        sut.logAdaptivePricingCurrencyToggledFailed(error: error)
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "elements.adaptive_pricing.currency_toggled.failed")
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["error_type"] as? String, "test_domain")
-        XCTAssertEqual(analyticsClient._testLogHistory.last!["error_code"] as? String, "42")
+        analyticsClient._testLogHistory.removeAll()
+        sut.logShow(showingSavedPMList: false)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["payment_method_orientation"] as? String, "horizontal")
     }
 
     // MARK: - Helpers

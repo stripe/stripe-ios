@@ -83,7 +83,7 @@ struct SeamlessSignInView: View {
                 try await coordinator.authenticateUserWithToken(result.linkAuthTokenClientSecret)
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    flowCoordinator.startForExistingUser()
+                    flowCoordinator.startForExistingUser(coordinator: coordinator)
                 }
             } catch {
                 await MainActor.run {

@@ -13,7 +13,8 @@ import UIKit
 
 // MARK: - CurrencySelectorView
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A standalone currency selector for Adaptive Pricing.
     ///
@@ -129,17 +130,17 @@ extension Checkout {
         /// on subsequent changes. Hides the view if AP data is unavailable.
         private func handleSessionUpdate() {
             guard let (session, exchangeRateMeta, rawCurrency) =
-                    AdaptivePricingSelectorElement.adaptivePricingData(from: checkout.state.session)
+                    CurrencySelectorUtilities.adaptivePricingData(from: checkout.state.session)
             else {
                 tearDown()
                 return
             }
 
-            let currency = AdaptivePricingSelectorElement.CurrencyCode(rawCurrency)
+            let currency = CurrencySelectorUtilities.CurrencyCode(rawCurrency)
 
             clearError()
 
-            // Build the selector after inital sesison loading, after that just update the caption
+            // Build the selector after initial session load; subsequent updates only change the caption
             if selectorView == nil {
                 buildSelectorView(session: session, exchangeRateMeta: exchangeRateMeta, currency: currency)
             }
@@ -150,11 +151,12 @@ extension Checkout {
         private func buildSelectorView(
             session: STPCheckoutSession,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
-            currency: AdaptivePricingSelectorElement.CurrencyCode
+            currency: CurrencySelectorUtilities.CurrencyCode
         ) {
-            let (left, right) = AdaptivePricingSelectorElement.buildSelectorItems(
+            let (left, right) = CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
-                localizedPricesMetas: session.localizedPricesMetas
+                localizedPricesMetas: session.localizedPricesMetas,
+                flagPrefixProvider: checkout.flagImageManager.flagIcon
             )
 
             let psAppearance = appearance.asPaymentSheetAppearance()
@@ -180,10 +182,10 @@ extension Checkout {
         }
 
         private func updateCaption(
-            currency: AdaptivePricingSelectorElement.CurrencyCode,
+            currency: CurrencySelectorUtilities.CurrencyCode,
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta
         ) {
-            let caption = AdaptivePricingSelectorElement.caption(
+            let caption = CurrencySelectorUtilities.caption(
                 forSelectedCurrency: currency.apiValue,
                 exchangeRateMeta: exchangeRateMeta
             )

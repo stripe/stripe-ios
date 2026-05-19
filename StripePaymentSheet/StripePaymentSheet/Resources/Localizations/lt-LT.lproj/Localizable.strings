@@ -1,3 +1,7 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "%@ nebebus išsaugota jūsų piniginėje.";
+
 "+ Add" = "+ Pridėti";
 
 "Add US bank account" = "Pridėti JAV banko sąskaitą";
@@ -16,11 +20,9 @@
 
 "Add your payment information" = "Pridėkite mokėjimo informaciją";
 
+"Agree and accept" = "Sutinku ir priimu";
+
 "Approve payment" = "Patvirtinti mokėjimą";
-
-"Are you sure you want to remove this card?" = "Ar tikrai norite pašalinti šią kortelę?";
-
-"Are you sure you want to remove this linked account?" = "Ar tikrai norite pašalinti šią susietą paskyrą?";
 
 "Back" = "Atgal";
 
@@ -68,8 +70,6 @@
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami telefono numerį ir el. pašto adresą sutinkate susikurti „Link“ paskyrą pagal „Link“ <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Pateikdami savo banko sąskaitos duomenis ir patvirtindami šį mokėjimą, jūs sutinkate su šiuo tiesioginio nurašymo prašymu ir <terms> tiesioginio nurašymo paslaugų teikimo sutartimi </terms> bei suteikiate leidimą bendrovei „Stripe Payments Australia Pty Ltd“ (ACN 160 180 343), tiesioginio nurašymo naudotojo ID Nr. 507156 („Stripe“), nurašyti lėšas iš jūsų sąskaitos per Bendrąją elektroninių atsiskaitymų sistemą (BECS) %@ (toliau – „Prekybininko“) vardu pagal bet kokias sumas, apie kurias jums atskirai praneš Prekybininkas. Jūs patvirtinate, kad esate šios sąskaitos savininkas arba įgaliotas (-a) ją naudoti.";
-
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Pateikdami kortelės duomenis sutinkate, kad \"%@\" nuskaičiuotų nuo jūsų kortelės būsimus mokėjimus pagal jų sąlygas.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Pateikdami savo el. pašto adresą sutinkate susikurti \"Link\" paskyrą bei įrašyti savo mokėjimo informaciją į \"Link\" pagal \"Link\" <terms>sąlygas</terms> ir <privacy>privatumo politiką</privacy>.";
@@ -89,6 +89,8 @@
 "Cancel and pay another way" = "Atšaukti ir sumokėti kitu būdu";
 
 "Card details cannot be changed." = "Kortelės duomenų keisti negalima.";
+
+"Card number. Supported cards include %@" = "Kortelės numeris. Palaikomos kortelės: %@";
 
 "Change" = "Keisti";
 
@@ -120,11 +122,15 @@
 
 "Debit or credit card" = "Debeto arba kredito kortelė";
 
+"Declarations" = "Deklaracijos";
+
 "Default" = "Numatytasis";
 
 "Default payment method" = "Numatytasis mokėjimo būdas";
 
 "Did you mean %@? %@." = "Ar norėjote %1$@? %2$@.";
+
+"Discount" = "Nuolaida";
 
 "EPS Bank" = "EPS bankas";
 
@@ -210,6 +216,8 @@
 
 "Payment failed" = "Sumokėti nepavyko";
 
+"Payment method details cannot be changed." = "Mokėjimo būdo duomenų keisti negalima.";
+
 "Payment methods" = "Mokėjimo būdai";
 
 "Please choose a valid payment method." = "Pasirinkite galiojantį mokėjimo būdą.";
@@ -222,9 +230,17 @@
 
 "Przelewy24 Bank" = "Bankas \"Przelewy24\"";
 
+"Remove %@" = "Šalinti %@";
+
+"Remove bank?" = "Pašalinti banką?";
+
 "Remove card?" = "Ištraukti kortelę?";
 
 "Remove linked account" = "Pašalinti susietą paskyrą";
+
+"Remove payment method" = "Pašalinti mokėjimo būdą";
+
+"Remove payment method?" = "Pašalinti mokėjimo būdą?";
 
 "SEPA debit details cannot be changed." = "SEPA debeto duomenų keisti negalima.";
 
@@ -266,19 +282,19 @@
 
 "Simple, secure one-click payments" = "Paprasti ir saugūs mokėjimai vienu spustelėjimu";
 
-"Something went wrong when linking your account.\nPlease try again later." = "Susiejant paskyrą kažkas nepavyko.\n Bandykite dar kartą vėliau.";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Per 1–2 darbo dienas \"Stripe\" į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip baigti įrašyti savo banko sąskaitą naudojant \"%@\".";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Po 1–2 darbo dienas \"Stripe\" į jūsų sąskaitą įneš 0,01 USD. Tada gausite el. laišką su nurodymais, kaip užbaigti mokėjimą %@.";
+
+"Subtotal" = "Tarpinė suma";
 
 "Tap to close" = "Bakstelėkite, kad uždarytumėte";
 
 "Tap to expand" = "Bakstelėkite, kad išplėstumėte";
 
-"The IBAN you entered is incomplete." = "Įvedėte ne visą IBAN.";
+"Tax" = "Mokestis";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Jūsų įvestas IBAN yra neteisingas, „%@“ nėra palaikomas šalies kodas.";
+"The IBAN you entered is incomplete." = "Įvedėte ne visą IBAN.";
 
 "The provided verification code has expired." = "Pateiktas patvirtinimo kodas nebegalioja.";
 

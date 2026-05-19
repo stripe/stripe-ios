@@ -170,6 +170,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case TH
         case DE
         case IT
+        case usTax = "us_tax"
         case stripeShop = "stripe_shop_test"
         case custom
     }
@@ -318,15 +319,15 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case never
     }
 
-    enum AllowsDelayedPMs: String, PickerEnum {
-        static var enumName: String { "allowsDelayedPMs" }
+    enum LinkBrand: String, PickerEnum {
+        static var enumName: String { "Link brand" }
 
-        case on
-        case off
+        case link
+        case onelink
     }
 
-    enum EnableAttestationOnConfirmation: String, PickerEnum {
-        static var enumName: String { "Enable attestation on confirmation" }
+    enum AllowsDelayedPMs: String, PickerEnum {
+        static var enumName: String { "allowsDelayedPMs" }
 
         case on
         case off
@@ -748,7 +749,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var applePayEnabled: ApplePayEnabled
     var applePayButtonType: ApplePayButtonType
     var allowsDelayedPMs: AllowsDelayedPMs
-    var enableAttestationOnConfirmation: EnableAttestationOnConfirmation
     var paymentMethodSave: PaymentMethodSave
     var allowRedisplayOverride: AllowRedisplayOverride
     var paymentMethodRemove: PaymentMethodRemove
@@ -761,6 +761,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var linkPassthroughMode: LinkPassthroughMode
     var linkEnabledMode: LinkEnabledMode
     var linkDisplay: LinkDisplay
+    var linkBrand: LinkBrand
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
@@ -821,7 +822,6 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             applePayEnabled: .on,
             applePayButtonType: .buy,
             allowsDelayedPMs: .on,
-            enableAttestationOnConfirmation: .on,
             paymentMethodSave: .enabled,
             allowRedisplayOverride: .notSet,
             paymentMethodRemove: .enabled,
@@ -834,6 +834,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             linkPassthroughMode: .passthrough,
             linkEnabledMode: .native,
             linkDisplay: .automatic,
+            linkBrand: .link,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,

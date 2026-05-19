@@ -45,6 +45,7 @@ Stripe.xcworkspace/xcuserdata/*
 
 # Local LLM settings (ignore local settings but allow project settings)
 .claude/settings.local.json
+.claude/scheduled_tasks.lock
 
 # Simulator configuration cache
 .stripe-ios-config

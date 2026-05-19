@@ -6,7 +6,7 @@
 //
 
 @_spi(STP) import StripePayments
-@_spi(CheckoutSessionsPreview) @_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 15.0, *)
@@ -33,7 +33,7 @@ struct CheckoutCartView: View {
                         errorMessage: $errorMessage
                     )
                     .overlay(alignment: .bottom) {
-                        if checkout.state.session.totals != nil {
+                        if checkout.state.session.total != nil {
                             CheckoutCartPaymentButton(
                                 checkout: checkout,
                                 onDismiss: { dismiss() }

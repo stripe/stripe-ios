@@ -1,3 +1,7 @@
+"%1$@ ×%2$d" = "%1$@ ×%2$li";
+
+"%@ will no longer be saved to your wallet." = "%@ 将不再保存到您的钱包中。";
+
 "+ Add" = "+ 添加";
 
 "Add US bank account" = "添加美国银行账户";
@@ -16,11 +20,9 @@
 
 "Add your payment information" = "添加您的支付信息";
 
+"Agree and accept" = "同意并接受";
+
 "Approve payment" = "批准付款";
-
-"Are you sure you want to remove this card?" = "您确定要移除此卡吗？";
-
-"Are you sure you want to remove this linked account?" = "您确定要移除这个关联的账户吗？";
 
 "Back" = "返回";
 
@@ -68,8 +70,6 @@
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的手机号码和邮件地址，即表示您同意按照 Link <terms>条款</terms>和<privacy>隐私政策</privacy>创建 Link 账户。";
 
-"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "提供您的银行账户详情并确认这笔付款，即表示您同意该直接借记请求以及<terms>“直接借记请求”服务协议</terms>，并授权 Stripe Payments Australia Pty Ltd ACN 160 180 343，直接借记用户 ID 507156 (\"Stripe\") 通过“批量电子清算系统”(BECS) 代 %@（“商家”）向您收取其单独与您议定的金额。您确认您是上述所列账户的账户持有人或授权签字人。";
-
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "提供您的银行卡信息，即表示您允许 %@ 按照他们的条款从您的银行卡收取未来款项。";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的电子邮件地址，即表示您同意按照 Link <terms>条款</terms>和<privacy>隐私政策</privacy>创建 Link 账户并将您的支付信息保存到 Link。";
@@ -89,6 +89,8 @@
 "Cancel and pay another way" = "取消并用另一方式支付";
 
 "Card details cannot be changed." = "无法更改银行卡详情。";
+
+"Card number. Supported cards include %@" = "卡号。支持的卡片包括 %@";
 
 "Change" = "更改";
 
@@ -120,11 +122,15 @@
 
 "Debit or credit card" = "借记卡或信用卡";
 
+"Declarations" = "声明";
+
 "Default" = "默认";
 
 "Default payment method" = "默认支付方式";
 
 "Did you mean %@? %@." = "你是指 %1$@ 吗？%2$@。";
+
+"Discount" = "折扣";
 
 "EPS Bank" = "EPS 银行";
 
@@ -210,6 +216,8 @@
 
 "Payment failed" = "付款失败";
 
+"Payment method details cannot be changed." = "支付方式详情不可更改。";
+
 "Payment methods" = "支付方式";
 
 "Please choose a valid payment method." = "请选择一个有效的支付方式。";
@@ -222,9 +230,17 @@
 
 "Przelewy24 Bank" = "Przelewy24 银行";
 
+"Remove %@" = "移除 %@";
+
+"Remove bank?" = "移除银行？";
+
 "Remove card?" = "移除卡？";
 
 "Remove linked account" = "移除关联账户";
+
+"Remove payment method" = "移除支付方式";
+
+"Remove payment method?" = "移除支付方式？";
 
 "SEPA debit details cannot be changed." = "无法更改 SEPA 借记详情。";
 
@@ -266,19 +282,19 @@
 
 "Simple, secure one-click payments" = "简单、安全的一键支付";
 
-"Something went wrong when linking your account.\nPlease try again later." = "关联您的账户时出现问题。\n请稍后重试。";
-
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe 会在 1-2 个工作日向您的账户存入 0.01 美元。然后您会收到一封包含说明的邮件，指导您用 %@ 保存您的银行账户。";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you’ll get an email with instructions to complete payment to %@." = "Stripe 会在 1-2 个工作日向您的账户存入 0.01 美元。然后您会收到一封邮件，指导您完成向 %@ 的付款。";
+
+"Subtotal" = "小计";
 
 "Tap to close" = "点击关闭";
 
 "Tap to expand" = "点击扩展";
 
-"The IBAN you entered is incomplete." = "您输入的 IBAN 不完整。";
+"Tax" = "税费";
 
-"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "您输入的 IBAN 无效，\"%@\" 不是有效的国家/地区代码。";
+"The IBAN you entered is incomplete." = "您输入的 IBAN 不完整。";
 
 "The provided verification code has expired." = "提供的验证码已过期。";
 

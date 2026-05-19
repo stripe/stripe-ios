@@ -29,6 +29,7 @@ class PaymentSheetFormFactory {
     let showLinkInlineCardSignup: Bool
     let linkAccount: PaymentSheetLinkAccount?
     let linkAppearance: LinkAppearance?
+    let linkBrand: LinkBrand
     let accountService: LinkAccountServiceProtocol?
     let previousCustomerInput: IntentConfirmParams?
 
@@ -49,6 +50,8 @@ class PaymentSheetFormFactory {
     let sellerName: String?
     let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
     let cardFundingFilter: CardFundingFilter
+    let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+    let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
 
     var shouldDisplaySaveCheckbox: Bool {
         // Don't show the save checkbox in Link
@@ -87,11 +90,13 @@ class PaymentSheetFormFactory {
         elementsSession: STPElementsSession,
         configuration: PaymentSheetFormFactoryConfig,
         paymentMethod: PaymentSheet.PaymentMethodType,
+        paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         linkAppearance: LinkAppearance? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
@@ -120,8 +125,17 @@ class PaymentSheetFormFactory {
                 return .unknown
             }
         }()
+        let linkBrand: LinkBrand = {
+            switch configuration {
+            case .paymentElement(let configuration, _):
+                return configuration.resolvedLinkBrand(elementsSession: elementsSession)
+            case .customerSheet:
+                return .link
+            }
+        }()
         self.init(configuration: configuration,
                   paymentMethod: paymentMethod,
+                  paymentMethodOrientation: paymentMethodOrientation,
                   previousCustomerInput: previousCustomerInput,
                   addressSpecProvider: addressSpecProvider,
                   showLinkInlineCardSignup: showLinkInlineCardSignup,
@@ -140,8 +154,10 @@ class PaymentSheetFormFactory {
                   signupOptInInitialValue: elementsSession.linkSignupOptInInitialValue,
                   isFirstSavedPaymentMethod: elementsSession.customer?.paymentMethods.isEmpty ?? true,
                   analyticsHelper: analyticsHelper,
+                  paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
                   paymentMethodIncentive: elementsSession.incentive,
                   linkAppearance: linkAppearance,
+                  linkBrand: linkBrand,
                   sellerName: intent.sellerDetails?.businessName,
                   previousLinkInlineSignupAction: previousLinkInlineSignupAction,
                   cardFundingFilter: configuration.cardFundingFilter(for: elementsSession)
@@ -151,6 +167,7 @@ class PaymentSheetFormFactory {
     required init(
         configuration: PaymentSheetFormFactoryConfig,
         paymentMethod: PaymentSheet.PaymentMethodType,
+        paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
         previousCustomerInput: IntentConfirmParams? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         showLinkInlineCardSignup: Bool = false,
@@ -169,14 +186,17 @@ class PaymentSheetFormFactory {
         signupOptInInitialValue: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
         paymentMethodIncentive: PaymentMethodIncentive?,
         linkAppearance: LinkAppearance? = nil,
+        linkBrand: LinkBrand = .link,
         sellerName: String? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil,
         cardFundingFilter: CardFundingFilter = .default
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod
+        self.paymentMethodOrientation = paymentMethodOrientation
         self.addressSpecProvider = addressSpecProvider
         self.showLinkInlineCardSignup = showLinkInlineCardSignup
         self.linkAccount = linkAccount
@@ -200,8 +220,10 @@ class PaymentSheetFormFactory {
         self.signupOptInInitialValue = signupOptInInitialValue
         self.isFirstSavedPaymentMethod = isFirstSavedPaymentMethod
         self.analyticsHelper = analyticsHelper
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.paymentMethodIncentive = paymentMethodIncentive
         self.linkAppearance = linkAppearance
+        self.linkBrand = linkBrand
         self.sellerName = sellerName
         self.previousLinkInlineSignupAction = previousLinkInlineSignupAction
         self.cardFundingFilter = cardFundingFilter
@@ -561,9 +583,10 @@ extension PaymentSheetFormFactory {
     static func makeBankMandateText(
         isSettingUp: Bool,
         merchantName: String,
-        sellerName: String?
+        sellerName: String?,
+        brand: LinkBrand
     ) -> NSAttributedString {
-        let links = ["terms": URL(string: "https://link.com/terms/ach-authorization")!]
+        let links = ["terms": brand.achAuthorizationURL]
 
         let string = if let sellerName, isSettingUp {
             String(
@@ -837,13 +860,57 @@ extension PaymentSheetFormFactory {
         return country
     }
 
+    private var bnplHeaderStyle: PaymentSheet.UserInterfaceStyle {
+        guard case .paymentElement(let configuration, _) = configuration else {
+            stpAssertionFailure("BNPL headers are only supported for PaymentSheet/FlowController/EmbeddedPaymentElement and not CustomerSheet.")
+            return .automatic
+        }
+        return configuration.style
+    }
+
+    func makeKlarnaHeader() -> SubtitleElement {
+        if let header = makeBNPLHeader() {
+            // Use the shared BNPL header when header content is available.
+            return header
+        } else {
+            // Fall back to the legacy Klarna copy label.
+            return makeCopyLabel(text: .Localized.buy_now_or_pay_later_with_klarna)
+        }
+    }
+
+    func makeAffirmHeader() -> SubtitleElement {
+        if let header = makeBNPLHeader() {
+            // Use the shared BNPL header when header content is available.
+            return header
+        } else {
+            // Fall back to the legacy Affirm-specific header UI.
+            return SubtitleElement(
+                view: AffirmCopyLabel(theme: theme),
+                isHorizontalMode: paymentMethodOrientation == .horizontal
+            )
+        }
+    }
+
+    func makeBNPLHeader() -> SubtitleElement? {
+        // This will be hooked up to promotion content data in a future PR.
+        return nil
+//        let headerView = BNPLFormHeaderView(
+//            appearance: configuration.appearance,
+//            style: bnplHeaderStyle,
+//            promotion: "TODO: fill in with real promotion content",
+//            learnMoreText: "TODO: fill in with real learn more text",
+//            infoUrl: URL(string: "https://stripe.com")!
+//        )
+//        return SubtitleElement(view: headerView, isHorizontalMode: paymentMethodOrientation == .horizontal)
+    }
+
     func makeCopyLabel(text: String) -> SubtitleElement {
         let label = UILabel()
         label.text = text
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.bodyText
         label.numberOfLines = 0
-        return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
+        return SubtitleElement(view: label, isHorizontalMode: paymentMethodOrientation == .horizontal)
     }
 
     func makeInstantDebits() -> PaymentMethodElement {
@@ -881,6 +948,7 @@ extension PaymentSheetFormFactory {
             isPaymentIntent: isPaymentIntent,
             sellerName: sellerName,
             isSettingUp: isSettingUp || forceSaveFutureUseBehavior,
+            linkBrand: linkBrand,
             appearance: configuration.appearance
         )
 
@@ -913,7 +981,7 @@ extension PaymentSheetFormFactory {
         label.font = theme.fonts.subheadline
         label.textColor = theme.colors.secondaryText
         label.numberOfLines = 0
-        return SubtitleElement(view: label, isHorizontalMode: configuration.isHorizontalMode)
+        return SubtitleElement(view: label, isHorizontalMode: paymentMethodOrientation == .horizontal)
     }
 
     /// This method returns a "Contact information" Section containing a name, email, and phone field depending on the `PaymentSheet.Configuration.billingDetailsCollectionConfiguration` and your payment method's required fields.

@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=8EepNfuMQoq7ZLWzcqplQK8KAQdQ7L8rl0BmBPlf2PUjAOpg7PbjjUlLSyRHc9Gtv4N2fPcI1JOpRAOWQhQwezN072vmvuMX%2BSfDSAb1YfSu7qB9TNYGNh5LxjZRpl%2BrTAP9d9L7cjKXAy4JRfan4LSjB8LppP7mRMT8ZKouuaTVdl7pHQW%2B9IkgqJtW48WZyCAhriw64RpukfSoP8LQR5D2BwUCP9TCi%2BIl94LLWzY%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: e5162a1a1de0d3284602c96414863752
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:42:05 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: d474e4d02712a19ec5e14371a2d5e4ae
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=JUMAbIahsFHls%2Bh1J%2BXFaumVSl1011y3zGpRuLRtJjgLCbjOzVUxxa5RzkjD92oxHo7bXOXM06JiSOxmiZT4dGXzcKzUAn46glhk%2B2V%2BJnaTswyimuaxtSt9TjhQcGr8bpRgQ%2BKzxZ8lkiJbVAnGy65%2FxLqiC6uQxQIrJwTOHKX9Ih19Jlx5SmfGlV8iqlVstl5iSMtbaum7zzRl%2BhOp9e7xwNcs5K5X49Tbtne5jeA%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Tue, 05 May 2026 03:23:28 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000
 
-{"id":"cs_test_a1QGQ3m8iz6eyhzYazPhEdRnvRiEWe6yOmhptmEz8qYBWLB1sYBzw44l8t","client_secret":"cs_test_a1QGQ3m8iz6eyhzYazPhEdRnvRiEWe6yOmhptmEz8qYBWLB1sYBzw44l8t_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51KmkHbGoesj9fw9QAZJlz1qY4dns8nFmLKc7rXiWKAIj8QU7NPFPwSY1h8mqRaFRKQ9njs9pVJoo2jhN6ZKSDA4h00mjcbGF7b"}
+{"id":"cs_test_a1FdnOKO5oe8Jb1OhwCC8O74ZdYHD4OlYy4rCiN2tNK1hxo1S2SGDMQl6g","client_secret":"cs_test_a1FdnOKO5oe8Jb1OhwCC8O74ZdYHD4OlYy4rCiN2tNK1hxo1S2SGDMQl6g_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51KmkHbGoesj9fw9QAZJlz1qY4dns8nFmLKc7rXiWKAIj8QU7NPFPwSY1h8mqRaFRKQ9njs9pVJoo2jhN6ZKSDA4h00mjcbGF7b"}

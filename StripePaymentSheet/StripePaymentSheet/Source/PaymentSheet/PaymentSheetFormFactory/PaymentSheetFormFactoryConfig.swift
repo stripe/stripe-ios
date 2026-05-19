@@ -6,6 +6,7 @@
 import Foundation
 import UIKit
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
 enum PaymentSheetFormFactoryConfig {
@@ -113,15 +114,6 @@ enum PaymentSheetFormFactoryConfig {
             return config.linkPaymentMethodsOnly
         case .customerSheet:
             return false
-        }
-    }
-
-    var isHorizontalMode: Bool {
-        switch self {
-        case .paymentElement(let config, _):
-            return config.resolvedPaymentMethodLayout == .horizontal
-        case .customerSheet:
-            return true
         }
     }
 

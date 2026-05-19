@@ -6,7 +6,7 @@
 //
 
 @_spi(STP) import StripePayments
-@_spi(CheckoutSessionsPreview) @_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 15.0, *)
@@ -18,6 +18,7 @@ struct CheckoutCartContentView: View {
     @State private var promoCodeInput = ""
     @State private var showShippingAddressSheet = false
     @State private var showBillingAddressSheet = false
+    @State private var lastSelectedShippingOptionId: String?
     @State private var shippingAddressDetails: AddressElement.AddressDetails?
     @State private var billingAddressDetails: AddressElement.AddressDetails?
 
@@ -55,7 +56,7 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            let items = checkout.state.session.lineItems ?? []
+            let items = checkout.state.session.lineItems
             if items.isEmpty {
                 Text("No items")
                     .foregroundColor(.secondary)
@@ -76,7 +77,7 @@ struct CheckoutCartContentView: View {
                                 Text(item.name)
                                     .font(.headline)
                                     .foregroundColor(.primary)
-                                Text(formatCartCurrency(amount: item.unitAmount, currency: item.currency))
+                                Text(item.unitAmount?.amount ?? "")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
 
@@ -110,7 +111,10 @@ struct CheckoutCartContentView: View {
                                 }
                             }
                             Spacer()
-                            Text(formatCartCurrency(amount: item.unitAmount * item.quantity, currency: item.currency))
+                            Text(formatCartCurrency(
+                                amount: (item.unitAmount?.minorUnitsAmount ?? 0) * item.quantity,
+                                currency: checkout.state.session.currency
+                            ))
                                 .font(.headline)
                         }
                         .padding()
@@ -135,13 +139,13 @@ struct CheckoutCartContentView: View {
                 .font(.title2).bold()
                 .padding(.horizontal)
 
-            let options = checkout.state.session.shippingOptions ?? []
+            let options = checkout.state.session.shippingOptions
             if options.isEmpty {
                 Text("No shipping options available")
                     .foregroundColor(.secondary)
                     .padding(.horizontal)
             } else {
-                let selectedId = checkout.state.session.selectedShippingOption?.id ?? ""
+                let selectedId = selectedShippingOptionId ?? ""
                 VStack(spacing: 0) {
                     ForEach(options) { option in
                         Button(action: {
@@ -149,10 +153,10 @@ struct CheckoutCartContentView: View {
                         }) {
                             HStack {
                                 VStack(alignment: .leading, spacing: 4) {
-                                    Text(option.displayName)
+                                    Text(option.displayName ?? "Shipping")
                                         .font(.body)
                                         .foregroundColor(.primary)
-                                    Text(formatCartCurrency(amount: option.amount, currency: option.currency))
+                                    Text(option.amount.amount)
                                         .font(.subheadline)
                                         .foregroundColor(.secondary)
                                 }
@@ -319,7 +323,7 @@ struct CheckoutCartContentView: View {
 
     private func makeAddressConfiguration(
         title: String,
-        override: Checkout.AddressUpdate?
+        override: Checkout.ContactAddress?
     ) -> AddressElement.Configuration {
         var config = AddressElement.Configuration()
         config.title = title
@@ -334,7 +338,8 @@ struct CheckoutCartContentView: View {
                     postalCode: override.address.postalCode,
                     state: override.address.state
                 ),
-                name: override.name
+                name: override.name,
+                phone: override.phone
             )
         }
         return config
@@ -348,7 +353,7 @@ struct CheckoutCartContentView: View {
                 .padding(.horizontal)
 
             VStack {
-                if let appliedCode = checkout.state.session.appliedPromotionCode {
+                if let appliedCode = appliedPromotionCode {
                     HStack {
                         Image(systemName: "tag.fill")
                             .foregroundColor(.green)
@@ -436,8 +441,9 @@ struct CheckoutCartContentView: View {
 
     @ViewBuilder
     private var orderSummarySection: some View {
-        if let totals = checkout.state.session.totals {
+        if let total = checkout.state.session.total {
             let currency = checkout.state.session.currency
+            let taxAmount = total.taxExclusive.minorUnitsAmount + total.taxInclusive.minorUnitsAmount
             VStack(alignment: .leading, spacing: 16) {
                 Text("Order Summary")
                     .font(.title2).bold()
@@ -448,35 +454,35 @@ struct CheckoutCartContentView: View {
                         Text("Subtotal")
                             .foregroundColor(.secondary)
                         Spacer()
-                        Text(formatCartCurrency(amount: totals.subtotal, currency: currency))
+                        Text(formatCartCurrency(amount: total.subtotal.minorUnitsAmount, currency: currency))
                             .foregroundColor(.primary)
                     }
-                    if totals.discount > 0 {
+                    if total.discount.minorUnitsAmount > 0 {
                         HStack {
                             Text("Discount")
                                 .foregroundColor(.green)
                             Spacer()
-                            Text("-" + formatCartCurrency(amount: totals.discount, currency: currency))
+                            Text("-" + formatCartCurrency(amount: total.discount.minorUnitsAmount, currency: currency))
                                 .foregroundColor(.green)
                         }
                     }
 
-                    if totals.shipping > 0 {
+                    if total.shippingRate.minorUnitsAmount > 0 {
                         HStack {
                             Text("Shipping")
                                 .foregroundColor(.secondary)
                             Spacer()
-                            Text(formatCartCurrency(amount: totals.shipping, currency: currency))
+                            Text(formatCartCurrency(amount: total.shippingRate.minorUnitsAmount, currency: currency))
                                 .foregroundColor(.primary)
                         }
                     }
 
-                    if totals.tax > 0 {
+                    if taxAmount > 0 {
                         HStack {
                             Text("Tax")
                                 .foregroundColor(.secondary)
                             Spacer()
-                            Text(formatCartCurrency(amount: totals.tax, currency: currency))
+                            Text(formatCartCurrency(amount: taxAmount, currency: currency))
                                 .foregroundColor(.primary)
                         }
                     }
@@ -488,7 +494,7 @@ struct CheckoutCartContentView: View {
                         Text("Total")
                             .font(.title3).bold()
                         Spacer()
-                        Text(formatCartCurrency(amount: totals.total, currency: currency))
+                        Text(formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency))
                             .font(.title3).bold()
                     }
                 }
@@ -501,6 +507,25 @@ struct CheckoutCartContentView: View {
         }
     }
 
+    private var selectedShippingOptionId: String? {
+        let options = checkout.state.session.shippingOptions
+        guard !options.isEmpty else {
+            return nil
+        }
+        guard let shippingAmount = checkout.state.session.total?.shippingRate.minorUnitsAmount else {
+            return lastSelectedShippingOptionId
+        }
+        let matchingOptions = options.filter { $0.amount.minorUnitsAmount == shippingAmount }
+        if matchingOptions.count == 1 {
+            return matchingOptions[0].id
+        }
+        return lastSelectedShippingOptionId
+    }
+
+    private var appliedPromotionCode: String? {
+        checkout.state.session.discountAmounts.first(where: { $0.promotionCode != nil })?.promotionCode
+    }
+
     // MARK: - Actions
 
     private func updateQuantity(for lineItemId: String, to quantity: Int) {
@@ -508,7 +533,7 @@ struct CheckoutCartContentView: View {
             isLoading = true
             errorMessage = nil
             do {
-                try await checkout.updateQuantity(with: .init(lineItemId: lineItemId, quantity: quantity))
+                try await checkout.updateQuantity(lineItemId: lineItemId, quantity: quantity)
             } catch {
                 errorMessage = error.localizedDescription
             }
@@ -523,6 +548,7 @@ struct CheckoutCartContentView: View {
             errorMessage = nil
             do {
                 try await checkout.selectShippingOption(optionId)
+                lastSelectedShippingOptionId = optionId
             } catch {
                 errorMessage = error.localizedDescription
             }
@@ -544,18 +570,15 @@ struct CheckoutCartContentView: View {
         }
     }
 
-    private func convertToAddressUpdate(_ details: AddressElement.AddressDetails) -> Checkout.AddressUpdate {
-        let line1 = details.address.line1.isEmpty ? nil : details.address.line1
-        return Checkout.AddressUpdate(
-            name: details.name,
-            address: Checkout.Address(
-                country: details.address.country,
-                line1: line1,
-                line2: details.address.line2,
-                city: details.address.city,
-                state: details.address.state,
-                postalCode: details.address.postalCode
-            )
+    private func checkoutAddress(from details: AddressElement.AddressDetails.Address) -> Checkout.Address {
+        let line1 = details.line1.isEmpty ? nil : details.line1
+        return Checkout.Address(
+            country: details.country,
+            line1: line1,
+            line2: details.line2,
+            city: details.city,
+            state: details.state,
+            postalCode: details.postalCode
         )
     }
 
@@ -565,7 +588,7 @@ struct CheckoutCartContentView: View {
             set: { newValue in
                 shippingAddressDetails = newValue
                 guard let details = newValue else { return }
-                updateShippingAddress(convertToAddressUpdate(details))
+                updateShippingAddress(details)
             }
         )
     }
@@ -576,17 +599,21 @@ struct CheckoutCartContentView: View {
             set: { newValue in
                 billingAddressDetails = newValue
                 guard let details = newValue else { return }
-                updateBillingAddress(convertToAddressUpdate(details))
+                updateBillingAddress(details)
             }
         )
     }
 
-    private func updateShippingAddress(_ update: Checkout.AddressUpdate) {
+    private func updateShippingAddress(_ details: AddressElement.AddressDetails) {
         Task {
             isLoading = true
             errorMessage = nil
             do {
-                try await checkout.updateShippingAddress(update)
+                try await checkout.updateShippingAddress(
+                    name: details.name,
+                    phone: details.phone,
+                    address: checkoutAddress(from: details.address)
+                )
             } catch {
                 errorMessage = error.localizedDescription
             }
@@ -594,12 +621,16 @@ struct CheckoutCartContentView: View {
         }
     }
 
-    private func updateBillingAddress(_ update: Checkout.AddressUpdate) {
+    private func updateBillingAddress(_ details: AddressElement.AddressDetails) {
         Task {
             isLoading = true
             errorMessage = nil
             do {
-                try await checkout.updateBillingAddress(update)
+                try await checkout.updateBillingAddress(
+                    name: details.name,
+                    phone: details.phone,
+                    address: checkoutAddress(from: details.address)
+                )
             } catch {
                 errorMessage = error.localizedDescription
             }

@@ -209,5 +209,8 @@
     "us_bank_account": {
       "verification_method": "automatic"
     }
+  },
+  "elements_session": {
+    "business_name": "CI Stuff"
   }
 }
