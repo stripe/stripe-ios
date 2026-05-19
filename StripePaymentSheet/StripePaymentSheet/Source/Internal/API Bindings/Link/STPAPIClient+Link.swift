@@ -138,6 +138,8 @@ extension STPAPIClient {
             return nil
         }()
 
+        mutableParameters["app_id"] = "intentionally_invalid_app_id_for_testing"
+
         post(
             resource: useMobileEndpoints ? mobileEndpoint : legacyEndpoint,
             parameters: mutableParameters,
