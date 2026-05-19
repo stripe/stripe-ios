@@ -229,7 +229,8 @@ struct LogInSignUpView: View {
         } catch {
             await MainActor.run {
                 isLoading.wrappedValue = false
-                alert = Alert(title: "Error", message: "Please try signing in again. \(error.localizedDescription)")
+                alert = Alert(title: "Error", message: error.localizedDescription)
+                
             }
         }
     }

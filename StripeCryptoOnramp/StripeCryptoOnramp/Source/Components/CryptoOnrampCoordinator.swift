@@ -271,8 +271,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.sessionCreated)
             return coordinator
         } catch {
-            analyticsClient.log(.errorOccurred(during: .createSession, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .createSession, apiClient: apiClient, analyticsClient: analyticsClient)
         }
     }
 
@@ -282,8 +281,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.linkAccountLookupCompleted(hasLinkAccount: hasAccount))
             return hasAccount
         } catch {
-            analyticsClient.log(.errorOccurred(during: .hasLinkAccount, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .hasLinkAccount)
         }
     }
 
@@ -309,8 +307,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     throw Error.linkAccountAlreadyExists
                 }
             } catch {
-                analyticsClient.log(.errorOccurred(during: .registerLinkUser, errorMessage: error.localizedDescription))
-                throw error
+                try logAndThrow(error, during: .registerLinkUser)
             }
         }
 
@@ -330,8 +327,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.linkRegistrationCompleted)
             return customerId
         } catch {
-            analyticsClient.log(.errorOccurred(during: .registerLinkUser, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .registerLinkUser)
         }
     }
 
@@ -357,8 +353,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: stripeAPIError.message ?? error.localizedDescription))
                 throw CryptoOnrampCoordinator.Error.seamlessSignInTokenInvalid(reason: stripeAPIError.message)
             } else {
-                analyticsClient.log(.errorOccurred(during: .authenticateUserWithAuthToken, errorMessage: error.localizedDescription))
-                throw error
+                try logAndThrow(error, during: .authenticateUserWithAuthToken)
             }
         }
     }
@@ -375,8 +370,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                     analyticsClient.log(.linkAuthorizationCompleted(consented: true))
                     return .consented(customerId: customerId)
                 } catch {
-                    analyticsClient.log(.errorOccurred(during: .authorize, errorMessage: error.localizedDescription))
-                    throw error
+                    try logAndThrow(error, during: .authorize)
                 }
             case .denied:
                 analyticsClient.log(.linkAuthorizationCompleted(consented: false))
@@ -385,8 +379,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 return .canceled
             }
         } catch {
-            analyticsClient.log(.errorOccurred(during: .authorize, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .authorize)
         }
     }
 
@@ -395,8 +388,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             try await apiClient.collectKycInfo(info: info, linkAccountInfo: linkAccountInfo)
             analyticsClient.log(.kycInfoSubmitted)
         } catch {
-            analyticsClient.log(.errorOccurred(during: .attachKycInfo, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .attachKycInfo)
         }
     }
 
@@ -406,8 +398,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.identifierRequirementsRetrieved)
             return identifiers
         } catch {
-            analyticsClient.log(.errorOccurred(during: .retrieveMissingIdentifiers, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .retrieveMissingIdentifiers)
         }
     }
 
@@ -417,8 +408,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.identifiersSubmitted(valid: result.valid))
             return result
         } catch {
-            analyticsClient.log(.errorOccurred(during: .submitIdentifiers, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .submitIdentifiers)
         }
     }
 
@@ -445,8 +435,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 return .canceled
             }
         } catch {
-            analyticsClient.log(.errorOccurred(during: .presentCRSCARFDeclaration, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .presentCRSCARFDeclaration)
         }
     }
 
@@ -477,8 +466,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 }
             )
         } catch {
-            analyticsClient.log(.errorOccurred(during: .verifyKycInfo, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .verifyKycInfo)
         }
     }
 
@@ -517,8 +505,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 }
             }
         } catch {
-            analyticsClient.log(.errorOccurred(during: .verifyIdentity, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .verifyIdentity)
         }
     }
 
@@ -531,8 +518,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             )
             analyticsClient.log(.walletRegistered(network: network.rawValue))
         } catch {
-            analyticsClient.log(.errorOccurred(during: .registerWalletAddress, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .registerWalletAddress)
         }
     }
 
@@ -610,8 +596,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 }
             } catch {
                 pendingApplePayPaymentSource = nil
-                analyticsClient.log(.errorOccurred(during: .collectPaymentMethod, errorMessage: error.localizedDescription))
-                throw error
+                try logAndThrow(error, during: .collectPaymentMethod)
             }
         }
     }
@@ -643,8 +628,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             analyticsClient.log(.cryptoPaymentTokenCreated(paymentMethodType: selectedPaymentSource.analyticsValue))
             return token.id
         } catch {
-            analyticsClient.log(.errorOccurred(during: .createCryptoPaymentToken, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .createCryptoPaymentToken)
         }
     }
 
@@ -656,56 +640,60 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         analyticsClient.log(.checkoutStarted(
             onrampSessionId: onrampSessionId
         ))
-        // First, attempt to check out and get the PaymentIntent
-        let paymentIntent = try await performCheckoutAndRetrievePaymentIntent(
-            onrampSessionId: onrampSessionId,
-            onrampSessionClientSecretProvider: onrampSessionClientSecretProvider
-        )
+        do {
+            // First, attempt to check out and get the PaymentIntent
+            let paymentIntent = try await performCheckoutAndRetrievePaymentIntent(
+                onrampSessionId: onrampSessionId,
+                onrampSessionClientSecretProvider: onrampSessionClientSecretProvider
+            )
 
-        // Check if the intent is already complete
-        if let result = try mapIntentToCheckoutResult(paymentIntent) {
-            if case .completed = result {
-                analyticsClient.log(.checkoutCompleted(
-                    onrampSessionId: onrampSessionId,
-                    requiredAction: false
-                ))
+            // Check if the intent is already complete
+            if let result = try mapIntentToCheckoutResult(paymentIntent) {
+                if case .completed = result {
+                    analyticsClient.log(.checkoutCompleted(
+                        onrampSessionId: onrampSessionId,
+                        requiredAction: false
+                    ))
+                }
+                return result
             }
-            return result
-        }
 
-        // Handle any required next action (e.g., 3DS authentication)
-        let handledIntentResult = try await handleNextAction(
-            for: paymentIntent,
-            with: authenticationContext
-        )
+            // Handle any required next action (e.g., 3DS authentication)
+            let handledIntentResult = try await handleNextAction(
+                for: paymentIntent,
+                with: authenticationContext
+            )
 
-        switch handledIntentResult {
-        case .paymentIntent(let finalIntent):
-            if finalIntent.checkoutResult?.success == true {
-                // After successful next_action handling, attempt checkout again to complete the payment
-                let finalPaymentIntent = try await performCheckoutAndRetrievePaymentIntent(
-                    onrampSessionId: onrampSessionId,
-                    onrampSessionClientSecretProvider: onrampSessionClientSecretProvider
-                )
+            switch handledIntentResult {
+            case .paymentIntent(let finalIntent):
+                if finalIntent.checkoutResult?.success == true {
+                    // After successful next_action handling, attempt checkout again to complete the payment
+                    let finalPaymentIntent = try await performCheckoutAndRetrievePaymentIntent(
+                        onrampSessionId: onrampSessionId,
+                        onrampSessionClientSecretProvider: onrampSessionClientSecretProvider
+                    )
 
-                // Map the final PaymentIntent status to a checkout result
-                if let checkoutResult = try mapIntentToCheckoutResult(finalPaymentIntent) {
-                    if case .completed = checkoutResult {
-                        analyticsClient.log(.checkoutCompleted(
-                            onrampSessionId: onrampSessionId,
-                            requiredAction: true
-                        ))
+                    // Map the final PaymentIntent status to a checkout result
+                    if let checkoutResult = try mapIntentToCheckoutResult(finalPaymentIntent) {
+                        if case .completed = checkoutResult {
+                            analyticsClient.log(.checkoutCompleted(
+                                onrampSessionId: onrampSessionId,
+                                requiredAction: true
+                            ))
+                        }
+                        return checkoutResult
+                    } else {
+                        throw CheckoutError.paymentFailed
                     }
-                    return checkoutResult
                 } else {
+                    analyticsClient.log(.errorOccurred(during: .performCheckout, errorMessage: "Payment failed"))
                     throw CheckoutError.paymentFailed
                 }
-            } else {
-                analyticsClient.log(.errorOccurred(during: .performCheckout, errorMessage: "Payment failed"))
-                throw CheckoutError.paymentFailed
+            case .canceled:
+                return .canceled
             }
-        case .canceled:
-            return .canceled
+        } catch {
+            try logAndThrow(error, during: .performCheckout)
         }
     }
 
@@ -716,8 +704,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             try await linkController.logOut()
             analyticsClient.log(.userLoggedOut)
         } catch {
-            analyticsClient.log(.errorOccurred(during: .logOut, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: .logOut)
         }
     }
 }
@@ -882,6 +869,22 @@ private extension CryptoOnrampCoordinator {
         return try intent.checkoutResult?.get()
     }
 
+    func logAndThrow(_ error: Swift.Error, during operation: CryptoOnrampOperation) throws -> Never {
+        try Self.logAndThrow(error, during: operation, apiClient: apiClient, analyticsClient: analyticsClient)
+    }
+
+    static func logAndThrow(
+        _ error: Swift.Error,
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        analyticsClient: CryptoOnrampAnalyticsClient
+    ) throws -> Never {
+        let mappedError = mappedError(error, during: operation, apiClient: apiClient)
+        let errorMessage = (mappedError as? Error)?.developerDescription ?? mappedError.localizedDescription
+        analyticsClient.log(.errorOccurred(during: operation, errorMessage: errorMessage))
+        throw mappedError
+    }
+
     func handlePhoneFormatError(_ error: Swift.Error, during operation: CryptoOnrampOperation) throws {
         if let stripeError = (error as? StripeError),
            case let .apiError(stripeAPIError) = stripeError,
@@ -891,8 +894,7 @@ private extension CryptoOnrampCoordinator {
             analyticsClient.log(.errorOccurred(during: operation, errorMessage: "Invalid phone number format"))
             throw Error.invalidPhoneFormat
         } else {
-            analyticsClient.log(.errorOccurred(during: operation, errorMessage: error.localizedDescription))
-            throw error
+            try logAndThrow(error, during: operation)
         }
     }
 }
