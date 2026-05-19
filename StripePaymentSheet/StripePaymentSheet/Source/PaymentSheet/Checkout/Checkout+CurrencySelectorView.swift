@@ -51,7 +51,10 @@ extension Checkout {
         private var lastSelectedCurrency: String?
         private let containerStackView = UIStackView()
         private lazy var errorLabel: UILabel = {
-            let label = ElementsUI.makeErrorLabel(theme: appearance.asPaymentSheetAppearance().asElementsTheme)
+            let label = ElementsUI.makeErrorLabel(
+                font: appearance.scaledFont(for: appearance.font, style: .caption1),
+                textColor: appearance.danger
+            )
             label.setHiddenIfNecessary(true)
             return label
         }()
@@ -153,23 +156,23 @@ extension Checkout {
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
             currency: CurrencySelectorUtilities.CurrencyCode
         ) {
+            let flagFont = appearance.scaledFont(for: appearance.font, style: .footnote)
             let (left, right) = CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
                 localizedPricesMetas: session.localizedPricesMetas,
-                flagPrefixProvider: checkout.flagImageManager.flagIcon
+                labelContent: appearance.labelContent,
+                flagPrefixProvider: { [weak checkout] currency in
+                    checkout?.flagImageManager.flagIcon(for: currency, font: flagFont) ?? NSAttributedString()
+                }
             )
 
-            let psAppearance = appearance.asPaymentSheetAppearance()
             let newSelector = TwoOptionSelectorView(
                 leftItem: left,
                 rightItem: right,
                 selectedItemId: currency.apiValue,
-                appearance: psAppearance
+                appearance: appearance
             )
             newSelector.delegate = self
-
-            newSelector.captionLabel.font = appearance.subtitleFont
-            newSelector.captionLabel.textColor = appearance.captionColor
 
             newSelector.translatesAutoresizingMaskIntoConstraints = false
             containerStackView.insertArrangedSubview(newSelector, at: 0)
@@ -190,8 +193,6 @@ extension Checkout {
                 exchangeRateMeta: exchangeRateMeta
             )
             selectorView?.updateCaption(caption)
-            selectorView?.captionLabel.font = appearance.subtitleFont
-            selectorView?.captionLabel.textColor = appearance.captionColor
         }
 
         private func tearDown() {
@@ -216,6 +217,7 @@ extension Checkout {
             errorLabel.setHiddenIfNecessary(true)
             invalidateIntrinsicContentSize()
         }
+
     }
 }
 

@@ -10,6 +10,7 @@ import StripeCoreTestUtils
 @testable @_spi(STP) import StripePaymentSheet
 @_spi(STP) @testable import StripeUICore
 import UIKit
+import XCTest
 // ☠️ WARNING: These snapshots do not have capsule corners on iOS 26 - this is a snapshot-test-only-bug and does not repro on simulator/device.
 @MainActor
 // @iOS26
@@ -33,13 +34,52 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
     func testCustomAppearance() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
         appearance.cornerRadius = 16.0
-        appearance.titleFont = .systemFont(ofSize: 40, weight: .bold)
-        appearance.backgroundColor = .systemBlue.withAlphaComponent(0.1)
-        appearance.selectedColor = .systemBlue
-        appearance.selectedTextColor = .white
-        appearance.unselectedTextColor = .systemBlue
-        appearance.borderColor = .systemBlue
-        appearance.captionColor = .systemBlue.withAlphaComponent(0.6)
+        appearance.background = .systemBlue.withAlphaComponent(0.1)
+        appearance.selectedBackground = .systemBlue
+        appearance.selectedText = .white
+        appearance.textSecondary = .systemBlue
+        appearance.border = .systemBlue
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        verify(view)
+    }
+
+    func testCustomHeight_tall() async {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.height = 52
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        verify(view)
+    }
+
+    func testCustomHeight_compact() async {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.height = 28
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        verify(view)
+    }
+
+    func testCustomBorderWidth() async {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.borderWidth = 2.0
+        appearance.border = .systemBlue
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        verify(view)
+    }
+
+    func testSizeScaleFactor_large() async {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.sizeScaleFactor = 1.3
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        verify(view)
+    }
+
+    func testCustomFont() async throws {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.font = try XCTUnwrap(UIFont(name: "Courier", size: 14))
 
         let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
         verify(view)
@@ -65,6 +105,48 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         view.setNeedsLayout()
         view.layoutIfNeeded()
         verify(view, darkMode: true)
+    }
+
+    func testLabelContentAmount() async {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.labelContent = .amount
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        verify(view)
+    }
+
+    func testTextSecondaryClampsLowAlpha() async {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.textSecondary = UIColor.red.withAlphaComponent(0.1)
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        verify(view)
+    }
+
+    func testTextSecondaryClampsFullyTransparent() async {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.textSecondary = .clear
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        verify(view)
+    }
+
+    func testFullyCustomized() async {
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.height = 44
+        appearance.cornerRadius = 22
+        appearance.borderWidth = 1.5
+        appearance.border = .systemPurple
+        appearance.background = .systemPurple.withAlphaComponent(0.08)
+        appearance.selectedBackground = .systemPurple
+        appearance.font = .systemFont(ofSize: 15, weight: .bold)
+        appearance.sizeScaleFactor = 1.1
+        appearance.text = .label
+        appearance.selectedText = .white
+        appearance.textSecondary = .systemPurple
+
+        let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
+        verify(view)
     }
 
     // MARK: - Helpers
