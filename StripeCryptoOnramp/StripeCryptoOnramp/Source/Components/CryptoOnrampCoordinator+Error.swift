@@ -34,9 +34,34 @@ public extension CryptoOnrampCoordinator {
         case seamlessSignInTokenInvalid(reason: String?)
 
         /// App attestation failed while processing an SDK operation.
-        case appAttestationFailed(ErrorDetails)
+        case appAttestationFailed(APIErrorDetails)
 
         public var errorDescription: String? {
+            return userFacingMessage
+        }
+
+        public var userFacingMessage: String {
+            switch self {
+            case .invalidPhoneFormat:
+                return "Invalid phone format. Please use E.164 format (e.g., +12125551234)."
+            case .linkAccountAlreadyExists:
+                return "A Link account already exists for this email. Log in instead."
+            case .missingEphemeralKey:
+                return "Required information was missing. Please try again later."
+            case .invalidSelectedPaymentSource:
+                return "No payment method is ready to use. Please collect a payment method and try again."
+            case .missingCryptoCustomerID:
+                return "Finish verifying your Link account before continuing."
+            case .linkAccountNotVerified:
+                return "Verify your Link account before continuing."
+            case .seamlessSignInTokenInvalid:
+                return "An error occurred while automatically signing in to your Link account. Please sign in manually."
+            case .appAttestationFailed(let error):
+                return error.userFacingMessage
+            }
+        }
+
+        public var developerDescription: String? {
             switch self {
             case .invalidPhoneFormat:
                 return "Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234)."
@@ -53,21 +78,84 @@ public extension CryptoOnrampCoordinator {
             case .seamlessSignInTokenInvalid:
                 return "An error occurred while automatically signing in to your Link account. Please sign in manually."
             case .appAttestationFailed(let error):
-                return error.userFacingMessage
+                return error.developerDescription
             }
         }
 
-        public var developerDescription: String? {
+        public var docURL: String? {
             switch self {
             case .appAttestationFailed(let error):
-                return error.developerDescription
+                return error.docURL
             default:
-                return errorDescription
+                return nil
+            }
+        }
+
+        public var rawReason: String? {
+            switch self {
+            case .appAttestationFailed(let error):
+                return error.rawReason
+            default:
+                return nil
+            }
+        }
+
+        public var requestID: String? {
+            switch self {
+            case .appAttestationFailed(let error):
+                return error.requestID
+            default:
+                return nil
+            }
+        }
+
+        public var operation: String? {
+            switch self {
+            case .appAttestationFailed(let error):
+                return error.operation
+            default:
+                return nil
+            }
+        }
+
+        public var mode: String? {
+            switch self {
+            case .appAttestationFailed(let error):
+                return error.mode
+            default:
+                return nil
+            }
+        }
+
+        public var apiErrorCode: String? {
+            switch self {
+            case .appAttestationFailed(let error):
+                return error.apiErrorCode
+            default:
+                return nil
+            }
+        }
+
+        public var apiErrorMessage: String? {
+            switch self {
+            case .appAttestationFailed(let error):
+                return error.apiErrorMessage
+            default:
+                return nil
+            }
+        }
+
+        public var underlyingError: Swift.Error? {
+            switch self {
+            case .appAttestationFailed(let error):
+                return error.underlyingError
+            default:
+                return nil
             }
         }
     }
 
-    struct ErrorDetails: LocalizedError {
+    struct APIErrorDetails: LocalizedError {
         public let rawReason: String?
         public let operation: String
         public let appIdentifier: String?
@@ -205,7 +293,7 @@ extension CryptoOnrampCoordinator {
     ) -> Swift.Error {
         let rawReason = apiError.allResponseFields["reason"] as? String
         return Error.appAttestationFailed(
-            ErrorDetails(
+            APIErrorDetails(
                 rawReason: rawReason,
                 operation: operation.rawValue,
                 appIdentifier: Bundle.main.bundleIdentifier,
