@@ -36,7 +36,7 @@ extension PaymentOption {
             case .signUp(_, _, _, _, _, let confirmParams):
                 return confirmParams.makeIcon(forDarkBackground: isDarkMode, currency: currency, iconStyle: iconStyle)
             case .wallet, .withPaymentMethod, .withPaymentDetails:
-                return Image.link_icon.makeImage()
+                return Image.link_icon_with_inset.makeImage()
             }
         case .external(let paymentMethod, _):
             return PaymentSheet.PaymentMethodType.external(paymentMethod).makeImage(
@@ -59,8 +59,8 @@ extension PaymentOption {
         case .new:
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
             return UIImage()
-        case .link(let linkConfirmOption):
-            return linkConfirmOption.brand.paymentSheetLogoImage
+        case .link:
+            return Image.paymentSheetLinkLogoImage
         case .external:
             assertionFailure("This shouldn't be called - we don't show EPMs in the saved PM collection view")
             return UIImage()
@@ -107,20 +107,20 @@ extension STPPaymentMethod {
     }
 
     /// Returns an image to display inside a cell representing the given payment option in the saved PM collection view
-    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle, brand: LinkBrand = .link) -> UIImage {
+    func makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: UIUserInterfaceStyle?, iconStyle: PaymentSheet.Appearance.IconStyle) -> UIImage {
         switch type {
         case .card:
             return (isLinkPaymentMethod || isLinkPassthroughMode)
-                ? brand.paymentSheetLogoImage
+                ? Image.paymentSheetLinkLogoImage
                 : calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .USBankAccount:
             return isLinkPassthroughMode
-                ? brand.paymentSheetLogoImage
+                ? Image.paymentSheetLinkLogoImage
                 : PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle)
         case .SEPADebit:
             return Image.carousel_sepa.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
         case .link:
-            return brand.paymentSheetLogoImage
+            return Image.paymentSheetLinkLogoImage
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()
