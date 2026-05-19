@@ -632,18 +632,20 @@ extension SelfieScanningView: CheckboxButtonDelegate {
 
 private final class CaptureTickMarksView: UIView {
     struct Styling {
-        static let tickCount = 68
-        static let tickLength: CGFloat = 11
+        static let tickCount = 72
+        static let tickLength: CGFloat = 10
         static let tickWidth: CGFloat = 2
-        static let horizontalDiameterToWidthRatio: CGFloat = 0.64
-        static let verticalDiameterToHeightRatio: CGFloat = 0.58
-        static let centerYRatio: CGFloat = 0.42
+        static let horizontalDiameterToWidthRatio: CGFloat = 0.62
+        static let verticalDiameterToHeightRatio: CGFloat = 0.56
+        static let centerYRatio: CGFloat = 0.41
         static let tickColor = UIColor.white.withAlphaComponent(0.96)
         static let shadowColor = UIColor.black.withAlphaComponent(0.35)
         static let shadowOffset = CGSize(width: 0, height: 1)
         static let shadowBlur: CGFloat = 4
-        static let centeredShadowColor = UIColor.black.withAlphaComponent(0.22)
-        static let centeredShadowPadding: CGFloat = 8
+        static let centeredShadowRingColor = UIColor.black.withAlphaComponent(0.16)
+        static let centeredShadowOuterColor = UIColor.black.withAlphaComponent(0.28)
+        static let centeredShadowClearPadding: CGFloat = 4
+        static let centeredShadowFeatherPadding: CGFloat = 58
     }
 
     var showsCenteredShadow: Bool = false {
@@ -672,17 +674,12 @@ private final class CaptureTickMarksView: UIView {
         )
 
         if showsCenteredShadow {
-            let ovalRect = CGRect(
-                x: center.x - horizontalRadius - Styling.centeredShadowPadding,
-                y: center.y - verticalRadius - Styling.centeredShadowPadding,
-                width: (horizontalRadius + Styling.centeredShadowPadding) * 2,
-                height: (verticalRadius + Styling.centeredShadowPadding) * 2
+            drawCenteredShadow(
+                in: context,
+                center: center,
+                horizontalRadius: horizontalRadius,
+                verticalRadius: verticalRadius
             )
-            let shadowPath = UIBezierPath(rect: bounds)
-            shadowPath.append(UIBezierPath(ovalIn: ovalRect))
-            shadowPath.usesEvenOddFillRule = true
-            Styling.centeredShadowColor.setFill()
-            shadowPath.fill()
         }
 
         context.setLineWidth(Styling.tickWidth)
@@ -698,7 +695,7 @@ private final class CaptureTickMarksView: UIView {
             let angle = (CGFloat(index) / CGFloat(Styling.tickCount)) * .pi * 2
             let cosAngle = cos(angle)
             let sinAngle = sin(angle)
-            let startPoint = CGPoint(
+            let tickCenter = CGPoint(
                 x: center.x + cosAngle * horizontalRadius,
                 y: center.y + sinAngle * verticalRadius
             )
@@ -711,9 +708,14 @@ private final class CaptureTickMarksView: UIView {
                 dx: normal.dx / normalLength,
                 dy: normal.dy / normalLength
             )
+            let halfTickLength = Styling.tickLength / 2
+            let startPoint = CGPoint(
+                x: tickCenter.x - unitNormal.dx * halfTickLength,
+                y: tickCenter.y - unitNormal.dy * halfTickLength
+            )
             let endPoint = CGPoint(
-                x: startPoint.x + unitNormal.dx * Styling.tickLength,
-                y: startPoint.y + unitNormal.dy * Styling.tickLength
+                x: tickCenter.x + unitNormal.dx * halfTickLength,
+                y: tickCenter.y + unitNormal.dy * halfTickLength
             )
 
             context.move(to: startPoint)
@@ -721,5 +723,58 @@ private final class CaptureTickMarksView: UIView {
         }
 
         context.strokePath()
+    }
+
+    private func drawCenteredShadow(
+        in context: CGContext,
+        center: CGPoint,
+        horizontalRadius: CGFloat,
+        verticalRadius: CGFloat
+    ) {
+        let scaleX = horizontalRadius / verticalRadius
+        let maxXDistance = max(center.x, bounds.width - center.x) / scaleX
+        let maxYDistance = max(center.y, bounds.height - center.y)
+        let outerRadius = hypot(maxXDistance, maxYDistance)
+        let clearRadius = verticalRadius + Styling.centeredShadowClearPadding
+        guard outerRadius > clearRadius else {
+            return
+        }
+
+        let featherRadius = min(
+            verticalRadius + Styling.centeredShadowFeatherPadding,
+            outerRadius
+        )
+        let featherLocation = min(
+            max((featherRadius - clearRadius) / (outerRadius - clearRadius), 0.12),
+            0.96
+        )
+        let colors = [
+            UIColor.clear.cgColor,
+            UIColor.clear.cgColor,
+            Styling.centeredShadowRingColor.cgColor,
+            Styling.centeredShadowOuterColor.cgColor,
+        ] as CFArray
+        let locations = [CGFloat(0), CGFloat(0.08), featherLocation, CGFloat(1)]
+
+        guard let gradient = CGGradient(
+            colorsSpace: CGColorSpaceCreateDeviceRGB(),
+            colors: colors,
+            locations: locations
+        ) else {
+            return
+        }
+
+        context.saveGState()
+        context.translateBy(x: center.x, y: center.y)
+        context.scaleBy(x: scaleX, y: 1)
+        context.drawRadialGradient(
+            gradient,
+            startCenter: .zero,
+            startRadius: clearRadius,
+            endCenter: .zero,
+            endRadius: outerRadius,
+            options: [.drawsAfterEndLocation]
+        )
+        context.restoreGState()
     }
 }
