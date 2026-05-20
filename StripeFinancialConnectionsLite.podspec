@@ -1,0 +1,21 @@
+Pod::Spec.new do |s|
+  s.name                           = 'StripeFinancialConnectionsLite'
+
+  # Do not update s.version directly.
+  # Instead, update the VERSION file and run ./ci_scripts/update_version.sh
+  s.version                        = '25.15.0'
+
+  s.summary                        = 'StripeFinancialConnectionsLite is a lightweight SDK for connecting financial '\
+                                     'accounts to Stripe via a hosted web flow.'
+  s.license                        = { :type => 'MIT', :file => 'LICENSE' }
+  s.homepage                       = 'https://stripe.com/docs/financial-connections'
+  s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
+  s.source                         = { :git => 'https://github.com/stripe/stripe-ios.git', :tag => "#{s.version}" }
+  s.frameworks                     = 'Foundation', 'UIKit', 'WebKit', 'AuthenticationServices'
+  s.requires_arc                   = true
+  s.platform                       = :ios
+  s.ios.deployment_target          = '13.0'
+  s.swift_version                  = '5.0'
+  s.source_files                   = 'StripeFinancialConnectionsLite/StripeFinancialConnectionsLite/**/*.swift'
+  s.dependency                       'StripeCore', "#{s.version}"
+end
