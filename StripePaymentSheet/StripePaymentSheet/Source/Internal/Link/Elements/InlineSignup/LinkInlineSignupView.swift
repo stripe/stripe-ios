@@ -7,6 +7,7 @@
 //
 
 import SafariServices
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -65,6 +66,13 @@ final class LinkInlineSignupView: UIView {
         return TextFieldElement(configuration: configuration, theme: theme)
     }()
 
+    private lazy var phoneMoreInfoView: LinkMoreInfoView? = {
+        guard viewModel.mode == .textFieldsOnlyPhoneFirst else {
+            return nil
+        }
+        return LinkMoreInfoView(brand: viewModel.brand)
+    }()
+
     private(set) lazy var phoneNumberElement: PhoneNumberElement = {
         // Don't allow a default phone number in textFieldsOnly mode.
         // Otherwise, we'd imply consumer consent when it hasn't occurred.
@@ -80,7 +88,7 @@ final class LinkInlineSignupView: UIView {
         case .textFieldsOnlyPhoneFirst:
             return PhoneNumberElement(
                 isOptional: viewModel.isPhoneNumberOptional,
-                infoView: LinkMoreInfoView(brand: viewModel.brand),
+                infoView: phoneMoreInfoView,
                 theme: theme
             )
         }
@@ -100,7 +108,7 @@ final class LinkInlineSignupView: UIView {
         return phoneNumberElement
     }()
 
-    private(set) lazy var legalTermsElement: StaticElement? = {
+    private lazy var legalTermsView: LinkLegalTermsView? = {
         guard viewModel.mode != .signupOptIn else {
             return nil
         }
@@ -112,9 +120,15 @@ final class LinkInlineSignupView: UIView {
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText
         legalView.tintColor = theme.colors.primary
+        return legalView
+    }()
 
+    private(set) lazy var legalTermsElement: StaticElement? = {
+        guard let legalTermsView else {
+            return nil
+        }
         return StaticElement(
-            view: legalView
+            view: legalTermsView
         )
     }()
 
@@ -239,6 +253,17 @@ final class LinkInlineSignupView: UIView {
         viewModel.delegate = self
         checkboxElement.delegate = self
         formElement.delegate = self
+    }
+
+    func updateBrand(_ brand: LinkBrand) {
+        guard viewModel.brand != brand else {
+            return
+        }
+        viewModel.brand = brand
+        checkboxElement.updateBrand(brand)
+        emailElement.updateBrand(brand)
+        phoneMoreInfoView?.updateBrand(brand)
+        legalTermsView?.updateBrand(brand)
     }
 
     func updateUI(animated: Bool = false) {

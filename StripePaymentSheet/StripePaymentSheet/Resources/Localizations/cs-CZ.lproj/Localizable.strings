@@ -56,6 +56,8 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Pokračovaním souhlasíte s autorizací plateb podle <terms>těchto podmínek</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Pokračováním souhlasíte s uložením svých údajů pro budoucí nákupy u %1$@ a <link>%2$@</link> v souladu s <terms>podmínkami</terms> a <privacy>zásadami ochrany osobních údajů</privacy> %2$@.";
+
 "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Pokračováním vyjadřujete souhlas s uložením vašich informací pro budoucí nákupy pomocí služby %@ a služby <link>Link</link> podle <terms>podmínek</terms> a <privacy>ochrany osobních údajů</privacy> Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Pokračováním vyjadřujete souhlas s uložením vašich informací pro budoucí nákupy u %@.";
@@ -66,15 +68,25 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Pokračováním povolujete, %1$@ aby odepisovala z vašeho účtu Cash App tuto platbu a budoucí platby v souladu s podmínkami společnosti %2$@, dokud toto oprávnění neodvoláte. Toto oprávnění můžete kdykoli změnit v nastavení aplikace Cash App.";
 
+"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Připojením se k %@ souhlasíte s <terms>podmínkami</terms> a <privacy>zásadami ochrany osobních údajů</privacy>.";
+
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Připojením se ke službám Link vyjadřujete zároveň svůj souhlas s <terms>Podmínkami</terms> a <privacy>Zásadami ochrany osobních údajů</privacy>.";
+
+"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím telefonního čísla a e-mailu souhlasíte s vytvořením účtu %1$@, který podléhá <terms>podmínkám</terms> a <privacy>zásadám ochrany osobních údajů</privacy> %1$@.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Zadáním telefonního čísla a e-mailu souhlasíte s vytvořením účtu Link, který podléhá <terms>Podmínkám</terms> a <privacy>Zásadám ochrany osobních údajů</privacy> Link.";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Poskytnutím údajů o svém bankovním účtu a potvrzením této platby souhlasíte s touto žádostí o přímý debet a <terms>smlouvou o přímém debetu</terms> a opravňujete společnost Stripe Payments Australia Pty Ltd ACN 160 180 343 s uživatelským identifikačním číslem 507156 pro přímý debet (dále jen „Stripe“) k tomu, aby z vašeho účtu prostřednictvím systému hromadného elektronického zúčtování (BECS) jménem společnosti %@ (dále jen „obchodník“) strhávala veškeré částky, které vám byly obchodníkem samostatně sděleny. Potvrzujete, že jste buď majitelem účtu, nebo oprávněnou osobou k výše uvedenému účtu.";
+
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Poskytnutím údajů o vaší kartě povolujete společnosti %@, aby si v souladu se svými podmínkami strhla z vaší karty poplatky za budoucí platby.";
+
+"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím e-mailu souhlasíte s vytvořením účtu %1$@ a uložením platebních údajů do %1$@ v souladu s <terms>podmínkami</terms> a <privacy>zásadami ochrany osobních údajů</privacy> %1$@.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím svého e-mailu souhlasíte s vytvořením účtu Link a uložením vašich platebních informací v rámci služby Link, a to v souladu s <terms>Podmínkami</terms> a <privacy>zásadami ochrany osobních údajů</privacy>.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Tím, že zadáte informace o platbě a potvrdíte tuto platbu, udělujete společnosti (A) %@ a Stripe, našemu poskytovateli platebních služeb, oprávnění zaslat do vaší banky pokyny k zatížení vašeho účtu a (B) vaší bance zatížit váš účet na základě těchto pokynů. V rámci svých práv máte nárok na refundaci od banky na základě smluvních podmínek vaší smlouvy s bankou. Refundaci je nutné nárokovat během 8 týdnů od data, kdy byl váš účet zatížen. Vaše práva jsou vysvětlena v prohlášení, které můžete získat od banky.";
+
+"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím svého telefonního čísla souhlasíte s vytvořením účtu %1$@ a uložením platebních údajů do %1$@ v souladu s <terms>podmínkami</terms> a <privacy>zásadami ochrany osobních údajů</privacy> %1$@.";
 
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Poskytnutím svého telefonního čísla souhlasíte s vytvořením účtu Link a uložením vašich platebních informací v rámci služby Link, a to v souladu s <terms>Podmínkami</terms> a <privacy>zásadami ochrany osobních údajů</privacy>.";
 
@@ -118,6 +130,8 @@
 
 "Continue another way" = "Pokračovat jiným způsobem";
 
+"Create an account with %@ for faster checkout across the web" = "Vytvořte si účet u %@ a plaťte na webu rychleji";
+
 "Create an account with Link for faster checkout across the web" = "Vytvořte si účet ve službě Link a plaťte na webu rychleji";
 
 "Debit or credit card" = "Debetní nebo kreditní karta";
@@ -153,6 +167,8 @@
 "Last 4 digits of SSN" = "Poslední 4 číslice SSN";
 
 "Log in or sign up" = "Registrovat nebo přihlásit";
+
+"Log out of %@" = "Odhlásit se z %@?";
 
 "Log out of Link" = "Odhlásit ze služby Link";
 
@@ -202,11 +218,15 @@
 
 "Pay faster at %@ and thousands of businesses." = "Plaťte rychleji u %@ a tisíců firem.";
 
+"Pay faster everywhere %@ is accepted." = "Plaťte rychleji všude, kde je akceptována služba %@.";
+
 "Pay faster everywhere Link is accepted." = "Plaťte rychleji všude, kde je akceptována služba Link.";
 
 "Pay over time with %@" = "Platit průběžně pomocí %@";
 
 "Pay over time with Affirm" = "Platit průběžně pomocí Affirm";
+
+"Pay with %@" = "Zaplatit pomocí %@";
 
 "Pay with Link" = "Zaplatit pomocí Link";
 
@@ -252,6 +272,8 @@
 
 "Save for future payments" = "Uložit pro budoucí platby";
 
+"Save my info for faster checkout with %@" = "Uložit mé údaje pro rychlejší platbu u %@";
+
 "Save my info for faster checkout with Link" = "Uložit mé informace pro rychlejší odbavení pomocí Link";
 
 "Save payment details to %@ for future purchases" = "Uložit platební údaje do  %@  pro budoucí nákupy";
@@ -259,6 +281,8 @@
 "Save this account for future %@ payments" = "Uložit tento účet pro budoucí platby %@";
 
 "Save your bank account in just a few steps." = "Uložte si svůj bankovní účet v několika málo krocích.";
+
+"Save your info for secure 1-click checkout with %@" = "Uložte své údaje pro bezpečnou platbu jedním kliknutím u %@";
 
 "Save your info for secure 1-click checkout with Link" = "Uložte své údaje pro pro bezpečné odbavení 1 kliknutím u Link";
 
@@ -276,11 +300,15 @@
 
 "Set up" = "Nastavit";
 
+"Shipping" = "Doprava";
+
 "Shipping to %@ is not supported." = "Dodání do zemí jako %@ není podporováno.";
 
 "Show menu" = "Zobrazit nabídku";
 
 "Simple, secure one-click payments" = "Jednoduché a bezpečné platby jedním kliknutím";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Při propojování účtu se něco pokazilo.\nZkuste to prosím znovu později.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe vloží 0,01 USD na váš účet během 1 až 2 pracovních dnů. Poté obdržíte e-mail s pokyny k dokončení ukládání na bankovní účet u %@.";
 
@@ -295,6 +323,8 @@
 "Tax" = "Daň";
 
 "The IBAN you entered is incomplete." = "Číslo IBAN, které jste zadali, je neúplné.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Zadaný IBAN je neplatný,„%@“ není podporovaný kód země.";
 
 "The provided verification code has expired." = "Platnost zadaného ověřovacího kódu vypršela.";
 

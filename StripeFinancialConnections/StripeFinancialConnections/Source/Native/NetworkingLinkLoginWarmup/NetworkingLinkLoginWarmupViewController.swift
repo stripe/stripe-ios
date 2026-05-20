@@ -42,7 +42,9 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
 
     private let dataSource: NetworkingLinkLoginWarmupDataSource
     weak var delegate: NetworkingLinkLoginWarmupViewControllerDelegate?
-    private var linkBrand: LinkBrand { dataSource.manifest.brand ?? .link }
+    private var linkBrand: LinkBrand {
+        PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: dataSource.manifest.linkBrand) ?? .link
+    }
 
     private lazy var warmupFooterView: NetworkingLinkLoginWarmupFooterView = {
         let secondaryButtonTitle: String

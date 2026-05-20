@@ -7,7 +7,9 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
+import UIKit
 
 // TODO(yuki|https://jira.corp.stripe.com/browse/MOBILESDK-309): Refactor STPImageLibrary's images to live here as well
 
@@ -85,10 +87,13 @@ enum Image: String, CaseIterable, ImageMaker {
     case icon_link_error = "icon_link_error"
     case icon_link_warning_circle = "icon_link_warning_circle"
     case link_logo = "link_logo"
+    case onelink_logo = "onelink_logo"
     case link_logo_bw = "link_logo_bw"
     case link_logo_knockout = "link_logo_knockout"
+    case onelink_logo_knockout = "onelink_logo_knockout"
     case link_icon = "link_icon"
     case link_logo_tintable = "link_logo_tintable"
+    case onelink_logo_tintable = "onelink_logo_tintable"
     case onelink_logo_bw = "onelink_logo_bw"
 
     // ShopPay
@@ -121,4 +126,33 @@ enum Image: String, CaseIterable, ImageMaker {
 
     // KYC Refresh
     case iconEditOutline = "icon_edit_outline"
+}
+
+extension LinkBrand {
+    var paymentSheetLogoImage: UIImage {
+        switch self {
+        case .link, .unparsable:
+            return Image.link_logo.makeImage(template: false)
+        case .onelink:
+            return Image.onelink_logo.makeImage(template: false)
+        }
+    }
+
+    var paymentSheetKnockoutLogoImage: UIImage {
+        switch self {
+        case .link, .unparsable:
+            return Image.link_logo_knockout.makeImage(template: false)
+        case .onelink:
+            return Image.onelink_logo_knockout.makeImage(template: false)
+        }
+    }
+
+    var paymentSheetTintableLogoImage: UIImage {
+        switch self {
+        case .link, .unparsable:
+            return Image.link_logo_tintable.makeImage(template: true)
+        case .onelink:
+            return Image.onelink_logo_tintable.makeImage(template: true)
+        }
+    }
 }

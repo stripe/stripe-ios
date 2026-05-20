@@ -18,6 +18,9 @@ final class SuccessViewController: UIViewController {
 
     private let dataSource: SuccessDataSource
     weak var delegate: SuccessViewControllerDelegate?
+    private var linkBrand: LinkBrand {
+        PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: dataSource.manifest.linkBrand) ?? .link
+    }
 
     init(dataSource: SuccessDataSource) {
         self.dataSource = dataSource
@@ -47,7 +50,7 @@ final class SuccessViewController: UIViewController {
                 // manual entry has "0" linked accounts count
                 isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
                 showSaveToLinkFailedNotice: showSaveToLinkFailedNotice,
-                brand: dataSource.manifest.brand ?? .link
+                linkBrand: linkBrand
             ),
             appearance: dataSource.manifest.appearance
         )
@@ -213,13 +216,13 @@ private func CreateIconView(appearance: FinancialConnectionsAppearance) -> UIVie
 private func CreateSubtitleText(
     isLinkingOneAccount: Bool,
     showSaveToLinkFailedNotice: Bool,
-    brand: LinkBrand
+    linkBrand: LinkBrand
 ) -> String {
     if showSaveToLinkFailedNotice {
         if isLinkingOneAccount {
-            return String.Localized.your_account_was_connected_but_could_not_be_saved_to_brand(brand: brand)
+            return String.Localized.your_account_was_connected_but_could_not_be_saved_to_brand(brand: linkBrand)
         } else { // multiple bank accounts
-            return String.Localized.your_accounts_were_connected_but_could_not_be_saved_to_brand(brand: brand)
+            return String.Localized.your_accounts_were_connected_but_could_not_be_saved_to_brand(brand: linkBrand)
         }
     } else if isLinkingOneAccount {
         return STPLocalizedString(

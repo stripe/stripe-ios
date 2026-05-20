@@ -136,7 +136,7 @@ import UIKit
     private var currentTaxRate: (String, Double)?
 
     var linkConfiguration: PaymentSheet.LinkConfiguration {
-        let brand: LinkBrand? = settings.linkBrand == .onelink ? .onelink : nil
+        let brand: LinkBrand? = settings.forceOnelink == .on ? .onelink : nil
 
         switch settings.linkDisplay {
         case .automatic:
@@ -645,6 +645,7 @@ import UIKit
         self.settings = settings
         self.appearance = appearance
         self.currentlyRenderedSettings = .defaultValues()
+        updateForcedConsumerLinkBrand(settings)
 
         $settings.removeDuplicates().sink { [weak self] newValue in
             if newValue.autoreload == .on {
@@ -668,6 +669,8 @@ import UIKit
 
             let enableFcLite = newValue.fcLiteEnabled == .on
             FinancialConnectionsSDKAvailability.localFcLiteOverride = enableFcLite
+
+            self?.updateForcedConsumerLinkBrand(newValue)
         }.store(in: &subscribers)
 
         // Listen for analytics
@@ -679,6 +682,11 @@ import UIKit
         if let v = self.rootViewController.view.window!.ambiguousView() {
             print(v)
         }
+    }
+
+    private func updateForcedConsumerLinkBrand(_ settings: PaymentSheetTestPlaygroundSettings) {
+        PaymentSheetLinkAccount.forcedConsumerLinkBrandForTesting =
+            settings.forceOnelinkConsumer == .on ? .onelink : nil
     }
 
     func buildPaymentSheet() {
@@ -921,6 +929,7 @@ extension PlaygroundController {
                             clientSecret: checkoutSessionClientSecret,
                             configuration: checkoutConfiguration
                         )
+                        self.checkout?.delegate = self
                     } catch {
                         self.checkout = nil
                         print("Failed to load checkout session: \(error)")
@@ -941,7 +950,6 @@ extension PlaygroundController {
                     return "intent id: \(intentID ?? "")"
                 }()
                 print("✅ Test playground finished loading with \(idDescription) and customer id: \(self.customerId ?? "") ")
-
                 switch self.settings.uiStyle {
                 case .paymentSheet:
                     self.buildPaymentSheet()
@@ -1382,6 +1390,29 @@ extension AddressViewController.AddressDetails {
         postalAddress.country = address.country
 
         return [name, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
+    }
+}
+
+// MARK: - CheckoutDelegate
+
+extension PlaygroundController: CheckoutDelegate {
+    func checkout(_ checkout: Checkout, didChangeState state: Checkout.State) {
+        switch settings.uiStyle {
+        case .embedded:
+            Task { @MainActor in
+                _ = await embeddedPlaygroundViewController?.embeddedPaymentElement?.update(checkout: checkout)
+            }
+        case .flowController:
+            paymentSheetFlowController?.update(checkout: checkout) { [weak self] error in
+                if let error {
+                    print("PaymentSheet.FlowController.update(checkout:) failed: \(error)")
+                    self?.fail(error: error)
+                }
+            }
+        case .paymentSheet:
+            // PaymentSheet waits for pending Checkout updates and resnapshots the session when presenting.
+            break
+        }
     }
 }
 

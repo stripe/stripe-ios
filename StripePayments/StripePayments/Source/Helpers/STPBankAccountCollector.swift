@@ -305,7 +305,7 @@ public class STPBankAccountCollector: NSObject {
                 existingConsumer: nil,
                 style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
-                brand: elementsSessionContext?.linkSettings?.brand,
+                linkBrand: nil,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -599,7 +599,7 @@ public class STPBankAccountCollector: NSObject {
                 existingConsumer: nil,
                 style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
-                brand: elementsSessionContext?.linkSettings?.brand,
+                linkBrand: nil,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -695,7 +695,7 @@ public class STPBankAccountCollector: NSObject {
                 existingConsumer: nil,
                 style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
-                brand: elementsSessionContext?.linkSettings?.brand,
+                linkBrand: nil,
                 onEvent: onEvent,
                 from: viewController
             ) { result in

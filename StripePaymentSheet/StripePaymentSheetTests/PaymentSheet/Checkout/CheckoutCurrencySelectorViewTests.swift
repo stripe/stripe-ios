@@ -14,16 +14,16 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
 
     // MARK: - Auto-hide tests
 
-    func testHiddenWhenSessionIsNil() {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
+    func testHiddenWhenSessionIsNil() async {
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
         // Session is nil before load(), so the view should be hidden
         XCTAssertTrue(view.isHidden)
     }
 
-    func testHiddenWhenAdaptivePricingNotActive() {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
+    func testHiddenWhenAdaptivePricingNotActive() async {
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession(adaptivePricingActive: false)
         checkout.updateSession(session)
 
@@ -35,11 +35,11 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
             XCTAssertTrue(view.isHidden)
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 1.0)
     }
 
-    func testHiddenWhenLocalizedPricesEmpty() {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
+    func testHiddenWhenLocalizedPricesEmpty() async {
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession(includeLocalizedPrices: false)
         checkout.updateSession(session)
 
@@ -50,11 +50,11 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
             XCTAssertTrue(view.isHidden)
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 1.0)
     }
 
-    func testHiddenWhenExchangeRateMetaNil() {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
+    func testHiddenWhenExchangeRateMetaNil() async {
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession(includeExchangeRateFields: false)
         checkout.updateSession(session)
 
@@ -65,11 +65,11 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
             XCTAssertTrue(view.isHidden)
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 1.0)
     }
 
-    func testVisibleWhenAdaptivePricingActive() {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
+    func testVisibleWhenAdaptivePricingActive() async {
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let session = makeSession()
         checkout.updateSession(session)
 
@@ -80,11 +80,11 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
             XCTAssertFalse(view.isHidden)
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 1.0)
     }
 
-    func testTransitionsFromHiddenToVisibleOnSessionUpdate() {
-        let checkout = Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
+    func testTransitionsFromHiddenToVisibleOnSessionUpdate() async {
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
         let view = Checkout.CurrencySelectorView(checkout: checkout)
 
         // Initially hidden
@@ -99,7 +99,7 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
             XCTAssertFalse(view.isHidden)
             expectation.fulfill()
         }
-        wait(for: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 1.0)
     }
 
     // MARK: - Helpers

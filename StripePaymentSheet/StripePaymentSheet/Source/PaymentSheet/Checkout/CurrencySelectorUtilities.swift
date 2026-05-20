@@ -30,9 +30,13 @@ enum CurrencySelectorUtilities {
 
     /// Local currency on the left, integration (merchant) currency on the right.
     /// Uses `exchangeRateMeta` for stable ordering that doesn't change on reload.
+    ///
+    /// - Parameter flagPrefixProvider: Returns an attributed flag icon for each currency code.
     static func buildSelectorItems(
         exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
-        localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta]
+        localizedPricesMetas: [STPCheckoutSessionLocalizedPriceMeta],
+        labelContent: Checkout.CurrencySelectorView.Appearance.LabelContent = .currencyCode,
+        flagPrefixProvider: (String) -> NSAttributedString = { _ in NSAttributedString() }
     ) -> (left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
         let localCurrency = CurrencyCode(exchangeRateMeta.localizedCurrency)
         let integrationCurrency = CurrencyCode(exchangeRateMeta.integrationCurrency)
@@ -40,20 +44,36 @@ enum CurrencySelectorUtilities {
         let localMeta = localizedPricesMetas.first { CurrencyCode($0.currency) == localCurrency }
         let integrationMeta = localizedPricesMetas.first { CurrencyCode($0.currency) == integrationCurrency }
 
-        let left = localMeta.map { makeSelectorItem(currency: CurrencyCode($0.currency), total: $0.total) }
-            ?? makeSelectorItem(currency: localCurrency, total: 0)
-        let right = integrationMeta.map { makeSelectorItem(currency: CurrencyCode($0.currency), total: $0.total) }
-            ?? makeSelectorItem(currency: integrationCurrency, total: 0)
+        let left = localMeta.map {
+            makeSelectorItem(currency: CurrencyCode($0.currency), total: $0.total, labelContent: labelContent, flagPrefix: flagPrefixProvider(localCurrency.apiValue))
+        } ?? makeSelectorItem(currency: localCurrency, total: 0, labelContent: labelContent, flagPrefix: flagPrefixProvider(localCurrency.apiValue))
+
+        let right = integrationMeta.map {
+            makeSelectorItem(currency: CurrencyCode($0.currency), total: $0.total, labelContent: labelContent, flagPrefix: flagPrefixProvider(integrationCurrency.apiValue))
+        } ?? makeSelectorItem(currency: integrationCurrency, total: 0, labelContent: labelContent, flagPrefix: flagPrefixProvider(integrationCurrency.apiValue))
 
         return (left: left, right: right)
     }
 
-    static func makeSelectorItem(currency: CurrencyCode, total: Int) -> TwoOptionSelectorItem {
-        let flag = flagEmoji(for: currency)
-        let amount = String.localizedAmountDisplayString(for: total, currency: currency.displayValue)
+    static func makeSelectorItem(currency: CurrencyCode, total: Int, labelContent: Checkout.CurrencySelectorView.Appearance.LabelContent = .currencyCode, flagPrefix: NSAttributedString) -> TwoOptionSelectorItem {
+        let displayText = NSMutableAttributedString(attributedString: flagPrefix)
+        if displayText.length > 0 {
+            displayText.append(NSAttributedString(string: " \u{2009}"))
+        }
+        let accessibilityLabel: String
+        switch labelContent {
+        case .currencyCode:
+            displayText.append(NSAttributedString(string: currency.displayValue))
+            accessibilityLabel = currency.displayValue
+        case .amount:
+            let formattedAmount = String.localizedAmountDisplayString(for: total, currency: currency.apiValue)
+            displayText.append(NSAttributedString(string: formattedAmount))
+            accessibilityLabel = "\(formattedAmount) \(currency.displayValue)"
+        }
         return TwoOptionSelectorItem(
             id: currency.apiValue,
-            displayText: "\(flag) \(amount)",
+            displayText: displayText,
+            accessibilityLabel: accessibilityLabel,
             accessibilityIdentifier: "currency_option_\(currency.apiValue)"
         )
     }
@@ -75,20 +95,43 @@ enum CurrencySelectorUtilities {
     }
 
     static func formatExchangeRate(from meta: STPCheckoutSessionExchangeRateMeta) -> String {
-        let sellCurrency = CurrencyCode(meta.sellCurrency).displayValue
-        let buyCurrency = CurrencyCode(meta.buyCurrency).displayValue
+        let localCurrency = CurrencyCode(meta.localizedCurrency).displayValue
+        let integrationCurrency = CurrencyCode(meta.integrationCurrency).displayValue
 
         let formattedRate: String
         if let rateDouble = Double(meta.exchangeRate) {
+            let inverse = 1.0 / rateDouble
             let formatter = NumberFormatter()
             formatter.minimumFractionDigits = 2
             formatter.maximumFractionDigits = 4
-            formattedRate = formatter.string(from: NSNumber(value: rateDouble)) ?? meta.exchangeRate
+            formattedRate = formatter.string(from: NSNumber(value: inverse)) ?? meta.exchangeRate
         } else {
             formattedRate = meta.exchangeRate
         }
 
-        return "1 \(sellCurrency) = \(formattedRate) \(buyCurrency)"
+        if meta.conversionMarkupBps > 0 {
+            let feePercent = formatConversionFeePercent(bps: meta.conversionMarkupBps)
+            return .Localized.exchangeRateWithConversionFee(
+                localCurrency: localCurrency,
+                rate: formattedRate,
+                integrationCurrency: integrationCurrency,
+                feePercent: feePercent
+            )
+        }
+
+        return .Localized.exchangeRate(
+            localCurrency: localCurrency,
+            rate: formattedRate,
+            integrationCurrency: integrationCurrency
+        )
+    }
+
+    private static func formatConversionFeePercent(bps: Int) -> String {
+        let percent = Double(bps) / 100.0
+        if percent.truncatingRemainder(dividingBy: 1) == 0 {
+            return String(format: "%.0f", percent)
+        }
+        return String(format: "%g", percent)
     }
 
     // MARK: - Availability
@@ -96,9 +139,9 @@ enum CurrencySelectorUtilities {
     /// Returns the adaptive pricing data needed to show a currency selector,
     /// or `nil` if adaptive pricing is not available for the given session.
     static func adaptivePricingData(
-        from session: Checkout.Session?
+        from session: STPCheckoutSession?
     ) -> (session: STPCheckoutSession, exchangeRateMeta: STPCheckoutSessionExchangeRateMeta, currency: String)? {
-        guard let session = session as? STPCheckoutSession,
+        guard let session,
               session.adaptivePricingActive,
               !session.localizedPricesMetas.isEmpty,
               let exchangeRateMeta = session.exchangeRateMeta,

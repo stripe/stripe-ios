@@ -33,39 +33,6 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertFalse(checkout.state.isLoading)
     }
 
-    func testRefreshFetchesLatestServerState() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
-            allowPromotionCodes: true
-        )
-        let apiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        let checkout = try await Checkout(
-            clientSecret: checkoutSessionResponse.clientSecret,
-            apiClient: apiClient
-        )
-        let delegate = MockCheckoutDelegate()
-        checkout.delegate = delegate
-
-        XCTAssertNil(promotionCode(in: checkout.state.session))
-        XCTAssertEqual(checkout.state.session.total?.total.minorUnitsAmount, 2000)
-
-        _ = try await apiClient.updateCheckoutSession(
-            checkoutSessionId: checkoutSessionResponse.id,
-            parameters: ["promotion_code": "SAVE25"]
-        )
-
-        // The local copy remains stale until refresh() fetches the latest session snapshot.
-        XCTAssertNil(promotionCode(in: checkout.state.session))
-        XCTAssertEqual(checkout.state.session.total?.total.minorUnitsAmount, 2000)
-
-        try await checkout.refresh()
-
-        XCTAssertEqual(promotionCode(in: checkout.state.session), "SAVE25")
-        XCTAssertEqual(checkout.state.session.total?.total.minorUnitsAmount, 1500)
-        XCTAssertFalse(checkout.state.isLoading)
-        XCTAssertTrue(delegate.didChangeStateCalled)
-        XCTAssertEqual(promotionCode(in: delegate.lastState?.session), "SAVE25")
-    }
-
     func testDelegateCalledOnPromotionCodeApply() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             allowPromotionCodes: true
@@ -313,7 +280,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
             apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
         )
 
-        let initialSession = try XCTUnwrap(checkout.state.session as? STPCheckoutSession)
+        let initialSession = try XCTUnwrap(checkout.stpSession)
 
         // Session loads with the localized currency (EUR for DE)
         XCTAssertEqual(initialSession.currency, "eur")
@@ -324,7 +291,7 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         // Switch to USD
         try await checkout.selectCurrency("usd")
 
-        let updatedSession = try XCTUnwrap(checkout.state.session as? STPCheckoutSession)
+        let updatedSession = try XCTUnwrap(checkout.stpSession)
         XCTAssertEqual(updatedSession.currency, "usd")
         XCTAssertEqual(updatedSession.total?.total.minorUnitsAmount, 2000)
         XCTAssertNotEqual(updatedSession.total?.total.minorUnitsAmount, eurTotal, "USD total should differ from EUR total")

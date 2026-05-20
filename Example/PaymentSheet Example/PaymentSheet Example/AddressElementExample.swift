@@ -19,7 +19,7 @@ public struct AddressElementExampleView: View {
         STPAPIClient.shared.publishableKey = "pk_test"
 
         var config = AddressElement.Configuration()
-        config.allowedCountries = ["US", "CA", "GB", "AU"]
+        config.allowedCountries = ["US", "CA", "GB", "AU", "JP"]
         config.buttonTitle = "Save Address"
 
         // Pre-populate with existing address if available

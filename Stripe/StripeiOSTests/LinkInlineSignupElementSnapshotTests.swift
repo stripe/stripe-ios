@@ -275,6 +275,7 @@ extension LinkInlineSignupElementSnapshotTests {
             brand: .link,
             showCheckbox: showCheckbox,
             accountService: MockAccountService(),
+            resolvedLinkBrand: { $0?.linkBrand ?? .link },
             allowsDefaultOptIn: allowsDefaultOptIn,
             signupOptInFeatureEnabled: signupOptInFeatureEnabled,
             signupOptInInitialValue: signupOptInInitialValue,

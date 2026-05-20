@@ -470,6 +470,64 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         XCTAssertGreaterThanOrEqual(retrieveCount, 2, "Should have polled at least once after initial processing status")
     }
 
+    func testCallConfirmCard_IntentConfirmationChallenge() {
+        let nextActionData = """
+              {
+                "type": "use_stripe_sdk",
+                "use_stripe_sdk": {
+                  "type": "intent_confirmation_challenge",
+                  "stripe_js": {"captcha_vendor_name": "arkose"}
+                }
+              }
+            """
+        let cardPaymentMethod = """
+              {
+                "id": "pm_123",
+                "object": "payment_method",
+                "billing_details": {},
+                "card": {"brand": "visa", "last4": "4242", "exp_month": 1, "exp_year": 2040},
+                "created": 1658187899,
+                "livemode": false,
+                "type": "card"
+              }
+            """
+        let apiClient = stubbedAPIClient()
+        apiClient.publishableKey = "pk_test_abc123"
+        let paymentHandler = STPPaymentHandler(apiClient: apiClient)
+        stubConfirm(
+            fileMock: .paymentIntentResponse,
+            responseCallback: { data in
+                self.replaceData(
+                    data: data,
+                    variables: [
+                        "<next_action>": nextActionData,
+                        "<payment_method>": cardPaymentMethod,
+                        "<status>": "\"requires_action\"",
+                    ]
+                )
+            }
+        )
+
+        let cardParams = STPPaymentMethodCardParams()
+        cardParams.number = "4242424242424242"
+        cardParams.cvc = "123"
+        cardParams.expYear = 2040
+        cardParams.expMonth = 1
+        let params = STPPaymentIntentConfirmParams(clientSecret: "pi_123456_secret_654321")
+        params.paymentMethodParams = STPPaymentMethodParams(card: cardParams, billingDetails: nil, metadata: nil)
+
+        let mockPresenter = StubbedCaptchaPresentingViewController()
+        let presentedExpectation = expectation(description: "IntentConfirmationChallengeViewController presented")
+        mockPresenter.onPresent = { vc in
+            if #available(iOS 14.0, *), vc is IntentConfirmationChallengeViewController {
+                presentedExpectation.fulfill()
+            }
+        }
+
+        paymentHandler.confirmPaymentIntent(params: params, authenticationContext: mockPresenter) { _, _, _ in }
+        wait(for: [presentedExpectation], timeout: 5.0)
+    }
+
     /// Verifies that deallocating an STPPaymentHandler mid-flow resets the static `anyHandlerInProgress` flag.
     /// Regression test: PaymentSheet/FlowController create their own STPPaymentHandler instances.
     /// If deallocated mid-flow, deinit must release the global lock to avoid permanently blocking
@@ -579,6 +637,21 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
 extension STPPaymentHandlerStubbedMockedFilesTests {
     func authenticationPresentingViewController() -> UIViewController {
         return UIViewController()
+    }
+}
+
+private class StubbedCaptchaPresentingViewController: UIViewController, STPAuthenticationContext {
+    var onPresent: ((UIViewController) -> Void)?
+
+    func authenticationPresentingViewController() -> UIViewController { self }
+
+    override func present(
+        _ viewControllerToPresent: UIViewController,
+        animated: Bool,
+        completion: (() -> Void)? = nil
+    ) {
+        onPresent?(viewControllerToPresent)
+        completion?()
     }
 }
 
