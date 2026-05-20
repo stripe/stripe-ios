@@ -327,7 +327,7 @@ extension STPAPIClient {
             "locale": locale,
             "country_codes": countryCodes,
             "session_token": sessionToken,
-            "client_type": "mobile"
+            "client_type": "mobile",
         ]
 
         return try await APIRequest<AutocompleteResponse>.post(
