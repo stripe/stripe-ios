@@ -268,6 +268,72 @@ class AddressSectionElementTest: XCTestCase {
         XCTAssertEqual(sut.addressDetails.address.state, "CA")
     }
 
+    func testJapanAddressIncludesCityField() {
+        // Japan addresses are:
+        // - Postcode
+        // - Prefecture (state)
+        // - Municipality
+        // - Ward/chome
+        // - Banchi/go (line1)
+        // - Building name (line2)
+        //
+        // Users are expected to enter municipality and ward/chome into the city field,
+        // so it should be required.
+        let specProvider = AddressSpecProvider()
+        specProvider.addressSpecs = [
+            "JP": AddressSpec(
+                format: "〒%Z%n%S%C%n%A%n%O%n%N",
+                require: "ACSZ",
+                cityNameType: .city,
+                stateNameType: .prefecture,
+                zip: "\\d{3}-?\\d{4}",
+                zipNameType: .zip
+            ),
+        ]
+        let sut = AddressSectionElement(
+            title: "",
+            countries: ["JP"],
+            locale: locale_enUS,
+            addressSpecProvider: specProvider
+        )
+        let section = sut.addressSection
+
+        // Verify that the city field exists
+        XCTAssertNotNil(sut.city, "Japan address should include a city field")
+
+        // Verify the field ordering contains .city after .state
+        let spec = specProvider.addressSpecs["JP"]!
+        XCTAssertTrue(spec.fieldOrdering.contains(.city), "JP field ordering should contain .city")
+        XCTAssertTrue(spec.requiredFields.contains(.city), "JP required fields should contain .city")
+        if let stateIndex = spec.fieldOrdering.firstIndex(of: .state),
+           let cityIndex = spec.fieldOrdering.firstIndex(of: .city) {
+            XCTAssertTrue(cityIndex > stateIndex, "City should come after state/prefecture in JP address")
+        } else {
+            XCTFail("Both .state and .city should be in JP field ordering")
+        }
+
+        // Verify city field is not optional (it's required)
+        let textFields = section.elements.compactMap { $0 as? TextFieldElement }
+        let cityField = textFields.first { $0.configuration.label == "City" }
+        XCTAssertNotNil(cityField, "City text field should be present in JP address form")
+        XCTAssertFalse(cityField?.configuration.isOptional ?? true, "City should be required for JP addresses")
+    }
+
+    func testJapanAddressSpecFromJSON() {
+        // Verify the actual JSON data includes city for JP by loading the real spec provider
+        let specProvider = AddressSpecProvider()
+        let expectation = expectation(description: "Address specs loaded")
+        specProvider.loadAddressSpecs {
+            expectation.fulfill()
+        }
+        wait(for: [expectation], timeout: 5.0)
+        guard let jpSpec = specProvider.addressSpecs["JP"] else {
+            return XCTFail("JP address spec should exist")
+        }
+        XCTAssertTrue(jpSpec.fieldOrdering.contains(.city), "JP field ordering should include city")
+        XCTAssertTrue(jpSpec.requiredFields.contains(.city), "JP required fields should include city")
+    }
+
     func testConvertLinkBillingAddressToAddressDetails() {
         let linkBillingDetails = BillingAddress(
             name: "Test Testerson",
