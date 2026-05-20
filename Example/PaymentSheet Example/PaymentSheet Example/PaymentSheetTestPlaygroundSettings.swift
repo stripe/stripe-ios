@@ -170,6 +170,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case TH
         case DE
         case IT
+        case usTax = "us_tax"
         case stripeShop = "stripe_shop_test"
         case custom
     }
@@ -318,11 +319,18 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case never
     }
 
-    enum LinkBrand: String, PickerEnum {
-        static var enumName: String { "Link brand" }
+    enum ForceOnelink: String, PickerEnum {
+        static var enumName: String { "Force onelink" }
 
-        case link
-        case onelink
+        case on
+        case off
+    }
+
+    enum ForceOnelinkConsumer: String, PickerEnum {
+        static var enumName: String { "Force onelink consumer" }
+
+        case on
+        case off
     }
 
     enum AllowsDelayedPMs: String, PickerEnum {
@@ -754,7 +762,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var linkPassthroughMode: LinkPassthroughMode
     var linkEnabledMode: LinkEnabledMode
     var linkDisplay: LinkDisplay
-    var linkBrand: LinkBrand
+    var forceOnelink: ForceOnelink
+    var forceOnelinkConsumer: ForceOnelinkConsumer
     var userOverrideCountry: UserOverrideCountry
     var customCtaLabel: String?
     var paymentMethodConfigurationId: String?
@@ -826,7 +835,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             linkPassthroughMode: .passthrough,
             linkEnabledMode: .native,
             linkDisplay: .automatic,
-            linkBrand: .link,
+            forceOnelink: .off,
+            forceOnelinkConsumer: .off,
             userOverrideCountry: .off,
             customCtaLabel: nil,
             paymentMethodConfigurationId: nil,

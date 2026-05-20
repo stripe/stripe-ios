@@ -20,11 +20,13 @@ struct LinkInlineVerificationView: View {
     }
 
     @StateObject private var viewModel: LinkInlineVerificationViewModel
+    private let brand: LinkBrand
     private var onComplete: () -> Void
 
     init(
         account: PaymentSheetLinkAccount,
         appearance: PaymentSheet.Appearance,
+        brand: LinkBrand = .link,
         onComplete: @escaping () -> Void
     ) {
         self._viewModel = StateObject(
@@ -33,6 +35,7 @@ struct LinkInlineVerificationView: View {
                 appearance: appearance
             )
         )
+        self.brand = brand
         self.onComplete = onComplete
     }
 
@@ -44,7 +47,7 @@ struct LinkInlineVerificationView: View {
     var body: some View {
         VStack(spacing: LinkUI.contentSpacing) {
             HStack(spacing: Constants.contentSpacing) {
-                SwiftUI.Image(uiImage: Image.link_logo.makeImage())
+                SwiftUI.Image(uiImage: brand.paymentSheetLogoImage)
                     .resizable()
                     .scaledToFit()
                     .frame(height: Constants.logoHeight)
@@ -143,16 +146,20 @@ struct LinkInlineVerificationView: View {
 
 #if DEBUG
 enum Stubs {
-    static let consumerSession: ConsumerSession = .init(
-        clientSecret: "cs_123",
-        emailAddress: "jane.diaz@gmail.com",
-        redactedFormattedPhoneNumber: "(•••) ••• ••70",
-        unredactedPhoneNumber: "+17070707070",
-        phoneNumberCountry: "US",
-        verificationSessions: [],
-        supportedPaymentDetailsTypes: [ParsedEnum(.card)],
-        mobileFallbackWebviewParams: nil
-    )
+    static let consumerSession: ConsumerSession = {
+        let payload: [String: Any] = [
+            "clientSecret": "cs_123",
+            "emailAddress": "jane.diaz@example.com",
+            "redactedFormattedPhoneNumber": "(•••) ••• ••70",
+            "unredactedPhoneNumber": "+17070707070",
+            "phoneNumberCountry": "US",
+            "verificationSessions": [],
+            "supportPaymentDetailsTypes": [ConsumerPaymentDetails.DetailsType.card.rawValue],
+        ]
+
+        let data = try! JSONSerialization.data(withJSONObject: payload)
+        return try! JSONDecoder().decode(ConsumerSession.self, from: data)
+    }()
 
     static func displayablePaymentDetails(
         paymentMethodType: ConsumerSession.DisplayablePaymentDetails.PaymentType

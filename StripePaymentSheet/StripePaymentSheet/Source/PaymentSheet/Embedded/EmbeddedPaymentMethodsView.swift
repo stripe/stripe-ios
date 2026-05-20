@@ -79,7 +79,8 @@ class EmbeddedPaymentMethodsView: UIView {
     private let shouldShowMandate: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let incentive: PaymentMethodIncentive?
-    private let linkBrand: LinkBrand
+    private var linkBrand: LinkBrand
+    private let linkBrandProvider: () -> LinkBrand
     /// A bit hacky; this is the mandate text for the given payment method, *regardless* of whether it is shown in the view.
     /// It'd be better if the source of truth of mandate text was not the view and instead an independent `func mandateText(...) -> NSAttributedString` function, but this is hard b/c US Bank Account doesn't show mandate in certain states.
     var mandateText: NSAttributedString? {
@@ -116,6 +117,7 @@ class EmbeddedPaymentMethodsView: UIView {
         shouldShowApplePay: Bool,
         shouldShowLink: Bool,
         linkBrand: LinkBrand = .link,
+        linkBrandProvider: (() -> LinkBrand)? = nil,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         mandateProvider: MandateTextProvider,
         shouldShowMandate: Bool = true,
@@ -136,6 +138,7 @@ class EmbeddedPaymentMethodsView: UIView {
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
         self.linkBrand = linkBrand
+        self.linkBrandProvider = linkBrandProvider ?? { linkBrand }
         self.delegate = delegate
         self.rowButtons = []
         super.init(frame: .zero)
@@ -316,6 +319,13 @@ class EmbeddedPaymentMethodsView: UIView {
     func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?, animated: Bool = true) {
         guard let linkRowButton else {
             return
+        }
+
+        let resolvedBrand = linkBrandProvider()
+        if resolvedBrand != linkBrand {
+            linkBrand = resolvedBrand
+            linkRowButton.setLabel(text: resolvedBrand.displayName)
+            linkRowButton.setPrimaryAccessibilityLabel(String.Localized.pay_with_link(brand: resolvedBrand))
         }
 
         var sublabel = String.Localized.link_subtitle_text

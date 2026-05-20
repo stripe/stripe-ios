@@ -19,6 +19,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
     let confirmHandler: (PaymentSheetResult) -> Void
     let clickHandler: WalletButtonClickHandler?
     @State var orderedWallets: [ExpressType]
+    @StateObject private var linkButtonViewModel = LinkButtonViewModel()
 
     @_spi(STP) public init(flowController: PaymentSheet.FlowController,
                            confirmHandler: @escaping (PaymentSheetResult) -> Void,
@@ -63,6 +64,7 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                             height: flowController.configuration.appearance.primaryButton.height,
                             // TODO (iOS 26): Respect cornerRadius = nil
                             cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius,
+                            brand: flowController.configuration.resolvedLinkBrand(elementsSession: flowController.elementsSession, linkAccount: linkButtonViewModel.account),
                             borderColor: flowController.configuration.appearance.colors.componentBorder,
                             action: completion
                         )

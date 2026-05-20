@@ -24,6 +24,7 @@ class PaymentMethodFormViewController: UIViewController {
     let analyticsHelper: PaymentSheetAnalyticsHelper
     let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     weak var delegate: PaymentMethodFormViewControllerDelegate?
+    private var linkAccountObserver: LinkAccountContextObserver?
 
     /// Reference to the AddressSectionElement in the form, if present
     private var addressSectionElement: AddressSectionElement?
@@ -38,7 +39,7 @@ class PaymentMethodFormViewController: UIViewController {
                 case .signupAndPay(let account, let phoneNumber, let legalName):
                     return .link(
                         option: .signUp(
-                            brand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+                            brand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: account),
                             account: account,
                             phoneNumber: phoneNumber,
                             consentAction: linkInlineSignupElement.viewModel.consentAction,
@@ -144,6 +145,15 @@ class PaymentMethodFormViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if form.linkInlineSignupElement != nil {
+            linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.syncLinkInlineSignupBrand()
+                }
+            }
+            _ = linkAccountObserver
+            syncLinkInlineSignupBrand()
+        }
         view.addAndPinSubview(formStackView)
     }
 
@@ -248,7 +258,30 @@ extension PaymentMethodFormViewController: ElementDelegate {
             let text = PaymentSheetFormFactory.makeMandateText(
                 variant: variant,
                 merchantName: configuration.merchantDisplayName,
-                brand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                brand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)
+            )
+            mandateElement.mandateTextView.attributedText = text
+        }
+    }
+
+    private func syncLinkInlineSignupBrand() {
+        guard let linkInlineSignupElement = form.linkInlineSignupElement else {
+            return
+        }
+
+        let resolvedLinkBrand = configuration.resolvedLinkBrand(
+            elementsSession: elementsSession,
+            linkAccount: LinkAccountContext.shared.account
+        )
+        linkInlineSignupElement.updateBrand(resolvedLinkBrand)
+
+        if linkInlineSignupElement.viewModel.mode == .signupOptIn,
+           let mandateElement = form.mandateElement {
+            let variant = MandateVariant.updated(shouldSignUpToLink: linkInlineSignupElement.viewModel.saveCheckboxChecked)
+            let text = PaymentSheetFormFactory.makeMandateText(
+                variant: variant,
+                merchantName: configuration.merchantDisplayName,
+                brand: resolvedLinkBrand
             )
             mandateElement.mandateTextView.attributedText = text
         }

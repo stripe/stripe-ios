@@ -26,6 +26,8 @@
 
 "Continue linking your account" = "Продолжить привязку счета";
 
+"Continue with %@" = "Продолжить с %@";
+
 "Continue with Link" = "Продолжить с Link";
 
 "Email address" = "Адрес электронной почты";
@@ -110,6 +112,8 @@
 
 "Try searching another bank or %@" = "Попробуйте поискать другой банк или %@";
 
+"Use information you previously saved with your %@ account." = "Использовать данные, ранее сохраненные в вашей учетной записи %@.";
+
 "Use information you previously saved with your Link account." = "Используйте данные, ранее сохраненные в вашей учетной записи Link.";
 
 "Use test account" = "Использовать тестовый счет";
@@ -150,9 +154,13 @@
 
 "Your account numbers don't match." = "Номера счетов не совпадают.";
 
+"Your account was connected, but couldn't be saved to %@." = "Ваш счет удалось подключить, но не удалось сохранить в %@.";
+
 "Your account was connected, but couldn't be saved to Link." = "Ваш счет подключен, но его не удалось сохранить в Link.";
 
 "Your account was connected." = "Ваш счет подключен.";
+
+"Your accounts were connected, but couldn't be saved to %@." = "Ваши счета подключены, но их не удалось сохранить в %@.";
 
 "Your accounts were connected, but couldn't be saved to Link." = "Ваши счета подключены, но их не удалось сохранить в Link.";
 

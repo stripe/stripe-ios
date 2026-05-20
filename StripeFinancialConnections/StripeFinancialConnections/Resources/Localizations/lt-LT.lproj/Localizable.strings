@@ -26,6 +26,8 @@
 
 "Continue linking your account" = "Tęsti savo sąskaitos susiejimą";
 
+"Continue with %@" = "Tęsti su %@";
+
 "Continue with Link" = "Tęsti naudojant „Link“";
 
 "Email address" = "El. pašto adresas";
@@ -110,6 +112,8 @@
 
 "Try searching another bank or %@" = "Pabandykite ieškoti kito banko arba %@";
 
+"Use information you previously saved with your %@ account." = "Naudokite informaciją, kurią anksčiau įrašėte naudodamiesi %@ paskyra.";
+
 "Use information you previously saved with your Link account." = "Naudokite anksčiau savo „Link“ paskyroje įrašytą informaciją.";
 
 "Use test account" = "Naudoti bandomąją sąskaitą";
@@ -150,9 +154,13 @@
 
 "Your account numbers don't match." = "Jūsų sąskaitos numeriai neatitinka.";
 
+"Your account was connected, but couldn't be saved to %@." = "Paskyra susieta, bet jos nepavyko įrašyti į %@.";
+
 "Your account was connected, but couldn't be saved to Link." = "Jūsų sąskaita buvo susieta, tačiau nepavyko išsaugoti „Link“.";
 
 "Your account was connected." = "Jūsų sąskaita buvo susieta.";
+
+"Your accounts were connected, but couldn't be saved to %@." = "Paskyros susietos, bet jų nepavyko įrašyti į %@.";
 
 "Your accounts were connected, but couldn't be saved to Link." = "Jūsų sąskaitos buvo susietos, tačiau nepavyko išsaugoti „Link“.";
 

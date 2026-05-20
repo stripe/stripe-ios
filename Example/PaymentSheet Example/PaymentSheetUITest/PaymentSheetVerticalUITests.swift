@@ -433,6 +433,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         _testVerticalPreservesFormDetails()
 
         // PaymentSheet.FlowController + Vertical
+        app.swipeUp(velocity: 100)
         app.buttons["flowController"].waitForExistenceAndTap()
         XCTAssertTrue(app.buttons["Confirm"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.buttons["Payment method"].waitForExistenceAndTap(timeout: 10))
@@ -453,7 +454,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Payment method"].waitForExistenceAndTap()
         app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
-        app.buttons["Done"].tap() // Tap done on keyboard, not sure why it doesn't auto dismiss
+        app.stp_dismissKeyboard() // Dismiss keyboard
         app.buttons["Continue"].waitForExistenceAndTap()
         // ...and *updating* to a SetupIntent...
         app.buttons["Setup"].waitForExistenceAndTap()

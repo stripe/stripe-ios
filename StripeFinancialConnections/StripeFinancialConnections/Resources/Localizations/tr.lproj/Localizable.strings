@@ -26,6 +26,8 @@
 
 "Continue linking your account" = "Hesabınızı bağlamaya devam edin";
 
+"Continue with %@" = "%@ ile devam et";
+
 "Continue with Link" = "Link ile Devam Et";
 
 "Email address" = "E-posta adresi";
@@ -110,6 +112,8 @@
 
 "Try searching another bank or %@" = "Başka bir banka veya %@ aramayı deneyin.";
 
+"Use information you previously saved with your %@ account." = "%@ hesabınıza daha önce kaydettiğiniz bilgileri kullanın.";
+
 "Use information you previously saved with your Link account." = "Daha önce Link hesabınıza kaydettiğiniz bilgileri kullanın.";
 
 "Use test account" = "Test hesabı kullan";
@@ -150,9 +154,13 @@
 
 "Your account numbers don't match." = "Hesap numaralarınız eşleşmiyor.";
 
+"Your account was connected, but couldn't be saved to %@." = "Hesabınız bağlandı ancak %@’e kaydedilemedi.";
+
 "Your account was connected, but couldn't be saved to Link." = "Hesabınız bağlandı, ancak Link'e kaydedilemedi.";
 
 "Your account was connected." = "Hesabınız bağlandı.";
+
+"Your accounts were connected, but couldn't be saved to %@." = "Hesaplarınız bağlandı ancak %@’e kaydedilemedi.";
 
 "Your accounts were connected, but couldn't be saved to Link." = "Hesaplarınız bağlandı, ancak Link'e kaydedilemedi.";
 

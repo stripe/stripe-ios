@@ -99,6 +99,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         intent: Intent,
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
+        linkAccount: PaymentSheetLinkAccount? = nil,
         callToAction: ConfirmButton.CallToActionType? = nil,
         alwaysUseEphemeralSession: Bool = false
     ) {
@@ -107,7 +108,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: configuration,
-                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
                 callToAction: callToAction,
                 alwaysUseEphemeralSession: alwaysUseEphemeralSession
             )
@@ -130,10 +131,7 @@ final class PayWithLinkWebController: NSObject, ASWebAuthenticationPresentationC
         do {
             // Generate Link URL, fetching the customer if needed
             let linkPopupParams = try LinkURLGenerator.linkParams(configuration: self.context.configuration, intent: self.context.intent, elementsSession: self.context.elementsSession)
-            let linkPopupUrl = try LinkURLGenerator.url(
-                params: linkPopupParams,
-                brand: context.linkBrand
-            )
+            let linkPopupUrl = try LinkURLGenerator.url(params: linkPopupParams)
 
             let webAuthSession = ASWebAuthenticationSession(url: linkPopupUrl, callbackURLScheme: "link-popup") { returnURL, error in
                 self.handleWebAuthenticationSessionCompletion(returnURL: returnURL, error: error)

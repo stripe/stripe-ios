@@ -38,13 +38,17 @@ extension STPElementsSession {
         linkSettings?.popupWebviewOption ?? .shared
     }
 
-    func shouldShowLink2FABeforePaymentSheet(for linkAccount: PaymentSheetLinkAccount) -> Bool {
-        return self.supportsLink &&
+    func shouldShowLink2FABeforePaymentSheet(
+        for linkAccount: PaymentSheetLinkAccount,
+        savedPaymentMethods: [STPPaymentMethod]
+    ) -> Bool {
+        self.supportsLink &&
         linkAccount.sessionState == .requiresVerification &&
         !linkAccount.hasStartedSMSVerification &&
         linkAccount.useMobileEndpoints &&
         self.linkSettings?.suppress2FAModal != true &&
-        linkAccount.currentSession?.mobileFallbackWebviewParams?.webviewRequirementType != .required
+        linkAccount.currentSession?.mobileFallbackWebviewParams?.webviewRequirementType != .required &&
+        savedPaymentMethods.isEmpty // prefer MPE checkout when SPMs are present 
     }
 
     var linkFlags: [String: Bool] {

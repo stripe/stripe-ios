@@ -22,17 +22,21 @@ final class LinkMoreInfoView: UIView {
         static let logoHeight: CGFloat = 14
     }
     private lazy var logoView: UIImageView = {
-        let imageView: UIImageView
-        imageView = DynamicImageView(dynamicImage: Image.link_logo_knockout.makeImage(template: false), pairedColor: theme.colors.componentBackground)
+        let imageView = makeLogoView()
+        return imageView
+    }()
+
+    private func makeLogoView() -> UIImageView {
+        let imageView = DynamicImageView(dynamicImage: brand.paymentSheetKnockoutLogoImage, pairedColor: theme.colors.componentBackground)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
         imageView.isAccessibilityElement = true
         imageView.accessibilityLabel = brand.displayName
         return imageView
-    }()
+    }
 
     private let theme: ElementsAppearance
-    private let brand: LinkBrand
+    private var brand: LinkBrand
 
     init(theme: ElementsAppearance = .default, brand: LinkBrand = .link) {
         self.theme = theme
@@ -59,5 +63,14 @@ final class LinkMoreInfoView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func updateBrand(_ brand: LinkBrand) {
+        guard self.brand != brand else {
+            return
+        }
+        self.brand = brand
+        logoView.image = brand.paymentSheetKnockoutLogoImage.withConfiguration(logoView.traitCollection.imageConfiguration)
+        logoView.accessibilityLabel = brand.displayName
     }
 }

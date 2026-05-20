@@ -32,6 +32,7 @@ final class LinkInlineSignupViewModel {
     weak var delegate: LinkInlineSignupViewModelDelegate?
 
     private let accountService: LinkAccountServiceProtocol
+    private let resolvedLinkBrand: (PaymentSheetLinkAccount?) -> LinkBrand
 
     let analyticsHelper: PaymentSheetAnalyticsHelper?
 
@@ -40,7 +41,13 @@ final class LinkInlineSignupViewModel {
     private let country: String?
 
     let configuration: PaymentElementConfiguration
-    let brand: LinkBrand
+    var brand: LinkBrand {
+        didSet {
+            if brand != oldValue {
+                notifyUpdate()
+            }
+        }
+    }
 
     let mode: Mode
 
@@ -124,7 +131,10 @@ final class LinkInlineSignupViewModel {
     private(set) var linkAccount: PaymentSheetLinkAccount? {
         didSet {
             if linkAccount !== oldValue {
-                notifyUpdate()
+                let didUpdateBrand = syncBrandWithLinkAccount()
+                if !didUpdateBrand {
+                    notifyUpdate()
+                }
 
                 if let linkAccount = linkAccount,
                    !linkAccount.isRegistered {
@@ -399,6 +409,7 @@ final class LinkInlineSignupViewModel {
         brand: LinkBrand,
         showCheckbox: Bool,
         accountService: LinkAccountServiceProtocol,
+        resolvedLinkBrand: @escaping (PaymentSheetLinkAccount?) -> LinkBrand,
         allowsDefaultOptIn: Bool,
         signupOptInFeatureEnabled: Bool,
         signupOptInInitialValue: Bool,
@@ -409,6 +420,7 @@ final class LinkInlineSignupViewModel {
         self.configuration = configuration
         self.brand = brand
         self.accountService = accountService
+        self.resolvedLinkBrand = resolvedLinkBrand
         self.analyticsHelper = analyticsHelper
         self.linkAccount = linkAccount
         self.emailAddress = linkAccount?.email
@@ -453,6 +465,14 @@ enum LinkEmailHelper {
 }
 
 private extension LinkInlineSignupViewModel {
+    func syncBrandWithLinkAccount() -> Bool {
+        let resolvedBrand = resolvedLinkBrand(linkAccount)
+        guard brand != resolvedBrand else {
+            return false
+        }
+        brand = resolvedBrand
+        return true
+    }
 
     func notifyUpdate() {
         delegate?.signupViewModelDidUpdate(self)
