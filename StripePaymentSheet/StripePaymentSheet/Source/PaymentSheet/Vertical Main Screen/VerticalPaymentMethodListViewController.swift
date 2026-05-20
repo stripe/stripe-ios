@@ -187,6 +187,19 @@ class VerticalPaymentMethodListViewController: UIViewController {
         // Insert Apple Pay/Link after card or, if cards aren't present, first
         views.insert(contentsOf: [applePay, link].compactMap({ $0 }), at: indexAfterCards ?? 0)
 
+        // Prototype: red button above the card row
+        let redButton: UIButton = {
+            let btn = UIButton(type: .system)
+            btn.setTitle("Button", for: .normal)
+            btn.setTitleColor(.white, for: .normal)
+            btn.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
+            btn.backgroundColor = .red
+            btn.layer.cornerRadius = 10
+            btn.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            return btn
+        }()
+        views.insert(redButton, at: 0)
+
         for view in views {
             stackView.addArrangedSubview(view)
         }

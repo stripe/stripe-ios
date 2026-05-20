@@ -19,6 +19,16 @@ struct DesignCanvas: View {
 
                 // ── Merchant summary card ──────────────────────────────
                 VStack(spacing: 16) {
+                    Button(action: {}) {
+                        Text("Button")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 50)
+                            .background(Color.red)
+                            .cornerRadius(10)
+                    }
+                    .padding(.horizontal, 24)
                     RoundedRectangle(cornerRadius: 12)
                         .fill(Color(UIColor.secondarySystemGroupedBackground))
                         .frame(height: 180)
