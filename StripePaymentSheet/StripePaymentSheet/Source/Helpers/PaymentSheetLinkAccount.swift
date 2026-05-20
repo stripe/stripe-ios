@@ -551,6 +551,21 @@ struct LinkPMDisplayDetails {
             // We don't need to do anything if this fails, the key will expire automatically.
         }
     }
+
+    /// Reuses a previously verified session when a subsequent lookup resolves to the same Link account.
+    func reuseVerifiedSession(from existingAccount: PaymentSheetLinkAccount) {
+        guard
+            sessionState != .verified,
+            isRegistered,
+            existingAccount.sessionState == .verified,
+            email.caseInsensitiveCompare(existingAccount.email) == .orderedSame
+        else {
+            return
+        }
+
+        currentSession = existingAccount.currentSession
+        publishableKey = publishableKey ?? existingAccount.publishableKey
+    }
 }
 
 // MARK: - Equatable
