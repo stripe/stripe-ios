@@ -62,6 +62,14 @@ struct DesignCanvas: View {
         .onAppear {
             model.prepare()
         }
+        .onChange(of: model.isReady) { ready in
+            if ready { isPresented = true }
+        }
+        .paymentSheet(
+            isPresented: $isPresented,
+            paymentSheet: model.paymentSheet ?? PaymentSheet(paymentIntentClientSecret: "", configuration: .init()),
+            onCompletion: model.onCompletion
+        )
     }
 }
 
@@ -69,20 +77,29 @@ struct DesignCanvas: View {
 
 private class DesignCanvasModel: ObservableObject {
     @Published var paymentSheet: PaymentSheet?
+    @Published var isReady: Bool = false
     @Published var result: PaymentSheetResult?
 
-    private let backendURL = URL(string: "https://stripe-mobile-payment-sheet.stripedemos.com/checkout")!
+    private let backendURL = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
 
     func prepare() {
         var request = URLRequest(url: backendURL)
         request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try? JSONSerialization.data(withJSONObject: [
+            "customer": "returning",
+            "currency": "usd",
+            "merchant_country_code": "US",
+            "mode": "payment",
+            "automatic_payment_methods": true,
+        ])
         URLSession.shared.dataTask(with: request) { data, _, _ in
             guard
                 let data = data,
                 let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                let customerId = json["customer"] as? String,
-                let ephemeralKey = json["ephemeralKey"] as? String,
-                let clientSecret = json["paymentIntent"] as? String,
+                let customerId = json["customerId"] as? String,
+                let ephemeralKey = json["customerEphemeralKeySecret"] as? String,
+                let clientSecret = json["intentClientSecret"] as? String,
                 let publishableKey = json["publishableKey"] as? String
             else { return }
 
@@ -100,6 +117,7 @@ private class DesignCanvasModel: ObservableObject {
                     paymentIntentClientSecret: clientSecret,
                     configuration: config
                 )
+                self.isReady = true
             }
         }.resume()
     }
