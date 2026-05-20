@@ -269,9 +269,16 @@ class AddressSectionElementTest: XCTestCase {
     }
 
     func testJapanAddressIncludesCityField() {
-        // Verify that Japan's address spec includes a city field and that it's required.
-        // This is a regression test for a bug where the JP entry in localized_address_data.json
-        // was missing the %C token, causing the city field to not render.
+        // Japan addresses are:
+        // - Postcode
+        // - Prefecture (state)
+        // - Municipality
+        // - Ward/chome
+        // - Banchi/go (line1)
+        // - Building name (line2)
+        //
+        // Users are expected to enter municipality and ward/chome into the city field,
+        // so it should be required.
         let specProvider = AddressSpecProvider()
         specProvider.addressSpecs = [
             "JP": AddressSpec(
@@ -294,10 +301,16 @@ class AddressSectionElementTest: XCTestCase {
         // Verify that the city field exists
         XCTAssertNotNil(sut.city, "Japan address should include a city field")
 
-        // Verify the field ordering contains .city
+        // Verify the field ordering contains .city after .state
         let spec = specProvider.addressSpecs["JP"]!
         XCTAssertTrue(spec.fieldOrdering.contains(.city), "JP field ordering should contain .city")
         XCTAssertTrue(spec.requiredFields.contains(.city), "JP required fields should contain .city")
+        if let stateIndex = spec.fieldOrdering.firstIndex(of: .state),
+           let cityIndex = spec.fieldOrdering.firstIndex(of: .city) {
+            XCTAssertTrue(cityIndex > stateIndex, "City should come after state/prefecture in JP address")
+        } else {
+            XCTFail("Both .state and .city should be in JP field ordering")
+        }
 
         // Verify city field is not optional (it's required)
         let textFields = section.elements.compactMap { $0 as? TextFieldElement }
