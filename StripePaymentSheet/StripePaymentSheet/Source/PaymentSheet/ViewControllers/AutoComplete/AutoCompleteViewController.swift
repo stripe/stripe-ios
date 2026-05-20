@@ -116,15 +116,20 @@ class AutoCompleteViewController: UIViewController {
         return form
     }()
 
+    /// The country code selected in the address form's country dropdown, used to narrow autocomplete results.
+    let selectedCountry: String?
+
     // MARK: - Initializers
     required init(
         configuration: AddressViewController.Configuration,
         initialLine1Text: String?,
+        selectedCountry: String? = nil,
         addressSpecProvider: AddressSpecProvider = .shared,
         verticalOffset: CGFloat = 0
     ) {
         self.configuration = configuration
         self.initialLine1Text = initialLine1Text
+        self.selectedCountry = selectedCountry
         self.addressSpecProvider = addressSpecProvider
         self.verticalOffset = verticalOffset
         super.init(nibName: nil, bundle: nil)
@@ -264,13 +269,18 @@ extension AutoCompleteViewController: ElementDelegate {
         autocompleteTask?.cancel()
         autocompleteTask = Task { @MainActor in
             do {
-                let languageCode = Locale.current.identifier
-                let countryCodes = configuration.autocompleteCountries.isEmpty
-                    ? configuration.allowedCountries
-                    : configuration.autocompleteCountries
+                let locale = Locale.current.toLanguageTag()
+                let countryCodes: [String]
+                if let selectedCountry = selectedCountry, !selectedCountry.isEmpty {
+                    countryCodes = [selectedCountry]
+                } else if configuration.autocompleteCountries.isEmpty {
+                    countryCodes = configuration.allowedCountries
+                } else {
+                    countryCodes = configuration.autocompleteCountries
+                }
                 let response = try await configuration.apiClient.autocomplete(
                     searchText: query,
-                    languageCode: languageCode,
+                    locale: locale,
                     countryCodes: countryCodes,
                     sessionToken: sessionToken
                 )
