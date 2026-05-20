@@ -184,24 +184,42 @@ public extension CryptoOnrampCoordinator {
         public var developerDescription: String? {
             let summary = developerSummary
             let context = [
-                "operation: \(operation)",
-                appIdentifier.map { "app_id: \($0)" },
-                mode.map { "mode: \($0)" },
-                rawReason.map { "reason: \($0)" },
-                requestID.map { "request_id: \($0)" },
-                apiErrorCode.map { "code: \($0)" },
+                "  - operation: \(operation)",
+                appIdentifier.map { "  - app_id: \($0)" },
+                mode.map { "  - mode: \($0)" },
+                rawReason.map { "  - reason: \($0)" },
+                requestID.map { "  - request_id: \($0)" },
+                apiErrorCode.map { "  - code: \($0)" },
             ].compactMap { $0 }
 
-            return [
-                summary,
+            var lines = [
+                "StripeCryptoOnramp error",
                 "",
-                "Context:",
+                "Summary",
+                "  \(summary)",
+                "",
+                "Context",
                 context.joined(separator: "\n"),
                 "",
-                "Next step: \(nextStep)",
-                docURL.map { "Docs: \($0)" },
-                "SDK: stripe-ios@\(sdkVersion)",
-            ].compactMap { $0 }.joined(separator: "\n")
+                "Next step",
+                "  \(nextStep)",
+            ]
+
+            if let docURL {
+                lines.append(contentsOf: [
+                    "",
+                    "Docs",
+                    "  \(docURL)",
+                ])
+            }
+
+            lines.append(contentsOf: [
+                "",
+                "SDK",
+                "  stripe-ios@\(sdkVersion)",
+            ])
+
+            return lines.joined(separator: "\n")
         }
 
         private var developerSummary: String {
