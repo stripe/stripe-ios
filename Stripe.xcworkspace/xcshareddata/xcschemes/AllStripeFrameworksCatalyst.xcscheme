@@ -98,6 +98,20 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
+               BlueprintIdentifier = "A1B2C3D4E5F60009A1B2C3D4"
+               BuildableName = "StripeFinancialConnectionsLite.framework"
+               BlueprintName = "StripeFinancialConnectionsLite"
+               ReferencedContainer = "container:StripeFinancialConnectionsLite/StripeFinancialConnectionsLite.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
                BlueprintIdentifier = "DE3C3F3D3BB67DD660A44B1E"
                BuildableName = "StripeUICore.framework"
                BlueprintName = "StripeUICore"

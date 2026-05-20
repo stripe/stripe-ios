@@ -184,6 +184,11 @@ modules:
     readme: StripeCardScan/README.md
   localization_dir: StripeCardScan/StripeCardScan
 
+- podspec: StripeFinancialConnectionsLite.podspec
+  scheme: StripeFinancialConnectionsLite
+  framework_name: StripeFinancialConnectionsLite
+  supports_catalyst: true
+
 - podspec: StripeFinancialConnections.podspec
   scheme: StripeFinancialConnections
   framework_name: StripeFinancialConnections
@@ -235,6 +240,7 @@ modules:
 pod_push_order:
 - StripeCore.podspec
 - StripeUICore.podspec
+- StripeFinancialConnectionsLite.podspec
 - StripeCameraCore.podspec
 - StripeApplePay.podspec
 - StripePayments.podspec
