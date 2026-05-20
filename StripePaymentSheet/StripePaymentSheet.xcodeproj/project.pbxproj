@@ -36,6 +36,8 @@
 		E792B9597C67C5E6EA70E81A /* StripePaymentsTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15854DCE06F859BB426E9C9A /* StripePaymentsTestUtils.framework */; };
 		EAE876E2E023C88D2EFCE3CD /* StripePaymentsUI.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F22354BD25171B8DC2B922D2 /* StripePaymentsUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		FAB721318163CB8DF4EA2286 /* Stripe3DS2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9300105117D75EDBB229C14F /* Stripe3DS2.framework */; };
+		FCL00200000000000000001A /* StripeFinancialConnectionsLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FCL00100000000000000001A /* StripeFinancialConnectionsLite.framework */; };
+		FCL00300000000000000001A /* StripeFinancialConnectionsLite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FCL00100000000000000001A /* StripeFinancialConnectionsLite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,6 +88,7 @@
 				23FBF09FDCE5C94F9E407458 /* StripeApplePay.framework in Embed Frameworks */,
 				B4679C9095BCD53CCC2C7D25 /* StripeCore.framework in Embed Frameworks */,
 				E6D9F6C7D768F76B7A84BC91 /* StripeCoreTestUtils.framework in Embed Frameworks */,
+				FCL00300000000000000001A /* StripeFinancialConnectionsLite.framework in Embed Frameworks */,
 				395CFB782E1F93789A260434 /* StripePaymentSheet.framework in Embed Frameworks */,
 				98F1E3C5FA699C0C14938125 /* StripePayments.framework in Embed Frameworks */,
 				99B9F22868B1FAF2CA834995 /* StripePaymentsObjcTestUtils.framework in Embed Frameworks */,
@@ -123,6 +126,7 @@
 		E41AA4E90E5BB28D588FDE51 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB98DA1D622DC572F0894A28 /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
 		F22354BD25171B8DC2B922D2 /* StripePaymentsUI.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripePaymentsUI.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FCL00100000000000000001A /* StripeFinancialConnectionsLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeFinancialConnectionsLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F8A3A76BD737F195578558CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -174,6 +178,7 @@
 				FAB721318163CB8DF4EA2286 /* Stripe3DS2.framework in Frameworks */,
 				999D46841AFC73E411A91037 /* StripeApplePay.framework in Frameworks */,
 				3D4497A6A1CB151C4B75A68F /* StripeCore.framework in Frameworks */,
+				FCL00200000000000000001A /* StripeFinancialConnectionsLite.framework in Frameworks */,
 				61C0D3B8C63EB4558AB74A7E /* StripePayments.framework in Frameworks */,
 				4A8C7B2AFB290567C961DAB0 /* StripePaymentsUI.framework in Frameworks */,
 				96B1DCBDA1923BF5E7F990B8 /* StripeUICore.framework in Frameworks */,
@@ -198,6 +203,7 @@
 				E41AA4E90E5BB28D588FDE51 /* StripeCore.framework */,
 				169C7CCB7A003FEDEA598095 /* StripeCoreTestUtils.framework */,
 				5A1C7CFA5C9C1A8A73CFA1C0 /* StripePayments.framework */,
+				FCL00100000000000000001A /* StripeFinancialConnectionsLite.framework */,
 				2E42F31D392C0AED757D6239 /* StripePaymentSheet.framework */,
 				B829BC7EEE9576F724F7A9B3 /* StripePaymentSheetTestHostApp.app */,
 				4C6AA41454A6757B3E26AE67 /* StripePaymentSheetTests.xctest */,

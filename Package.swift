@@ -45,6 +45,10 @@ let package = Package(
             targets: ["StripeFinancialConnections"]
         ),
         .library(
+            name: "StripeFinancialConnectionsLite",
+            targets: ["StripeFinancialConnectionsLite"]
+        ),
+        .library(
             name: "StripeConnect",
             targets: ["StripeConnect"]
         ),
@@ -154,7 +158,7 @@ let package = Package(
         ),
         .target(
             name: "StripePaymentSheet",
-            dependencies: ["StripePaymentsUI", "StripeApplePay", "StripePayments", "StripeCore", "StripeUICore"],
+            dependencies: ["StripePaymentsUI", "StripeApplePay", "StripePayments", "StripeCore", "StripeUICore", "StripeFinancialConnectionsLite"],
             path: "StripePaymentSheet/StripePaymentSheet",
             exclude: ["Info.plist"],
             resources: [
@@ -162,6 +166,12 @@ let package = Package(
                 .process("Resources/JSON"),
                 .process("PrivacyInfo.xcprivacy")
             ]
+        ),
+        .target(
+            name: "StripeFinancialConnectionsLite",
+            dependencies: ["StripeCore"],
+            path: "StripeFinancialConnectionsLite/StripeFinancialConnectionsLite",
+            exclude: ["Info.plist"]
         ),
         .target(
             name: "StripeFinancialConnections",
