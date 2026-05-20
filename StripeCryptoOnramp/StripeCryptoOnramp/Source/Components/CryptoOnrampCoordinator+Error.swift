@@ -36,6 +36,9 @@ public extension CryptoOnrampCoordinator {
         /// App attestation failed while processing an SDK operation.
         case appAttestationFailed(APIErrorDetails)
 
+        /// A Stripe API error without a more specific Crypto Onramp category.
+        case uncategorizedAPIError(APIErrorDetails)
+
         public var errorDescription: String? {
             return userFacingMessage
         }
@@ -56,7 +59,8 @@ public extension CryptoOnrampCoordinator {
                 return "Verify your Link account before continuing."
             case .seamlessSignInTokenInvalid:
                 return "An error occurred while automatically signing in to your Link account. Please sign in manually."
-            case .appAttestationFailed(let error):
+            case .appAttestationFailed(let error),
+                 .uncategorizedAPIError(let error):
                 return error.userFacingMessage
             }
         }
@@ -77,14 +81,16 @@ public extension CryptoOnrampCoordinator {
                 return "No active Link consumer is available in a verified state."
             case .seamlessSignInTokenInvalid:
                 return "An error occurred while automatically signing in to your Link account. Please sign in manually."
-            case .appAttestationFailed(let error):
+            case .appAttestationFailed(let error),
+                 .uncategorizedAPIError(let error):
                 return error.developerDescription
             }
         }
 
         public var docURL: String? {
             switch self {
-            case .appAttestationFailed(let error):
+            case .appAttestationFailed(let error),
+                 .uncategorizedAPIError(let error):
                 return error.docURL
             default:
                 return nil
@@ -93,7 +99,8 @@ public extension CryptoOnrampCoordinator {
 
         public var rawReason: String? {
             switch self {
-            case .appAttestationFailed(let error):
+            case .appAttestationFailed(let error),
+                 .uncategorizedAPIError(let error):
                 return error.rawReason
             default:
                 return nil
@@ -102,7 +109,8 @@ public extension CryptoOnrampCoordinator {
 
         public var requestID: String? {
             switch self {
-            case .appAttestationFailed(let error):
+            case .appAttestationFailed(let error),
+                 .uncategorizedAPIError(let error):
                 return error.requestID
             default:
                 return nil
@@ -111,7 +119,8 @@ public extension CryptoOnrampCoordinator {
 
         public var operation: String? {
             switch self {
-            case .appAttestationFailed(let error):
+            case .appAttestationFailed(let error),
+                 .uncategorizedAPIError(let error):
                 return error.operation
             default:
                 return nil
@@ -120,7 +129,8 @@ public extension CryptoOnrampCoordinator {
 
         public var mode: String? {
             switch self {
-            case .appAttestationFailed(let error):
+            case .appAttestationFailed(let error),
+                 .uncategorizedAPIError(let error):
                 return error.mode
             default:
                 return nil
@@ -129,7 +139,8 @@ public extension CryptoOnrampCoordinator {
 
         public var apiErrorCode: String? {
             switch self {
-            case .appAttestationFailed(let error):
+            case .appAttestationFailed(let error),
+                 .uncategorizedAPIError(let error):
                 return error.apiErrorCode
             default:
                 return nil
@@ -138,7 +149,8 @@ public extension CryptoOnrampCoordinator {
 
         public var apiErrorMessage: String? {
             switch self {
-            case .appAttestationFailed(let error):
+            case .appAttestationFailed(let error),
+                 .uncategorizedAPIError(let error):
                 return error.apiErrorMessage
             default:
                 return nil
@@ -147,7 +159,8 @@ public extension CryptoOnrampCoordinator {
 
         public var underlyingError: Swift.Error? {
             switch self {
-            case .appAttestationFailed(let error):
+            case .appAttestationFailed(let error),
+                 .uncategorizedAPIError(let error):
                 return error.underlyingError
             default:
                 return nil
@@ -296,7 +309,15 @@ extension CryptoOnrampCoordinator {
                     apiClient: apiClient
                 )
             default:
-                return error
+                return Error.uncategorizedAPIError(
+                    apiErrorDetails(
+                        from: error,
+                        apiError: apiError,
+                        during: operation,
+                        apiClient: apiClient,
+                        docURL: apiError.docUrl?.absoluteString
+                    )
+                )
             }
         } else {
             return error
@@ -309,21 +330,36 @@ extension CryptoOnrampCoordinator {
         during operation: CryptoOnrampOperation,
         apiClient: STPAPIClient
     ) -> Swift.Error {
-        let rawReason = apiError.allResponseFields["reason"] as? String
         return Error.appAttestationFailed(
-            APIErrorDetails(
-                rawReason: rawReason,
-                operation: operation.rawValue,
-                appIdentifier: Bundle.main.bundleIdentifier,
-                mode: apiClient.publishableKey.flatMap(Self.publishableKeyMode),
-                sdkVersion: STPAPIClient.STPSDKVersion,
-                requestID: apiError.requestID,
-                apiErrorCode: apiError.code,
-                apiErrorMessage: apiError.message,
-                apiUserMessage: apiError.allResponseFields["user_message"] as? String,
-                docURL: "https://stripe.com/docs/crypto/onramp/app-attestation",
-                underlyingError: error
+            apiErrorDetails(
+                from: error,
+                apiError: apiError,
+                during: operation,
+                apiClient: apiClient,
+                docURL: "https://stripe.com/docs/crypto/onramp/app-attestation"
             )
+        )
+    }
+
+    private static func apiErrorDetails(
+        from error: Swift.Error,
+        apiError: StripeAPIError,
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        docURL: String?
+    ) -> APIErrorDetails {
+        return APIErrorDetails(
+            rawReason: apiError.allResponseFields["reason"] as? String,
+            operation: operation.rawValue,
+            appIdentifier: Bundle.main.bundleIdentifier,
+            mode: apiClient.publishableKey.flatMap(Self.publishableKeyMode),
+            sdkVersion: STPAPIClient.STPSDKVersion,
+            requestID: apiError.requestID,
+            apiErrorCode: apiError.code,
+            apiErrorMessage: apiError.message,
+            apiUserMessage: apiError.allResponseFields["user_message"] as? String,
+            docURL: docURL,
+            underlyingError: error
         )
     }
 
