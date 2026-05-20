@@ -3,6 +3,7 @@ PATCH
 
 ## X.Y.Z - changes pending release
 ### PaymentSheet
+* [Fixed] Fixed `LinkAppearance.PrimaryButtonConfiguration` styling so unspecified custom height and corner radius values use Link defaults.
 * [Fixed] Fixed Japan address form missing the city field. ([#6506](https://github.com/stripe/stripe-ios/issues/6506))
 
 ### Address Element
