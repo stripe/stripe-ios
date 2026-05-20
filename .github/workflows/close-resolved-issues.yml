@@ -14,7 +14,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const issueNumber = context.payload.client_payload.issue_number;
+            const issueNumber = parseInt(context.payload.client_payload.issue_number, 10);
             const jiraKey    = context.payload.client_payload.jira_key;
             const jiraUrl    = `https://jira.corp.stripe.com/browse/${jiraKey}`;
 
@@ -22,7 +22,7 @@ jobs:
               owner: context.repo.owner,
               repo:  context.repo.repo,
               issue_number: issueNumber,
-              body: `This issue has been resolved internally (${jiraKey}). Closing — please reopen if you're still experiencing this or have follow-up questions!`
+              body: `This issue has been resolved internally ([${jiraKey}](${jiraUrl})). Closing — please reopen if you're still experiencing this or have follow-up questions!`
             });
 
             await github.rest.issues.update({
