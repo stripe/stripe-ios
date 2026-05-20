@@ -720,7 +720,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         email: String,
         clientSecret: String = "pscs_persisted"
     ) -> PaymentSheetLinkAccount {
-        let verifiedSession = ConsumerSession(
+        let verifiedSession = ConsumerSession.make(
             clientSecret: clientSecret,
             emailAddress: email,
             redactedFormattedPhoneNumber: "(***) *** **12",
