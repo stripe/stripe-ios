@@ -100,6 +100,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case guest
         case new
         case returning
+        case custom
     }
     enum CustomerKeyType: String, PickerEnum {
         static var enumName: String { "CustomerKeyType" }
@@ -741,6 +742,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var currency: Currency
     var amount: Amount
     var merchantCountryCode: MerchantCountry
+    var customerId: String?
     // For testing purposes only; keys should typically not be defined on the client
     var customSecretKey: String?
     var customPublishableKey: String?
@@ -819,6 +821,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             currency: .usd,
             amount: ._5099,
             merchantCountryCode: .US,
+            customerId: nil,
             apmsEnabled: .on,
             paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage.defaultValues(),
             shippingInfo: .off,
