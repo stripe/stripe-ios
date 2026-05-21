@@ -67,11 +67,9 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
     var buttonViewModels: [IdentityFlowView.ViewModel.Button] {
         switch imageScanningSession.state {
         case .initial,
-            .scanning:
-            return [.continueButton(state: .disabled, didTap: {})]
-
-        case .saving:
-            return [.continueButton(state: .loading, didTap: {})]
+            .scanning,
+            .saving:
+            return []
 
         case .scanned(_, let faceCaptureData):
             return [

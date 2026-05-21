@@ -200,6 +200,20 @@ final class SelfieCaptureViewControllerTest: XCTestCase {
 
         XCTAssertTrue(mockSheetController.transitionedToFallbackUrl)
     }
+
+    func testAutoCaptureStatesDoNotShowBottomButton() {
+        XCTAssertTrue(
+            makeViewController(initialState: .initial).buttonViewModels.isEmpty
+        )
+        XCTAssertTrue(
+            makeViewController(initialState: .scanning(.empty, [])).buttonViewModels.isEmpty
+        )
+        XCTAssertTrue(
+            makeViewController(
+                initialState: .saving(.empty, makeFaceCaptureData())
+            ).buttonViewModels.isEmpty
+        )
+    }
 }
 
 private extension SelfieCaptureViewControllerTest {
@@ -217,6 +231,31 @@ private extension SelfieCaptureViewControllerTest {
             cameraPermissionsManager: mockCameraPermissionsManager,
             appSettingsHelper: mockAppSettingsHelper
         )
+    }
+
+    func makeFaceCaptureData() -> FaceCaptureData {
+        let image = CapturedImageMock.frontDriversLicense.image.cgImage!
+        let faceRect = CGRect(x: 0.3, y: 0.2, width: 0.4, height: 0.4)
+        let samples: [FaceScannerInputOutput] = [0.7, 0.8, 0.9].map { score in
+            FaceScannerInputOutput(
+                image: image,
+                scannerOutput: .init(
+                    faceDetectorOutput: .init(
+                        predictions: [
+                            .init(
+                                rect: faceRect,
+                                score: score
+                            ),
+                        ]
+                    ),
+                    cameraProperties: nil,
+                    motionBlurResult: nil,
+                    isValid: true
+                ),
+                cameraExifMetadata: nil
+            )
+        }
+        return FaceCaptureData(samples: samples)!
     }
 }
 
