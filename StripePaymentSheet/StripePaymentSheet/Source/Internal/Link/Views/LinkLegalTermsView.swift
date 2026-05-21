@@ -136,14 +136,19 @@ final class LinkLegalTermsView: UIView {
         }
 
         let leadingIcon: NSTextAttachment? = {
-            guard mode == .checkboxWithDefaultOptIn else {
+            guard !isStandalone else {
                 return nil
             }
-            return LinkUI.inlineLogo(
-                withScale: 1.3,
-                forFont: LinkUI.font(forTextStyle: .caption),
-                brand: brand
-            )
+            switch mode {
+            case .checkbox, .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+                return LinkUI.inlineLogo(
+                    withScale: 1.3,
+                    forFont: LinkUI.font(forTextStyle: .caption),
+                    brand: brand
+                )
+            case .signupOptIn:
+                return nil
+            }
         }()
 
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)

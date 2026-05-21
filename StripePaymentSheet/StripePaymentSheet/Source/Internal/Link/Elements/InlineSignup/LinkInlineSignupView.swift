@@ -54,7 +54,7 @@ final class LinkInlineSignupView: UIView {
     private(set) lazy var emailElement: LinkEmailElement = {
         let element = LinkEmailElement(defaultValue: viewModel.emailAddress,
                                        isOptional: viewModel.isEmailOptional,
-                                       showLogo: viewModel.showLogoInEmailField,
+                                       showLogo: false,
                                        theme: theme,
                                        brand: viewModel.brand)
         element.indicatorTintColor = theme.colors.primary
@@ -64,13 +64,6 @@ final class LinkInlineSignupView: UIView {
     private(set) lazy var nameElement: TextFieldElement = {
         let configuration = TextFieldElement.NameConfiguration(type: .full, defaultValue: viewModel.legalName)
         return TextFieldElement(configuration: configuration, theme: theme)
-    }()
-
-    private lazy var phoneMoreInfoView: LinkMoreInfoView? = {
-        guard viewModel.mode == .textFieldsOnlyPhoneFirst else {
-            return nil
-        }
-        return LinkMoreInfoView(brand: viewModel.brand)
     }()
 
     private(set) lazy var phoneNumberElement: PhoneNumberElement = {
@@ -88,7 +81,6 @@ final class LinkInlineSignupView: UIView {
         case .textFieldsOnlyPhoneFirst:
             return PhoneNumberElement(
                 isOptional: viewModel.isPhoneNumberOptional,
-                infoView: phoneMoreInfoView,
                 theme: theme
             )
         }
@@ -262,7 +254,6 @@ final class LinkInlineSignupView: UIView {
         viewModel.brand = brand
         checkboxElement.updateBrand(brand)
         emailElement.updateBrand(brand)
-        phoneMoreInfoView?.updateBrand(brand)
         legalTermsView?.updateBrand(brand)
     }
 
