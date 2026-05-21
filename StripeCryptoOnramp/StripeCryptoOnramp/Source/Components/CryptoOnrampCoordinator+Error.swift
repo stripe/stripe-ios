@@ -336,7 +336,7 @@ extension CryptoOnrampCoordinator {
                 apiError: apiError,
                 during: operation,
                 apiClient: apiClient,
-                docURL: "https://stripe.com/docs/crypto/onramp/app-attestation"
+                docURL: nil
             )
         )
     }
