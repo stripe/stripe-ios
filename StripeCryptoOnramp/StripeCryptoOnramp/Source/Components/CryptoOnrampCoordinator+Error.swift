@@ -104,12 +104,12 @@ public extension CryptoOnrampCoordinator {
             }
         }
 
-        /// The raw backend `reason` value associated with this error, if one is available.
-        public var rawReason: String? {
+        /// The backend `reason` value associated with this error, if one is available.
+        public var reason: String? {
             switch self {
             case .appAttestationFailed(let error),
                  .uncategorizedAPIError(let error):
-                return error.rawReason
+                return error.reason
             default:
                 return nil
             }
@@ -196,8 +196,8 @@ public extension CryptoOnrampCoordinator {
     /// Details from a backend API error, enriched with SDK-local diagnostic context.
     struct APIErrorDetails: LocalizedError {
 
-        /// The raw backend `reason` value associated with this error, if one is available.
-        public let rawReason: String?
+        /// The backend `reason` value associated with this error, if one is available.
+        public let reason: String?
 
         /// The SDK operation that was running when this error occurred.
         public let operation: String
@@ -257,7 +257,7 @@ public extension CryptoOnrampCoordinator {
                 "  - operation: \(operation)",
                 appIdentifier.map { "  - app_id: \($0)" },
                 mode.map { "  - mode: \($0)" },
-                rawReason.map { "  - reason: \($0)" },
+                reason.map { "  - reason: \($0)" },
                 requestID.map { "  - request_id: \($0)" },
                 apiErrorCode.map { "  - code: \($0)" },
                 apiErrorType.map { "  - type: \($0)" },
@@ -292,7 +292,7 @@ public extension CryptoOnrampCoordinator {
         }
 
         private var developerSummary: String {
-            switch rawReason {
+            switch reason {
             case "attestation_not_enabled":
                 return "App attestation failed: app attestation is not enabled for this Stripe account."
             case "app_not_registered":
@@ -316,7 +316,7 @@ public extension CryptoOnrampCoordinator {
         }
 
         private var nextStep: String {
-            switch rawReason {
+            switch reason {
             case "attestation_not_enabled":
                 return "Contact Stripe to enable app attestation for this account and mode, then retry the Onramp flow."
             case "app_not_registered":
@@ -423,7 +423,7 @@ extension CryptoOnrampCoordinator {
         docURL: String?
     ) -> APIErrorDetails {
         return APIErrorDetails(
-            rawReason: apiError.allResponseFields["reason"] as? String,
+            reason: apiError.allResponseFields["reason"] as? String,
             operation: operation.rawValue,
             appIdentifier: Bundle.main.bundleIdentifier,
             mode: apiClient.publishableKey.flatMap(Self.publishableKeyMode),
