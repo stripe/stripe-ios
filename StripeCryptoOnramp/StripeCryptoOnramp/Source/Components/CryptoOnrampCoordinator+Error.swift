@@ -71,7 +71,7 @@ public extension CryptoOnrampCoordinator {
         }
 
         /// A developer-facing description with diagnostic details and suggested next steps.
-        public var developerDescription: String? {
+        public var developerDescription: String {
             switch self {
             case .invalidPhoneFormat:
                 return "Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234)."
@@ -251,7 +251,7 @@ public extension CryptoOnrampCoordinator {
         }
 
         /// A developer-facing description with diagnostic details and suggested next steps.
-        public var developerDescription: String? {
+        public var developerDescription: String {
             let summary = developerSummary
             let context = [
                 "  - operation: \(operation)",
@@ -264,8 +264,6 @@ public extension CryptoOnrampCoordinator {
             ].compactMap { $0 }
 
             var lines = [
-                "StripeCryptoOnramp error",
-                "",
                 "Summary",
                 "  \(summary)",
                 "",
@@ -355,7 +353,7 @@ extension CryptoOnrampCoordinator.Error: CustomDebugStringConvertible {
     // MARK: - CustomDebugStringConvertible
 
     public var debugDescription: String {
-        return developerDescription ?? localizedDescription
+        return developerDescription
     }
 }
 
@@ -364,7 +362,7 @@ extension CryptoOnrampCoordinator.APIErrorDetails: CustomDebugStringConvertible 
     // MARK: - CustomDebugStringConvertible
 
     public var debugDescription: String {
-        return developerDescription ?? localizedDescription
+        return developerDescription
     }
 }
 
