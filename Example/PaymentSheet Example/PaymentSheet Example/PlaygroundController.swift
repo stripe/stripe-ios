@@ -507,7 +507,7 @@ import UIKit
         case .returning:
             return customerId ?? "returning"
         case .custom:
-            return settings.customerId ?? ""
+            return customerId ?? "custom"
         }
     }
 
