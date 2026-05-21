@@ -398,7 +398,7 @@ extension SavedPaymentMethodCollectionView {
                         label.text = linkBrand.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
-                        selectableRectangle.accessibilityLabel = linkBrand.accessibilityText(from: label.text ?? "")
+                        selectableRectangle.accessibilityLabel = label.text
                         let paymentMethodLogoImage = Image.paymentSheetLinkLogoImage
                         paymentMethodLogo.image = paymentMethodLogoImage
                         paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
