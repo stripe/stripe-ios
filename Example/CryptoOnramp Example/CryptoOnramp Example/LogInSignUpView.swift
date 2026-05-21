@@ -230,7 +230,6 @@ struct LogInSignUpView: View {
             await MainActor.run {
                 isLoading.wrappedValue = false
                 alert = Alert(title: "Error", message: error.localizedDescription)
-                
             }
         }
     }
