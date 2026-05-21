@@ -21,7 +21,7 @@ class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
         let sut = LinkVerificationView.Header(brand: .onelink)
         let logoView = sut.subviews.compactMap { $0 as? UIImageView }.first
 
-        XCTAssertEqual(logoView?.accessibilityLabel, "Onelink")
+        XCTAssertEqual(logoView?.accessibilityLabel, "one link")
     }
 
     func testModal() {

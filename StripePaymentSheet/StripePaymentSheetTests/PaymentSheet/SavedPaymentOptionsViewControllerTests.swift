@@ -209,7 +209,7 @@ class SavedPaymentOptionsViewControllerTests: XCTestCase {
         )
 
         XCTAssertEqual(cell.label.text, "Onelink")
-        XCTAssertEqual(cell.selectableRectangle.accessibilityLabel, "Onelink")
+        XCTAssertEqual(cell.selectableRectangle.accessibilityLabel, "one link")
     }
 
     // MARK: Helpers

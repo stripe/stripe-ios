@@ -138,5 +138,6 @@ final class SavedPaymentMethodRowButton: UIView {
 
         rowButton.setLabel(text: linkBrand.displayName)
         rowButton.setSublabel(text: paymentMethod.paymentSheetLabel(brand: linkBrand), animated: false)
+        rowButton.setPrimaryAccessibilityLabel(linkBrand.accessibilityText(from: linkBrand.displayName))
     }
 }

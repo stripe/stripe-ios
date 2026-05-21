@@ -17,6 +17,8 @@ extension PaneLayoutView {
         iconView: UIView?,
         title: String?,
         subtitle: String?,
+        accessibilityTitle: String? = nil,
+        accessibilitySubtitle: String? = nil,
         headerAlignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         contentView: UIView?,
@@ -29,6 +31,7 @@ extension PaneLayoutView {
             let headerView = createHeaderView(
                 iconView: iconView,
                 title: title,
+                accessibilityTitle: accessibilityTitle,
                 alignment: headerAlignment,
                 horizontalPadding: horizontalPadding,
                 isSheet: isSheet
@@ -38,6 +41,7 @@ extension PaneLayoutView {
         if subtitle != nil || contentView != nil {
             let bodyView = createBodyView(
                 text: subtitle,
+                accessibilityText: accessibilitySubtitle,
                 contentView: contentView
             )
             verticalStackView.addArrangedSubview(bodyView)
@@ -49,6 +53,7 @@ extension PaneLayoutView {
     static func createHeaderView(
         iconView: UIView?,
         title: String?,
+        accessibilityTitle: String? = nil,
         alignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         isSheet: Bool = false
@@ -79,6 +84,7 @@ extension PaneLayoutView {
                 alignment: textAlignment
             )
             titleLabel.setText(title)
+            titleLabel.accessibilityLabel = accessibilityTitle ?? title
             titleLabel.accessibilityIdentifier = "fc_pane_title_label"
             headerStackView.addArrangedSubview(titleLabel)
         }
@@ -103,6 +109,7 @@ extension PaneLayoutView {
     @available(iOSApplicationExtension, unavailable)
     static func createBodyView(
         text: String?,
+        accessibilityText: String? = nil,
         contentView: UIView?
     ) -> UIView {
         let willShowDescriptionText = (text != nil)
@@ -130,6 +137,7 @@ extension PaneLayoutView {
                 textColor: FinancialConnectionsAppearance.Colors.textDefault
             )
             textLabel.setText(text)
+            textLabel.accessibilityLabel = accessibilityText ?? text
             paddingStackView.addArrangedSubview(textLabel)
         }
 
@@ -142,15 +150,18 @@ extension PaneLayoutView {
 
     struct ButtonConfiguration {
         let title: String
+        let accessibilityLabel: String?
         let accessibilityIdentifier: String?
         let action: () -> Void
 
         init(
             title: String,
+            accessibilityLabel: String? = nil,
             accessibilityIdentifier: String? = nil,
             action: @escaping () -> Void
         ) {
             self.title = title
+            self.accessibilityLabel = accessibilityLabel
             self.accessibilityIdentifier = accessibilityIdentifier
             self.action = action
         }
@@ -198,6 +209,7 @@ extension PaneLayoutView {
             let primaryButton = Button.primary(appearance: appearance)
             primaryButtonReference = primaryButton
             primaryButton.title = primaryButtonConfiguration.title
+            primaryButton.accessibilityLabel = primaryButtonConfiguration.accessibilityLabel ?? primaryButtonConfiguration.title
             primaryButton.accessibilityIdentifier = primaryButtonConfiguration.accessibilityIdentifier
             primaryButton.addTarget(
                 footerStackView,
@@ -216,6 +228,7 @@ extension PaneLayoutView {
             let secondaryButton = Button.secondary()
             secondaryButtonReference = secondaryButton
             secondaryButton.title = secondaryButtonConfiguration.title
+            secondaryButton.accessibilityLabel = secondaryButtonConfiguration.accessibilityLabel ?? secondaryButtonConfiguration.title
             secondaryButton.accessibilityIdentifier = secondaryButtonConfiguration.accessibilityIdentifier
             secondaryButton.addTarget(
                 footerStackView,
