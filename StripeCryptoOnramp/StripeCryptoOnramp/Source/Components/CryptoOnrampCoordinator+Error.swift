@@ -147,6 +147,16 @@ public extension CryptoOnrampCoordinator {
             }
         }
 
+        public var apiErrorType: String? {
+            switch self {
+            case .appAttestationFailed(let error),
+                 .uncategorizedAPIError(let error):
+                return error.apiErrorType
+            default:
+                return nil
+            }
+        }
+
         public var apiErrorMessage: String? {
             switch self {
             case .appAttestationFailed(let error),
@@ -176,6 +186,7 @@ public extension CryptoOnrampCoordinator {
         public let sdkVersion: String
         public let requestID: String?
         public let apiErrorCode: String?
+        public let apiErrorType: String?
         public let apiErrorMessage: String?
         public let apiUserMessage: String?
         public let docURL: String?
@@ -203,6 +214,7 @@ public extension CryptoOnrampCoordinator {
                 rawReason.map { "  - reason: \($0)" },
                 requestID.map { "  - request_id: \($0)" },
                 apiErrorCode.map { "  - code: \($0)" },
+                apiErrorType.map { "  - type: \($0)" },
             ].compactMap { $0 }
 
             var lines = [
@@ -356,11 +368,25 @@ extension CryptoOnrampCoordinator {
             sdkVersion: STPAPIClient.STPSDKVersion,
             requestID: apiError.requestID,
             apiErrorCode: apiError.code,
+            apiErrorType: apiErrorType(from: apiError),
             apiErrorMessage: apiError.message,
             apiUserMessage: apiError.allResponseFields["user_message"] as? String,
             docURL: docURL,
             underlyingError: error
         )
+    }
+
+    private static func apiErrorType(from apiError: StripeAPIError) -> String? {
+        if let rawType = apiError.allResponseFields["type"] as? String {
+            return rawType
+        }
+
+        switch apiError.type {
+        case .unparsable:
+            return nil
+        default:
+            return apiError.type.rawValue
+        }
     }
 
     private static func publishableKeyMode(_ publishableKey: String) -> String? {
