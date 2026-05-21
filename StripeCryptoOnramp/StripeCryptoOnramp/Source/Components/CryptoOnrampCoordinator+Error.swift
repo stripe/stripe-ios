@@ -39,9 +39,13 @@ public extension CryptoOnrampCoordinator {
         /// A Stripe API error without a more specific Crypto Onramp category.
         case uncategorizedAPIError(APIErrorDetails)
 
+        // MARK: - LocalizedError
+
         public var errorDescription: String? {
             return userFacingMessage
         }
+
+        // MARK: - CryptoOnrampCoordinator.Error
 
         public var userFacingMessage: String {
             switch self {
@@ -192,9 +196,13 @@ public extension CryptoOnrampCoordinator {
         public let docURL: String?
         public let underlyingError: Swift.Error
 
+        // MARK: - LocalizedError
+
         public var errorDescription: String? {
             return userFacingMessage
         }
+
+        // MARK: - APIErrorDetails
 
         public var userFacingMessage: String {
             if isAppAttestationError {
@@ -301,6 +309,24 @@ public extension CryptoOnrampCoordinator {
             }
             return true
         }
+    }
+}
+
+extension CryptoOnrampCoordinator.Error: CustomDebugStringConvertible {
+
+    // MARK: - CustomDebugStringConvertible
+
+    public var debugDescription: String {
+        return developerDescription ?? localizedDescription
+    }
+}
+
+extension CryptoOnrampCoordinator.APIErrorDetails: CustomDebugStringConvertible {
+
+    // MARK: - CustomDebugStringConvertible
+
+    public var debugDescription: String {
+        return developerDescription ?? localizedDescription
     }
 }
 
