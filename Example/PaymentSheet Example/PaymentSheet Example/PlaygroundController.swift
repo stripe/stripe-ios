@@ -503,9 +503,9 @@ import UIKit
         case .guest:
             return "guest"
         case .new:
-            return "new"
+            return customerId ?? "new"
         case .returning:
-            return "returning"
+            return customerId ?? "returning"
         case .custom:
             return settings.customerId ?? ""
         }
