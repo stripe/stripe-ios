@@ -1,3 +1,27 @@
+/* Error message shown when the user tries to create a Link account for an email that already has one */
+"A Link account already exists for this email. Log in instead." = "A Link account already exists for this email. Log in instead.";
+
+/* Error message shown when automatic Link sign-in fails and the user needs to sign in manually */
+"An error occurred while automatically signing in to your Link account. Please sign in manually." = "An error occurred while automatically signing in to your Link account. Please sign in manually.";
+
 /* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Debit cards are most likely to be accepted.";
+
+/* Error message shown when the SDK needs a crypto customer ID before continuing */
+"Finish verifying your Link account before continuing." = "Finish verifying your Link account before continuing.";
+
+/* Error message shown when the provided phone number is not in the expected format */
+"Invalid phone format. Please use E.164 format (e.g., +12125551234)." = "Invalid phone format. Please use E.164 format (e.g., +12125551234).";
+
+/* Error message shown when there is no usable payment method selected */
+"No payment method is ready to use. Please collect a payment method and try again." = "No payment method is ready to use. Please collect a payment method and try again.";
+
+/* Error message shown when the SDK is missing required information from the server */
+"Required information was missing. Please try again later." = "Required information was missing. Please try again later.";
+
+/* Error message shown when app attestation fails */
+"This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists.";
+
+/* Error message shown when the user's Link account is not verified */
+"Verify your Link account before continuing." = "Verify your Link account before continuing.";
 

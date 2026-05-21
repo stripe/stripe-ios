@@ -46,19 +46,19 @@ public extension CryptoOnrampCoordinator {
         public var userFacingMessage: String {
             switch self {
             case .invalidPhoneFormat:
-                return "Invalid phone format. Please use E.164 format (e.g., +12125551234)."
+                return String.Localized.cryptoOnrampErrorInvalidPhoneFormat
             case .linkAccountAlreadyExists:
-                return "A Link account already exists for this email. Log in instead."
+                return String.Localized.cryptoOnrampErrorLinkAccountAlreadyExists
             case .missingEphemeralKey:
-                return "Required information was missing. Please try again later."
+                return String.Localized.cryptoOnrampErrorMissingEphemeralKey
             case .invalidSelectedPaymentSource:
-                return "No payment method is ready to use. Please collect a payment method and try again."
+                return String.Localized.cryptoOnrampErrorInvalidSelectedPaymentSource
             case .missingCryptoCustomerID:
-                return "Finish verifying your Link account before continuing."
+                return String.Localized.cryptoOnrampErrorMissingCryptoCustomerID
             case .linkAccountNotVerified:
-                return "Verify your Link account before continuing."
+                return String.Localized.cryptoOnrampErrorLinkAccountNotVerified
             case .seamlessSignInTokenInvalid:
-                return "An error occurred while automatically signing in to your Link account. Please sign in manually."
+                return String.Localized.cryptoOnrampErrorSeamlessSignInTokenInvalid
             case .appAttestationFailed(let error),
                  .uncategorizedAPIError(let error):
                 return error.userFacingMessage
@@ -187,7 +187,7 @@ public extension CryptoOnrampCoordinator {
 
         public var userFacingMessage: String {
             if isAppAttestationError {
-                return "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists."
+                return String.Localized.cryptoOnrampErrorAppAttestationFailed
             } else if let apiUserMessage {
                 return apiUserMessage
             }
