@@ -38,6 +38,13 @@ final class LinkSignUpViewControllerSnapshotTests: STPSnapshotTestCase {
         verify(sut.stackView)
     }
 
+    func testWithEmailOnelink() throws {
+        let sut = try makeSUT(email: "user@example.com", brand: .onelink)
+        sut.updateUI()
+
+        verify(sut.stackView, identifier: "onelink")
+    }
+
     func testWithEmailSuggestion() throws {
         let sut = try makeSUT(email: "user@example.con", suggestedEmail: "user@example.com")
         sut.updateUI()
@@ -59,7 +66,7 @@ final class LinkSignUpViewControllerSnapshotTests: STPSnapshotTestCase {
 
 extension LinkSignUpViewControllerSnapshotTests {
 
-    func makeSUT(email: String?, suggestedEmail: String? = nil) throws -> LinkSignUpViewController {
+    func makeSUT(email: String?, suggestedEmail: String? = nil, brand: LinkBrand = .link) throws -> LinkSignUpViewController {
         let (_, elementsSession) = try PayWithLinkTestHelpers.makePaymentIntentAndElementsSession()
         let session = email == nil ? LinkStubs.consumerSession(supportedPaymentDetailsTypes: [ParsedEnum(.card)]) : nil
 
@@ -76,7 +83,7 @@ extension LinkSignUpViewControllerSnapshotTests {
         return LinkSignUpViewController(
             accountService: LinkAccountService(elementsSession: elementsSession),
             linkAccount: linkAccount,
-            brand: .link,
+            brand: brand,
             defaultBillingDetails: nil
         )
     }

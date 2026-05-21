@@ -29,6 +29,11 @@ class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testModalOnelink() {
+        let sut = makeSUT(mode: .modal, brand: .onelink)
+        verify(sut, identifier: "onelink")
+    }
+
     func testModalWithLogout() {
         let sut = makeSUT(mode: .modal, allowLogoutInDialog: true)
         verify(sut)
@@ -90,7 +95,12 @@ extension LinkVerificationViewSnapshotTests {
         let consumerSessionClientSecret: String?
     }
 
-    func makeSUT(mode: LinkVerificationView.Mode, appearance: LinkAppearance? = nil, allowLogoutInDialog: Bool = false) -> LinkVerificationView {
+    func makeSUT(
+        mode: LinkVerificationView.Mode,
+        brand: LinkBrand = .link,
+        appearance: LinkAppearance? = nil,
+        allowLogoutInDialog: Bool = false
+    ) -> LinkVerificationView {
         let sut = LinkVerificationView(
             mode: mode,
             linkAccount: LinkAccountStub(
@@ -100,6 +110,7 @@ extension LinkVerificationViewSnapshotTests {
                 sessionState: .verified,
                 consumerSessionClientSecret: nil
             ),
+            brand: brand,
             appearance: appearance,
             allowLogoutInDialog: allowLogoutInDialog
         )
