@@ -154,7 +154,10 @@ final class SelfieScanningView: UIView {
     private let instructionLabelView = BottomAlignedLabel()
 
     // MARK: Camera Preview
-    private let previewContainerView = CameraPreviewContainerView()
+    private let previewContainerView = CameraPreviewContainerView(
+        cornerRadius: .viewfinder,
+        shadowStyle: .viewfinder
+    )
 
     private lazy var havingTroubleLabel: UILabel = {
         let label = UILabel()
