@@ -73,10 +73,12 @@ final class AdaptivePricingFlagImageManager {
     ///
     /// If a downloaded image is available, the string contains a text attachment;
     /// otherwise it contains the corresponding emoji flag.
-    func flagIcon(for currency: String) -> NSAttributedString {
+    /// - Parameters:
+    ///   - currency: The currency code (e.g. "USD", "GBP").
+    ///   - font: The font used to size the image attachment so it aligns with surrounding text.
+    func flagIcon(for currency: String, font: UIFont) -> NSAttributedString {
         let code = CurrencyCode(currency)
         if let image = imagesByCurrencyCode?[code.apiValue] {
-            let font = UIFont.preferredFont(forTextStyle: .footnote)
             return .attributedStringForImage(image.withRenderingMode(.alwaysOriginal), font: font, additionalScale: 1.5)
         }
         let emoji = CurrencySelectorUtilities.flagEmoji(for: code)
