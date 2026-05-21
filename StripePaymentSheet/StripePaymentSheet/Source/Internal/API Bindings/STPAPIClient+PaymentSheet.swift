@@ -317,19 +317,19 @@ extension STPAPIClient {
     ///   - sessionToken: The session identifier that groups the autocomplete requests together to be billed together.
     func autocomplete(
         searchText: String,
-        locale: String,
-        countryCodes: [String],
+        countryCodes: [String]?,
         sessionToken: String
     ) async throws -> AutocompleteResponse {
         let endpoint = "\(APIEndpointElementsAddress)/autocomplete"
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "search_text": searchText,
-            "locale": locale,
-            "country_codes": countryCodes,
+            "locale": Locale.current.toLanguageTag(),
             "session_token": sessionToken,
             "client_type": "mobile",
         ]
-
+        if let countryCodes {
+            parameters["country_codes[]"] = Set<AnyHashable>(countryCodes)
+        }
         return try await APIRequest<AutocompleteResponse>.post(
             with: self,
             endpoint: endpoint,

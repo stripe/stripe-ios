@@ -60,17 +60,22 @@ class AddressSuggestion: NSObject {
     /// The ranges to bold, as NSRanges over UTF-16 code units.
     let matches: [NSRange]
 
+    /// The place ID for fetching full address details.
+    let placeID: String?
+
     /// The raw API response used to create this object.
     let allResponseFields: [AnyHashable: Any]
 
     private init(title: String,
                  subtitle: String,
                  matches: [NSRange],
+                 placeID: String?,
                  allResponseFields: [AnyHashable: Any]
     ) {
         self.title = title
         self.subtitle = subtitle
         self.matches = matches
+        self.placeID = placeID
         self.allResponseFields = allResponseFields
     }
 }
@@ -95,22 +100,24 @@ extension AddressSuggestion: AddressSearchResult {
 extension AddressSuggestion: STPAPIResponseDecodable {
     static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
-              let title = dict["title"] as? String,
-              let subtitle = dict["subtitle"] as? String,
-              let matchesDict = dict["matches"] as? [[AnyHashable: Any]]
+              let displayData = dict["display_data"] as? [AnyHashable: Any],
+              let title = displayData["title"] as? String,
+              let subtitle = displayData["subtitle"] as? String,
+              let matchesDict = displayData["matches"] as? [[AnyHashable: Any]]
         else {
             return nil
         }
 
         let matches: [NSRange] = matchesDict.compactMap { matchDict in
-            guard let endOffset = matchDict["endOffset"] as? Int else { return nil }
-            let startOffset = matchDict["startOffset"] as? Int ?? 0
+            guard let endOffset = matchDict["end_offset"] as? Int else { return nil }
+            let startOffset = matchDict["start_offset"] as? Int ?? 0
             return NSRange(location: startOffset, length: endOffset - startOffset)
         }
         return AddressSuggestion(
             title: title,
             subtitle: subtitle,
             matches: matches,
+            placeID: dict["place_id"] as? String,
             allResponseFields: dict
         ) as? Self
     }

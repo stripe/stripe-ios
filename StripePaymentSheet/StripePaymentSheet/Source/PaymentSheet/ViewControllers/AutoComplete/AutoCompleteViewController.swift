@@ -39,6 +39,7 @@ class AutoCompleteViewController: UIViewController {
 
     private var autocompleteTask: Task<Void, Never>?
     private var debounceTask: Task<Void, Never>?
+    private var currentSource: String?
 
     weak var delegate: AutoCompleteViewControllerDelegate?
 
@@ -47,6 +48,8 @@ class AutoCompleteViewController: UIViewController {
         didSet {
             separatorView.isHidden = results.isEmpty
             tableView.reloadData()
+            let showGoogleAttribution = !results.isEmpty && currentSource?.lowercased() == "google"
+            tableView.tableFooterView = showGoogleAttribution ? googleAttributionFooterView : UIView()
             latestError = nil // reset latest error whenever we get new results
         }
     }
@@ -100,6 +103,23 @@ class AutoCompleteViewController: UIViewController {
         label.isHidden = true
         return label
     }()
+    lazy var googleAttributionFooterView: UIView = {
+        let image = Image.google_maps.makeImage()
+        let imageView = UIImageView(image: image)
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+
+        let container = UIView()
+        container.addSubview(imageView)
+        NSLayoutConstraint.activate([
+            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.appearance.formInsets.leading),
+            imageView.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            imageView.heightAnchor.constraint(equalToConstant: UIFont.preferredFont(forTextStyle: .footnote).lineHeight),
+            imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: image.size.width / image.size.height),
+        ])
+        container.frame = CGRect(x: 0, y: 0, width: 0, height: 34)
+        return container
+    }()
 
     // MARK: - Elements
     lazy var autoCompleteLine: TextFieldElement = {
@@ -123,7 +143,7 @@ class AutoCompleteViewController: UIViewController {
     required init(
         configuration: AddressViewController.Configuration,
         initialLine1Text: String?,
-        selectedCountry: String? = nil,
+        selectedCountry: String?,
         addressSpecProvider: AddressSpecProvider = .shared,
         verticalOffset: CGFloat = 0
     ) {
@@ -248,11 +268,16 @@ class AutoCompleteViewController: UIViewController {
 extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
         let query = autoCompleteLine.text
-        guard query.count >= 2 else { return }
+        guard query.count >= 2 else {
+            debounceTask?.cancel()
+            autocompleteTask?.cancel()
+            results.removeAll()
+            return
+        }
         if configuration.useAutocompleteEndpoints {
             debounceTask?.cancel()
             debounceTask = Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 400_000_000)
+                try? await Task.sleep(nanoseconds: 150_000_000)
                 guard !Task.isCancelled else { return }
                 fetchAPIResults(query: query)
             }
@@ -269,26 +294,24 @@ extension AutoCompleteViewController: ElementDelegate {
         autocompleteTask?.cancel()
         autocompleteTask = Task { @MainActor in
             do {
-                let locale = Locale.current.toLanguageTag()
-                let countryCodes: [String]
+                let countryCodes: [String]?
                 if let selectedCountry = selectedCountry, !selectedCountry.isEmpty {
                     countryCodes = [selectedCountry]
-                } else if configuration.autocompleteCountries.isEmpty {
-                    countryCodes = configuration.allowedCountries
                 } else {
-                    countryCodes = configuration.autocompleteCountries
+                    countryCodes = nil
                 }
                 let response = try await configuration.apiClient.autocomplete(
                     searchText: query,
-                    locale: locale,
                     countryCodes: countryCodes,
                     sessionToken: sessionToken
                 )
-                guard !Task.isCancelled else { return }
+                guard !Task.isCancelled, autoCompleteLine.text.count >= 2 else { return }
+                self.currentSource = response.source
                 self.results = response.suggestions
             } catch {
                 guard !Task.isCancelled else { return }
                 // Fall back to MapKit on API failure
+                self.currentSource = "apple"
                 self.addressSearchCompleter.queryFragment = query
             }
         }
@@ -298,6 +321,7 @@ extension AutoCompleteViewController: ElementDelegate {
 // MARK: MKLocalSearchCompleterDelegate
 extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        guard autoCompleteLine.text.count >= 2 else { return }
         self.results = completer.results
     }
 

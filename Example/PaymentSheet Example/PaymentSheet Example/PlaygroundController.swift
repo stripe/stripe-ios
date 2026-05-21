@@ -266,6 +266,7 @@ import UIKit
         }
 
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
+        configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
         configuration.termsDisplay = cardTermsDisplay
         return configuration
     }
