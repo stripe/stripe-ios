@@ -47,8 +47,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         promotion: String = String.Localized.buy_now_or_pay_later_with_klarna,
         learnMoreText: String = "Learn more",
         infoUrl: URL = URL(string: "https://example.com/learn-more")!
-    ) -> PaymentMethodMessagingPromotionsHelper {
-        PaymentMethodMessagingPromotionsHelper(
+    ) -> PaymentMethodMessagingPromotionHelper {
+        PaymentMethodMessagingPromotionHelper(
             experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
             prefetchedPromotionContents: [
                 paymentMethodType.identifier: .init(

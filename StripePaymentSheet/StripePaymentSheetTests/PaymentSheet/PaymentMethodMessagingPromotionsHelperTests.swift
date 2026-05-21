@@ -9,7 +9,7 @@
 import XCTest
 
 final class PaymentMethodMessagingPromotionsHelperTests: XCTestCase {
-    private let affirmContent = PaymentMethodMessagingPromotionsHelper.PromotionContent(
+    private let affirmContent = PaymentMethodMessagingPromotionHelper.PromotionContent(
         promotion: "Split your purchase into monthly payments.",
         learnMoreText: "Learn more",
         infoUrl: URL(string: "https://example.com/affirm")!
@@ -17,13 +17,13 @@ final class PaymentMethodMessagingPromotionsHelperTests: XCTestCase {
 
     private func makeHelper(
         group: ExperimentGroup,
-        prefetchedPromotionContents: [String: PaymentMethodMessagingPromotionsHelper.PromotionContent] = [:],
+        prefetchedPromotionContents: [String: PaymentMethodMessagingPromotionHelper.PromotionContent] = [:],
         analyticsClientV2: MockAnalyticsClientV2? = nil
-    ) -> PaymentMethodMessagingPromotionsHelper {
+    ) -> PaymentMethodMessagingPromotionHelper {
         let analyticsHelper = analyticsClientV2.map {
             PaymentSheetAnalyticsHelper._testValue(analyticsClientV2: $0)
         }
-        return PaymentMethodMessagingPromotionsHelper(
+        return PaymentMethodMessagingPromotionHelper(
             experiment: PaymentMethodMessagingPromotionsExperiment(
                 arbId: "arb_123",
                 group: group
@@ -50,7 +50,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: XCTestCase {
             allResponseFields: [:]
         )
 
-        _ = PaymentMethodMessagingPromotionsHelper(
+        _ = PaymentMethodMessagingPromotionHelper(
             elementsSession: STPElementsSession._testValue(experimentsData: experimentsData),
             analyticsHelper: analyticsHelper
         )

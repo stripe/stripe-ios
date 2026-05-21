@@ -33,7 +33,7 @@ final class RowButtonTests: XCTestCase {
             shouldAnimateOnPress: false,
             didTap: { _ in }
         )
-        let content = PaymentMethodMessagingPromotionsHelper.PromotionContent(
+        let content = PaymentMethodMessagingPromotionHelper.PromotionContent(
             promotion: "Split your purchase into monthly payments.",
             learnMoreText: "Learn more",
             infoUrl: URL(string: "https://example.com/affirm")!

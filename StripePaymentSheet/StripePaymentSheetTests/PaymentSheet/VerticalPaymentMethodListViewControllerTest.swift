@@ -166,7 +166,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
     }
 
     func testBNPLPromotionRow_UsesPrefetchedPMMESummary() {
-        let helper = PaymentMethodMessagingPromotionsHelper(
+        let helper = PaymentMethodMessagingPromotionHelper(
             experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
             prefetchedPromotionContents: [
                 STPPaymentMethodType.affirm.identifier: .init(
@@ -200,7 +200,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
     }
 
     func testBNPLPromotionRow_RetapShowsLateLoadedPMMContent() {
-        let helper = PaymentMethodMessagingPromotionsHelper(
+        let helper = PaymentMethodMessagingPromotionHelper(
             experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
             prefetchedPromotionContents: [:]
         )

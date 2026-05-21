@@ -155,7 +155,7 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
     }
 
     func testEmbeddedPaymentMethodsView_retapShowsLateLoadedPMMContent() {
-        let helper = PaymentMethodMessagingPromotionsHelper(
+        let helper = PaymentMethodMessagingPromotionHelper(
             experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
             prefetchedPromotionContents: [:]
         )

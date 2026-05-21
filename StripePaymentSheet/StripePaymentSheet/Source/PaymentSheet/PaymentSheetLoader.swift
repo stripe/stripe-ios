@@ -18,7 +18,7 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
-        let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+        let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
 
         init(
@@ -27,7 +27,7 @@ final class PaymentSheetLoader {
             savedPaymentMethods: [STPPaymentMethod],
             paymentMethodTypes: [PaymentSheet.PaymentMethodType],
             paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout,
-            paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil
+            paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper
         ) {
             self.intent = intent
             self.elementsSession = elementsSession
@@ -215,16 +215,15 @@ final class PaymentSheetLoader {
             let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
             let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
+            // Initializing PaymentMethodMessagingPromotionsHelper kick off loading the PMM/BNPL info
             let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(
                 elementsSession: elementsSession,
-                analyticsHelper: analyticsHelper
-            )
-            paymentMethodMessagingPromotionsHelper.prefetchIfNeeded(
                 intent: intent,
                 configuration: configuration,
-                paymentMethodTypes: paymentMethodTypes
+                paymentMethodTypes: paymentMethodTypes,
+                analyticsHelper: analyticsHelper
             )
-
+            
             let loadResult = LoadResult(
                 intent: intent,
                 elementsSession: elementsSession,

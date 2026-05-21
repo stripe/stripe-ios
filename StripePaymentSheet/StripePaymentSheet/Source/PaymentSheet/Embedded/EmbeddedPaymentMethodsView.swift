@@ -30,6 +30,7 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
 
 /// The view for an embedded payment element
 class EmbeddedPaymentMethodsView: UIView {
+
     /// Return the default size to let Auto Layout manage the height.
     /// Overriding intrinsicContentSize values and setting `invalidIntrinsicContentSize` forces force SwiftUI to update layout immediately,
     /// resulting in abrupt, non-animated height changes.
@@ -40,7 +41,6 @@ class EmbeddedPaymentMethodsView: UIView {
     private let appearance: PaymentSheet.Appearance
     private let customer: PaymentSheet.CustomerConfiguration?
     private let currency: String?
-    private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     private(set) var previousSelectedRowButton: RowButton? {
         didSet {
             guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
@@ -79,6 +79,7 @@ class EmbeddedPaymentMethodsView: UIView {
     private let shouldShowMandate: Bool
     private let analyticsHelper: PaymentSheetAnalyticsHelper
     private let incentive: PaymentMethodIncentive?
+    private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper
     /// A bit hacky; this is the mandate text for the given payment method, *regardless* of whether it is shown in the view.
     /// It'd be better if the source of truth of mandate text was not the view and instead an independent `func mandateText(...) -> NSAttributedString` function, but this is hard b/c US Bank Account doesn't show mandate in certain states.
     var mandateText: NSAttributedString? {
@@ -121,7 +122,7 @@ class EmbeddedPaymentMethodsView: UIView {
         customer: PaymentSheet.CustomerConfiguration? = nil,
         currency: String? = nil,
         incentive: PaymentMethodIncentive? = nil,
-        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper,
         analyticsHelper: PaymentSheetAnalyticsHelper,
         delegate: EmbeddedPaymentMethodsViewDelegate? = nil
     ) {
@@ -130,9 +131,9 @@ class EmbeddedPaymentMethodsView: UIView {
         self.shouldShowMandate = shouldShowMandate
         self.customer = customer
         self.currency = currency
-        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.analyticsHelper = analyticsHelper
         self.incentive = incentive
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.delegate = delegate
         self.rowButtons = []
         super.init(frame: .zero)
@@ -156,7 +157,9 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowApplePay {
-            let applePayRowButton = makeApplePayRowButton(didTap: { [weak self] rowButton in
+            let applePayRowButton = RowButton.makeForApplePay(appearance: appearance,
+                                                              isEmbedded: true,
+                                                              didTap: { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.applePay, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             })
@@ -164,7 +167,7 @@ class EmbeddedPaymentMethodsView: UIView {
         }
 
         if shouldShowLink {
-            let linkRowButton = makeLinkRowButton { [weak self] rowButton in
+            let linkRowButton = RowButton.makeForLink(appearance: appearance, isEmbedded: true) { [weak self] rowButton in
                 CustomerPaymentOption.setDefaultPaymentMethod(.link, forCustomer: customer?.id)
                 self?.didTap(rowButton: rowButton)
             }
@@ -298,7 +301,6 @@ class EmbeddedPaymentMethodsView: UIView {
 
     // MARK: Tap handling
     func didTap(rowButton: RowButton) {
-        populatePaymentMethodMessagingIfAvailable(for: rowButton)
         self.selectedRowButton = rowButton
         delegate?.embeddedPaymentMethodsViewDidTapPaymentMethodRow()
         analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: rowButton.type.analyticsIdentifier)
@@ -509,7 +511,7 @@ class EmbeddedPaymentMethodsView: UIView {
             hasSavedCard: savedPaymentMethods.hasSavedCard,
             accessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
-            paymentMethodMessaging: paymentMethodMessagingConfiguration(paymentMethodType: paymentMethodType),
+            promotionsHelper: paymentMethodMessagingPromotionsHelper,
             appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
             shouldAnimateOnPress: delegate?.shouldAnimateOnPress(paymentMethodType) == true,
@@ -519,45 +521,6 @@ class EmbeddedPaymentMethodsView: UIView {
             }
         )
     }
-
-    private func makeApplePayRowButton(didTap: @escaping RowButton.DidTapClosure) -> RowButton {
-        return RowButton.makeForApplePay(appearance: appearance, isEmbedded: true, didTap: didTap)
-    }
-
-    private func makeLinkRowButton(didTap: @escaping RowButton.DidTapClosure) -> RowButton {
-        return RowButton.makeForLink(appearance: appearance, isEmbedded: true, didTap: didTap)
-    }
-
-    private func paymentMethodMessagingConfiguration(
-        paymentMethodType: PaymentSheet.PaymentMethodType,
-    ) -> RowButton.PaymentMethodMessagingConfiguration {
-        guard paymentMethodMessagingPromotionsHelper?.shouldUsePaymentMethodMessagingRow(
-            for: paymentMethodType,
-            layout: PaymentSheetAnalyticsHelper.PaymentMethodLayout.vertical.rawValue
-        ) == true else {
-            return .disabled
-        }
-        return .enabled(
-            content: paymentMethodMessagingPromotionsHelper?.promotion(
-                for: paymentMethodType,
-                layout: PaymentSheetAnalyticsHelper.PaymentMethodLayout.vertical.rawValue
-            )
-        )
-    }
-
-    private func populatePaymentMethodMessagingIfAvailable(for rowButton: RowButton) {
-        guard rowButton.isPaymentMethodMessagingCapable,
-              !rowButton.hasPaymentMethodMessagingContent,
-              let paymentMethodType = rowButton.type.paymentMethodType,
-              let content = paymentMethodMessagingPromotionsHelper?.promotion(
-                for: paymentMethodType,
-                layout: PaymentSheetAnalyticsHelper.PaymentMethodLayout.vertical.rawValue
-              ) else {
-            return
-        }
-        rowButton.populatePaymentMethodMessagingIfNeeded(content)
-    }
-
 }
 
 extension PaymentSheet.Appearance.EmbeddedPaymentElement.Row.Style {

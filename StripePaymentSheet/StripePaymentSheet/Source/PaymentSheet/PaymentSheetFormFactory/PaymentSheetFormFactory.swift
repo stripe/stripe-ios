@@ -870,10 +870,7 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBNPLHeader() -> SubtitleElement? {
-        guard let promotionContent = paymentMethodMessagingPromotionsHelper?.promotion(
-            for: paymentMethod,
-            layout: paymentMethodOrientation.rawValue
-        ) else {
+        guard let promotionContent = paymentMethodMessagingPromotionsHelper?.promotion(for: paymentMethod) else {
             return nil
         }
         let headerView = BNPLFormHeaderView(
