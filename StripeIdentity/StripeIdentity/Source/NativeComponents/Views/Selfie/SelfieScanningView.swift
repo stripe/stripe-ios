@@ -632,14 +632,14 @@ extension SelfieScanningView: CheckboxButtonDelegate {
 
 private final class CaptureTickMarksView: UIView {
     struct Styling {
-        static let tickCount = 72
+        static let tickCount = 77
         static let tickLength: CGFloat = 10
         static let tickWidth: CGFloat = 2
         static let horizontalDiameterToWidthRatio: CGFloat = 0.62
         static let verticalDiameterToHeightRatio: CGFloat = 0.56
         static let centerYRatio: CGFloat = 0.41
-        static let tickColor = UIColor.white.withAlphaComponent(0.96)
-        static let shadowColor = UIColor.black.withAlphaComponent(0.35)
+        static let tickColor = UIColor.white.withAlphaComponent(0.8)
+        static let shadowColor = UIColor.black.withAlphaComponent(0.3)
         static let shadowOffset = CGSize(width: 0, height: 1)
         static let shadowBlur: CGFloat = 4
         static let centeredShadowRingColor = UIColor.black.withAlphaComponent(0.16)
@@ -683,7 +683,7 @@ private final class CaptureTickMarksView: UIView {
         }
 
         context.setLineWidth(Styling.tickWidth)
-        context.setLineCap(.round)
+        context.setLineCap(.butt)
         context.setStrokeColor(Styling.tickColor.cgColor)
         context.setShadow(
             offset: Styling.shadowOffset,
