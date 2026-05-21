@@ -47,6 +47,7 @@ public extension CryptoOnrampCoordinator {
 
         // MARK: - CryptoOnrampCoordinator.Error
 
+        /// A localized message that can be shown to the app user.
         public var userFacingMessage: String {
             switch self {
             case .invalidPhoneFormat:
@@ -69,6 +70,7 @@ public extension CryptoOnrampCoordinator {
             }
         }
 
+        /// A developer-facing description with diagnostic details and suggested next steps.
         public var developerDescription: String? {
             switch self {
             case .invalidPhoneFormat:
@@ -91,6 +93,7 @@ public extension CryptoOnrampCoordinator {
             }
         }
 
+        /// A URL to documentation for this error, if one is available.
         public var docURL: String? {
             switch self {
             case .appAttestationFailed(let error),
@@ -101,6 +104,7 @@ public extension CryptoOnrampCoordinator {
             }
         }
 
+        /// The raw backend `reason` value associated with this error, if one is available.
         public var rawReason: String? {
             switch self {
             case .appAttestationFailed(let error),
@@ -111,6 +115,7 @@ public extension CryptoOnrampCoordinator {
             }
         }
 
+        /// The Stripe API request ID associated with this error, if one is available.
         public var requestID: String? {
             switch self {
             case .appAttestationFailed(let error),
@@ -121,6 +126,7 @@ public extension CryptoOnrampCoordinator {
             }
         }
 
+        /// The SDK operation that was running when this error occurred, if one is available.
         public var operation: String? {
             switch self {
             case .appAttestationFailed(let error),
@@ -131,6 +137,7 @@ public extension CryptoOnrampCoordinator {
             }
         }
 
+        /// The Stripe mode associated with this error, if it can be determined.
         public var mode: String? {
             switch self {
             case .appAttestationFailed(let error),
@@ -141,6 +148,7 @@ public extension CryptoOnrampCoordinator {
             }
         }
 
+        /// The backend API error code associated with this error, if one is available.
         public var apiErrorCode: String? {
             switch self {
             case .appAttestationFailed(let error),
@@ -151,6 +159,7 @@ public extension CryptoOnrampCoordinator {
             }
         }
 
+        /// The backend API error type associated with this error, if one is available.
         public var apiErrorType: String? {
             switch self {
             case .appAttestationFailed(let error),
@@ -161,6 +170,7 @@ public extension CryptoOnrampCoordinator {
             }
         }
 
+        /// The backend developer-facing API error message associated with this error, if one is available.
         public var apiErrorMessage: String? {
             switch self {
             case .appAttestationFailed(let error),
@@ -171,6 +181,7 @@ public extension CryptoOnrampCoordinator {
             }
         }
 
+        /// The original error that was mapped to this error, if one is available.
         public var underlyingError: Swift.Error? {
             switch self {
             case .appAttestationFailed(let error),
@@ -182,18 +193,43 @@ public extension CryptoOnrampCoordinator {
         }
     }
 
+    /// Details from a backend API error, enriched with SDK-local diagnostic context.
     struct APIErrorDetails: LocalizedError {
+
+        /// The raw backend `reason` value associated with this error, if one is available.
         public let rawReason: String?
+
+        /// The SDK operation that was running when this error occurred.
         public let operation: String
+
+        /// The bundle identifier for the app using the SDK, if one is available.
         public let appIdentifier: String?
+
+        /// The Stripe mode associated with this error, if it can be determined.
         public let mode: String?
+
+        /// The Stripe iOS SDK version.
         public let sdkVersion: String
+
+        /// The Stripe API request ID associated with this error, if one is available.
         public let requestID: String?
+
+        /// The backend API error code associated with this error, if one is available.
         public let apiErrorCode: String?
+
+        /// The backend API error type associated with this error, if one is available.
         public let apiErrorType: String?
+
+        /// The backend developer-facing API error message associated with this error, if one is available.
         public let apiErrorMessage: String?
+
+        /// The backend user-facing API error message associated with this error, if one is available.
         public let apiUserMessage: String?
+
+        /// A URL to documentation for this error, if one is available.
         public let docURL: String?
+
+        /// The original error that was mapped to this error.
         public let underlyingError: Swift.Error
 
         // MARK: - LocalizedError
@@ -204,6 +240,7 @@ public extension CryptoOnrampCoordinator {
 
         // MARK: - APIErrorDetails
 
+        /// A localized message that can be shown to the app user.
         public var userFacingMessage: String {
             if isAppAttestationError {
                 return String.Localized.cryptoOnrampErrorAppAttestationFailed
@@ -213,6 +250,7 @@ public extension CryptoOnrampCoordinator {
             return underlyingError.localizedDescription
         }
 
+        /// A developer-facing description with diagnostic details and suggested next steps.
         public var developerDescription: String? {
             let summary = developerSummary
             let context = [
