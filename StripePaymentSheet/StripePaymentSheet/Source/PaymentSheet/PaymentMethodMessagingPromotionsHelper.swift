@@ -18,6 +18,13 @@ private let paymentSheetPMMESupportedPaymentMethodIdentifiers = Set(paymentSheet
 
 @MainActor
 final class PaymentMethodMessagingPromotionsHelper {
+
+    static let supportedPaymentMethods: [PaymentSheet.PaymentMethodType] = [
+        .stripe(.afterpayClearpay),
+        .stripe(.affirm),
+        .stripe(.klarna),
+    ]
+
     struct PromotionContent: Equatable {
         let promotion: String
         let learnMoreText: String
@@ -32,6 +39,10 @@ final class PaymentMethodMessagingPromotionsHelper {
 
     private let elementsSession: STPElementsSession?
     let experiment: PaymentMethodMessagingPromotionsExperiment
+
+    var isInTreatmentGroup: Bool {
+        experiment.isInTreatment
+    }
 
     private var fetchState: FetchState
     private var fetchTask: Task<Void, Never>?

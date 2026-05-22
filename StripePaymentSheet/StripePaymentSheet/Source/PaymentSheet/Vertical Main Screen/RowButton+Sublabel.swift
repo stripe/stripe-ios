@@ -25,6 +25,161 @@ extension RowButton {
     }
 }
 
+// MARK: - PaymentMethodMessagingSublabelView
+
+extension RowButton {
+
+    final class PaymentMethodMessagingSublabelView: UIView, SublabelView {
+
+        // Payment Method Messaging content can be larger than a normal sublabel
+        var needsUnlimitedHeight: Bool { true }
+        var hasText: Bool {
+            guard let attributedText = promotionTextView.attributedText else {
+                return false
+            }
+            return !attributedText.string.isEmpty
+        }
+
+        private let appearance: PaymentSheet.Appearance
+        private let paymentMethodType: PaymentSheet.PaymentMethodType
+        private let promotionsHelper: PaymentMethodMessagingPromotionsHelper
+
+        private var isExpanded = false
+        private var infoUrl: URL?
+
+        private static let visibilityAnimationDuration: TimeInterval = 0.2
+        private static let fadeAnimationDuration: TimeInterval = 0.1
+
+        private lazy var promotionTextView: PMMEPromotionTextView = {
+            let textView = PMMEPromotionTextView(foregroundColor: appearance.colors.primary)
+            textView.delegate = self
+            textView.isHidden = true
+            textView.alpha = 0
+            return textView
+        }()
+
+        var onLayoutNeedsUpdate: (() -> Void)?
+
+        init(
+            appearance: PaymentSheet.Appearance,
+            paymentMethodType: PaymentSheet.PaymentMethodType,
+            promotionsHelper: PaymentMethodMessagingPromotionsHelper
+        ) {
+            self.appearance = appearance
+            self.paymentMethodType = paymentMethodType
+            self.promotionsHelper = promotionsHelper
+            super.init(frame: .zero)
+
+            isHidden = true
+            addAndPinSubview(promotionTextView)
+        }
+
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+        }
+
+        func setSublabel(text: String?, animated: Bool) {
+            stpAssertionFailure("Setting sublabel not supported with payment method messaging sublabel. setSublabel() should only be called on the plain variant")
+        }
+
+        func updateSelectedState(_ isRowSelected: Bool) {
+            if isRowSelected {
+                // If selected, get PMME content (logging an exposure), and expand if content is available
+                // PMM data is not always available on initial load/display of a RowButton, so we check for it right before attempting to display
+                if let promotionContent = promotionsHelper.promotion(for: paymentMethodType) {
+                    applyContent(promotionContent)
+                    setExpanded(true)
+                }
+            } else {
+                setExpanded(false)
+            }
+        }
+
+        // Track expansion state to avoid re-expanding or re-collapsing when already expanded/collapsed
+        private func setExpanded(_ isExpanded: Bool) {
+            guard self.isExpanded != isExpanded else {
+                return
+            }
+
+            self.isExpanded = isExpanded
+
+            if isExpanded {
+                expand()
+            } else {
+                collapse()
+            }
+        }
+
+        private func expand() {
+            promotionTextView.alpha = 0
+
+            UIView.animate(withDuration: Self.visibilityAnimationDuration) { [self] in
+                self.isHidden = false
+                promotionTextView.isHidden = false
+                onLayoutNeedsUpdate?()
+            }
+
+            UIView.animate(
+                withDuration: Self.fadeAnimationDuration,
+                delay: Self.visibilityAnimationDuration - Self.fadeAnimationDuration
+            ) { [self] in
+                promotionTextView.alpha = 1
+            }
+        }
+
+        private func collapse() {
+            UIView.animate(withDuration: Self.visibilityAnimationDuration) { [self] in
+                self.isHidden = true
+                promotionTextView.isHidden = true
+                onLayoutNeedsUpdate?()
+            }
+
+            UIView.animate(withDuration: Self.visibilityAnimationDuration) { [self] in
+                promotionTextView.alpha = 0
+            }
+        }
+
+        private func applyContent(_ content: PaymentMethodMessagingPromotionsHelper.PromotionContent) {
+            promotionTextView.attributedText = NSMutableAttributedString.pmmePromoString(
+                font: appearance.scaledFont(for: appearance.font.base.medium, style: .caption1, maximumPointSize: 20),
+                textColor: appearance.colors.text,
+                template: content.promotion,
+                substitution: nil,
+                learnMoreText: content.learnMoreText,
+                learnMoreUrl: content.infoUrl
+            )
+            self.infoUrl = content.infoUrl
+        }
+
+        private func openInfoModal() {
+            guard let infoUrl else {
+                stpAssertionFailure("PMME row sublabel tried to present the PMME info modal without content.")
+                return
+            }
+
+            PMMEInfoModal.present(infoUrl: infoUrl, style: .automatic, from: self)
+        }
+    }
+}
+
+extension RowButton.PaymentMethodMessagingSublabelView: UITextViewDelegate {
+#if !os(visionOS)
+    func textView(
+        _ textView: UITextView,
+        shouldInteractWith URL: URL,
+        in characterRange: NSRange,
+        interaction: UITextItemInteraction
+    ) -> Bool {
+        guard interaction == .invokeDefaultAction else {
+            return false
+        }
+
+        openInfoModal()
+        return false
+    }
+#endif
+}
+
 // MARK: - PlainSublabelView
 
 extension RowButton {

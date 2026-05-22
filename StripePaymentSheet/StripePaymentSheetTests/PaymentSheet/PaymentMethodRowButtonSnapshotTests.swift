@@ -63,6 +63,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             paymentMethodType: .instantDebits,
             hasSavedCard: false,
             promoText: nil,
+            promotionsHelper: nil,
             appearance: .default,
             shouldAnimateOnPress: false,
             didTap: { _ in }
@@ -76,6 +77,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             paymentMethodType: .instantDebits,
             hasSavedCard: false,
             promoText: nil,
+            promotionsHelper: nil,
             appearance: appearance,
             shouldAnimateOnPress: false,
             didTap: { _ in }
@@ -88,6 +90,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             paymentMethodType: .instantDebits,
             hasSavedCard: false,
             promoText: "$5",
+            promotionsHelper: nil,
             appearance: .default,
             shouldAnimateOnPress: false,
             didTap: { _ in }
@@ -133,6 +136,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.card),
                 hasSavedCard: false,
+                promotionsHelper: nil,
                 appearance: appearance,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
@@ -149,6 +153,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .stripe(.card),
             hasSavedCard: false,
+            promotionsHelper: nil,
             appearance: appearance,
             shouldAnimateOnPress: false,
             isEmbedded: false,
@@ -169,6 +174,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.klarna),
                 hasSavedCard: false,
+                promotionsHelper: nil,
                 appearance: appearance,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
@@ -185,6 +191,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .stripe(.card),
             hasSavedCard: false,
+            promotionsHelper: nil,
             appearance: appearance,
             shouldAnimateOnPress: false,
             isEmbedded: false,
@@ -200,6 +207,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.card),
                 hasSavedCard: false,
+                promotionsHelper: nil,
                 appearance: appearance,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
