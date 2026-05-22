@@ -39,7 +39,7 @@ class AutoCompleteViewController: UIViewController {
 
     private var autocompleteTask: Task<Void, Never>?
     private var debounceTask: Task<Void, Never>?
-    private var currentSource: String?
+    var currentSource: String?
 
     weak var delegate: AutoCompleteViewControllerDelegate?
 

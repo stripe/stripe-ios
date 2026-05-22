@@ -139,6 +139,51 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
         verify(vc.view)
     }
 
+    func testAutoCompleteViewController_googleAttribution() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        let vc = AutoCompleteViewController(
+            configuration: configuration,
+            initialLine1Text: nil,
+            selectedCountry: nil,
+            addressSpecProvider: addressSpecProvider
+        )
+        vc.currentSource = "google"
+        vc.results = mockSearchResults
+        testWindow.rootViewController = vc
+        vc.additionalSafeAreaInsets = UIEdgeInsets(
+            top: -vc.view.safeAreaInsets.top,
+            left: -vc.view.safeAreaInsets.left,
+            bottom: -vc.view.safeAreaInsets.bottom,
+            right: -vc.view.safeAreaInsets.right
+        )
+
+        verify(vc.view)
+    }
+
+    func testAutoCompleteViewController_googleAttribution_darkMode() {
+        let testWindow = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 500))
+        testWindow.isHidden = false
+        testWindow.overrideUserInterfaceStyle = .dark
+        let vc = AutoCompleteViewController(
+            configuration: configuration,
+            initialLine1Text: nil,
+            selectedCountry: nil,
+            addressSpecProvider: addressSpecProvider
+        )
+        vc.currentSource = "google"
+        vc.results = mockSearchResults
+        testWindow.rootViewController = vc
+        vc.additionalSafeAreaInsets = UIEdgeInsets(
+            top: -vc.view.safeAreaInsets.top,
+            left: -vc.view.safeAreaInsets.left,
+            bottom: -vc.view.safeAreaInsets.bottom,
+            right: -vc.view.safeAreaInsets.right
+        )
+
+        verify(vc.view)
+    }
+
     func verify(
         _ view: UIView,
         identifier: String? = nil,
