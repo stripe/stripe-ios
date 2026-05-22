@@ -19,7 +19,7 @@ extension RowButton {
     protocol SublabelView: UIView {
         var needsUnlimitedHeight: Bool { get }
         var hasText: Bool { get }
-        func setSublabel(newText: String?, animated: Bool)
+        func setSublabel(text: String?, animated: Bool)
         func updateSelectedState(_ isRowSelected: Bool)
     }
 }
@@ -76,7 +76,7 @@ extension RowButton {
             fatalError("init(coder:) has not been implemented")
         }
         
-        func setSublabel(newText: String?, animated: Bool) {
+        func setSublabel(text: String?, animated: Bool) {
             stpAssertionFailure("Setting sublabel not supported with payment method messaging sublabel. setSublabel() should only be called on the plain variant")
         }
 
@@ -195,7 +195,7 @@ extension RowButton {
             return !text.isEmpty
         }
         
-        private let textLabel: UILabel
+        let textLabel: UILabel
 
         init(
             text: String?,
@@ -238,29 +238,31 @@ extension RowButton {
             fatalError("init(coder:) has not been implemented")
         }
         
-        func setSublabel(newText: String?, animated: Bool) {
-            // Do nothing if there is no actual text change
-            guard newText != self.textLabel.text else {
-                return
-            }
-            let duration = animated ? sublabelVisibilityAnimationDuration : 0
+        func setSublabel(text: String?, animated: Bool) {
+            guard text != textLabel.text else { return }
+
+            let showDuration = animated ? sublabelVisibilityAnimationDuration : 0
             let fadeDuration = animated ? sublabelFadeAnimationDuration : 0
-            guard let newText else {
-                UIView.animate(withDuration: duration) { [self] in
+
+            if let text {
+                textLabel.text = text
+                alpha = 0
+                UIView.animate(withDuration: showDuration) {
+                    self.isHidden = text.isEmpty
+                }
+                UIView.animate(
+                    withDuration: fadeDuration,
+                    delay: max(0, showDuration - fadeDuration)
+                ) {
+                    self.alpha = 1
+                }
+            } else {
+                UIView.animate(withDuration: showDuration) {
                     self.textLabel.text = nil
-                    isHidden = true
+                    self.isHidden = true
                     self.superview?.setNeedsLayout()
                     self.superview?.layoutIfNeeded()
                 }
-                return
-            }
-            self.textLabel.text = newText
-            alpha = 0
-            UIView.animate(withDuration: duration) {
-                self.isHidden = newText.isEmpty
-            }
-            UIView.animate(withDuration: fadeDuration, delay: max(0, duration - fadeDuration)) {
-                self.alpha = 1
             }
         }
         
