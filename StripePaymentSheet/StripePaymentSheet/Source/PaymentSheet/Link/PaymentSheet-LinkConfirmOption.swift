@@ -48,16 +48,6 @@ extension PaymentSheet {
 // MARK: - Helpers
 
 extension PaymentSheet.LinkConfirmOption {
-    var brand: LinkBrand {
-        switch self {
-        case .wallet(let brand),
-             .signUp(let brand, _, _, _, _, _),
-             .withPaymentMethod(let brand, _),
-             .withPaymentDetails(let brand, _, _, _, _):
-            return brand
-        }
-    }
-
     func displayPaymentSheetSubLabel(brand: LinkBrand) -> String? {
         guard let sublabel = paymentSheetSubLabel else {
             return nil
