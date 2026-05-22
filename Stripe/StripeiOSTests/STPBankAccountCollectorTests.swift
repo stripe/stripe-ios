@@ -193,7 +193,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
         let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
         let exp = expectation(description: "completion")
 
-        collector.collectBankAccountForDeferredIntent(
+        collector.collectBankAccountForDeferredIntentOrCheckoutSession(
             sessionId: "sess_123",
             returnURL: nil,
             onEvent: nil,
@@ -202,7 +202,36 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
             onBehalfOf: nil,
             additionalParameters: [:],
             elementsSessionContext: nil,
-            from: UIViewController()
+            from: UIViewController(),
+            intentType: .deferred
+        ) { result, linkAccountSession, error in
+            XCTAssertNil(error)
+            if case .completed? = result { } else {
+                XCTFail("Result was not completed")
+            }
+            XCTAssertEqual(linkAccountSession?.stripeID, "las_789")
+            exp.fulfill()
+        }
+        waitForExpectations(timeout: 2.0)
+    }
+
+    func testCollectBankAccountForCheckoutSessionSucceeds() {
+        stubCreateLinkAccountSessionForDeferredIntent()
+
+        let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
+        let exp = expectation(description: "completion")
+
+        collector.collectBankAccountForDeferredIntentOrCheckoutSession(
+            sessionId: "sess_456",
+            returnURL: "myapp://stripe-return",
+            onEvent: nil,
+            amount: 1000,
+            currency: "usd",
+            onBehalfOf: nil,
+            additionalParameters: ["hosted_surface": "payment_element"],
+            elementsSessionContext: nil,
+            from: UIViewController(),
+            intentType: .checkoutSession
         ) { result, linkAccountSession, error in
             XCTAssertNil(error)
             if case .completed? = result { } else {
