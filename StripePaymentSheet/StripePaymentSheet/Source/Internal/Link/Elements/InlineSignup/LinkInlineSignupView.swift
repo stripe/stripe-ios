@@ -52,11 +52,11 @@ final class LinkInlineSignupView: UIView {
     )
 
     private(set) lazy var emailElement: LinkEmailElement = {
-        let element = LinkEmailElement(defaultValue: viewModel.emailAddress,
-                                       isOptional: viewModel.isEmailOptional,
-                                       showLogo: false,
-                                       theme: theme,
-                                       brand: viewModel.brand)
+        let element = LinkEmailElement(
+            defaultValue: viewModel.emailAddress,
+            isOptional: viewModel.isEmailOptional,
+            theme: theme
+        )
         element.indicatorTintColor = theme.colors.primary
         return element
     }()
@@ -253,7 +253,6 @@ final class LinkInlineSignupView: UIView {
         }
         viewModel.brand = brand
         checkboxElement.updateBrand(brand)
-        emailElement.updateBrand(brand)
         legalTermsView?.updateBrand(brand)
     }
 
