@@ -64,10 +64,10 @@ final class WalletViewControllerTests: XCTestCase {
     }
 
     @MainActor
-    func testUnknownPaymentMethodActionsOnlyIncludeRemove() throws {
+    func testGenericPaymentMethodActionsOnlyIncludeRemove() throws {
         let sut = makeSUT()
 
-        let actions = sut.actions(for: LinkStubs.PaymentMethodIndices.unknownWithDisplay, includeCancelAction: false)
+        let actions = sut.actions(for: LinkStubs.PaymentMethodIndices.genericWithDisplay, includeCancelAction: false)
 
         XCTAssertEqual(actions.map(\.title), [
             "Remove payment method"

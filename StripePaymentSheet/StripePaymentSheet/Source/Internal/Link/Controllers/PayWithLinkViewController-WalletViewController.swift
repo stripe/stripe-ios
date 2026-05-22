@@ -463,7 +463,7 @@ extension PayWithLinkViewController.WalletViewController {
                 )
                 actions.append(updateCardAction)
             }
-        case .unparsable:
+        case .generic:
             break
         }
 
@@ -476,7 +476,7 @@ extension PayWithLinkViewController.WalletViewController {
                     "Remove linked account",
                     "Title for a button that when tapped removes a linked bank account."
                 )
-            case .unparsable:
+            case .generic:
                 return STPLocalizedString(
                     "Remove payment method",
                     "Title for a button that when tapped removes a payment method."
@@ -525,7 +525,7 @@ private extension PayWithLinkViewController.WalletViewController {
                     "Remove bank?",
                     "Title for confirmation alert to remove a bank account"
                 )
-            case .unparsable:
+            case .generic:
                 if let paymentMethodName = paymentMethod.linkPaymentDetailsFormattedString,
                    !paymentMethodName.isEmpty {
                     return String(

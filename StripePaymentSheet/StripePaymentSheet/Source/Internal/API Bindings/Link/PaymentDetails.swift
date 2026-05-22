@@ -106,7 +106,7 @@ extension ConsumerPaymentDetails {
         }
 
         switch details {
-        case .card, .unparsable:
+        case .card, .generic:
             // If the merchant is filtering, only allow cards with a billing country
             if let country = billingAddress?.countryCode {
                 return allowedCountries.contains(country)
@@ -154,7 +154,7 @@ extension ConsumerPaymentDetails {
     enum Details: Decodable {
         case card(card: Card)
         case bankAccount(bankAccount: BankAccount)
-        case unparsable(rawValue: String)
+        case generic(rawValue: String)
 
         private enum CodingKeys: String, CodingKey {
             case type
@@ -172,7 +172,7 @@ extension ConsumerPaymentDetails {
             case .bankAccount:
                 self = .bankAccount(bankAccount: try container.decode(BankAccount.self, forKey: CodingKeys.bankAccount))
             case nil:
-                self = .unparsable(rawValue: parsedType.rawValue)
+                self = .generic(rawValue: parsedType.rawValue)
             }
         }
     }
@@ -183,7 +183,7 @@ extension ConsumerPaymentDetails {
             return ParsedEnum(.card)
         case .bankAccount:
             return ParsedEnum(.bankAccount)
-        case .unparsable(let rawValue):
+        case .generic(let rawValue):
             return ParsedEnum(rawValue: rawValue)
         }
     }
@@ -376,7 +376,7 @@ extension ConsumerPaymentDetails {
             return card.displayName(with: nickname) ?? card.secondaryName
         case .bankAccount(let bank):
             return bank.displayName(with: nickname)
-        case .unparsable:
+        case .generic:
             return display?.label ?? ""
         }
     }
@@ -390,7 +390,7 @@ extension ConsumerPaymentDetails {
             return components.joined(separator: " ")
         case .bankAccount(let bankAccount):
             return bankAccount.displayName(with: nickname)
-        case .unparsable:
+        case .generic:
             guard let display else { return nil }
             let components = [display.label, display.sublabel].compactMap { $0 }
             return components.joined(separator: " ")
@@ -403,7 +403,7 @@ extension ConsumerPaymentDetails {
             return card.cvc
         case .bankAccount:
             return nil
-        case .unparsable:
+        case .generic:
             return nil
         }
     }
@@ -426,7 +426,7 @@ extension ConsumerPaymentDetails {
                 bank.name,
                 digits
             )
-        case .unparsable:
+        case .generic:
             guard let display else { return "" }
             let components = [display.label, display.sublabel].compactMap { $0 }
             return components.joined(separator: " ")
