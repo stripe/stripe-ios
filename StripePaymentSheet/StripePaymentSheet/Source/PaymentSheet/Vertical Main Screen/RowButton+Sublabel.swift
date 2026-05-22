@@ -58,8 +58,33 @@ extension RowButton {
 
             super.init(frame: .zero)
 
-            configureLabel(appearance: appearance, isEmbedded: isEmbedded)
+            if isEmbedded, let customFont = appearance.embeddedPaymentElement.row.subtitleFont {
+                textLabel.font = customFont
+            } else {
+                textLabel.font = appearance.scaledFont(
+                    for: appearance.font.base.regular,
+                    style: .caption1,
+                    maximumPointSize: 20
+                )
+            }
+            textLabel.numberOfLines = 1
+            textLabel.adjustsFontSizeToFitWidth = true
+            textLabel.adjustsFontForContentSizeCategory = true
             textLabel.text = text
+
+            let textColor: UIColor = {
+                guard isEmbedded else {
+                    return appearance.colors.componentPlaceholderText
+                }
+                switch appearance.embeddedPaymentElement.row.style {
+                case .flatWithRadio, .flatWithCheckmark, .flatWithDisclosure:
+                    return appearance.colors.textSecondary
+                case .floatingButton:
+                    return appearance.colors.componentPlaceholderText
+                }
+            }()
+
+            textLabel.textColor = textColor
             textLabel.isHidden = text?.isEmpty ?? true
 
             addAndPinSubview(textLabel)
@@ -102,37 +127,5 @@ extension RowButton {
             // Plain sublabel has no selection-dependent behavior
         }
 
-        // MARK: - Private
-
-        private func configureLabel(appearance: PaymentSheet.Appearance, isEmbedded: Bool) {
-            if isEmbedded, let customFont = appearance.embeddedPaymentElement.row.subtitleFont {
-                textLabel.font = customFont
-            } else {
-                textLabel.font = appearance.scaledFont(
-                    for: appearance.font.base.regular,
-                    style: .caption1,
-                    maximumPointSize: 20
-                )
-            }
-            textLabel.numberOfLines = 1
-            textLabel.adjustsFontSizeToFitWidth = true
-            textLabel.adjustsFontForContentSizeCategory = true
-            textLabel.textColor = Self.resolveTextColor(appearance: appearance, isEmbedded: isEmbedded)
-        }
-
-        private static func resolveTextColor(
-            appearance: PaymentSheet.Appearance,
-            isEmbedded: Bool
-        ) -> UIColor {
-            guard isEmbedded else {
-                return appearance.colors.componentPlaceholderText
-            }
-            switch appearance.embeddedPaymentElement.row.style {
-            case .flatWithRadio, .flatWithCheckmark, .flatWithDisclosure:
-                return appearance.colors.textSecondary
-            case .floatingButton:
-                return appearance.colors.componentPlaceholderText
-            }
-        }
     }
 }
