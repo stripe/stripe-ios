@@ -61,10 +61,15 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
     func testPaymentMethodRowButton_newPaymentMethod_unselected() {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,
+            currency: "USD",
             hasSavedCard: false,
+            accessoryView: nil,
             promoText: nil,
+            promotionsHelper: ._testValue(),
             appearance: .default,
+            originalCornerRadius: nil,
             shouldAnimateOnPress: false,
+            isEmbedded: false,
             didTap: { _ in }
         )
         verify(rowButton)
@@ -76,10 +81,15 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
 
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,
+            currency: "USD",
             hasSavedCard: false,
+            accessoryView: nil,
             promoText: nil,
+            promotionsHelper: ._testValue(),
             appearance: appearance,
+            originalCornerRadius: nil,
             shouldAnimateOnPress: false,
+            isEmbedded: false,
             didTap: { _ in }
         )
         verify(rowButton)
@@ -88,10 +98,15 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
     func testPaymentMethodRowButton_newPaymentMethod_withPromo_unselected() {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .instantDebits,
+            currency: "USD",
             hasSavedCard: false,
+            accessoryView: nil,
             promoText: "$5",
+            promotionsHelper: ._testValue(),
             appearance: .default,
+            originalCornerRadius: nil,
             shouldAnimateOnPress: false,
+            isEmbedded: false,
             didTap: { _ in }
         )
         verify(rowButton)
@@ -156,8 +171,13 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins = .init(top: 100, leading: 0, bottom: 100, trailing: 30) // Note: Top and bottom margins should be ignored
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.card),
+                currency: "USD",
                 hasSavedCard: false,
+                accessoryView: nil,
+                promoText: nil,
+                promotionsHelper: ._testValue(),
                 appearance: appearance,
+                originalCornerRadius: nil,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
                 didTap: { _ in }
@@ -172,8 +192,13 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins = .init(top: 100, leading: 100, bottom: 100, trailing: 100)
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .stripe(.card),
+            currency: "USD",
             hasSavedCard: false,
+            accessoryView: nil,
+            promoText: nil,
+            promotionsHelper: ._testValue(),
             appearance: appearance,
+            originalCornerRadius: nil,
             shouldAnimateOnPress: false,
             isEmbedded: false,
             didTap: { _ in }
@@ -192,8 +217,13 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             appearance.embeddedPaymentElement.row.subtitleFont = .italicSystemFont(ofSize: 10)
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.klarna),
+                currency: "USD",
                 hasSavedCard: false,
+                accessoryView: nil,
+                promoText: nil,
+                promotionsHelper: ._testValue(),
                 appearance: appearance,
+                originalCornerRadius: nil,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
                 didTap: { _ in }
@@ -208,8 +238,13 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         appearance.embeddedPaymentElement.row.paymentMethodIconLayoutMargins = .init(top: 100, leading: 100, bottom: 100, trailing: 100)
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .stripe(.card),
+            currency: "USD",
             hasSavedCard: false,
+            accessoryView: nil,
+            promoText: nil,
+            promotionsHelper: ._testValue(),
             appearance: appearance,
+            originalCornerRadius: nil,
             shouldAnimateOnPress: false,
             isEmbedded: false,
             didTap: { _ in }
@@ -224,8 +259,13 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             appearance.cardArtEnabled = true
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.card),
+                currency: "USD",
                 hasSavedCard: false,
+                accessoryView: nil,
+                promoText: nil,
+                promotionsHelper: ._testValue(),
                 appearance: appearance,
+                originalCornerRadius: nil,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
                 didTap: { _ in }
@@ -251,36 +291,17 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             appearance.embeddedPaymentElement.row.style = .flatWithRadio
         }
 
-        let image = PaymentSheet.PaymentMethodType.stripe(.affirm).makeImage(forDarkBackground: false) { _ in
-            XCTFail("Unexpected async image update for snapshot helper.")
-        }
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = UIView.ContentMode.scaleAspectFit
-
-        if isEmbedded {
-            return RowButtonFlatWithRadioView(
-                appearance: appearance,
-                type: .new(paymentMethodType: .stripe(.affirm)),
-                imageView: imageView,
-                text: "Affirm",
-                promotionText: "Split your purchase into monthly payments.",
-                learnMoreText: "Learn more",
-                infoUrl: URL(string: "https://example.com/affirm")!,
-                shouldAnimateOnPress: false,
-                isEmbedded: true,
-                didTap: { _ in }
-            )
-        }
-
-        return RowButtonFloating(
+        return RowButton.makeForPaymentMethodType(
+            paymentMethodType: .stripe(.affirm),
+            currency: "USD",
+            hasSavedCard: false,
+            accessoryView: nil,
+            promoText: nil,
+            promotionsHelper: ._testValue(),
             appearance: appearance,
-            type: .new(paymentMethodType: .stripe(.affirm)),
-            imageView: imageView,
-            text: "Affirm",
-            promotionText: "Split your purchase into monthly payments.",
-            learnMoreText: "Learn more",
-            infoUrl: URL(string: "https://example.com/affirm")!,
+            originalCornerRadius: nil,
             shouldAnimateOnPress: false,
+            isEmbedded: isEmbedded,
             didTap: { _ in }
         )
     }

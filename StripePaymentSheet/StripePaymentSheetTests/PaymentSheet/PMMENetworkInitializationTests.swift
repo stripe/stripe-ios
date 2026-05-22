@@ -67,7 +67,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
 
         XCTAssertEqual(
             promotions["afterpay_clearpay"],
-            PaymentMethodMessagingPromotionHelper.PromotionContent(
+            PaymentMethodMessagingPromotionsHelper.PromotionContent(
                 promotion: "Pay in 4 interest-free payments of $12.50.",
                 learnMoreText: "See plans",
                 infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=afterpay_clearpay&title=See%20plans")!
@@ -75,7 +75,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
         XCTAssertEqual(
             promotions["affirm"],
-            PaymentMethodMessagingPromotionHelper.PromotionContent(
+            PaymentMethodMessagingPromotionsHelper.PromotionContent(
                 promotion: "Pay in 4 interest-free payments of $12.50.",
                 learnMoreText: "See if you qualify",
                 infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=affirm&title=See%20if%20you%20qualify")!
@@ -83,7 +83,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         )
         XCTAssertEqual(
             promotions["klarna"],
-            PaymentMethodMessagingPromotionHelper.PromotionContent(
+            PaymentMethodMessagingPromotionsHelper.PromotionContent(
                 promotion: "Pay now, or in 4 interest-free payments of $12.50.",
                 learnMoreText: "See plans",
                 infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=klarna&title=See%20plans")!
@@ -157,7 +157,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(
             promotions,
             [
-                "affirm": PaymentMethodMessagingPromotionHelper.PromotionContent(
+                "affirm": PaymentMethodMessagingPromotionsHelper.PromotionContent(
                     promotion: "Pay in 4 interest-free payments of $12.50.",
                     learnMoreText: "See if you qualify",
                     infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=\(Self.usPublishableKey)&locale=en&payment_methods%5B0%5D=affirm&title=See%20if%20you%20qualify")!
@@ -746,7 +746,7 @@ class PMMENetworkInitializationTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(
             promotions,
             [
-                "klarna": PaymentMethodMessagingPromotionHelper.PromotionContent(
+                "klarna": PaymentMethodMessagingPromotionsHelper.PromotionContent(
                     promotion: "Valid summary",
                     learnMoreText: "See plans",
                     infoUrl: URL(string: "https://example.com/klarna")!

@@ -111,7 +111,8 @@ class EmbeddedPaymentElementSnapshotTests: STPSnapshotTestCase, EmbeddedPaymentE
             elementsSession: ._testValue(paymentMethodTypes: ["card", "us_bank_account", "afterpay_clearpay"]),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount), .stripe(.afterpayClearpay)],
-            paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical,
+            paymentMethodMessagingPromotionsHelper: ._testValue()
         )
         let sut = EmbeddedPaymentElement(
             configuration: configuration,

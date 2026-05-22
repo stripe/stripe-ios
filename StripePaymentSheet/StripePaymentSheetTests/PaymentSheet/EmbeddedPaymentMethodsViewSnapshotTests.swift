@@ -1491,6 +1491,7 @@ extension EmbeddedPaymentMethodsView {
             savedPaymentMethods: savedPaymentMethods,
             customer: customer,
             incentive: incentive,
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             analyticsHelper: ._testValue(),
             delegate: nil
         )

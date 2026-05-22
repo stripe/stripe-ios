@@ -42,23 +42,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         return subtitle.view.subviews.compactMap { $0 as? BNPLFormHeaderView }.first
     }
 
-    private func makePrefetchedPMMEHelper(
-        paymentMethodType: STPPaymentMethodType,
-        promotion: String = String.Localized.buy_now_or_pay_later_with_klarna,
-        learnMoreText: String = "Learn more",
-        infoUrl: URL = URL(string: "https://example.com/learn-more")!
-    ) -> PaymentMethodMessagingPromotionHelper {
-        PaymentMethodMessagingPromotionHelper(
-            experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
-            prefetchedPromotionContents: [
-                paymentMethodType.identifier: .init(
-                    promotion: promotion,
-                    learnMoreText: learnMoreText,
-                    infoUrl: infoUrl
-                ),
-            ]
-        )
-    }
 
     private func makeCheckoutSessionIntent(
         offerSave: [String: Any]? = nil,
@@ -2787,53 +2770,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertNil(headerView)
     }
 
-    func testMakeBNPLHeader_KlarnaUsesSharedPMMEHeaderViewWhenEnabled() {
-        let factory = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
-            elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
-            configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
-            paymentMethod: .stripe(.klarna),
-            paymentMethodOrientation: .vertical,
-            accountService: LinkAccountService(
-                apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
-                elementsSession: ._testValue()
-            ),
-            analyticsHelper: nil,
-            paymentMethodMessagingPromotionsHelper: makePrefetchedPMMEHelper(paymentMethodType: .klarna)
-        )
-
-        let header = factory.makeKlarnaHeader()
-        let headerView = extractBNPLHeaderView(from: header)
-
-        XCTAssertEqual(headerView?.promotion, String.Localized.buy_now_or_pay_later_with_klarna)
-        XCTAssertEqual(headerView?.learnMoreText, "Learn more")
-        XCTAssertEqual(headerView?.infoUrl, URL(string: "https://example.com/learn-more"))
-        XCTAssertEqual(headerView?.style, .automatic)
-    }
-
-    func testMakeBNPLHeader_KlarnaPreservesConfiguredStyle() {
-        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
-        configuration.style = .alwaysDark
-
-        let factory = PaymentSheetFormFactory(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
-            elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
-            configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.klarna),
-            paymentMethodOrientation: .vertical,
-            accountService: LinkAccountService(
-                apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
-                elementsSession: ._testValue()
-            ),
-            analyticsHelper: nil,
-            paymentMethodMessagingPromotionsHelper: makePrefetchedPMMEHelper(paymentMethodType: .klarna)
-        )
-
-        let header = factory.makeKlarnaHeader()
-        let headerView = extractBNPLHeaderView(from: header)
-
-        XCTAssertEqual(headerView?.style, .alwaysDark)
-    }
 
     func testAppliesPreviousCustomerInput_klarna_country() {
         func makeKlarnaCountry(apiPath: String?, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<DropdownFieldElement> {

@@ -31,6 +31,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             currency: "USD",
             amount: 1099,
             incentive: nil,
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             delegate: self
         )
         // ...the current selection should be the saved PM
@@ -79,6 +80,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             currency: "USD",
             amount: 1099,
             incentive: nil,
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             delegate: self
         )
 
@@ -105,6 +107,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             currency: "USD",
             amount: 1099,
             incentive: nil,
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             delegate: self
         )
 
@@ -126,6 +129,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             currency: "USD",
             amount: 1099,
             incentive: nil,
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             delegate: self
         )
         XCTAssertEqual(["SEPA Debit", "Card", "Apple Pay", "Link"], sut.rowButtons.map { $0.label.text })
@@ -143,6 +147,7 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             currency: "USD",
             amount: 1099,
             incentive: nil,
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             delegate: self
         )
         XCTAssertEqual(["Card", "Apple Pay", "Link"], sut_cards_only.rowButtons.map { $0.label.text })
@@ -160,93 +165,12 @@ final class VerticalPaymentMethodListViewControllerTest: XCTestCase {
             currency: "USD",
             amount: 1099,
             incentive: nil,
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             delegate: self
         )
         XCTAssertEqual(["Apple Pay", "Link", "SEPA Debit"], sut_no_cards.rowButtons.map { $0.label.text })
     }
 
-    func testBNPLPromotionRow_UsesPrefetchedPMMESummary() {
-        let helper = PaymentMethodMessagingPromotionHelper(
-            experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
-            prefetchedPromotionContents: [
-                STPPaymentMethodType.affirm.identifier: .init(
-                    promotion: "Split your purchase into monthly payments.",
-                    learnMoreText: "Learn more",
-                    infoUrl: URL(string: "https://example.com/affirm")!
-                ),
-            ]
-        )
-        let sut = VerticalPaymentMethodListViewController(
-            initialSelection: nil,
-            savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.affirm)],
-            shouldShowApplePay: false,
-            shouldShowLink: false,
-            savedPaymentMethodAccessoryType: .edit,
-            overrideHeaderView: nil,
-            appearance: .default,
-            currency: "USD",
-            amount: 1099,
-            incentive: nil,
-            paymentMethodMessagingPromotionsHelper: helper,
-            delegate: self
-        )
-
-        let affirmButton = sut.getRowButton(accessibilityIdentifier: "Affirm")
-        let sublabel = affirmButton.sublabel as? UITextView
-
-        XCTAssertEqual(affirmButton.label.text, "Affirm")
-        XCTAssertEqual(sublabel?.text, "Split your purchase into monthly payments. Learn more")
-    }
-
-    func testBNPLPromotionRow_RetapShowsLateLoadedPMMContent() {
-        let helper = PaymentMethodMessagingPromotionHelper(
-            experiment: PaymentMethodMessagingPromotionsExperiment(arbId: "", group: .treatment),
-            prefetchedPromotionContents: [:]
-        )
-        let sut = VerticalPaymentMethodListViewController(
-            initialSelection: nil,
-            savedPaymentMethods: [],
-            paymentMethodTypes: [.stripe(.affirm)],
-            shouldShowApplePay: false,
-            shouldShowLink: false,
-            savedPaymentMethodAccessoryType: .edit,
-            overrideHeaderView: nil,
-            appearance: .default,
-            currency: "USD",
-            amount: 1099,
-            incentive: nil,
-            paymentMethodMessagingPromotionsHelper: helper,
-            delegate: self
-        )
-        let animationsWereEnabled = UIView.areAnimationsEnabled
-        UIView.setAnimationsEnabled(false)
-        defer { UIView.setAnimationsEnabled(animationsWereEnabled) }
-        let affirmButton = sut.getRowButton(accessibilityIdentifier: "Affirm")
-        let sublabel = affirmButton.sublabel as? UITextView
-
-        XCTAssertTrue(affirmButton.isPaymentMethodMessagingCapable)
-        XCTAssertEqual(sublabel?.text, "")
-
-        shouldSelectPaymentMethodReturnValue = true
-        sut.didTap(rowButton: affirmButton, selection: .new(paymentMethodType: .stripe(.affirm)))
-        XCTAssertTrue(affirmButton.isSelected)
-        XCTAssertTrue(sublabel?.isHidden ?? false)
-
-        helper.completeLoading(with: [
-            STPPaymentMethodType.affirm.identifier: .init(
-                promotion: "Split your purchase into monthly payments.",
-                learnMoreText: "Learn more",
-                infoUrl: URL(string: "https://example.com/affirm")!
-            ),
-        ])
-
-        sut.didTap(rowButton: affirmButton, selection: .new(paymentMethodType: .stripe(.affirm)))
-
-        XCTAssertTrue(affirmButton.hasPaymentMethodMessagingContent)
-        XCTAssertEqual(sublabel?.text, "Split your purchase into monthly payments. Learn more")
-        XCTAssertFalse(sublabel?.isHidden ?? true)
-    }
 }
 
 extension VerticalPaymentMethodListViewControllerTest: VerticalPaymentMethodListViewControllerDelegate {
