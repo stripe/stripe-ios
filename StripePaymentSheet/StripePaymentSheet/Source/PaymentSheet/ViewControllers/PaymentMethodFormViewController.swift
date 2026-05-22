@@ -554,21 +554,11 @@ extension PaymentMethodFormViewController {
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
         case .checkoutSession(let checkoutSession):
-            let amount: Int?
-            switch checkoutSession.mode {
-            case .payment:
-                amount = checkoutSession.total?.total.minorUnitsAmount
-            case .setup:
-                amount = nil
-            case .subscription, .unknown:
-                stpAssertionFailure("subscription and unknown modes not supported")
-                amount = nil
-            }
             client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: amount,
+                amount: checkoutSession.expectedAmount(),
                 currency: checkoutSession.currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
@@ -680,21 +670,11 @@ extension PaymentMethodFormViewController {
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
         case .checkoutSession(let checkoutSession):
-            let amount: Int?
-            switch checkoutSession.mode {
-            case .payment:
-                amount = checkoutSession.total?.total.minorUnitsAmount
-            case .setup:
-                amount = nil
-            case .subscription, .unknown:
-                stpAssertionFailure("subscription and unknown modes not supported")
-                amount = nil
-            }
             client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: amount,
+                amount: checkoutSession.expectedAmount(),
                 currency: checkoutSession.currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,

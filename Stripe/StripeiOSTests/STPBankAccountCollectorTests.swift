@@ -216,6 +216,7 @@ final class STPBankAccountCollectorTests: APIStubbedTestCase {
     }
 
     func testCollectBankAccountForCheckoutSessionSucceeds() {
+        // Checkout Sessions calls the link_account_sessions_for_deferred_payment endpoint, so we stub it
         stubCreateLinkAccountSessionForDeferredIntent()
 
         let collector = STPBankAccountCollector(apiClient: stubbedAPIClient())
