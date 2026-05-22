@@ -20,11 +20,9 @@ struct ElementsCustomer: Equatable, Hashable {
     /// - Parameters:
     ///   - response: The value of the `customer` key in the `v1/elements/sessions` response.
     ///   - enableLinkInSPM: Whether Link in saved payment methods is enabled.
-    ///   - includeCardArt: Whether to attach card art data to payment methods.
     public static func decoded(
         fromAPIResponse response: [AnyHashable: Any]?,
-        enableLinkInSPM: Bool,
-        includeCardArt: Bool
+        enableLinkInSPM: Bool
     ) -> ElementsCustomer? {
         guard let response else {
             return nil
@@ -32,8 +30,7 @@ struct ElementsCustomer: Equatable, Hashable {
 
         let paymentMethods = Self.parsePaymentMethods(
             from: response,
-            enableLinkInSPM: enableLinkInSPM,
-            includeCardArt: includeCardArt
+            enableLinkInSPM: enableLinkInSPM
         )
 
         // Required fields
@@ -56,14 +53,14 @@ struct ElementsCustomer: Equatable, Hashable {
         )
     }
 
-    private static func parsePaymentMethods(from response: [AnyHashable: Any], enableLinkInSPM: Bool, includeCardArt: Bool) -> [STPPaymentMethod]? {
+    private static func parsePaymentMethods(from response: [AnyHashable: Any], enableLinkInSPM: Bool) -> [STPPaymentMethod]? {
         guard let paymentMethodsArray = selectPaymentMethods(from: response, enableLinkInSPM: enableLinkInSPM) else {
             return nil
         }
 
         // Build card art lookup for post-deserialization assignment
         var cardArtByPaymentMethodId: [String: STPPaymentMethodCardArt] = [:]
-        if includeCardArt, let cardArtArray = response["card_art"] as? [[AnyHashable: Any]] {
+        if let cardArtArray = response["card_art"] as? [[AnyHashable: Any]] {
             for artJSON in cardArtArray {
                 if let paymentMethodId = artJSON["payment_method"] as? String,
                     let cardArt = STPPaymentMethodCardArt.decodedObject(fromAPIResponse: artJSON) {
