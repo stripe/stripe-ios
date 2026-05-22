@@ -52,10 +52,6 @@ class RowButton: UIView, EventHandler {
         return (rowStyle == .flatWithCheckmark || rowStyle == .flatWithDisclosure) && isEmbedded
     }
 
-    var hasSubtext: Bool {
-        sublabel.hasText
-    }
-
     var isDisplayingAccessoryView: Bool {
         guard let accessoryView else {
             return false
@@ -256,7 +252,7 @@ class RowButton: UIView, EventHandler {
         }
 
         // Don't constrain if we *are* the tallest variant; otherwise we'll infinite loop!
-        guard !hasSubtext else {
+        guard !sublabel.hasText else {
             heightConstraint?.isActive = false
             return
         }

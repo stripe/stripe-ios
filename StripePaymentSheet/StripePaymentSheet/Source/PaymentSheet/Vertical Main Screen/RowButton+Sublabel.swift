@@ -18,8 +18,6 @@ extension RowButton {
         var needsUnlimitedHeight: Bool { get }
         /// Whether the sublabel currently contains displayable content.
         var hasText: Bool { get }
-        /// The current plain-text representation of the sublabel, if any.
-        var text: String? { get }
         /// Updates the displayed text, optionally animating the visibility transition.
         func setSublabel(newText: String?, animated: Bool)
         /// Notifies the sublabel that the parent row's selection state changed.
@@ -37,12 +35,12 @@ extension RowButton {
         var needsUnlimitedHeight: Bool { false }
 
         var hasText: Bool {
-            currentText?.isEmpty == false
+            guard let text = textLabel.text else {
+                return false
+            }
+            return !text.isEmpty
         }
 
-        var text: String? { currentText }
-
-        private var currentText: String?
         private let textLabel: UILabel
 
         private static let visibilityAnimationDuration: TimeInterval = 0.2
@@ -53,7 +51,6 @@ extension RowButton {
             appearance: PaymentSheet.Appearance,
             isEmbedded: Bool
         ) {
-            self.currentText = text
             self.textLabel = UILabel()
 
             super.init(frame: .zero)
@@ -85,9 +82,8 @@ extension RowButton {
             }()
 
             textLabel.textColor = textColor
-            textLabel.isHidden = text?.isEmpty ?? true
-
             addAndPinSubview(textLabel)
+            self.isHidden = text?.isEmpty ?? true
         }
 
         required init?(coder: NSCoder) {
@@ -95,13 +91,12 @@ extension RowButton {
         }
 
         func setSublabel(newText: String?, animated: Bool) {
-            guard newText != currentText else { return }
+            guard newText != textLabel.text else { return }
 
             let showDuration = animated ? Self.visibilityAnimationDuration : 0
             let fadeDuration = animated ? Self.fadeAnimationDuration : 0
 
             if let newText {
-                currentText = newText
                 textLabel.text = newText
                 alpha = 0
                 UIView.animate(withDuration: showDuration) {
@@ -115,7 +110,7 @@ extension RowButton {
                 }
             } else {
                 UIView.animate(withDuration: showDuration) {
-                    self.currentText = nil
+                    self.textLabel.text = nil
                     self.isHidden = true
                     self.superview?.setNeedsLayout()
                     self.superview?.layoutIfNeeded()
