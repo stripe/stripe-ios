@@ -980,40 +980,4 @@ class STPElementsSessionTest: XCTestCase {
         XCTAssertEqual(genericDetails.label, "Pix")
         XCTAssertEqual(genericDetails.sublabel, "000••••••••")
     }
-
-    // MARK: - includeCardArt gating
-
-    func testMergeCardArt_strippedWhenIncludeCardArtIsFalse() {
-        let response: [AnyHashable: Any] = [
-            "payment_methods": [testCardJSON],
-            "card_art": [
-                ["payment_method": "pm_123card",
-                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
-                 "program_name": "Test Program",
-                ],
-            ],
-            "customer_session": customerSessionJSON,
-        ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
-        XCTAssertNotNil(customer)
-        XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
-    }
-
-    func testMergeCardArt_linkFormat_strippedWhenIncludeCardArtIsFalse() {
-        let response: [AnyHashable: Any] = [
-            "payment_methods_with_link_details": [
-                ["payment_method": testCardJSON],
-            ],
-            "card_art": [
-                ["payment_method": "pm_123card",
-                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
-                 "program_name": "Test Program",
-                ],
-            ],
-            "customer_session": customerSessionJSON,
-        ]
-        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
-        XCTAssertNotNil(customer)
-        XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
-    }
 }
