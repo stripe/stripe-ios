@@ -293,7 +293,7 @@ import UIKit
                 amount = nil
                 currency = _currency
             }
-            bankAccountCollector.collectBankAccountForDeferredIntent(
+            bankAccountCollector.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: "ios_instant_debits_only_\(UUID().uuidString)",
                 returnURL: configuration.returnURL,
                 onEvent: nil,
@@ -303,6 +303,7 @@ import UIKit
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
                 from: presentingViewController,
+                intentType: .deferred,
                 financialConnectionsCompletion: completionHandler
             )
         case .checkoutSession:
