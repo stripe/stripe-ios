@@ -148,15 +148,16 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
             selectedCountry: nil,
             addressSpecProvider: addressSpecProvider
         )
-        vc.currentSource = "google"
-        vc.results = mockSearchResults
         testWindow.rootViewController = vc
+        // Force zero safe area insets for consistent snapshots across simulator builds
         vc.additionalSafeAreaInsets = UIEdgeInsets(
             top: -vc.view.safeAreaInsets.top,
             left: -vc.view.safeAreaInsets.left,
             bottom: -vc.view.safeAreaInsets.bottom,
             right: -vc.view.safeAreaInsets.right
         )
+        vc.currentSource = "google"
+        vc.results = mockSearchResults
 
         verify(vc.view)
     }
@@ -171,15 +172,16 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
             selectedCountry: nil,
             addressSpecProvider: addressSpecProvider
         )
-        vc.currentSource = "google"
-        vc.results = mockSearchResults
         testWindow.rootViewController = vc
+        // Force zero safe area insets for consistent snapshots across simulator builds
         vc.additionalSafeAreaInsets = UIEdgeInsets(
             top: -vc.view.safeAreaInsets.top,
             left: -vc.view.safeAreaInsets.left,
             bottom: -vc.view.safeAreaInsets.bottom,
             right: -vc.view.safeAreaInsets.right
         )
+        vc.currentSource = "google"
+        vc.results = mockSearchResults
 
         verify(vc.view)
     }
