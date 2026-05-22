@@ -19,7 +19,7 @@ extension RowButton {
         /// Whether the sublabel currently contains displayable content.
         var hasText: Bool { get }
         /// Updates the displayed text, optionally animating the visibility transition.
-        func setSublabel(newText: String?, animated: Bool)
+        func setSublabel(text: String?, animated: Bool)
         /// Notifies the sublabel that the parent row's selection state changed.
         func updateSelectedState(_ isRowSelected: Bool)
     }
@@ -41,7 +41,7 @@ extension RowButton {
             return !text.isEmpty
         }
 
-        private let textLabel: UILabel
+        let textLabel: UILabel
 
         private static let visibilityAnimationDuration: TimeInterval = 0.2
         private static let fadeAnimationDuration: TimeInterval = 0.1
@@ -90,17 +90,17 @@ extension RowButton {
             fatalError("init(coder:) has not been implemented")
         }
 
-        func setSublabel(newText: String?, animated: Bool) {
-            guard newText != textLabel.text else { return }
+        func setSublabel(text: String?, animated: Bool) {
+            guard text != textLabel.text else { return }
 
             let showDuration = animated ? Self.visibilityAnimationDuration : 0
             let fadeDuration = animated ? Self.fadeAnimationDuration : 0
 
-            if let newText {
-                textLabel.text = newText
+            if let text {
+                textLabel.text = text
                 alpha = 0
                 UIView.animate(withDuration: showDuration) {
-                    self.isHidden = newText.isEmpty
+                    self.isHidden = text.isEmpty
                 }
                 UIView.animate(
                     withDuration: fadeDuration,

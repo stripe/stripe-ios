@@ -169,7 +169,7 @@ class RowButton: UIView, EventHandler {
     }
 
     func setSublabel(text: String?, animated: Bool = true) {
-        sublabel.setSublabel(newText: text, animated: animated)
+        sublabel.setSublabel(text: text, animated: animated)
     }
 
     func setLabel(text: String) {
