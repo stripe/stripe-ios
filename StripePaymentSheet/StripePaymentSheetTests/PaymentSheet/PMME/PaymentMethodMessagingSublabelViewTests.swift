@@ -88,27 +88,6 @@ class PaymentMethodMessagingSublabelViewTests: XCTestCase {
         XCTAssertTrue(sublabelView.isHidden)
     }
 
-    func testUpdateSelectedState_true_calledTwice_doesNotReExpand() {
-        let helper = makeHelper(
-            isInTreatment: true,
-            contents: ["klarna": makePromotionContent()]
-        )
-        let sublabelView = makeSublabelView(helper: helper)
-
-        var layoutUpdateCount = 0
-        sublabelView.onLayoutNeedsUpdate = {
-            layoutUpdateCount += 1
-        }
-
-        sublabelView.updateSelectedState(true)
-        let countAfterFirstExpand = layoutUpdateCount
-
-        sublabelView.updateSelectedState(true)
-        let countAfterSecondExpand = layoutUpdateCount
-
-        XCTAssertEqual(countAfterFirstExpand, countAfterSecondExpand, "Second call to updateSelectedState(true) should be a no-op")
-    }
-
     // MARK: - RowButton.makeForPaymentMethodType branching logic tests
 
     func testMakeForPaymentMethodType_treatmentGroup_supportedMethod_usesPMMSublabel() {
