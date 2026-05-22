@@ -55,9 +55,6 @@ extension RowButton {
             return textView
         }()
 
-        // TODO: wire this up
-        var onLayoutNeedsUpdate: (() -> Void)?
-
         init(
             appearance: PaymentSheet.Appearance,
             paymentMethodType: PaymentSheet.PaymentMethodType,
@@ -116,7 +113,6 @@ extension RowButton {
             UIView.animate(withDuration: sublabelVisibilityAnimationDuration) { [self] in
                 self.isHidden = false
                 promotionTextView.isHidden = false
-                onLayoutNeedsUpdate?()
             }
 
             UIView.animate(
@@ -131,7 +127,6 @@ extension RowButton {
             UIView.animate(withDuration: sublabelVisibilityAnimationDuration) { [self] in
                 self.isHidden = true
                 promotionTextView.isHidden = true
-                onLayoutNeedsUpdate?()
             }
 
             UIView.animate(withDuration: sublabelVisibilityAnimationDuration) { [self] in
