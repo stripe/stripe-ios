@@ -21,11 +21,14 @@ final class SuccessViewController: UIViewController {
     private var linkBrand: LinkBrand {
         PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: dataSource.manifest.linkBrand) ?? .link
     }
+    private var showSaveToLinkFailedNotice: Bool {
+        dataSource.saveToLinkWithStripeSucceeded == false
+    }
     private var successSubtitle: String {
         dataSource.customSuccessPaneSubCaption ?? CreateSubtitleText(
             // manual entry has "0" linked accounts count
             isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
-            showSaveToLinkFailedNotice: (dataSource.saveToLinkWithStripeSucceeded == false),
+            showSaveToLinkFailedNotice: showSaveToLinkFailedNotice,
             linkBrand: linkBrand
         )
     }
