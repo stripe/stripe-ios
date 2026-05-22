@@ -189,21 +189,19 @@ extension RowButton {
         // the normal sublabel should have it's height constrained by the row button
         var needsUnlimitedHeight: Bool { false }
         var hasText: Bool {
-            guard let text else {
+            guard let text = self.textLabel.text else {
                 return false
             }
             return !text.isEmpty
         }
         
-        private var text: String?
+        private let textLabel: UILabel
 
         init(
             text: String?,
             appearance: PaymentSheet.Appearance,
             isEmbedded: Bool
         ) {
-            self.text = text
-            
             let sublabel = UILabel()
             if isEmbedded, let customFont = appearance.embeddedPaymentElement.row.subtitleFont {
                 sublabel.font = customFont
@@ -229,10 +227,11 @@ extension RowButton {
             }()
 
             sublabel.textColor = textColor
-            sublabel.isHidden = text?.isEmpty ?? true
+            self.textLabel = sublabel
             super.init(frame: .zero)
 
             addAndPinSubview(sublabel)
+            self.isHidden = text?.isEmpty ?? true
         }
         
         required init?(coder: NSCoder) {
@@ -241,21 +240,21 @@ extension RowButton {
         
         func setSublabel(newText: String?, animated: Bool) {
             // Do nothing if there is no actual text change
-            guard newText != self.text else {
+            guard newText != self.textLabel.text else {
                 return
             }
             let duration = animated ? sublabelVisibilityAnimationDuration : 0
             let fadeDuration = animated ? sublabelFadeAnimationDuration : 0
             guard let newText else {
                 UIView.animate(withDuration: duration) { [self] in
-                    self.text = nil
+                    self.textLabel.text = nil
                     isHidden = true
                     self.superview?.setNeedsLayout()
                     self.superview?.layoutIfNeeded()
                 }
                 return
             }
-            self.text = newText
+            self.textLabel.text = newText
             alpha = 0
             UIView.animate(withDuration: duration) {
                 self.isHidden = newText.isEmpty

@@ -243,7 +243,7 @@ class RowButton: UIView, EventHandler {
         }
 
         // Don't do this if we *are* the tallest variant; otherwise we'll infinite loop!
-        if sublabel.hasText {
+        guard !sublabel.hasText else {
             heightConstraint?.isActive = false
             return
         }
@@ -445,7 +445,8 @@ extension RowButton {
         }()
         
         let sublabel: SublabelView
-        if promotionsHelper.isInTreatmentGroup {
+        // Use plain sublabel if we are in the payment method messaging experiment and the payment method supports it
+        if promotionsHelper.isInTreatmentGroup && PaymentMethodMessagingPromotionsHelper.supportedPaymentMethods.contains(paymentMethodType) {
             sublabel = PaymentMethodMessagingSublabelView(
                 appearance: appearance,
                 paymentMethodType: paymentMethodType,

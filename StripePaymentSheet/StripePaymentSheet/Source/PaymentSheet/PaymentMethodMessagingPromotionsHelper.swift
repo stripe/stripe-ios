@@ -9,12 +9,6 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-private let paymentSheetPMMESupportedPaymentMethodTypes: [STPPaymentMethodType] = [
-    .afterpayClearpay,
-    .affirm,
-    .klarna,
-]
-
 @_spi(STP) public enum PaymentSheetTestHooks {
     private static let paymentMethodMessagingPromotionLoadDelayLock = NSLock()
     private static var _paymentMethodMessagingPromotionLoadDelay: TimeInterval = 0
@@ -35,6 +29,13 @@ private let paymentSheetPMMESupportedPaymentMethodTypes: [STPPaymentMethodType] 
 }
 
 final class PaymentMethodMessagingPromotionsHelper {
+    
+    static let supportedPaymentMethods: [PaymentSheet.PaymentMethodType] = [
+        .stripe(.afterpayClearpay),
+        .stripe(.affirm),
+        .stripe(.klarna)
+    ]
+    
     struct PromotionContent: Equatable {
         let promotion: String
         let learnMoreText: String
@@ -58,8 +59,8 @@ final class PaymentMethodMessagingPromotionsHelper {
         return _experiment
     }
     
-    // null until set by loading
     private let promotionsLock = NSLock()
+    // null until set by loading
     private var _promotions: [String: PromotionContent]?
     private var promotions: [String: PromotionContent]? {
         get {
@@ -105,13 +106,11 @@ final class PaymentMethodMessagingPromotionsHelper {
         guard let amount = intent.amount, let currency = intent.currency else {
             return
         }
-
+        
         // Generate list of payment methods
         let supportedPaymentMethodTypes: [STPPaymentMethodType] = paymentMethodTypes.compactMap { paymentMethodType in
-            guard case let .stripe(stpPaymentMethodType) = paymentMethodType else {
-                return nil
-            }
-            guard paymentSheetPMMESupportedPaymentMethodTypes.contains(stpPaymentMethodType) else {
+            guard Self.supportedPaymentMethods.contains(paymentMethodType),
+                  case let .stripe(stpPaymentMethodType) = paymentMethodType else {
                 return nil
             }
             return stpPaymentMethodType
@@ -158,8 +157,7 @@ final class PaymentMethodMessagingPromotionsHelper {
 
     func promotion(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromotionContent? {
         // get payment method identifier
-        guard case let .stripe(stpPaymentMethodType) = paymentMethodType,
-              paymentSheetPMMESupportedPaymentMethodTypes.contains(stpPaymentMethodType) else {
+        guard case let .stripe(stpPaymentMethodType) = paymentMethodType else {
             return nil
         }
         return promotions?[stpPaymentMethodType.identifier]
