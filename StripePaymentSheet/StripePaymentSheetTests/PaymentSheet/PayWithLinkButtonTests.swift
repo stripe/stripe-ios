@@ -26,7 +26,7 @@ final class PayWithLinkButtonTests: XCTestCase {
         let button = try XCTUnwrap(
             findPayWithLinkButton(in: header)
         )
-        XCTAssertEqual(button.accessibilityLabel, "Pay with one link")
+        XCTAssertEqual(button.accessibilityLabel, "Pay with One-link")
     }
 
     func testBrandUsesDistinctPrimaryLinkLogoAsset() {
@@ -53,7 +53,7 @@ final class PayWithLinkButtonTests: XCTestCase {
         let onelinkButton = PayWithLinkButton(brand: .onelink)
 
         XCTAssertEqual(linkButton.accessibilityLabel, "Pay with Link")
-        XCTAssertEqual(onelinkButton.accessibilityLabel, "Pay with one link")
+        XCTAssertEqual(onelinkButton.accessibilityLabel, "Pay with One-link")
     }
 
     func testOnelinkButtonReplacesBrandTextWithLogoAttachment() throws {

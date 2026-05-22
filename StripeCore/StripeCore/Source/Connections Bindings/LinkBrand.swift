@@ -27,7 +27,7 @@ import Foundation
         case .link, .unparsable:
             return "Link"
         case .onelink:
-            return "one link"
+            return "One-link"
         }
     }
 
