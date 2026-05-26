@@ -211,9 +211,6 @@ public extension CryptoOnrampCoordinator {
         /// The Stripe iOS SDK version.
         public let sdkVersion: String
 
-        /// The Stripe API request ID associated with this error, if one is available.
-        public let requestID: String?
-
         /// The backend API error code associated with this error, if one is available.
         public let apiErrorCode: String?
 
@@ -239,6 +236,15 @@ public extension CryptoOnrampCoordinator {
         }
 
         // MARK: - APIErrorDetails
+
+        /// The Stripe API request ID associated with this error, if one is available.
+        public var requestID: String? {
+            guard let stripeError = underlyingError as? StripeError,
+                  case let .apiError(apiError) = stripeError else {
+                return nil
+            }
+            return apiError.requestID
+        }
 
         /// A localized message that can be shown to the app user.
         public var userFacingMessage: String {
@@ -428,7 +434,6 @@ extension CryptoOnrampCoordinator {
             appIdentifier: Bundle.main.bundleIdentifier,
             mode: apiClient.publishableKey.flatMap(Self.publishableKeyMode),
             sdkVersion: STPAPIClient.STPSDKVersion,
-            requestID: apiError.requestID,
             apiErrorCode: apiError.code,
             apiErrorType: apiErrorType(from: apiError),
             apiErrorMessage: apiError.message,
