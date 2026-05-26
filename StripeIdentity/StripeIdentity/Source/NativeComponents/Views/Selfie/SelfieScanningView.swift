@@ -683,7 +683,7 @@ private final class CaptureTickMarksView: UIView {
         static let centeredShadowRingColor = UIColor.black.withAlphaComponent(0.34)
         static let centeredShadowOuterColor = UIColor.black.withAlphaComponent(0.42)
         static let centeredShadowClearPadding: CGFloat = 0
-        static let centeredShadowFeatherPadding: CGFloat = 28
+        static let centeredShadowFeatherPadding: CGFloat = 34
     }
 
     var showsCenteredShadow: Bool = false {
