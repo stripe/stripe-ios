@@ -89,9 +89,18 @@ final class SelfieScanningView: UIView {
                     )
                 case .uploading:
                     return STPLocalizedString(
-                        "Uploading",
-                        "Status text displayed over the blurred selfie while uploading"
+                        "Great! Checking your images....",
+                        "Status text displayed over the blurred selfie while checking uploaded selfie images"
                     )
+                }
+            }
+
+            var showsActivityIndicator: Bool {
+                switch self {
+                case .holdStill:
+                    return false
+                case .uploading:
+                    return true
                 }
             }
         }
@@ -222,6 +231,25 @@ final class SelfieScanningView: UIView {
         return label
     }()
 
+    private let statusActivityIndicatorView: ActivityIndicator = {
+        let activityIndicatorView = ActivityIndicator(size: .medium)
+        activityIndicatorView.color = .white
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.isHidden = true
+        return activityIndicatorView
+    }()
+
+    private lazy var statusContentStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            statusActivityIndicatorView,
+            statusLabel,
+        ])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = 8
+        return stackView
+    }()
+
     private let statusLabelContainerView: UIView = {
         let view = UIView()
         view.backgroundColor = UIColor(
@@ -335,6 +363,7 @@ final class SelfieScanningView: UIView {
         captureTickMarksView.isHidden = true
         captureTickMarksView.showsCenteredShadow = false
         statusLabelContainerView.isHidden = true
+        statusActivityIndicatorView.stopAnimating()
         previewContainerView.isHidden = true
         havingTroubleLabel.isHidden = true
         scannedImageScrollView.isHidden = true
@@ -444,7 +473,7 @@ extension SelfieScanningView {
         previewContainerView.contentView.addAndPinSubview(flashOverlayView)
         previewContainerView.contentView.addSubview(statusLabelContainerView)
         statusLabelContainerView.addAndPinSubview(
-            statusLabel,
+            statusContentStackView,
             insets: .init(top: 8, leading: 8, bottom: 8, trailing: 8)
         )
 
@@ -538,6 +567,12 @@ extension SelfieScanningView {
 
     fileprivate func configureStatusLabel(_ statusText: ViewModel.StatusText) {
         statusLabel.text = statusText.text
+        statusActivityIndicatorView.isHidden = !statusText.showsActivityIndicator
+        if statusText.showsActivityIndicator {
+            statusActivityIndicatorView.startAnimating()
+        } else {
+            statusActivityIndicatorView.stopAnimating()
+        }
         statusLabelContainerView.isHidden = false
     }
 

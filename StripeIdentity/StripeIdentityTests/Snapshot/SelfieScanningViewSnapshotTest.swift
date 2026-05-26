@@ -10,6 +10,7 @@ import Foundation
 import iOSSnapshotTestCase
 @_spi(STP) import StripeCameraCore
 @_spi(STP) import StripeCameraCoreTestUtils
+@_spi(STP) import StripeUICore
 import UIKit
 
 import StripeCoreTestUtils
@@ -32,6 +33,16 @@ final class SelfieScanningViewSnapshotTest: STPSnapshotTestCase {
         mockCameraSession.mockImage = SelfieScanningViewSnapshotTest.mockSelfieImage
         return mockCameraSession
     }()
+
+    override func setUp() {
+        super.setUp()
+        ActivityIndicator.isAnimationEnabled = false
+    }
+
+    override func tearDown() {
+        ActivityIndicator.isAnimationEnabled = true
+        super.tearDown()
+    }
 
     func testBlank() {
         verifyView(

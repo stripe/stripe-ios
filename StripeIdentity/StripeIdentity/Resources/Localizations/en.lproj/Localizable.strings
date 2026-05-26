@@ -295,6 +295,9 @@
 /* Status text displayed over the blurred selfie while uploading */
 "Uploading" = "Uploading";
 
+/* Status text displayed over the blurred selfie while checking uploaded selfie images */
+"Great! Checking your images...." = "Great! Checking your images....";
+
 /* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
 "Uploading back %@ photo" = "Uploading back %@ photo";
 
