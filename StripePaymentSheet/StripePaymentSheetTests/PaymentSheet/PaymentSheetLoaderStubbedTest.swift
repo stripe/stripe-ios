@@ -597,6 +597,78 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
+    // MARK: - Link Lookup Session Preservation
+
+    @MainActor
+    func testLookupLink_preservesVerifiedSessionForMatchingAccountOnReload() async throws {
+        var didCallLookup = false
+        stub { urlRequest in
+            if urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true {
+                didCallLookup = true
+                return true
+            }
+            return false
+        } response: { _ in
+            HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+        }
+
+        LinkAccountContext.shared.account = makeVerifiedLinkAccount(email: "foo@bar.com")
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        configuration.apiClient = stubbedAPIClient()
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+
+        let linkAccount = try await PaymentSheetLoader.lookupLinkAccount(
+            elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
+            configuration: configuration,
+            prefetchedEmailAndSource: nil,
+            loadTimings: .init(),
+            isUpdate: false
+        )
+
+        XCTAssertTrue(didCallLookup, "Expected Link lookup to still run when reloading PaymentSheet")
+        XCTAssertEqual(linkAccount?.consumerSessionClientSecret, "pscs_persisted")
+        XCTAssertEqual(linkAccount?.sessionState, .verified)
+    }
+
+    @MainActor
+    func testLookupLink_doesNotPreserveVerifiedSessionForDifferentAccountOnReload() async throws {
+        var didCallLookup = false
+        stub { urlRequest in
+            if urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true {
+                didCallLookup = true
+                return true
+            }
+            return false
+        } response: { _ in
+            HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+        }
+
+        LinkAccountContext.shared.account = makeVerifiedLinkAccount(email: "different@bar.com")
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        configuration.apiClient = stubbedAPIClient()
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+
+        let linkAccount = try await PaymentSheetLoader.lookupLinkAccount(
+            elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
+            configuration: configuration,
+            prefetchedEmailAndSource: nil,
+            loadTimings: .init(),
+            isUpdate: false
+        )
+
+        XCTAssertTrue(didCallLookup, "Expected Link lookup to run for the new email")
+        XCTAssertEqual(linkAccount?.consumerSessionClientSecret, "pscs_abc123")
+        XCTAssertEqual(linkAccount?.sessionState, .requiresVerification)
+    }
+
     // MARK: - Link Lookup Holdback Tests
 
     @MainActor
@@ -642,6 +714,34 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         } else {
             XCTAssertFalse(didCallLookup, message)
         }
+    }
+
+    private func makeVerifiedLinkAccount(
+        email: String,
+        clientSecret: String = "pscs_persisted"
+    ) -> PaymentSheetLinkAccount {
+        let verifiedSession = ConsumerSession.make(
+            clientSecret: clientSecret,
+            emailAddress: email,
+            redactedFormattedPhoneNumber: "(***) *** **12",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [.init(type: .sms, state: .verified)],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil,
+            currentAuthenticationLevel: .oneFactorAuth,
+            minimumAuthenticationLevel: .oneFactorAuth
+        )
+
+        return PaymentSheetLinkAccount(
+            email: email,
+            session: verifiedSession,
+            publishableKey: "pk_test_persisted",
+            displayablePaymentDetails: nil,
+            apiClient: stubbedAPIClient(),
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
     }
 
     func testLookupLink_linkDisabled_holdbackGlobal_shouldLookup() async throws {
@@ -780,30 +880,17 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
     // MARK: - hasCardArt
 
-    func testHasCardArt_enabledWithCardArt() {
+    func testHasCardArt_withCardArt() {
         let pm = STPPaymentMethod._testCardWithCardArt()
-        var appearance = PaymentSheet.Appearance()
-        appearance.cardArtEnabled = true
-        XCTAssertTrue(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm], appearance: appearance))
+        XCTAssertTrue(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm]))
     }
 
-    func testHasCardArt_disabledWithCardArt() {
-        let pm = STPPaymentMethod._testCardWithCardArt()
-        var appearance = PaymentSheet.Appearance()
-        appearance.cardArtEnabled = false
-        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm], appearance: appearance))
-    }
-
-    func testHasCardArt_enabledWithoutCardArt() {
+    func testHasCardArt_withoutCardArt() {
         let pm = STPPaymentMethod._testCard()
-        var appearance = PaymentSheet.Appearance()
-        appearance.cardArtEnabled = true
-        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm], appearance: appearance))
+        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [pm]))
     }
 
     func testHasCardArt_emptyPaymentMethods() {
-        var appearance = PaymentSheet.Appearance()
-        appearance.cardArtEnabled = true
-        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: [], appearance: appearance))
+        XCTAssertFalse(PaymentSheetLoader.hasCardArt(savedPaymentMethods: []))
     }
 }

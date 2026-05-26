@@ -8,7 +8,8 @@
 
 import Foundation
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// The loading state of the checkout session.
     public enum State {
@@ -20,7 +21,8 @@ extension Checkout {
     }
 }
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout.State {
     /// The most recent session data, regardless of whether a mutation or refresh is in flight.
     ///

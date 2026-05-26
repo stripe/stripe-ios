@@ -25,6 +25,8 @@ struct LinkPMDisplayDetails {
 }
 
 @_spi(STP) public class PaymentSheetLinkAccount: PaymentSheetLinkAccountInfoProtocol {
+    @_spi(STP) public static var forcedConsumerLinkBrandForTesting: LinkBrand?
+
     @_spi(STP) public enum SessionState: String {
         case requiresSignUp
         case requiresVerification
@@ -80,6 +82,13 @@ struct LinkPMDisplayDetails {
 
     /// Publishable key of the Consumer Account.
     private(set) var publishableKey: String?
+
+    var linkBrand: LinkBrand? {
+        guard sessionState == .verified else {
+            return nil
+        }
+        return Self.forcedConsumerLinkBrandForTesting ?? currentSession?.linkBrand
+    }
 
     var paymentSheetLinkAccountDelegate: PaymentSheetLinkAccountDelegate?
 
@@ -534,12 +543,28 @@ struct LinkPMDisplayDetails {
     }
 
     func logout() {
+        LinkAccountContext.shared.account = nil
         guard let session = currentSession else {
             return
         }
         session.logout(with: apiClient, requestSurface: requestSurface) { _ in
             // We don't need to do anything if this fails, the key will expire automatically.
         }
+    }
+
+    /// Reuses a previously verified session when a subsequent lookup resolves to the same Link account.
+    func reuseVerifiedSession(from existingAccount: PaymentSheetLinkAccount) {
+        guard
+            sessionState != .verified,
+            isRegistered,
+            existingAccount.sessionState == .verified,
+            email.caseInsensitiveCompare(existingAccount.email) == .orderedSame
+        else {
+            return
+        }
+
+        currentSession = existingAccount.currentSession
+        publishableKey = publishableKey ?? existingAccount.publishableKey
     }
 }
 
@@ -720,24 +745,16 @@ extension ParsedEnum where E == LinkSettings.FundingSource {
 // MARK: UpdatePaymentDetailsParams
 
 struct UpdatePaymentDetailsParams {
-    enum DetailsType {
+    enum PaymentMethodMetadata {
         case card(
             expiryDate: CardExpiryDate? = nil,
-            billingDetails: STPPaymentMethodBillingDetails? = nil,
             preferredNetwork: String? = nil
         )
-        case bankAccount(
-            billingDetails: STPPaymentMethodBillingDetails
-        )
     }
 
-    let isDefault: Bool?
-    let details: DetailsType?
-
-    init(isDefault: Bool? = nil, details: DetailsType? = nil) {
-        self.isDefault = isDefault
-        self.details = details
-    }
+    var billingDetails: STPPaymentMethodBillingDetails?
+    var isDefault: Bool?
+    var metadata: PaymentMethodMetadata?
 }
 
 protocol PaymentSheetLinkAccountDelegate {

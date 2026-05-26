@@ -6,6 +6,7 @@
 //  Copyright © 2021 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 import UIKit
@@ -17,12 +18,14 @@ extension LinkVerificationView {
             static let logoHeight: CGFloat = 24
         }
 
-        private let logoView: UIImageView = {
-            let logoView = UIImageView(image: Image.link_logo.makeImage(template: false))
+        private let brand: LinkBrand
+
+        private lazy var logoView: UIImageView = {
+            let logoView = UIImageView(image: brand.paymentSheetLogoImage)
             logoView.translatesAutoresizingMaskIntoConstraints = false
             logoView.isAccessibilityElement = true
             logoView.accessibilityTraits = .header
-            logoView.accessibilityLabel = STPPaymentMethodType.link.displayName
+            logoView.accessibilityLabel = brand.displayName
             return logoView
         }()
 
@@ -37,7 +40,8 @@ extension LinkVerificationView {
             return CGSize(width: 72, height: 32)
         }
 
-        init() {
+        init(brand: LinkBrand = .link) {
+            self.brand = brand
             super.init(frame: .zero)
 
             addSubview(logoView)

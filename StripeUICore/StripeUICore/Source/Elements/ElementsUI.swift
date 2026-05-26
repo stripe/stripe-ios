@@ -36,9 +36,13 @@ import UIKit
     }()
 
     public static func makeErrorLabel(theme: ElementsAppearance) -> UILabel {
+        return makeErrorLabel(font: theme.fonts.error, textColor: theme.colors.danger)
+    }
+
+    public static func makeErrorLabel(font: UIFont, textColor: UIColor) -> UILabel {
         let label = UILabel()
-        label.font = theme.fonts.error
-        label.textColor = theme.colors.danger
+        label.font = font
+        label.textColor = textColor
         label.numberOfLines = 0
         label.setContentHuggingPriority(.required, for: .vertical)
         return label

@@ -10,7 +10,7 @@ import OHHTTPStubsSwift
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripeCoreTestUtils
 @testable@_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CheckoutSessionsPreview) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsTestUtils
 @testable@_spi(STP) import StripeUICore
 import XCTest
@@ -23,6 +23,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         super.setUp()
         self.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         LinkAccountContext.shared.account = nil
+        StubbedBackend.stubLookup()
     }
     lazy var configuration: PaymentSheet.Configuration = {
         var config = PaymentSheet.Configuration()
@@ -679,7 +680,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(loadResult.savedPaymentMethods.count, 1)
         // ...and looks up link
         XCTAssertNotNil(LinkAccountContext.shared.account)
-        XCTAssertEqual(LinkAccountContext.shared.account?.email, "yuki@stripe.com")
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "foo@bar.com")
     }
 
     func test_loader_doesnt_fetch_Customer_when_default_billing_email() async throws {
@@ -708,9 +709,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             analyticsHelper: .init(integrationShape: .flowController, configuration: configuration),
             integrationShape: .flowController
         )
-        // ...and looks up link, preferring the default email provided
+        // ...and looks up link. The resulting Link account email comes from the consumer session returned by lookup.
         XCTAssertNotNil(LinkAccountContext.shared.account)
-        XCTAssertEqual(LinkAccountContext.shared.account?.email, configuration.defaultBillingDetails.email)
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "foo@bar.com")
     }
 
     func testLoaderLooksUpLink_CustomerSession() async throws {
@@ -737,7 +738,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         XCTAssertEqual(loadResult.elementsSession.customer?.email, "yuki@stripe.com")
         // ...and looks up link
         XCTAssertNotNil(LinkAccountContext.shared.account)
-        XCTAssertEqual(LinkAccountContext.shared.account?.email, "yuki@stripe.com")
+        XCTAssertEqual(LinkAccountContext.shared.account?.email, "foo@bar.com")
     }
 
     func testLoadPerformance() {
@@ -797,7 +798,7 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     return
                 }
                 // Verify CheckoutSession properties
-                XCTAssertEqual(loadedSession.stripeId, checkoutSessionId)
+                XCTAssertEqual(loadedSession.id, checkoutSessionId)
                 // Verify elements session is loaded
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 // Verify payment methods are loaded
@@ -838,10 +839,10 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
                     return
                 }
                 // Verify CheckoutSession properties
-                XCTAssertEqual(checkoutSession.stripeId, checkoutSessionId)
+                XCTAssertEqual(checkoutSession.id, checkoutSessionId)
                 XCTAssertEqual(checkoutSession.mode, .setup)
-                XCTAssertEqual(checkoutSession.status, .open)
-                XCTAssertEqual(checkoutSession.paymentStatus, .noPaymentRequired)
+                XCTAssertEqual(checkoutSession.status?.type, .open)
+                XCTAssertEqual(checkoutSession.status?.paymentStatus, .noPaymentRequired)
                 // Verify elements session is loaded
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
                 // Verify payment methods are loaded

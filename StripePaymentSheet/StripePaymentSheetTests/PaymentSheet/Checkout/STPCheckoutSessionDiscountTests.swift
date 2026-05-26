@@ -3,8 +3,15 @@
 //  StripePaymentSheetTests
 //
 
-@testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 import XCTest
+
+private extension STPCheckoutSession {
+    static func parseDiscounts(from dict: [AnyHashable: Any]) -> [Checkout.DiscountAmount] {
+        let currency = dict["currency"] as? String
+        return parseDiscountAmounts(from: dict, currency: currency)
+    }
+}
 
 final class STPCheckoutSessionDiscountTests: XCTestCase {
 
@@ -12,6 +19,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
 
     func testParseDiscountWithCouponAndPromotionCode() {
         let dict: [AnyHashable: Any] = [
+            "currency": "usd",
             "line_item_group": [
                 "discount_amounts": [
                     [
@@ -33,18 +41,16 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
         XCTAssertEqual(discounts.count, 1)
 
         let discount = discounts[0]
-        XCTAssertEqual(discount.coupon.id, "coupon_abc")
-        XCTAssertEqual(discount.coupon.name, "25% Off")
+        XCTAssertEqual(discount.displayName, "25% Off")
         XCTAssertEqual(discount.promotionCode, "SAVE25")
-        XCTAssertEqual(discount.amount, 500)
-        XCTAssertEqual(discount.coupon.percentOff, 25.0)
-        XCTAssertNil(discount.coupon.amountOff)
+        XCTAssertEqual(discount.amount.minorUnitsAmount, 500)
     }
 
     // MARK: - Discount with coupon only (no promotion code)
 
     func testParseDiscountWithCouponOnly() {
         let dict: [AnyHashable: Any] = [
+            "currency": "usd",
             "line_item_group": [
                 "discount_amounts": [
                     [
@@ -63,12 +69,9 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
         XCTAssertEqual(discounts.count, 1)
 
         let discount = discounts[0]
-        XCTAssertEqual(discount.coupon.id, "coupon_def")
-        XCTAssertEqual(discount.coupon.name, "$10 Off")
+        XCTAssertEqual(discount.displayName, "$10 Off")
         XCTAssertNil(discount.promotionCode)
-        XCTAssertEqual(discount.amount, 1000)
-        XCTAssertNil(discount.coupon.percentOff)
-        XCTAssertEqual(discount.coupon.amountOff, 1000)
+        XCTAssertEqual(discount.amount.minorUnitsAmount, 1000)
     }
 
     // MARK: - Zero amount is filtered out
@@ -120,6 +123,7 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
 
     func testMultipleDiscounts() {
         let dict: [AnyHashable: Any] = [
+            "currency": "usd",
             "line_item_group": [
                 "discount_amounts": [
                     [
@@ -148,23 +152,20 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
         let discounts = STPCheckoutSession.parseDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 2)
 
-        XCTAssertEqual(discounts[0].coupon.id, "coupon_first")
-        XCTAssertEqual(discounts[0].coupon.name, "First")
+        XCTAssertEqual(discounts[0].displayName, "First")
         XCTAssertEqual(discounts[0].promotionCode, "FIRST10")
-        XCTAssertEqual(discounts[0].amount, 500)
-        XCTAssertEqual(discounts[0].coupon.percentOff, 10.0)
+        XCTAssertEqual(discounts[0].amount.minorUnitsAmount, 500)
 
-        XCTAssertEqual(discounts[1].coupon.id, "coupon_second")
-        XCTAssertEqual(discounts[1].coupon.name, "Second")
+        XCTAssertEqual(discounts[1].displayName, "Second")
         XCTAssertNil(discounts[1].promotionCode)
-        XCTAssertEqual(discounts[1].amount, 200)
-        XCTAssertEqual(discounts[1].coupon.amountOff, 200)
+        XCTAssertEqual(discounts[1].amount.minorUnitsAmount, 200)
     }
 
     // MARK: - Zero amount mixed with valid discounts
 
     func testZeroAmountFilteredFromMultipleDiscounts() {
         let dict: [AnyHashable: Any] = [
+            "currency": "usd",
             "line_item_group": [
                 "discount_amounts": [
                     [
@@ -187,15 +188,15 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
 
         let discounts = STPCheckoutSession.parseDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
-        XCTAssertEqual(discounts[0].coupon.id, "coupon_valid")
-        XCTAssertEqual(discounts[0].coupon.name, "Valid")
-        XCTAssertEqual(discounts[0].amount, 300)
+        XCTAssertEqual(discounts[0].displayName, "Valid")
+        XCTAssertEqual(discounts[0].amount.minorUnitsAmount, 300)
     }
 
-    // MARK: - Missing coupon key (fallback ID)
+    // MARK: - Missing coupon key (fallback display name)
 
     func testDiscountWithNoCoupon() {
         let dict: [AnyHashable: Any] = [
+            "currency": "usd",
             "line_item_group": [
                 "discount_amounts": [
                     [
@@ -207,22 +208,20 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
 
         let discounts = STPCheckoutSession.parseDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
-        XCTAssertEqual(discounts[0].coupon.id, "coupon_0")
-        XCTAssertNil(discounts[0].coupon.name)
-        XCTAssertNil(discounts[0].coupon.percentOff)
-        XCTAssertNil(discounts[0].coupon.amountOff)
+        XCTAssertEqual(discounts[0].displayName, "Discount")
     }
 
-    // MARK: - Coupon without explicit ID uses fallback
+    // MARK: - Coupon without name uses ID then default
 
-    func testCouponWithoutIdUsesFallback() {
+    func testCouponWithoutNameFallsBackToId() {
         let dict: [AnyHashable: Any] = [
+            "currency": "usd",
             "line_item_group": [
                 "discount_amounts": [
                     [
                         "amount": 250,
                         "coupon": [
-                            "name": "No ID Coupon",
+                            "id": "coupon_no_id",
                             "percent_off": 5.0,
                         ] as [String: Any],
                     ] as [String: Any],
@@ -232,7 +231,6 @@ final class STPCheckoutSessionDiscountTests: XCTestCase {
 
         let discounts = STPCheckoutSession.parseDiscounts(from: dict)
         XCTAssertEqual(discounts.count, 1)
-        XCTAssertEqual(discounts[0].coupon.id, "coupon_0")
-        XCTAssertEqual(discounts[0].coupon.name, "No ID Coupon")
+        XCTAssertEqual(discounts[0].displayName, "coupon_no_id")
     }
 }

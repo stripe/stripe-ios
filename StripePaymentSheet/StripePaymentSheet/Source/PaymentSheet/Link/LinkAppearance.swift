@@ -8,23 +8,23 @@
 import UIKit
 
 // Customizable appearance-related configuration for Stripe-provided Link UI.
-@_spi(STP)
+@_spi(CryptoOnrampAlpha)
 public struct LinkAppearance {
 
     /// Configuration values for the primary button.
     public struct PrimaryButtonConfiguration {
 
-        /// The corner radius of of the primary button. Defaults to 0.
-        public var cornerRadius: CGFloat = .zero
+        /// The corner radius of of the primary button. Defaults to Link's primary button corner radius.
+        public var cornerRadius: CGFloat?
 
-        /// The height of the primary button. Defaults to 0.
-        public var height: CGFloat = .zero
+        /// The height of the primary button. Defaults to Link's primary button height.
+        public var height: CGFloat?
 
         /// Creates a new instance of `PrimaryButtonConfiguration`.
         /// - Parameters:
-        ///   - cornerRadius: The corner radius of of the primary button. Defaults to 0.
-        ///   - height: The height of the primary button. Defaults to 0.
-        public init(cornerRadius: CGFloat = .zero, height: CGFloat = .zero) {
+        ///   - cornerRadius: The corner radius of of the primary button. Defaults to Link's primary button corner radius.
+        ///   - height: The height of the primary button. Defaults to Link's primary button height.
+        public init(cornerRadius: CGFloat? = nil, height: CGFloat? = nil) {
             self.cornerRadius = cornerRadius
             self.height = height
         }
@@ -56,8 +56,8 @@ public struct LinkAppearance {
     /// Custom colors used throughout the Link UI. Defaults to Link colors.
     public var colors: Colors?
 
-    /// Configuration values for the primary button. Uses reasonable defaults if nothing is provided.
-    public var primaryButton: PrimaryButtonConfiguration?
+    /// Configuration values for the primary button. Uses Link defaults when individual values are not provided.
+    public var primaryButton: PrimaryButtonConfiguration
 
     /// Style options for colors in the Link UI. Defaults to automatic.
     public var style: PaymentSheet.UserInterfaceStyle = .automatic
@@ -80,7 +80,7 @@ public struct LinkAppearance {
         reduceLinkBranding: Bool = false
     ) {
         self.colors = colors
-        self.primaryButton = primaryButton
+        self.primaryButton = primaryButton ?? PrimaryButtonConfiguration()
         self.style = style
         self.reduceLinkBranding = reduceLinkBranding
     }

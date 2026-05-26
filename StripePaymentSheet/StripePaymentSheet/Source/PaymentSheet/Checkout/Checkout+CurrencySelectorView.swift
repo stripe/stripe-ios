@@ -13,7 +13,8 @@ import UIKit
 
 // MARK: - CurrencySelectorView
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A standalone currency selector for Adaptive Pricing.
     ///
@@ -50,7 +51,10 @@ extension Checkout {
         private var lastSelectedCurrency: String?
         private let containerStackView = UIStackView()
         private lazy var errorLabel: UILabel = {
-            let label = ElementsUI.makeErrorLabel(theme: appearance.asPaymentSheetAppearance().asElementsTheme)
+            let label = ElementsUI.makeErrorLabel(
+                font: appearance.scaledFont(for: appearance.font, style: .caption1),
+                textColor: appearance.danger
+            )
             label.setHiddenIfNecessary(true)
             return label
         }()
@@ -129,7 +133,7 @@ extension Checkout {
         /// on subsequent changes. Hides the view if AP data is unavailable.
         private func handleSessionUpdate() {
             guard let (session, exchangeRateMeta, rawCurrency) =
-                    CurrencySelectorUtilities.adaptivePricingData(from: checkout.state.session)
+                    CurrencySelectorUtilities.adaptivePricingData(from: checkout.stpSession)
             else {
                 tearDown()
                 return
@@ -139,7 +143,7 @@ extension Checkout {
 
             clearError()
 
-            // Build the selector after inital sesison loading, after that just update the caption
+            // Build the selector after initial session load; subsequent updates only change the caption
             if selectorView == nil {
                 buildSelectorView(session: session, exchangeRateMeta: exchangeRateMeta, currency: currency)
             }
@@ -152,22 +156,23 @@ extension Checkout {
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
             currency: CurrencySelectorUtilities.CurrencyCode
         ) {
+            let flagFont = appearance.scaledFont(for: appearance.font, style: .footnote)
             let (left, right) = CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
-                localizedPricesMetas: session.localizedPricesMetas
+                localizedPricesMetas: session.localizedPricesMetas,
+                labelContent: appearance.labelContent,
+                flagPrefixProvider: { [weak checkout] currency in
+                    checkout?.flagImageManager.flagIcon(for: currency, font: flagFont) ?? NSAttributedString()
+                }
             )
 
-            let psAppearance = appearance.asPaymentSheetAppearance()
             let newSelector = TwoOptionSelectorView(
                 leftItem: left,
                 rightItem: right,
                 selectedItemId: currency.apiValue,
-                appearance: psAppearance
+                appearance: appearance
             )
             newSelector.delegate = self
-
-            newSelector.captionLabel.font = appearance.subtitleFont
-            newSelector.captionLabel.textColor = appearance.captionColor
 
             newSelector.translatesAutoresizingMaskIntoConstraints = false
             containerStackView.insertArrangedSubview(newSelector, at: 0)
@@ -188,8 +193,6 @@ extension Checkout {
                 exchangeRateMeta: exchangeRateMeta
             )
             selectorView?.updateCaption(caption)
-            selectorView?.captionLabel.font = appearance.subtitleFont
-            selectorView?.captionLabel.textColor = appearance.captionColor
         }
 
         private func tearDown() {
@@ -214,6 +217,7 @@ extension Checkout {
             errorLabel.setHiddenIfNecessary(true)
             invalidateIntrinsicContentSize()
         }
+
     }
 }
 

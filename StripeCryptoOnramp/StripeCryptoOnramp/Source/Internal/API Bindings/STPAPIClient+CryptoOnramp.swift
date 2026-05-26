@@ -112,6 +112,88 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
+    /// Retrieves compliance identifiers still required for MiCA and CRS/CARF compliance.
+    /// - Parameters:
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: An instance of `ComplianceIdentifierRequirements` containing missing identifier requirements.
+    /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    func retrieveMissingIdentifiers(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> ComplianceIdentifierRequirements {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/identifier_requirements"
+        return try await get(
+            resource: endpoint,
+            parameters: try credentialsParameters(consumerSessionClientSecret: consumerSessionClientSecret)
+        )
+    }
+
+    /// Submits compliance identifiers for MiCA and CRS/CARF compliance.
+    /// - Parameters:
+    ///   - identifiers: Compliance identifiers collected for MiCA and CRS/CARF compliance.
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: An instance of `SubmitIdentifiersResult` describing whether the identifiers were accepted.
+    /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    @discardableResult
+    func submitIdentifiers(
+        identifiers: [ComplianceIdentifier],
+        linkAccountInfo: PaymentSheetLinkAccountInfoProtocol
+    ) async throws -> SubmitIdentifiersResult {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/eu_identifiers"
+        let requestObject = SubmitIdentifiersRequest(
+            credentials: Credentials(consumerSessionClientSecret: consumerSessionClientSecret),
+            identifiers: identifiers
+        )
+
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
+    /// Retrieves the CRS/CARF declaration text for the current Link user.
+    /// - Parameters:
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: An instance of `CRSCARFDeclaration` containing the declaration text and version.
+    /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    func retrieveCRSCARFDeclaration(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CRSCARFDeclaration {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/crs_carf_declaration"
+        return try await get(
+            resource: endpoint,
+            parameters: try credentialsParameters(consumerSessionClientSecret: consumerSessionClientSecret)
+        )
+    }
+
+    /// Confirms the current Link user accepted the CRS/CARF declaration.
+    /// - Parameters:
+    ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
+    /// - Returns: An empty response.
+    /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
+    @discardableResult
+    func confirmCRSCARFDeclaration(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> EmptyResponse {
+        guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
+            throw CryptoOnrampAPIError.missingConsumerSessionClientSecret
+        }
+
+        try validateSessionState(using: linkAccountInfo)
+
+        let endpoint = "crypto/internal/crs_carf_declaration"
+        let requestObject = EmptyRequestWithCredentials(consumerSessionClientSecret: consumerSessionClientSecret)
+        return try await post(resource: endpoint, object: requestObject)
+    }
+
     /// Begins an identity verification session, providing the necessary data used to initialize the Identity SDK.
     /// - Parameter linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
     /// - Returns: API response that includes information used to initialize the Identity SDK.
@@ -208,6 +290,12 @@ extension STPAPIClient {
         guard case .verified = linkAccountInfo.sessionState else {
             throw CryptoOnrampAPIError.linkAccountNotVerified
         }
+    }
+
+    private func credentialsParameters(consumerSessionClientSecret: String) throws -> [String: Any] {
+        return try EmptyRequestWithCredentials(
+            consumerSessionClientSecret: consumerSessionClientSecret
+        ).encodeJSONDictionary()
     }
 }
 

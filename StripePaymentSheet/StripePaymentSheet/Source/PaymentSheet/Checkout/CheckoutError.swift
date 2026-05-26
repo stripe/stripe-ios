@@ -9,7 +9,9 @@
 import Foundation
 
 /// An error returned by ``Checkout``.
-@_spi(CheckoutSessionsPreview) public enum CheckoutError: Error, LocalizedError, Sendable {
+@_spi(STP)
+@_spi(ReactNativeSDK)
+public enum CheckoutError: Error, LocalizedError, Sendable {
     /// The client secret provided to ``Checkout`` is empty.
     case invalidClientSecret
 
@@ -18,6 +20,9 @@ import Foundation
 
     /// A payment sheet or form is currently presented. Dismiss it before making changes.
     case sheetCurrentlyPresented
+
+    /// A pending Checkout operation did not complete before the timeout elapsed.
+    case timedOut
 
     /// The Stripe API returned an error with the given message.
     case apiError(message: String)
@@ -32,6 +37,8 @@ import Foundation
             return "The session is no longer active."
         case .sheetCurrentlyPresented:
             return "A payment sheet or form is currently presented. Dismiss it before making changes."
+        case .timedOut:
+            return "Timed out waiting for a Checkout operation to complete."
         case .apiError(let message):
             return message
         }

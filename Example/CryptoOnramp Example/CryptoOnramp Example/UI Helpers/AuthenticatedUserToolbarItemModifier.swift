@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 
 @_spi(CryptoOnrampAlpha) import StripeCryptoOnramp
-@_spi(STP) import StripePaymentSheet
+@_spi(CryptoOnrampAlpha) import StripePaymentSheet
 
 extension View {
 
@@ -184,16 +184,7 @@ private struct AuthenticatedUserToolbarItemModifier: ViewModifier {
                 }
             } catch {
                 await MainActor.run {
-                    let errorMessage = if
-                        let stripeError = error as? StripeError,
-                        case let .apiError(stripeAPIError) = stripeError,
-                        let message = stripeAPIError.message {
-                        message + " (\(stripeAPIError.code ?? "no error code"))"
-                    } else {
-                        error.localizedDescription
-                    }
-
-                    alert = Alert(title: "KYC verification failed", message: errorMessage)
+                    alert = Alert(title: "KYC verification failed", message: error.localizedDescription)
                 }
             }
         }

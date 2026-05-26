@@ -16,8 +16,7 @@ extension PaymentOption {
     /// Returns an icon representing the payment option, suitable for display on a checkout screen
     func makeIcon(
         currency: String?,
-        iconStyle: PaymentSheet.Appearance.IconStyle,
-        cardArtEnabled: Bool = false
+        iconStyle: PaymentSheet.Appearance.IconStyle
     ) -> UIImage {
         let isDarkMode = UIApplication.shared.activeOrFirstScene?.traitCollection.isDarkMode ?? false
         switch self {
@@ -27,17 +26,17 @@ extension PaymentOption {
             if let linkedBank = paymentOption?.instantDebitsLinkedBank {
                 return PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: linkedBank.bankName), iconStyle: iconStyle)
             } else {
-                let cardArtImage = paymentMethod.cachedCardArtImage(cardArtEnabled: cardArtEnabled)
+                let cardArtImage = paymentMethod.cachedCardArtImage()
                 return cardArtImage ?? paymentMethod.makeIcon(iconStyle: iconStyle)
             }
         case .new(let confirmParams):
             return confirmParams.makeIcon(forDarkBackground: isDarkMode, currency: currency, iconStyle: iconStyle)
         case .link(let linkConfirmOption):
             switch linkConfirmOption {
-            case .signUp(_, _, _, _, let confirmParams):
+            case .signUp(_, _, _, _, _, let confirmParams):
                 return confirmParams.makeIcon(forDarkBackground: isDarkMode, currency: currency, iconStyle: iconStyle)
             case .wallet, .withPaymentMethod, .withPaymentDetails:
-                return Image.link_icon.makeImage()
+                return Image.paymentSheetLinkLogoImage
             }
         case .external(let paymentMethod, _):
             return PaymentSheet.PaymentMethodType.external(paymentMethod).makeImage(
@@ -61,7 +60,7 @@ extension PaymentOption {
             assertionFailure("This shouldn't be called - we don't show new PMs in the saved PM collection view")
             return UIImage()
         case .link:
-            return Image.link_logo.makeImage()
+            return Image.paymentSheetLinkLogoImage
         case .external:
             assertionFailure("This shouldn't be called - we don't show EPMs in the saved PM collection view")
             return UIImage()
@@ -112,16 +111,16 @@ extension STPPaymentMethod {
         switch type {
         case .card:
             return (isLinkPaymentMethod || isLinkPassthroughMode)
-                ? Image.link_logo.makeImage()
+                ? Image.paymentSheetLinkLogoImage
                 : calculateCardBrandToDisplay().makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
         case .USBankAccount:
             return isLinkPassthroughMode
-                ? Image.link_logo.makeImage()
+                ? Image.paymentSheetLinkLogoImage
                 : PaymentSheetImageLibrary.bankIcon(for: PaymentSheetImageLibrary.bankIconCode(for: usBankAccount?.bankName), iconStyle: iconStyle)
         case .SEPADebit:
             return Image.carousel_sepa.makeImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle).withRenderingMode(.alwaysOriginal)
         case .link:
-            return Image.link_logo.makeImage()
+            return Image.paymentSheetLinkLogoImage
         default:
             assertionFailure("\(type) not supported for saved PMs")
             return makeIcon()
@@ -149,8 +148,8 @@ extension STPPaymentMethod {
         }
     }
 
-    func cachedCardArtImage(cardArtEnabled: Bool, downloadManager: DownloadManager = DownloadManager.sharedManager) -> UIImage? {
-        guard let cardArtURL = cardArtCDNURL(cardArtEnabled: cardArtEnabled) else {
+    func cachedCardArtImage(downloadManager: DownloadManager = DownloadManager.sharedManager) -> UIImage? {
+        guard let cardArtURL = cardArtCDNURL() else {
             return nil
         }
         let placeholder = downloadManager.imagePlaceHolder()
@@ -164,8 +163,8 @@ extension STPPaymentMethod {
 
     // Populates the in-memory card art cache. Promotes from disk cache if available,
     // then fires a best-effort network request to fetch the latest image.
-    func preloadCardArtImage(cardArtEnabled: Bool, downloadManager: DownloadManager = DownloadManager.sharedManager) {
-        guard let cardArtURL = cardArtCDNURL(cardArtEnabled: cardArtEnabled) else {
+    func preloadCardArtImage(downloadManager: DownloadManager = DownloadManager.sharedManager) {
+        guard let cardArtURL = cardArtCDNURL() else {
             return
         }
         // Passing a non-nil updateHandler triggers a best-effort network
@@ -196,8 +195,8 @@ extension STPPaymentMethod {
 extension STPPaymentMethod {
     /// Returns the card art CDN URL if this is a card payment method with card art available.
     static let cardArtHeight: Int = 26
-    func cardArtCDNURL(cardArtEnabled: Bool, dpr: Int = 3) -> URL? {
-        guard cardArtEnabled, let artImageURL = card?.cardArt?.artImage?.url else {
+    func cardArtCDNURL(dpr: Int = 3) -> URL? {
+        guard let artImageURL = card?.cardArt?.artImage?.url else {
             return nil
         }
         return URL(string: "https://img.stripecdn.com/cdn-cgi/image/format=auto,height=\(STPPaymentMethod.cardArtHeight),dpr=\(dpr)/\(artImageURL.absoluteString)")

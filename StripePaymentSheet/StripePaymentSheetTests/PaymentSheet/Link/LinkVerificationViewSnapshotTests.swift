@@ -8,18 +8,30 @@
 
 import StripeCoreTestUtils
 import UIKit
+import XCTest
 
 @testable@_spi(STP) import StripeCore
 @testable@_spi(STP) import StripePayments
-@testable@_spi(STP) import StripePaymentSheet
+@testable@_spi(STP) @_spi(CryptoOnrampAlpha) import StripePaymentSheet
 @testable@_spi(STP) import StripePaymentsUI
 @testable@_spi(STP) import StripeUICore
 
 class LinkVerificationViewSnapshotTests: STPSnapshotTestCase {
+    func testHeader_usesProvidedBrandForAccessibilityLabel() {
+        let sut = LinkVerificationView.Header(brand: .onelink)
+        let logoView = sut.subviews.compactMap { $0 as? UIImageView }.first
+
+        XCTAssertEqual(logoView?.accessibilityLabel, "Onelink")
+    }
 
     func testModal() {
         let sut = makeSUT(mode: .modal)
         verify(sut)
+    }
+
+    func testModalOnelink() {
+        let sut = makeSUT(mode: .modal, brand: .onelink)
+        verify(sut, identifier: "onelink")
     }
 
     func testModalWithLogout() {
@@ -83,7 +95,12 @@ extension LinkVerificationViewSnapshotTests {
         let consumerSessionClientSecret: String?
     }
 
-    func makeSUT(mode: LinkVerificationView.Mode, appearance: LinkAppearance? = nil, allowLogoutInDialog: Bool = false) -> LinkVerificationView {
+    func makeSUT(
+        mode: LinkVerificationView.Mode,
+        brand: LinkBrand = .link,
+        appearance: LinkAppearance? = nil,
+        allowLogoutInDialog: Bool = false
+    ) -> LinkVerificationView {
         let sut = LinkVerificationView(
             mode: mode,
             linkAccount: LinkAccountStub(
@@ -93,6 +110,7 @@ extension LinkVerificationViewSnapshotTests {
                 sessionState: .verified,
                 consumerSessionClientSecret: nil
             ),
+            brand: brand,
             appearance: appearance,
             allowLogoutInDialog: allowLogoutInDialog
         )

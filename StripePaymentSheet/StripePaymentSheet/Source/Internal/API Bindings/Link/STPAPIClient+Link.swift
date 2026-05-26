@@ -341,6 +341,10 @@ extension STPAPIClient {
             resource: endpoint,
             parameters: parameters
         ) { (result: Result<SessionResponse, Error>) in
+            if case .success(let sessionResponse) = result,
+               let linkBrand = sessionResponse.linkBrand {
+                sessionResponse.consumerSession.linkBrand = linkBrand
+            }
             completion(result.map { $0.consumerSession })
         }
     }
@@ -539,30 +543,23 @@ extension STPAPIClient {
             "request_surface": requestSurface.rawValue,
         ]
 
-        if let details = updateParams.details, case .card(let expiryDate, let billingDetails, let preferredNetwork) = details {
-            if let expiryDate {
-                parameters["exp_month"] = expiryDate.month
-                parameters["exp_year"] = expiryDate.year
-            }
-
-            if let billingDetails = billingDetails {
-                parameters["billing_address"] = billingDetails.consumersAPIParams
-            }
-
-            if let billingEmailAddress = billingDetails?.email, !billingEmailAddress.isEmpty {
-                // This email address needs to be lowercase or the API will reject it
-                parameters["billing_email_address"] = billingEmailAddress.lowercased()
-            }
-
-            if let preferredNetwork {
-                parameters["preferred_network"] = preferredNetwork
+        if let metadata = updateParams.metadata {
+            switch metadata {
+            case .card(let expiryDate, let preferredNetwork):
+                if let expiryDate {
+                    parameters["exp_month"] = expiryDate.month
+                    parameters["exp_year"] = expiryDate.year
+                }
+                if let preferredNetwork {
+                    parameters["preferred_network"] = preferredNetwork
+                }
             }
         }
 
-        if let details = updateParams.details, case .bankAccount(let billingDetails) = details {
+        if let billingDetails = updateParams.billingDetails {
             parameters["billing_address"] = billingDetails.consumersAPIParams
 
-            if let billingEmailAddress = billingDetails.email {
+            if let billingEmailAddress = billingDetails.email, !billingEmailAddress.isEmpty {
                 // This email address needs to be lowercase or the API will reject it
                 parameters["billing_email_address"] = billingEmailAddress.lowercased()
             }
@@ -733,7 +730,9 @@ extension STPAPIClient {
             resource: endpoint,
             parameters: parameters,
             consumerPublishableKey: consumerPublishableKey,
-            completion: completion
+            completion: { (result: Result<EmptyResponse, Error>) in
+                completion(result)
+            }
         )
     }
 }
@@ -801,6 +800,12 @@ private extension STPAPIClient {
 
     struct SessionResponse: Decodable {
         let consumerSession: ConsumerSession
+        let linkBrand: LinkBrand?
+
+        private enum CodingKeys: String, CodingKey {
+            case consumerSession
+            case linkBrand
+        }
     }
 
     struct UpdatePhoneNumberResponse: Decodable {

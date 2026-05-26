@@ -55,7 +55,16 @@ public final class EmbeddedPaymentElement {
         guard let _paymentOption else {
             return nil
         }
-        return .init(paymentOption: _paymentOption, mandateText: embeddedPaymentMethodsView.mandateText, currency: intent.currency, iconStyle: configuration.appearance.iconStyle, cardArtEnabled: configuration.appearance.cardArtEnabled)
+        return .init(
+            paymentOption: _paymentOption,
+            mandateText: embeddedPaymentMethodsView.mandateText,
+            currency: intent.currency,
+            iconStyle: configuration.appearance.iconStyle,
+            linkBrand: configuration.resolvedLinkBrand(
+                elementsSession: elementsSession,
+                linkAccount: LinkAccountContext.shared.account
+            )
+        )
     }
 
     /// An asynchronous failable initializer
@@ -96,18 +105,16 @@ public final class EmbeddedPaymentElement {
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, customer details, etc.
     /// - Returns: A valid EmbeddedPaymentElement instance
     /// - Throws: An error if loading failed.
-    @_spi(CheckoutSessionsPreview) public static func create(
+    @_spi(STP)
+    @_spi(ReactNativeSDK)
+    public static func create(
         checkout: Checkout,
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+        try await checkout.awaitPendingOperations()
+        guard let stpSession = checkout.stpSession else {
             stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
             throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
-        }
-        if checkout.state.isLoading {
-            let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.create(checkout:configuration:)."
-            assertionFailure(message)
-            throw PaymentSheetError.integrationError(nonPIIDebugDescription: message)
         }
         var config = configuration
         stpSession.applyAddressOverrides(to: &config)
@@ -163,17 +170,19 @@ public final class EmbeddedPaymentElement {
     /// - Returns: The result of the update.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
     /// - Note: If you call `update` while a previous call to `update` is still in progress, the previous call returns `.canceled`.
-    @_spi(CheckoutSessionsPreview) public func update(
+    @_spi(STP)
+    @_spi(ReactNativeSDK)
+    public func update(
         checkout: Checkout
     ) async -> UpdateResult {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+        do {
+            try await checkout.awaitPendingOperations()
+        } catch {
+            return .failed(error: error)
+        }
+        guard let stpSession = checkout.stpSession else {
             stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
             return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
-        }
-        if checkout.state.isLoading {
-            let message = "A Checkout operation is already in progress. Wait for it to complete before calling EmbeddedPaymentElement.update(checkout:)."
-            assertionFailure(message)
-            return .failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message))
         }
         stpSession.applyAddressOverrides(to: &configuration)
         return await performUpdate(mode: .checkoutSession(stpSession))
@@ -258,6 +267,7 @@ public final class EmbeddedPaymentElement {
                 elementsSession: loadResult.elementsSession,
                 savedPaymentMethods: loadResult.savedPaymentMethods,
                 analyticsHelper: self.analyticsHelper,
+                paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
                 formCache: self.formCache,
                 delegate: self
             )
@@ -405,7 +415,7 @@ public final class EmbeddedPaymentElement {
         case .applePay:
             return .applePay
         case .link:
-            return .link(option: .wallet)
+            return .link(option: .wallet(brand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: LinkAccountContext.shared.account)))
         case let .new(paymentMethodType: paymentMethodType):
             let params = IntentConfirmParams(type: paymentMethodType)
             params.setDefaultBillingDetailsIfNecessary(for: configuration)
@@ -433,6 +443,7 @@ public final class EmbeddedPaymentElement {
     internal private(set) lazy var paymentHandler: STPPaymentHandler = STPPaymentHandler(apiClient: configuration.apiClient)
 
     internal var confirmationChallenge: ConfirmationChallenge?
+    internal var linkAccountObserver: LinkAccountContextObserver?
 
     internal init(
         configuration: Configuration,
@@ -453,6 +464,14 @@ public final class EmbeddedPaymentElement {
             guard let self else { return }
             self.delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
         }
+        self.linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.embeddedPaymentMethodsView.updateLinkRow(for: LinkAccountContext.shared.account, animated: true)
+                self.informDelegateIfPaymentOptionUpdated()
+            }
+        }
+        _ = self.linkAccountObserver
         self.lastUpdatedPaymentOption = paymentOption
     }
 }
@@ -526,7 +545,9 @@ extension EmbeddedPaymentElement {
     /// - Parameter completion: A completion block containing the result of the update. Called on the main thread.
     /// - Returns: The result of the update. Any calls made to `update` before this call that are still in progress will return a `.canceled` result.
     /// - Note: Upon completion, `paymentOption` may become nil if it's no longer available.
-    @_spi(CheckoutSessionsPreview) public func update(
+    @_spi(STP)
+    @_spi(ReactNativeSDK)
+    public func update(
         checkout: Checkout,
         completion: @escaping (UpdateResult) -> Void
     ) {

@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@testable import StripePaymentSheet
+@_spi(STP) @testable import StripePaymentSheet
 import XCTest
 
 final class SavedPaymentMethodRowButtonTests: XCTestCase {
@@ -140,6 +140,42 @@ final class SavedPaymentMethodRowButtonTests: XCTestCase {
         XCTAssertTrue(sut.isSelected)
         XCTAssertEqual(sut.previousSelectedState, .unselected)
         XCTAssertTrue(sut.chevronButton.isHidden)
+    }
+
+    func testLinkPassthroughUsesConfiguredBrandForSublabel() {
+        let paymentMethod = STPPaymentMethod._testLink()
+        paymentMethod.linkPaymentDetails = nil
+        paymentMethod.isLinkPassthroughMode = true
+
+        let sut = SavedPaymentMethodRowButton(
+            paymentMethod: paymentMethod,
+            appearance: appearance,
+            linkBrand: .onelink
+        )
+
+        XCTAssertEqual(sut.rowButton.label.text, "Onelink")
+        let sublabel = sut.rowButton.sublabel as! RowButton.PlainSublabelView
+        XCTAssertEqual(sublabel.textLabel.text, "Onelink")
+    }
+
+    func testLinkPassthroughPreservesFundingDetailsInAccessibilityLabel() {
+        let paymentMethod = STPPaymentMethod._testCard()
+        paymentMethod.isLinkPassthroughMode = true
+
+        let sut = SavedPaymentMethodRowButton(
+            paymentMethod: paymentMethod,
+            appearance: appearance,
+            linkBrand: .onelink
+        )
+
+        XCTAssertEqual(sut.rowButton.label.text, "Onelink")
+        let sublabel = sut.rowButton.sublabel as! RowButton.PlainSublabelView
+        XCTAssertEqual(sublabel.textLabel.text, "•••• 4242")
+        let accessibilityLabel = (sut.rowButton.accessibilityElements?.first as? UIView)?.accessibilityLabel
+        XCTAssertEqual(
+            accessibilityLabel,
+            paymentMethod.paymentSheetAccessibilityLabel
+        )
     }
 
 }

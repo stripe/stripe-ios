@@ -24,6 +24,11 @@ class LinkLegalTermsViewSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testDefaultOnelink() {
+        let sut = makeSUT(brand: .onelink)
+        verify(sut, identifier: "onelink")
+    }
+
     func testCentered() {
         let sut = makeSUT(textAlignment: .center)
         verify(sut)
@@ -91,8 +96,8 @@ extension LinkLegalTermsViewSnapshotTests {
 
 extension LinkLegalTermsViewSnapshotTests {
 
-    func makeSUT() -> LinkLegalTermsView {
-        return LinkLegalTermsView()
+    func makeSUT(brand: LinkBrand = .link) -> LinkLegalTermsView {
+        return LinkLegalTermsView(brand: brand)
     }
 
     func makeSUT(textAlignment: NSTextAlignment) -> LinkLegalTermsView {

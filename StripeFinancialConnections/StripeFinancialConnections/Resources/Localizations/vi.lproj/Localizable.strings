@@ -26,6 +26,8 @@
 
 "Continue linking your account" = "Tiếp tục liên kết tài khoản của bạn";
 
+"Continue with %@" = "Tiếp tục với %@";
+
 "Continue with Link" = "Tiếp tục với Link";
 
 "Email address" = "Địa chỉ email";
@@ -110,6 +112,8 @@
 
 "Try searching another bank or %@" = "Hãy thử tìm ngân hàng khác hoặc %@";
 
+"Use information you previously saved with your %@ account." = "Sử dụng thông tin bạn đã lưu vào tài khoản %@ trước đây.";
+
 "Use information you previously saved with your Link account." = "Sử dụng thông tin bạn đã lưu vào tài khoản Link trước đây.";
 
 "Use test account" = "Sử dụng tài khoản thử nghiệm";
@@ -150,9 +154,13 @@
 
 "Your account numbers don't match." = "Số tài khoản của bạn không khớp.";
 
+"Your account was connected, but couldn't be saved to %@." = "Tài khoản của bạn đã được kết nối nhưng không thể lưu vào %@.";
+
 "Your account was connected, but couldn't be saved to Link." = "Tài khoản của bạn đã kết nối thành công, nhưng không thể lưu vào Link.";
 
 "Your account was connected." = "Tài khoản của bạn đã kết nối.";
+
+"Your accounts were connected, but couldn't be saved to %@." = "Các tài khoản của bạn đã được kết nối nhưng không thể lưu vào %@.";
 
 "Your accounts were connected, but couldn't be saved to Link." = "Tài khoản của bạn đã kết nối thành công, nhưng không thể lưu vào Link.";
 

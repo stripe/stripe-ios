@@ -100,6 +100,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         let customerID: String?
         let showApplePay: Bool
         let showLink: Bool
+        let linkBrand: LinkBrand
         let removeSavedPaymentMethodMessage: String?
         let merchantDisplayName: String
         let isCVCRecollectionEnabled: Bool
@@ -174,6 +175,8 @@ class SavedPaymentOptionsViewController: UIViewController {
     private let intent: Intent
     private let paymentSheetConfiguration: PaymentSheet.Configuration
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let linkBrandProvider: () -> LinkBrand
+    private var currentLinkBrand: LinkBrand
 
     var selectedPaymentOption: PaymentOption? {
         guard let index = selectedViewModelIndex, viewModels.indices.contains(index) else {
@@ -186,7 +189,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         case .applePay:
             return .applePay
         case .link:
-            return .link(option: .wallet)
+            return .link(option: .wallet(brand: currentLinkBrand))
         case let .saved(paymentMethod):
             return .saved(paymentMethod: paymentMethod, confirmParams: selectedPaymentOptionIntentConfirmParams)
         }
@@ -242,6 +245,7 @@ class SavedPaymentOptionsViewController: UIViewController {
     private var selectedViewModelIndex: Int?
     private var viewModels: [Selection] = []
     private let cbcEligible: Bool
+    private var linkAccountObserver: LinkAccountContextObserver?
 
     private var selectedIndexPath: IndexPath? {
         guard
@@ -335,6 +339,7 @@ class SavedPaymentOptionsViewController: UIViewController {
         elementsSession: STPElementsSession,
         cbcEligible: Bool = false,
         analyticsHelper: PaymentSheetAnalyticsHelper,
+        linkBrandProvider: (() -> LinkBrand)? = nil,
         delegate: SavedPaymentOptionsViewControllerDelegate? = nil
     ) {
         self.savedPaymentMethods = savedPaymentMethods
@@ -347,6 +352,8 @@ class SavedPaymentOptionsViewController: UIViewController {
         self.cbcEligible = cbcEligible
         self.delegate = delegate
         self.analyticsHelper = analyticsHelper
+        self.currentLinkBrand = configuration.linkBrand
+        self.linkBrandProvider = linkBrandProvider ?? { configuration.linkBrand }
         super.init(nibName: nil, bundle: nil)
         updateUI()
     }
@@ -358,6 +365,14 @@ class SavedPaymentOptionsViewController: UIViewController {
     // MARK: - UIViewController
     override func viewDidLoad() {
         super.viewDidLoad()
+        if configuration.showLink {
+            linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.syncLinkBrand()
+                }
+            }
+            _ = linkAccountObserver
+        }
         view.addAndPinSubview(stackView)
     }
 
@@ -400,6 +415,17 @@ class SavedPaymentOptionsViewController: UIViewController {
         if isViewLoaded {
             updateFormElement()
         }
+    }
+
+    private func syncLinkBrand() {
+        let resolvedLinkBrand = linkBrandProvider()
+        guard resolvedLinkBrand != currentLinkBrand else {
+            return
+        }
+        currentLinkBrand = resolvedLinkBrand
+        collectionView.reloadData()
+        collectionView.selectItem(at: selectedIndexPath, animated: false, scrollPosition: [])
+        delegate?.didUpdate(self)
     }
 
     private func updateMandateView() {
@@ -535,7 +561,7 @@ extension SavedPaymentOptionsViewController: UICollectionViewDataSource, UIColle
                           allowsSetAsDefaultPM: configuration.allowsSetAsDefaultPM,
                           needsVerticalPaddingForBadge: hasDefault,
                           showDefaultPMBadge: isDefaultPaymentMethod(savedPaymentMethodId: viewModel.savedPaymentMethod?.stripeId),
-                          cardArtEnabled: appearance.cardArtEnabled)
+                          linkBrand: currentLinkBrand)
         cell.delegate = self
         cell.isRemovingPaymentMethods = self.collectionView.isRemovingPaymentMethods
         cell.appearance = appearance
@@ -867,6 +893,14 @@ private extension LinkPaymentDetails {
             return makeCardRemovalMessage(brand: cardDetails.brand, last4: cardDetails.last4)
         case .bankAccount(let bankDetails):
             return makeBankAccountRemovalMessage(last4: bankDetails.last4)
+        case .generic(let genericDetails):
+            return (
+                title: STPLocalizedString(
+                    "Remove payment method?",
+                    "Title for confirmation alert to remove a payment method"
+                ),
+                message: genericDetails.formattedDisplayText
+            )
         }
     }
 }

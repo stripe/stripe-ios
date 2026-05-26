@@ -2,17 +2,16 @@ POST
 https:\/\/stp-mobile-ci-test-backend-e1b3\.stripedemos\.com\/create_checkout_session$
 200
 text/html
-Content-Type: text/html;charset=utf-8
-Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
-Set-Cookie: rack.session=M6%2Be5d%2BEDsFFvzcEzsWYyEULwgskn4uLtgOf90zIeK2bCisp7hH%2Br%2BpjXwfxp8yrVhYXQO1i2Ov85lfAkyYgBKluab1tQKsHR%2BImJOg5mKMJ2pd3rKibauugY13l%2B4XTc47rmVofjDG2yJI3AOgCLYldw6kLiUNNZ%2BCdphzYSWupYvskOFRKvgv4qfRcoZjUwIK0g7kun0VXU3GaIJUY0eZB8rJpMpCtET3VEeisRu8%3D; path=/
-Server: Google Frontend
-x-cloud-trace-context: 5154b63c4903200c67c28b97ab4d62d3
-Via: 1.1 google
-x-xss-protection: 1; mode=block
-Date: Mon, 16 Mar 2026 18:39:36 GMT
-x-robots-tag: noindex, nofollow
-Content-Length: 358
 x-content-type-options: nosniff
+x-cloud-trace-context: a2567afa25e9f70be348b9dc1d2594ea
+Content-Type: text/html;charset=utf-8
+Set-Cookie: rack.session=Yz1eplCEN0m2MkhTX0JmXVoXy0RlJtLzReZ4J9Kxhct%2F1utY%2Bb03LNPL15LznwXU23KWP8zlmj2qTGMLpOgQBW2XfbetYAfYzrbWc%2FrcDT4z7Gkfkk2tMlV4PnrDlxTS8LqC7j2hpJy0b1FMKY0BQ65ox83Ea4BaQmhIZtJ3H8oRzBDYBpNaVsRubgNgZwBWrYCSMi%2FD6tKWqXHmcFYrVRZRyB6B1UjbK5dseY1FhMo%3D; path=/
+Server: Google Frontend
+Via: 1.1 google
+Date: Tue, 05 May 2026 03:21:07 GMT
 x-frame-options: SAMEORIGIN
+x-xss-protection: 1; mode=block
+Content-Length: 358
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
 
-{"id":"cs_test_a1skQ1dc66mMYd1gtmFC8WySTs2avYJ4Rev0CxNFRdCaJBsnrZGgwRi3hs","client_secret":"cs_test_a1skQ1dc66mMYd1gtmFC8WySTs2avYJ4Rev0CxNFRdCaJBsnrZGgwRi3hs_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51H7oXMAOnZToJom1hqiSvNGsUVTrG1SaXRSBon9xcEp0yDFAxEh5biA4n0ty6paEsD5Mo5ps1b7Taj9WAHQzjup800m8A8Nc3u"}
+{"id":"cs_test_a1LFdo8lF7mvKaxhPeQ6IeTClXaJCYoFo5dL7Yb0jGZp2NHkHxTgsAJEy2","client_secret":"cs_test_a1LFdo8lF7mvKaxhPeQ6IeTClXaJCYoFo5dL7Yb0jGZp2NHkHxTgsAJEy2_secret_fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdwbEhqYWAnPydmcHZxamgneCUl","publishable_key":"pk_test_51H7oXMAOnZToJom1hqiSvNGsUVTrG1SaXRSBon9xcEp0yDFAxEh5biA4n0ty6paEsD5Mo5ps1b7Taj9WAHQzjup800m8A8Nc3u"}

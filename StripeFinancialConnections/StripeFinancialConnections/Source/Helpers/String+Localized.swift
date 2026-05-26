@@ -11,6 +11,84 @@ import Foundation
 // Localized strings that are used in multiple contexts. Collected here to avoid re-translation
 // We use snake case to make long names easier to read.
 extension String.Localized {
+    @_spi(STP) public static func continue_with_link(brand: LinkBrand) -> String {
+        switch brand {
+        case .link, .unparsable:
+            return STPLocalizedString(
+                "Continue with Link",
+                """
+                A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
+                   The title of a screen where users are informed that they can sign-in-to Link.
+                """
+            )
+        case .onelink:
+            return String(
+                format: STPLocalizedString(
+                    "Continue with %@",
+                    """
+                    A button title. This button, when pressed, will automatically log-in the user with their e-mail to Link (one-click checkout provider).
+                       The title of a screen where users are informed that they can sign-in-to Link.
+                       The placeholder is a Stripe brand name and should not be translated.
+                    """
+                ),
+                brand.displayName
+            )
+        }
+    }
+
+    @_spi(STP) public static func use_information_you_previously_saved_with_your_brand_account(brand: LinkBrand) -> String {
+        switch brand {
+        case .link, .unparsable:
+            return STPLocalizedString(
+                "Use information you previously saved with your Link account.",
+                "The subtitle/description of a screen where users are informed that they can sign-in-to Link."
+            )
+        case .onelink:
+            return String(
+                format: STPLocalizedString(
+                    "Use information you previously saved with your %@ account.",
+                    "The subtitle/description of a screen where users are informed that they can sign in to the Link brand. The placeholder is a Stripe brand name and should not be translated."
+                ),
+                brand.displayName
+            )
+        }
+    }
+
+    @_spi(STP) public static func your_account_was_connected_but_could_not_be_saved_to_brand(brand: LinkBrand) -> String {
+        switch brand {
+        case .link, .unparsable:
+            return STPLocalizedString(
+                "Your account was connected, but couldn't be saved to Link.",
+                "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments."
+            )
+        case .onelink:
+            return String(
+                format: STPLocalizedString(
+                    "Your account was connected, but couldn't be saved to %@.",
+                    "The subtitle/description of the success screen when the user's single connected account could not be saved to the Link brand. The placeholder is a Stripe brand name and should not be translated."
+                ),
+                brand.displayName
+            )
+        }
+    }
+
+    @_spi(STP) public static func your_accounts_were_connected_but_could_not_be_saved_to_brand(brand: LinkBrand) -> String {
+        switch brand {
+        case .link, .unparsable:
+            return STPLocalizedString(
+                "Your accounts were connected, but couldn't be saved to Link.",
+                "The subtitle/description of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected, the user will be able to use the bank account for payments."
+            )
+        case .onelink:
+            return String(
+                format: STPLocalizedString(
+                    "Your accounts were connected, but couldn't be saved to %@.",
+                    "The subtitle/description of the success screen when the user's connected accounts could not be saved to the Link brand. The placeholder is a Stripe brand name and should not be translated."
+                ),
+                brand.displayName
+            )
+        }
+    }
 
     static var learn_more: String {
         return STPLocalizedString(

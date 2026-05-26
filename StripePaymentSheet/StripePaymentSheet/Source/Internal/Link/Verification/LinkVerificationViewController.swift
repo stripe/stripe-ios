@@ -37,6 +37,7 @@ final class LinkVerificationViewController: UIViewController {
     let mode: LinkVerificationView.Mode
     let linkAccount: PaymentSheetLinkAccount
 
+    private let brand: LinkBrand
     private let appearance: LinkAppearance?
     private let allowLogoutInDialog: Bool
     private let consentViewModel: LinkConsentViewModel?
@@ -49,6 +50,7 @@ final class LinkVerificationViewController: UIViewController {
         let verificationView = LinkVerificationView(
             mode: mode,
             linkAccount: linkAccount,
+            brand: brand,
             appearance: appearance,
             allowLogoutInDialog: allowLogoutInDialog,
             consentViewModel: consentViewModel
@@ -74,12 +76,14 @@ final class LinkVerificationViewController: UIViewController {
     required init(
         mode: LinkVerificationView.Mode = .modal,
         linkAccount: PaymentSheetLinkAccount,
+        brand: LinkBrand = .link,
         appearance: LinkAppearance? = nil,
         allowLogoutInDialog: Bool = false,
         consentViewModel: LinkConsentViewModel? = nil
     ) {
         self.mode = mode
         self.linkAccount = linkAccount
+        self.brand = brand
         self.appearance = appearance
         self.allowLogoutInDialog = allowLogoutInDialog
         self.consentViewModel = consentViewModel

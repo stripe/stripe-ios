@@ -26,6 +26,8 @@
 
 "Continue linking your account" = "Continuați asocierea contului dvs.";
 
+"Continue with %@" = "Continuați cu %@";
+
 "Continue with Link" = "Continuare cu Link";
 
 "Email address" = "Adresă de e-mail";
@@ -110,6 +112,8 @@
 
 "Try searching another bank or %@" = "Încercați să căutați o altă bancă sau %@";
 
+"Use information you previously saved with your %@ account." = "Folosiți informațiile pe care le-ați salvat anterior în contul dvs. %@.";
+
 "Use information you previously saved with your Link account." = "Utilizați informațiile pe care le-ați salvat anterior cu contul dvs. Link.";
 
 "Use test account" = "Utilizați un cont de testare";
@@ -150,9 +154,13 @@
 
 "Your account numbers don't match." = "Numerele dvs. de cont nu corespund.";
 
+"Your account was connected, but couldn't be saved to %@." = "Contul dvs. era conectat, dar nu a putut fi salvat în %@.";
+
 "Your account was connected, but couldn't be saved to Link." = "Contul dvs. a fost conectat, dar nu a putut fi salvat în Link.";
 
 "Your account was connected." = "Contul dvs. a fost conectat.";
+
+"Your accounts were connected, but couldn't be saved to %@." = "Conturile dvs. erau conectate, dar nu au putut fi salvate în %@.";
 
 "Your accounts were connected, but couldn't be saved to Link." = "Conturile dvs. au fost conectate, dar nu au putut fi salvate în Link.";
 

@@ -6,62 +6,116 @@
 //
 
 import Foundation
+@_spi(STP) import StripePayments
 
-// MARK: - Session Protocol
+// MARK: - Session
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
-    /// A read-only snapshot of a Stripe Checkout Session.
-    public protocol Session {
-        /// Unique identifier for this checkout session.
-        var id: String { get }
+    /// A read-only representation of a Stripe Checkout Session.
+    public final class Session {
+        /// The ID of the Checkout Session.
+        public let id: String
 
-        /// The status of this checkout session, or `nil` if not yet determined.
-        var status: Checkout.Status? { get }
+        /// Billing details of the customer.
+        public let billingAddress: Checkout.ContactAddress?
 
-        /// The payment status of this checkout session.
-        var paymentStatus: Checkout.PaymentStatus { get }
+        /// The business name as configured in the Business Public Details settings of
+        /// your Stripe account.
+        public let businessName: String?
 
         /// Three-letter ISO 4217 currency code in lowercase (e.g. `"usd"`).
-        var currency: String? { get }
+        public let currency: String?
 
-        /// Whether this session was created in live mode.
-        var livemode: Bool { get }
+        /// The currency options available on the Checkout Session when adaptive pricing is active.
+        /// Empty when adaptive pricing is not active.
+        public let currencyOptions: [Checkout.CurrencyOption]
 
-        /// A summary of monetary totals for this session, or `nil` if not yet available.
-        var totals: Checkout.Totals? { get }
+        /// The aggregate amounts calculated per discount for all line items.
+        public let discountAmounts: [Checkout.DiscountAmount]
 
-        /// The line items purchased by the customer.
-        var lineItems: [Checkout.LineItem] { get }
+        /// The customer's email address.
+        public let email: String?
 
-        /// The shipping rate options available for this session.
-        var shippingOptions: [Checkout.ShippingOption] { get }
+        /// The line items the customer is purchasing.
+        public let lineItems: [Checkout.LineItem]
 
-        /// The discounts applied to this session.
-        var discounts: [Checkout.Discount] { get }
+        /// `true` if this object exists in live mode, `false` for test mode.
+        public let livemode: Bool
 
-        /// The ID of the Stripe customer for this session, or `nil` if no customer is attached.
-        var customerId: String? { get }
+        /// The factor used to convert between minor and major currency units. For USD this
+        /// is `100`; for JPY this is `1`. `nil` when the session has no currency (e.g. setup mode).
+        public let minorUnitsAmountDivisor: Int?
 
-        /// The customer's email address, or `nil` if not available.
-        var customerEmail: String? { get }
+        /// Payment methods attached to the customer.
+        public let savedPaymentMethods: [STPPaymentMethod]
 
-        /// The URL to the hosted Checkout page, or `nil` if not using hosted mode.
-        var url: URL? { get }
+        /// The selected shipping option, if any.
+        public let shipping: Checkout.SelectedShipping?
 
-        /// The billing contact details and address set via
-        /// ``Checkout.updateBillingAddress(name:phone:address:)``, or `nil`.
-        var billingAddress: Checkout.ContactAddress? { get }
+        /// Shipping address of the customer.
+        public let shippingAddress: Checkout.ContactAddress?
 
-        /// The shipping contact details and address set via
-        /// ``Checkout.updateShippingAddress(name:phone:address:)``, or `nil`.
-        var shippingAddress: Checkout.ContactAddress? { get }
+        /// The list of shipping options that can be selected.
+        public let shippingOptions: [Checkout.ShippingOption]
+
+        /// Status of the Checkout Session.
+        ///
+        /// `nil` if the server did not return a status. When non-nil, ``Status.paymentStatus``
+        /// is populated from the top-level payment status.
+        public let status: Checkout.Status?
+
+        /// Details about the tax computation status and aggregated tax amounts.
+        public let tax: Checkout.Tax
+
+        /// Tax and discount details for the computed total amount.
+        public let total: Checkout.Total?
+
+        init(
+            id: String,
+            billingAddress: Checkout.ContactAddress?,
+            businessName: String?,
+            currency: String?,
+            currencyOptions: [Checkout.CurrencyOption],
+            discountAmounts: [Checkout.DiscountAmount],
+            email: String?,
+            lineItems: [Checkout.LineItem],
+            livemode: Bool,
+            minorUnitsAmountDivisor: Int?,
+            savedPaymentMethods: [STPPaymentMethod],
+            shipping: Checkout.SelectedShipping?,
+            shippingAddress: Checkout.ContactAddress?,
+            shippingOptions: [Checkout.ShippingOption],
+            status: Checkout.Status?,
+            tax: Checkout.Tax,
+            total: Checkout.Total?
+        ) {
+            self.id = id
+            self.billingAddress = billingAddress
+            self.businessName = businessName
+            self.currency = currency
+            self.currencyOptions = currencyOptions
+            self.discountAmounts = discountAmounts
+            self.email = email
+            self.lineItems = lineItems
+            self.livemode = livemode
+            self.minorUnitsAmountDivisor = minorUnitsAmountDivisor
+            self.savedPaymentMethods = savedPaymentMethods
+            self.shipping = shipping
+            self.shippingAddress = shippingAddress
+            self.shippingOptions = shippingOptions
+            self.status = status
+            self.tax = tax
+            self.total = total
+        }
     }
 }
 
 // MARK: - Mode
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// The mode of a checkout session.
     public enum Mode: Sendable {
@@ -73,131 +127,5 @@ extension Checkout {
         case setup
         /// Use Stripe Billing to set up fixed-price subscriptions.
         case subscription
-    }
-}
-
-// MARK: - Status
-
-@_spi(CheckoutSessionsPreview)
-extension Checkout {
-    /// The status of a checkout session.
-    public enum Status: Sendable {
-        /// A status not recognized by this version of the SDK.
-        case unknown
-        /// The checkout session is still in progress. Payment processing has not started.
-        case open
-        /// The checkout session is complete. Payment processing may still be in progress.
-        case complete
-        /// The checkout session has expired. No further processing will occur.
-        case expired
-    }
-}
-
-// MARK: - PaymentStatus
-
-@_spi(CheckoutSessionsPreview)
-extension Checkout {
-    /// The payment status of a checkout session.
-    public enum PaymentStatus: Sendable {
-        /// A payment status not recognized by this version of the SDK.
-        case unknown
-        /// The payment funds are available in your account.
-        case paid
-        /// The payment funds are not yet available in your account.
-        case unpaid
-        /// The payment is delayed to a future date, or the session is in setup mode
-        /// and doesn't require a payment at this time.
-        case noPaymentRequired
-    }
-}
-
-// MARK: - Totals
-
-@_spi(CheckoutSessionsPreview)
-extension Checkout {
-    /// Monetary totals for a checkout session.
-    ///
-    /// All amounts are in the smallest currency unit (e.g. cents for USD).
-    public struct Totals: Sendable, Hashable {
-        /// The subtotal amount before discounts and taxes.
-        public let subtotal: Int
-        /// The total amount after discounts and taxes.
-        public let total: Int
-        /// The amount due from the customer.
-        public let due: Int
-        /// The total discount amount applied.
-        public let discount: Int
-        /// The total shipping amount.
-        public let shipping: Int
-        /// The total tax amount applied.
-        public let tax: Int
-    }
-}
-
-// MARK: - LineItem
-
-@_spi(CheckoutSessionsPreview)
-extension Checkout {
-    /// A line item in a checkout session.
-    public struct LineItem: Sendable, Hashable, Identifiable {
-        /// Unique identifier for this line item.
-        public let id: String
-        /// The display name for this line item.
-        public let name: String
-        /// The quantity of this line item.
-        public let quantity: Int
-        /// The per-unit price in the smallest currency unit.
-        public let unitAmount: Int
-        /// Three-letter ISO 4217 currency code in lowercase.
-        public let currency: String
-    }
-}
-
-// MARK: - ShippingOption
-
-@_spi(CheckoutSessionsPreview)
-extension Checkout {
-    /// A shipping option available in a checkout session.
-    public struct ShippingOption: Sendable, Hashable, Identifiable {
-        /// The shipping rate ID.
-        public let id: String
-        /// The display name shown to the customer.
-        public let displayName: String
-        /// The shipping amount in the smallest currency unit.
-        public let amount: Int
-        /// Three-letter ISO 4217 currency code in lowercase.
-        public let currency: String
-    }
-}
-
-// MARK: - Discount
-
-@_spi(CheckoutSessionsPreview)
-extension Checkout {
-    /// A discount applied to a checkout session.
-    public struct Discount: Sendable, Hashable {
-        /// The coupon applied to this discount.
-        public let coupon: Checkout.Coupon
-        /// The promotion code used, if this discount was applied via a promotion code.
-        public let promotionCode: String?
-        /// The discount amount in the smallest currency unit.
-        public let amount: Int
-    }
-}
-
-// MARK: - Coupon
-
-@_spi(CheckoutSessionsPreview)
-extension Checkout {
-    /// A coupon associated with a discount.
-    public struct Coupon: Sendable, Hashable, Identifiable {
-        /// The coupon identifier.
-        public let id: String
-        /// The display name of the coupon.
-        public let name: String?
-        /// The percentage off, if this is a percentage-based coupon.
-        public let percentOff: Double?
-        /// The fixed amount off in the smallest currency unit, if this is a fixed-amount coupon.
-        public let amountOff: Int?
     }
 }

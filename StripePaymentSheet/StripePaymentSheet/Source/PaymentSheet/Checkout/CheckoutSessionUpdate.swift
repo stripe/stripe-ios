@@ -8,7 +8,7 @@
 
 import Foundation
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
 extension Checkout {
     enum SessionUpdate {
         case setPromotionCode(String)

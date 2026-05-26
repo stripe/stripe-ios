@@ -6,7 +6,7 @@
 //
 
 @_spi(STP) import StripePayments
-@_spi(CheckoutSessionsPreview) @_spi(STP) import StripePaymentSheet
+@_spi(STP) import StripePaymentSheet
 import SwiftUI
 
 @available(iOS 15.0, *)
@@ -19,21 +19,23 @@ struct CheckoutCartView: View {
 
     let clientSecret: String
     let adaptivePricing: Bool
+    var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
 
     var body: some View {
         NavigationView {
             ZStack {
-                Color(UIColor.systemGroupedBackground)
+                Color(UIColor.systemBackground)
                     .ignoresSafeArea()
 
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
+                        currencySelectorAppearance: currencySelectorAppearance,
                         isLoading: $isLoading,
                         errorMessage: $errorMessage
                     )
                     .overlay(alignment: .bottom) {
-                        if checkout.state.session.totals != nil {
+                        if checkout.state.session.total != nil {
                             CheckoutCartPaymentButton(
                                 checkout: checkout,
                                 onDismiss: { dismiss() }

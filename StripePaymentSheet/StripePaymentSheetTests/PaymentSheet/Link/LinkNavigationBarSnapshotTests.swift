@@ -40,6 +40,15 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
         verify(backSut, identifier: "BackButton")
     }
 
+    func testDefaultOnelink() {
+        let sut = makeSUT(brand: .onelink)
+        verify(sut, identifier: "Onelink")
+
+        let backSut = makeSUT(brand: .onelink)
+        backSut.setStyle(.back(showAdditionalButton: false))
+        verify(backSut, identifier: "OnelinkBackButton")
+    }
+
     func testTitle() {
         let sut = makeSUT(title: "Test title")
         sut.setStyle(.back(showAdditionalButton: false))
@@ -59,7 +68,7 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
     }
 
     func testBackStyleThenTruncatingTitle() {
-        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance, brand: .link)
         sut.setStyle(.back(showAdditionalButton: false))
         sut.title = "Test title that is pretty long and should wrap"
         verify(sut)
@@ -86,7 +95,7 @@ class LinkNavigationBarSnapshotTests: STPSnapshotTestCase {
     }
 
     func testCloseStyleThenTruncatingTitle() {
-        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance, brand: .link)
         sut.setStyle(.close(showAdditionalButton: false))
         sut.title = "Test title that is pretty long and should wrap"
         verify(sut)
@@ -131,8 +140,8 @@ extension LinkNavigationBarSnapshotTests {
         )
     }
 
-    fileprivate func makeSUT(title: String? = nil) -> LinkSheetNavigationBar {
-        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance)
+    fileprivate func makeSUT(title: String? = nil, brand: LinkBrand = .link) -> LinkSheetNavigationBar {
+        let sut = LinkSheetNavigationBar(isTestMode: false, appearance: LinkUI.appearance, brand: brand)
         sut.title = title
         return sut
     }

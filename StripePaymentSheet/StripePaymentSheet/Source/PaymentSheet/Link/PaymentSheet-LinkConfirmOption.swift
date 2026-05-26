@@ -7,6 +7,7 @@
 //
 
 import Foundation
+@_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 @_spi(STP) import StripeUICore
 
@@ -14,10 +15,11 @@ extension PaymentSheet {
 
     enum LinkConfirmOption {
         /// Present the Link wallet.
-        case wallet
+        case wallet(brand: LinkBrand)
 
         /// Signup for Link then pay.
         case signUp(
+            brand: LinkBrand,
             account: PaymentSheetLinkAccount,
             phoneNumber: PhoneNumber?,
             consentAction: PaymentSheetLinkAccount.ConsentAction,
@@ -27,11 +29,13 @@ extension PaymentSheet {
 
         /// Confirm with Payment Method. (Web fallback)
         case withPaymentMethod(
+            brand: LinkBrand,
             paymentMethod: STPPaymentMethod
         )
 
         /// Confirm intent with paymentDetails.
         case withPaymentDetails(
+            brand: LinkBrand,
             account: PaymentSheetLinkAccount,
             paymentDetails: ConsumerPaymentDetails,
             confirmationExtras: LinkConfirmationExtras?,
@@ -44,28 +48,28 @@ extension PaymentSheet {
 // MARK: - Helpers
 
 extension PaymentSheet.LinkConfirmOption {
+    func displayPaymentSheetSubLabel(brand: LinkBrand) -> String? {
+        guard let sublabel = paymentSheetSubLabel else {
+            return nil
+        }
+        // Suppress the redundant sublabel both for the resolved brand name and for
+        // the legacy Link label that some lower-level paths can still return.
+        guard sublabel != brand.displayName, sublabel != LinkBrand.link.displayName else {
+            return nil
+        }
+        return sublabel
+    }
 
     var account: PaymentSheetLinkAccount? {
         switch self {
         case .wallet:
             return nil
-        case .signUp(let account, _, _, _, _):
+        case .signUp(_, let account, _, _, _, _):
             return account
         case .withPaymentMethod:
             return nil
-        case .withPaymentDetails(let account, _, _, _):
+        case .withPaymentDetails(_, let account, _, _, _):
             return account
-        }
-    }
-
-    var paymentSheetLabel: String {
-        switch self {
-        case .wallet, .withPaymentDetails:
-            return STPPaymentMethodType.link.displayName
-        case .signUp(_, _, _, _, let intentConfirmParams):
-            return intentConfirmParams.paymentMethodParams.paymentSheetLabel
-        case .withPaymentMethod(let paymentMethod):
-            return paymentMethod.paymentSheetLabel
         }
     }
 
@@ -73,18 +77,18 @@ extension PaymentSheet.LinkConfirmOption {
         switch self {
         case .wallet:
             return nil
-        case .signUp(_, _, _, _, let intentConfirmParams):
+        case .signUp(_, _, _, _, _, let intentConfirmParams):
             return intentConfirmParams.paymentMethodParams.paymentSheetLabel
-        case .withPaymentMethod(let paymentMethod):
+        case .withPaymentMethod(_, let paymentMethod):
             return paymentMethod.linkPaymentDetailsFormattedString
-        case .withPaymentDetails(_, let paymentDetails, _, _):
+        case .withPaymentDetails(_, _, let paymentDetails, _, _):
             return paymentDetails.linkPaymentDetailsFormattedString
         }
     }
 
     var paymentMethodType: String {
         switch self {
-        case .signUp(_, _, _, _, let intentConfirmParams):
+        case .signUp(_, _, _, _, _, let intentConfirmParams):
             return intentConfirmParams.paymentMethodParams.type.identifier
         case .wallet, .withPaymentMethod, .withPaymentDetails:
             return STPPaymentMethodType.link.identifier
@@ -93,7 +97,7 @@ extension PaymentSheet.LinkConfirmOption {
 
     var shippingAddress: AddressViewController.Configuration.DefaultAddressDetails? {
         switch self {
-        case let .withPaymentDetails(linkAccount, _, _, shippingAddress):
+        case let .withPaymentDetails(_, linkAccount, _, _, shippingAddress):
             guard let shippingAddress else { return nil }
             return .init(
                 address: shippingAddress.toPaymentSheetAddress(),
@@ -109,18 +113,18 @@ extension PaymentSheet.LinkConfirmOption {
         switch self {
         case .wallet:
             return nil
-        case .signUp(_, _, _, _, let intentConfirmParams):
+        case .signUp(_, _, _, _, _, let intentConfirmParams):
             return intentConfirmParams.paymentMethodParams.billingDetails
-        case .withPaymentMethod(let paymentMethod):
+        case .withPaymentMethod(_, let paymentMethod):
             return paymentMethod.billingDetails
-        case .withPaymentDetails(_, let paymentDetails, _, _):
+        case .withPaymentDetails(_, _, let paymentDetails, _, _):
             return STPPaymentMethodBillingDetails(billingAddress: paymentDetails.billingAddress, email: paymentDetails.billingEmailAddress)
         }
     }
 
     var signupConfirmParams: IntentConfirmParams? {
         switch self {
-        case .signUp(_, _, _, _, let intentConfirmParams):
+        case .signUp(_, _, _, _, _, let intentConfirmParams):
             return intentConfirmParams
         case .wallet, .withPaymentDetails, .withPaymentMethod:
             return nil
@@ -129,10 +133,21 @@ extension PaymentSheet.LinkConfirmOption {
 
     var signupAction: LinkInlineSignupViewModel.Action? {
         switch self {
-        case .signUp(let account, let phoneNumber, _, let legalName, _):
+        case .signUp(_, let account, let phoneNumber, _, let legalName, _):
             return .signupAndPay(account: account, phoneNumber: phoneNumber, legalName: legalName)
         case .wallet, .withPaymentDetails, .withPaymentMethod:
             return nil
+        }
+    }
+
+    func paymentSheetLabel(brand: LinkBrand) -> String {
+        switch self {
+        case .wallet, .withPaymentDetails:
+            return brand.displayName
+        case .signUp(_, _, _, _, _, let intentConfirmParams):
+            return intentConfirmParams.paymentSheetLabel(brand: brand)
+        case .withPaymentMethod(_, let paymentMethod):
+            return paymentMethod.paymentSheetLabel(brand: brand)
         }
     }
 }

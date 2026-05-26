@@ -1,7 +1,29 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Fixed] Fixed `LinkAppearance.PrimaryButtonConfiguration` styling so unspecified custom height and corner radius values use Link defaults.
+* [Fixed] Fixed Japan address form missing the city field. ([#6506](https://github.com/stripe/stripe-ios/issues/6506))
+* [Added] Added support for Card Art for saved payment methods when using CustomerSessions
+* [Added] `PaymentSheet.FlowController.PaymentOptionDisplayData.image` and `EmbeddedPaymentElement.PaymentOptionDisplayData` may now return card art for saved card. Integrators displaying this image in very compact layouts may wish to revisit sizing to best accommodate richer payment method visuals.
+
+### Address Element
+* [Fixed] Fixed Japan address form missing the city field. ([#6506](https://github.com/stripe/stripe-ios/issues/6506))
+
+## 25.15.0 2026-05-18
+* Added support for [Onelink](https://support.stripe.com/questions/what-is-onelink).
+
+## 25.14.0 2026-05-11
+### PaymentSheet
+* [Fixed] Fixed a crash due to parameter packs being unsupported.
+* [Changed] When paymentMethodLayout is set to automatic, the layout is now horizontal when there are 2 or fewer payment methods available.
+* [Fixed] Changed `@_spi(STP)` exposure of `LinkAppearance` and `VerifyKYCResult` to `@_spi(CryptoOnrampAlpha)`.
+
+### CryptoOnramp (Alpha)
+* [Added] Added API models for upcoming EU support. 
+* [Added] Added `birthCountry`, `birthCity`, and `nationalities` properties to `KycInfo`, required for EU customers.
+* [Added] Added `CryptoOnrampCoordinator` APIs for EU support: `retrieveMissingIdentifiers()`, `submitIdentifiers(_:)`, and `presentCRSCARFDeclaration(from:)`.
 
 ## 25.13.0 2026-05-04
 ### PaymentSheet

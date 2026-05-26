@@ -18,6 +18,24 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+        let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+        let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
+
+        init(
+            intent: Intent,
+            elementsSession: STPElementsSession,
+            savedPaymentMethods: [STPPaymentMethod],
+            paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+            paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+            paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
+        ) {
+            self.intent = intent
+            self.elementsSession = elementsSession
+            self.savedPaymentMethods = savedPaymentMethods
+            self.paymentMethodTypes = paymentMethodTypes
+            self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
+            self.paymentMethodOrientation = paymentMethodOrientation
+        }
     }
 
     enum IntegrationShape {
@@ -197,15 +215,16 @@ final class PaymentSheetLoader {
             let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
             let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
-            let loadResult = LoadResult(
+            let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(elementsSession: elementsSession)
+            paymentMethodMessagingPromotionsHelper.prefetchIfNeeded(
                 intent: intent,
-                elementsSession: elementsSession,
-                savedPaymentMethods: filteredSavedPaymentMethods,
+                configuration: configuration,
                 paymentMethodTypes: paymentMethodTypes
             )
-            let confirmationChallenge = ConfirmationChallenge(
+
+            let paymentMethodOrientation = configuration.resolveLayout(
                 elementsSession: elementsSession,
-                stripeAttest: configuration.apiClient.stripeAttest
+                paymentMethodTypes: paymentMethodTypes
             )
 
             // This is hacky; the logic to determine the default selected payment method belongs to the SavedPaymentOptionsViewController. We invoke it here just to report it to analytics before that VC loads.
@@ -224,9 +243,22 @@ final class PaymentSheetLoader {
             // TODO: Revisit overall pre-loading approach to make this work for other payment methods
             if let defaultPaymentMethod = paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                case .saved(let stpPaymentMethod) = defaultPaymentMethod {
-                stpPaymentMethod.preloadCardArtImage(cardArtEnabled: configuration.appearance.cardArtEnabled)
+                stpPaymentMethod.preloadCardArtImage()
             }
             loadTimings.logEnd("makeViewModels")
+
+            let loadResult = LoadResult(
+                intent: intent,
+                elementsSession: elementsSession,
+                savedPaymentMethods: filteredSavedPaymentMethods,
+                paymentMethodTypes: paymentMethodTypes,
+                paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
+                paymentMethodOrientation: paymentMethodOrientation
+            )
+            let confirmationChallenge = ConfirmationChallenge(
+                elementsSession: elementsSession,
+                stripeAttest: configuration.apiClient.stripeAttest
+            )
 
             // Send load finished analytic
             // ⚠️ Important: Log load succeeded at the very end, to ensure it measures the entire amount of time this method took.
@@ -235,9 +267,10 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex),
                 orderedPaymentMethodTypes: paymentMethodTypes,
+                paymentMethodOrientation: loadResult.paymentMethodOrientation,
                 loadTimings: loadTimings,
                 isUpdate: isUpdate,
-                hasCardArt: hasCardArt(savedPaymentMethods: filteredSavedPaymentMethods, appearance: configuration.appearance),
+                hasCardArt: hasCardArt(savedPaymentMethods: filteredSavedPaymentMethods),
                 didLinkLookupTimeOut: didLinkLookupTimeOut
             )
             return (loadResult, confirmationChallenge)
@@ -247,9 +280,9 @@ final class PaymentSheetLoader {
         }
     }
 
-    /// Returns `true` if the card art feature is enabled and at least one saved card has a card art image URL.
-    static func hasCardArt(savedPaymentMethods: [STPPaymentMethod], appearance: PaymentSheet.Appearance) -> Bool {
-        appearance.cardArtEnabled && savedPaymentMethods.contains { $0.type == .card && $0.card?.cardArt?.artImage?.url != nil }
+    /// Returns `true` if at least one saved card has a card art image URL.
+    static func hasCardArt(savedPaymentMethods: [STPPaymentMethod]) -> Bool {
+        savedPaymentMethods.contains { $0.type == .card && $0.card?.cardArt?.artImage?.url != nil }
     }
 
     // MARK: - Helper methods that load things
@@ -319,11 +352,17 @@ final class PaymentSheetLoader {
         }
 
         let linkAccountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession)
-        return try await linkAccountService.lookupAccount(
+        let linkAccount = try await linkAccountService.lookupAccount(
             withEmail: lookupEmail.email,
             emailSource: lookupEmail.source,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
         )
+        // PaymentSheet can be torn down and rebuilt while the customer is still using the same Link account.
+        // Preserve the verified session across the second lookup so the user does not need to OTP again.
+        if let currentLinkAccount = LinkAccountContext.shared.account {
+            linkAccount?.reuseVerifiedSession(from: currentLinkAccount)
+        }
+        return linkAccount
     }
 
     @MainActor

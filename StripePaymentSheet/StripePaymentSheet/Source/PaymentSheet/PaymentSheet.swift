@@ -68,7 +68,7 @@ public class PaymentSheet {
     }
 
     /// This contains all configurable properties of PaymentSheet
-    public let configuration: Configuration
+    public private(set) var configuration: Configuration
 
     /// The most recent error encountered by the customer, if any.
     public internal(set) var mostRecentError: Error?
@@ -107,8 +107,11 @@ public class PaymentSheet {
     /// Initializes PaymentSheet with a Checkout object
     /// - Parameter checkout: A loaded Checkout instance.
     /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
-    @MainActor @_spi(CheckoutSessionsPreview) public convenience init(checkout: Checkout, configuration: Configuration) {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+    @_spi(STP)
+    @_spi(ReactNativeSDK)
+    @MainActor
+    public convenience init(checkout: Checkout, configuration: Configuration) {
+        guard let stpSession = checkout.stpSession else {
             fatalError("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
         }
         var config = configuration
@@ -162,16 +165,23 @@ public class PaymentSheet {
                 completion(.failed(error: error))
                 return
             }
-            if let checkout, checkout.state.isLoading {
-                let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.present(from:completion:)."
-                assertionFailure(message)
-                completion(.failed(error: PaymentSheetError.integrationError(nonPIIDebugDescription: message)))
-                return
+            var loadMode = mode
+            if let checkout {
+                do {
+                    try await checkout.awaitPendingOperations()
+                } catch {
+                    completion(.failed(error: error))
+                    return
+                }
+                if let stpSession = checkout.stpSession {
+                    loadMode = .checkoutSession(stpSession)
+                    stpSession.applyAddressOverrides(to: &self.configuration)
+                }
             }
 
             // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.
             PaymentSheetLoader.load(
-                mode: mode,
+                mode: loadMode,
                 configuration: configuration,
                 analyticsHelper: analyticsHelper,
                 integrationShape: .paymentSheet
@@ -182,15 +192,19 @@ public class PaymentSheet {
                     let presentPaymentSheet: () -> Void = {
                         let paymentSheetVC = self.makePaymentSheetVC(
                             loadResult: loadResult,
-                            previousPaymentOption: nil,
-                            shouldLogExperimentExposure: true
+                            previousPaymentOption: nil
                         )
                         self.bottomSheetViewController.setViewControllers([paymentSheetVC])
                     }
-                    if let linkAccount = LinkAccountContext.shared.account, loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(for: linkAccount) {
+                    if let linkAccount = LinkAccountContext.shared.account,
+                       loadResult.elementsSession.shouldShowLink2FABeforePaymentSheet(
+                           for: linkAccount,
+                           savedPaymentMethods: loadResult.savedPaymentMethods
+                       ) {
                         let verificationController = LinkVerificationController(
                             mode: .inlineLogin,
                             linkAccount: linkAccount,
+                            brand: self.configuration.resolvedLinkBrand(elementsSession: loadResult.elementsSession, linkAccount: linkAccount),
                             configuration: self.configuration
                         )
 
@@ -289,17 +303,9 @@ public class PaymentSheet {
     @MainActor
     func makePaymentSheetVC(
         loadResult: PaymentSheetLoader.LoadResult,
-        previousPaymentOption: PaymentOption?,
-        shouldLogExperimentExposure: Bool
+        previousPaymentOption: PaymentOption?
     ) -> PaymentSheetViewControllerProtocol {
-        var configuration = self.configuration
-        let layout = configuration.resolveLayout(
-            loadResult: loadResult,
-            configuration: self.configuration,
-            analyticsHelper: self.analyticsHelper,
-            shouldLogExperimentExposure: shouldLogExperimentExposure
-        )
-        switch layout {
+        switch loadResult.paymentMethodOrientation {
         case .horizontal:
             let vc = PaymentSheetViewController(
                 configuration: configuration,

@@ -83,12 +83,9 @@ class FCLiteUITests: XCTestCase {
         let autofillButton = app.webViews.firstMatch.buttons.containing(autofillButtonPredicate).firstMatch
         XCTAssertTrue(autofillButton.waitForExistenceAndTap(timeout: 5.0))
 
-        // Dismiss keyboard if open - check for "Done" (iOS 18) or checkmark button (iOS 26)
-        let keyboardDoneButton = app.toolbars.buttons["Done"]
-        if keyboardDoneButton.waitForExistence(timeout: 1.0) {
-            keyboardDoneButton.tap()
-            Thread.sleep(forTimeInterval: 0.5)
-        }
+        // Dismiss keyboard if open
+        app.stp_dismissKeyboard()
+        Thread.sleep(forTimeInterval: 0.5)
 
         // Tap "Save with Link" button (tapPrimaryButton handles keyboard dismissal if needed)
         let saveWithLinkButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Save with Link'")
@@ -133,12 +130,14 @@ class FCLiteUITests: XCTestCase {
         // Continue with Link
         let continueWithLinkButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Continue with Link'") // Link signup pane
         let continueWithLinkButton = app.webViews.firstMatch.buttons.containing(continueWithLinkButtonPredicate).firstMatch
-        XCTAssertTrue(continueWithLinkButton.waitForExistence(timeout: 10.0))
-        app.typeText(XCUIKeyboardKey.return.rawValue) // Enter key will continue to the next screen
-
         // Success bank
         let paymentSuccessBankButtonPredicate = NSPredicate(format: "label CONTAINS[cd] 'Disputed'") // Institution Picker
         let paymentSuccessBankButton = app.webViews.firstMatch.buttons.containing(paymentSuccessBankButtonPredicate).firstMatch
+        XCTAssertTrue(continueWithLinkButton.waitForExistence(timeout: 10.0))
+        advancePrimaryCTA(
+            continueButton: continueWithLinkButton,
+            nextPaneElement: paymentSuccessBankButton
+        )
         XCTAssertTrue(paymentSuccessBankButton.waitForExistenceAndTap(timeout: 10.0))
 
         // Connect account - wait for button to appear, then tap via coordinate
@@ -175,5 +174,25 @@ class FCLiteUITests: XCTestCase {
 
         // Primary button is at the bottom center of the webview (roughly 95% down, centered)
         app.webViews.firstMatch.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.95)).tap()
+    }
+
+    private func advancePrimaryCTA(
+        continueButton: XCUIElement,
+        nextPaneElement: XCUIElement
+    ) {
+        if app.keyboards.firstMatch.exists || app.toolbars.buttons["Done"].exists {
+            app.typeText(XCUIKeyboardKey.return.rawValue)
+            if nextPaneElement.waitForExistence(timeout: 2.0) {
+                return
+            }
+        }
+
+        if continueButton.waitForExistenceAndTap(timeout: 2.0),
+           nextPaneElement.waitForExistence(timeout: 2.0) {
+            return
+        }
+
+        tapPrimaryButton()
+        XCTAssertTrue(nextPaneElement.waitForExistence(timeout: 10.0))
     }
 }

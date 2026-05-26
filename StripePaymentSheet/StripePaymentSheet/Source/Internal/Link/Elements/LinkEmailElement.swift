@@ -6,6 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -24,13 +25,8 @@ class LinkEmailElement: Element {
         return activityIndicator
     }()
 
-    private var infoView: LinkMoreInfoView?
-
     private lazy var stackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [emailAddressElement.view, activityIndicator])
-        if let infoView = infoView {
-            stackView.addArrangedSubview(infoView)
-        }
         stackView.spacing = 0
         stackView.axis = .horizontal
         stackView.alignment = .center
@@ -41,13 +37,6 @@ class LinkEmailElement: Element {
             bottom: 0,
             trailing: theme.textFieldInsets.trailing
         )
-        if let infoView = infoView {
-            // Use stack view's custom spacing instead of manual constraints to avoid conflicts
-            stackView.setCustomSpacing(ElementsUI.contentViewInsets.trailing, after: activityIndicator)
-            NSLayoutConstraint.activate([
-                infoView.widthAnchor.constraint(equalToConstant: LinkMoreInfoView.Constants.logoWidth),
-            ])
-        }
         return stackView
     }()
 
@@ -89,12 +78,8 @@ class LinkEmailElement: Element {
         }
     }
 
-    public init(defaultValue: String? = nil, isOptional: Bool = false, showLogo: Bool, theme: ElementsAppearance = .default) {
+    public init(defaultValue: String? = nil, isOptional: Bool = false, theme: ElementsAppearance = .default) {
         self.theme = theme
-
-        if showLogo {
-            self.infoView = LinkMoreInfoView(theme: theme)
-        }
         emailAddressElement = TextFieldElement.makeEmail(defaultValue: defaultValue,
                                                          isOptional: isOptional,
                                                          theme: theme)

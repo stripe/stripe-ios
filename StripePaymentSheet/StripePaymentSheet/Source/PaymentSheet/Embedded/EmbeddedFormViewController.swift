@@ -92,6 +92,7 @@ class EmbeddedFormViewController: UIViewController {
     private let shouldUseNewCardNewCardHeader: Bool
     private let formCache: PaymentMethodFormCache
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     private var error: Swift.Error?
     private var isPaymentInFlight: Bool = false
     /// Previous customer input - in the `update` flow, this is the customer input prior to `update`, used so we can restore their state in this VC.
@@ -150,8 +151,10 @@ class EmbeddedFormViewController: UIViewController {
             previousCustomerInput: previousCustomerInput,
             formCache: formCache,
             configuration: configuration,
+            paymentMethodOrientation: .vertical,
             headerView: headerView,
             analyticsHelper: analyticsHelper,
+            paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper,
             isLinkUI: false,
             delegate: self
         )
@@ -170,6 +173,7 @@ class EmbeddedFormViewController: UIViewController {
          paymentMethodType: PaymentSheet.PaymentMethodType,
          previousPaymentOption: PaymentOption? = nil,
          analyticsHelper: PaymentSheetAnalyticsHelper,
+         paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
          formCache: PaymentMethodFormCache = .init(),
          delegate: EmbeddedFormViewControllerDelegate
     ) {
@@ -179,6 +183,7 @@ class EmbeddedFormViewController: UIViewController {
         self.configuration = configuration
         self.previousPaymentOption = previousPaymentOption
         self.analyticsHelper = analyticsHelper
+        self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
         self.paymentMethodType = paymentMethodType
         self.formCache = formCache
         self.delegate = delegate

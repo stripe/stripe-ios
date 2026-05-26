@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -136,7 +136,7 @@ import UIKit
     private var currentTaxRate: (String, Double)?
 
     var linkConfiguration: PaymentSheet.LinkConfiguration {
-        let brand: LinkBrand? = settings.linkBrand == .onelink ? .onelink : nil
+        let brand: LinkBrand? = settings.forceOnelink == .on ? .onelink : nil
 
         switch settings.linkDisplay {
         case .automatic:
@@ -301,6 +301,7 @@ import UIKit
         }
         configuration.merchantDisplayName = "Example, Inc."
         configuration.applePay = applePayConfiguration
+        configuration.link = linkConfiguration
         configuration.customer = customerConfiguration
         configuration.appearance = appearance
         if settings.userOverrideCountry != .off {
@@ -505,6 +506,8 @@ import UIKit
             return customerId ?? "new"
         case .returning:
             return customerId ?? "returning"
+        case .custom:
+            return customerId ?? "custom"
         }
     }
 
@@ -587,6 +590,7 @@ import UIKit
     var paymentMethodTypes: [String]?
     var addressViewController: AddressViewController?
     var appearance = PaymentSheet.Appearance.default
+    var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
     var currentDataTask: URLSessionDataTask?
 
     var checkoutEndpoint: String {
@@ -625,6 +629,7 @@ import UIKit
             await MainActor.run {
                 self.settings = settings
                 self.appearance = appearance
+                self.customerId = settings.customerId
                 self.loadLastSavedCustomer()
             }
         }
@@ -644,6 +649,7 @@ import UIKit
         self.settings = settings
         self.appearance = appearance
         self.currentlyRenderedSettings = .defaultValues()
+        updateForcedConsumerLinkBrand(settings)
 
         $settings.removeDuplicates().sink { [weak self] newValue in
             if newValue.autoreload == .on {
@@ -667,6 +673,8 @@ import UIKit
 
             let enableFcLite = newValue.fcLiteEnabled == .on
             FinancialConnectionsSDKAvailability.localFcLiteOverride = enableFcLite
+
+            self?.updateForcedConsumerLinkBrand(newValue)
         }.store(in: &subscribers)
 
         // Listen for analytics
@@ -678,6 +686,11 @@ import UIKit
         if let v = self.rootViewController.view.window!.ambiguousView() {
             print(v)
         }
+    }
+
+    private func updateForcedConsumerLinkBrand(_ settings: PaymentSheetTestPlaygroundSettings) {
+        PaymentSheetLinkAccount.forcedConsumerLinkBrandForTesting =
+            settings.forceOnelinkConsumer == .on ? .onelink : nil
     }
 
     func buildPaymentSheet() {
@@ -758,11 +771,19 @@ import UIKit
     }
     func checkoutSessionSettingsTapped() {
         if #available(iOS 15.0, *) {
-            let vc = UIHostingController(rootView: CheckoutSessionPlaygroundView(viewModel: settings, doneAction: { updatedSettings in
-                self.settings = updatedSettings
-                self.rootViewController.dismiss(animated: true, completion: nil)
-                self.load(reinitializeControllers: true)
-            }))
+            let appearanceBinding = Binding(
+                get: { self.currencySelectorAppearance },
+                set: { self.currencySelectorAppearance = $0 }
+            )
+            let vc = UIHostingController(rootView: CheckoutSessionPlaygroundView(
+                viewModel: settings,
+                currencySelectorAppearance: appearanceBinding,
+                doneAction: { updatedSettings in
+                    self.settings = updatedSettings
+                    self.rootViewController.dismiss(animated: true, completion: nil)
+                    self.load(reinitializeControllers: true)
+                }
+            ))
             rootViewController.present(vc, animated: true, completion: nil)
         }
     }
@@ -920,6 +941,7 @@ extension PlaygroundController {
                             clientSecret: checkoutSessionClientSecret,
                             configuration: checkoutConfiguration
                         )
+                        self.checkout?.delegate = self
                     } catch {
                         self.checkout = nil
                         print("Failed to load checkout session: \(error)")
@@ -940,7 +962,6 @@ extension PlaygroundController {
                     return "intent id: \(intentID ?? "")"
                 }()
                 print("✅ Test playground finished loading with \(idDescription) and customer id: \(self.customerId ?? "") ")
-
                 switch self.settings.uiStyle {
                 case .paymentSheet:
                     self.buildPaymentSheet()
@@ -1080,9 +1101,8 @@ extension PlaygroundController {
             body["display_shipping_rates"] = settings.csDisplayShippingRates == .on
             body["adjustable_quantity"] = settings.csAdjustableQuantity == .on
             body["use_manual_capture"] = settings.csManualCapture == .on
-            if let email = settings.csCustomerEmail, !email.isEmpty {
-                body["customer_email"] = email
-            }
+            let email = settings.csCustomerEmail ?? "test@example.com"
+            body["customer_email"] = email.isEmpty ? "test@example.com" : email
             if let pmc = settings.csPaymentMethodConfiguration, !pmc.isEmpty {
                 body["payment_method_configuration"] = pmc
             }
@@ -1347,6 +1367,10 @@ extension PlaygroundController {
     }
 
     func loadLastSavedCustomer() {
+        if settings.customerMode == .custom {
+            self.customerId = settings.customerId
+            return
+        }
         if let customerIdData = UserDefaults.standard.value(forKey: PaymentSheetTestPlaygroundSettings.nsUserDefaultsCustomerIDKey) as? Data {
             do {
                 self.customerId = try JSONDecoder().decode(String.self, from: customerIdData)
@@ -1381,6 +1405,29 @@ extension AddressViewController.AddressDetails {
         postalAddress.country = address.country
 
         return [name, formatter.string(from: postalAddress), phone].compactMap { $0 }.joined(separator: "\n")
+    }
+}
+
+// MARK: - CheckoutDelegate
+
+extension PlaygroundController: CheckoutDelegate {
+    func checkout(_ checkout: Checkout, didChangeState state: Checkout.State) {
+        switch settings.uiStyle {
+        case .embedded:
+            Task { @MainActor in
+                _ = await embeddedPlaygroundViewController?.embeddedPaymentElement?.update(checkout: checkout)
+            }
+        case .flowController:
+            paymentSheetFlowController?.update(checkout: checkout) { [weak self] error in
+                if let error {
+                    print("PaymentSheet.FlowController.update(checkout:) failed: \(error)")
+                    self?.fail(error: error)
+                }
+            }
+        case .paymentSheet:
+            // PaymentSheet waits for pending Checkout updates and resnapshots the session when presenting.
+            break
+        }
     }
 }
 

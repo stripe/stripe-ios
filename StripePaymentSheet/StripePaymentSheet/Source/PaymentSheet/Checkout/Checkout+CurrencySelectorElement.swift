@@ -9,7 +9,8 @@ import SwiftUI
 
 // MARK: - CurrencySelectorElement (SwiftUI)
 
-@_spi(CheckoutSessionsPreview)
+@_spi(STP)
+@_spi(ReactNativeSDK)
 extension Checkout {
     /// A SwiftUI currency selector for Adaptive Pricing.
     ///
@@ -53,7 +54,7 @@ extension Checkout {
         }
 
         private var isAdaptivePricingAvailable: Bool {
-            return CurrencySelectorUtilities.adaptivePricingData(from: checkout.state.session) != nil
+            return CurrencySelectorUtilities.adaptivePricingData(from: checkout.stpSession) != nil
         }
     }
 }

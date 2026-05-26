@@ -149,7 +149,7 @@ extension SavedPaymentMethodCollectionView {
         var allowsSetAsDefaultPM: Bool = false
         var needsVerticalPaddingForBadge: Bool = false
         var showDefaultPMBadge: Bool = false
-        var cardArtEnabled: Bool = false
+        var linkBrand: LinkBrand = .link
 
         /// Indicates whether the cell for a saved payment method should display the edit icon.
         /// True if payment methods can be removed or edited
@@ -265,7 +265,7 @@ extension SavedPaymentMethodCollectionView {
         }()
 
         // MARK: - Internal Methods
-        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false, cardArtEnabled: Bool = false) {
+        func setViewModel(_ viewModel: SavedPaymentOptionsViewController.Selection, cbcEligible: Bool, allowsPaymentMethodRemoval: Bool, allowsPaymentMethodUpdate: Bool, allowsSetAsDefaultPM: Bool = false, needsVerticalPaddingForBadge: Bool = false, showDefaultPMBadge: Bool = false, linkBrand: LinkBrand = .link) {
             paymentMethodLogo.isHidden = false
             plus.isHidden = true
             selectableRectangle.isHidden = false
@@ -276,7 +276,7 @@ extension SavedPaymentMethodCollectionView {
             self.allowsSetAsDefaultPM = allowsSetAsDefaultPM
             self.needsVerticalPaddingForBadge = needsVerticalPaddingForBadge
             self.showDefaultPMBadge = showDefaultPMBadge
-            self.cardArtEnabled = cardArtEnabled
+            self.linkBrand = linkBrand
             update()
         }
 
@@ -352,13 +352,16 @@ extension SavedPaymentMethodCollectionView {
                         } else if let linkPaymentDetails = paymentMethod.linkPaymentDetails {
                             label.text = linkPaymentDetails.formattedLast4
                         } else {
-                            label.text = paymentMethod.paymentSheetLabel
+                            label.text = paymentMethod.paymentSheetLabel(brand: linkBrand)
                         }
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
-                        let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle, iconStyle: appearance.iconStyle)
-                        if let cardArtURL = paymentMethod.cardArtCDNURL(cardArtEnabled: cardArtEnabled) {
+                        let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(
+                            overrideUserInterfaceStyle: overrideUserInterfaceStyle,
+                            iconStyle: appearance.iconStyle
+                        )
+                        if let cardArtURL = paymentMethod.cardArtCDNURL() {
                             if paymentMethodLogo.tag != cardArtURL.hashValue {
                                 paymentMethodLogo.tag = cardArtURL.hashValue
                                 paymentMethodLogo.image = STPImageLibrary.cardBrandChoiceImage()
@@ -392,11 +395,11 @@ extension SavedPaymentMethodCollectionView {
                         paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
                         paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                     case .link:
-                        label.text = STPPaymentMethodType.link.displayName
+                        label.text = linkBrand.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
-                        let paymentMethodLogoImage = PaymentOption.link(option: .wallet).makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        let paymentMethodLogoImage = Image.paymentSheetLinkLogoImage
                         paymentMethodLogo.image = paymentMethodLogoImage
                         paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
                         paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height

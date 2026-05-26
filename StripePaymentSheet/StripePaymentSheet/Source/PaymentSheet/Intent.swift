@@ -28,7 +28,7 @@ enum Intent {
         case .paymentIntent(let intent): intent.stripeId
         case .setupIntent(let intent): intent.stripeID
         case .deferredIntent: nil
-        case .checkoutSession(let session): session.stripeId
+        case .checkoutSession(let session): session.id
         }
     }
 
@@ -79,7 +79,7 @@ enum Intent {
         case .paymentIntent(let paymentIntent):
             return paymentIntent.paymentMethodOptions?.card?.requireCvcRecollection ?? false
         case .setupIntent, .checkoutSession:
-            // TODO(porter) Figure out CVC recollection flag during confirmation work
+            // CheckoutSession does not yet support CVC recollection
             return false
         }
     }
@@ -121,7 +121,7 @@ enum Intent {
                 stpAssertionFailure("Received CheckoutSession in unknown mode")
                 return nil
             case .payment:
-                return session.totals?.total
+                return session.total?.total.minorUnitsAmount
             case .setup:
                 return nil
             case .subscription:

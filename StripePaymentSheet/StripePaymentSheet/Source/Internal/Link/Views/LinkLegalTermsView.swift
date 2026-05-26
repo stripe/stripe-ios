@@ -32,13 +32,16 @@ final class LinkLegalTermsView: UIView {
         static let lineHeight: CGFloat = 1.0
     }
 
-    private let links: [String: URL] = [
-        "terms": URL(string: "https://link.co/terms")!,
-        "privacy": URL(string: "https://link.co/privacy")!,
-    ]
+    private var links: [String: URL] {
+        [
+            "terms": brand.termsURL,
+            "privacy": brand.privacyURL,
+        ]
+    }
 
     weak var delegate: LinkLegalTermsViewDelegate?
     private let mode: LinkInlineSignupViewModel.Mode
+    private var brand: LinkBrand
     /// If true, we're in a separate Link VC (instead of the inline PS one)
     private let isStandalone: Bool
     private let emailWasPrefilled: Bool
@@ -79,10 +82,12 @@ final class LinkLegalTermsView: UIView {
 
     init(textAlignment: NSTextAlignment = .left,
          mode: LinkInlineSignupViewModel.Mode = .checkbox,
+         brand: LinkBrand = .link,
          emailWasPrefilled: Bool = false,
          isStandalone: Bool = false,
          delegate: LinkLegalTermsViewDelegate? = nil) {
         self.mode = mode
+        self.brand = brand
         self.emailWasPrefilled = emailWasPrefilled
         self.isStandalone = isStandalone
         super.init(frame: .zero)
@@ -95,6 +100,14 @@ final class LinkLegalTermsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func updateBrand(_ brand: LinkBrand) {
+        guard self.brand != brand else {
+            return
+        }
+        self.brand = brand
+        textView.attributedText = formattedLegalText()
+    }
+
     private func formattedLegalText() -> NSAttributedString? {
         let string: String? = {
             if isStandalone {
@@ -105,25 +118,13 @@ final class LinkLegalTermsView: UIView {
             }
             switch mode {
             case .checkbox:
-                return STPLocalizedString(
-                    "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
-                    "Legal text shown when creating a Link account."
-                )
+                return String.Localized.by_joining_brand_you_agree_to_the_terms_and_privacy_policy(brand: brand)
             case .checkboxWithDefaultOptIn:
-                return STPLocalizedString(
-                    "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
-                    "Legal text shown when creating a Link account."
-                )
+                return String.Localized.by_providing_phone_number_and_email_you_agree_to_create_a_brand_account(brand: brand)
             case .textFieldsOnlyEmailFirst:
-                return STPLocalizedString(
-                    "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
-                    "Legal text shown when creating a Link account."
-                )
+                return String.Localized.by_providing_your_email_you_agree_to_create_a_brand_account_and_save_your_payment_info(brand: brand)
             case .textFieldsOnlyPhoneFirst:
-                return STPLocalizedString(
-                    "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>.",
-                    "Legal text shown when creating a Link account."
-                )
+                return String.Localized.by_providing_your_phone_number_you_agree_to_create_a_brand_account_and_save_your_payment_info(brand: brand)
             case .signupOptIn:
                 stpAssertionFailure("LinkLegalTermsView should not be available in signup opt-in mode")
                 return nil
@@ -135,13 +136,19 @@ final class LinkLegalTermsView: UIView {
         }
 
         let leadingIcon: NSTextAttachment? = {
-            guard mode == .checkboxWithDefaultOptIn else {
+            guard !isStandalone else {
                 return nil
             }
-            return LinkUI.inlineLogo(
-                withScale: 1.3,
-                forFont: LinkUI.font(forTextStyle: .caption)
-            )
+            switch mode {
+            case .checkbox, .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+                return LinkUI.inlineLogo(
+                    withScale: 1.3,
+                    forFont: LinkUI.font(forTextStyle: .caption),
+                    brand: brand
+                )
+            case .signupOptIn:
+                return nil
+            }
         }()
 
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)

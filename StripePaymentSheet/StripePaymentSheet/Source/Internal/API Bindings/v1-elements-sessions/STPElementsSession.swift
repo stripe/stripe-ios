@@ -184,6 +184,10 @@ extension STPElementsSession: STPAPIResponseDecodable {
         let applePayPreference = response["apple_pay_preference"] as? String
         let isApplePayEnabled = applePayPreference != "disabled"
         let flags = response["flags"] as? [String: Bool] ?? [:]
+        let experimentsData = ExperimentsData.decodedObject(
+            fromAPIResponse: response["experiments_data"] as? [AnyHashable: Any]
+        )
+
         let customer: ElementsCustomer? = {
             let customerDataKey = "customer"
             guard response[customerDataKey] != nil, !(response[customerDataKey] is NSNull) else {
@@ -257,9 +261,7 @@ extension STPElementsSession: STPAPIResponseDecodable {
             linkSettings: LinkSettings.decodedObject(
                 fromAPIResponse: response["link_settings"] as? [AnyHashable: Any]
             ),
-            experimentsData: ExperimentsData.decodedObject(
-                fromAPIResponse: response["experiments_data"] as? [AnyHashable: Any]
-            ),
+            experimentsData: experimentsData,
             flags: flags,
             paymentMethodSpecs: response["payment_method_specs"] as? [[AnyHashable: Any]],
             cardBrandChoice: cardBrandChoice,
@@ -394,6 +396,10 @@ extension STPElementsSession {
     /// When `false`, `CardFundingFilter` should act as a no-op and accept all card funding types.
     var isCardFundingFilteringEnabled: Bool {
         flags["elements_mobile_card_funding_filtering"] == true
+    }
+
+    var forceVerticalPaymentMethodLayout: Bool {
+        flags["elements_mobile_force_vertical_payment_method_layout"] == true
     }
 }
 

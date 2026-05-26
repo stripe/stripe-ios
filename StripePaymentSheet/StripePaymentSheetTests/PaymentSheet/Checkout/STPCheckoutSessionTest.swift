@@ -8,7 +8,7 @@
 
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CheckoutSessionsPreview) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentSheet
 import StripePaymentsObjcTestUtils
 import XCTest
 
@@ -61,15 +61,15 @@ class STPCheckoutSessionTest: XCTestCase {
         let json = STPTestUtils.jsonNamed("CheckoutSession")!
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
 
-        XCTAssertEqual(session.stripeId, "cs_test_a1b2c3d4e5f6g7h8i9j0")
+        XCTAssertEqual(session.id, "cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.clientSecret, "cs_test_a1b2c3d4e5f6g7h8i9j0_secret_xyz123abc456")
-        XCTAssertEqual(session.totals?.total, 2686)
-        XCTAssertEqual(session.totals?.subtotal, 2000)
-        XCTAssertEqual(session.totals?.due, 2686)
+        XCTAssertEqual(session.total?.total.minorUnitsAmount, 2686)
+        XCTAssertEqual(session.total?.subtotal.minorUnitsAmount, 2000)
         XCTAssertEqual(session.currency, "usd")
+        XCTAssertEqual(session.minorUnitsAmountDivisor, 100)
         XCTAssertEqual(session.mode, .payment)
-        XCTAssertEqual(session.status, .open)  // status is nullable but present in JSON
-        XCTAssertEqual(session.paymentStatus, .unpaid)
+        XCTAssertEqual(session.status?.type, .open)  // status is nullable but present in JSON
+        XCTAssertEqual(session.status?.paymentStatus, .unpaid)
         XCTAssertEqual(session.paymentIntentId, "pi_test123456789")
         XCTAssertNil(session.setupIntentId)
         XCTAssertFalse(session.livemode)
@@ -86,10 +86,19 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.customer?.paymentMethods[0].card?.last4, "4242")
         XCTAssertEqual(session.customer?.paymentMethods[1].stripeId, "pm_1Sxae4Lu5o3P18ZplFiKexnM")
         XCTAssertEqual(session.customer?.paymentMethods[1].type, .USBankAccount)
-        XCTAssertEqual(session.customerEmail, "test@example.com")
+        XCTAssertEqual(session.businessName, "CI Stuff")
+        XCTAssertEqual(session.email, "test@example.com")
         XCTAssertEqual(session.url?.absoluteString, "https://checkout.stripe.com/c/pay/cs_test_a1b2c3d4e5f6g7h8i9j0")
         XCTAssertEqual(session.returnUrl, "https://example.com/return")
         XCTAssertEqual(session.cancelUrl, "https://example.com/cancel")
+
+        // Saved payment methods
+        XCTAssertEqual(session.savedPaymentMethods.count, 2)
+        XCTAssertEqual(session.savedPaymentMethods[0].stripeId, "pm_1Sxae3Lu5o3P18Zpt5YuRRoG")
+        XCTAssertEqual(session.savedPaymentMethods[0].type, .card)
+        XCTAssertEqual(session.savedPaymentMethods[0].card?.last4, "4242")
+        XCTAssertEqual(session.savedPaymentMethods[1].stripeId, "pm_1Sxae4Lu5o3P18ZplFiKexnM")
+        XCTAssertEqual(session.savedPaymentMethods[1].type, .USBankAccount)
 
         // Verify saved payment methods offer save
         XCTAssertNotNil(session.savedPaymentMethodsOfferSave)
@@ -109,28 +118,26 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.lineItems[0].id, "li_1abc")
         XCTAssertEqual(session.lineItems[0].name, "Widget")
         XCTAssertEqual(session.lineItems[0].quantity, 2)
-        XCTAssertEqual(session.lineItems[0].unitAmount, 750)
-        XCTAssertEqual(session.lineItems[0].currency, "usd")
+        XCTAssertEqual(session.lineItems[0].unitAmount?.minorUnitsAmount, 750)
         XCTAssertEqual(session.lineItems[1].id, "li_2def")
         XCTAssertEqual(session.lineItems[1].name, "Gadget")
         XCTAssertEqual(session.lineItems[1].quantity, 1)
-        XCTAssertEqual(session.lineItems[1].unitAmount, 500)
-        XCTAssertEqual(session.lineItems[1].currency, "usd")
+        XCTAssertEqual(session.lineItems[1].unitAmount?.minorUnitsAmount, 500)
 
         // Shipping options
         XCTAssertEqual(session.shippingOptions.count, 2)
         XCTAssertEqual(session.shippingOptions[0].id, "shr_standard")
         XCTAssertEqual(session.shippingOptions[0].displayName, "Standard Shipping")
-        XCTAssertEqual(session.shippingOptions[0].amount, 500)
+        XCTAssertEqual(session.shippingOptions[0].amount.minorUnitsAmount, 500)
         XCTAssertEqual(session.shippingOptions[0].currency, "usd")
         XCTAssertEqual(session.shippingOptions[1].id, "shr_express")
         XCTAssertEqual(session.shippingOptions[1].displayName, "Express Shipping")
-        XCTAssertEqual(session.shippingOptions[1].amount, 1500)
+        XCTAssertEqual(session.shippingOptions[1].amount.minorUnitsAmount, 1500)
         XCTAssertEqual(session.shippingOptions[1].currency, "usd")
 
         // Totals — discount and tax
-        XCTAssertEqual(session.totals?.discount, 0)
-        XCTAssertEqual(session.totals?.tax, 186)
+        XCTAssertEqual(session.total?.discount.minorUnitsAmount, 0)
+        XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 186)
 
         // Tax amounts
         XCTAssertEqual(session.taxAmounts.count, 1)
@@ -148,7 +155,13 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.allowedShippingCountries, ["US", "CA"])
         XCTAssertTrue(session.requiresShippingAddress)
 
-        XCTAssertEqual(session.totals?.shipping, 500)
+        XCTAssertEqual(session.total?.shippingRate.minorUnitsAmount, 500)
+
+        // Selected shipping
+        XCTAssertNotNil(session.shipping)
+        XCTAssertEqual(session.shipping?.shippingOption.id, "shr_standard")
+        XCTAssertEqual(session.shipping?.shippingOption.amount.minorUnitsAmount, 500)
+        XCTAssertEqual(session.shipping?.shippingOption.displayName, "Standard Shipping")
 
         // Adaptive pricing
         XCTAssertTrue(session.adaptivePricingActive)
@@ -161,6 +174,16 @@ class STPCheckoutSessionTest: XCTestCase {
         XCTAssertEqual(session.exchangeRateMeta?.buyCurrency, "eur")
         XCTAssertEqual(session.exchangeRateMeta?.sellCurrency, "usd")
         XCTAssertEqual(session.exchangeRateMeta?.exchangeRate, "0.90325")
+
+        // Currency options (derived from adaptive pricing)
+        XCTAssertEqual(session.currencyOptions.count, 2)
+        XCTAssertEqual(session.currencyOptions[0].currency, "eur")
+        XCTAssertEqual(session.currencyOptions[0].amount.minorUnitsAmount, 10839)
+        XCTAssertEqual(session.currencyOptions[0].currencyConversion?.fxRate, "0.90325")
+        XCTAssertEqual(session.currencyOptions[0].currencyConversion?.sourceCurrency, "usd")
+        XCTAssertEqual(session.currencyOptions[1].currency, "usd")
+        XCTAssertEqual(session.currencyOptions[1].amount.minorUnitsAmount, 12000)
+        XCTAssertNil(session.currencyOptions[1].currencyConversion)
 
         XCTAssertEqual(
             session.allResponseFields as NSDictionary,
@@ -183,22 +206,21 @@ class STPCheckoutSessionTest: XCTestCase {
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: minimalJson)
 
         XCTAssertNotNil(session, "Should decode with all required fields")
-        XCTAssertEqual(session?.stripeId, "cs_test_minimal")
+        XCTAssertEqual(session?.id, "cs_test_minimal")
         XCTAssertNil(session?.status)  // status is nullable, should be nil when missing
         XCTAssertEqual(session?.mode, .payment)
-        XCTAssertEqual(session?.paymentStatus, .unpaid)
         XCTAssertTrue(session?.livemode ?? false)
         XCTAssertEqual(session?.paymentMethodTypes, [.card])
 
         // Optional fields should be nil
-        XCTAssertNil(session?.totals)
+        XCTAssertNil(session?.total)
         XCTAssertNil(session?.currency)
         XCTAssertNil(session?.clientSecret)
         XCTAssertNil(session?.paymentIntentId)
         XCTAssertNil(session?.setupIntentId)
         XCTAssertNil(session?.customer)
         XCTAssertNil(session?.customerId)
-        XCTAssertNil(session?.customerEmail)
+        XCTAssertNil(session?.email)
         XCTAssertNil(session?.url)
         XCTAssertNil(session?.returnUrl)
         XCTAssertNil(session?.savedPaymentMethodsOfferSave)
@@ -221,8 +243,8 @@ class STPCheckoutSessionTest: XCTestCase {
 
         XCTAssertNotNil(session)
         XCTAssertEqual(session?.mode, .setup)
-        XCTAssertEqual(session?.status, .open)
-        XCTAssertEqual(session?.paymentStatus, .noPaymentRequired)
+        XCTAssertEqual(session?.status?.type, .open)
+        XCTAssertEqual(session?.status?.paymentStatus, .noPaymentRequired)
         XCTAssertEqual(session?.setupIntentId, "seti_test123456")
         XCTAssertNil(session?.paymentIntentId)
     }
@@ -326,12 +348,11 @@ class STPCheckoutSessionTest: XCTestCase {
         ]
         let session = STPCheckoutSession.decodedObject(fromAPIResponse: json)
         XCTAssertNotNil(session)
-        XCTAssertEqual(session?.totals?.tax, 186)
-        XCTAssertEqual(session?.totals?.subtotal, 2000)
-        XCTAssertEqual(session?.totals?.total, 2186)
-        XCTAssertEqual(session?.totals?.due, 2186)
-        XCTAssertEqual(session?.totals?.discount, 0)
-        XCTAssertEqual(session?.totals?.shipping, 0)
+        XCTAssertEqual(session?.total?.taxExclusive.minorUnitsAmount, 186)
+        XCTAssertEqual(session?.total?.subtotal.minorUnitsAmount, 2000)
+        XCTAssertEqual(session?.total?.total.minorUnitsAmount, 2186)
+        XCTAssertEqual(session?.total?.discount.minorUnitsAmount, 0)
+        XCTAssertEqual(session?.total?.shippingRate.minorUnitsAmount, 0)
         XCTAssertEqual(session?.taxAmounts.count, 1)
         XCTAssertEqual(session?.taxAmounts[0].amount, 186)
         XCTAssertFalse(session?.taxAmounts[0].inclusive ?? true)
@@ -495,6 +516,49 @@ class STPCheckoutSessionTest: XCTestCase {
         ])
 
         XCTAssertFalse(Intent.checkoutSession(session).isSetupFutureUsageSet(for: .payPal))
+    }
+
+    // MARK: - TaxStatus Tests
+
+    func testTaxStatus_automaticRequiresLocationInputs_usesTaxContextAddressSource() {
+        let taxMeta: [String: Any] = [
+            "computation_type": "automatic",
+            "status": "requires_location_inputs",
+        ]
+        let shipping = makeCheckoutSession([
+            "tax_meta": taxMeta,
+            "tax_context": ["automatic_tax_address_source": "session.shipping"],
+        ])
+        XCTAssertEqual(shipping.tax.status, .requiresShippingAddress)
+
+        let billing = makeCheckoutSession([
+            "tax_meta": taxMeta,
+            "tax_context": ["automatic_tax_address_source": "session.billing"],
+        ])
+        XCTAssertEqual(billing.tax.status, .requiresBillingAddress)
+
+        let missingSource = makeCheckoutSession(["tax_meta": taxMeta])
+        XCTAssertEqual(missingSource.tax.status, .requiresBillingAddress)
+    }
+
+    func testTaxStatus_automaticFailed_returnsUnknown() {
+        let session = makeCheckoutSession([
+            "tax_meta": [
+                "computation_type": "automatic",
+                "status": "failed",
+            ],
+        ])
+        XCTAssertEqual(session.tax.status, .unknown)
+    }
+
+    func testTaxStatus_nonAutomaticComputationType_isReady() {
+        let session = makeCheckoutSession([
+            "tax_meta": [
+                "computation_type": "dynamic",
+                "status": "requires_location_inputs",
+            ],
+        ])
+        XCTAssertEqual(session.tax.status, .ready)
     }
 
 }

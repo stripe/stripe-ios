@@ -103,7 +103,7 @@ extension PaymentSheet {
         var linkUIAnalyticsValue: String? {
             if case .link(let option) = self {
                 switch option {
-                case .withPaymentDetails(let account, _, _, _):
+                case .withPaymentDetails(_, let account, _, _, _):
                     if account.hasCompletedSMSVerification {
                         // This was a returning user who logged in
                         return "native-returning"
@@ -180,8 +180,8 @@ extension PaymentSheet {
                 }
             }
 
-            init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, cardArtEnabled: Bool = false) {
-                image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle, cardArtEnabled: cardArtEnabled)
+            init(paymentOption: PaymentOption, currency: String?, iconStyle: PaymentSheet.Appearance.IconStyle, linkBrand: LinkBrand = .link) {
+                image = paymentOption.makeIcon(currency: currency, iconStyle: iconStyle)
                 switch paymentOption {
                 case .applePay:
                     label = String.Localized.apple_pay
@@ -195,25 +195,34 @@ extension PaymentSheet {
                         let sublabel = linkedBank.last4.flatMap { "••••\($0)" }
                         labels = Labels(label: linkedBank.bankName ?? .Localized.bank, sublabel: sublabel)
                     } else {
-                        labels = Labels(label: paymentMethod.expandedPaymentSheetLabel, sublabel: paymentMethod.paymentSheetSublabel)
+                        labels = Labels(
+                            label: paymentMethod.expandedPaymentSheetLabel(brand: linkBrand),
+                            sublabel: paymentMethod.paymentSheetSublabel(brand: linkBrand)
+                        )
                     }
-                    label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams)
+                    label = paymentMethod.paymentOptionLabel(confirmParams: confirmParams, brand: linkBrand)
                     paymentMethodType = paymentMethod.type.identifier
                     billingDetails = paymentMethod.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
                 case .new(let confirmParams):
-                    label = confirmParams.paymentSheetLabel
-                    labels = Labels(label: confirmParams.expandedPaymentSheetLabel, sublabel: confirmParams.paymentSheetSublabel)
+                    label = confirmParams.paymentSheetLabel(brand: linkBrand)
+                    labels = Labels(
+                        label: confirmParams.expandedPaymentSheetLabel(brand: linkBrand),
+                        sublabel: confirmParams.paymentSheetSublabel
+                    )
                     paymentMethodType = confirmParams.paymentMethodType.identifier
                     billingDetails = confirmParams.paymentMethodParams.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = nil
                 case .link(let option):
-                    if case let .signUp(_, _, _, _, confirmParams) = option {
-                        labels = Labels(label: confirmParams.expandedPaymentSheetLabel, sublabel: confirmParams.paymentSheetSublabel)
+                    if case let .signUp(_, _, _, _, _, confirmParams) = option {
+                        labels = Labels(
+                            label: confirmParams.expandedPaymentSheetLabel(brand: linkBrand),
+                            sublabel: confirmParams.paymentSheetSublabel
+                        )
                     } else {
-                        labels = Labels(label: STPPaymentMethodType.link.displayName, sublabel: option.paymentSheetSubLabel)
+                        labels = Labels(label: linkBrand.displayName, sublabel: option.displayPaymentSheetSubLabel(brand: linkBrand))
                     }
-                    label = option.paymentSheetLabel
+                    label = option.paymentSheetLabel(brand: linkBrand)
                     paymentMethodType = option.paymentMethodType
                     billingDetails = option.billingDetails?.toPaymentSheetBillingDetails()
                     shippingDetails = option.shippingAddress
@@ -243,9 +252,6 @@ extension PaymentSheet {
 
         private var presentPaymentOptionsCompletionWithResult: ((Bool) -> Void)?
         private var didDismissLinkVerificationDialog: Bool = false
-        // We check the experiment assignment when creating the FlowController view controller, but we don't want to log the layout experiment exposure until the sheet is actually presented
-        // If the FlowController is loaded with a selected payment option and the user confirms without presenting the sheet, the layout had no bearing on the user's actions, so we don't want that session included in the experiment
-        private var hasLoggedLayoutExperimentExposure: Bool = false
 
         // If a WalletButtonsView is currently visible
         var walletButtonsViewState: WalletButtonsViewState = .hidden {
@@ -300,6 +306,7 @@ extension PaymentSheet {
         private(set) var didPresentAndContinue: Bool = false
         private var confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
+        private var linkAccountObserver: LinkAccountContextObserver?
 
         // MARK: - Initializer (Internal)
 
@@ -317,11 +324,16 @@ extension PaymentSheet {
                 configuration: configuration,
                 loadResult: loadResult,
                 analyticsHelper: analyticsHelper,
-                walletButtonsViewState: self.walletButtonsViewState,
-                shouldLogExperimentExposure: false
+                walletButtonsViewState: self.walletButtonsViewState
             )
             self.viewController.flowControllerDelegate = self
             self.confirmationChallenge = confirmationChallenge
+            self.linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.updatePaymentOption()
+                }
+            }
+            _ = self.linkAccountObserver
 
             updatePaymentOption()
         }
@@ -385,31 +397,36 @@ extension PaymentSheet {
         /// - Parameter checkout: A fully loaded Checkout instance whose ``Checkout.session`` is non-nil.
         /// - Parameter configuration: Configuration for the PaymentSheet. e.g. your business name, Customer details, etc.
         /// - Parameter completion: This is called with either a valid PaymentSheet.FlowController instance or an error if loading failed.
-        @MainActor @_spi(CheckoutSessionsPreview) public static func create(
+        @_spi(STP)
+        @_spi(ReactNativeSDK)
+        @MainActor
+        public static func create(
             checkout: Checkout,
             configuration: PaymentSheet.Configuration,
             completion: @escaping (Result<PaymentSheet.FlowController, Error>) -> Void
         ) {
-            guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-                completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
-                return
-            }
-            if checkout.state.isLoading {
-                let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.FlowController.create(checkout:configuration:completion:)."
-                assertionFailure(message)
-                completion(.failure(PaymentSheetError.integrationError(nonPIIDebugDescription: message)))
-                return
-            }
-            var config = configuration
-            stpSession.applyAddressOverrides(to: &config)
-            create(mode: .checkoutSession(stpSession),
-                   configuration: config
-            ) { result in
-                if case .success(let flowController) = result {
-                    checkout.integrationDelegate = flowController
+            Task { @MainActor in
+                do {
+                    try await checkout.awaitPendingOperations()
+                } catch {
+                    completion(.failure(error))
+                    return
                 }
-                completion(result)
+                guard let stpSession = checkout.stpSession else {
+                    stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
+                    completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
+                    return
+                }
+                var config = configuration
+                stpSession.applyAddressOverrides(to: &config)
+                create(mode: .checkoutSession(stpSession),
+                       configuration: config
+                ) { result in
+                    if case .success(let flowController) = result {
+                        checkout.integrationDelegate = flowController
+                    }
+                    completion(result)
+                }
             }
         }
 
@@ -498,9 +515,6 @@ extension PaymentSheet {
 
             let showPaymentOptions: () -> Void = { [weak self] in
                 guard let self = self else { return }
-
-                // Log experiment exposure now that the sheet is being presented
-                self.logExperimentExposureIfNeeded()
 
                 // Set the PaymentSheetViewController as the content of our bottom sheet
                 let bottomSheetVC = Self.makeBottomSheetViewController(
@@ -664,30 +678,62 @@ extension PaymentSheet {
         /// - Parameter checkout: The Checkout instance whose session has been updated.
         /// - Parameter completion: Called when the update completes with an optional error. Your implementation should get the customer's updated payment option by using the `paymentOption` property and update your UI. If an error occurred, retry.
         /// - Note: Don't call `confirm` or `present` until the update succeeds. Don't call this method while PaymentSheet is being presented.
-        @MainActor @_spi(CheckoutSessionsPreview) public func update(
+        @_spi(STP)
+        @_spi(ReactNativeSDK)
+        @MainActor
+        public func update(
             checkout: Checkout,
             completion: @escaping (Error?) -> Void
         ) {
             assert(Thread.isMainThread, "PaymentSheet.FlowController.update must be called from the main thread.")
             assert(!isPresented, "PaymentSheet.FlowController.update must be when PaymentSheet is not presented.")
-            guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-                stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-                completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
-                return
+            let updateID = beginUpdate()
+            Task { @MainActor in
+                do {
+                    try await checkout.awaitPendingOperations()
+                } catch {
+                    self.failUpdate(updateID)
+                    completion(error)
+                    return
+                }
+                guard !self.isPresented else {
+                    let message = "PaymentSheet.FlowController.update must be called when PaymentSheet is not presented."
+                    assertionFailure(message)
+                    let error = PaymentSheetError.integrationError(nonPIIDebugDescription: message)
+                    self.failUpdate(updateID)
+                    completion(error)
+                    return
+                }
+                guard let stpSession = checkout.stpSession else {
+                    stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
+                    self.failUpdate(updateID)
+                    completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
+                    return
+                }
+                stpSession.applyAddressOverrides(to: &configuration)
+                performUpdate(mode: .checkoutSession(stpSession), updateID: updateID, completion: completion)
             }
-            if checkout.state.isLoading {
-                let message = "A Checkout operation is already in progress. Wait for it to complete before calling PaymentSheet.FlowController.update(checkout:completion:)."
-                assertionFailure(message)
-                completion(PaymentSheetError.integrationError(nonPIIDebugDescription: message))
-                return
-            }
-            stpSession.applyAddressOverrides(to: &configuration)
-            performUpdate(mode: .checkoutSession(stpSession), completion: completion)
         }
 
-        private func performUpdate(mode: PaymentSheet.InitializationMode, completion: @escaping (Error?) -> Void) {
-            let updateID = UUID()
+        @discardableResult
+        private func beginUpdate(updateID: UUID = UUID()) -> UUID {
             latestUpdateContext = UpdateContext(id: updateID)
+            return updateID
+        }
+
+        private func failUpdate(_ updateID: UUID) {
+            guard latestUpdateContext?.id == updateID else {
+                return
+            }
+            latestUpdateContext?.status = .failed
+        }
+
+        private func performUpdate(
+            mode: PaymentSheet.InitializationMode,
+            updateID: UUID = UUID(),
+            completion: @escaping (Error?) -> Void
+        ) {
+            beginUpdate(updateID: updateID)
 
             // 1. Load the intent, payment methods, and link data from the Stripe API
             PaymentSheetLoader.load(
@@ -717,13 +763,10 @@ extension PaymentSheet {
                         loadResult: loadResult,
                         analyticsHelper: analyticsHelper,
                         walletButtonsViewState: walletButtonsViewState,
-                        previousPaymentOption: self.internalPaymentOption,
-                        shouldLogExperimentExposure: false
+                        previousPaymentOption: self.internalPaymentOption
                     )
                     self.viewController.flowControllerDelegate = self
                     self.confirmationChallenge = confirmationChallenge
-                    // Defer experiment exposure logging until next presentation
-                    self.hasLoggedLayoutExperimentExposure = false
 
                     // Update the payment option and synchronously pre-load image into cache
                     self.updatePaymentOption()
@@ -745,26 +788,33 @@ extension PaymentSheet {
                 intent: viewController.loadResult.intent,
                 elementsSession: viewController.loadResult.elementsSession,
                 savedPaymentMethods: viewController.savedPaymentMethods, // Note: not using load result!
-                paymentMethodTypes: viewController.loadResult.paymentMethodTypes
+                paymentMethodTypes: viewController.loadResult.paymentMethodTypes,
+                paymentMethodMessagingPromotionsHelper: viewController.loadResult.paymentMethodMessagingPromotionsHelper,
+                paymentMethodOrientation: viewController.loadResult.paymentMethodOrientation
             )
             self.viewController = Self.makeViewController(
                 configuration: self.configuration,
                 loadResult: updatedLoadResult,
                 analyticsHelper: analyticsHelper,
                 walletButtonsViewState: self.walletButtonsViewState,
-                previousPaymentOption: self.internalPaymentOption,
-                shouldLogExperimentExposure: false
+                previousPaymentOption: self.internalPaymentOption
             )
             self.viewController.flowControllerDelegate = self
-            // Defer experiment exposure logging until next presentation
-            self.hasLoggedLayoutExperimentExposure = false
             updatePaymentOption()
         }
 
         /// Updates the published paymentOption property based on the current state
         func updatePaymentOption() {
             if let selectedPaymentOption = internalPaymentOption {
-                paymentOption = PaymentOptionDisplayData(paymentOption: selectedPaymentOption, currency: intent.currency, iconStyle: configuration.appearance.iconStyle, cardArtEnabled: configuration.appearance.cardArtEnabled)
+                paymentOption = PaymentOptionDisplayData(
+                    paymentOption: selectedPaymentOption,
+                    currency: intent.currency,
+                    iconStyle: configuration.appearance.iconStyle,
+                    linkBrand: configuration.resolvedLinkBrand(
+                        elementsSession: elementsSession,
+                        linkAccount: LinkAccountContext.shared.account
+                    )
+                )
             } else {
                 paymentOption = nil
             }
@@ -774,22 +824,6 @@ extension PaymentSheet {
         private func preloadPaymentOptionImage() {
             // Accessing paymentOption has the side-effect of ensuring its `image` property is loaded (e.g. from the internet instead of disk)
             _ = paymentOption?.image
-        }
-
-        /// Logs experiment exposure if it was deferred during initialization
-        private func logExperimentExposureIfNeeded() {
-            guard !hasLoggedLayoutExperimentExposure, configuration.paymentMethodLayout == .automatic else { return }
-            hasLoggedLayoutExperimentExposure = true
-
-            let experiments: [LoggableExperiment] = PaymentSheetLayoutExperiment.createExperiments(
-                loadResult: viewController.loadResult,
-                configuration: configuration,
-                analyticsHelper: analyticsHelper
-            )
-
-            experiments.forEach { experiment in
-                analyticsHelper.logExposure(experiment: experiment)
-            }
         }
 
         // MARK: Internal helper methods
@@ -814,19 +848,10 @@ extension PaymentSheet {
             loadResult: PaymentSheetLoader.LoadResult,
             analyticsHelper: PaymentSheetAnalyticsHelper,
             walletButtonsViewState: PaymentSheet.WalletButtonsViewState,
-            previousPaymentOption: PaymentOption? = nil,
-            shouldLogExperimentExposure: Bool = true
+            previousPaymentOption: PaymentOption? = nil
         ) -> FlowControllerViewControllerProtocol {
             let controller: FlowControllerViewControllerProtocol
-            // Resolve automatic layout based on experiment
-            var configuration = configuration
-            let resolvedPaymentMethodLayout = configuration.resolveLayout(
-                loadResult: loadResult,
-                configuration: configuration,
-                analyticsHelper: analyticsHelper,
-                shouldLogExperimentExposure: shouldLogExperimentExposure
-            )
-            switch resolvedPaymentMethodLayout {
+            switch loadResult.paymentMethodOrientation {
             case .horizontal:
                 controller = PaymentSheetFlowControllerViewController(
                     configuration: configuration,
@@ -993,7 +1018,7 @@ extension PaymentOption {
             switch confirmOption {
             case .wallet, .signUp, .withPaymentMethod:
                 return nil
-            case .withPaymentDetails(_, let paymentDetails, _, _):
+            case .withPaymentDetails(_, _, let paymentDetails, _, _):
                 return paymentDetails.stripeID
             }
         case .applePay, .new, .external:

@@ -8,7 +8,7 @@
 @testable import StripeApplePay
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@testable @_spi(STP) @_spi(CheckoutSessionsPreview) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@testable @_spi(STP) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(SharedPaymentToken) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
 @testable import StripePaymentsTestUtils
 import XCTest
 
@@ -485,6 +485,153 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
             XCTAssertEqual(sut.applePayLaterAvailability, .unavailable(.recurringTransaction))
         }
 #endif
+    }
+
+    // MARK: - CheckoutSession Line Items Tests
+
+    private func makeMerchantConfiguration() -> PaymentSheet.Configuration {
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.merchantDisplayName = "Acme"
+        config.applePay = applePayConfiguration
+        return config
+    }
+
+    func testCreatePaymentRequest_CheckoutSession_SingleLineItem() {
+        let lineItems: [Checkout.LineItem] = [
+            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: .testValue(2345)),
+        ]
+        let intent = Intent._testCheckoutSession(
+            mode: .payment,
+            amount: 2345,
+            currency: "USD",
+            lineItems: lineItems
+        )
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: makeMerchantConfiguration(), applePay: applePayConfiguration)
+
+        XCTAssertEqual(sut.paymentSummaryItems.count, 2)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, "Widget")
+        XCTAssertEqual(sut.paymentSummaryItems[0].amount, NSDecimalNumber(string: "23.45"))
+        XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
+        XCTAssertEqual(sut.paymentSummaryItems[1].label, "Acme")
+        XCTAssertEqual(sut.paymentSummaryItems[1].amount, NSDecimalNumber(string: "23.45"))
+        XCTAssertEqual(sut.paymentSummaryItems[1].type, .final)
+    }
+
+    func testCreatePaymentRequest_CheckoutSession_MultipleLineItemsWithQuantity() {
+        let lineItems: [Checkout.LineItem] = [
+            .init(id: "li_1", name: "Widget", quantity: 3, unitAmount: .testValue(1000)),
+            .init(id: "li_2", name: "Gadget", quantity: 1, unitAmount: .testValue(500)),
+        ]
+        let intent = Intent._testCheckoutSession(
+            mode: .payment,
+            amount: 3500,
+            currency: "USD",
+            lineItems: lineItems
+        )
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: makeMerchantConfiguration(), applePay: applePayConfiguration)
+
+        XCTAssertEqual(sut.paymentSummaryItems.count, 3)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, String.Localized.lineItemLabel(name: "Widget", quantity: 3))
+        XCTAssertEqual(sut.paymentSummaryItems[0].amount, NSDecimalNumber(string: "30.00"))
+        XCTAssertEqual(sut.paymentSummaryItems[1].label, "Gadget")
+        XCTAssertEqual(sut.paymentSummaryItems[1].amount, NSDecimalNumber(string: "5.00"))
+        XCTAssertEqual(sut.paymentSummaryItems[2].label, "Acme")
+        XCTAssertEqual(sut.paymentSummaryItems[2].amount, NSDecimalNumber(string: "35.00"))
+        XCTAssertEqual(sut.paymentSummaryItems[2].type, .final)
+    }
+
+    func testCreatePaymentRequest_CheckoutSession_WithBreakdownRows() {
+        let lineItems: [Checkout.LineItem] = [
+            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: .testValue(2000)),
+            .init(id: "li_2", name: "Gadget", quantity: 2, unitAmount: .testValue(500)),
+        ]
+        // subtotal = 3000, shipping = 500, tax = 200, discount = 100 -> total = 3600
+        let intent = Intent._testCheckoutSession(
+            mode: .payment,
+            amount: 3600,
+            currency: "USD",
+            lineItems: lineItems,
+            subtotal: 3000,
+            shippingAmount: 500,
+            taxAmount: 200,
+            discountAmount: 100
+        )
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: makeMerchantConfiguration(), applePay: applePayConfiguration)
+
+        XCTAssertEqual(sut.paymentSummaryItems.count, 7)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, "Widget")
+        XCTAssertEqual(sut.paymentSummaryItems[0].amount, NSDecimalNumber(string: "20.00"))
+        XCTAssertEqual(sut.paymentSummaryItems[1].label, String.Localized.lineItemLabel(name: "Gadget", quantity: 2))
+        XCTAssertEqual(sut.paymentSummaryItems[1].amount, NSDecimalNumber(string: "10.00"))
+        XCTAssertEqual(sut.paymentSummaryItems[2].label, String.Localized.subtotal)
+        XCTAssertEqual(sut.paymentSummaryItems[2].amount, NSDecimalNumber(string: "30.00"))
+        XCTAssertEqual(sut.paymentSummaryItems[3].label, String.Localized.shipping)
+        XCTAssertEqual(sut.paymentSummaryItems[3].amount, NSDecimalNumber(string: "5.00"))
+        XCTAssertEqual(sut.paymentSummaryItems[4].label, String.Localized.tax)
+        XCTAssertEqual(sut.paymentSummaryItems[4].amount, NSDecimalNumber(string: "2.00"))
+        XCTAssertEqual(sut.paymentSummaryItems[5].label, String.Localized.discount)
+        XCTAssertEqual(sut.paymentSummaryItems[5].amount, NSDecimalNumber(string: "-1.00"))
+        XCTAssertEqual(sut.paymentSummaryItems[6].label, "Acme")
+        XCTAssertEqual(sut.paymentSummaryItems[6].amount, NSDecimalNumber(string: "36.00"))
+        XCTAssertEqual(sut.paymentSummaryItems[6].type, .final)
+    }
+
+    func testCreatePaymentRequest_CheckoutSession_OmitsBreakdownWhenZero() {
+        let lineItems: [Checkout.LineItem] = [
+            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: .testValue(2345)),
+        ]
+        let intent = Intent._testCheckoutSession(
+            mode: .payment,
+            amount: 2345,
+            currency: "USD",
+            lineItems: lineItems,
+            subtotal: 2345,
+            shippingAmount: 0,
+            taxAmount: 0,
+            discountAmount: 0
+        )
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: makeMerchantConfiguration(), applePay: applePayConfiguration)
+
+        XCTAssertEqual(sut.paymentSummaryItems.count, 2)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, "Widget")
+        XCTAssertEqual(sut.paymentSummaryItems[1].label, "Acme")
+    }
+
+    func testCreatePaymentRequest_CheckoutSession_FallsBackWhenLineItemsEmpty() {
+        let intent = Intent._testCheckoutSession(mode: .payment, amount: 2345, currency: "USD")
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration)
+        XCTAssertEqual(sut.paymentSummaryItems.count, 1)
+        XCTAssertEqual(sut.paymentSummaryItems[0].amount, NSDecimalNumber(string: "23.45"))
+        XCTAssertEqual(sut.paymentSummaryItems[0].type, .final)
+    }
+
+    func testCreatePaymentRequest_CheckoutSession_MerchantPaymentSummaryItemsTakePrecedence() {
+        let merchantItems: [PKPaymentSummaryItem] = [
+            PKPaymentSummaryItem(label: "Custom", amount: NSDecimalNumber(string: "9.99"), type: .final),
+        ]
+        let applePay = PaymentSheet.ApplePayConfiguration(
+            merchantId: "merchant_id",
+            merchantCountryCode: "GB",
+            paymentSummaryItems: merchantItems
+        )
+
+        var config = PaymentSheet.Configuration._testValue_MostPermissive()
+        config.applePay = applePay
+
+        let lineItems: [Checkout.LineItem] = [
+            .init(id: "li_1", name: "Widget", quantity: 1, unitAmount: .testValue(2345)),
+        ]
+        let intent = Intent._testCheckoutSession(
+            mode: .payment,
+            amount: 2345,
+            currency: "USD",
+            lineItems: lineItems
+        )
+        let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: config, applePay: applePay)
+
+        XCTAssertEqual(sut.paymentSummaryItems.count, 1)
+        XCTAssertEqual(sut.paymentSummaryItems[0].label, "Custom")
+        XCTAssertEqual(sut.paymentSummaryItems[0].amount, NSDecimalNumber(string: "9.99"))
     }
 }
 

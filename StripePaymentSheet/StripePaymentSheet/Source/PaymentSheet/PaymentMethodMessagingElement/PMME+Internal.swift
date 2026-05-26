@@ -28,7 +28,11 @@ extension PaymentMethodMessagingElement {
     /// - Parameter downloadManager: The DownloadManager instance to use for downloading images.
     /// - Parameter analyticsClient: Optional analytics client for testing. Defaults to shared client.
     /// - Returns: A `CreationResult` object representing the result of the attempt to load the element.
-    static func create(configuration: Configuration, downloadManager: DownloadManager, analyticsClient: STPAnalyticsClientProtocol) async -> CreationResult {
+    static func create(
+        configuration: Configuration,
+        downloadManager: DownloadManager,
+        analyticsClient: STPAnalyticsClientProtocol
+    ) async -> CreationResult {
         // This being a singleton can theoretically cause problems when using multiple sessions-generating products at once
         // TODO(ocs-mobile): Make this not a singleton
         AnalyticsHelper.shared.generateSessionID()

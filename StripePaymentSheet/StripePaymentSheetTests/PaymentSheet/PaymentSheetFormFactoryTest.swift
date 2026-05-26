@@ -35,7 +35,32 @@ class MockElement: Element {
 }
 
 class PaymentSheetFormFactoryTest: XCTestCase {
+    private func extractBNPLHeaderView(from subtitle: SubtitleElement) -> BNPLFormHeaderView? {
+        if let headerView = subtitle.view as? BNPLFormHeaderView {
+            return headerView
+        }
+        return subtitle.view.subviews.compactMap { $0 as? BNPLFormHeaderView }.first
+    }
 
+    func testMakeKlarnaHeader_DefaultsToLegacyHeader() {
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.klarna], currency: "eur"),
+            elementsSession: ._testValue(paymentMethodTypes: ["klarna"]),
+            configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
+            paymentMethod: .stripe(.klarna),
+            paymentMethodOrientation: .vertical,
+            accountService: LinkAccountService(
+                apiClient: STPAPIClient(publishableKey: "pk_test_factory"),
+                elementsSession: ._testValue()
+            ),
+            analyticsHelper: nil
+        )
+
+        let header = factory.makeKlarnaHeader()
+        let headerView = extractBNPLHeaderView(from: header)
+
+        XCTAssertNil(headerView)
+    }
     private func makeCheckoutSessionIntent(
         offerSave: [String: Any]? = nil,
         hasCustomer: Bool = true
@@ -1849,6 +1874,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             elementsSession: ._testValue(paymentMethodTypes: ["fpx", "card"]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.cardPresent), // A payment method that doesn't have LUXE specs and in-code form definition
+            paymentMethodOrientation: .vertical,
             accountService: LinkAccountService._testValue(),
             analyticsHelper: ._testValue(analyticsClient: analyticsClient)
         )
@@ -1881,6 +1907,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: false),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
+                paymentMethodOrientation: .vertical,
                 linkAccount: PaymentSheetLinkAccount(
                     email: "example@example.com",
                     session: nil,
@@ -1928,6 +1955,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: false),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
+                paymentMethodOrientation: .vertical,
                 linkAccount: PaymentSheetLinkAccount(
                     email: "example@example.com",
                     session: nil,
@@ -1973,6 +2001,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: true),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
+                paymentMethodOrientation: .vertical,
                 linkAccount: PaymentSheetLinkAccount(
                     email: "example@example.com",
                     session: nil,
@@ -2018,6 +2047,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent, isLinkPassthroughModeEnabled: true),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
+                paymentMethodOrientation: .vertical,
                 linkAccount: PaymentSheetLinkAccount(
                     email: "example@example.com",
                     session: nil,
@@ -2063,6 +2093,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
+                paymentMethodOrientation: .vertical,
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
             ).make()
@@ -2109,6 +2140,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.card),
+                paymentMethodOrientation: .vertical,
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
             ).make()
@@ -2146,6 +2178,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                 elementsSession: ._testValue(intent: intent),
                 configuration: .paymentElement(configuration),
                 paymentMethod: .stripe(.iDEAL),
+                paymentMethodOrientation: .vertical,
                 accountService: LinkAccountService._testValue(),
                 analyticsHelper: ._testValue(analyticsClient: analyticsClient)
             ).make()

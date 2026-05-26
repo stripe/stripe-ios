@@ -39,6 +39,7 @@ final class LinkVerificationView: UIView {
     let linkAccount: PaymentSheetLinkAccountInfoProtocol
 
     private let appearance: LinkAppearance?
+    private let brand: LinkBrand
     private let allowLogoutInDialog: Bool
     private let consentViewModel: LinkConsentViewModel?
 
@@ -56,7 +57,7 @@ final class LinkVerificationView: UIView {
     }
 
     private lazy var header: Header = {
-        let header = Header()
+        let header = Header(brand: brand)
         header.closeButton.addTarget(self, action: #selector(didSelectCancel), for: .touchUpInside)
         return header
     }()
@@ -149,12 +150,14 @@ final class LinkVerificationView: UIView {
     required init(
         mode: Mode,
         linkAccount: PaymentSheetLinkAccountInfoProtocol,
+        brand: LinkBrand = .link,
         appearance: LinkAppearance? = nil,
         allowLogoutInDialog: Bool,
         consentViewModel: LinkConsentViewModel? = nil
     ) {
         self.mode = mode
         self.linkAccount = linkAccount
+        self.brand = brand
         self.appearance = appearance
         self.allowLogoutInDialog = allowLogoutInDialog
         self.consentViewModel = consentViewModel
