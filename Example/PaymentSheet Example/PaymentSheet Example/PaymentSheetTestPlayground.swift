@@ -148,6 +148,12 @@ struct PaymentSheetTestPlayground: View {
                                 }
                                 SearchableSettingView(setting: customerKeyTypeBinding, searchText: $searchText)
                                 SearchableSettingView(setting: customerModeBinding, searchText: $searchText)
+                                if playgroundController.settings.customerMode == .custom {
+                                    SearchableView(searchableName: "Customer ID", searchText: $searchText) {
+                                        TextField("cus_...", text: customerIdBinding)
+                                            .autocorrectionDisabled()
+                                    }
+                                }
                                 SearchableView(searchableName: "Amount Currency", searchText: $searchText) {
                                     HStack {
                                         SettingPickerView(setting: $playgroundController.settings.amount, customDisplayName: { amount in
@@ -339,6 +345,15 @@ struct PaymentSheetTestPlayground: View {
             playgroundController.settings.paymentMethodConfigurationId = (newString != "") ? newString : nil
         }
     }
+
+    var customerIdBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.customerId ?? ""
+        } set: { newString in
+            playgroundController.settings.customerId = (newString != "") ? newString : nil
+        }
+    }
+
     var customerModeBinding: Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
         Binding<PaymentSheetTestPlaygroundSettings.CustomerMode> {
             return playgroundController.settings.customerMode
@@ -652,7 +667,7 @@ struct PaymentSheetButtons: View {
         }
         .sheet(isPresented: $showingCart) {
             if #available(iOS 15.0, *), let checkout = playgroundController.checkout {
-                CheckoutCartSheet(checkout: checkout)
+                CheckoutCartSheet(checkout: checkout, currencySelectorAppearance: playgroundController.currencySelectorAppearance)
             }
         }
     }
