@@ -24,6 +24,11 @@ class LinkInlineSignupElementSnapshotTests: STPSnapshotTestCase {
         verify(sut)
     }
 
+    func testDefaultState_onelink() {
+        let sut = makeSUT(brand: .onelink)
+        verify(sut, identifier: "onelink")
+    }
+
     // WARNING: If this tests fails, see go/link-signup-consent-action-log to determine if a new consent_action is needed.
     func testExpandedState() {
         let sut = makeSUT(saveCheckboxChecked: true, userTypedEmailAddress: "user@example.com")
@@ -243,6 +248,7 @@ extension LinkInlineSignupElementSnapshotTests {
         saveCheckboxChecked: Bool = false,
         linkAccountEmailAddress: String? = nil,
         userTypedEmailAddress: String? = nil,
+        brand: LinkBrand = .link,
         country: String = "US",
         preFillName: String? = nil,
         preFillPhone: String? = nil,
@@ -272,10 +278,10 @@ extension LinkInlineSignupElementSnapshotTests {
 
         let viewModel = LinkInlineSignupViewModel(
             configuration: configuration,
-            brand: .link,
+            brand: brand,
             showCheckbox: showCheckbox,
             accountService: MockAccountService(),
-            resolvedLinkBrand: { $0?.linkBrand ?? .link },
+            resolvedLinkBrand: { $0?.linkBrand ?? brand },
             allowsDefaultOptIn: allowsDefaultOptIn,
             signupOptInFeatureEnabled: signupOptInFeatureEnabled,
             signupOptInInitialValue: signupOptInInitialValue,
