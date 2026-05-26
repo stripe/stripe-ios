@@ -60,7 +60,7 @@ extension CryptoOnrampCoordinator {
                     apiError: apiError,
                     during: operation,
                     apiClient: apiClient,
-                    docURL: nil
+                    docURL: apiError.docUrl?.absoluteString
                 )
             )
         )
