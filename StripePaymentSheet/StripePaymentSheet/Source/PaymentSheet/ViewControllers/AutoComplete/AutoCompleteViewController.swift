@@ -111,22 +111,30 @@ class AutoCompleteViewController: UIViewController {
 
         let container = UIView()
         container.addSubview(imageView)
+        // On iOS 26, UIListContentConfiguration positions text using cell.layoutMargins.leading (~16pt)
+        // plus the indentation offset (5pt), so the logo must match that same position.
+        let imageLeading: CGFloat
+        if #available(iOS 26, *) {
+            imageLeading = tableView.layoutMargins.left + 5
+        } else {
+            imageLeading = configuration.appearance.formInsets.leading
+        }
         var constraints = [
-            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.appearance.formInsets.leading),
+            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: imageLeading),
             imageView.centerYAnchor.constraint(equalTo: container.centerYAnchor),
             imageView.heightAnchor.constraint(equalToConstant: UIFont.preferredFont(forTextStyle: .footnote).lineHeight),
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: image.size.width / image.size.height),
         ]
         if #available(iOS 26, *) {
             let separator = UIView()
-            separator.backgroundColor = configuration.appearance.colors.componentDivider
+            separator.backgroundColor = tableView.separatorColor
             separator.translatesAutoresizingMaskIntoConstraints = false
             container.addSubview(separator)
             constraints += [
                 separator.topAnchor.constraint(equalTo: container.topAnchor),
-                separator.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-                separator.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-                separator.heightAnchor.constraint(equalToConstant: 0.33),
+                separator.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: tableView.layoutMargins.left),
+                separator.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -tableView.layoutMargins.right),
+                separator.heightAnchor.constraint(equalToConstant: 1.0),
             ]
         }
         NSLayoutConstraint.activate(constraints)
