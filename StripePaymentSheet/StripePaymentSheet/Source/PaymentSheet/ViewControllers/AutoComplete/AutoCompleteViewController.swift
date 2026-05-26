@@ -49,7 +49,7 @@ class AutoCompleteViewController: UIViewController {
             separatorView.isHidden = results.isEmpty
             tableView.reloadData()
             let showGoogleAttribution = !results.isEmpty && currentSource?.lowercased() == "google"
-            tableView.tableFooterView = showGoogleAttribution ? googleAttributionFooterView : UIView()
+            tableView.tableFooterView = showGoogleAttribution ? googleAttributionFooterView : nil
             latestError = nil // reset latest error whenever we get new results
         }
     }
@@ -104,7 +104,7 @@ class AutoCompleteViewController: UIViewController {
         return label
     }()
     lazy var googleAttributionFooterView: UIView = {
-        let image = Image.google_maps.makeImage()
+        let image = Image.google_maps_mark.makeImage()
         let imageView = UIImageView(image: image)
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -268,20 +268,22 @@ class AutoCompleteViewController: UIViewController {
 extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
         let query = autoCompleteLine.text
-        guard query.count >= 2 else {
-            debounceTask?.cancel()
-            autocompleteTask?.cancel()
-            results.removeAll()
-            return
-        }
         if configuration.useAutocompleteEndpoints {
+            guard query.count >= 2 else {
+                debounceTask?.cancel()
+                autocompleteTask?.cancel()
+                currentSource = nil
+                results.removeAll()
+                return
+            }
             debounceTask?.cancel()
             debounceTask = Task { @MainActor in
-                try? await Task.sleep(nanoseconds: 150_000_000)
+                try? await Task.sleep(nanoseconds: 100_000_000)
                 guard !Task.isCancelled else { return }
                 fetchAPIResults(query: query)
             }
-        } else {
+        } else if !query.isEmpty {
+            currentSource = "apple"
             addressSearchCompleter.queryFragment = query
         }
     }
@@ -305,7 +307,7 @@ extension AutoCompleteViewController: ElementDelegate {
                     countryCodes: countryCodes,
                     sessionToken: sessionToken
                 )
-                guard !Task.isCancelled, autoCompleteLine.text.count >= 2 else { return }
+                guard !Task.isCancelled else { return }
                 self.currentSource = response.source
                 self.results = response.suggestions
             } catch {
@@ -321,7 +323,6 @@ extension AutoCompleteViewController: ElementDelegate {
 // MARK: MKLocalSearchCompleterDelegate
 extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        guard autoCompleteLine.text.count >= 2 else { return }
         self.results = completer.results
     }
 

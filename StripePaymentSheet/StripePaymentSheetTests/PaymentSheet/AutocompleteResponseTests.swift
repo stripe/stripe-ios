@@ -16,7 +16,7 @@ class AutocompleteResponseTests: XCTestCase {
     func testDecodesResponse() {
         let response: [AnyHashable: Any] = [
             "source": "google",
-            "suggestions": [makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeID: "places/abc123")],
+            "suggestions": [makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: "places/abc123")],
         ]
         let result = AutocompleteResponse.decodedObject(fromAPIResponse: response)
         XCTAssertEqual(result?.source, "google")
@@ -27,8 +27,8 @@ class AutocompleteResponseTests: XCTestCase {
         let response: [AnyHashable: Any] = [
             "source": "google",
             "suggestions": [
-                makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeID: nil),
-                makeSuggestionDict(title: "456 Oak Ave", subtitle: "Brooklyn, NY", endOffset: 3, placeID: nil),
+                makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil),
+                makeSuggestionDict(title: "456 Oak Ave", subtitle: "Brooklyn, NY", endOffset: 3, placeId: nil),
             ],
         ]
         XCTAssertEqual(AutocompleteResponse.decodedObject(fromAPIResponse: response)?.suggestions.count, 2)
@@ -38,7 +38,7 @@ class AutocompleteResponseTests: XCTestCase {
         let response: [AnyHashable: Any] = [
             "source": "google",
             "suggestions": [
-                makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeID: nil),
+                makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil),
                 ["invalid": "data"],
             ],
         ]
@@ -63,19 +63,19 @@ class AutocompleteResponseTests: XCTestCase {
 
     func testDecodesSuggestionFields() {
         let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
-            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeID: "places/abc123")
+            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: "places/abc123")
         )
         XCTAssertEqual(suggestion?.title, "123 Main St")
         XCTAssertEqual(suggestion?.subtitle, "New York, NY")
-        XCTAssertEqual(suggestion?.placeID, "places/abc123")
+        XCTAssertEqual(suggestion?.placeId, "places/abc123")
     }
 
-    func testDecodesSuggestionWithNilPlaceID() {
+    func testDecodesSuggestionWithNilplaceId() {
         let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
-            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeID: nil)
+            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil)
         )
         XCTAssertNotNil(suggestion)
-        XCTAssertNil(suggestion?.placeID)
+        XCTAssertNil(suggestion?.placeId)
     }
 
     func testReturnsNilForMissingDisplayData() {
@@ -97,7 +97,7 @@ class AutocompleteResponseTests: XCTestCase {
 
     func testMatchRangeFromEndOffsetOnly() {
         let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
-            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeID: nil)
+            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil)
         )!
         XCTAssertEqual(suggestion.matches.count, 1)
         XCTAssertEqual(suggestion.matches[0], NSRange(location: 0, length: 3))
@@ -133,6 +133,22 @@ class AutocompleteResponseTests: XCTestCase {
         XCTAssertEqual(suggestion.matches[1], NSRange(location: 4, length: 4))
     }
 
+    func testMatchRangeWithNonBMPCharacterBefore() {
+        // 😀 is outside the BMP: 1 code point but 2 UTF-16 code units.
+        // Title: "😀 Main St" — code point offsets: 😀(0), space(1), M(2)...
+        // A match at code points [2, 6) should map to UTF-16 [3, 7), not [2, 6).
+        let dict: [AnyHashable: Any] = [
+            "display_data": [
+                "title": "😀 Main St",
+                "subtitle": "New York, NY",
+                "matches": [["start_offset": 2, "end_offset": 6]],
+            ],
+        ]
+        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse: dict)!
+        XCTAssertEqual(suggestion.matches.count, 1)
+        XCTAssertEqual(suggestion.matches[0], NSRange(location: 3, length: 4))
+    }
+
     func testMatchMissingEndOffsetIsSkipped() {
         let dict: [AnyHashable: Any] = [
             "display_data": [
@@ -145,11 +161,86 @@ class AutocompleteResponseTests: XCTestCase {
         XCTAssertEqual(suggestion.matches.count, 0)
     }
 
+    // MARK: - address field
+
+    func testDecodesAddress() {
+        let dict = makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil, address: [
+            "line1": "123 Main St",
+            "line2": "Apt 4",
+            "city": "New York",
+            "state": "NY",
+            "postal_code": "10001",
+            "country": "US",
+        ])
+        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse: dict)!
+        XCTAssertEqual(suggestion.address?.line1, "123 Main St")
+        XCTAssertEqual(suggestion.address?.line2, "Apt 4")
+        XCTAssertEqual(suggestion.address?.city, "New York")
+        XCTAssertEqual(suggestion.address?.state, "NY")
+        XCTAssertEqual(suggestion.address?.postalCode, "10001")
+        XCTAssertEqual(suggestion.address?.country, "US")
+    }
+
+    func testAddressIsNilWhenAbsent() {
+        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
+            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil)
+        )!
+        XCTAssertNil(suggestion.address)
+    }
+
+    func testAddressFieldsAreOptional() {
+        let dict = makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil, address: [
+            "line1": "123 Main St",
+        ])
+        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse: dict)!
+        XCTAssertEqual(suggestion.address?.line1, "123 Main St")
+        XCTAssertNil(suggestion.address?.line2)
+        XCTAssertNil(suggestion.address?.city)
+        XCTAssertNil(suggestion.address?.state)
+        XCTAssertNil(suggestion.address?.postalCode)
+        XCTAssertNil(suggestion.address?.country)
+    }
+
+    // MARK: - asAddress
+
+    func testAsAddressReturnsAddressWhenPresent() {
+        let dict = makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil, address: [
+            "line1": "123 Main St",
+            "city": "New York",
+            "state": "NY",
+            "postal_code": "10001",
+            "country": "US",
+        ])
+        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse: dict)!
+        let expectation = expectation(description: "asAddress")
+        suggestion.asAddress { address in
+            XCTAssertEqual(address?.line1, "123 Main St")
+            XCTAssertEqual(address?.city, "New York")
+            XCTAssertEqual(address?.state, "NY")
+            XCTAssertEqual(address?.postalCode, "10001")
+            XCTAssertEqual(address?.country, "US")
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+    }
+
+    func testAsAddressReturnsNilWhenAbsent() {
+        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
+            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil)
+        )!
+        let expectation = expectation(description: "asAddress")
+        suggestion.asAddress { address in
+            XCTAssertNil(address)
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+    }
+
     // MARK: - AddressSearchResult conformance
 
     func testTitleHighlightRangesMatchMatches() {
         let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
-            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeID: nil)
+            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil)
         )!
         XCTAssertEqual(suggestion.titleHighlightRanges.count, 1)
         XCTAssertEqual(suggestion.titleHighlightRanges[0].rangeValue, NSRange(location: 0, length: 3))
@@ -157,14 +248,14 @@ class AutocompleteResponseTests: XCTestCase {
 
     func testSubtitleHighlightRangesAreEmpty() {
         let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
-            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeID: nil)
+            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil)
         )!
         XCTAssertTrue(suggestion.subtitleHighlightRanges.isEmpty)
     }
 
     // MARK: - Helpers
 
-    private func makeSuggestionDict(title: String, subtitle: String, endOffset: Int, placeID: String?) -> [AnyHashable: Any] {
+    private func makeSuggestionDict(title: String, subtitle: String, endOffset: Int, placeId: String?, address: [AnyHashable: Any]? = nil) -> [AnyHashable: Any] {
         var dict: [AnyHashable: Any] = [
             "display_data": [
                 "title": title,
@@ -172,8 +263,11 @@ class AutocompleteResponseTests: XCTestCase {
                 "matches": [["end_offset": endOffset]],
             ],
         ]
-        if let placeID {
-            dict["place_id"] = placeID
+        if let placeId {
+            dict["place_id"] = placeId
+        }
+        if let address {
+            dict["address"] = address
         }
         return dict
     }

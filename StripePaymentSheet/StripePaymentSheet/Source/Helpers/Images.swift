@@ -22,8 +22,8 @@ enum Image: String, CaseIterable, ImageMaker {
     /// https://developer.apple.com/apple-pay/marketing/
     case apple_pay_mark = "apple_pay_mark"
 
-    /// https://developers.google.com/maps/documentation/places/android-sdk/attributions
-    case google_maps = "google_maps"
+    /// https://developers.google.com/maps/documentation/places/web-service/policies
+    case google_maps_mark = "google_maps_mark"
 
     // Payment Method Type images
     case pm_type_affirm = "icon-pm-affirm"

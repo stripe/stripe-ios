@@ -7,6 +7,18 @@
 
 import Foundation
 
+private extension String {
+    /// Converts a half-open code-point range [start, end) to an NSRange of UTF-16 code units.
+    func utf16Range(fromCodePointOffsets start: Int, to end: Int) -> NSRange? {
+        let scalars = unicodeScalars
+        guard
+            let startIndex = scalars.index(scalars.startIndex, offsetBy: start, limitedBy: scalars.endIndex),
+            let endIndex = scalars.index(scalars.startIndex, offsetBy: end, limitedBy: scalars.endIndex)
+        else { return nil }
+        return NSRange(startIndex..<endIndex, in: self)
+    }
+}
+
 class AutocompleteResponse: NSObject {
 
     /// The list of autocomplete suggestions
@@ -60,22 +72,28 @@ class AddressSuggestion: NSObject {
     /// The ranges to bold, as NSRanges over UTF-16 code units.
     let matches: [NSRange]
 
-    /// The place ID for fetching full address details.
-    let placeID: String?
+    /// The place id for fetching full address details.
+    let placeId: String?
+
+    /// The pre-filled address components, if returned by the API.
+    let address: PaymentSheet.Address?
 
     /// The raw API response used to create this object.
     let allResponseFields: [AnyHashable: Any]
 
-    private init(title: String,
-                 subtitle: String,
-                 matches: [NSRange],
-                 placeID: String?,
-                 allResponseFields: [AnyHashable: Any]
+    private init(
+        title: String,
+        subtitle: String,
+        matches: [NSRange],
+        placeId: String?,
+        address: PaymentSheet.Address?,
+        allResponseFields: [AnyHashable: Any]
     ) {
         self.title = title
         self.subtitle = subtitle
         self.matches = matches
-        self.placeID = placeID
+        self.placeId = placeId
+        self.address = address
         self.allResponseFields = allResponseFields
     }
 }
@@ -91,8 +109,7 @@ extension AddressSuggestion: AddressSearchResult {
     }
 
     func asAddress(completion: @escaping (PaymentSheet.Address?) -> Void) {
-        // Place details lookup not yet implemented; return nil to fall back to manual entry.
-        completion(nil)
+        completion(address)
     }
 }
 
@@ -111,13 +128,29 @@ extension AddressSuggestion: STPAPIResponseDecodable {
         let matches: [NSRange] = matchesDict.compactMap { matchDict in
             guard let endOffset = matchDict["end_offset"] as? Int else { return nil }
             let startOffset = matchDict["start_offset"] as? Int ?? 0
-            return NSRange(location: startOffset, length: endOffset - startOffset)
+            return title.utf16Range(fromCodePointOffsets: startOffset, to: endOffset)
         }
+
+        let address: PaymentSheet.Address?
+        if let addressDict = dict["address"] as? [AnyHashable: Any] {
+            address = PaymentSheet.Address(
+                city: addressDict["city"] as? String,
+                country: addressDict["country"] as? String,
+                line1: addressDict["line1"] as? String,
+                line2: addressDict["line2"] as? String,
+                postalCode: addressDict["postal_code"] as? String,
+                state: addressDict["state"] as? String
+            )
+        } else {
+            address = nil
+        }
+
         return AddressSuggestion(
             title: title,
             subtitle: subtitle,
             matches: matches,
-            placeID: dict["place_id"] as? String,
+            placeId: dict["place_id"] as? String,
+            address: address,
             allResponseFields: dict
         ) as? Self
     }
