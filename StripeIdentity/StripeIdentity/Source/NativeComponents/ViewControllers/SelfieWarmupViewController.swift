@@ -21,13 +21,6 @@ final class SelfieWarmupViewController: IdentityFlowViewController {
         let warmupView = SelfieWarmupView()
         let showsTrainingConsent = trainingConsentText?.isEmpty == false
 
-        try warmupView.configure(
-            trainingConsentText: trainingConsentText,
-            didOpenURL: { url in
-                didOpenURLHandler?(url)
-            }
-        )
-
         let buttons: [IdentityFlowView.ViewModel.Button] = {
             if showsTrainingConsent {
                 return [
@@ -61,6 +54,19 @@ final class SelfieWarmupViewController: IdentityFlowViewController {
                 },
             ]
         }()
+        let buttonTopContentViewModel: HTMLTextView.ViewModel? = {
+            guard let trainingConsentText, !trainingConsentText.isEmpty else {
+                return nil
+            }
+
+            return .init(
+                text: SelfieWarmupViewController.trainingConsentHTMLText(trainingConsentText),
+                style: .html(makeStyle: SelfieWarmupViewController.trainingConsentHTMLStyle),
+                didOpenURL: { url in
+                    didOpenURLHandler?(url)
+                }
+            )
+        }()
         flowViewModel = .init(
             headerViewModel: nil,
             contentViewModel: .init(
@@ -68,7 +74,7 @@ final class SelfieWarmupViewController: IdentityFlowViewController {
                 inset: nil
             ),
             buttons: buttons,
-            buttonTopContentViewModel: nil
+            buttonTopContentViewModel: buttonTopContentViewModel
         )
         super.init(sheetController: sheetController, analyticsScreenName: .selfieWarmup)
         didOpenURLHandler = self.openInSafariViewController
@@ -84,4 +90,23 @@ final class SelfieWarmupViewController: IdentityFlowViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+}
+
+private extension SelfieWarmupViewController {
+    static func trainingConsentHTMLText(_ trainingConsentText: String) -> String {
+        return """
+            <b>\(String.Localized.selfieWarmupTrainingConsentTitle)</b><br/><br/>\(trainingConsentText)
+            """
+    }
+
+    static func trainingConsentHTMLStyle() -> HTMLStyle {
+        let contentColor = IdentityUI.htmlLineTextColor
+        return .init(
+            bodyFont: IdentityUI.preferredFont(forTextStyle: .caption1),
+            bodyColor: contentColor,
+            isLinkUnderlined: true,
+            shouldCenterText: true,
+            linkColor: contentColor
+        )
+    }
 }
