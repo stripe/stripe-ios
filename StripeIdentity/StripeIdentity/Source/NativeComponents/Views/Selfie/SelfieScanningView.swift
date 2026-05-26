@@ -682,7 +682,7 @@ private final class CaptureTickMarksView: UIView {
         static let shadowBlur: CGFloat = 4
         static let centeredShadowRingColor = UIColor.black.withAlphaComponent(0.2)
         static let centeredShadowOuterColor = UIColor.black.withAlphaComponent(0.28)
-        static let centeredShadowClearPadding: CGFloat = 2
+        static let centeredShadowClearPadding: CGFloat = 0
         static let centeredShadowFeatherPadding: CGFloat = 44
     }
 
@@ -783,7 +783,7 @@ private final class CaptureTickMarksView: UIView {
             outerRadius
         )
         let featherLocation = min(
-            max((featherRadius - clearRadius) / (outerRadius - clearRadius), 0.12),
+            max((featherRadius - clearRadius) / (outerRadius - clearRadius), 0.06),
             0.96
         )
         let colors = [
