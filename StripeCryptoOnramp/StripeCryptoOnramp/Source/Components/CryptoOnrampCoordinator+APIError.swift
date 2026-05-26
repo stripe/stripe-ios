@@ -9,6 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 /// Details from an app attestation API error, enriched with SDK-local diagnostic context.
+@_spi(CryptoOnrampAlpha)
 public struct AppAttestationAPIError: APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
@@ -94,6 +95,7 @@ public struct AppAttestationAPIError: APIErrorContextProviding {
 }
 
 /// Details from an uncategorized backend API error, enriched with SDK-local diagnostic context.
+@_spi(CryptoOnrampAlpha)
 public struct UncategorizedAPIError: APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
