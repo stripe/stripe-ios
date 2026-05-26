@@ -70,7 +70,7 @@ class AutocompleteResponseTests: XCTestCase {
         XCTAssertEqual(suggestion?.placeId, "places/abc123")
     }
 
-    func testDecodesSuggestionWithNilplaceId() {
+    func testDecodesSuggestionWithNilPlaceId() {
         let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
             makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil)
         )
