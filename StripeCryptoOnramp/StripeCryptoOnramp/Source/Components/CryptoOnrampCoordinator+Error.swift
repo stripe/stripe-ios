@@ -10,7 +10,6 @@ import Foundation
 
 @_spi(CryptoOnrampAlpha)
 public extension CryptoOnrampCoordinator {
-
     /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
     enum Error: LocalizedError {
 
@@ -153,7 +152,6 @@ public extension CryptoOnrampCoordinator {
             }
         }
     }
-
 }
 
 extension CryptoOnrampCoordinator.Error: CustomDebugStringConvertible {
