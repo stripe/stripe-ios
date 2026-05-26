@@ -32,12 +32,13 @@ extension ConfirmButton {
                 appearance.primaryButton.textColor = contentOnPrimaryColor
             }
 
-            if let buttonConfiguration = linkAppearance.primaryButton {
-                appearance.primaryButton.cornerRadius = buttonConfiguration.cornerRadius
+            if let cornerRadius = linkAppearance.primaryButton.cornerRadius {
+                appearance.primaryButton.cornerRadius = cornerRadius
+            }
 
-                // Adjust the margins to back solve for the `LinkAppearance` customized height.
-                let desiredHeight = buttonConfiguration.height
-                let verticalMargin = LinkUI.verticalMarginForPrimaryButton(withDesiredHeight: desiredHeight)
+            // Adjust the margins to back solve for the `LinkAppearance` customized height.
+            if let height = linkAppearance.primaryButton.height {
+                let verticalMargin = LinkUI.verticalMarginForPrimaryButton(withDesiredHeight: height)
                 directionalLayoutMargins.top = verticalMargin
                 directionalLayoutMargins.bottom = verticalMargin
             }
