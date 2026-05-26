@@ -28,9 +28,6 @@ final class SelfieScanningView: UIView {
             IdentityUI.preferredFont(forTextStyle: .body).withSize(12)
         }
 
-        static let flashAnimationDuration: TimeInterval = 0.2
-        static let flashOverlayAlpha: CGFloat = 0.8
-
         static let scannedImageSize = CGSize(width: 172, height: 172)
         static let scannedImageSpacing: CGFloat = 12
         static let scannedImageScrollIndicatorMargin: CGFloat = 8
@@ -184,14 +181,6 @@ final class SelfieScanningView: UIView {
 
     /// Camera preview
     private let cameraPreviewView = CameraPreviewView()
-
-    /// Creates flash animation by animating alpha
-    private let flashOverlayView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.alpha = 0
-        return view
-    }()
 
     private let capturedImageView: UIImageView = {
         let imageView = UIImageView()
@@ -376,7 +365,7 @@ final class SelfieScanningView: UIView {
             previewContainerView.isHidden = false
             havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
 
-        case .videoPreview(let cameraSession, let showFlashAnimation, let statusText, let showCaptureGuideShadow):
+        case .videoPreview(let cameraSession, _, let statusText, let showCaptureGuideShadow):
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
             previewContainerView.isHidden = false
@@ -387,9 +376,6 @@ final class SelfieScanningView: UIView {
             captureTickMarksView.showsCenteredShadow = showCaptureGuideShadow
             if let statusText {
                 configureStatusLabel(statusText)
-            }
-            if showFlashAnimation {
-                animateFlash()
             }
 
         case .scanned(let images, let consentText, let consentHandler, let openURLHandler, let retakeSelfieHandler):
@@ -470,7 +456,6 @@ extension SelfieScanningView {
         previewContainerView.contentView.addAndPinSubview(capturedImageView)
         previewContainerView.contentView.addAndPinSubview(capturedImageBlurView)
         previewContainerView.contentView.addAndPinSubview(captureTickMarksView)
-        previewContainerView.contentView.addAndPinSubview(flashOverlayView)
         previewContainerView.contentView.addSubview(statusLabelContainerView)
         statusLabelContainerView.addAndPinSubview(
             statusContentStackView,
@@ -620,31 +605,6 @@ extension SelfieScanningView {
         }
 
         NSLayoutConstraint.activate(constraints)
-    }
-
-    fileprivate func animateFlash() {
-        animateFlashInDirection(forwards: true) { [weak self] _ in
-            self?.animateFlashInDirection(forwards: false)
-        }
-    }
-
-    fileprivate func animateFlashInDirection(
-        forwards shouldAnimateForwards: Bool,
-        completion: ((Bool) -> Void)? = nil
-    ) {
-        let options: UIView.AnimationOptions =
-            shouldAnimateForwards ? [.curveEaseIn] : [.curveEaseOut]
-        let alpha = shouldAnimateForwards ? Styling.flashOverlayAlpha : 0
-
-        UIView.animate(
-            withDuration: Styling.flashAnimationDuration,
-            delay: 0,
-            options: options,
-            animations: { [weak self] in
-                self?.flashOverlayView.alpha = alpha
-            },
-            completion: completion
-        )
     }
 
     @objc fileprivate func didToggleConsent() {
