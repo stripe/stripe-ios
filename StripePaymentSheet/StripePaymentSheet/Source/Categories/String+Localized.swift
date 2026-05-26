@@ -151,6 +151,13 @@ extension String.Localized {
         )
     }
 
+    static var payment_method_details: String {
+        STPLocalizedString(
+            "Payment method details",
+            "Label for a read-only field displaying payment method details."
+        )
+    }
+
     static var payment_method_details_cannot_be_changed: String {
         STPLocalizedString(
             "Payment method details cannot be changed.",
