@@ -388,22 +388,6 @@ final class LinkInlineSignupViewModel {
         }
     }
 
-    var showLogoInEmailField: Bool {
-        switch mode {
-        case .checkbox, .textFieldsOnlyEmailFirst:
-            return true
-        case .checkboxWithDefaultOptIn:
-            // We show it below the signup view
-            return false
-        case .textFieldsOnlyPhoneFirst:
-            // Already shown in the phone number field
-            return false
-        case .signupOptIn:
-            // Not applicable
-            return false
-        }
-    }
-
     init(
         configuration: PaymentElementConfiguration,
         brand: LinkBrand,
