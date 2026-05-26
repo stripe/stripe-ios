@@ -232,8 +232,8 @@ extension String.Localized {
 
     static var liveCaptureMode: String {
         STPLocalizedString(
-            "Live",
-            "Segmented control option for live identity document capture"
+            "Auto",
+            "Segmented control option for automatic identity document capture"
         )
     }
 

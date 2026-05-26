@@ -212,11 +212,14 @@
 /* State when identity document has been successfully scanned */
 "Scanned" = "Scanned";
 
-/* Segmented control option for live identity document capture */
-"Live" = "Live";
+/* Segmented control option for automatic identity document capture */
+"Auto" = "Auto";
 
 /* Segmented control option for manual identity document upload */
 "Manual" = "Manual";
+
+/* State when a manual identity document image has been captured */
+"Image taken" = "Image taken";
 
 /* Button to select a file to upload */
 "Select" = "Select";
@@ -313,4 +316,3 @@
 
 /* Text for message of warning alert */
 "Your selfie images have not been saved. Do you want to leave?" = "Your selfie images have not been saved. Do you want to leave?";
-
