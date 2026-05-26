@@ -238,19 +238,6 @@ final class PaymentSheetLoader {
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
 
-            // Log card art experiment exposure
-            if let cardArtExperiment = CardArtExperiment.create(
-                elementsSession: elementsSession,
-                configuration: configuration,
-                analyticsHelper: analyticsHelper,
-                paymentMethodTypes: paymentMethodTypes,
-                savedPaymentMethods: filteredSavedPaymentMethods,
-                paymentMethodOrientation: paymentMethodOrientation,
-                selectedPaymentOption: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex)
-            ) {
-                analyticsHelper.logExposure(experiment: cardArtExperiment)
-            }
-
             // Temporary band-aid for pre-loading card art: fire-and-forget fetch to warm the in-meory cache for PS.FC
             // and embedded PaymentOptionDisplayData APIs.
             // TODO: Revisit overall pre-loading approach to make this work for other payment methods
@@ -365,11 +352,17 @@ final class PaymentSheetLoader {
         }
 
         let linkAccountService = LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession)
-        return try await linkAccountService.lookupAccount(
+        let linkAccount = try await linkAccountService.lookupAccount(
             withEmail: lookupEmail.email,
             emailSource: lookupEmail.source,
             doNotLogConsumerFunnelEvent: doNotLogConsumerFunnelEvent
         )
+        // PaymentSheet can be torn down and rebuilt while the customer is still using the same Link account.
+        // Preserve the verified session across the second lookup so the user does not need to OTP again.
+        if let currentLinkAccount = LinkAccountContext.shared.account {
+            linkAccount?.reuseVerifiedSession(from: currentLinkAccount)
+        }
+        return linkAccount
     }
 
     @MainActor

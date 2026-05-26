@@ -154,7 +154,8 @@ final class SavedPaymentMethodRowButtonTests: XCTestCase {
         )
 
         XCTAssertEqual(sut.rowButton.label.text, "Onelink")
-        XCTAssertEqual(sut.rowButton.sublabel.text, "Onelink")
+        let sublabel = sut.rowButton.sublabel as! RowButton.PlainSublabelView
+        XCTAssertEqual(sublabel.textLabel.text, "Onelink")
     }
 
     func testLinkPassthroughPreservesFundingDetailsInAccessibilityLabel() {
@@ -168,7 +169,8 @@ final class SavedPaymentMethodRowButtonTests: XCTestCase {
         )
 
         XCTAssertEqual(sut.rowButton.label.text, "Onelink")
-        XCTAssertEqual(sut.rowButton.sublabel.text, "•••• 4242")
+        let sublabel = sut.rowButton.sublabel as! RowButton.PlainSublabelView
+        XCTAssertEqual(sublabel.textLabel.text, "•••• 4242")
         let accessibilityLabel = (sut.rowButton.accessibilityElements?.first as? UIView)?.accessibilityLabel
         XCTAssertEqual(
             accessibilityLabel,

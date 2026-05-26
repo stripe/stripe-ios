@@ -9,7 +9,7 @@ import Foundation
 
 extension PaymentSheetFormFactory {
     func makeKlarna() -> PaymentMethodElement {
-        let headerElement = makeCopyLabel(text: .Localized.buy_now_or_pay_later_with_klarna)
+        let headerElement = makeKlarnaHeader()
 
         // Email is required by Klarna, name and phone are optional
         let contactInfoSection = makeContactInformationSection(

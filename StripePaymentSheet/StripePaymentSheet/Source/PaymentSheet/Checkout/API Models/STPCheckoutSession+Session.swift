@@ -8,11 +8,34 @@
 import Foundation
 @_spi(STP) import StripePayments
 
-extension STPCheckoutSession: Checkout.Session {
+extension STPCheckoutSession {
     var minorUnitsAmountDivisor: Int? {
         guard let currency else { return nil }
         let oneMinorUnitInMajor = NSDecimalNumber.stp_decimalNumber(withAmount: 1, currency: currency)
         return Int(truncating: NSDecimalNumber(value: 1).dividing(by: oneMinorUnitInMajor))
+    }
+
+    /// Builds a public, read-only ``Checkout.Session`` snapshot from this object.
+    func makePublicSession() -> Checkout.Session {
+        return Checkout.Session(
+            id: id,
+            billingAddress: billingAddress,
+            businessName: businessName,
+            currency: currency,
+            currencyOptions: currencyOptions,
+            discountAmounts: discountAmounts,
+            email: email,
+            lineItems: lineItems,
+            livemode: livemode,
+            minorUnitsAmountDivisor: minorUnitsAmountDivisor,
+            savedPaymentMethods: savedPaymentMethods,
+            shipping: shipping,
+            shippingAddress: shippingAddress,
+            shippingOptions: shippingOptions,
+            status: status,
+            tax: tax,
+            total: total
+        )
     }
 }
 

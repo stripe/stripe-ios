@@ -27,8 +27,11 @@ ci_scripts/run_tests.rb --scheme StripePaymentSheet
 # Run all framework tests
 ci_scripts/run_tests.rb --all
 
-# Record snapshot reference images (tests will fail during recording)
-ci_scripts/run_tests.rb --record-snapshots --test StripePaymentSheetTests/SomeSnapshotTest
+# Record snapshot reference images and update if meaningfully different
+ci_scripts/record_snapshots.rb
+
+# Preview snapshot changes without updating reference images
+ci_scripts/record_snapshots.rb --dry-run
 
 # Record network responses (tests will fail during recording)
 ci_scripts/run_tests.rb --record-network --test StripePaymentsTests/STPCardFunctionalTest
@@ -152,7 +155,7 @@ The Stripe iOS SDK is organized as a multi-module framework with clear dependenc
 
 ### Testing Strategy
 - Comprehensive unit tests for each module in corresponding `*Tests/` directories
-- Snapshot tests for UI components using FBSnapshotTestCase
+- Snapshot tests for UI components using FBSnapshotTestCase (always record to temp dir, CI auto-commits meaningful changes via `ci_scripts/record_snapshots.rb`)
 - Integration tests with real backend APIs (marked as functional tests)
 - Example apps for manual testing in `Example/` directory
 

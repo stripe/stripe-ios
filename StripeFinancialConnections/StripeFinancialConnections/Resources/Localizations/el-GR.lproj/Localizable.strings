@@ -26,6 +26,8 @@
 
 "Continue linking your account" = "Συνεχίστε τη σύνδεση του λογαριασμού σας";
 
+"Continue with %@" = "Συνέχεια με %@";
+
 "Continue with Link" = "Συνέχεια με το Link";
 
 "Email address" = "Διεύθυνση email";
@@ -110,6 +112,8 @@
 
 "Try searching another bank or %@" = "Δοκιμάστε να αναζητήσετε άλλη τράπεζα ή %@";
 
+"Use information you previously saved with your %@ account." = "Χρησιμοποιήστε τα στοιχεία που είχατε αποθηκεύσει προηγουμένως με τον λογαριασμό σας %@.";
+
 "Use information you previously saved with your Link account." = "Χρησιμοποιήστε τα στοιχεία που είχατε αποθηκεύσει προηγουμένως με τον λογαριασμό σας στο Link.";
 
 "Use test account" = "Χρήση δοκιμαστικού λογαριασμού";
@@ -150,9 +154,13 @@
 
 "Your account numbers don't match." = "Οι αριθμοί λογαριασμού σας δε συμφωνούν.";
 
+"Your account was connected, but couldn't be saved to %@." = "Ο λογαριασμός σας συνδέθηκε, αλλά δεν ήταν δυνατή η αποθήκευση του στο %@.";
+
 "Your account was connected, but couldn't be saved to Link." = "Ο λογαριασμός σας συνδέθηκε, αλλά δεν ήταν δυνατή η αποθήκευσή του στο Link.";
 
 "Your account was connected." = "Ο λογαριασμός σας συνδέθηκε.";
+
+"Your accounts were connected, but couldn't be saved to %@." = "Οι λογαριασμοί σας ήταν συνδεδεμένοι, αλλά δεν ήταν δυνατή η αποθήκευση τους στο %@.";
 
 "Your accounts were connected, but couldn't be saved to Link." = "Οι λογαριασμοί σας συνδέθηκαν, αλλά δεν ήταν δυνατή η αποθήκευσή τους στο Link.";
 

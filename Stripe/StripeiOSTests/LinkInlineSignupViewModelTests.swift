@@ -359,6 +359,7 @@ extension LinkInlineSignupViewModelTests {
             brand: .link,
             showCheckbox: showCheckbox,
             accountService: MockAccountService(shouldFailLookup: shouldFailLookup),
+            resolvedLinkBrand: { $0?.linkBrand ?? .link },
             allowsDefaultOptIn: allowsDefaultOptIn,
             signupOptInFeatureEnabled: signupOptInFeatureEnabled,
             signupOptInInitialValue: signupOptInInitialValue,

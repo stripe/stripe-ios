@@ -15,7 +15,7 @@ final class PayWithLinkButtonTests: XCTestCase {
         let consumerSessionClientSecret: String?
     }
 
-    func testWalletHeaderViewStoresProvidedBrand() {
+    func testWalletHeaderViewUsesProvidedBrandForPayWithLinkButton() throws {
         let header = PaymentSheetViewController.WalletHeaderView(
             options: [.link],
             appearance: .default,
@@ -23,7 +23,10 @@ final class PayWithLinkButtonTests: XCTestCase {
             delegate: nil
         )
 
-        XCTAssertEqual(header.linkBrand, .onelink)
+        let button = try XCTUnwrap(
+            findPayWithLinkButton(in: header)
+        )
+        XCTAssertEqual(button.accessibilityLabel, "Pay with Onelink")
     }
 
     func testBrandUsesDistinctPrimaryLinkLogoAsset() {
@@ -50,7 +53,7 @@ final class PayWithLinkButtonTests: XCTestCase {
         let onelinkButton = PayWithLinkButton(brand: .onelink)
 
         XCTAssertEqual(linkButton.accessibilityLabel, "Pay with Link")
-        XCTAssertEqual(onelinkButton.accessibilityLabel, "Pay with Link")
+        XCTAssertEqual(onelinkButton.accessibilityLabel, "Pay with Onelink")
     }
 
     func testOnelinkButtonReplacesBrandTextWithLogoAttachment() throws {
@@ -68,7 +71,7 @@ final class PayWithLinkButtonTests: XCTestCase {
 
     func testLocalizedBrandStrings_useProvidedBrandDisplayName() {
         XCTAssertEqual(String.Localized.pay_with_link(brand: .link), "Pay with Link")
-        XCTAssertEqual(String.Localized.pay_with_link(brand: .onelink), "Pay with Link")
+        XCTAssertEqual(String.Localized.pay_with_link(brand: .onelink), "Pay with Onelink")
         XCTAssertEqual(String.Localized.link_subtitle_text, "Simple, secure one-click payments")
         XCTAssertEqual(
             String.Localized.pay_faster_everywhere_brand_is_accepted(brand: .link),
@@ -76,11 +79,11 @@ final class PayWithLinkButtonTests: XCTestCase {
         )
         XCTAssertEqual(
             String.Localized.pay_faster_everywhere_brand_is_accepted(brand: .onelink),
-            "Pay faster everywhere Link is accepted."
+            "Pay faster everywhere Onelink is accepted."
         )
         XCTAssertEqual(
             String.Localized.save_my_info_for_faster_checkout(with: .onelink),
-            "Save my info for faster checkout with Link"
+            "Save my info for faster checkout with Onelink"
         )
     }
 
@@ -97,14 +100,13 @@ final class PayWithLinkButtonTests: XCTestCase {
         onelinkButton.frame = CGRect(origin: .zero, size: CGSize(width: 240, height: 44))
         onelinkButton.layoutIfNeeded()
 
-        let expectedWidth = ceil(
+        let expectedWidth =
             PayWithLinkButton.Constants.logoSize.height
-                * (onelinkButton.primaryLinkLogoImage.size.width / onelinkButton.primaryLinkLogoImage.size.height)
-        )
+            * (onelinkButton.primaryLinkLogoImage.size.width / onelinkButton.primaryLinkLogoImage.size.height)
         let logoView = try XCTUnwrap(findVisibleLogoImageView(in: onelinkButton, matching: onelinkButton.primaryLinkLogoImage))
 
         XCTAssertEqual(logoView.bounds.height, PayWithLinkButton.Constants.logoSize.height)
-        XCTAssertEqual(logoView.bounds.width, expectedWidth)
+        XCTAssertEqual(logoView.bounds.width, expectedWidth, accuracy: 0.01)
         XCTAssertGreaterThan(logoView.bounds.width, PayWithLinkButton.Constants.logoSize.width)
     }
 
@@ -124,6 +126,20 @@ final class PayWithLinkButtonTests: XCTestCase {
         for subview in view.subviews where !subview.isHidden {
             if let imageView = findVisibleLogoImageView(in: subview, matching: image) {
                 return imageView
+            }
+        }
+
+        return nil
+    }
+
+    private func findPayWithLinkButton(in view: UIView) -> PayWithLinkButton? {
+        if let button = view as? PayWithLinkButton {
+            return button
+        }
+
+        for subview in view.subviews {
+            if let button = findPayWithLinkButton(in: subview) {
+                return button
             }
         }
 

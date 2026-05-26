@@ -1,7 +1,18 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+### PaymentSheet
+* [Fixed] Fixed `LinkAppearance.PrimaryButtonConfiguration` styling so unspecified custom height and corner radius values use Link defaults.
+* [Fixed] Fixed Japan address form missing the city field. ([#6506](https://github.com/stripe/stripe-ios/issues/6506))
+* [Added] Added support for Card Art for saved payment methods when using CustomerSessions
+* [Added] `PaymentSheet.FlowController.PaymentOptionDisplayData.image` and `EmbeddedPaymentElement.PaymentOptionDisplayData` may now return card art for saved card. Integrators displaying this image in very compact layouts may wish to revisit sizing to best accommodate richer payment method visuals.
+
+### Address Element
+* [Fixed] Fixed Japan address form missing the city field. ([#6506](https://github.com/stripe/stripe-ios/issues/6506))
+
+## 25.15.0 2026-05-18
+* Added support for [Onelink](https://support.stripe.com/questions/what-is-onelink).
 
 ## 25.14.0 2026-05-11
 ### PaymentSheet
