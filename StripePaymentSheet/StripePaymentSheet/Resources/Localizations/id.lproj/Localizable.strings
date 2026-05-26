@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Tambahkan";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (termasuk %4$@%% biaya konversi).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Tambahkan rekening bank AS";
 
 "Add a card" = "Tambahkan sebuah kartu";

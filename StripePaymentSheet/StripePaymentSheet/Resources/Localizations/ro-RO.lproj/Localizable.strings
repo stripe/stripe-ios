@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Adăugare";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (include %4$@%% taxă de conversie).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Adăugați un cont bancar din SUA";
 
 "Add a card" = "Adăugare card";
