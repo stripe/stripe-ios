@@ -36,7 +36,7 @@ extension PaymentOption {
             case .signUp(_, _, _, _, _, let confirmParams):
                 return confirmParams.makeIcon(forDarkBackground: isDarkMode, currency: currency, iconStyle: iconStyle)
             case .wallet, .withPaymentMethod, .withPaymentDetails:
-                return Image.link_icon_with_inset.makeImage()
+                return Image.paymentSheetLinkLogoImage
             }
         case .external(let paymentMethod, _):
             return PaymentSheet.PaymentMethodType.external(paymentMethod).makeImage(
