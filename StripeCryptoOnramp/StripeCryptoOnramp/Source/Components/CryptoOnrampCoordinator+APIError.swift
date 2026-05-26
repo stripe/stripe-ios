@@ -13,7 +13,7 @@ import Foundation
 public struct AppAttestationAPIError: APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
-    let context: APIErrorContext
+    public let context: APIErrorContext
 
     /// Creates an app attestation API error from shared API error context.
     ///
@@ -99,7 +99,7 @@ public struct AppAttestationAPIError: APIErrorContextProviding {
 public struct UncategorizedAPIError: APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
-    let context: APIErrorContext
+    public let context: APIErrorContext
 
     /// Creates an uncategorized API error from shared API error context.
     ///
@@ -137,50 +137,52 @@ public struct UncategorizedAPIError: APIErrorContextProviding {
 }
 
 /// A type that exposes shared API error context.
-protocol APIErrorContextProviding: LocalizedError, CustomDebugStringConvertible {
+@_spi(CryptoOnrampAlpha)
+public protocol APIErrorContextProviding: LocalizedError, CustomDebugStringConvertible {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     var context: APIErrorContext { get }
 }
 
 /// Contains the common properties of all API error types.
-struct APIErrorContext {
+@_spi(CryptoOnrampAlpha)
+public struct APIErrorContext {
 
     /// The backend `reason` value associated with this error, if one is available.
-    let reason: String?
+    public let reason: String?
 
     /// The SDK operation that was running when this error occurred.
-    let operation: String
+    public let operation: String
 
     /// The bundle identifier for the app using the SDK, if one is available.
-    let appIdentifier: String?
+    public let appIdentifier: String?
 
     /// The Stripe mode associated with this error, if it can be determined.
-    let mode: String?
+    public let mode: String?
 
     /// The Stripe iOS SDK version.
-    let sdkVersion: String
+    public let sdkVersion: String
 
     /// The backend API error code associated with this error, if one is available.
-    let apiErrorCode: String?
+    public let apiErrorCode: String?
 
     /// The backend API error type associated with this error, if one is available.
-    let apiErrorType: String?
+    public let apiErrorType: String?
 
     /// The backend developer-facing API error message associated with this error, if one is available.
-    let apiErrorMessage: String?
+    public let apiErrorMessage: String?
 
     /// The backend user-facing API error message associated with this error, if one is available.
-    let apiUserMessage: String?
+    public let apiUserMessage: String?
 
     /// A URL to documentation for this error, if one is available.
-    let docURL: String?
+    public let docURL: String?
 
     /// The original error that was mapped to this error.
-    let underlyingError: Swift.Error
+    public let underlyingError: Swift.Error
 
     /// The Stripe API request ID associated with this error, if one is available.
-    var requestID: String? {
+    public var requestID: String? {
         guard let stripeError = underlyingError as? StripeError,
               case let .apiError(apiError) = stripeError else {
             return nil
@@ -228,7 +230,7 @@ struct APIErrorContext {
     }
 }
 
-/// Default protocol implementation to surface values from the underlying `APIErrorContext`.
+/// Default protocol implementation to surface values from the underlying `APIErrorContext` for convenience.
 extension APIErrorContextProviding {
 
     /// The backend `reason` value associated with this error, if one is available.

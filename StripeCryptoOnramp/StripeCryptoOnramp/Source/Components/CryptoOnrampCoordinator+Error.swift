@@ -8,7 +8,9 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+@_spi(CryptoOnrampAlpha)
 public extension CryptoOnrampCoordinator {
+
     /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
     enum Error: LocalizedError {
 
