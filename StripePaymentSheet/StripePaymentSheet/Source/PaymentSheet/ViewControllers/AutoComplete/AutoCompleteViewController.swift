@@ -111,12 +111,25 @@ class AutoCompleteViewController: UIViewController {
 
         let container = UIView()
         container.addSubview(imageView)
-        NSLayoutConstraint.activate([
+        var constraints = [
             imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.appearance.formInsets.leading),
             imageView.centerYAnchor.constraint(equalTo: container.centerYAnchor),
             imageView.heightAnchor.constraint(equalToConstant: UIFont.preferredFont(forTextStyle: .footnote).lineHeight),
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: image.size.width / image.size.height),
-        ])
+        ]
+        if #available(iOS 26, *) {
+            let separator = UIView()
+            separator.backgroundColor = configuration.appearance.colors.componentDivider
+            separator.translatesAutoresizingMaskIntoConstraints = false
+            container.addSubview(separator)
+            constraints += [
+                separator.topAnchor.constraint(equalTo: container.topAnchor),
+                separator.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+                separator.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+                separator.heightAnchor.constraint(equalToConstant: 0.33),
+            ]
+        }
+        NSLayoutConstraint.activate(constraints)
         container.frame = CGRect(x: 0, y: 0, width: 0, height: 34)
         return container
     }()
