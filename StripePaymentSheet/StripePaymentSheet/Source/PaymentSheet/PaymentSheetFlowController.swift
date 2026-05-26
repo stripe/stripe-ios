@@ -220,7 +220,7 @@ extension PaymentSheet {
                             sublabel: confirmParams.paymentSheetSublabel
                         )
                     } else {
-                        labels = Labels(label: option.brand.displayName, sublabel: option.displayPaymentSheetSubLabel())
+                        labels = Labels(label: linkBrand.displayName, sublabel: option.displayPaymentSheetSubLabel(brand: linkBrand))
                     }
                     label = option.paymentSheetLabel(brand: linkBrand)
                     paymentMethodType = option.paymentMethodType
@@ -306,6 +306,7 @@ extension PaymentSheet {
         private(set) var didPresentAndContinue: Bool = false
         private var confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
+        private var linkAccountObserver: LinkAccountContextObserver?
 
         // MARK: - Initializer (Internal)
 
@@ -327,6 +328,12 @@ extension PaymentSheet {
             )
             self.viewController.flowControllerDelegate = self
             self.confirmationChallenge = confirmationChallenge
+            self.linkAccountObserver = LinkAccountContextObserver { [weak self] _ in
+                DispatchQueue.main.async {
+                    self?.updatePaymentOption()
+                }
+            }
+            _ = self.linkAccountObserver
 
             updatePaymentOption()
         }
@@ -405,7 +412,7 @@ extension PaymentSheet {
                     completion(.failure(error))
                     return
                 }
-                guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+                guard let stpSession = checkout.stpSession else {
                     stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
                     completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
                     return
@@ -697,7 +704,7 @@ extension PaymentSheet {
                     completion(error)
                     return
                 }
-                guard let stpSession = checkout.state.session as? STPCheckoutSession else {
+                guard let stpSession = checkout.stpSession else {
                     stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
                     self.failUpdate(updateID)
                     completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
@@ -803,7 +810,10 @@ extension PaymentSheet {
                     paymentOption: selectedPaymentOption,
                     currency: intent.currency,
                     iconStyle: configuration.appearance.iconStyle,
-                    linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                    linkBrand: configuration.resolvedLinkBrand(
+                        elementsSession: elementsSession,
+                        linkAccount: LinkAccountContext.shared.account
+                    )
                 )
             } else {
                 paymentOption = nil

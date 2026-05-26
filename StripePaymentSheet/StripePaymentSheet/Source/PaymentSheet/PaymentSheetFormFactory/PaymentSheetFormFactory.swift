@@ -128,7 +128,7 @@ class PaymentSheetFormFactory {
         let linkBrand: LinkBrand = {
             switch configuration {
             case .paymentElement(let configuration, _):
-                return configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                return configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount)
             case .customerSheet:
                 return .link
             }

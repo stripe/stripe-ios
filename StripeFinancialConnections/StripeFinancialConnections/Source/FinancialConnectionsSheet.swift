@@ -334,6 +334,7 @@ final public class FinancialConnectionsSheet {
             financialConnectionsApiClient.isLinkWithStripe = true
             financialConnectionsApiClient.consumerSession = consumerSession
             financialConnectionsApiClient.consumerPublishableKey = existingConsumer.publishableKey
+            financialConnectionsApiClient.authenticatedLinkBrand = existingConsumer.linkBrand
         }
 
         hostController = HostController(

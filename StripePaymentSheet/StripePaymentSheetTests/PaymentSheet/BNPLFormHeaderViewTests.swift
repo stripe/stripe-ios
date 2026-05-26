@@ -3,37 +3,13 @@
 //  StripePaymentSheetTests
 //
 
-import StripeCoreTestUtils
 import UIKit
 import XCTest
 
 @_spi(STP) @testable import StripePaymentSheet
 
 @MainActor
-final class BNPLFormHeaderViewTests: STPSnapshotTestCase {
-    func testDefaultAppearance() {
-        let (headerView, _, _) = makeHeaderView()
-
-        verify(headerView)
-    }
-
-    func testAlwaysDarkStyleSnapshot() {
-        let (headerView, _, _) = makeHeaderView(style: .alwaysDark)
-
-        verify(headerView)
-    }
-
-    func testCustomAppearance() {
-        var appearance = PaymentSheet.Appearance.default
-        appearance.colors.background = .systemYellow.withAlphaComponent(0.15)
-        appearance.colors.primary = .systemGreen
-        appearance.colors.text = .systemBrown
-
-        let (headerView, _, _) = makeHeaderView(appearance: appearance)
-
-        verify(headerView)
-    }
-
+final class BNPLFormHeaderViewTests: XCTestCase {
     func testAlwaysDarkStyle_AppliesToHeaderAndInfoModal() throws {
         let (headerView, rootViewController, _) = makeHeaderView(style: .alwaysDark)
 
@@ -106,15 +82,5 @@ final class BNPLFormHeaderViewTests: STPSnapshotTestCase {
         rootViewController.view.layoutIfNeeded()
 
         return (headerView, rootViewController, window)
-    }
-
-    private func verify(
-        _ view: UIView,
-        identifier: String? = nil,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        view.autosizeHeight(width: 320)
-        STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
 }

@@ -38,6 +38,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private var shouldShowApplePay: Bool
     private var shouldShowLink: Bool
     private var linkBrand: LinkBrand
+    private let linkBrandProvider: () -> LinkBrand
     private var paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     private let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
 
@@ -58,6 +59,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         shouldShowApplePay: Bool,
         shouldShowLink: Bool,
         linkBrand: LinkBrand = .link,
+        linkBrandProvider: (() -> LinkBrand)? = nil,
         savedPaymentMethodAccessoryType: RowButton.RightAccessoryButton.AccessoryType?,
         overrideHeaderView: UIView?,
         appearance: PaymentSheet.Appearance,
@@ -78,6 +80,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
         self.shouldShowApplePay = shouldShowApplePay
         self.shouldShowLink = shouldShowLink
         self.linkBrand = linkBrand
+        self.linkBrandProvider = linkBrandProvider ?? { linkBrand }
         self.paymentMethodTypes = paymentMethodTypes
         self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
 
@@ -227,6 +230,13 @@ class VerticalPaymentMethodListViewController: UIViewController {
     private func updateLinkRow(for linkAccount: PaymentSheetLinkAccount?) {
         guard let linkRowButton else {
             return
+        }
+
+        let resolvedBrand = linkBrandProvider()
+        if resolvedBrand != linkBrand {
+            linkBrand = resolvedBrand
+            linkRowButton.setLabel(text: resolvedBrand.displayName)
+            linkRowButton.setPrimaryAccessibilityLabel(String.Localized.pay_with_link(brand: resolvedBrand))
         }
 
         let sublabel = linkAccount?.email ?? .Localized.link_subtitle_text

@@ -82,7 +82,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         let intent: Intent
         let elementsSession: STPElementsSession
         let configuration: PaymentElementConfiguration
-        let linkBrand: LinkBrand
+        var linkBrand: LinkBrand
         let shouldOfferApplePay: Bool
         let shouldFinishOnClose: Bool
         let shouldShowSecondaryCta: Bool
@@ -228,7 +228,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
                 intent: intent,
                 elementsSession: elementsSession,
                 configuration: configuration,
-                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession),
+                linkBrand: configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount),
                 shouldOfferApplePay: shouldOfferApplePay,
                 shouldFinishOnClose: shouldFinishOnClose,
                 shouldShowSecondaryCta: shouldShowSecondaryCta,
@@ -315,6 +315,7 @@ final class PayWithLinkViewController: BottomSheetViewController {
         DispatchQueue.main.async { [weak self] in
             let linkAccount = notification.object as? PaymentSheetLinkAccount
             linkAccount?.paymentSheetLinkAccountDelegate = self
+            self?.syncContextLinkBrand(using: linkAccount)
         }
     }
 
@@ -382,6 +383,13 @@ final class PayWithLinkViewController: BottomSheetViewController {
         case .verified:
             loadAndPresentWallet()
         }
+    }
+
+    func syncContextLinkBrand(using linkAccount: PaymentSheetLinkAccount?) {
+        context.linkBrand = context.configuration.resolvedLinkBrand(
+            elementsSession: context.elementsSession,
+            linkAccount: linkAccount
+        )
     }
 }
 
@@ -461,6 +469,7 @@ private extension PayWithLinkViewController {
                 switch result {
                 case .success(let account):
                     self.linkAccount = account
+                    self.syncContextLinkBrand(using: account)
                     continuation.resume(returning: account)
                 case .failure:
                     continuation.resume(returning: nil)
@@ -621,7 +630,8 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             clientSecret: consumerSession.clientSecret,
             emailAddress: consumerSession.emailAddress,
             redactedFormattedPhoneNumber: consumerSession.redactedFormattedPhoneNumber,
-            verificationSessions: verificationSessions
+            verificationSessions: verificationSessions,
+            linkBrand: consumerSession.linkBrand
         )
 
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataIfNecessary(analyticsHelper: context.analyticsHelper, intent: context.intent, elementsSession: context.elementsSession)
@@ -657,7 +667,9 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
                 },
                 clientAttributionMetadata: clientAttributionMetadata
             ),
-            brand: context.linkBrand,
+            // Only `.onelink` should be treated as an explicit client override for FC.
+            // A `.link` selection should behave like no override so backend brand updates can still win.
+            linkBrand: context.configuration.link.brand == .onelink ? .onelink : nil,
             onEvent: nil,
             from: self,
             completion: { result in
@@ -739,6 +751,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
 
     func accountUpdated(_ linkAccount: PaymentSheetLinkAccount) {
         self.linkAccount = linkAccount
+        syncContextLinkBrand(using: linkAccount)
         updateSupportedPaymentMethods()
         updateUI()
     }
@@ -788,6 +801,7 @@ extension PayWithLinkViewController: PayWithLinkCoordinating {
             intent: context.intent,
             elementsSession: context.elementsSession,
             configuration: context.configuration,
+            linkAccount: linkAccount,
             alwaysUseEphemeralSession: true
         )
         payWithLinkVC.payWithLinkDelegate = payWithLinkWebDelegate
@@ -824,7 +838,7 @@ extension PayWithLinkViewController: PaymentSheetLinkAccountDelegate {
                     let verificationController = LinkVerificationController(
                         mode: .modal,
                         linkAccount: account,
-                        brand: self.context.linkBrand,
+                        brand: account.linkBrand ?? self.context.linkBrand,
                         configuration: self.context.configuration
                     )
                     verificationController.present(from: self) { result in

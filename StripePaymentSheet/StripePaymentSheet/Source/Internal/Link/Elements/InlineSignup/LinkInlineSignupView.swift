@@ -7,6 +7,7 @@
 //
 
 import SafariServices
+@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -51,11 +52,11 @@ final class LinkInlineSignupView: UIView {
     )
 
     private(set) lazy var emailElement: LinkEmailElement = {
-        let element = LinkEmailElement(defaultValue: viewModel.emailAddress,
-                                       isOptional: viewModel.isEmailOptional,
-                                       showLogo: viewModel.showLogoInEmailField,
-                                       theme: theme,
-                                       brand: viewModel.brand)
+        let element = LinkEmailElement(
+            defaultValue: viewModel.emailAddress,
+            isOptional: viewModel.isEmailOptional,
+            theme: theme
+        )
         element.indicatorTintColor = theme.colors.primary
         return element
     }()
@@ -80,7 +81,6 @@ final class LinkInlineSignupView: UIView {
         case .textFieldsOnlyPhoneFirst:
             return PhoneNumberElement(
                 isOptional: viewModel.isPhoneNumberOptional,
-                infoView: LinkMoreInfoView(brand: viewModel.brand),
                 theme: theme
             )
         }
@@ -100,7 +100,7 @@ final class LinkInlineSignupView: UIView {
         return phoneNumberElement
     }()
 
-    private(set) lazy var legalTermsElement: StaticElement? = {
+    private lazy var legalTermsView: LinkLegalTermsView? = {
         guard viewModel.mode != .signupOptIn else {
             return nil
         }
@@ -112,9 +112,15 @@ final class LinkInlineSignupView: UIView {
         legalView.font = theme.fonts.caption
         legalView.textColor = theme.colors.secondaryText
         legalView.tintColor = theme.colors.primary
+        return legalView
+    }()
 
+    private(set) lazy var legalTermsElement: StaticElement? = {
+        guard let legalTermsView else {
+            return nil
+        }
         return StaticElement(
-            view: legalView
+            view: legalTermsView
         )
     }()
 
@@ -239,6 +245,15 @@ final class LinkInlineSignupView: UIView {
         viewModel.delegate = self
         checkboxElement.delegate = self
         formElement.delegate = self
+    }
+
+    func updateBrand(_ brand: LinkBrand) {
+        guard viewModel.brand != brand else {
+            return
+        }
+        viewModel.brand = brand
+        checkboxElement.updateBrand(brand)
+        legalTermsView?.updateBrand(brand)
     }
 
     func updateUI(animated: Bool = false) {

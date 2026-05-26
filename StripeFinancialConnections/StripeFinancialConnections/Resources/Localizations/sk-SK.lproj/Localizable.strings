@@ -26,6 +26,8 @@
 
 "Continue linking your account" = "Pokračujte s prepojením účtu.";
 
+"Continue with %@" = "Pokračovať s %@";
+
 "Continue with Link" = "Pokračovať so službou Link";
 
 "Email address" = "E-mailová adresa";
@@ -110,6 +112,8 @@
 
 "Try searching another bank or %@" = "Skúste vyhľadať inú banku alebo %@";
 
+"Use information you previously saved with your %@ account." = "Použite informácie, ktoré ste predtým uložili pomocou účtu %@.";
+
 "Use information you previously saved with your Link account." = "Použite informácie, ktoré ste predtým uložili pomocou svojho účtu Link.";
 
 "Use test account" = "Použiť testovací účet";
@@ -150,9 +154,13 @@
 
 "Your account numbers don't match." = "Čísla účtov sa nezhodujú.";
 
+"Your account was connected, but couldn't be saved to %@." = "Váš účet bol prepojený, ale nebolo možné ho uložiť k službe %@.";
+
 "Your account was connected, but couldn't be saved to Link." = "Váš účet bol pripojený, ale nebolo možné uloženie do služby Link.";
 
 "Your account was connected." = "Váš účet bol pripojený.";
+
+"Your accounts were connected, but couldn't be saved to %@." = "Vaše účty boli prepojené, ale nebolo možné ich uložiť na %@.";
 
 "Your accounts were connected, but couldn't be saved to Link." = "Vaše účty boli pripojené, ale nebolo možné uloženie do služby Link.";
 

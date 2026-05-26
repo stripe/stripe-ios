@@ -95,6 +95,7 @@ enum Image: String, CaseIterable, ImageMaker {
     case link_logo_knockout = "link_logo_knockout"
     case onelink_logo_knockout = "onelink_logo_knockout"
     case link_icon = "link_icon"
+    case link_icon_with_inset = "link_icon_with_inset"
     case link_logo_tintable = "link_logo_tintable"
     case onelink_logo_tintable = "onelink_logo_tintable"
     case onelink_logo_bw = "onelink_logo_bw"
@@ -129,6 +130,12 @@ enum Image: String, CaseIterable, ImageMaker {
 
     // KYC Refresh
     case iconEditOutline = "icon_edit_outline"
+}
+
+extension Image {
+    static var paymentSheetLinkLogoImage: UIImage {
+        Image.link_icon_with_inset.makeImage(template: false)
+    }
 }
 
 extension LinkBrand {

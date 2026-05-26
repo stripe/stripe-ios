@@ -26,6 +26,8 @@
 
 "Continue linking your account" = "เชื่อมโยงบัญชีของคุณต่อ";
 
+"Continue with %@" = "ดำเนินการต่อกับ %@";
+
 "Continue with Link" = "ดำเนินการต่อด้วย Link";
 
 "Email address" = "อีเมล";
@@ -110,6 +112,8 @@
 
 "Try searching another bank or %@" = "ลองค้นหาธนาคารอื่นหรือ %@";
 
+"Use information you previously saved with your %@ account." = "ใช้ข้อมูลที่บันทึกไว้ก่อนหน้านี้ด้วยบัญชี %@";
+
 "Use information you previously saved with your Link account." = "ใช้ข้อมูลที่บันทึกไว้ก่อนหน้านี้ด้วยบัญชี Link";
 
 "Use test account" = "ใช้บัญชีทดสอบ";
@@ -150,9 +154,13 @@
 
 "Your account numbers don't match." = "หมายเลขบัญชีไม่ตรงกัน";
 
+"Your account was connected, but couldn't be saved to %@." = "บัญชีของคุณเชื่อมโยงอยู่ แต่ไม่สามารถบันทึกในระบบ %@ ได้";
+
 "Your account was connected, but couldn't be saved to Link." = "บัญชีของคุณเชื่อมโยงแล้วแต่ไม่สามารถบันทึกไปยัง Link ได้";
 
 "Your account was connected." = "เชื่อมโยงบัญชีแล้ว";
+
+"Your accounts were connected, but couldn't be saved to %@." = "บัญชีของคุณเชื่อมโยงอยู่ แต่ไม่สามารถบันทึกในระบบ %@ ได้";
 
 "Your accounts were connected, but couldn't be saved to Link." = "บัญชีของคุณเชื่อมโยงแล้วแต่ไม่สามารถบันทึกไปยัง Link ได้";
 

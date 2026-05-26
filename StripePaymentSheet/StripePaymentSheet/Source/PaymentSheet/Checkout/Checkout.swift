@@ -32,7 +32,7 @@ public final class Checkout: ObservableObject {
     /// The current state of the checkout session.
     ///
     /// After initialization this is always ``State.loaded(_:)``. It transitions to
-    /// ``State.loading(_:)`` while a mutation or refresh is in flight.
+    /// ``State.loading(_:)`` while a mutation is in flight.
     @Published public private(set) var state: State
 
     /// The configuration supplied at initialization.
@@ -41,13 +41,14 @@ public final class Checkout: ObservableObject {
     /// A delegate notified when session data changes.
     public weak var delegate: CheckoutDelegate?
 
-    // MARK: - Private Properties
+    // MARK: - Internal Properties
 
-    /// Concrete accessor for internal use where `STPCheckoutSession`-specific
-    /// properties (e.g. `allResponseFields`, `billingAddress`) are needed.
-    var stpSession: STPCheckoutSession? {
-        state.session as? STPCheckoutSession
-    }
+    /// The underlying `STPCheckoutSession` backing the current public ``state``.
+    ///
+    /// Internal callers that need `STPCheckoutSession`-specific data (e.g.
+    /// `allResponseFields`, address overrides, the expanded intent objects)
+    /// should read this rather than casting from `state.session`.
+    private(set) var stpSession: STPCheckoutSession?
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
@@ -64,9 +65,11 @@ public final class Checkout: ObservableObject {
     /// Timeout enforced on the merchant's closure in ``runServerUpdate(_:)``.
     nonisolated static let serverUpdateTimeout: TimeInterval = 20
 
-    /// The single state writer. Publishes `.loading` if any op is queued, else `.loaded`.
-    func setSession(_ session: Checkout.Session) {
-        state = pendingOperations.isEmpty ? .loaded(session) : .loading(session)
+    /// The single state writer. Stores the STPCheckoutSession, publishes the public session.
+    func setSession(_ session: STPCheckoutSession) {
+        stpSession = session
+        let publicSession = session.makePublicSession()
+        state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
     }
 
     // MARK: - Initialization
@@ -97,7 +100,8 @@ public final class Checkout: ObservableObject {
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
             await flagImageManager.prefetchFlagImages(for: checkoutSession)
-            self.state = .loaded(checkoutSession)
+            self.stpSession = checkoutSession
+            self.state = .loaded(checkoutSession.makePublicSession())
             checkoutSession.onConfirmed = { [weak self] response in
                 self?.updateSession(response)
             }
@@ -117,7 +121,8 @@ public final class Checkout: ObservableObject {
         self.configuration = configuration
         self.apiClient = apiClient
         await flagImageManager.prefetchFlagImages(for: session)
-        self.state = .loaded(session)
+        self.stpSession = session
+        self.state = .loaded(session.makePublicSession())
         session.onConfirmed = { [weak self] response in
             self?.updateSession(response)
         }
@@ -125,7 +130,7 @@ public final class Checkout: ObservableObject {
 
     // MARK: - Pending Operations
 
-    /// Waits for all in-flight session updates (refresh, mutations, etc.) to complete.
+    /// Waits for all in-flight session updates (mutations, etc.) to complete.
     ///
     /// - Returns immediately if no operations are pending.
     /// - Waits for the operations pending when this method is called; operations
@@ -153,24 +158,6 @@ public final class Checkout: ObservableObject {
         }
         if case .failure(let error) = result {
             throw error is TimeoutError ? CheckoutError.timedOut : error
-        }
-    }
-
-    // MARK: - Session
-
-    /// Refreshes the session by fetching the latest copy from Stripe.
-    ///
-    /// Call this after making server-side changes to the Checkout Session so
-    /// the local ``state`` stays in sync with Stripe.
-    ///
-    /// - Throws: ``CheckoutError`` if checkout UI is currently presented or the
-    ///   latest session cannot be fetched.
-    public func refresh() async throws {
-        guard integrationDelegate?.isSheetPresented != true else {
-            throw CheckoutError.sheetCurrentlyPresented
-        }
-        try await enqueueSessionUpdate {
-            try await self.refreshSession()
         }
     }
 

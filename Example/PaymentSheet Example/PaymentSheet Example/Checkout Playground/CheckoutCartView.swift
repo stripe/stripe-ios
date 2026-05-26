@@ -19,16 +19,18 @@ struct CheckoutCartView: View {
 
     let clientSecret: String
     let adaptivePricing: Bool
+    var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
 
     var body: some View {
         NavigationView {
             ZStack {
-                Color(UIColor.systemGroupedBackground)
+                Color(UIColor.systemBackground)
                     .ignoresSafeArea()
 
                 if let checkout {
                     CheckoutCartContentView(
                         checkout: checkout,
+                        currencySelectorAppearance: currencySelectorAppearance,
                         isLoading: $isLoading,
                         errorMessage: $errorMessage
                     )
