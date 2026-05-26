@@ -97,107 +97,55 @@ public extension CryptoOnrampCoordinator {
 
         /// A URL to documentation for this error, if one is available.
         public var docURL: String? {
-            switch self {
-            case .appAttestationFailed(let error):
-                return error.docURL
-            case .uncategorizedAPIError(let error):
-                return error.docURL
-            default:
-                return nil
-            }
+            return apiError?.docURL
         }
 
         /// The backend `reason` value associated with this error, if one is available.
         public var reason: String? {
-            switch self {
-            case .appAttestationFailed(let error):
-                return error.reason
-            case .uncategorizedAPIError(let error):
-                return error.reason
-            default:
-                return nil
-            }
+            return apiError?.reason
         }
 
         /// The Stripe API request ID associated with this error, if one is available.
         public var requestID: String? {
-            switch self {
-            case .appAttestationFailed(let error):
-                return error.requestID
-            case .uncategorizedAPIError(let error):
-                return error.requestID
-            default:
-                return nil
-            }
+            return apiError?.requestID
         }
 
         /// The SDK operation that was running when this error occurred, if one is available.
         public var operation: String? {
-            switch self {
-            case .appAttestationFailed(let error):
-                return error.operation
-            case .uncategorizedAPIError(let error):
-                return error.operation
-            default:
-                return nil
-            }
+            return apiError?.operation
         }
 
         /// The Stripe mode associated with this error, if it can be determined.
         public var mode: String? {
-            switch self {
-            case .appAttestationFailed(let error):
-                return error.mode
-            case .uncategorizedAPIError(let error):
-                return error.mode
-            default:
-                return nil
-            }
+            return apiError?.mode
         }
 
         /// The backend API error code associated with this error, if one is available.
         public var apiErrorCode: String? {
-            switch self {
-            case .appAttestationFailed(let error):
-                return error.apiErrorCode
-            case .uncategorizedAPIError(let error):
-                return error.apiErrorCode
-            default:
-                return nil
-            }
+            return apiError?.apiErrorCode
         }
 
         /// The backend API error type associated with this error, if one is available.
         public var apiErrorType: String? {
-            switch self {
-            case .appAttestationFailed(let error):
-                return error.apiErrorType
-            case .uncategorizedAPIError(let error):
-                return error.apiErrorType
-            default:
-                return nil
-            }
+            return apiError?.apiErrorType
         }
 
         /// The backend developer-facing API error message associated with this error, if one is available.
         public var apiErrorMessage: String? {
-            switch self {
-            case .appAttestationFailed(let error):
-                return error.apiErrorMessage
-            case .uncategorizedAPIError(let error):
-                return error.apiErrorMessage
-            default:
-                return nil
-            }
+            return apiError?.apiErrorMessage
         }
 
         /// The original error that was mapped to this error, if one is available.
         public var underlyingError: Swift.Error? {
+            return apiError?.underlyingError
+        }
+
+        private var apiError: (any APIErrorContextProviding)? {
             switch self {
             case .appAttestationFailed(let error):
-                return error.underlyingError
+                return error
             case .uncategorizedAPIError(let error):
-                return error.underlyingError
+                return error
             default:
                 return nil
             }
