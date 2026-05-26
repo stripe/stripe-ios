@@ -238,21 +238,6 @@ final class PaymentSheetLoader {
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
 
-            if elementsSession.customer != nil {
-                // Log card art experiment exposure only for CustomerSession
-                if let cardArtExperiment = CardArtExperiment.create(
-                    elementsSession: elementsSession,
-                    configuration: configuration,
-                    analyticsHelper: analyticsHelper,
-                    paymentMethodTypes: paymentMethodTypes,
-                    savedPaymentMethods: filteredSavedPaymentMethods,
-                    paymentMethodOrientation: paymentMethodOrientation,
-                    selectedPaymentOption: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex)
-                ) {
-                    analyticsHelper.logExposure(experiment: cardArtExperiment)
-                }
-            }
-
             // Temporary band-aid for pre-loading card art: fire-and-forget fetch to warm the in-meory cache for PS.FC
             // and embedded PaymentOptionDisplayData APIs.
             // TODO: Revisit overall pre-loading approach to make this work for other payment methods
