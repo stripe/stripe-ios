@@ -645,10 +645,10 @@ private final class CaptureTickMarksView: UIView {
         static let shadowColor = UIColor.black.withAlphaComponent(0.3)
         static let shadowOffset = CGSize(width: 0, height: 1)
         static let shadowBlur: CGFloat = 4
-        static let centeredShadowRingColor = UIColor.black.withAlphaComponent(0.16)
+        static let centeredShadowRingColor = UIColor.black.withAlphaComponent(0.2)
         static let centeredShadowOuterColor = UIColor.black.withAlphaComponent(0.28)
-        static let centeredShadowClearPadding: CGFloat = 4
-        static let centeredShadowFeatherPadding: CGFloat = 58
+        static let centeredShadowClearPadding: CGFloat = 2
+        static let centeredShadowFeatherPadding: CGFloat = 44
     }
 
     var showsCenteredShadow: Bool = false {
@@ -753,11 +753,10 @@ private final class CaptureTickMarksView: UIView {
         )
         let colors = [
             UIColor.clear.cgColor,
-            UIColor.clear.cgColor,
             Styling.centeredShadowRingColor.cgColor,
             Styling.centeredShadowOuterColor.cgColor,
         ] as CFArray
-        let locations = [CGFloat(0), CGFloat(0.08), featherLocation, CGFloat(1)]
+        let locations = [CGFloat(0), featherLocation, CGFloat(1)]
 
         guard let gradient = CGGradient(
             colorsSpace: CGColorSpaceCreateDeviceRGB(),
