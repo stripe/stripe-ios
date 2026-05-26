@@ -24,6 +24,7 @@ final class SelfieScanningView: UIView {
         }
         static let preferredPreviewHeightToWidthRatio: CGFloat = 4 / 3
         static let troubleLinkTopPadding: CGFloat = 12
+        static let captureGuideShadowFadeInDuration: TimeInterval = 0.6
         static var troubleLinkFont: UIFont {
             IdentityUI.preferredFont(forTextStyle: .body).withSize(12)
         }
@@ -350,7 +351,6 @@ final class SelfieScanningView: UIView {
         capturedImageView.image = nil
         capturedImageBlurView.isHidden = true
         captureTickMarksView.isHidden = true
-        captureTickMarksView.showsCenteredShadow = false
         statusLabelContainerView.isHidden = true
         statusActivityIndicatorView.stopAnimating()
         previewContainerView.isHidden = true
@@ -362,6 +362,7 @@ final class SelfieScanningView: UIView {
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
             retakeSelfieStack.isHidden = true
+            captureTickMarksView.setShowsCenteredShadow(false, animated: false)
             previewContainerView.isHidden = false
             havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
 
@@ -373,12 +374,13 @@ final class SelfieScanningView: UIView {
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
             captureTickMarksView.isHidden = false
-            captureTickMarksView.showsCenteredShadow = showCaptureGuideShadow
+            captureTickMarksView.setShowsCenteredShadow(showCaptureGuideShadow, animated: true)
             if let statusText {
                 configureStatusLabel(statusText)
             }
 
         case .scanned(let images, let consentText, let consentHandler, let openURLHandler, let retakeSelfieHandler):
+            captureTickMarksView.setShowsCenteredShadow(false, animated: false)
             scannedImageScrollView.isHidden = false
             rebuildImageHStack(with: images)
 
@@ -411,6 +413,7 @@ final class SelfieScanningView: UIView {
                 }
             }
         case .saving(let image, let statusText):
+            captureTickMarksView.setShowsCenteredShadow(false, animated: false)
             previewContainerView.isHidden = false
             capturedImageView.image = image
             capturedImageView.isHidden = false
@@ -646,11 +649,71 @@ private final class CaptureTickMarksView: UIView {
         static let centeredShadowOuterColor = UIColor.black.withAlphaComponent(0.42)
         static let centeredShadowClearPadding: CGFloat = 0
         static let centeredShadowFeatherPadding: CGFloat = 34
+        static let centeredShadowFadeInDuration: TimeInterval = SelfieScanningView.Styling.captureGuideShadowFadeInDuration
     }
 
-    var showsCenteredShadow: Bool = false {
+    private var showsCenteredShadow: Bool = false
+    private var centeredShadowOpacity: CGFloat = 0 {
         didSet {
             setNeedsDisplay()
+        }
+    }
+    private var centeredShadowDisplayLink: CADisplayLink?
+    private var centeredShadowAnimationStartTime: CFTimeInterval?
+
+    deinit {
+        centeredShadowDisplayLink?.invalidate()
+    }
+
+    func setShowsCenteredShadow(_ showsCenteredShadow: Bool, animated: Bool) {
+        guard showsCenteredShadow != self.showsCenteredShadow else {
+            return
+        }
+
+        self.showsCenteredShadow = showsCenteredShadow
+        centeredShadowDisplayLink?.invalidate()
+        centeredShadowDisplayLink = nil
+        centeredShadowAnimationStartTime = nil
+
+        guard showsCenteredShadow else {
+            centeredShadowOpacity = 0
+            return
+        }
+
+        guard animated, window != nil else {
+            centeredShadowOpacity = 1
+            return
+        }
+
+        centeredShadowOpacity = 0
+        let displayLink = CADisplayLink(
+            target: self,
+            selector: #selector(updateCenteredShadowFadeIn)
+        )
+        displayLink.add(to: .main, forMode: .common)
+        centeredShadowDisplayLink = displayLink
+    }
+
+    @objc private func updateCenteredShadowFadeIn(_ displayLink: CADisplayLink) {
+        if centeredShadowAnimationStartTime == nil {
+            centeredShadowAnimationStartTime = displayLink.timestamp
+        }
+        guard let centeredShadowAnimationStartTime else {
+            return
+        }
+
+        let elapsedTime = displayLink.timestamp - centeredShadowAnimationStartTime
+        let progress = min(
+            max(elapsedTime / Styling.centeredShadowFadeInDuration, 0),
+            1
+        )
+        centeredShadowOpacity = 1 - ((1 - progress) * (1 - progress))
+
+        if progress >= 1 {
+            displayLink.invalidate()
+            centeredShadowDisplayLink = nil
+            self.centeredShadowAnimationStartTime = nil
+            centeredShadowOpacity = 1
         }
     }
 
@@ -673,12 +736,13 @@ private final class CaptureTickMarksView: UIView {
             y: bounds.height * Styling.centerYRatio
         )
 
-        if showsCenteredShadow {
+        if showsCenteredShadow, centeredShadowOpacity > 0 {
             drawCenteredShadow(
                 in: context,
                 center: center,
                 horizontalRadius: horizontalRadius,
-                verticalRadius: verticalRadius
+                verticalRadius: verticalRadius,
+                opacity: centeredShadowOpacity
             )
         }
 
@@ -729,7 +793,8 @@ private final class CaptureTickMarksView: UIView {
         in context: CGContext,
         center: CGPoint,
         horizontalRadius: CGFloat,
-        verticalRadius: CGFloat
+        verticalRadius: CGFloat,
+        opacity: CGFloat
     ) {
         let scaleX = horizontalRadius / verticalRadius
         let maxXDistance = max(center.x, bounds.width - center.x) / scaleX
@@ -750,10 +815,10 @@ private final class CaptureTickMarksView: UIView {
         )
         let colors = [
             UIColor.clear.cgColor,
-            Styling.centeredShadowInnerColor.cgColor,
-            Styling.centeredShadowMidColor.cgColor,
-            Styling.centeredShadowRingColor.cgColor,
-            Styling.centeredShadowOuterColor.cgColor,
+            shadowColor(Styling.centeredShadowInnerColor, opacity: opacity),
+            shadowColor(Styling.centeredShadowMidColor, opacity: opacity),
+            shadowColor(Styling.centeredShadowRingColor, opacity: opacity),
+            shadowColor(Styling.centeredShadowOuterColor, opacity: opacity),
         ] as CFArray
         let locations = [
             CGFloat(0),
@@ -783,5 +848,9 @@ private final class CaptureTickMarksView: UIView {
             options: [.drawsAfterEndLocation]
         )
         context.restoreGState()
+    }
+
+    private func shadowColor(_ color: UIColor, opacity: CGFloat) -> CGColor {
+        return color.withAlphaComponent(color.cgColor.alpha * opacity).cgColor
     }
 }
