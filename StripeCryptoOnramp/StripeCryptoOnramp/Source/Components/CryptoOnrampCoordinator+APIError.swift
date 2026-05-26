@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 
 /// Details from an app attestation API error, enriched with SDK-local diagnostic context.
-public struct AppAttestationAPIError: LocalizedError, APIErrorContextProviding {
+public struct AppAttestationAPIError: APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     let context: APIErrorContext
@@ -94,7 +94,7 @@ public struct AppAttestationAPIError: LocalizedError, APIErrorContextProviding {
 }
 
 /// Details from an uncategorized backend API error, enriched with SDK-local diagnostic context.
-public struct UncategorizedAPIError: LocalizedError, APIErrorContextProviding {
+public struct UncategorizedAPIError: APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     let context: APIErrorContext
@@ -135,7 +135,7 @@ public struct UncategorizedAPIError: LocalizedError, APIErrorContextProviding {
 }
 
 /// A type that exposes shared API error context.
-protocol APIErrorContextProviding: CustomDebugStringConvertible {
+protocol APIErrorContextProviding: LocalizedError, CustomDebugStringConvertible {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     var context: APIErrorContext { get }
