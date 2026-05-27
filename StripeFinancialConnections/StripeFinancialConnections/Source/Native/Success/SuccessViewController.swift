@@ -24,16 +24,17 @@ final class SuccessViewController: UIViewController {
     private var showSaveToLinkFailedNotice: Bool {
         dataSource.saveToLinkWithStripeSucceeded == false
     }
-    private var successSubtitle: String {
-        dataSource.customSuccessPaneSubCaption ?? CreateSubtitleText(
+    private var successSubtitle: (text: String, accessibilityText: String)? {
+        let text = dataSource.customSuccessPaneSubCaption ?? CreateSubtitleText(
             // manual entry has "0" linked accounts count
             isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
             showSaveToLinkFailedNotice: showSaveToLinkFailedNotice,
             linkBrand: linkBrand
         )
-    }
-    private var successAccessibilitySubtitle: String {
-        linkBrand.accessibilityText(from: successSubtitle)
+        return (
+            text: text,
+            accessibilityText: linkBrand.accessibilityText(from: text)
+        )
     }
 
     init(dataSource: SuccessDataSource) {
@@ -59,7 +60,6 @@ final class SuccessViewController: UIViewController {
                 "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
             ),
             subtitle: successSubtitle,
-            accessibilitySubtitle: successAccessibilitySubtitle,
             appearance: dataSource.manifest.appearance
         )
         contentView.addSubview(bodyView)
@@ -131,8 +131,7 @@ final class SuccessViewController: UIViewController {
 
 private func CreateBodyView(
     title: String,
-    subtitle: String?,
-    accessibilitySubtitle: String? = nil,
+    subtitle: (text: String, accessibilityText: String)?,
     appearance: FinancialConnectionsAppearance
 ) -> UIView {
     let titleLabel = AttributedLabel(
@@ -155,8 +154,8 @@ private func CreateBodyView(
             textColor: FinancialConnectionsAppearance.Colors.textDefault,
             alignment: .center
         )
-        subtitleLabel.setText(subtitle)
-        subtitleLabel.accessibilityLabel = accessibilitySubtitle ?? subtitle
+        subtitleLabel.setText(subtitle.text)
+        subtitleLabel.accessibilityLabel = subtitle.accessibilityText
         labelVerticalStackView.addArrangedSubview(subtitleLabel)
     }
 
