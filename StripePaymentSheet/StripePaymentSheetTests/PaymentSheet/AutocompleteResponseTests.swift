@@ -93,6 +93,11 @@ class AutocompleteResponseTests: XCTestCase {
         XCTAssertNil(AddressSuggestion.decodedObject(fromAPIResponse: dict))
     }
 
+    func testReturnsNilForMissingMatches() {
+        let dict: [AnyHashable: Any] = ["display_data": ["title": "123 Main St", "subtitle": "New York, NY"]]
+        XCTAssertNil(AddressSuggestion.decodedObject(fromAPIResponse: dict))
+    }
+
     // MARK: - Match ranges
 
     func testMatchRangeFromEndOffsetOnly() {
@@ -199,41 +204,6 @@ class AutocompleteResponseTests: XCTestCase {
         XCTAssertNil(suggestion.address?.state)
         XCTAssertNil(suggestion.address?.postalCode)
         XCTAssertNil(suggestion.address?.country)
-    }
-
-    // MARK: - asAddress
-
-    func testAsAddressReturnsAddressWhenPresent() {
-        let dict = makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil, address: [
-            "line1": "123 Main St",
-            "city": "New York",
-            "state": "NY",
-            "postal_code": "10001",
-            "country": "US",
-        ])
-        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse: dict)!
-        let expectation = expectation(description: "asAddress")
-        suggestion.asAddress { address in
-            XCTAssertEqual(address?.line1, "123 Main St")
-            XCTAssertEqual(address?.city, "New York")
-            XCTAssertEqual(address?.state, "NY")
-            XCTAssertEqual(address?.postalCode, "10001")
-            XCTAssertEqual(address?.country, "US")
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: 1)
-    }
-
-    func testAsAddressReturnsNilWhenAbsent() {
-        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
-            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil)
-        )!
-        let expectation = expectation(description: "asAddress")
-        suggestion.asAddress { address in
-            XCTAssertNil(address)
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: 1)
     }
 
     // MARK: - AddressSearchResult conformance

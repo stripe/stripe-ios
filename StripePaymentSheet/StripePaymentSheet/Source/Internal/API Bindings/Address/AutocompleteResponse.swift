@@ -51,7 +51,7 @@ extension AutocompleteResponse: STPAPIResponseDecodable {
             return nil
         }
 
-        let suggestions = suggestionsDict.compactMap { suggestionDict in AddressSuggestion.decodedObject(fromAPIResponse: suggestionDict) }
+        let suggestions = suggestionsDict.compactMap { AddressSuggestion.decodedObject(fromAPIResponse: $0) }
 
         return AutocompleteResponse(
             suggestions: suggestions,
@@ -131,18 +131,15 @@ extension AddressSuggestion: STPAPIResponseDecodable {
             return title.utf16Range(fromCodePointOffsets: startOffset, to: endOffset)
         }
 
-        let address: PaymentSheet.Address?
-        if let addressDict = dict["address"] as? [AnyHashable: Any] {
-            address = PaymentSheet.Address(
-                city: addressDict["city"] as? String,
-                country: addressDict["country"] as? String,
-                line1: addressDict["line1"] as? String,
-                line2: addressDict["line2"] as? String,
-                postalCode: addressDict["postal_code"] as? String,
-                state: addressDict["state"] as? String
+        let address = (dict["address"] as? [AnyHashable: Any]).map {
+            PaymentSheet.Address(
+                city: $0["city"] as? String,
+                country: $0["country"] as? String,
+                line1: $0["line1"] as? String,
+                line2: $0["line2"] as? String,
+                postalCode: $0["postal_code"] as? String,
+                state: $0["state"] as? String
             )
-        } else {
-            address = nil
         }
 
         return AddressSuggestion(

@@ -312,18 +312,19 @@ extension STPAPIClient {
     /// Fetches autocomplete suggestions.
     /// - Parameters:
     ///   - searchText: The search text.
-    ///   - languageCode: The language to display results in, derived from the device.
+    ///   - locale: The BCP 47 language tag for the locale to use. Defaults to the device locale.
     ///   - countryCodes: The countries to restrict the results to, from the country selector.
     ///   - sessionToken: The session identifier that groups the autocomplete requests together to be billed together.
     func autocomplete(
         searchText: String,
+        locale: String = Locale.current.toLanguageTag(),
         countryCodes: [String]?,
         sessionToken: String
     ) async throws -> AutocompleteResponse {
         let endpoint = "\(APIEndpointElementsAddress)/autocomplete"
         var parameters: [String: Any] = [
             "search_text": searchText,
-            "locale": Locale.current.toLanguageTag(),
+            "locale": locale,
             "session_token": sessionToken,
             "client_type": "mobile",
         ]

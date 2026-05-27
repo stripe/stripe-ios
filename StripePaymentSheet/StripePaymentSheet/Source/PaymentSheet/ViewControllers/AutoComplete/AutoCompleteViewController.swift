@@ -111,21 +111,16 @@ class AutoCompleteViewController: UIViewController {
 
         let container = UIView()
         container.addSubview(imageView)
-        // On iOS 26, UIListContentConfiguration positions text using cell.layoutMargins.leading (~16pt)
-        // plus the indentation offset (5pt), so the logo must match that same position.
-        let imageLeading: CGFloat
-        if #available(iOS 26, *) {
-            imageLeading = tableView.layoutMargins.left + 5
-        } else {
-            imageLeading = configuration.appearance.formInsets.leading
-        }
         var constraints = [
-            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: imageLeading),
+            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.appearance.formInsets.leading),
             imageView.centerYAnchor.constraint(equalTo: container.centerYAnchor),
             imageView.heightAnchor.constraint(equalToConstant: UIFont.preferredFont(forTextStyle: .footnote).lineHeight),
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: image.size.width / image.size.height),
         ]
         if #available(iOS 26, *) {
+            // UIListContentConfiguration positions text at cell.layoutMargins.leading (~16pt)
+            // plus indentation (5pt), so the logo leading must match that same position.
+            constraints[0] = imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: tableView.layoutMargins.left + 5)
             let separator = UIView()
             separator.backgroundColor = tableView.separatorColor
             separator.translatesAutoresizingMaskIntoConstraints = false
@@ -279,6 +274,13 @@ class AutoCompleteViewController: UIViewController {
     }
 
     // MARK: Private functions
+
+    /// Sets source and results together so `results.didSet` always sees the correct source.
+    private func setResults(_ newResults: [AddressSearchResult], source: String?) {
+        currentSource = source
+        results = newResults
+    }
+
     @objc private func manualEntryButtonTapped() {
         // Populate address with partial for line 1
         delegate?.didSelectManualEntry(autoCompleteLine.text)
@@ -293,8 +295,7 @@ extension AutoCompleteViewController: ElementDelegate {
             guard query.count >= 2 else {
                 debounceTask?.cancel()
                 autocompleteTask?.cancel()
-                currentSource = nil
-                results.removeAll()
+                setResults([], source: nil)
                 return
             }
             debounceTask?.cancel()
@@ -304,7 +305,6 @@ extension AutoCompleteViewController: ElementDelegate {
                 fetchAPIResults(query: query)
             }
         } else if !query.isEmpty {
-            currentSource = "apple"
             addressSearchCompleter.queryFragment = query
         }
     }
@@ -317,20 +317,14 @@ extension AutoCompleteViewController: ElementDelegate {
         autocompleteTask?.cancel()
         autocompleteTask = Task { @MainActor in
             do {
-                let countryCodes: [String]?
-                if let selectedCountry = selectedCountry, !selectedCountry.isEmpty {
-                    countryCodes = [selectedCountry]
-                } else {
-                    countryCodes = nil
-                }
+                let countryCodes = selectedCountry.flatMap { $0.isEmpty ? nil : [$0] }
                 let response = try await configuration.apiClient.autocomplete(
                     searchText: query,
                     countryCodes: countryCodes,
                     sessionToken: sessionToken
                 )
                 guard !Task.isCancelled else { return }
-                self.currentSource = response.source
-                self.results = response.suggestions
+                self.setResults(response.suggestions, source: response.source)
             } catch {
                 guard !Task.isCancelled else { return }
                 // Fall back to MapKit on API failure
@@ -344,7 +338,7 @@ extension AutoCompleteViewController: ElementDelegate {
 // MARK: MKLocalSearchCompleterDelegate
 extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        self.results = completer.results
+        setResults(completer.results, source: "apple")
     }
 
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
@@ -352,7 +346,7 @@ extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
 
         // Making a query with an empty string causes a server error and doesn't update search results
         if completer.queryFragment.isEmpty && nsError.code == MKError.serverFailure.rawValue {
-            results.removeAll()
+            setResults([], source: nil)
             return
         }
 
