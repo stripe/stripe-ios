@@ -66,8 +66,8 @@ extension PaneLayoutView {
     ) -> UIView {
         createContentView(
             iconView: iconView,
-            title: title.map(AccessibleText.init),
-            subtitle: subtitle.map(AccessibleText.init),
+            title: title.map { AccessibleText($0) },
+            subtitle: subtitle.map { AccessibleText($0) },
             headerAlignment: headerAlignment,
             horizontalPadding: horizontalPadding,
             contentView: contentView,
@@ -141,7 +141,7 @@ extension PaneLayoutView {
     ) -> UIView {
         createHeaderView(
             iconView: iconView,
-            title: title.map(AccessibleText.init),
+            title: title.map { AccessibleText($0) },
             alignment: alignment,
             horizontalPadding: horizontalPadding,
             isSheet: isSheet
@@ -195,7 +195,7 @@ extension PaneLayoutView {
         contentView: UIView?
     ) -> UIView {
         createBodyView(
-            text: text.map(AccessibleText.init),
+            text: text.map { AccessibleText($0) },
             contentView: contentView
         )
     }
