@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Ekle";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (%4$@%% dönüşüm ücretini içerir).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "ABD banka hesabı ekleyin";
 
 "Add a card" = "Kart ekle";

@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Thêm";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (bao gồm %4$@%% phí chuyển đổi).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Thêm tài khoản ngân hàng Hoa Kỳ";
 
 "Add a card" = "Thêm một thẻ";
