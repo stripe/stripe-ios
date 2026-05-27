@@ -16,7 +16,7 @@ class STPAPIClientAutocompleteTest: STPNetworkStubbingTestCase {
         let response = try await makeAPIClient().autocomplete(
             searchText: "354 Oyster Point",
             locale: "en-US",
-            countryCodes: ["US", "CA"],
+            countryCodes: ["US"],
             sessionToken: UUID().uuidString
         )
         XCTAssertFalse(response.source.isEmpty)
