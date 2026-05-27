@@ -3,6 +3,11 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### CryptoOnramp (Alpha)
+* [Added] Added two new `CryptoOnrampCoordinator.Error` cases: `appAttestationFailed` and `uncategorizedAPIError`. These include associated values with additional API error details.
+* [Added] `CryptoOnrampCoordinator.Error` exposes new convenience accessors for underlying API error details, including those of the new cases mentioned above.
+* [Added] `CryptoOnrampCoordinator.Error` exposes `userFacingMessage` and `developerDescription` for better separation of user-specific messaging, and developer-specific steps to take.
+
 ## 25.16.0 2026-05-26
 ### PaymentSheet
 * [Fixed] Fixed `LinkAppearance.PrimaryButtonConfiguration` styling so unspecified custom height and corner radius values use Link defaults.
@@ -12,11 +17,6 @@ PATCH
 
 ### Address Element
 * [Fixed] Fixed Japan address form missing the city field. ([#6506](https://github.com/stripe/stripe-ios/issues/6506))
-
-### CryptoOnramp (Alpha)
-* [Added] Added two new `CryptoOnrampCoordinator.Error` cases: `appAttestationFailed` and `uncategorizedAPIError`. These include associated values with additional API error details.
-* [Added] `CryptoOnrampCoordinator.Error` exposes new convenience accessors for underlying API error details, including those of the new cases mentioned above.
-* [Added] `CryptoOnrampCoordinator.Error` exposes `userFacingMessage` and `developerDescription` for better separation of user-specific messaging, and developer-specific steps to take.
 
 ## 25.15.0 2026-05-18
 * Added support for [Onelink](https://support.stripe.com/questions/what-is-onelink).
