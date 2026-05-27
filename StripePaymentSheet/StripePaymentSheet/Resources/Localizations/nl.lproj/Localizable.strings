@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Toevoegen";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (inclusief %4$@%% conversievergoeding).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Amerikaanse bankrekening toevoegen";
 
 "Add a card" = "Een kaart toevoegen";

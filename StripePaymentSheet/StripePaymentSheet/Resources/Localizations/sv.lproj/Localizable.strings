@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Lägg till";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (inklusive %4$@%% växlingsavgift).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Lägg till amerikanskt bankkonto";
 
 "Add a card" = "Lägg till ett kort";
