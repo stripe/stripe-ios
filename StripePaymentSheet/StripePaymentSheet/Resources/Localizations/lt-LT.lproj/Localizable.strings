@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Pridėti";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (įskaitant %4$@%% konvertavimo mokestį).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Pridėti JAV banko sąskaitą";
 
 "Add a card" = "Pridėti kortelę";
