@@ -170,16 +170,16 @@ extension AddressSuggestion: STPAPIResponseDecodable {
 }
 
 class DetailsResponse: NSObject {
-    
+
     /// The pre-filled address components.
     let address: PaymentSheet.Address
-    
+
     /// The source of the details response (e.g. "google")
     let source: String
-    
+
     /// The raw API response used to create this object.
     let allResponseFields: [AnyHashable: Any]
-    
+
     private init(
         address: PaymentSheet.Address,
         source: String,
