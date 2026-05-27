@@ -396,7 +396,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        results[indexPath.row].asAddress { [weak self] address in
+        results[indexPath.row].asAddress(apiClient: configuration.apiClient, source: currentSource, sessionToken: sessionToken) { [weak self] address in
             DispatchQueue.main.async {
                 self?.delegate?.didSelectAddress(address)
             }

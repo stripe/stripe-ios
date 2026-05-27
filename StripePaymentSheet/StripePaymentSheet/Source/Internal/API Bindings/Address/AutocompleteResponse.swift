@@ -108,8 +108,24 @@ extension AddressSuggestion: AddressSearchResult {
         return []
     }
 
-    func asAddress(completion: @escaping (PaymentSheet.Address?) -> Void) {
-        completion(address)
+    func asAddress(apiClient: STPAPIClient? = .shared, source: String?, sessionToken: String?, completion: @escaping (PaymentSheet.Address?) -> Void) {
+        if let address {
+            completion(address)
+        }
+        guard let apiClient,
+                  let placeId,
+                  let source,
+                  let sessionToken else {
+                      completion(nil)
+                      return
+        }
+        Task { @MainActor in
+            do {
+                completion(try await apiClient.details(placeId: placeId, source: source, mainText: title, sessionToken: sessionToken).address)
+            } catch {
+                completion(nil)
+            }
+        }
     }
 }
 
@@ -148,6 +164,55 @@ extension AddressSuggestion: STPAPIResponseDecodable {
             matches: matches,
             placeId: dict["place_id"] as? String,
             address: address,
+            allResponseFields: dict
+        ) as? Self
+    }
+}
+
+class DetailsResponse: NSObject {
+    
+    /// The pre-filled address components.
+    let address: PaymentSheet.Address
+    
+    /// The source of the details response (e.g. "google")
+    let source: String
+    
+    /// The raw API response used to create this object.
+    let allResponseFields: [AnyHashable: Any]
+    
+    private init(
+        address: PaymentSheet.Address,
+        source: String,
+        allResponseFields: [AnyHashable: Any]
+    ) {
+        self.address = address
+        self.source = source
+        self.allResponseFields = allResponseFields
+    }
+}
+
+// MARK: - STPAPIResponseDecodable
+extension DetailsResponse: STPAPIResponseDecodable {
+    static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+        guard let dict = response,
+              let addressDict = dict["address"] as? [AnyHashable: Any],
+              let source = dict["source"] as? String
+        else {
+            return nil
+        }
+
+        let address = PaymentSheet.Address(
+            city: addressDict["city"] as? String,
+            country: addressDict["country"] as? String,
+            line1: addressDict["line1"] as? String,
+            line2: addressDict["line2"] as? String,
+            postalCode: addressDict["postal_code"] as? String,
+            state: addressDict["state"] as? String
+        )
+
+        return DetailsResponse(
+            address: address,
+            source: source,
             allResponseFields: dict
         ) as? Self
     }
