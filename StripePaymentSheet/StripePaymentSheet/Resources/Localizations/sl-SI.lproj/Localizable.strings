@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Dodaj";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (vključuje %4$@%% provizijo za menjavo).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Dodaj bančni račun v ZDA";
 
 "Add a card" = "Dodajte kartico";

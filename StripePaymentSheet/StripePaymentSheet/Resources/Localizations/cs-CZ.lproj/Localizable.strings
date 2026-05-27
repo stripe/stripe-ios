@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Přidat";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (včetně %4$@%% poplatku za převod).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Přidat bankovní účet v USA";
 
 "Add a card" = "Přidat kartu";
