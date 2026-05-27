@@ -40,6 +40,7 @@ class AutoCompleteViewController: UIViewController {
 
     private var autocompleteTask: Task<Void, Never>?
     private var debounceTask: Task<Void, Never>?
+    private var lastFetchedQuery: String = ""
     var currentSource: String?
 
     weak var delegate: AutoCompleteViewControllerDelegate?
@@ -169,7 +170,11 @@ class AutoCompleteViewController: UIViewController {
         self.verticalOffset = verticalOffset
         super.init(nibName: nil, bundle: nil)
         if let initialLine1Text = initialLine1Text, !initialLine1Text.isEmpty {
-            self.addressSearchCompleter.queryFragment = initialLine1Text
+            if configuration.useAutocompleteEndpoints {
+                fetchAPIResults(query: initialLine1Text)
+            } else {
+                self.addressSearchCompleter.queryFragment = initialLine1Text
+            }
         }
     }
 
@@ -290,6 +295,8 @@ class AutoCompleteViewController: UIViewController {
 extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
         let query = autoCompleteLine.text
+        guard query != lastFetchedQuery else { return }
+        lastFetchedQuery = query
         if configuration.useAutocompleteEndpoints {
             guard query.count >= 2 else {
                 debounceTask?.cancel()
@@ -396,6 +403,8 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        debounceTask?.cancel()
+        autocompleteTask?.cancel()
         results[indexPath.row].asAddress(apiClient: configuration.apiClient, source: currentSource, sessionToken: sessionToken) { [weak self] address in
             DispatchQueue.main.async {
                 self?.delegate?.didSelectAddress(address)
