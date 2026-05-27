@@ -11,14 +11,21 @@ import SwiftUI
 import UIKit
 
 extension PaneLayoutView {
+    struct AccessibleText {
+        let text: String
+        let accessibilityText: String
+
+        init(_ text: String, accessibilityText: String? = nil) {
+            self.text = text
+            self.accessibilityText = accessibilityText ?? text
+        }
+    }
 
     @available(iOSApplicationExtension, unavailable)
     static func createContentView(
         iconView: UIView?,
-        title: String?,
-        subtitle: String?,
-        accessibilityTitle: String? = nil,
-        accessibilitySubtitle: String? = nil,
+        title: AccessibleText?,
+        subtitle: AccessibleText?,
         headerAlignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         contentView: UIView?,
@@ -31,7 +38,6 @@ extension PaneLayoutView {
             let headerView = createHeaderView(
                 iconView: iconView,
                 title: title,
-                accessibilityTitle: accessibilityTitle,
                 alignment: headerAlignment,
                 horizontalPadding: horizontalPadding,
                 isSheet: isSheet
@@ -41,7 +47,6 @@ extension PaneLayoutView {
         if subtitle != nil || contentView != nil {
             let bodyView = createBodyView(
                 text: subtitle,
-                accessibilityText: accessibilitySubtitle,
                 contentView: contentView
             )
             verticalStackView.addArrangedSubview(bodyView)
@@ -50,10 +55,30 @@ extension PaneLayoutView {
     }
 
     @available(iOSApplicationExtension, unavailable)
-    static func createHeaderView(
+    static func createContentView(
         iconView: UIView?,
         title: String?,
-        accessibilityTitle: String? = nil,
+        subtitle: String?,
+        headerAlignment: UIStackView.Alignment = .leading,
+        horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
+        contentView: UIView?,
+        isSheet: Bool = false
+    ) -> UIView {
+        createContentView(
+            iconView: iconView,
+            title: title.map(AccessibleText.init),
+            subtitle: subtitle.map(AccessibleText.init),
+            headerAlignment: headerAlignment,
+            horizontalPadding: horizontalPadding,
+            contentView: contentView,
+            isSheet: isSheet
+        )
+    }
+
+    @available(iOSApplicationExtension, unavailable)
+    static func createHeaderView(
+        iconView: UIView?,
+        title: AccessibleText?,
         alignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         isSheet: Bool = false
@@ -83,8 +108,8 @@ extension PaneLayoutView {
                 textColor: FinancialConnectionsAppearance.Colors.textDefault,
                 alignment: textAlignment
             )
-            titleLabel.setText(title)
-            titleLabel.accessibilityLabel = accessibilityTitle ?? title
+            titleLabel.setText(title.text)
+            titleLabel.accessibilityLabel = title.accessibilityText
             titleLabel.accessibilityIdentifier = "fc_pane_title_label"
             headerStackView.addArrangedSubview(titleLabel)
         }
@@ -107,9 +132,25 @@ extension PaneLayoutView {
     }
 
     @available(iOSApplicationExtension, unavailable)
+    static func createHeaderView(
+        iconView: UIView?,
+        title: String?,
+        alignment: UIStackView.Alignment = .leading,
+        horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
+        isSheet: Bool = false
+    ) -> UIView {
+        createHeaderView(
+            iconView: iconView,
+            title: title.map(AccessibleText.init),
+            alignment: alignment,
+            horizontalPadding: horizontalPadding,
+            isSheet: isSheet
+        )
+    }
+
+    @available(iOSApplicationExtension, unavailable)
     static func createBodyView(
-        text: String?,
-        accessibilityText: String? = nil,
+        text: AccessibleText?,
         contentView: UIView?
     ) -> UIView {
         let willShowDescriptionText = (text != nil)
@@ -134,11 +175,11 @@ extension PaneLayoutView {
                 font: .body(.medium),
                 boldFont: .body(.mediumEmphasized),
                 linkFont: .body(.mediumEmphasized),
-                textColor: FinancialConnectionsAppearance.Colors.textDefault
-            )
-            textLabel.setText(text)
-            textLabel.accessibilityLabel = accessibilityText ?? text
-            paddingStackView.addArrangedSubview(textLabel)
+            textColor: FinancialConnectionsAppearance.Colors.textDefault
+        )
+        textLabel.setText(text.text)
+        textLabel.accessibilityLabel = text.accessibilityText
+        paddingStackView.addArrangedSubview(textLabel)
         }
 
         if let contentView = contentView {
@@ -148,9 +189,19 @@ extension PaneLayoutView {
         return paddingStackView
     }
 
+    @available(iOSApplicationExtension, unavailable)
+    static func createBodyView(
+        text: String?,
+        contentView: UIView?
+    ) -> UIView {
+        createBodyView(
+            text: text.map(AccessibleText.init),
+            contentView: contentView
+        )
+    }
+
     struct ButtonConfiguration {
-        let title: String
-        let accessibilityLabel: String?
+        let title: AccessibleText
         let accessibilityIdentifier: String?
         let action: () -> Void
 
@@ -160,8 +211,17 @@ extension PaneLayoutView {
             accessibilityIdentifier: String? = nil,
             action: @escaping () -> Void
         ) {
+            self.title = AccessibleText(title, accessibilityText: accessibilityLabel)
+            self.accessibilityIdentifier = accessibilityIdentifier
+            self.action = action
+        }
+
+        init(
+            title: AccessibleText,
+            accessibilityIdentifier: String? = nil,
+            action: @escaping () -> Void
+        ) {
             self.title = title
-            self.accessibilityLabel = accessibilityLabel
             self.accessibilityIdentifier = accessibilityIdentifier
             self.action = action
         }
@@ -208,8 +268,8 @@ extension PaneLayoutView {
         if let primaryButtonConfiguration = primaryButtonConfiguration {
             let primaryButton = Button.primary(appearance: appearance)
             primaryButtonReference = primaryButton
-            primaryButton.title = primaryButtonConfiguration.title
-            primaryButton.accessibilityLabel = primaryButtonConfiguration.accessibilityLabel ?? primaryButtonConfiguration.title
+            primaryButton.title = primaryButtonConfiguration.title.text
+            primaryButton.accessibilityLabel = primaryButtonConfiguration.title.accessibilityText
             primaryButton.accessibilityIdentifier = primaryButtonConfiguration.accessibilityIdentifier
             primaryButton.addTarget(
                 footerStackView,
@@ -227,8 +287,8 @@ extension PaneLayoutView {
         if let secondaryButtonConfiguration = secondaryButtonConfiguration {
             let secondaryButton = Button.secondary()
             secondaryButtonReference = secondaryButton
-            secondaryButton.title = secondaryButtonConfiguration.title
-            secondaryButton.accessibilityLabel = secondaryButtonConfiguration.accessibilityLabel ?? secondaryButtonConfiguration.title
+            secondaryButton.title = secondaryButtonConfiguration.title.text
+            secondaryButton.accessibilityLabel = secondaryButtonConfiguration.title.accessibilityText
             secondaryButton.accessibilityIdentifier = secondaryButtonConfiguration.accessibilityIdentifier
             secondaryButton.addTarget(
                 footerStackView,

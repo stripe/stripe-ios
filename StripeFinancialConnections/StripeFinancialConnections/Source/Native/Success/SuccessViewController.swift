@@ -24,15 +24,15 @@ final class SuccessViewController: UIViewController {
     private var showSaveToLinkFailedNotice: Bool {
         dataSource.saveToLinkWithStripeSucceeded == false
     }
-    private var successSubtitle: (text: String, accessibilityText: String)? {
+    private var successSubtitle: PaneLayoutView.AccessibleText? {
         let text = dataSource.customSuccessPaneSubCaption ?? CreateSubtitleText(
             // manual entry has "0" linked accounts count
             isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
             showSaveToLinkFailedNotice: showSaveToLinkFailedNotice,
             linkBrand: linkBrand
         )
-        return (
-            text: text,
+        return .init(
+            text,
             accessibilityText: linkBrand.accessibilityText(from: text)
         )
     }
@@ -131,7 +131,7 @@ final class SuccessViewController: UIViewController {
 
 private func CreateBodyView(
     title: String,
-    subtitle: (text: String, accessibilityText: String)?,
+    subtitle: PaneLayoutView.AccessibleText?,
     appearance: FinancialConnectionsAppearance
 ) -> UIView {
     let titleLabel = AttributedLabel(
