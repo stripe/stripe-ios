@@ -25,7 +25,7 @@ protocol AddressSearchResult {
 }
 
 extension MKLocalSearchCompletion: AddressSearchResult {
-    func asAddress(apiClient: STPAPIClient? = nil, source: String? = nil, sessionToken: String? = nil, completion: @escaping (PaymentSheet.Address?) -> Void) {
+    func asAddress(apiClient: STPAPIClient?, source: String?, sessionToken: String?, completion: @escaping (PaymentSheet.Address?) -> Void) {
         #if os(visionOS)
         assertionFailure("MKMapItem.asAddress is not yet implemented for visionOS")
         completion(PaymentSheet.Address())

@@ -108,7 +108,7 @@ extension AddressSuggestion: AddressSearchResult {
         return []
     }
 
-    func asAddress(apiClient: STPAPIClient? = .shared, source: String?, sessionToken: String?, completion: @escaping (PaymentSheet.Address?) -> Void) {
+    func asAddress(apiClient: STPAPIClient?, source: String?, sessionToken: String?, completion: @escaping (PaymentSheet.Address?) -> Void) {
         if let address {
             completion(address)
         }
