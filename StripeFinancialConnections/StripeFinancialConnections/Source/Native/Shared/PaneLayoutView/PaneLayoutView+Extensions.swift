@@ -24,8 +24,8 @@ extension PaneLayoutView {
     @available(iOSApplicationExtension, unavailable)
     static func createContentView(
         iconView: UIView?,
-        title: AccessibleText?,
-        subtitle: AccessibleText?,
+        accessibleTitle: AccessibleText?,
+        accessibleSubtitle: AccessibleText?,
         headerAlignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         contentView: UIView?,
@@ -34,19 +34,19 @@ extension PaneLayoutView {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 0
-        if iconView != nil || title != nil {
+        if iconView != nil || accessibleTitle != nil {
             let headerView = createHeaderView(
                 iconView: iconView,
-                title: title,
+                accessibleTitle: accessibleTitle,
                 alignment: headerAlignment,
                 horizontalPadding: horizontalPadding,
                 isSheet: isSheet
             )
             verticalStackView.addArrangedSubview(headerView)
         }
-        if subtitle != nil || contentView != nil {
+        if accessibleSubtitle != nil || contentView != nil {
             let bodyView = createBodyView(
-                text: subtitle,
+                accessibleText: accessibleSubtitle,
                 contentView: contentView
             )
             verticalStackView.addArrangedSubview(bodyView)
@@ -66,8 +66,8 @@ extension PaneLayoutView {
     ) -> UIView {
         createContentView(
             iconView: iconView,
-            title: title.map { AccessibleText($0) },
-            subtitle: subtitle.map { AccessibleText($0) },
+            accessibleTitle: title.map { AccessibleText($0) },
+            accessibleSubtitle: subtitle.map { AccessibleText($0) },
             headerAlignment: headerAlignment,
             horizontalPadding: horizontalPadding,
             contentView: contentView,
@@ -78,7 +78,7 @@ extension PaneLayoutView {
     @available(iOSApplicationExtension, unavailable)
     static func createHeaderView(
         iconView: UIView?,
-        title: AccessibleText?,
+        accessibleTitle: AccessibleText?,
         alignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         isSheet: Bool = false
@@ -91,7 +91,7 @@ extension PaneLayoutView {
             headerStackView.addArrangedSubview(iconView)
         }
 
-        if let title = title {
+        if let title = accessibleTitle {
             let textAlignment: NSTextAlignment? = {
                 switch alignment {
                 case .leading: return .left
@@ -141,7 +141,7 @@ extension PaneLayoutView {
     ) -> UIView {
         createHeaderView(
             iconView: iconView,
-            title: title.map { AccessibleText($0) },
+            accessibleTitle: title.map { AccessibleText($0) },
             alignment: alignment,
             horizontalPadding: horizontalPadding,
             isSheet: isSheet
@@ -150,10 +150,10 @@ extension PaneLayoutView {
 
     @available(iOSApplicationExtension, unavailable)
     static func createBodyView(
-        text: AccessibleText?,
+        accessibleText: AccessibleText?,
         contentView: UIView?
     ) -> UIView {
-        let willShowDescriptionText = (text != nil)
+        let willShowDescriptionText = (accessibleText != nil)
 
         let paddingStackView = HitTestStackView()
         paddingStackView.axis = .vertical
@@ -170,16 +170,16 @@ extension PaneLayoutView {
             trailing: Constants.Layout.defaultHorizontalMargin
         )
 
-        if let text = text {
+        if let text = accessibleText {
             let textLabel = AttributedTextView(
                 font: .body(.medium),
                 boldFont: .body(.mediumEmphasized),
                 linkFont: .body(.mediumEmphasized),
-            textColor: FinancialConnectionsAppearance.Colors.textDefault
-        )
-        textLabel.setText(text.text)
-        textLabel.accessibilityLabel = text.accessibilityText
-        paddingStackView.addArrangedSubview(textLabel)
+                textColor: FinancialConnectionsAppearance.Colors.textDefault
+            )
+            textLabel.setText(text.text)
+            textLabel.accessibilityLabel = text.accessibilityText
+            paddingStackView.addArrangedSubview(textLabel)
         }
 
         if let contentView = contentView {
@@ -195,7 +195,7 @@ extension PaneLayoutView {
         contentView: UIView?
     ) -> UIView {
         createBodyView(
-            text: text.map { AccessibleText($0) },
+            accessibleText: text.map { AccessibleText($0) },
             contentView: contentView
         )
     }
