@@ -30,6 +30,7 @@ class AutoCompleteViewController: UIViewController {
     /// Session token for grouping autocomplete and place details calls.
     let sessionToken: String = UUID().uuidString
 
+    private let indendationWidth: CGFloat = 5
     private lazy var addressSearchCompleter: MKLocalSearchCompleter = {
        let searchCompleter = MKLocalSearchCompleter()
         searchCompleter.delegate = self
@@ -111,16 +112,14 @@ class AutoCompleteViewController: UIViewController {
 
         let container = UIView()
         container.addSubview(imageView)
+
         var constraints = [
-            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: configuration.appearance.formInsets.leading),
-            imageView.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+            imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: tableView.layoutMargins.left + indendationWidth),
             imageView.heightAnchor.constraint(equalToConstant: UIFont.preferredFont(forTextStyle: .footnote).lineHeight),
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: image.size.width / image.size.height),
+            imageView.topAnchor.constraint(equalTo: container.topAnchor, constant: tableView.layoutMargins.top),
         ]
         if #available(iOS 26, *) {
-            // UIListContentConfiguration positions text at cell.layoutMargins.leading (~16pt)
-            // plus indentation (5pt), so the logo leading must match that same position.
-            constraints[0] = imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: tableView.layoutMargins.left + 5)
             let separator = UIView()
             separator.backgroundColor = tableView.separatorColor
             separator.translatesAutoresizingMaskIntoConstraints = false
@@ -133,7 +132,7 @@ class AutoCompleteViewController: UIViewController {
             ]
         }
         NSLayoutConstraint.activate(constraints)
-        container.frame = CGRect(x: 0, y: 0, width: 0, height: 34)
+        container.frame.size.height = 64
         return container
     }()
 
@@ -328,7 +327,6 @@ extension AutoCompleteViewController: ElementDelegate {
             } catch {
                 guard !Task.isCancelled else { return }
                 // Fall back to MapKit on API failure
-                self.currentSource = "apple"
                 self.addressSearchCompleter.queryFragment = query
             }
         }
@@ -346,7 +344,7 @@ extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
 
         // Making a query with an empty string causes a server error and doesn't update search results
         if completer.queryFragment.isEmpty && nsError.code == MKError.serverFailure.rawValue {
-            setResults([], source: nil)
+            setResults([], source: "apple")
             return
         }
 
@@ -379,10 +377,10 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                                                                             textStyle: .footnote,
                                                                             appearance: configuration.appearance,
                                                                             isSubtitle: true)
-        cell.indentationWidth = 5 // hardcoded value to align with searchbar textfield
+        cell.indentationWidth = indendationWidth // hardcoded value to align with searchbar textfield
 
         cell.contentView.directionalLayoutMargins = .insets(
-            leading: configuration.appearance.formInsets.leading - 5, // adjust for the indentation
+            leading: configuration.appearance.formInsets.leading - indendationWidth, // adjust for the indentation
             trailing: configuration.appearance.formInsets.trailing)
         cell.contentView.preservesSuperviewLayoutMargins = false
 
