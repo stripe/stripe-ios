@@ -18,7 +18,7 @@ public struct AppAttestationAPIError: APIErrorContextProviding {
     /// Creates an app attestation API error from shared API error context.
     ///
     /// - Parameter context: Shared API error context used to expose diagnostics.
-    init(context: APIErrorContext) {
+    public init(context: APIErrorContext) {
         self.context = context
     }
 
@@ -104,7 +104,7 @@ public struct UncategorizedAPIError: APIErrorContextProviding {
     /// Creates an uncategorized API error from shared API error context.
     ///
     /// - Parameter context: Shared API error context used to expose diagnostics.
-    init(context: APIErrorContext) {
+    public init(context: APIErrorContext) {
         self.context = context
     }
 
@@ -180,6 +180,46 @@ public struct APIErrorContext {
 
     /// The original error that was mapped to this error.
     public let underlyingError: Swift.Error
+
+    /// Creates shared API error context.
+    ///
+    /// - Parameters:
+    ///   - reason: The backend `reason` value associated with this error, if one is available.
+    ///   - operation: The SDK operation that was running when this error occurred.
+    ///   - appIdentifier: The bundle identifier for the app using the SDK, if one is available.
+    ///   - mode: The Stripe mode associated with this error, if it can be determined.
+    ///   - sdkVersion: The Stripe iOS SDK version.
+    ///   - apiErrorCode: The backend API error code associated with this error, if one is available.
+    ///   - apiErrorType: The backend API error type associated with this error, if one is available.
+    ///   - apiErrorMessage: The backend developer-facing API error message associated with this error, if one is available.
+    ///   - apiUserMessage: The backend user-facing API error message associated with this error, if one is available.
+    ///   - docURL: A URL to documentation for this error, if one is available.
+    ///   - underlyingError: The original error that was mapped to this error.
+    public init(
+        reason: String?,
+        operation: String,
+        appIdentifier: String?,
+        mode: String?,
+        sdkVersion: String,
+        apiErrorCode: String?,
+        apiErrorType: String?,
+        apiErrorMessage: String?,
+        apiUserMessage: String?,
+        docURL: String?,
+        underlyingError: Swift.Error
+    ) {
+        self.reason = reason
+        self.operation = operation
+        self.appIdentifier = appIdentifier
+        self.mode = mode
+        self.sdkVersion = sdkVersion
+        self.apiErrorCode = apiErrorCode
+        self.apiErrorType = apiErrorType
+        self.apiErrorMessage = apiErrorMessage
+        self.apiUserMessage = apiUserMessage
+        self.docURL = docURL
+        self.underlyingError = underlyingError
+    }
 
     /// The Stripe API request ID associated with this error, if one is available.
     public var requestID: String? {
