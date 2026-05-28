@@ -119,20 +119,7 @@ class AutoCompleteViewController: UIViewController {
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: image.size.width / image.size.height),
             imageView.topAnchor.constraint(equalTo: container.topAnchor, constant: tableView.layoutMargins.top),
         ]
-        if #available(iOS 26, *) {
-            let separator = UIView()
-            separator.backgroundColor = tableView.separatorColor
-            separator.translatesAutoresizingMaskIntoConstraints = false
-            container.addSubview(separator)
-            constraints += [
-                separator.topAnchor.constraint(equalTo: container.topAnchor),
-                separator.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: tableView.layoutMargins.left),
-                separator.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -tableView.layoutMargins.right),
-                separator.heightAnchor.constraint(equalToConstant: 1.0),
-            ]
-        }
         NSLayoutConstraint.activate(constraints)
-        container.frame.size.height = 64
         return container
     }()
 
