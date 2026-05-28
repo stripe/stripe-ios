@@ -170,6 +170,11 @@ public struct APIErrorContext {
         return apiErrorCode ?? fallback
     }
 
+    /// Returns a developer-facing description with diagnostic context and a suggested next step.
+    ///
+    /// - Parameters:
+    ///   - summary: A short description of the error.
+    ///   - nextStep: A suggested action for resolving the error.
     func developerDescription(summary: String, nextStep: String) -> String {
         let context = [
             "  - operation: \(operation)",

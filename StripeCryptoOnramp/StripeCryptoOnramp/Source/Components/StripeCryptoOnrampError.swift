@@ -31,10 +31,14 @@ public protocol StripeCryptoOnrampError: Error, LocalizedError, CustomDebugStrin
 @_spi(CryptoOnrampAlpha)
 public extension StripeCryptoOnrampError {
 
+    // MARK: - LocalizedError
+
     /// A localized message that can be shown to the app user.
     var errorDescription: String? {
         return userMessage
     }
+
+    // MARK: - CustomDebugStringConvertible
 
     /// A developer-facing description with diagnostic details and suggested next steps.
     var debugDescription: String {
