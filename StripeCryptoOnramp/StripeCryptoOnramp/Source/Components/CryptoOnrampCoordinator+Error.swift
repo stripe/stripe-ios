@@ -6,12 +6,10 @@
 //
 
 import Foundation
-@_spi(STP) import StripeCore
 
-@_spi(CryptoOnrampAlpha)
 public extension CryptoOnrampCoordinator {
     /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
-    enum Error: StripeCryptoOnrampError {
+    enum Error: LocalizedError {
 
         /// Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234).
         case invalidPhoneFormat
@@ -34,50 +32,7 @@ public extension CryptoOnrampCoordinator {
         /// The provided sign-in token is invalid for a reason described in the non-localized associated value. Use the `authorize` API to sign in manually.
         case seamlessSignInTokenInvalid(reason: String?)
 
-        // MARK: - StripeCryptoOnrampError
-
-        /// A stable code identifying this error.
-        public var code: String {
-            switch self {
-            case .invalidPhoneFormat:
-                return "invalid_phone_format"
-            case .linkAccountAlreadyExists:
-                return "link_account_already_exists"
-            case .missingEphemeralKey:
-                return "missing_ephemeral_key"
-            case .invalidSelectedPaymentSource:
-                return "invalid_selected_payment_source"
-            case .missingCryptoCustomerID:
-                return "missing_crypto_customer_id"
-            case .linkAccountNotVerified:
-                return "link_account_not_verified"
-            case .seamlessSignInTokenInvalid:
-                return "seamless_sign_in_token_invalid"
-            }
-        }
-
-        /// A localized message that can be shown to the app user.
-        public var userMessage: String {
-            switch self {
-            case .invalidPhoneFormat:
-                return String.Localized.cryptoOnrampErrorInvalidPhoneFormat
-            case .linkAccountAlreadyExists:
-                return String.Localized.cryptoOnrampErrorLinkAccountAlreadyExists
-            case .missingEphemeralKey:
-                return String.Localized.cryptoOnrampErrorMissingEphemeralKey
-            case .invalidSelectedPaymentSource:
-                return String.Localized.cryptoOnrampErrorInvalidSelectedPaymentSource
-            case .missingCryptoCustomerID:
-                return String.Localized.cryptoOnrampErrorMissingCryptoCustomerID
-            case .linkAccountNotVerified:
-                return String.Localized.cryptoOnrampErrorLinkAccountNotVerified
-            case .seamlessSignInTokenInvalid:
-                return String.Localized.cryptoOnrampErrorSeamlessSignInTokenInvalid
-            }
-        }
-
-        /// A developer-facing description with diagnostic details and suggested next steps.
-        public var developerMessage: String {
+        public var errorDescription: String? {
             switch self {
             case .invalidPhoneFormat:
                 return "Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234)."
@@ -94,16 +49,6 @@ public extension CryptoOnrampCoordinator {
             case .seamlessSignInTokenInvalid:
                 return "An error occurred while automatically signing in to your Link account. Please sign in manually."
             }
-        }
-
-        /// A URL to documentation for this error, if one is available.
-        public var docURL: URL? {
-            return nil
-        }
-
-        /// The original error that was mapped to this error, if one is available.
-        public var underlyingError: Swift.Error? {
-            return nil
         }
     }
 }
