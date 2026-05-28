@@ -9,6 +9,8 @@ import Foundation
 
 private extension String {
     /// Converts a half-open code-point range [start, end) to an NSRange of UTF-16 code units.
+    /// The Google API returns zero based Unicode character offsets, which could theoretically include non-BMP characters
+    /// `highlightSearchString` uses NSAttributedString, which is UTF-16, so we convert to get the correct range
     func utf16Range(fromCodePointOffsets start: Int, to end: Int) -> NSRange? {
         let scalars = unicodeScalars
         guard

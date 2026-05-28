@@ -26,7 +26,7 @@
 
 "Continue linking your account" = "繼續關聯您的賬戶";
 
-"Continue with %@" = "繼續使用 %@";
+"Continue with %@" = "利用 %@ 繼續操作";
 
 "Continue with Link" = "繼續使用 Link";
 
@@ -112,7 +112,7 @@
 
 "Try searching another bank or %@" = "嘗試搜尋另一銀行或%@";
 
-"Use information you previously saved with your %@ account." = "使用先前儲存在您 %@ 帳戶中的資訊。";
+"Use information you previously saved with your %@ account." = "使用先前儲存在閣下 %@ 賬戶中的資訊。";
 
 "Use information you previously saved with your Link account." = "使用您之前在 Link 賬戶中儲存的資訊。";
 
@@ -154,7 +154,7 @@
 
 "Your account numbers don't match." = "您的賬號不匹配。";
 
-"Your account was connected, but couldn't be saved to %@." = "已連線至您的帳戶，但無法將其儲存至 %@。";
+"Your account was connected, but couldn't be saved to %@." = "貴賬戶已關聯，但無法儲存至 %@。";
 
 "Your account was connected, but couldn't be saved to Link." = "您的賬戶已關聯至，但無法儲存到 Link。";
 

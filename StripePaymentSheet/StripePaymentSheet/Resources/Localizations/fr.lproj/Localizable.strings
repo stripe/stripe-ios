@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Ajouter";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 [ %1$s] = [ %2$s] [ %3$s] (inclut [ %4$s] %% des frais de conversion).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Ajouter un compte bancaire américain";
 
 "Add a card" = "Ajouter une carte bancaire";
