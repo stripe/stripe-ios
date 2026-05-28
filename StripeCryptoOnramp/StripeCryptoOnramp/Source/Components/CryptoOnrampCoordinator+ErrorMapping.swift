@@ -30,15 +30,13 @@ extension CryptoOnrampCoordinator {
                     apiClient: apiClient
                 )
             default:
-                return Error.uncategorizedAPIError(
-                    UncategorizedAPIError(
-                        context: apiErrorContext(
-                            from: error,
-                            apiError: apiError,
-                            during: operation,
-                            apiClient: apiClient,
-                            docURL: apiError.docUrl?.absoluteString
-                        )
+                return UncategorizedAPIError(
+                    context: apiErrorContext(
+                        from: error,
+                        apiError: apiError,
+                        during: operation,
+                        apiClient: apiClient,
+                        docURL: apiError.docUrl
                     )
                 )
             }
@@ -53,15 +51,13 @@ extension CryptoOnrampCoordinator {
         during operation: CryptoOnrampOperation,
         apiClient: STPAPIClient
     ) -> Swift.Error {
-        return Error.appAttestationFailed(
-            AppAttestationAPIError(
-                context: apiErrorContext(
-                    from: error,
-                    apiError: apiError,
-                    during: operation,
-                    apiClient: apiClient,
-                    docURL: apiError.docUrl?.absoluteString
-                )
+        return AppAttestationAPIError(
+            context: apiErrorContext(
+                from: error,
+                apiError: apiError,
+                during: operation,
+                apiClient: apiClient,
+                docURL: apiError.docUrl
             )
         )
     }
@@ -71,7 +67,7 @@ extension CryptoOnrampCoordinator {
         apiError: StripeAPIError,
         during operation: CryptoOnrampOperation,
         apiClient: STPAPIClient,
-        docURL: String?
+        docURL: URL?
     ) -> APIErrorContext {
         return APIErrorContext(
             reason: apiError.allResponseFields["reason"] as? String,

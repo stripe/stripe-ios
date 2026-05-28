@@ -880,7 +880,7 @@ private extension CryptoOnrampCoordinator {
         analyticsClient: CryptoOnrampAnalyticsClient
     ) throws -> Never {
         let mappedError = mappedError(error, during: operation, apiClient: apiClient)
-        let errorMessage = (mappedError as? Error)?.developerDescription ?? mappedError.localizedDescription
+        let errorMessage = (mappedError as? StripeCryptoOnrampError)?.developerMessage ?? mappedError.localizedDescription
         analyticsClient.log(.errorOccurred(during: operation, errorMessage: errorMessage))
         throw mappedError
     }

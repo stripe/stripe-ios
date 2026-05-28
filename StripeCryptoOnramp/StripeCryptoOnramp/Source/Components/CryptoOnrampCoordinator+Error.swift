@@ -11,7 +11,7 @@ import Foundation
 @_spi(CryptoOnrampAlpha)
 public extension CryptoOnrampCoordinator {
     /// A subset of errors that may be thrown by `CryptoOnrampCoordinator` APIs.
-    enum Error: LocalizedError {
+    enum Error: StripeCryptoOnrampError {
 
         /// Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234).
         case invalidPhoneFormat
@@ -34,22 +34,30 @@ public extension CryptoOnrampCoordinator {
         /// The provided sign-in token is invalid for a reason described in the non-localized associated value. Use the `authorize` API to sign in manually.
         case seamlessSignInTokenInvalid(reason: String?)
 
-        /// App attestation failed while processing an SDK operation.
-        case appAttestationFailed(AppAttestationAPIError)
+        // MARK: - StripeCryptoOnrampError
 
-        /// A Stripe API error without a more specific Crypto Onramp category.
-        case uncategorizedAPIError(UncategorizedAPIError)
-
-        // MARK: - LocalizedError
-
-        public var errorDescription: String? {
-            return userFacingMessage
+        /// A stable code identifying this error.
+        public var code: String {
+            switch self {
+            case .invalidPhoneFormat:
+                return "invalid_phone_format"
+            case .linkAccountAlreadyExists:
+                return "link_account_already_exists"
+            case .missingEphemeralKey:
+                return "missing_ephemeral_key"
+            case .invalidSelectedPaymentSource:
+                return "invalid_selected_payment_source"
+            case .missingCryptoCustomerID:
+                return "missing_crypto_customer_id"
+            case .linkAccountNotVerified:
+                return "link_account_not_verified"
+            case .seamlessSignInTokenInvalid:
+                return "seamless_sign_in_token_invalid"
+            }
         }
 
-        // MARK: - CryptoOnrampCoordinator.Error
-
         /// A localized message that can be shown to the app user.
-        public var userFacingMessage: String {
+        public var userMessage: String {
             switch self {
             case .invalidPhoneFormat:
                 return String.Localized.cryptoOnrampErrorInvalidPhoneFormat
@@ -65,15 +73,11 @@ public extension CryptoOnrampCoordinator {
                 return String.Localized.cryptoOnrampErrorLinkAccountNotVerified
             case .seamlessSignInTokenInvalid:
                 return String.Localized.cryptoOnrampErrorSeamlessSignInTokenInvalid
-            case .appAttestationFailed(let error):
-                return error.userFacingMessage
-            case .uncategorizedAPIError(let error):
-                return error.userFacingMessage
             }
         }
 
         /// A developer-facing description with diagnostic details and suggested next steps.
-        public var developerDescription: String {
+        public var developerMessage: String {
             switch self {
             case .invalidPhoneFormat:
                 return "Phone number validation failed. Phone number should be in E.164 format (e.g., +12125551234)."
@@ -89,76 +93,17 @@ public extension CryptoOnrampCoordinator {
                 return "No active Link consumer is available in a verified state."
             case .seamlessSignInTokenInvalid:
                 return "An error occurred while automatically signing in to your Link account. Please sign in manually."
-            case .appAttestationFailed(let error):
-                return error.developerDescription
-            case .uncategorizedAPIError(let error):
-                return error.developerDescription
             }
         }
 
         /// A URL to documentation for this error, if one is available.
-        public var docURL: String? {
-            return apiError?.docURL
-        }
-
-        /// The backend `reason` value associated with this error, if one is available.
-        public var reason: String? {
-            return apiError?.reason
-        }
-
-        /// The Stripe API request ID associated with this error, if one is available.
-        public var requestID: String? {
-            return apiError?.requestID
-        }
-
-        /// The SDK operation that was running when this error occurred, if one is available.
-        public var operation: String? {
-            return apiError?.operation
-        }
-
-        /// The Stripe mode associated with this error, if it can be determined.
-        public var mode: String? {
-            return apiError?.mode
-        }
-
-        /// The backend API error code associated with this error, if one is available.
-        public var apiErrorCode: String? {
-            return apiError?.apiErrorCode
-        }
-
-        /// The backend API error type associated with this error, if one is available.
-        public var apiErrorType: String? {
-            return apiError?.apiErrorType
-        }
-
-        /// The backend developer-facing API error message associated with this error, if one is available.
-        public var apiErrorMessage: String? {
-            return apiError?.apiErrorMessage
+        public var docURL: URL? {
+            return nil
         }
 
         /// The original error that was mapped to this error, if one is available.
         public var underlyingError: Swift.Error? {
-            return apiError?.underlyingError
+            return nil
         }
-
-        private var apiError: (any APIErrorContextProviding)? {
-            switch self {
-            case .appAttestationFailed(let error):
-                return error
-            case .uncategorizedAPIError(let error):
-                return error
-            default:
-                return nil
-            }
-        }
-    }
-}
-
-extension CryptoOnrampCoordinator.Error: CustomDebugStringConvertible {
-
-    // MARK: - CustomDebugStringConvertible
-
-    public var debugDescription: String {
-        return developerDescription
     }
 }

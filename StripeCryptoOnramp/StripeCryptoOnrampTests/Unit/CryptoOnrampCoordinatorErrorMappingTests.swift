@@ -28,19 +28,21 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             during: .hasLinkAccount,
             apiClient: apiClient
         )
-        let coordinatorError = try XCTUnwrap(mappedError as? CryptoOnrampCoordinator.Error)
-
-        guard case .appAttestationFailed(let apiError) = coordinatorError else {
-            return XCTFail("Expected appAttestationFailed, got \(coordinatorError).")
-        }
+        let apiError = try XCTUnwrap(mappedError as? AppAttestationAPIError)
 
         XCTAssertEqual(apiError.reason, "app_not_registered")
         XCTAssertEqual(apiError.context.reason, "app_not_registered")
+        XCTAssertEqual(apiError.code, "link_failed_to_attest_request")
         XCTAssertEqual(apiError.operation, "has_link_account")
         XCTAssertEqual(apiError.mode, "test")
         XCTAssertEqual(apiError.requestID, "req_attestation_test")
+        XCTAssertEqual(apiError.type, "invalid_request_error")
         XCTAssertEqual(apiError.apiErrorCode, "link_failed_to_attest_request")
         XCTAssertEqual(apiError.apiErrorType, "invalid_request_error")
+        XCTAssertEqual(
+            apiError.apiMessage,
+            "App identifier intentionally_invalid_app_id_for_testing (bundle ID on iOS or package name on Android) isn't registered as a trusted application in test mode for this Stripe account. Contact Stripe to register it and try again."
+        )
         XCTAssertEqual(
             apiError.apiErrorMessage,
             "App identifier intentionally_invalid_app_id_for_testing (bundle ID on iOS or package name on Android) isn't registered as a trusted application in test mode for this Stripe account. Contact Stripe to register it and try again."
@@ -49,18 +51,41 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         XCTAssertNil(apiError.docURL)
         XCTAssertTrue(apiError.underlyingError is StripeError)
 
-        XCTAssertEqual(coordinatorError.reason, apiError.reason)
-        XCTAssertEqual(coordinatorError.operation, apiError.operation)
-        XCTAssertEqual(coordinatorError.mode, apiError.mode)
-        XCTAssertEqual(coordinatorError.requestID, apiError.requestID)
-        XCTAssertEqual(coordinatorError.apiErrorCode, apiError.apiErrorCode)
-        XCTAssertEqual(coordinatorError.apiErrorType, apiError.apiErrorType)
-        XCTAssertEqual(coordinatorError.apiErrorMessage, apiError.apiErrorMessage)
+        let richError = apiError as StripeCryptoOnrampError
+        XCTAssertEqual(richError.code, "link_failed_to_attest_request")
+        XCTAssertEqual(richError.userMessage, apiError.userMessage)
+        XCTAssertEqual(richError.developerMessage, apiError.developerMessage)
 
-        XCTAssertEqual(coordinatorError.errorDescription, coordinatorError.userFacingMessage)
-        XCTAssertEqual(coordinatorError.debugDescription, coordinatorError.developerDescription)
-        XCTAssertTrue(coordinatorError.developerDescription.contains("App attestation failed: this app is not registered as a trusted application."))
-        XCTAssertTrue(coordinatorError.developerDescription.contains("reason: app_not_registered"))
-        XCTAssertTrue(coordinatorError.developerDescription.contains("request_id: req_attestation_test"))
+        XCTAssertEqual(apiError.errorDescription, apiError.userMessage)
+        XCTAssertEqual(apiError.debugDescription, apiError.developerMessage)
+        XCTAssertTrue(apiError.developerMessage.contains("App attestation failed: this app is not registered as a trusted application."))
+        XCTAssertTrue(apiError.developerMessage.contains("reason: app_not_registered"))
+        XCTAssertTrue(apiError.developerMessage.contains("request_id: req_attestation_test"))
+    }
+
+    func testMappedErrorUsesSafeUserMessageForUncategorizedAPIError() throws {
+        let stripeError = StripeError.apiError(StripeAPIError(
+            type: .invalidRequestError,
+            code: "unexpected_backend_error",
+            message: "Raw backend message that should not be shown to app users.",
+            param: nil
+        ))
+        let apiClient = STPAPIClient(publishableKey: "pk_test_123")
+
+        let mappedError = CryptoOnrampCoordinator.mappedError(
+            stripeError,
+            during: .hasLinkAccount,
+            apiClient: apiClient
+        )
+        let apiError = try XCTUnwrap(mappedError as? UncategorizedAPIError)
+
+        XCTAssertEqual(apiError.code, "unexpected_backend_error")
+        XCTAssertEqual(apiError.apiMessage, "Raw backend message that should not be shown to app users.")
+        XCTAssertEqual(apiError.userMessage, NSError.stp_unexpectedErrorMessage())
+        XCTAssertNotEqual(apiError.userMessage, apiError.apiMessage)
+
+        let richError = apiError as StripeCryptoOnrampError
+        XCTAssertEqual(richError.userMessage, NSError.stp_unexpectedErrorMessage())
+        XCTAssertTrue(richError.developerMessage.contains("Raw backend message that should not be shown to app users."))
     }
 }
