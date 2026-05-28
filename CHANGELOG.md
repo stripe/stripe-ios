@@ -4,9 +4,9 @@ MINOR
 ## X.Y.Z - changes pending release
 
 ### CryptoOnramp (Alpha)
-* [Added] Added two new `CryptoOnrampCoordinator.Error` cases: `appAttestationFailed` and `uncategorizedAPIError`. These include associated values with additional API error details.
-* [Added] `CryptoOnrampCoordinator.Error` exposes new convenience accessors for underlying API error details, including those of the new cases mentioned above.
-* [Added] `CryptoOnrampCoordinator.Error` exposes `userFacingMessage` and `developerDescription` for better separation of user-specific messaging, and developer-specific steps to take.
+* [Added] Added `StripeCryptoOnrampError` for rich Crypto Onramp errors and `StripeCryptoOnrampAPIError` for API-backed Crypto Onramp errors, with separate user-facing and developer-facing messages, stable error codes, documentation URLs, and underlying errors.
+* [Added] Added `AppAttestationAPIError`, `UncategorizedAPIError`, and `APIErrorContext` to expose inspectable backend error details such as reason, operation, mode, request ID, API type, API message, and SDK version.
+* [Changed] `CryptoOnrampCoordinator` APIs now map Stripe API failures to the new API-backed error types, including a specific `AppAttestationAPIError` for app attestation failures, while preserving existing local `CryptoOnrampCoordinator.Error` behavior for now, with plans to migrate these existing errors to the new protocol-based format.
 
 ## 25.16.0 2026-05-26
 ### PaymentSheet
