@@ -8,6 +8,75 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+/// A type that stores shared API error context.
+///
+/// Used to keep `StripeCryptoOnrampAPIError` conformers from needing to duplicate all property declarations, and instead use a concrete type, `APIErrorContext`, to store properties common to all API errors.
+@_spi(CryptoOnrampAlpha)
+public protocol APIErrorContextProviding {
+
+    /// Shared API error context used to expose diagnostics and build developer-facing messages.
+    var context: APIErrorContext { get }
+}
+
+@_spi(CryptoOnrampAlpha)
+public extension APIErrorContextProviding {
+
+    /// A URL to documentation for this error, if one is available.
+    var docURL: URL? {
+        return context.docURL
+    }
+
+    /// The original error that was mapped to this error, if one is available.
+    var underlyingError: Swift.Error? {
+        return context.underlyingError
+    }
+
+    /// The backend `reason` value associated with this error, if one is available.
+    var reason: String? {
+        return context.reason
+    }
+
+    /// The SDK operation that was running when this error occurred.
+    var operation: String {
+        return context.operation
+    }
+
+    /// The bundle identifier for the app using the SDK, if one is available.
+    var appIdentifier: String? {
+        return context.appIdentifier
+    }
+
+    /// The Stripe mode associated with this error, if it can be determined.
+    var mode: String? {
+        return context.mode
+    }
+
+    /// The Stripe iOS SDK version.
+    var sdkVersion: String {
+        return context.sdkVersion
+    }
+
+    /// The backend API error type associated with this error, if one is available.
+    var type: String? {
+        return context.apiErrorType
+    }
+
+    /// The Stripe API request ID associated with this error, if one is available.
+    var requestID: String? {
+        return context.requestID
+    }
+
+    /// The backend developer-facing API error message associated with this error, if one is available.
+    var apiMessage: String? {
+        return context.apiErrorMessage
+    }
+
+    /// The backend user-facing API error message associated with this error, if one is available.
+    var apiUserMessage: String? {
+        return context.apiUserMessage
+    }
+}
+
 /// Contains the common properties of all API error types.
 @_spi(CryptoOnrampAlpha)
 public struct APIErrorContext {
@@ -92,6 +161,13 @@ public struct APIErrorContext {
             return nil
         }
         return apiError.requestID
+    }
+
+    /// Returns the backend API error code, or a fallback code if the backend code is unavailable.
+    ///
+    /// - Parameter fallback: The SDK-defined error code to use if the backend API error code is unavailable.
+    func code(fallback: String) -> String {
+        return apiErrorCode ?? fallback
     }
 
     func developerDescription(summary: String, nextStep: String) -> String {

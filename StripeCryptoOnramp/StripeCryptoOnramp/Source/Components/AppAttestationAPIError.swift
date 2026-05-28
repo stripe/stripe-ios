@@ -10,7 +10,7 @@ import Foundation
 
 /// Details from an app attestation API error, enriched with SDK-local diagnostic context.
 @_spi(CryptoOnrampAlpha)
-public struct AppAttestationAPIError: StripeCryptoOnrampAPIError {
+public struct AppAttestationAPIError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     public let context: APIErrorContext
@@ -20,6 +20,12 @@ public struct AppAttestationAPIError: StripeCryptoOnrampAPIError {
     /// - Parameter context: Shared API error context used to expose diagnostics.
     public init(context: APIErrorContext) {
         self.context = context
+    }
+
+    // MARK: - StripeCryptoOnrampAPIError
+
+    public var code: String {
+        return context.code(fallback: "link_failed_to_attest_request")
     }
 
     // MARK: - AppAttestationAPIError
@@ -35,11 +41,6 @@ public struct AppAttestationAPIError: StripeCryptoOnrampAPIError {
             summary: developerSummary,
             nextStep: nextStep
         )
-    }
-
-    /// A stable code identifying this error.
-    public var code: String {
-        return apiErrorCode ?? "app_attestation_failed"
     }
 
     private var developerSummary: String {
@@ -60,7 +61,7 @@ public struct AppAttestationAPIError: StripeCryptoOnrampAPIError {
         case "ios_attestation_validation_failed":
             return "App attestation failed: the App Attest attestation could not be validated."
         default:
-            return apiErrorMessage ?? "App attestation failed."
+            return apiMessage ?? "App attestation failed."
         }
     }
 
@@ -82,7 +83,7 @@ public struct AppAttestationAPIError: StripeCryptoOnrampAPIError {
         case "ios_attestation_validation_failed":
             return "Generate a new App Attest attestation and retry the Onramp flow. If the issue persists, check your app attestation configuration."
         default:
-            return apiErrorMessage ?? "Inspect the preserved Stripe API error for details and retry after correcting the app attestation configuration."
+            return apiMessage ?? "Inspect the preserved Stripe API error for details and retry after correcting the app attestation configuration."
         }
     }
 }

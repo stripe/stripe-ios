@@ -31,20 +31,13 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let apiError = try XCTUnwrap(mappedError as? AppAttestationAPIError)
 
         XCTAssertEqual(apiError.reason, "app_not_registered")
-        XCTAssertEqual(apiError.context.reason, "app_not_registered")
         XCTAssertEqual(apiError.code, "link_failed_to_attest_request")
         XCTAssertEqual(apiError.operation, "has_link_account")
         XCTAssertEqual(apiError.mode, "test")
         XCTAssertEqual(apiError.requestID, "req_attestation_test")
         XCTAssertEqual(apiError.type, "invalid_request_error")
-        XCTAssertEqual(apiError.apiErrorCode, "link_failed_to_attest_request")
-        XCTAssertEqual(apiError.apiErrorType, "invalid_request_error")
         XCTAssertEqual(
             apiError.apiMessage,
-            "App identifier intentionally_invalid_app_id_for_testing (bundle ID on iOS or package name on Android) isn't registered as a trusted application in test mode for this Stripe account. Contact Stripe to register it and try again."
-        )
-        XCTAssertEqual(
-            apiError.apiErrorMessage,
             "App identifier intentionally_invalid_app_id_for_testing (bundle ID on iOS or package name on Android) isn't registered as a trusted application in test mode for this Stripe account. Contact Stripe to register it and try again."
         )
         XCTAssertNil(apiError.apiUserMessage)
@@ -87,5 +80,24 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         let richError = apiError as StripeCryptoOnrampError
         XCTAssertEqual(richError.userMessage, NSError.stp_unexpectedErrorMessage())
         XCTAssertTrue(richError.developerMessage.contains("Raw backend message that should not be shown to app users."))
+    }
+
+    func testAPIErrorCodeFallsBackWhenBackendCodeIsUnavailable() {
+        let context = APIErrorContext(
+            reason: nil,
+            operation: CryptoOnrampOperation.hasLinkAccount.rawValue,
+            appIdentifier: nil,
+            mode: nil,
+            sdkVersion: STPAPIClient.STPSDKVersion,
+            apiErrorCode: nil,
+            apiErrorType: nil,
+            apiErrorMessage: nil,
+            apiUserMessage: nil,
+            docURL: nil,
+            underlyingError: NSError(domain: "test", code: 0)
+        )
+
+        XCTAssertEqual(AppAttestationAPIError(context: context).code, "link_failed_to_attest_request")
+        XCTAssertEqual(UncategorizedAPIError(context: context).code, "uncategorized_api_error")
     }
 }

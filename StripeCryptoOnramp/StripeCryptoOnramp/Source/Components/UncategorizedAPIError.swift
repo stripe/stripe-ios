@@ -10,7 +10,7 @@ import Foundation
 
 /// Details from an uncategorized backend API error, enriched with SDK-local diagnostic context.
 @_spi(CryptoOnrampAlpha)
-public struct UncategorizedAPIError: StripeCryptoOnrampAPIError {
+public struct UncategorizedAPIError: StripeCryptoOnrampAPIError, APIErrorContextProviding {
 
     /// Shared API error context used to expose diagnostics and build developer-facing messages.
     public let context: APIErrorContext
@@ -20,6 +20,12 @@ public struct UncategorizedAPIError: StripeCryptoOnrampAPIError {
     /// - Parameter context: Shared API error context used to expose diagnostics.
     public init(context: APIErrorContext) {
         self.context = context
+    }
+
+    // MARK: - StripeCryptoOnrampAPIError
+
+    public var code: String {
+        return context.code(fallback: "uncategorized_api_error")
     }
 
     // MARK: - UncategorizedAPIError
@@ -35,10 +41,5 @@ public struct UncategorizedAPIError: StripeCryptoOnrampAPIError {
             summary: apiMessage ?? context.underlyingError.localizedDescription,
             nextStep: "Inspect the preserved Stripe API error for details and retry after correcting the issue."
         )
-    }
-
-    /// A stable code identifying this error.
-    public var code: String {
-        return apiErrorCode ?? "uncategorized_api_error"
     }
 }
