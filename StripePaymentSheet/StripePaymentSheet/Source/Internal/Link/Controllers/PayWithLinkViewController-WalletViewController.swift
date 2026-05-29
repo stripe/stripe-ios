@@ -287,12 +287,20 @@ extension PayWithLinkViewController {
                 .getSupportedPaymentDetailsTypes(linkAccount: linkAccount)
                 .toSortedArray()
 
+            context.analyticsHelper.analyticsClient.logLinkPaymentDetailsListRequestSent(
+                sentTypes: supportedPaymentDetailsTypes
+            )
+
             // Fire and forget; ignore any errors that might happen here.
             linkAccount.listPaymentDetails(
                 supportedTypes: supportedPaymentDetailsTypes,
                 shouldRetryOnAuthError: true
             ) { [weak self] result in
                 if case .success(let paymentDetails) = result {
+                    let receivedTypes = paymentDetails.map { $0.type }
+                    self?.context.analyticsHelper.analyticsClient.logLinkPaymentDetailsListRequestReceived(
+                        receivedTypes: receivedTypes
+                    )
                     self?.viewModel.updatePaymentMethods(paymentDetails)
                 }
                 completion?()
