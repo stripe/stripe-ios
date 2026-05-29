@@ -152,7 +152,7 @@ final class NetworkingLinkSignupViewController: UIViewController {
             contentView: PaneLayoutView.createContentView(
                 iconView: nil,
                 title: networkingLinkSignup.title,
-                subtitle: nil as String?,
+                subtitle: nil,
                 contentView: NetworkingLinkSignupBodyView(
                     bulletPoints: networkingLinkSignup.body.bullets,
                     formView: formView,

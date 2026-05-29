@@ -82,7 +82,7 @@ final class LinkAccountPickerViewController: UIViewController {
                 // `createBodyView` adds extra padding
                 // around the loading view
                 PaneLayoutView.createBodyView(
-                    text: nil as String?,
+                    text: nil,
                     contentView: LinkAccountPickerLoadingView()
                 ),
             ]
@@ -196,7 +196,7 @@ final class LinkAccountPickerViewController: UIViewController {
         )
         contentStackView.addArrangedSubview(
             PaneLayoutView.createBodyView(
-                text: nil as String?,
+                text: nil,
                 contentView: bodyView
             )
         )

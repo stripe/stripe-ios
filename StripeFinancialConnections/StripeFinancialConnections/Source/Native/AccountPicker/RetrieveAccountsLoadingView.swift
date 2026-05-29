@@ -27,7 +27,7 @@ final class RetrieveAccountsLoadingView: UIView {
                     "Retrieving accounts...",
                     "The title of the loading screen that appears when a user just logged into their bank account, and now is waiting for their bank accounts to load. Once the bank accounts are loaded, user will be able to pick the bank account they want to to use for things like payments."
                 ),
-                subtitle: nil as String?,
+                subtitle: nil,
                 contentView: {
                     let verticalStackView = UIStackView(
                         arrangedSubviews: [
