@@ -49,7 +49,7 @@ class PaymentSheetFormFactory {
     let paymentMethodIncentive: PaymentMethodIncentive?
     let sellerName: String?
     let previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action?
-    let cardFundingFilter: CardFundingFilter
+    let cardFundingFilter: any CardFundingFilter
     let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
     let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
 
@@ -192,7 +192,7 @@ class PaymentSheetFormFactory {
         linkBrand: LinkBrand = .link,
         sellerName: String? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil,
-        cardFundingFilter: CardFundingFilter = .default
+        cardFundingFilter: any CardFundingFilter = DefaultCardFundingFilter()
     ) {
         self.configuration = configuration
         self.paymentMethod = paymentMethod

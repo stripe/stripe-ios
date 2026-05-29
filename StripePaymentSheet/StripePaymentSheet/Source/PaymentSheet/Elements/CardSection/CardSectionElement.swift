@@ -44,9 +44,8 @@ final class CardSectionElement: ContainerElement {
     let cardSection: SectionElement
     let analyticsHelper: PaymentSheetAnalyticsHelper?
     let cardBrandFilter: CardBrandFilter
-    let cardFundingFilter: CardFundingFilter
-    /// Separate BIN controller for funding filtering to avoid polluting
-    /// See: https://jira.corp.stripe.com/browse/RUN_MOBILESDK-5052
+    let cardFundingFilter: any CardFundingFilter
+    /// Separate BIN controller for funding filtering to avoid polluting shared BIN controller state.
     private let fundingBinController: STPBINController = STPBINController()
     private let opensCardScannerAutomatically: Bool
 
@@ -85,7 +84,7 @@ final class CardSectionElement: ContainerElement {
         theme: ElementsAppearance = .default,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
         cardBrandFilter: CardBrandFilter = .default,
-        cardFundingFilter: CardFundingFilter = .default,
+        cardFundingFilter: any CardFundingFilter = DefaultCardFundingFilter(),
         opensCardScannerAutomatically: Bool = false,
         linkAppearance: LinkAppearance? = nil
     ) {
@@ -244,7 +243,7 @@ final class CardSectionElement: ContainerElement {
 
     /// Fetches BIN metadata from the card metadata service and caches it in `STPBINController`.
     func fetchAndCacheCardFunding() {
-        guard cardFundingFilter != .default else {
+        guard !(cardFundingFilter is DefaultCardFundingFilter) else {
             return
         }
         let binPrefix = String(panElement.text.prefix(6))

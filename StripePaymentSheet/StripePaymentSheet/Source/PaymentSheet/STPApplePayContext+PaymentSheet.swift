@@ -350,7 +350,7 @@ extension STPApplePayContext {
         intent: Intent,
         configuration: PaymentElementConfiguration,
         applePay: PaymentSheet.ApplePayConfiguration,
-        cardFundingFilter: CardFundingFilter = .default
+        cardFundingFilter: any CardFundingFilter = DefaultCardFundingFilter()
     ) -> PKPaymentRequest {
         let paymentRequest = StripeAPI.paymentRequest(
             withMerchantIdentifier: applePay.merchantId,

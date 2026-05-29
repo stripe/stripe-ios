@@ -413,7 +413,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
             theme: .default,
             analyticsHelper: ._testValue(),
             cardBrandFilter: .default,
-            cardFundingFilter: .init(allowedFundingTypes: .debit, filteringEnabled: true),
+            cardFundingFilter: PaymentSheetCardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: true),
             opensCardScannerAutomatically: false
         )
         let textFieldElement = cardSection.panElement
@@ -496,7 +496,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
 
         // Only allow debit - but without network fetch, we don't know the funding type
         var configuration = TextFieldElement.PANConfiguration(
-            cardFundingFilter: .init(allowedFundingTypes: .debit, filteringEnabled: true)
+            cardFundingFilter: PaymentSheetCardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: true)
         )
         configuration.binController = STPBINController()
 
@@ -515,7 +515,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
         let apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         let fundingBinController = STPBINController()
         var configuration = TextFieldElement.PANConfiguration(
-            cardFundingFilter: .init(allowedFundingTypes: .debit, filteringEnabled: true),
+            cardFundingFilter: PaymentSheetCardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: true),
             fundingBinController: fundingBinController
         )
         configuration.binController = STPBINController()
@@ -553,7 +553,7 @@ class TextFieldElementCardTest: STPNetworkStubbingTestCase {
 
         // Allow all funding types (default)
         let configuration = TextFieldElement.PANConfiguration(
-            cardFundingFilter: .default
+            cardFundingFilter: DefaultCardFundingFilter()
         )
 
         for text in testcases {

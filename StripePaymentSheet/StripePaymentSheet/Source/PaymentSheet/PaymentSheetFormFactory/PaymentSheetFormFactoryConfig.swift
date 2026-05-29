@@ -97,14 +97,13 @@ enum PaymentSheetFormFactoryConfig {
         }
     }
 
-    func cardFundingFilter(for elementsSession: STPElementsSession) -> CardFundingFilter {
+    func cardFundingFilter(for elementsSession: STPElementsSession) -> any CardFundingFilter {
         switch self {
         case .paymentElement(let config, _):
             return config.cardFundingFilter(for: elementsSession)
         case .customerSheet:
             // CustomerSheet does not yet support card funding filtering
-            // Just return the default filter (none)
-            return .default
+            return DefaultCardFundingFilter()
         }
     }
 

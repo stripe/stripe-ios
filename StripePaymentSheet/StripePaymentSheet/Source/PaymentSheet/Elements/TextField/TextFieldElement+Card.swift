@@ -24,9 +24,8 @@ extension TextFieldElement {
         let cardBrand: STPCardBrand?
         let cardBrandChoiceElement: CardBrandChoiceElement?
         let cardBrandFilter: CardBrandFilter
-        let cardFundingFilter: CardFundingFilter
-        /// Separate BIN controller for funding filtering to avoid polluting
-        /// See: https://jira.corp.stripe.com/browse/RUN_MOBILESDK-5052
+        let cardFundingFilter: any CardFundingFilter
+        /// Separate BIN controller for funding filtering to avoid polluting shared BIN controller state.
         let fundingBinController: STPBINController?
 
         init(
@@ -34,7 +33,7 @@ extension TextFieldElement {
             cardBrand: STPCardBrand? = nil,
             cardBrandChoiceElement: CardBrandChoiceElement? = nil,
             cardBrandFilter: CardBrandFilter = .default,
-            cardFundingFilter: CardFundingFilter = .default,
+            cardFundingFilter: any CardFundingFilter = DefaultCardFundingFilter(),
             fundingBinController: STPBINController? = nil
         ) {
             self.defaultValue = defaultValue
@@ -228,7 +227,7 @@ extension TextFieldElement {
         }
 
         func warningLabel(text: String) -> String? {
-            guard cardFundingFilter != .default else { return nil }
+            guard !(cardFundingFilter is DefaultCardFundingFilter) else { return nil }
             guard text.count >= 6 else { return nil }
             guard let fundingBinController else { return nil }
 

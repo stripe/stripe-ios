@@ -185,7 +185,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_fundingAcceptance_debitOnly() {
         let intent = Intent._testValue()
-        let cardFundingFilter = CardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: true)
+        let cardFundingFilter = PaymentSheetCardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: true)
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration, cardFundingFilter: cardFundingFilter)
         XCTAssertTrue(sut.merchantCapabilities.contains(.capability3DS))
         XCTAssertTrue(sut.merchantCapabilities.contains(.capabilityDebit))
@@ -194,7 +194,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_fundingAcceptance_creditOnly() {
         let intent = Intent._testValue()
-        let cardFundingFilter = CardFundingFilter(allowedFundingTypes: .credit, filteringEnabled: true)
+        let cardFundingFilter = PaymentSheetCardFundingFilter(allowedFundingTypes: .credit, filteringEnabled: true)
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration, cardFundingFilter: cardFundingFilter)
         XCTAssertTrue(sut.merchantCapabilities.contains(.capability3DS))
         XCTAssertFalse(sut.merchantCapabilities.contains(.capabilityDebit))
@@ -203,7 +203,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
 
     func testCreatePaymentRequest_fundingAcceptance_debitAndCredit() {
         let intent = Intent._testValue()
-        let cardFundingFilter = CardFundingFilter(allowedFundingTypes: [.debit, .credit], filteringEnabled: true)
+        let cardFundingFilter = PaymentSheetCardFundingFilter(allowedFundingTypes: [.debit, .credit], filteringEnabled: true)
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration, cardFundingFilter: cardFundingFilter)
         XCTAssertTrue(sut.merchantCapabilities.contains(.capability3DS))
         XCTAssertTrue(sut.merchantCapabilities.contains(.capabilityDebit))
@@ -213,7 +213,7 @@ final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     func testCreatePaymentRequest_fundingAcceptance_filteringDisabled() {
         // Even with restrictive funding types, if filtering is disabled, capabilities should not be modified
         let intent = Intent._testValue()
-        let cardFundingFilter = CardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: false)
+        let cardFundingFilter = PaymentSheetCardFundingFilter(allowedFundingTypes: .debit, filteringEnabled: false)
         let sut = STPApplePayContext.createPaymentRequest(intent: intent, configuration: configuration, applePay: applePayConfiguration, cardFundingFilter: cardFundingFilter)
         // When filtering is disabled, the default merchant capabilities from StripeAPI.paymentRequest are preserved (.capability3DS)
         XCTAssertEqual(sut.merchantCapabilities, .capability3DS)

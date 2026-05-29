@@ -75,7 +75,7 @@ extension ConsumerPaymentDetails {
                      elementsSession: STPElementsSession,
                      configuration: PaymentElementConfiguration,
                      cardBrandFilter: CardBrandFilter,
-                     cardFundingFilter: CardFundingFilter) -> Bool {
+                     cardFundingFilter: any CardFundingFilter) -> Bool {
         guard linkAccount.supportedPaymentDetailsTypes(for: elementsSession).contains(type) else {
             return false
         }
