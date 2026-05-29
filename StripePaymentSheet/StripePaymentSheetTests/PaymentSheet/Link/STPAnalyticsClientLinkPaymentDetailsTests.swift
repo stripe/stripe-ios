@@ -19,29 +19,42 @@ final class STPAnalyticsClientLinkPaymentDetailsTests: APIStubbedTestCase {
     func testListPaymentDetails_firesTwoEvents() {
         let analyticsClient = STPTestingAnalyticsClient()
 
-        // Stub the consumers/payment_details/list endpoint to return one CARD and one PIX entry.
+        // Stub the consumers/payment_details/list endpoint to return two CARD entries and one PIX entry.
         stub { request in
             request.url?.absoluteString.contains("consumers/payment_details/list") ?? false
         } response: { _ in
             let cardEntry: [String: Any] = [
                 "id": "pd_card",
                 "type": "CARD",
-                "cardDetails": [
-                    "expYear": 30,
-                    "expMonth": 12,
+                "card_details": [
+                    "exp_year": 30,
+                    "exp_month": 12,
                     "brand": "visa",
                     "networks": ["visa"],
                     "last4": "4242",
                     "funding": "CREDIT",
                 ],
-                "isDefault": true,
+                "is_default": true,
+            ]
+            let secondCardEntry: [String: Any] = [
+                "id": "pd_card_2",
+                "type": "CARD",
+                "card_details": [
+                    "exp_year": 31,
+                    "exp_month": 11,
+                    "brand": "visa",
+                    "networks": ["visa"],
+                    "last4": "4444",
+                    "funding": "CREDIT",
+                ],
+                "is_default": false,
             ]
             let pixEntry: [String: Any] = [
                 "id": "pd_pix",
                 "type": "PIX",
-                "isDefault": false,
+                "is_default": false,
             ]
-            let body: [String: Any] = ["redacted_payment_details": [cardEntry, pixEntry]]
+            let body: [String: Any] = ["redacted_payment_details": [cardEntry, secondCardEntry, pixEntry]]
             return HTTPStubsResponse(jsonObject: body, statusCode: 200, headers: nil)
         }
 
@@ -75,7 +88,7 @@ final class STPAnalyticsClientLinkPaymentDetailsTests: APIStubbedTestCase {
                 return
             }
 
-            let receivedTypes = paymentDetails.map { $0.type }
+            let receivedTypes = Set(paymentDetails.map { $0.type })
             analyticsClient.logLinkPaymentDetailsListRequestReceived(receivedTypes: receivedTypes)
             expectation.fulfill()
         }
@@ -158,15 +171,15 @@ final class STPAnalyticsClientLinkPaymentDetailsTests: APIStubbedTestCase {
             let cardEntry: [String: Any] = [
                 "id": "pd_card",
                 "type": "CARD",
-                "cardDetails": [
-                    "expYear": 30,
-                    "expMonth": 12,
+                "card_details": [
+                    "exp_year": 30,
+                    "exp_month": 12,
                     "brand": "visa",
                     "networks": ["visa"],
                     "last4": "4242",
                     "funding": "CREDIT",
                 ],
-                "isDefault": true,
+                "is_default": true,
             ]
             let body: [String: Any] = ["redacted_payment_details": [cardEntry]]
             return HTTPStubsResponse(jsonObject: body, statusCode: 200, headers: nil)
@@ -202,7 +215,7 @@ final class STPAnalyticsClientLinkPaymentDetailsTests: APIStubbedTestCase {
                 return
             }
 
-            let receivedTypes = paymentDetails.map { $0.type }
+            let receivedTypes = Set(paymentDetails.map { $0.type })
             analyticsClient.logLinkPaymentDetailsListRequestReceived(receivedTypes: receivedTypes)
             expectation.fulfill()
         }

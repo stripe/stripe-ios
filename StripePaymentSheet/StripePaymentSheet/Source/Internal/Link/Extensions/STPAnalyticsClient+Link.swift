@@ -171,7 +171,7 @@ extension STPAnalyticsClient {
     }
 
     func logLinkPaymentDetailsListRequestReceived(
-        receivedTypes: [ParsedEnum<ConsumerPaymentDetails.DetailsType>]
+        receivedTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>>
     ) {
         let params: [String: Any] = [
             "received_types": receivedTypes.map(\.rawValue).sorted().joined(separator: ","),

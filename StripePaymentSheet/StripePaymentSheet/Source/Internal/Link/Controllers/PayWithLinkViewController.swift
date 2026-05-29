@@ -435,7 +435,7 @@ private extension PayWithLinkViewController {
             do {
                 let paymentDetails = try await paymentDetailsTask.value
 
-                let receivedTypes = paymentDetails.map { $0.type }
+                let receivedTypes = Set(paymentDetails.map { $0.type })
                 context.analyticsHelper.analyticsClient.logLinkPaymentDetailsListRequestReceived(
                     receivedTypes: receivedTypes
                 )
