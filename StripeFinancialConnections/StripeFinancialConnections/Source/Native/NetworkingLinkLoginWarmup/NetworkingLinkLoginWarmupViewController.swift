@@ -103,8 +103,8 @@ final class NetworkingLinkLoginWarmupViewController: SheetViewController {
                     style: .circle,
                     appearance: dataSource.manifest.appearance
                 ),
-                accessibleTitle: continueText,
-                accessibleSubtitle: savedInfoSubtitle,
+                title: continueText,
+                subtitle: savedInfoSubtitle,
                 contentView: NetworkingLinkLoginWarmupBodyView(
                     // `email` should always be non-null, and since the email is only used as a visual, it's not worth to throw an error if it is null
                     email: dataSource.email ?? "you"

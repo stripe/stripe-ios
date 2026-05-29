@@ -317,7 +317,7 @@ final class AccountPickerViewController: UIViewController {
                         )
                     }
                 }(),
-                subtitle: nil,
+                subtitle: nil as String?,
                 contentView: accountPickerSelectionView
             ),
             footerView: footerView

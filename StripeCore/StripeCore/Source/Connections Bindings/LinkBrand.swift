@@ -37,7 +37,7 @@ import Foundation
         }
         return text
             .replacingOccurrences(of: displayName, with: accessibilityDisplayName)
-            .replacingOccurrences(of: rawValue, with: accessibilityDisplayName)
+            .replacingOccurrences(of: displayName.lowercased(), with: accessibilityDisplayName)
     }
 
     @_spi(STP) public var websiteURL: URL {

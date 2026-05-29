@@ -24,8 +24,8 @@ extension PaneLayoutView {
     @available(iOSApplicationExtension, unavailable)
     static func createContentView(
         iconView: UIView?,
-        accessibleTitle: AccessibleText?,
-        accessibleSubtitle: AccessibleText?,
+        title: AccessibleText?,
+        subtitle: AccessibleText?,
         headerAlignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         contentView: UIView?,
@@ -34,19 +34,19 @@ extension PaneLayoutView {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.spacing = 0
-        if iconView != nil || accessibleTitle != nil {
+        if iconView != nil || title != nil {
             let headerView = createHeaderView(
                 iconView: iconView,
-                accessibleTitle: accessibleTitle,
+                title: title,
                 alignment: headerAlignment,
                 horizontalPadding: horizontalPadding,
                 isSheet: isSheet
             )
             verticalStackView.addArrangedSubview(headerView)
         }
-        if accessibleSubtitle != nil || contentView != nil {
+        if subtitle != nil || contentView != nil {
             let bodyView = createBodyView(
-                accessibleText: accessibleSubtitle,
+                text: subtitle,
                 contentView: contentView
             )
             verticalStackView.addArrangedSubview(bodyView)
@@ -66,8 +66,8 @@ extension PaneLayoutView {
     ) -> UIView {
         createContentView(
             iconView: iconView,
-            accessibleTitle: title.map { AccessibleText($0) },
-            accessibleSubtitle: subtitle.map { AccessibleText($0) },
+            title: title.map { AccessibleText($0) },
+            subtitle: subtitle.map { AccessibleText($0) },
             headerAlignment: headerAlignment,
             horizontalPadding: horizontalPadding,
             contentView: contentView,
@@ -78,7 +78,7 @@ extension PaneLayoutView {
     @available(iOSApplicationExtension, unavailable)
     static func createHeaderView(
         iconView: UIView?,
-        accessibleTitle: AccessibleText?,
+        title: AccessibleText?,
         alignment: UIStackView.Alignment = .leading,
         horizontalPadding: CGFloat = Constants.Layout.defaultHorizontalMargin,
         isSheet: Bool = false
@@ -91,7 +91,7 @@ extension PaneLayoutView {
             headerStackView.addArrangedSubview(iconView)
         }
 
-        if let title = accessibleTitle {
+        if let title = title {
             let textAlignment: NSTextAlignment? = {
                 switch alignment {
                 case .leading: return .left
@@ -141,7 +141,7 @@ extension PaneLayoutView {
     ) -> UIView {
         createHeaderView(
             iconView: iconView,
-            accessibleTitle: title.map { AccessibleText($0) },
+            title: title.map { AccessibleText($0) },
             alignment: alignment,
             horizontalPadding: horizontalPadding,
             isSheet: isSheet
@@ -150,10 +150,10 @@ extension PaneLayoutView {
 
     @available(iOSApplicationExtension, unavailable)
     static func createBodyView(
-        accessibleText: AccessibleText?,
+        text: AccessibleText?,
         contentView: UIView?
     ) -> UIView {
-        let willShowDescriptionText = (accessibleText != nil)
+        let willShowDescriptionText = (text != nil)
 
         let paddingStackView = HitTestStackView()
         paddingStackView.axis = .vertical
@@ -170,7 +170,7 @@ extension PaneLayoutView {
             trailing: Constants.Layout.defaultHorizontalMargin
         )
 
-        if let text = accessibleText {
+        if let text {
             let textLabel = AttributedTextView(
                 font: .body(.medium),
                 boldFont: .body(.mediumEmphasized),
@@ -195,7 +195,7 @@ extension PaneLayoutView {
         contentView: UIView?
     ) -> UIView {
         createBodyView(
-            accessibleText: text.map { AccessibleText($0) },
+            text: text.map { AccessibleText($0) },
             contentView: contentView
         )
     }
