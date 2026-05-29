@@ -164,19 +164,32 @@ extension STPAnalyticsClient {
     func logLinkPaymentDetailsListRequestSent(
         sentTypes: [ParsedEnum<ConsumerPaymentDetails.DetailsType>]
     ) {
-        let params: [String: Any] = [
-            "sent_types": sentTypes.map(\.rawValue).sorted().joined(separator: ","),
-        ]
-        self.logPaymentSheetEvent(event: .linkPaymentDetailsListRequestSent, params: params)
+        self.logPaymentSheetEvent(
+            event: .linkPaymentDetailsListRequestSent,
+            params: [
+                "sent_types":
+                    sentTypes
+                        .map(\.rawValue)
+                        .sorted()
+                        .joined(separator: ","),
+            ]
+        )
     }
 
     func logLinkPaymentDetailsListRequestReceived(
         receivedTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>>
     ) {
-        let params: [String: Any] = [
-            "received_types": receivedTypes.map(\.rawValue).sorted().joined(separator: ","),
-        ]
-        self.logPaymentSheetEvent(event: .linkPaymentDetailsListRequestReceived, params: params)
+
+        self.logPaymentSheetEvent(
+            event: .linkPaymentDetailsListRequestReceived,
+            params: [
+                "received_types":
+                    receivedTypes
+                        .map(\.rawValue)
+                        .sorted()
+                        .joined(separator: ","),
+            ]
+        )
     }
 }
 
