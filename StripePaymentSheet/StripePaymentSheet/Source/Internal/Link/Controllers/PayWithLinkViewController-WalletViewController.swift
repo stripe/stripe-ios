@@ -293,6 +293,11 @@ extension PayWithLinkViewController {
                 shouldRetryOnAuthError: true
             ) { [weak self] result in
                 if case .success(let paymentDetails) = result {
+                    let receivedTypes = paymentDetails.map { $0.type }
+                    self?.context.analyticsHelper.analyticsClient.logLinkPaymentDetailsListRequest(
+                        sentTypes: supportedPaymentDetailsTypes,
+                        receivedTypes: receivedTypes
+                    )
                     self?.viewModel.updatePaymentMethods(paymentDetails)
                 }
                 completion?()

@@ -173,6 +173,7 @@ import Foundation
     case linkAccountLookupComplete = "link.account_lookup.complete"
     case linkAccountLookupFailure = "link.account_lookup.failure"
     case linkEmailSuggestionAccepted = "link.email_suggestion.accepted"
+    case linkPaymentDetailsListRequest = "link.payment_details.list.request"
 
     // MARK: - LUXE
     case luxeSerializeFailure = "luxe_serialize_failure"

@@ -158,6 +158,19 @@ extension STPAnalyticsClient {
                                  linkSessionType: sessionType,
                                  params: params)
         }
+
+    // MARK: - Payment Details
+
+    func logLinkPaymentDetailsListRequest(
+        sentTypes: [ParsedEnum<ConsumerPaymentDetails.DetailsType>],
+        receivedTypes: [ParsedEnum<ConsumerPaymentDetails.DetailsType>]
+    ) {
+        let params: [String: Any] = [
+            "sent_types": sentTypes.map(\.rawValue).sorted().joined(separator: ","),
+            "received_types": receivedTypes.map(\.rawValue).sorted().joined(separator: ","),
+        ]
+        self.logPaymentSheetEvent(event: .linkPaymentDetailsListRequest, params: params)
+    }
 }
 
 extension LinkInlineSignupViewModel.Mode {
