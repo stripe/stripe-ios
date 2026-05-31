@@ -373,6 +373,7 @@ extension RowButton {
             imageView: imageView,
             text: "Dummy text",
             sublabel: plainSublabel,
+            isEmbedded: isEmbedded,
             didTap: { _ in }
         )
         let size = tallestPlainRowButton.systemLayoutSizeFitting(.init(width: 320, height: UIView.noIntrinsicMetric))

@@ -304,7 +304,6 @@ class EmbeddedPaymentMethodsView: UIView {
         self.selectedRowButton = rowButton
         delegate?.embeddedPaymentMethodsViewDidTapPaymentMethodRow()
         analyticsHelper.logNewPaymentMethodSelected(paymentMethodTypeIdentifier: rowButton.type.analyticsIdentifier)
-
     }
 
     func didTapViewMoreSavedPaymentMethods() {
