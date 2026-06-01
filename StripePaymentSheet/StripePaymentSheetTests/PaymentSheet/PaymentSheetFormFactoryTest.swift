@@ -42,7 +42,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         return subtitle.view.subviews.compactMap { $0 as? BNPLFormHeaderView }.first
     }
 
-
     private func makeCheckoutSessionIntent(
         offerSave: [String: Any]? = nil,
         hasCustomer: Bool = true
@@ -2769,7 +2768,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         XCTAssertNil(headerView)
     }
-
 
     func testAppliesPreviousCustomerInput_klarna_country() {
         func makeKlarnaCountry(apiPath: String?, previousCustomerInput: IntentConfirmParams?) -> PaymentMethodElementWrapper<DropdownFieldElement> {

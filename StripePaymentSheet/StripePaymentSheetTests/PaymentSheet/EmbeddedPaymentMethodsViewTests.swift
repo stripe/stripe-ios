@@ -5,8 +5,8 @@
 //  Created by Nick Porter on 10/4/24.
 //
 
-@testable import StripePaymentSheet
 @_spi(STP) import StripePayments
+@testable import StripePaymentSheet
 import UIKit
 import XCTest
 
@@ -153,7 +153,6 @@ final class EmbeddedPaymentMethodsViewTests: XCTestCase {
         // still the same text
         XCTAssertEqual(embeddedView.mandateText?.string, expectedPayPal)
     }
-
 
 }
 

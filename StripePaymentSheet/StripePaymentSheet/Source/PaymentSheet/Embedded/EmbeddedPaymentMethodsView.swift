@@ -21,7 +21,7 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func embeddedPaymentMethodsViewDidUpdateSelection()
 
     func embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?)
-    
+
     // TODO: document
     func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool
 }

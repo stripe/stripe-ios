@@ -29,13 +29,13 @@ import Foundation
 }
 
 final class PaymentMethodMessagingPromotionsHelper {
-    
+
     static let supportedPaymentMethods: [PaymentSheet.PaymentMethodType] = [
         .stripe(.afterpayClearpay),
         .stripe(.affirm),
-        .stripe(.klarna)
+        .stripe(.klarna),
     ]
-    
+
     struct PromotionContent: Equatable {
         let promotion: String
         let learnMoreText: String
@@ -47,7 +47,8 @@ final class PaymentMethodMessagingPromotionsHelper {
     private let configuration: PaymentElementConfiguration
     private let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     private let analyticsHelper: PaymentSheetAnalyticsHelper
-    
+    private var loadDuration: TimeInterval?
+
     // ⚠️ an exposure must be logged before the experiment value is used for any purpose ⚠️
     // ⚠️ do not directly access the property, instead use `experiment` ⚠️
     private let _experiment: PaymentMethodMessagingPromotionsExperiment
@@ -59,7 +60,7 @@ final class PaymentMethodMessagingPromotionsHelper {
         }
         return _experiment
     }
-    
+
     private let promotionsLock = NSLock()
     // null until set by loading
     private var _promotions: [String: PromotionContent]?
@@ -75,7 +76,7 @@ final class PaymentMethodMessagingPromotionsHelper {
             _promotions = newValue
         }
     }
-    
+
     var isInTreatmentGroup: Bool {
         experiment.group == .treatment
     }
@@ -93,7 +94,7 @@ final class PaymentMethodMessagingPromotionsHelper {
         self.paymentMethodTypes = paymentMethodTypes
         self._experiment = PaymentMethodMessagingPromotionsExperiment(elementsSession: elementsSession)
         self.analyticsHelper = analyticsHelper
-        
+
         fetchData()
     }
 
@@ -102,12 +103,12 @@ final class PaymentMethodMessagingPromotionsHelper {
         guard experiment.group == .treatment else {
             return
         }
-        
+
         // Only fetch data if we have an amount and currency (for example setup mode won't have this)
         guard let amount = intent.amount, let currency = intent.currency else {
             return
         }
-        
+
         // Generate list of payment methods
         let supportedPaymentMethodTypes: [STPPaymentMethodType] = paymentMethodTypes.compactMap { paymentMethodType in
             guard Self.supportedPaymentMethods.contains(paymentMethodType),
@@ -116,7 +117,7 @@ final class PaymentMethodMessagingPromotionsHelper {
             }
             return stpPaymentMethodType
         }
-        
+
         // Only fetch data if we have payment method types
         guard !supportedPaymentMethodTypes.isEmpty else {
             return
@@ -131,7 +132,10 @@ final class PaymentMethodMessagingPromotionsHelper {
             countryCode: elementsSession.countryCode,
             paymentMethodTypes: supportedPaymentMethodTypes
         )
-        
+
+        // Start tracking loading time
+        let loadStartDate = Date()
+
         // Fetch data
         Task { @MainActor in
             do {
@@ -141,8 +145,10 @@ final class PaymentMethodMessagingPromotionsHelper {
                     try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
                 }
                 let response = try await PaymentMethodMessagingElement.get(configuration: pmmeConfig)
+                self.loadDuration = Date().timeIntervalSince(loadStartDate)
                 promotions = response.paymentSheetPromotionContents(apiClient: configuration.apiClient)
             } catch {
+                self.loadDuration = Date().timeIntervalSince(loadStartDate)
                 logUnexpectedPMMEError(
                     error: error,
                     apiClient: configuration.apiClient,
@@ -162,6 +168,13 @@ final class PaymentMethodMessagingPromotionsHelper {
             return nil
         }
         return promotions?[stpPaymentMethodType.identifier]
+    }
+
+    /// Logs an analytics event (NOT an exposure) indicating that payment method messaging data was attempted to be displayed.
+    /// - Parameter displayedSuccessfully: Whether the promotion content was available and actually rendered to the user.
+    ///   We could theoretically derive this from whether or not we have promotions data, but for safety/redundancy we require it to be explicitly passed.
+    func logDisplayedAnalytic(displayedSuccessfully: Bool) {
+        analyticsHelper.logPaymentMethodMessagingDisplayed(duration: loadDuration ?? 0, displayedSuccessfully: displayedSuccessfully)
     }
 }
 

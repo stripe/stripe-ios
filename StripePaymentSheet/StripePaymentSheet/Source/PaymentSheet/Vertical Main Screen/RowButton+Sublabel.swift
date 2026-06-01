@@ -11,10 +11,10 @@ import Foundation
 import UIKit
 
 extension RowButton {
-    
+
     fileprivate static let sublabelVisibilityAnimationDuration: TimeInterval = 0.2
     fileprivate static let sublabelFadeAnimationDuration: TimeInterval = 0.1
-    
+
     // TODO: documentation
     protocol SublabelView: UIView {
         var needsUnlimitedHeight: Bool { get }
@@ -24,13 +24,12 @@ extension RowButton {
     }
 }
 
-
 // MARK: - Payment Method Messaging variant
 
 extension RowButton {
 
     final class PaymentMethodMessagingSublabelView: UIView, SublabelView {
-        
+
         // Payment Method Messaging content can be larger than a normal sublabel
         var needsUnlimitedHeight: Bool { true }
         var hasText: Bool {
@@ -45,7 +44,7 @@ extension RowButton {
         private let promotionsHelper: PaymentMethodMessagingPromotionsHelper
 
         private var isExpanded = false
-        private var infoUrl: URL? = nil
+        private var infoUrl: URL?
 
         private lazy var promotionTextView: PMMEPromotionTextView = {
             let textView = PMMEPromotionTextView(foregroundColor: appearance.colors.primary)
@@ -72,7 +71,7 @@ extension RowButton {
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
-        
+
         func setSublabel(text: String?, animated: Bool) {
             // If there is no actual text then there is no issue
             guard let text, !text.isEmpty else {
@@ -86,9 +85,11 @@ extension RowButton {
         // TODO: if we are already expanded and we are selected, should we try to avoid even doing the promotion check + log?
         func updateSelectedState(_ isRowSelected: Bool, willDisplayForm: Bool) {
             if isRowSelected && !willDisplayForm {
-                // If selected, get PMME content (logging an exposure), and expand if content is available
+                // If selected, get PMME content, log an attempt to display, and expand if applicable
                 // PMM data is not always available on initial load/display of a RowButton, so we check for it right before attempting to dispaly
-                if let promotionContent = promotionsHelper.promotion(for: paymentMethodType) {
+                let promotionContent = promotionsHelper.promotion(for: paymentMethodType)
+                promotionsHelper.logDisplayedAnalytic(displayedSuccessfully: promotionContent != nil)
+                if let promotionContent {
                     applyContent(promotionContent)
                     setExpanded(true)
                 }
@@ -183,9 +184,9 @@ extension RowButton.PaymentMethodMessagingSublabelView: UITextViewDelegate {
 // MARK: - plain variant
 
 extension RowButton {
-    
+
     class PlainSublabelView: UIView, SublabelView {
-        
+
         // the normal sublabel should have it's height constrained by the row button
         var needsUnlimitedHeight: Bool { false }
         var hasText: Bool {
@@ -194,7 +195,7 @@ extension RowButton {
             }
             return !text.isEmpty
         }
-        
+
         let textLabel: UILabel
 
         init(
@@ -233,11 +234,11 @@ extension RowButton {
             addAndPinSubview(sublabel)
             self.isHidden = text?.isEmpty ?? true
         }
-        
+
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
-        
+
         func setSublabel(text: String?, animated: Bool) {
             guard text != textLabel.text else { return }
 
@@ -265,7 +266,7 @@ extension RowButton {
                 }
             }
         }
-        
+
         func updateSelectedState(_ isRowSelected: Bool, willDisplayForm: Bool) {
             // no-op: plain sublabel variant doesn't do anything with selection state
         }

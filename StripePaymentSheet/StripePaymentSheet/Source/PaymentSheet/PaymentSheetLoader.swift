@@ -223,7 +223,7 @@ final class PaymentSheetLoader {
                 paymentMethodTypes: paymentMethodTypes,
                 analyticsHelper: analyticsHelper
             )
-            
+
             let loadResult = LoadResult(
                 intent: intent,
                 elementsSession: elementsSession,

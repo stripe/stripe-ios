@@ -3,8 +3,8 @@
 //  StripePaymentSheetTests
 //
 
-import XCTest
 import UIKit
+import XCTest
 
 @_spi(STP) @testable import StripePaymentSheet
 

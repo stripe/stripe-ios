@@ -36,7 +36,7 @@ class RowButton: UIView, EventHandler {
     // MARK: State
 
     private var isSelected: Bool = false
-    
+
     /// When enabled the `didTap` closure will be called when the button is tapped. When false the `didTap` closure will not be called on taps
     var isEnabled: Bool = true {
         didSet {
@@ -167,7 +167,7 @@ class RowButton: UIView, EventHandler {
     func setupUI() {
         stpAssertionFailure("RowButton init not called from subclass, use RowButton.create() instead of RowButton(...).")
     }
-    
+
     func setSublabel(text: String?, animated: Bool = true) {
         sublabel.setSublabel(text: text, animated: animated)
     }
@@ -180,11 +180,11 @@ class RowButton: UIView, EventHandler {
 
     func updateSelectedState(_ isSelected: Bool, willDisplayForm: Bool) {
         self.isSelected = isSelected
-        
+
         // Default badge font is heavier when the row is selected
         defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
         updateAccessibilityTraits()
-        
+
         sublabel.updateSelectedState(isSelected, willDisplayForm: willDisplayForm)
     }
 
@@ -443,7 +443,7 @@ extension RowButton {
             }
             return paymentMethodType.displayName
         }()
-        
+
         let sublabel: SublabelView
         // Use plain sublabel if we are in the payment method messaging experiment and the payment method supports it
         if promotionsHelper.isInTreatmentGroup && PaymentMethodMessagingPromotionsHelper.supportedPaymentMethods.contains(paymentMethodType) {

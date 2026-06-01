@@ -130,7 +130,7 @@ extension EmbeddedPaymentElement {
 // MARK: - EmbeddedPaymentMethodsViewDelegate
 
 extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
-    
+
     func embeddedPaymentMethodsViewDidUpdateHeight() {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
@@ -214,7 +214,7 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
         presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
     }
-    
+
     func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool {
         // Attempt to create a form and return whethers created
         return Self.makeFormViewControllerIfNecessary(
