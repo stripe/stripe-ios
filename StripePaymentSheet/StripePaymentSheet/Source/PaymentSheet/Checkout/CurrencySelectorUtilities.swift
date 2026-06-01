@@ -69,6 +69,10 @@ enum CurrencySelectorUtilities {
             let formattedAmount = String.localizedAmountDisplayString(for: total, currency: currency.apiValue)
             displayText.append(NSAttributedString(string: formattedAmount))
             accessibilityLabel = "\(formattedAmount) \(currency.displayValue)"
+        case .automatic:
+            assertionFailure(".automatic should be resolved before reaching makeSelectorItem")
+            displayText.append(NSAttributedString(string: currency.displayValue))
+            accessibilityLabel = currency.displayValue
         }
         return TwoOptionSelectorItem(
             id: currency.apiValue,
