@@ -21,11 +21,9 @@ protocol EmbeddedPaymentMethodsViewDelegate: AnyObject {
     func embeddedPaymentMethodsViewDidUpdateSelection()
 
     func embeddedPaymentMethodsViewDidTapViewMoreSavedPaymentMethods(selectedSavedPaymentMethod: STPPaymentMethod?)
-
-    /// Determines if the button for a given `PaymentSheet.PaymentMethodType` should animate when tapped
-    /// - Parameter paymentMethodType: A `PaymentSheet.PaymentMethodType`
-    /// - Returns: True if the button for this payment method type should animate when tapped
-    func shouldAnimateOnPress(_ paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool
+    
+    // TODO: document
+    func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool
 }
 
 /// The view for an embedded payment element
@@ -46,7 +44,7 @@ class EmbeddedPaymentMethodsView: UIView {
             guard let previousSelectedRowButton, selectedRowButton?.type != previousSelectedRowButton.type else {
                 return
             }
-            previousSelectedRowButton.isSelected = false
+            previousSelectedRowButton.updateSelectedState(false, willDisplayForm: delegate?.willDisplayForm(for: selectedRowButton?.type) == true)
             // Clear out the 'Change >' button and any sublabel (eg 4242) we set for new PM rows
             switch previousSelectedRowButton.type {
             case .new(paymentMethodType: let paymentMethodType):
@@ -67,7 +65,7 @@ class EmbeddedPaymentMethodsView: UIView {
                 delegate?.embeddedPaymentMethodsViewDidUpdateSelection()
             }
             if let selectedRowButton {
-                selectedRowButton.isSelected = true
+                selectedRowButton.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(for: selectedRowButton.type) == true)
             }
         }
     }
@@ -198,7 +196,7 @@ class EmbeddedPaymentMethodsView: UIView {
 
         // If we have a row button that matches the initial selection, make it selected
         if let initialSelectedRowType, let rowButtonMatchingInitialSelection = rowButtons.filter({ $0.type == initialSelectedRowType }).first {
-            rowButtonMatchingInitialSelection.isSelected = true
+            rowButtonMatchingInitialSelection.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(for: rowButtonMatchingInitialSelection.type) == true)
             if let initialSelectedRowChangeButtonState {
                 selectedRowChangeButtonState = initialSelectedRowChangeButtonState
                 if initialSelectedRowChangeButtonState.shouldShowChangeButton {
@@ -342,9 +340,11 @@ class EmbeddedPaymentMethodsView: UIView {
                                                                                savedPaymentMethodAccessoryType: accessoryType)
             if isSelected {
                 self.stackView.arrangedSubviews.forEach { view in
-                    (view as? RowButton)?.isSelected = false
+                    if let rowButton = view as? RowButton {
+                        rowButton.updateSelectedState(false, willDisplayForm: delegate?.willDisplayForm(for: rowButton.type) == true)
+                    }
                 }
-                updatedSavedPaymentMethodButton.isSelected = true
+                updatedSavedPaymentMethodButton.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(for: updatedSavedPaymentMethodButton.type) == true)
                 self.selectedRowButton = updatedSavedPaymentMethodButton
             }
             // Remove old button & insert new button
@@ -513,7 +513,7 @@ class EmbeddedPaymentMethodsView: UIView {
             promotionsHelper: paymentMethodMessagingPromotionsHelper,
             appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
-            shouldAnimateOnPress: delegate?.shouldAnimateOnPress(paymentMethodType) == true,
+            shouldAnimateOnPress: delegate?.willDisplayForm(for: .new(paymentMethodType: paymentMethodType)) == true,
             isEmbedded: true,
             didTap: { [weak self] rowButton in
                 self?.didTap(rowButton: rowButton)

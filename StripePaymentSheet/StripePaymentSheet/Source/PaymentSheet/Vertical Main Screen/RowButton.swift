@@ -35,11 +35,8 @@ class RowButton: UIView, EventHandler {
 
     // MARK: State
 
-    var isSelected: Bool = false {
-        didSet {
-            updateSelectedState()
-        }
-    }
+    private var isSelected: Bool = false
+    
     /// When enabled the `didTap` closure will be called when the button is tapped. When false the `didTap` closure will not be called on taps
     var isEnabled: Bool = true {
         didSet {
@@ -181,12 +178,14 @@ class RowButton: UIView, EventHandler {
         }
     }
 
-    func updateSelectedState() {
+    func updateSelectedState(_ isSelected: Bool, willDisplayForm: Bool) {
+        self.isSelected = isSelected
+        
         // Default badge font is heavier when the row is selected
         defaultBadgeLabel?.font = isSelected ? appearance.selectedDefaultBadgeFont : appearance.defaultBadgeFont
         updateAccessibilityTraits()
         
-        sublabel.updateSelectedState(isSelected)
+        sublabel.updateSelectedState(isSelected, willDisplayForm: willDisplayForm)
     }
 
     // MARK: EventHandler

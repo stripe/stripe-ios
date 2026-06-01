@@ -36,7 +36,8 @@ final class SavedPaymentMethodRowButton: UIView {
                 previousSelectedState = oldValue
             }
 
-            rowButton.isSelected = isSelected
+            // saved payment methods never show a form
+            rowButton.updateSelectedState(isSelected, willDisplayForm: false)
             chevronButton.isHidden = !isEditing
         }
     }

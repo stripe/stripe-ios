@@ -130,6 +130,7 @@ extension EmbeddedPaymentElement {
 // MARK: - EmbeddedPaymentMethodsViewDelegate
 
 extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
+    
     func embeddedPaymentMethodsViewDidUpdateHeight() {
         delegate?.embeddedPaymentElementDidUpdateHeight(embeddedPaymentElement: self)
     }
@@ -213,23 +214,21 @@ extension EmbeddedPaymentElement: EmbeddedPaymentMethodsViewDelegate {
         let bottomSheetVC = bottomSheetController(with: verticalSavedPaymentMethodsViewController)
         presentingViewController?.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
     }
-
-    func shouldAnimateOnPress(_ paymentMethodType: PaymentSheet.PaymentMethodType) -> Bool {
-        let formViewController = EmbeddedFormViewController(
+    
+    func willDisplayForm(for rowButtonType: RowButtonType?) -> Bool {
+        // Attempt to create a form and return whethers created
+        return Self.makeFormViewControllerIfNecessary(
+            selection: rowButtonType,
+            previousPaymentOption: nil, // This is just to check if there's a form, so this data isn't necessary
             configuration: configuration,
             intent: intent,
             elementsSession: elementsSession,
-            shouldUseNewCardNewCardHeader: savedPaymentMethods.first?.type == .card,
-            paymentMethodType: paymentMethodType,
-            previousPaymentOption: nil,
+            savedPaymentMethods: savedPaymentMethods,
             analyticsHelper: analyticsHelper,
-            paymentMethodMessagingPromotionsHelper: loadResult.paymentMethodMessagingPromotionsHelper,
+            paymentMethodMessagingPromotionsHelper: nil, // This is just to check if there's a form, so this data isn't necessary
             formCache: .init(),  // Use a fresh form cache to ensure forms aren't re-added to a different view controller's hierarchy
             delegate: self
-        )
-
-        // Show an animation on the label if the payment method shows a form
-        return formViewController.collectsUserInput
+        ) != nil
     }
 }
 

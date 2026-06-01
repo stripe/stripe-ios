@@ -20,7 +20,7 @@ extension RowButton {
         var needsUnlimitedHeight: Bool { get }
         var hasText: Bool { get }
         func setSublabel(text: String?, animated: Bool)
-        func updateSelectedState(_ isRowSelected: Bool)
+        func updateSelectedState(_ isRowSelected: Bool, willDisplayForm: Bool)
     }
 }
 
@@ -79,8 +79,8 @@ extension RowButton {
 
         // TODO: clean up the logic here some
         // TODO: if we are already expanded and we are selected, should we try to avoid even doing the promotion check + log?
-        func updateSelectedState(_ isRowSelected: Bool) {
-            if isRowSelected {
+        func updateSelectedState(_ isRowSelected: Bool, willDisplayForm: Bool) {
+            if isRowSelected && !willDisplayForm {
                 // If selected, get PMME content (logging an exposure), and expand if content is available
                 // PMM data is not always available on initial load/display of a RowButton, so we check for it right before attempting to dispaly
                 if let promotionContent = promotionsHelper.promotion(for: paymentMethodType) {
@@ -261,7 +261,7 @@ extension RowButton {
             }
         }
         
-        func updateSelectedState(_ isRowSelected: Bool) {
+        func updateSelectedState(_ isRowSelected: Bool, willDisplayForm: Bool) {
             // no-op: plain sublabel variant doesn't do anything with selection state
         }
     }
