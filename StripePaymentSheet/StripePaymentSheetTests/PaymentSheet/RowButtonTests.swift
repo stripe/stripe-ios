@@ -10,7 +10,7 @@ import XCTest
 
 final class RowButtonTests: XCTestCase {
     func testRowButtonForPaymentMethodType_usesPaymentMethodMessagingSublabelWhenInTreatment() {
-        let promotionsHelper = PaymentMethodMessagingPromotionsHelper._testValue()
+        let promotionsHelper = PaymentMethodMessagingPromotionsHelper._testValueInTreatment()
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .stripe(.affirm),
             currency: "USD",
@@ -21,6 +21,6 @@ final class RowButtonTests: XCTestCase {
             didTap: { _ in }
         )
 
-        XCTAssertEqual(rowButton.label.text, "Affirm")
+        XCTAssert(rowButton.sublabel is RowButton.PaymentMethodMessagingSublabelView)
     }
 }

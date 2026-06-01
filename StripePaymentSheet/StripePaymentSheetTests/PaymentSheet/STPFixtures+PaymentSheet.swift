@@ -476,6 +476,24 @@ extension PaymentMethodMessagingPromotionsHelper {
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )
     }
+
+    static func _testValueInTreatment() -> PaymentMethodMessagingPromotionsHelper {
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let experimentsData = ExperimentsData(
+            arbId: "test_arb_id",
+            experimentAssignments: [PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        return PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: PaymentSheet.Configuration(),
+            paymentMethodTypes: [],
+            analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
+        )
+    }
 }
 
 extension PaymentSheetAnalyticsHelper {
