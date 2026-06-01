@@ -255,6 +255,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             countryCode: nil,
             savePaymentMethodConsentBehavior: savePaymentMethodConsentBehavior,
             analyticsHelper: nil,
+            paymentMethodMessagingPromotionsHelper: nil, // customer sheet doesn't support payment method messaging
             paymentMethodIncentive: nil
         ).make()
         formElement.delegate = self

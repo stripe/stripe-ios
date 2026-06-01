@@ -95,7 +95,7 @@ class PaymentSheetFormFactory {
         linkAccount: PaymentSheetLinkAccount? = nil,
         accountService: LinkAccountServiceProtocol,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
-        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
         linkAppearance: LinkAppearance? = nil,
         previousLinkInlineSignupAction: LinkInlineSignupViewModel.Action? = nil
     ) {
@@ -176,7 +176,7 @@ class PaymentSheetFormFactory {
         signupOptInInitialValue: Bool = false,
         isFirstSavedPaymentMethod: Bool = true,
         analyticsHelper: PaymentSheetAnalyticsHelper?,
-        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
+        paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?,
         paymentMethodIncentive: PaymentMethodIncentive?,
         linkAppearance: LinkAppearance? = nil,
         sellerName: String? = nil,

@@ -68,7 +68,8 @@ class VerticalListMandateProvider: MandateTextProvider {
                 previousCustomerInput: nil,
                 linkAccount: LinkAccountContext.shared.account,
                 accountService: LinkAccountService(apiClient: configuration.apiClient, elementsSession: elementsSession),
-                analyticsHelper: analyticsHelper
+                analyticsHelper: analyticsHelper,
+                paymentMethodMessagingPromotionsHelper: nil // we're just fetching the mandate, which BNPL promotions doesn't impact, so we can omit it
             ).make()
 
             if let embeddedPaymentElementConfiguration = configuration as? EmbeddedPaymentElement.Configuration {
