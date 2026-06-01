@@ -121,6 +121,7 @@ final class PaymentSheetFlowControllerViewControllerSnapshotTests: STPSnapshotTe
             ),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .horizontal
         )
 

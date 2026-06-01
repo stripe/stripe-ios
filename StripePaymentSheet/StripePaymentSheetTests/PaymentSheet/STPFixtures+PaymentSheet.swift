@@ -458,7 +458,7 @@ extension PaymentSheetLoader.LoadResult {
             savedPaymentMethods: savedPaymentMethods,
             paymentMethodTypes: pmTypes,
             paymentMethodMessagingPromotionsHelper: promotionsHelper,
-            paymentMethodMessagingPromotionsHelper: ._testValue(), paymentMethodOrientation: .vertical
+            paymentMethodOrientation: .vertical
         )
     }
 }
