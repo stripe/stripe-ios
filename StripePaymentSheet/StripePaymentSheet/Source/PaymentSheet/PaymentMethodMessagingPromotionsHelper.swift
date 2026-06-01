@@ -55,6 +55,7 @@ final class PaymentMethodMessagingPromotionsHelper {
     private var experiment: PaymentMethodMessagingPromotionsExperiment {
         if !exposureLogged {
             analyticsHelper.logExposure(experiment: _experiment)
+            exposureLogged = true
         }
         return _experiment
     }
