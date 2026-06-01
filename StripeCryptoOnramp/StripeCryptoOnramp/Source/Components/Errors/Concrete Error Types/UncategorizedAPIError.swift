@@ -37,9 +37,11 @@ public struct UncategorizedAPIError: StripeCryptoOnrampAPIError, APIErrorContext
 
     /// A developer-facing description with diagnostic details and suggested next steps.
     public var developerMessage: String {
-        return context.developerDescription(
+        return StripeCryptoOnrampErrorRenderer.renderAPIErrorDeveloperMessage(
+            context: context,
             summary: apiMessage ?? context.underlyingError.localizedDescription,
-            nextStep: "Inspect the preserved Stripe API error for details and retry after correcting the issue."
+            code: code,
+            nextStep: "Inspect the preserved Stripe API error for details and retry after correcting the request."
         )
     }
 }

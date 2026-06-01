@@ -37,8 +37,10 @@ public struct AppAttestationAPIError: StripeCryptoOnrampAPIError, APIErrorContex
 
     /// A developer-facing description with diagnostic details and suggested next steps.
     public var developerMessage: String {
-        return context.developerDescription(
+        return StripeCryptoOnrampErrorRenderer.renderAPIErrorDeveloperMessage(
+            context: context,
             summary: developerSummary,
+            code: code,
             nextStep: nextStep
         )
     }
@@ -83,7 +85,7 @@ public struct AppAttestationAPIError: StripeCryptoOnrampAPIError, APIErrorContex
         case "ios_attestation_validation_failed":
             return "Generate a new App Attest attestation and retry the Onramp flow. If the issue persists, check your app attestation configuration."
         default:
-            return apiMessage ?? "Inspect the preserved Stripe API error for details and retry after correcting the app attestation configuration."
+            return "Inspect the preserved Stripe API error for details and retry after correcting the app attestation configuration."
         }
     }
 }

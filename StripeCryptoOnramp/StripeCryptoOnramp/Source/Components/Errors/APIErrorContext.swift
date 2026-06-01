@@ -169,48 +169,4 @@ public struct APIErrorContext {
     func code(fallback: String) -> String {
         return apiErrorCode ?? fallback
     }
-
-    /// Returns a developer-facing description with diagnostic context and a suggested next step.
-    ///
-    /// - Parameters:
-    ///   - summary: A short description of the error.
-    ///   - nextStep: A suggested action for resolving the error.
-    func developerDescription(summary: String, nextStep: String) -> String {
-        let context = [
-            "  - operation: \(operation)",
-            appIdentifier.map { "  - app_id: \($0)" },
-            mode.map { "  - mode: \($0)" },
-            reason.map { "  - reason: \($0)" },
-            requestID.map { "  - request_id: \($0)" },
-            apiErrorCode.map { "  - code: \($0)" },
-            apiErrorType.map { "  - type: \($0)" },
-        ].compactMap { $0 }
-
-        var lines = [
-            "Summary",
-            "  \(summary)",
-            "",
-            "Context",
-            context.joined(separator: "\n"),
-            "",
-            "Next step",
-            "  \(nextStep)",
-        ]
-
-        if let docURL {
-            lines.append(contentsOf: [
-                "",
-                "Docs",
-                "  \(docURL.absoluteString)",
-            ])
-        }
-
-        lines.append(contentsOf: [
-            "",
-            "SDK",
-            "  stripe-ios@\(sdkVersion)",
-        ])
-
-        return lines.joined(separator: "\n")
-    }
 }

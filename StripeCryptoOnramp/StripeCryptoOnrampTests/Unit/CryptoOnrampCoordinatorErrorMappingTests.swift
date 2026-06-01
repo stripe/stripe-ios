@@ -51,9 +51,22 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
 
         XCTAssertEqual(apiError.errorDescription, apiError.userMessage)
         XCTAssertEqual(apiError.debugDescription, apiError.developerMessage)
-        XCTAssertTrue(apiError.developerMessage.contains("App attestation failed: this app is not registered as a trusted application."))
-        XCTAssertTrue(apiError.developerMessage.contains("reason: app_not_registered"))
-        XCTAssertTrue(apiError.developerMessage.contains("request_id: req_attestation_test"))
+
+        let appIdentifierLine = Bundle.main.bundleIdentifier.map { "  app_id: \($0)\n" } ?? ""
+        XCTAssertEqual(apiError.developerMessage, """
+        App attestation failed: this app is not registered as a trusted application.
+
+        Request Context:
+          operation: has_link_account
+        \(appIdentifierLine)  mode: test
+          reason: app_not_registered
+          request_id: req_attestation_test
+          type: invalid_request_error
+
+        Code: link_failed_to_attest_request
+        Next step: Register this app's bundle ID or package name as a trusted application with Stripe, then retry the Onramp flow.
+        SDK: stripe-ios@\(STPAPIClient.STPSDKVersion)
+        """)
     }
 
     func testMappedErrorUsesSafeUserMessageForUncategorizedAPIError() throws {
@@ -99,5 +112,25 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
 
         XCTAssertEqual(AppAttestationAPIError(context: context).code, "link_failed_to_attest_request")
         XCTAssertEqual(UncategorizedAPIError(context: context).code, "uncategorized_api_error")
+    }
+
+    func testRendererAppendsFooterMetadataAndAdditionalSDKVersions() {
+        let developerMessage = StripeCryptoOnrampErrorRenderer.render(
+            developerBody: "Developer body.",
+            code: "test_code",
+            nextStep: "Fix the integration.",
+            docURL: URL(string: "https://stripe.com/docs/test")!,
+            sdkVersion: "25.16.0",
+            additionalSDKVersions: ["stripe-react-native@1.2.3"]
+        )
+
+        XCTAssertEqual(developerMessage, """
+        Developer body.
+
+        Code: test_code
+        Next step: Fix the integration.
+        Docs: https://stripe.com/docs/test
+        SDK: stripe-ios@25.16.0, stripe-react-native@1.2.3
+        """)
     }
 }
