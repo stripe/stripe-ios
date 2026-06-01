@@ -74,10 +74,6 @@ class EmbeddedFormViewController: UIViewController {
         return paymentMethodFormViewController.form
     }
 
-    var collectsUserInput: Bool {
-        return form.collectsUserInput
-    }
-
     enum Error: Swift.Error {
         case noPaymentOptionOnBuyButtonTap
     }
