@@ -79,6 +79,7 @@ extension LinkInlineSignupView {
                 theme: appearanceCopy.asElementsTheme,
                 alwaysEmphasizeText: true
             )
+            checkbox.accessibilityLabel = brand.accessibilityText(from: text)
             checkbox.addTarget(self, action: #selector(didToggleCheckbox), for: .touchUpInside)
             checkbox.isSelected = false
 
@@ -150,7 +151,9 @@ extension LinkInlineSignupView {
                     return nil
                 }
             }()
-            checkboxButton.setAttributedText(makeAttributedText(text: checkboxText(), leadingIcon: leadingIcon))
+            let text = checkboxText()
+            checkboxButton.setAttributedText(makeAttributedText(text: text, leadingIcon: leadingIcon))
+            checkboxButton.accessibilityLabel = brand.accessibilityText(from: text)
         }
 
         init(

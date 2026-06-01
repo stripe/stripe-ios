@@ -236,7 +236,9 @@ class VerticalPaymentMethodListViewController: UIViewController {
         if resolvedBrand != linkBrand {
             linkBrand = resolvedBrand
             linkRowButton.setLabel(text: resolvedBrand.displayName)
-            linkRowButton.setPrimaryAccessibilityLabel(String.Localized.pay_with_link(brand: resolvedBrand))
+            linkRowButton.setPrimaryAccessibilityLabel(
+                resolvedBrand.accessibilityText(from: String.Localized.pay_with_link(brand: resolvedBrand))
+            )
         }
 
         let sublabel = linkAccount?.email ?? .Localized.link_subtitle_text
