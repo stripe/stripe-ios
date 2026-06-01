@@ -18,24 +18,8 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
-        let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+        let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
-
-        init(
-            intent: Intent,
-            elementsSession: STPElementsSession,
-            savedPaymentMethods: [STPPaymentMethod],
-            paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-            paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
-            paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
-        ) {
-            self.intent = intent
-            self.elementsSession = elementsSession
-            self.savedPaymentMethods = savedPaymentMethods
-            self.paymentMethodTypes = paymentMethodTypes
-            self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
-            self.paymentMethodOrientation = paymentMethodOrientation
-        }
     }
 
     enum IntegrationShape {
@@ -215,11 +199,13 @@ final class PaymentSheetLoader {
             let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
             let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
-            let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(elementsSession: elementsSession)
-            paymentMethodMessagingPromotionsHelper.prefetchIfNeeded(
+            // Initializing PaymentMethodMessagingPromotionsHelper kick off loading the PMM/BNPL info
+            let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(
+                elementsSession: elementsSession,
                 intent: intent,
                 configuration: configuration,
-                paymentMethodTypes: paymentMethodTypes
+                paymentMethodTypes: paymentMethodTypes,
+                analyticsHelper: analyticsHelper
             )
 
             let paymentMethodOrientation = configuration.resolveLayout(

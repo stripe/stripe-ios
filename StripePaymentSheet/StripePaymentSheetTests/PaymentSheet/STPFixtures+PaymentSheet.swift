@@ -443,12 +443,37 @@ extension PaymentSheetLoader.LoadResult {
             paymentMethodTypes: paymentMethodTypes
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let analyticsHelper = PaymentSheetAnalyticsHelper._testValue()
+        let pmTypes = paymentMethodTypes.map { PaymentSheet.PaymentMethodType.stripe(STPPaymentMethod.type(from: $0)) }
+        let promotionsHelper = PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: PaymentSheet.Configuration(),
+            paymentMethodTypes: pmTypes,
+            analyticsHelper: analyticsHelper
+        )
         return PaymentSheetLoader.LoadResult(
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
-            paymentMethodTypes: paymentMethodTypes.map { .stripe(STPPaymentMethod.type(from: $0)) },
-            paymentMethodOrientation: .vertical
+            paymentMethodTypes: pmTypes,
+            paymentMethodMessagingPromotionsHelper: promotionsHelper,
+            paymentMethodMessagingPromotionsHelper: ._testValue(), paymentMethodOrientation: .vertical
+        )
+    }
+}
+
+extension PaymentMethodMessagingPromotionsHelper {
+    static func _testValue() -> PaymentMethodMessagingPromotionsHelper {
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        return PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: PaymentSheet.Configuration(),
+            paymentMethodTypes: [],
+            analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )
     }
 }
