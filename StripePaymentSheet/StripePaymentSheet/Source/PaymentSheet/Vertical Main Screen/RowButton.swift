@@ -432,6 +432,7 @@ extension RowButton {
         hasSavedCard: Bool,
         accessoryView: UIView? = nil,
         promoText: String? = nil,
+        promotionsHelper: PaymentMethodMessagingPromotionsHelper?,
         appearance: PaymentSheet.Appearance,
         originalCornerRadius: CGFloat? = nil,
         shouldAnimateOnPress: Bool,
@@ -451,28 +452,36 @@ extension RowButton {
             return paymentMethodType.displayName
         }()
 
-        let subtext: String? = {
-            switch paymentMethodType {
-            case .stripe(.klarna):
-                return String.Localized.buy_now_or_pay_later_with_klarna
-            case .stripe(.afterpayClearpay):
-                if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
-                    return String.Localized.buy_now_or_pay_later_with_clearpay
-                } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
-                    return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
-                } else {
-                    return String.Localized.buy_now_or_pay_later_with_afterpay
+        let sublabel: SublabelView
+        if let promotionsHelper, promotionsHelper.isInTreatmentGroup, PaymentMethodMessagingPromotionsHelper.supportedPaymentMethods.contains(paymentMethodType) {
+            sublabel = PaymentMethodMessagingSublabelView(
+                appearance: appearance,
+                paymentMethodType: paymentMethodType,
+                promotionsHelper: promotionsHelper
+            )
+        } else {
+            let subtext: String? = {
+                switch paymentMethodType {
+                case .stripe(.klarna):
+                    return String.Localized.buy_now_or_pay_later_with_klarna
+                case .stripe(.afterpayClearpay):
+                    if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
+                        return String.Localized.buy_now_or_pay_later_with_clearpay
+                    } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+                        return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
+                    } else {
+                        return String.Localized.buy_now_or_pay_later_with_afterpay
+                    }
+                case .stripe(.affirm):
+                    return String.Localized.pay_over_time_with_affirm
+                case .external(let externalPaymentOption):
+                    return externalPaymentOption.displaySubtext
+                default:
+                    return nil
                 }
-            case .stripe(.affirm):
-                return String.Localized.pay_over_time_with_affirm
-            case .external(let externalPaymentOption):
-                return externalPaymentOption.displaySubtext
-            default:
-                return nil
-            }
-        }()
-
-        let sublabel = PlainSublabelView(text: subtext, appearance: appearance, isEmbedded: isEmbedded)
+            }()
+            sublabel = PlainSublabelView(text: subtext, appearance: appearance, isEmbedded: isEmbedded)
+        }
 
         let promoBadge: PromoBadgeView? = {
             guard let promoText else { return nil }
