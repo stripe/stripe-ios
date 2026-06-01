@@ -199,7 +199,6 @@ final class PaymentSheetLoader {
             let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
             let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
-            // Initializing PaymentMethodMessagingPromotionsHelper kick off loading the PMM/BNPL info
             let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(
                 elementsSession: elementsSession,
                 intent: intent,
@@ -207,6 +206,7 @@ final class PaymentSheetLoader {
                 paymentMethodTypes: paymentMethodTypes,
                 analyticsHelper: analyticsHelper
             )
+            paymentMethodMessagingPromotionsHelper.fetchData()
 
             let paymentMethodOrientation = configuration.resolveLayout(
                 elementsSession: elementsSession,

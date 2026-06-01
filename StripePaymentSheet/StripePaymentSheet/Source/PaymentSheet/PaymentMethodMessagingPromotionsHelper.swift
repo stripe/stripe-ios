@@ -74,11 +74,9 @@ final class PaymentMethodMessagingPromotionsHelper {
         self.paymentMethodTypes = paymentMethodTypes
         self._experiment = PaymentMethodMessagingPromotionsExperiment(elementsSession: elementsSession)
         self.analyticsHelper = analyticsHelper
-
-        fetchData()
     }
 
-    private func fetchData() {
+    func fetchData() {
         // Check experiment group, and only proceed if in treatment group
         guard experiment.group == .treatment else {
             return
