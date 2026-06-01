@@ -170,5 +170,9 @@ public extension AddressViewController {
         /// When provided, shows a checkbox that allows customers to populate shipping fields with billing address data.
         @_spi(STP) public var billingAddress: DefaultAddressDetails?
 
+        /// When true, uses the Stripe autocomplete endpoints for address autocomplete instead of Apple MapKit.
+        /// Defaults to false.
+        @_spi(STP) public var useAutocompleteEndpoints: Bool = false
+
     }
 }

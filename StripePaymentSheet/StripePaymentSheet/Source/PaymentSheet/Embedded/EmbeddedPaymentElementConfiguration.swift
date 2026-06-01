@@ -148,6 +148,9 @@ extension EmbeddedPaymentElement {
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
 
+        /// When true, uses the Stripe autocomplete endpoints for billing address autocomplete instead of Apple MapKit.
+        @_spi(STP) public var useAutocompleteEndpoints: Bool = false
+
         /// A map for specifying when legal agreements are displayed for each payment method type.
         /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
         /// Valid payment method types include:

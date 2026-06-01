@@ -254,6 +254,9 @@ extension PaymentSheet {
         /// If true, the card form will instead initialize with the card scanner already open.
         public var opensCardScannerAutomatically: Bool = false
 
+        /// When true, uses the Stripe autocomplete endpoints for billing address autocomplete instead of Apple MapKit.
+        @_spi(STP) public var useAutocompleteEndpoints: Bool = false
+
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
 
