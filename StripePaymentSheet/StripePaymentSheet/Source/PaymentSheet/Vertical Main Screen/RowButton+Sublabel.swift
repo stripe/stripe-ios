@@ -74,6 +74,11 @@ extension RowButton {
         }
         
         func setSublabel(text: String?, animated: Bool) {
+            // If there is no actual text then there is no issue
+            guard let text, !text.isEmpty else {
+                return
+            }
+            // Otherwise we have an issue since the PMM sublabel doesn't support this
             stpAssertionFailure("Setting sublabel not supported with payment method messaging sublabel. setSublabel() should only be called on the plain variant")
         }
 
