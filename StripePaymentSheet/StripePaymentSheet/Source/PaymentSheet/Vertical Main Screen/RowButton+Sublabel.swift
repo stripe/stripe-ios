@@ -21,7 +21,7 @@ extension RowButton {
         /// Updates the displayed text, optionally animating the visibility transition.
         func setSublabel(text: String?, animated: Bool)
         /// Notifies the sublabel that the parent row's selection state changed.
-        func updateSelectedState(_ isRowSelected: Bool)
+        func updateSelectedState(_ isRowSelected: Bool, willDisplayForm: Bool)
     }
 }
 
@@ -118,7 +118,7 @@ extension RowButton {
             }
         }
 
-        func updateSelectedState(_ isRowSelected: Bool) {
+        func updateSelectedState(_ isRowSelected: Bool, willDisplayForm: Bool) {
             // Plain sublabel has no selection-dependent behavior
         }
 
