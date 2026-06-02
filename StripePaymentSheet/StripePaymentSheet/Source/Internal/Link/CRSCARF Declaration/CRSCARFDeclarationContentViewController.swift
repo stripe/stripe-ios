@@ -39,6 +39,23 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         appearance.colors?.primary ?? LinkUI.appearance.primaryButton.backgroundColor ?? LinkUI.appearance.colors.primary
     }
 
+    private var declarationBaseAttributes: [NSAttributedString.Key: Any] {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.2
+
+        return [
+            .font: LinkUI.font(forTextStyle: .body),
+            .foregroundColor: UIColor.linkTextPrimary,
+            .paragraphStyle: paragraphStyle,
+        ]
+    }
+
+    private var declarationLinkAttributes: [NSAttributedString.Key: Any] {
+        [
+            .foregroundColor: linkPrimaryButtonColor,
+        ]
+    }
+
     /// Closure called when a user confirms or cancels the declaration.
     var onResult: ((LinkController.CRSCARFDeclarationResult) -> Void)?
 
@@ -84,7 +101,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     }()
 
     private var attributedDeclarationHTML: NSAttributedString {
-        guard let importedString = try? NSMutableAttributedString(
+        guard let attributedString = try? NSMutableAttributedString(
             data: Data(html.utf8),
             options: [
                 .documentType: NSAttributedString.DocumentType.html,
@@ -92,21 +109,22 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
             ],
             documentAttributes: nil
         ) else {
-            return NSAttributedString(string: html, attributes: declarationHTMLAttributes(isLink: false))
+            return NSAttributedString(string: html, attributes: declarationBaseAttributes)
         }
 
-        var rangesToUpdate: [(range: NSRange, isLink: Bool)] = []
-        let fullRange = NSRange(location: 0, length: importedString.length)
-        importedString.enumerateAttributes(in: fullRange) { attributes, range, _ in
-            rangesToUpdate.append((range, attributes[.link] != nil))
+        let fullRange = NSRange(location: 0, length: attributedString.length)
+        var linkRanges: [NSRange] = []
+        attributedString.enumerateAttribute(.link, in: fullRange) { value, range, _ in
+            if value != nil {
+                linkRanges.append(range)
+            }
         }
-        rangesToUpdate.forEach { range, isLink in
-            importedString.addAttributes(
-                declarationHTMLAttributes(isLink: isLink),
-                range: range
-            )
+
+        attributedString.addAttributes(declarationBaseAttributes, range: fullRange)
+        linkRanges.forEach { range in
+            attributedString.addAttributes(declarationLinkAttributes, range: range)
         }
-        return importedString
+        return attributedString
     }
 
     private lazy var bottomButtonContainer: UIView = {
@@ -152,17 +170,6 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         onResult?(.confirmed)
     }
 
-    private func declarationHTMLAttributes(isLink: Bool) -> [NSAttributedString.Key: Any] {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.2
-
-        return [
-            .font: LinkUI.font(forTextStyle: .body),
-            .foregroundColor: isLink ? linkPrimaryButtonColor : UIColor.linkTextPrimary,
-            .paragraphStyle: paragraphStyle,
-        ]
-    }
-
     // MARK: - BottomSheetContentViewController
 
     func didTapOrSwipeToDismiss() {
@@ -171,6 +178,8 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
 }
 
 extension CRSCARFDeclarationContentViewController: UITextViewDelegate {
+
+    // MARK: - UITextViewDelegate
 
     func textView(
         _ textView: UITextView,
