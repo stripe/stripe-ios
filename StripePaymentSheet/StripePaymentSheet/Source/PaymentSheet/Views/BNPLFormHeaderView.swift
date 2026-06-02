@@ -8,7 +8,6 @@ import UIKit
 
 final class BNPLFormHeaderView: UIView {
     private let appearance: PaymentSheet.Appearance
-    let style: PaymentSheet.UserInterfaceStyle
     let promotion: String
     let learnMoreText: String
     let infoUrl: URL
@@ -37,26 +36,15 @@ final class BNPLFormHeaderView: UIView {
 
     init(
         appearance: PaymentSheet.Appearance,
-        style: PaymentSheet.UserInterfaceStyle,
         promotion: String,
         learnMoreText: String,
         infoUrl: URL
     ) {
         self.appearance = appearance
-        self.style = style
         self.promotion = promotion
         self.learnMoreText = learnMoreText
         self.infoUrl = infoUrl
         super.init(frame: .zero)
-
-        switch style {
-        case .automatic:
-            break
-        case .alwaysLight:
-            overrideUserInterfaceStyle = .light
-        case .alwaysDark:
-            overrideUserInterfaceStyle = .dark
-        }
 
         addAndPinSubview(textView)
         isAccessibilityElement = false
@@ -68,18 +56,7 @@ final class BNPLFormHeaderView: UIView {
     }
 
     private func openInfoModal() {
-        PMMEInfoModal.present(infoUrl: infoUrl, style: pmmeStyle, from: self)
-    }
-
-    private var pmmeStyle: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle {
-        switch style {
-        case .automatic:
-            return .automatic
-        case .alwaysLight:
-            return .alwaysLight
-        case .alwaysDark:
-            return .alwaysDark
-        }
+        PMMEInfoModal.present(infoUrl: infoUrl, style: traitCollection.isDarkMode ? .alwaysDark : .alwaysLight, from: self)
     }
 }
 
