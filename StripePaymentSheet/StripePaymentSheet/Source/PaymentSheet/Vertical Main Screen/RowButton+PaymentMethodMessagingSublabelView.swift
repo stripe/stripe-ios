@@ -134,7 +134,7 @@ extension RowButton {
                 return
             }
 
-            PMMEInfoModal.present(infoUrl: infoUrl, style: .automatic, from: self)
+            PMMEInfoModal.present(infoUrl: infoUrl, style: traitCollection.isDarkMode ? .alwaysDark : .alwaysLight, from: self)
         }
     }
 }
