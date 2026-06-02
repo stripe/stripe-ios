@@ -357,6 +357,7 @@ extension SavedPaymentMethodCollectionView {
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = paymentMethod.paymentSheetAccessibilityLabel
+                            .map { linkBrand.accessibilityText(from: $0) }
                         let paymentMethodCellImage = paymentMethod.makeSavedPaymentMethodCellImage(
                             overrideUserInterfaceStyle: overrideUserInterfaceStyle,
                             iconStyle: appearance.iconStyle
@@ -398,7 +399,7 @@ extension SavedPaymentMethodCollectionView {
                         label.text = linkBrand.displayName
                         accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityIdentifier = label.text
-                        selectableRectangle.accessibilityLabel = label.text
+                        selectableRectangle.accessibilityLabel = linkBrand.accessibilityText(from: linkBrand.displayName)
                         let paymentMethodLogoImage = Image.paymentSheetLinkLogoImage
                         paymentMethodLogo.image = paymentMethodLogoImage
                         paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
