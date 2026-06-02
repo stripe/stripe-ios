@@ -12,6 +12,11 @@
 require 'json'
 require 'base64'
 require 'uri'
+require 'open3'
+require 'rbconfig'
+
+REPO_ROOT = File.expand_path("..", __dir__)
+DEFAULT_SCHEME = 'StripePaymentSheet-LatencyTests'
 
 class TimingEvent
   attr_accessor :name, :phase, :timestamp
@@ -111,7 +116,28 @@ def parse_test_cases(input)
   test_cases
 end
 
-test_cases = parse_test_cases(ARGF.read)
+def run_latency_tests
+  command = [
+    RbConfig.ruby,
+    File.join(REPO_ROOT, 'ci_scripts/run_tests.rb'),
+    '--scheme', DEFAULT_SCHEME,
+    '--verbose',
+  ]
+
+  output, status = Open3.capture2e(*command, chdir: REPO_ROOT)
+  abort output unless status.success?
+  output
+end
+
+input = if ARGV.empty? && STDIN.tty?
+  ""
+else
+  ARGF.read
+end
+
+input = run_latency_tests if input.strip.empty?
+
+test_cases = parse_test_cases(input)
 
 if test_cases.empty?
   puts "No test cases found in logs"
