@@ -38,13 +38,13 @@ final class BNPLFormHeaderViewSnapshotTests: STPSnapshotTestCase {
         appearance: PaymentSheet.Appearance = .default,
         style: PaymentSheet.UserInterfaceStyle = .automatic
     ) -> (BNPLFormHeaderView, UIViewController, UIWindow) {
+        let promotionsHelper = PaymentMethodMessagingPromotionsHelper._testValueInTreatment()
         let headerView = BNPLFormHeaderView(
             appearance: appearance,
             style: style,
-            promotion: "Split your purchase into monthly payments",
-            learnMoreText: "Learn more",
-            infoUrl: URL(string: "https://example.com/affirm")!
-        )
+            paymentMethod: .stripe(.affirm),
+            promotionsHelper: promotionsHelper
+        )!
         let rootViewController = UIViewController()
         headerView.backgroundColor = appearance.colors.background
         rootViewController.view.backgroundColor = appearance.colors.background

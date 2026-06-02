@@ -66,7 +66,11 @@ extension RowButton {
 
         func updateSelectedState(_ isRowSelected: Bool, willDisplayForm: Bool) {
             if isRowSelected && !willDisplayForm {
-                if let promotionContent = promotionsHelper.promotion(for: paymentMethodType) {
+                // If selected, get PMME content, log an attempt to display, and expand if applicable
+                // PMM data is not always available on initial load/display of a RowButton, so we check for it right before attempting to display
+                let promotionContent = promotionsHelper.promotion(for: paymentMethodType)
+                promotionsHelper.logDisplayedAnalytic(displayedSuccessfully: promotionContent != nil)
+                if let promotionContent {
                     applyContent(promotionContent)
                     setExpanded(true)
                 }

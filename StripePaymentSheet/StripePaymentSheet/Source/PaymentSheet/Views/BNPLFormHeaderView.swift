@@ -9,6 +9,7 @@ import UIKit
 final class BNPLFormHeaderView: UIView {
     private let appearance: PaymentSheet.Appearance
     let style: PaymentSheet.UserInterfaceStyle
+    let promotionsHelper: PaymentMethodMessagingPromotionsHelper
     let promotion: String
     let learnMoreText: String
     let infoUrl: URL
@@ -35,18 +36,19 @@ final class BNPLFormHeaderView: UIView {
         return textView
     }()
 
-    init(
+    init?(
         appearance: PaymentSheet.Appearance,
         style: PaymentSheet.UserInterfaceStyle,
-        promotion: String,
-        learnMoreText: String,
-        infoUrl: URL
+        paymentMethod: PaymentSheet.PaymentMethodType,
+        promotionsHelper: PaymentMethodMessagingPromotionsHelper
     ) {
         self.appearance = appearance
         self.style = style
-        self.promotion = promotion
-        self.learnMoreText = learnMoreText
-        self.infoUrl = infoUrl
+        self.promotionsHelper = promotionsHelper
+        guard let promotionContent = promotionsHelper.promotion(for: paymentMethod) else { return nil }
+        self.promotion = promotionContent.promotion
+        self.learnMoreText = promotionContent.learnMoreText
+        self.infoUrl = promotionContent.infoUrl
         super.init(frame: .zero)
 
         switch style {
@@ -65,6 +67,15 @@ final class BNPLFormHeaderView: UIView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+
+        // If we are moved on screen we log that the promotion was displayed successfully.
+        // When the form is moved off screen didMoveToWindow() will be called with window == nil and we do nothing in this case.
+        guard window != nil else { return }
+        promotionsHelper.logDisplayedAnalytic(displayedSuccessfully: true)
     }
 
     private func openInfoModal() {
