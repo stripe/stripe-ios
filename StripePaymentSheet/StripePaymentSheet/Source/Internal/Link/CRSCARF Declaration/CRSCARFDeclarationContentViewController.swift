@@ -9,7 +9,6 @@ import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
-import WebKit
 
 /// The content view of `CRSCARFDeclarationViewController`, which displays CRS/CARF declaration HTML with a confirmation button.
 final class CRSCARFDeclarationContentViewController: UIViewController, BottomSheetContentViewController {
@@ -64,45 +63,46 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         return label
     }()
 
-    private lazy var declarationWebView: WKWebView = {
-        let configuration = WKWebViewConfiguration()
-        configuration.dataDetectorTypes = [.link]
-        if #unavailable(iOS 14.0) {
-            configuration.preferences.javaScriptEnabled = false
-        }
-
-        let webView = WKWebView(frame: .zero, configuration: configuration)
-        webView.translatesAutoresizingMaskIntoConstraints = false
-        webView.backgroundColor = .clear
-        webView.isOpaque = false
-        webView.navigationDelegate = self
-        webView.scrollView.alwaysBounceVertical = true
-        webView.scrollView.contentInsetAdjustmentBehavior = .never
-        return webView
+    private lazy var declarationTextView: UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.backgroundColor = .clear
+        textView.isEditable = false
+        textView.isScrollEnabled = false
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+        textView.delegate = self
+        textView.attributedText = attributedDeclarationHTML
+        textView.linkTextAttributes = [
+            .foregroundColor: linkPrimaryButtonColor,
+        ]
+        return textView
     }()
 
-    private var declarationHTML: String {
-        """
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-        <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline';">
-        <style>
-        body {
-            margin: 0;
-            color: \(cssColor(for: .linkTextPrimary));
-            font-family: -apple-system, sans-serif;
-            font-size: \(LinkUI.font(forTextStyle: .body).pointSize)px;
-            line-height: \(declarationLineHeight);
-            -webkit-text-size-adjust: 100%;
+    private var attributedDeclarationHTML: NSAttributedString {
+        guard let importedString = try? NSMutableAttributedString(
+            data: Data(html.utf8),
+            options: [
+                .documentType: NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8.rawValue,
+            ],
+            documentAttributes: nil
+        ) else {
+            return NSAttributedString(string: html, attributes: declarationHTMLAttributes(isLink: false))
         }
-        p {
-            margin: 0;
+
+        var rangesToUpdate: [(range: NSRange, isLink: Bool)] = []
+        let fullRange = NSRange(location: 0, length: importedString.length)
+        importedString.enumerateAttributes(in: fullRange) { attributes, range, _ in
+            rangesToUpdate.append((range, attributes[.link] != nil))
         }
-        a {
-            color: \(cssColor(for: linkPrimaryButtonColor));
+        rangesToUpdate.forEach { range, isLink in
+            importedString.addAttributes(
+                declarationHTMLAttributes(isLink: isLink),
+                range: range
+            )
         }
-        </style>
-        \(html)
-        """
+        return importedString
     }
 
     private lazy var bottomButtonContainer: UIView = {
@@ -113,7 +113,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     }()
 
     private lazy var confirmButton = ConfirmButton.makeLinkButton(
-        callToAction: .custom(title: String.Localized.agree_and_accept),
+        callToAction: .custom(title: String.Localized.accept),
         showProcessingLabel: false,
         linkAppearance: appearance
     ) { [weak self] in
@@ -124,7 +124,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         super.viewDidLoad()
 
         view.addSubview(headingLabel)
-        view.addSubview(declarationWebView)
+        view.addSubview(declarationTextView)
         view.addSubview(bottomButtonContainer)
 
         NSLayoutConstraint.activate([
@@ -132,27 +132,15 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
             headingLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LinkUI.contentSpacing),
             headingLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -LinkUI.contentSpacing),
 
-            declarationWebView.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: LinkUI.contentSpacing),
-            declarationWebView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LinkUI.contentSpacing),
-            declarationWebView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -LinkUI.contentSpacing),
-            declarationWebView.heightAnchor.constraint(equalToConstant: 200),
-            declarationWebView.bottomAnchor.constraint(equalTo: bottomButtonContainer.topAnchor),
+            declarationTextView.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: LinkUI.contentSpacing),
+            declarationTextView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LinkUI.contentSpacing),
+            declarationTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -LinkUI.contentSpacing),
+            declarationTextView.bottomAnchor.constraint(equalTo: bottomButtonContainer.topAnchor),
 
             bottomButtonContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             bottomButtonContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             bottomButtonContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
         ])
-
-        declarationWebView.loadHTMLString(declarationHTML, baseURL: nil)
-    }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        guard traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) else {
-            return
-        }
-        declarationWebView.loadHTMLString(declarationHTML, baseURL: nil)
     }
 
     private func confirmButtonTapped() {
@@ -169,10 +157,15 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         20 / LinkUI.font(forTextStyle: .body).pointSize
     }
 
-    private func cssColor(for color: UIColor) -> String {
-        let resolvedColor = color.resolvedColor(with: traitCollection)
-        let rgba = resolvedColor.rgba
-        return "rgba(\(Int(rgba.red * 255)), \(Int(rgba.green * 255)), \(Int(rgba.blue * 255)), \(rgba.alpha))"
+    private func declarationHTMLAttributes(isLink: Bool) -> [NSAttributedString.Key: Any] {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = declarationLineHeight
+
+        return [
+            .font: LinkUI.font(forTextStyle: .body),
+            .foregroundColor: isLink ? linkPrimaryButtonColor : UIColor.linkTextPrimary,
+            .paragraphStyle: paragraphStyle,
+        ]
     }
 
     // MARK: - BottomSheetContentViewController
@@ -182,47 +175,27 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     }
 }
 
-extension CRSCARFDeclarationContentViewController: WKNavigationDelegate {
-    func webView(
-        _ webView: WKWebView,
-        decidePolicyFor navigationAction: WKNavigationAction,
-        preferences: WKWebpagePreferences,
-        decisionHandler: @escaping (WKNavigationActionPolicy, WKWebpagePreferences) -> Void
-    ) {
-        if #available(iOS 14.0, *) {
-            preferences.allowsContentJavaScript = false
+extension CRSCARFDeclarationContentViewController: UITextViewDelegate {
+
+#if !os(visionOS)
+    func textView(
+        _ textView: UITextView,
+        shouldInteractWith URL: URL,
+        in characterRange: NSRange,
+        interaction: UITextItemInteraction
+    ) -> Bool {
+        guard interaction == .invokeDefaultAction else {
+            return false
         }
-        decisionHandler(policy(for: navigationAction), preferences)
+
+        if ["http", "https"].contains(URL.scheme?.lowercased()) {
+            let safariViewController = SFSafariViewController(url: URL)
+            safariViewController.dismissButtonStyle = .close
+            safariViewController.modalPresentationStyle = .overFullScreen
+            present(safariViewController, animated: true)
+        }
+
+        return false
     }
-
-    func webView(
-        _ webView: WKWebView,
-        decidePolicyFor navigationAction: WKNavigationAction,
-        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
-    ) {
-        decisionHandler(policy(for: navigationAction))
-    }
-
-    private func policy(for navigationAction: WKNavigationAction) -> WKNavigationActionPolicy {
-        if navigationAction.navigationType == .linkActivated, let url = navigationAction.request.url {
-            if ["http", "https"].contains(url.scheme?.lowercased()) {
-                let safariViewController = SFSafariViewController(url: url)
-                #if !os(visionOS)
-                safariViewController.dismissButtonStyle = .close
-                #endif
-                safariViewController.modalPresentationStyle = .overFullScreen
-                present(safariViewController, animated: true)
-            }
-            return .cancel
-        }
-
-        guard navigationAction.navigationType == .other else {
-            return .cancel
-        }
-
-        if navigationAction.request.url?.scheme == "about" {
-            return .allow
-        }
-        return .cancel
-    }
+#endif
 }
