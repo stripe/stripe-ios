@@ -101,6 +101,15 @@ final class SelfieScanningView: UIView {
                     return true
                 }
             }
+
+            var isCenteredInViewfinder: Bool {
+                switch self {
+                case .holdStill:
+                    return false
+                case .uploading:
+                    return true
+                }
+            }
         }
 
         enum State {
@@ -253,6 +262,15 @@ final class SelfieScanningView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
+
+    private lazy var statusLabelBottomConstraint = statusLabelContainerView.bottomAnchor.constraint(
+        equalTo: previewContainerView.contentView.bottomAnchor,
+        constant: -40
+    )
+
+    private lazy var statusLabelCenterYConstraint = statusLabelContainerView.centerYAnchor.constraint(
+        equalTo: previewContainerView.contentView.centerYAnchor
+    )
 
     // MARK: Scanned Images
 
@@ -542,10 +560,7 @@ extension SelfieScanningView {
             statusLabelContainerView.centerXAnchor.constraint(
                 equalTo: previewContainerView.contentView.centerXAnchor
             ),
-            statusLabelContainerView.bottomAnchor.constraint(
-                equalTo: previewContainerView.contentView.bottomAnchor,
-                constant: -40
-            ),
+            statusLabelBottomConstraint,
             statusLabelContainerView.widthAnchor.constraint(
                 lessThanOrEqualTo: previewContainerView.contentView.widthAnchor,
                 multiplier: 0.8
@@ -555,6 +570,8 @@ extension SelfieScanningView {
 
     fileprivate func configureStatusLabel(_ statusText: ViewModel.StatusText) {
         statusLabel.text = statusText.text
+        statusLabelBottomConstraint.isActive = !statusText.isCenteredInViewfinder
+        statusLabelCenterYConstraint.isActive = statusText.isCenteredInViewfinder
         statusActivityIndicatorView.isHidden = !statusText.showsActivityIndicator
         if statusText.showsActivityIndicator {
             statusActivityIndicatorView.startAnimating()
