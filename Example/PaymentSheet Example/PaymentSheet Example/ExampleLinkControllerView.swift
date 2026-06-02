@@ -23,6 +23,7 @@ struct ExampleLinkControllerView: View {
     @State private var authenticationResult: String?
     @State private var userExists: Bool?
     @State private var selectedPaymentMethodTypes: Set<LinkPaymentMethodType> = Set(LinkPaymentMethodType.allCases)
+    @State private var allowAnyPaymentMethodType: Bool = false
     @FocusState private var isEmailFieldFocused: Bool
 
     var body: some View {
@@ -98,6 +99,19 @@ struct ExampleLinkControllerView: View {
                             .font(.headline)
 
                         VStack(spacing: 8) {
+                            Button(action: {
+                                allowAnyPaymentMethodType.toggle()
+                            }) {
+                                HStack {
+                                    Image(systemName: allowAnyPaymentMethodType ? "checkmark.square.fill" : "square")
+                                        .foregroundColor(allowAnyPaymentMethodType ? .blue : .gray)
+                                    Text("Any")
+                                        .foregroundColor(.primary)
+                                    Spacer()
+                                }
+                            }
+                            .buttonStyle(PlainButtonStyle())
+
                             ForEach(LinkPaymentMethodType.allCases, id: \.self) { paymentMethodType in
                                 HStack {
                                     Button(action: {
@@ -105,13 +119,17 @@ struct ExampleLinkControllerView: View {
                                     }) {
                                         HStack {
                                             Image(systemName: selectedPaymentMethodTypes.contains(paymentMethodType) ? "checkmark.square.fill" : "square")
-                                                .foregroundColor(selectedPaymentMethodTypes.contains(paymentMethodType) ? .blue : .gray)
+                                                .foregroundColor(
+                                                    allowAnyPaymentMethodType ? .gray.opacity(0.4) :
+                                                    selectedPaymentMethodTypes.contains(paymentMethodType) ? .blue : .gray
+                                                )
                                             Text(paymentMethodType.displayName)
-                                                .foregroundColor(.primary)
+                                                .foregroundColor(allowAnyPaymentMethodType ? .secondary : .primary)
                                             Spacer()
                                         }
                                     }
                                     .buttonStyle(PlainButtonStyle())
+                                    .disabled(allowAnyPaymentMethodType)
                                 }
                             }
                         }
@@ -494,7 +512,7 @@ struct ExampleLinkControllerView: View {
         let paymentMethodPreview = await linkController.collectPaymentMethod(
             from: rootViewController,
             with: email,
-            supportedPaymentMethodTypes: Array(selectedPaymentMethodTypes)
+            supportedPaymentMethodTypes: allowAnyPaymentMethodType ? nil : Array(selectedPaymentMethodTypes)
         )
 
         await MainActor.run {
@@ -535,7 +553,7 @@ struct ExampleLinkControllerView: View {
             let result = try await linkController.present(
                 email: email,
                 phoneNumber: phone.isEmpty ? nil : phone,
-                supportedPaymentMethodTypes: Array(selectedPaymentMethodTypes),
+                supportedPaymentMethodTypes: allowAnyPaymentMethodType ? nil : Array(selectedPaymentMethodTypes),
                 from: rootViewController
             )
             await MainActor.run {
@@ -597,6 +615,7 @@ struct ExampleLinkControllerView: View {
         phone = ""
         country = "US"
         selectedPaymentMethodTypes = Set(LinkPaymentMethodType.allCases)
+        allowAnyPaymentMethodType = false
 
         initializeLinkController()
     }
