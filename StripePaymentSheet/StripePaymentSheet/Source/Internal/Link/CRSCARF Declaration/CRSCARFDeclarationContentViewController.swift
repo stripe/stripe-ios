@@ -35,6 +35,10 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     private let appearance: LinkAppearance
     private let brand: LinkBrand
 
+    private var linkPrimaryButtonColor: UIColor {
+        appearance.colors?.primary ?? LinkUI.appearance.primaryButton.backgroundColor ?? LinkUI.appearance.colors.primary
+    }
+
     /// Closure called when a user confirms or cancels the declaration.
     var onResult: ((LinkController.CRSCARFDeclarationResult) -> Void)?
 
@@ -146,10 +150,6 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     private func confirmButtonTapped() {
         confirmButton.update(status: .spinnerWithInteractionDisabled)
         onResult?(.confirmed)
-    }
-
-    private var linkPrimaryButtonColor: UIColor {
-        appearance.colors?.primary ?? LinkUI.appearance.primaryButton.backgroundColor ?? LinkUI.appearance.colors.primary
     }
 
     private func declarationHTMLAttributes(isLink: Bool) -> [NSAttributedString.Key: Any] {
