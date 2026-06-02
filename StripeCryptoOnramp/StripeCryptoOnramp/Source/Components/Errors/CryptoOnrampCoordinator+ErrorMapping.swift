@@ -74,7 +74,6 @@ extension CryptoOnrampCoordinator {
             operation: operation.rawValue,
             appIdentifier: Bundle.main.bundleIdentifier,
             mode: apiClient.publishableKey.flatMap(Self.publishableKeyMode),
-            sdkVersion: STPAPIClient.STPSDKVersion,
             apiErrorCode: apiError.code,
             apiErrorType: apiErrorType(from: apiError),
             apiErrorMessage: apiError.message,

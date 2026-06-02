@@ -51,11 +51,6 @@ public extension APIErrorContextProviding {
         return context.mode
     }
 
-    /// The Stripe iOS SDK version.
-    var sdkVersion: String {
-        return context.sdkVersion
-    }
-
     /// The backend API error type associated with this error, if one is available.
     var type: String? {
         return context.apiErrorType
@@ -93,9 +88,6 @@ public struct APIErrorContext {
     /// The Stripe mode associated with this error, if it can be determined.
     public var mode: String?
 
-    /// The Stripe iOS SDK version.
-    public var sdkVersion: String
-
     /// The backend API error code associated with this error, if one is available.
     public var apiErrorCode: String?
 
@@ -121,7 +113,6 @@ public struct APIErrorContext {
     ///   - operation: The SDK operation that was running when this error occurred.
     ///   - appIdentifier: The bundle identifier for the app using the SDK, if one is available.
     ///   - mode: The Stripe mode associated with this error, if it can be determined.
-    ///   - sdkVersion: The Stripe iOS SDK version.
     ///   - apiErrorCode: The backend API error code associated with this error, if one is available.
     ///   - apiErrorType: The backend API error type associated with this error, if one is available.
     ///   - apiErrorMessage: The backend developer-facing API error message associated with this error, if one is available.
@@ -133,7 +124,6 @@ public struct APIErrorContext {
         operation: String,
         appIdentifier: String?,
         mode: String?,
-        sdkVersion: String,
         apiErrorCode: String?,
         apiErrorType: String?,
         apiErrorMessage: String?,
@@ -145,7 +135,6 @@ public struct APIErrorContext {
         self.operation = operation
         self.appIdentifier = appIdentifier
         self.mode = mode
-        self.sdkVersion = sdkVersion
         self.apiErrorCode = apiErrorCode
         self.apiErrorType = apiErrorType
         self.apiErrorMessage = apiErrorMessage

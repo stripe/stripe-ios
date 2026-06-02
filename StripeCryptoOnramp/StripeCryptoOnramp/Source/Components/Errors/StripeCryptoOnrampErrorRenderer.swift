@@ -39,6 +39,7 @@ public enum StripeCryptoOnrampErrorRenderer {
         context: APIErrorContext,
         summary: String,
         code: String,
+        sdkVersion: String,
         nextStep: String,
         additionalSDKVersions: [String] = []
     ) -> String {
@@ -47,7 +48,7 @@ public enum StripeCryptoOnrampErrorRenderer {
             code: code,
             nextStep: nextStep,
             docURL: context.docURL,
-            sdkVersion: context.sdkVersion,
+            sdkVersion: sdkVersion,
             additionalSDKVersions: additionalSDKVersions
         )
     }

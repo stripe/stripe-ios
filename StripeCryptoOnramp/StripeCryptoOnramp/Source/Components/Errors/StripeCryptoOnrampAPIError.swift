@@ -23,9 +23,6 @@ public protocol StripeCryptoOnrampAPIError: StripeCryptoOnrampError {
     /// The Stripe mode associated with this error, if it can be determined.
     var mode: String? { get }
 
-    /// The Stripe iOS SDK version.
-    var sdkVersion: String { get }
-
     /// The backend API error type associated with this error, if one is available.
     var type: String? { get }
 

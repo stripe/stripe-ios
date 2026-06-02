@@ -101,7 +101,6 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
             operation: CryptoOnrampOperation.hasLinkAccount.rawValue,
             appIdentifier: nil,
             mode: nil,
-            sdkVersion: STPAPIClient.STPSDKVersion,
             apiErrorCode: nil,
             apiErrorType: nil,
             apiErrorMessage: nil,
