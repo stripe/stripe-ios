@@ -153,7 +153,7 @@ extension String.Localized {
 
     static var payment_method_details: String {
         STPLocalizedString(
-            "Payment method details",
+            "Payment method",
             "Label for a read-only field displaying payment method details."
         )
     }
