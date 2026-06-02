@@ -64,48 +64,54 @@ class TestCase
   end
 end
 
-# Parse input and group by test cases
-test_cases = []
-current_test = nil
-in_test = false
+def parse_test_cases(input)
+  # Parse input and group by test cases
+  test_cases = []
+  current_test = nil
+  in_test = false
 
-ARGF.each_line do |line|
-  # Test case start - match the pattern from the example
-  if line =~ /Test Case '-\[StripePaymentSheetTests\.MPELatencyTest (test_\w+)\]' started\./
-    test_name = $1
-    current_test = TestCase.new(test_name)
-    in_test = true
-  # Test case end
-  elsif line =~ /Test Case '-\[.*MPELatencyTest (test_\w+)\]' passed/
-    if current_test
-      test_cases << current_test
-      current_test = nil
-      in_test = false
+  input.each_line do |line|
+    # Test case start - match the pattern from the example
+    if line =~ /Test Case '-\[StripePaymentSheetTests\.MPELatencyTest (test_\w+)\]' started\./
+      test_name = $1
+      current_test = TestCase.new(test_name)
+      in_test = true
+    # Test case end
+    elsif line =~ /Test Case '-\[.*MPELatencyTest (test_\w+)\]' passed/
+      if current_test
+        test_cases << current_test
+        current_test = nil
+        in_test = false
+      end
+    # LOADER_TIMING event
+    elsif in_test && current_test && line =~ /\[LOADER_TIMING\]\s+(\w+)\s+(\S+)\s+([\d.]+)/
+      phase = $1
+      name = $2
+      timestamp = $3.to_f
+      current_test.events << TimingEvent.new(name, phase, timestamp)
+    # TOTAL_LOAD_TIME - extract start and end timestamps
+    elsif in_test && current_test && line =~ /TOTAL_LOAD_TIME:\s+([\d.]+)\s+([\d.]+)/
+      start_time = $1.to_f
+      end_time = $2.to_f
+      current_test.total_load_time = Operation.new("Total Load Time", start_time, end_time)
+    # SYNTHETIC_LATENCY_RESULT - extract test name and latency
+    elsif in_test && current_test && line =~ /SYNTHETIC_LATENCY_RESULT:\s+(test_\w+):\s+([\d.]+)/
+      result_test_name = $1
+      current_test.latency_result = $2.to_f
+      # Update test name from the result line if we somehow didn't get it from the test case start
+      current_test.name = result_test_name if current_test.name.empty?
     end
-  # LOADER_TIMING event
-  elsif in_test && current_test && line =~ /\[LOADER_TIMING\]\s+(\w+)\s+(\S+)\s+([\d.]+)/
-    phase = $1
-    name = $2
-    timestamp = $3.to_f
-    current_test.events << TimingEvent.new(name, phase, timestamp)
-  # TOTAL_LOAD_TIME - extract start and end timestamps
-  elsif in_test && current_test && line =~ /TOTAL_LOAD_TIME:\s+([\d.]+)\s+([\d.]+)/
-    start_time = $1.to_f
-    end_time = $2.to_f
-    current_test.total_load_time = Operation.new("Total Load Time", start_time, end_time)
-  # SYNTHETIC_LATENCY_RESULT - extract test name and latency
-  elsif in_test && current_test && line =~ /SYNTHETIC_LATENCY_RESULT:\s+(test_\w+):\s+([\d.]+)/
-    result_test_name = $1
-    current_test.latency_result = $2.to_f
-    # Update test name from the result line if we somehow didn't get it from the test case start
-    current_test.name = result_test_name if current_test.name.empty?
   end
+
+  # Add current test if it wasn't closed properly
+  if current_test && !current_test.events.empty?
+    test_cases << current_test
+  end
+
+  test_cases
 end
 
-# Add current test if it wasn't closed properly
-if current_test && !current_test.events.empty?
-  test_cases << current_test
-end
+test_cases = parse_test_cases(ARGF.read)
 
 if test_cases.empty?
   puts "No test cases found in logs"
