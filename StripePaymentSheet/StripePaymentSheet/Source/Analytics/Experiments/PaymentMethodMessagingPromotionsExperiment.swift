@@ -59,8 +59,4 @@ struct PaymentMethodMessagingPromotionsExperiment: LoggableExperiment {
         self.promotionDisplayedSuccessfully = promotionDisplayedSuccessfully
         self.layout = layout
     }
-
-    var isInTreatment: Bool {
-        group == .treatment
-    }
 }

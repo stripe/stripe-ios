@@ -869,9 +869,9 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
         // Verify the 3 exposure events
         let exposures = mockAnalyticsClientV2.loggedAnalyticPayloads(withEventName: "elements.experiment_exposure")
-        XCTAssertEqual(exposures.count, 3)
+        XCTAssertEqual(exposures.count, 4)
         let experimentNames = Set(exposures.compactMap { $0["experiment_retrieved"] as? String })
-        XCTAssertEqual(experimentNames, ["link_global_holdback", "link_global_holdback_aa", "link_ab_test"])
+        XCTAssertEqual(experimentNames, ["link_global_holdback", "link_global_holdback_aa", "link_ab_test", "ocs_mobile_payment_method_messaging_promotions"])
         for exposure in exposures {
             XCTAssertEqual(exposure["arb_id"] as? String, "test_arb_123")
             XCTAssertNotNil(exposure["assignment_group"], "Expected assignment_group in exposure: \(exposure)")
