@@ -9,7 +9,7 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-final class PaymentMethodMessagingPromotionsHelper {
+class PaymentMethodMessagingPromotionsHelper {
 
     static let supportedPaymentMethods: [PaymentSheet.PaymentMethodType] = [
         .stripe(.afterpayClearpay),
