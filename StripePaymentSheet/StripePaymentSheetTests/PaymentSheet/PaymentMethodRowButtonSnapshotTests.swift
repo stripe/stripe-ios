@@ -260,7 +260,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             paymentMethodType: .stripe(.affirm),
             currency: "USD",
             hasSavedCard: false,
-            promotionsHelper: ._testValue(),
+            promotionsHelper: ._testValueInTreatment(),
             appearance: appearance,
             shouldAnimateOnPress: false,
             isEmbedded: isEmbedded,
