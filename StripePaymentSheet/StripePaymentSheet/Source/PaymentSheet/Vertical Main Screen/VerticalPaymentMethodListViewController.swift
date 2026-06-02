@@ -124,7 +124,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 self?.didTap(rowButton: $0, selection: selection)
             }
             if initialSelection == selection {
-                savedPaymentMethodButton.isSelected = true
+                savedPaymentMethodButton.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(savedPaymentMethodButton.type) == true)
                 currentSelection = selection
             }
             views += [
@@ -143,7 +143,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 self?.didTap(rowButton: $0, selection: .applePay)
             }
             if initialSelection == selection {
-                rowButton.isSelected = true
+                rowButton.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(rowButton.type) == true)
                 currentSelection = selection
             }
             return rowButton
@@ -155,7 +155,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 self?.didTap(rowButton: $0, selection: .link)
             }
             if initialSelection == selection {
-                rowButton.isSelected = true
+                rowButton.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(rowButton.type) == true)
                 currentSelection = selection
             }
             return rowButton
@@ -173,7 +173,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
                 appearance: appearance,
                 // Enable press animation if tapping this transitions the screen to a form instead of becoming selected
-                shouldAnimateOnPress: delegate?.shouldSelectPaymentMethod(selection) == false
+                shouldAnimateOnPress: delegate?.willDisplayForm(selection) == true
             ) { [weak self] in
                 self?.didTap(rowButton: $0, selection: selection)
             }
@@ -182,7 +182,7 @@ class VerticalPaymentMethodListViewController: UIViewController {
                 indexAfterCards = index + 1
             }
             if initialSelection == selection {
-                rowButton.isSelected = true
+                rowButton.updateSelectedState(true, willDisplayForm: delegate?.willDisplayForm(rowButton.type) == true)
                 currentSelection = selection
             }
         }
@@ -236,7 +236,9 @@ class VerticalPaymentMethodListViewController: UIViewController {
         if resolvedBrand != linkBrand {
             linkBrand = resolvedBrand
             linkRowButton.setLabel(text: resolvedBrand.displayName)
-            linkRowButton.setPrimaryAccessibilityLabel(String.Localized.pay_with_link(brand: resolvedBrand))
+            linkRowButton.setPrimaryAccessibilityLabel(
+                resolvedBrand.accessibilityText(from: String.Localized.pay_with_link(brand: resolvedBrand))
+            )
         }
 
         let sublabel = linkAccount?.email ?? .Localized.link_subtitle_text
@@ -247,14 +249,14 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
     func didTap(rowButton: RowButton, selection: RowButtonType) {
         guard let delegate else { return }
-        let shouldSelect = delegate.shouldSelectPaymentMethod(selection)
+        let shouldSelect = !delegate.willDisplayForm(rowButton.type)
         if shouldSelect {
             // Deselect previous row
             rowButtons.forEach {
-                $0.isSelected = false
+                $0.updateSelectedState(false, willDisplayForm: delegate.willDisplayForm($0.type))
             }
             // Select new row
-            rowButton.isSelected = shouldSelect
+            rowButton.updateSelectedState(shouldSelect, willDisplayForm: delegate.willDisplayForm(rowButton.type))
             currentSelection = selection
         }
         delegate.didTapPaymentMethod(selection)
@@ -286,8 +288,8 @@ class VerticalPaymentMethodListViewController: UIViewController {
 // MARK: - VerticalPaymentMethodListViewControllerDelegate
 protocol VerticalPaymentMethodListViewControllerDelegate: AnyObject {
     /// Called when a row is tapped, before `didTapPaymentMethod` is called.
-    /// - Returns: Whether or not the payment method row button should appear selected.
-    func shouldSelectPaymentMethod(_ selection: RowButtonType) -> Bool
+    /// - Returns: Whether or not selecting the RowButtonType will cause a form to be displayed.
+    func willDisplayForm(_ rowButtonType: RowButtonType) -> Bool
 
     /// Called after a row is tapped and after `shouldSelectPaymentMethod` is called
     func didTapPaymentMethod(_ selection: RowButtonType)

@@ -63,6 +63,7 @@ final class LinkSignUpViewController: UIViewController {
         label.numberOfLines = 0
         label.textAlignment = .center
         label.text = String.Localized.pay_faster_everywhere_brand_is_accepted(brand: brand)
+        label.accessibilityLabel = brand.accessibilityText(from: label.text ?? "")
         return label
     }()
 

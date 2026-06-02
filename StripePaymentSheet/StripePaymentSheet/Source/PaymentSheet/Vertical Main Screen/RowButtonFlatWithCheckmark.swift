@@ -21,8 +21,8 @@ final class RowButtonFlatWithCheckmark: RowButton {
         return checkmarkImageView
     }()
 
-    override func updateSelectedState() {
-        super.updateSelectedState()
+    override func updateSelectedState(_ isSelected: Bool, willDisplayForm: Bool) {
+        super.updateSelectedState(isSelected, willDisplayForm: willDisplayForm)
         checkmarkImageView.isHidden = !isSelected
     }
 

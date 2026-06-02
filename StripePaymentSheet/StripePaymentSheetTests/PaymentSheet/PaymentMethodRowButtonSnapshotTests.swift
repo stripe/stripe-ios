@@ -138,7 +138,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
                 isEmbedded: true,
                 didTap: { _ in }
             )
-            rowButton.isSelected = true
+            rowButton.updateSelectedState(true, willDisplayForm: false)
             // ...the row button icon should have 0 left padding and 30 right padding
             verify(rowButton, identifier: "\(style)_0_left_padding_30_right_padding")
         }
@@ -174,7 +174,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
                 isEmbedded: true,
                 didTap: { _ in }
             )
-            rowButton.isSelected = true
+            rowButton.updateSelectedState(true, willDisplayForm: false)
             // ...the row button label should have the custom italic font
             verify(rowButton, identifier: "\(style)_custom_italic_font")
         }
@@ -205,7 +205,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
                 isEmbedded: true,
                 didTap: { _ in }
             )
-            rowButton.isSelected = true
+            rowButton.updateSelectedState(true, willDisplayForm: false)
             verify(rowButton, identifier: "\(style)")
         }
     }

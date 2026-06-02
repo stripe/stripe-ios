@@ -70,6 +70,7 @@ final class LinkLegalTermsView: UIView {
         textView.isEditable = false
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
+        textView.accessibilityLabel = brand.accessibilityText(from: textView.attributedText?.string ?? "")
         textView.textColor = .linkTextTertiary
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
@@ -106,6 +107,7 @@ final class LinkLegalTermsView: UIView {
         }
         self.brand = brand
         textView.attributedText = formattedLegalText()
+        textView.accessibilityLabel = brand.accessibilityText(from: textView.attributedText?.string ?? "")
     }
 
     private func formattedLegalText() -> NSAttributedString? {

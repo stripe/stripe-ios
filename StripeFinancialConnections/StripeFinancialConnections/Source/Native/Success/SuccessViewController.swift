@@ -21,6 +21,21 @@ final class SuccessViewController: UIViewController {
     private var linkBrand: LinkBrand {
         PresentationManager.shared.resolvedLinkBrand(manifestLinkBrand: dataSource.manifest.linkBrand) ?? .link
     }
+    private var showSaveToLinkFailedNotice: Bool {
+        dataSource.saveToLinkWithStripeSucceeded == false
+    }
+    private var successSubtitle: PaneLayoutView.AccessibleText? {
+        let text = dataSource.customSuccessPaneSubCaption ?? CreateSubtitleText(
+            // manual entry has "0" linked accounts count
+            isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
+            showSaveToLinkFailedNotice: showSaveToLinkFailedNotice,
+            linkBrand: linkBrand
+        )
+        return .init(
+            text,
+            accessibilityText: linkBrand.accessibilityText(from: text)
+        )
+    }
 
     init(dataSource: SuccessDataSource) {
         self.dataSource = dataSource
@@ -36,8 +51,6 @@ final class SuccessViewController: UIViewController {
         view.backgroundColor = FinancialConnectionsAppearance.Colors.background
         navigationItem.hidesBackButton = true
 
-        let showSaveToLinkFailedNotice = (dataSource.saveToLinkWithStripeSucceeded == false)
-
         let contentView = UIView()
         view.addSubview(contentView)
 
@@ -46,12 +59,7 @@ final class SuccessViewController: UIViewController {
                 "Success",
                 "The title of the success screen that appears when a user is done with the process of connecting their bank account to an application. Now that the bank account is connected (or linked), the user will be able to use the bank account for payments."
             ),
-            subtitle: dataSource.customSuccessPaneSubCaption ?? CreateSubtitleText(
-                // manual entry has "0" linked accounts count
-                isLinkingOneAccount: (dataSource.linkedAccountsCount == 0 || dataSource.linkedAccountsCount == 1),
-                showSaveToLinkFailedNotice: showSaveToLinkFailedNotice,
-                linkBrand: linkBrand
-            ),
+            subtitle: successSubtitle,
             appearance: dataSource.manifest.appearance
         )
         contentView.addSubview(bodyView)
@@ -123,7 +131,7 @@ final class SuccessViewController: UIViewController {
 
 private func CreateBodyView(
     title: String,
-    subtitle: String?,
+    subtitle: PaneLayoutView.AccessibleText?,
     appearance: FinancialConnectionsAppearance
 ) -> UIView {
     let titleLabel = AttributedLabel(
@@ -146,7 +154,8 @@ private func CreateBodyView(
             textColor: FinancialConnectionsAppearance.Colors.textDefault,
             alignment: .center
         )
-        subtitleLabel.setText(subtitle)
+        subtitleLabel.setText(subtitle.text)
+        subtitleLabel.accessibilityLabel = subtitle.accessibilityText
         labelVerticalStackView.addArrangedSubview(subtitleLabel)
     }
 
