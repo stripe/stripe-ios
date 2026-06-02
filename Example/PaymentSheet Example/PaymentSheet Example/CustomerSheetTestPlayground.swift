@@ -108,6 +108,9 @@ struct CustomerSheetTestPlayground: View {
                         SettingView(setting: $playgroundController.settings.allowsRemovalOfLastSavedPaymentMethod)
                         SettingView(setting: $playgroundController.settings.opensCardScannerAutomatically)
                         SettingView(setting: $playgroundController.settings.useAutocompleteEndpoints)
+                        TextField("Autocomplete API Key", text: autocompleteApiKeyBinding)
+                            .autocorrectionDisabled()
+                            .textInputAutocapitalization(.never)
                         HStack {
                             Text("Macros").font(.headline)
                             Spacer()
@@ -187,6 +190,14 @@ struct CustomerSheetTestPlayground: View {
             playgroundController.settings.customerId = (newString != "") ? newString : nil
         }
     }
+    var autocompleteApiKeyBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.autocompleteApiKey ?? ""
+        } set: { newString in
+            playgroundController.settings.autocompleteApiKey = newString.isEmpty ? nil : newString
+        }
+    }
+
     var headerTextForSelectionScreenBinding: Binding<String> {
         Binding<String> {
             return playgroundController.settings.headerTextForSelectionScreen ?? ""

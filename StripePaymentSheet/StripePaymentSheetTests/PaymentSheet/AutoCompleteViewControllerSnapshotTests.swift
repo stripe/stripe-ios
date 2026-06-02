@@ -208,7 +208,7 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
     let titleHighlightRanges: [NSValue]
     let subtitleHighlightRanges: [NSValue]
 
-    func asAddress(apiClient: StripeCore.STPAPIClient?, source: String?, sessionToken: String?, completion: @escaping (StripePaymentSheet.PaymentSheet.Address?) -> Void) {
+    func asAddress(apiClient: StripeCore.STPAPIClient?, source: String?, sessionToken: String?, apiKey: String?, completion: @escaping (StripePaymentSheet.PaymentSheet.Address?) -> Void) {
         completion(nil)
     }
  }

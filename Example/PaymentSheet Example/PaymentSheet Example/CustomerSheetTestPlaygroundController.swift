@@ -5,7 +5,7 @@
 
 import Combine
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentSheet
+@_spi(STP) @_spi(AddressAutocompletePreview) import StripePaymentSheet
 import SwiftUI
 
 class CustomerSheetTestPlaygroundController: ObservableObject {
@@ -161,6 +161,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         }
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
         configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
+        configuration.autocompleteApiKey = settings.autocompleteApiKey
 
         return configuration
     }

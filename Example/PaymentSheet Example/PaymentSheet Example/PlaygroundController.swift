@@ -14,7 +14,7 @@ import Contacts
 import PassKit
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
-@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) import StripePaymentSheet
+@_spi(STP) @_spi(PaymentSheetSkipConfirmation) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) @_spi(PaymentMethodOptionsSetupFutureUsagePreview) @_spi(CardFundingFilteringPrivatePreview) @_spi(AddressAutocompletePreview) import StripePaymentSheet
 import SwiftUI
 import UIKit
 
@@ -267,6 +267,7 @@ import UIKit
 
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
         configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
+        configuration.autocompleteApiKey = settings.autocompleteApiKey
         configuration.termsDisplay = cardTermsDisplay
         return configuration
     }
@@ -409,6 +410,7 @@ import UIKit
         }
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
         configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
+        configuration.autocompleteApiKey = settings.autocompleteApiKey
         return configuration
     }
 

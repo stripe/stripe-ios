@@ -21,11 +21,11 @@ protocol AddressSearchResult {
 
     /// Converts this search result to a `PaymentSheet.Address?`
     /// - Parameter completion: Invoked with a `PaymentSheet.Address?` representation of this address search result
-    func asAddress(apiClient: STPAPIClient?, source: String?, sessionToken: String?, completion: @escaping (PaymentSheet.Address?) -> Void)
+    func asAddress(apiClient: STPAPIClient?, source: String?, sessionToken: String?, apiKey: String?, completion: @escaping (PaymentSheet.Address?) -> Void)
 }
 
 extension MKLocalSearchCompletion: AddressSearchResult {
-    func asAddress(apiClient: STPAPIClient?, source: String?, sessionToken: String?, completion: @escaping (PaymentSheet.Address?) -> Void) {
+    func asAddress(apiClient: STPAPIClient?, source: String?, sessionToken: String?, apiKey: String?, completion: @escaping (PaymentSheet.Address?) -> Void) {
         #if os(visionOS)
         assertionFailure("MKMapItem.asAddress is not yet implemented for visionOS")
         completion(PaymentSheet.Address())

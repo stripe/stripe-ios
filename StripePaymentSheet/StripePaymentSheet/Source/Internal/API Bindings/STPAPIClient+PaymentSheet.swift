@@ -319,7 +319,8 @@ extension STPAPIClient {
         searchText: String,
         locale: String = Locale.current.toLanguageTag(),
         countryCodes: [String]?,
-        sessionToken: String
+        sessionToken: String,
+        apiKey: String? = nil
     ) async throws -> AutocompleteResponse {
         let endpoint = "\(APIEndpointElementsAddress)/autocomplete"
         var parameters: [String: Any] = [
@@ -330,6 +331,9 @@ extension STPAPIClient {
         ]
         if let countryCodes {
             parameters["country_codes[]"] = Set<AnyHashable>(countryCodes)
+        }
+        if let apiKey {
+            parameters["api_key"] = apiKey
         }
         return try await APIRequest<AutocompleteResponse>.post(
             with: self,
@@ -350,10 +354,11 @@ extension STPAPIClient {
         source: String,
         locale: String = Locale.current.toLanguageTag(),
         displayTitle: String,
-        sessionToken: String
+        sessionToken: String,
+        apiKey: String? = nil
     ) async throws -> DetailsResponse {
         let endpoint = "\(APIEndpointElementsAddress)/details"
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "place_id": placeId,
             "source": source,
             "locale": locale,
@@ -361,6 +366,9 @@ extension STPAPIClient {
             "session_token": sessionToken,
             "client_type": "mobile",
         ]
+        if let apiKey {
+            parameters["api_key"] = apiKey
+        }
         return try await APIRequest<DetailsResponse>.post(
             with: self,
             endpoint: endpoint,

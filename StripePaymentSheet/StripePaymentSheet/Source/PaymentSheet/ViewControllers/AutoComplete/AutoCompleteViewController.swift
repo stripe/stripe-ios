@@ -314,7 +314,8 @@ extension AutoCompleteViewController: ElementDelegate {
                 let response = try await configuration.apiClient.autocomplete(
                     searchText: query,
                     countryCodes: countryCodes,
-                    sessionToken: sessionToken
+                    sessionToken: sessionToken,
+                    apiKey: configuration.autocompleteApiKey
                 )
                 guard !Task.isCancelled else { return }
                 self.setResults(response.suggestions, source: response.source)
@@ -392,7 +393,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         debounceTask?.cancel()
         autocompleteTask?.cancel()
-        results[indexPath.row].asAddress(apiClient: configuration.apiClient, source: currentSource, sessionToken: sessionToken) { [weak self] address in
+        results[indexPath.row].asAddress(apiClient: configuration.apiClient, source: currentSource, sessionToken: sessionToken, apiKey: configuration.autocompleteApiKey) { [weak self] address in
             DispatchQueue.main.async {
                 self?.delegate?.didSelectAddress(address)
             }

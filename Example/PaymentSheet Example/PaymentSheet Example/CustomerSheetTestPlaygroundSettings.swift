@@ -192,6 +192,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
     var cardBrandAcceptance: CardBrandAcceptance
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
     var useAutocompleteEndpoints: UseAutocompleteEndpoints
+    var autocompleteApiKey: String?
 
     // For testing purposes only; keys should typically not be defined on the client
     var customSecretKey: String?
@@ -221,6 +222,7 @@ public struct CustomerSheetTestPlaygroundSettings: Codable, Equatable {
                                                    cardBrandAcceptance: .all,
                                                    opensCardScannerAutomatically: .off,
                                                    useAutocompleteEndpoints: .off,
+                                                   autocompleteApiKey: nil,
                                                    customSecretKey: nil,
                                                    customPublishableKey: nil)
     }

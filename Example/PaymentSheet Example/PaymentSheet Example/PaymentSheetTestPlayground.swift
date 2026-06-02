@@ -76,6 +76,11 @@ struct PaymentSheetTestPlayground: View {
         SearchableSettingView(setting: $playgroundController.settings.opensCardScannerAutomatically, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.termsDisplay, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.useAutocompleteEndpoints, searchText: searchText)
+        SearchableView(searchableName: "Autocomplete API Key", searchText: searchText) {
+            TextField("Autocomplete API Key", text: autocompleteApiKeyBinding)
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
+        }
     }
 
     var body: some View {
@@ -424,6 +429,14 @@ struct PaymentSheetTestPlayground: View {
             return playgroundController.settings.supportedPaymentMethods ?? ""
         } set: { newString in
             playgroundController.settings.supportedPaymentMethods = newString
+        }
+    }
+
+    var autocompleteApiKeyBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.autocompleteApiKey ?? ""
+        } set: { newString in
+            playgroundController.settings.autocompleteApiKey = newString.isEmpty ? nil : newString
         }
     }
 
