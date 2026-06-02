@@ -123,7 +123,7 @@ extension AddressSuggestion: AddressSearchResult {
         }
         Task { @MainActor in
             do {
-                completion(try await apiClient.details(placeId: placeId, source: source, mainText: title, sessionToken: sessionToken).address)
+                completion(try await apiClient.details(placeId: placeId, source: source, displayTitle: title, sessionToken: sessionToken).address)
             } catch {
                 completion(nil)
             }
@@ -176,19 +176,14 @@ class DetailsResponse: NSObject {
     /// The pre-filled address components.
     let address: PaymentSheet.Address
 
-    /// The source of the details response (e.g. "google")
-    let source: String
-
     /// The raw API response used to create this object.
     let allResponseFields: [AnyHashable: Any]
 
     private init(
         address: PaymentSheet.Address,
-        source: String,
         allResponseFields: [AnyHashable: Any]
     ) {
         self.address = address
-        self.source = source
         self.allResponseFields = allResponseFields
     }
 }
@@ -197,8 +192,7 @@ class DetailsResponse: NSObject {
 extension DetailsResponse: STPAPIResponseDecodable {
     static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
-              let addressDict = dict["address"] as? [AnyHashable: Any],
-              let source = dict["source"] as? String
+              let addressDict = dict["address"] as? [AnyHashable: Any]
         else {
             return nil
         }
@@ -214,7 +208,6 @@ extension DetailsResponse: STPAPIResponseDecodable {
 
         return DetailsResponse(
             address: address,
-            source: source,
             allResponseFields: dict
         ) as? Self
     }

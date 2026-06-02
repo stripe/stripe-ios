@@ -343,13 +343,13 @@ extension STPAPIClient {
     ///   - placeId: The id of the autocomplete suggestion selected.
     ///   - source: The source of the autocomplete suggestion selected.
     ///   - locale: The BCP 47 language tag for the locale to use. Defaults to the device locale.
-    ///   - mainText: The main text from the autocomplete suggestion selected.
+    ///   - displayTitle: The displayed title from the autocomplete suggestion selected.
     ///   - sessionToken: The session identifier that groups the autocomplete requests together to be billed together.
     func details(
         placeId: String,
         source: String,
         locale: String = Locale.current.toLanguageTag(),
-        mainText: String,
+        displayTitle: String,
         sessionToken: String
     ) async throws -> DetailsResponse {
         let endpoint = "\(APIEndpointElementsAddress)/details"
@@ -357,7 +357,7 @@ extension STPAPIClient {
             "place_id": placeId,
             "source": source,
             "locale": locale,
-            "main_text": mainText,
+            "display_title": displayTitle,
             "session_token": sessionToken,
             "client_type": "mobile",
         ]
