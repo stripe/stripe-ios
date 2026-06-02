@@ -152,14 +152,9 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         appearance.colors?.primary ?? LinkUI.appearance.primaryButton.backgroundColor ?? LinkUI.appearance.colors.primary
     }
 
-    private var declarationLineHeight: CGFloat {
-        // based on the "20px" value in Figma
-        20 / LinkUI.font(forTextStyle: .body).pointSize
-    }
-
     private func declarationHTMLAttributes(isLink: Bool) -> [NSAttributedString.Key: Any] {
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = declarationLineHeight
+        paragraphStyle.lineHeightMultiple = 1.2
 
         return [
             .font: LinkUI.font(forTextStyle: .body),
