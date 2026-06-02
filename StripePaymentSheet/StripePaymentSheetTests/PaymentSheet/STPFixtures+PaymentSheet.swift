@@ -443,12 +443,65 @@ extension PaymentSheetLoader.LoadResult {
             paymentMethodTypes: paymentMethodTypes
         )
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let analyticsHelper = PaymentSheetAnalyticsHelper._testValue()
+        let pmTypes = paymentMethodTypes.map { PaymentSheet.PaymentMethodType.stripe(STPPaymentMethod.type(from: $0)) }
+        let promotionsHelper = PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: PaymentSheet.Configuration(),
+            paymentMethodTypes: pmTypes,
+            analyticsHelper: analyticsHelper
+        )
         return PaymentSheetLoader.LoadResult(
             intent: intent,
             elementsSession: elementsSession,
             savedPaymentMethods: savedPaymentMethods,
-            paymentMethodTypes: paymentMethodTypes.map { .stripe(STPPaymentMethod.type(from: $0)) },
+            paymentMethodTypes: pmTypes,
+            paymentMethodMessagingPromotionsHelper: promotionsHelper,
             paymentMethodOrientation: .vertical
+        )
+    }
+}
+
+extension PaymentMethodMessagingPromotionsHelper {
+    static func _testValue() -> PaymentMethodMessagingPromotionsHelper {
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        return PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: PaymentSheet.Configuration(),
+            paymentMethodTypes: [],
+            analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
+        )
+    }
+
+    static func _testValueInTreatment() -> PaymentMethodMessagingPromotionsHelper {
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let experimentsData = ExperimentsData(
+            arbId: "test_arb_id",
+            experimentAssignments: [PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        return MockPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: PaymentSheet.Configuration(),
+            paymentMethodTypes: [],
+            analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
+        )
+    }
+}
+
+private class MockPromotionsHelper: PaymentMethodMessagingPromotionsHelper {
+    override func promotion(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromotionContent? {
+        return PromotionContent(
+            promotion: "Pay in 4 interest-free payments of $12.50.",
+            learnMoreText: "See if you qualify",
+            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C&locale=en&payment_methods%5B0%5D=affirm&title=See%20if%20you%20qualify")!
         )
     }
 }

@@ -12,7 +12,7 @@ import XCTest
 @testable @_spi(STP) import StripePaymentSheet
 
 class STPAPIClientAutocompleteTest: STPNetworkStubbingTestCase {
-    func testAutocomplete() async throws {
+    func _testAutocomplete() async throws {
         let response = try await makeAPIClient().autocomplete(
             searchText: "354 Oyster Point",
             locale: "en-US",

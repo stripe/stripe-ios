@@ -80,14 +80,16 @@ extension Checkout.CurrencySelectorView {
 
         /// Controls what content is displayed in each currency option's label.
         public enum LabelContent {
+            /// Automatically determines the best display based on the purchase type.
+            case automatic
             /// Displays only the currency code (e.g. "USD").
             case currencyCode
             /// Displays the formatted amount (e.g. "$12.00").
             case amount
         }
 
-        /// Controls what is displayed in each currency option's label. Default is `.currencyCode`.
-        public var labelContent: LabelContent = .currencyCode
+        /// Controls what is displayed in each currency option's label. Default is `.automatic`.
+        public var labelContent: LabelContent = .automatic
 
         /// Creates an appearance with default values.
         public init() {}

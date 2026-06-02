@@ -5,7 +5,9 @@
 //  Created by Yuki Tokuhiro on 6/4/24.
 //
 
-import StripeCoreTestUtils
+@_spi(STP) import StripeCore
+@_spi(STP) import StripeCoreTestUtils
+@_spi(STP) import StripePayments
 @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) import StripeUICore
 import XCTest
@@ -23,25 +25,61 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
     }
 
     func testInitialScreen() {
+        let analyticsClientV2 = MockAnalyticsClientV2()
+        let arbId = "arb_pmm_123"
+        let experimentsData = ExperimentsData(
+            arbId: arbId,
+            experimentAssignments: [
+                PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment,
+            ],
+            allResponseFields: [:]
+        )
+        let analyticsHelper = PaymentSheetAnalyticsHelper(
+            integrationShape: .complete,
+            configuration: PaymentSheet.Configuration(),
+            analyticsClient: STPTestingAnalyticsClient(),
+            analyticsClientV2: analyticsClientV2
+        )
+
         func makeViewController(loadResult: PaymentSheetLoader.LoadResult) -> PaymentSheetVerticalViewController {
             return PaymentSheetVerticalViewController(
                 configuration: ._testValue_MostPermissive(),
                 loadResult: loadResult,
                 isFlowController: false,
-                analyticsHelper: ._testValue(),
+                analyticsHelper: analyticsHelper,
                 previousPaymentOption: nil
             )
         }
         // TODO: Test other things like `selectedPaymentOption`
         // If there are saved PMs, always show the list, even if there's only one other PM
+        let elementsSession = STPElementsSession._testValue(experimentsData: experimentsData)
+        let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
+        let promotionsHelper = PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: PaymentSheet.Configuration(),
+            paymentMethodTypes: [.stripe(.card)],
+            analyticsHelper: analyticsHelper
+        )
+        promotionsHelper.fetchData()
         let savedPMsLoadResult = PaymentSheetLoader.LoadResult(
-            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
-            elementsSession: ._testCardValue(),
+            intent: intent,
+            elementsSession: elementsSession,
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: promotionsHelper,
             paymentMethodOrientation: .vertical
         )
         XCTAssertTrue(makeViewController(loadResult: savedPMsLoadResult).children.first is VerticalPaymentMethodListViewController)
+
+        // Verify PMM experiment exposure was logged exactly once with correct params
+        let exposurePayloads = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName)
+        XCTAssertEqual(exposurePayloads.count, 1)
+        if let payload = exposurePayloads.first {
+            XCTAssertEqual(payload["arb_id"] as? String, arbId)
+            XCTAssertEqual(payload["experiment_retrieved"] as? String, PaymentMethodMessagingPromotionsExperiment.experimentName)
+            XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
+        }
 
         // If there are no saved payment methods and we have only one payment method and it collects user input, display the form directly
         let formDirectlyResult = PaymentSheetLoader.LoadResult(
@@ -49,6 +87,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         XCTAssertTrue(makeViewController(loadResult: formDirectlyResult).children.first is PaymentMethodFormViewController)
@@ -59,6 +98,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         XCTAssertTrue(makeViewController(loadResult: onlyOnePM).children.first is VerticalPaymentMethodListViewController)
@@ -69,6 +109,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         XCTAssertTrue(makeViewController(loadResult: multiplePMs).children.first is VerticalPaymentMethodListViewController)
@@ -79,6 +120,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         XCTAssertTrue(makeViewController(loadResult: onePMAndLink).children.first is VerticalPaymentMethodListViewController)
@@ -89,6 +131,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             elementsSession: ._testCardValue(),
             savedPaymentMethods: [._testCard()],
             paymentMethodTypes: [.stripe(.card)],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         XCTAssertTrue(makeViewController(loadResult: onePMAndApplePay).children.first is VerticalPaymentMethodListViewController)
@@ -102,6 +145,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
                 elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
                 savedPaymentMethods: hasSavedPM ? [._testCard()] : [],
                 paymentMethodTypes: [.stripe(.card)],
+                paymentMethodMessagingPromotionsHelper: ._testValue(),
                 paymentMethodOrientation: .vertical
             )
             return PaymentSheetVerticalViewController(
@@ -155,6 +199,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
                 elementsSession: ._testValue(paymentMethodTypes: ["card"], isLinkPassthroughModeEnabled: true),
                 savedPaymentMethods: hasSavedPM ? [savedPM] : [],
                 paymentMethodTypes: [.stripe(.card)],
+                paymentMethodMessagingPromotionsHelper: ._testValue(),
                 paymentMethodOrientation: .vertical
             )
             return PaymentSheetVerticalViewController(
