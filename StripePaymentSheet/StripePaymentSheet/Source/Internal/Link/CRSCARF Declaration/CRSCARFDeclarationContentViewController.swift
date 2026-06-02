@@ -27,7 +27,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         return navigationBar
     }()
 
-    let requiresFullScreen: Bool = false
+    let requiresFullScreen = false
 
     // MARK: - CRSCARFDeclarationContentViewController
 
@@ -177,7 +177,6 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
 
 extension CRSCARFDeclarationContentViewController: UITextViewDelegate {
 
-#if !os(visionOS)
     func textView(
         _ textView: UITextView,
         shouldInteractWith URL: URL,
@@ -190,12 +189,13 @@ extension CRSCARFDeclarationContentViewController: UITextViewDelegate {
 
         if ["http", "https"].contains(URL.scheme?.lowercased()) {
             let safariViewController = SFSafariViewController(url: URL)
+            #if !os(visionOS)
             safariViewController.dismissButtonStyle = .close
+            #endif
             safariViewController.modalPresentationStyle = .overFullScreen
             present(safariViewController, animated: true)
         }
 
         return false
     }
-#endif
 }
