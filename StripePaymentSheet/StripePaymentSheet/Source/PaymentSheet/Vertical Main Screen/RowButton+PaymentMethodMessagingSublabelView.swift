@@ -70,9 +70,9 @@ extension RowButton {
                 // PMM data is not always available on initial load/display of a RowButton, so we check for it right before attempting to display
                 let promotionContent = promotionsHelper.promotion(for: paymentMethodType)
                 if let promotionContent {
+                    // In this case we want until expand() to log the analytic so that we avoid repeat logging when the row is simply re-selected
                     applyContent(promotionContent)
                     setExpanded(true)
-                    promotionsHelper.logDisplayedAnalytic(displayedSuccessfully: true)
                 } else {
                     promotionsHelper.logDisplayedAnalytic(displayedSuccessfully: false)
                 }
@@ -96,6 +96,9 @@ extension RowButton {
         }
 
         private func expand() {
+            // Log analytic
+            promotionsHelper.logDisplayedAnalytic(displayedSuccessfully: true)
+
             promotionTextView.alpha = 0
 
             UIView.animate(withDuration: sublabelIsHiddenAnimationDuration) { [self] in
