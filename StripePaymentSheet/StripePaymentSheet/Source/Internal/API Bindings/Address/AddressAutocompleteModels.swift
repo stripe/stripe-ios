@@ -113,20 +113,20 @@ extension AddressSuggestion: AddressSearchResult {
     func asAddress(apiClient: STPAPIClient?, source: String?, sessionToken: String?, completion: @escaping (PaymentSheet.Address?) -> Void) {
         if let address {
             completion(address)
-            return
-        }
-        guard let apiClient,
+        } else {
+            guard let apiClient,
                   let placeId,
                   let source,
                   let sessionToken else {
-                      completion(nil)
-                      return
-        }
-        Task { @MainActor in
-            do {
-                completion(try await apiClient.details(placeId: placeId, source: source, displayTitle: title, sessionToken: sessionToken).address)
-            } catch {
                 completion(nil)
+                return
+            }
+            Task { @MainActor in
+                do {
+                    completion(try await apiClient.details(placeId: placeId, source: source, displayTitle: title, sessionToken: sessionToken).address)
+                } catch {
+                    completion(nil)
+                }
             }
         }
     }
