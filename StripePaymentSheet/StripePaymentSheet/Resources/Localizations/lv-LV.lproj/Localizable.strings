@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Pievienot";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (ietver %4$@%% konvertēšanas maksu).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Pievienot ASV bankas kontu";
 
 "Add a card" = "Pievienot karti";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Pievienot jaunu maksājuma veidu";
 
 "Add your payment information" = "Pievienot maksājuma informāciju";
-
-"Agree and accept" = "Piekrītu un pieņemu";
 
 "Approve payment" = "Apstiprināt maksājumu";
 

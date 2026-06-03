@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Dodaj";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (vključuje %4$@%% provizijo za menjavo).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Dodaj bančni račun v ZDA";
 
 "Add a card" = "Dodajte kartico";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Dodaj nov način plačila";
 
 "Add your payment information" = "Dodajte podatke o plačilu";
-
-"Agree and accept" = "Strinjam se in sprejemam";
 
 "Approve payment" = "Odobrite plačilo";
 

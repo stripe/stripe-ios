@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Tilføj";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (inkluderer vekselgebyr på %4$@%%).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Tilføj amerikansk bankkonto";
 
 "Add a card" = "Tilføj et kort";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Tilføj ny betalingsmetode";
 
 "Add your payment information" = "Tilføj dine betalingsoplysninger";
-
-"Agree and accept" = "Acceptér";
 
 "Approve payment" = "Godkend betaling";
 

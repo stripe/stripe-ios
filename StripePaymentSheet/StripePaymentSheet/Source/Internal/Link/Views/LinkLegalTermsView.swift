@@ -70,6 +70,7 @@ final class LinkLegalTermsView: UIView {
         textView.isEditable = false
         textView.backgroundColor = .clear
         textView.attributedText = formattedLegalText()
+        textView.accessibilityLabel = brand.accessibilityText(from: textView.attributedText?.string ?? "")
         textView.textColor = .linkTextTertiary
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
@@ -106,6 +107,7 @@ final class LinkLegalTermsView: UIView {
         }
         self.brand = brand
         textView.attributedText = formattedLegalText()
+        textView.accessibilityLabel = brand.accessibilityText(from: textView.attributedText?.string ?? "")
     }
 
     private func formattedLegalText() -> NSAttributedString? {
@@ -136,14 +138,19 @@ final class LinkLegalTermsView: UIView {
         }
 
         let leadingIcon: NSTextAttachment? = {
-            guard mode == .checkboxWithDefaultOptIn else {
+            guard !isStandalone else {
                 return nil
             }
-            return LinkUI.inlineLogo(
-                withScale: 1.3,
-                forFont: LinkUI.font(forTextStyle: .caption),
-                brand: brand
-            )
+            switch mode {
+            case .checkbox, .checkboxWithDefaultOptIn, .textFieldsOnlyEmailFirst, .textFieldsOnlyPhoneFirst:
+                return LinkUI.inlineLogo(
+                    withScale: 1.3,
+                    forFont: LinkUI.font(forTextStyle: .caption),
+                    brand: brand
+                )
+            case .signupOptIn:
+                return nil
+            }
         }()
 
         let formattedString = STPStringUtils.applyLinksToString(template: string, links: links)

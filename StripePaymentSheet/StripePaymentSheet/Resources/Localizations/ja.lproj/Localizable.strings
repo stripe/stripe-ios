@@ -4,6 +4,10 @@
 
 "+ Add" = "+ 追加";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (%4$@%% の換算手数料を含む).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "アメリカの銀行口座を追加";
 
 "Add a card" = "カードを追加";
@@ -19,8 +23,6 @@
 "Add new payment method" = "新たな支払い方法を追加";
 
 "Add your payment information" = "支払い情報を追加";
-
-"Agree and accept" = "同意して承認";
 
 "Approve payment" = "支払いを承認する";
 

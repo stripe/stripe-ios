@@ -4,6 +4,10 @@
 
 "+ Add" = "+ 추가";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (%4$@%%의 환전 수수료 포함).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "미국 은행 계좌 추가";
 
 "Add a card" = "카드 추가";
@@ -19,8 +23,6 @@
 "Add new payment method" = "새 결제 방식 추가";
 
 "Add your payment information" = "결제 정보를 추가하세요.";
-
-"Agree and accept" = "동의 및 수락";
 
 "Approve payment" = "결제 승인";
 

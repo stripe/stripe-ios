@@ -18,24 +18,8 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
-        let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
+        let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
-
-        init(
-            intent: Intent,
-            elementsSession: STPElementsSession,
-            savedPaymentMethods: [STPPaymentMethod],
-            paymentMethodTypes: [PaymentSheet.PaymentMethodType],
-            paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper? = nil,
-            paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
-        ) {
-            self.intent = intent
-            self.elementsSession = elementsSession
-            self.savedPaymentMethods = savedPaymentMethods
-            self.paymentMethodTypes = paymentMethodTypes
-            self.paymentMethodMessagingPromotionsHelper = paymentMethodMessagingPromotionsHelper
-            self.paymentMethodOrientation = paymentMethodOrientation
-        }
     }
 
     enum IntegrationShape {
@@ -157,7 +141,7 @@ final class PaymentSheetLoader {
                 if isLinkEnabled {
                     LinkAccountContext.shared.account = linkAccount
                 }
-                Self.logLinkExperimentExposures(
+                Self.logExperimentExposures(
                     elementsSession: elementsSession,
                     configuration: configuration,
                     linkAccount: linkAccount,
@@ -215,12 +199,14 @@ final class PaymentSheetLoader {
             let prefetchedSavedPaymentMethods = try await prefetchedSavedPaymentMethodsTask.value
             let filteredSavedPaymentMethods = filterSavedPaymentMethods(intent: intent, elementsSession: elementsSession, configuration: configuration, prefetchedSPMs: prefetchedSavedPaymentMethods, loadTimings: loadTimings)
 
-            let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(elementsSession: elementsSession)
-            paymentMethodMessagingPromotionsHelper.prefetchIfNeeded(
+            let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(
+                elementsSession: elementsSession,
                 intent: intent,
                 configuration: configuration,
-                paymentMethodTypes: paymentMethodTypes
+                paymentMethodTypes: paymentMethodTypes,
+                analyticsHelper: analyticsHelper
             )
+            paymentMethodMessagingPromotionsHelper.fetchData()
 
             let paymentMethodOrientation = configuration.resolveLayout(
                 elementsSession: elementsSession,
@@ -237,21 +223,6 @@ final class PaymentSheetLoader {
                 elementsSession: elementsSession,
                 defaultPaymentMethod: elementsSession.customer?.getDefaultPaymentMethod()
             )
-
-            if elementsSession.customer != nil {
-                // Log card art experiment exposure only for CustomerSession
-                if let cardArtExperiment = CardArtExperiment.create(
-                    elementsSession: elementsSession,
-                    configuration: configuration,
-                    analyticsHelper: analyticsHelper,
-                    paymentMethodTypes: paymentMethodTypes,
-                    savedPaymentMethods: filteredSavedPaymentMethods,
-                    paymentMethodOrientation: paymentMethodOrientation,
-                    selectedPaymentOption: paymentOptionsViewModels.stp_boundSafeObject(at: defaultSelectedIndex)
-                ) {
-                    analyticsHelper.logExposure(experiment: cardArtExperiment)
-                }
-            }
 
             // Temporary band-aid for pre-loading card art: fire-and-forget fetch to warm the in-meory cache for PS.FC
             // and embedded PaymentOptionDisplayData APIs.
@@ -381,7 +352,7 @@ final class PaymentSheetLoader {
     }
 
     @MainActor
-    private static func logLinkExperimentExposures(
+    private static func logExperimentExposures(
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         linkAccount: PaymentSheetLinkAccount?,
@@ -391,32 +362,35 @@ final class PaymentSheetLoader {
             guard let arbId = elementsSession.experimentsData?.arbId else {
                 return
             }
-            let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
+            analyticsHelper.logExposure(experiment: LinkGlobalHoldback(
                 arbId: arbId,
                 session: elementsSession,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
-            )
-            analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
-
-            let linkGlobalHoldbackAAExperiment = LinkGlobalHoldbackAA(
+            ))
+            analyticsHelper.logExposure(experiment: LinkGlobalHoldbackAA(
                 arbId: arbId,
                 session: elementsSession,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
-            )
-            analyticsHelper.logExposure(experiment: linkGlobalHoldbackAAExperiment)
-
-            let linkAbTestExperiment = LinkABTest(
+            ))
+            analyticsHelper.logExposure(experiment: LinkABTest(
                 arbId: arbId,
                 session: elementsSession,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
-            )
-            analyticsHelper.logExposure(experiment: linkAbTestExperiment)
+            ))
+            analyticsHelper.logExposure(experiment: ConnectionsFCLiteVsNative(
+                arbId: arbId,
+                session: elementsSession
+            ))
+            analyticsHelper.logExposure(experiment: ConnectionsFCLiteVsNativeAA(
+                arbId: arbId,
+                session: elementsSession
+            ))
         }
     }
 

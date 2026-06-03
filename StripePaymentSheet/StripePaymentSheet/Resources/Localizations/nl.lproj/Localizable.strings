@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Toevoegen";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (inclusief %4$@%% conversievergoeding).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Amerikaanse bankrekening toevoegen";
 
 "Add a card" = "Een kaart toevoegen";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Nieuwe betaalmethode toevoegen";
 
 "Add your payment information" = "Je betaalgegevens toevoegen";
-
-"Agree and accept" = "Akkoord en accepteren";
 
 "Approve payment" = "Betaling goedkeuren";
 

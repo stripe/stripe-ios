@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Add";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Add US bank account";
 
 "Add a card" = "Add a card";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Add new payment method";
 
 "Add your payment information" = "Add your payment information";
-
-"Agree and accept" = "Agree and accept";
 
 "Approve payment" = "Approve payment";
 

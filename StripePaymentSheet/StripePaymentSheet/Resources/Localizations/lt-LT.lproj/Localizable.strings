@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Pridėti";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (įskaitant %4$@%% konvertavimo mokestį).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Pridėti JAV banko sąskaitą";
 
 "Add a card" = "Pridėti kortelę";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Pridėti naują mokėjimo būdą";
 
 "Add your payment information" = "Pridėkite mokėjimo informaciją";
-
-"Agree and accept" = "Sutinku ir priimu";
 
 "Approve payment" = "Patvirtinti mokėjimą";
 

@@ -213,13 +213,16 @@ class PaymentMethodFormViewController: UIViewController {
         }
 
         // Create a basic AddressViewController.Configuration for the autocomplete
-        let addressConfiguration = AddressViewController.Configuration(
+        var addressConfiguration = AddressViewController.Configuration(
             appearance: configuration.appearance
         )
+        addressConfiguration.apiClient = configuration.apiClient
+        addressConfiguration.useAutocompleteEndpoints = configuration.useAutocompleteEndpoints
 
         let autoCompleteViewController = AutoCompleteViewController(
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
+            selectedCountry: addressSectionElement.selectedCountryCode,
             addressSpecProvider: AddressSpecProvider.shared,
             verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
         )

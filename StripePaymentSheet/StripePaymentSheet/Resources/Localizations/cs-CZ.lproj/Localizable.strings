@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Přidat";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (včetně %4$@%% poplatku za převod).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Přidat bankovní účet v USA";
 
 "Add a card" = "Přidat kartu";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Nová platební metoda";
 
 "Add your payment information" = "Přidejte své platební údaje";
-
-"Agree and accept" = "Souhlasím a přijímám";
 
 "Approve payment" = "Schválit platbu";
 

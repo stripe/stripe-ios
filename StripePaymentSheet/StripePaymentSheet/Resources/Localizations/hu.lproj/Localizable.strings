@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Hozzáadás";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (%4$@%% konverziós díjat tartalmaz).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Amerikai bankszámla hozzáadása";
 
 "Add a card" = "Kártya hozzáadása";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Új fizetési mód hozzáadása";
 
 "Add your payment information" = "Fizetési adatok megadása";
-
-"Agree and accept" = "Beleegyezés és elfogadás";
 
 "Approve payment" = "Fizetés jóváhagyása";
 

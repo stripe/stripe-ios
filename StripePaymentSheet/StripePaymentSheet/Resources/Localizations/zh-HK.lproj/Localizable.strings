@@ -4,6 +4,10 @@
 
 "+ Add" = "+ 添加";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "%1$@ = %2$@ %3$@（包含 %4$@%% 的兌換費）。";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "添加美國銀行賬戶";
 
 "Add a card" = "添加卡";
@@ -19,8 +23,6 @@
 "Add new payment method" = "添加新支付方式";
 
 "Add your payment information" = "添加您的支付資訊";
-
-"Agree and accept" = "同意並接受";
 
 "Approve payment" = "批准付款";
 
@@ -56,7 +58,7 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "繼續操作即表示您同意按照<terms>這些條款</terms>授權付款。";
 
-"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "繼續操作即表示，您同意按照 %2$@ <terms>條款</terms>和<privacy>私隱政策</privacy>，以供未來在 %1$@ 和 <link>%2$@</link> 購物時使用而儲存您的資訊。";
+"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "繼續操作即表示，閣下同意按照 %2$@ <terms>條款</terms>和<privacy>私隱政策</privacy>儲存閣下的資訊，以便未來在 %1$@ 和 <link>%2$@</link> 購物時使用。";
 
 "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "繼續即表示您同意儲存您的個人資料，以便將來根據 <link>Link</link> <terms>條款</terms>與<privacy>私隱政策</privacy> 透過 %@ 和 Link 購物";
 
@@ -68,7 +70,7 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "繼續操作，即表示您授權 %1$@ 按照 %2$@ 的條款從您的 Cash App 賬戶中扣取該款項及未來的款項，直至撤銷授權。您可以隨時在 Cash App 設置中進行修改。";
 
-"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 %@ 即表示您同意<terms>條款</terms>和<privacy>私隱政策</privacy>。";
+"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 %@ 即表示閣下同意<terms>條款</terms>和<privacy>私隱政策</privacy>。";
 
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "加入 Link 即表示您同意<terms>條款</terms>和<privacy>隱私政策</privacy>。";
 
@@ -80,13 +82,13 @@
 
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "提供您的銀行卡資訊，即表示您允許 %@ 按照他們的條款從您的銀行卡扣取未來款項。";
 
-"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的電郵地址即表示，您同意按照 %1$@ <terms>條款</terms>和<privacy>隱私政策</privacy>建立 %1$@ 帳戶，並將您的支付資訊儲存至 %1$@。";
+"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供電郵地址即表示，閣下同意按照 %1$@ <terms>條款</terms>和<privacy>私隱政策</privacy>建立 %1$@ 賬戶，並將閣下的支付資訊儲存至 %1$@。";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的電郵地址，即表示您同意按照 Link <terms>條款</terms>和<privacy>私隱政策</privacy>建立 Link 賬戶並將您的支付資訊儲存到 Link。";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "提供您的支付方式並確認該付款即表示您授權 (A) %@ 與我們的支付服務者 Stripe 向您的銀行發送對您的賬戶進行扣款的指令以及 (B) 您的銀行按照這些指令對您的賬戶進行扣款。根據您與您的銀行協議的條款和條件，您有權從您的銀行得到退款。退款必須在 8 周內申請，從您的賬戶被扣款之日起算。您的權利在結單上有解釋，可從您的銀行獲取。您同意提前 2 天接收後續扣款的通知。";
 
-"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的電話號碼即表示，您同意按照 %1$@ <terms>條款</terms>和<privacy>隱私政策</privacy>建立 %1$@ 帳戶，並將您的支付資訊儲存至 %1$@。";
+"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供電話號碼即表示，閣下同意按照 %1$@ <terms>條款</terms>和<privacy>私隱政策</privacy>建立 %1$@ 賬戶，並將閣下的付款資訊儲存至 %1$@。";
 
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "提供您的手機號碼，即表示您同意按照 Link <terms>條款</terms>和<privacy>私隱政策</privacy>建立 Link 賬戶並將您的支付資訊儲存到 Link。";
 
@@ -130,7 +132,7 @@
 
 "Continue another way" = "用另一方式繼續";
 
-"Create an account with %@ for faster checkout across the web" = "透過 %@ 建立帳戶，在網上各處享受更快捷的結帳體驗";
+"Create an account with %@ for faster checkout across the web" = "透過 %@ 建立賬戶，在網上各處享受更快捷的結賬體驗";
 
 "Create an account with Link for faster checkout across the web" = "使用 Link 建立帳戶，以便在網站上更快結帳";
 
@@ -218,7 +220,7 @@
 
 "Pay faster at %@ and thousands of businesses." = "在 %@ 及数千商家那里更快支付。";
 
-"Pay faster everywhere %@ is accepted." = "在任何接受 %@ 的地方享受更快捷的支付體驗。";
+"Pay faster everywhere %@ is accepted." = "在任何接受 %@ 的地方享受更快捷的付款體驗。";
 
 "Pay faster everywhere Link is accepted." = "在接受 Link 的任何地方可以更快速支付。";
 
@@ -226,7 +228,7 @@
 
 "Pay over time with Affirm" = "用 Affirm 慢慢支付";
 
-"Pay with %@" = "使用 %@ 進行支付";
+"Pay with %@" = "利用 %@ 付款";
 
 "Pay with Link" = "用 Link 支付";
 
@@ -272,7 +274,7 @@
 
 "Save for future payments" = "儲存以用於未來的付款";
 
-"Save my info for faster checkout with %@" = "儲存資訊，以便透過 %@ 更快結帳";
+"Save my info for faster checkout with %@" = "儲存我的資訊，以便儲存 %@ 更快結賬";
 
 "Save my info for faster checkout with Link" = "保存我的資訊，用 Link 更快結賬";
 
@@ -282,7 +284,7 @@
 
 "Save your bank account in just a few steps." = "幾步儲存您的銀行賬戶。";
 
-"Save your info for secure 1-click checkout with %@" = "儲存您的資訊，以便透過 %@ 享受安全的一鍵結帳體驗";
+"Save your info for secure 1-click checkout with %@" = "儲存閣下的資訊，以便透過 %@ 享受安全的一鍵結賬體驗";
 
 "Save your info for secure 1-click checkout with Link" = "儲存您的資訊，用 Link 安全地一鍵結賬";
 

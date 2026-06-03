@@ -22,6 +22,24 @@ import Foundation
         }
     }
 
+    @_spi(STP) public var accessibilityDisplayName: String {
+        switch self {
+        case .link, .unparsable:
+            return "Link"
+        case .onelink:
+            return "One-link"
+        }
+    }
+
+    @_spi(STP) public func accessibilityText(from text: String) -> String {
+        guard self == .onelink else {
+            return text
+        }
+        return text
+            .replacingOccurrences(of: displayName, with: accessibilityDisplayName)
+            .replacingOccurrences(of: displayName.lowercased(), with: accessibilityDisplayName)
+    }
+
     @_spi(STP) public var websiteURL: URL {
         switch self {
         case .link, .unparsable:

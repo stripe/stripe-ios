@@ -49,7 +49,7 @@ import UIKit
         if paymentMethodId == nil { return nil }
 
         return PaymentOptionDisplayData(
-            image: resolvedLinkBrand.paymentSheetLogoImage,
+            image: Image.paymentSheetLinkLogoImage,
             label: resolvedLinkBrand.displayName
         )
     }

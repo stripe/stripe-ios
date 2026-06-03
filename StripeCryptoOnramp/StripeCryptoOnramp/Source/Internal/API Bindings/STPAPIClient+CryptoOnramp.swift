@@ -157,10 +157,10 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
-    /// Retrieves the CRS/CARF declaration text for the current Link user.
+    /// Retrieves the CRS/CARF declaration HTML for the current Link user.
     /// - Parameters:
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    /// - Returns: An instance of `CRSCARFDeclaration` containing the declaration text and version.
+    /// - Returns: An instance of `CRSCARFDeclaration` containing the declaration HTML and version.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     func retrieveCRSCARFDeclaration(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> CRSCARFDeclaration {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {

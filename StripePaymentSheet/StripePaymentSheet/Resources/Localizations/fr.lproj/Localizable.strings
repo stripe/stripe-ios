@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Ajouter";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 [ %1$s] = [ %2$s] [ %3$s] (inclut [ %4$s] %% des frais de conversion).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Ajouter un compte bancaire américain";
 
 "Add a card" = "Ajouter une carte bancaire";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Ajouter un moyen de paiement";
 
 "Add your payment information" = "Ajoutez vos informations de paiement";
-
-"Agree and accept" = "Accepter";
 
 "Approve payment" = "Autoriser le paiement";
 

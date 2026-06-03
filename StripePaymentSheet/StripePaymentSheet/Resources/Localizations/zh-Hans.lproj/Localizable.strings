@@ -4,6 +4,10 @@
 
 "+ Add" = "+ 添加";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@（含 %4$@%% 转换费）。";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "添加美国银行账户";
 
 "Add a card" = "添加卡";
@@ -19,8 +23,6 @@
 "Add new payment method" = "添加新支付方式";
 
 "Add your payment information" = "添加您的支付信息";
-
-"Agree and accept" = "同意并接受";
 
 "Approve payment" = "批准付款";
 

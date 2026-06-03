@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Afegir";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (inclou una comissió de conversió del %4$@%%).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Afegeix un compte bancari dels EUA";
 
 "Add a card" = "Afegir una targeta";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Afegir nou mètode de pagament";
 
 "Add your payment information" = "Afegir la teva informació de pagament";
-
-"Agree and accept" = "Permet i accepta";
 
 "Approve payment" = "Aprova el pagament";
 

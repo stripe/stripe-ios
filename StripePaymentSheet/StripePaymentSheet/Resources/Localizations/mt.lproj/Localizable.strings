@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Żid";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (inkluż tariffa tal-konverżjoni %4$@%%).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Żid kont tal-bank ibbażat ġewwa l-Istati Uniti tal-Amerka";
 
 "Add a card" = "Żid karta";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Żid metodu tal-ħlas ġdid";
 
 "Add your payment information" = "Żid l-informazzjoni dwar il-pagament tiegħek";
-
-"Agree and accept" = "Aqbel u aċċetta";
 
 "Approve payment" = "Approva l-pagament";
 
