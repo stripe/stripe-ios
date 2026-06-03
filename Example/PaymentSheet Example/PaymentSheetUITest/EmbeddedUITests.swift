@@ -86,7 +86,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
             .prefix(7)
         XCTAssertEqual(
             aliPayAnalytics,
-            ["mc_embedded_update_started", "mc_load_started", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown"]
+            ["mc_embedded_update_started", "mc_load_started", "payment_method_messaging_fetch_begin", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped"]
         )
 
         // ...and *updating* to a SetupIntent...
