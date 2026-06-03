@@ -72,6 +72,8 @@ final class TwoOptionSelectorView: UIView {
     private var rightButton = UIButton(type: .custom)
 
     private var trackPadding: CGFloat { appearance.contentVerticalPadding }
+    private static let defaultContentHeight: CGFloat = 26
+    private static let pillInset: CGFloat = 3
 
     private var indicatorLeadingConstraint: NSLayoutConstraint?
     private var indicatorTrailingConstraint: NSLayoutConstraint?
@@ -105,9 +107,9 @@ final class TwoOptionSelectorView: UIView {
         let bw = appearance.borderWidth
         let maxTrack = max((height - bw) / 2, 0)
         let track = min(appearance.cornerRadius, maxTrack)
-        let innerH = height - 2 * trackPadding
-        let maxPill = innerH / 2
-        let pill = max(0, min(track - trackPadding, maxPill))
+        let pillHeight = height - 2 * trackPadding
+        let maxPill = pillHeight / 2
+        let pill = min(max(track - Self.pillInset, 0), maxPill)
         return (track, pill)
     }
 
@@ -149,6 +151,10 @@ final class TwoOptionSelectorView: UIView {
             trailing,
             buttonsStackView.bottomAnchor.constraint(equalTo: trackView.bottomAnchor, constant: -trackPadding),
         ])
+
+        let heightConstraint = trackView.heightAnchor.constraint(equalToConstant: Self.defaultContentHeight + 2 * trackPadding)
+        heightConstraint.priority = UILayoutPriority(999)
+        heightConstraint.isActive = true
 
         captionLabel.font = appearance.scaledFont(for: appearance.font, style: .caption1)
         captionLabel.textColor = appearance.captionColor
