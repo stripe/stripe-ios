@@ -282,9 +282,9 @@ class AutoCompleteViewController: UIViewController {
 extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
         let query = autoCompleteLine.text
-        guard query != lastFetchedQuery else { return }
-        lastFetchedQuery = query
         if configuration.useAutocompleteEndpoints {
+            guard query != lastFetchedQuery else { return }
+            lastFetchedQuery = query
             guard query.count >= 2 else {
                 debounceTask?.cancel()
                 autocompleteTask?.cancel()

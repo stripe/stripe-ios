@@ -113,6 +113,7 @@ extension AddressSuggestion: AddressSearchResult {
     func asAddress(apiClient: STPAPIClient?, source: String?, sessionToken: String?, completion: @escaping (PaymentSheet.Address?) -> Void) {
         if let address {
             completion(address)
+            return
         }
         guard let apiClient,
                   let placeId,

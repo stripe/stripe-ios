@@ -270,7 +270,7 @@ class AddressAutocompleteModelTests: XCTestCase {
 
     // MARK: - AddressSuggestion.asAddress
 
-    func testAsAddress_withEmbeddedAddress_deliversAddress() {
+    func testAsAddress_withEmbeddedAddress_deliversAddressExactlyOnce() {
         let dict = makeSuggestionDict(
             title: "354 Oyster Point Blvd",
             subtitle: "South San Francisco, CA",
@@ -280,12 +280,15 @@ class AddressAutocompleteModelTests: XCTestCase {
         )
         let suggestion = AddressSuggestion.decodedObject(fromAPIResponse: dict)!
 
-        var delivered: [PaymentSheet.Address?] = []
+        var callCount = 0
+        var result: PaymentSheet.Address?
         suggestion.asAddress(apiClient: nil, source: nil, sessionToken: nil) {
-            delivered.append($0)
+            callCount += 1
+            result = $0
         }
 
-        XCTAssertTrue(delivered.contains { $0?.line1 == "354 Oyster Point Boulevard" })
+        XCTAssertEqual(callCount, 1)
+        XCTAssertEqual(result?.line1, "354 Oyster Point Boulevard")
     }
 
     func testAsAddress_withNoEmbeddedAddress_nilApiClient_returnsNil() {

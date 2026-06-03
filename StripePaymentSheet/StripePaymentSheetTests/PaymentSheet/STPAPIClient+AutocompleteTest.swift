@@ -35,7 +35,7 @@ class STPAPIClientAutocompleteTest: STPNetworkStubbingTestCase {
                 displayTitle: first.title,
                 sessionToken: sessionToken
             )
-            XCTAssertNotNil(detailsResponse.address)
+            XCTAssertNotNil(detailsResponse.address.line1)
         } else {
             XCTAssertNotNil(first.address)
         }
