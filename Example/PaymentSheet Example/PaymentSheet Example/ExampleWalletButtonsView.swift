@@ -7,19 +7,8 @@
 @_spi(STP) @_spi(SharedPaymentToken) @_spi(AppearanceAPIAdditionsPreview) import StripePaymentSheet
 import SwiftUI
 
-struct ShopPayTestingOptions {
-    var billingAddressRequired: Bool = false
-    var emailRequired: Bool = false
-    var shippingAddressRequired: Bool = true
-    var allowedShippingCountries: String = ""
-    var rejectShippingAddressChange: Bool = false
-    var rejectShippingRateChange: Bool = false
-    var simulatePaymentFailed: Bool = false
-}
-
 struct ExampleWalletButtonsContainerView: View {
     @State private var email: String = ""
-    @State private var shopId: String = "69293637654"
     @State private var linkInlineVerificationEnabled: Bool = PaymentSheet.LinkFeatureFlags.enableLinkInlineVerification
     @State private var appearance: PaymentSheet.Appearance = PaymentSheet.Appearance()
     @State private var showingAppearancePlayground = false
@@ -32,20 +21,10 @@ struct ExampleWalletButtonsContainerView: View {
     @State private var applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic
     @State private var linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic
 
-    // Shop Pay testing options
-    @State private var billingAddressRequired: Bool = false
-    @State private var emailRequired: Bool = false
-    @State private var shippingAddressRequired: Bool = true
-    @State private var allowedShippingCountries: String = ""
-    @State private var rejectShippingAddressChange: Bool = false
-    @State private var rejectShippingRateChange: Bool = false
-    @State private var simulatePaymentFailed: Bool = false
-
     // Click handler testing options
     @State private var enableClickHandler: Bool = false
     @State private var rejectApplePay: Bool = false
     @State private var rejectLink: Bool = false
-    @State private var rejectShopPay: Bool = false
 
     var body: some View {
         if #available(iOS 16.0, *) {
@@ -54,11 +33,6 @@ struct ExampleWalletButtonsContainerView: View {
                     TextField("Email", text: $email)
                         .textContentType(.emailAddress)
                         .textInputAutocapitalization(.never)
-
-                    TextField("ShopId", text: $shopId)
-                        .textContentType(.emailAddress)
-                        .textInputAutocapitalization(.never)
-                        .autocorrectionDisabled()
 
                     Toggle("Enable inline verification", isOn: $linkInlineVerificationEnabled)
                         .onChange(of: linkInlineVerificationEnabled) { newValue in
@@ -121,30 +95,11 @@ struct ExampleWalletButtonsContainerView: View {
                     }
                 }
 
-                Section("Shop Pay Testing Options") {
-                    Group {
-                        Toggle("Billing Address Required", isOn: $billingAddressRequired)
-                        Toggle("Email Required", isOn: $emailRequired)
-                        Toggle("Shipping Address Required", isOn: $shippingAddressRequired)
-
-                        TextField("Allowed Shipping Countries (comma separated)", text: $allowedShippingCountries)
-                            .textInputAutocapitalization(.never)
-                            .autocorrectionDisabled()
-                    }
-
-                    Group {
-                        Toggle("Reject Shipping Address Change", isOn: $rejectShippingAddressChange)
-                        Toggle("Reject Shipping Rate Change", isOn: $rejectShippingRateChange)
-                        Toggle("Simulate Payment Failed", isOn: $simulatePaymentFailed)
-                    }
-                }
-
                 Section("Click Handler Testing") {
                     Toggle("Enable Click Handler", isOn: $enableClickHandler)
                     if enableClickHandler {
                         Toggle("Reject Apple Pay", isOn: $rejectApplePay)
                         Toggle("Reject Link", isOn: $rejectLink)
-                        Toggle("Reject Shop Pay", isOn: $rejectShopPay)
                     }
                 }.sheet(isPresented: $showingAppearancePlayground) {
                     AppearancePlaygroundView(appearance: appearance) { updatedAppearance in
@@ -157,7 +112,6 @@ struct ExampleWalletButtonsContainerView: View {
                     NavigationLink("Launch") {
                         ExampleWalletButtonsView(
                             email: email,
-                            shopId: shopId,
                             disableLink: disableLink,
                             hideBankTab: hideBankTab,
                             appearance: appearance,
@@ -165,19 +119,9 @@ struct ExampleWalletButtonsContainerView: View {
                             linkVisibilityInPaymentElement: linkVisibilityInPaymentElement,
                             applePayVisibilityInWalletButtonsView: applePayVisibilityInWalletButtonsView,
                             linkVisibilityInWalletButtonsView: linkVisibilityInWalletButtonsView,
-                            shopPayTestingOptions: ShopPayTestingOptions(
-                                billingAddressRequired: billingAddressRequired,
-                                emailRequired: emailRequired,
-                                shippingAddressRequired: shippingAddressRequired,
-                                allowedShippingCountries: allowedShippingCountries,
-                                rejectShippingAddressChange: rejectShippingAddressChange,
-                                rejectShippingRateChange: rejectShippingRateChange,
-                                simulatePaymentFailed: simulatePaymentFailed
-                            ),
                             enableClickHandler: enableClickHandler,
                             rejectApplePay: rejectApplePay,
-                            rejectLink: rejectLink,
-                            rejectShopPay: rejectShopPay
+                            rejectLink: rejectLink
                         )
                     }
                 }
@@ -194,7 +138,6 @@ struct ExampleWalletButtonsView: View {
 
     init(
         email: String,
-        shopId: String,
         disableLink: Bool,
         hideBankTab: Bool,
         appearance: PaymentSheet.Appearance = PaymentSheet.Appearance(),
@@ -202,15 +145,12 @@ struct ExampleWalletButtonsView: View {
         linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility = .automatic,
         applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic,
         linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility = .automatic,
-        shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions(),
         enableClickHandler: Bool = false,
         rejectApplePay: Bool = false,
-        rejectLink: Bool = false,
-        rejectShopPay: Bool = false
+        rejectLink: Bool = false
     ) {
         self.model = ExampleWalletButtonsModel(
             email: email,
-            shopId: shopId,
             disableLink: disableLink,
             hideBankTab: hideBankTab,
             appearance: appearance,
@@ -218,11 +158,9 @@ struct ExampleWalletButtonsView: View {
             linkVisibilityInPaymentElement: linkVisibilityInPaymentElement,
             applePayVisibilityInWalletButtonsView: applePayVisibilityInWalletButtonsView,
             linkVisibilityInWalletButtonsView: linkVisibilityInWalletButtonsView,
-            shopPayTestingOptions: shopPayTestingOptions,
             enableClickHandler: enableClickHandler,
             rejectApplePay: rejectApplePay,
-            rejectLink: rejectLink,
-            rejectShopPay: rejectShopPay
+            rejectLink: rejectLink
         )
     }
 
@@ -236,8 +174,7 @@ struct ExampleWalletButtonsView: View {
                         onCompletion: model.onCompletion,
                         enableClickHandler: model.enableClickHandler,
                         rejectApplePay: model.rejectApplePay,
-                        rejectLink: model.rejectLink,
-                        rejectShopPay: model.rejectShopPay
+                        rejectLink: model.rejectLink
                     )
                 } else if model.paymentResult == nil {
                     ExampleLoadingView()
@@ -284,7 +221,6 @@ struct WalletButtonsFlowControllerView: View {
     let enableClickHandler: Bool
     let rejectApplePay: Bool
     let rejectLink: Bool
-    let rejectShopPay: Bool
 
     @State private var showingError: Bool = false
     @State private var errorMessage: String = ""
@@ -298,7 +234,6 @@ struct WalletButtonsFlowControllerView: View {
                     let shouldReject = switch walletType {
                     case "apple_pay": rejectApplePay
                     case "link": rejectLink
-                    case "shop_pay": rejectShopPay
                     default: false
                     }
 
@@ -354,7 +289,6 @@ struct WalletButtonsFlowControllerView: View {
 
 class ExampleWalletButtonsModel: ObservableObject {
     let email: String
-    let shopId: String
     let disableLink: Bool
     let hideBankTab: Bool
     let appearance: PaymentSheet.Appearance
@@ -362,11 +296,9 @@ class ExampleWalletButtonsModel: ObservableObject {
     let linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility
     let applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility
     let linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility
-    let shopPayTestingOptions: ShopPayTestingOptions
     let enableClickHandler: Bool
     let rejectApplePay: Bool
     let rejectLink: Bool
-    let rejectShopPay: Bool
 
     let backendCheckoutUrl = URL(string: "https://stp-mobile-playground-backend-v7.stripedemos.com/checkout")!
     let SPTTestCustomerUrl = URL(string: "https://2f6qwl-3000.csb.app/api/customer")!
@@ -380,7 +312,6 @@ class ExampleWalletButtonsModel: ObservableObject {
 
     init(
         email: String,
-        shopId: String,
         disableLink: Bool,
         hideBankTab: Bool,
         appearance: PaymentSheet.Appearance,
@@ -388,14 +319,11 @@ class ExampleWalletButtonsModel: ObservableObject {
         linkVisibilityInPaymentElement: PaymentSheet.WalletButtonsVisibility.PaymentElementVisibility,
         applePayVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility,
         linkVisibilityInWalletButtonsView: PaymentSheet.WalletButtonsVisibility.WalletButtonsViewVisibility,
-        shopPayTestingOptions: ShopPayTestingOptions = ShopPayTestingOptions(),
         enableClickHandler: Bool = false,
         rejectApplePay: Bool = false,
-        rejectLink: Bool = false,
-        rejectShopPay: Bool = false
+        rejectLink: Bool = false
     ) {
         self.email = email
-        self.shopId = shopId
         self.disableLink = disableLink
         self.hideBankTab = hideBankTab
         self.appearance = appearance
@@ -403,11 +331,9 @@ class ExampleWalletButtonsModel: ObservableObject {
         self.linkVisibilityInPaymentElement = linkVisibilityInPaymentElement
         self.applePayVisibilityInWalletButtonsView = applePayVisibilityInWalletButtonsView
         self.linkVisibilityInWalletButtonsView = linkVisibilityInWalletButtonsView
-        self.shopPayTestingOptions = shopPayTestingOptions
         self.enableClickHandler = enableClickHandler
         self.rejectApplePay = rejectApplePay
         self.rejectLink = rejectLink
-        self.rejectShopPay = rejectShopPay
     }
 
     func addDebugLog(_ message: String) {
@@ -490,7 +416,6 @@ class ExampleWalletButtonsModel: ObservableObject {
                         return paymentRequest
                     })
                 )
-                configuration.shopPay = self.shopPayConfiguration
                 configuration.customer = .init(id: customerId, customerSessionClientSecret: customerSessionClientSecret)
                 configuration.returnURL = "payments-example://stripe-redirect"
                 configuration.willUseWalletButtonsView = true
@@ -507,7 +432,7 @@ class ExampleWalletButtonsModel: ObservableObject {
                 configuration.walletButtonsVisibility.walletButtonsView[.applePay] = self.applePayVisibilityInWalletButtonsView
                 configuration.walletButtonsVisibility.walletButtonsView[.link] = self.linkVisibilityInWalletButtonsView
 
-                self.latestIntentConfig = .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp", businessName: "Till's Pills"), paymentMethodTypes: ["card", "shop_pay"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
+                self.latestIntentConfig = .init(sharedPaymentTokenSessionWithMode: .payment(amount: 9999, currency: "USD", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil), sellerDetails: .init(networkId: "stripe", externalId: "acct_1HvTI7Lu5o3P18Zp", businessName: "Till's Pills"), paymentMethodTypes: ["card"], preparePaymentMethodHandler: { [weak self] paymentMethod, address in
                     self?.isProcessing = true
                     self?.addDebugLog("PaymentMethod prepared: \(paymentMethod.stripeId)")
                     self?.addDebugLog("Address: \(address)")
@@ -609,13 +534,6 @@ class ExampleWalletButtonsModel: ObservableObject {
     func onCompletion(result: PaymentSheetResult) {
         self.addDebugLog("PaymentSheet completion called with result: \(result)")
 
-        // Check if we should simulate payment failure for testing
-        if shopPayTestingOptions.simulatePaymentFailed {
-            self.addDebugLog("[TEST MODE] Simulating payment failure")
-            self.paymentResult = .failed(error: NSError(domain: "TestMode", code: -1, userInfo: [NSLocalizedDescriptionKey: "Simulated payment failure for testing"]))
-            return
-        }
-
         // Only set the result if it hasn't been set by the payment handler
         if self.paymentResult == nil {
             self.paymentResult = result
@@ -630,120 +548,6 @@ class ExampleWalletButtonsModel: ObservableObject {
     func cleanupDemo() {
         // A PaymentIntent can't be reused after a successful payment. Prepare a new one for the demo.
         self.paymentSheetFlowController = nil
-    }
-
-    var shopPayConfiguration: PaymentSheet.ShopPayConfiguration {
-        let twoBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .business_day)
-        let fiveBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 5, unit: .business_day)
-        let sevenBusinessDays = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 7, unit: .business_day)
-        let twoWeeks = PaymentSheet.ShopPayConfiguration.DeliveryEstimate.DeliveryEstimateUnit(value: 2, unit: .week)
-
-        let shippingRates: [PaymentSheet.ShopPayConfiguration.ShippingRate] = [
-            .init(id: "immediate", amount: 1099, displayName: "2-hour", deliveryEstimate: .unstructured("Get your item in 2 hours")),
-            .init(id: "fast", amount: 500, displayName: "Expedited", deliveryEstimate: .structured(minimum: twoBusinessDays, maximum: fiveBusinessDays)),
-            .init(id: "regular", amount: 200, displayName: "Standard", deliveryEstimate: .structured(minimum: nil, maximum: sevenBusinessDays)),
-            .init(id: "no_rush", amount: 100, displayName: "No Rush", deliveryEstimate: .structured(minimum: twoWeeks, maximum: nil)),
-            .init(id: "no_estimate", amount: 0, displayName: "Free (No estimate)", deliveryEstimate: nil),
-        ]
-
-        let handlers = PaymentSheet.ShopPayConfiguration.Handlers(
-            shippingMethodUpdateHandler: { [weak self] shippingRateSelected, completion in
-                // Process the selected shipping method
-                // For example, you might recalculate totals based on the shipping rate
-                let selectedRate = shippingRateSelected.shippingRate
-                self?.addDebugLog("User selected shipping rate: \(selectedRate.displayName) with cost \(selectedRate.amount)")
-
-                // Check if we should reject the shipping rate change for testing
-                if self?.shopPayTestingOptions.rejectShippingRateChange == true {
-                    self?.addDebugLog("[TEST MODE] Rejecting shipping rate change")
-                    completion(nil)
-                    return
-                }
-
-                // Create the update with the new line items and available shipping rates
-                let update = PaymentSheet.ShopPayConfiguration.ShippingRateUpdate(
-                    lineItems: [.init(name: "Golden Potato", amount: 500),
-                                .init(name: "Silver Potato", amount: 345),
-                                .init(name: "Tax", amount: 200),
-                                .init(name: "Shipping", amount: selectedRate.amount), ],
-                    shippingRates: shippingRates + [.init(id: "newAmount", amount: 100, displayName: "newAmount", deliveryEstimate: nil)]
-                )
-
-                // Return the update to the Shop Pay UI
-                completion(update)
-            },
-            shippingContactUpdateHandler: { [weak self] shippingContactSelected, completion in
-                // Process the selected shipping contact information
-                let name = shippingContactSelected.name
-                let address = shippingContactSelected.address
-
-                self?.addDebugLog("User selected shipping to: \(name) in \(address.city), \(address.state)")
-
-                // Check if we should reject the shipping address change for testing
-                if self?.shopPayTestingOptions.rejectShippingAddressChange == true {
-                    self?.addDebugLog("[TEST MODE] Rejecting shipping address change")
-                    completion(nil)
-                    return
-                }
-
-                // Check if we can ship to this location
-                let canShipToLocation = self?.isValidShippingLocation(address) ?? false
-
-                if canShipToLocation {
-                    // Return the update with new line items and shipping rates
-                    let update = PaymentSheet.ShopPayConfiguration.ShippingContactUpdate(
-                        lineItems: [.init(name: "Golden Potato", amount: 500),
-                                    .init(name: "Silver Potato", amount: 345),
-                                    .init(name: "Tax", amount: 200),
-                                    .init(name: "Shipping", amount: shippingRates.first?.amount ?? 0), ],
-                        shippingRates: shippingRates + [.init(id: "newAmount", amount: 100, displayName: "newAmount", deliveryEstimate: nil)]
-                    )
-
-                    completion(update)
-                } else {
-                    // If we can't ship to this location, pass nil to reject it
-                    self?.addDebugLog("Cannot ship to selected location")
-                    completion(nil)
-                }
-            }
-        )
-
-        // Parse allowed shipping countries if provided
-        var allowedCountries: [String] = []
-        if !shopPayTestingOptions.allowedShippingCountries.isEmpty {
-            allowedCountries = shopPayTestingOptions.allowedShippingCountries
-                .split(separator: ",")
-                .map { $0.trimmingCharacters(in: .whitespaces).uppercased() }
-        }
-
-        // Create configuration with test options
-        var config = PaymentSheet.ShopPayConfiguration(
-            billingAddressRequired: shopPayTestingOptions.billingAddressRequired,
-            emailRequired: shopPayTestingOptions.emailRequired,
-            shippingAddressRequired: shopPayTestingOptions.shippingAddressRequired,
-            lineItems: [.init(name: "Golden Potato", amount: 500),
-                        .init(name: "Silver Potato", amount: 345),
-                        .init(name: "Tax", amount: 200),
-                        .init(name: "Shipping", amount: shippingRates.first?.amount ?? 0), ],
-            shippingRates: shippingRates,
-            shopId: self.shopId,
-            allowedShippingCountries: allowedCountries,
-            handlers: handlers
-        )
-
-        // Log the testing configuration
-        addDebugLog("[SHOP PAY CONFIG] Billing Address Required: \(shopPayTestingOptions.billingAddressRequired)")
-        addDebugLog("[SHOP PAY CONFIG] Email Required: \(shopPayTestingOptions.emailRequired)")
-        addDebugLog("[SHOP PAY CONFIG] Shipping Address Required: \(shopPayTestingOptions.shippingAddressRequired)")
-        addDebugLog("[SHOP PAY CONFIG] Allowed Countries: \(allowedCountries.joined(separator: ", "))")
-        addDebugLog("[SHOP PAY CONFIG] Reject Shipping Address: \(shopPayTestingOptions.rejectShippingAddressChange)")
-        addDebugLog("[SHOP PAY CONFIG] Reject Shipping Rate: \(shopPayTestingOptions.rejectShippingRateChange)")
-        addDebugLog("[SHOP PAY CONFIG] Simulate Payment Failed: \(shopPayTestingOptions.simulatePaymentFailed)")
-
-        return config
-    }
-    func isValidShippingLocation(_ address: PaymentSheet.ShopPayConfiguration.PartialAddress) -> Bool {
-        return address.postalCode != "91911"
     }
 }
 

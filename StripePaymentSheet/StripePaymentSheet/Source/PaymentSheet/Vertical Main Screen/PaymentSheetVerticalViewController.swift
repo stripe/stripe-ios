@@ -208,9 +208,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return !walletButtonsViewState.showApplePay
         case .link:
             return !walletButtonsViewState.showLink
-        case .shopPay:
-            stpAssertionFailure()
-            return false // not yet implemented
         }
     }
 

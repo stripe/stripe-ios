@@ -5,14 +5,13 @@
 
 import PassKit
 import SwiftUI
-import WebKit
 
 typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
 
 @available(iOS 16.0, *)
 @_spi(STP) public struct WalletButtonsView: View {
     /// Handler called when a wallet button is tapped. Return `true` to proceed with checkout, `false` to cancel.
-    /// The parameter is the wallet type as a string: "apple_pay", "link", or "shop_pay"
+    /// The parameter is the wallet type as a string: "apple_pay" or "link"
     @_spi(STP) public typealias WalletButtonClickHandler = (String) -> Bool
 
     let flowController: PaymentSheet.FlowController
@@ -67,14 +66,6 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                             borderColor: flowController.configuration.appearance.colors.componentBorder,
                             action: completion
                         )
-                    case .shopPay:
-                        ShopPayButton(
-                            height: flowController.configuration.appearance.primaryButton.height,
-                            // TODO (iOS 26): Respect cornerRadius = nil
-                            cornerRadius: flowController.configuration.appearance.primaryButton.cornerRadius ?? flowController.configuration.appearance.cornerRadius ?? PaymentSheet.Appearance.defaultCornerRadius
-                        ) {
-                            checkoutTapped(.shopPay)
-                        }
                     }
                 }
             }
@@ -113,8 +104,6 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                 if PaymentSheet.isApplePayEnabled(elementsSession: flowController.elementsSession, configuration: flowController.configuration) {
                     appendIfAllowed(.applePay)
                 }
-            case "shop_pay":
-                appendIfAllowed(.shopPay)
             default:
                 continue
             }
@@ -178,22 +167,6 @@ typealias ExpressType = PaymentSheet.WalletButtonsVisibility.ExpressType
                     flowController.updatePaymentOption()
                 }
             )
-        case .shopPay:
-            guard let shopPayConfig = flowController.configuration.shopPay else {
-                // Shop Pay configuration is required
-                let error = PaymentSheetError.integrationError(nonPIIDebugDescription: "Shop Pay configuration is missing")
-                confirmHandler(.failed(error: error))
-                return
-            }
-
-            // Present Shop Pay via ECE WebView
-            let shopPayPresenter = ShopPayECEPresenter(
-                flowController: flowController,
-                configuration: shopPayConfig,
-                analyticsHelper: flowController.analyticsHelper
-            )
-            shopPayPresenter.present(from: WindowAuthenticationContext().authenticationPresentingViewController(),
-                                     confirmHandler: confirmHandler)
         }
     }
 
