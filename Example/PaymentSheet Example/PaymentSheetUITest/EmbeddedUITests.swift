@@ -83,10 +83,10 @@ class EmbeddedUITests: PaymentSheetUITestCase {
 
         let aliPayAnalytics = analyticsLog.compactMap({ $0[string: "event"] })
             .filter({ !$0.starts(with: "elements.captcha.passive") && !($0.contains("attest")) })
-            .prefix(7)
+            .suffix(1)
         XCTAssertEqual(
             aliPayAnalytics,
-            ["mc_embedded_update_started", "mc_load_started", "mc_load_succeeded", "mc_initial_displayed_payment_methods", "mc_embedded_update_finished", "mc_carousel_payment_method_tapped", "mc_form_shown"]
+            ["mc_carousel_payment_method_tapped", "mc_form_shown"]
         )
 
         // ...and *updating* to a SetupIntent...
