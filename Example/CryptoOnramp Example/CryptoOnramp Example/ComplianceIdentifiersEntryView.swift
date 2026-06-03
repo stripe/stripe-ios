@@ -145,6 +145,7 @@ struct ComplianceIdentifiersEntryView: View {
                         micaSection
                     }
                 }
+                .animation(.default, value: carfIdentifierInputs.count)
             }
             .padding()
         }
@@ -221,7 +222,6 @@ struct ComplianceIdentifiersEntryView: View {
             .disabled(isLoading.wrappedValue)
             .padding(.top, 4)
         }
-        .animation(.default, value: carfIdentifierInputs.count)
     }
 
     @ViewBuilder
