@@ -863,15 +863,14 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
         // Experiment exposures are logged asynchronously after the lookup completes
         let predicate = NSPredicate { _, _ in
-            mockAnalyticsClientV2.loggedAnalyticPayloads(withEventName: "elements.experiment_exposure").count >= 3
+            mockAnalyticsClientV2.loggedAnalyticPayloads(withEventName: "elements.experiment_exposure").count >= 6
         }
         wait(for: [XCTNSPredicateExpectation(predicate: predicate, object: nil)], timeout: 5)
 
-        // Verify the 3 exposure events
         let exposures = mockAnalyticsClientV2.loggedAnalyticPayloads(withEventName: "elements.experiment_exposure")
-        XCTAssertEqual(exposures.count, 4)
+        XCTAssertEqual(exposures.count, 6)
         let experimentNames = Set(exposures.compactMap { $0["experiment_retrieved"] as? String })
-        XCTAssertEqual(experimentNames, ["link_global_holdback", "link_global_holdback_aa", "link_ab_test", "ocs_mobile_payment_method_messaging_promotions"])
+        XCTAssertEqual(experimentNames, ["link_global_holdback", "link_global_holdback_aa", "link_ab_test", "ocs_mobile_payment_method_messaging_promotions", "connections_fc_lite_vs_native", "connections_fc_lite_vs_native_aa"])
         for exposure in exposures {
             XCTAssertEqual(exposure["arb_id"] as? String, "test_arb_123")
             XCTAssertNotNil(exposure["assignment_group"], "Expected assignment_group in exposure: \(exposure)")
