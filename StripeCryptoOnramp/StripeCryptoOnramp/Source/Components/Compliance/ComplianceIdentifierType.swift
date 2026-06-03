@@ -93,6 +93,9 @@ public extension ComplianceIdentifierType {
     /// Personas kods - Latvia.
     static let lvPK = Self(rawValue: "lv_pk")
 
+    /// Número de Identificación Fiscal (NIF) - Spain.
+    static let esNIF = Self(rawValue: "es_nif")
+
     /// Asmens kodas - Lithuania.
     static let ltAK = Self(rawValue: "lt_ak")
 

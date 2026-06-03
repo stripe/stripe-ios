@@ -1,4 +1,6 @@
 {
+  "carf_tin_required": false,
+  "completed": false,
   "alternatives": [
     {
       "alternative_missing_identifiers": [
@@ -11,14 +13,6 @@
   ],
   "identifiers": [
     {
-      "regulation": "eu_carf",
-      "type": "de_stn"
-    },
-    {
-      "regulation": "eu_carf",
-      "type": "mt_nic"
-    },
-    {
       "regulation": "eu_mica",
       "type": "mt_nic"
     }
@@ -26,6 +20,5 @@
   "invalid_identifiers": [
     "de_stn",
     "mt_nic"
-  ],
-  "valid": false
+  ]
 }

@@ -11,14 +11,17 @@ import Foundation
 @_spi(CryptoOnrampAlpha)
 public struct SubmitIdentifiersResult: Decodable, Equatable {
 
-    /// Whether all required identifiers were accepted.
-    public let valid: Bool
+    /// Whether all required MiCA identifiers and CRS/CARF tax identification numbers have been submitted.
+    public let completed: Bool
 
-    /// Any identifiers that still need to be collected.
+    /// Any MiCA identifiers that still need to be collected.
     public let identifiers: [ComplianceIdentifierRequirement]
 
-    /// Alternative identifier groups that may satisfy one or more requirements.
+    /// Alternative MiCA identifier groups that may satisfy one or more requirements.
     public let alternatives: [ComplianceIdentifierAlternativeGroup]
+
+    /// Whether at least one CRS/CARF tax identification number still needs to be collected.
+    public let carfTinRequired: Bool
 
     /// Submitted identifier types whose values were invalid.
     public let invalidIdentifiers: [ComplianceIdentifierType]
@@ -26,17 +29,19 @@ public struct SubmitIdentifiersResult: Decodable, Equatable {
     // MARK: - Decodable
 
     private enum CodingKeys: String, CodingKey {
-        case valid
+        case completed
         case identifiers
         case alternatives
+        case carfTinRequired = "carf_tin_required"
         case invalidIdentifiers = "invalid_identifiers"
     }
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        valid = try container.decodeIfPresent(Bool.self, forKey: .valid) ?? true
+        completed = try container.decodeIfPresent(Bool.self, forKey: .completed) ?? true
         identifiers = try container.decodeIfPresent([ComplianceIdentifierRequirement].self, forKey: .identifiers) ?? []
         alternatives = try container.decodeIfPresent([ComplianceIdentifierAlternativeGroup].self, forKey: .alternatives) ?? []
+        carfTinRequired = try container.decodeIfPresent(Bool.self, forKey: .carfTinRequired) ?? false
         invalidIdentifiers = try container.decodeIfPresent([ComplianceIdentifierType].self, forKey: .invalidIdentifiers) ?? []
     }
 }
