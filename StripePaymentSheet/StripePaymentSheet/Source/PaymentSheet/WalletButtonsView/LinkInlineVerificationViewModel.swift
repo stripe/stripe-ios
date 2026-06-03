@@ -16,6 +16,7 @@ class LinkInlineVerificationViewModel: ObservableObject {
 
     @Published var code: String = ""
     @Published var loading: Bool = false
+    @Published var startVerificationError: Error?
 
     init(account: PaymentSheetLinkAccount, appearance: PaymentSheet.Appearance) {
         self.account = account
@@ -27,6 +28,8 @@ class LinkInlineVerificationViewModel: ObservableObject {
 
     @MainActor
     func startVerification() async throws {
+        startVerificationError = nil
+
         try await withCheckedThrowingContinuation { continuation in
             account.startVerification { result in
                 switch result {
