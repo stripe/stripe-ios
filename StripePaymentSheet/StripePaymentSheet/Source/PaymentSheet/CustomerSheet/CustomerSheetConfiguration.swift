@@ -88,8 +88,8 @@ extension CustomerSheet {
         /// When true, uses the Stripe autocomplete endpoints for billing address autocomplete instead of Apple MapKit.
         @_spi(STP) public var useAutocompleteEndpoints: Bool = false
 
-        /// An optional API key to include in autocomplete and place details requests.
-        @_spi(AddressAutocompletePreview) public var autocompleteApiKey: String?
+        /// An optional Google Places API key used to power address autocompletion. When provided, this key is used instead of the Stripe-managed key.
+        public var autocompleteApiKey: String?
 
         public init () {
         }

@@ -174,10 +174,8 @@ public extension AddressViewController {
         /// Defaults to false.
         @_spi(STP) public var useAutocompleteEndpoints: Bool = false
 
-        /// An optional API key to include in autocomplete and place details requests.
-        /// When provided, the key is sent as `api_key` in the request body, allowing merchants to
-        /// use their own Google Places API key rather than the Stripe-managed key.
-        @_spi(AddressAutocompletePreview) public var autocompleteApiKey: String?
+        /// An optional Google Places API key used to power address autocompletion. When provided, this key is used instead of the Stripe-managed key.
+        public var autocompleteApiKey: String?
 
     }
 }
