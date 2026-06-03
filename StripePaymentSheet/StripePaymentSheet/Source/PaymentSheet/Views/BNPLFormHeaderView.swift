@@ -8,7 +8,6 @@ import UIKit
 
 final class BNPLFormHeaderView: UIView {
     private let appearance: PaymentSheet.Appearance
-    let style: PaymentSheet.UserInterfaceStyle
     let promotionsHelper: PaymentMethodMessagingPromotionsHelper
     let promotion: String
     let learnMoreText: String

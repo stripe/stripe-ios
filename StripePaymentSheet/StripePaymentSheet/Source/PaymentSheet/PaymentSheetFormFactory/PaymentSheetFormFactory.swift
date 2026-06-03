@@ -890,7 +890,6 @@ extension PaymentSheetFormFactory {
             promotionsHelper: paymentMethodMessagingPromotionsHelper
         ) else { return nil }
         return SubtitleElement(view: headerView, isHorizontalMode: paymentMethodOrientation == .horizontal)
-        return nil
     }
 
     func makeCopyLabel(text: String) -> SubtitleElement {
