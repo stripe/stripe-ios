@@ -71,9 +71,8 @@ final class TwoOptionSelectorView: UIView {
     private var leftButton = UIButton(type: .custom)
     private var rightButton = UIButton(type: .custom)
 
-    private var trackPadding: CGFloat { appearance.contentVerticalPadding }
+    private static let trackPadding: CGFloat = 3
     private static let defaultContentHeight: CGFloat = 26
-    private static let pillInset: CGFloat = 3
 
     private var indicatorLeadingConstraint: NSLayoutConstraint?
     private var indicatorTrailingConstraint: NSLayoutConstraint?
@@ -107,9 +106,9 @@ final class TwoOptionSelectorView: UIView {
         let bw = appearance.borderWidth
         let maxTrack = max((height - bw) / 2, 0)
         let track = min(appearance.cornerRadius, maxTrack)
-        let pillHeight = height - 2 * trackPadding
+        let pillHeight = height - 2 * Self.trackPadding
         let maxPill = pillHeight / 2
-        let pill = min(max(track - Self.pillInset, 0), maxPill)
+        let pill = min(max(track - Self.trackPadding, 0), maxPill)
         return (track, pill)
     }
 
@@ -119,7 +118,7 @@ final class TwoOptionSelectorView: UIView {
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainStackView)
 
-        let trackHeight = Self.defaultContentHeight + 2 * trackPadding
+        let trackHeight = Self.defaultContentHeight + 2 * appearance.contentVerticalPadding
         let (trackCornerRadius, pillCornerRadius) = trackAndPillCornerRadii(for: trackHeight)
 
         // Track background
@@ -145,16 +144,16 @@ final class TwoOptionSelectorView: UIView {
 
         // Priority 999 on horizontal constraints so they break gracefully during
         // zero-width sizing passes (e.g. SwiftUI's fixedSize measuring).
-        let leading = buttonsStackView.leadingAnchor.constraint(equalTo: trackView.leadingAnchor, constant: trackPadding)
+        let leading = buttonsStackView.leadingAnchor.constraint(equalTo: trackView.leadingAnchor, constant: Self.trackPadding)
         leading.priority = UILayoutPriority(999)
-        let trailing = buttonsStackView.trailingAnchor.constraint(equalTo: trackView.trailingAnchor, constant: -trackPadding)
+        let trailing = buttonsStackView.trailingAnchor.constraint(equalTo: trackView.trailingAnchor, constant: -Self.trackPadding)
         trailing.priority = UILayoutPriority(999)
 
         NSLayoutConstraint.activate([
-            buttonsStackView.topAnchor.constraint(equalTo: trackView.topAnchor, constant: trackPadding),
+            buttonsStackView.topAnchor.constraint(equalTo: trackView.topAnchor, constant: Self.trackPadding),
             leading,
             trailing,
-            buttonsStackView.bottomAnchor.constraint(equalTo: trackView.bottomAnchor, constant: -trackPadding),
+            buttonsStackView.bottomAnchor.constraint(equalTo: trackView.bottomAnchor, constant: -Self.trackPadding),
         ])
 
         let heightConstraint = trackView.heightAnchor.constraint(equalToConstant: trackHeight)
