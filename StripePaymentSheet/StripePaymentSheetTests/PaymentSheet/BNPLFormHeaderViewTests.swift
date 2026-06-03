@@ -10,10 +10,8 @@ import XCTest
 
 @MainActor
 final class BNPLFormHeaderViewTests: XCTestCase {
-    func testAlwaysDarkStyle_AppliesToHeaderAndInfoModal() throws {
-        let (headerView, rootViewController, _) = makeHeaderView(style: .alwaysDark)
-
-        XCTAssertEqual(headerView.overrideUserInterfaceStyle, .dark)
+    func testDarkMode_AppliesToInfoModal() throws {
+        let (headerView, rootViewController, _) = makeHeaderView(interfaceStyle: .dark)
 
         let didHandleTap = headerView.textView(
             UITextView(),
@@ -29,10 +27,8 @@ final class BNPLFormHeaderViewTests: XCTestCase {
         XCTAssertEqual(infoModal.overrideUserInterfaceStyle, .dark)
     }
 
-    func testAlwaysLightStyle_AppliesToHeaderAndInfoModal() throws {
-        let (headerView, rootViewController, _) = makeHeaderView(style: .alwaysLight)
-
-        XCTAssertEqual(headerView.overrideUserInterfaceStyle, .light)
+    func testLightMode_AppliesToInfoModal() throws {
+        let (headerView, rootViewController, _) = makeHeaderView(interfaceStyle: .light)
 
         let didHandleTap = headerView.textView(
             UITextView(),
@@ -50,16 +46,16 @@ final class BNPLFormHeaderViewTests: XCTestCase {
 
     private func makeHeaderView(
         appearance: PaymentSheet.Appearance = .default,
-        style: PaymentSheet.UserInterfaceStyle = .automatic
+        interfaceStyle: UIUserInterfaceStyle = .unspecified
     ) -> (BNPLFormHeaderView, UIViewController, UIWindow) {
         let promotionsHelper = PaymentMethodMessagingPromotionsHelper._testValueInTreatment()
         let headerView = BNPLFormHeaderView(
             appearance: appearance,
-            style: style,
             paymentMethod: .stripe(.affirm),
             promotionsHelper: promotionsHelper
         )!
         let rootViewController = UIViewController()
+        rootViewController.overrideUserInterfaceStyle = interfaceStyle
         headerView.backgroundColor = appearance.colors.background
         rootViewController.view.backgroundColor = appearance.colors.background
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
