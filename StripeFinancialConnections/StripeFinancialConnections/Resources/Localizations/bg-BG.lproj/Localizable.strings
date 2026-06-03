@@ -26,6 +26,8 @@
 
 "Continue linking your account" = "Продължете със свързването на вашата сметка";
 
+"Continue with %@" = "Продължете с %@";
+
 "Continue with Link" = "Продължаване с Link";
 
 "Email address" = "Имейл";
@@ -110,6 +112,8 @@
 
 "Try searching another bank or %@" = "Опитайте да потърсите друга банка или %@";
 
+"Use information you previously saved with your %@ account." = "Използвайте информация, която сте запазили преди това с Вашия %@ акаунт.";
+
 "Use information you previously saved with your Link account." = "Използвайте информация, която вече сте запазили в акаунта си в Link.";
 
 "Use test account" = "Използване на тестов акаунт";
@@ -150,9 +154,13 @@
 
 "Your account numbers don't match." = "Посочените номера на сметки не съвпадат.";
 
+"Your account was connected, but couldn't be saved to %@." = "Акаунтът Ви беше свързан, но не можа да бъде запазен в %@.";
+
 "Your account was connected, but couldn't be saved to Link." = "Вашата сметка беше свързана, но не може да бъде запазена в Link.";
 
 "Your account was connected." = "Вашата сметка беше свързана.";
+
+"Your accounts were connected, but couldn't be saved to %@." = "Акаунтите Ви бяха свързани, но не можаха да бъдат запазени в %@.";
 
 "Your accounts were connected, but couldn't be saved to Link." = "Вашите сметки бяха свързани, но не могат да бъдат запазени в Link.";
 

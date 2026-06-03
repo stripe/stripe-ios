@@ -128,7 +128,7 @@ class PaymentSheetFormFactory {
         let linkBrand: LinkBrand = {
             switch configuration {
             case .paymentElement(let configuration, _):
-                return configuration.resolvedLinkBrand(elementsSession: elementsSession)
+                return configuration.resolvedLinkBrand(elementsSession: elementsSession, linkAccount: linkAccount)
             case .customerSheet:
                 return .link
             }
@@ -860,14 +860,6 @@ extension PaymentSheetFormFactory {
         return country
     }
 
-    private var bnplHeaderStyle: PaymentSheet.UserInterfaceStyle {
-        guard case .paymentElement(let configuration, _) = configuration else {
-            stpAssertionFailure("BNPL headers are only supported for PaymentSheet/FlowController/EmbeddedPaymentElement and not CustomerSheet.")
-            return .automatic
-        }
-        return configuration.style
-    }
-
     func makeKlarnaHeader() -> SubtitleElement {
         if let header = makeBNPLHeader() {
             // Use the shared BNPL header when header content is available.
@@ -896,7 +888,6 @@ extension PaymentSheetFormFactory {
         return nil
 //        let headerView = BNPLFormHeaderView(
 //            appearance: configuration.appearance,
-//            style: bnplHeaderStyle,
 //            promotion: "TODO: fill in with real promotion content",
 //            learnMoreText: "TODO: fill in with real learn more text",
 //            infoUrl: URL(string: "https://stripe.com")!

@@ -4,6 +4,10 @@
 
 "+ Add" = "+ 追加";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (%4$@%% の換算手数料を含む).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "アメリカの銀行口座を追加";
 
 "Add a card" = "カードを追加";
@@ -19,8 +23,6 @@
 "Add new payment method" = "新たな支払い方法を追加";
 
 "Add your payment information" = "支払い情報を追加";
-
-"Agree and accept" = "同意して承認";
 
 "Approve payment" = "支払いを承認する";
 
@@ -56,6 +58,8 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "続行すると、<terms>これらの規約</terms>に従って支払いをオーソリすることに同意したものとみなされます。";
 
+"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "%1$@ および <link>%2$@</link> での今後の購入に利用するためのお客様の情報の保存、ならびに%2$@ の<terms>規約</terms>と<privacy>プライバシー</privacy>に同意した上で、続行してください。";
+
 "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "続行することで、今後の購入のために情報を保存することに同意したことになります <link>Link</link> リンク<terms>規約</terms>および<privacy>プライバシー</privacy>に従うことになります。";
 
 "By continuing, you agree to save your information for future purchases with %@." = "続行することで、あなたは、%@ での今後の購入のために情報を保存することに同意したことになります。";
@@ -66,15 +70,25 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "続行すると、%2$@ の利用規約に従って、この許可が取り消されない限り、お客様は今回の支払いおよび今後の支払いを、Cash App のアカウントから引き落とすことを %1$@ に許可したものとみなされます。これは、Cash App の設定でいつでも変更することができます。";
 
+"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "%@ に参加するには、<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に同意する必要があります。";
+
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Link に登録することで、お客様は<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に同意したことになります。";
+
+"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "電話番号とメールアドレスを提供するには、%1$@ の <terms>規約</terms> と <privacy>プライバシーポリシー</privacy> に同意した上で、%1$@ アカウントを作成します。";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "電話番号とメールアドレスを入力することにより、Link の<terms>利用規約</terms>および<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成することに同意したとみなされます。";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "本口座振替依頼および<terms>ダイレクトデビットリクエスト利用規約</terms>に同意し、本支払いを確認することにより、お客様は銀行口座情報を提供し、Stripe Payments Australia Pty Ltd (ACN 160 180 343、ダイレクトデビットユーザーID：507156) (以下「Stripe」) が、%@ (以下「加盟店」) に代わり、加盟店から別途通知される金額について、Bulk Electronic Clearing System (BECS) を通じてお客様の口座から引き落としを行うことを承認するものとします。また、お客様は、上記口座の口座名義人であるか、または当該口座の正式な署名権限者であることを証明するものとします。";
+
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "カード情報を提供すると、%@ がその規約に従って今後の支払いをお客様のカードに請求することを許可することになります。";
+
+"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "メールアドレスを提供するには、%1$@ の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に同意した上で、%1$@ アカウントを作成し、決済情報を %1$@ に保存してください。";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "メールアドレスを入力することにより、お客様は Link の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成し、お支払い情報を Link に保存することに同意したとみなされます。";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "支払い情報を提供し、この支払いを確定することで、お客様は (A) %@ および決済サービスプロバイダーである Stripe がお客様の銀行に口座引き落としの指図を送り、(B) 銀行がこの指図に従ってお客様の口座から引き落としを行うことを承認することになります。お客様の権利の一部として、銀行との契約条件に基づき、お客様は銀行からの返金を受ける権利を有します。返金は口座の引き落とし日から 8 週間以内に請求する必要があります。お客様の権利は、銀行から得られる明細書内で説明されています。お客様は今後の引き落としに関する通知を引き落としの実行日の 2 日前までに受け取ることに同意するものとします。";
+
+"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "電話番号を提供するには、%1$@ の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に同意した上で、%1$@ アカウントを作成し、決済情報を %1$@ に保存してください。";
 
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "電話番号を入力することにより、お客様は Link の<terms>規約</terms>と<privacy>プライバシーポリシー</privacy>に従って Link アカウントを作成し、お支払い情報を Link に保存することに同意したとみなされます。";
 
@@ -118,6 +132,8 @@
 
 "Continue another way" = "別の方法で続行";
 
+"Create an account with %@ for faster checkout across the web" = "%@ でアカウントを作成すると、ウェブ上でよりスムーズに決済できるようになります";
+
 "Create an account with Link for faster checkout across the web" = "Link でアカウントを作成すると、ウェブ上で決済を迅速化できます";
 
 "Debit or credit card" = "デビットカードまたはクレジットカード";
@@ -153,6 +169,8 @@
 "Last 4 digits of SSN" = "SSN の末尾 4 桁";
 
 "Log in or sign up" = "ログイン / 登録";
+
+"Log out of %@" = "%@ からログアウト";
 
 "Log out of Link" = "Link からログアウト";
 
@@ -202,11 +220,15 @@
 
 "Pay faster at %@ and thousands of businesses." = "%@ やその他多数のサイトで、すばやく支払うことができます。";
 
+"Pay faster everywhere %@ is accepted." = "%@ に対応しているすべての場所で、より迅速に支払う。";
+
 "Pay faster everywhere Link is accepted." = "Link に対応している店舗でスピーディーに支払うことができます。";
 
 "Pay over time with %@" = "%@ で時間をかけて支払う";
 
 "Pay over time with Affirm" = "Affirm で分割払い";
+
+"Pay with %@" = "%@ で支払う";
 
 "Pay with Link" = "Link で支払う";
 
@@ -252,6 +274,8 @@
 
 "Save for future payments" = "今後の支払いのために保存する";
 
+"Save my info for faster checkout with %@" = "%@ でより迅速に決済できるよう情報を保存";
+
 "Save my info for faster checkout with Link" = "Link で支払い情報を保存して決済をスピードアップ";
 
 "Save payment details to %@ for future purchases" = "今後の購入のために %@ に決済情報を保存する";
@@ -259,6 +283,8 @@
 "Save this account for future %@ payments" = "今後の %@ の支払いのためにこの口座を保存する";
 
 "Save your bank account in just a few steps." = "銀行口座の保存はわずか数ステップで完了します。";
+
+"Save your info for secure 1-click checkout with %@" = "%@ を使用して安全なワンクリック決済の情報を保存する";
 
 "Save your info for secure 1-click checkout with Link" = "Link を使用して安全なワンクリック決済の情報を保存する";
 
@@ -276,11 +302,15 @@
 
 "Set up" = "設定";
 
+"Shipping" = "配送";
+
 "Shipping to %@ is not supported." = "%@ への配送には対応していません。";
 
 "Show menu" = "メニューを表示";
 
 "Simple, secure one-click payments" = "シンプルで安全なワンクリック決済";
+
+"Something went wrong when linking your account.\nPlease try again later." = "アカウントをリンクする際に問題が発生しました。\n後で再度お試しください。";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe は 1 ～ 2 営業日後に口座に $0.01 を入金します。その後、%@ で銀行口座の保存を完了させるための手順が記載されたメールが送信されます。";
 
@@ -295,6 +325,8 @@
 "Tax" = "税金";
 
 "The IBAN you entered is incomplete." = "入力した IBAN に不備があります。";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "入力した IBAN が無効です。「%@」はサポートされている国コードではありません。";
 
 "The provided verification code has expired." = "入力された確認コードは期限が切れています。";
 

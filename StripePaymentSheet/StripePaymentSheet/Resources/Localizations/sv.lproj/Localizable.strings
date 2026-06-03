@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Lägg till";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (inklusive %4$@%% växlingsavgift).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Lägg till amerikanskt bankkonto";
 
 "Add a card" = "Lägg till ett kort";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Lägg till ny betalningsmetod";
 
 "Add your payment information" = "Lägg till betalningsinformation";
-
-"Agree and accept" = "Godkänn och acceptera";
 
 "Approve payment" = "Godkänn betalning";
 
@@ -56,6 +58,8 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Genom att fortsätta samtycker du till att godkänna betalningar i enlighet med dessa <terms>villkor</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Genom att fortsätta samtycker du till att spara dina uppgifter för framtida köp med %1$@ och <link>%2$@</link> enligt <terms>villkoren</terms> och <privacy>integritetspolicyn</privacy> för %2$@.";
+
 "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Genom att fortsätta godkänner du att dina uppgifter sparas för framtida köp hos %@ och <link>Link</link> enligt Links <terms>villkor</terms> och <privacy>integritetspolicy</privacy>.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Genom att fortsätta godkänner du att dina uppgifter sparas för framtida köp hos %@.";
@@ -66,15 +70,25 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Genom att fortsätta godkänner du att %1$@ debiterar ditt Cash App-konto för den här betalningen och framtida betalningar i enlighet med %2$@s villkor, tills detta godkännande återkallas. Du kan när som helst ändra detta i dina Cash App-inställningar.";
 
+"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att gå med i %@ godkänner du <terms>villkoren</terms> och <privacy>integritetspolicyn</privacy>.";
+
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att registrera dig på Link, godkänner du våra <terms>villkor</terms> och vår <privacy>integritetspolicy</privacy>.";
+
+"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att ange telefonnummer och e-post samtycker du till att skapa ett %1$@-konto som omfattas av <terms>villkoren</terms> och <privacy>integritetspolicyn</privacy> för %1$@.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att tillhandahålla ditt telefonnummer och din e-postadress godkänner du att skapa ett Link-konto som omfattas av Links <terms>villkor</terms> och <privacy>integritetspolicy</privacy>.";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Genom att tillhandahålla dina bankkontouppgifter och bekräfta denna betalning, samtycker du till denna begäran om autogiro och <terms>serviceavtalet för begäran om autogiro</terms>, och godkänner att Stripe Payments Australia Pty Ltd ACN 160 180 343 Användar-id för autogiro 507156 (“Stripe”) debiterar ditt konto via Bulk Electronic Clearing System (BECS) på uppdrag av %@ (\"Handlaren\") för eventuella belopp som separat meddelats till dig av Handlaren. Du intygar att du antingen är kontoinnehavare eller auktoriserad undertecknare på det konto som anges ovan.";
+
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Genom att tillhandahålla kortinformationen ger du %@ tillåtelse att debitera ditt kort för framtida betalningar enligt deras villkor.";
+
+"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att tillhandahålla din e-post samtycker du till att skapa ett konto för %1$@ och spara din betalningsinformation till %1$@, enligt <terms>villkoren</terms> och <privacy>integritetspolicyn</privacy> för %1$@.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att tillhandahålla din e-postadress godkänner du att skapa ett Link-konto och spara dina betalningsuppgifter hos Link, i enlighet med Links <terms>villkor</terms> och <privacy>integritetspolicy</privacy>.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Genom att tillhandahålla din betalningsinformation och bekräfta denna betalning godkänner du (A) %@ och Stripe, vår betaltjänstleverantör, att skicka instruktioner till din bank att debitera ditt konto och (B) din bank att debitera ditt konto i enlighet med dessa instruktioner. Som en del av dina rättigheter har du rätt till återbetalning från din bank enligt villkoren för ditt avtal med din bank. Återbetalning måste krävas inom åtta veckor från det datum då ditt konto debiterades. Dina rättigheter förklaras i ett utdrag som du kan få från din bank. Du godkänner att få aviseringar för framtida debiteringar upp till två dagar innan de inträffar.";
+
+"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att ange ditt telefonnummer samtycker du till att skapa ett konto för %1$@ och spara din betalningsinformation till %1$@, enligt <terms>villkoren</terms> och <privacy>integritetspolicyn</privacy> för %1$@.";
 
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Genom att tillhandahålla ditt telefonnummer godkänner du att skapa ett Link-konto och spara dina betalningsuppgifter hos Link, i enlighet med Links <terms>villkor</terms> och <privacy>integritetspolicy</privacy>.";
 
@@ -118,6 +132,8 @@
 
 "Continue another way" = "Fortsätt på ett annat sätt";
 
+"Create an account with %@ for faster checkout across the web" = "Skapa ett konto hos %@ för snabbare betalningar i kassan på nätet";
+
 "Create an account with Link for faster checkout across the web" = "Skapa ett konto med Link för en snabbare kassaupplevelse på webben";
 
 "Debit or credit card" = "Bank- eller kreditkort";
@@ -153,6 +169,8 @@
 "Last 4 digits of SSN" = "Sista 4 siffrorna i SSN";
 
 "Log in or sign up" = "Logga in eller registrera dig";
+
+"Log out of %@" = "Logga ut från %@";
 
 "Log out of Link" = "Logga ut från Link";
 
@@ -202,11 +220,15 @@
 
 "Pay faster at %@ and thousands of businesses." = "Betala snabbare hos %@ och tusentals andra företag.";
 
+"Pay faster everywhere %@ is accepted." = "Betala snabbare överallt där %@ accepteras.";
+
 "Pay faster everywhere Link is accepted." = "Betala snabbare överallt där Link accepteras.";
 
 "Pay over time with %@" = "Sprid ut betalningarna med %@";
 
 "Pay over time with Affirm" = "Sprid ut betalningarna med Affirm";
+
+"Pay with %@" = "Betala med %@";
 
 "Pay with Link" = "Betala med Link";
 
@@ -252,6 +274,8 @@
 
 "Save for future payments" = "Spara för framtida betalningar";
 
+"Save my info for faster checkout with %@" = "Spara mina uppgifter för snabbare betalningar i kassan med %@";
+
 "Save my info for faster checkout with Link" = "Spara mina uppgifter för snabbare betalning med Link";
 
 "Save payment details to %@ for future purchases" = "Spara betalningsuppgifter hos %@ för framtida köp";
@@ -259,6 +283,8 @@
 "Save this account for future %@ payments" = "Spara detta konto för framtida betalningar hos %@";
 
 "Save your bank account in just a few steps." = "Spara ditt bankkonto med några få steg.";
+
+"Save your info for secure 1-click checkout with %@" = "Spara dina uppgifter för säker betalning med ett klick med %@";
 
 "Save your info for secure 1-click checkout with Link" = "Spara dina uppgifter för säker betalning med ett klick med Link";
 
@@ -276,11 +302,15 @@
 
 "Set up" = "Konfigurera";
 
+"Shipping" = "Frakt";
+
 "Shipping to %@ is not supported." = "Leverans till %@ stöds inte.";
 
 "Show menu" = "Visa meny";
 
 "Simple, secure one-click payments" = "Enkla och säkra betalningar med ett klick";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Något gick fel när ditt konto skulle länkas.\nFörsök igen senare.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "Stripe kommer att sätta in 0,01 USD på ditt konto om 1–2 arbetsdagar. Därefter får du ett e-postmeddelande med instruktioner om hur du slutför sparandet av ditt bankkonto hos %@.";
 
@@ -295,6 +325,8 @@
 "Tax" = "Skatt";
 
 "The IBAN you entered is incomplete." = "Angivet IBAN är ofullständigt.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "Angivet IBAN är ogiltigt, \"%@\" är inte en giltig landskod.";
 
 "The provided verification code has expired." = "Den angivna verifieringskoden har förfallit.";
 

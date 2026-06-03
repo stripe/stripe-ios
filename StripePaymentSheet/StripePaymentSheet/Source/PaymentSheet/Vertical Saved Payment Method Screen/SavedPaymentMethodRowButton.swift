@@ -36,7 +36,8 @@ final class SavedPaymentMethodRowButton: UIView {
                 previousSelectedState = oldValue
             }
 
-            rowButton.isSelected = isSelected
+            // saved payment methods never show a form
+            rowButton.updateSelectedState(isSelected, willDisplayForm: false)
             chevronButton.isHidden = !isEditing
         }
     }
@@ -53,7 +54,7 @@ final class SavedPaymentMethodRowButton: UIView {
     // MARK: - Private properties
 
     private let appearance: PaymentSheet.Appearance
-    private let linkBrand: LinkBrand
+    private var linkBrand: LinkBrand
 
     private var isEditing: Bool {
         switch state {
@@ -124,5 +125,19 @@ final class SavedPaymentMethodRowButton: UIView {
             state = .selected
             delegate?.didSelectButton(self, with: paymentMethod)
         }
+    }
+
+    func updateLinkBrand(_ linkBrand: LinkBrand) {
+        guard self.linkBrand != linkBrand else {
+            return
+        }
+        self.linkBrand = linkBrand
+
+        guard paymentMethod.isLinkPassthroughMode else {
+            return
+        }
+
+        rowButton.setLabel(text: linkBrand.displayName)
+        rowButton.setSublabel(text: paymentMethod.paymentSheetLabel(brand: linkBrand), animated: false)
     }
 }

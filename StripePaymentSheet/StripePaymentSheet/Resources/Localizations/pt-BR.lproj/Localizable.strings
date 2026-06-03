@@ -4,6 +4,10 @@
 
 "+ Add" = "+ Adicionar";
 
+"1 %1$@ = %2$@ %3$@ (includes %4$@%% conversion fee)." = "1 %1$@ = %2$@ %3$@ (inclui %4$@%% tarifa de conversão).";
+
+"1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
+
 "Add US bank account" = "Adicionar conta bancária dos EUA";
 
 "Add a card" = "Adicione um cartão";
@@ -19,8 +23,6 @@
 "Add new payment method" = "Adicionar nova forma de pagamento";
 
 "Add your payment information" = "Adicione seus dados de pagamento";
-
-"Agree and accept" = "Concordar e aceitar";
 
 "Approve payment" = "Aprovar pagamento";
 
@@ -56,6 +58,8 @@
 
 "By continuing, you agree to authorize payments pursuant to <terms>these terms</terms>." = "Ao continuar, você aceita autorizar pagamentos de acordo com <terms>estes termos</terms>.";
 
+"By continuing, you agree to save your information for future purchases with %1$@ and <link>%2$@</link> according to %2$@ <terms>terms</terms> and <privacy>privacy</privacy>." = "Ao continuar, você concorda em salvar suas informações para compras futuras com %1$@ e <link>%2$@</link> de acordo com os <terms>termos</terms> e <privacy>privacidade</privacy> do %2$@.";
+
 "By continuing, you agree to save your information for future purchases with %@ and <link>Link</link> according to Link <terms>terms</terms> and <privacy>privacy</privacy>." = "Ao continuar, você concorda em salvar seus dados para compras futuras com %@ e <link>Link</link> de acordo com os <terms>termos</terms> e a <privacy>privacidade</privacy> do Link.";
 
 "By continuing, you agree to save your information for future purchases with %@." = "Ao continuar, você concorda em salvar seus dados para compras futuras com %@.";
@@ -66,15 +70,25 @@
 
 "By continuing, you authorize %@ to debit your Cash App account for this payment and future payments in accordance with %@'s terms, until this authorization is revoked. You can change this anytime in your Cash App Settings." = "Ao continuar, você autoriza %1$@ a debitar sua conta do Cash App para este pagamento e futuros pagamentos, em conformidade com os temos da empresa %2$@, até que a autorização seja revogada. É possível alterar isso a qualquer momento nas Configurações do Cash App.";
 
+"By joining %@, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao aderir a %@, você concorda com os <terms>Termos</terms> e <privacy>Política de Privacidade</privacy>.";
+
 "By joining Link, you agree to the <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao entrar no Link, você concorda com os <terms>Termos</terms> e <privacy>Política de Privacidade</privacy>.";
+
+"By providing phone number and email, you agree to create a %1$@ account subject to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao fornecer o número de telefone e e-mail, você concorda em criar uma conta %1$@ sujeita aos <terms>Termos</terms> e <privacy>Política de Privacidade</privacy> da %1$@.";
 
 "By providing phone number and email, you agree to create a Link account subject to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao informar número de telefone e e-mail, você concorda em criar uma conta do Link sujeita aos <terms>Termos</terms> e à <privacy>Política de Privacidade</privacy> do Link.";
 
+"By providing your bank account details and confirming this payment, you agree to this Direct Debit Request and the <terms>Direct Debit Request service agreement</terms>, and authorise Stripe Payments Australia Pty Ltd ACN 160 180 343 Direct Debit User ID number 507156 (“Stripe”) to debit your account through the Bulk Electronic Clearing System (BECS) on behalf of %@ (the \"Merchant\") for any amounts separately communicated to you by the Merchant. You certify that you are either an account holder or an authorised signatory on the account listed above." = "Ao informar os dados da sua conta bancária e confirmar este pagamento, você aceita esta Solicitação de Débito Direto e o <terms>contrato de serviço da Solicitação de Débito Direto</terms>, e como autoriza a Stripe Payments Australia Pty Ltd ACN 160 180 343 com número de Usuário para Débito Direto 507156 (“Stripe”) a debitar sua conta pelo Bulk Electronic Clearing System (BECS) em nome de %@ (o \"Comerciante\") quaisquer quantias comunicadas separadamente a você pelo Comerciante. Você confirma que é titular da conta ou signatário autorizado da conta listada acima.";
+
 "By providing your card information, you allow %@ to charge your card for future payments in accordance with their terms." = "Ao fornecer os dados do seu cartão, você permite que %@ cobre de seu cartão por pagamentos futuros de acordo com os termos da empresa.";
+
+"By providing your email, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao fornecer seu e-mail, você concorda em criar uma conta %1$@ e salvar suas informações de pagamento para %1$@, de acordo com os <terms>Termos</terms> e <privacy>Política de Privacidade</privacy> da %1$@.";
 
 "By providing your email, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao informar seu e-mail, você concorda em criar uma conta do Link e salvar seus dados de pagamento no Link, segundo os <terms>Termos</terms> e a <privacy>Política de Privacidade</privacy> do Link.";
 
 "By providing your payment information and confirming this payment, you authorise (A) %@ and Stripe, our payment service provider, to send instructions to your bank to debit your account and (B) your bank to debit your account in accordance with those instructions. As part of your rights, you are entitled to a refund from your bank under the terms and conditions of your agreement with your bank. A refund must be claimed within 8 weeks starting from the date on which your account was debited. Your rights are explained in a statement that you can obtain from your bank. You agree to receive notifications for future debits up to 2 days before they occur." = "Ao fornecer seus dados de pagamento e confirmar este pagamento, você autoriza (A) %@ e a Stripe, o nosso provedor de serviços de pagamento, a enviar instruções ao seu banco para debitar sua conta e (B) seu banco a debitar sua conta, de acordo com as referidas instruções. Os seus direitos incluem a possibilidade de exigir do banco o reembolso do valor debitado, nos termos e condições acordados com a instituição. O reembolso deve ser solicitado dentro de um prazo de 8 semanas a partir da data do débito na conta. Você concorda em receber notificações de débitos futuros em até 2 dias antes do débito.";
+
+"By providing your phone number, you agree to create a %1$@ account and save your payment info to %1$@, according to the %1$@ <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao fornecer seu número de telefone, você concorda em criar uma conta %1$@ e salvar suas informações de pagamento para %1$@, de acordo com os <terms>Termos</terms> e <privacy>Política de Privacidade</privacy> da %1$@.";
 
 "By providing your phone number, you agree to create a Link account and save your payment info to Link, according to the Link <terms>Terms</terms> and <privacy>Privacy Policy</privacy>." = "Ao informar seu número de telefone, você concorda em criar uma conta do Link e salvar seus dados de pagamento no Link, segundo os <terms>Termos</terms> e a <privacy>Política de Privacidade</privacy> do Link.";
 
@@ -118,6 +132,8 @@
 
 "Continue another way" = "Continuar de outro modo";
 
+"Create an account with %@ for faster checkout across the web" = "Crie uma conta com %@ para um checkout mais rápido pela web";
+
 "Create an account with Link for faster checkout across the web" = "Crie uma conta com o Link para um checkout mais rápido na web";
 
 "Debit or credit card" = "Cartão de crédito ou débito";
@@ -153,6 +169,8 @@
 "Last 4 digits of SSN" = "Últimos 4 dígitos do SSN";
 
 "Log in or sign up" = "Faça login ou registre-se";
+
+"Log out of %@" = "Fazer logout de %@?";
 
 "Log out of Link" = "Sair do Link";
 
@@ -202,11 +220,15 @@
 
 "Pay faster at %@ and thousands of businesses." = "Pague mais rápido em %@ e milhares de empresas.";
 
+"Pay faster everywhere %@ is accepted." = "Pague mais rápido em todos os lugares onde %@ é aceito.";
+
 "Pay faster everywhere Link is accepted." = "Pague mais rápido em todos os lugares que aceitam o Link.";
 
 "Pay over time with %@" = "Pagar depois com %@";
 
 "Pay over time with Affirm" = "Parcelar com Affirm";
+
+"Pay with %@" = "Pagar com %@";
 
 "Pay with Link" = "Pagar com Link";
 
@@ -252,6 +274,8 @@
 
 "Save for future payments" = "Salvar para pagamentos futuros";
 
+"Save my info for faster checkout with %@" = "Salvar meus dados para um checkout mais rápido com %@";
+
 "Save my info for faster checkout with Link" = "Salvar meus dados para um checkout mais rápido com o Link";
 
 "Save payment details to %@ for future purchases" = "Salvar dados de pagamento para compras futuras em %@";
@@ -259,6 +283,8 @@
 "Save this account for future %@ payments" = "Salvar esta conta para pagamentos futuros de %@";
 
 "Save your bank account in just a few steps." = "Salve sua conta bancária em poucos passos.";
+
+"Save your info for secure 1-click checkout with %@" = "Salve suas informações para um checkout seguro com um clique usando o %@";
 
 "Save your info for secure 1-click checkout with Link" = "Salve seus dados para fazer checkout seguro em 1 clique com o Link";
 
@@ -276,11 +302,15 @@
 
 "Set up" = "Configurar";
 
+"Shipping" = "Envio";
+
 "Shipping to %@ is not supported." = "Envios para %@ não são aceitos.";
 
 "Show menu" = "Mostrar o menu";
 
 "Simple, secure one-click payments" = "Pagamentos simples e seguros em um clique";
+
+"Something went wrong when linking your account.\nPlease try again later." = "Algo deu errado ao vincular sua conta.\nTente novamente mais tarde.";
 
 "Stripe will deposit $0.01 to your account in 1-2 business days. Then you'll get an email with instructions to finish saving your bank account with %@." = "A Stripe depositará US$ 0,01 na sua conta em até 2 dias úteis. Em seguida, você receberá um e-mail com instruções de como salvar sua conta bancária com a %@.";
 
@@ -295,6 +325,8 @@
 "Tax" = "Imposto";
 
 "The IBAN you entered is incomplete." = "O IBAN inserido está incompleto.";
+
+"The IBAN you entered is invalid, \"%@\" is not a supported country code." = "O IBAN inserido é inválido, \"%@\" não foi reconhecido como código de país.";
 
 "The provided verification code has expired." = "O código de verificação informado expirou.";
 

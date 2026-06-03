@@ -44,13 +44,17 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var disableWalletPaymentMethodFiltering: Bool { get set }
     var linkPaymentMethodsOnly: Bool { get set }
     var opensCardScannerAutomatically: Bool { get set }
+    var useAutocompleteEndpoints: Bool { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
     func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout
 }
 
 extension PaymentElementConfiguration {
-    func resolvedLinkBrand(elementsSession: STPElementsSession) -> LinkBrand {
-        link.effectiveBrand(elementsSession: elementsSession)
+    func resolvedLinkBrand(elementsSession: STPElementsSession, linkAccount: PaymentSheetLinkAccount?) -> LinkBrand {
+        if let brand = link.brand {
+            return brand
+        }
+        return linkAccount?.linkBrand ?? elementsSession.linkBrand ?? .link
     }
 
     /// Returns `true` if the merchant requires the collection of _any_ billing detail fields - name, phone, email, address.
@@ -99,13 +103,6 @@ extension PaymentElementConfiguration {
             return .automatic
         }
         return termsDisplay
-    }
-}
-
-private extension PaymentSheet.LinkConfiguration {
-    func effectiveBrand(elementsSession: STPElementsSession) -> LinkBrand {
-        // `brand` is an explicit client override; `nil` means defer to the elements session response.
-        brand ?? elementsSession.linkBrand ?? .link
     }
 }
 

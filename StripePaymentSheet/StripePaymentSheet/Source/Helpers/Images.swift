@@ -22,6 +22,9 @@ enum Image: String, CaseIterable, ImageMaker {
     /// https://developer.apple.com/apple-pay/marketing/
     case apple_pay_mark = "apple_pay_mark"
 
+    /// https://developers.google.com/maps/documentation/places/web-service/policies
+    case google_maps_mark = "google_maps_mark"
+
     // Payment Method Type images
     case pm_type_affirm = "icon-pm-affirm"
     case pm_type_afterpay = "icon-pm-afterpay"
@@ -92,6 +95,7 @@ enum Image: String, CaseIterable, ImageMaker {
     case link_logo_knockout = "link_logo_knockout"
     case onelink_logo_knockout = "onelink_logo_knockout"
     case link_icon = "link_icon"
+    case link_icon_with_inset = "link_icon_with_inset"
     case link_logo_tintable = "link_logo_tintable"
     case onelink_logo_tintable = "onelink_logo_tintable"
     case onelink_logo_bw = "onelink_logo_bw"
@@ -123,6 +127,12 @@ enum Image: String, CaseIterable, ImageMaker {
 
     // KYC Refresh
     case iconEditOutline = "icon_edit_outline"
+}
+
+extension Image {
+    static var paymentSheetLinkLogoImage: UIImage {
+        Image.link_icon_with_inset.makeImage(template: false)
+    }
 }
 
 extension LinkBrand {

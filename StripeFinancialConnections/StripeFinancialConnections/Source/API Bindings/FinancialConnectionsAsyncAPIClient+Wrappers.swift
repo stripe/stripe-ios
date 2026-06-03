@@ -351,7 +351,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         customEmailType: String?,
         connectionsMerchantName: String?,
         consumerSessionClientSecret: String
-    ) -> Future<ConsumerSessionResponse> {
+    ) -> Future<ConsumerSessionStartVerificationResponse> {
         wrapAsyncToFuture {
             try await self.consumerSessionStartVerification(
                 otpType: otpType,
@@ -366,7 +366,7 @@ extension FinancialConnectionsAsyncAPIClient: FinancialConnectionsAPI {
         otpCode: String,
         otpType: String,
         consumerSessionClientSecret: String
-    ) -> Future<ConsumerSessionResponse> {
+    ) -> Future<ConsumerSessionConfirmVerificationResponse> {
         wrapAsyncToFuture {
             try await self.consumerSessionConfirmVerification(
                 otpCode: otpCode,

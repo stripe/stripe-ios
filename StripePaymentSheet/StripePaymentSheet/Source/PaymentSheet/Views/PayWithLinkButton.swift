@@ -44,7 +44,14 @@ final class PayWithLinkButton: UIControl {
         }
     }
 
-    let brand: LinkBrand
+    var brand: LinkBrand {
+        didSet {
+            guard oldValue != brand else {
+                return
+            }
+            updateBrandUI()
+        }
+    }
 
     var primaryLinkLogoImage: UIImage {
         switch brand {
@@ -134,22 +141,23 @@ final class PayWithLinkButton: UIControl {
         return stackView
     }()
 
+    private lazy var emailLogoView = makeLogoView()
     private lazy var emailSeparatorView: UIView = Self.makeSeparatorView()
     private lazy var emailStackView: UIStackView = {
-        let logoView = makeLogoView()
         let stackView = UIStackView(arrangedSubviews: [
-            logoView,
+            emailLogoView,
             emailSeparatorView,
             emailLabel,
         ].compactMap({ $0 }))
         stackView.spacing = 10
-        stackView.setCustomSpacing(12, after: logoView)
+        stackView.setCustomSpacing(12, after: emailLogoView)
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.distribution = .fill
         stackView.alignment = .center
         return stackView
     }()
 
+    private lazy var cardLogoView = makeLogoView()
     private lazy var cardBrandSeparatorView: UIView = Self.makeSeparatorView()
     private lazy var cardBrandView: UIImageView = {
         let brandView = UIImageView(image: STPImageLibrary.unknownCardCardImage())
@@ -165,9 +173,8 @@ final class PayWithLinkButton: UIControl {
     }()
 
     private lazy var cardStackView: UIStackView = {
-        let logoView = makeLogoView()
         let stackView = UIStackView(arrangedSubviews: [
-            logoView,
+            cardLogoView,
             cardBrandSeparatorView,
             cardBrandView,
             last4Label,
@@ -391,6 +398,14 @@ private extension PayWithLinkButton {
         updateAccessibilityContent()
     }
 
+    func updateBrandUI() {
+        payWithLinkView.attributedText = makePayWithLinkAttributedText(for: payWithLinkView.font)
+        updateLogoView(emailLogoView)
+        updateLogoView(cardLogoView)
+        updateAccessibilityContent()
+        setNeedsLayout()
+    }
+
 }
 
 // MARK: - Styling
@@ -479,7 +494,7 @@ private extension PayWithLinkButton {
         }
 
         // To use Xcode SwiftUI Previews, comment out the following `accessibilityLabel` setter:
-        accessibilityLabel = String.Localized.pay_with_link(brand: brand)
+        accessibilityLabel = brand.accessibilityText(from: String.Localized.pay_with_link(brand: brand))
 
         switch linkAccountState {
         case .hasCard(let last4, let brand):

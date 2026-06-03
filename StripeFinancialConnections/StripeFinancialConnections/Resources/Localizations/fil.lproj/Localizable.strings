@@ -26,6 +26,8 @@
 
 "Continue linking your account" = "Magpatuloy sa pag-link sa iyong account";
 
+"Continue with %@" = "Magpatuloy sa %@";
+
 "Continue with Link" = "Magpatuloy sa Link";
 
 "Email address" = "Email address";
@@ -110,6 +112,8 @@
 
 "Try searching another bank or %@" = "Subukang maghanap ng ibang bangko o %@";
 
+"Use information you previously saved with your %@ account." = "Gamitin ang impormasyong dati mong nai-save gamit ang iyong %@ account.";
+
 "Use information you previously saved with your Link account." = "Gamitin ang impormasyon na dati mong na-save sa iyong Link account.";
 
 "Use test account" = "Gumamit ng test account";
@@ -150,9 +154,13 @@
 
 "Your account numbers don't match." = "Hindi nagtutugma ang mga numero ng account mo.";
 
+"Your account was connected, but couldn't be saved to %@." = "Nakakonekta ang iyong account, ngunit hindi mai-save sa %@.";
+
 "Your account was connected, but couldn't be saved to Link." = "Naikonekta ang iyong account, pero hindi mai-save sa Link.";
 
 "Your account was connected." = "Naikonekta ang iyong account.";
+
+"Your accounts were connected, but couldn't be saved to %@." = "Nakakonekta ang iyong mga account, ngunit hindi mai-save sa %@.";
 
 "Your accounts were connected, but couldn't be saved to Link." = "Naikonekta ang iyong mga account, pero hindi mai-save sa Link.";
 

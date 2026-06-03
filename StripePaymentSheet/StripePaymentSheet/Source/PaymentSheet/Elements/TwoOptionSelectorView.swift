@@ -11,7 +11,34 @@ import UIKit
 struct TwoOptionSelectorItem: Equatable {
     let id: String
     let displayText: NSAttributedString
+    let accessibilityLabel: String
     let accessibilityIdentifier: String
+}
+
+// MARK: - TwoOptionSelectorViewAppearance
+
+/// The visual properties that `TwoOptionSelectorView` reads from its appearance.
+protocol TwoOptionSelectorViewAppearance {
+    var trackBackground: UIColor { get }
+    var pillBackground: UIColor { get }
+    var selectedTextColor: UIColor { get }
+    var unselectedTextColor: UIColor { get }
+    var borderColor: UIColor { get }
+    var borderWidth: CGFloat { get }
+    var cornerRadius: CGFloat { get }
+    var height: CGFloat { get }
+    var font: UIFont { get }
+    var sizeScaleFactor: CGFloat { get }
+    var captionColor: UIColor { get }
+}
+
+extension TwoOptionSelectorViewAppearance {
+    func scaledFont(for font: UIFont, style: UIFont.TextStyle) -> UIFont {
+        let defaultTraitCollection = UITraitCollection(preferredContentSizeCategory: .large)
+        let fontDescriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: style, compatibleWith: defaultTraitCollection)
+        let customFont = font.withSize(fontDescriptor.pointSize * sizeScaleFactor)
+        return UIFontMetrics.default.scaledFont(for: customFont, maximumPointSize: 20)
+    }
 }
 
 // MARK: - TwoOptionSelectorViewDelegate
@@ -30,10 +57,10 @@ final class TwoOptionSelectorView: UIView {
 
     weak var delegate: TwoOptionSelectorViewDelegate?
 
-    private let appearance: PaymentSheet.Appearance
+    private let appearance: TwoOptionSelectorViewAppearance
 
-    private var leftItem: TwoOptionSelectorItem
-    private var rightItem: TwoOptionSelectorItem
+    private let leftItem: TwoOptionSelectorItem
+    private let rightItem: TwoOptionSelectorItem
     private(set) var selectedItemId: String
 
     private let mainStackView = UIStackView()
@@ -56,7 +83,7 @@ final class TwoOptionSelectorView: UIView {
         rightItem: TwoOptionSelectorItem,
         selectedItemId: String,
         caption: String? = nil,
-        appearance: PaymentSheet.Appearance
+        appearance: TwoOptionSelectorViewAppearance
     ) {
         self.appearance = appearance
         self.leftItem = leftItem
@@ -74,24 +101,37 @@ final class TwoOptionSelectorView: UIView {
 
     // MARK: - Setup
 
+    private func trackAndPillCornerRadii() -> (track: CGFloat, pill: CGFloat) {
+        let h = appearance.height
+        let bw = appearance.borderWidth
+        let maxTrack = max((h - bw) / 2, 0)
+        let track = min(appearance.cornerRadius, maxTrack)
+        let innerH = h - 2 * trackPadding
+        let maxPill = innerH / 2
+        let pill = max(0, min(track - trackPadding, maxPill))
+        return (track, pill)
+    }
+
     private func setupViews() {
         mainStackView.axis = .vertical
         mainStackView.spacing = 6
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainStackView)
 
+        let (trackCornerRadius, pillCornerRadius) = trackAndPillCornerRadii()
+
         // Track background
-        trackView.backgroundColor = appearance.colors.background
-        trackView.layer.borderWidth = 0.5
-        trackView.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .uniform)
+        trackView.backgroundColor = appearance.trackBackground
+        trackView.layer.borderWidth = appearance.borderWidth
+        trackView.layer.cornerRadius = trackCornerRadius
+        trackView.layer.cornerCurve = .circular
         trackView.clipsToBounds = false
 
         // Selection indicator pill
-        selectionIndicatorView.backgroundColor = appearance.colors.componentBackground
-        selectionIndicatorView.applyCornerRadiusOrConfiguration(for: appearance, ios26DefaultCornerStyle: .uniform)
+        selectionIndicatorView.backgroundColor = appearance.pillBackground
+        selectionIndicatorView.layer.cornerRadius = pillCornerRadius
+        selectionIndicatorView.layer.cornerCurve = .circular
 
-        selectionIndicatorView.layer.applyShadow(shadow: appearance.shadow.asElementThemeShadow)
-        selectionIndicatorView.layer.borderWidth = 0.5
         buttonsStackView.axis = .horizontal
         buttonsStackView.spacing = 0
         buttonsStackView.distribution = .fillEqually
@@ -115,8 +155,12 @@ final class TwoOptionSelectorView: UIView {
             buttonsStackView.bottomAnchor.constraint(equalTo: trackView.bottomAnchor, constant: -trackPadding),
         ])
 
-        captionLabel.font = appearance.scaledFont(for: appearance.font.base.regular, style: .caption1, maximumPointSize: 20)
-        captionLabel.textColor = appearance.colors.textSecondary
+        let heightConstraint = trackView.heightAnchor.constraint(equalToConstant: appearance.height)
+        heightConstraint.priority = UILayoutPriority(999)
+        heightConstraint.isActive = true
+
+        captionLabel.font = appearance.scaledFont(for: appearance.font, style: .caption1)
+        captionLabel.textColor = appearance.captionColor
         captionLabel.numberOfLines = 0
         captionLabel.isHidden = true
         mainStackView.addArrangedSubview(captionLabel)
@@ -150,26 +194,29 @@ final class TwoOptionSelectorView: UIView {
     }
 
     private func updateBorderColors() {
-        let borderColor = appearance.colors.componentBorder.withAlphaComponent(0.5).cgColor
-        trackView.layer.borderColor = borderColor
-        selectionIndicatorView.layer.borderColor = borderColor
+        trackView.layer.borderColor = appearance.borderColor.cgColor
     }
 
     private func configureButton(_ button: UIButton, item: TwoOptionSelectorItem) {
         button.setAttributedTitle(item.displayText, for: .normal)
-        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
-        button.contentEdgeInsets = UIEdgeInsets(top: 7, left: 16, bottom: 7, right: 16)
+        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         button.backgroundColor = .clear
         button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
+        button.accessibilityLabel = item.accessibilityLabel
         button.accessibilityIdentifier = item.accessibilityIdentifier
     }
 
     private func updateButtonStyles(animated: Bool) {
         let isLeftSelected = leftItem.id == selectedItemId
-        let font = appearance.scaledFont(for: appearance.font.base.medium, style: .footnote, maximumPointSize: 20)
+        let font = appearance.scaledFont(for: appearance.font.medium, style: .footnote)
 
-        applyTitleColor(to: leftButton, item: leftItem, color: isLeftSelected ? appearance.colors.componentText : appearance.colors.textSecondary, font: font)
-        applyTitleColor(to: rightButton, item: rightItem, color: !isLeftSelected ? appearance.colors.componentText : appearance.colors.textSecondary, font: font)
+        applyTitleColor(to: leftButton, item: leftItem, color: isLeftSelected ? appearance.selectedTextColor : appearance.unselectedTextColor, font: font)
+        applyTitleColor(to: rightButton, item: rightItem, color: !isLeftSelected ? appearance.selectedTextColor : appearance.unselectedTextColor, font: font)
+
+        leftButton.accessibilityTraits = isLeftSelected ? [.button, .selected] : .button
+        rightButton.accessibilityTraits = !isLeftSelected ? [.button, .selected] : .button
+
         indicatorLeadingConstraint?.isActive = false
         indicatorTrailingConstraint?.isActive = false
 
@@ -227,6 +274,7 @@ final class TwoOptionSelectorView: UIView {
         if notifyDelegate {
             delegate?.twoOptionSelectorView(self, didSelectItemWithId: itemId)
         }
+        UIAccessibility.post(notification: .layoutChanged, argument: itemId == leftItem.id ? leftButton : rightButton)
     }
 
 #if !os(visionOS)

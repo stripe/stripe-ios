@@ -454,7 +454,7 @@ class PaymentSheetVerticalUITests: PaymentSheetUITestCase {
         app.buttons["Payment method"].waitForExistenceAndTap()
         app.buttons["Card"].waitForExistenceAndTap()
         try! fillCardData(app)
-        app.buttons["Done"].tap() // Tap done on keyboard, not sure why it doesn't auto dismiss
+        app.stp_dismissKeyboard() // Dismiss keyboard
         app.buttons["Continue"].waitForExistenceAndTap()
         // ...and *updating* to a SetupIntent...
         app.buttons["Setup"].waitForExistenceAndTap()
