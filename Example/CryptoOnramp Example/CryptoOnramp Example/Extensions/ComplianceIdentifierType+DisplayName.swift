@@ -33,6 +33,8 @@ extension ComplianceIdentifierType {
             return "Henkilötunnus (HETU) - Finland"
         case .frSPI:
             return "Numéro fiscal de référence (SPI) - France"
+        case .frNIR:
+            return "Social security number (NIR) - France"
         case .deSTN:
             return "Tax Identification Number (Steuer-ID) - Germany"
         case .grAFM:
@@ -47,6 +49,8 @@ extension ComplianceIdentifierType {
             return "Codice fiscale - Italy"
         case .lvPK:
             return "Personas kods - Latvia"
+        case .esNIF:
+            return "Número de Identificación Fiscal (NIF) - Spain"
         case .ltAK:
             return "Asmens kodas - Lithuania"
         case .luNIF:
@@ -71,6 +75,69 @@ extension ComplianceIdentifierType {
             return "Personal Identification Number (EMŠO) - Slovenia"
         case .sePIN:
             return "Personnummer (PIN) - Sweden"
+        default:
+            return rawValue
+        }
+    }
+
+    var carfDisplayName: String {
+        switch self {
+        case .atSTN:
+            return "Austria — at_stn"
+        case .beNRN:
+            return "Belgium — be_nrn"
+        case .bgUCN:
+            return "Bulgaria — bg_ucn"
+        case .cyTIC:
+            return "Cyprus — cy_tic"
+        case .czRC:
+            return "Czech Republic — cz_rc"
+        case .deSTN:
+            return "Germany — de_stn"
+        case .dkCPR:
+            return "Denmark — dk_cpr"
+        case .eeIK:
+            return "Estonia — ee_ik"
+        case .esNIF:
+            return "Spain — es_nif"
+        case .fiHETU:
+            return "Finland — fi_hetu"
+        case .frNIR:
+            return "France — fr_nir (NIR)"
+        case .frSPI:
+            return "France — fr_spi (SPI)"
+        case .grAFM:
+            return "Greece — gr_afm"
+        case .hrOIB:
+            return "Croatia — hr_oib"
+        case .huAD:
+            return "Hungary — hu_ad"
+        case .iePPSN:
+            return "Ireland — ie_ppsn"
+        case .itCF:
+            return "Italy — it_cf"
+        case .ltAK:
+            return "Lithuania — lt_ak"
+        case .luNIF:
+            return "Luxembourg — lu_nif"
+        case .lvPK:
+            return "Latvia — lv_pk"
+        case .mtNIC:
+            return "Malta — mt_nic"
+        case .nlBSN:
+            return "Netherlands — nl_bsn"
+        case .plPESEL:
+            return "Poland — pl_pesel"
+        case .ptNIF:
+            return "Portugal — pt_nif"
+        case .roCNP:
+            return "Romania — ro_cnp"
+        case .sePIN:
+            return "Sweden — se_pin"
+        case .siPIN:
+            return "Slovenia — si_pin"
+        case .skRC:
+            return "Slovakia — sk_rc"
         default:
             return rawValue
         }

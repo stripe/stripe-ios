@@ -72,6 +72,9 @@ public extension ComplianceIdentifierType {
     /// Numéro fiscal de référence (SPI) - France.
     static let frSPI = Self(rawValue: "fr_spi")
 
+    /// Social security number (NIR) - France.
+    static let frNIR = Self(rawValue: "fr_nir")
+
     /// Tax Identification Number (Steuer-ID) - Germany.
     static let deSTN = Self(rawValue: "de_stn")
 
