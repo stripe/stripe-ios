@@ -528,6 +528,7 @@ class EmbeddedPaymentMethodsView: UIView {
             hasSavedCard: savedPaymentMethods.hasSavedCard,
             accessoryView: accessoryButton,
             promoText: incentive?.takeIfAppliesTo(paymentMethodType)?.displayText,
+            promotionsHelper: paymentMethodMessagingPromotionsHelper,
             appearance: appearance,
             originalCornerRadius: appearance.cornerRadius,
             shouldAnimateOnPress: delegate?.willDisplayForm(for: .new(paymentMethodType: paymentMethodType)) == true,

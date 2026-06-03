@@ -75,6 +75,7 @@ class ECEIntegrationTests: XCTestCase {
             elementsSession: elementsSession,
             savedPaymentMethods: [],
             paymentMethodTypes: [],
+            paymentMethodMessagingPromotionsHelper: ._testValue(),
             paymentMethodOrientation: .vertical
         )
         analyticsHelper = PaymentSheetAnalyticsHelper(
@@ -574,6 +575,7 @@ class ECEIntegrationTests: XCTestCase {
                 elementsSession: loadResult.elementsSession,
                 savedPaymentMethods: [],
                 paymentMethodTypes: [],
+                paymentMethodMessagingPromotionsHelper: ._testValue(),
                 paymentMethodOrientation: .vertical
             ),
             analyticsHelper: PaymentSheetAnalyticsHelper(
@@ -611,6 +613,7 @@ class ECEIntegrationTests: XCTestCase {
                 elementsSession: loadResult.elementsSession,
                 savedPaymentMethods: [],
                 paymentMethodTypes: [],
+                paymentMethodMessagingPromotionsHelper: ._testValue(),
                 paymentMethodOrientation: .vertical
             ),
             analyticsHelper: PaymentSheetAnalyticsHelper(

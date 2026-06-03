@@ -1,29 +1,10 @@
 //
-//  RowButton+Sublabel.swift
+//  RowButton+PlainSublabelView.swift
 //  StripePaymentSheet
 //
 
-@_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
-
-// MARK: - SublabelView protocol
-
-extension RowButton {
-
-    /// Defines the interface for sublabel views displayed beneath the primary label in a `RowButton`.
-    /// Conforming types manage their own visibility transitions and text state.
-    protocol SublabelView: UIView {
-        /// Whether this sublabel variant needs to expand beyond the standard row height.
-        var needsUnlimitedHeight: Bool { get }
-        /// Whether the sublabel currently contains displayable content.
-        var hasText: Bool { get }
-        /// Updates the displayed text, optionally animating the visibility transition.
-        func setSublabel(text: String?, animated: Bool)
-        /// Notifies the sublabel that the parent row's selection state changed.
-        func updateSelectedState(_ isRowSelected: Bool, willDisplayForm: Bool)
-    }
-}
 
 // MARK: - PlainSublabelView
 
@@ -42,9 +23,6 @@ extension RowButton {
         }
 
         let textLabel: UILabel
-
-        private static let visibilityAnimationDuration: TimeInterval = 0.2
-        private static let fadeAnimationDuration: TimeInterval = 0.1
 
         init(
             text: String?,
@@ -93,8 +71,8 @@ extension RowButton {
         func setSublabel(text: String?, animated: Bool) {
             guard text != textLabel.text else { return }
 
-            let showDuration = animated ? Self.visibilityAnimationDuration : 0
-            let fadeDuration = animated ? Self.fadeAnimationDuration : 0
+            let showDuration = animated ? sublabelIsHiddenAnimationDuration : 0
+            let fadeDuration = animated ? sublabelAlphaAnimationDuration : 0
 
             if let text {
                 textLabel.text = text

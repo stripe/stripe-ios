@@ -5,11 +5,12 @@
 //  Created by Michael Liberatore on 4/23/26.
 //
 
+import SafariServices
 @_spi(STP) import StripeCore
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// The content view of `CRSCARFDeclarationViewController`, which displays CRS/CARF declaration text with a confirmation button.
+/// The content view of `CRSCARFDeclarationViewController`, which displays CRS/CARF declaration HTML with a confirmation button.
 final class CRSCARFDeclarationContentViewController: UIViewController, BottomSheetContentViewController {
 
     // MARK: - BottomSheetContentViewController
@@ -26,23 +27,44 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         return navigationBar
     }()
 
-    let requiresFullScreen: Bool = true
+    let requiresFullScreen = false
 
     // MARK: - CRSCARFDeclarationContentViewController
 
-    private let text: String
+    private let html: String
     private let appearance: LinkAppearance
     private let brand: LinkBrand
+
+    private var linkPrimaryButtonColor: UIColor {
+        appearance.colors?.primary ?? LinkUI.appearance.primaryButton.backgroundColor ?? LinkUI.appearance.colors.primary
+    }
+
+    private var declarationBaseAttributes: [NSAttributedString.Key: Any] {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineHeightMultiple = 1.2
+
+        return [
+            .font: LinkUI.font(forTextStyle: .body),
+            .foregroundColor: UIColor.linkTextPrimary,
+            .paragraphStyle: paragraphStyle,
+        ]
+    }
+
+    private var declarationLinkAttributes: [NSAttributedString.Key: Any] {
+        [
+            .foregroundColor: linkPrimaryButtonColor,
+        ]
+    }
 
     /// Closure called when a user confirms or cancels the declaration.
     var onResult: ((LinkController.CRSCARFDeclarationResult) -> Void)?
 
     /// Creates a new instance of `CRSCARFDeclarationContentViewController`.
     /// - Parameters:
-    ///   - text: The declaration text to display.
+    ///   - html: The declaration HTML to display.
     ///   - appearance: Determines the colors, corner radius, and height of the confirmation button.
-    init(text: String, appearance: LinkAppearance, brand: LinkBrand) {
-        self.text = text
+    init(html: String, appearance: LinkAppearance, brand: LinkBrand) {
+        self.html = html
         self.appearance = appearance
         self.brand = brand
         super.init(nibName: nil, bundle: nil)
@@ -51,41 +73,6 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.alwaysBounceVertical = true
-        scrollView.translatesAutoresizingMaskIntoConstraints = false
-
-        scrollView.addSubview(containerStackView)
-        NSLayoutConstraint.activate([
-            containerStackView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
-            containerStackView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
-            containerStackView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
-            containerStackView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
-            containerStackView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
-        ])
-
-        return scrollView
-    }()
-
-    private lazy var containerStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [
-            headingLabel,
-            declarationLabel,
-        ])
-        stackView.axis = .vertical
-        stackView.spacing = LinkUI.contentSpacing
-        stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.directionalLayoutMargins = NSDirectionalEdgeInsets(
-            top: LinkUI.smallContentSpacing,
-            leading: LinkUI.contentSpacing,
-            bottom: LinkUI.contentSpacing,
-            trailing: LinkUI.contentSpacing
-        )
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
 
     private lazy var headingLabel: UILabel = {
         let label = UILabel()
@@ -97,25 +84,47 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         return label
     }()
 
-    private lazy var declarationLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = LinkUI.font(forTextStyle: .detail)
-        label.textColor = .linkTextPrimary
-        label.numberOfLines = 0
-        label.attributedText = attributedDeclarationText
-        return label
+    private lazy var declarationTextView: UITextView = {
+        let textView = UITextView()
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        textView.backgroundColor = .clear
+        textView.isEditable = false
+        textView.isScrollEnabled = false
+        textView.textContainerInset = .zero
+        textView.textContainer.lineFragmentPadding = 0
+        textView.delegate = self
+        textView.attributedText = attributedDeclarationHTML
+        textView.linkTextAttributes = [
+            .foregroundColor: linkPrimaryButtonColor,
+        ]
+        return textView
     }()
 
-    private var attributedDeclarationText: NSAttributedString {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = LinkUI.tinyContentSpacing
-        return NSAttributedString(
-            string: text,
-            attributes: [
-                .paragraphStyle: paragraphStyle,
-            ]
-        )
+    private var attributedDeclarationHTML: NSAttributedString {
+        guard let attributedString = try? NSMutableAttributedString(
+            data: Data(html.utf8),
+            options: [
+                .documentType: NSAttributedString.DocumentType.html,
+                .characterEncoding: String.Encoding.utf8.rawValue,
+            ],
+            documentAttributes: nil
+        ) else {
+            return NSAttributedString(string: html, attributes: declarationBaseAttributes)
+        }
+
+        let fullRange = NSRange(location: 0, length: attributedString.length)
+        var linkRanges: [NSRange] = []
+        attributedString.enumerateAttribute(.link, in: fullRange) { value, range, _ in
+            if value != nil {
+                linkRanges.append(range)
+            }
+        }
+
+        attributedString.addAttributes(declarationBaseAttributes, range: fullRange)
+        linkRanges.forEach { range in
+            attributedString.addAttributes(declarationLinkAttributes, range: range)
+        }
+        return attributedString
     }
 
     private lazy var bottomButtonContainer: UIView = {
@@ -126,7 +135,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     }()
 
     private lazy var confirmButton = ConfirmButton.makeLinkButton(
-        callToAction: .custom(title: String.Localized.agree_and_accept),
+        callToAction: .custom(title: String.Localized.accept),
         showProcessingLabel: false,
         linkAppearance: appearance
     ) { [weak self] in
@@ -136,18 +145,23 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.addSubview(scrollView)
+        view.addSubview(headingLabel)
+        view.addSubview(declarationTextView)
         view.addSubview(bottomButtonContainer)
 
         NSLayoutConstraint.activate([
+            headingLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: LinkUI.smallContentSpacing),
+            headingLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LinkUI.contentSpacing),
+            headingLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -LinkUI.contentSpacing),
+
+            declarationTextView.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: LinkUI.contentSpacing),
+            declarationTextView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LinkUI.contentSpacing),
+            declarationTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -LinkUI.contentSpacing),
+            declarationTextView.bottomAnchor.constraint(equalTo: bottomButtonContainer.topAnchor),
+
             bottomButtonContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             bottomButtonContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             bottomButtonContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-
-            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: bottomButtonContainer.topAnchor),
         ])
     }
 
@@ -160,5 +174,32 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
 
     func didTapOrSwipeToDismiss() {
         onResult?(.canceled)
+    }
+}
+
+extension CRSCARFDeclarationContentViewController: UITextViewDelegate {
+
+    // MARK: - UITextViewDelegate
+
+    func textView(
+        _ textView: UITextView,
+        shouldInteractWith URL: URL,
+        in characterRange: NSRange,
+        interaction: UITextItemInteraction
+    ) -> Bool {
+        guard interaction == .invokeDefaultAction else {
+            return false
+        }
+
+        if ["http", "https"].contains(URL.scheme?.lowercased()) {
+            let safariViewController = SFSafariViewController(url: URL)
+            #if !os(visionOS)
+            safariViewController.dismissButtonStyle = .close
+            #endif
+            safariViewController.modalPresentationStyle = .overFullScreen
+            present(safariViewController, animated: true)
+        }
+
+        return false
     }
 }
