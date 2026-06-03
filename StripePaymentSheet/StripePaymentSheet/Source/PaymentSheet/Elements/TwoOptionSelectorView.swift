@@ -128,6 +128,8 @@ final class TwoOptionSelectorView: UIView {
         selectionIndicatorView.backgroundColor = appearance.pillBackground
         selectionIndicatorView.layer.cornerCurve = .circular
 
+        applyCornerRadii()
+
         buttonsStackView.axis = .horizontal
         buttonsStackView.spacing = 0
         buttonsStackView.distribution = .fillEqually
