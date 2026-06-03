@@ -141,7 +141,7 @@ final class PaymentSheetLoader {
                 if isLinkEnabled {
                     LinkAccountContext.shared.account = linkAccount
                 }
-                Self.logLinkExperimentExposures(
+                Self.logExperimentExposures(
                     elementsSession: elementsSession,
                     configuration: configuration,
                     linkAccount: linkAccount,
@@ -352,7 +352,7 @@ final class PaymentSheetLoader {
     }
 
     @MainActor
-    private static func logLinkExperimentExposures(
+    private static func logExperimentExposures(
         elementsSession: STPElementsSession,
         configuration: PaymentElementConfiguration,
         linkAccount: PaymentSheetLinkAccount?,
@@ -362,32 +362,35 @@ final class PaymentSheetLoader {
             guard let arbId = elementsSession.experimentsData?.arbId else {
                 return
             }
-            let linkGlobalHoldbackExperiment = LinkGlobalHoldback(
+            analyticsHelper.logExposure(experiment: LinkGlobalHoldback(
                 arbId: arbId,
                 session: elementsSession,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
-            )
-            analyticsHelper.logExposure(experiment: linkGlobalHoldbackExperiment)
-
-            let linkGlobalHoldbackAAExperiment = LinkGlobalHoldbackAA(
+            ))
+            analyticsHelper.logExposure(experiment: LinkGlobalHoldbackAA(
                 arbId: arbId,
                 session: elementsSession,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
-            )
-            analyticsHelper.logExposure(experiment: linkGlobalHoldbackAAExperiment)
-
-            let linkAbTestExperiment = LinkABTest(
+            ))
+            analyticsHelper.logExposure(experiment: LinkABTest(
                 arbId: arbId,
                 session: elementsSession,
                 configuration: configuration,
                 linkAccount: linkAccount,
                 integrationShape: analyticsHelper.integrationShape
-            )
-            analyticsHelper.logExposure(experiment: linkAbTestExperiment)
+            ))
+            analyticsHelper.logExposure(experiment: ConnectionsFCLiteVsNative(
+                arbId: arbId,
+                session: elementsSession
+            ))
+            analyticsHelper.logExposure(experiment: ConnectionsFCLiteVsNativeAA(
+                arbId: arbId,
+                session: elementsSession
+            ))
         }
     }
 
