@@ -584,7 +584,7 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
         let apiClient = stubbedAPIClient()
         let response = try await apiClient.retrieveCRSCARFDeclaration(linkAccountInfo: Constant.validLinkAccountInfo)
 
-        XCTAssertEqual(response.text, "test")
+        XCTAssertEqual(response.html, "<p>test</p>")
         XCTAssertEqual(response.version, "0")
     }
 
