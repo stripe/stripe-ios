@@ -86,7 +86,7 @@ class EmbeddedUITests: PaymentSheetUITestCase {
             .suffix(1)
         XCTAssertEqual(
             aliPayAnalytics,
-            ["mc_carousel_payment_method_tapped", "mc_form_shown"]
+            ["mc_carousel_payment_method_tapped"]
         )
 
         // ...and *updating* to a SetupIntent...
