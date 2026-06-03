@@ -118,19 +118,14 @@ final class TwoOptionSelectorView: UIView {
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainStackView)
 
-        let trackHeight = Self.defaultContentHeight + 2 * appearance.contentVerticalPadding
-        let (trackCornerRadius, pillCornerRadius) = trackAndPillCornerRadii(for: trackHeight)
-
         // Track background
         trackView.backgroundColor = appearance.trackBackground
         trackView.layer.borderWidth = appearance.borderWidth
-        trackView.layer.cornerRadius = trackCornerRadius
         trackView.layer.cornerCurve = .circular
         trackView.clipsToBounds = false
 
         // Selection indicator pill
         selectionIndicatorView.backgroundColor = appearance.pillBackground
-        selectionIndicatorView.layer.cornerRadius = pillCornerRadius
         selectionIndicatorView.layer.cornerCurve = .circular
 
         buttonsStackView.axis = .horizontal
@@ -156,7 +151,7 @@ final class TwoOptionSelectorView: UIView {
             buttonsStackView.bottomAnchor.constraint(equalTo: trackView.bottomAnchor, constant: -Self.trackPadding),
         ])
 
-        let heightConstraint = trackView.heightAnchor.constraint(equalToConstant: trackHeight)
+        let heightConstraint = trackView.heightAnchor.constraint(equalToConstant: Self.defaultContentHeight + 2 * appearance.contentVerticalPadding)
         heightConstraint.priority = UILayoutPriority(999)
         heightConstraint.isActive = true
 
@@ -192,6 +187,18 @@ final class TwoOptionSelectorView: UIView {
 
         updateBorderColors()
         updateButtonStyles(animated: false)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        applyCornerRadii()
+    }
+
+    private func applyCornerRadii() {
+        let trackHeight = Self.defaultContentHeight + 2 * appearance.contentVerticalPadding
+        let (trackCornerRadius, pillCornerRadius) = trackAndPillCornerRadii(for: trackHeight)
+        trackView.layer.cornerRadius = trackCornerRadius
+        selectionIndicatorView.layer.cornerRadius = pillCornerRadius
     }
 
     private func updateBorderColors() {
