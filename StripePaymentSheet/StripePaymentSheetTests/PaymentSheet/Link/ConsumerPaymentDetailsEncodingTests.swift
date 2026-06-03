@@ -30,7 +30,7 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
 
     // MARK: - Display metadata decoding
 
-    func test_decodingUnknownTypeWithDisplayMetadata() throws {
+    func test_decodingGenericTypeWithDisplayMetadata() throws {
         let json: [String: Any] = [
             "id": "csmrpd_test_123",
             "type": "CRYPTO",
@@ -61,7 +61,7 @@ class ConsumerPaymentDetailsEncodingTests: XCTestCase {
         XCTAssertEqual(details.display?.icon?.main, URL(string: "https://cdn.stripe.com/crypto.png"))
     }
 
-    func test_decodingUnknownTypeWithoutDisplayMetadata() throws {
+    func test_decodingGenericTypeWithoutDisplayMetadata() throws {
         let json: [String: Any] = [
             "id": "csmrpd_test_456",
             "type": "UNKNOWN_TYPE",
