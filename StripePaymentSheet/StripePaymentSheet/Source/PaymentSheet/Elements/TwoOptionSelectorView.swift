@@ -26,7 +26,7 @@ protocol TwoOptionSelectorViewAppearance {
     var borderColor: UIColor { get }
     var borderWidth: CGFloat { get }
     var cornerRadius: CGFloat { get }
-    var height: CGFloat { get }
+    var contentVerticalPadding: CGFloat { get }
     var font: UIFont { get }
     var sizeScaleFactor: CGFloat { get }
     var captionColor: UIColor { get }
@@ -71,7 +71,7 @@ final class TwoOptionSelectorView: UIView {
     private var leftButton = UIButton(type: .custom)
     private var rightButton = UIButton(type: .custom)
 
-    private let trackPadding: CGFloat = 3
+    private var trackPadding: CGFloat { appearance.contentVerticalPadding }
 
     private var indicatorLeadingConstraint: NSLayoutConstraint?
     private var indicatorTrailingConstraint: NSLayoutConstraint?
@@ -101,12 +101,11 @@ final class TwoOptionSelectorView: UIView {
 
     // MARK: - Setup
 
-    private func trackAndPillCornerRadii() -> (track: CGFloat, pill: CGFloat) {
-        let h = appearance.height
+    private func trackAndPillCornerRadii(for height: CGFloat) -> (track: CGFloat, pill: CGFloat) {
         let bw = appearance.borderWidth
-        let maxTrack = max((h - bw) / 2, 0)
+        let maxTrack = max((height - bw) / 2, 0)
         let track = min(appearance.cornerRadius, maxTrack)
-        let innerH = h - 2 * trackPadding
+        let innerH = height - 2 * trackPadding
         let maxPill = innerH / 2
         let pill = max(0, min(track - trackPadding, maxPill))
         return (track, pill)
@@ -118,18 +117,14 @@ final class TwoOptionSelectorView: UIView {
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainStackView)
 
-        let (trackCornerRadius, pillCornerRadius) = trackAndPillCornerRadii()
-
         // Track background
         trackView.backgroundColor = appearance.trackBackground
         trackView.layer.borderWidth = appearance.borderWidth
-        trackView.layer.cornerRadius = trackCornerRadius
         trackView.layer.cornerCurve = .circular
         trackView.clipsToBounds = false
 
         // Selection indicator pill
         selectionIndicatorView.backgroundColor = appearance.pillBackground
-        selectionIndicatorView.layer.cornerRadius = pillCornerRadius
         selectionIndicatorView.layer.cornerCurve = .circular
 
         buttonsStackView.axis = .horizontal
@@ -154,10 +149,6 @@ final class TwoOptionSelectorView: UIView {
             trailing,
             buttonsStackView.bottomAnchor.constraint(equalTo: trackView.bottomAnchor, constant: -trackPadding),
         ])
-
-        let heightConstraint = trackView.heightAnchor.constraint(equalToConstant: appearance.height)
-        heightConstraint.priority = UILayoutPriority(999)
-        heightConstraint.isActive = true
 
         captionLabel.font = appearance.scaledFont(for: appearance.font, style: .caption1)
         captionLabel.textColor = appearance.captionColor
@@ -191,6 +182,13 @@ final class TwoOptionSelectorView: UIView {
 
         updateBorderColors()
         updateButtonStyles(animated: false)
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        let (trackCornerRadius, pillCornerRadius) = trackAndPillCornerRadii(for: trackView.bounds.height)
+        trackView.layer.cornerRadius = trackCornerRadius
+        selectionIndicatorView.layer.cornerRadius = pillCornerRadius
     }
 
     private func updateBorderColors() {
