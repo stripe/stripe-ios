@@ -119,14 +119,19 @@ final class TwoOptionSelectorView: UIView {
         mainStackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainStackView)
 
+        let trackHeight = Self.defaultContentHeight + 2 * trackPadding
+        let (trackCornerRadius, pillCornerRadius) = trackAndPillCornerRadii(for: trackHeight)
+
         // Track background
         trackView.backgroundColor = appearance.trackBackground
         trackView.layer.borderWidth = appearance.borderWidth
+        trackView.layer.cornerRadius = trackCornerRadius
         trackView.layer.cornerCurve = .circular
         trackView.clipsToBounds = false
 
         // Selection indicator pill
         selectionIndicatorView.backgroundColor = appearance.pillBackground
+        selectionIndicatorView.layer.cornerRadius = pillCornerRadius
         selectionIndicatorView.layer.cornerCurve = .circular
 
         buttonsStackView.axis = .horizontal
@@ -152,7 +157,7 @@ final class TwoOptionSelectorView: UIView {
             buttonsStackView.bottomAnchor.constraint(equalTo: trackView.bottomAnchor, constant: -trackPadding),
         ])
 
-        let heightConstraint = trackView.heightAnchor.constraint(equalToConstant: Self.defaultContentHeight + 2 * trackPadding)
+        let heightConstraint = trackView.heightAnchor.constraint(equalToConstant: trackHeight)
         heightConstraint.priority = UILayoutPriority(999)
         heightConstraint.isActive = true
 
@@ -188,13 +193,6 @@ final class TwoOptionSelectorView: UIView {
 
         updateBorderColors()
         updateButtonStyles(animated: false)
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        let (trackCornerRadius, pillCornerRadius) = trackAndPillCornerRadii(for: trackView.bounds.height)
-        trackView.layer.cornerRadius = trackCornerRadius
-        selectionIndicatorView.layer.cornerRadius = pillCornerRadius
     }
 
     private func updateBorderColors() {
