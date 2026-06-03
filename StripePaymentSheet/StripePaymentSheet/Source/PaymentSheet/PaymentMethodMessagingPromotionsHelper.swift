@@ -43,6 +43,7 @@ class PaymentMethodMessagingPromotionsHelper {
         return _experiment
     }
 
+    private(set) var fetchTask: Task<Void, Never>?
     private let promotionsLock = NSLock()
     // null until set by loading
     private var _promotions: [String: PromotionContent]?
@@ -127,7 +128,7 @@ class PaymentMethodMessagingPromotionsHelper {
         analyticsHelper.logPaymentMethodMessagingFetchBegin()
 
         // Fetch data
-        Task { @MainActor in
+        fetchTask = Task { @MainActor in
             do {
                 let response = try await PaymentMethodMessagingElement.get(configuration: pmmeConfig)
                 promotions = response.paymentSheetPromotionContents(apiClient: configuration.apiClient)
