@@ -112,4 +112,124 @@ final class PaymentMethodMessagingPromotionsHelperTests: XCTestCase {
 
         XCTAssertNil(helper.promotion(for: .stripe(.cashApp)))
     }
+
+    // MARK: - Analytics
+
+    func testFetchData_logsFetchBeginEvent() {
+        let analyticsClient = STPTestingAnalyticsClient()
+        let experimentsData = ExperimentsData(
+            arbId: "arb_123",
+            experimentAssignments: [PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(
+            integrationShape: .complete,
+            configuration: PaymentSheet.Configuration(),
+            analyticsClient: analyticsClient
+        )
+        let helper = PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: PaymentSheet.Configuration(),
+            paymentMethodTypes: [.stripe(.affirm)],
+            analyticsHelper: analyticsHelper
+        )
+
+        helper.fetchData()
+
+        let fetchBeginEvents = analyticsClient._testLogHistory.filter { $0["event"] as? String == "payment_method_messaging_fetch_begin" }
+        XCTAssertEqual(fetchBeginEvents.count, 1)
+    }
+
+    func testFetchData_controlGroup_doesNotLogFetchBegin() {
+        let analyticsClient = STPTestingAnalyticsClient()
+        let experimentsData = ExperimentsData(
+            arbId: "arb_123",
+            experimentAssignments: [PaymentMethodMessagingPromotionsExperiment.experimentName: .control],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(
+            integrationShape: .complete,
+            configuration: PaymentSheet.Configuration(),
+            analyticsClient: analyticsClient
+        )
+        let helper = PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: PaymentSheet.Configuration(),
+            paymentMethodTypes: [.stripe(.affirm)],
+            analyticsHelper: analyticsHelper
+        )
+
+        helper.fetchData()
+
+        let fetchBeginEvents = analyticsClient._testLogHistory.filter { $0["event"] as? String == "payment_method_messaging_fetch_begin" }
+        XCTAssertEqual(fetchBeginEvents.count, 0)
+    }
+
+    func testLogDisplayedAnalytic_afterFetch_logsDurationAndSuccess() {
+        let analyticsClient = STPTestingAnalyticsClient()
+        let experimentsData = ExperimentsData(
+            arbId: "arb_123",
+            experimentAssignments: [PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(
+            integrationShape: .complete,
+            configuration: PaymentSheet.Configuration(),
+            analyticsClient: analyticsClient
+        )
+        let helper = PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: PaymentSheet.Configuration(),
+            paymentMethodTypes: [.stripe(.affirm)],
+            analyticsHelper: analyticsHelper
+        )
+
+        helper.fetchData()
+        helper.logDisplayedAnalytic(displayedSuccessfully: true)
+
+        let displayedEvents = analyticsClient._testLogHistory.filter { $0["event"] as? String == "payment_method_messaging_displayed" }
+        XCTAssertEqual(displayedEvents.count, 1)
+        guard let event = displayedEvents.first else { return }
+        XCTAssertEqual(event["displayed_successfully"] as? Bool, true)
+        XCTAssertGreaterThanOrEqual(event["duration"] as? Double ?? -1, 0)
+    }
+
+    func testLogDisplayedAnalytic_withoutFetch_logsDurationZero() {
+        let analyticsClient = STPTestingAnalyticsClient()
+        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let analyticsHelper = PaymentSheetAnalyticsHelper(
+            integrationShape: .complete,
+            configuration: PaymentSheet.Configuration(),
+            analyticsClient: analyticsClient
+        )
+        let helper = PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: PaymentSheet.Configuration(),
+            paymentMethodTypes: [],
+            analyticsHelper: analyticsHelper
+        )
+
+        helper.logDisplayedAnalytic(displayedSuccessfully: false)
+
+        let displayedEvents = analyticsClient._testLogHistory.filter { $0["event"] as? String == "payment_method_messaging_displayed" }
+        XCTAssertEqual(displayedEvents.count, 1)
+        guard let event = displayedEvents.first else { return }
+        XCTAssertEqual(event["displayed_successfully"] as? Bool, false)
+        XCTAssertEqual(event["duration"] as? Double, 0)
+    }
 }

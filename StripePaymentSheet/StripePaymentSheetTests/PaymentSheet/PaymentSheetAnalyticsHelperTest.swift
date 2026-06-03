@@ -827,6 +827,28 @@ final class PaymentSheetAnalyticsHelperTest: XCTestCase {
         XCTAssertEqual(analyticsClient._testLogHistory.last!["payment_method_orientation"] as? String, "horizontal")
     }
 
+    // MARK: - Payment Method Messaging
+
+    func testLogPaymentMethodMessagingFetchBegin() {
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+        sut.logPaymentMethodMessagingFetchBegin()
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "payment_method_messaging_fetch_begin")
+    }
+
+    func testLogPaymentMethodMessagingDisplayed() {
+        let sut = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: PaymentSheet.Configuration(), analyticsClient: analyticsClient)
+
+        sut.logPaymentMethodMessagingDisplayed(duration: 1.5, displayedSuccessfully: true)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "payment_method_messaging_displayed")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["duration"] as? Double, 1.5)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["displayed_successfully"] as? Bool, true)
+
+        sut.logPaymentMethodMessagingDisplayed(duration: 0, displayedSuccessfully: false)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["event"] as? String, "payment_method_messaging_displayed")
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["duration"] as? Double, 0)
+        XCTAssertEqual(analyticsClient._testLogHistory.last!["displayed_successfully"] as? Bool, false)
+    }
+
     // MARK: - Helpers
 
     func makeConfig(
