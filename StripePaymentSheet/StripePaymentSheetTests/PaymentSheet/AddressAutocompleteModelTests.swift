@@ -1,5 +1,5 @@
 //
-//  AutocompleteResponseTests.swift
+//  AddressAutocompleteModelTests.swift
 //  StripePaymentSheetTests
 //
 //  Created by Joyce Qin on 5/21/26.
@@ -9,7 +9,7 @@ import XCTest
 
 @testable import StripePaymentSheet
 
-class AutocompleteResponseTests: XCTestCase {
+class AddressAutocompleteModelTests: XCTestCase {
 
     // MARK: - AutocompleteResponse
 
@@ -221,6 +221,119 @@ class AutocompleteResponseTests: XCTestCase {
             makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil)
         )!
         XCTAssertTrue(suggestion.subtitleHighlightRanges.isEmpty)
+    }
+
+    // MARK: - DetailsResponse decoding
+
+    func testDetailsResponseDecodesAllAddressFields() {
+        let response: [AnyHashable: Any] = [
+            "address": [
+                "line1": "354 Oyster Point Boulevard",
+                "line2": "Suite 100",
+                "city": "South San Francisco",
+                "state": "CA",
+                "postal_code": "94080",
+                "country": "US",
+            ],
+        ]
+        let result = DetailsResponse.decodedObject(fromAPIResponse: response)
+        XCTAssertEqual(result?.address.line1, "354 Oyster Point Boulevard")
+        XCTAssertEqual(result?.address.line2, "Suite 100")
+        XCTAssertEqual(result?.address.city, "South San Francisco")
+        XCTAssertEqual(result?.address.state, "CA")
+        XCTAssertEqual(result?.address.postalCode, "94080")
+        XCTAssertEqual(result?.address.country, "US")
+    }
+
+    func testDetailsResponseAddressFieldsAreOptional() {
+        let response: [AnyHashable: Any] = [
+            "address": ["line1": "354 Oyster Point Boulevard"],
+        ]
+        let result = DetailsResponse.decodedObject(fromAPIResponse: response)
+        XCTAssertNotNil(result)
+        XCTAssertEqual(result?.address.line1, "354 Oyster Point Boulevard")
+        XCTAssertNil(result?.address.line2)
+        XCTAssertNil(result?.address.city)
+        XCTAssertNil(result?.address.state)
+        XCTAssertNil(result?.address.postalCode)
+        XCTAssertNil(result?.address.country)
+    }
+
+    func testDetailsResponseReturnsNilForMissingAddressKey() {
+        let response: [AnyHashable: Any] = ["other": "data"]
+        XCTAssertNil(DetailsResponse.decodedObject(fromAPIResponse: response))
+    }
+
+    func testDetailsResponseReturnsNilForNilResponse() {
+        XCTAssertNil(DetailsResponse.decodedObject(fromAPIResponse: nil))
+    }
+
+    // MARK: - AddressSuggestion.asAddress
+
+    func testAsAddress_withEmbeddedAddress_deliversAddress() {
+        let dict = makeSuggestionDict(
+            title: "354 Oyster Point Blvd",
+            subtitle: "South San Francisco, CA",
+            endOffset: 3,
+            placeId: "places/abc123",
+            address: ["line1": "354 Oyster Point Boulevard", "city": "South San Francisco"]
+        )
+        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse: dict)!
+
+        var delivered: [PaymentSheet.Address?] = []
+        suggestion.asAddress(apiClient: nil, source: nil, sessionToken: nil) {
+            delivered.append($0)
+        }
+
+        XCTAssertTrue(delivered.contains { $0?.line1 == "354 Oyster Point Boulevard" })
+    }
+
+    func testAsAddress_withNoEmbeddedAddress_nilApiClient_returnsNil() {
+        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
+            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: "places/abc123")
+        )!
+
+        var result: PaymentSheet.Address? = PaymentSheet.Address()
+        suggestion.asAddress(apiClient: nil, source: "google", sessionToken: "token") {
+            result = $0
+        }
+        XCTAssertNil(result)
+    }
+
+    func testAsAddress_withNoEmbeddedAddress_nilPlaceId_returnsNil() {
+        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
+            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil)
+        )!
+
+        var result: PaymentSheet.Address? = PaymentSheet.Address()
+        suggestion.asAddress(apiClient: STPAPIClient(publishableKey: "pk_test_placeholder"), source: "google", sessionToken: "token") {
+            result = $0
+        }
+        XCTAssertNil(result)
+    }
+
+    func testAsAddress_withNoEmbeddedAddress_nilSource_returnsNil() {
+        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
+            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: "places/abc123")
+        )!
+
+        var result: PaymentSheet.Address? = PaymentSheet.Address()
+        suggestion.asAddress(apiClient: STPAPIClient(publishableKey: "pk_test_placeholder"), source: nil, sessionToken: "token") {
+            result = $0
+        }
+        XCTAssertNil(result)
+    }
+
+    func testAsAddress_withNoEmbeddedAddress_nilSessionToken_returnsNil() {
+        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
+            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: "places/abc123")
+        )!
+
+        var result: PaymentSheet.Address? = PaymentSheet.Address()
+        suggestion.asAddress(apiClient: STPAPIClient(publishableKey: "pk_test_placeholder"), source: "google", sessionToken: nil) {
+            result = $0
+        }
+        XCTAssertNil(result)
     }
 
     // MARK: - Helpers
