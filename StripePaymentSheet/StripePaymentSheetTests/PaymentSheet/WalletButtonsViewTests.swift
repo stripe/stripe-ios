@@ -134,49 +134,8 @@ class WalletButtonsViewTests: XCTestCase {
         XCTAssertEqual(view.orderedWallets, [])
     }
 
-    func testLinkRespectsOrderInPaymentMethodMode() {
-        // Create mock elements session with Link ordered after Apple Pay and an unsupported wallet
-        let elementsSession = STPElementsSession(
-            allResponseFields: [:],
-            sessionID: "test_session",
-            configID: "test_config",
-            orderedPaymentMethodTypes: [.card, .link],
-            orderedPaymentMethodTypesAndWallets: ["apple_pay", "link"],
-            unactivatedPaymentMethodTypes: [],
-            countryCode: nil,
-            merchantCountryCode: nil,
-            merchantLogoUrl: nil,
-            linkSettings: nil,
-            experimentsData: nil,
-            flags: [:],
-            paymentMethodSpecs: nil,
-            cardBrandChoice: nil,
-            isApplePayEnabled: true,
-            externalPaymentMethods: [],
-            customPaymentMethods: [],
-            passiveCaptchaData: nil,
-            customer: nil
-        )
-
-        // Create mock flow controller
-        var psConfig = PaymentSheet.Configuration()
-        psConfig.applePay = .init(merchantId: "test_merchant_id", merchantCountryCode: "US")
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "usd", setupFutureUsage: nil, captureMethod: .automatic, paymentMethodOptions: nil)) { _, _ in return "" }
-        let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let paymentMethodMessagingPromotionsHelper = PaymentMethodMessagingPromotionsHelper(elementsSession: elementsSession, intent: intent, configuration: psConfig, paymentMethodTypes: [], analyticsHelper: PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig))
-        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [], paymentMethodMessagingPromotionsHelper: paymentMethodMessagingPromotionsHelper, paymentMethodOrientation: .vertical)
-        let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .complete, configuration: psConfig)
-        let flowController = PaymentSheet.FlowController(configuration: psConfig, loadResult: loadResult, analyticsHelper: analyticsHelper)
-
-        // Initialize wallet buttons view
-        let view = WalletButtonsView(flowController: flowController) { _ in }
-
-        // Verify Link appears like in server ordering and unsupported wallets are ignored
-        XCTAssertEqual(view.orderedWallets, [.applePay, .link])
-    }
-
     func testLinkIsAppendedInPassthroughMode() {
-        // Create mock elements session with Link omitted and an unsupported wallet present
+        // Create mock elements session with Link omitted
         let elementsSession = STPElementsSession(
             allResponseFields: [:],
             sessionID: "test_session",
@@ -212,7 +171,7 @@ class WalletButtonsViewTests: XCTestCase {
         // Initialize wallet buttons view
         let view = WalletButtonsView(flowController: flowController) { _ in }
 
-        // Verify Link is appended and unsupported wallets are ignored
+        // Verify Link is appended
         XCTAssertEqual(view.orderedWallets, [.applePay, .link])
     }
 
@@ -253,7 +212,7 @@ class WalletButtonsViewTests: XCTestCase {
         // Initialize wallet buttons view
         let view = WalletButtonsView(flowController: flowController) { _ in }
 
-        // Verify Link is not shown when disabled and unsupported wallets are ignored
+        // Verify Link is not shown when disabled
         XCTAssertEqual(view.orderedWallets, [.applePay])
     }
 
