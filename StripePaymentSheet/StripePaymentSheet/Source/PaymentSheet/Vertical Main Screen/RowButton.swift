@@ -432,6 +432,7 @@ extension RowButton {
         hasSavedCard: Bool,
         accessoryView: UIView? = nil,
         promoText: String? = nil,
+        promotionsHelper: PaymentMethodMessagingPromotionsHelper?,
         appearance: PaymentSheet.Appearance,
         originalCornerRadius: CGFloat? = nil,
         shouldAnimateOnPress: Bool,
@@ -451,28 +452,36 @@ extension RowButton {
             return paymentMethodType.displayName
         }()
 
-        let subtext: String? = {
-            switch paymentMethodType {
-            case .stripe(.klarna):
-                return String.Localized.buy_now_or_pay_later_with_klarna
-            case .stripe(.afterpayClearpay):
-                if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
-                    return String.Localized.buy_now_or_pay_later_with_clearpay
-                } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
-                    return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
-                } else {
-                    return String.Localized.buy_now_or_pay_later_with_afterpay
+        let sublabel: SublabelView
+        if let promotionsHelper, promotionsHelper.isInTreatmentGroup, PaymentMethodMessagingPromotionsHelper.supportedPaymentMethods.contains(paymentMethodType) {
+            sublabel = PaymentMethodMessagingSublabelView(
+                appearance: appearance,
+                paymentMethodType: paymentMethodType,
+                promotionsHelper: promotionsHelper
+            )
+        } else {
+            let subtext: String? = {
+                switch paymentMethodType {
+                case .stripe(.klarna):
+                    return String.Localized.buy_now_or_pay_later_with_klarna
+                case .stripe(.afterpayClearpay):
+                    if AfterpayPriceBreakdownView.shouldUseClearpayBrand(for: currency) {
+                        return String.Localized.buy_now_or_pay_later_with_clearpay
+                    } else if AfterpayPriceBreakdownView.shouldUseCashAppBrand(for: currency) {
+                        return String.Localized.buy_now_or_pay_later_with_cash_app_afterpay
+                    } else {
+                        return String.Localized.buy_now_or_pay_later_with_afterpay
+                    }
+                case .stripe(.affirm):
+                    return String.Localized.pay_over_time_with_affirm
+                case .external(let externalPaymentOption):
+                    return externalPaymentOption.displaySubtext
+                default:
+                    return nil
                 }
-            case .stripe(.affirm):
-                return String.Localized.pay_over_time_with_affirm
-            case .external(let externalPaymentOption):
-                return externalPaymentOption.displaySubtext
-            default:
-                return nil
-            }
-        }()
-
-        let sublabel = PlainSublabelView(text: subtext, appearance: appearance, isEmbedded: isEmbedded)
+            }()
+            sublabel = PlainSublabelView(text: subtext, appearance: appearance, isEmbedded: isEmbedded)
+        }
 
         let promoBadge: PromoBadgeView? = {
             guard let promoText else { return nil }
@@ -655,5 +664,26 @@ private extension STPPaymentMethod {
             return paymentSheetLabel(brand: brand)
         }
         return nil
+    }
+}
+
+// MARK: - SublabelView protocol
+
+extension RowButton {
+
+    static let sublabelIsHiddenAnimationDuration: TimeInterval = 0.2
+    static let sublabelAlphaAnimationDuration: TimeInterval = 0.1
+
+    /// Defines the interface for sublabel views displayed beneath the primary label in a `RowButton`.
+    /// Conforming types manage their own visibility transitions and text state.
+    protocol SublabelView: UIView {
+        /// Whether this sublabel variant needs to expand beyond the standard row height.
+        var needsUnlimitedHeight: Bool { get }
+        /// Whether the sublabel currently contains displayable content.
+        var hasText: Bool { get }
+        /// Updates the displayed text, optionally animating the visibility transition.
+        func setSublabel(text: String?, animated: Bool)
+        /// Notifies the sublabel that the parent row's selection state changed.
+        func updateSelectedState(_ isRowSelected: Bool, willDisplayForm: Bool)
     }
 }

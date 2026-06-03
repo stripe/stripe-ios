@@ -245,4 +245,41 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             ]
         )
     }
+
+    func testConnectionsFCLiteVsNative() {
+        let arbId = "arb_id"
+        let experimentsData = ExperimentsData(
+            arbId: arbId,
+            experimentAssignments: [
+                ConnectionsFCLiteVsNative.experimentName: .treatment,
+                ConnectionsFCLiteVsNativeAA.experimentName: .control,
+            ],
+            allResponseFields: [:]
+        )
+        let session = STPElementsSession._testValue(
+            orderedPaymentMethodTypesAndWallets: ["card", "us_bank_account", "apple_pay"],
+            experimentsData: experimentsData,
+            customer: nil
+        )
+
+        let experiment = ConnectionsFCLiteVsNative(arbId: arbId, session: session)
+        analyticsClient.logExposure(experiment: experiment)
+
+        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
+            return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
+        }
+
+        XCTAssertEqual(payload["arb_id"] as? String, arbId)
+        XCTAssertEqual(payload["experiment_retrieved"] as? String, ConnectionsFCLiteVsNative.experimentName)
+        XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
+        XCTAssertEqual(payload["dimensions-elements_session_id"] as? String, "test_123")
+        XCTAssertNotNil(payload["dimensions-mobile_session_id"])
+        XCTAssertNotNil(payload["dimensions-mobile_sdk_version"] as? String)
+        XCTAssertNotNil(payload["dimensions-fc_sdk_availability"] as? String)
+        XCTAssertEqual(payload["dimensions-available_lpms"] as? String, "card,us_bank_account,apple_pay")
+
+        let aaExperiment = ConnectionsFCLiteVsNativeAA(arbId: arbId, session: session)
+        XCTAssertEqual(aaExperiment.name, ConnectionsFCLiteVsNativeAA.experimentName)
+        XCTAssertEqual(aaExperiment.group, .control)
+    }
 }

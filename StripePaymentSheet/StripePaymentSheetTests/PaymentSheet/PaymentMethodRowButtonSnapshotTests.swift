@@ -63,6 +63,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             paymentMethodType: .instantDebits,
             hasSavedCard: false,
             promoText: nil,
+            promotionsHelper: nil,
             appearance: .default,
             shouldAnimateOnPress: false,
             didTap: { _ in }
@@ -76,6 +77,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             paymentMethodType: .instantDebits,
             hasSavedCard: false,
             promoText: nil,
+            promotionsHelper: nil,
             appearance: appearance,
             shouldAnimateOnPress: false,
             didTap: { _ in }
@@ -88,11 +90,34 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             paymentMethodType: .instantDebits,
             hasSavedCard: false,
             promoText: "$5",
+            promotionsHelper: nil,
             appearance: .default,
             shouldAnimateOnPress: false,
             didTap: { _ in }
         )
         verify(rowButton)
+    }
+
+    func testPaymentMethodRowButton_paymentMethodMessaging_unselected() {
+        let rowButton = makePaymentMethodMessagingRowButton(isEmbedded: false)
+        verify(rowButton, identifier: "payment_method_messaging_unselected")
+    }
+
+    func testPaymentMethodRowButton_paymentMethodMessaging_selected() {
+        let rowButton = makePaymentMethodMessagingRowButton(isEmbedded: false)
+        rowButton.updateSelectedState(true, willDisplayForm: false)
+        verify(rowButton, identifier: "payment_method_messaging_selected")
+    }
+
+    func testEmbeddedPaymentMethodRowButton_paymentMethodMessaging_unselected() {
+        let rowButton = makePaymentMethodMessagingRowButton(isEmbedded: true)
+        verify(rowButton, identifier: "embedded_payment_method_messaging_unselected")
+    }
+
+    func testEmbeddedPaymentMethodRowButton_paymentMethodMessaging_selected() {
+        let rowButton = makePaymentMethodMessagingRowButton(isEmbedded: true)
+        rowButton.updateSelectedState(true, willDisplayForm: false)
+        verify(rowButton, identifier: "embedded_payment_method_messaging_selected")
     }
 
     func testPaymentMethodRowButton_newPaymentMethod_linkType_unselected() {
@@ -133,6 +158,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.card),
                 hasSavedCard: false,
+                promotionsHelper: nil,
                 appearance: appearance,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
@@ -149,6 +175,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .stripe(.card),
             hasSavedCard: false,
+            promotionsHelper: nil,
             appearance: appearance,
             shouldAnimateOnPress: false,
             isEmbedded: false,
@@ -169,6 +196,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.klarna),
                 hasSavedCard: false,
+                promotionsHelper: nil,
                 appearance: appearance,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
@@ -185,6 +213,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
         let rowButton = RowButton.makeForPaymentMethodType(
             paymentMethodType: .stripe(.card),
             hasSavedCard: false,
+            promotionsHelper: nil,
             appearance: appearance,
             shouldAnimateOnPress: false,
             isEmbedded: false,
@@ -200,6 +229,7 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
             let rowButton = RowButton.makeForPaymentMethodType(
                 paymentMethodType: .stripe(.card),
                 hasSavedCard: false,
+                promotionsHelper: nil,
                 appearance: appearance,
                 shouldAnimateOnPress: false,
                 isEmbedded: true,
@@ -218,5 +248,23 @@ class PaymentMethodRowButtonSnapshotTests: STPSnapshotTestCase {
     ) {
         view.autosizeHeight(width: 300)
         STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
+    }
+
+    private func makePaymentMethodMessagingRowButton(isEmbedded: Bool) -> RowButton {
+        var appearance = PaymentSheet.Appearance.default
+        if isEmbedded {
+            appearance.embeddedPaymentElement.row.style = .flatWithRadio
+        }
+
+        return RowButton.makeForPaymentMethodType(
+            paymentMethodType: .stripe(.affirm),
+            currency: "USD",
+            hasSavedCard: false,
+            promotionsHelper: ._testValueInTreatment(),
+            appearance: appearance,
+            shouldAnimateOnPress: false,
+            isEmbedded: isEmbedded,
+            didTap: { _ in }
+        )
     }
 }
