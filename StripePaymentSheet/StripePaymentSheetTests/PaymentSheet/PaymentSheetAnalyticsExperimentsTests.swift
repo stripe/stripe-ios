@@ -213,7 +213,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["dimensions-integration_shape"] as? String, "flowcontroller")
         XCTAssertEqual(payload["dimensions-has_spms"] as? String, "false")
     }
-    func testPaymentMethodMessagingPromotionsExperiment() {
+    func testPaymentMethodMessagingPromotionsExperiment() throws {
         let experimentsData = ExperimentsData(
             arbId: "arb_id_123",
             experimentAssignments: [
@@ -226,10 +226,10 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             customer: nil
         )
 
-        let experiment = PaymentMethodMessagingPromotionsExperiment(
+        let experiment = try XCTUnwrap(PaymentMethodMessagingPromotionsExperiment(
             elementsSession: elementsSession,
             layout: "vertical"
-        )
+        ))
 
         XCTAssertEqual(experiment.name, PaymentMethodMessagingPromotionsExperiment.experimentName)
         XCTAssertEqual(experiment.arbId, "arb_id_123")
