@@ -29,14 +29,4 @@ struct PaymentMethodMessagingPromotionsExperiment: LoggableExperiment {
         self.group = assignment ?? .control
         self.layout = layout
     }
-
-    init(
-        arbId: String,
-        group: ExperimentGroup,
-        layout: String
-    ) {
-        self.arbId = arbId
-        self.group = group
-        self.layout = layout
-    }
 }
