@@ -124,6 +124,7 @@ options = {
   all: false,
   ui: false,
   record_snapshots: false,
+  liquid_glass: false,
   record_network: false,
   retry: false,
   build_only: false,
@@ -144,6 +145,7 @@ banner = <<~USAGE
     ci_scripts/run_tests.rb --scheme StripePaymentSheet
     ci_scripts/run_tests.rb --all
     ci_scripts/run_tests.rb --record-snapshots --test StripePaymentSheetTests/SomeSnapshotTest
+    ci_scripts/run_tests.rb --record-snapshots --liquid-glass
     ci_scripts/run_tests.rb --record-network --test StripePaymentsTests/STPCardFunctionalTest
     ci_scripts/run_tests.rb --ui
     ci_scripts/run_tests.rb --scheme StripeCore --retry
@@ -173,6 +175,9 @@ parser = OptionParser.new do |opts|
   end
   opts.on("--record-snapshots", "Record snapshot reference images (RecordMode scheme)") do
     options[:record_snapshots] = true
+  end
+  opts.on("--liquid-glass", "Run/record Liquid Glass snapshot tests") do
+    options[:liquid_glass] = true
   end
   opts.on("--record-network", "Record network responses (NetworkRecordMode scheme)") do
     options[:record_network] = true
@@ -225,6 +230,10 @@ if options[:ui] && (options[:record_snapshots] || options[:record_network])
   abort "Error: --ui cannot be combined with --record-snapshots or --record-network."
 end
 
+if options[:liquid_glass] && options[:record_network]
+  abort "Error: --liquid-glass cannot be combined with --record-network."
+end
+
 # --- Failure inspection mode (early exit) ---
 if options[:failures]
   Dir.chdir(REPO_ROOT)
@@ -238,7 +247,12 @@ end
 
 # --- Resolve scheme ---
 scheme =
-  if options[:record_snapshots]
+  if options[:record_snapshots] && options[:liquid_glass]
+    warn "Warning: --record-snapshots --liquid-glass overrides --scheme. Using AllStripeFrameworks-LiquidGlass." if options[:scheme]
+    "AllStripeFrameworks-LiquidGlass"
+  elsif options[:liquid_glass]
+    "AllStripeFrameworks-LiquidGlass"
+  elsif options[:record_snapshots]
     warn "Warning: --record-snapshots overrides --scheme. Using AllStripeFrameworks-RecordMode." if options[:scheme]
     "AllStripeFrameworks-RecordMode"
   elsif options[:record_network]
@@ -315,11 +329,36 @@ if options[:dry_run]
   exit 0
 end
 
+# Liquid Glass uses a filtered test plan rather than the RecordMode scheme, so inject
+# snapshot recording into the plan for the duration of this command.
+liquid_glass_testplan = File.join(REPO_ROOT, "Stripe", "AllStripeFrameworks-LiquidGlass.xctestplan")
+liquid_glass_testplan_modified = false
+
+if options[:record_snapshots] && options[:liquid_glass]
+  plan = JSON.parse(File.read(liquid_glass_testplan))
+  entries = plan.dig("defaultOptions", "environmentVariableEntries") || []
+  unless entries.any? { |entry| entry["key"] == "STP_RECORD_SNAPSHOTS" }
+    entries << { "key" => "STP_RECORD_SNAPSHOTS", "value" => "1" }
+    plan["defaultOptions"]["environmentVariableEntries"] = entries
+    File.write(liquid_glass_testplan, JSON.pretty_generate(plan))
+    liquid_glass_testplan_modified = true
+  end
+end
+
 FileUtils.rm_rf(options[:result_bundle_path]) if File.exist?(options[:result_bundle_path])
 
 puts "Running: #{cmd.shelljoin}"
 puts "Result bundle: #{options[:result_bundle_path]}"
 success = system(*cmd)
+
+if liquid_glass_testplan_modified
+  plan = JSON.parse(File.read(liquid_glass_testplan))
+  entries = plan.dig("defaultOptions", "environmentVariableEntries") || []
+  entries.reject! { |entry| entry["key"] == "STP_RECORD_SNAPSHOTS" }
+  plan["defaultOptions"]["environmentVariableEntries"] = entries
+  File.write(liquid_glass_testplan, JSON.pretty_generate(plan))
+end
+
 unless success
   exit_code = $?.exitstatus || 1
   puts "\nTests failed! Inspect failures with:"
