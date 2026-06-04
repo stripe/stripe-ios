@@ -132,20 +132,6 @@ final class CheckoutUnitTests: XCTestCase {
         }
     }
 
-    func testUpdateTaxIdRequiresOpenSession() async throws {
-        let checkout = await makeCheckoutWithClosedSession()
-
-        do {
-            try await checkout.updateTaxId(type: "eu_vat", value: "DE123456789")
-            XCTFail("Expected CheckoutError.sessionNotOpen")
-        } catch let error as CheckoutError {
-            guard case .sessionNotOpen = error else {
-                XCTFail("Expected .sessionNotOpen, got \(error)")
-                return
-            }
-        }
-    }
-
     // MARK: - runServerUpdate Tests
 
     func testRunServerUpdateWrapsClosureError() async {

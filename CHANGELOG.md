@@ -1,7 +1,11 @@
 The next release's version bump will so far be:
-PATCH
+MINOR
 
 ## X.Y.Z - changes pending release
+
+### CryptoOnramp (Alpha)
+* [Changed] Updated EU compliance identifier APIs to match the latest backend contract, including CRS/CARF TIN requirements and `SubmitIdentifiersResult.completed`.
+* [Added] Added known compliance identifier types for Spain NIF (`es_nif`) and France NIR (`fr_nir`).
 
 ## 25.16.0 2026-05-26
 ### PaymentSheet
