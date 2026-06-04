@@ -273,10 +273,17 @@ class AddressAutocompleteModelTests: XCTestCase {
     func testAsAddress_withEmbeddedAddress_deliversAddress() {
         let dict = makeSuggestionDict(
             title: "354 Oyster Point Blvd",
-            subtitle: "South San Francisco, CA",
+            subtitle: "South San Francisco, CA 94080",
             endOffset: 3,
             placeId: "places/abc123",
-            address: ["line1": "354 Oyster Point Boulevard", "city": "South San Francisco"]
+            address: [
+                "line1": "354 Oyster Point Boulevard",
+                "line2": "Suite 100",
+                "city": "South San Francisco",
+                "state": "CA",
+                "postal_code": "94080",
+                "country": "US",
+            ]
         )
         let suggestion = AddressSuggestion.decodedObject(fromAPIResponse: dict)!
 
@@ -284,7 +291,11 @@ class AddressAutocompleteModelTests: XCTestCase {
         suggestion.asAddress { result = $0 }
 
         XCTAssertEqual(result?.line1, "354 Oyster Point Boulevard")
+        XCTAssertEqual(result?.line2, "Suite 100")
         XCTAssertEqual(result?.city, "South San Francisco")
+        XCTAssertEqual(result?.state, "CA")
+        XCTAssertEqual(result?.postalCode, "94080")
+        XCTAssertEqual(result?.country, "US")
     }
 
     func testAsAddress_withNoEmbeddedAddress_returnsNil() {
