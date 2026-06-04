@@ -33,7 +33,8 @@ class STPCardExpiryInputTextField: STPInputTextField {
         assert(formatter.isKind(of: STPCardExpiryInputTextFieldFormatter.self))
         assert(validator.isKind(of: STPCardExpiryInputTextFieldValidator.self))
         super.init(formatter: formatter, validator: validator)
-        keyboardType = .asciiCapableNumberPad
+        keyboardType = UIDevice.current.shouldAvoidNumericKeyboard
+            ? .numbersAndPunctuation : .asciiCapableNumberPad
     }
 
     required init?(
