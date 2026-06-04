@@ -212,6 +212,10 @@ import Foundation
     // MARK: - Address Element
     case addressShow = "mc_address_show"
     case addressCompleted = "mc_address_completed"
+    case addressAutocompleteStart = "mc_address_autocomplete_start"
+    case addressAutocompleteSuggestions = "mc_address_autocomplete_suggestions"
+    case addressAutocompleteComplete = "mc_address_autocomplete_complete"
+    case addressAutocompleteError = "mc_address_autocomplete_error"
 
     // MARK: - PaymentSheet Force Success
     case paymentSheetForceSuccess = "mc_force_success"

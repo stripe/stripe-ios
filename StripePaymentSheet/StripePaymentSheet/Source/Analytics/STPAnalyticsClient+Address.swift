@@ -44,6 +44,38 @@ extension STPAnalyticsClient {
 
         self.logAddressControllerEvent(event: .addressCompleted, addressAnalyticData: analyticData, apiClient: apiClient)
     }
+
+    // MARK: - Autocomplete
+
+    func logAddressAutocompleteStart(apiClient: STPAPIClient) {
+        log(analytic: AddressAnalytic(event: .addressAutocompleteStart, params: [:]), apiClient: apiClient)
+    }
+
+    func logAddressAutocompleteSuggestions(characterCount: Int, sessionToken: String, source: String, duration: Float, apiClient: STPAPIClient) {
+        log(analytic: AddressAnalytic(event: .addressAutocompleteSuggestions, params: [
+            "character_count": characterCount,
+            "session_token": sessionToken,
+            "source": source,
+            "duration": duration,
+        ]), apiClient: apiClient)
+    }
+
+    func logAddressAutocompleteComplete(characterCount: Int, sessionToken: String, source: String, duration: Float, apiClient: STPAPIClient) {
+        log(analytic: AddressAnalytic(event: .addressAutocompleteComplete, params: [
+            "character_count": characterCount,
+            "session_token": sessionToken,
+            "source": source,
+            "duration": duration,
+        ]), apiClient: apiClient)
+    }
+
+    func logAddressAutocompleteError(error: Error, sessionToken: String, duration: Float, apiClient: STPAPIClient) {
+        log(analytic: AddressAnalytic(event: .addressAutocompleteError, params: [
+            "error": error.localizedDescription,
+            "session_token": sessionToken,
+            "duration": duration,
+        ]), apiClient: apiClient)
+    }
 }
 
 struct AddressAnalyticData {

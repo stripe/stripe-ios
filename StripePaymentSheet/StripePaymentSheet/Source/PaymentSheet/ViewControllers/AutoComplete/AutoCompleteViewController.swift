@@ -42,6 +42,7 @@ class AutoCompleteViewController: UIViewController {
     private var debounceTask: Task<Void, Never>?
     private var lastFetchedQuery: String = ""
     var currentSource: String?
+    private var autocompleteStartTime: Date?
 
     weak var delegate: AutoCompleteViewControllerDelegate?
 
@@ -257,6 +258,8 @@ class AutoCompleteViewController: UIViewController {
         super.viewWillAppear(animated)
         registerForKeyboardNotifications()
         autoCompleteLine.beginEditing()
+        autocompleteStartTime = Date()
+        STPAnalyticsClient.sharedClient.logAddressAutocompleteStart(apiClient: configuration.apiClient)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -270,6 +273,20 @@ class AutoCompleteViewController: UIViewController {
     private func setResults(_ newResults: [AddressSearchResult], source: String?) {
         currentSource = source
         results = newResults
+        if !newResults.isEmpty, let source {
+            STPAnalyticsClient.sharedClient.logAddressAutocompleteSuggestions(
+                characterCount: autoCompleteLine.text.count,
+                sessionToken: sessionToken,
+                source: source,
+                duration: elapsedTimeSinceAutocompleteStart,
+                apiClient: configuration.apiClient
+            )
+        }
+    }
+
+    private var elapsedTimeSinceAutocompleteStart: Float {
+        guard let startTime = autocompleteStartTime else { return 0 }
+        return Float(Date().timeIntervalSince(startTime))
     }
 
     @objc private func manualEntryButtonTapped() {
@@ -320,6 +337,12 @@ extension AutoCompleteViewController: ElementDelegate {
                 self.setResults(response.suggestions, source: response.source)
             } catch {
                 guard !Task.isCancelled else { return }
+                STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
+                    error: error,
+                    sessionToken: self.sessionToken,
+                    duration: self.elapsedTimeSinceAutocompleteStart,
+                    apiClient: self.configuration.apiClient
+                )
                 // Fall back to MapKit on API failure
                 self.addressSearchCompleter.queryFragment = query
             }
@@ -394,10 +417,20 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
         fetchTask?.cancel()
 
         let result = results[indexPath.row]
+        let characterCount = autoCompleteLine.text.count
+        let source = currentSource ?? ""
+        let duration = elapsedTimeSinceAutocompleteStart
 
         if let suggestion = result as? AddressSuggestion {
             // If the suggestion returned with a full address, complete with that address
             if let address = suggestion.address {
+                STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
+                    characterCount: characterCount,
+                    sessionToken: sessionToken,
+                    source: source,
+                    duration: duration,
+                    apiClient: configuration.apiClient
+                )
                 delegate?.didSelectAddress(address)
             } else { // If the suggestion did not return with a full address, it must have a place id and source to fetch the address details
                 guard let placeId = suggestion.placeId, let currentSource else {
@@ -413,8 +446,21 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             displayTitle: suggestion.title,
                             sessionToken: sessionToken
                         )
+                        STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
+                            characterCount: characterCount,
+                            sessionToken: sessionToken,
+                            source: source,
+                            duration: duration,
+                            apiClient: configuration.apiClient
+                        )
                         delegate?.didSelectAddress(details.address)
                     } catch {
+                        STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
+                            error: error,
+                            sessionToken: sessionToken,
+                            duration: elapsedTimeSinceAutocompleteStart,
+                            apiClient: configuration.apiClient
+                        )
                         delegate?.didSelectAddress(nil)
                     }
                 }
@@ -422,7 +468,15 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
         } else {
             result.asAddress { [weak self] address in
                 DispatchQueue.main.async {
-                    self?.delegate?.didSelectAddress(address)
+                    guard let self else { return }
+                    STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
+                        characterCount: characterCount,
+                        sessionToken: self.sessionToken,
+                        source: source,
+                        duration: duration,
+                        apiClient: self.configuration.apiClient
+                    )
+                    self.delegate?.didSelectAddress(address)
                 }
             }
         }
