@@ -38,7 +38,7 @@ class AutoCompleteViewController: UIViewController {
         return searchCompleter
     }()
 
-    private var autocompleteTask: Task<Void, Never>?
+    private var fetchTask: Task<Void, Never>?
     private var debounceTask: Task<Void, Never>?
     private var lastFetchedQuery: String = ""
     var currentSource: String?
@@ -287,7 +287,7 @@ extension AutoCompleteViewController: ElementDelegate {
             lastFetchedQuery = query
             guard query.count >= 2 else {
                 debounceTask?.cancel()
-                autocompleteTask?.cancel()
+                fetchTask?.cancel()
                 setResults([], source: nil)
                 return
             }
@@ -307,8 +307,8 @@ extension AutoCompleteViewController: ElementDelegate {
     }
 
     private func fetchAPIResults(query: String) {
-        autocompleteTask?.cancel()
-        autocompleteTask = Task { @MainActor in
+        fetchTask?.cancel()
+        fetchTask = Task { @MainActor in
             do {
                 let countryCodes = selectedCountry.flatMap { $0.isEmpty ? nil : [$0] }
                 let response = try await configuration.apiClient.getAddressSuggestions(
@@ -391,12 +391,12 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         debounceTask?.cancel()
-        autocompleteTask?.cancel()
+        fetchTask?.cancel()
 
         let result = results[indexPath.row]
 
         if let suggestion = result as? AddressSuggestion, let placeId = suggestion.placeId {
-            autocompleteTask = Task { @MainActor [weak self] in
+            fetchTask = Task { @MainActor [weak self] in
                 guard let self else { return }
                 do {
                     let details = try await configuration.apiClient.getAddressDetails(

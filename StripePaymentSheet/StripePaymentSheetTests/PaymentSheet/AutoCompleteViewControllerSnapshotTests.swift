@@ -208,7 +208,7 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
     let titleHighlightRanges: [NSValue]
     let subtitleHighlightRanges: [NSValue]
 
-    func asAddress(completion: @escaping (StripePaymentSheet.PaymentSheet.Address?) -> Void) {
+    func asAddress(completion: @escaping (PaymentSheet.Address?) -> Void) {
         completion(nil)
     }
  }
