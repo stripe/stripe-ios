@@ -7,6 +7,9 @@
 
 #include "IdentityVerification-Example-Shared.xcconfig"
 
-//********************************************//
-//* Currently no build settings in this file *//
-//********************************************//
+// Device builds intentionally omit the wallet identity entitlement by default so third-party developers can run
+// the sample app with their own signing profiles. Simulator builds still use the entitlement via the target's
+// sdk-specific CODE_SIGN_ENTITLEMENTS setting. Stripe/internal builds with a wallet-capable provisioning profile
+// can enable the device wallet flow by setting this to:
+// IdentityVerification Example/IdentityVerification Example.entitlements
+IDENTITY_VERIFICATION_EXAMPLE_DEVICE_CODE_SIGN_ENTITLEMENTS =

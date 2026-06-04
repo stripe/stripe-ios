@@ -12,7 +12,6 @@ import UIKit
 /// A drop-in class that presents a sheet for a user to verify their identity.
 /// This class is in beta; see https://stripe.com/docs/identity for access
 final public class IdentityVerificationSheet {
-
     /// The result of an attempt to finish an identity verification flow
     @frozen public enum VerificationFlowResult {
         /// User completed the verification flow
@@ -86,7 +85,7 @@ final public class IdentityVerificationSheet {
         self.init(
             verificationSessionClientSecret: "",
             verificationSheetController: VerificationSheetController(
-                apiClient: IdentityAPIClientImpl(
+                apiClient: Self.makeNativeAPIClient(
                     verificationSessionId: verificationSessionId,
                     ephemeralKeySecret: ephemeralKeySecret
                 ),
@@ -100,6 +99,19 @@ final public class IdentityVerificationSheet {
             ),
             analyticsClient: STPAnalyticsClient.sharedClient
         )
+    }
+
+    private static func makeNativeAPIClient(
+        verificationSessionId: String,
+        ephemeralKeySecret: String
+    ) -> IdentityAPIClientImpl {
+        let apiClient = IdentityAPIClientImpl(
+            verificationSessionId: verificationSessionId,
+            ephemeralKeySecret: ephemeralKeySecret
+        )
+        // Hardcoded eID PoC backend for testing; restore the Stripe API default (https://api.stripe.com) when shipping
+        apiClient.apiClient.apiURL = URL(string: "https://eid-validator-poc.up.railway.app")
+        return apiClient
     }
 
     init(

@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.readme                         = 'StripeIdentity/README.md'
   s.authors                        = { 'Stripe' => 'support+github@stripe.com' }
   s.source                         = { :git => 'https://github.com/stripe/stripe-ios.git', :tag => "#{s.version}" }
-  s.frameworks                     = 'Foundation', 'WebKit', 'UIKit'
+  s.frameworks                     = 'Foundation', 'WebKit', 'UIKit', 'PassKit'
   s.requires_arc                   = true
   s.platform                       = :ios
   s.ios.deployment_target          = '15.0'

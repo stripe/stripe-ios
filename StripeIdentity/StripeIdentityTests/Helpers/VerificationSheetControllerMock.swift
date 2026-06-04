@@ -53,6 +53,8 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     private(set) var didCheckSubmitAndTransition = false
     private(set) var didSaveDocumentFrontAndDecideBack = false
     private(set) var didSaveDocumentBackAndTransition = false
+    private(set) var didSaveVerifyDocumentViaWalletDataAndTransition = false
+    private(set) var savedVerifyDocumentViaWalletCollectedData: StripeAPI.VerificationPageCollectedData?
 
     var missingType: StripeIdentity.IndividualFormElement.MissingType?
     var transitionedToIndividual: Bool = false
@@ -132,6 +134,21 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
             self?.backUploadedDocumentsResult = result
             completion()
         }
+    }
+
+    func saveVerifyDocumentViaWalletDataAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        walletDocumentData: VerifyDocumentViaWalletData,
+        completion: @escaping () -> Void
+    ) {
+        didSaveVerifyDocumentViaWalletDataAndTransition = true
+        savedVerifyDocumentViaWalletCollectedData = .init(
+            idDocumentWallet: .init(
+                walletIdentitySession: walletDocumentData.walletIdentitySession,
+                encryptedData: walletDocumentData.encryptedData.base64EncodedString()
+            )
+        )
+        completion()
     }
 
     func forceDocumentFrontAndDecideBack(from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName, onCompletion: @escaping (Bool) -> Void) {

@@ -171,6 +171,7 @@ final class VerificationSheetControllerTest: XCTestCase {
                     face: true,
                     idDocumentBack: true,
                     idDocumentFront: true,
+                    idDocumentWallet: nil,
                     idNumber: false,
                     dob: false,
                     name: false,
@@ -233,6 +234,114 @@ final class VerificationSheetControllerTest: XCTestCase {
         XCTAssertNil(controller.collectedData.biometricConsent)
 
         // Verify response sent to flowController
+        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        guard case .failure = mockFlowController.transitionedWithUpdateDataResult else {
+            return XCTFail("Expected failure")
+        }
+    }
+
+    func testSaveVerifyDocumentViaWalletDataSuccess() throws {
+        // Mock initial VerificationPage request successful
+        controller.verificationPageResponse = .success(
+            try VerificationPageMock.response200.make().copyWithNewMissings(newMissings: [.idDocumentWallet])
+        )
+
+        let documentData = Data("encrypted_data".utf8)
+        let walletDocumentData = VerifyDocumentViaWalletData(
+            walletIdentitySession: "wis_123",
+            encryptedData: documentData
+        )
+        let expectedWalletData = StripeAPI.VerificationPageDataDocumentWalletData(
+            walletIdentitySession: walletDocumentData.walletIdentitySession,
+            encryptedData: documentData.base64EncodedString()
+        )
+        let expectedCollectedData = StripeAPI.VerificationPageCollectedData(
+            idDocumentWallet: expectedWalletData
+        )
+        let mockResponse = try VerificationPageDataMock.noErrors.make()
+
+        let saveRequestExp = expectation(description: "Save wallet document data request was made")
+        mockAPIClient.verificationPageData.callBackOnRequest {
+            saveRequestExp.fulfill()
+        }
+
+        controller.saveVerifyDocumentViaWalletDataAndTransition(
+            from: .documentWarmup,
+            walletDocumentData: walletDocumentData
+        ) {
+            self.exp.fulfill()
+        }
+
+        wait(for: [saveRequestExp], timeout: 1)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
+        XCTAssertEqual(
+            mockAPIClient.verificationPageData.requestHistory.first?.collectedData?.idDocumentWallet,
+            expectedWalletData
+        )
+        XCTAssertEqual(
+            mockAPIClient.verificationPageData.requestHistory.first,
+            .init(
+                clearData: .init(
+                    biometricConsent: false,
+                    face: false,
+                    idDocumentBack: false,
+                    idDocumentFront: false,
+                    idDocumentWallet: nil,
+                    idNumber: false,
+                    dob: false,
+                    name: false,
+                    address: false,
+                    phoneOtp: false
+                ),
+                collectedData: expectedCollectedData
+            )
+        )
+        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 0)
+
+        mockAPIClient.verificationPageData.respondToRequests(with: .success(mockResponse))
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
+        wait(for: [submitRequestExp], timeout: 1)
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
+
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .documentWarmup)
+        XCTAssertEqual(controller.collectedData.idDocumentWallet, expectedWalletData)
+        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+    }
+
+    func testSaveVerifyDocumentViaWalletDataErrorResponse() throws {
+        // Mock initial VerificationPage request successful
+        controller.verificationPageResponse = .success(
+            try VerificationPageMock.response200.make().copyWithNewMissings(newMissings: [.idDocumentWallet])
+        )
+
+        let mockError = NSError(domain: "", code: 0, userInfo: nil)
+        let documentData = Data("encrypted_data".utf8)
+        let walletDocumentData = VerifyDocumentViaWalletData(
+            walletIdentitySession: "wis_123",
+            encryptedData: documentData
+        )
+
+        controller.saveVerifyDocumentViaWalletDataAndTransition(
+            from: .documentWarmup,
+            walletDocumentData: walletDocumentData
+        ) {
+            self.exp.fulfill()
+        }
+
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 1)
+        XCTAssertEqual(mockAPIClient.imageUpload.requestHistory.count, 0)
+
+        mockAPIClient.verificationPageData.respondToRequests(with: .failure(mockError))
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertNil(controller.collectedData.idDocumentWallet)
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 0)
         wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
         guard case .failure = mockFlowController.transitionedWithUpdateDataResult else {
             return XCTFail("Expected failure")

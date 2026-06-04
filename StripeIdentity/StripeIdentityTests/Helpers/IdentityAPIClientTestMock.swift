@@ -25,6 +25,7 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
     }
 
     let verificationPage = MockAPIRequests<Void, StripeAPI.VerificationPage>()
+    let walletIdentitySession = MockAPIRequests<Void, StripeAPI.VerificationPageWalletIdentitySession>()
     let verificationPageData = MockAPIRequests<
         StripeAPI.VerificationPageDataUpdate, StripeAPI.VerificationPageData
     >()
@@ -49,6 +50,10 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
 
     func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage> {
         return verificationPage.makeRequest(with: ())
+    }
+
+    func createWalletIdentitySession() -> Promise<StripeAPI.VerificationPageWalletIdentitySession> {
+        return walletIdentitySession.makeRequest(with: ())
     }
 
     func updateIdentityVerificationPageData(

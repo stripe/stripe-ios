@@ -15,6 +15,7 @@ extension StripeAPI {
         let face: Bool?
         let idDocumentBack: Bool?
         let idDocumentFront: Bool?
+        let idDocumentWallet: Bool?
         let idNumber: Bool?
         let dob: Bool?
         let name: Bool?
@@ -32,6 +33,8 @@ extension StripeAPI.VerificationPageClearData {
             face: fields.contains(.face),
             idDocumentBack: fields.contains(.idDocumentBack),
             idDocumentFront: fields.contains(.idDocumentFront),
+// TODO: nil should not be needed once api support this
+            idDocumentWallet: fields.contains(.idDocumentWallet) ? true : nil,
             idNumber: fields.contains(.idNumber),
             dob: fields.contains(.dob),
             name: fields.contains(.name),

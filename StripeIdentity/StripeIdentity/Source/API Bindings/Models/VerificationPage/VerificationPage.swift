@@ -53,6 +53,24 @@ extension StripeAPI {
 
     }
 
+    struct VerificationPageWalletIdentitySession: Decodable, Equatable {
+        struct Request: Decodable, Equatable {
+            struct DocumentRequest: Decodable, Equatable {
+                let documentType: String
+                let requestedElements: [String]
+            }
+
+            let type: String
+            let nonce: String
+            let merchantIdentifier: String
+            let documentRequests: [DocumentRequest]
+        }
+
+        let sessionId: String
+        let platform: String
+        let request: Request
+    }
+
 }
 
 extension StripeAPI.VerificationPage {

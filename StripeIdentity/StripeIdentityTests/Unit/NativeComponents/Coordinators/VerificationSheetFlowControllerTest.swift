@@ -22,7 +22,7 @@ final class VerificationSheetFlowControllerTest: XCTestCase {
         [.biometricConsent], [.idDocumentFront, .idDocumentBack],
     ]
 
-let flowController = VerificationSheetFlowController(brandLogo: UIImage())
+    let flowController = VerificationSheetFlowController(brandLogo: UIImage())
     var mockMLModelLoader: IdentityMLModelLoaderMock!
     var mockSheetController: VerificationSheetControllerMock!
 
@@ -342,7 +342,16 @@ let flowController = VerificationSheetFlowController(brandLogo: UIImage())
             }
         )
 
-        wait(for: [frontExp, backExp], timeout: 1)
+        let walletExp = expectation(description: "wallet")
+        try nextViewController(
+            missingRequirements: [.idDocumentWallet],
+            completion: { nextVC in
+                XCTAssertIs(nextVC, DocumentWarmupViewController.self)
+                walletExp.fulfill()
+            }
+        )
+
+        wait(for: [frontExp, backExp, walletExp], timeout: 1)
     }
 
     func testNextViewControllerSelfie() throws {

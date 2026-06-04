@@ -8,12 +8,13 @@
 import Foundation
 import XCTest
 
-@testable import StripeIdentity
+@_spi(VerifyWithWallet) @testable import StripeIdentity
 
 final class DocumentWarmupViewControllerTest: XCTestCase {
 
     private var vc: DocumentWarmupViewController!
     private let mockSheetController = VerificationSheetControllerMock()
+    private let verifyViaWalletManager = VerifyDocumentViaWalletManagerMock()
 
     override func setUp() {
         super.setUp()
@@ -29,7 +30,8 @@ final class DocumentWarmupViewControllerTest: XCTestCase {
                         "id_card": "Identity card",
                     ],
                     title: "unused title"
-                )
+                ),
+                verifyViaWalletManager: verifyViaWalletManager
         )
     }
 
@@ -40,4 +42,18 @@ final class DocumentWarmupViewControllerTest: XCTestCase {
         XCTAssertTrue(mockSheetController.transitionedToDocumentCapture)
     }
 
+}
+
+private final class VerifyDocumentViaWalletManagerMock: VerifyDocumentViaWalletManagerProtocol {
+    func isVerifyDocumentViaWalletAvailable() async -> Bool {
+        return false
+    }
+
+    @MainActor
+    func requestDocumentData() async throws -> VerifyDocumentViaWalletData {
+        return VerifyDocumentViaWalletData(
+            walletIdentitySession: "wis_123",
+            encryptedData: Data()
+        )
+    }
 }

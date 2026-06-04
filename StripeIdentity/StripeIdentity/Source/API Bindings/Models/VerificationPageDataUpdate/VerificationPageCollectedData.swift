@@ -16,6 +16,7 @@ extension StripeAPI {
         private(set) var face: VerificationPageDataFace?
         private(set) var idDocumentBack: VerificationPageDataDocumentFileData?
         private(set) var idDocumentFront: VerificationPageDataDocumentFileData?
+        private(set) var idDocumentWallet: VerificationPageDataDocumentWalletData?
         private(set) var idNumber: VerificationPageDataIdNumber?
         private(set) var dob: VerificationPageDataDob?
         private(set) var name: VerificationPageDataName?
@@ -28,6 +29,7 @@ extension StripeAPI {
             face: VerificationPageDataFace? = nil,
             idDocumentBack: VerificationPageDataDocumentFileData? = nil,
             idDocumentFront: VerificationPageDataDocumentFileData? = nil,
+            idDocumentWallet: VerificationPageDataDocumentWalletData? = nil,
             idNumber: VerificationPageDataIdNumber? = nil,
             dob: VerificationPageDataDob? = nil,
             name: VerificationPageDataName? = nil,
@@ -39,6 +41,7 @@ extension StripeAPI {
             self.face = face
             self.idDocumentBack = idDocumentBack
             self.idDocumentFront = idDocumentFront
+            self.idDocumentWallet = idDocumentWallet
             self.idNumber = idNumber
             self.dob = dob
             self.name = name
@@ -61,6 +64,7 @@ extension StripeAPI.VerificationPageCollectedData {
             face: otherData.face ?? self.face,
             idDocumentBack: otherData.idDocumentBack ?? self.idDocumentBack,
             idDocumentFront: otherData.idDocumentFront ?? self.idDocumentFront,
+            idDocumentWallet: otherData.idDocumentWallet ?? self.idDocumentWallet,
             idNumber: otherData.idNumber ?? self.idNumber,
             dob: otherData.dob ?? self.dob,
             name: otherData.name ?? self.name,
@@ -85,6 +89,8 @@ extension StripeAPI.VerificationPageCollectedData {
             self.idDocumentBack = nil
         case .idDocumentFront:
             self.idDocumentFront = nil
+        case .idDocumentWallet:
+            self.idDocumentWallet = nil
         case .idNumber:
             self.idNumber = nil
         case .dob:
@@ -127,6 +133,9 @@ extension StripeAPI.VerificationPageCollectedData {
         }
         if self.idDocumentFront != nil {
             ret.insert(.idDocumentFront)
+        }
+        if self.idDocumentWallet != nil {
+            ret.insert(.idDocumentWallet)
         }
         if self.idNumber != nil {
             ret.insert(.idNumber)

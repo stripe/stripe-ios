@@ -53,6 +53,12 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         completion: @escaping () -> Void
     )
 
+    func saveVerifyDocumentViaWalletDataAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        walletDocumentData: VerifyDocumentViaWalletData,
+        completion: @escaping () -> Void
+    )
+
     func forceDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         onCompletion: @escaping (_ isBackRequired: Bool) -> Void
@@ -342,6 +348,33 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
             documentUploader: documentUploader,
             onCompletion: completion
         )
+    }
+
+    func saveVerifyDocumentViaWalletDataAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        walletDocumentData: VerifyDocumentViaWalletData,
+        completion: @escaping () -> Void
+    ) {
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
+
+        let collectedData = StripeAPI.VerificationPageCollectedData(
+            idDocumentWallet: .init(
+                walletIdentitySession: walletDocumentData.walletIdentitySession,
+                encryptedData: walletDocumentData.encryptedData.base64EncodedString()
+            )
+        )
+        apiClient.updateIdentityVerificationPageData(
+            updating: .init(
+                clearData: calculateClearData(dataToBeCollected: collectedData),
+                collectedData: collectedData
+            )
+        ).observe(on: .main) { [weak self] result in
+            self?.saveCheckSubmitAndTransition(
+                collectedData: collectedData,
+                updateDataResult: result,
+                completion: completion
+            )
+        }
     }
 
     func forceDocumentFrontAndDecideBack(

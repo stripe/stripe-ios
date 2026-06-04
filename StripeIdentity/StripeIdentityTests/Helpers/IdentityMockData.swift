@@ -77,6 +77,16 @@ enum CapturedImageMock: String {
 }
 
 enum VerificationPageDataUpdateMock {
+    static let walletDocument = StripeAPI.VerificationPageDataUpdate(
+        clearData: nil,
+        collectedData: .init(
+            idDocumentWallet: .init(
+                walletIdentitySession: "wis_123",
+                encryptedData: "ZW5jcnlwdGVkX2RhdGE="
+            )
+        )
+    )
+
     static let `default` = StripeAPI.VerificationPageDataUpdate(
         clearData: nil,
         collectedData: .init(

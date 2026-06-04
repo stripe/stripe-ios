@@ -13,7 +13,8 @@ class PlaygroundViewController: UIViewController {
 
     // Constants
     // View and fork the backend code here: https://codesandbox.io/p/devbox/dsx4vq
-    let baseURL = "https://stripe-mobile-identity-verification-playground.stripedemos.com"
+    // Hardcoded eID PoC backend for testing; restore the playground backend (https://stripe-mobile-identity-verification-playground.stripedemos.com) when shipping
+    let baseURL = "https://eid-validator-poc.up.railway.app"
     let verifyEndpoint = "/verification-sessions"
     let reuseEndpoint = "/reuse-verification-session"
 
@@ -28,6 +29,7 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet private weak var requireAddressSwitch: UISwitch!
     @IBOutlet private weak var requireLiveCaptureSwitch: UISwitch!
     @IBOutlet private weak var requireSelfieSwitch: UISwitch!
+    @IBOutlet private weak var enableVerifyViaWalletSwitch: UISwitch!
     @IBOutlet private weak var verificationTypeContainerView: UIStackView!
     @IBOutlet private weak var documentOptionsContainerView: UIStackView!
     @IBOutlet private weak var nativeComponentsOptionsContainerView: UIStackView!
@@ -190,6 +192,7 @@ class PlaygroundViewController: UIViewController {
                         "require_live_capture": requireLiveCaptureSwitch.isOn,
                         "require_matching_selfie": requireSelfieSwitch.isOn,
                         "require_address": requireAddressSwitch.isOn,
+                        "enable_verify_via_wallet": enableVerifyViaWalletSwitch.isOn,
                     ],
                 ]
                 if requirePhoneNumberSwitch.isOn {
@@ -223,6 +226,7 @@ class PlaygroundViewController: UIViewController {
                         "require_live_capture": requireLiveCaptureSwitch.isOn,
                         "require_matching_selfie": requireSelfieSwitch.isOn,
                         "require_address": requireAddressSwitch.isOn,
+                        "enable_verify_via_wallet": enableVerifyViaWalletSwitch.isOn,
                     ]
                     options["phone_records"] = [
                         "fallback": "document",
@@ -243,6 +247,12 @@ class PlaygroundViewController: UIViewController {
                 guard let verificationSessionId = responseJson["id"] else {
                     self.updateButtonState(isLoading: false)
                     assertionFailure("Did not receive a valid id.")
+                    return
+                }
+
+                if responseJson["ephemeral_key_secret"] != nil {
+                    self.updateButtonState(isLoading: false)
+                    self.startVerificationFlow(responseJson: responseJson)
                     return
                 }
 

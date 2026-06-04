@@ -9,6 +9,12 @@ import Foundation
 @_spi(STP) import StripeCore
 
 extension StripeAPI {
+    struct VerificationPageDataDocumentWalletData: Encodable, Equatable {
+        let walletIdentitySession: String
+        let platform = "apple_passkit"
+        let encryptedData: String
+    }
+
     struct VerificationPageDataDocumentFileData: Encodable, Equatable {
 
         enum FileUploadMethod: String, Encodable, Equatable {

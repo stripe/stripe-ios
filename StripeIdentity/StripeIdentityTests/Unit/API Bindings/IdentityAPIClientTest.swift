@@ -120,6 +120,149 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         wait(for: [exp], timeout: 1)
     }
 
+    func testUpdateVerificationPageDataWithWalletDocumentData() throws {
+        let mockVerificationData = VerificationPageDataUpdateMock.walletDocument
+        let encodedMockVerificationDataDictionary = try mockVerificationData.encodeJSONDictionary()
+        let encodedMockVerificationData = URLEncoder.queryString(
+            from: encodedMockVerificationDataDictionary
+        )
+        XCTAssertEqual(
+            encodedMockVerificationDataDictionary["collected_data"] as? [String: [String: String]],
+            [
+                "id_document_wallet": [
+                    "wallet_identity_session": "wis_123",
+                    "platform": "apple_passkit",
+                    "encrypted_data": "ZW5jcnlwdGVkX2RhdGE=",
+                ],
+            ]
+        )
+
+        let mockVerificationPageData = VerificationPageDataMock.response200
+        let mockResponseData = try mockVerificationPageData.data()
+        let mockResponse = try mockVerificationPageData.make()
+
+        stub { urlRequest in
+            XCTAssertEqual(
+                urlRequest.url?.absoluteString.hasSuffix(
+                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/data"
+                ),
+                true
+            )
+            XCTAssertEqual(urlRequest.httpMethod, "POST")
+
+            verifyHeaders(urlRequest: urlRequest)
+
+            guard let httpBody = urlRequest.ohhttpStubs_httpBody else {
+                XCTFail("Expected an httpBody but found none")
+                return false
+            }
+            let httpBodyString = String(data: httpBody, encoding: .utf8)
+            XCTAssertEqual(httpBodyString, encodedMockVerificationData)
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        apiClient.updateIdentityVerificationPageData(
+            updating: mockVerificationData
+        ).observe { result in
+            switch result {
+            case .success(let response):
+                XCTAssertEqual(response, mockResponse)
+            case .failure(let error):
+                XCTFail("Request returned error \(error)")
+            }
+            self.exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testCreateWalletIdentitySession() throws {
+        let responseJSON = """
+            {
+              "session_id": "wis_123",
+              "platform": "apple_passkit",
+              "request": {
+                "type": "apple_identity",
+                "nonce": "dGVzdE5vbmNlQWJjZGVmZ2hpamtsbW5vcHE",
+                "merchant_identifier": "merchant.com.stripe.identity.test",
+                "document_requests": [{
+                  "document_type": "driving_license",
+                  "requested_elements": [
+                    "org.iso.18013.5.1.given_name",
+                    "org.iso.18013.5.1.family_name",
+                    "org.iso.18013.5.1.portrait",
+                    "org.iso.18013.5.1.address",
+                    "org.iso.18013.5.1.birth_date",
+                    "org.iso.18013.5.1.document_number",
+                    "org.iso.18013.5.1.issue_date",
+                    "org.iso.18013.5.1.expiry_date",
+                    "org.iso.18013.5.1.issuing_authority"
+                  ]
+                }]
+              }
+            }
+            """
+        let mockResponseData = responseJSON.data(using: .utf8)!
+        let mockResponse = StripeAPI.VerificationPageWalletIdentitySession(
+            sessionId: "wis_123",
+            platform: "apple_passkit",
+            request: .init(
+                type: "apple_identity",
+                nonce: "dGVzdE5vbmNlQWJjZGVmZ2hpamtsbW5vcHE",
+                merchantIdentifier: "merchant.com.stripe.identity.test",
+                documentRequests: [
+                    .init(
+                        documentType: "driving_license",
+                        requestedElements: [
+                            "org.iso.18013.5.1.given_name",
+                            "org.iso.18013.5.1.family_name",
+                            "org.iso.18013.5.1.portrait",
+                            "org.iso.18013.5.1.address",
+                            "org.iso.18013.5.1.birth_date",
+                            "org.iso.18013.5.1.document_number",
+                            "org.iso.18013.5.1.issue_date",
+                            "org.iso.18013.5.1.expiry_date",
+                            "org.iso.18013.5.1.issuing_authority",
+                        ]
+                    ),
+                ]
+            )
+        )
+
+        stub { urlRequest in
+            XCTAssertEqual(
+                urlRequest.url?.absoluteString.hasSuffix(
+                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/wallet_identity/sessions"
+                ),
+                true
+            )
+            XCTAssertEqual(urlRequest.httpMethod, "POST")
+            verifyHeaders(urlRequest: urlRequest)
+            let body = String(data: urlRequest.ohhttpStubs_httpBody ?? Data(), encoding: .utf8)
+            XCTAssertEqual(Set(body?.components(separatedBy: "&") ?? []), [
+                "app_identifier=\(Bundle.main.bundleIdentifier ?? "")",
+                "platform=apple_passkit",
+            ])
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        apiClient.createWalletIdentitySession().observe { result in
+            switch result {
+            case .success(let response):
+                XCTAssertEqual(response, mockResponse)
+            case .failure(let error):
+                XCTFail("Request returned error \(error)")
+            }
+            self.exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
+    }
+
     func testSubmitIdentityVerificationSession() throws {
         try verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/submit") {
             apiClient.submitIdentityVerificationPage()
@@ -191,7 +334,7 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         stub { urlRequest in
             XCTAssertEqual(
                 urlRequest.url?.absoluteString.hasSuffix(
-                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)?app_identifier=\(Bundle.main.bundleIdentifier ?? "")"
+                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)?platform=ios&app_identifier=\(Bundle.main.bundleIdentifier ?? "")"
                 ),
                 true
             )
@@ -264,7 +407,7 @@ private func verifyHeaders(
     )
     XCTAssertEqual(
         urlRequest.allHTTPHeaderFields?["Stripe-Version"],
-        "2020-08-27; identity_client_api=v7",
+        "2020-08-27; identity_client_api=v8",
         file: file,
         line: line
     )
