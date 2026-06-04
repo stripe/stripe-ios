@@ -884,15 +884,12 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBNPLHeader() -> SubtitleElement? {
-        // This will be hooked up to promotion content data in a future PR.
-        return nil
-//        let headerView = BNPLFormHeaderView(
-//            appearance: configuration.appearance,
-//            promotion: "TODO: fill in with real promotion content",
-//            learnMoreText: "TODO: fill in with real learn more text",
-//            infoUrl: URL(string: "https://stripe.com")!
-//        )
-//        return SubtitleElement(view: headerView, isHorizontalMode: paymentMethodOrientation == .horizontal)
+        guard let paymentMethodMessagingPromotionsHelper, let headerView = BNPLFormHeaderView(
+            appearance: configuration.appearance,
+            paymentMethod: paymentMethod,
+            promotionsHelper: paymentMethodMessagingPromotionsHelper
+        ) else { return nil }
+        return SubtitleElement(view: headerView, isHorizontalMode: paymentMethodOrientation == .horizontal)
     }
 
     func makeCopyLabel(text: String) -> SubtitleElement {

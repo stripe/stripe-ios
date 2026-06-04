@@ -471,6 +471,20 @@ final class PaymentSheetAnalyticsHelper {
         log(event: .shopPayWebviewCancelled, params: ["did_receive_ece_click": didReceiveECEClick])
     }
 
+    func logPaymentMethodMessagingFetchBegin() {
+        log(event: .paymentMethodMessagingFetchBegin)
+    }
+
+    func logPaymentMethodMessagingDisplayed(duration: TimeInterval, displayedSuccessfully: Bool) {
+        log(
+            event: .paymentMethodMessagingDisplayed,
+            duration: duration,
+            params: [
+                "displayed_successfully": displayedSuccessfully,
+            ]
+        )
+    }
+
     func log(
         event: STPAnalyticEvent,
         duration: TimeInterval? = nil,

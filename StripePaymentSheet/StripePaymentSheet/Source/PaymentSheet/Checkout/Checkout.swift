@@ -319,18 +319,4 @@ public final class Checkout: ObservableObject {
         }
     }
 
-    // MARK: - Tax ID
-
-    /// Sets the customer's tax ID on the session.
-    /// - Parameters:
-    ///   - type: The type of tax ID to set (for example, `"eu_vat"`).
-    ///   - value: The tax ID value to set.
-    /// - Throws: ``CheckoutError`` if the update fails.
-    public func updateTaxId(type: String, value: String) async throws {
-        try requireOpenSession()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setTaxId(type: type, value: value))
-        }
-    }
-
 }
