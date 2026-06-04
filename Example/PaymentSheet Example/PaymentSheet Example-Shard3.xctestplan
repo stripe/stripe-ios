@@ -37,7 +37,7 @@
         "EmbeddedUITests\/testUpdate()",
         "FCLiteUITests",
         "FCLiteUITests\/testFCLiteInitialPaneAndDismiss()",
-        "LinkPaymentControllerUITest",
+        "InstantBankPaymentsControllerUITest",
         "PaymentSheetBillingCollectionBankTests",
         "PaymentSheetCVCRecollectionUITests",
         "PaymentSheetCardBrandFilteringUITests",

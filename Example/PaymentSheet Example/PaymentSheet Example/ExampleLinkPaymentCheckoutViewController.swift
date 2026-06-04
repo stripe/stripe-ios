@@ -14,7 +14,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
     @IBOutlet weak var paymentMethodButton: UIButton!
     @IBOutlet weak var paymentMethodImage: UIImageView!
     @IBOutlet weak var deferredSwitch: UISwitch!
-    var linkPaymentController: LinkPaymentController!
+    var linkPaymentController: InstantBankPaymentsController!
     static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
     var backendCheckoutUrl: String {
         "\(ExampleLinkPaymentCheckoutViewController.baseEndpoint)/checkout"
@@ -66,9 +66,9 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                                 }
                             }
 
-                    self.linkPaymentController = LinkPaymentController(intentConfiguration: intentConfiguration, returnURL: returnURL, billingDetails: self.billingDetails)
+                    self.linkPaymentController = InstantBankPaymentsController(intentConfiguration: intentConfiguration, returnURL: returnURL, billingDetails: self.billingDetails)
                 } else {
-                    self.linkPaymentController = LinkPaymentController(paymentIntentClientSecret: paymentIntentClientSecret, returnURL: returnURL, billingDetails: self.billingDetails)
+                    self.linkPaymentController = InstantBankPaymentsController(paymentIntentClientSecret: paymentIntentClientSecret, returnURL: returnURL, billingDetails: self.billingDetails)
                 }
 
                 self.updateButtons()

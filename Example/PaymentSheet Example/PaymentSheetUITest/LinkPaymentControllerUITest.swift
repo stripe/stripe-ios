@@ -1,5 +1,5 @@
 //
-//  LinkPaymentControllerUITest.swift
+//  InstantBankPaymentsControllerUITest.swift
 //  PaymentSheetUITest
 //
 //  Created by Krisjanis Gaidis on 6/3/24.
@@ -7,7 +7,7 @@
 
 import XCTest
 
-class LinkPaymentControllerUITest: XCTestCase {
+class InstantBankPaymentsControllerUITest: XCTestCase {
     fileprivate var app: XCUIApplication!
     fileprivate let timeout: TimeInterval = 10
 
@@ -25,14 +25,14 @@ class LinkPaymentControllerUITest: XCTestCase {
         app.launchEnvironment = [:]
     }
 
-    func testWebInstantDebitsOnlyLinkPaymentController() {
+    func testWebInstantDebitsOnlyInstantBankPaymentsController() {
         app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "false"
         app.launch()
 
         // PaymentSheet Example
-        app.staticTexts["LinkPaymentController"].tap()
+        app.staticTexts["InstantBankPaymentsController"].tap()
 
-        // LinkPaymentController
+        // InstantBankPaymentsController
         let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
         let paymentMethodButtonEnabledExpectation = expectation(
             for: NSPredicate(format: "enabled == true"),
@@ -78,20 +78,20 @@ class LinkPaymentControllerUITest: XCTestCase {
 
         sleep(3) // wait for modal to disappear before pressing Buy
 
-        // Back to "LinkPaymentController"
+        // Back to "InstantBankPaymentsController"
         app.buttons["Buy"].waitForExistenceAndTap(timeout: timeout)
         XCTAssert(app.alerts.staticTexts["Your order is confirmed!"].waitForExistence(timeout: timeout))
     }
 
-    func testNativeInstantDebitsOnlyLinkPaymentController() {
+    func testNativeInstantDebitsOnlyInstantBankPaymentsController() {
         app.launchArguments += ["-FINANCIAL_CONNECTIONS_EXAMPLE_APP_ENABLE_NATIVE", "YES"]
         app.launchEnvironment["FinancialConnectionsSDKAvailable"] = "true"
         app.launch()
 
         // PaymentSheet Example
-        app.staticTexts["LinkPaymentController"].tap()
+        app.staticTexts["InstantBankPaymentsController"].tap()
 
-        // LinkPaymentController
+        // InstantBankPaymentsController
         let paymentMethodButton = app.buttons["SelectPaymentMethodButton"]
         let paymentMethodButtonEnabledExpectation = expectation(
             for: NSPredicate(format: "enabled == true"),
@@ -104,7 +104,7 @@ class LinkPaymentControllerUITest: XCTestCase {
 
         sleep(3) // wait for modal to disappear before pressing Buy
 
-        // Back to "LinkPaymentController"
+        // Back to "InstantBankPaymentsController"
         app.buttons["Buy"].waitForExistenceAndTap(timeout: timeout)
         XCTAssert(app.alerts.staticTexts["Your order is confirmed!"].waitForExistence(timeout: timeout))
     }

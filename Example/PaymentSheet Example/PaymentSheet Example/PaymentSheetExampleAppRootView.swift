@@ -153,7 +153,7 @@ struct PaymentSheetExampleAppRootView: View {
             case .customerSheet_swiftUI:
                 return "CustomerSheet (SwiftUI)"
             case .linkPaymentController:
-                return "LinkPaymentController"
+                return "InstantBankPaymentsController"
             case .linkController:
                 return "LinkController (SwiftUI)"
             case .linkStandaloneDemo:
