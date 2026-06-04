@@ -8,6 +8,36 @@
 import Foundation
 @_spi(STP) import StripeCore
 
+/// A wrapper SDK name and version pair included in developer diagnostics.
+///
+/// Do not use this type for the Stripe iOS SDK version. Stripe iOS is always included automatically.
+@_spi(CryptoOnrampAlpha)
+public struct SDKVersion: CustomDebugStringConvertible, Equatable {
+
+    /// The SDK name.
+    public let name: String
+
+    /// The SDK version.
+    public let version: String
+
+    static let stripeIOS = SDKVersion(name: "stripe-ios", version: STPAPIClient.STPSDKVersion)
+
+    /// Creates an SDK version from a name and version.
+    ///
+    /// - Parameters:
+    ///   - name: The SDK name.
+    ///   - version: The SDK version.
+    public init(name: String, version: String) {
+        self.name = name
+        self.version = version
+    }
+
+    /// A developer-facing SDK version description.
+    public var debugDescription: String {
+        return "\(name)@\(version)"
+    }
+}
+
 /// A rich Crypto Onramp error with separate app-user and developer-facing surfaces.
 @_spi(CryptoOnrampAlpha)
 public protocol StripeCryptoOnrampError: Error, LocalizedError, CustomDebugStringConvertible {
@@ -27,20 +57,13 @@ public protocol StripeCryptoOnrampError: Error, LocalizedError, CustomDebugStrin
     /// The original error that was mapped to this error, if one is available.
     var underlyingError: Swift.Error? { get }
 
-    /// The Stripe iOS SDK version.
-    var sdkVersion: String { get }
+    /// SDK versions included in developer diagnostics, including Stripe iOS and any additional wrapper SDK versions.
+    var sdkVersions: [SDKVersion] { get }
 }
 
 /// Default surfaces for rich Crypto Onramp errors.
 @_spi(CryptoOnrampAlpha)
 public extension StripeCryptoOnrampError {
-
-    // MARK: - StripeCryptoOnrampError
-
-    /// The Stripe iOS SDK version.
-    var sdkVersion: String {
-        return STPAPIClient.STPSDKVersion
-    }
 
     // MARK: - LocalizedError
 

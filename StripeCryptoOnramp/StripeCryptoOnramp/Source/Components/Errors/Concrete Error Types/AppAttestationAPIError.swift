@@ -41,7 +41,7 @@ public struct AppAttestationAPIError: StripeCryptoOnrampAPIError, APIErrorContex
             context: context,
             summary: developerSummary,
             code: code,
-            sdkVersion: sdkVersion,
+            sdkVersions: sdkVersions,
             nextStep: nextStep
         )
     }

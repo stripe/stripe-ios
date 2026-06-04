@@ -26,11 +26,13 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// - Parameter apiClient: The `STPAPIClient` instance for this coordinator. Defaults to `.shared`.
     /// - Parameter appearance: Customizable appearance-related configuration for any Stripe-provided UI.
     /// - Parameter cryptoCustomerID: The crypto customer's ID, if available.
+    /// - Parameter additionalSDKVersions: Additional wrapper SDK versions to include in developer diagnostics, such as the Stripe React Native SDK version. Do not include Stripe iOS; it is always included automatically.
     /// - Returns: A configured `CryptoOnrampCoordinator`.
     static func create(
         apiClient: STPAPIClient,
         appearance: LinkAppearance,
-        cryptoCustomerID: String?
+        cryptoCustomerID: String?,
+        additionalSDKVersions: [SDKVersion]
     ) async throws -> Self
 
     /// Whether or not the provided email is associated with an existing Link consumer.
@@ -197,6 +199,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     private let apiClient: STPAPIClient
     private let appearance: LinkAppearance
     private let analyticsClient: CryptoOnrampAnalyticsClient
+    private let additionalSDKVersions: [SDKVersion]
     private var applePayCompletionContinuation: CheckedContinuation<ApplePayPaymentStatus, Swift.Error>?
 
     /// Apple Pay payment source created by `didCreatePaymentMethod` but not yet committed.
@@ -231,12 +234,14 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
         cryptoCustomerID: String?,
         apiClient: STPAPIClient = .shared,
         appearance: LinkAppearance,
-        analyticsClient: CryptoOnrampAnalyticsClient
+        analyticsClient: CryptoOnrampAnalyticsClient,
+        additionalSDKVersions: [SDKVersion]
     ) {
         self.linkController = linkController
         self.apiClient = apiClient
         self.appearance = appearance
         self.analyticsClient = analyticsClient
+        self.additionalSDKVersions = additionalSDKVersions
         self.cryptoCustomerState = CryptoCustomerState(cryptoCustomerID)
         super.init()
     }
@@ -246,7 +251,8 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public static func create(
         apiClient: STPAPIClient = .shared,
         appearance: LinkAppearance = .init(),
-        cryptoCustomerID: String? = nil
+        cryptoCustomerID: String? = nil,
+        additionalSDKVersions: [SDKVersion] = []
     ) async throws -> CryptoOnrampCoordinator {
         let analyticsClient = CryptoOnrampAnalyticsClient()
 
@@ -264,14 +270,21 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
                 cryptoCustomerID: cryptoCustomerID,
                 apiClient: apiClient,
                 appearance: appearance,
-                analyticsClient: analyticsClient
+                analyticsClient: analyticsClient,
+                additionalSDKVersions: additionalSDKVersions
             )
 
             analyticsClient.elementsSessionId = await linkController.elementsSessionID
             analyticsClient.log(.sessionCreated)
             return coordinator
         } catch {
-            try logAndThrow(error, during: .createSession, apiClient: apiClient, analyticsClient: analyticsClient)
+            try logAndThrow(
+                error,
+                during: .createSession,
+                apiClient: apiClient,
+                analyticsClient: analyticsClient,
+                additionalSDKVersions: additionalSDKVersions
+            )
         }
     }
 
@@ -870,16 +883,28 @@ private extension CryptoOnrampCoordinator {
     }
 
     func logAndThrow(_ error: Swift.Error, during operation: CryptoOnrampOperation) throws -> Never {
-        try Self.logAndThrow(error, during: operation, apiClient: apiClient, analyticsClient: analyticsClient)
+        try Self.logAndThrow(
+            error,
+            during: operation,
+            apiClient: apiClient,
+            analyticsClient: analyticsClient,
+            additionalSDKVersions: additionalSDKVersions
+        )
     }
 
     static func logAndThrow(
         _ error: Swift.Error,
         during operation: CryptoOnrampOperation,
         apiClient: STPAPIClient,
-        analyticsClient: CryptoOnrampAnalyticsClient
+        analyticsClient: CryptoOnrampAnalyticsClient,
+        additionalSDKVersions: [SDKVersion] = []
     ) throws -> Never {
-        let mappedError = mappedError(error, during: operation, apiClient: apiClient)
+        let mappedError = mappedError(
+            error,
+            during: operation,
+            apiClient: apiClient,
+            additionalSDKVersions: additionalSDKVersions
+        )
         let errorMessage = (mappedError as? StripeCryptoOnrampError)?.developerMessage ?? mappedError.localizedDescription
         analyticsClient.log(.errorOccurred(during: operation, errorMessage: errorMessage))
         throw mappedError

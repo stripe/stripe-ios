@@ -17,7 +17,8 @@ extension CryptoOnrampCoordinator {
     static func mappedError(
         _ error: Swift.Error,
         during operation: CryptoOnrampOperation,
-        apiClient: STPAPIClient
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion] = []
     ) -> Swift.Error {
         if let stripeError = error as? StripeError,
            case let .apiError(apiError) = stripeError {
@@ -27,7 +28,8 @@ extension CryptoOnrampCoordinator {
                     from: error,
                     apiError: apiError,
                     during: operation,
-                    apiClient: apiClient
+                    apiClient: apiClient,
+                    additionalSDKVersions: additionalSDKVersions
                 )
             default:
                 return UncategorizedAPIError(
@@ -36,7 +38,8 @@ extension CryptoOnrampCoordinator {
                         apiError: apiError,
                         during: operation,
                         apiClient: apiClient,
-                        docURL: apiError.docUrl
+                        docURL: apiError.docUrl,
+                        additionalSDKVersions: additionalSDKVersions
                     )
                 )
             }
@@ -49,7 +52,8 @@ extension CryptoOnrampCoordinator {
         from error: Swift.Error,
         apiError: StripeAPIError,
         during operation: CryptoOnrampOperation,
-        apiClient: STPAPIClient
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
         return AppAttestationAPIError(
             context: apiErrorContext(
@@ -57,7 +61,8 @@ extension CryptoOnrampCoordinator {
                 apiError: apiError,
                 during: operation,
                 apiClient: apiClient,
-                docURL: apiError.docUrl
+                docURL: apiError.docUrl,
+                additionalSDKVersions: additionalSDKVersions
             )
         )
     }
@@ -67,7 +72,8 @@ extension CryptoOnrampCoordinator {
         apiError: StripeAPIError,
         during operation: CryptoOnrampOperation,
         apiClient: STPAPIClient,
-        docURL: URL?
+        docURL: URL?,
+        additionalSDKVersions: [SDKVersion]
     ) -> APIErrorContext {
         return APIErrorContext(
             reason: apiError.allResponseFields["reason"] as? String,
@@ -79,7 +85,8 @@ extension CryptoOnrampCoordinator {
             apiErrorMessage: apiError.message,
             apiUserMessage: apiError.allResponseFields["user_message"] as? String,
             docURL: docURL,
-            underlyingError: error
+            underlyingError: error,
+            sdkVersions: [.stripeIOS] + additionalSDKVersions
         )
     }
 

@@ -16,22 +16,20 @@ public enum StripeCryptoOnrampErrorRenderer {
     ///   - code: A stable code identifying this error.
     ///   - nextStep: A suggested action for resolving the error.
     ///   - docURL: Documentation for this error, if available.
-    ///   - sdkVersion: The Stripe iOS SDK version.
-    ///   - additionalSDKVersions: Additional wrapper SDK versions, formatted as `name@version`.
+    ///   - sdkVersions: SDK versions included in developer diagnostics, including Stripe iOS and any additional wrapper SDK versions.
     public static func render(
         developerBody: String,
         code: String,
         nextStep: String,
         docURL: URL?,
-        sdkVersion: String,
-        additionalSDKVersions: [String] = []
+        sdkVersions: [SDKVersion] = []
     ) -> String {
         return render(
             developerBody: developerBody,
             code: code,
             nextStep: nextStep,
             docURLString: docURL?.absoluteString,
-            sdkVersions: ["stripe-ios@\(sdkVersion)"] + additionalSDKVersions
+            sdkVersions: sdkVersions
         )
     }
 
@@ -39,17 +37,15 @@ public enum StripeCryptoOnrampErrorRenderer {
         context: APIErrorContext,
         summary: String,
         code: String,
-        sdkVersion: String,
-        nextStep: String,
-        additionalSDKVersions: [String] = []
+        sdkVersions: [SDKVersion],
+        nextStep: String
     ) -> String {
         return render(
             developerBody: apiErrorDeveloperBody(summary: summary, context: context),
             code: code,
             nextStep: nextStep,
             docURL: context.docURL,
-            sdkVersion: sdkVersion,
-            additionalSDKVersions: additionalSDKVersions
+            sdkVersions: sdkVersions
         )
     }
 
@@ -58,7 +54,7 @@ public enum StripeCryptoOnrampErrorRenderer {
         code: String,
         nextStep: String,
         docURLString: String?,
-        sdkVersions: [String]
+        sdkVersions: [SDKVersion]
     ) -> String {
         var lines = [
             developerBody,
@@ -71,11 +67,14 @@ public enum StripeCryptoOnrampErrorRenderer {
             lines.append("Docs: \(docURLString)")
         }
 
-        if !sdkVersions.isEmpty {
-            lines.append("SDK: \(sdkVersions.joined(separator: ", "))")
-        }
+        lines.append("SDK: \(sdkVersionDescription(sdkVersions: sdkVersions))")
 
         return lines.joined(separator: "\n")
+    }
+
+    private static func sdkVersionDescription(sdkVersions: [SDKVersion]) -> String {
+        let normalizedSDKVersions = sdkVersions.isEmpty ? [.stripeIOS] : sdkVersions
+        return normalizedSDKVersions.map(\.debugDescription).joined(separator: ", ")
     }
 
     private static func apiErrorDeveloperBody(summary: String, context: APIErrorContext) -> String {

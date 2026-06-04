@@ -113,14 +113,12 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         XCTAssertEqual(UncategorizedAPIError(context: context).code, "uncategorized_api_error")
     }
 
-    func testRendererAppendsFooterMetadataAndAdditionalSDKVersions() {
+    func testRendererAppendsFooterMetadata() {
         let developerMessage = StripeCryptoOnrampErrorRenderer.render(
             developerBody: "Developer body.",
             code: "test_code",
             nextStep: "Fix the integration.",
-            docURL: URL(string: "https://stripe.com/docs/test")!,
-            sdkVersion: "25.16.0",
-            additionalSDKVersions: ["stripe-react-native@1.2.3"]
+            docURL: URL(string: "https://stripe.com/docs/test")!
         )
 
         XCTAssertEqual(developerMessage, """
@@ -129,7 +127,31 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         Code: test_code
         Next step: Fix the integration.
         Docs: https://stripe.com/docs/test
-        SDK: stripe-ios@25.16.0, stripe-react-native@1.2.3
+        SDK: stripe-ios@25.16.0
         """)
+    }
+
+    func testMappedErrorUsesAdditionalSDKVersionsInSDKVersionsAndDeveloperMessage() throws {
+        let stripeError = StripeError.apiError(StripeAPIError(
+            type: .invalidRequestError,
+            code: "link_failed_to_attest_request",
+            message: nil,
+            param: nil
+        ))
+        let apiClient = STPAPIClient(publishableKey: "pk_test_123")
+        let additionalSDKVersions = [
+            SDKVersion(name: "stripe-react-native", version: "1.2.3"),
+        ]
+
+        let mappedError = CryptoOnrampCoordinator.mappedError(
+            stripeError,
+            during: .hasLinkAccount,
+            apiClient: apiClient,
+            additionalSDKVersions: additionalSDKVersions
+        )
+        let apiError = try XCTUnwrap(mappedError as? AppAttestationAPIError)
+
+        XCTAssertEqual(apiError.sdkVersions, [.stripeIOS] + additionalSDKVersions)
+        XCTAssertTrue(apiError.developerMessage.contains("SDK: stripe-ios@\(STPAPIClient.STPSDKVersion), stripe-react-native@1.2.3"))
     }
 }

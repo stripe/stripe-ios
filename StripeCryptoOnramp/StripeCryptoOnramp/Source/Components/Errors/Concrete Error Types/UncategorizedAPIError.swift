@@ -41,7 +41,7 @@ public struct UncategorizedAPIError: StripeCryptoOnrampAPIError, APIErrorContext
             context: context,
             summary: apiMessage ?? context.underlyingError.localizedDescription,
             code: code,
-            sdkVersion: sdkVersion,
+            sdkVersions: sdkVersions,
             nextStep: "Inspect the preserved Stripe API error for details and retry after correcting the request."
         )
     }

@@ -70,6 +70,11 @@ public extension APIErrorContextProviding {
     var apiUserMessage: String? {
         return context.apiUserMessage
     }
+
+    /// SDK versions included in developer diagnostics, including Stripe iOS and any additional wrapper SDK versions.
+    var sdkVersions: [SDKVersion] {
+        return context.sdkVersions
+    }
 }
 
 /// Contains the common properties of all API error types.
@@ -106,6 +111,9 @@ public struct APIErrorContext {
     /// The original error that was mapped to this error.
     public var underlyingError: Swift.Error
 
+    /// SDK versions included in developer diagnostics, including Stripe iOS and any additional wrapper SDK versions.
+    public var sdkVersions: [SDKVersion]
+
     /// Creates shared API error context.
     ///
     /// - Parameters:
@@ -119,6 +127,7 @@ public struct APIErrorContext {
     ///   - apiUserMessage: The backend user-facing API error message associated with this error, if one is available.
     ///   - docURL: A URL to documentation for this error, if one is available.
     ///   - underlyingError: The original error that was mapped to this error.
+    ///   - sdkVersions: SDK versions included in developer diagnostics, including Stripe iOS and any additional wrapper SDK versions.
     public init(
         reason: String?,
         operation: String,
@@ -129,7 +138,8 @@ public struct APIErrorContext {
         apiErrorMessage: String?,
         apiUserMessage: String?,
         docURL: URL?,
-        underlyingError: Swift.Error
+        underlyingError: Swift.Error,
+        sdkVersions: [SDKVersion] = []
     ) {
         self.reason = reason
         self.operation = operation
@@ -141,6 +151,7 @@ public struct APIErrorContext {
         self.apiUserMessage = apiUserMessage
         self.docURL = docURL
         self.underlyingError = underlyingError
+        self.sdkVersions = sdkVersions.isEmpty ? [.stripeIOS] : sdkVersions
     }
 
     /// The Stripe API request ID associated with this error, if one is available.
