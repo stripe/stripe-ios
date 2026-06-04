@@ -72,7 +72,8 @@ class PaymentMethodMessagingPromotionsHelper {
         self.intent = intent
         self.configuration = configuration
         self.paymentMethodTypes = paymentMethodTypes
-        self._experiment = PaymentMethodMessagingPromotionsExperiment(elementsSession: elementsSession)
+        let layout = configuration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
+        self._experiment = PaymentMethodMessagingPromotionsExperiment(elementsSession: elementsSession, layout: layout.rawValue)
         self.analyticsHelper = analyticsHelper
     }
 

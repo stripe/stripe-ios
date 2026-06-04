@@ -228,8 +228,6 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
 
         let experiment = PaymentMethodMessagingPromotionsExperiment(
             elementsSession: elementsSession,
-            selectedPaymentMethodType: "klarna",
-            promotionDisplayedSuccessfully: true,
             layout: "vertical"
         )
 
@@ -239,8 +237,6 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(
             experiment.dimensions,
             [
-                "selected_payment_method_type": "klarna",
-                "promotion_displayed_successfully": "true",
                 "in_app_elements_layout": "vertical",
             ]
         )
