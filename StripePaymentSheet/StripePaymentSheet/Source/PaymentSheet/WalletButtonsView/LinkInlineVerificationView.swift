@@ -120,7 +120,7 @@ struct LinkInlineVerificationView: View {
             if let startVerificationErrorMessage {
                 Text(startVerificationErrorMessage)
                     .font(Font(LinkUI.font(forTextStyle: .detail)))
-                    .foregroundColor(Color(uiColor: .systemRed))
+                    .foregroundColor(Color(uiColor: viewModel.appearance.colors.danger))
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
             }

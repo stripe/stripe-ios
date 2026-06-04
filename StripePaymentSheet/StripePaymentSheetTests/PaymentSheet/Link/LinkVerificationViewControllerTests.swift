@@ -23,7 +23,7 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
         defer { StripeAPI.maxRetries = originalMaxRetries }
 
         stub(condition: isPath("/v1/consumers/sessions/start_verification")) { _ in
-            Self.makeStartVerificationRateLimitResponse()
+            LinkVerificationTestHelpers.makeStartVerificationRateLimitResponse()
         }
 
         let finishedExpectation = expectation(description: "verification finished with failed result")
@@ -52,21 +52,6 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
 }
 
 private extension LinkVerificationViewControllerTests {
-    static func makeStartVerificationRateLimitResponse() -> HTTPStubsResponse {
-        let response: [String: Any] = [
-            "error": [
-                "message": "Too many attempts. Please try again in a few minutes.",
-                "code": "consumer_verification_max_attempts_exceeded",
-                "type": "invalid_request_error",
-            ],
-        ]
-        return HTTPStubsResponse(
-            jsonObject: response,
-            statusCode: 429,
-            headers: ["Content-Type": "application/json"]
-        )
-    }
-
     @MainActor
     func makeSUT() -> LinkVerificationViewController {
         let session = ConsumerSession.make(
