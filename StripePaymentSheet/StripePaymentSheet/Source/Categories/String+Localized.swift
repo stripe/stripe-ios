@@ -779,8 +779,8 @@ extension String.Localized {
         STPLocalizedString("Declarations", "Title label for a screen showing CRS/CARF tax declarations")
     }
 
-    static var agree_and_accept: String {
-        STPLocalizedString("Agree and accept", "Label for a button that confirms the user agrees to and accepts a declaration")
+    static var accept: String {
+        STPLocalizedString("Accept", "Label for a button that confirms the user accepts a declaration")
     }
 
     static var last_4_digits_of_ssn: String {

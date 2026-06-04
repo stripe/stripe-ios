@@ -175,7 +175,7 @@ public extension AddressViewController {
         @_spi(STP) public var useAutocompleteEndpoints: Bool = false
 
         /// An optional Google Places API key used to power address autocompletion. When provided, this key is used instead of the Stripe-managed key.
-        public var autocompleteApiKey: String?
+        @_spi(STP) public var autocompleteApiKey: String?
 
     }
 }

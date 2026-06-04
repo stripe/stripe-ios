@@ -38,7 +38,7 @@ class AutoCompleteViewController: UIViewController {
         return searchCompleter
     }()
 
-    private var autocompleteTask: Task<Void, Never>?
+    private var fetchTask: Task<Void, Never>?
     private var debounceTask: Task<Void, Never>?
     private var lastFetchedQuery: String = ""
     var currentSource: String?
@@ -282,12 +282,12 @@ class AutoCompleteViewController: UIViewController {
 extension AutoCompleteViewController: ElementDelegate {
     func didUpdate(element: Element) {
         let query = autoCompleteLine.text
-        guard query != lastFetchedQuery else { return }
-        lastFetchedQuery = query
         if configuration.useAutocompleteEndpoints {
+            guard query != lastFetchedQuery else { return }
+            lastFetchedQuery = query
             guard query.count >= 2 else {
                 debounceTask?.cancel()
-                autocompleteTask?.cancel()
+                fetchTask?.cancel()
                 setResults([], source: nil)
                 return
             }
@@ -307,11 +307,11 @@ extension AutoCompleteViewController: ElementDelegate {
     }
 
     private func fetchAPIResults(query: String) {
-        autocompleteTask?.cancel()
-        autocompleteTask = Task { @MainActor in
+        fetchTask?.cancel()
+        fetchTask = Task { @MainActor in
             do {
                 let countryCodes = selectedCountry.flatMap { $0.isEmpty ? nil : [$0] }
-                let response = try await configuration.apiClient.autocomplete(
+                let response = try await configuration.apiClient.getAddressSuggestions(
                     searchText: query,
                     countryCodes: countryCodes,
                     sessionToken: sessionToken,
@@ -392,10 +392,39 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         debounceTask?.cancel()
-        autocompleteTask?.cancel()
-        results[indexPath.row].asAddress(apiClient: configuration.apiClient, source: currentSource, sessionToken: sessionToken, apiKey: configuration.autocompleteApiKey) { [weak self] address in
-            DispatchQueue.main.async {
-                self?.delegate?.didSelectAddress(address)
+        fetchTask?.cancel()
+
+        let result = results[indexPath.row]
+
+        if let suggestion = result as? AddressSuggestion {
+            // If the suggestion returned with a full address, complete with that address
+            if let address = suggestion.address {
+                delegate?.didSelectAddress(address)
+            } else { // If the suggestion did not return with a full address, it must have a place id and source to fetch the address details
+                guard let placeId = suggestion.placeId, let currentSource else {
+                    delegate?.didSelectAddress(nil)
+                    return
+                }
+                fetchTask = Task { @MainActor [weak self] in
+                    guard let self else { return }
+                    do {
+                        let details = try await configuration.apiClient.getAddressDetails(
+                            placeId: placeId,
+                            source: currentSource,
+                            displayTitle: suggestion.title,
+                            sessionToken: sessionToken
+                        )
+                        delegate?.didSelectAddress(details.address)
+                    } catch {
+                        delegate?.didSelectAddress(nil)
+                    }
+                }
+            }
+        } else {
+            result.asAddress { [weak self] address in
+                DispatchQueue.main.async {
+                    self?.delegate?.didSelectAddress(address)
+                }
             }
         }
     }

@@ -8,7 +8,7 @@
 @_spi(STP) import StripeCore
 import UIKit
 
-/// Container view controller that displays the CRS/CARF declaration in a Link-styled bottom sheet.
+/// Container view controller that displays the CRS/CARF declaration HTML in a Link-styled bottom sheet.
 final class CRSCARFDeclarationViewController: BottomSheetViewController {
     private weak var contentViewController: CRSCARFDeclarationContentViewController?
 
@@ -25,10 +25,10 @@ final class CRSCARFDeclarationViewController: BottomSheetViewController {
 
     /// Creates a new instance of `CRSCARFDeclarationViewController`.
     /// - Parameters:
-    ///   - text: The declaration text to display.
+    ///   - html: The declaration HTML to display.
     ///   - appearance: Determines the colors, corner radius, and height of the confirmation button and the user interface style.
-    init(text: String, appearance: LinkAppearance, brand: LinkBrand) {
-        let contentViewController = CRSCARFDeclarationContentViewController(text: text, appearance: appearance, brand: brand)
+    init(html: String, appearance: LinkAppearance, brand: LinkBrand) {
+        let contentViewController = CRSCARFDeclarationContentViewController(html: html, appearance: appearance, brand: brand)
         self.contentViewController = contentViewController
 
         super.init(
