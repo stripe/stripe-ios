@@ -15,7 +15,7 @@ class STPAPIClientAutocompleteTest: STPNetworkStubbingTestCase {
     func testAutocompleteAndDetails() async throws {
         let sessionToken = UUID().uuidString
         let locale = "en-US"
-        let autocompleteResponse = try await makeAPIClient().autocomplete(
+        let autocompleteResponse = try await makeAPIClient().getAddressSuggestions(
             searchText: "354 Oyster Point",
             locale: locale,
             countryCodes: ["US"],
@@ -28,7 +28,7 @@ class STPAPIClientAutocompleteTest: STPNetworkStubbingTestCase {
         XCTAssertFalse(first.subtitle.isEmpty)
         XCTAssertFalse(first.matches.isEmpty)
         if let placeId = first.placeId {
-            let detailsResponse = try await makeAPIClient().details(
+            let detailsResponse = try await makeAPIClient().getAddressDetails(
                 placeId: placeId,
                 source: autocompleteResponse.source,
                 locale: locale,

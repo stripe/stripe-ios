@@ -311,7 +311,7 @@ extension AutoCompleteViewController: ElementDelegate {
         autocompleteTask = Task { @MainActor in
             do {
                 let countryCodes = selectedCountry.flatMap { $0.isEmpty ? nil : [$0] }
-                let response = try await configuration.apiClient.autocomplete(
+                let response = try await configuration.apiClient.getAddressSuggestions(
                     searchText: query,
                     countryCodes: countryCodes,
                     sessionToken: sessionToken
@@ -392,9 +392,29 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         debounceTask?.cancel()
         autocompleteTask?.cancel()
-        results[indexPath.row].asAddress(apiClient: configuration.apiClient, source: currentSource, sessionToken: sessionToken) { [weak self] address in
-            DispatchQueue.main.async {
-                self?.delegate?.didSelectAddress(address)
+
+        let result = results[indexPath.row]
+
+        if let suggestion = result as? AddressSuggestion, let placeId = suggestion.placeId {
+            autocompleteTask = Task { @MainActor [weak self] in
+                guard let self else { return }
+                do {
+                    let details = try await configuration.apiClient.getAddressDetails(
+                        placeId: placeId,
+                        source: currentSource ?? "",
+                        displayTitle: suggestion.title,
+                        sessionToken: sessionToken
+                    )
+                    delegate?.didSelectAddress(details.address)
+                } catch {
+                    delegate?.didSelectAddress(nil)
+                }
+            }
+        } else {
+            result.asAddress { [weak self] address in
+                DispatchQueue.main.async {
+                    self?.delegate?.didSelectAddress(address)
+                }
             }
         }
     }

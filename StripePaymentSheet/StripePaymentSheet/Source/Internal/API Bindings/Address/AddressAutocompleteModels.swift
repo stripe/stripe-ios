@@ -1,5 +1,5 @@
 //
-//  AutocompleteResponse.swift
+//  AddressAutocompleteModels.swift
 //  StripePaymentSheet
 //
 //  Created by Joyce Qin on 4/20/26.
@@ -21,7 +21,7 @@ private extension String {
     }
 }
 
-class AutocompleteResponse: NSObject {
+class AddressAutocompleteResponse: NSObject {
 
     /// The list of autocomplete suggestions
     let suggestions: [AddressSuggestion]
@@ -44,7 +44,7 @@ class AutocompleteResponse: NSObject {
 }
 
 // MARK: - STPAPIResponseDecodable
-extension AutocompleteResponse: STPAPIResponseDecodable {
+extension AddressAutocompleteResponse: STPAPIResponseDecodable {
     static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
               let suggestionsDict = dict["suggestions"] as? [[AnyHashable: Any]],
@@ -55,7 +55,7 @@ extension AutocompleteResponse: STPAPIResponseDecodable {
 
         let suggestions = suggestionsDict.compactMap { AddressSuggestion.decodedObject(fromAPIResponse: $0) }
 
-        return AutocompleteResponse(
+        return AddressAutocompleteResponse(
             suggestions: suggestions,
             source: source,
             allResponseFields: dict
@@ -110,25 +110,8 @@ extension AddressSuggestion: AddressSearchResult {
         return []
     }
 
-    func asAddress(apiClient: STPAPIClient?, source: String?, sessionToken: String?, completion: @escaping (PaymentSheet.Address?) -> Void) {
-        if let address {
-            completion(address)
-        } else {
-            guard let apiClient,
-                  let placeId,
-                  let source,
-                  let sessionToken else {
-                completion(nil)
-                return
-            }
-            Task { @MainActor in
-                do {
-                    completion(try await apiClient.details(placeId: placeId, source: source, displayTitle: title, sessionToken: sessionToken).address)
-                } catch {
-                    completion(nil)
-                }
-            }
-        }
+    func asAddress(completion: @escaping (PaymentSheet.Address?) -> Void) {
+        completion(address)
     }
 }
 
@@ -172,7 +155,7 @@ extension AddressSuggestion: STPAPIResponseDecodable {
     }
 }
 
-class DetailsResponse: NSObject {
+class AddressDetailsResponse: NSObject {
 
     /// The pre-filled address components.
     let address: PaymentSheet.Address
@@ -190,7 +173,7 @@ class DetailsResponse: NSObject {
 }
 
 // MARK: - STPAPIResponseDecodable
-extension DetailsResponse: STPAPIResponseDecodable {
+extension AddressDetailsResponse: STPAPIResponseDecodable {
     static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
               let addressDict = dict["address"] as? [AnyHashable: Any]
@@ -207,7 +190,7 @@ extension DetailsResponse: STPAPIResponseDecodable {
             state: addressDict["state"] as? String
         )
 
-        return DetailsResponse(
+        return AddressDetailsResponse(
             address: address,
             allResponseFields: dict
         ) as? Self

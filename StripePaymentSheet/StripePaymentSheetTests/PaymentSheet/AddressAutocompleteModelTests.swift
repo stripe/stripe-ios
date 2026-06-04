@@ -11,14 +11,14 @@ import XCTest
 
 class AddressAutocompleteModelTests: XCTestCase {
 
-    // MARK: - AutocompleteResponse
+    // MARK: - AddressAutocompleteResponse
 
     func testDecodesResponse() {
         let response: [AnyHashable: Any] = [
             "source": "google",
             "suggestions": [makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: "places/abc123")],
         ]
-        let result = AutocompleteResponse.decodedObject(fromAPIResponse: response)
+        let result = AddressAutocompleteResponse.decodedObject(fromAPIResponse: response)
         XCTAssertEqual(result?.source, "google")
         XCTAssertEqual(result?.suggestions.count, 1)
     }
@@ -31,7 +31,7 @@ class AddressAutocompleteModelTests: XCTestCase {
                 makeSuggestionDict(title: "456 Oak Ave", subtitle: "Brooklyn, NY", endOffset: 3, placeId: nil),
             ],
         ]
-        XCTAssertEqual(AutocompleteResponse.decodedObject(fromAPIResponse: response)?.suggestions.count, 2)
+        XCTAssertEqual(AddressAutocompleteResponse.decodedObject(fromAPIResponse: response)?.suggestions.count, 2)
     }
 
     func testSkipsInvalidSuggestions() {
@@ -42,21 +42,21 @@ class AddressAutocompleteModelTests: XCTestCase {
                 ["invalid": "data"],
             ],
         ]
-        XCTAssertEqual(AutocompleteResponse.decodedObject(fromAPIResponse: response)?.suggestions.count, 1)
+        XCTAssertEqual(AddressAutocompleteResponse.decodedObject(fromAPIResponse: response)?.suggestions.count, 1)
     }
 
     func testReturnsNilForMissingSource() {
         let response: [AnyHashable: Any] = ["suggestions": []]
-        XCTAssertNil(AutocompleteResponse.decodedObject(fromAPIResponse: response))
+        XCTAssertNil(AddressAutocompleteResponse.decodedObject(fromAPIResponse: response))
     }
 
     func testReturnsNilForMissingSuggestions() {
         let response: [AnyHashable: Any] = ["source": "google"]
-        XCTAssertNil(AutocompleteResponse.decodedObject(fromAPIResponse: response))
+        XCTAssertNil(AddressAutocompleteResponse.decodedObject(fromAPIResponse: response))
     }
 
     func testReturnsNilForNilResponse() {
-        XCTAssertNil(AutocompleteResponse.decodedObject(fromAPIResponse: nil))
+        XCTAssertNil(AddressAutocompleteResponse.decodedObject(fromAPIResponse: nil))
     }
 
     // MARK: - AddressSuggestion fields
@@ -223,9 +223,9 @@ class AddressAutocompleteModelTests: XCTestCase {
         XCTAssertTrue(suggestion.subtitleHighlightRanges.isEmpty)
     }
 
-    // MARK: - DetailsResponse decoding
+    // MARK: - AddressDetailsResponse decoding
 
-    func testDetailsResponseDecodesAllAddressFields() {
+    func testAddressDetailsResponseDecodesAllAddressFields() {
         let response: [AnyHashable: Any] = [
             "address": [
                 "line1": "354 Oyster Point Boulevard",
@@ -236,7 +236,7 @@ class AddressAutocompleteModelTests: XCTestCase {
                 "country": "US",
             ],
         ]
-        let result = DetailsResponse.decodedObject(fromAPIResponse: response)
+        let result = AddressDetailsResponse.decodedObject(fromAPIResponse: response)
         XCTAssertEqual(result?.address.line1, "354 Oyster Point Boulevard")
         XCTAssertEqual(result?.address.line2, "Suite 100")
         XCTAssertEqual(result?.address.city, "South San Francisco")
@@ -245,11 +245,11 @@ class AddressAutocompleteModelTests: XCTestCase {
         XCTAssertEqual(result?.address.country, "US")
     }
 
-    func testDetailsResponseAddressFieldsAreOptional() {
+    func testAddressDetailsResponseAddressFieldsAreOptional() {
         let response: [AnyHashable: Any] = [
             "address": ["line1": "354 Oyster Point Boulevard"],
         ]
-        let result = DetailsResponse.decodedObject(fromAPIResponse: response)
+        let result = AddressDetailsResponse.decodedObject(fromAPIResponse: response)
         XCTAssertNotNil(result)
         XCTAssertEqual(result?.address.line1, "354 Oyster Point Boulevard")
         XCTAssertNil(result?.address.line2)
@@ -259,18 +259,18 @@ class AddressAutocompleteModelTests: XCTestCase {
         XCTAssertNil(result?.address.country)
     }
 
-    func testDetailsResponseReturnsNilForMissingAddressKey() {
+    func testAddressDetailsResponseReturnsNilForMissingAddressKey() {
         let response: [AnyHashable: Any] = ["other": "data"]
-        XCTAssertNil(DetailsResponse.decodedObject(fromAPIResponse: response))
+        XCTAssertNil(AddressDetailsResponse.decodedObject(fromAPIResponse: response))
     }
 
-    func testDetailsResponseReturnsNilForNilResponse() {
-        XCTAssertNil(DetailsResponse.decodedObject(fromAPIResponse: nil))
+    func testAddressDetailsResponseReturnsNilForNilResponse() {
+        XCTAssertNil(AddressDetailsResponse.decodedObject(fromAPIResponse: nil))
     }
 
     // MARK: - AddressSuggestion.asAddress
 
-    func testAsAddress_withEmbeddedAddress_deliversAddressExactlyOnce() {
+    func testAsAddress_withEmbeddedAddress_deliversAddress() {
         let dict = makeSuggestionDict(
             title: "354 Oyster Point Blvd",
             subtitle: "South San Francisco, CA",
@@ -280,62 +280,20 @@ class AddressAutocompleteModelTests: XCTestCase {
         )
         let suggestion = AddressSuggestion.decodedObject(fromAPIResponse: dict)!
 
-        var callCount = 0
         var result: PaymentSheet.Address?
-        suggestion.asAddress(apiClient: nil, source: nil, sessionToken: nil) {
-            callCount += 1
-            result = $0
-        }
+        suggestion.asAddress { result = $0 }
 
-        XCTAssertEqual(callCount, 1)
         XCTAssertEqual(result?.line1, "354 Oyster Point Boulevard")
+        XCTAssertEqual(result?.city, "South San Francisco")
     }
 
-    func testAsAddress_withNoEmbeddedAddress_nilApiClient_returnsNil() {
+    func testAsAddress_withNoEmbeddedAddress_returnsNil() {
         let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
             makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: "places/abc123")
         )!
 
         var result: PaymentSheet.Address? = PaymentSheet.Address()
-        suggestion.asAddress(apiClient: nil, source: "google", sessionToken: "token") {
-            result = $0
-        }
-        XCTAssertNil(result)
-    }
-
-    func testAsAddress_withNoEmbeddedAddress_nilPlaceId_returnsNil() {
-        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
-            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: nil)
-        )!
-
-        var result: PaymentSheet.Address? = PaymentSheet.Address()
-        suggestion.asAddress(apiClient: STPAPIClient(publishableKey: "pk_test_placeholder"), source: "google", sessionToken: "token") {
-            result = $0
-        }
-        XCTAssertNil(result)
-    }
-
-    func testAsAddress_withNoEmbeddedAddress_nilSource_returnsNil() {
-        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
-            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: "places/abc123")
-        )!
-
-        var result: PaymentSheet.Address? = PaymentSheet.Address()
-        suggestion.asAddress(apiClient: STPAPIClient(publishableKey: "pk_test_placeholder"), source: nil, sessionToken: "token") {
-            result = $0
-        }
-        XCTAssertNil(result)
-    }
-
-    func testAsAddress_withNoEmbeddedAddress_nilSessionToken_returnsNil() {
-        let suggestion = AddressSuggestion.decodedObject(fromAPIResponse:
-            makeSuggestionDict(title: "123 Main St", subtitle: "New York, NY", endOffset: 3, placeId: "places/abc123")
-        )!
-
-        var result: PaymentSheet.Address? = PaymentSheet.Address()
-        suggestion.asAddress(apiClient: STPAPIClient(publishableKey: "pk_test_placeholder"), source: "google", sessionToken: nil) {
-            result = $0
-        }
+        suggestion.asAddress { result = $0 }
         XCTAssertNil(result)
     }
 
