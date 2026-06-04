@@ -60,7 +60,7 @@ final class PaymentSheetVerticalViewControllerTest: XCTestCase {
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [.stripe(.card)],
             analyticsHelper: analyticsHelper
-        )
+        )!
         promotionsHelper.fetchData()
         let savedPMsLoadResult = PaymentSheetLoader.LoadResult(
             intent: intent,

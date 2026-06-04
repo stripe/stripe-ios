@@ -229,7 +229,7 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         let experiment = PaymentMethodMessagingPromotionsExperiment(
             elementsSession: elementsSession,
             layout: "vertical"
-        )
+        )!
 
         XCTAssertEqual(experiment.name, PaymentMethodMessagingPromotionsExperiment.experimentName)
         XCTAssertEqual(experiment.arbId, "arb_id_123")

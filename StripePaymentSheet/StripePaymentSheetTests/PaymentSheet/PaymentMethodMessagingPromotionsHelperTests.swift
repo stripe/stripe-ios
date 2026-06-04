@@ -64,7 +64,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
             analyticsHelper: analyticsHelper
-        )
+        )!
 
         XCTAssertTrue(helper.isInTreatmentGroup)
 
@@ -109,7 +109,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
             analyticsHelper: analyticsHelper
-        )
+        )!
 
         XCTAssertFalse(helper.isInTreatmentGroup)
 
@@ -139,7 +139,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             configuration: configuration,
             paymentMethodTypes: [],
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
-        )
+        )!
 
         helper.fetchData()
         await helper.fetchTask?.value
@@ -171,7 +171,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
             analyticsHelper: analyticsHelper
-        )
+        )!
 
         helper.fetchData()
         await helper.fetchTask?.value
@@ -202,7 +202,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
             analyticsHelper: analyticsHelper
-        )
+        )!
 
         helper.fetchData()
         await helper.fetchTask?.value
@@ -233,7 +233,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
             analyticsHelper: analyticsHelper
-        )
+        )!
 
         helper.fetchData()
         await helper.fetchTask?.value
@@ -263,7 +263,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             configuration: configuration,
             paymentMethodTypes: [],
             analyticsHelper: analyticsHelper
-        )
+        )!
 
         helper.logDisplayedAnalytic(displayedSuccessfully: false)
 
