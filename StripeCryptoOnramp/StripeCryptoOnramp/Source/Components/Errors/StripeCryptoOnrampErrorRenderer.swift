@@ -6,8 +6,7 @@
 import Foundation
 
 /// Renders rich Crypto Onramp developer diagnostics with a consistent visual grammar.
-@_spi(CryptoOnrampAlpha)
-public enum StripeCryptoOnrampErrorRenderer {
+enum StripeCryptoOnrampErrorRenderer {
 
     /// Renders a developer-facing message from concrete-error content and shared metadata.
     ///
@@ -17,7 +16,7 @@ public enum StripeCryptoOnrampErrorRenderer {
     ///   - nextStep: A suggested action for resolving the error.
     ///   - docURL: Documentation for this error, if available.
     ///   - sdkVersions: SDK versions included in developer diagnostics, including Stripe iOS and any additional wrapper SDK versions.
-    public static func render(
+    static func render(
         developerBody: String,
         code: String,
         nextStep: String,
