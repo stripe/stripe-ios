@@ -9,130 +9,113 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
-private let paymentSheetPMMESupportedPaymentMethodTypes: [STPPaymentMethodType] = [
-    .afterpayClearpay,
-    .affirm,
-    .klarna,
-]
-private let paymentSheetPMMESupportedPaymentMethodIdentifiers = Set(paymentSheetPMMESupportedPaymentMethodTypes.map(\.identifier))
+class PaymentMethodMessagingPromotionsHelper {
 
-@MainActor
-final class PaymentMethodMessagingPromotionsHelper {
+    static let supportedPaymentMethods: [PaymentSheet.PaymentMethodType] = [
+        .stripe(.afterpayClearpay),
+        .stripe(.affirm),
+        .stripe(.klarna),
+    ]
+
     struct PromotionContent: Equatable {
         let promotion: String
         let learnMoreText: String
         let infoUrl: URL
     }
 
-    private enum FetchState: Equatable {
-        case idle
-        case loading
-        case completed([String: PromotionContent])
+    private let elementsSession: STPElementsSession
+    private let intent: Intent
+    private let configuration: PaymentElementConfiguration
+    private let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
+    private let analyticsHelper: PaymentSheetAnalyticsHelper
+    /// The time when the fetch was initiated; used to compute the duration between fetch start and display attempt.
+    private var fetchStartDate: Date?
+
+    // ⚠️ an exposure must be logged before the experiment value is used for any purpose ⚠️
+    // ⚠️ do not directly access the property, instead use `experiment` ⚠️
+    private let _experiment: PaymentMethodMessagingPromotionsExperiment
+    private var exposureLogged = false
+    private var experiment: PaymentMethodMessagingPromotionsExperiment {
+        if !exposureLogged {
+            analyticsHelper.logExposure(experiment: _experiment)
+            exposureLogged = true
+        }
+        return _experiment
     }
 
-    private let elementsSession: STPElementsSession?
-    let experiment: PaymentMethodMessagingPromotionsExperiment
+    private(set) var fetchTask: Task<Void, Never>?
+    private let promotionsLock = NSLock()
+    // null until set by loading
+    private var _promotions: [String: PromotionContent]?
+    private var promotions: [String: PromotionContent]? {
+        get {
+            promotionsLock.lock()
+            defer { promotionsLock.unlock() }
+            return _promotions
+        }
+        set {
+            promotionsLock.lock()
+            defer { promotionsLock.unlock() }
+            _promotions = newValue
+        }
+    }
 
-    private var fetchState: FetchState
-    private var fetchTask: Task<Void, Never>?
-
-    init(elementsSession: STPElementsSession) {
-        self.elementsSession = elementsSession
-        self.experiment = PaymentMethodMessagingPromotionsExperiment(elementsSession: elementsSession)
-        self.fetchState = experiment.isInTreatment ? .idle : .completed([:])
+    var isInTreatmentGroup: Bool {
+        experiment.group == .treatment
     }
 
     init(
-        experiment: PaymentMethodMessagingPromotionsExperiment,
-        prefetchedPromotionContents: [String: PromotionContent]
-    ) {
-        self.elementsSession = nil
-        self.experiment = experiment
-        self.fetchState = .completed(prefetchedPromotionContents)
-    }
-
-    func prefetchIfNeeded(
-        intent: Intent,
-        configuration: PaymentElementConfiguration,
-        paymentMethodTypes: [PaymentSheet.PaymentMethodType]
-    ) {
-        guard experiment.isInTreatment else {
-            fetchState = .completed([:])
-            return
-        }
-        guard beginLoadingIfIdle() else {
-            return
-        }
-        guard let elementsSession else {
-            fetchState = .completed([:])
-            return
-        }
-        guard let requestConfiguration = Self.makeConfiguration(
-            intent: intent,
-            elementsSession: elementsSession,
-            configuration: configuration,
-            paymentMethodTypes: paymentMethodTypes
-        ) else {
-            fetchState = .completed([:])
-            return
-        }
-
-        fetchTask = Task { [weak self] in
-            let contents = await Self.fetchPromotionContents(
-                configuration: requestConfiguration,
-                apiClient: configuration.apiClient
-            )
-            await MainActor.run {
-                self?.fetchState = .completed(contents)
-            }
-        }
-    }
-
-    func promotion(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromotionContent? {
-        guard experiment.isInTreatment else {
-            return nil
-        }
-        guard let identifier = Self.paymentMethodIdentifier(for: paymentMethodType) else {
-            return nil
-        }
-        guard case .completed(let contentsByPaymentMethodType) = fetchState else {
-            return nil
-        }
-        return contentsByPaymentMethodType[identifier]
-    }
-
-    private func beginLoadingIfIdle() -> Bool {
-        guard case .idle = fetchState else {
-            return false
-        }
-        fetchState = .loading
-        return true
-    }
-
-    private static func makeConfiguration(
-        intent: Intent,
         elementsSession: STPElementsSession,
+        intent: Intent,
         configuration: PaymentElementConfiguration,
-        paymentMethodTypes: [PaymentSheet.PaymentMethodType]
-    ) -> PaymentMethodMessagingElement.Configuration? {
-        guard let amount = intent.amount, let currency = intent.currency else {
-            return nil
+        paymentMethodTypes: [PaymentSheet.PaymentMethodType],
+        analyticsHelper: PaymentSheetAnalyticsHelper
+    ) {
+        self.elementsSession = elementsSession
+        self.intent = intent
+        self.configuration = configuration
+        self.paymentMethodTypes = paymentMethodTypes
+        let layout = configuration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
+        self._experiment = PaymentMethodMessagingPromotionsExperiment(elementsSession: elementsSession, layout: layout.rawValue)
+        self.analyticsHelper = analyticsHelper
+    }
+
+    func fetchData() {
+        // PaymentMethodMessagingPromotionsHelper is not written to support doing multiple fetches.
+        // If at some point multiple fetches are intentionally supported then we need to decide whether the
+        //      stale promotions data gets cleared before the second fetch, what `duration` value is logged
+        //      in analytics if .promotion(for:) is called during the second fetch, etc.
+        guard fetchStartDate == nil else {
+            stpAssertionFailure("Multiple fetches not supported in PaymentMethodMessagingPromotionsHelper")
+            return
         }
 
+        // Check experiment group, and only proceed if in treatment group
+        guard experiment.group == .treatment else {
+            return
+        }
+
+        // Only fetch data if we have an amount and currency (for example setup mode won't have this)
+        guard let amount = intent.amount, let currency = intent.currency else {
+            return
+        }
+
+        // Generate list of payment methods
         let supportedPaymentMethodTypes: [STPPaymentMethodType] = paymentMethodTypes.compactMap { paymentMethodType in
-            guard case let .stripe(stpPaymentMethodType) = paymentMethodType else {
-                return nil
-            }
-            guard paymentSheetPMMESupportedPaymentMethodTypes.contains(stpPaymentMethodType) else {
+            guard Self.supportedPaymentMethods.contains(paymentMethodType),
+                  case let .stripe(stpPaymentMethodType) = paymentMethodType else {
                 return nil
             }
             return stpPaymentMethodType
         }
+
+        // Only fetch data if we have payment method types
         guard !supportedPaymentMethodTypes.isEmpty else {
-            return nil
+            return
         }
 
-        return PaymentMethodMessagingElement.Configuration(
+        // Generate PMME config
+        let pmmeConfig = PaymentMethodMessagingElement.Configuration(
             amount: amount,
             currency: currency,
             apiClient: configuration.apiClient,
@@ -140,36 +123,45 @@ final class PaymentMethodMessagingPromotionsHelper {
             countryCode: elementsSession.countryCode,
             paymentMethodTypes: supportedPaymentMethodTypes
         )
+
+        // Record fetch start time (used to measure duration until display attempt) and log that fetch began
+        fetchStartDate = Date()
+        analyticsHelper.logPaymentMethodMessagingFetchBegin()
+
+        // Fetch data
+        fetchTask = Task { @MainActor in
+            do {
+                let response = try await PaymentMethodMessagingElement.get(configuration: pmmeConfig)
+                promotions = response.paymentSheetPromotionContents(apiClient: configuration.apiClient)
+            } catch {
+                logUnexpectedPMMEError(
+                    error: error,
+                    apiClient: configuration.apiClient,
+                    analyticsClient: STPAnalyticsClient.sharedClient,
+                    additionalNonPIIParams: [
+                        "failure_reason": "promotion_prefetch_request_failed",
+                    ]
+                )
+                promotions = [:]
+            }
+        }
     }
 
-    private static func paymentMethodIdentifier(for paymentMethodType: PaymentSheet.PaymentMethodType) -> String? {
+    func promotion(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromotionContent? {
+        // get payment method identifier
         guard case let .stripe(stpPaymentMethodType) = paymentMethodType else {
             return nil
         }
-        guard paymentSheetPMMESupportedPaymentMethodTypes.contains(stpPaymentMethodType) else {
-            return nil
-        }
-        return stpPaymentMethodType.identifier
+        return promotions?[stpPaymentMethodType.identifier]
     }
 
-    private static func fetchPromotionContents(
-        configuration: PaymentMethodMessagingElement.Configuration,
-        apiClient: STPAPIClient
-    ) async -> [String: PromotionContent] {
-        do {
-            let response = try await PaymentMethodMessagingElement.get(configuration: configuration)
-            return response.paymentSheetPromotionContents(apiClient: apiClient)
-        } catch {
-            logUnexpectedPMMEError(
-                error: error,
-                apiClient: apiClient,
-                analyticsClient: STPAnalyticsClient.sharedClient,
-                additionalNonPIIParams: [
-                    "failure_reason": "promotion_prefetch_request_failed",
-                ]
-            )
-            return [:]
-        }
+    /// Logs an analytics event (NOT an exposure) indicating that payment method messaging data was attempted to be displayed.
+    /// - Parameter displayedSuccessfully: Whether the promotion content was available and actually rendered to the user.
+    ///   We could theoretically derive this from whether or not we have promotions data, but for safety/redundancy we require it to be explicitly passed.
+    /// The duration reported is the time between when the fetch was initiated and when this display attempt occurs.
+    func logDisplayedAnalytic(displayedSuccessfully: Bool) {
+        let duration = fetchStartDate.map { Date().timeIntervalSince($0) } ?? 0
+        analyticsHelper.logPaymentMethodMessagingDisplayed(duration: duration, displayedSuccessfully: displayedSuccessfully)
     }
 }
 
@@ -181,24 +173,7 @@ extension PaymentMethodMessagingElement.APIResponse {
         var promotionContents: [String: PaymentMethodMessagingPromotionsHelper.PromotionContent] = [:]
 
         for paymentPlanGroup in paymentPlanGroups {
-            let rawType = paymentPlanGroup.type
-            let normalizedType = rawType.lowercased()
-
-            guard paymentSheetPMMESupportedPaymentMethodIdentifiers.contains(normalizedType) else {
-                logUnexpectedPMMEError(
-                    error: PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI,
-                    apiClient: apiClient,
-                    analyticsClient: analyticsClient,
-                    additionalNonPIIParams: [
-                        "failure_reason": "unsupported_payment_plan_group_type",
-                        "payment_method_type": normalizedType,
-                    ]
-                )
-                stpAssertionFailure(
-                    "Received unsupported payment_plan_groups.type '\(rawType)' while building PaymentSheet PMME promotions."
-                )
-                continue
-            }
+            let paymentMethodType = paymentPlanGroup.type.lowercased()
 
             guard let promotionContent = paymentPlanGroup.makePaymentSheetPromotionContent() else {
                 logUnexpectedPMMEError(
@@ -207,32 +182,32 @@ extension PaymentMethodMessagingElement.APIResponse {
                     analyticsClient: analyticsClient,
                     additionalNonPIIParams: [
                         "failure_reason": "missing_required_promotion_fields",
-                        "payment_method_type": normalizedType,
+                        "payment_method_type": paymentMethodType,
                     ]
                 )
                 stpAssertionFailure(
-                    "Received invalid PMME payment_plan_group for PaymentSheet promotion type '\(rawType)'; required fields: summary.message, learn_more.message, learn_more.url."
+                    "Received invalid PMME payment_plan_group for PaymentSheet promotion type '\(paymentMethodType)'; required fields: summary.message, learn_more.message, learn_more.url."
                 )
                 continue
             }
 
-            guard promotionContents[normalizedType] == nil else {
+            guard promotionContents[paymentMethodType] == nil else {
                 logUnexpectedPMMEError(
                     error: PaymentMethodMessagingElementError.unexpectedResponseFromStripeAPI,
                     apiClient: apiClient,
                     analyticsClient: analyticsClient,
                     additionalNonPIIParams: [
                         "failure_reason": "duplicate_payment_plan_group_type",
-                        "payment_method_type": normalizedType,
+                        "payment_method_type": paymentMethodType,
                     ]
                 )
                 stpAssertionFailure(
-                    "Received duplicate payment_plan_groups.type '\(rawType)' while building PaymentSheet PMME promotions."
+                    "Received duplicate payment_plan_groups.type '\(paymentMethodType)' while building PaymentSheet PMME promotions."
                 )
                 continue
             }
 
-            promotionContents[normalizedType] = promotionContent
+            promotionContents[paymentMethodType] = promotionContent
         }
 
         if !paymentPlanGroups.isEmpty && promotionContents.isEmpty {

@@ -116,17 +116,7 @@ enum Intent {
                 return nil
             }
         case .checkoutSession(let session):
-            switch session.mode {
-            case .unknown:
-                stpAssertionFailure("Received CheckoutSession in unknown mode")
-                return nil
-            case .payment:
-                return session.total?.total.minorUnitsAmount
-            case .setup:
-                return nil
-            case .subscription:
-                fatalError("Subscriptoins not yet implemented for CheckoutSessions")
-            }
+            return session.expectedAmount()
         }
     }
 

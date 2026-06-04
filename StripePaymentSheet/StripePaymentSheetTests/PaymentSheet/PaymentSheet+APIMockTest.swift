@@ -141,7 +141,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         }
 
         stub { urlRequest in
-            guard let pathComponents = urlRequest.url?.pathComponents else { return false }
+            guard let pathComponents = urlRequest.url?.pathComponents, pathComponents.count >= 3 else { return false }
             return pathComponents[2] == "payment_intents" && pathComponents.last != "confirm"
         } response: { request in
             var json = MockJson.paymentIntent
@@ -156,7 +156,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         }
 
         stub { urlRequest in
-            guard let pathComponents = urlRequest.url?.pathComponents else { return false }
+            guard let pathComponents = urlRequest.url?.pathComponents, pathComponents.count >= 3 else { return false }
             return pathComponents[2] == "setup_intents" && pathComponents.last != "confirm"
         } response: { request in
             var json = MockJson.setupIntent

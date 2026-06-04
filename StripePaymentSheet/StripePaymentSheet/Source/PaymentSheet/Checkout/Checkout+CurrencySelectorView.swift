@@ -156,11 +156,18 @@ extension Checkout {
             exchangeRateMeta: STPCheckoutSessionExchangeRateMeta,
             currency: CurrencySelectorUtilities.CurrencyCode
         ) {
+            let resolvedLabelContent: Appearance.LabelContent = {
+                guard case .automatic = appearance.labelContent else {
+                    return appearance.labelContent
+                }
+                return session.mode == .subscription ? .currencyCode : .amount
+            }()
+
             let flagFont = appearance.scaledFont(for: appearance.font, style: .footnote)
             let (left, right) = CurrencySelectorUtilities.buildSelectorItems(
                 exchangeRateMeta: exchangeRateMeta,
                 localizedPricesMetas: session.localizedPricesMetas,
-                labelContent: appearance.labelContent,
+                labelContent: resolvedLabelContent,
                 flagPrefixProvider: { [weak checkout] currency in
                     checkout?.flagImageManager.flagIcon(for: currency, font: flagFont) ?? NSAttributedString()
                 }
@@ -231,7 +238,8 @@ extension Checkout.CurrencySelectorView: TwoOptionSelectorViewDelegate {
         // Disable interaction during the API call
         selectorView?.setEnabled(false)
 
-        Task {
+        Task { [weak self] in
+            guard let self else { return }
             do {
                 try await checkout.selectCurrency(id)
                 STPAnalyticsClient.sharedClient.log(

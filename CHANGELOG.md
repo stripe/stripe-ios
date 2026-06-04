@@ -7,6 +7,9 @@ MINOR
 * [Added] Added `StripeCryptoOnrampError` for rich Crypto Onramp errors and `StripeCryptoOnrampAPIError` for API-backed Crypto Onramp errors, with separate user-facing and developer-facing messages, stable error codes, documentation URLs, and underlying errors.
 * [Added] Added `AppAttestationAPIError`, `UncategorizedAPIError`, and `APIErrorContext` to expose inspectable backend error details such as reason, operation, mode, request ID, API type, API message, and SDK version.
 * [Changed] `CryptoOnrampCoordinator` APIs now map Stripe API failures to the new API-backed error types, including a specific `AppAttestationAPIError` for app attestation failures, while preserving existing local `CryptoOnrampCoordinator.Error` behavior for now, with plans to migrate these existing errors to the new protocol-based format.
+* [Changed] Updated EU compliance identifier APIs to match the latest backend contract, including CRS/CARF TIN requirements and `SubmitIdentifiersResult.completed`.
+* [Added] Added known compliance identifier types for Spain NIF (`es_nif`) and France NIR (`fr_nir`).
+
 
 ## 25.16.0 2026-05-26
 ### PaymentSheet

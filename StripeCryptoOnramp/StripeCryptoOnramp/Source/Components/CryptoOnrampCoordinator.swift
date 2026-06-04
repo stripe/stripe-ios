@@ -94,7 +94,7 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Requires an authenticated Link user.
     ///
     /// - Parameter identifiers: The compliance identifiers to submit.
-    /// - Returns: A result describing whether the identifiers were accepted, and what remains missing or invalid if not.
+    /// - Returns: A result describing whether identifier collection is complete, and what remains missing or invalid if not.
     /// Throws if an authenticated Link user is not available, or an API error occurs.
     func submitIdentifiers(_ identifiers: [ComplianceIdentifier]) async throws -> SubmitIdentifiersResult
 
@@ -418,7 +418,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     public func submitIdentifiers(_ identifiers: [ComplianceIdentifier]) async throws -> SubmitIdentifiersResult {
         do {
             let result = try await apiClient.submitIdentifiers(identifiers: identifiers, linkAccountInfo: linkAccountInfo)
-            analyticsClient.log(.identifiersSubmitted(valid: result.valid))
+            analyticsClient.log(.identifiersSubmitted(completed: result.completed))
             return result
         } catch {
             try logAndThrow(error, during: .submitIdentifiers)
@@ -432,7 +432,7 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
             let linkAccountInfo = try await self.linkAccountInfo
             let declaration = try await apiClient.retrieveCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
             let result = try await linkController.presentCRSCARFDeclaration(
-                text: declaration.text,
+                html: declaration.html,
                 appearance: appearance,
                 from: viewController,
                 onConfirm: { [apiClient] in

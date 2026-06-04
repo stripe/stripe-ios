@@ -860,14 +860,6 @@ extension PaymentSheetFormFactory {
         return country
     }
 
-    private var bnplHeaderStyle: PaymentSheet.UserInterfaceStyle {
-        guard case .paymentElement(let configuration, _) = configuration else {
-            stpAssertionFailure("BNPL headers are only supported for PaymentSheet/FlowController/EmbeddedPaymentElement and not CustomerSheet.")
-            return .automatic
-        }
-        return configuration.style
-    }
-
     func makeKlarnaHeader() -> SubtitleElement {
         if let header = makeBNPLHeader() {
             // Use the shared BNPL header when header content is available.
@@ -892,16 +884,12 @@ extension PaymentSheetFormFactory {
     }
 
     func makeBNPLHeader() -> SubtitleElement? {
-        // This will be hooked up to promotion content data in a future PR.
-        return nil
-//        let headerView = BNPLFormHeaderView(
-//            appearance: configuration.appearance,
-//            style: bnplHeaderStyle,
-//            promotion: "TODO: fill in with real promotion content",
-//            learnMoreText: "TODO: fill in with real learn more text",
-//            infoUrl: URL(string: "https://stripe.com")!
-//        )
-//        return SubtitleElement(view: headerView, isHorizontalMode: paymentMethodOrientation == .horizontal)
+        guard let paymentMethodMessagingPromotionsHelper, let headerView = BNPLFormHeaderView(
+            appearance: configuration.appearance,
+            paymentMethod: paymentMethod,
+            promotionsHelper: paymentMethodMessagingPromotionsHelper
+        ) else { return nil }
+        return SubtitleElement(view: headerView, isHorizontalMode: paymentMethodOrientation == .horizontal)
     }
 
     func makeCopyLabel(text: String) -> SubtitleElement {

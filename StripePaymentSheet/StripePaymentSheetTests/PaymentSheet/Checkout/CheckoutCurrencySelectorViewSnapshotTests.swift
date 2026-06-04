@@ -44,17 +44,17 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
         verify(view)
     }
 
-    func testCustomHeight_tall() async {
+    func testCustomVerticalPadding_tall() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
-        appearance.height = 52
+        appearance.contentVerticalPadding = 13
 
         let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
         verify(view)
     }
 
-    func testCustomHeight_compact() async {
+    func testCustomVerticalPadding_compact() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
-        appearance.height = 28
+        appearance.contentVerticalPadding = 1
 
         let view = await makeCurrencySelectorView(selectedCurrency: "gbp", appearance: appearance)
         verify(view)
@@ -133,7 +133,7 @@ final class CheckoutCurrencySelectorViewSnapshotTests: STPSnapshotTestCase {
 
     func testFullyCustomized() async {
         var appearance = Checkout.CurrencySelectorView.Appearance()
-        appearance.height = 44
+        appearance.contentVerticalPadding = 9
         appearance.cornerRadius = 22
         appearance.borderWidth = 1.5
         appearance.border = .systemPurple

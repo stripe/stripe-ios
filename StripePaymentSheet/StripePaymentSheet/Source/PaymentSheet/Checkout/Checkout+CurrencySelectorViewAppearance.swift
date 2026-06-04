@@ -15,8 +15,8 @@ extension Checkout.CurrencySelectorView {
 
         // MARK: - Dimensions
 
-        /// Height of the selector track. Default is `32`.
-        public var height: CGFloat = 32.0
+        /// Vertical padding between the track edges and the currency option content. Default is `3`.
+        public var contentVerticalPadding: CGFloat = 3.0
 
         /// Corner radius applied to the track and the selected currency pill. Default is `16` (capsule).
         public var cornerRadius: CGFloat = 16.0
@@ -80,14 +80,16 @@ extension Checkout.CurrencySelectorView {
 
         /// Controls what content is displayed in each currency option's label.
         public enum LabelContent {
+            /// Automatically determines the best display based on the purchase type.
+            case automatic
             /// Displays only the currency code (e.g. "USD").
             case currencyCode
             /// Displays the formatted amount (e.g. "$12.00").
             case amount
         }
 
-        /// Controls what is displayed in each currency option's label. Default is `.currencyCode`.
-        public var labelContent: LabelContent = .currencyCode
+        /// Controls what is displayed in each currency option's label. Default is `.automatic`.
+        public var labelContent: LabelContent = .automatic
 
         /// Creates an appearance with default values.
         public init() {}
