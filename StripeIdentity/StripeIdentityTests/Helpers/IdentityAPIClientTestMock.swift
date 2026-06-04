@@ -25,6 +25,11 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
     }
 
     let verificationPage = MockAPIRequests<Void, StripeAPI.VerificationPage>()
+    let walletIdentitySession = MockAPIRequests<Void, StripeAPI.VerificationPageWalletIdentitySession>()
+    let walletIdentitySessionSubmit = MockAPIRequests<
+        WalletIdentitySessionSubmitRequest,
+        StripeAPI.VerificationPageWalletIdentitySessionSubmission
+    >()
     let verificationPageData = MockAPIRequests<
         StripeAPI.VerificationPageDataUpdate, StripeAPI.VerificationPageData
     >()
@@ -39,6 +44,11 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
     var verificationSessionId: String
     var ephemeralKeySecret: String
 
+    struct WalletIdentitySessionSubmitRequest: Equatable {
+        let id: String
+        let outcome: StripeAPI.VerificationPageWalletIdentitySessionOutcome
+    }
+
     init(
         verificationSessionId: String = "",
         ephemeralKeySecret: String = ""
@@ -49,6 +59,19 @@ final class IdentityAPIClientTestMock: IdentityAPIClient {
 
     func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage> {
         return verificationPage.makeRequest(with: ())
+    }
+
+    func createWalletIdentitySession() -> Promise<StripeAPI.VerificationPageWalletIdentitySession> {
+        return walletIdentitySession.makeRequest(with: ())
+    }
+
+    func submitWalletIdentitySession(
+        id: String,
+        outcome: StripeAPI.VerificationPageWalletIdentitySessionOutcome
+    ) -> Promise<StripeAPI.VerificationPageWalletIdentitySessionSubmission> {
+        return walletIdentitySessionSubmit.makeRequest(
+            with: .init(id: id, outcome: outcome)
+        )
     }
 
     func updateIdentityVerificationPageData(

@@ -53,6 +53,11 @@ protocol VerificationSheetControllerProtocol: AnyObject {
         completion: @escaping () -> Void
     )
 
+    func submitVerificationPageAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        completion: @escaping () -> Void
+    )
+
     func forceDocumentFrontAndDecideBack(
         from fromScreen: IdentityAnalyticsClient.ScreenName,
         onCompletion: @escaping (_ isBackRequired: Bool) -> Void
@@ -276,40 +281,51 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
         // If finished collecting, submit and transition
         if updateData.requirements.missing.isEmpty {
-            apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] submittedData in
-                guard let self = self else { return }
-                self.isVerificationPageSubmitted = (try? submittedData.get())?.submittedAndClosed() == true
-
-                // Checking the response of submit
-                guard case .success(let resultData) = submittedData
-                else {
-                    self.isVerificationPageSubmitted = false
-                    self.transitionWithVerificaionPageDataResult(submittedData, completion: completion)
-                    return
-                }
-
-                self.isVerificationPageSubmitted = resultData.submitted == true && resultData.closed == true
-
-                if resultData.needsFallback() {
-                    // Checking the buffered VerificationPageResponse, update its missings with the new missings
-                    guard let verificationPageResponse = self.verificationPageOrLogError(
-                        missingError: .missingVerificationPageResponseForFallbackUpdate,
-                        assertionMessage: "Fail to get VerificationPageResponse is nil"
-                    ) else {
-                        return
-                    }
-                    self.verificationPageResponse = .success(verificationPageResponse.copyWithNewMissings(newMissings: resultData.requirements.missing))
-                    // clear collected data
-                    self.collectedData = StripeAPI.VerificationPageCollectedData()
-
-                }
-                self.transitionWithVerificaionPageDataResult(
-                    submittedData,
-                    completion: completion
-                )
-            }
+            submitVerificationPageAndTransition(completion: completion)
         } else {
             transitionWithVerificaionPageDataResult(updateDataResult, completion: completion)
+        }
+    }
+
+    func submitVerificationPageAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        completion: @escaping () -> Void
+    ) {
+        analyticsClient.startTrackingTimeToScreen(from: fromScreen, sheetController: self)
+        submitVerificationPageAndTransition(completion: completion)
+    }
+
+    private func submitVerificationPageAndTransition(completion: @escaping () -> Void) {
+        apiClient.submitIdentityVerificationPage().observe(on: .main) { [weak self] submittedData in
+            guard let self else { return }
+
+            guard case .success(let resultData) = submittedData
+            else {
+                self.isVerificationPageSubmitted = false
+                self.transitionWithVerificaionPageDataResult(submittedData, completion: completion)
+                return
+            }
+
+            self.isVerificationPageSubmitted = resultData.submittedAndClosed()
+
+            if resultData.needsFallback() {
+                guard let verificationPageResponse = self.verificationPageOrLogError(
+                    missingError: .missingVerificationPageResponseForFallbackUpdate,
+                    assertionMessage: "Fail to get VerificationPageResponse is nil"
+                ) else {
+                    return
+                }
+                self.verificationPageResponse = .success(
+                    verificationPageResponse.copyWithNewMissings(
+                        newMissings: resultData.requirements.missing
+                    )
+                )
+                self.collectedData = StripeAPI.VerificationPageCollectedData()
+            }
+            self.transitionWithVerificaionPageDataResult(
+                submittedData,
+                completion: completion
+            )
         }
     }
 

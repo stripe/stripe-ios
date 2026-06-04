@@ -15,6 +15,13 @@ protocol IdentityAPIClient: AnyObject {
 
     func getIdentityVerificationPage() -> Promise<StripeAPI.VerificationPage>
 
+    func createWalletIdentitySession() -> Promise<StripeAPI.VerificationPageWalletIdentitySession>
+
+    func submitWalletIdentitySession(
+        id: String,
+        outcome: StripeAPI.VerificationPageWalletIdentitySessionOutcome
+    ) -> Promise<StripeAPI.VerificationPageWalletIdentitySessionSubmission>
+
     func updateIdentityVerificationPageData(
         updating verificationData: StripeAPI.VerificationPageDataUpdate
     ) -> Promise<StripeAPI.VerificationPageData>
@@ -46,7 +53,7 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
     /// SDK is capable of using.
     ///
     /// - Note: Update this value when a new API version is ready for use in production.
-    static let productionApiVersion: Int = 7
+    static let productionApiVersion: Int = 8
 
     var betas: Set<String> {
         return ["identity_client_api=v\(apiVersion)"]
@@ -88,6 +95,29 @@ final class IdentityAPIClientImpl: IdentityAPIClient {
         return apiClient.get(
             resource: APIEndpointVerificationPage(id: verificationSessionId),
             parameters: ["app_identifier": Bundle.main.bundleIdentifier ?? ""]
+        )
+    }
+
+    func createWalletIdentitySession() -> Promise<StripeAPI.VerificationPageWalletIdentitySession> {
+        return apiClient.post(
+            resource: APIEndpointVerificationPageWalletIdentitySessions(id: verificationSessionId),
+            parameters: [
+                "platform": "apple_passkit",
+                "app_identifier": Bundle.main.bundleIdentifier ?? "",
+            ]
+        )
+    }
+
+    func submitWalletIdentitySession(
+        id: String,
+        outcome: StripeAPI.VerificationPageWalletIdentitySessionOutcome
+    ) -> Promise<StripeAPI.VerificationPageWalletIdentitySessionSubmission> {
+        return apiClient.post(
+            resource: APIEndpointVerificationPageWalletIdentitySessionSubmit(
+                id: verificationSessionId,
+                walletIdentitySessionId: id
+            ),
+            object: outcome
         )
     }
 
@@ -156,6 +186,15 @@ private func APIEndpointVerificationPage(id: String) -> String {
 }
 private func APIEndpointVerificationPageData(id: String) -> String {
     return "identity/verification_pages/\(id)/data"
+}
+private func APIEndpointVerificationPageWalletIdentitySessions(id: String) -> String {
+    return "identity/verification_pages/\(id)/wallet_identity/sessions"
+}
+private func APIEndpointVerificationPageWalletIdentitySessionSubmit(
+    id: String,
+    walletIdentitySessionId: String
+) -> String {
+    return "identity/verification_pages/\(id)/wallet_identity/sessions/\(walletIdentitySessionId)/submit"
 }
 private func APIEndpointVerificationPageSubmit(id: String) -> String {
     return "identity/verification_pages/\(id)/submit"

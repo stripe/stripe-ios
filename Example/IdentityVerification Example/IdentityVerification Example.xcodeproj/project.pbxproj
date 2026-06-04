@@ -256,6 +256,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B8E3BF03F2CF73AE592C6FF7 /* IdentityVerification-Example-Debug.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "$(IDENTITY_VERIFICATION_EXAMPLE_DEVICE_CODE_SIGN_ENTITLEMENTS)";
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "IdentityVerification Example/IdentityVerification Example.entitlements";
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
@@ -268,6 +270,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ADBBBF53B498F35A47113604 /* IdentityVerification-Example-Release.xcconfig */;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "$(IDENTITY_VERIFICATION_EXAMPLE_DEVICE_CODE_SIGN_ENTITLEMENTS)";
+				"CODE_SIGN_ENTITLEMENTS[sdk=iphonesimulator*]" = "IdentityVerification Example/IdentityVerification Example.entitlements";
 				DEVELOPMENT_TEAM = Y28TH9SHX7;
 				INFOPLIST_FILE = "IdentityVerification Example/Info.plist";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.stripe.IdentityVerification-Example";
@@ -305,8 +309,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 4D2B674F033CFBC8B744669E /* Project object */;
 }

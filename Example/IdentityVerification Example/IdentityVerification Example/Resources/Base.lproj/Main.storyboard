@@ -264,6 +264,22 @@
                                                 </subviews>
                                                 <viewLayoutGuide key="safeArea" id="oHp-gi-HD1"/>
                                             </stackView>
+                                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" spacing="8" id="2Jg-h3-9pi" userLabel="Enable Verify Via Wallet">
+                                                <rect key="frame" x="0.0" y="192.5" width="406" height="31"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="750" verticalCompressionResistancePriority="1000" text="Enable verify via wallet" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ehM-bx-dQg">
+                                                        <rect key="frame" x="0.0" y="0.0" width="349" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="1000" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="p1F-rt-r1f">
+                                                        <rect key="frame" x="357" y="0.0" width="51" height="31"/>
+                                                    </switch>
+                                                </subviews>
+                                                <viewLayoutGuide key="safeArea" id="QoF-HF-L5m"/>
+                                            </stackView>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" axis="vertical" spacing="8" id="8h6-di-UVA" userLabel="Phone OTP">
@@ -377,6 +393,7 @@
                         <outlet property="activityIndicator" destination="oXV-29-c3d" id="7mM-GO-kd9"/>
                         <outlet property="documentOptionsContainerView" destination="aEP-Ix-Kna" id="WxF-0y-f0o"/>
                         <outlet property="drivingLicenseSwitch" destination="KQk-6j-QM7" id="c5T-0x-am1"/>
+                        <outlet property="enableVerifyViaWalletSwitch" destination="p1F-rt-r1f" id="SpS-4U-Qw5"/>
                         <outlet property="fallbackToDocumentSwitch" destination="YSZ-qt-Z2T" id="VTV-JI-w8m"/>
                         <outlet property="idCardSwitch" destination="3HV-8M-Kqe" id="auy-qM-CeH"/>
                         <outlet property="nativeComponentsOptionsContainerView" destination="3vx-nm-76o" id="Nnk-Ox-Hs7"/>

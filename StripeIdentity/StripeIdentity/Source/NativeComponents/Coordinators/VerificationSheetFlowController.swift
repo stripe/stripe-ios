@@ -652,7 +652,12 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
         do {
             return try DocumentWarmupViewController(
                 sheetController: sheetController,
-                staticContent: staticContent.documentSelect
+                staticContent: staticContent.documentSelect,
+                verifyViaWalletManager: VerifyDocumentViaWalletManager(
+                    shouldEnableVerifyDocumentViaWallet: staticContent.documentCapture.enableVerifyViaWallet,
+                    idDocumentTypeAllowlistKeys: staticContent.documentSelect.idDocumentTypeAllowlistKeys,
+                    apiClient: sheetController.apiClient
+                )
             )
         } catch let error {
             return ErrorViewController(
@@ -856,7 +861,7 @@ extension Set<StripeAPI.VerificationPageFieldType> {
     func nextDestination(collectedData: StripeAPI.VerificationPageCollectedData) -> IdentityTopLevelDestination {
         if self.contains(.biometricConsent) {
             return .consentDestination
-        } else if !self.isDisjoint(with: [.idDocumentFront, .idDocumentBack]) {
+        } else if !self.isDisjoint(with: [.idDocumentFront, .idDocumentBack, .idDocumentWallet]) {
             return .documentWarmupDestination
         } else if self.contains(.face) {
             return .selfieCaptureDestination

@@ -120,6 +120,116 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         wait(for: [exp], timeout: 1)
     }
 
+    func testCreateWalletIdentitySession() throws {
+        let responseJSON = """
+            {
+              "session_id": "wis_123",
+              "platform": "apple_passkit",
+              "request": {
+                "nonce": "dGVzdE5vbmNlQWJjZGVmZ2hpamtsbW5vcHE",
+                "merchant_identifier": "merchant.com.stripe.identity.test",
+                "document_requests": [{
+                  "document_type": "driving_license",
+                  "requested_elements": [
+                    "org.iso.18013.5.1.given_name",
+                    "org.iso.18013.5.1.family_name",
+                    "org.iso.18013.5.1.portrait",
+                    "org.iso.18013.5.1.address",
+                    "org.iso.18013.5.1.birth_date",
+                    "org.iso.18013.5.1.document_number",
+                    "org.iso.18013.5.1.issue_date",
+                    "org.iso.18013.5.1.expiry_date",
+                    "org.iso.18013.5.1.issuing_authority"
+                  ]
+                }]
+              }
+            }
+            """
+        let mockResponseData = responseJSON.data(using: .utf8)!
+        let mockResponse = StripeAPI.VerificationPageWalletIdentitySession(
+            sessionId: "wis_123",
+            platform: "apple_passkit",
+            request: .init(
+                nonce: "dGVzdE5vbmNlQWJjZGVmZ2hpamtsbW5vcHE",
+                merchantIdentifier: "merchant.com.stripe.identity.test",
+                documentRequests: [
+                    .init(
+                        documentType: "driving_license",
+                        requestedElements: [
+                            "org.iso.18013.5.1.given_name",
+                            "org.iso.18013.5.1.family_name",
+                            "org.iso.18013.5.1.portrait",
+                            "org.iso.18013.5.1.address",
+                            "org.iso.18013.5.1.birth_date",
+                            "org.iso.18013.5.1.document_number",
+                            "org.iso.18013.5.1.issue_date",
+                            "org.iso.18013.5.1.expiry_date",
+                            "org.iso.18013.5.1.issuing_authority",
+                        ]
+                    ),
+                ]
+            )
+        )
+
+        stub { urlRequest in
+            XCTAssertEqual(
+                urlRequest.url?.absoluteString.hasSuffix(
+                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/wallet_identity/sessions"
+                ),
+                true
+            )
+            XCTAssertEqual(urlRequest.httpMethod, "POST")
+            verifyHeaders(urlRequest: urlRequest)
+            let body = String(data: urlRequest.ohhttpStubs_httpBody ?? Data(), encoding: .utf8)
+            XCTAssertEqual(Set(body?.components(separatedBy: "&") ?? []), [
+                "app_identifier=\(Bundle.main.bundleIdentifier ?? "")",
+                "platform=apple_passkit",
+            ])
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(data: mockResponseData, statusCode: 200, headers: nil)
+        }
+
+        apiClient.createWalletIdentitySession().observe { result in
+            switch result {
+            case .success(let response):
+                XCTAssertEqual(response, mockResponse)
+            case .failure(let error):
+                XCTFail("Request returned error \(error)")
+            }
+            self.exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
+    }
+
+    func testSubmitWalletIdentitySessionWithCredential() throws {
+        try testSubmitWalletIdentitySession(
+            outcome: .credentialReturned(encryptedResponse: "-_8"),
+            expectedParameters: [
+                "outcome": "credential_returned",
+                "encrypted_response": "-_8",
+            ],
+            responseStatus: .validated
+        )
+    }
+
+    func testSubmitWalletIdentitySessionWithoutCredential() throws {
+        try testSubmitWalletIdentitySession(
+            outcome: .userDeclined,
+            expectedParameters: ["outcome": "user_declined"],
+            responseStatus: .userDeclined
+        )
+    }
+
+    func testSubmitWalletIdentitySessionWithNoDocument() throws {
+        try testSubmitWalletIdentitySession(
+            outcome: .noDocument,
+            expectedParameters: ["outcome": "no_document"],
+            responseStatus: .noDocument
+        )
+    }
+
     func testSubmitIdentityVerificationSession() throws {
         try verifyPostWithSuffix(expectedSuffix: "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/submit") {
             apiClient.submitIdentityVerificationPage()
@@ -216,6 +326,57 @@ final class IdentityAPIClientTest: APIStubbedTestCase {
         wait(for: [exp], timeout: 1)
     }
 
+    private func testSubmitWalletIdentitySession(
+        outcome: StripeAPI.VerificationPageWalletIdentitySessionOutcome,
+        expectedParameters: [String: String],
+        responseStatus: StripeAPI.VerificationPageWalletIdentitySessionSubmission.Status
+    ) throws {
+        let responseJSON = """
+            {
+              "session_id": "wis_123",
+              "platform": "apple_passkit",
+              "status": "\(responseStatus.rawValue)"
+            }
+            """
+        let expectedResponse = StripeAPI.VerificationPageWalletIdentitySessionSubmission(
+            sessionId: "wis_123",
+            platform: "apple_passkit",
+            status: responseStatus
+        )
+
+        stub { urlRequest in
+            XCTAssertEqual(
+                urlRequest.url?.absoluteString.hasSuffix(
+                    "v1/identity/verification_pages/\(IdentityAPIClientTest.mockId)/wallet_identity/sessions/wis_123/submit"
+                ),
+                true
+            )
+            XCTAssertEqual(urlRequest.httpMethod, "POST")
+            verifyHeaders(urlRequest: urlRequest)
+            let body = String(data: urlRequest.ohhttpStubs_httpBody ?? Data(), encoding: .utf8)
+            XCTAssertEqual(Set(body?.components(separatedBy: "&") ?? []), Set(expectedParameters.map { "\($0.key)=\($0.value)" }))
+            return true
+        } response: { _ in
+            return HTTPStubsResponse(
+                data: Data(responseJSON.utf8),
+                statusCode: 200,
+                headers: nil
+            )
+        }
+
+        apiClient.submitWalletIdentitySession(id: "wis_123", outcome: outcome).observe { result in
+            switch result {
+            case .success(let response):
+                XCTAssertEqual(response, expectedResponse)
+            case .failure(let error):
+                XCTFail("Request returned error \(error)")
+            }
+            self.exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
+    }
+
     private func verifyPostWithSuffix(expectedSuffix: String, apiCall: () -> StripeCore.Promise<StripeCore.StripeAPI.VerificationPageData>) throws {
         let mockVerificationPageData = VerificationPageDataMock.response200
         let mockResponseData = try mockVerificationPageData.data()
@@ -264,7 +425,7 @@ private func verifyHeaders(
     )
     XCTAssertEqual(
         urlRequest.allHTTPHeaderFields?["Stripe-Version"],
-        "2020-08-27; identity_client_api=v7",
+        "2020-08-27; identity_client_api=v8",
         file: file,
         line: line
     )

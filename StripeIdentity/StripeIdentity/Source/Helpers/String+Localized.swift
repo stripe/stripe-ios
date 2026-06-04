@@ -485,6 +485,13 @@ extension String.Localized {
         )
     }
 
+    static var continueWithCamera: String {
+        STPLocalizedString(
+            "Continue with camera",
+            "Button text to continue document verification by scanning with the camera"
+        )
+    }
+
     static var passport: String {
         STPLocalizedString(
             "passport",

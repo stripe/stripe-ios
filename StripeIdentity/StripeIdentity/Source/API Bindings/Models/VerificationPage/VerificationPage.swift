@@ -53,6 +53,66 @@ extension StripeAPI {
 
     }
 
+    struct VerificationPageWalletIdentitySession: Decodable, Equatable {
+        struct Request: Decodable, Equatable {
+            struct DocumentRequest: Decodable, Equatable {
+                let documentType: String
+                let requestedElements: [String]
+            }
+
+            let nonce: String
+            let merchantIdentifier: String
+            let documentRequests: [DocumentRequest]
+        }
+
+        let sessionId: String
+        let platform: String
+        let request: Request
+    }
+
+    enum VerificationPageWalletIdentitySessionOutcome: Encodable, Equatable {
+        case credentialReturned(encryptedResponse: String)
+        case userDeclined
+        case noDocument
+
+        private enum CodingKeys: String, CodingKey {
+            case outcome
+            case encryptedResponse
+        }
+
+        private enum Outcome: String, Encodable {
+            case credentialReturned = "credential_returned"
+            case userDeclined = "user_declined"
+            case noDocument = "no_document"
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            switch self {
+            case .credentialReturned(let encryptedResponse):
+                try container.encode(Outcome.credentialReturned, forKey: .outcome)
+                try container.encode(encryptedResponse, forKey: .encryptedResponse)
+            case .userDeclined:
+                try container.encode(Outcome.userDeclined, forKey: .outcome)
+            case .noDocument:
+                try container.encode(Outcome.noDocument, forKey: .outcome)
+            }
+        }
+    }
+
+    struct VerificationPageWalletIdentitySessionSubmission: Decodable, Equatable {
+        enum Status: String, Decodable, Equatable {
+            case validated
+            case invalid
+            case userDeclined = "user_declined"
+            case noDocument = "no_document"
+        }
+
+        let sessionId: String
+        let platform: String
+        let status: Status
+    }
+
 }
 
 extension StripeAPI.VerificationPage {

@@ -53,6 +53,7 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
     private(set) var didCheckSubmitAndTransition = false
     private(set) var didSaveDocumentFrontAndDecideBack = false
     private(set) var didSaveDocumentBackAndTransition = false
+    private(set) var didSubmitVerificationPageAndTransition = false
 
     var missingType: StripeIdentity.IndividualFormElement.MissingType?
     var transitionedToIndividual: Bool = false
@@ -132,6 +133,14 @@ final class VerificationSheetControllerMock: VerificationSheetControllerProtocol
             self?.backUploadedDocumentsResult = result
             completion()
         }
+    }
+
+    func submitVerificationPageAndTransition(
+        from fromScreen: IdentityAnalyticsClient.ScreenName,
+        completion: @escaping () -> Void
+    ) {
+        didSubmitVerificationPageAndTransition = true
+        completion()
     }
 
     func forceDocumentFrontAndDecideBack(from fromScreen: StripeIdentity.IdentityAnalyticsClient.ScreenName, onCompletion: @escaping (Bool) -> Void) {

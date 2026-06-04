@@ -14,6 +14,7 @@ extension StripeAPI {
         case face = "face"
         case idDocumentBack = "id_document_back"
         case idDocumentFront = "id_document_front"
+        case idDocumentWallet = "id_document_wallet"
         case idNumber = "id_number"
         case dob = "dob"
         case name = "name"

@@ -39,6 +39,8 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>To verify your identity.</string>
+	<key>NSIdentityUsageDescription</key>
+	<string>To verify your identity using Wallet.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

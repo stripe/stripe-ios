@@ -54,10 +54,28 @@ class IdentityFlowView: UIView {
                 case loading
             }
 
-            let text: String
+            enum Kind {
+                case standard(text: String, isPrimary: Bool)
+                case custom(makeControl: () -> UIControl)
+            }
+
+            let kind: Kind
             let state: State
-            let isPrimary: Bool
             let didTap: () -> Void
+
+            var text: String? {
+                guard case let .standard(text, _) = kind else {
+                    return nil
+                }
+                return text
+            }
+
+            var isPrimary: Bool {
+                guard case let .standard(_, isPrimary) = kind else {
+                    return false
+                }
+                return isPrimary
+            }
 
             init(
                 text: String,
@@ -65,9 +83,18 @@ class IdentityFlowView: UIView {
                 isPrimary: Bool = true,
                 didTap: @escaping () -> Void
             ) {
-                self.text = text
+                self.kind = .standard(text: text, isPrimary: isPrimary)
                 self.state = state
-                self.isPrimary = isPrimary
+                self.didTap = didTap
+            }
+
+            init(
+                makeControl: @escaping () -> UIControl,
+                state: State = .enabled,
+                didTap: @escaping () -> Void
+            ) {
+                self.kind = .custom(makeControl: makeControl)
+                self.state = state
                 self.didTap = didTap
             }
         }
@@ -132,8 +159,9 @@ class IdentityFlowView: UIView {
 
     // MARK: Configured properties
     private var contentViewModel: ContentViewModel?
-    private var buttons: [Button] = []
+    private var buttons: [UIControl] = []
     private var buttonTapActions: [() -> Void] = []
+    private var buttonKinds: [ViewModel.Button.Kind.ReuseIdentifier] = []
     private var initialScrollViewBottomInsect: CGFloat = 0
 
     // MARK: - Init
@@ -276,7 +304,7 @@ extension IdentityFlowView {
         ])
     }
 
-    @objc fileprivate func didTapButton(button: Button) {
+    @objc fileprivate func didTapButton(button: UIControl) {
         buttonTapActions.stp_boundSafeObject(at: button.index)?()
     }
 }
@@ -297,29 +325,34 @@ extension IdentityFlowView {
         defer {
             // Configure buttons
             zip(buttonViewModels, buttons).forEach { (viewModel, button) in
-                button.configure(with: viewModel)
+                if let stripeButton = button as? StripeUICore.Button {
+                    stripeButton.configureStripeButton(with: viewModel)
+                } else {
+                    button.configureControl(with: viewModel)
+                }
             }
 
             // Cache tap actions
             buttonTapActions = buttonViewModels.map { $0.didTap }
         }
 
-        // Only rebuild buttons if the number of buttons has changed
-        guard buttonViewModels.count != buttons.count else {
+        let newButtonKinds = buttonViewModels.map { $0.kind.reuseIdentifier }
+
+        // Only rebuild buttons if the number or kind of buttons has changed
+        guard buttonViewModels.count != buttons.count || newButtonKinds != buttonKinds else {
             return
         }
 
         // Remove old buttons and create new ones and add them to the stack view
         buttons.forEach { $0.removeFromSuperview() }
         buttons = buttonViewModels.indices.map { index in
-            let button = Button(
-                index: index,
-                target: self,
-                action: #selector(didTapButton(button:))
-            )
+            let button = buttonViewModels[index].makeControl()
+            button.index = index
+            button.addTarget(self, action: #selector(didTapButton(button:)), for: .touchUpInside)
             buttonStackView.addArrangedSubview(button)
             return button
         }
+        buttonKinds = newButtonKinds
     }
 
     fileprivate func configureContentView(with contentViewModel: ContentViewModel) {
@@ -426,30 +459,59 @@ extension IdentityFlowView.ViewModel.Button {
             didTap: didTap
         )
     }
+
+    fileprivate func makeControl() -> UIControl {
+        switch kind {
+        case .standard:
+            return Button()
+        case let .custom(makeControl):
+            return makeControl()
+        }
+    }
+}
+
+extension IdentityFlowView.ViewModel.Button.Kind {
+    fileprivate enum ReuseIdentifier: Equatable {
+        case standard
+        case custom
+    }
+
+    fileprivate var reuseIdentifier: ReuseIdentifier {
+        switch self {
+        case .standard:
+            return .standard
+        case .custom:
+            return .custom
+        }
+    }
+}
+
+extension UIControl {
+    fileprivate var index: Int {
+        get {
+            return tag
+        }
+        set {
+            tag = newValue
+        }
+    }
+
+    fileprivate func configureControl(with viewModel: IdentityFlowView.ViewModel.Button) {
+        isEnabled = viewModel.state == .enabled
+    }
 }
 
 extension StripeUICore.Button {
-    fileprivate convenience init(
-        index: Int,
-        target: Any?,
-        action: Selector
-    ) {
-        self.init()
-        self.tag = index
-        addTarget(target, action: action, for: .touchUpInside)
-    }
-
-    fileprivate var index: Int {
-        return tag
-    }
-
-    fileprivate func configure(with viewModel: IdentityFlowView.ViewModel.Button) {
-        self.title = viewModel.text
-        self.configuration = IdentityFlowView.Style.buttonConfiguration(
-            isPrimary: viewModel.isPrimary
+    fileprivate func configureStripeButton(with viewModel: IdentityFlowView.ViewModel.Button) {
+        guard case let .standard(text, isPrimary) = viewModel.kind else {
+            return
+        }
+        title = text
+        configuration = IdentityFlowView.Style.buttonConfiguration(
+            isPrimary: isPrimary
         )
-        self.isEnabled = viewModel.state == .enabled
-        self.isLoading = viewModel.state == .loading
+        isEnabled = viewModel.state == .enabled
+        isLoading = viewModel.state == .loading
     }
 }
 

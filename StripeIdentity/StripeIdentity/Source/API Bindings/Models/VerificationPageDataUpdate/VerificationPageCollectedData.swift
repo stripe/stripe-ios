@@ -85,6 +85,8 @@ extension StripeAPI.VerificationPageCollectedData {
             self.idDocumentBack = nil
         case .idDocumentFront:
             self.idDocumentFront = nil
+        case .idDocumentWallet:
+            break
         case .idNumber:
             self.idNumber = nil
         case .dob:

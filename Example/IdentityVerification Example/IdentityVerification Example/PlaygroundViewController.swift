@@ -28,6 +28,7 @@ class PlaygroundViewController: UIViewController {
     @IBOutlet private weak var requireAddressSwitch: UISwitch!
     @IBOutlet private weak var requireLiveCaptureSwitch: UISwitch!
     @IBOutlet private weak var requireSelfieSwitch: UISwitch!
+    @IBOutlet private weak var enableVerifyViaWalletSwitch: UISwitch!
     @IBOutlet private weak var verificationTypeContainerView: UIStackView!
     @IBOutlet private weak var documentOptionsContainerView: UIStackView!
     @IBOutlet private weak var nativeComponentsOptionsContainerView: UIStackView!
@@ -190,6 +191,7 @@ class PlaygroundViewController: UIViewController {
                         "require_live_capture": requireLiveCaptureSwitch.isOn,
                         "require_matching_selfie": requireSelfieSwitch.isOn,
                         "require_address": requireAddressSwitch.isOn,
+                        "enable_verify_via_wallet": enableVerifyViaWalletSwitch.isOn,
                     ],
                 ]
                 if requirePhoneNumberSwitch.isOn {
@@ -223,6 +225,7 @@ class PlaygroundViewController: UIViewController {
                         "require_live_capture": requireLiveCaptureSwitch.isOn,
                         "require_matching_selfie": requireSelfieSwitch.isOn,
                         "require_address": requireAddressSwitch.isOn,
+                        "enable_verify_via_wallet": enableVerifyViaWalletSwitch.isOn,
                     ]
                     options["phone_records"] = [
                         "fallback": "document",

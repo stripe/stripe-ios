@@ -239,6 +239,56 @@ final class VerificationSheetControllerTest: XCTestCase {
         }
     }
 
+    func testSubmitVerificationPageAfterWalletValidation() throws {
+        // Given an initial VerificationPage response
+        controller.verificationPageResponse = .success(
+            try VerificationPageMock.response200.make().copyWithNewMissings(newMissings: [.idDocumentWallet])
+        )
+        let mockResponse = try VerificationPageDataMock.noErrors.make()
+        let submitRequestExp = expectation(description: "submit request made")
+        mockAPIClient.verificationSessionSubmit.callBackOnRequest {
+            submitRequestExp.fulfill()
+        }
+
+        // When the validated Wallet result submits the VerificationPage
+        controller.submitVerificationPageAndTransition(from: .documentWarmup) {
+            self.exp.fulfill()
+        }
+
+        wait(for: [submitRequestExp], timeout: 1)
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .success(mockResponse))
+
+        // Then the flow transitions without posting Wallet data to /data
+        wait(for: [exp], timeout: 1)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 0)
+        XCTAssertEqual(identityAnalyticsClient.timeToScreenFromScreen, .documentWarmup)
+        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+    }
+
+    func testSubmitVerificationPageAfterWalletValidationError() throws {
+        // Given an initial VerificationPage response
+        controller.verificationPageResponse = .success(
+            try VerificationPageMock.response200.make().copyWithNewMissings(newMissings: [.idDocumentWallet])
+        )
+        let mockError = NSError(domain: "", code: 0, userInfo: nil)
+
+        // When the VerificationPage submit fails
+        controller.submitVerificationPageAndTransition(from: .documentWarmup) {
+            self.exp.fulfill()
+        }
+        mockAPIClient.verificationSessionSubmit.respondToRequests(with: .failure(mockError))
+
+        // Then the failure is passed to the flow controller
+        wait(for: [exp], timeout: 1)
+        XCTAssertEqual(mockAPIClient.verificationPageData.requestHistory.count, 0)
+        XCTAssertEqual(mockAPIClient.verificationSessionSubmit.requestHistory.count, 1)
+        wait(for: [mockFlowController.didTransitionToNextScreenExp], timeout: 1)
+        guard case .failure = mockFlowController.transitionedWithUpdateDataResult else {
+            return XCTFail("Expected failure")
+        }
+    }
+
     func testSaveDocumentFrontNotNeedbackSuccess() throws {
         // Mock initial VerificationPage request successful
         controller.verificationPageResponse = .success(try VerificationPageMock.response200.make())
