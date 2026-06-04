@@ -83,6 +83,22 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).count, 1)
     }
 
+    func testInit_noAssignment_returnsNil() {
+        let elementsSession = STPElementsSession._testValue(experimentsData: nil)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let configuration = stubbedConfiguration()
+        let helper = PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: configuration,
+            paymentMethodTypes: [.stripe(.affirm)],
+            analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
+        )
+
+        XCTAssertNil(helper)
+    }
+
     func testIsInTreatmentGroup_controlAssignment() throws {
         let analyticsClientV2 = MockAnalyticsClientV2()
         let arbId = "arb_123"
