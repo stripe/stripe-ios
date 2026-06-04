@@ -34,7 +34,7 @@ extension ComplianceIdentifierType {
         case .frSPI:
             return "Numéro fiscal de référence (SPI) - France"
         case .frNIR:
-            return "Social security number (NIR) - France"
+            return "Numéro de sécurité sociale (NIR) - France"
         case .deSTN:
             return "Tax Identification Number (Steuer-ID) - Germany"
         case .grAFM:
