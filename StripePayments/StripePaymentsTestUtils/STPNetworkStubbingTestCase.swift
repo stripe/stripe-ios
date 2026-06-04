@@ -118,9 +118,6 @@ import XCTest
                         "\\[locale]", // Nested locale param varies by machine
                         "\\[mobile_app_id]", // App bundle ID varies by test target
                         "\\[mobile_session_id]", // Session ID varies by run
-                        "place_id", // Autocomplete place ID, can vary by machine due to IP biasing,
-                        "source", // Autocomplete source, can change if the server autocomplete source changes
-                        "display_title", // Autocomplete suggestion title, can vary by machine due to IP biasing,
                         "session_token", // Autocomplete session token, random UUID
                     ]
                     return replaceNondeterministicParams(escapedBody, componentsToFilter: componentsToFilter)
