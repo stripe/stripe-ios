@@ -51,22 +51,27 @@ extension STPAnalyticsClient {
         log(analytic: AddressAnalytic(event: .addressAutocompleteStart, params: [:]), apiClient: apiClient)
     }
 
-    func logAddressAutocompleteSuggestions(characterCount: Int, sessionToken: String, source: String, duration: Float, apiClient: STPAPIClient) {
-        log(analytic: AddressAnalytic(event: .addressAutocompleteSuggestions, params: [
+    func logAddressAutocompleteSuggestions(characterCount: Int, sessionToken: String, source: String, duration: Float, latency: Float?, apiClient: STPAPIClient) {
+        var params: [String: Any] = [
             "character_count": characterCount,
             "session_token": sessionToken,
             "source": source,
             "duration": duration,
-        ]), apiClient: apiClient)
+        ]
+        if let latency { params["latency"] = latency }
+        log(analytic: AddressAnalytic(event: .addressAutocompleteSuggestions, params: params), apiClient: apiClient)
     }
 
-    func logAddressAutocompleteComplete(characterCount: Int, sessionToken: String, source: String, duration: Float, apiClient: STPAPIClient) {
-        log(analytic: AddressAnalytic(event: .addressAutocompleteComplete, params: [
+    func logAddressAutocompleteComplete(characterCount: Int, sessionToken: String, source: String, duration: Float, latency: Float?, editDistance: Int?, apiClient: STPAPIClient) {
+        var params: [String: Any] = [
             "character_count": characterCount,
             "session_token": sessionToken,
             "source": source,
             "duration": duration,
-        ]), apiClient: apiClient)
+        ]
+        if let latency { params["latency"] = latency }
+        if let editDistance { params["edit_distance"] = editDistance }
+        log(analytic: AddressAnalytic(event: .addressAutocompleteComplete, params: params), apiClient: apiClient)
     }
 
     func logAddressAutocompleteError(error: Error, sessionToken: String, duration: Float, apiClient: STPAPIClient) {

@@ -270,7 +270,7 @@ class AutoCompleteViewController: UIViewController {
     // MARK: Private functions
 
     /// Sets source and results together so `results.didSet` always sees the correct source.
-    private func setResults(_ newResults: [AddressSearchResult], source: String?) {
+    private func setResults(_ newResults: [AddressSearchResult], source: String?, requestLatency: Float? = nil) {
         currentSource = source
         results = newResults
         if !newResults.isEmpty, let source {
@@ -279,6 +279,7 @@ class AutoCompleteViewController: UIViewController {
                 sessionToken: sessionToken,
                 source: source,
                 duration: elapsedTimeSinceAutocompleteStart,
+                latency: requestLatency,
                 apiClient: configuration.apiClient
             )
         }
@@ -328,13 +329,15 @@ extension AutoCompleteViewController: ElementDelegate {
         fetchTask = Task { @MainActor in
             do {
                 let countryCodes = selectedCountry.flatMap { $0.isEmpty ? nil : [$0] }
+                let requestStart = Date()
                 let response = try await configuration.apiClient.getAddressSuggestions(
                     searchText: query,
                     countryCodes: countryCodes,
                     sessionToken: sessionToken
                 )
                 guard !Task.isCancelled else { return }
-                self.setResults(response.suggestions, source: response.source)
+                let latency = Float(Date().timeIntervalSince(requestStart))
+                self.setResults(response.suggestions, source: response.source, requestLatency: latency)
             } catch {
                 guard !Task.isCancelled else { return }
                 STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
@@ -417,7 +420,8 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
         fetchTask?.cancel()
 
         let result = results[indexPath.row]
-        let characterCount = autoCompleteLine.text.count
+        let typedText = autoCompleteLine.text
+        let characterCount = typedText.count
         let source = currentSource ?? ""
         let duration = elapsedTimeSinceAutocompleteStart
 
@@ -429,6 +433,8 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                     sessionToken: sessionToken,
                     source: source,
                     duration: duration,
+                    latency: nil,
+                    editDistance: typedText.editDistance(to: address.line1 ?? ""),
                     apiClient: configuration.apiClient
                 )
                 delegate?.didSelectAddress(address)
@@ -440,17 +446,21 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                 fetchTask = Task { @MainActor [weak self] in
                     guard let self else { return }
                     do {
+                        let requestStart = Date()
                         let details = try await configuration.apiClient.getAddressDetails(
                             placeId: placeId,
                             source: currentSource,
                             displayTitle: suggestion.title,
                             sessionToken: sessionToken
                         )
+                        let latency = Float(Date().timeIntervalSince(requestStart))
                         STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
                             characterCount: characterCount,
                             sessionToken: sessionToken,
                             source: source,
                             duration: duration,
+                            latency: latency,
+                            editDistance: typedText.editDistance(to: details.address.line1 ?? ""),
                             apiClient: configuration.apiClient
                         )
                         delegate?.didSelectAddress(details.address)
@@ -474,6 +484,8 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                         sessionToken: self.sessionToken,
                         source: source,
                         duration: duration,
+                        latency: nil,
+                        editDistance: typedText.editDistance(to: address?.line1 ?? ""),
                         apiClient: self.configuration.apiClient
                     )
                     self.delegate?.didSelectAddress(address)
