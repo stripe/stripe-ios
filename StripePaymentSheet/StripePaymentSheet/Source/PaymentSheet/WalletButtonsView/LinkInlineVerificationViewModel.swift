@@ -27,18 +27,22 @@ class LinkInlineVerificationViewModel: ObservableObject {
     // MARK: - API Methods
 
     @MainActor
-    func startVerification() async throws {
+    func startVerification() async {
         startVerificationError = nil
 
-        try await withCheckedThrowingContinuation { continuation in
-            account.startVerification { result in
-                switch result {
-                case .success:
-                    continuation.resume()
-                case .failure(let error):
-                    continuation.resume(throwing: error)
+        do {
+            try await withCheckedThrowingContinuation { continuation in
+                account.startVerification { result in
+                    switch result {
+                    case .success:
+                        continuation.resume()
+                    case .failure(let error):
+                        continuation.resume(throwing: error)
+                    }
                 }
             }
+        } catch {
+            startVerificationError = error
         }
     }
 

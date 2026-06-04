@@ -138,17 +138,8 @@ struct LinkInlineVerificationView: View {
         .animation(.easeInOut, value: viewModel.loading)
         .onAppear {
             Task {
-                await startVerification()
+                await viewModel.startVerification()
             }
-        }
-    }
-
-    @MainActor
-    private func startVerification() async {
-        do {
-            try await viewModel.startVerification()
-        } catch {
-            viewModel.startVerificationError = error
         }
     }
 
@@ -168,7 +159,7 @@ struct LinkInlineVerificationView: View {
     private func onResend() {
         viewModel.loading = true
         Task {
-            await startVerification()
+            await viewModel.startVerification()
             viewModel.code = ""
             viewModel.loading = false
         }
