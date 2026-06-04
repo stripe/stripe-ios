@@ -29,6 +29,8 @@ extension ComplianceIdentifierType {
             return "Personnummer (CPR) - Denmark"
         case .eeIK:
             return "Isikukood (PIC) - Estonia"
+        case .esNIF:
+            return "Número de Identificación Fiscal (NIF) - Spain"
         case .fiHETU:
             return "Henkilötunnus (HETU) - Finland"
         case .frSPI:
@@ -49,8 +51,6 @@ extension ComplianceIdentifierType {
             return "Codice fiscale - Italy"
         case .lvPK:
             return "Personas kods - Latvia"
-        case .esNIF:
-            return "Número de Identificación Fiscal (NIF) - Spain"
         case .ltAK:
             return "Asmens kodas - Lithuania"
         case .luNIF:

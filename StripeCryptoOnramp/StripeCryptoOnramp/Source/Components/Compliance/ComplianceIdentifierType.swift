@@ -66,6 +66,9 @@ public extension ComplianceIdentifierType {
     /// Isikukood (PIC) - Estonia.
     static let eeIK = Self(rawValue: "ee_ik")
 
+    /// Número de Identificación Fiscal (NIF) - Spain.
+    static let esNIF = Self(rawValue: "es_nif")
+
     /// Henkilötunnus (HETU) - Finland.
     static let fiHETU = Self(rawValue: "fi_hetu")
 
@@ -95,9 +98,6 @@ public extension ComplianceIdentifierType {
 
     /// Personas kods - Latvia.
     static let lvPK = Self(rawValue: "lv_pk")
-
-    /// Número de Identificación Fiscal (NIF) - Spain.
-    static let esNIF = Self(rawValue: "es_nif")
 
     /// Asmens kodas - Lithuania.
     static let ltAK = Self(rawValue: "lt_ak")
