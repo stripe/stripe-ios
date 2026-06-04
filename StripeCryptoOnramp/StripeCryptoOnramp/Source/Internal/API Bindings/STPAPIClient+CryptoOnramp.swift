@@ -112,10 +112,10 @@ extension STPAPIClient {
         return try await post(resource: endpoint, object: requestObject)
     }
 
-    /// Retrieves compliance identifiers still required for MiCA and CRS/CARF compliance.
+    /// Retrieves compliance identifiers still required for MiCA and whether CRS/CARF tax identification numbers are still required.
     /// - Parameters:
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    /// - Returns: An instance of `ComplianceIdentifierRequirements` containing missing identifier requirements.
+    /// - Returns: An instance of `ComplianceIdentifierRequirements` containing missing MiCA identifier requirements and CRS/CARF TIN status.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     func retrieveMissingIdentifiers(linkAccountInfo: PaymentSheetLinkAccountInfoProtocol) async throws -> ComplianceIdentifierRequirements {
         guard let consumerSessionClientSecret = linkAccountInfo.consumerSessionClientSecret else {
@@ -135,7 +135,7 @@ extension STPAPIClient {
     /// - Parameters:
     ///   - identifiers: Compliance identifiers collected for MiCA and CRS/CARF compliance.
     ///   - linkAccountInfo: Information associated with the link account including the client secret and whether the account has been verified.
-    /// - Returns: An instance of `SubmitIdentifiersResult` describing whether the identifiers were accepted.
+    /// - Returns: An instance of `SubmitIdentifiersResult` describing whether identifier collection is complete.
     /// Throws if the `linkAccountSessionState` is not verified, a client secret doesn’t exist, or if an API error occurs.
     @discardableResult
     func submitIdentifiers(

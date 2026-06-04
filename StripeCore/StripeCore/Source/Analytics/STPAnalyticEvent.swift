@@ -237,6 +237,10 @@ import Foundation
     case paymentSheetCardNumberCompleted = "mc_card_number_completed"
     case paymentSheetDeferredIntentPaymentMethodMismatch = "mc_deferred_intent_payment_method_mismatch"
 
+    // MARK: - PaymentSheet payment method messaging
+    case paymentMethodMessagingFetchBegin = "payment_method_messaging_fetch_begin"
+    case paymentMethodMessagingDisplayed = "payment_method_messaging_displayed"
+
     // MARK: - v1/elements/session
     case paymentSheetElementsSessionLoadFailed = "mc_elements_session_load_failed"
     case paymentSheetElementsSessionCustomerDeserializeFailed = "mc_elements_session_customer_deserialize_failed"

@@ -28,6 +28,8 @@ class PaymentMethodMessagingPromotionsHelper {
     private let configuration: PaymentElementConfiguration
     private let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     private let analyticsHelper: PaymentSheetAnalyticsHelper
+    /// The time when the fetch was initiated; used to compute the duration between fetch start and display attempt.
+    private var fetchStartDate: Date?
 
     // ⚠️ an exposure must be logged before the experiment value is used for any purpose ⚠️
     // ⚠️ do not directly access the property, instead use `experiment` ⚠️
@@ -41,6 +43,7 @@ class PaymentMethodMessagingPromotionsHelper {
         return _experiment
     }
 
+    private(set) var fetchTask: Task<Void, Never>?
     private let promotionsLock = NSLock()
     // null until set by loading
     private var _promotions: [String: PromotionContent]?
@@ -72,11 +75,21 @@ class PaymentMethodMessagingPromotionsHelper {
         self.intent = intent
         self.configuration = configuration
         self.paymentMethodTypes = paymentMethodTypes
-        self._experiment = PaymentMethodMessagingPromotionsExperiment(elementsSession: elementsSession)
+        let layout = configuration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
+        self._experiment = PaymentMethodMessagingPromotionsExperiment(elementsSession: elementsSession, layout: layout.rawValue)
         self.analyticsHelper = analyticsHelper
     }
 
     func fetchData() {
+        // PaymentMethodMessagingPromotionsHelper is not written to support doing multiple fetches.
+        // If at some point multiple fetches are intentionally supported then we need to decide whether the
+        //      stale promotions data gets cleared before the second fetch, what `duration` value is logged
+        //      in analytics if .promotion(for:) is called during the second fetch, etc.
+        guard fetchStartDate == nil else {
+            stpAssertionFailure("Multiple fetches not supported in PaymentMethodMessagingPromotionsHelper")
+            return
+        }
+
         // Check experiment group, and only proceed if in treatment group
         guard experiment.group == .treatment else {
             return
@@ -111,8 +124,12 @@ class PaymentMethodMessagingPromotionsHelper {
             paymentMethodTypes: supportedPaymentMethodTypes
         )
 
+        // Record fetch start time (used to measure duration until display attempt) and log that fetch began
+        fetchStartDate = Date()
+        analyticsHelper.logPaymentMethodMessagingFetchBegin()
+
         // Fetch data
-        Task { @MainActor in
+        fetchTask = Task { @MainActor in
             do {
                 let response = try await PaymentMethodMessagingElement.get(configuration: pmmeConfig)
                 promotions = response.paymentSheetPromotionContents(apiClient: configuration.apiClient)
@@ -136,6 +153,15 @@ class PaymentMethodMessagingPromotionsHelper {
             return nil
         }
         return promotions?[stpPaymentMethodType.identifier]
+    }
+
+    /// Logs an analytics event (NOT an exposure) indicating that payment method messaging data was attempted to be displayed.
+    /// - Parameter displayedSuccessfully: Whether the promotion content was available and actually rendered to the user.
+    ///   We could theoretically derive this from whether or not we have promotions data, but for safety/redundancy we require it to be explicitly passed.
+    /// The duration reported is the time between when the fetch was initiated and when this display attempt occurs.
+    func logDisplayedAnalytic(displayedSuccessfully: Bool) {
+        let duration = fetchStartDate.map { Date().timeIntervalSince($0) } ?? 0
+        analyticsHelper.logPaymentMethodMessagingDisplayed(duration: duration, displayedSuccessfully: displayedSuccessfully)
     }
 }
 

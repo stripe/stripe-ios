@@ -465,7 +465,7 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                         )
                         delegate?.didSelectAddress(details.address)
                     } catch {
-                        STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
+                      STPAnalyticsClient.sharedClient.logAddressAutocompleteError(
                             error: error,
                             sessionToken: sessionToken,
                             duration: elapsedTimeSinceAutocompleteStart,

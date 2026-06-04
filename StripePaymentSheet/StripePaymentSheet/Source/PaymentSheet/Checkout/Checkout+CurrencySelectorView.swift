@@ -238,7 +238,8 @@ extension Checkout.CurrencySelectorView: TwoOptionSelectorViewDelegate {
         // Disable interaction during the API call
         selectorView?.setEnabled(false)
 
-        Task {
+        Task { [weak self] in
+            guard let self else { return }
             do {
                 try await checkout.selectCurrency(id)
                 STPAnalyticsClient.sharedClient.log(
