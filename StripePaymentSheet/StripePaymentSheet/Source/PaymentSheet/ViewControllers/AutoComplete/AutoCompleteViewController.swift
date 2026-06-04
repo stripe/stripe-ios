@@ -395,19 +395,28 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
 
         let result = results[indexPath.row]
 
-        if let suggestion = result as? AddressSuggestion, let placeId = suggestion.placeId {
-            fetchTask = Task { @MainActor [weak self] in
-                guard let self else { return }
-                do {
-                    let details = try await configuration.apiClient.getAddressDetails(
-                        placeId: placeId,
-                        source: currentSource ?? "",
-                        displayTitle: suggestion.title,
-                        sessionToken: sessionToken
-                    )
-                    delegate?.didSelectAddress(details.address)
-                } catch {
+        if let suggestion = result as? AddressSuggestion {
+            // If the suggestion returned with a full address, complete with that address
+            if let address = suggestion.address {
+                delegate?.didSelectAddress(address)
+            } else { // If the suggestion did not return with a full address, it must have a place id and source to fetch the address details
+                guard let placeId = suggestion.placeId, let currentSource else {
                     delegate?.didSelectAddress(nil)
+                    return
+                }
+                fetchTask = Task { @MainActor [weak self] in
+                    guard let self else { return }
+                    do {
+                        let details = try await configuration.apiClient.getAddressDetails(
+                            placeId: placeId,
+                            source: currentSource,
+                            displayTitle: suggestion.title,
+                            sessionToken: sessionToken
+                        )
+                        delegate?.didSelectAddress(details.address)
+                    } catch {
+                        delegate?.didSelectAddress(nil)
+                    }
                 }
             }
         } else {
