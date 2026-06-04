@@ -68,6 +68,7 @@ public extension PaymentSheet.Appearance {
 extension STPElementsSession {
     static func _testValue(
         orderedPaymentMethodTypes: [STPPaymentMethodType] = [.card],
+        orderedPaymentMethodTypesAndWallets: [String] = [],
         unactivatedPaymentMethodTypes: [STPPaymentMethodType] = [],
         countryCode: String? = nil,
         merchantCountryCode: String? = nil,
@@ -89,7 +90,7 @@ extension STPElementsSession {
             sessionID: "test_123",
             configID: "test_config",
             orderedPaymentMethodTypes: orderedPaymentMethodTypes,
-            orderedPaymentMethodTypesAndWallets: [],
+            orderedPaymentMethodTypesAndWallets: orderedPaymentMethodTypesAndWallets,
             unactivatedPaymentMethodTypes: unactivatedPaymentMethodTypes,
             countryCode: countryCode,
             merchantCountryCode: merchantCountryCode,
