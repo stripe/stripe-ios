@@ -52,7 +52,7 @@ class InstantBankPaymentsControllerUITest: XCTestCase {
             .matching(NSPredicate(format: "label CONTAINS 'Email address'"))
             .firstMatch
             .waitForExistenceAndTap(timeout: 10)
-        let email = "linkpaymentcontrolleruitest-\(UUID().uuidString)@example.com"
+        let email = "instantbankpaymentscontrolleruitest-\(UUID().uuidString)@example.com"
         app.typeText(email + XCUIKeyboardKey.return.rawValue)
         app.textFields["Phone number"].tap()
         // the `XCUIKeyboardKey.return.rawValue` will automatically

@@ -14,7 +14,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
     @IBOutlet weak var paymentMethodButton: UIButton!
     @IBOutlet weak var paymentMethodImage: UIImageView!
     @IBOutlet weak var deferredSwitch: UISwitch!
-    var linkPaymentController: InstantBankPaymentsController!
+    var instantBankPaymentsController: InstantBankPaymentsController!
     static let baseEndpoint = "https://stp-mobile-playground-backend-v7.stripedemos.com"
     var backendCheckoutUrl: String {
         "\(ExampleLinkPaymentCheckoutViewController.baseEndpoint)/checkout"
@@ -66,9 +66,9 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
                                 }
                             }
 
-                    self.linkPaymentController = InstantBankPaymentsController(intentConfiguration: intentConfiguration, returnURL: returnURL, billingDetails: self.billingDetails)
+                    self.instantBankPaymentsController = InstantBankPaymentsController(intentConfiguration: intentConfiguration, returnURL: returnURL, billingDetails: self.billingDetails)
                 } else {
-                    self.linkPaymentController = InstantBankPaymentsController(paymentIntentClientSecret: paymentIntentClientSecret, returnURL: returnURL, billingDetails: self.billingDetails)
+                    self.instantBankPaymentsController = InstantBankPaymentsController(paymentIntentClientSecret: paymentIntentClientSecret, returnURL: returnURL, billingDetails: self.billingDetails)
                 }
 
                 self.updateButtons()
@@ -93,7 +93,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
     @objc
     func didTapPaymentMethodButton() {
         buyButton.isEnabled = false
-        linkPaymentController.present(from: self) { [weak self] result in
+        instantBankPaymentsController.present(from: self) { [weak self] result in
             switch result {
             case .success:
                 self?.updateButtons()
@@ -106,7 +106,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
 
     @objc
     func didTapCheckoutButton() {
-        linkPaymentController.confirm(from: self) { paymentResult in
+        instantBankPaymentsController.confirm(from: self) { paymentResult in
             switch paymentResult {
             case .completed:
                 self.displayAlert("Your order is confirmed!")
@@ -127,7 +127,7 @@ class ExampleLinkPaymentCheckoutViewController: UIViewController {
 
     func updateButtons() {
         // MARK: Update the payment method and buy buttons
-        if let paymentOption = linkPaymentController.paymentOption {
+        if let paymentOption = instantBankPaymentsController.paymentOption {
             paymentMethodButton.setTitle(paymentOption.label, for: .normal)
             paymentMethodButton.setTitleColor(.label, for: .normal)
             paymentMethodImage.image = paymentOption.image
