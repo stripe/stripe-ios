@@ -70,6 +70,9 @@ class PaymentSheetDefaultSPMUITests: PaymentSheetUITestCase {
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_load_succeeded" }.last?["has_default_payment_method"] as? Bool, false)
         XCTAssertEqual(analyticsLog.filter { $0[string: "event"] == "mc_complete_payment_newpm_success" }.last?["set_as_default"] as? Bool, true)
 
+        // Wait to make sure the default is set in the backend
+        sleep(5)
+
         // Reload the sheet
         app.buttons["Reload"].waitForExistenceAndTap()
         app.buttons["Present PaymentSheet"].waitForExistenceAndTap()
