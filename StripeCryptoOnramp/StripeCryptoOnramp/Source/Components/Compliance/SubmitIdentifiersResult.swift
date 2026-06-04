@@ -38,7 +38,7 @@ public struct SubmitIdentifiersResult: Decodable, Equatable {
 
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        completed = try container.decodeIfPresent(Bool.self, forKey: .completed) ?? true
+        completed = try container.decodeIfPresent(Bool.self, forKey: .completed) ?? false
         identifiers = try container.decodeIfPresent([ComplianceIdentifierRequirement].self, forKey: .identifiers) ?? []
         alternatives = try container.decodeIfPresent([ComplianceIdentifierAlternativeGroup].self, forKey: .alternatives) ?? []
         carfTinRequired = try container.decodeIfPresent(Bool.self, forKey: .carfTinRequired) ?? false
