@@ -188,7 +188,7 @@ import UIKit
         case .bankAccount(let bankAccount):
             let iconCode = PaymentSheetImageLibrary.bankIconCode(for: bankAccount.name)
             return PaymentSheetImageLibrary.bankIcon(for: iconCode, iconStyle: .filled)
-        case .unparsable:
+        case .generic:
             return Self.linkIcon
         }
     }
@@ -200,7 +200,7 @@ import UIKit
         }
 
         let type: PaymentMethodPreview.PaymentMethodType = switch selectedPaymentDetails.details {
-        case .card, .unparsable:
+        case .card, .generic:
             .card
         case .bankAccount:
             .bankAccount

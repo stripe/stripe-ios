@@ -330,15 +330,15 @@ final class FundingSourceDetailsTypeMappingTests: XCTestCase {
         XCTAssertEqual(fundingSource.detailsType.value, .bankAccount)
     }
 
-    func test_unknownType_transfersRawValue() {
+    func test_genericType_transfersRawValue() {
         let fundingSource = ParsedEnum<LinkSettings.FundingSource>(rawValue: "PIX")
         let detailsType = fundingSource.detailsType
-        XCTAssertNil(detailsType.value, "Unknown funding source should produce an unparsed details type")
-        XCTAssertEqual(detailsType.rawValue, "PIX", "Raw value should be preserved for unknown types")
+        XCTAssertNil(detailsType.value, "Generic funding source should produce an unparsed details type")
+        XCTAssertEqual(detailsType.rawValue, "PIX", "Raw value should be preserved for generic types")
     }
 
-    func test_unknownType_appearsInIntersectionWhenConsumerSessionAlsoAdvertisesIt() {
-        // If both the funding sources and the consumer session advertise an unknown type,
+    func test_genericType_appearsInIntersectionWhenConsumerSessionAlsoAdvertisesIt() {
+        // If both the funding sources and the consumer session advertise a generic type,
         // it should survive the intersection even though neither side can parse it.
         let fundingSourceDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [
             ParsedEnum(rawValue: "PIX"),
@@ -353,7 +353,7 @@ final class FundingSourceDetailsTypeMappingTests: XCTestCase {
         XCTAssertNil(supported.first?.value)
     }
 
-    func test_unknownType_isExcludedFromIntersectionWhenSessionDoesNotAdvertiseIt() {
+    func test_genericType_isExcludedFromIntersectionWhenSessionDoesNotAdvertiseIt() {
         let fundingSourceDetailsTypes: Set<ParsedEnum<ConsumerPaymentDetails.DetailsType>> = [
             ParsedEnum(rawValue: "PIX"),
             ParsedEnum(.card),

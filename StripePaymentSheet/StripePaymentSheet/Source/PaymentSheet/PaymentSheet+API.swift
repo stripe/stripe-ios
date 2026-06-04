@@ -957,7 +957,7 @@ private extension ConsumerPaymentDetails {
         switch details {
         case .bankAccount(let bankAccount):
             return bankAccount
-        case .card, .unparsable:
+        case .card, .generic:
             return nil
         }
     }

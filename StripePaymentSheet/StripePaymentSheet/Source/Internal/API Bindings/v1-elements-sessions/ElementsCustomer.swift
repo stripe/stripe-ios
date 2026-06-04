@@ -125,7 +125,7 @@ private extension STPPaymentMethod {
         case .bankAccount(let bankDetails):
             let bankAccount = LinkPaymentDetails.BankDetails(from: bankDetails, paymentDetailsID: paymentDetails.stripeID)
             self.linkPaymentDetails = .bankAccount(bankAccount)
-        case .unparsable:
+        case .generic:
             guard let genericDetails = LinkPaymentDetails.Generic(from: paymentDetails, paymentDetailsID: paymentDetails.stripeID) else {
                 break
             }

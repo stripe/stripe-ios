@@ -162,7 +162,7 @@ extension PayWithLinkViewController {
             switch selectedPaymentMethod?.details {
             case .card(let card):
                 return card.hasExpired
-            case .bankAccount, .unparsable, .none:
+            case .bankAccount, .generic, .none:
                 // Only cards have expiry date.
                 return false
             }
