@@ -39,7 +39,7 @@ enum CryptoOnrampAnalyticsEvent {
     case identityVerificationCompleted
     case kycInfoSubmitted
     case identifierRequirementsRetrieved
-    case identifiersSubmitted(valid: Bool)
+    case identifiersSubmitted(completed: Bool)
     case crsCarfDeclarationStarted
     case crsCarfDeclarationCompleted
     case kycInfoVerificationStarted
@@ -123,8 +123,8 @@ enum CryptoOnrampAnalyticsEvent {
              .kycInfoVerificationCompleted,
              .userLoggedOut:
             return [:]
-        case let .identifiersSubmitted(valid):
-            return ["valid": valid]
+        case let .identifiersSubmitted(completed):
+            return ["completed": completed]
         case let .linkAccountLookupCompleted(hasLinkAccount):
             return ["has_link_account": hasLinkAccount]
         case let .linkAuthorizationCompleted(consented):

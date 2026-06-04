@@ -8,7 +8,7 @@ import UIKit
 
 final class BNPLFormHeaderView: UIView {
     private let appearance: PaymentSheet.Appearance
-    let style: PaymentSheet.UserInterfaceStyle
+    let promotionsHelper: PaymentMethodMessagingPromotionsHelper
     let promotion: String
     let learnMoreText: String
     let infoUrl: URL
@@ -35,28 +35,18 @@ final class BNPLFormHeaderView: UIView {
         return textView
     }()
 
-    init(
+    init?(
         appearance: PaymentSheet.Appearance,
-        style: PaymentSheet.UserInterfaceStyle,
-        promotion: String,
-        learnMoreText: String,
-        infoUrl: URL
+        paymentMethod: PaymentSheet.PaymentMethodType,
+        promotionsHelper: PaymentMethodMessagingPromotionsHelper
     ) {
         self.appearance = appearance
-        self.style = style
-        self.promotion = promotion
-        self.learnMoreText = learnMoreText
-        self.infoUrl = infoUrl
+        self.promotionsHelper = promotionsHelper
+        guard let promotionContent = promotionsHelper.promotion(for: paymentMethod) else { return nil }
+        self.promotion = promotionContent.promotion
+        self.learnMoreText = promotionContent.learnMoreText
+        self.infoUrl = promotionContent.infoUrl
         super.init(frame: .zero)
-
-        switch style {
-        case .automatic:
-            break
-        case .alwaysLight:
-            overrideUserInterfaceStyle = .light
-        case .alwaysDark:
-            overrideUserInterfaceStyle = .dark
-        }
 
         addAndPinSubview(textView)
         isAccessibilityElement = false
@@ -67,19 +57,17 @@ final class BNPLFormHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func openInfoModal() {
-        PMMEInfoModal.present(infoUrl: infoUrl, style: pmmeStyle, from: self)
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+
+        // If we are moved on screen we log that the promotion was displayed successfully.
+        // When the form is moved off screen didMoveToWindow() will be called with window == nil and we do nothing in this case.
+        guard window != nil else { return }
+        promotionsHelper.logDisplayedAnalytic(displayedSuccessfully: true)
     }
 
-    private var pmmeStyle: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle {
-        switch style {
-        case .automatic:
-            return .automatic
-        case .alwaysLight:
-            return .alwaysLight
-        case .alwaysDark:
-            return .alwaysDark
-        }
+    private func openInfoModal() {
+        PMMEInfoModal.present(infoUrl: infoUrl, style: traitCollection.isDarkMode ? .alwaysDark : .alwaysLight, from: self)
     }
 }
 

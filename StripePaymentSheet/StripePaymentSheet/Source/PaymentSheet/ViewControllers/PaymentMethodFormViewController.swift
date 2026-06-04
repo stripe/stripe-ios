@@ -213,13 +213,16 @@ class PaymentMethodFormViewController: UIViewController {
         }
 
         // Create a basic AddressViewController.Configuration for the autocomplete
-        let addressConfiguration = AddressViewController.Configuration(
+        var addressConfiguration = AddressViewController.Configuration(
             appearance: configuration.appearance
         )
+        addressConfiguration.apiClient = configuration.apiClient
+        addressConfiguration.useAutocompleteEndpoints = configuration.useAutocompleteEndpoints
 
         let autoCompleteViewController = AutoCompleteViewController(
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
+            selectedCountry: addressSectionElement.selectedCountryCode,
             addressSpecProvider: AddressSpecProvider.shared,
             verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
         )
@@ -360,10 +363,10 @@ extension PaymentMethodFormViewController {
                 return .setup(setupIntent.stripeID)
             case .deferredIntent:
                 return .deferred(elementsSession.sessionID)
-            case .checkoutSession:
+            case .checkoutSession(let checkoutSession):
                 // This ID is used for financial incentive eligibility. Ideally we'd use the underlying
                 // paymentIntentId or setupIntentId, but those are not yet populated on CheckoutSession.
-                return .deferred(elementsSession.sessionID)
+                return .deferred(checkoutSession.id)
             }
         }()
 
@@ -540,7 +543,7 @@ extension PaymentMethodFormViewController {
                 amount = nil
                 currency = _currency
             }
-            client.collectBankAccountForDeferredIntent(
+            client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
@@ -550,10 +553,23 @@ extension PaymentMethodFormViewController {
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
                 from: viewController,
+                intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .checkoutSession:
-            delegate?.updateErrorLabel(for: PaymentSheetError.unknown(debugDescription: "US Bank Account is not yet supported by CheckoutSession."))
+        case .checkoutSession(let checkoutSession):
+            client.collectBankAccountForDeferredIntentOrCheckoutSession(
+                sessionId: elementsSession.sessionID,
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: checkoutSession.expectedAmount(),
+                currency: checkoutSession.currency,
+                onBehalfOf: nil,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                from: viewController,
+                intentType: .checkoutSession,
+                financialConnectionsCompletion: financialConnectionsCompletion
+            )
         }
     }
 
@@ -643,7 +659,7 @@ extension PaymentMethodFormViewController {
                 amount = nil
                 currency = _currency
             }
-            client.collectBankAccountForDeferredIntent(
+            client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
@@ -653,10 +669,23 @@ extension PaymentMethodFormViewController {
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
                 from: viewController,
+                intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .checkoutSession:
-            delegate?.updateErrorLabel(for: PaymentSheetError.unknown(debugDescription: "Instant Debits is not yet supported by CheckoutSession."))
+        case .checkoutSession(let checkoutSession):
+            client.collectBankAccountForDeferredIntentOrCheckoutSession(
+                sessionId: elementsSession.sessionID,
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: checkoutSession.expectedAmount(),
+                currency: checkoutSession.currency,
+                onBehalfOf: nil,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                from: viewController,
+                intentType: .checkoutSession,
+                financialConnectionsCompletion: financialConnectionsCompletion
+            )
         }
     }
 }
