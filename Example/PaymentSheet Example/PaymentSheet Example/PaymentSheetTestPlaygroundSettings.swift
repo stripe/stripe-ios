@@ -705,16 +705,16 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case off
     }
     enum PMMEPromotionLoadDelay: String, PickerEnum {
-        static let enumName: String = "PMME promo delay"
+        static let enumName: String = "PMM load delay"
         case off
-        case threeSeconds = "3 seconds"
+        case fiveSeconds = "5 seconds"
 
         var timeInterval: TimeInterval {
             switch self {
             case .off:
                 return 0
-            case .threeSeconds:
-                return 3
+            case .fiveSeconds:
+                return 5
             }
         }
     }
