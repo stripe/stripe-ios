@@ -17,7 +17,7 @@ import XCTest
 #if !os(visionOS)
 final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
     @MainActor
-    func testStartVerification429StopsAnimatingAndFinishesWithFailedResult() throws {
+    func testStartVerification429StopsAnimatingAndShowsError() throws {
         let originalMaxRetries = StripeAPI.maxRetries
         StripeAPI.maxRetries = 0
         defer { StripeAPI.maxRetries = originalMaxRetries }
@@ -26,28 +26,34 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
             LinkVerificationTestHelpers.makeStartVerificationRateLimitResponse()
         }
 
-        let finishedExpectation = expectation(description: "verification finished with failed result")
         let sut = makeSUT()
-        let delegate = MockLinkVerificationViewControllerDelegate { result in
-            switch result {
-            case .failed(let error):
-                XCTAssertEqual(error._stp_error_code, "consumer_verification_max_attempts_exceeded")
-                finishedExpectation.fulfill()
-            case .completed, .canceled, .switchAccount:
-                XCTFail("Expected start verification to fail")
-            }
+        let delegate = MockLinkVerificationViewControllerDelegate { _ in
+            XCTFail("Delegate should not be called — user must close the view manually")
         }
         sut.delegate = delegate
 
         sut.loadViewIfNeeded()
         sut.viewWillAppear(false)
 
-        wait(for: [finishedExpectation], timeout: 2.0)
+        let errorDisplayedExpectation = expectation(description: "error displayed")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            errorDisplayedExpectation.fulfill()
+        }
+        wait(for: [errorDisplayedExpectation], timeout: 2.0)
 
         let activityIndicator = try XCTUnwrap(
             sut.view.subviews.compactMap { $0 as? ActivityIndicator }.first
         )
         XCTAssertFalse(activityIndicator.isAnimating)
+
+        let verificationView = try XCTUnwrap(
+            sut.view.subviews.compactMap { $0 as? LinkVerificationView }.first
+        )
+        XCTAssertFalse(verificationView.isHidden)
+        XCTAssertEqual(
+            verificationView.errorMessage,
+            "Too many attempts. Please try again in a few minutes."
+        )
     }
 }
 

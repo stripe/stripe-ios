@@ -10,6 +10,7 @@ import XCTest
 
 @testable @_spi(STP) import StripeCore
 @testable @_spi(STP) import StripePaymentSheet
+@testable @_spi(STP) import StripePaymentsTestUtils
 
 @MainActor
 final class LinkInlineVerificationViewModelTests: STPNetworkStubbingTestCase {

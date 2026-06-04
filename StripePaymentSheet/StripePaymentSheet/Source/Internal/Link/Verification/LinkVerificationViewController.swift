@@ -156,7 +156,8 @@ final class LinkVerificationViewController: UIViewController {
             case .failure(let error):
                 STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
                 self?.activityIndicator.stopAnimating()
-                self?.finish(withResult: .failed(error))
+                self?.verificationView.isHidden = false
+                self?.verificationView.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
             }
         }
     }
