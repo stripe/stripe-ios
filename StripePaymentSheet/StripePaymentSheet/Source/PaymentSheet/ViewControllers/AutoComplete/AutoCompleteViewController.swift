@@ -412,7 +412,8 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             placeId: placeId,
                             source: currentSource,
                             displayTitle: suggestion.title,
-                            sessionToken: sessionToken
+                            sessionToken: sessionToken,
+                            apiKey: configuration.autocompleteApiKey
                         )
                         delegate?.didSelectAddress(details.address)
                     } catch {
