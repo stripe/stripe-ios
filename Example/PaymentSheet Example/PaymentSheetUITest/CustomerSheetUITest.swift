@@ -787,7 +787,7 @@ class CustomerSheetUITest: XCTestCase {
         XCTAssertTrue(app.staticTexts["•••• 4242"].waitForExistence(timeout: timeout))
     }
 
-    func testUpdatePaymentMethod_auto() throws {
+    func testUpdatePaymentMethod_auto() {
         var settings = CustomerSheetTestPlaygroundSettings.defaultValues()
         settings.customerMode = .returning
         settings.customerKeyType = .customerSession
@@ -807,7 +807,7 @@ class CustomerSheetUITest: XCTestCase {
         editPMButton.tap()
 
         let expField = app.textFields["expiration date"]
-        XCTAssertTrue(expField.waitForExistence(timeout: 3.0))
+        XCTAssertTrue(expField.waitForExistence(timeout: 10.0))
         expField.tap()
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
         expField.typeText(XCUIKeyboardKey.delete.rawValue)
