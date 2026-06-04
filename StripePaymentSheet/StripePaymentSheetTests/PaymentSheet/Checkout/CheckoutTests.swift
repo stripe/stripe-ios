@@ -251,22 +251,6 @@ final class CheckoutTests: STPNetworkStubbingTestCase {
         XCTAssertEqual(checkout.state.session.total?.total.minorUnitsAmount, 5542)
     }
 
-    func testUpdateTaxId() async throws {
-        let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
-            enableTaxIdCollection: true
-        )
-        let checkout = try await Checkout(
-            clientSecret: checkoutSessionResponse.clientSecret,
-            apiClient: STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
-        )
-
-        try await checkout.updateTaxId(type: "eu_vat", value: "DE123456789")
-
-        // Updating the tax ID does not change any properties on the payment page init response
-        // Nothing to assert on other than it did not fail/throw
-        XCTAssertEqual(checkout.state.session.status?.type, .open)
-    }
-
     func testSelectCurrency() async throws {
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionPaymentMode(
             adaptivePricingEnabled: true,

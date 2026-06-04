@@ -457,6 +457,20 @@ final class PaymentSheetAnalyticsHelper {
         log(event: .mcUpdateFinishedEmbedded, duration: duration, error: error, params: ["status": result.analyticValue])
     }
 
+    func logPaymentMethodMessagingFetchBegin() {
+        log(event: .paymentMethodMessagingFetchBegin)
+    }
+
+    func logPaymentMethodMessagingDisplayed(duration: TimeInterval, displayedSuccessfully: Bool) {
+        log(
+            event: .paymentMethodMessagingDisplayed,
+            duration: duration,
+            params: [
+                "displayed_successfully": displayedSuccessfully,
+            ]
+        )
+    }
+
     func log(
         event: STPAnalyticEvent,
         duration: TimeInterval? = nil,
