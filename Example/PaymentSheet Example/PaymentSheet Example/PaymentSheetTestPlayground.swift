@@ -107,6 +107,13 @@ struct PaymentSheetTestPlayground: View {
 
                     Group {
                         SearchableSection(
+                            title: "PMME Testing",
+                            searchText: $searchText
+                        ) {
+                            SearchableSettingView(setting: pmmePromotionLoadDelayBinding, searchText: $searchText)
+                        }
+
+                        SearchableSection(
                             title: "Backend",
                             searchText: $searchText,
                             headerButtons: {
@@ -328,6 +335,14 @@ struct PaymentSheetTestPlayground: View {
             return playgroundController.settings.customCtaLabel ?? ""
         } set: { newString in
             playgroundController.settings.customCtaLabel = (newString != "") ? newString : nil
+        }
+    }
+
+    var pmmePromotionLoadDelayBinding: Binding<PaymentSheetTestPlaygroundSettings.PMMEPromotionLoadDelay> {
+        Binding<PaymentSheetTestPlaygroundSettings.PMMEPromotionLoadDelay> {
+            return playgroundController.settings.pmmePromotionLoadDelay ?? .off
+        } set: { newValue in
+            playgroundController.settings.pmmePromotionLoadDelay = newValue
         }
     }
 

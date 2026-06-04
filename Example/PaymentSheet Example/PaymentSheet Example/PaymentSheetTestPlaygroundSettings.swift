@@ -704,6 +704,20 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on
         case off
     }
+    enum PMMEPromotionLoadDelay: String, PickerEnum {
+        static let enumName: String = "PMME promo delay"
+        case off
+        case threeSeconds = "3 seconds"
+
+        var timeInterval: TimeInterval {
+            switch self {
+            case .off:
+                return 0
+            case .threeSeconds:
+                return 3
+            }
+        }
+    }
 
     // MARK: - Checkout Session enums
     enum CSAllowPromotionCodes: String, PickerEnum {
@@ -813,6 +827,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var cardFundingAcceptance: CardFundingAcceptance
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
     var termsDisplay: PaymentMethodTermsDisplay
+    var pmmePromotionLoadDelay: PMMEPromotionLoadDelay?
     var useAutocompleteEndpoints: UseAutocompleteEndpoints
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
@@ -884,6 +899,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             cardFundingAcceptance: .all,
             opensCardScannerAutomatically: .off,
             termsDisplay: .unset,
+            pmmePromotionLoadDelay: .off,
             useAutocompleteEndpoints: .off
         )
     }

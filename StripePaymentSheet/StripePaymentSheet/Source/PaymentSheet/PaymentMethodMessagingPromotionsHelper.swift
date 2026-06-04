@@ -9,6 +9,24 @@ import Foundation
 @_spi(STP) import StripeCore
 @_spi(STP) import StripePayments
 
+@_spi(STP) public enum PaymentSheetTestHooks {
+    private static let paymentMethodMessagingPromotionLoadDelayLock = NSLock()
+    private static var _paymentMethodMessagingPromotionLoadDelay: TimeInterval = 0
+
+    @_spi(STP) public static var paymentMethodMessagingPromotionLoadDelay: TimeInterval {
+        get {
+            paymentMethodMessagingPromotionLoadDelayLock.lock()
+            defer { paymentMethodMessagingPromotionLoadDelayLock.unlock() }
+            return _paymentMethodMessagingPromotionLoadDelay
+        }
+        set {
+            paymentMethodMessagingPromotionLoadDelayLock.lock()
+            defer { paymentMethodMessagingPromotionLoadDelayLock.unlock() }
+            _paymentMethodMessagingPromotionLoadDelay = max(0, newValue)
+        }
+    }
+}
+
 class PaymentMethodMessagingPromotionsHelper {
 
     static let supportedPaymentMethods: [PaymentSheet.PaymentMethodType] = [
@@ -131,6 +149,10 @@ class PaymentMethodMessagingPromotionsHelper {
         // Fetch data
         fetchTask = Task { @MainActor in
             do {
+                let delay = PaymentSheetTestHooks.paymentMethodMessagingPromotionLoadDelay
+                if delay > 0 {
+                    try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                }
                 let response = try await PaymentMethodMessagingElement.get(configuration: pmmeConfig)
                 promotions = response.paymentSheetPromotionContents(apiClient: configuration.apiClient)
             } catch {

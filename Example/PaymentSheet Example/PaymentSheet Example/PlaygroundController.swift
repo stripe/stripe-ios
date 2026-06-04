@@ -819,6 +819,7 @@ import UIKit
 extension PlaygroundController {
     @objc
     func load(reinitializeControllers: Bool = false) {
+        PaymentSheetTestHooks.paymentMethodMessagingPromotionLoadDelay = settings.pmmePromotionLoadDelay?.timeInterval ?? 0
         loadLastSavedCustomer()
         serializeSettingsToNSUserDefaults()
         loadBackend(reinitializeControllers: reinitializeControllers)
