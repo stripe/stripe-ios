@@ -320,4 +320,3 @@ public final class Checkout: ObservableObject {
     }
 
 }
-
