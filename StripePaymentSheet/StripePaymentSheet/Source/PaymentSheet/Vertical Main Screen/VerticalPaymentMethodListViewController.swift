@@ -250,7 +250,10 @@ class VerticalPaymentMethodListViewController: UIViewController {
 
     func didTap(rowButton: RowButton, selection: RowButtonType) {
         guard let delegate else { return }
-        let shouldSelect = !delegate.willDisplayForm(rowButton.type)
+        // We set shouldSelect to be false if the selection is not actually changing to avoid de-selecting and then re-selecting the row
+        // We intentionally do not guard / exit early on this condition to preserve the call to delegate.didTapPaymentMethod()
+        //      and the analytics logging it does, which historically has been called in this scenario.
+        let shouldSelect = !delegate.willDisplayForm(rowButton.type) && currentSelection != selection
         if shouldSelect {
             // Deselect previous row
             rowButtons.forEach {
