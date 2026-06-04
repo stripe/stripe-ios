@@ -5,8 +5,8 @@
 //  Created by Mat Schmid on 7/23/25.
 //
 
-import StripeCoreTestUtils
 @_spi(STP)@testable import StripeCore
+import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentSheet
 import SwiftUI
 import UIKit
