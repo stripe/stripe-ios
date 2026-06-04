@@ -165,3 +165,4 @@ To format modified files automatically, you can use `ci_scripts/format_modified_
 ## Licenses
 
 - [Stripe iOS SDK License](LICENSE)
+- StripeCardScan and StripeIdentity use LiteRT in Google Play services. When you use StripeCardScan or StripeIdentity, LiteRT in Google Play services may send metrics about the utilizations of the APIs in your app to Google. For more information, visit the [LiteRT in Google Play services terms of service](https://ai.google.dev/edge/litert/android/play_services#tos).
