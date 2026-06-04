@@ -475,7 +475,7 @@ extension PaymentMethodMessagingPromotionsHelper {
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [],
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
-        )
+        )!
     }
 
     static func _testValueInTreatment() -> PaymentMethodMessagingPromotionsHelper {
@@ -493,7 +493,7 @@ extension PaymentMethodMessagingPromotionsHelper {
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [],
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
-        )
+        )!
     }
 }
 

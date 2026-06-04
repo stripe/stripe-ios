@@ -64,7 +64,7 @@ class PaymentMethodMessagingPromotionsHelper {
         experiment.group == .treatment
     }
 
-    init(
+    init?(
         elementsSession: STPElementsSession,
         intent: Intent,
         configuration: PaymentElementConfiguration,
@@ -76,7 +76,13 @@ class PaymentMethodMessagingPromotionsHelper {
         self.configuration = configuration
         self.paymentMethodTypes = paymentMethodTypes
         let layout = configuration.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes)
-        self._experiment = PaymentMethodMessagingPromotionsExperiment(elementsSession: elementsSession, layout: layout.rawValue)
+        guard let exp = PaymentMethodMessagingPromotionsExperiment(
+            elementsSession: elementsSession,
+            layout: layout.rawValue
+        ) else {
+            return nil
+        }
+        self._experiment = exp
         self.analyticsHelper = analyticsHelper
     }
 
