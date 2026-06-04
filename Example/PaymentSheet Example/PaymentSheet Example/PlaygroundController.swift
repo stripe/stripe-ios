@@ -266,9 +266,9 @@ import UIKit
         }
 
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
+        configuration.termsDisplay = cardTermsDisplay
         configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
         configuration.autocompleteApiKey = settings.autocompleteApiKey
-        configuration.termsDisplay = cardTermsDisplay
         return configuration
     }
 
@@ -377,6 +377,8 @@ import UIKit
 
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
         configuration.termsDisplay = cardTermsDisplay
+        configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
+        configuration.autocompleteApiKey = settings.autocompleteApiKey
 
         return configuration
     }
