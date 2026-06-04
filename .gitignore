@@ -47,5 +47,8 @@ Stripe.xcworkspace/xcuserdata/*
 .claude/settings.local.json
 .claude/scheduled_tasks.lock
 
+# Local environment variables (tokens, keys)
+.env
+
 # Simulator configuration cache
 .stripe-ios-config
