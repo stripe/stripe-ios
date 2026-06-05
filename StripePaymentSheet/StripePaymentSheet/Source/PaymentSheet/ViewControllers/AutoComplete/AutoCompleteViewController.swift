@@ -275,7 +275,7 @@ class AutoCompleteViewController: UIViewController {
     private func setResults(_ newResults: [AddressSearchResult], source: String?, requestLatency: TimeInterval? = nil) {
         currentSource = source
         results = newResults
-        if !newResults.isEmpty, let source {
+        if let source {
             STPAnalyticsClient.sharedClient.logAddressAutocompleteSuggestions(
                 characterCount: autoCompleteLine.text.count,
                 sessionToken: sessionToken,
