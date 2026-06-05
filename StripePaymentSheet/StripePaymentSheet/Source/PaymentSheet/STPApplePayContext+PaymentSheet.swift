@@ -62,7 +62,7 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             return setupIntent.clientSecret
         case .checkout(let checkout):
             return try await handleCheckoutSessionApplePay(
-                checkoutSession: checkout.stpSession,
+                checkout: checkout,
                 paymentMethod: paymentMethod,
                 paymentInformation: paymentInformation,
                 context: context
@@ -169,11 +169,13 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
 
     /// Handles Apple Pay confirmation for CheckoutSession by calling the confirm API with the payment method.
     private func handleCheckoutSessionApplePay(
-        checkoutSession: STPCheckoutSession,
+        checkout: Checkout,
         paymentMethod: StripeAPI.PaymentMethod,
         paymentInformation: PKPayment,
         context: STPApplePayContext
     ) async throws -> String {
+        let checkoutSession: STPCheckoutSession = checkout.stpSession
+
         // 1. Build client attribution metadata
         let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
             intent: intent,
@@ -198,8 +200,8 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             clientAttributionMetadata: clientAttributionMetadata
         )
 
-        // 5. Update the Checkout session with the latest response
-        checkoutSession.onConfirmed?(response)
+        // 5. Update the Checkout instance with the confirmed session response
+        await checkout.updateSession(response)
 
         // 6. Return client secret based on checkout session mode
         return try response.clientSecret(for: checkoutSession.mode)

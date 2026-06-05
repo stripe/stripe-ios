@@ -21,7 +21,7 @@ extension PaymentSheet {
         paymentHandler: STPPaymentHandler,
         elementsSession: STPElementsSession
     ) async -> PaymentSheetResult {
-        let checkoutSession = checkout.stpSession!
+        let checkoutSession: STPCheckoutSession = checkout.stpSession
         do {
             let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
                 intent: .checkout(checkout),
@@ -83,8 +83,8 @@ extension PaymentSheet {
                 clientAttributionMetadata: clientAttributionMetadata
             )
 
-            // Update the Checkout session with the latest response
-            checkoutSession.onConfirmed?(response)
+            // Update the Checkout instance with the confirmed session response
+            checkout.updateSession(response)
 
             // 4. Handle response based on checkout session mode
             return try await handleCheckoutSessionConfirmResponse(

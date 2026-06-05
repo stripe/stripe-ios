@@ -105,9 +105,6 @@ public final class Checkout: ObservableObject {
             await flagImageManager.prefetchFlagImages(for: checkoutSession)
             self.stpSession = checkoutSession
             self.state = .loaded(checkoutSession.makePublicSession())
-            checkoutSession.onConfirmed = { [weak self] response in
-                self?.updateSession(response)
-            }
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
@@ -126,9 +123,6 @@ public final class Checkout: ObservableObject {
         await flagImageManager.prefetchFlagImages(for: session)
         self.stpSession = session
         self.state = .loaded(session.makePublicSession())
-        session.onConfirmed = { [weak self] response in
-            self?.updateSession(response)
-        }
     }
 
     #if ENABLE_STPASSERTIONFAILURE
