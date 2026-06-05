@@ -5,6 +5,7 @@ MINOR
 
 ### PaymentSheet
 * [Changed] Renamed `LinkPaymentController` to `InstantBankPaymentsController`.
+* [Changed] Link bank account display strings now include the last 4 digits in `LinkController.PaymentMethodPreview.sublabel` and `PaymentSheet.FlowController.PaymentOptionDisplayData.labels.sublabel`, matching the existing card behavior.
 
 ### CryptoOnramp (Alpha)
 * [Changed] Updated EU compliance identifier APIs to match the latest backend contract, including CRS/CARF TIN requirements and `SubmitIdentifiersResult.completed`.
