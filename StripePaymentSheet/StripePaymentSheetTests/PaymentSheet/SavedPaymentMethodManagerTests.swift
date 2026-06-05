@@ -131,7 +131,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkoutSession(checkoutSession)
+            intent: .checkout(Checkout(session: checkoutSession))
         )
         sut.detach(paymentMethod: paymentMethod)
 

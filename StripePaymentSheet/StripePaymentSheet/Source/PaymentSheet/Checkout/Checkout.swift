@@ -48,7 +48,7 @@ public final class Checkout: ObservableObject {
     /// Internal callers that need `STPCheckoutSession`-specific data (e.g.
     /// `allResponseFields`, address overrides, the expanded intent objects)
     /// should read this rather than casting from `state.session`.
-    private(set) var stpSession: STPCheckoutSession?
+    nonisolated(unsafe) private(set) var stpSession: STPCheckoutSession!
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
@@ -127,6 +127,17 @@ public final class Checkout: ObservableObject {
             self?.updateSession(response)
         }
     }
+
+    #if ENABLE_STPASSERTIONFAILURE
+    /// Synchronous test-only initializer that wraps a pre-loaded session without async work.
+    nonisolated init(session: STPCheckoutSession) {
+        self.clientSecret = ""
+        self.configuration = Configuration()
+        self.apiClient = .shared
+        self.stpSession = session
+        self._state = Published(wrappedValue: .loaded(session.makePublicSession()))
+    }
+    #endif
 
     // MARK: - Pending Operations
 

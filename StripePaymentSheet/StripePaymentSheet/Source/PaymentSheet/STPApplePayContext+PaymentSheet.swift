@@ -60,9 +60,9 @@ private class ApplePayContextClosureDelegate: NSObject, ApplePayContextDelegate 
             return paymentIntent.clientSecret
         case .setupIntent(let setupIntent):
             return setupIntent.clientSecret
-        case .checkoutSession(let checkoutSession):
+        case .checkout(let checkout):
             return try await handleCheckoutSessionApplePay(
-                checkoutSession: checkoutSession,
+                checkoutSession: checkout.stpSession,
                 paymentMethod: paymentMethod,
                 paymentInformation: paymentInformation,
                 context: context
@@ -365,11 +365,11 @@ extension STPApplePayContext {
         if let paymentSummaryItems = applePay.paymentSummaryItems {
             // Use the merchant supplied paymentSummaryItems
             paymentRequest.paymentSummaryItems = paymentSummaryItems
-        } else if case .checkoutSession(let session) = intent,
-                  !session.lineItems.isEmpty,
-                  let total = session.total {
+        } else if case .checkout(let checkout) = intent,
+                  !checkout.stpSession.lineItems.isEmpty,
+                  let total = checkout.stpSession.total {
             paymentRequest.paymentSummaryItems = STPApplePayContext.makeApplePayPaymentSummaryItems(
-                lineItems: session.lineItems,
+                lineItems: checkout.stpSession.lineItems,
                 total: total,
                 totalLabel: label,
                 currency: intent.currency

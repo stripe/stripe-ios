@@ -14,16 +14,17 @@ extension PaymentSheet {
     /// Confirms a checkout session with a new payment method
     @MainActor
     static func handleCheckoutSessionConfirmation(
-        checkoutSession: STPCheckoutSession,
+        checkout: Checkout,
         confirmType: ConfirmPaymentMethodType,
         configuration: PaymentElementConfiguration,
         authenticationContext: STPAuthenticationContext,
         paymentHandler: STPPaymentHandler,
         elementsSession: STPElementsSession
     ) async -> PaymentSheetResult {
+        let checkoutSession = checkout.stpSession!
         do {
             let clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadata(
-                intent: .checkoutSession(checkoutSession),
+                intent: .checkout(checkout),
                 elementsSession: elementsSession
             )
 
@@ -43,7 +44,6 @@ extension PaymentSheet {
                 paymentMethodType = params.type
                 paymentMethodOptions = paymentOptions
                 params.clientAttributionMetadata = clientAttributionMetadata
-                // Ensure email is set on the payment method — fall back to the checkout session's customer email
                 if params.billingDetails?.email == nil, let customerEmail = checkoutSession.email {
                     params.nonnil_billingDetails.email = customerEmail
                 }
@@ -59,7 +59,6 @@ extension PaymentSheet {
             let savePaymentMethod: Bool? = {
                 switch checkoutSession.mode {
                 case .setup:
-                    // setup mode does not send the save_payment_method param
                     return nil
                 case .payment:
                     return confirmType.savePaymentMethodForCheckoutSession
@@ -82,7 +81,6 @@ extension PaymentSheet {
                 clientAttributionMetadata: clientAttributionMetadata
             )
 
-            // Update the Checkout session with the latest response
             checkoutSession.onConfirmed?(response)
 
             // 4. Handle response based on checkout session mode
