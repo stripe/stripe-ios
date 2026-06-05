@@ -28,7 +28,7 @@ final class LinkInlineVerificationViewModelTests: STPNetworkStubbingTestCase {
         await sut.startVerification()
 
         let error = try XCTUnwrap(sut.startVerificationError as NSError?)
-        XCTAssertEqual(error._stp_error_code, "consumer_verification_max_attempts_exceeded")
+        XCTAssertEqual(error._stp_error_code, LinkUtils.ConsumerErrorCode.consumerVerificationMaxAttemptsExceeded.rawValue)
     }
 }
 

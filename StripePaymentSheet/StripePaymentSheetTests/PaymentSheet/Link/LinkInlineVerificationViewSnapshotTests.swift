@@ -68,6 +68,7 @@ class LinkInlineVerificationViewSnapshotTests: STPSnapshotTestCase {
         )
         let vc = UIHostingController(rootView: verificationView)
 
+        // Need to host the SwiftUI view in a window for iOSSnapshotTestCase to work:
         let window = UIWindow(frame: frame)
         window.rootViewController = vc
         window.makeKeyAndVisible()
@@ -78,8 +79,8 @@ class LinkInlineVerificationViewSnapshotTests: STPSnapshotTestCase {
     private func makeStartVerificationRateLimitError() -> NSError {
         NSError.stp_error(
             errorType: "invalid_request_error",
-            stripeErrorCode: "consumer_verification_max_attempts_exceeded",
-            stripeErrorMessage: "Too many attempts. Please try again in a few minutes.",
+            stripeErrorCode: LinkUtils.ConsumerErrorCode.consumerVerificationMaxAttemptsExceeded.rawValue,
+            stripeErrorMessage: LinkUtils.ConsumerErrorCode.consumerVerificationMaxAttemptsExceeded.localizedDescription,
             errorParam: nil,
             declineCode: nil,
             intent: nil,

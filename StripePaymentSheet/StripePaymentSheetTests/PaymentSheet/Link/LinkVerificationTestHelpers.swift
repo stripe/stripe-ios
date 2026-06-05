@@ -5,13 +5,14 @@
 
 import OHHTTPStubs
 import OHHTTPStubsSwift
+@testable import StripePaymentSheet
 
 enum LinkVerificationTestHelpers {
     static func makeStartVerificationRateLimitResponse() -> HTTPStubsResponse {
         let response: [String: Any] = [
             "error": [
-                "message": "Too many attempts. Please try again in a few minutes.",
-                "code": "consumer_verification_max_attempts_exceeded",
+                "message": LinkUtils.ConsumerErrorCode.consumerVerificationMaxAttemptsExceeded.localizedDescription,
+                "code": LinkUtils.ConsumerErrorCode.consumerVerificationMaxAttemptsExceeded.rawValue,
                 "type": "invalid_request_error",
             ],
         ]

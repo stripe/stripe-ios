@@ -52,7 +52,7 @@ final class LinkVerificationViewControllerTests: STPNetworkStubbingTestCase {
         XCTAssertFalse(verificationView.isHidden)
         XCTAssertEqual(
             verificationView.errorMessage,
-            "Too many attempts. Please try again in a few minutes."
+            LinkUtils.ConsumerErrorCode.consumerVerificationMaxAttemptsExceeded.localizedDescription
         )
     }
 }
