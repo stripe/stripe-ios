@@ -92,7 +92,7 @@ import UIKit
     }
 
     /// The intent for which the `LinkController` collects a payment method.
-    @_spi(STP) @_spi(LinkControllerPreview) public enum Mode {
+    @_spi(STP) public enum Mode {
         case payment
         case paymentAndSetupFutureUse
         case setup
@@ -286,21 +286,19 @@ import UIKit
         }
     }
 
-    /// Creates a `LinkController` for the specified `mode`.
+    /// Creates a `LinkController` with the specified preview `configuration`.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
-    /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
     /// - Parameter configuration: Configuration for Link behavior and content. If not specified, default behavior is used.
     /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
     @_spi(LinkControllerPreview) public static func create(
         apiClient: STPAPIClient = .shared,
-        mode: LinkController.Mode,
         configuration: LinkConfiguration = .init(),
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
         self.create(
             apiClient: apiClient,
-            mode: mode,
+            mode: .setup,
             linkConfiguration: configuration,
             completion: completion
         )
@@ -1300,19 +1298,17 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
 
 @_spi(LinkControllerPreview) public extension LinkController {
 
-    /// Creates a `LinkController` for the specified `mode`.
+    /// Creates a `LinkController` with the specified preview `configuration`.
     ///
     /// - Parameter apiClient: The `STPAPIClient` instance for this controller. Defaults to `.shared`.
-    /// - Parameter mode: The mode in which the Link payment method controller should operate, either `payment` or `setup`.
     /// - Parameter configuration: Configuration for Link behavior and content. If not specified, default behavior is used.
     /// - Returns: A `LinkController` if successful, or throws an error if the creation failed.
     static func create(
         apiClient: STPAPIClient = .shared,
-        mode: LinkController.Mode,
         configuration: LinkConfiguration = .init()
     ) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
-            create(apiClient: apiClient, mode: mode, configuration: configuration) { result in
+            create(apiClient: apiClient, configuration: configuration) { result in
                 switch result {
                 case .success(let controller):
                     continuation.resume(returning: controller)
