@@ -1,5 +1,5 @@
 //
-//  AutocompleteResponse.swift
+//  AddressAutocompleteModels.swift
 //  StripePaymentSheet
 //
 //  Created by Joyce Qin on 4/20/26.
@@ -21,7 +21,7 @@ private extension String {
     }
 }
 
-class AutocompleteResponse: NSObject {
+class AddressAutocompleteResponse: NSObject {
 
     /// The list of autocomplete suggestions
     let suggestions: [AddressSuggestion]
@@ -44,7 +44,7 @@ class AutocompleteResponse: NSObject {
 }
 
 // MARK: - STPAPIResponseDecodable
-extension AutocompleteResponse: STPAPIResponseDecodable {
+extension AddressAutocompleteResponse: STPAPIResponseDecodable {
     static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
         guard let dict = response,
               let suggestionsDict = dict["suggestions"] as? [[AnyHashable: Any]],
@@ -55,7 +55,7 @@ extension AutocompleteResponse: STPAPIResponseDecodable {
 
         let suggestions = suggestionsDict.compactMap { AddressSuggestion.decodedObject(fromAPIResponse: $0) }
 
-        return AutocompleteResponse(
+        return AddressAutocompleteResponse(
             suggestions: suggestions,
             source: source,
             allResponseFields: dict
@@ -149,6 +149,48 @@ extension AddressSuggestion: STPAPIResponseDecodable {
             subtitle: subtitle,
             matches: matches,
             placeId: dict["place_id"] as? String,
+            address: address,
+            allResponseFields: dict
+        ) as? Self
+    }
+}
+
+class AddressDetailsResponse: NSObject {
+
+    /// The pre-filled address components.
+    let address: PaymentSheet.Address
+
+    /// The raw API response used to create this object.
+    let allResponseFields: [AnyHashable: Any]
+
+    private init(
+        address: PaymentSheet.Address,
+        allResponseFields: [AnyHashable: Any]
+    ) {
+        self.address = address
+        self.allResponseFields = allResponseFields
+    }
+}
+
+// MARK: - STPAPIResponseDecodable
+extension AddressDetailsResponse: STPAPIResponseDecodable {
+    static func decodedObject(fromAPIResponse response: [AnyHashable: Any]?) -> Self? {
+        guard let dict = response,
+              let addressDict = dict["address"] as? [AnyHashable: Any]
+        else {
+            return nil
+        }
+
+        let address = PaymentSheet.Address(
+            city: addressDict["city"] as? String,
+            country: addressDict["country"] as? String,
+            line1: addressDict["line1"] as? String,
+            line2: addressDict["line2"] as? String,
+            postalCode: addressDict["postal_code"] as? String,
+            state: addressDict["state"] as? String
+        )
+
+        return AddressDetailsResponse(
             address: address,
             allResponseFields: dict
         ) as? Self

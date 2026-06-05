@@ -40,13 +40,9 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     }
 
     private var declarationBaseAttributes: [NSAttributedString.Key: Any] {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineHeightMultiple = 1.2
-
-        return [
+        [
             .font: LinkUI.font(forTextStyle: .body),
             .foregroundColor: UIColor.linkTextPrimary,
-            .paragraphStyle: paragraphStyle,
         ]
     }
 
@@ -121,9 +117,24 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         }
 
         attributedString.addAttributes(declarationBaseAttributes, range: fullRange)
+
+        // Processing the HTML via NSAttributedString applies paragraph style properties. We need to apply our line height multiple to each of these
+        // paragraph styles individually, as setting the paragraph style for the entire range will overwrite other formatting aspects from the HTML,
+        // such as lists/bullet points and indentation.
+        var paragraphStyles: [(style: NSMutableParagraphStyle, range: NSRange)] = []
+        attributedString.enumerateAttribute(.paragraphStyle, in: fullRange) { value, range, _ in
+            let paragraphStyle = (value as? NSParagraphStyle)?.mutableCopy() as? NSMutableParagraphStyle ?? NSMutableParagraphStyle()
+            paragraphStyle.lineHeightMultiple = 1.2
+            paragraphStyles.append((paragraphStyle, range))
+        }
+
+        paragraphStyles.forEach { style, range in
+            attributedString.addAttribute(.paragraphStyle, value: style, range: range)
+        }
         linkRanges.forEach { range in
             attributedString.addAttributes(declarationLinkAttributes, range: range)
         }
+
         return attributedString
     }
 
