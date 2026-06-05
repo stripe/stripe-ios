@@ -3,6 +3,9 @@ MINOR
 
 ## X.Y.Z - changes pending release
 
+### PaymentSheet
+* [Fixed] The Link verification flow no longer shows an indefinite loading state when encountering rate limit errors.
+
 ### CryptoOnramp (Alpha)
 * [Changed] Updated EU compliance identifier APIs to match the latest backend contract, including CRS/CARF TIN requirements and `SubmitIdentifiersResult.completed`.
 * [Added] Added known compliance identifier types for Spain NIF (`es_nif`) and France NIR (`fr_nir`).
