@@ -130,12 +130,12 @@ public final class Checkout: ObservableObject {
 
     #if ENABLE_STPASSERTIONFAILURE
     /// Synchronous test-only initializer that wraps a pre-loaded session without async work.
-    nonisolated init(session: STPCheckoutSession) {
+    init(session: STPCheckoutSession) {
         self.clientSecret = ""
         self.configuration = Configuration()
         self.apiClient = .shared
         self.stpSession = session
-        self._state = Published(wrappedValue: .loaded(session.makePublicSession()))
+        self.state = .loaded(session.makePublicSession())
     }
     #endif
 

@@ -10,6 +10,7 @@ import StripeCoreTestUtils
 @testable @_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 import XCTest
 
+@MainActor
 class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
 
     var paymentMethods: [STPPaymentMethod]!

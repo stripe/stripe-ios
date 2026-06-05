@@ -12,6 +12,7 @@
 import StripePaymentsObjcTestUtils
 import XCTest
 
+@MainActor
 class STPCheckoutSessionTest: XCTestCase {
     private func makeCheckoutSession(_ overrides: [String: Any]) -> STPCheckoutSession {
         var json: [String: Any] = [
