@@ -1,5 +1,5 @@
 //
-//  LinkPaymentController.swift
+//  InstantBankPaymentsController.swift
 //  StripePaymentSheet
 //
 //  Created by Bill Meltsner on 12/9/22.
@@ -12,9 +12,9 @@ import AuthenticationServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// `LinkPaymentController` encapsulates the Link payment flow, allowing you to let your customers pay with their Link account.
+/// `InstantBankPaymentsController` encapsulates the Link payment flow, allowing you to let your customers pay with their Link account.
 /// This feature is currently invite-only. To accept payments, [use the Mobile Payment Element.](https://stripe.com/docs/payments/accept-a-payment?platform=ios&ui=payment-sheet)
-@_spi(LinkOnly) public class LinkPaymentController: NSObject {
+@_spi(LinkOnly) public class InstantBankPaymentsController: NSObject {
     private let mode: PaymentSheet.InitializationMode
     private let configuration: PaymentSheet.Configuration
 
@@ -69,7 +69,7 @@ import UIKit
         return vc
     }()
 
-    /// Initializes a new `LinkPaymentController` instance.
+    /// Initializes a new `InstantBankPaymentsController` instance.
     /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
     /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
     /// - Parameter returnURL: A URL that redirects back to your app for flows that complete authentication in another app (such as a bank app).
@@ -78,7 +78,7 @@ import UIKit
         self.init(intentSecret: .paymentIntentClientSecret(paymentIntentClientSecret), returnURL: returnURL, billingDetails: billingDetails)
     }
 
-    /// Initializes a new `LinkPaymentController` instance.
+    /// Initializes a new `InstantBankPaymentsController` instance.
     /// - Parameter setupIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe SetupIntent object
     /// - Parameter returnURL: A URL that redirects back to your app for flows that complete authentication in another app (such as a bank app).
     /// - Parameter billingDetails: Any information about the customer you've already collected.
@@ -86,9 +86,8 @@ import UIKit
         self.init(intentSecret: .setupIntentClientSecret(setupIntentClientSecret), returnURL: returnURL, billingDetails: billingDetails)
     }
 
-    /// Initializes a new `LinkPaymentController` instance.
-    /// - Parameter paymentIntentClientSecret: The [client secret](https://stripe.com/docs/api/payment_intents/object#payment_intent_object-client_secret) of a Stripe PaymentIntent object
-    /// - Note: This can be used to complete a payment - don't log it, store it, or expose it to anyone other than the customer.
+    /// Initializes a new `InstantBankPaymentsController` instance.
+    /// - Parameter intentConfiguration: The `IntentConfiguration` for the payment
     /// - Parameter returnURL: A URL that redirects back to your app for flows that complete authentication in another app (such as a bank app).
     /// - Parameter billingDetails: Any information about the customer you've already collected.
     @_spi(LinkOnly) public convenience init(intentConfiguration: PaymentSheet.IntentConfiguration, returnURL: String? = nil, billingDetails: PaymentSheet.BillingDetails? = nil) {
@@ -103,13 +102,17 @@ import UIKit
             configuration.defaultBillingDetails = billingDetails
         }
         self.configuration = configuration
+        super.init()
+        STPAnalyticsClient.sharedClient.log(
+            analytic: GenericAnalytic(event: .instantBankPaymentsControllerInit, params: [:])
+        )
     }
 
     /// Presents the Link payment flow, allowing your customer to pay with Link.
     /// The flow lets your customer log into or create a Link account, select a valid source of funds, and approve the usage of those funds to complete the purchase. The actual purchase will not occur until you call `confirm(from:completion:)`.
     /// - Note: Once `confirm(from:completion:)` completes successfully (i.e. when `result` is `.success`), calling this method is an error, as payment/setup intents should not be reused. Until then, you may call this method as many times as is necessary.
     /// - Parameter presentingViewController: The view controller to present the payment flow from.
-    /// - Parameter completion: Called when the payment flow is dismissed. If the flow was completed successfully, the result will be `.success`, and you can call `confirm(from:completion:)` when you're ready to complete the payment. If it was not, the result will be `.failure` with an `Error` describing what happened; this will be `LinkPaymentController.Error.canceled` if the customer canceled the flow.
+    /// - Parameter completion: Called when the payment flow is dismissed. If the flow was completed successfully, the result will be `.success`, and you can call `confirm(from:completion:)` when you're ready to complete the payment. If it was not, the result will be `.failure` with an `Error` describing what happened; this will be `InstantBankPaymentsController.Error.canceled` if the customer canceled the flow.
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController, completion: @escaping (Result<Void, Swift.Error>) -> Void) {
         Task {
             do {
@@ -130,7 +133,7 @@ import UIKit
     /// If this method returns successfully, you can call `confirm(from:)` when you're ready to complete the payment.
     /// - Note: Once `confirm(from:)` returns successfully, calling this method is an error, as payment/setup intents should not be reused. Until then, you may call this method as many times as is necessary.
     /// - Parameter presentingViewController: The view controller to present the payment flow from.
-    /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
+    /// - Throws: Either `InstantBankPaymentsController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
     @_spi(LinkOnly) public func present(from presentingViewController: UIViewController) async throws {
         guard FinancialConnectionsSDKAvailability.isFinancialConnectionsSDKAvailable else {
@@ -214,7 +217,7 @@ import UIKit
                         self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                     }
             case .checkout:
-                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Link payment controller is not yet supported by CheckoutSession"))
+                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "InstantBankPaymentsController is not yet supported by CheckoutSession"))
             }
         }
 
@@ -307,7 +310,7 @@ import UIKit
                 financialConnectionsCompletion: completionHandler
             )
         case .checkout:
-            completionHandler(nil, nil, PaymentSheetError.unknown(debugDescription: "Link payment controller is not yet supported by CheckoutSession") as NSError)
+            completionHandler(nil, nil, PaymentSheetError.unknown(debugDescription: "InstantBankPaymentsController is not yet supported by CheckoutSession") as NSError)
         }
     }
 
@@ -468,7 +471,7 @@ import UIKit
     }
 
     /// Completes the Link payment or setup.
-    /// - Note: Once `completion` is called with a `.completed` result, this `LinkPaymentController` instance should no longer be used, as payment/setup intents should not be reused. Other results indicate cancellation or failure, and do not invalidate the instance.
+    /// - Note: Once `completion` is called with a `.completed` result, this `InstantBankPaymentsController` instance should no longer be used, as payment/setup intents should not be reused. Other results indicate cancellation or failure, and do not invalidate the instance.
     /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer
     /// - Parameter completion: Called with the result of the payment after any presented view controllers are dismissed
     @_spi(LinkOnly) public func confirm(from presentingViewController: UIViewController, completion: @escaping (PaymentSheetResult) -> Void) {
@@ -491,9 +494,9 @@ import UIKit
     }
 
     /// Completes the Link payment or setup.
-    /// - Note: Once this method returns successfully, this `LinkPaymentController` instance should no longer be used, as payment/setup intents should not be reused. Thrown errors indicate cancellation or failure, and do not invalidate the instance.
+    /// - Note: Once this method returns successfully, this `InstantBankPaymentsController` instance should no longer be used, as payment/setup intents should not be reused. Thrown errors indicate cancellation or failure, and do not invalidate the instance.
     /// - Parameter presentingViewController: The view controller used to present any view controllers required e.g. to authenticate the customer
-    /// - Throws: Either `LinkPaymentController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
+    /// - Throws: Either `InstantBankPaymentsController.Error.canceled`, meaning the customer canceled the flow, or an error describing what went wrong.
     @MainActor
     @_spi(LinkOnly) public func confirm(from presentingViewController: UIViewController) async throws {
         guard let paymentMethodId = paymentMethodId else {
@@ -544,7 +547,7 @@ import UIKit
                 Task { @MainActor in
                     let result = await PaymentSheet
                         .routeDeferredIntentConfirmation(
-                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil), // LinkPaymentController is standalone and isn't a part of MPE, so it doesn't generate a client_session_id and doesn't have an elements session object so we don't want to send CAM here
+                            confirmType: .saved(paymentMethod, paymentOptions: nil, clientAttributionMetadata: nil, radarOptions: nil), // InstantBankPaymentsController is standalone and isn't a part of MPE, so it doesn't generate a client_session_id and doesn't have an elements session object so we don't want to send CAM here
                             configuration: configuration,
                             intentConfig: intentConfiguration,
                             authenticationContext: authenticationContext,
@@ -562,7 +565,7 @@ import UIKit
                     }
                 }
             case .checkout:
-                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "Link payment controller is not yet supported by CheckoutSession"))
+                continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "InstantBankPaymentsController is not yet supported by CheckoutSession"))
             }
         }
     }
@@ -575,9 +578,9 @@ import UIKit
         PaymentSheet.resetCustomer()
     }
 
-    /// Errors related to the Link payment flow
+    /// Errors related to the InstantBankPaymentsController payment flow
     ///
-    /// Most errors do not originate from LinkPaymentController itself; instead, they come from the Stripe API or other SDK components
+    /// Most errors do not originate from InstantBankPaymentsController itself; instead, they come from the Stripe API or other SDK components
     @frozen @_spi(LinkOnly) public enum Error: Swift.Error {
         /// The customer canceled the flow they were in.
         case canceled
@@ -587,7 +590,7 @@ import UIKit
 }
 
 @_spi(LinkOnly)
-extension LinkPaymentController: LoadingViewControllerDelegate {
+extension InstantBankPaymentsController: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
         instantDebitsOnlyAuthenticationSessionManager = nil
         paymentMethodId = nil

@@ -85,7 +85,7 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="Ysb-4K-dUG">
                                         <rect key="frame" x="121" y="96" width="156" height="0.0"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="LinkPaymentController"/>
+                                        <state key="normal" title="InstantBankPaymentsController"/>
                                         <connections>
                                             <segue destination="jqF-43-4W3" kind="show" id="I4Q-i5-Ogf"/>
                                         </connections>
