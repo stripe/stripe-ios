@@ -20,7 +20,7 @@ import UIKit
     @_spi(STP) @_spi(LinkControllerPreview) public struct PaymentMethodPreview {
 
         /// Represents the type of selected payment method.
-        @_spi(STP) @_spi(LinkControllerPreview) public enum PaymentMethodType {
+        @_spi(STP) public enum PaymentMethodType {
 
             /// The user chose a card-based payment method, such as a debit or credit card.
             case card
@@ -30,7 +30,7 @@ import UIKit
         }
 
         /// The type of the selected payment method.
-        @_spi(STP) @_spi(LinkControllerPreview) public let paymentMethodType: PaymentMethodType
+        @_spi(STP) public let paymentMethodType: PaymentMethodType
 
         /// The Link icon to render in your screen.
         @_spi(STP) @_spi(LinkControllerPreview) public let icon: UIImage
