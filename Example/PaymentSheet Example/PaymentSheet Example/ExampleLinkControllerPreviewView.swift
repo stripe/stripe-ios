@@ -61,7 +61,9 @@ struct ExampleLinkControllerPreviewView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         ForEach(LinkPaymentMethodType.allCases, id: \.self) { paymentMethodType in
                             Button {
-                                togglePaymentMethodType(paymentMethodType)
+                                Task { @MainActor in
+                                    await togglePaymentMethodType(paymentMethodType)
+                                }
                             } label: {
                                 HStack(spacing: 12) {
                                     Image(systemName: selectedPaymentMethodTypes.contains(paymentMethodType) ? "checkmark.square.fill" : "square")
@@ -72,6 +74,7 @@ struct ExampleLinkControllerPreviewView: View {
                                 }
                             }
                             .buttonStyle(.plain)
+                            .disabled(isLoading)
                         }
                     }
                 }
@@ -141,12 +144,16 @@ struct ExampleLinkControllerPreviewView: View {
     private func initializeLinkController() async {
         STPAPIClient.shared.publishableKey = Self.publishableKey
 
+        linkController = nil
         isLoading = true
         errorMessage = nil
         statusMessage = "Initializing LinkController..."
 
         do {
-            linkController = try await LinkController.create(mode: .setup)
+            linkController = try await LinkController.create(
+                mode: .setup,
+                configuration: .init(supportedPaymentMethodTypes: supportedPaymentMethodTypes)
+            )
             isLoading = false
             statusMessage = "LinkController initialized successfully"
         } catch {
@@ -182,7 +189,6 @@ struct ExampleLinkControllerPreviewView: View {
             let result = try await linkController.present(
                 email: email,
                 phoneNumber: phone.isEmpty ? nil : phone,
-                supportedPaymentMethodTypes: supportedPaymentMethodTypes,
                 from: rootViewController
             )
 
@@ -213,12 +219,15 @@ struct ExampleLinkControllerPreviewView: View {
         await initializeLinkController()
     }
 
-    private func togglePaymentMethodType(_ paymentMethodType: LinkPaymentMethodType) {
+    @MainActor
+    private func togglePaymentMethodType(_ paymentMethodType: LinkPaymentMethodType) async {
         if selectedPaymentMethodTypes.contains(paymentMethodType) {
             selectedPaymentMethodTypes.remove(paymentMethodType)
         } else {
             selectedPaymentMethodTypes.insert(paymentMethodType)
         }
+
+        await initializeLinkController()
     }
 
     private func paymentMethodTypeTitle(_ paymentMethodType: LinkPaymentMethodType) -> String {
