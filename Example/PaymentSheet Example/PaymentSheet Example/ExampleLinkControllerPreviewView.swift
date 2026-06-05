@@ -151,7 +151,6 @@ struct ExampleLinkControllerPreviewView: View {
 
         do {
             linkController = try await LinkController.create(
-                mode: .setup,
                 configuration: .init(supportedPaymentMethodTypes: supportedPaymentMethodTypes)
             )
             isLoading = false
