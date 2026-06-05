@@ -170,10 +170,8 @@ public class PaymentSheet {
                     completion(.failed(error: error))
                     return
                 }
-                if checkout.stpSession != nil {
-                    loadMode = .checkout(checkout)
-                    checkout.stpSession.applyAddressOverrides(to: &self.configuration)
-                }
+                loadMode = .checkout(checkout)
+                checkout.stpSession.applyAddressOverrides(to: &self.configuration)
             }
 
             // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.

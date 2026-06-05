@@ -214,6 +214,7 @@ extension Intent: PaymentMethodRequirementProvider {
                 reqs.append(.shippingAddress)
             }
 
+            // Mirror PaymentIntent/SetupIntent: valid us bank verification method
             if let usBankOptions = checkout.stpSession.paymentMethodOptions?.usBankAccount,
                 usBankOptions.verificationMethod.isValidForPaymentSheet
             {
