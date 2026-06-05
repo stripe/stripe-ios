@@ -972,9 +972,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
             let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
-            XCTAssertEqual(parameters.count, 2)
+            XCTAssertEqual(parameters.count, 3)
             XCTAssertEqual(parameters["payment_method"], Constant.validPaymentId)
             XCTAssertEqual(parameters["crypto_customer_id"], Constant.validCustomerId)
+            XCTAssertEqual(parameters["ui_mode"], "headless")
 
             return true
         } response: { _ in
@@ -1029,8 +1030,9 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
             let parameters = queryParametersString.parsedHTTPParametersDictionary
 
-            XCTAssertEqual(parameters.count, 1)
+            XCTAssertEqual(parameters.count, 2)
             XCTAssertEqual(parameters["crypto_customer_id"], Constant.validCustomerId)
+            XCTAssertEqual(parameters["ui_mode"], "headless")
 
             return true
         } response: { _ in
