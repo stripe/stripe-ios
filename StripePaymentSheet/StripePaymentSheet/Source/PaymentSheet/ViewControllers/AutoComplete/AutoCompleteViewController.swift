@@ -43,6 +43,7 @@ class AutoCompleteViewController: UIViewController {
     private var lastFetchedQuery: String = ""
     var currentSource: String?
     private var autocompleteStartTime: Date?
+    private var mapKitQueryStartTime: Date?
 
     weak var delegate: AutoCompleteViewControllerDelegate?
 
@@ -161,6 +162,7 @@ class AutoCompleteViewController: UIViewController {
             if configuration.useAutocompleteEndpoints {
                 fetchAPIResults(query: initialLine1Text)
             } else {
+                mapKitQueryStartTime = Date()
                 self.addressSearchCompleter.queryFragment = initialLine1Text
             }
         }
@@ -270,7 +272,7 @@ class AutoCompleteViewController: UIViewController {
     // MARK: Private functions
 
     /// Sets source and results together so `results.didSet` always sees the correct source.
-    private func setResults(_ newResults: [AddressSearchResult], source: String?, requestLatency: Float? = nil) {
+    private func setResults(_ newResults: [AddressSearchResult], source: String?, requestLatency: TimeInterval? = nil) {
         currentSource = source
         results = newResults
         if !newResults.isEmpty, let source {
@@ -285,9 +287,9 @@ class AutoCompleteViewController: UIViewController {
         }
     }
 
-    private var elapsedTimeSinceAutocompleteStart: Float {
+    private var elapsedTimeSinceAutocompleteStart: TimeInterval {
         guard let startTime = autocompleteStartTime else { return 0 }
-        return Float(Date().timeIntervalSince(startTime))
+        return Date().timeIntervalSince(startTime)
     }
 
     @objc private func manualEntryButtonTapped() {
@@ -316,6 +318,7 @@ extension AutoCompleteViewController: ElementDelegate {
                 fetchAPIResults(query: query)
             }
         } else if !query.isEmpty {
+            mapKitQueryStartTime = Date()
             addressSearchCompleter.queryFragment = query
         }
     }
@@ -336,7 +339,7 @@ extension AutoCompleteViewController: ElementDelegate {
                     sessionToken: sessionToken
                 )
                 guard !Task.isCancelled else { return }
-                let latency = Float(Date().timeIntervalSince(requestStart))
+                let latency = Date().timeIntervalSince(requestStart)
                 self.setResults(response.suggestions, source: response.source, requestLatency: latency)
             } catch {
                 guard !Task.isCancelled else { return }
@@ -347,6 +350,7 @@ extension AutoCompleteViewController: ElementDelegate {
                     apiClient: self.configuration.apiClient
                 )
                 // Fall back to MapKit on API failure
+                self.mapKitQueryStartTime = Date()
                 self.addressSearchCompleter.queryFragment = query
             }
         }
@@ -356,7 +360,11 @@ extension AutoCompleteViewController: ElementDelegate {
 // MARK: MKLocalSearchCompleterDelegate
 extension AutoCompleteViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        setResults(completer.results, source: "apple")
+        var latency: TimeInterval?
+        if let mapKitQueryStartTime {
+            latency = Date().timeIntervalSince(mapKitQueryStartTime)
+        }
+        setResults(completer.results, source: "apple", requestLatency: latency)
     }
 
     func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
@@ -434,7 +442,6 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                     source: source,
                     duration: duration,
                     latency: nil,
-                    editDistance: typedText.editDistance(to: address.line1 ?? ""),
                     apiClient: configuration.apiClient
                 )
                 delegate?.didSelectAddress(address)
@@ -453,14 +460,13 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             displayTitle: suggestion.title,
                             sessionToken: sessionToken
                         )
-                        let latency = Float(Date().timeIntervalSince(requestStart))
+                        let latency = Date().timeIntervalSince(requestStart)
                         STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(
                             characterCount: characterCount,
                             sessionToken: sessionToken,
                             source: source,
                             duration: duration,
                             latency: latency,
-                            editDistance: typedText.editDistance(to: details.address.line1 ?? ""),
                             apiClient: configuration.apiClient
                         )
                         delegate?.didSelectAddress(details.address)
@@ -485,7 +491,6 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                         source: source,
                         duration: duration,
                         latency: nil,
-                        editDistance: typedText.editDistance(to: address?.line1 ?? ""),
                         apiClient: self.configuration.apiClient
                     )
                     self.delegate?.didSelectAddress(address)

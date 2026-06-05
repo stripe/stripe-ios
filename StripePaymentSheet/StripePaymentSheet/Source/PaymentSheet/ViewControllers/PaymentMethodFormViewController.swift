@@ -28,6 +28,7 @@ class PaymentMethodFormViewController: UIViewController {
 
     /// Reference to the AddressSectionElement in the form, if present
     private var addressSectionElement: AddressSectionElement?
+    private var selectedAutoCompleteAddress: PaymentSheet.Address?
 
     var paymentOption: PaymentOption? {
         let params = IntentConfirmParams(type: paymentMethodType)
@@ -720,6 +721,31 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
             addressSectionElement.city?.setText(address.city ?? "")
             addressSectionElement.postalCode?.setText(address.postalCode ?? "")
             addressSectionElement.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
+
+            // Read back from the element so field processing (e.g. postal code truncation) is reflected
+            let normalized = addressSectionElement.addressDetails.address
+            self.selectedAutoCompleteAddress = PaymentSheet.Address(
+                city: normalized.city, country: normalized.country, line1: normalized.line1,
+                line2: normalized.line2, postalCode: normalized.postalCode, state: normalized.state
+            )
         }
+    }
+
+    func logBillingAddressCompletionIfNeeded() {
+        guard let addressSectionElement = addressSectionElement else { return }
+        let details = addressSectionElement.addressDetails.address
+        let submittedAddress = PaymentSheet.Address(
+            city: details.city,
+            country: details.country,
+            line1: details.line1,
+            line2: details.line2,
+            postalCode: details.postalCode,
+            state: details.state
+        )
+        var editDistance: Int?
+        if let autoCompleteAddress = selectedAutoCompleteAddress {
+            editDistance = submittedAddress.editDistance(from: autoCompleteAddress)
+        }
+        STPAnalyticsClient.sharedClient.logBillingAddressCompleted(addressCountryCode: addressSectionElement.selectedCountryCode, autoCompleteResultedSelected: selectedAutoCompleteAddress != nil, editDistance: editDistance, apiClient: configuration.apiClient)
     }
 }
