@@ -208,6 +208,8 @@ extension Intent: PaymentMethodRequirementProvider {
         case let .checkout(checkout):
             var reqs = [PaymentMethodTypeRequirement]()
 
+            // The session is configured to collect a shipping address, so payment methods
+            // that require one can be offered.
             if checkout.stpSession.requiresShippingAddress {
                 reqs.append(.shippingAddress)
             }

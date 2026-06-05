@@ -45,9 +45,12 @@ public final class Checkout: ObservableObject {
 
     /// The underlying `STPCheckoutSession` backing the current public ``state``.
     ///
-    /// Internal callers that need `STPCheckoutSession`-specific data (e.g.
-    /// `allResponseFields`, address overrides, the expanded intent objects)
-    /// should read this rather than casting from `state.session`.
+    /// Marked `nonisolated(unsafe)` because PaymentSheet internals read this from non-MainActor
+    /// contexts. This is safe: reads only occur after the session is loaded and while the payment
+    /// UI is presented, a window during which no mutations occur. Writes are always on MainActor
+    /// because they go through `Checkout`'s MainActor-isolated mutation methods.
+    /// Requiring full MainActor isolation would propagate `@MainActor` through nearly all of
+    /// PaymentSheet's internal types, which is not warranted by the actual concurrency risk.
     nonisolated(unsafe) private(set) var stpSession: STPCheckoutSession!
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
