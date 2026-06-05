@@ -13,6 +13,7 @@ MINOR
 * [Fixed] Fixed Japan address form missing the city field. ([#6506](https://github.com/stripe/stripe-ios/issues/6506))
 * [Added] Added support for Card Art for saved payment methods when using CustomerSessions
 * [Added] `PaymentSheet.FlowController.PaymentOptionDisplayData.image` and `EmbeddedPaymentElement.PaymentOptionDisplayData` may now return card art for saved card. Integrators displaying this image in very compact layouts may wish to revisit sizing to best accommodate richer payment method visuals.
+* [Fixed] Fixed removal of shimmering effect for horizontal view cells
 
 ### Address Element
 * [Fixed] Fixed Japan address form missing the city field. ([#6506](https://github.com/stripe/stripe-ios/issues/6506))
