@@ -389,7 +389,9 @@ extension ConsumerPaymentDetails {
             let components = [label, sublabel].compactMap { $0 }
             return components.joined(separator: " ")
         case .bankAccount(let bankAccount):
-            return bankAccount.displayName(with: nickname)
+            let label = bankAccount.displayName(with: nickname)
+            let sublabel = "•••• \(bankAccount.last4)"
+            return [label, sublabel].joined(separator: " ")
         case .unparsable:
             guard let display else { return nil }
             let components = [display.label, display.sublabel].compactMap { $0 }
