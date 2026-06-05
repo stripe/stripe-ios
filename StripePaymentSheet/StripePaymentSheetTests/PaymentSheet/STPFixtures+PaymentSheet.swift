@@ -297,7 +297,7 @@ extension Intent {
         return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in return "" }))
     }
 
-    static func _testCheckoutSession(
+    @MainActor static func _testCheckoutSession(
         mode: Checkout.Mode = .payment,
         amount: Int? = 2345,
         currency: String = "USD",

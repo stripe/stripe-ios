@@ -12,6 +12,7 @@ import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentSheet
 import XCTest
 
+@MainActor
 final class SavedPaymentMethodManagerTests: XCTestCase {
 
     let ephemeralKey = "test-eph-key"

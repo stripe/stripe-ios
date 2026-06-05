@@ -34,6 +34,7 @@ class MockElement: Element {
     lazy var view: UIView = { UIView() }()
 }
 
+@MainActor
 class PaymentSheetFormFactoryTest: XCTestCase {
     private func extractBNPLHeaderView(from subtitle: SubtitleElement) -> BNPLFormHeaderView? {
         if let headerView = subtitle.view as? BNPLFormHeaderView {
