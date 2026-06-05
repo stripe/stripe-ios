@@ -104,6 +104,26 @@ class LinkButtonSnapshotTests: STPSnapshotTestCase {
 
         STPSnapshotVerifyView(vc.view, identifier: "bank_payment_method", file: #filePath, line: #line)
     }
+
+    func testLinkButton_genericPaymentMethodPreview() {
+        let linkAccount = Stubs.linkAccount(
+            email: "user@example.com",
+            paymentMethodType: .unparsable,
+            isRegistered: true
+        )
+
+        let viewModel = LinkButtonViewModel()
+        viewModel.setAccount(linkAccount)
+
+        let linkButton = LinkButton(viewModel: viewModel, borderColor: .gray, action: {})
+        let vc = UIHostingController(rootView: linkButton)
+
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 428, height: 100))
+        window.rootViewController = vc
+        window.makeKeyAndVisible()
+
+        STPSnapshotVerifyView(vc.view, identifier: "generic_payment_method", file: #filePath, line: #line)
+    }
 }
 
 // MARK: - Test Stubs
@@ -124,11 +144,20 @@ enum Stubs {
     static func displayablePaymentDetails(
         paymentMethodType: ConsumerSession.DisplayablePaymentDetails.PaymentType
     ) -> ConsumerSession.DisplayablePaymentDetails {
-        .init(
-            defaultCardBrand: "VISA",
-            defaultPaymentType: paymentMethodType,
-            last4: paymentMethodType == .card ? "4242" : "6789"
-        )
+        switch paymentMethodType {
+        case .card:
+            return .init(defaultCardBrand: "VISA", defaultPaymentType: paymentMethodType, last4: "4242")
+        case .bankAccount:
+            return .init(defaultCardBrand: nil, defaultPaymentType: paymentMethodType, last4: "6789")
+        case .unparsable:
+            let displayJson: [String: Any] = [
+                "label": "Affirm",
+                "sublabel": "Affirm •••• 1234",
+            ]
+            let data = try! JSONSerialization.data(withJSONObject: displayJson)
+            let display = try! JSONDecoder().decode(ConsumerPaymentDetails.DisplayMetadata.self, from: data)
+            return .init(defaultCardBrand: nil, defaultPaymentType: paymentMethodType, last4: nil, display: display)
+        }
     }
 
     static func linkAccount(
