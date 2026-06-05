@@ -17,7 +17,6 @@ final class LinkControllerPreviewAPITests: XCTestCase {
 
         if false {
             LinkController.create(
-                mode: .payment,
                 configuration: .init(supportedPaymentMethodTypes: [.card])
             ) { result in
                 _ = result
@@ -25,7 +24,6 @@ final class LinkControllerPreviewAPITests: XCTestCase {
 
             Task { @MainActor in
                 let controller = try await LinkController.create(
-                    mode: .payment,
                     configuration: .init(supportedPaymentMethodTypes: [.card])
                 )
                 _ = controller.paymentMethodPreview
