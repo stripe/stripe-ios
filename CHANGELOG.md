@@ -4,6 +4,8 @@ MINOR
 ## X.Y.Z - changes pending release
 
 ### PaymentSheet
+* [Changed] Renamed `LinkPaymentController` to `InstantBankPaymentsController`.
+* [Changed] Link bank account display strings now include the last 4 digits in `LinkController.PaymentMethodPreview.sublabel` and `PaymentSheet.FlowController.PaymentOptionDisplayData.labels.sublabel`, matching the existing card behavior.
 * [Fixed] The Link verification flow no longer shows an indefinite loading state when encountering rate limit errors.
 
 ### CryptoOnramp (Alpha)
