@@ -6,6 +6,7 @@
 //
 
 import StripeCoreTestUtils
+@_spi(STP) @testable import StripeCore
 @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripeUICore
 import XCTest
@@ -109,6 +110,40 @@ final class PaymentMethodFormViewControllerTest: XCTestCase {
         )
         XCTAssertEqual(secondSUT.form.getTextFieldElement("ZIP").text, "12345")
     }
+
+    // MARK: - logBillingAddressCompletionIfNeeded
+
+    func testLogBillingAddressCompletionIfNeeded_withoutAutocomplete() {
+        STPAnalyticsClient.sharedClient._testLogHistory = []
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.billingDetailsCollectionConfiguration = .init(address: .full)
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_123")
+
+        let sut = PaymentMethodFormViewController(
+            type: .stripe(.card),
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: ._testCardValue(),
+            previousCustomerInput: nil,
+            formCache: .init(),
+            configuration: configuration,
+            paymentMethodOrientation: .vertical,
+            headerView: nil,
+            analyticsHelper: ._testValue(),
+            delegate: self
+        )
+
+        sut.logBillingAddressCompletionIfNeeded()
+
+        let event = STPAnalyticsClient.sharedClient._testLogHistory.first(where: {
+            $0["event"] as? String == "mc_billing_address_completed"
+        })
+        XCTAssertNotNil(event)
+        let blob = event?["address_data_blob"] as? [String: Any?]
+        XCTAssertEqual(blob?["auto_complete_result_selected"] as? Bool, false)
+        XCTAssertNil(blob?["edit_distance"] as? Int)
+    }
+
 }
 
 extension PaymentMethodFormViewControllerTest: PaymentMethodFormViewControllerDelegate {
