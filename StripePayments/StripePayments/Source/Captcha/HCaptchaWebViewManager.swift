@@ -117,7 +117,8 @@ internal class HCaptchaWebViewManager: NSObject {
         self.decoder = HCaptchaDecoder { [weak self] result in
             self?.handle(result: result)
         }
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
             let arguments = ["apiKey": config.apiKey,
                              "endpoint": config.actualEndpoint.absoluteString,
                              "size": config.size.rawValue,

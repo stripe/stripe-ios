@@ -1189,7 +1189,11 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
         collectName: Bool = false
     ) async -> LinkController.PaymentMethodPreview? {
         return await withCheckedContinuation { continuation in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else {
+                    continuation.resume(returning: nil)
+                    return
+                }
                 self.collectPaymentMethod(
                     from: presentingViewController,
                     with: email,

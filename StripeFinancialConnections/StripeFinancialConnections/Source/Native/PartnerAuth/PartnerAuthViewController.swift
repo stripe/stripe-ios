@@ -337,7 +337,8 @@ final class PartnerAuthViewController: SheetViewController {
         UIApplication.shared.open(
             url,
             options: [.universalLinksOnly: true]
-        ) { (didOpenBankingApp) in
+        ) { [weak self] (didOpenBankingApp) in
+            guard let self = self else { return }
             guard !didOpenBankingApp else {
                 // we pass control to the bank app
                 return
