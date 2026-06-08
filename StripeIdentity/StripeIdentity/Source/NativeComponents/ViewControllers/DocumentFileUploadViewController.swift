@@ -30,6 +30,22 @@ enum DocumentFileUploadViewControllerError: String, AnalyticLoggableStringErrorV
 
 final class DocumentFileUploadViewController: IdentityFlowViewController {
 
+    override var warningAlertViewModel: WarningAlertViewModel? {
+        guard hasUnsavedDocumentChanges else {
+            return nil
+        }
+
+        return .init(
+            titleText: .Localized.unsavedChanges,
+            messageText: STPLocalizedString(
+                "The images of your identity document have not been saved. Do you want to leave?",
+                "Text for message of warning alert"
+            ),
+            acceptButtonText: String.Localized.continue,
+            declineButtonText: String.Localized.cancel
+        )
+    }
+
     struct Styling {
         static let uploadCompleteIcon = Image.iconCheckmark.makeImage(template: true)
     }
@@ -68,6 +84,27 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     private(set) var continueButtonEnabled = false {
         didSet {
             updateUI()
+        }
+    }
+
+    private var hasUnsavedDocumentChanges: Bool {
+        if isSubmitting || isLoadingFrontImageFile || isLoadingBackImageFile {
+            return true
+        }
+
+        if sheetController?.collectedData.idDocumentFront != nil
+            || sheetController?.collectedData.idDocumentBack != nil
+        {
+            return true
+        }
+
+        return [documentUploader.frontUploadStatus, documentUploader.backUploadStatus].contains {
+            switch $0 {
+            case .inProgress, .complete:
+                return true
+            case .notStarted, .error:
+                return false
+            }
         }
     }
 
