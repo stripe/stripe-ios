@@ -437,6 +437,7 @@ class PaymentSheetViewController: UIViewController, PaymentSheetViewControllerPr
                     stpAssertionFailure("Tapped buy button while adding without paymentOption")
                     return
                 }
+                addPaymentMethodViewController.logBillingAddressCompletionIfNeeded()
                 paymentOption = newPaymentOption
             }
         case .selectingSaved:

@@ -408,6 +408,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                     stpAssertionFailure()
                     return
                 }
+                addPaymentMethodViewController.logBillingAddressCompletionIfNeeded()
                 addPaymentOption(paymentOption: newPaymentOption)
             }
         case .addingNewPaymentMethodAttachToCustomer:
@@ -418,6 +419,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
                 stpAssertionFailure()
                 return
             }
+            addPaymentMethodViewController.logBillingAddressCompletionIfNeeded()
             if case .new(let confirmParams) = newPaymentOption {
                 confirmParams.paymentMethodParams.clientAttributionMetadata = STPClientAttributionMetadata.makeClientAttributionMetadataForCustomerSheet(elementsSessionConfigId: elementsSessionConfigId)
             }

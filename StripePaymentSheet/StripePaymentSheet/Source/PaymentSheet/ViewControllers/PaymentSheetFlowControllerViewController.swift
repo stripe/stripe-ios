@@ -477,6 +477,7 @@ class PaymentSheetFlowControllerViewController: UIViewController, FlowController
             if addPaymentMethodViewController.overridePrimaryButtonState != nil {
                 addPaymentMethodViewController.didTapCallToActionButton(from: self)
             } else {
+                addPaymentMethodViewController.logBillingAddressCompletionIfNeeded()
                 self.flowControllerDelegate?.flowControllerViewControllerShouldClose(self, didCancel: false)
             }
         }
