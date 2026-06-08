@@ -8,6 +8,8 @@
 
 "1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
 
+"Accept" = "Sutikti";
+
 "Add US bank account" = "Pridėti JAV banko sąskaitą";
 
 "Add a card" = "Pridėti kortelę";
