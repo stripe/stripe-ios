@@ -152,16 +152,3 @@ extension HTMLTextView: UITextViewDelegate {
         return false
     }
 }
-
-/// A UITextView without the misspelled words rotor
-private class TextViewWithoutSpellingRotor: UITextView {
-    override var accessibilityCustomRotors: [UIAccessibilityCustomRotor]? {
-        get {
-            // Removes the misspelled word rotor from the accessibility rotors
-            return super.accessibilityCustomRotors?.filter { $0.systemRotorType != .misspelledWord }
-        }
-        set {
-            super.accessibilityCustomRotors = newValue
-        }
-    }
-}
