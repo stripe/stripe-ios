@@ -173,7 +173,7 @@ final class PaymentSheetLoader {
             let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
             FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
 
-            let remoteFcLiteOverrideEnabled = elementsSession.flags["elements_prefer_fc_lite"] == true
+            let remoteFcLiteOverrideEnabled = shouldPreferFCLite(elementsSession: elementsSession)
             FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
 
             let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
@@ -674,6 +674,13 @@ final class PaymentSheetLoader {
         }
 
         return allowedCountries.contains(billingCountry)
+    }
+
+    static func shouldPreferFCLite(elementsSession: STPElementsSession) -> Bool {
+        let flagPrefersFCLite = elementsSession.flags["elements_prefer_fc_lite"] == true
+        let experimentPrefersFCLite =
+            elementsSession.experimentsData?.experimentAssignments[ConnectionsFCLiteVsNative.experimentName] == .treatment
+        return flagPrefersFCLite || experimentPrefersFCLite
     }
 }
 

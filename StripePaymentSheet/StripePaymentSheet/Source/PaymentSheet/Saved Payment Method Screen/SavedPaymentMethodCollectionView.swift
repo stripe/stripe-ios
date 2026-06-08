@@ -382,6 +382,7 @@ extension SavedPaymentMethodCollectionView {
                                 }
                             }
                         } else {
+                            paymentMethodLogo.removeShimmer()
                             paymentMethodLogo.image = paymentMethodCellImage
                             paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
                         }
@@ -392,6 +393,7 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = label.text
                         let paymentMethodLogoImage = PaymentOption.applePay.makeSavedPaymentMethodCellImage(overrideUserInterfaceStyle: overrideUserInterfaceStyle)
+                        paymentMethodLogo.removeShimmer()
                         paymentMethodLogo.image = paymentMethodLogoImage
                         paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
                         paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
@@ -401,6 +403,7 @@ extension SavedPaymentMethodCollectionView {
                         selectableRectangle.accessibilityIdentifier = label.text
                         selectableRectangle.accessibilityLabel = linkBrand.accessibilityText(from: linkBrand.displayName)
                         let paymentMethodLogoImage = Image.paymentSheetLinkLogoImage
+                        paymentMethodLogo.removeShimmer()
                         paymentMethodLogo.image = paymentMethodLogoImage
                         paymentMethodLogo.tag = paymentMethodLogoImage.hashValue
                         paymentMethodLogoHeightConstraint.constant = paymentMethodLogoSize.height
@@ -414,6 +417,7 @@ extension SavedPaymentMethodCollectionView {
                         )
                         selectableRectangle.accessibilityLabel = String.Localized.add_new_payment_method
                         selectableRectangle.accessibilityIdentifier = "+ Add"
+                        paymentMethodLogo.removeShimmer()
                         paymentMethodLogo.isHidden = true
                         paymentMethodLogo.tag = 0
                         plus.isHidden = false

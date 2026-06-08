@@ -84,7 +84,7 @@ struct PaymentSheetExampleAppRootView: View {
         case paymentSheet_flowController_swiftUI
 
         case customerSheet_swiftUI
-        case linkPaymentController
+        case instantBankPaymentsController
         case linkController
         case linkStandaloneDemo
         case linkPayoutsDemo
@@ -115,7 +115,7 @@ struct PaymentSheetExampleAppRootView: View {
                      .paymentSheet_swiftUI,
                      .paymentSheet_flowController_swiftUI,
                      .customerSheet_swiftUI,
-                     .linkPaymentController,
+                     .instantBankPaymentsController,
                      .linkController,
                      .linkStandaloneDemo,
                      .linkPayoutsDemo,
@@ -152,8 +152,8 @@ struct PaymentSheetExampleAppRootView: View {
 
             case .customerSheet_swiftUI:
                 return "CustomerSheet (SwiftUI)"
-            case .linkPaymentController:
-                return "LinkPaymentController"
+            case .instantBankPaymentsController:
+                return "InstantBankPaymentsController"
             case .linkController:
                 return "LinkController (SwiftUI)"
             case .linkStandaloneDemo:
@@ -226,7 +226,7 @@ struct PaymentSheetExampleAppRootView: View {
         case .customerSheet_swiftUI:
             ExampleSwiftUICustomerSheet()
 
-        case .linkPaymentController:
+        case .instantBankPaymentsController:
             StoryboardSceneView<ExampleLinkPaymentCheckoutViewController>(sceneIdentifier: "ExampleLinkPaymentCheckoutViewController")
         case .linkController:
             if #available(iOS 16.0, *) {

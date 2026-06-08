@@ -362,6 +362,9 @@ import Foundation
     // MARK: - Synthetic latency tests
     case mpeSyntheticLatency = "mpe.synthetic_latency"
 
+    // MARK: - InstantBankPaymentsController
+    case instantBankPaymentsControllerInit = "mc_instant_bank_payments_controller_init"
+
     // MARK: - Adaptive Pricing
     case adaptivePricingCurrencySelectorInit = "elements.adaptive_pricing.currency_selector_init"
     case adaptivePricingCurrencyToggled = "elements.adaptive_pricing.currency_toggled"

@@ -281,7 +281,8 @@ extension STPAPIClient {
         let endpoint = "crypto/internal/platform_settings"
 
         let parameters: [String: Any] = [
-            "crypto_customer_id": cryptoCustomerId
+            "crypto_customer_id": cryptoCustomerId,
+            "ui_mode": "headless",
         ]
         return try await get(resource: endpoint, parameters: parameters)
     }
