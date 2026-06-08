@@ -5,8 +5,8 @@
 //  Created by Yuki Tokuhiro on 5/24/24.
 //
 
-import StripeCoreTestUtils
 @_spi(STP) @testable import StripeCore
+import StripeCoreTestUtils
 @_spi(STP) @testable import StripePaymentSheet
 @_spi(STP) @testable import StripeUICore
 import XCTest

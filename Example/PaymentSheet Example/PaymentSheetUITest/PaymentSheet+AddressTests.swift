@@ -9,9 +9,6 @@
 import XCTest
 
 class PaymentSheet_AddressTests: PaymentSheetUITestCase {
-    override func setUpWithError() throws {
-        try super.setUpWithError()
-    }
 
     // MARK: - Helper Functions
 
