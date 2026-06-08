@@ -3,6 +3,9 @@ MINOR
 
 ## X.Y.Z - changes pending release
 
+### All
+* [Changed] The minimum iOS version is now 15.0. If you'd like to deploy for iOS 13.0 or iOS 14.0, please use Stripe SDK 25.16.0.
+
 ### PaymentSheet
 * [Changed] Renamed `LinkPaymentController` to `InstantBankPaymentsController`.
 * [Changed] Link bank account display strings now include the last 4 digits in `LinkController.PaymentMethodPreview.sublabel` and `PaymentSheet.FlowController.PaymentOptionDisplayData.labels.sublabel`, matching the existing card behavior.

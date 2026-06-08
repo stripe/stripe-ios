@@ -14,11 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)init {
     WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
-#if !TARGET_OS_VISION
     WKWebpagePreferences *pagePreferences = [[WKWebpagePreferences alloc] init];
     pagePreferences.allowsContentJavaScript = NO;
     configuration.defaultWebpagePreferences = pagePreferences;
-#endif
     return [super initWithFrame:CGRectZero configuration:configuration];
 }
 

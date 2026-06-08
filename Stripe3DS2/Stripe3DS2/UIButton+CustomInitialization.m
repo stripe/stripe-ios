@@ -13,18 +13,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation UIButton (CustomInitialization)
 
-#if !STP_TARGET_VISION
 static const CGFloat kDefaultButtonContentInset = (CGFloat)12.0;
-#endif
 
 + (UIButton *)_stds_buttonWithTitle:(NSString * _Nullable)title customization:(STDSButtonCustomization * _Nullable)customization {
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     button.clipsToBounds = YES;
-#if !STP_TARGET_VISION // UIButton edge insets not supported on visionOS
     UIButtonConfiguration *config = [UIButtonConfiguration plainButtonConfiguration];
     config.contentInsets = NSDirectionalEdgeInsetsMake(kDefaultButtonContentInset, 0, kDefaultButtonContentInset, 0);
     button.configuration = config;
-#endif
     [[self class] _stds_configureButton:button withTitle:title customization:customization];
     
     return button;
