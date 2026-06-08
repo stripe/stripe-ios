@@ -237,33 +237,31 @@ private struct PhoneTextFieldUIViewRepresentable: UIViewRepresentable {
 
 struct PhoneTextField_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            VStack(spacing: 16) {
-                PhoneTextFieldUIViewRepresentable(
-                    defaultPhoneNumber: ""
-                ).frame(height: 56)
+        VStack(spacing: 16) {
+            PhoneTextFieldUIViewRepresentable(
+                defaultPhoneNumber: ""
+            ).frame(height: 56)
 
-                PhoneTextFieldUIViewRepresentable(
-                    defaultPhoneNumber: "4015006000"
-                ).frame(height: 56)
+            PhoneTextFieldUIViewRepresentable(
+                defaultPhoneNumber: "4015006000"
+            ).frame(height: 56)
 
-                PhoneTextFieldUIViewRepresentable(
-                    defaultPhoneNumber: "401500600"
-                ).frame(height: 56)
+            PhoneTextFieldUIViewRepresentable(
+                defaultPhoneNumber: "401500600"
+            ).frame(height: 56)
 
-                PhoneTextFieldUIViewRepresentable(
-                    defaultPhoneNumber: "40150060003435"
-                ).frame(height: 56)
+            PhoneTextFieldUIViewRepresentable(
+                defaultPhoneNumber: "40150060003435"
+            ).frame(height: 56)
 
-                PhoneTextFieldUIViewRepresentable(
-                    defaultPhoneNumber: "+442079460321"
-                ).frame(height: 56)
+            PhoneTextFieldUIViewRepresentable(
+                defaultPhoneNumber: "+442079460321"
+            ).frame(height: 56)
 
-                Spacer()
-            }
-            .padding()
-            .background(Color(FinancialConnectionsAppearance.Colors.background))
+            Spacer()
         }
+        .padding()
+        .background(Color(FinancialConnectionsAppearance.Colors.background))
     }
 }
 

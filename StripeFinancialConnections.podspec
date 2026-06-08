@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
     s.frameworks                     = 'Foundation', 'WebKit', 'UIKit'
     s.requires_arc                   = true
     s.platform                       = :ios
-    s.ios.deployment_target          = '13.0'
+    s.ios.deployment_target          = '15.0'
     s.swift_version		               = '5.0'
     s.weak_framework = 'SwiftUI'
     s.dependency   'StripeCore', "#{s.version}"

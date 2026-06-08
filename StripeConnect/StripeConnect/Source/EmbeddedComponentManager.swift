@@ -11,7 +11,6 @@ import UIKit
 
 /// Manages Connect embedded components
 /// - Seealso: [Step by step integration guide](  https://docs.stripe.com/connect/get-started-connect-embedded-components?platform=ios)
-@available(iOS 15, *)
 public final class EmbeddedComponentManager {
     let apiClient: STPAPIClient
 

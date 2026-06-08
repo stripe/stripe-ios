@@ -7,7 +7,6 @@
 
 import UIKit
 
-@available(iOS 15, *)
 struct AppearanceWrapper: Encodable {
     let appearance: Appearance
     let traitCollection: UITraitCollection

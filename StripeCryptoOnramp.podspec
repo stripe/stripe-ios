@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.frameworks                     = 'Foundation', 'UIKit', 'PassKit'
   s.requires_arc                   = true
   s.platform                       = :ios
-  s.ios.deployment_target          = '13.0'
+  s.ios.deployment_target          = '15.0'
   s.swift_version                  = '5.0'
   s.source_files                   = 'StripeCryptoOnramp/StripeCryptoOnramp/**/*.swift'
   s.ios.resource_bundle            = { 'StripeCryptoOnrampBundle' => 'StripeCryptoOnramp/StripeCryptoOnramp/Resources/**/*.{lproj,json,png,xcassets}' }
