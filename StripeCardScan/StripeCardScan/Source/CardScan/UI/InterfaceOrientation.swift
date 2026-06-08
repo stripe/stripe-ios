@@ -9,11 +9,17 @@ import UIKit
 
 extension UIWindow {
     static var interfaceOrientation: UIInterfaceOrientation {
-        return
-            UIApplication.shared.windows
-            .first?
-            .windowScene?
-            .interfaceOrientation ?? .unknown
+        if #available(iOS 15.0, *) {
+            return UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .first?
+                .interfaceOrientation ?? .unknown
+        } else {
+            return UIApplication.shared.windows
+                .first?
+                .windowScene?
+                .interfaceOrientation ?? .unknown
+        }
     }
 
     static var interfaceOrientationToString: String {

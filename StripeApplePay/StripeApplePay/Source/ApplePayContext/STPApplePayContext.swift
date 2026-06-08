@@ -230,7 +230,15 @@ public class STPApplePayContext: NSObject, PKPaymentAuthorizationControllerDeleg
             .sorted { firstWindow, _ in firstWindow.isKeyWindow }
         let window = windows.first
         #else
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+        let window: UIWindow?
+        if #available(iOS 15.0, *) {
+            window = UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+                .first { $0.isKeyWindow }
+        } else {
+            window = UIApplication.shared.windows.first { $0.isKeyWindow }
+        }
         #endif
         self.presentApplePay(from: window, completion: completion)
     }
