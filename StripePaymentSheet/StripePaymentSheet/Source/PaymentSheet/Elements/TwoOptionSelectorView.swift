@@ -200,7 +200,7 @@ final class TwoOptionSelectorView: UIView {
 
     private func configureButton(_ button: UIButton, item: TwoOptionSelectorItem) {
         var config = UIButton.Configuration.plain()
-        config.contentInsets = NSDirectionalEdgeInsets(top: 1, leading: 16, bottom: 0, trailing: 16)
+        config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
         config.attributedTitle = AttributedString(item.displayText)
         config.background.backgroundColor = .clear
         button.configuration = config
