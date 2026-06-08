@@ -3,6 +3,9 @@ MINOR
 
 ## X.Y.Z - changes pending release
 
+### Identity
+* [Added] Added a manual capture mode for identity document verification, allowing users to tap "Take Photo" instead of relying on automatic capture. ([#6379](https://github.com/stripe/stripe-ios/pull/6379))
+
 ### PaymentSheet
 * [Changed] Renamed `LinkPaymentController` to `InstantBankPaymentsController`.
 * [Changed] Link bank account display strings now include the last 4 digits in `LinkController.PaymentMethodPreview.sublabel` and `PaymentSheet.FlowController.PaymentOptionDisplayData.labels.sublabel`, matching the existing card behavior.
