@@ -64,6 +64,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
           type: invalid_request_error
 
         Code: link_failed_to_attest_request
+
         Next step: Register this app's bundle ID or package name as a trusted application with Stripe, then retry the Onramp flow.
         SDK: stripe-ios@\(STPAPIClient.STPSDKVersion)
         """)
@@ -125,6 +126,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         Developer body.
 
         Code: test_code
+
         Next step: Fix the integration.
         Docs: https://stripe.com/docs/test
         SDK: stripe-ios@25.16.0
