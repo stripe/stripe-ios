@@ -317,11 +317,6 @@ import Foundation
     // MARK: - Custom Payment Methods
     case paymentSheetInvalidCPM = "mc_invalid_cpm"
 
-    // MARK: - Shop Pay Webview
-    case shopPayWebviewLoadAttempt = "mc_shoppay_webview_load_attempt"
-    case shopPayWebviewConfirmSuccess = "mc_shoppay_webview_confirm_success"
-    case shopPayWebviewCancelled = "mc_shoppay_webview_cancelled"
-
     // MARK: - Captcha
     case passiveCaptchaInit = "elements.captcha.passive.init"
     case passiveCaptchaExecute = "elements.captcha.passive.execute"

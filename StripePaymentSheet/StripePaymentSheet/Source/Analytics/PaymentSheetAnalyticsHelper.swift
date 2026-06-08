@@ -282,8 +282,6 @@ final class PaymentSheetAnalyticsHelper {
                 return "apple_pay"
             case .link:
                 return "link"
-            case .shopPay:
-                return "shop_pay"
             }
         }()
         log(event: .mcWalletButtonTapped, selectedLPM: selectedLPM)
@@ -457,18 +455,6 @@ final class PaymentSheetAnalyticsHelper {
             }
         }()
         log(event: .mcUpdateFinishedEmbedded, duration: duration, error: error, params: ["status": result.analyticValue])
-    }
-
-    func logShopPayWebviewLoadAttempt() {
-        log(event: .shopPayWebviewLoadAttempt)
-    }
-
-    func logShopPayWebviewConfirmSuccess() {
-        log(event: .shopPayWebviewConfirmSuccess)
-    }
-
-    func logShopPayWebviewCancelled(didReceiveECEClick: Bool) {
-        log(event: .shopPayWebviewCancelled, params: ["did_receive_ece_click": didReceiveECEClick])
     }
 
     func logPaymentMethodMessagingFetchBegin() {

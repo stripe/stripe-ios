@@ -90,8 +90,6 @@ import Foundation
     case twint
     /// A Multibanco payment method
     case multibanco
-    /// A ShopPay payment method
-    @_spi(STP) case shopPay
     /// A PayPay payment method
     case payPay
     /// A Wero payment method
@@ -186,8 +184,6 @@ import Foundation
             return "TWINT"
         case .multibanco:
             return "Multibanco"
-        case .shopPay:
-            return "ShopPay"
         case .payPay:
             return "PayPay"
         case .wero:
@@ -285,8 +281,6 @@ import Foundation
             return "twint"
         case .multibanco:
             return "multibanco"
-        case .shopPay:
-            return "shop_pay"
         case .payPay:
             return "paypay"
         case .wero:
