@@ -7,6 +7,7 @@ MINOR
 * [Changed] Renamed `LinkPaymentController` to `InstantBankPaymentsController`.
 * [Changed] Link bank account display strings now include the last 4 digits in `LinkController.PaymentMethodPreview.sublabel` and `PaymentSheet.FlowController.PaymentOptionDisplayData.labels.sublabel`, matching the existing card behavior.
 * [Fixed] The Link verification flow no longer shows an indefinite loading state when encountering rate limit errors.
+* [Fixed] Fixed removal of shimmering effect for horizontal view cells
 
 ### CryptoOnramp (Alpha)
 * [Added] Added `StripeCryptoOnrampError` for rich Crypto Onramp errors and `StripeCryptoOnrampAPIError` for API-backed Crypto Onramp errors, with separate user-facing and developer-facing messages, stable error codes, documentation URLs, and underlying errors.
@@ -22,7 +23,6 @@ MINOR
 * [Fixed] Fixed Japan address form missing the city field. ([#6506](https://github.com/stripe/stripe-ios/issues/6506))
 * [Added] Added support for Card Art for saved payment methods when using CustomerSessions
 * [Added] `PaymentSheet.FlowController.PaymentOptionDisplayData.image` and `EmbeddedPaymentElement.PaymentOptionDisplayData` may now return card art for saved card. Integrators displaying this image in very compact layouts may wish to revisit sizing to best accommodate richer payment method visuals.
-* [Fixed] Fixed removal of shimmering effect for horizontal view cells
 
 ### Address Element
 * [Fixed] Fixed Japan address form missing the city field. ([#6506](https://github.com/stripe/stripe-ios/issues/6506))
