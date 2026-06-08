@@ -862,7 +862,6 @@ public class STPPaymentHandler: NSObject {
             .swish,
             .twint,
             .multibanco,
-            .shopPay,
             .payPay,
             .wero,
             .payByBank:
