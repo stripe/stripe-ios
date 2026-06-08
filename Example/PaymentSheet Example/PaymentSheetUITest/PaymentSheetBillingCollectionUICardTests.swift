@@ -112,7 +112,7 @@ class PaymentSheetBillingCollectionUICardTests: PaymentSheetBillingCollectionUIT
         XCTAssertNotNil(analyticsLog.last { $0[string: "event"] == "mc_address_autocomplete_complete" })
 
         continueButton.tap()
-        confirmButton.tap()
+        confirmButton.waitForExistenceAndTap()
         XCTAssertTrue(successText.waitForExistence(timeout: 10.0))
 
         if let completedEvent = analyticsLog.first(where: { $0[string: "event"] == "mc_billing_address_completed" }),
