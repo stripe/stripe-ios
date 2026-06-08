@@ -46,8 +46,6 @@ Table of contents
 
 **Stripe API**: [StripePayments](StripePayments/README.md) provides [low-level APIs](https://stripe.dev/stripe-ios/docs/Classes/STPAPIClient.html) that correspond to objects and methods in the Stripe API. You can build your own entirely custom UI on top of this layer, while still taking advantage of utilities like [STPCardValidator](https://stripe.dev/stripe-ios/docs/Classes/STPCardValidator.html) to validate your user’s input.
 
-**Card scanning**: We support card scanning on iOS 15 and higher. See our [Card scanning](#Card-scanning) section.
-
 **App Clips**: The `StripeApplePay` module provides a [lightweight SDK for offering Apple Pay in an App Clip](https://stripe.com/docs/apple-pay#app-clips).
 
 **Localized**: We support the following localizations: Bulgarian, Catalan, Chinese (Hong Kong), Chinese (Simplified), Chinese (Traditional), Croatian, Czech, Danish, Dutch, English (US), English (United Kingdom), Estonian, Filipino, Finnish, French, French (Canada), German, Greek, Hungarian, Indonesian, Italian, Japanese, Korean, Latvian, Lithuanian, Malay, Maltese, Norwegian Bokmål, Norwegian Nynorsk (Norway), Polish, Portuguese, Portuguese (Brazil), Romanian, Russian, Slovak, Slovenian, Spanish, Spanish (Latin America), Swedish, Turkish, Thai and Vietnamese.
@@ -112,9 +110,9 @@ If you're reading this on GitHub.com, please make sure you are looking at the [t
 
 ## Requirements
 
-The minimum iOS version is now 15.0, as Xcode 27 no longer supports building for iOS 13 or iOS 14. If you'd like to deploy for iOS versions below iOS 15, please use Stripe SDK 25.16.0. We support Catalyst on macOS 11 or later.
+The Stripe iOS SDK supports all [Apple supported Xcode versions](https://developer.apple.com/news/upcoming-requirements/) and is compatible with apps targeting iOS 15 or above. We support Catalyst on macOS 15 or later.
 
-For iOS 12 support, please use [v22.8.4](https://github.com/stripe/stripe-ios/tree/v22.8.4). For iOS 11 support, please use [v21.13.0](https://github.com/stripe/stripe-ios/tree/v21.13.0). For iOS 10, please use [v19.4.0](https://github.com/stripe/stripe-ios/tree/v19.4.0). If you need to support iOS 9, use [v17.0.2](https://github.com/stripe/stripe-ios/tree/v17.0.2).
+For iOS 13 and 14 support, please use [25.16.0](https://github.com/stripe/stripe-ios/tree/v25.16.0).
 
 ## Getting started
 
