@@ -199,12 +199,11 @@ final class TwoOptionSelectorView: UIView {
     }
 
     private func configureButton(_ button: UIButton, item: TwoOptionSelectorItem) {
-        button.setAttributedTitle(item.displayText, for: .normal)
-        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote)
-        var config = button.configuration ?? .plain()
+        var config = UIButton.Configuration.plain()
         config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+        config.attributedTitle = AttributedString(item.displayText)
+        config.background.backgroundColor = .clear
         button.configuration = config
-        button.backgroundColor = .clear
         button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
         button.accessibilityLabel = item.accessibilityLabel
         button.accessibilityIdentifier = item.accessibilityIdentifier
