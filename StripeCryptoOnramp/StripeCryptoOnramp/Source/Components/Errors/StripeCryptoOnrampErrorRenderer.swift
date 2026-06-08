@@ -59,6 +59,7 @@ enum StripeCryptoOnrampErrorRenderer {
             developerBody,
             "",
             "Code: \(code)",
+            "",
             "Next step: \(nextStep)",
         ]
 
