@@ -71,6 +71,10 @@ import UIKit
     /// The API version used to communicate with Stripe.
     @objc public static let apiVersion = APIVersion
 
+    /// Standardized mobile SDK version header for server-driven mobile endpoints.
+    @_spi(STP) public static let mobileSDKVersionHeader = "Stripe-Mobile-SDK-Version"
+    @_spi(STP) public static let mobileSDKVersionHeaderValue = "stripe-ios/\(STPSDKVersion)"
+
     // MARK: Internal/private properties
     @_spi(STP) public var apiURL: URL! = URL(string: APIBaseURL)
     @_spi(STP) public var urlSession = URLSession(
@@ -138,6 +142,7 @@ import UIKit
             stripeVersion += "; \(beta)"
         }
         defaultHeaders["Stripe-Version"] = stripeVersion
+        defaultHeaders[STPAPIClient.mobileSDKVersionHeader] = STPAPIClient.mobileSDKVersionHeaderValue
         defaultHeaders["Stripe-Account"] = stripeAccount
         for (k, v) in authorizationHeader(using: ephemeralKeySecret) { defaultHeaders[k] = v }
         return defaultHeaders

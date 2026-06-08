@@ -129,15 +129,31 @@ final class PaymentSheetLoader {
             let elementsSessionAndIntent = try await elementsSessionAndIntentTask.value
             let intent = elementsSessionAndIntent.intent
             let elementsSession = elementsSessionAndIntent.elementsSession
+
+            loadTimings.logStart("loadServerDrivenPaymentSheet")
+            if let serverDrivenPaymentSheet = ServerDrivenPaymentSheetMockServer.load(
+                configuration: configuration,
+                intent: intent,
+                elementsSession: elementsSession
+            ) {
+                elementsSession.serverDrivenPaymentSheet = serverDrivenPaymentSheet
+                ServerDrivenPaymentSheetAssetStore.shared.install(serverDrivenPaymentSheet.assets)
+            }
+            loadTimings.logEnd("loadServerDrivenPaymentSheet")
+
             // Overwrite the form specs that were already loaded from disk
             loadTimings.logStart("loadFormSpecs")
-            switch intent {
-            case .paymentIntent, .deferredIntent, .checkoutSession:
-                if !elementsSession.isBackupInstance {
-                    _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+            if let serverFormSpecs = elementsSession.serverDrivenPaymentSheet?.formSpecs {
+                _ = FormSpecProvider.shared.loadFrom(serverFormSpecs.map { $0 as NSDictionary })
+            } else {
+                switch intent {
+                case .paymentIntent, .deferredIntent, .checkoutSession:
+                    if !elementsSession.isBackupInstance {
+                        _ = FormSpecProvider.shared.loadFrom(elementsSession.paymentMethodSpecs as Any)
+                    }
+                case .setupIntent:
+                    break // Not supported
                 }
-            case .setupIntent:
-                break // Not supported
             }
             loadTimings.logEnd("loadFormSpecs")
 
@@ -185,12 +201,8 @@ final class PaymentSheetLoader {
             loadTimings.logStart("computePaymentMethodTypes")
             let isApplePayEnabled = PaymentSheet.isApplePayEnabled(elementsSession: elementsSession, configuration: configuration)
 
-            // Disable FC Lite if killswitch is enabled
-            let isFcLiteKillswitchEnabled = elementsSession.flags["elements_disable_fc_lite"] == true
-            FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = isFcLiteKillswitchEnabled
-
-            let remoteFcLiteOverrideEnabled = elementsSession.flags["elements_prefer_fc_lite"] == true
-            FinancialConnectionsSDKAvailability.remoteFcLiteOverride = remoteFcLiteOverrideEnabled
+            let serverDrivenFeatures = elementsSession.serverDrivenFeatures
+            applyServerDrivenFeatures(serverDrivenFeatures)
 
             let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: elementsSession, configuration: configuration, logAvailability: true)
 
@@ -300,6 +312,11 @@ final class PaymentSheetLoader {
         savedPaymentMethods.contains { $0.type == .card && $0.card?.cardArt?.artImage?.url != nil }
     }
 
+    static func applyServerDrivenFeatures(_ features: ServerDrivenPaymentSheetResponse.Features) {
+        FinancialConnectionsSDKAvailability.fcLiteKillswitchEnabled = features.financialConnectionsLite.fcLiteKillswitchEnabled
+        FinancialConnectionsSDKAvailability.remoteFcLiteOverride = features.financialConnectionsLite.remoteFcLiteOverrideEnabled
+    }
+
     // MARK: - Helper methods that load things
 
     /// Loads miscellaneous singletons
@@ -335,7 +352,7 @@ final class PaymentSheetLoader {
         // Lookup Link account if Link is enabled, or if Link is disabled due to the holdback experiment (to collect experiment dimensions).
         let isLinkEnabled = PaymentSheet.isLinkEnabled(elementsSession: elementsSession, configuration: configuration)
         let isLinkInHoldbackExperiment = PaymentSheet.isLinkInHoldbackExperiment(elementsSession: elementsSession)
-        let isLookupForHoldbackEnabled = elementsSession.flags["elements_disable_link_global_holdback_lookup"] != true
+        let isLookupForHoldbackEnabled = elementsSession.serverDrivenFeatures.linkGlobalHoldbackLookup
 
         guard isLinkEnabled || (isLinkInHoldbackExperiment && isLookupForHoldbackEnabled) else {
             return nil

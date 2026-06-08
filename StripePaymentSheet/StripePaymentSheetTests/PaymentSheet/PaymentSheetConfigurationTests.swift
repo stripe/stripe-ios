@@ -85,6 +85,7 @@ class PaymentSheetConfigurationTests: XCTestCase {
         XCTAssertEqual(psBillingDetails.address.state, "California")
         XCTAssertEqual(psBillingDetails.address.country, "US")
     }
+
     func testReturnsEphemeralKey() {
         let customerConfig = PaymentSheet.CustomerConfiguration(id: "cus_12345", ephemeralKeySecret: "ek_12345")
         let key = customerConfig.ephemeralKeySecret(basedOn: .emptyElementsSession)
@@ -155,15 +156,15 @@ class PaymentSheetConfigurationTests: XCTestCase {
         )
         let config2 = PaymentSheet.BillingDetailsCollectionConfiguration(
             name: .always,
-            allowedCountries: ["CA", "US"]  // Different order, but same set
+            allowedCountries: ["CA", "US"] // Different order, but same set
         )
         let config3 = PaymentSheet.BillingDetailsCollectionConfiguration(
             name: .always,
-            allowedCountries: ["US", "GB"]  // Different countries
+            allowedCountries: ["US", "GB"] // Different countries
         )
 
-        XCTAssertEqual(config1, config2)  // Order shouldn't matter for sets
-        XCTAssertNotEqual(config1, config3)  // Different countries should not be equal
+        XCTAssertEqual(config1, config2) // Order shouldn't matter for sets
+        XCTAssertNotEqual(config1, config3) // Different countries should not be equal
     }
 
     func testBillingDetailsCollectionConfiguration_allowedCountries_mutability() {
@@ -209,8 +210,16 @@ class PaymentSheetConfigurationTests: XCTestCase {
     func testResolveLayout_automatic_forceVertical() {
         var config = PaymentSheet.Configuration()
         config.paymentMethodLayout = .automatic
-        // forceVerticalPaymentMethodLayout flag set → vertical even with few PMs
-        let elementsSession = STPElementsSession._testValue(flags: ["elements_mobile_force_vertical_payment_method_layout": true])
+        // Server-driven forceVerticalPaymentMethodLayout feature set -> vertical even with few PMs
+        let elementsSession = STPElementsSession._testValue()
+        elementsSession.serverDrivenPaymentSheet = ._testValue(
+            features: .init(
+                financialConnectionsLite: .automatic,
+                linkGlobalHoldbackLookup: true,
+                forceVerticalPaymentMethodLayout: true,
+                cardFundingFiltering: false
+            )
+        )
         XCTAssertEqual(config.resolveLayout(elementsSession: elementsSession, paymentMethodTypes: [.stripe(.card), .stripe(.USBankAccount)]), .vertical)
     }
 }
@@ -222,11 +231,11 @@ extension STPElementsSession {
                                           "session_id": "123",
                                           "config_id": "abc123",
                                           "apple_pay_preference": "enabled",
-                                          "customer": ["payment_methods": [["id": "pm_1234"], ["id": "pm_4567"], ],
+                                          "customer": ["payment_methods": [["id": "pm_1234"], ["id": "pm_4567"]],
                                                        "customer_session": ["id": "cuss_123",
                                                                             "livemode": false,
                                                                             "api_key": apiKey,
-                                                                            "api_key_expiry": 123456678,
+                                                                            "api_key_expiry": 123_456_678,
                                                                             "customer": "cus_456",
                                                                             "components": [
                                                                                 "mobile_payment_element": [
@@ -240,9 +249,8 @@ extension STPElementsSession {
                                                                                     "enabled": false,
                                                                                 ],
                                                                             ],
-                                                                           ],
-                                                      ],
-        ]
+                                                       ],
+                                          ], ]
         return STPElementsSession.decodedObject(fromAPIResponse: apiResponse)!
     }
 }

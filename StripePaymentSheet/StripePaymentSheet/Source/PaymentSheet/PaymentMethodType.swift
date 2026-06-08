@@ -26,6 +26,9 @@ extension PaymentSheet {
         static let analyticLogForIconSemaphore = DispatchSemaphore(value: 1)
 
         var displayName: String {
+            if let serverDisplayName = ServerDrivenPaymentSheetAssetStore.shared.displayName(for: identifier) {
+                return serverDisplayName
+            }
             switch self {
             case .stripe(let paymentMethodType):
                 return paymentMethodType.displayName
@@ -147,6 +150,33 @@ extension PaymentSheet {
                     #if DEBUG
                     print("[Stripe SDK]: \(message)")
                     #endif
+                }
+            }
+
+            if let serverDrivenPaymentSheet = elementsSession.serverDrivenPaymentSheet {
+                return serverDrivenPaymentSheet.paymentMethodTypes.compactMap { paymentMethodType in
+                    switch paymentMethodType {
+                    case "instant_debits":
+                        return .instantDebits
+                    case "link_card_brand":
+                        return .linkCardBrand
+                    default:
+                        let stripePaymentMethodType = STPPaymentMethod.type(from: paymentMethodType)
+                        if stripePaymentMethodType != .unknown {
+                            return .stripe(stripePaymentMethodType)
+                        }
+                        if let externalPaymentMethod = elementsSession.externalPaymentMethods.first(where: { $0.type == paymentMethodType }),
+                           let externalPaymentOption = ExternalPaymentOption.from(externalPaymentMethod, configuration: configuration.externalPaymentMethodConfiguration) {
+                            return .external(externalPaymentOption)
+                        }
+                        if let customPaymentMethod = elementsSession.customPaymentMethods.first(where: { $0.type == paymentMethodType }),
+                           let externalPaymentOption = ExternalPaymentOption.from(customPaymentMethod, configuration: configuration.customPaymentMethodConfiguration) {
+                            return .external(externalPaymentOption)
+                        }
+                        stpAssertionFailure("Server-driven PaymentSheet returned unsupported payment method type: \(paymentMethodType)")
+                        logIfNecessary("Server-driven PaymentSheet returned unsupported payment method type: \(paymentMethodType)")
+                        return nil
+                    }
                 }
             }
 

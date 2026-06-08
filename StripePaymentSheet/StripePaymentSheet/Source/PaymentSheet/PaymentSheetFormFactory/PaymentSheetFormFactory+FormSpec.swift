@@ -11,6 +11,36 @@ import Foundation
 @_spi(STP) import StripeUICore
 
 extension PaymentSheetFormFactory {
+    private typealias NativePaymentMethodFormBuilder = (PaymentSheetFormFactory, FormSpec.NativePaymentMethodFormSpec) -> PaymentMethodElement
+    private typealias NativeMandateBuilder = (PaymentSheetFormFactory) -> Element
+
+    private static let nativePaymentMethodFormBuilders: [FormSpec.NativePaymentMethodFormSpec.FormType: NativePaymentMethodFormBuilder] = [
+        .card: { factory, _ in factory.makeCard(linkAppearance: factory.linkAppearance) },
+        .usBankAccount: { factory, _ in factory.makeUSBankAccount(merchantName: factory.configuration.merchantDisplayName) },
+        .instantDebits: { factory, _ in factory.makeInstantDebits() },
+        .externalPaymentMethod: { factory, spec in
+            factory.makeExternalPaymentMethodForm(
+                subtitle: spec.subtitle,
+                disableBillingDetailCollection: spec.disableBillingDetailCollection ?? false
+            )
+        },
+        .bacsDebit: { factory, _ in factory.makeBacsDebit() },
+        .blik: { factory, _ in factory.makeBLIK() },
+        .konbini: { factory, _ in factory.makeKonbini() },
+        .boleto: { factory, _ in factory.makeBoleto() },
+    ]
+
+    private static let nativeMandateBuilders: [FormSpec.NativeMandateSpec.MandateType: NativeMandateBuilder] = [
+        .cashApp: { factory in factory.makeCashAppMandate() },
+        .paypal: { factory in factory.makePaypalMandate() },
+        .revolutPay: { factory in factory.makeRevolutPayMandate() },
+        .amazonPay: { factory in factory.makeAmazonPayMandate() },
+        .satispay: { factory in factory.makeSatispayMandate() },
+        .twint: { factory in factory.makeTwintMandate() },
+        .sepa: { factory in factory.makeSepaMandate() },
+        .klarna: { factory in factory.makeKlarnaMandate() },
+    ]
+
     func makeFormElementFromSpec(
         spec: FormSpec,
         additionalElements: [Element] = []
@@ -18,20 +48,12 @@ extension PaymentSheetFormFactory {
         let elements = makeFormElements(from: spec)
         let formElement = FormElement(
             autoSectioningElements: elements + additionalElements,
-            theme: theme)
+            theme: theme
+        )
         return makeDefaultsApplierWrapper(for: formElement)
     }
 
     private func makeFormElements(from spec: FormSpec) -> [Element] {
-        // These fields may be added according to `configuration.billingDetailsCollectionConfiguration` if they
-        // aren't already present.
-        var billingDetailsFields: [FormSpec.PlaceholderSpec.PlaceholderField] = [
-            .name,
-            .email,
-            .phone,
-            .billingAddress,
-        ]
-
         // These fields will need to be connected.
         var countryElement: Element?
         var billingAddressElement: Element?
@@ -40,9 +62,6 @@ extension PaymentSheetFormFactory {
         var elements: [Element] = []
         for fieldSpec in spec.fields {
             guard let element = fieldSpecToElement(fieldSpec: fieldSpec) else { continue }
-            if let fieldToRemove = fieldToRemove(from: fieldSpec) {
-                billingDetailsFields.remove(fieldToRemove)
-            }
 
             if fieldSpec.isCountrySpec {
                 countryElement = element
@@ -57,94 +76,88 @@ extension PaymentSheetFormFactory {
             elements.append(element)
         }
 
-        // Add billing details fields if they are needed and not already present.
-        for field in billingDetailsFields {
-            guard let element = makeOptionalBillingDetailsField(for: field) else { continue }
-
-            switch field {
-            case .phone:
-                phoneElement = element
-            case .billingAddress:
-                billingAddressElement = element
-            default: break
-            }
-
-            elements.append(element)
-        }
-
         connectBillingDetailsFields(
             countryElement: countryElement as? PaymentMethodElementWrapper<DropdownFieldElement>,
             addressElement: billingAddressElement as? PaymentMethodElementWrapper<AddressSectionElement>,
-            phoneElement: phoneElement as? PaymentMethodElementWrapper<PhoneNumberElement>)
+            phoneElement: phoneElement as? PaymentMethodElementWrapper<PhoneNumberElement>
+        )
 
         return elements
     }
 
-    private func fieldToRemove(from fieldSpec: FormSpec.FieldSpec) -> FormSpec.PlaceholderSpec.PlaceholderField? {
-        switch fieldSpec {
-        case .name:
-            return .name
-        case .email:
-            return .email
-        case .billing_address:
-            return .billingAddress
-        case .placeholder(let placeholder):
-            switch placeholder.field {
-            case .name:
-                return .name
-            case .email:
-                return .email
-            case .phone:
-                return .phone
-            case .billingAddress, .billingAddressWithoutCountry:
-                return .billingAddress
-            default: return nil
-            }
-        default: return nil
-        }
-    }
-
     private func fieldSpecToElement(fieldSpec: FormSpec.FieldSpec) -> Element? {
         switch fieldSpec {
-        case .name(let spec):
+        case let .name(spec):
             return configuration.billingDetailsCollectionConfiguration.name != .never
                 ? makeName(label: spec.translationId?.localizedValue, apiPath: spec.apiPath?["v1"])
                 : nil
-        case .email(let spec):
+        case let .email(spec):
             return configuration.billingDetailsCollectionConfiguration.email != .never
                 ? makeEmail(apiPath: spec.apiPath?["v1"])
                 : nil
-        case .selector(let selectorSpec):
+        case let .selector(selectorSpec):
             return makeDropdown(for: selectorSpec)
-        case .billing_address(let countrySpec):
+        case let .billing_address(countrySpec):
             return configuration.billingDetailsCollectionConfiguration.address != .never
                 ? makeBillingAddressSection(countries: countrySpec.allowedCountryCodes)
                 : nil
-        case .country(let spec):
+        case let .country(spec):
             return makeCountry(countryCodes: spec.allowedCountryCodes, apiPath: spec.apiPath?["v1"])
         case .affirm_header:
             return makeAffirmHeader()
         case .klarna_header:
             return makeKlarnaHeader()
-        case .klarna_country(let spec):
+        case let .klarna_country(spec):
             return makeKlarnaCountry(apiPath: spec.apiPath?["v1"])!
-        case .au_becs_bsb_number(let spec):
+        case let .au_becs_bsb_number(spec):
             return makeBSB(apiPath: spec.apiPath?["v1"])
-        case .au_becs_account_number(let spec):
+        case let .au_becs_account_number(spec):
             return makeAUBECSAccountNumber(apiPath: spec.apiPath?["v1"])
         case .au_becs_mandate:
             return makeAUBECSMandate()
         case .afterpay_header:
             return makeAfterpayClearpayHeader()
-        case .iban(let spec):
+        case let .iban(spec):
             return makeIban(apiPath: spec.apiPath?["v1"])
         case .sepa_mandate:
             return makeSepaMandate()
-        case .placeholder(let spec):
+        case let .placeholder(spec):
             return makePlaceholder(for: spec)
-        case .unknown:
+        case let .native_payment_method_form(spec):
+            return makeNativePaymentMethodForm(for: spec)
+        case let .native_mandate(spec):
+            return makeNativeMandate(for: spec)
+        case let .unknown(fieldType):
+            logUnsupportedFormSpecField(fieldType)
             return nil
         }
+    }
+
+    private func logUnsupportedFormSpecField(_ fieldType: String) {
+        let errorAnalytic = ErrorAnalytic(
+            event: .unexpectedPaymentSheetFormFactoryError,
+            error: Error.unsupportedFormSpecField,
+            additionalNonPIIParams: [
+                "payment_method": paymentMethod.identifier,
+                "field_type": fieldType,
+            ]
+        )
+        analyticsHelper?.analyticsClient.log(analytic: errorAnalytic)
+
+        let assertMessage = "Unsupported PaymentSheet form spec field '\(fieldType)' for \(paymentMethod.identifier)"
+        print("STPAssertionFailure: \(assertMessage)")
+    }
+
+    func makeNativePaymentMethodForm(for spec: FormSpec.NativePaymentMethodFormSpec) -> PaymentMethodElement? {
+        return Self.nativePaymentMethodFormBuilders[spec.formType]?(self, spec)
+    }
+
+    func makeNativeMandate(for spec: FormSpec.NativeMandateSpec) -> Element? {
+        if spec.setupFutureUsageRequired == true && !isSettingUp {
+            return nil
+        }
+
+        return Self.nativeMandateBuilders[spec.mandateType]?(self)
     }
 
     func makePlaceholder(for spec: FormSpec.PlaceholderSpec) -> Element? {
@@ -213,7 +226,7 @@ extension FormSpec.FieldSpec {
     }
 
     var isPhoneSpec: Bool {
-        if case .placeholder(let placeholderSpec) = self {
+        if case let .placeholder(placeholderSpec) = self {
             return placeholderSpec.field == .phone
         }
         return false
@@ -222,7 +235,7 @@ extension FormSpec.FieldSpec {
     var isAddressSpec: Bool {
         switch self {
         case .billing_address: return true
-        case .placeholder(let placeholderSpec):
+        case let .placeholder(placeholderSpec):
             switch placeholderSpec.field {
             case .billingAddress, .billingAddressWithoutCountry: return true
             default: break
@@ -231,5 +244,16 @@ extension FormSpec.FieldSpec {
         }
 
         return false
+    }
+}
+
+extension FormSpec {
+    var nativePaymentMethodFormSpec: NativePaymentMethodFormSpec? {
+        guard fields.count == 1,
+              case let .native_payment_method_form(spec) = fields.first
+        else {
+            return nil
+        }
+        return spec
     }
 }

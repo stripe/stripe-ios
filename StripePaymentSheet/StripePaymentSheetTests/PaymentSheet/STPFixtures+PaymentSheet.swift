@@ -48,20 +48,53 @@ public extension EmbeddedPaymentElement.Configuration {
 
 public extension PaymentSheet.Appearance {
     mutating func applyLiquidGlassIfPossible() {
-#if !os(visionOS)
-        if #available(iOS 26.0, visionOS 26.0, *) {
-            self.applyLiquidGlass()
-        }
-#endif
+        #if !os(visionOS)
+            if #available(iOS 26.0, visionOS 26.0, *) {
+                self.applyLiquidGlass()
+            }
+        #endif
     }
+
     func applyingLiquidGlassIfPossible() -> PaymentSheet.Appearance {
         var copy = self
-#if !os(visionOS)
-        if #available(iOS 26.0, visionOS 26.0, *) {
-            copy.applyLiquidGlass()
-        }
-#endif
+        #if !os(visionOS)
+            if #available(iOS 26.0, visionOS 26.0, *) {
+                copy.applyLiquidGlass()
+            }
+        #endif
         return copy
+    }
+}
+
+extension ServerDrivenPaymentSheetResponse {
+    static func _testValue(
+        features: Features = .defaults,
+        paymentMethodTypes: [String] = ["card"],
+        assets: Assets = .init(paymentMethodDisplayNames: [:], selectorIconURLs: [:]),
+        formSpecs: [[String: Any]] = []
+    ) -> ServerDrivenPaymentSheetResponse {
+        return .init(
+            mobileTeamContact: "mobile-paymentsheet-backend@example.invalid",
+            sdkVersionHeader: STPAPIClient.mobileSDKVersionHeaderValue,
+            serializedConfiguration: .init(
+                merchantDisplayName: "Test Merchant",
+                allowsDelayedPaymentMethods: false,
+                allowsPaymentMethodsRequiringShippingAddress: false,
+                hasApplePay: false,
+                linkEnabled: true,
+                returnURLProvided: false,
+                paymentMethodOrder: nil,
+                billingDetailsCollection: [:],
+                defaultBillingDetails: [:],
+                mode: "payment",
+                amount: 1099,
+                currency: "usd"
+            ),
+            features: features,
+            paymentMethodTypes: paymentMethodTypes,
+            assets: assets,
+            formSpecs: formSpecs
+        )
     }
 }
 
@@ -82,7 +115,7 @@ extension STPElementsSession {
         customPaymentMethods: [CustomPaymentMethod] = [],
         passiveCaptchaData: PassiveCaptchaData? = nil,
         customer: ElementsCustomer? = nil,
-        isBackupInstance: Bool = false
+        isBackupInstance _: Bool = false
     ) -> STPElementsSession {
         return .init(
             allResponseFields: [:],
@@ -118,7 +151,7 @@ extension STPElementsSession {
                 "features": ["payment_method_save": "enabled",
                              "payment_method_remove": "enabled",
                              "payment_method_set_as_default": "enabled",
-                            ],
+                ],
             ],
             "customer_sheet": [
                 "enabled": false,
@@ -226,13 +259,13 @@ extension STPElementsSession {
     ) -> STPElementsSession {
         let paymentMethodTypes: [String] = {
             switch intent {
-            case .paymentIntent(let paymentIntent):
+            case let .paymentIntent(paymentIntent):
                 return paymentIntent.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
-            case .setupIntent(let setupIntent):
+            case let .setupIntent(setupIntent):
                 return setupIntent.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
-            case .deferredIntent(let intentConfig):
+            case let .deferredIntent(intentConfig):
                 return intentConfig.paymentMethodTypes ?? []
-            case .checkoutSession(let checkoutSession):
+            case let .checkoutSession(checkoutSession):
                 return checkoutSession.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
             }
         }()
@@ -244,7 +277,7 @@ extension STPElementsSession {
                     "features": ["payment_method_save": "enabled",
                                  "payment_method_remove": "enabled",
                                  "payment_method_set_as_default": "enabled",
-                                ],
+                    ],
                 ],
                 "customer_sheet": [
                     "enabled": false,
@@ -282,18 +315,18 @@ extension Intent {
 
     static func _testSetupIntent(
         paymentMethodTypes: [STPPaymentMethodType] = [.card],
-        customerSessionData: [String: Any]? = nil
+        customerSessionData _: [String: Any]? = nil
     ) -> Intent {
         let setupIntent = STPFixtures.makeSetupIntent(paymentMethodTypes: paymentMethodTypes)
         return .setupIntent(setupIntent)
     }
 
     static func _testDeferredIntent(
-        paymentMethodTypes: [STPPaymentMethodType],
+        paymentMethodTypes _: [STPPaymentMethodType],
         setupFutureUsage: PaymentSheet.IntentConfiguration.SetupFutureUsage? = nil,
         paymentMethodOptionsSetupFutureUsage: [STPPaymentMethodType: PaymentSheet.IntentConfiguration.SetupFutureUsage]? = nil
     ) -> Intent {
-        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in return "" }))
+        return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in "" }))
     }
 
     static func _testCheckoutSession(
@@ -362,7 +395,7 @@ extension Intent {
             lineItemGroup["tax_amounts"] = [[
                 "amount": taxAmount,
                 "inclusive": false,
-                "taxable_amount": (subtotal ?? amount ?? 0),
+                "taxable_amount": subtotal ?? amount ?? 0,
             ], ]
         }
         if discountAmount != 0 {
@@ -384,7 +417,7 @@ extension Intent {
 
 extension PaymentSheet.IntentConfiguration {
     static func _testValue() -> Self {
-        return .init(mode: .payment(amount: 100, currency: "USD")) { _, _ in return "" }
+        return .init(mode: .payment(amount: 100, currency: "USD")) { _, _ in "" }
     }
 }
 
@@ -438,7 +471,7 @@ extension PaymentSheet.Appearance {
 
 extension PaymentSheetLoader.LoadResult {
     static func _testValue(paymentMethodTypes: [String], savedPaymentMethods: [STPPaymentMethod]) -> Self {
-        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in "" }
         let elementsSession = STPElementsSession._testValue(
             paymentMethodTypes: paymentMethodTypes
         )

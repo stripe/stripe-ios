@@ -31,7 +31,7 @@ class MockElement: Element {
     }
 
     weak var delegate: ElementDelegate?
-    lazy var view: UIView = { UIView() }()
+    lazy var view: UIView = .init()
 }
 
 class PaymentSheetFormFactoryTest: XCTestCase {
@@ -61,6 +61,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         XCTAssertNil(headerView)
     }
+
     private func makeCheckoutSessionIntent(
         offerSave: [String: Any]? = nil,
         hasCustomer: Bool = true
@@ -701,6 +702,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             ],
             selectorIcon: nil
         )
+        STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         let formElement = factory.makeFormElementFromSpec(spec: spec)
         let params = IntentConfirmParams(type: .stripe(.AUBECSDebit))
         guard let wrappedElement = firstWrappedTextFieldElement(formElement: formElement.element) else {
@@ -973,7 +975,10 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let factory = PaymentSheetFormFactory(
             intent: ._testValue(), elementsSession: ._testCardValue(),
             configuration: .paymentElement(configuration),
-            paymentMethod: .stripe(.grabPay)
+            paymentMethod: .stripe(.grabPay),
+            paymentMethodOrientation: .vertical,
+            accountService: LinkAccountService._testValue(),
+            analyticsHelper: nil
         )
         let spec = FormSpec(
             type: "grabpay",
@@ -981,7 +986,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             fields: [
                 .unknown("some_unknownField1"),
                 .email(.init(apiPath: nil)),
-                .unknown("some_unknownField2"),
             ],
             selectorIcon: nil
         )
@@ -1163,7 +1167,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             }
             if form.getAllUnwrappedSubElements()
                 .compactMap({ $0 as? CheckboxElement })
-                .contains(where: { $0.label.hasPrefix("Save") }) { // Hacky way to differentiate the save checkbox from other checkboxes
+                .contains(where: { $0.label.hasPrefix("Save") })
+            { // Hacky way to differentiate the save checkbox from other checkboxes
                 XCTFail("\(type) contains a checkbox")
             }
         }
@@ -1216,7 +1221,8 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             }
             if form.getAllUnwrappedSubElements()
                 .compactMap({ $0 as? CheckboxElement })
-                .contains(where: { $0.label.hasPrefix("Set as default") }) { // Hacky way to differentiate the save checkbox from other checkboxes
+                .contains(where: { $0.label.hasPrefix("Set as default") })
+            { // Hacky way to differentiate the save checkbox from other checkboxes
                 XCTFail("\(type) contains a checkbox")
             }
         }
@@ -1475,7 +1481,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                     "enabled": true,
                     "features": ["payment_method_save": "enabled",
                                  "payment_method_remove": "enabled",
-                                ],
+                    ],
                 ],
                 "customer_sheet": [
                     "enabled": false,
@@ -1497,15 +1503,15 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                         setupFutureUsage: .offSession),
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
                                          customerSessionData: [
-                                            "mobile_payment_element": [
-                                                "enabled": true,
-                                                "features": ["payment_method_save": "enabled",
-                                                             "payment_method_remove": "enabled",
-                                                            ],
-                                            ],
-                                            "customer_sheet": [
-                                                "enabled": false,
-                                            ],
+                                             "mobile_payment_element": [
+                                                 "enabled": true,
+                                                 "features": ["payment_method_save": "enabled",
+                                                              "payment_method_remove": "enabled",
+                                                 ],
+                                             ],
+                                             "customer_sheet": [
+                                                 "enabled": false,
+                                             ],
                                          ]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
@@ -1523,15 +1529,15 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                         paymentMethodOptionsSetupFutureUsage: [.card: "off_session"]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
                                          customerSessionData: [
-                                            "mobile_payment_element": [
-                                                "enabled": true,
-                                                "features": ["payment_method_save": "enabled",
-                                                             "payment_method_remove": "enabled",
-                                                            ],
-                                            ],
-                                            "customer_sheet": [
-                                                "enabled": false,
-                                            ],
+                                             "mobile_payment_element": [
+                                                 "enabled": true,
+                                                 "features": ["payment_method_save": "enabled",
+                                                              "payment_method_remove": "enabled",
+                                                 ],
+                                             ],
+                                             "customer_sheet": [
+                                                 "enabled": false,
+                                             ],
                                          ]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
@@ -1549,16 +1555,16 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                         setupFutureUsage: .offSession),
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
                                          customerSessionData: [
-                                            "mobile_payment_element": [
-                                                "enabled": true,
-                                                "features": ["payment_method_save": "disabled",
-                                                             "payment_method_remove": "enabled",
-                                                            ],
-                                            ],
-                                            "customer_sheet": [
-                                                "enabled": false,
-                                            ],
-                                        ]),
+                                             "mobile_payment_element": [
+                                                 "enabled": true,
+                                                 "features": ["payment_method_save": "disabled",
+                                                              "payment_method_remove": "enabled",
+                                                 ],
+                                             ],
+                                             "customer_sheet": [
+                                                 "enabled": false,
+                                             ],
+                                         ]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
         )
@@ -1575,16 +1581,16 @@ class PaymentSheetFormFactoryTest: XCTestCase {
                                         paymentMethodOptionsSetupFutureUsage: [.card: "off_session"]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
                                          customerSessionData: [
-                                            "mobile_payment_element": [
-                                                "enabled": true,
-                                                "features": ["payment_method_save": "disabled",
-                                                             "payment_method_remove": "enabled",
-                                                            ],
-                                            ],
-                                            "customer_sheet": [
-                                                "enabled": false,
-                                            ],
-                                        ]),
+                                             "mobile_payment_element": [
+                                                 "enabled": true,
+                                                 "features": ["payment_method_save": "disabled",
+                                                              "payment_method_remove": "enabled",
+                                                 ],
+                                             ],
+                                             "customer_sheet": [
+                                                 "enabled": false,
+                                             ],
+                                         ]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
         )
@@ -1600,15 +1606,15 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             intent: ._testSetupIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
                                          customerSessionData: [
-                                            "mobile_payment_element": [
-                                                "enabled": true,
-                                                "features": ["payment_method_save": "disabled",
-                                                             "payment_method_remove": "enabled",
-                                                            ],
-                                            ],
-                                            "customer_sheet": [
-                                                "enabled": false,
-                                            ],
+                                             "mobile_payment_element": [
+                                                 "enabled": true,
+                                                 "features": ["payment_method_save": "disabled",
+                                                              "payment_method_remove": "enabled",
+                                                 ],
+                                             ],
+                                             "customer_sheet": [
+                                                 "enabled": false,
+                                             ],
                                          ]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
@@ -1625,15 +1631,15 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             intent: ._testSetupIntent(paymentMethodTypes: [.card]),
             elementsSession: ._testValue(paymentMethodTypes: ["card"],
                                          customerSessionData: [
-                                            "mobile_payment_element": [
-                                                "enabled": true,
-                                                "features": ["payment_method_save": "enabled",
-                                                             "payment_method_remove": "enabled",
-                                                            ],
-                                            ],
-                                            "customer_sheet": [
-                                                "enabled": false,
-                                            ],
+                                             "mobile_payment_element": [
+                                                 "enabled": true,
+                                                 "features": ["payment_method_save": "enabled",
+                                                              "payment_method_remove": "enabled",
+                                                 ],
+                                             ],
+                                             "customer_sheet": [
+                                                 "enabled": false,
+                                             ],
                                          ]),
             configuration: .paymentElement(configuration),
             paymentMethod: .stripe(.card)
@@ -1787,7 +1793,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         configuration.customer = .init(id: "id", ephemeralKeySecret: "sec")
         configuration.defaultBillingDetails.address = .init(line1: "Billing line 1")
         configuration.shippingDetails = {
-            return .init(address: .init(country: "US", line1: "Shipping line 1"), name: "Name")
+            .init(address: .init(country: "US", line1: "Shipping line 1"), name: "Name")
         }
         // An address section with both default billing and default shipping...
         let specProvider = AddressSpecProvider()
@@ -1860,6 +1866,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
     func testMissingFormSpec() {
         let expectation = expectation(description: "Load specs")
+        FormSpecProvider.shared = FormSpecProvider()
         FormSpecProvider.shared.load { _ in
             expectation.fulfill()
         }
@@ -1885,6 +1892,37 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(errorAnalytic["event"] as? String, STPAnalyticEvent.unexpectedPaymentSheetFormFactoryError.rawValue)
         XCTAssertEqual(errorAnalytic["payment_method"] as? String, "card_present")
         XCTAssertEqual(errorAnalytic["error_code"] as? String, "missingFormSpec")
+    }
+
+    func testMakeUsesServerNativeFormSpecInsteadOfPaymentMethodType() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            _ = FormSpecProvider.shared.loadFrom([
+                [
+                    "type": "card_present",
+                    "fields": [
+                        [
+                            "type": "native_payment_method_form",
+                            "form_type": "bacs_debit",
+                        ],
+                    ],
+                ] as NSDictionary,
+            ])
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+
+        let factory = PaymentSheetFormFactory(
+            intent: ._testPaymentIntent(paymentMethodTypes: [.cardPresent]),
+            elementsSession: ._testValue(paymentMethodTypes: ["card_present"]),
+            configuration: .paymentElement(PaymentSheet.Configuration._testValue_MostPermissive()),
+            paymentMethod: .stripe(.cardPresent)
+        )
+
+        let form = factory.make()
+
+        XCTAssertTrue(form.toHierarchyNode().description.contains("Bank account"))
+        XCTAssertTrue(form.toHierarchyNode().description.contains("Sort code"))
     }
 
     func testLinkPMModeCardFormContainsMandateText() {
@@ -2027,6 +2065,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         let cardForm_deferred_pi_top_level_sfu_pmo_sfu_none_link_sfu = makeForm(intent: ._testDeferredIntent(paymentMethodTypes: [.link, .card], setupFutureUsage: .offSession, paymentMethodOptionsSetupFutureUsage: [.card: .none, .link: .offSession]))
         XCTAssertTrue(cardForm_deferred_pi_top_level_sfu_pmo_sfu_none_link_sfu.getMandateElement() == nil)
     }
+
     func testLinkPassthroughModeCardFormDoesNotContainMandateText() {
         let expectation = expectation(description: "Load specs")
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -2168,6 +2207,39 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     }
 
     func testiDEALFormContainsMandateText() {
+        let expectation = expectation(description: "Load specs")
+        AddressSpecProvider.shared.loadAddressSpecs {
+            _ = FormSpecProvider.shared.loadFrom([
+                [
+                    "type": "ideal",
+                    "fields": [
+                        [
+                            "type": "name",
+                        ],
+                        [
+                            "type": "placeholder",
+                            "for": "email",
+                        ],
+                        [
+                            "type": "placeholder",
+                            "for": "phone",
+                        ],
+                        [
+                            "type": "placeholder",
+                            "for": "billing_address",
+                        ],
+                        [
+                            "type": "native_mandate",
+                            "mandate_type": "sepa",
+                            "setup_future_usage_required": true,
+                        ],
+                    ],
+                ] as NSDictionary,
+            ])
+            expectation.fulfill()
+        }
+        waitForExpectations(timeout: 1)
+
         var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
         configuration.customer = .init(id: "id", ephemeralKeySecret: "ek")
         let analyticsClient = STPAnalyticsClient()
@@ -2623,11 +2695,12 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // ...and full card details...
         let cardValues = STPFixtures.paymentMethodCardParams()
         cardValues.expMonth = 3 // Choose a single digit month to exercise the code for padding with leading zeros
-        let previousCustomerInput = IntentConfirmParams.init(
+        let previousCustomerInput = IntentConfirmParams(
             params: .paramsWith(
                 card: cardValues,
                 billingDetails: billingDetails,
-                metadata: nil),
+                metadata: nil
+            ),
             type: .stripe(.card)
         )
 
@@ -2684,11 +2757,12 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             ).make()
         }
         // A filled out card form in setup mode...
-        let previousCustomerInput = IntentConfirmParams.init(
+        let previousCustomerInput = IntentConfirmParams(
             params: .paramsWith(
                 card: STPFixtures.paymentMethodCardParams(),
                 billingDetails: STPFixtures.paymentMethodBillingDetails(),
-                metadata: nil),
+                metadata: nil
+            ),
             type: .stripe(.card)
         )
         let cardForm_setup = makeCardForm(isSettingUp: true, previousCustomerInput: previousCustomerInput)
@@ -2704,7 +2778,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssertEqual(cardForm_payment_params?.saveForFutureUseCheckboxState, .deselected)
 
         // Deselecting the checkbox...
-        let saveCheckbox = cardForm_payment.getAllUnwrappedSubElements().compactMap({ $0 as? CheckboxElement }).first(where: { $0.label.hasPrefix("Save") })
+        let saveCheckbox = cardForm_payment.getAllUnwrappedSubElements().compactMap { $0 as? CheckboxElement }.first(where: { $0.label.hasPrefix("Save") })
         saveCheckbox?.isSelected = false
         let cardForm_payment_params_checkbox_deselected = cardForm_payment.updateParams(params: .init(type: .stripe(.card)))
         XCTAssertEqual(cardForm_payment_params_checkbox_deselected?.saveForFutureUseCheckboxState, .deselected)
@@ -2713,7 +2787,6 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         // ...should have the checkbox deselected, preserving the previous customer input
         let cardForm_payment_2_params = cardForm_payment_2.updateParams(params: .init(type: .stripe(.card)))
         XCTAssertEqual(cardForm_payment_2_params?.saveForFutureUseCheckboxState, .deselected)
-
     }
 
     func testAppliesPreviousCustomerInput_for_different_payment_method_type() {
@@ -2739,7 +2812,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         billingDetails.address?.postalCode = "94102"
 
         // ...for Afterpay...
-        let previousAfterpayCustomerInput = IntentConfirmParams.init(
+        let previousAfterpayCustomerInput = IntentConfirmParams(
             params: .paramsWith(afterpayClearpay: .init(), billingDetails: billingDetails, metadata: nil),
             type: .stripe(.afterpayClearpay)
         )
@@ -2756,11 +2829,12 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         XCTAssert(afterpayForm.validationState == .valid)
 
         // ...but if the customer previous input was for a card...
-        let previousCardCustomerInput = IntentConfirmParams.init(
+        let previousCardCustomerInput = IntentConfirmParams(
             params: .paramsWith(
                 card: STPFixtures.paymentMethodCardParams(),
                 billingDetails: billingDetails,
-                metadata: nil),
+                metadata: nil
+            ),
             type: .stripe(.card)
         )
         // ...the Afterpay form should be blank and invalid, even though the previous input had full billing details
@@ -2786,7 +2860,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
             return factory.makeKlarnaCountry(apiPath: apiPath) as! PaymentMethodElementWrapper<DropdownFieldElement>
         }
         let apiPathValues: [String?] = [nil, "billing_details[address][country]"] // Test the same thing with and without an api path
-        apiPathValues.forEach { apiPath in
+        for apiPath in apiPathValues {
             // Given a klarna country...
             let klarnaCountry = makeKlarnaCountry(apiPath: apiPath, previousCustomerInput: nil)
             // ...with a selection *different* from the default of 0
@@ -2937,7 +3011,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
     func testMakeBillingAddressSectionIfNecessary_withAllowedCountries_emptySet() {
         var configuration = PaymentSheet.Configuration()
         configuration.billingDetailsCollectionConfiguration.address = .full
-        configuration.billingDetailsCollectionConfiguration.allowedCountries = []  // Empty set should allow all countries
+        configuration.billingDetailsCollectionConfiguration.allowedCountries = [] // Empty set should allow all countries
 
         let factory = PaymentSheetFormFactory(
             intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
@@ -2996,7 +3070,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         )
 
         let billingSection = factory.makeBillingAddressSectionIfNecessary(requiredByPaymentMethod: false)
-        XCTAssertNil(billingSection)  // Should be nil when address collection is .never
+        XCTAssertNil(billingSection) // Should be nil when address collection is .never
     }
 
     func testMakeBillingAddressSectionIfNecessary_withAllowedCountries_automaticRequired() {
@@ -3043,7 +3117,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         // Should contain billing address section with country filtering
         let hasBillingAddress = formElement.elements.contains { element in
-            return element is PaymentMethodElementWrapper<AddressSectionElement>
+            element is PaymentMethodElementWrapper<AddressSectionElement>
         }
         XCTAssertTrue(hasBillingAddress, "Card form should contain billing address section when address collection is .full")
     }
@@ -3070,7 +3144,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         }
 
         let hasBillingAddress = formElement.elements.contains { element in
-            return element is PaymentMethodElementWrapper<AddressSectionElement>
+            element is PaymentMethodElementWrapper<AddressSectionElement>
         }
         XCTAssertTrue(hasBillingAddress, "Card form should contain billing address section when address collection is .automatic")
     }
@@ -3092,7 +3166,7 @@ class PaymentSheetFormFactoryTest: XCTestCase {
 
         // Verify form contains billing address section when address collection is .full
         let hasBillingAddress = form.elements.contains { element in
-            return element is PaymentMethodElementWrapper<AddressSectionElement>
+            element is PaymentMethodElementWrapper<AddressSectionElement>
         }
         XCTAssertTrue(hasBillingAddress, "BLIK form should contain billing address section when address collection is .full")
     }
@@ -3225,17 +3299,18 @@ class PaymentSheetFormFactoryTest: XCTestCase {
         formElement: FormElement
     ) -> PaymentMethodElementWrapper<TextFieldElement>? {
         guard let sectionElement = formElement.elements.first as? SectionElement,
-            let wrappedElement = sectionElement.elements.first
-                as? PaymentMethodElementWrapper<TextFieldElement>
+              let wrappedElement = sectionElement.elements.first
+              as? PaymentMethodElementWrapper<TextFieldElement>
         else {
             return nil
         }
         return wrappedElement
     }
+
     private func firstAddressSectionElement(formElement: FormElement) -> AddressSectionElement? {
         guard
             let wrapper = formElement.elements.first
-                as? PaymentMethodElementWrapper<AddressSectionElement>
+            as? PaymentMethodElementWrapper<AddressSectionElement>
         else {
             return nil
         }

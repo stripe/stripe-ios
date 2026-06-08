@@ -40,52 +40,60 @@ struct FormSpec: Decodable {
         case sepa_mandate
 
         case placeholder(PlaceholderSpec)
+        case native_payment_method_form(NativePaymentMethodFormSpec)
+        case native_mandate(NativeMandateSpec)
 
         case unknown(String)
 
         private enum CodingKeys: String, CodingKey {
             case type
         }
+
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             let field_type = try container.decode(String.self, forKey: .type)
 
             switch field_type {
             case "name":
-                self = .name(try NameFieldSpec(from: decoder))
+                self = try .name(NameFieldSpec(from: decoder))
             case "email":
-                self = .email(try BaseFieldSpec(from: decoder))
+                self = try .email(BaseFieldSpec(from: decoder))
             case "selector":
-                self = .selector(try SelectorSpec(from: decoder))
+                self = try .selector(SelectorSpec(from: decoder))
             case "billing_address":
-                self = .billing_address(try BillingAddressSpec(from: decoder))
+                self = try .billing_address(BillingAddressSpec(from: decoder))
             case "country":
-                self = .country(try CountrySpec(from: decoder))
+                self = try .country(CountrySpec(from: decoder))
             case "affirm_header":
                 self = .affirm_header
             case "klarna_header":
                 self = .klarna_header
             case "klarna_country":
-                self = .klarna_country(try BaseFieldSpec(from: decoder))
+                self = try .klarna_country(BaseFieldSpec(from: decoder))
             case "au_becs_bsb_number":
-                self = .au_becs_bsb_number(try BaseFieldSpec(from: decoder))
+                self = try .au_becs_bsb_number(BaseFieldSpec(from: decoder))
             case "au_becs_account_number":
-                self = .au_becs_account_number(try BaseFieldSpec(from: decoder))
+                self = try .au_becs_account_number(BaseFieldSpec(from: decoder))
             case "au_becs_mandate":
                 self = .au_becs_mandate
             case "afterpay_header":
                 self = .afterpay_header
             case "iban":
-                self = .iban(try BaseFieldSpec(from: decoder))
+                self = try .iban(BaseFieldSpec(from: decoder))
             case "sepa_mandate":
                 self = .sepa_mandate
             case "placeholder":
-                self = .placeholder(try PlaceholderSpec(from: decoder))
+                self = try .placeholder(PlaceholderSpec(from: decoder))
+            case "native_payment_method_form":
+                self = try .native_payment_method_form(NativePaymentMethodFormSpec(from: decoder))
+            case "native_mandate":
+                self = try .native_mandate(NativeMandateSpec(from: decoder))
             default:
                 self = .unknown(field_type)
             }
         }
     }
+
     struct DownloadableImageSpec: Decodable {
         let lightThemePng: String
         let darkThemePng: String?
@@ -97,12 +105,14 @@ extension FormSpec {
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
         let apiPath: [String: String]?
     }
+
     struct NameFieldSpec: Decodable, Equatable {
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
         let apiPath: [String: String]?
         /// An optional localizedId to control the label
         let translationId: LocalizedString?
     }
+
     struct SelectorSpec: Decodable, Equatable {
         struct PropertyItemSpec: Decodable, Equatable {
             /// The localized text to display for this item in the dropdown
@@ -110,13 +120,13 @@ extension FormSpec {
             /// The value to send to the Stripe API if the customer selects this dropdown item
             let apiValue: String?
         }
+
         /// The dropdown's label
         let translationId: LocalizedString
         /// The list of items to display in the dropdown
         let items: [PropertyItemSpec]
         /// A form URL encoded key, whose value is `PropertyItemSpec.apiValue`
         let apiPath: [String: String]?
-
     }
 
     struct BillingAddressSpec: Decodable, Equatable {
@@ -152,12 +162,45 @@ extension FormSpec {
             }
         }
     }
+
+    struct NativePaymentMethodFormSpec: Decodable, Equatable {
+        let formType: FormType
+        let subtitle: String?
+        let disableBillingDetailCollection: Bool?
+
+        enum FormType: String, Decodable, Equatable {
+            case card
+            case usBankAccount = "us_bank_account"
+            case instantDebits = "instant_debits"
+            case externalPaymentMethod = "external_payment_method"
+            case bacsDebit = "bacs_debit"
+            case blik
+            case konbini
+            case boleto
+        }
+    }
+
+    struct NativeMandateSpec: Decodable, Equatable {
+        let mandateType: MandateType
+        let setupFutureUsageRequired: Bool?
+
+        enum MandateType: String, Decodable, Equatable {
+            case cashApp = "cashapp"
+            case paypal
+            case revolutPay = "revolut_pay"
+            case amazonPay = "amazon_pay"
+            case satispay
+            case twint
+            case sepa
+            case klarna
+        }
+    }
 }
 
 extension FormSpec {
     enum LocalizedString: String, Decodable {
         case ideal_bank = "upe.labels.ideal.bank"
-        case eps_bank =  "upe.labels.eps.bank"
+        case eps_bank = "upe.labels.eps.bank"
         case p24_bank = "upe.labels.p24.bank"
         case fpx_bank = "upe.labels.fpx.bank"
 
@@ -176,7 +219,6 @@ extension FormSpec {
                 return STPLocalizedString("Przelewy24 Bank", "Label title for Przelewy24 Bank")
             case .fpx_bank:
                 return STPLocalizedString("FPX Bank", "Select a bank dropdown for FPX")
-
             case .nameLabel_given:
                 return String.Localized.given_name
             case .nameLabel_family:

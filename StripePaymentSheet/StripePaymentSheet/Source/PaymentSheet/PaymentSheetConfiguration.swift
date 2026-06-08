@@ -222,7 +222,7 @@ extension PaymentSheet {
             case .horizontal: return .horizontal
             case .vertical: return .vertical
             case .automatic:
-                if elementsSession.forceVerticalPaymentMethodLayout {
+                if elementsSession.serverDrivenFeatures.forceVerticalPaymentMethodLayout {
                     return .vertical
                 } else {
                     return paymentMethodTypes.count >= 3 ? .vertical : .horizontal

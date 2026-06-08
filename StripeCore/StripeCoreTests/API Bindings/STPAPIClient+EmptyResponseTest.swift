@@ -10,6 +10,15 @@
 import XCTest
 
 class STPAPIClient_EmptyResponseTest: XCTestCase {
+    func testConfiguredRequestIncludesMobileSDKVersionHeader() {
+        let request = STPAPIClient().configuredRequest(for: URL(string: "https://api.stripe.com/v1/test")!)
+
+        XCTAssertEqual(
+            request.value(forHTTPHeaderField: STPAPIClient.mobileSDKVersionHeader),
+            STPAPIClient.mobileSDKVersionHeaderValue
+        )
+    }
+
     /// Response is an error; Error is nil.
     ///
     /// Should result in a failure.`

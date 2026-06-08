@@ -22,8 +22,9 @@
                 "for": "billing_address"
             },
             {
-                "type": "placeholder",
-                "for": "sepa_mandate"
+                "type": "native_mandate",
+                "mandate_type": "sepa",
+                "setup_future_usage_required": true
             }
         ],
         "next_action_spec": {
@@ -392,7 +393,13 @@
     {
         "type": "paypal",
         "async": false,
-        "fields": [],
+        "fields": [
+            {
+                "type": "native_mandate",
+                "mandate_type": "paypal",
+                "setup_future_usage_required": true
+            }
+        ],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
@@ -464,7 +471,13 @@
     {
         "type": "revolut_pay",
         "async": false,
-        "fields": [],
+        "fields": [
+            {
+                "type": "native_mandate",
+                "mandate_type": "revolut_pay",
+                "setup_future_usage_required": true
+            }
+        ],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
@@ -488,7 +501,13 @@
             "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light@3x-46eb8b8a4a252b78d7b4c3b96d4ed7ae.png",
             "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-amazonpay_light-22cdec0f5f5609554a34fa62fa583f23.svg"
         },
-        "fields": [],
+        "fields": [
+            {
+                "type": "native_mandate",
+                "mandate_type": "amazon_pay",
+                "setup_future_usage_required": true
+            }
+        ],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
@@ -716,7 +735,13 @@
             "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay-eca5006db20571e80caec1509c680c27.svg",
             "dark_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-satispay_dark-c01fc432e3c7b334f0204d011879bb1a.svg"
         },
-        "fields": [],
+        "fields": [
+            {
+                "type": "native_mandate",
+                "mandate_type": "satispay",
+                "setup_future_usage_required": true
+            }
+        ],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {
@@ -811,12 +836,251 @@
     {
         "type": "card",
         "async": false,
-        "fields": []
+        "fields": [
+            {
+                "type": "native_payment_method_form",
+                "form_type": "card"
+            }
+        ]
+    },
+    {
+        "type": "klarna",
+        "async": false,
+        "fields": [
+            {
+                "type": "klarna_header"
+            },
+            {
+                "type": "placeholder",
+                "for": "name"
+            },
+            {
+                "type": "email"
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "klarna_country"
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address_without_country"
+            },
+            {
+                "type": "native_mandate",
+                "mandate_type": "klarna",
+                "setup_future_usage_required": true
+            }
+        ]
+    },
+    {
+        "type": "afterpay_clearpay",
+        "async": false,
+        "fields": [
+            {
+                "type": "afterpay_header"
+            },
+            {
+                "type": "name"
+            },
+            {
+                "type": "email"
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            }
+        ]
+    },
+    {
+        "type": "affirm",
+        "async": false,
+        "fields": [
+            {
+                "type": "affirm_header"
+            },
+            {
+                "type": "placeholder",
+                "for": "name"
+            },
+            {
+                "type": "placeholder",
+                "for": "email"
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            }
+        ]
+    },
+    {
+        "type": "ideal",
+        "async": false,
+        "fields": [
+            {
+                "type": "name"
+            },
+            {
+                "type": "placeholder",
+                "for": "email"
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            },
+            {
+                "type": "native_mandate",
+                "mandate_type": "sepa",
+                "setup_future_usage_required": true
+            }
+        ]
+    },
+    {
+        "type": "us_bank_account",
+        "async": false,
+        "fields": [
+            {
+                "type": "native_payment_method_form",
+                "form_type": "us_bank_account"
+            }
+        ]
+    },
+    {
+        "type": "blik",
+        "async": false,
+        "fields": [
+            {
+                "type": "native_payment_method_form",
+                "form_type": "blik"
+            }
+        ]
+    },
+    {
+        "type": "bacs_debit",
+        "async": false,
+        "fields": [
+            {
+                "type": "native_payment_method_form",
+                "form_type": "bacs_debit"
+            }
+        ]
+    },
+    {
+        "type": "oxxo",
+        "async": false,
+        "fields": [
+            {
+                "type": "name"
+            },
+            {
+                "type": "email"
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            }
+        ]
+    },
+    {
+        "type": "konbini",
+        "async": false,
+        "fields": [
+            {
+                "type": "native_payment_method_form",
+                "form_type": "konbini"
+            }
+        ]
+    },
+    {
+        "type": "boleto",
+        "async": false,
+        "fields": [
+            {
+                "type": "native_payment_method_form",
+                "form_type": "boleto"
+            }
+        ]
+    },
+    {
+        "type": "swish",
+        "async": false,
+        "fields": [
+            {
+                "type": "placeholder",
+                "for": "name"
+            },
+            {
+                "type": "placeholder",
+                "for": "email"
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            }
+        ]
+    },
+    {
+        "type": "wero",
+        "async": false,
+        "fields": [
+            {
+                "type": "country",
+                "allowed_country_codes": [
+                    "DE",
+                    "BE",
+                    "FR"
+                ]
+            },
+            {
+                "type": "placeholder",
+                "for": "name"
+            },
+            {
+                "type": "placeholder",
+                "for": "email"
+            },
+            {
+                "type": "placeholder",
+                "for": "phone"
+            },
+            {
+                "type": "placeholder",
+                "for": "billing_address"
+            }
+        ]
     },
     {
         "type": "cashapp",
         "async": false,
-        "fields": [],
+        "fields": [
+            {
+                "type": "native_mandate",
+                "mandate_type": "cashapp",
+                "setup_future_usage_required": true
+            }
+        ],
         "selector_icon": {
             "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp@3x-a89c5d8d0651cae2a511bb49a6be1cfc.png",
             "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-cashapp-981164a833e417d28a8ac2684fda2324.svg"
@@ -1044,7 +1308,13 @@
             "light_theme_png": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint@3x-0d33d2bf7c7037878c2a42232362accb.png",
             "light_theme_svg": "https://js.stripe.com/v3/fingerprinted/img/payment-methods/icon-pm-twint-mod-360acb04bcd96c476ae6002cfd1eca4b.svg"
         },
-        "fields": [],
+        "fields": [
+            {
+                "type": "native_mandate",
+                "mandate_type": "twint",
+                "setup_future_usage_required": true
+            }
+        ],
         "next_action_spec": {
             "confirm_response_status_specs": {
                 "requires_action": {

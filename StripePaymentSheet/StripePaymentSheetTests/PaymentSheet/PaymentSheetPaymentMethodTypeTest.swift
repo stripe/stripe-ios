@@ -14,7 +14,6 @@ import XCTest
 @testable@_spi(STP) import StripePaymentsUI
 
 class PaymentSheetPaymentMethodTypeTest: XCTestCase {
-
     func makeConfiguration(
         hasReturnURL: Bool = false
     ) -> PaymentSheet.Configuration {
@@ -23,7 +22,172 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         return configuration
     }
 
+    // MARK: - Server-driven PaymentSheet
+
+    func testServerDrivenPaymentSheetMockSerializesConfigurationAndReturnsServerArtifacts() {
+        var configuration = PaymentSheet.Configuration()
+        configuration.merchantDisplayName = "Server-driven merchant"
+        configuration.allowsDelayedPaymentMethods = true
+        configuration.allowsPaymentMethodsRequiringShippingAddress = true
+        configuration.returnURL = "example://stripe-redirect"
+        configuration.paymentMethodOrder = ["sepa_debit", "card"]
+        configuration.defaultBillingDetails.email = "server@example.com"
+
+        let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card, .SEPADebit])
+        let response = ServerDrivenPaymentSheetMockServer.load(
+            configuration: configuration,
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card, .SEPADebit], currency: "eur"),
+            elementsSession: elementsSession
+        )
+
+        XCTAssertEqual(response?.mobileTeamContact, "mobile-paymentsheet-backend@example.invalid")
+        XCTAssertEqual(response?.sdkVersionHeader, STPAPIClient.mobileSDKVersionHeaderValue)
+        XCTAssertEqual(response?.serializedConfiguration.merchantDisplayName, "Server-driven merchant")
+        XCTAssertEqual(response?.serializedConfiguration.allowsDelayedPaymentMethods, true)
+        XCTAssertEqual(response?.serializedConfiguration.allowsPaymentMethodsRequiringShippingAddress, true)
+        XCTAssertEqual(response?.serializedConfiguration.returnURLProvided, true)
+        XCTAssertEqual(response?.serializedConfiguration.defaultBillingDetails["email"], "server@example.com")
+        XCTAssertEqual(response?.serializedConfiguration.mode, "payment")
+        XCTAssertEqual(response?.serializedConfiguration.currency, "eur")
+        XCTAssertEqual(response?.features.financialConnectionsLite, .preferred)
+        XCTAssertEqual(response?.features.linkGlobalHoldbackLookup, true)
+        XCTAssertEqual(response?.features.forceVerticalPaymentMethodLayout, true)
+        XCTAssertEqual(response?.paymentMethodTypes, ["sepa_debit", "card"])
+        XCTAssertTrue(response?.assets.paymentMethodDisplayNames.keys.contains("sepa_debit") == true)
+        XCTAssertTrue(response?.formSpecs.contains { $0["type"] as? String == "sepa_debit" } == true)
+        let cardFields = response?.formSpecs.first { $0["type"] as? String == "card" }?["fields"] as? [[String: Any]]
+        XCTAssertEqual(cardFields?.first?["type"] as? String, "native_payment_method_form")
+        XCTAssertEqual(cardFields?.first?["form_type"] as? String, "card")
+    }
+
+    func testServerDrivenPaymentSheetMockReturnsFormSpecsForSessionPaymentMethods() {
+        let paymentMethodTypes: [STPPaymentMethodType] = [
+            .card,
+            .USBankAccount,
+            .bacsDebit,
+            .klarna,
+            .iDEAL,
+            .payPal,
+            .cashApp,
+        ]
+        let response = ServerDrivenPaymentSheetMockServer.load(
+            configuration: PaymentSheet.Configuration._testValue_MostPermissive(),
+            intent: ._testPaymentIntent(paymentMethodTypes: paymentMethodTypes, setupFutureUsage: .offSession),
+            elementsSession: ._testValue(orderedPaymentMethodTypes: paymentMethodTypes)
+        )
+
+        XCTAssertEqual(response?.paymentMethodTypes, paymentMethodTypes.map(\.identifier))
+
+        func firstField(for paymentMethodType: STPPaymentMethodType) -> [String: Any]? {
+            let fields = response?.formSpecs.first { $0["type"] as? String == paymentMethodType.identifier }?["fields"] as? [[String: Any]]
+            return fields?.first
+        }
+
+        XCTAssertEqual(firstField(for: .USBankAccount)?["form_type"] as? String, "us_bank_account")
+        XCTAssertEqual(firstField(for: .bacsDebit)?["form_type"] as? String, "bacs_debit")
+        XCTAssertEqual(firstField(for: .klarna)?["type"] as? String, "klarna_header")
+        XCTAssertEqual(firstField(for: .iDEAL)?["type"] as? String, "name")
+        XCTAssertEqual(firstField(for: .payPal)?["type"] as? String, "native_mandate")
+        XCTAssertEqual(firstField(for: .payPal)?["mandate_type"] as? String, "paypal")
+        XCTAssertEqual(firstField(for: .cashApp)?["type"] as? String, "native_mandate")
+        XCTAssertEqual(firstField(for: .cashApp)?["mandate_type"] as? String, "cashapp")
+    }
+
+    func testServerDrivenPaymentSheetMockReturnsNativeSpecsForExternalAndCustomPaymentMethods() {
+        let cpmId = "cpmt_1Qzj4rFY0qyl6XeWoHB842bf"
+        var customPaymentMethodConfiguration = PaymentSheet.CustomPaymentMethodConfiguration.CustomPaymentMethod(
+            id: cpmId,
+            subtitle: "Pay with BufoPay"
+        )
+        customPaymentMethodConfiguration.disableBillingDetailCollection = true
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive()
+        configuration.externalPaymentMethodConfiguration = .init(
+            externalPaymentMethods: ["external_paypal"],
+            externalPaymentMethodConfirmHandler: { _, _ in .canceled }
+        )
+        configuration.customPaymentMethodConfiguration = .init(
+            customPaymentMethods: [customPaymentMethodConfiguration],
+            customPaymentMethodConfirmHandler: { _, _ in .canceled }
+        )
+        configuration.paymentMethodOrder = ["external_paypal", cpmId, "card"]
+
+        let elementsSession = STPElementsSession._testValue(
+            orderedPaymentMethodTypes: [.card],
+            externalPaymentMethods: [
+                ExternalPaymentMethod(
+                    type: "external_paypal",
+                    label: "PayPal",
+                    lightImageUrl: URL(string: "https://example.com/light.png")!,
+                    darkImageUrl: URL(string: "https://example.com/dark.png")!
+                ),
+            ],
+            customPaymentMethods: [
+                CustomPaymentMethod(
+                    displayName: "BufoPay",
+                    type: cpmId,
+                    logoUrl: URL(string: "https://example.com/bufopay.png")!,
+                    isPreset: false,
+                    error: nil
+                ),
+            ]
+        )
+
+        let response = ServerDrivenPaymentSheetMockServer.load(
+            configuration: configuration,
+            intent: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: elementsSession
+        )
+
+        XCTAssertEqual(response?.paymentMethodTypes, ["external_paypal", cpmId, "card"])
+        let externalField = response?.formSpecs.first { $0["type"] as? String == "external_paypal" }?["fields"] as? [[String: Any]]
+        XCTAssertEqual(externalField?.first?["type"] as? String, "native_payment_method_form")
+        XCTAssertEqual(externalField?.first?["form_type"] as? String, "external_payment_method")
+        XCTAssertEqual(externalField?.first?["disable_billing_detail_collection"] as? Bool, false)
+
+        let customField = response?.formSpecs.first { $0["type"] as? String == cpmId }?["fields"] as? [[String: Any]]
+        XCTAssertEqual(customField?.first?["type"] as? String, "native_payment_method_form")
+        XCTAssertEqual(customField?.first?["form_type"] as? String, "external_payment_method")
+        XCTAssertEqual(customField?.first?["subtitle"] as? String, "Pay with BufoPay")
+        XCTAssertEqual(customField?.first?["disable_billing_detail_collection"] as? Bool, true)
+    }
+
+    func testServerDrivenPaymentMethodTypesTrustServerAvailabilityAndAssets() {
+        let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card])
+        let response = ServerDrivenPaymentSheetResponse._testValue(
+            features: .init(
+                financialConnectionsLite: .disabled,
+                linkGlobalHoldbackLookup: true,
+                forceVerticalPaymentMethodLayout: true,
+                cardFundingFiltering: false
+            ),
+            paymentMethodTypes: ["klarna"],
+            assets: .init(
+                paymentMethodDisplayNames: ["klarna": "Pay later from server"],
+                selectorIconURLs: [:]
+            ),
+            formSpecs: []
+        )
+        elementsSession.serverDrivenPaymentSheet = response
+        ServerDrivenPaymentSheetAssetStore.shared.install(response.assets)
+
+        let paymentMethodTypes = PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(
+            from: ._testPaymentIntent(paymentMethodTypes: [.card]),
+            elementsSession: elementsSession,
+            configuration: PaymentSheet.Configuration()
+        )
+
+        XCTAssertEqual(paymentMethodTypes, [.stripe(.klarna)])
+        XCTAssertEqual(paymentMethodTypes.first?.displayName, "Pay later from server")
+        XCTAssertEqual(elementsSession.serverDrivenFeatures.financialConnectionsLite, .disabled)
+        XCTAssertEqual(
+            PaymentSheet.Configuration().resolveLayout(elementsSession: elementsSession, paymentMethodTypes: paymentMethodTypes),
+            .vertical
+        )
+    }
+
     // MARK: - Images
+
     func testMakeImage_with_client_asset_and_form_spec() {
         let e = expectation(description: "Load specs")
         FormSpecProvider.shared.load { _ in
@@ -69,8 +233,8 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
                 configuration: PaymentSheet.Configuration(),
                 intent: ._testValue(), elementsSession: ._testCardValue(),
                 supportedPaymentMethods: []
-            )
-            , .notSupported
+            ),
+            .notSupported
         )
     }
 
@@ -446,7 +610,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .missingRequirements(let requirements) = availability else {
+        guard case let .missingRequirements(requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
@@ -492,7 +656,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .missingRequirements(let requirements) = availability else {
+        guard case let .missingRequirements(requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
@@ -519,7 +683,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .missingRequirements(let requirements) = availability else {
+        guard case let .missingRequirements(requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
@@ -649,7 +813,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .missingRequirements(let requirements) = availability else {
+        guard case let .missingRequirements(requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
@@ -694,7 +858,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .missingRequirements(let requirements) = availability else {
+        guard case let .missingRequirements(requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
@@ -721,7 +885,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             elementsSession: elementsSession
         )
 
-        guard case .missingRequirements(let requirements) = availability else {
+        guard case let .missingRequirements(requirements) = availability else {
             XCTFail("Unexpected availability: \(availability)")
             return
         }
@@ -827,7 +991,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
             PaymentSheet.PaymentMethodType.supportsAdding(
                 paymentMethod: paymentMethod,
                 configuration: configuration,
-                intent: Intent.setupIntent( setupIntent),
+                intent: Intent.setupIntent(setupIntent),
                 elementsSession: ._testCardValue()
             ),
             .notSupported
@@ -868,7 +1032,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
 
         func callFilteredPaymentMethodTypes(withIntentTypes paymentMethodTypes: [String], externalPMTypes: [String]) -> [PaymentSheet.PaymentMethodType] {
             let intent = Intent.deferredIntent(
-                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
+                intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in "" })
             )
             // Note: 👇 `filteredPaymentMethodTypes` is the function we are testing
             return PaymentSheet.PaymentMethodType.filteredPaymentMethodTypes(from: intent, elementsSession: ._testValue(paymentMethodTypes: paymentMethodTypes, externalPaymentMethodTypes: externalPMTypes), configuration: configuration)
@@ -942,7 +1106,7 @@ class PaymentSheetPaymentMethodTypeTest: XCTestCase {
         )
 
         let intent = Intent.deferredIntent(
-            intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in return "" })
+            intentConfig: .init(mode: .payment(amount: 1010, currency: "USD"), confirmHandler: { _, _ in "" })
         )
 
         // Mixed-case CPM id in paymentMethodOrder is matched correctly
@@ -992,7 +1156,6 @@ extension STPFixtures {
         }
         if let paymentMethodJson = paymentMethodJson {
             json["payment_method"] = paymentMethodJson
-
         }
         if let paymentMethodOptions = paymentMethodOptions {
             json["payment_method_options"] = paymentMethodOptions.dictionaryValue
@@ -1012,7 +1175,6 @@ extension STPFixtures {
         }
         if let paymentMethodJson = paymentMethodJson {
             json["payment_method"] = paymentMethodJson
-
         }
         return STPSetupIntent.decodedObject(fromAPIResponse: json)!
     }
