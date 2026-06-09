@@ -4,7 +4,7 @@ MAJOR
 ## X.Y.Z - changes pending release
 
 ### All
-* [Changed] The minimum iOS version is now 15.0, as Xcode 27 no longer supports building for iOS 13 or iOS 14. If you'd like to deploy for iOS versions below iOS 15, please use Stripe SDK 25.16.0.
+* [Changed] The minimum iOS version is now 15.0, as Xcode 27 no longer supports building for iOS 13 or iOS 14. If you'd like to deploy for iOS versions below iOS 15, please use Stripe SDK 25.17.0.
 
 ### PaymentSheet
 * [Changed] Renamed `LinkPaymentController` to `InstantBankPaymentsController`.
