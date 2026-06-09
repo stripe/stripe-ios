@@ -110,11 +110,17 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
     /// The payment details of a PaymentMethod that was created using Link.
     @_spi(STP) public var linkPaymentDetails: LinkPaymentDetails?
 
-    /// Whether this payment method is coming from Link.
-    @_spi(STP) public var isLinkPassthroughMode: Bool = false
+    /// Whether this payment method originated from Link.
+    @_spi(STP) public var isLinkOrigin: Bool = false
 
+    /// Whether this payment method is coming from Link in payment method mode.
     @_spi(STP) public var isLinkPaymentMethod: Bool {
         linkPaymentDetails != nil
+    }
+
+    /// Whether this payment method is coming from Link in passthrough mode.
+    @_spi(STP) public var isLinkPassthroughMode: Bool {
+        isLinkOrigin || card?.wallet?.type == .link
     }
 
     /// :nodoc:
@@ -369,7 +375,6 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.payByBank = STPPaymentMethodPayByBank.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "pay_by_bank")
         )
-        paymentMethod.isLinkPassthroughMode = paymentMethod.card?.wallet?.type == .link
         return paymentMethod
     }
 }
