@@ -6,9 +6,7 @@
 //  Copyright © 2022 Stripe, Inc. All rights reserved.
 //
 
-import CloudKit
 @_spi(STP) import StripeCore
-@_spi(STP) import StripePaymentsUI
 @_spi(STP) import StripeUICore
 import UIKit
 
@@ -19,18 +17,44 @@ extension UIButton {
             font: fontMetrics.scaledFont(for: UIFont.systemFont(ofSize: 9, weight: .semibold))
         )
 
-        let scanButton = UIButton(type: .system)
-        scanButton.titleLabel?.adjustsFontSizeToFitWidth = true
-        scanButton.setTitle(String.Localized.scan_card, for: .normal)
-        switch theme.iconStyle {
+        let image: UIImage? = switch theme.iconStyle {
         case .filled:
-            scanButton.setImage(UIImage(systemName: "camera.fill", withConfiguration: iconConfig), for: .normal)
+            UIImage(systemName: "camera.fill", withConfiguration: iconConfig)
         case .outlined:
-            scanButton.setImage(UIImage(systemName: "camera", withConfiguration: iconConfig), for: .normal)
+            UIImage(systemName: "camera", withConfiguration: iconConfig)
         }
-        scanButton.setContentSpacing(4, withEdgeInsets: .zero)
-        scanButton.tintColor = linkAppearance?.colors?.primary ?? theme.colors.primary
-        scanButton.titleLabel?.font = theme.fonts.sectionHeader
+
+        let tintColor = linkAppearance?.colors?.primary ?? theme.colors.primary
+        let scanButton: UIButton
+        if #available(iOS 15.0, *) {
+            var config = UIButton.Configuration.plain()
+            config.image = image
+            config.title = String.Localized.scan_card
+            config.imagePadding = 4
+            config.contentInsets = .zero
+            config.titleTextAttributesTransformer = .init { container in
+                var container = container
+                container.font = theme.fonts.sectionHeader
+                return container
+            }
+            config.baseForegroundColor = tintColor
+
+            scanButton = UIButton(configuration: config)
+        } else {
+            scanButton = UIButton(type: .system)
+            scanButton.titleLabel?.adjustsFontSizeToFitWidth = true
+            scanButton.setTitle(String.Localized.scan_card, for: .normal)
+            scanButton.setImage(image, for: .normal)
+            if scanButton.effectiveUserInterfaceLayoutDirection == .leftToRight {
+                scanButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: -4, bottom: 0, right: 4)
+                scanButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: 0)
+            } else {
+                scanButton.imageEdgeInsets = UIEdgeInsets(top: 0, left: 4, bottom: 0, right: -4)
+                scanButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 4)
+            }
+            scanButton.tintColor = tintColor
+            scanButton.titleLabel?.font = theme.fonts.sectionHeader
+        }
         scanButton.setContentHuggingPriority(.defaultLow + 1, for: .horizontal)
         return scanButton
     }
