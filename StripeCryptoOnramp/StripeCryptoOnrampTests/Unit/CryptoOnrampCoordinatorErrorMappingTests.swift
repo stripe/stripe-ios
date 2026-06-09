@@ -129,7 +129,7 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
 
         Next step: Fix the integration.
         Docs: https://stripe.com/docs/test
-        SDK: stripe-ios@25.16.0
+        SDK: stripe-ios@\(STPAPIClient.STPSDKVersion)
         """)
     }
 
