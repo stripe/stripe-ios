@@ -109,6 +109,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
 
     /// The payment details of a PaymentMethod that was created using Link.
     @_spi(STP) public var linkPaymentDetails: LinkPaymentDetails?
+
     /// Whether this payment method is coming from Link.
     @_spi(STP) public var isLinkPassthroughMode: Bool = false
 
@@ -368,6 +369,7 @@ public class STPPaymentMethod: NSObject, STPAPIResponseDecodable {
         paymentMethod.payByBank = STPPaymentMethodPayByBank.decodedObject(
             fromAPIResponse: dict.stp_dictionary(forKey: "pay_by_bank")
         )
+        paymentMethod.isLinkPassthroughMode = paymentMethod.card?.wallet?.type == .link
         return paymentMethod
     }
 }
