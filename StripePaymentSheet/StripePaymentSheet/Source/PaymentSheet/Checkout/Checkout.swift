@@ -110,6 +110,7 @@ public final class Checkout: ObservableObject {
         }
     }
 
+#if DEBUG
     /// Internal initializer for unit tests that injects a pre-loaded session.
     init(
         clientSecret: String,
@@ -125,7 +126,6 @@ public final class Checkout: ObservableObject {
         self.state = .loaded(session.makePublicSession())
     }
 
-    #if ENABLE_STPASSERTIONFAILURE
     /// Synchronous test-only initializer that wraps a pre-loaded session without async work.
     init(session: STPCheckoutSession) {
         self.clientSecret = ""
@@ -134,7 +134,7 @@ public final class Checkout: ObservableObject {
         self.stpSession = session
         self.state = .loaded(session.makePublicSession())
     }
-    #endif
+#endif
 
     // MARK: - Pending Operations
 
