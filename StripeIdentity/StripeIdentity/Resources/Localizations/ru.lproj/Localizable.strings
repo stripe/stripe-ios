@@ -6,6 +6,8 @@
 
 "App Settings" = "Настройки приложения";
 
+"Auto" = "Авто";
+
 "Back %@ photo successfully uploaded" = "Фото оборотной стороны документа (%@) успешно загружено";
 
 "Back identity document photo successfully uploaded" = "Фото оборотной стороны документа, удостоверяющего личность, успешно загружено";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Изображение размыто. Попробуйте еще раз, удерживая телефон неподвижно.";
 
+"Image taken" = "Снимок сделан";
+
 "Individual CPF" = "Личный номер CPF";
 
 "Invalid document" = "Недействительный документ";
@@ -85,6 +89,8 @@
 "Loading" = "Идет загрузка";
 
 "Make sure you're in a well lit space." = "Позаботьтесь о хорошем освещении.";
+
+"Manual" = "Вручную";
 
 "Move closer" = "Придвиньтесь поближе";
 

@@ -11,6 +11,18 @@
 import WebKit
 import XCTest
 
+private extension UIApplication {
+    var stp_testWindows: [UIWindow] {
+        if #available(iOS 15.0, *) {
+            return connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+        } else {
+            return windows
+        }
+    }
+}
+
 class HCaptchaWebViewManager__Tests: XCTestCase {
 
     fileprivate var apiKey: String!
@@ -19,7 +31,7 @@ class HCaptchaWebViewManager__Tests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        presenterView = UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.rootViewController?.view
+        presenterView = UIApplication.shared.stp_testWindows.first(where: { $0.isKeyWindow })?.rootViewController?.view
         apiKey = UUID().uuidString
     }
 

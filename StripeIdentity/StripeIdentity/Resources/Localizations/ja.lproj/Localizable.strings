@@ -6,6 +6,8 @@
 
 "App Settings" = "アプリの設定";
 
+"Auto" = "自動";
+
 "Back %@ photo successfully uploaded" = "%@ 裏面の写真が正常にアップロードされました";
 
 "Back identity document photo successfully uploaded" = "身分証明書裏面の写真が正常にアップロードされました";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "画像がぼやけています。スマホをしっかり持って、もう一度お試しください。";
 
+"Image taken" = "撮影画像";
+
 "Individual CPF" = "個人 CPF";
 
 "Invalid document" = "書類が無効です";
@@ -85,6 +89,8 @@
 "Loading" = "読み込み中";
 
 "Make sure you're in a well lit space." = "明るい場所にいることを確認してください。";
+
+"Manual" = "手動";
 
 "Move closer" = "近付けてください";
 

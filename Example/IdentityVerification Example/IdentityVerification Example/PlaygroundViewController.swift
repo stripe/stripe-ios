@@ -574,7 +574,15 @@ class PlaygroundViewController: UIViewController {
 
     func applyUIAppearance() {
         // Changes to UIAppearance are only applied when the view is added to the window hierarchy
-        UIApplication.shared.windows.forEach { window in
+        let windows: [UIWindow]
+        if #available(iOS 15.0, *) {
+            windows = UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+        } else {
+            windows = UIApplication.shared.windows
+        }
+        windows.forEach { window in
             window.subviews.forEach { view in
                 view.removeFromSuperview()
                 window.addSubview(view)

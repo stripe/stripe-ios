@@ -42,6 +42,10 @@ class AddPaymentMethodViewController: UIViewController {
         paymentMethodFormViewController.paymentOption
     }
 
+    func logBillingAddressCompletionIfNeeded() {
+        paymentMethodFormViewController.logBillingAddressCompletionIfNeeded()
+    }
+
     var overridePrimaryButtonState: OverridePrimaryButtonState? {
         paymentMethodFormViewController.overridePrimaryButtonState
     }

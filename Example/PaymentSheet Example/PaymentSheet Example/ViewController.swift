@@ -70,14 +70,7 @@ extension UIViewController {
 
     static func topMostViewController() -> UIViewController? {
         let window: UIWindow?
-        #if os(visionOS)
-        window = UIApplication.shared.connectedScenes
-            .compactMap { $0 as? UIWindowScene }
-            .flatMap { $0.windows }
-            .first { $0.isKeyWindow }
-        #else
-        window = UIApplication.shared.keyWindow
-        #endif
+        window = UIApplication.shared.stripe_keyWindow
         guard let window else {
             return nil
         }

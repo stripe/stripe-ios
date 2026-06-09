@@ -661,7 +661,7 @@ enum CarType: CaseIterable {
 }
 
 private func findViewController() -> UIViewController? {
-    let keyWindow = UIApplication.shared.windows.filter { $0.isKeyWindow }.first
+    let keyWindow = UIApplication.shared.stripe_keyWindow
     var topController = keyWindow?.rootViewController
     while let presentedViewController = topController?.presentedViewController {
         topController = presentedViewController

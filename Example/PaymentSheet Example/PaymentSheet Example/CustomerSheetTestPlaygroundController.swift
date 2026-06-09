@@ -58,7 +58,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
 
     var rootViewController: UIViewController {
         // Hack, should do this in SwiftUI
-        return UIApplication.shared.windows.first!.rootViewController!
+        return UIApplication.shared.stripe_keyWindow!.rootViewController!
     }
 
     func makeAlertController() -> UIAlertController {

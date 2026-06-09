@@ -6,6 +6,8 @@
 
 "App Settings" = "Lietotnes iestatījumi";
 
+"Auto" = "Auto";
+
 "Back %@ photo successfully uploaded" = "Aizmugurējais %@ fotoattēls veiksmīgi augšupielādēts";
 
 "Back identity document photo successfully uploaded" = "Personu apliecinoša dokumenta aizmugures fotoattēls veiksmīgi augšupielādēts";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Attēls ir neskaidrs. Turiet tālruni stabili un mēģiniet vēlreiz.";
 
+"Image taken" = "Uzņemtais attēls";
+
 "Individual CPF" = "Fiziskas personas CPF";
 
 "Invalid document" = "Nederīgs dokuments";
@@ -85,6 +89,8 @@
 "Loading" = "Ielādē";
 
 "Make sure you're in a well lit space." = "Pārliecinieties, ka atrodaties labi apgaismotā vietā.";
+
+"Manual" = "Rokasgrāmata";
 
 "Move closer" = "Novietojiet tuvāk";
 
