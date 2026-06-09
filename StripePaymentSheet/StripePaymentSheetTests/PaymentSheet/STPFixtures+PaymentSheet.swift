@@ -233,8 +233,8 @@ extension STPElementsSession {
                 return setupIntent.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
             case .deferredIntent(let intentConfig):
                 return intentConfig.paymentMethodTypes ?? []
-            case .checkoutSession(let checkoutSession):
-                return checkoutSession.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
+            case .checkout(let checkout):
+                return checkout.stpSession.paymentMethodTypes.map { STPPaymentMethod.string(from: $0) ?? "unknown" }
             }
         }()
         var customerSessionData: [String: Any]?
@@ -297,7 +297,7 @@ extension Intent {
         return .deferredIntent(intentConfig: .init(mode: .payment(amount: 1010, currency: "USD", setupFutureUsage: setupFutureUsage, paymentMethodOptions: PaymentSheet.IntentConfiguration.Mode.PaymentMethodOptions(setupFutureUsageValues: paymentMethodOptionsSetupFutureUsage)), confirmHandler: { _, _ in return "" }))
     }
 
-    static func _testCheckoutSession(
+    @MainActor static func _testCheckoutSession(
         mode: Checkout.Mode = .payment,
         amount: Int? = 2345,
         currency: String = "USD",
@@ -379,7 +379,7 @@ extension Intent {
         }
 
         let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json)!
-        return .checkoutSession(checkoutSession)
+        return .checkout(Checkout(session: checkoutSession))
     }
 }
 

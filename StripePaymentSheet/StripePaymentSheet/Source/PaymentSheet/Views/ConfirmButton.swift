@@ -46,11 +46,11 @@ class ConfirmButton: UIControl {
                 case .setup:
                     return .setup
                 }
-            case .checkoutSession(let checkoutSession):
-                switch checkoutSession.mode {
+            case .checkout(let checkout):
+                switch checkout.stpSession.mode {
                 case .payment:
-                    if let amount = checkoutSession.expectedAmount(),
-                       let currency = checkoutSession.currency {
+                    if let amount = checkout.stpSession.expectedAmount(),
+                       let currency = checkout.stpSession.currency {
                         return .pay(amount: amount, currency: currency, withLock: withLock)
                     }
                     stpAssertionFailure("Missing amount and currency in checkout session for .payment mode")

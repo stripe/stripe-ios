@@ -12,6 +12,7 @@ import OHHTTPStubsSwift
 import StripePaymentsObjcTestUtils
 import XCTest
 
+@MainActor
 class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     private func configuration(apiClient: STPAPIClient) -> PaymentSheet.Configuration {
         var config = PaymentSheet.Configuration()
@@ -509,7 +510,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let loaded = expectation(description: "Loaded")
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkout(Checkout(session: checkoutSession)),
             configuration: configuration,
             analyticsHelper: ._testValue(integrationShape: .complete),
             integrationShape: .paymentSheet
@@ -539,7 +540,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let loaded = expectation(description: "Loaded")
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkout(Checkout(session: checkoutSession)),
             configuration: configuration,
             analyticsHelper: ._testValue(integrationShape: .complete),
             integrationShape: .paymentSheet

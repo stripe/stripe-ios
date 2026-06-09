@@ -16,19 +16,19 @@ import UIKit
 
 // MARK: - Intent
 
-/// An internal type representing either a PaymentIntent, SetupIntent, a "deferred Intent", or a CheckoutSession
+/// An internal type representing either a PaymentIntent, SetupIntent, a "deferred Intent", or a Checkout
 enum Intent {
     case paymentIntent(STPPaymentIntent)
     case setupIntent(STPSetupIntent)
     case deferredIntent(intentConfig: PaymentSheet.IntentConfiguration)
-    case checkoutSession(STPCheckoutSession)
+    case checkout(Checkout)
 
     var stripeId: String? {
         switch self {
         case .paymentIntent(let intent): intent.stripeId
         case .setupIntent(let intent): intent.stripeID
         case .deferredIntent: nil
-        case .checkoutSession(let session): session.id
+        case .checkout(let checkout): checkout.stpSession.id
         }
     }
 
@@ -45,8 +45,8 @@ enum Intent {
             case .setup:
                 return false
             }
-        case .checkoutSession(let session):
-            return session.mode == .payment || session.mode == .subscription
+        case .checkout(let checkout):
+            return checkout.stpSession.mode == .payment || checkout.stpSession.mode == .subscription
         }
     }
 
@@ -58,7 +58,7 @@ enum Intent {
             return false
         case .deferredIntent:
             return true
-        case .checkoutSession:
+        case .checkout:
             return false
         }
     }
@@ -67,7 +67,7 @@ enum Intent {
         switch self {
         case .deferredIntent(let intentConfig):
             return intentConfig
-        case .paymentIntent, .setupIntent, .checkoutSession:
+        case .paymentIntent, .setupIntent, .checkout:
             return nil
         }
     }
@@ -78,7 +78,7 @@ enum Intent {
             return intentConfig.requireCVCRecollection
         case .paymentIntent(let paymentIntent):
             return paymentIntent.paymentMethodOptions?.card?.requireCvcRecollection ?? false
-        case .setupIntent, .checkoutSession:
+        case .setupIntent, .checkout:
             // CheckoutSession does not yet support CVC recollection
             return false
         }
@@ -97,8 +97,8 @@ enum Intent {
             case .setup(let currency, _):
                 return currency
             }
-        case .checkoutSession(let session):
-            return session.currency
+        case .checkout(let checkout):
+            return checkout.stpSession.currency
         }
     }
 
@@ -115,8 +115,8 @@ enum Intent {
             case .setup:
                 return nil
             }
-        case .checkoutSession(let session):
-            return session.expectedAmount()
+        case .checkout(let checkout):
+            return checkout.stpSession.expectedAmount()
         }
     }
 
@@ -129,10 +129,10 @@ enum Intent {
                 return setupFutureUsage?.rawValue
             }
             return nil
-        case .checkoutSession(let checkoutSession):
-            switch checkoutSession.mode {
+        case .checkout(let checkout):
+            switch checkout.stpSession.mode {
             case .payment:
-                return checkoutSession.setupFutureUsage
+                return checkout.stpSession.setupFutureUsage
             case .setup:
                 return nil
             case .subscription, .unknown:
@@ -156,8 +156,8 @@ enum Intent {
                 return !setupFutureUsageValues.isEmpty
             }
             return nil
-        case .checkoutSession(let checkoutSession):
-            return checkoutSession.isPaymentMethodOptionsSetupFutureUsageSet
+        case .checkout(let checkout):
+            return checkout.stpSession.isPaymentMethodOptionsSetupFutureUsageSet
         case .setupIntent:
             return nil
         }
@@ -181,10 +181,10 @@ enum Intent {
             case .setup:
                 return true
             }
-        case .checkoutSession(let checkoutSession):
-            switch checkoutSession.mode {
+        case .checkout(let checkout):
+            switch checkout.stpSession.mode {
             case .payment:
-                guard let setupFutureUsage = checkoutSession.setupFutureUsage(for: paymentMethodType) else {
+                guard let setupFutureUsage = checkout.stpSession.setupFutureUsage(for: paymentMethodType) else {
                     return false
                 }
                 return setupFutureUsage != "none"
@@ -199,8 +199,8 @@ enum Intent {
 
     func allowsPaymentMethodRemoval(elementsSession: STPElementsSession) -> Bool {
         switch self {
-        case .checkoutSession(let checkoutSession):
-            return checkoutSession.customer?.canDetachPaymentMethod ?? false
+        case .checkout(let checkout):
+            return checkout.stpSession.customer?.canDetachPaymentMethod ?? false
         case .paymentIntent, .setupIntent, .deferredIntent:
             return elementsSession.allowsRemovalOfPaymentMethodsForPaymentSheet()
         }

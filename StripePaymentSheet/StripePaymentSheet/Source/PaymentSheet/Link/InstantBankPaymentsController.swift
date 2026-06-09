@@ -216,7 +216,7 @@ import UIKit
                     ) { [weak self] linkAccountSession, error in
                         self?.generateManifest(continuation: continuation, error: error, emailAddress: self?.configuration.defaultBillingDetails.email, linkAccountSession: linkAccountSession)
                     }
-            case .checkoutSession:
+            case .checkout:
                 continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "InstantBankPaymentsController is not yet supported by CheckoutSession"))
             }
         }
@@ -309,7 +309,7 @@ import UIKit
                 intentType: .deferred,
                 financialConnectionsCompletion: completionHandler
             )
-        case .checkoutSession:
+        case .checkout:
             completionHandler(nil, nil, PaymentSheetError.unknown(debugDescription: "InstantBankPaymentsController is not yet supported by CheckoutSession") as NSError)
         }
     }
@@ -436,7 +436,7 @@ import UIKit
                     configuration: configuration
                 )
                 linkBrand = elementsSession.linkBrand
-            case .checkoutSession:
+            case .checkout:
                 linkBrand = nil
             }
 
@@ -564,7 +564,7 @@ import UIKit
                         continuation.resume()
                     }
                 }
-            case .checkoutSession:
+            case .checkout:
                 continuation.resume(throwing: PaymentSheetError.unknown(debugDescription: "InstantBankPaymentsController is not yet supported by CheckoutSession"))
             }
         }
@@ -614,7 +614,7 @@ private extension PaymentSheet.InitializationMode {
             case .setup:
                 return nil
             }
-        case .checkoutSession:
+        case .checkout:
             return nil
         }
     }
@@ -632,7 +632,7 @@ private extension PaymentSheet.InitializationMode {
             case .setup(let currency, _):
                 return currency
             }
-        case .checkoutSession:
+        case .checkout:
             return nil
         }
     }

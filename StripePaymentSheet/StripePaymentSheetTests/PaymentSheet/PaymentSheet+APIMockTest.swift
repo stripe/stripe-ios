@@ -15,6 +15,7 @@ import XCTest
 import OHHTTPStubs
 import OHHTTPStubsSwift
 
+@MainActor
 final class PaymentSheetAPIMockTest: APIStubbedTestCase {
     enum MockJson {
         static let cardPaymentMethod = STPTestUtils.jsonNamed("CardPaymentMethod")!
@@ -356,7 +357,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: paymentOption,
             paymentHandler: paymentHandler,
@@ -389,7 +390,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
@@ -422,7 +423,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
@@ -454,7 +455,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
@@ -489,7 +490,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
@@ -528,7 +529,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,
@@ -563,7 +564,7 @@ final class PaymentSheetAPIMockTest: APIStubbedTestCase {
         PaymentSheet.confirm(
             configuration: configuration,
             authenticationContext: self,
-            intent: .checkoutSession(checkoutSession),
+            intent: .checkout(Checkout(session: checkoutSession)),
             elementsSession: elementsSession,
             paymentOption: .new(confirmParams: confirmParams),
             paymentHandler: paymentHandler,

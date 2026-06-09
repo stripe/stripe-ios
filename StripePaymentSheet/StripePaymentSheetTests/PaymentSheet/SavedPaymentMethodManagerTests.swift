@@ -12,6 +12,7 @@ import StripeCoreTestUtils
 @_spi(STP)@testable import StripePaymentSheet
 import XCTest
 
+@MainActor
 final class SavedPaymentMethodManagerTests: XCTestCase {
 
     let ephemeralKey = "test-eph-key"
@@ -131,7 +132,7 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
         let sut = SavedPaymentMethodManager(
             configuration: configuration,
             elementsSession: ._testValue(paymentMethodTypes: ["card"]),
-            intent: .checkoutSession(checkoutSession)
+            intent: .checkout(Checkout(session: checkoutSession))
         )
         sut.detach(paymentMethod: paymentMethod)
 

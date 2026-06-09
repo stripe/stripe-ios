@@ -35,9 +35,6 @@ extension Checkout {
         newSession.billingAddress = stpSession?.billingAddress
         newSession.shippingAddress = stpSession?.shippingAddress
         applyOverrides?(newSession)
-        newSession.onConfirmed = { [weak self] response in
-            self?.updateSession(response)
-        }
         let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
         setSession(newSession)
         if changed {

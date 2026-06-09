@@ -156,9 +156,6 @@ class STPCheckoutSession: NSObject {
     /// Client-side shipping address override.
     var shippingAddress: Checkout.ContactAddress?
 
-    /// Called by confirm handlers with the updated session after a successful confirm.
-    var onConfirmed: ((STPCheckoutSession) -> Void)?
-
     // MARK: - Convenience
 
     /// Returns `true` when the server needs a `tax_region` update for the given address type.

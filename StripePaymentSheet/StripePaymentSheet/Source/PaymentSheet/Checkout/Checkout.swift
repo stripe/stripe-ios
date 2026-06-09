@@ -45,10 +45,13 @@ public final class Checkout: ObservableObject {
 
     /// The underlying `STPCheckoutSession` backing the current public ``state``.
     ///
-    /// Internal callers that need `STPCheckoutSession`-specific data (e.g.
-    /// `allResponseFields`, address overrides, the expanded intent objects)
-    /// should read this rather than casting from `state.session`.
-    private(set) var stpSession: STPCheckoutSession?
+    /// Marked `nonisolated(unsafe)` because PaymentSheet internals read this from non-MainActor
+    /// contexts. This is safe: reads only occur after the session is loaded and while the payment
+    /// UI is presented, a window during which no mutations occur. Writes are always on MainActor
+    /// because they go through `Checkout`'s MainActor-isolated mutation methods.
+    /// Requiring full MainActor isolation would propagate `@MainActor` through nearly all of
+    /// PaymentSheet's internal types, which is not warranted by the actual concurrency risk.
+    nonisolated(unsafe) private(set) var stpSession: STPCheckoutSession!
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
@@ -102,14 +105,12 @@ public final class Checkout: ObservableObject {
             await flagImageManager.prefetchFlagImages(for: checkoutSession)
             self.stpSession = checkoutSession
             self.state = .loaded(checkoutSession.makePublicSession())
-            checkoutSession.onConfirmed = { [weak self] response in
-                self?.updateSession(response)
-            }
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
 
+#if DEBUG
     /// Internal initializer for unit tests that injects a pre-loaded session.
     init(
         clientSecret: String,
@@ -123,10 +124,17 @@ public final class Checkout: ObservableObject {
         await flagImageManager.prefetchFlagImages(for: session)
         self.stpSession = session
         self.state = .loaded(session.makePublicSession())
-        session.onConfirmed = { [weak self] response in
-            self?.updateSession(response)
-        }
     }
+
+    /// Synchronous test-only initializer that wraps a pre-loaded session without async work.
+    init(session: STPCheckoutSession) {
+        self.clientSecret = ""
+        self.configuration = Configuration()
+        self.apiClient = .shared
+        self.stpSession = session
+        self.state = .loaded(session.makePublicSession())
+    }
+#endif
 
     // MARK: - Pending Operations
 
