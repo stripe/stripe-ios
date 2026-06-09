@@ -7,6 +7,12 @@ let package = Package(
     platforms: [
         .iOS(.v13)
     ],
+    dependencies: [
+        .package(
+            url: "https://github.com/paescebu/SwiftTasksVision.git",
+            exact: "0.10.21"
+        )
+    ],
     products: [
         .library(
             name: "Stripe",
@@ -98,7 +104,12 @@ let package = Package(
         ),
         .target(
             name: "StripeIdentity",
-            dependencies: ["StripeCore", "StripeUICore", "StripeCameraCore"],
+            dependencies: [
+                "StripeCore",
+                "StripeUICore",
+                "StripeCameraCore",
+                .product(name: "SwiftTasksVision", package: "SwiftTasksVision"),
+            ],
             path: "StripeIdentity/StripeIdentity",
             exclude: ["Info.plist"],
             resources: [
