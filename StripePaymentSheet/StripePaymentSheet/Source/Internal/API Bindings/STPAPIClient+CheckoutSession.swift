@@ -59,10 +59,14 @@ extension STPAPIClient {
         checkoutSessionId: String,
         parameters: [String: Any]
     ) async throws -> STPCheckoutSession {
+        var params = parameters
+        params["elements_session_client"] = [
+            "is_aggregation_expected": true,
+        ]
         return try await APIRequest<STPCheckoutSession>.post(
             with: self,
             endpoint: "payment_pages/\(checkoutSessionId)",
-            parameters: parameters
+            parameters: params
         )
     }
 

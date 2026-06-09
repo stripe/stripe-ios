@@ -8,6 +8,8 @@
 
 "1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
 
+"Accept" = "Piekrītu";
+
 "Add US bank account" = "Pievienot ASV bankas kontu";
 
 "Add a card" = "Pievienot karti";

@@ -6,6 +6,8 @@
 
 "App Settings" = "App Settings";
 
+"Auto" = "Auto";
+
 "Back %@ photo successfully uploaded" = "Back %@ photo successfully uploaded";
 
 "Back identity document photo successfully uploaded" = "Back identity document photo successfully uploaded";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Image is blurry. Hold your phone steady and try again.";
 
+"Image taken" = "Image taken";
+
 "Individual CPF" = "Individual CPF";
 
 "Invalid document" = "Invalid document";
@@ -85,6 +89,8 @@
 "Loading" = "Loading";
 
 "Make sure you're in a well lit space." = "Make sure you're in a well lit space.";
+
+"Manual" = "Manual";
 
 "Move closer" = "Move closer";
 

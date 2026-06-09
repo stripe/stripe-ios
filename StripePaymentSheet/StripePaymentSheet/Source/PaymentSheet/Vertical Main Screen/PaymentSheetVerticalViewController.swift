@@ -726,6 +726,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return
         }
 
+        paymentMethodFormViewController?.logBillingAddressCompletionIfNeeded()
+
         // Send analytic when primary button is tapped
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
 

@@ -19,6 +19,7 @@ class AutoCompleteViewControllerSnapshotTests: STPSnapshotTestCase {
     private var configuration: AddressViewController.Configuration {
         var configuration = AddressViewController.Configuration()
         configuration.appearance.applyLiquidGlassIfPossible()
+        configuration.apiClient = STPAPIClient(publishableKey: "pk_test_1234")
         return configuration
     }
 

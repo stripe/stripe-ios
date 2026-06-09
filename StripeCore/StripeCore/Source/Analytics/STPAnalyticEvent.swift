@@ -213,6 +213,16 @@ import Foundation
     case addressShow = "mc_address_show"
     case addressCompleted = "mc_address_completed"
 
+    // MARK: - Billing Address
+    case mcbillingAddressCompleted = "mc_billing_address_completed"
+    case csbillingAddressCompleted = "cs_billing_address_completed"
+
+    // MARK: - Autocomplete
+    case addressAutocompleteStart = "mc_address_autocomplete_start"
+    case addressAutocompleteSuggestions = "mc_address_autocomplete_suggestions"
+    case addressAutocompleteComplete = "mc_address_autocomplete_complete"
+    case addressAutocompleteError = "mc_address_autocomplete_error"
+
     // MARK: - PaymentSheet Force Success
     case paymentSheetForceSuccess = "mc_force_success"
 
