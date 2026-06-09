@@ -8,6 +8,8 @@
 
 "1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
 
+"Accept" = "Chấp nhận";
+
 "Add US bank account" = "Thêm tài khoản ngân hàng Hoa Kỳ";
 
 "Add a card" = "Thêm một thẻ";

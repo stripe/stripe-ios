@@ -6,6 +6,8 @@
 
 "App Settings" = "Postavke aplikacije";
 
+"Auto" = "Automatski";
+
 "Back %@ photo successfully uploaded" = "Fotografija poleđine %@ uspješno prenesena";
 
 "Back identity document photo successfully uploaded" = "Fotografija poleđine osobnog dokumenta uspješno učitana";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Slika je mutna. Držite telefon mirno i ponovno pokušajte.";
 
+"Image taken" = "Slika je snimljena";
+
 "Individual CPF" = "CPF porezni broj";
 
 "Invalid document" = "Nevaljani dokument";
@@ -85,6 +89,8 @@
 "Loading" = "Učitavanje";
 
 "Make sure you're in a well lit space." = "Provjerite jeste li u dobro osvijetljenom prostoru.";
+
+"Manual" = "Ručno";
 
 "Move closer" = "Pomaknite bliže";
 

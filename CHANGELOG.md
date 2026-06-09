@@ -1,8 +1,9 @@
 The next release's version bump will so far be:
-MINOR
+PATCH
 
 ## X.Y.Z - changes pending release
 
+## 25.17.0 2026-06-08
 ### PaymentSheet
 * [Changed] Renamed `LinkPaymentController` to `InstantBankPaymentsController`.
 * [Changed] Link bank account display strings now include the last 4 digits in `LinkController.PaymentMethodPreview.sublabel` and `PaymentSheet.FlowController.PaymentOptionDisplayData.labels.sublabel`, matching the existing card behavior.

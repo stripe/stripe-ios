@@ -6,6 +6,8 @@
 
 "App Settings" = "Настройки на приложението";
 
+"Auto" = "Автоматично";
+
 "Back %@ photo successfully uploaded" = "Снимка на задната част на %@ е качена успешно";
 
 "Back identity document photo successfully uploaded" = "Успешно качена снимка на задната част на документа за самоличност";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Изображението е размазано. Дръжте телефона си стабилно и опитайте отново.";
 
+"Image taken" = "Снимка е направена";
+
 "Individual CPF" = "CPF на физическо лице";
 
 "Invalid document" = "Невалиден документ";
@@ -85,6 +89,8 @@
 "Loading" = "Зареждане";
 
 "Make sure you're in a well lit space." = "Уверете се, че сте на добре осветено място.";
+
+"Manual" = "Ръчно";
 
 "Move closer" = "Приближете";
 
