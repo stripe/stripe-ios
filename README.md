@@ -110,7 +110,7 @@ If you're reading this on GitHub.com, please make sure you are looking at the [t
 
 ## Requirements
 
-The Stripe iOS SDK supports all [Apple supported Xcode versions](https://developer.apple.com/news/upcoming-requirements/) and is compatible with apps targeting iOS 15 or above. We support Catalyst on macOS 15 or later.
+The Stripe iOS SDK supports all [Apple supported Xcode versions](https://developer.apple.com/news/upcoming-requirements/) and is compatible with apps targeting iOS 15 or above. We support Catalyst on macOS 12 or later.
 
 For iOS 13 and 14 support, please use [25.17.0](https://github.com/stripe/stripe-ios/tree/v25.17.0).
 
