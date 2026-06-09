@@ -102,17 +102,58 @@ final class CheckoutCurrencySelectorViewTests: XCTestCase {
         await fulfillment(of: [expectation], timeout: 1.0)
     }
 
+    // MARK: - Label update tests
+
+    func testLabelsUpdateWhenSessionAmountChanges() async {
+        let checkout = await Checkout(clientSecret: "cs_test_123_secret_abc", session: CheckoutTestHelpers.makeOpenSession())
+        let session = makeSession(integrationAmount: 1200, localAmount: 1000)
+        checkout.updateSession(session)
+
+        var appearance = Checkout.CurrencySelectorView.Appearance()
+        appearance.labelContent = .amount
+        let view = Checkout.CurrencySelectorView(checkout: checkout, appearance: appearance)
+
+        // Wait for initial build
+        let built = expectation(description: "Initial build")
+        DispatchQueue.main.async {
+            built.fulfill()
+        }
+        await fulfillment(of: [built], timeout: 1.0)
+
+        let selectorView = view.subviews.compactMap { ($0 as? UIStackView)?.arrangedSubviews.compactMap { $0 as? TwoOptionSelectorView }.first }.first
+        XCTAssertNotNil(selectorView)
+        XCTAssertTrue(selectorView!.leftItem.displayText.string.contains("10"))
+        XCTAssertTrue(selectorView!.rightItem.displayText.string.contains("12"))
+
+        // Update session with new amounts
+        let updatedSession = makeSession(integrationAmount: 2400, localAmount: 2000)
+        checkout.updateSession(updatedSession)
+
+        let updated = expectation(description: "Labels updated")
+        DispatchQueue.main.async {
+            updated.fulfill()
+        }
+        await fulfillment(of: [updated], timeout: 1.0)
+
+        XCTAssertTrue(selectorView!.leftItem.displayText.string.contains("20"))
+        XCTAssertTrue(selectorView!.rightItem.displayText.string.contains("24"))
+    }
+
     // MARK: - Helpers
 
     private func makeSession(
         adaptivePricingActive: Bool = true,
         includeLocalizedPrices: Bool = true,
-        includeExchangeRateFields: Bool = true
+        includeExchangeRateFields: Bool = true,
+        integrationAmount: Int = 1200,
+        localAmount: Int = 1000
     ) -> STPCheckoutSession {
         CheckoutTestHelpers.makeAdaptivePricingSession(
             adaptivePricingActive: adaptivePricingActive,
             includeLocalizedPrices: includeLocalizedPrices,
-            includeExchangeRateFields: includeExchangeRateFields
+            includeExchangeRateFields: includeExchangeRateFields,
+            integrationAmount: integrationAmount,
+            localAmount: localAmount
         )
     }
 }
