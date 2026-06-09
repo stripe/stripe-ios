@@ -218,7 +218,8 @@ class PaymentMethodFormViewController: UIViewController {
             appearance: configuration.appearance
         )
         addressConfiguration.apiClient = configuration.apiClient
-        addressConfiguration.useAutocompleteEndpoints = configuration.useAutocompleteEndpoints
+        addressConfiguration.useAutocompleteEndpoints = configuration.useAutocompleteEndpoints && elementsSession.shouldUseAutocompleteProxyEndpoints
+        addressConfiguration.autocompleteApiKey = configuration.autocompleteApiKey
 
         let autoCompleteViewController = AutoCompleteViewController(
             configuration: addressConfiguration,

@@ -164,7 +164,7 @@ public extension AddressViewController {
 
         /// A list of two-letter country codes that support autocomplete
         /// Defaults to a list of countries that Stripe has audited to ensure a good autocomplete experience.
-        public var autocompleteCountries: [String] = ["AU", "BE", "BR", "CA", "CH", "DE", "ES", "FR", "GB", "IE", "IT", "MX", "NO", "NL", "PL", "RU", "SE", "TR", "US", "ZA"]
+        public var autocompleteCountries: [String] = ["AU", "BE", "BR", "CA", "CH", "DE", "ES", "FR", "GB", "IE", "IT", "JP", "MX", "NO", "NL", "PL", "RU", "SE", "TR", "US", "ZA"]
 
         /// The billing address to use for the "Use billing address for shipping" checkbox.
         /// When provided, shows a checkbox that allows customers to populate shipping fields with billing address data.
@@ -173,6 +173,9 @@ public extension AddressViewController {
         /// When true, uses the Stripe autocomplete endpoints for address autocomplete instead of Apple MapKit.
         /// Defaults to false.
         @_spi(STP) public var useAutocompleteEndpoints: Bool = false
+
+        /// An API key to include in autocomplete and address details requests. Only used when `useAutocompleteEndpoints` is true.
+        @_spi(STP) public var autocompleteApiKey: String?
 
     }
 }

@@ -254,6 +254,9 @@ extension PaymentSheet {
         /// When true, uses the Stripe autocomplete endpoints for billing address autocomplete instead of Apple MapKit.
         @_spi(STP) public var useAutocompleteEndpoints: Bool = false
 
+        /// An API key to include in autocomplete and address details requests. Only used when `useAutocompleteEndpoints` is true.
+        @_spi(STP) public var autocompleteApiKey: String?
+
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
 

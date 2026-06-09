@@ -161,6 +161,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         }
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
         configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
+        configuration.autocompleteApiKey = settings.useAutocompleteEndpoints == .on ? settings.autocompleteApiKey : nil
 
         return configuration
     }

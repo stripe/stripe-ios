@@ -23,6 +23,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
 
     let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
     let cbcEligible: Bool
+    let useAutocompleteEndpoints: Bool
     let savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior
 
     // MARK: - Read-only Properties
@@ -134,6 +135,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         configuration: CustomerSheet.Configuration,
         paymentMethodTypes: [PaymentSheet.PaymentMethodType],
         cbcEligible: Bool,
+        useAutocompleteEndpoints: Bool,
         savePaymentMethodConsentBehavior: PaymentSheetFormFactory.SavePaymentMethodConsentBehavior,
         delegate: CustomerAddPaymentMethodViewControllerDelegate
     ) {
@@ -147,6 +149,7 @@ class CustomerAddPaymentMethodViewController: UIViewController {
         stpAssert(!paymentMethodTypes.isEmpty, "At least one payment method type must be available.")
         self.paymentMethodTypes = paymentMethodTypes
         self.cbcEligible = cbcEligible
+        self.useAutocompleteEndpoints = useAutocompleteEndpoints
         self.savePaymentMethodConsentBehavior = savePaymentMethodConsentBehavior
         super.init(nibName: nil, bundle: nil)
         self.view.backgroundColor = configuration.appearance.colors.background
@@ -293,7 +296,8 @@ class CustomerAddPaymentMethodViewController: UIViewController {
             appearance: configuration.appearance
         )
         addressConfiguration.apiClient = configuration.apiClient
-        addressConfiguration.useAutocompleteEndpoints = configuration.useAutocompleteEndpoints
+        addressConfiguration.useAutocompleteEndpoints = useAutocompleteEndpoints
+        addressConfiguration.autocompleteApiKey = configuration.autocompleteApiKey
 
         let autoCompleteViewController = AutoCompleteViewController(
             configuration: addressConfiguration,

@@ -76,6 +76,13 @@ struct PaymentSheetTestPlayground: View {
         SearchableSettingView(setting: $playgroundController.settings.opensCardScannerAutomatically, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.termsDisplay, searchText: searchText)
         SearchableSettingView(setting: $playgroundController.settings.useAutocompleteEndpoints, searchText: searchText)
+        if playgroundController.settings.useAutocompleteEndpoints == .on {
+            SearchableView(searchableName: "Autocomplete API Key", searchText: searchText) {
+                TextField("Autocomplete API Key", text: autocompleteApiKeyBinding)
+                    .autocapitalization(.none)
+                    .autocorrectionDisabled()
+            }
+        }
     }
 
     var body: some View {
@@ -404,6 +411,14 @@ struct PaymentSheetTestPlayground: View {
             if newString.hasPrefix("pk_live") {
                 playgroundController.settings.manualCapture = .on
             }
+        }
+    }
+
+    var autocompleteApiKeyBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.autocompleteApiKey ?? ""
+        } set: { newString in
+            playgroundController.settings.autocompleteApiKey = (newString != "") ? newString : nil
         }
     }
 

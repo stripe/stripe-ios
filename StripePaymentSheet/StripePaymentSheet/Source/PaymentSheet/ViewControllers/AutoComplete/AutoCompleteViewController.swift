@@ -336,7 +336,8 @@ extension AutoCompleteViewController: ElementDelegate {
                 let response = try await configuration.apiClient.getAddressSuggestions(
                     searchText: query,
                     countryCodes: countryCodes,
-                    sessionToken: sessionToken
+                    sessionToken: sessionToken,
+                    apiKey: configuration.autocompleteApiKey
                 )
                 guard !Task.isCancelled else { return }
                 let latency = Date().timeIntervalSince(requestStart)
@@ -458,7 +459,8 @@ extension AutoCompleteViewController: UITableViewDelegate, UITableViewDataSource
                             placeId: placeId,
                             source: currentSource,
                             displayTitle: suggestion.title,
-                            sessionToken: sessionToken
+                            sessionToken: sessionToken,
+                            apiKey: configuration.autocompleteApiKey
                         )
                         let latency = Date().timeIntervalSince(requestStart)
                         STPAnalyticsClient.sharedClient.logAddressAutocompleteComplete(

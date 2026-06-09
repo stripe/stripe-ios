@@ -191,6 +191,7 @@ public class CustomerSheet {
                              paymentMethodSyncDefault: paymentMethodSyncDefault,
                              allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false,
+                             useAutocompleteEndpoints: self.configuration.useAutocompleteEndpoints && elementsSession.shouldUseAutocompleteProxyEndpoints,
                              elementsSessionConfigId: elementsSession.configID)
                 var params: [String: Any] = [:]
                 if elementsSession.customer?.customerSession != nil {
@@ -227,6 +228,7 @@ public class CustomerSheet {
                  paymentMethodSyncDefault: Bool,
                  allowsRemovalOfLastSavedPaymentMethod: Bool,
                  cbcEligible: Bool,
+                 useAutocompleteEndpoints: Bool,
                  elementsSessionConfigId: String?) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -247,6 +249,7 @@ public class CustomerSheet {
                                                                                 paymentMethodSyncDefault: paymentMethodSyncDefault,
                                                                                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                 cbcEligible: cbcEligible,
+                                                                                useAutocompleteEndpoints: useAutocompleteEndpoints,
                                                                                 confirmationChallenge: self.confirmationChallenge,
                                                                                 elementsSessionConfigId: elementsSessionConfigId,
                                                                                 csCompletion: self.csCompletion,
