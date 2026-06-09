@@ -55,7 +55,7 @@ extension PaymentSheet {
             }
 
             // 2. Get expected amount and save_payment_method from checkout session
-            let expectedAmount = try checkoutSession.expectedAmount()
+            let expectedAmount = checkoutSession.expectedAmount()
             let savePaymentMethod: Bool? = {
                 switch checkoutSession.mode {
                 case .setup:

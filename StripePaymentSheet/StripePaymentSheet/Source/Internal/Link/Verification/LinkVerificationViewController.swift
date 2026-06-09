@@ -150,11 +150,14 @@ final class LinkVerificationViewController: UIViewController {
                     self?.verificationView.codeField.becomeFirstResponder()
                 } else {
                     // No OTP collection is required.
+                    self?.activityIndicator.stopAnimating()
                     self?.finish(withResult: .completed)
                 }
             case .failure(let error):
                 STPAnalyticsClient.sharedClient.logLink2FAStartFailure()
-                self?.finish(withResult: .failed(error))
+                self?.activityIndicator.stopAnimating()
+                self?.verificationView.isHidden = false
+                self?.verificationView.errorMessage = LinkUtils.getLocalizedErrorMessage(from: error)
             }
         }
     }

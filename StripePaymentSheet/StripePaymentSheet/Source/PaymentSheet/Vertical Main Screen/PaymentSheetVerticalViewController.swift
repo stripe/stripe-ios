@@ -208,9 +208,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return !walletButtonsViewState.showApplePay
         case .link:
             return !walletButtonsViewState.showLink
-        case .shopPay:
-            stpAssertionFailure()
-            return false // not yet implemented
         }
     }
 
@@ -728,6 +725,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             stpAssertionFailure("Tapped buy button while adding without paymentOption")
             return
         }
+
+        paymentMethodFormViewController?.logBillingAddressCompletionIfNeeded()
 
         // Send analytic when primary button is tapped
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)

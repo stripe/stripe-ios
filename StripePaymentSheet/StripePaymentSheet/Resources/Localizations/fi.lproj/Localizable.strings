@@ -8,6 +8,8 @@
 
 "1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
 
+"Accept" = "Hyväksy";
+
 "Add US bank account" = "Lisää yhdysvaltalainen pankkitili";
 
 "Add a card" = "Lisää kortti";

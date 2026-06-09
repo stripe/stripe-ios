@@ -1,3 +1,6 @@
 /* Label shown in the Link UI indicating that debit cards are more likely to be accepted */
 "Debit cards are most likely to be accepted." = "Debit cards are most likely to be accepted.";
 
+/* Error message shown when app attestation fails */
+"This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists." = "This app couldn't be verified due to an attestation error. Please try again later or contact the developer if the issue persists.";
+

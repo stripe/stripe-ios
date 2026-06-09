@@ -8,6 +8,8 @@
 
 "1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
 
+"Accept" = "Tanggapin";
+
 "Add US bank account" = "Magdagdag ng account sa bangko ng US";
 
 "Add a card" = "Magdagdag ng isang kard";

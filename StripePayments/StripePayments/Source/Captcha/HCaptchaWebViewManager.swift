@@ -117,7 +117,8 @@ internal class HCaptchaWebViewManager: NSObject {
         self.decoder = HCaptchaDecoder { [weak self] result in
             self?.handle(result: result)
         }
-        DispatchQueue.global(qos: .userInitiated).async {
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            guard let self = self else { return }
             let arguments = ["apiKey": config.apiKey,
                              "endpoint": config.actualEndpoint.absoluteString,
                              "size": config.size.rawValue,
@@ -295,7 +296,15 @@ fileprivate extension HCaptchaWebViewManager {
             .sorted { firstWindow, _ in firstWindow.isKeyWindow }
         let window = windows.first
         #else
-        let window = UIApplication.shared.windows.first { $0.isKeyWindow }
+        let window: UIWindow?
+        if #available(iOS 15.0, *) {
+            window = UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+                .first { $0.isKeyWindow }
+        } else {
+            window = UIApplication.shared.windows.first { $0.isKeyWindow }
+        }
         #endif
         if let window {
             setupWebview(on: window, html: html, url: url)

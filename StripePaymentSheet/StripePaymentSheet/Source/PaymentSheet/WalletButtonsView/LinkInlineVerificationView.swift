@@ -24,24 +24,38 @@ struct LinkInlineVerificationView: View {
     private var onComplete: () -> Void
 
     init(
+        viewModel: LinkInlineVerificationViewModel,
+        brand: LinkBrand = .link,
+        onComplete: @escaping () -> Void
+    ) {
+        self._viewModel = StateObject(wrappedValue: viewModel)
+        self.brand = brand
+        self.onComplete = onComplete
+    }
+
+    init(
         account: PaymentSheetLinkAccount,
         appearance: PaymentSheet.Appearance,
         brand: LinkBrand = .link,
         onComplete: @escaping () -> Void
     ) {
-        self._viewModel = StateObject(
-            wrappedValue: LinkInlineVerificationViewModel(
+        self.init(
+            viewModel: LinkInlineVerificationViewModel(
                 account: account,
                 appearance: appearance
-            )
+            ),
+            brand: brand,
+            onComplete: onComplete
         )
-        self.brand = brand
-        self.onComplete = onComplete
     }
 
     private var font: UIFont {
         UIFont.systemFont(ofSize: Constants.fontSize, weight: .medium)
             .scaled(withTextStyle: .caption1, maximumPointSize: Constants.fontSize)
+    }
+
+    private var startVerificationErrorMessage: String? {
+        viewModel.startVerificationError.map { LinkUtils.getLocalizedErrorMessage(from: $0) }
     }
 
     var body: some View {
@@ -103,6 +117,14 @@ struct LinkInlineVerificationView: View {
             }
             .frame(height: 72)
 
+            if let startVerificationErrorMessage {
+                Text(startVerificationErrorMessage)
+                    .font(Font(LinkUI.font(forTextStyle: .detail)))
+                    .foregroundColor(Color(uiColor: viewModel.appearance.colors.danger))
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
             Button(action: onResend) {
                 // TODO: Localize
                 Text("Resend code")
@@ -116,7 +138,7 @@ struct LinkInlineVerificationView: View {
         .animation(.easeInOut, value: viewModel.loading)
         .onAppear {
             Task {
-                try? await viewModel.startVerification()
+                await viewModel.startVerification()
             }
         }
     }
@@ -137,7 +159,7 @@ struct LinkInlineVerificationView: View {
     private func onResend() {
         viewModel.loading = true
         Task {
-            try? await viewModel.startVerification()
+            await viewModel.startVerification()
             viewModel.code = ""
             viewModel.loading = false
         }

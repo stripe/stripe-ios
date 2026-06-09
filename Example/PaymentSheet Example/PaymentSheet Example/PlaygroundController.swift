@@ -616,7 +616,7 @@ import UIKit
 
     var rootViewController: UIViewController {
         // Hack, should do this in SwiftUI
-        return UIApplication.shared.windows.first!.rootViewController!
+        return UIApplication.shared.stripe_keyWindow!.rootViewController!
     }
 
     private var subscribers: Set<AnyCancellable> = []

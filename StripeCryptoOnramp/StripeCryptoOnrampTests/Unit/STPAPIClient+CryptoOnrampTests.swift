@@ -451,13 +451,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
         let apiClient = stubbedAPIClient()
         let response = try await apiClient.retrieveMissingIdentifiers(linkAccountInfo: Constant.validLinkAccountInfo)
-        XCTAssertEqual(response.identifiers.count, 3)
-        XCTAssertEqual(response.identifiers[0].type, .deSTN)
-        XCTAssertEqual(response.identifiers[0].regulation, .euCARF)
-        XCTAssertEqual(response.identifiers[1].type, .mtNIC)
-        XCTAssertEqual(response.identifiers[1].regulation, .euCARF)
-        XCTAssertEqual(response.identifiers[2].type, .mtNIC)
-        XCTAssertEqual(response.identifiers[2].regulation, .euMiCA)
+        XCTAssertTrue(response.carfTinRequired)
+        XCTAssertEqual(response.identifiers.count, 1)
+        XCTAssertEqual(response.identifiers[0].type, .mtNIC)
+        XCTAssertEqual(response.identifiers[0].regulation, .euMiCA)
         XCTAssertEqual(response.alternatives.count, 1)
         XCTAssertEqual(response.alternatives[0].originalMissingIdentifiers, [.mtNIC])
         XCTAssertEqual(response.alternatives[0].alternativeMissingIdentifiers, [.mtPP])
@@ -507,9 +504,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             linkAccountInfo: Constant.validLinkAccountInfo
         )
 
-        XCTAssertFalse(response.valid)
-        XCTAssertEqual(response.identifiers.map(\.type), [.deSTN, .mtNIC, .mtNIC])
-        XCTAssertEqual(response.identifiers.map(\.regulation), [.euCARF, .euCARF, .euMiCA])
+        XCTAssertFalse(response.completed)
+        XCTAssertFalse(response.carfTinRequired)
+        XCTAssertEqual(response.identifiers.map(\.type), [.mtNIC])
+        XCTAssertEqual(response.identifiers.map(\.regulation), [.euMiCA])
         XCTAssertEqual(response.alternatives[0].originalMissingIdentifiers, [.mtNIC])
         XCTAssertEqual(response.alternatives[0].alternativeMissingIdentifiers, [.mtPP])
         XCTAssertEqual(response.invalidIdentifiers, [.deSTN, .mtNIC])
@@ -532,7 +530,8 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
             linkAccountInfo: Constant.validLinkAccountInfo
         )
 
-        XCTAssertTrue(response.valid)
+        XCTAssertTrue(response.completed)
+        XCTAssertFalse(response.carfTinRequired)
         XCTAssertEqual(response.identifiers, [])
         XCTAssertEqual(response.alternatives, [])
         XCTAssertEqual(response.invalidIdentifiers, [])
@@ -973,9 +972,10 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
             let parameters = String(data: httpBody, encoding: .utf8)?.parsedHTTPParametersDictionary ?? [:]
 
-            XCTAssertEqual(parameters.count, 2)
+            XCTAssertEqual(parameters.count, 3)
             XCTAssertEqual(parameters["payment_method"], Constant.validPaymentId)
             XCTAssertEqual(parameters["crypto_customer_id"], Constant.validCustomerId)
+            XCTAssertEqual(parameters["ui_mode"], "headless")
 
             return true
         } response: { _ in
@@ -1030,8 +1030,9 @@ final class STPAPIClientCryptoOnrampTests: APIStubbedTestCase {
 
             let parameters = queryParametersString.parsedHTTPParametersDictionary
 
-            XCTAssertEqual(parameters.count, 1)
+            XCTAssertEqual(parameters.count, 2)
             XCTAssertEqual(parameters["crypto_customer_id"], Constant.validCustomerId)
+            XCTAssertEqual(parameters["ui_mode"], "headless")
 
             return true
         } response: { _ in

@@ -8,6 +8,8 @@
 
 "1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
 
+"Accept" = "Accetta";
+
 "Add US bank account" = "Aggiungi un conto bancario degli Stati Uniti";
 
 "Add a card" = "Aggiungi una carta";
