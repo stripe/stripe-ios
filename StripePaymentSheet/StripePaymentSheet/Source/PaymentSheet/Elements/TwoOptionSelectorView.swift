@@ -59,8 +59,8 @@ final class TwoOptionSelectorView: UIView {
 
     private let appearance: TwoOptionSelectorViewAppearance
 
-    private let leftItem: TwoOptionSelectorItem
-    private let rightItem: TwoOptionSelectorItem
+    private(set) var leftItem: TwoOptionSelectorItem
+    private(set) var rightItem: TwoOptionSelectorItem
     private(set) var selectedItemId: String
 
     private let mainStackView = UIStackView()
@@ -199,10 +199,18 @@ final class TwoOptionSelectorView: UIView {
     }
 
     private func configureButton(_ button: UIButton, item: TwoOptionSelectorItem) {
-        button.setAttributedTitle(item.displayText, for: .normal)
-        button.titleLabel?.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote)
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        button.backgroundColor = .clear
+        if #available(iOS 15.0, *) {
+            var config = button.configuration ?? .plain()
+            config.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16)
+            config.attributedTitle = AttributedString(item.displayText)
+            config.background.backgroundColor = .clear
+            button.configuration = config
+        } else {
+            button.setAttributedTitle(item.displayText, for: .normal)
+            button.titleLabel?.font = appearance.scaledFont(for: appearance.font.medium, style: .footnote)
+            button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+            button.backgroundColor = .clear
+        }
         button.addTarget(self, action: #selector(buttonTapped(_:)), for: .touchUpInside)
         button.accessibilityLabel = item.accessibilityLabel
         button.accessibilityIdentifier = item.accessibilityIdentifier
@@ -246,6 +254,22 @@ final class TwoOptionSelectorView: UIView {
             range: NSRange(location: 0, length: styled.length)
         )
         button.setAttributedTitle(styled, for: .normal)
+    }
+
+    // MARK: - Update Items
+
+    func updateItems(left: TwoOptionSelectorItem, right: TwoOptionSelectorItem) {
+        leftItem = left
+        rightItem = right
+        updateButton(leftButton, item: leftItem)
+        updateButton(rightButton, item: rightItem)
+        updateButtonStyles(animated: false)
+    }
+
+    private func updateButton(_ button: UIButton, item: TwoOptionSelectorItem) {
+        button.setAttributedTitle(item.displayText, for: .normal)
+        button.accessibilityLabel = item.accessibilityLabel
+        button.accessibilityIdentifier = item.accessibilityIdentifier
     }
 
     // MARK: - Caption

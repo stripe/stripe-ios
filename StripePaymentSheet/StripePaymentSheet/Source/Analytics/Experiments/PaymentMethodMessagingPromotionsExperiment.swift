@@ -20,13 +20,15 @@ struct PaymentMethodMessagingPromotionsExperiment: LoggableExperiment {
         ["in_app_elements_layout": layout]
     }
 
-    init(
+    init?(
         elementsSession: STPElementsSession,
         layout: String
     ) {
-        let assignment = elementsSession.experimentsData?.experimentAssignments[Self.experimentName]
+        guard let assignment = elementsSession.experimentsData?.experimentAssignments[Self.experimentName] else {
+            return nil
+        }
         self.arbId = elementsSession.experimentsData?.arbId ?? ""
-        self.group = assignment ?? .control
+        self.group = assignment
         self.layout = layout
     }
 }

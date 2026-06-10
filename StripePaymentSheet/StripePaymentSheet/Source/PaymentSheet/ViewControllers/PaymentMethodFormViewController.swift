@@ -364,10 +364,10 @@ extension PaymentMethodFormViewController {
                 return .setup(setupIntent.stripeID)
             case .deferredIntent:
                 return .deferred(elementsSession.sessionID)
-            case .checkoutSession(let checkoutSession):
+            case .checkout(let checkout):
                 // This ID is used for financial incentive eligibility. Ideally we'd use the underlying
                 // paymentIntentId or setupIntentId, but those are not yet populated on CheckoutSession.
-                return .deferred(checkoutSession.id)
+                return .deferred(checkout.stpSession.id)
             }
         }()
 
@@ -557,13 +557,13 @@ extension PaymentMethodFormViewController {
                 intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .checkoutSession(let checkoutSession):
+        case .checkout(let checkout):
             client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: checkoutSession.expectedAmount(),
-                currency: checkoutSession.currency,
+                amount: checkout.stpSession.expectedAmount(),
+                currency: checkout.stpSession.currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
@@ -622,7 +622,7 @@ extension PaymentMethodFormViewController {
         switch intent {
         case .paymentIntent, .setupIntent:
             additionalParameters["attach_required"] = true
-        case .deferredIntent, .checkoutSession:
+        case .deferredIntent, .checkout:
             break
         }
 
@@ -673,13 +673,13 @@ extension PaymentMethodFormViewController {
                 intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .checkoutSession(let checkoutSession):
+        case .checkout(let checkout):
             client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
-                amount: checkoutSession.expectedAmount(),
-                currency: checkoutSession.currency,
+                amount: checkout.stpSession.expectedAmount(),
+                currency: checkout.stpSession.currency,
                 onBehalfOf: nil,
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,

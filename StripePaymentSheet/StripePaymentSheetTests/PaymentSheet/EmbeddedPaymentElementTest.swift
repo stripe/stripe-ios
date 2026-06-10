@@ -717,13 +717,13 @@ class EmbeddedPaymentElementTest: XCTestCase {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(experimentsData: experimentsData)
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
-        let promotionsHelper = PaymentMethodMessagingPromotionsHelper(
+        let promotionsHelper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
             elementsSession: elementsSession,
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.card)],
             analyticsHelper: analyticsHelper
-        )
+        ))
         promotionsHelper.fetchData()
         let loadResult = PaymentSheetLoader.LoadResult(
             intent: intent,

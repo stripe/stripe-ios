@@ -269,8 +269,7 @@ class VerifyCardViewController: SimpleScanViewController {
 
             self.roiView.layer.borderColor = UIColor.red.cgColor
             self.lastWrongCard = Date()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                guard let self = self else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 guard let lastWrongCard = self.lastWrongCard else { return }
                 if -lastWrongCard.timeIntervalSinceNow >= 0.5 {
                     self.showNoCard()
