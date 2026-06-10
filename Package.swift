@@ -7,12 +7,6 @@ let package = Package(
     platforms: [
         .iOS(.v13)
     ],
-    dependencies: [
-        .package(
-            url: "https://github.com/paescebu/SwiftTasksVision.git",
-            exact: "0.10.21"
-        )
-    ],
     products: [
         .library(
             name: "Stripe",
@@ -57,6 +51,12 @@ let package = Package(
         .library(
             name: "StripeCryptoOnramp",
             targets: ["StripeCryptoOnramp"]
+        )
+    ],
+    dependencies: [
+        .package(
+            url: "https://github.com/paescebu/SwiftTasksVision.git",
+            exact: "0.10.21"
         )
     ],
     targets: [
