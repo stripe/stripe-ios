@@ -2,8 +2,8 @@
 //  LinkControllerPreviewAPITests.swift
 //  StripePaymentSheetTests
 
-import UIKit
 @testable @_spi(LinkControllerPreview) import StripePaymentSheet
+import UIKit
 import XCTest
 
 final class LinkControllerPreviewAPITests: XCTestCase {
@@ -11,6 +11,7 @@ final class LinkControllerPreviewAPITests: XCTestCase {
     func testPreviewSPISurfaceCompiles() {
         _ = LinkPaymentMethodType.card
         _ = LinkConfiguration(supportedPaymentMethodTypes: [.card])
+        _ = LinkConfiguration(supportedPaymentMethodTypes: [.card], merchantDisplayName: "Example Merchant")
 
         let result: LinkController.PaymentMethodResult = .canceled
         _ = result

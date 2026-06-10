@@ -245,6 +245,9 @@ import UIKit
                 if let appearance = appearance {
                     paymentElementConfiguration.style = appearance.style
                 }
+                if let merchantDisplayName = configuration?.merchantDisplayName {
+                    paymentElementConfiguration.merchantDisplayName = merchantDisplayName
+                }
 
                 let analyticsHelper = PaymentSheetAnalyticsHelper(
                     integrationShape: .linkController,
@@ -293,7 +296,7 @@ import UIKit
     /// - Parameter completion: A closure that is called with the result of the creation. It returns a `LinkController` if successful, or an error if the creation failed.
     @_spi(LinkControllerPreview) public static func create(
         apiClient: STPAPIClient = .shared,
-        configuration: LinkConfiguration = .init(),
+        configuration: LinkConfiguration = .init(supportedPaymentMethodTypes: nil),
         completion: @escaping (Result<LinkController, Error>) -> Void
     ) {
         self.create(
@@ -1305,7 +1308,7 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
     /// - Returns: A `LinkController` if successful, or throws an error if the creation failed.
     static func create(
         apiClient: STPAPIClient = .shared,
-        configuration: LinkConfiguration = .init()
+        configuration: LinkConfiguration = .init(supportedPaymentMethodTypes: nil)
     ) async throws -> LinkController {
         return try await withCheckedThrowingContinuation { continuation in
             create(apiClient: apiClient, configuration: configuration) { result in

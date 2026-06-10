@@ -20,6 +20,10 @@ public struct LinkConfiguration {
     /// The payment method types to support in the Link sheet. If `nil`, all available types are shown.
     @_spi(LinkControllerPreview) public let supportedPaymentMethodTypes: [LinkPaymentMethodType]?
 
+    /// The merchant name displayed in Link UI (e.g. consent text, wallet header).
+    /// If `nil`, defaults to the host app's `CFBundleDisplayName` / `CFBundleName`.
+    @_spi(LinkControllerPreview) public let merchantDisplayName: String?
+
     /// Creates a new instance of `LinkConfiguration`.
     /// - Parameters:
     ///   - hintMessage: Custom hint message to display in the wallet view. If `nil`, no hint will be shown.
@@ -31,15 +35,20 @@ public struct LinkConfiguration {
         self.hintMessage = hintMessage
         self.allowLogout = allowLogout
         self.supportedPaymentMethodTypes = nil
+        self.merchantDisplayName = nil
     }
 
     /// Creates a new instance of `LinkConfiguration`.
-    /// - Parameter supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil`, all available types are shown.
+    /// - Parameters:
+    ///   - supportedPaymentMethodTypes: The payment method types to support in the Link sheet. If `nil`, all available types are shown.
+    ///   - merchantDisplayName: The merchant name displayed in Link UI. If `nil`, defaults to the app's `CFBundleDisplayName`.
     @_spi(LinkControllerPreview) public init(
-        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil
+        supportedPaymentMethodTypes: [LinkPaymentMethodType]? = nil,
+        merchantDisplayName: String? = nil
     ) {
         self.hintMessage = nil
         self.allowLogout = true
         self.supportedPaymentMethodTypes = supportedPaymentMethodTypes
+        self.merchantDisplayName = merchantDisplayName
     }
 }
