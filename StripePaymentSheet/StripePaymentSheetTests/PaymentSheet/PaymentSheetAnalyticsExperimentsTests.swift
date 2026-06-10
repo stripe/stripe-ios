@@ -213,7 +213,42 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["dimensions-integration_shape"] as? String, "flowcontroller")
         XCTAssertEqual(payload["dimensions-has_spms"] as? String, "false")
     }
-    func testPaymentMethodMessagingPromotionsExperiment() {
+    func testPaymentMethodMessagingPromotionsExperiment_noAssignment_returnsNil() {
+        let elementsSession = STPElementsSession._testValue(
+            experimentsData: nil,
+            customer: nil
+        )
+
+        let experiment = PaymentMethodMessagingPromotionsExperiment(
+            elementsSession: elementsSession,
+            layout: "vertical"
+        )
+
+        XCTAssertNil(experiment)
+    }
+
+    func testPaymentMethodMessagingPromotionsExperiment_unrelatedAssignment_returnsNil() {
+        let experimentsData = ExperimentsData(
+            arbId: "arb_id_123",
+            experimentAssignments: [
+                "some_other_experiment": .treatment,
+            ],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(
+            experimentsData: experimentsData,
+            customer: nil
+        )
+
+        let experiment = PaymentMethodMessagingPromotionsExperiment(
+            elementsSession: elementsSession,
+            layout: "vertical"
+        )
+
+        XCTAssertNil(experiment)
+    }
+
+    func testPaymentMethodMessagingPromotionsExperiment() throws {
         let experimentsData = ExperimentsData(
             arbId: "arb_id_123",
             experimentAssignments: [
@@ -226,12 +261,10 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             customer: nil
         )
 
-        let experiment = PaymentMethodMessagingPromotionsExperiment(
+        let experiment = try XCTUnwrap(PaymentMethodMessagingPromotionsExperiment(
             elementsSession: elementsSession,
-            selectedPaymentMethodType: "klarna",
-            promotionDisplayedSuccessfully: true,
             layout: "vertical"
-        )
+        ))
 
         XCTAssertEqual(experiment.name, PaymentMethodMessagingPromotionsExperiment.experimentName)
         XCTAssertEqual(experiment.arbId, "arb_id_123")
@@ -239,10 +272,45 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(
             experiment.dimensions,
             [
-                "selected_payment_method_type": "klarna",
-                "promotion_displayed_successfully": "true",
                 "in_app_elements_layout": "vertical",
             ]
         )
+    }
+
+    func testConnectionsFCLiteVsNative() {
+        let arbId = "arb_id"
+        let experimentsData = ExperimentsData(
+            arbId: arbId,
+            experimentAssignments: [
+                ConnectionsFCLiteVsNative.experimentName: .treatment,
+                ConnectionsFCLiteVsNativeAA.experimentName: .control,
+            ],
+            allResponseFields: [:]
+        )
+        let session = STPElementsSession._testValue(
+            orderedPaymentMethodTypesAndWallets: ["card", "us_bank_account", "apple_pay"],
+            experimentsData: experimentsData,
+            customer: nil
+        )
+
+        let experiment = ConnectionsFCLiteVsNative(arbId: arbId, session: session)
+        analyticsClient.logExposure(experiment: experiment)
+
+        guard let payload = analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).first else {
+            return XCTFail("Expected event logged with name \(PaymentSheetAnalyticsHelper.eventName)")
+        }
+
+        XCTAssertEqual(payload["arb_id"] as? String, arbId)
+        XCTAssertEqual(payload["experiment_retrieved"] as? String, ConnectionsFCLiteVsNative.experimentName)
+        XCTAssertEqual(payload["assignment_group"] as? String, ExperimentGroup.treatment.rawValue)
+        XCTAssertEqual(payload["dimensions-elements_session_id"] as? String, "test_123")
+        XCTAssertNotNil(payload["dimensions-mobile_session_id"])
+        XCTAssertNotNil(payload["dimensions-mobile_sdk_version"] as? String)
+        XCTAssertNotNil(payload["dimensions-fc_sdk_availability"] as? String)
+        XCTAssertEqual(payload["dimensions-available_lpms"] as? String, "card,us_bank_account,apple_pay")
+
+        let aaExperiment = ConnectionsFCLiteVsNativeAA(arbId: arbId, session: session)
+        XCTAssertEqual(aaExperiment.name, ConnectionsFCLiteVsNativeAA.experimentName)
+        XCTAssertEqual(aaExperiment.group, .control)
     }
 }

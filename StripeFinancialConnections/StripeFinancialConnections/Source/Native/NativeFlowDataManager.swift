@@ -33,6 +33,7 @@ protocol NativeFlowDataManager: AnyObject {
     var accountNumberLast4: String? { get set }
     var consumerSession: ConsumerSessionData? { get set }
     var consumerPublishableKey: String? { get set }
+    var authenticatedLinkBrand: LinkBrand? { get set }
     var saveToLinkWithStripeSucceeded: Bool? { get set }
     var lastPaneLaunched: FinancialConnectionsSessionManifest.NextPane? { get set }
     var customSuccessPaneCaption: String? { get set }
@@ -123,6 +124,11 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
             apiClient.consumerPublishableKey = consumerPublishableKey
         }
     }
+    var authenticatedLinkBrand: LinkBrand? {
+        didSet {
+            apiClient.authenticatedLinkBrand = authenticatedLinkBrand
+        }
+    }
 
     init(
         manifest: FinancialConnectionsSessionManifest,
@@ -153,6 +159,7 @@ class NativeFlowAPIDataManager: NativeFlowDataManager {
         // Use consumer properties from the API client, if available.
         self.consumerSession = apiClient.consumerSession
         self.consumerPublishableKey = apiClient.consumerPublishableKey
+        self.authenticatedLinkBrand = apiClient.authenticatedLinkBrand
         didUpdateManifest()
     }
 

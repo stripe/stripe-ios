@@ -41,13 +41,17 @@ public final class Checkout: ObservableObject {
     /// A delegate notified when session data changes.
     public weak var delegate: CheckoutDelegate?
 
-    // MARK: - Private Properties
+    // MARK: - Internal Properties
 
-    /// Concrete accessor for internal use where `STPCheckoutSession`-specific
-    /// properties (e.g. `allResponseFields`, `billingAddress`) are needed.
-    var stpSession: STPCheckoutSession? {
-        state.session as? STPCheckoutSession
-    }
+    /// The underlying `STPCheckoutSession` backing the current public ``state``.
+    ///
+    /// Marked `nonisolated(unsafe)` because PaymentSheet internals read this from non-MainActor
+    /// contexts. This is safe: reads only occur after the session is loaded and while the payment
+    /// UI is presented, a window during which no mutations occur. Writes are always on MainActor
+    /// because they go through `Checkout`'s MainActor-isolated mutation methods.
+    /// Requiring full MainActor isolation would propagate `@MainActor` through nearly all of
+    /// PaymentSheet's internal types, which is not warranted by the actual concurrency risk.
+    nonisolated(unsafe) private(set) var stpSession: STPCheckoutSession!
 
     weak var integrationDelegate: CheckoutIntegrationDelegate?
 
@@ -64,9 +68,11 @@ public final class Checkout: ObservableObject {
     /// Timeout enforced on the merchant's closure in ``runServerUpdate(_:)``.
     nonisolated static let serverUpdateTimeout: TimeInterval = 20
 
-    /// The single state writer. Publishes `.loading` if any op is queued, else `.loaded`.
-    func setSession(_ session: Checkout.Session) {
-        state = pendingOperations.isEmpty ? .loaded(session) : .loading(session)
+    /// The single state writer. Stores the STPCheckoutSession, publishes the public session.
+    func setSession(_ session: STPCheckoutSession) {
+        stpSession = session
+        let publicSession = session.makePublicSession()
+        state = pendingOperations.isEmpty ? .loaded(publicSession) : .loading(publicSession)
     }
 
     // MARK: - Initialization
@@ -97,15 +103,14 @@ public final class Checkout: ObservableObject {
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
             await flagImageManager.prefetchFlagImages(for: checkoutSession)
-            self.state = .loaded(checkoutSession)
-            checkoutSession.onConfirmed = { [weak self] response in
-                self?.updateSession(response)
-            }
+            self.stpSession = checkoutSession
+            self.state = .loaded(checkoutSession.makePublicSession())
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
     }
 
+#if DEBUG
     /// Internal initializer for unit tests that injects a pre-loaded session.
     init(
         clientSecret: String,
@@ -117,11 +122,19 @@ public final class Checkout: ObservableObject {
         self.configuration = configuration
         self.apiClient = apiClient
         await flagImageManager.prefetchFlagImages(for: session)
-        self.state = .loaded(session)
-        session.onConfirmed = { [weak self] response in
-            self?.updateSession(response)
-        }
+        self.stpSession = session
+        self.state = .loaded(session.makePublicSession())
     }
+
+    /// Synchronous test-only initializer that wraps a pre-loaded session without async work.
+    init(session: STPCheckoutSession) {
+        self.clientSecret = ""
+        self.configuration = Configuration()
+        self.apiClient = .shared
+        self.stpSession = session
+        self.state = .loaded(session.makePublicSession())
+    }
+#endif
 
     // MARK: - Pending Operations
 
@@ -311,20 +324,6 @@ public final class Checkout: ObservableObject {
             }
             try self.requireOpenSession()
             try await self.refreshSession()
-        }
-    }
-
-    // MARK: - Tax ID
-
-    /// Sets the customer's tax ID on the session.
-    /// - Parameters:
-    ///   - type: The type of tax ID to set (for example, `"eu_vat"`).
-    ///   - value: The tax ID value to set.
-    /// - Throws: ``CheckoutError`` if the update fails.
-    public func updateTaxId(type: String, value: String) async throws {
-        try requireOpenSession()
-        try await enqueueSessionUpdate {
-            try await self.performAPIUpdate(.setTaxId(type: type, value: value))
         }
     }
 

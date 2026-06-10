@@ -330,7 +330,7 @@ extension AddressViewController {
 
     @objc func presentAutocomplete() {
         assert(navigationController != nil)
-        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, addressSpecProvider: addressSpecProvider)
+        let autoCompleteViewController = AutoCompleteViewController(configuration: configuration, initialLine1Text: addressSection?.line1?.text, selectedCountry: addressSection?.selectedCountryCode, addressSpecProvider: addressSpecProvider)
         autoCompleteViewController.delegate = self
         navigationController?.pushViewController(autoCompleteViewController, animated: true)
     }
@@ -564,7 +564,12 @@ extension AddressViewController: AutoCompleteViewControllerDelegate {
         addressSection.postalCode?.setText(address.postalCode ?? "")
         addressSection.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
 
-        self.selectedAutoCompleteResult = address
+        // Read back from the element so field processing (e.g. postal code truncation) is reflected
+        let normalized = addressSection.addressDetails.address
+        self.selectedAutoCompleteResult = PaymentSheet.Address(
+            city: normalized.city, country: normalized.country, line1: normalized.line1,
+            line2: normalized.line2, postalCode: normalized.postalCode, state: normalized.state
+        )
     }
 }
 

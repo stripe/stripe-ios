@@ -12,6 +12,7 @@ import OHHTTPStubsSwift
 import StripePaymentsObjcTestUtils
 import XCTest
 
+@MainActor
 class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
     private func configuration(apiClient: STPAPIClient) -> PaymentSheet.Configuration {
         var config = PaymentSheet.Configuration()
@@ -509,7 +510,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let loaded = expectation(description: "Loaded")
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkout(Checkout(session: checkoutSession)),
             configuration: configuration,
             analyticsHelper: ._testValue(integrationShape: .complete),
             integrationShape: .paymentSheet
@@ -539,7 +540,7 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         let loaded = expectation(description: "Loaded")
         STPAssertTestUtil.shouldSuppressNextSTPAlert = true
         PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkout(Checkout(session: checkoutSession)),
             configuration: configuration,
             analyticsHelper: ._testValue(integrationShape: .complete),
             integrationShape: .paymentSheet
@@ -597,6 +598,78 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         wait(for: [loadExpectation], timeout: STPTestingNetworkRequestTimeout)
     }
 
+    // MARK: - Link Lookup Session Preservation
+
+    @MainActor
+    func testLookupLink_preservesVerifiedSessionForMatchingAccountOnReload() async throws {
+        var didCallLookup = false
+        stub { urlRequest in
+            if urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true {
+                didCallLookup = true
+                return true
+            }
+            return false
+        } response: { _ in
+            HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+        }
+
+        LinkAccountContext.shared.account = makeVerifiedLinkAccount(email: "foo@bar.com")
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        configuration.apiClient = stubbedAPIClient()
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+
+        let linkAccount = try await PaymentSheetLoader.lookupLinkAccount(
+            elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
+            configuration: configuration,
+            prefetchedEmailAndSource: nil,
+            loadTimings: .init(),
+            isUpdate: false
+        )
+
+        XCTAssertTrue(didCallLookup, "Expected Link lookup to still run when reloading PaymentSheet")
+        XCTAssertEqual(linkAccount?.consumerSessionClientSecret, "pscs_persisted")
+        XCTAssertEqual(linkAccount?.sessionState, .verified)
+    }
+
+    @MainActor
+    func testLookupLink_doesNotPreserveVerifiedSessionForDifferentAccountOnReload() async throws {
+        var didCallLookup = false
+        stub { urlRequest in
+            if urlRequest.url?.absoluteString.contains("consumers/sessions/lookup") == true {
+                didCallLookup = true
+                return true
+            }
+            return false
+        } response: { _ in
+            HTTPStubsResponse(data: try! FileMock.consumers_lookup_200.data(), statusCode: 200, headers: nil)
+        }
+
+        LinkAccountContext.shared.account = makeVerifiedLinkAccount(email: "different@bar.com")
+        defer {
+            LinkAccountContext.shared.account = nil
+        }
+
+        var configuration = PaymentSheet.Configuration._testValue_MostPermissive(isApplePayEnabled: false)
+        configuration.apiClient = stubbedAPIClient()
+        configuration.defaultBillingDetails.email = "foo@bar.com"
+
+        let linkAccount = try await PaymentSheetLoader.lookupLinkAccount(
+            elementsSession: STPElementsSession._testValue(paymentMethodTypes: ["card", "link"]),
+            configuration: configuration,
+            prefetchedEmailAndSource: nil,
+            loadTimings: .init(),
+            isUpdate: false
+        )
+
+        XCTAssertTrue(didCallLookup, "Expected Link lookup to run for the new email")
+        XCTAssertEqual(linkAccount?.consumerSessionClientSecret, "pscs_abc123")
+        XCTAssertEqual(linkAccount?.sessionState, .requiresVerification)
+    }
+
     // MARK: - Link Lookup Holdback Tests
 
     @MainActor
@@ -642,6 +715,34 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
         } else {
             XCTAssertFalse(didCallLookup, message)
         }
+    }
+
+    private func makeVerifiedLinkAccount(
+        email: String,
+        clientSecret: String = "pscs_persisted"
+    ) -> PaymentSheetLinkAccount {
+        let verifiedSession = ConsumerSession.make(
+            clientSecret: clientSecret,
+            emailAddress: email,
+            redactedFormattedPhoneNumber: "(***) *** **12",
+            unredactedPhoneNumber: nil,
+            phoneNumberCountry: nil,
+            verificationSessions: [.init(type: .sms, state: .verified)],
+            supportedPaymentDetailsTypes: [ParsedEnum(.card)],
+            mobileFallbackWebviewParams: nil,
+            currentAuthenticationLevel: .oneFactorAuth,
+            minimumAuthenticationLevel: .oneFactorAuth
+        )
+
+        return PaymentSheetLinkAccount(
+            email: email,
+            session: verifiedSession,
+            publishableKey: "pk_test_persisted",
+            displayablePaymentDetails: nil,
+            apiClient: stubbedAPIClient(),
+            useMobileEndpoints: false,
+            canSyncAttestationState: false
+        )
     }
 
     func testLookupLink_linkDisabled_holdbackGlobal_shouldLookup() async throws {
@@ -763,15 +864,14 @@ class PaymentSheetLoaderStubbedTest: APIStubbedTestCase {
 
         // Experiment exposures are logged asynchronously after the lookup completes
         let predicate = NSPredicate { _, _ in
-            mockAnalyticsClientV2.loggedAnalyticPayloads(withEventName: "elements.experiment_exposure").count >= 3
+            mockAnalyticsClientV2.loggedAnalyticPayloads(withEventName: "elements.experiment_exposure").count >= 5
         }
         wait(for: [XCTNSPredicateExpectation(predicate: predicate, object: nil)], timeout: 5)
 
-        // Verify the 3 exposure events
         let exposures = mockAnalyticsClientV2.loggedAnalyticPayloads(withEventName: "elements.experiment_exposure")
-        XCTAssertEqual(exposures.count, 3)
+        XCTAssertEqual(exposures.count, 5)
         let experimentNames = Set(exposures.compactMap { $0["experiment_retrieved"] as? String })
-        XCTAssertEqual(experimentNames, ["link_global_holdback", "link_global_holdback_aa", "link_ab_test"])
+        XCTAssertEqual(experimentNames, ["link_global_holdback", "link_global_holdback_aa", "link_ab_test", "connections_fc_lite_vs_native", "connections_fc_lite_vs_native_aa"])
         for exposure in exposures {
             XCTAssertEqual(exposure["arb_id"] as? String, "test_arb_123")
             XCTAssertNotNil(exposure["assignment_group"], "Expected assignment_group in exposure: \(exposure)")

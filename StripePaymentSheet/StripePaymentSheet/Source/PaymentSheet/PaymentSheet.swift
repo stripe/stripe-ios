@@ -48,13 +48,13 @@ public class PaymentSheet {
         case paymentIntentClientSecret(String)
         case setupIntentClientSecret(String)
         case deferredIntent(PaymentSheet.IntentConfiguration)
-        case checkoutSession(STPCheckoutSession)
+        case checkout(Checkout)
 
         var intentConfig: PaymentSheet.IntentConfiguration? {
             switch self {
             case .deferredIntent(let intentConfig):
                 return intentConfig
-            case .paymentIntentClientSecret, .setupIntentClientSecret, .checkoutSession:
+            case .paymentIntentClientSecret, .setupIntentClientSecret, .checkout:
                 return nil
             }
         }
@@ -111,13 +111,10 @@ public class PaymentSheet {
     @_spi(ReactNativeSDK)
     @MainActor
     public convenience init(checkout: Checkout, configuration: Configuration) {
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-            fatalError("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-        }
         var config = configuration
-        stpSession.applyAddressOverrides(to: &config)
+        checkout.stpSession.applyAddressOverrides(to: &config)
         self.init(
-            mode: .checkoutSession(stpSession),
+            mode: .checkout(checkout),
             configuration: config
         )
         self.checkout = checkout
@@ -173,12 +170,8 @@ public class PaymentSheet {
                     completion(.failed(error: error))
                     return
                 }
-                if let stpSession = checkout.state.session as? STPCheckoutSession {
-                    // Checkout refreshes replace `state.session` with a new STPCheckoutSession,
-                    // so resnapshot after pending updates instead of using the session captured at init.
-                    loadMode = .checkoutSession(stpSession)
-                    stpSession.applyAddressOverrides(to: &self.configuration)
-                }
+                loadMode = .checkout(checkout)
+                checkout.stpSession.applyAddressOverrides(to: &self.configuration)
             }
 
             // Configure the Payment Sheet VC after loading the PI/SI, Customer, etc.

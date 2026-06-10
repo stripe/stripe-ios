@@ -391,7 +391,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         // Test labels for Link with bank account payment details - should show "Link" as label and formatted details as sublabel
         XCTAssertEqual(displayData.labels.label, "Link")
         // The sublabel should show the bank account details
-        XCTAssertEqual(displayData.labels.sublabel, "My Checking")
+        XCTAssertEqual(displayData.labels.sublabel, "My Checking •••• 6789")
     }
 
     // MARK: - Enhanced Completion Block Tests
@@ -401,7 +401,8 @@ class PaymentSheetFlowControllerTests: XCTestCase {
         let configuration = PaymentSheet.Configuration()
         let intent = Intent._testPaymentIntent(paymentMethodTypes: [.card])
         let elementsSession = STPElementsSession._testCardValue()
-        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)], paymentMethodOrientation: .vertical)
+        let loadResult = PaymentSheetLoader.LoadResult(intent: intent, elementsSession: elementsSession, savedPaymentMethods: [], paymentMethodTypes: [.stripe(.card)], paymentMethodMessagingPromotionsHelper: ._testValue(),
+ paymentMethodOrientation: .vertical)
 
         let flowController = PaymentSheet.FlowController(
             configuration: configuration,

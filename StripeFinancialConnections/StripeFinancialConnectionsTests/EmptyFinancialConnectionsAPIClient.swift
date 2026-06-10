@@ -15,6 +15,7 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
     var isLinkWithStripe: Bool = false
     var consumerPublishableKey: String?
     var consumerSession: StripeFinancialConnections.ConsumerSessionData?
+    var authenticatedLinkBrand: LinkBrand?
 
     func completeAssertion(
         possibleError: Error?,
@@ -209,16 +210,16 @@ class EmptyFinancialConnectionsAPIClient: FinancialConnectionsAPI {
         customEmailType: String?,
         connectionsMerchantName: String?,
         consumerSessionClientSecret: String
-    ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionResponse> {
-        return Promise<StripeFinancialConnections.ConsumerSessionResponse>()
+    ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionStartVerificationResponse> {
+        return Promise<StripeFinancialConnections.ConsumerSessionStartVerificationResponse>()
     }
 
     func consumerSessionConfirmVerification(
         otpCode: String,
         otpType: String,
         consumerSessionClientSecret: String
-    ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionResponse> {
-        return Promise<StripeFinancialConnections.ConsumerSessionResponse>()
+    ) -> StripeCore.Future<StripeFinancialConnections.ConsumerSessionConfirmVerificationResponse> {
+        return Promise<StripeFinancialConnections.ConsumerSessionConfirmVerificationResponse>()
     }
 
     func linkAccountSignUp(

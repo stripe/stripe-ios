@@ -112,12 +112,8 @@ public final class EmbeddedPaymentElement {
         configuration: Configuration
     ) async throws -> EmbeddedPaymentElement {
         try await checkout.awaitPendingOperations()
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-            throw PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")
-        }
         var config = configuration
-        stpSession.applyAddressOverrides(to: &config)
+        checkout.stpSession.applyAddressOverrides(to: &config)
 
         try validateRowSelectionConfiguration(configuration: config)
 
@@ -126,7 +122,7 @@ public final class EmbeddedPaymentElement {
         let analyticsHelper = PaymentSheetAnalyticsHelper(integrationShape: .embedded, configuration: config)
 
         let (loadResult, confirmationChallenge) = try await PaymentSheetLoader.load(
-            mode: .checkoutSession(stpSession),
+            mode: .checkout(checkout),
             configuration: config,
             analyticsHelper: analyticsHelper,
             integrationShape: .embedded
@@ -180,12 +176,8 @@ public final class EmbeddedPaymentElement {
         } catch {
             return .failed(error: error)
         }
-        guard let stpSession = checkout.state.session as? STPCheckoutSession else {
-            stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-            return .failed(error: PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
-        }
-        stpSession.applyAddressOverrides(to: &configuration)
-        return await performUpdate(mode: .checkoutSession(stpSession))
+        checkout.stpSession.applyAddressOverrides(to: &configuration)
+        return await performUpdate(mode: .checkout(checkout))
     }
 
     private func performUpdate(mode: PaymentSheet.InitializationMode) async -> UpdateResult {

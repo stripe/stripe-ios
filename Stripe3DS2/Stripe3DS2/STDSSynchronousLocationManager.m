@@ -38,9 +38,8 @@ typedef void (^LocationUpdateCompletionBlock)(CLLocation * _Nullable);
 }
 
 + (BOOL)hasPermissions {
-//    TODO: Revisit this after we drop iOS 13, iOS 14 has a new API for authorizationStatus
 #ifdef STP_TARGET_VISION
-    if (@available(iOS 14.0, *)) {
+    if (@available(iOS 15.0, *)) {
         CLAuthorizationStatus authorizationStatus = [[[CLLocationManager alloc] init] authorizationStatus];
         return [CLLocationManager locationServicesEnabled] &&
         authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse;
@@ -49,7 +48,12 @@ typedef void (^LocationUpdateCompletionBlock)(CLLocation * _Nullable);
         return NO;
     }
 #else
-    CLAuthorizationStatus authorizationStatus = [CLLocationManager authorizationStatus];
+    CLAuthorizationStatus authorizationStatus;
+    if (@available(iOS 15.0, *)) {
+        authorizationStatus = [[[CLLocationManager alloc] init] authorizationStatus];
+    } else {
+        authorizationStatus = [CLLocationManager authorizationStatus];
+    }
     return [CLLocationManager locationServicesEnabled] &&
     (authorizationStatus == kCLAuthorizationStatusAuthorizedAlways || authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse);
 #endif

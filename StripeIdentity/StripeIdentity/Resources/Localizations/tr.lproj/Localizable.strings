@@ -6,6 +6,8 @@
 
 "App Settings" = "Uygulama Ayarları";
 
+"Auto" = "Otomatik";
+
 "Back %@ photo successfully uploaded" = "%@’nin arka yüzünün fotoğrafı başarıyla yüklendi";
 
 "Back identity document photo successfully uploaded" = "Kimlik belgesinin arka yüzünün fotoğrafı başarıyla yüklendi";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Görüntü bulanık. Telefonunuzu sabit tutun ve tekrar deneyin.";
 
+"Image taken" = "Fotoğraf çekildi";
+
 "Individual CPF" = "Bireysel CPF";
 
 "Invalid document" = "Geçersiz belge";
@@ -85,6 +89,8 @@
 "Loading" = "Yükleniyor";
 
 "Make sure you're in a well lit space." = "İyi ışık alan bir alanda olduğunuzdan emin olun.";
+
+"Manual" = "Manuel";
 
 "Move closer" = "Yakınlaştırın";
 

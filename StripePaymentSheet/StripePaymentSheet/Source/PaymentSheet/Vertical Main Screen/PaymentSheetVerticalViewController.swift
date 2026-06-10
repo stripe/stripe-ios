@@ -208,9 +208,6 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return !walletButtonsViewState.showApplePay
         case .link:
             return !walletButtonsViewState.showLink
-        case .shopPay:
-            stpAssertionFailure()
-            return false // not yet implemented
         }
     }
 
@@ -729,6 +726,8 @@ class PaymentSheetVerticalViewController: UIViewController, FlowControllerViewCo
             return
         }
 
+        paymentMethodFormViewController?.logBillingAddressCompletionIfNeeded()
+
         // Send analytic when primary button is tapped
         analyticsHelper.logConfirmButtonTapped(paymentOption: selectedPaymentOption)
 
@@ -866,15 +865,15 @@ extension PaymentSheetVerticalViewController: VerticalSavedPaymentMethodsViewCon
 
 extension PaymentSheetVerticalViewController: VerticalPaymentMethodListViewControllerDelegate {
 
-    func shouldSelectPaymentMethod(_ selection: RowButtonType) -> Bool {
+    func willDisplayForm(_ selection: RowButtonType) -> Bool {
         switch selection {
         case .applePay, .link:
-            return true
+            return false
         case let .new(paymentMethodType: paymentMethodType):
             // Only make payment methods appear selected in the list if they don't push to a form
-            return !shouldDisplayForm(for: paymentMethodType)
+            return shouldDisplayForm(for: paymentMethodType)
         case .saved:
-            return true
+            return false
         }
     }
 

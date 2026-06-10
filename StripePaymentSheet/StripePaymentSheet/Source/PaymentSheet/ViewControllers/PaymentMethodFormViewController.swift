@@ -28,6 +28,7 @@ class PaymentMethodFormViewController: UIViewController {
 
     /// Reference to the AddressSectionElement in the form, if present
     private var addressSectionElement: AddressSectionElement?
+    private var selectedAutoCompleteAddress: PaymentSheet.Address?
 
     var paymentOption: PaymentOption? {
         let params = IntentConfirmParams(type: paymentMethodType)
@@ -213,13 +214,16 @@ class PaymentMethodFormViewController: UIViewController {
         }
 
         // Create a basic AddressViewController.Configuration for the autocomplete
-        let addressConfiguration = AddressViewController.Configuration(
+        var addressConfiguration = AddressViewController.Configuration(
             appearance: configuration.appearance
         )
+        addressConfiguration.apiClient = configuration.apiClient
+        addressConfiguration.useAutocompleteEndpoints = configuration.useAutocompleteEndpoints && elementsSession.shouldUseAutocompleteProxyEndpoints
 
         let autoCompleteViewController = AutoCompleteViewController(
             configuration: addressConfiguration,
             initialLine1Text: addressSectionElement.line1?.text,
+            selectedCountry: addressSectionElement.selectedCountryCode,
             addressSpecProvider: AddressSpecProvider.shared,
             verticalOffset: PaymentSheetUI.navBarPadding(appearance: configuration.appearance)
         )
@@ -360,10 +364,10 @@ extension PaymentMethodFormViewController {
                 return .setup(setupIntent.stripeID)
             case .deferredIntent:
                 return .deferred(elementsSession.sessionID)
-            case .checkoutSession:
+            case .checkout(let checkout):
                 // This ID is used for financial incentive eligibility. Ideally we'd use the underlying
                 // paymentIntentId or setupIntentId, but those are not yet populated on CheckoutSession.
-                return .deferred(elementsSession.sessionID)
+                return .deferred(checkout.stpSession.id)
             }
         }()
 
@@ -540,7 +544,7 @@ extension PaymentMethodFormViewController {
                 amount = nil
                 currency = _currency
             }
-            client.collectBankAccountForDeferredIntent(
+            client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
@@ -550,10 +554,23 @@ extension PaymentMethodFormViewController {
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
                 from: viewController,
+                intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .checkoutSession:
-            delegate?.updateErrorLabel(for: PaymentSheetError.unknown(debugDescription: "US Bank Account is not yet supported by CheckoutSession."))
+        case .checkout(let checkout):
+            client.collectBankAccountForDeferredIntentOrCheckoutSession(
+                sessionId: elementsSession.sessionID,
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: checkout.stpSession.expectedAmount(),
+                currency: checkout.stpSession.currency,
+                onBehalfOf: nil,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                from: viewController,
+                intentType: .checkoutSession,
+                financialConnectionsCompletion: financialConnectionsCompletion
+            )
         }
     }
 
@@ -605,7 +622,7 @@ extension PaymentMethodFormViewController {
         switch intent {
         case .paymentIntent, .setupIntent:
             additionalParameters["attach_required"] = true
-        case .deferredIntent, .checkoutSession:
+        case .deferredIntent, .checkout:
             break
         }
 
@@ -643,7 +660,7 @@ extension PaymentMethodFormViewController {
                 amount = nil
                 currency = _currency
             }
-            client.collectBankAccountForDeferredIntent(
+            client.collectBankAccountForDeferredIntentOrCheckoutSession(
                 sessionId: elementsSession.sessionID,
                 returnURL: configuration.returnURL,
                 onEvent: nil,
@@ -653,10 +670,23 @@ extension PaymentMethodFormViewController {
                 additionalParameters: additionalParameters,
                 elementsSessionContext: elementsSessionContext,
                 from: viewController,
+                intentType: .deferred,
                 financialConnectionsCompletion: financialConnectionsCompletion
             )
-        case .checkoutSession:
-            delegate?.updateErrorLabel(for: PaymentSheetError.unknown(debugDescription: "Instant Debits is not yet supported by CheckoutSession."))
+        case .checkout(let checkout):
+            client.collectBankAccountForDeferredIntentOrCheckoutSession(
+                sessionId: elementsSession.sessionID,
+                returnURL: configuration.returnURL,
+                onEvent: nil,
+                amount: checkout.stpSession.expectedAmount(),
+                currency: checkout.stpSession.currency,
+                onBehalfOf: nil,
+                additionalParameters: additionalParameters,
+                elementsSessionContext: elementsSessionContext,
+                from: viewController,
+                intentType: .checkoutSession,
+                financialConnectionsCompletion: financialConnectionsCompletion
+            )
         }
     }
 }
@@ -717,6 +747,31 @@ extension PaymentMethodFormViewController: AutoCompleteViewControllerDelegate {
             addressSectionElement.city?.setText(address.city ?? "")
             addressSectionElement.postalCode?.setText(address.postalCode ?? "")
             addressSectionElement.state?.setRawData(address.state ?? "", shouldAutoAdvance: false)
+
+            // Read back from the element so field processing (e.g. postal code truncation) is reflected
+            let normalized = addressSectionElement.addressDetails.address
+            self.selectedAutoCompleteAddress = PaymentSheet.Address(
+                city: normalized.city, country: normalized.country, line1: normalized.line1,
+                line2: normalized.line2, postalCode: normalized.postalCode, state: normalized.state
+            )
         }
+    }
+
+    func logBillingAddressCompletionIfNeeded() {
+        guard let addressSectionElement = addressSectionElement else { return }
+        let details = addressSectionElement.addressDetails.address
+        let submittedAddress = PaymentSheet.Address(
+            city: details.city,
+            country: details.country,
+            line1: details.line1,
+            line2: details.line2,
+            postalCode: details.postalCode,
+            state: details.state
+        )
+        var editDistance: Int?
+        if let autoCompleteAddress = selectedAutoCompleteAddress {
+            editDistance = submittedAddress.editDistance(from: autoCompleteAddress)
+        }
+        STPAnalyticsClient.sharedClient.logBillingAddressCompleted(addressCountryCode: addressSectionElement.selectedCountryCode, autoCompleteResultedSelected: selectedAutoCompleteAddress != nil, editDistance: editDistance, apiClient: configuration.apiClient)
     }
 }

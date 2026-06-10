@@ -305,7 +305,7 @@ public class STPBankAccountCollector: NSObject {
                 existingConsumer: nil,
                 style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
-                brand: elementsSessionContext?.linkSettings?.brand,
+                linkBrand: nil,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -599,7 +599,7 @@ public class STPBankAccountCollector: NSObject {
                 existingConsumer: nil,
                 style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
-                brand: elementsSessionContext?.linkSettings?.brand,
+                linkBrand: nil,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -643,7 +643,7 @@ public class STPBankAccountCollector: NSObject {
     }
 
     // MARK: - Collect Bank Account - Deferred Intent
-    @_spi(STP) public func collectBankAccountForDeferredIntent(
+    @_spi(STP) public func collectBankAccountForDeferredIntentOrCheckoutSession(
         sessionId: String,
         returnURL: String?,
         onEvent: ((FinancialConnectionsEvent) -> Void)?,
@@ -653,14 +653,15 @@ public class STPBankAccountCollector: NSObject {
         additionalParameters: [String: Any] = [:],
         elementsSessionContext: ElementsSessionContext?,
         from viewController: UIViewController,
+        intentType: IntentType,
         financialConnectionsCompletion: @escaping (
             FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?
         ) -> Void
     ) {
-        logCollectBankAccountStarted(type: .deferred, intentID: nil)
+        logCollectBankAccountStarted(type: intentType, intentID: nil)
         // Overwrite completion to send an analytic before calling the caller-supplied completion
         let financialConnectionsCompletion: (FinancialConnectionsSDKResult?, LinkAccountSession?, NSError?) -> Void = { result, linkAccountSession, error in
-            self.logCollectBankAccountFinished(type: .deferred, intentID: nil, linkAccountSessionID: linkAccountSession?.stripeID, financialConnectionsSDKResult: result, error: error)
+            self.logCollectBankAccountFinished(type: intentType, intentID: nil, linkAccountSessionID: linkAccountSession?.stripeID, financialConnectionsSDKResult: result, error: error)
             financialConnectionsCompletion(result, linkAccountSession, error)
         }
 
@@ -695,7 +696,7 @@ public class STPBankAccountCollector: NSObject {
                 existingConsumer: nil,
                 style: self.style.asFinancialConnectionsConfigurationStyle,
                 elementsSessionContext: elementsSessionContext,
-                brand: elementsSessionContext?.linkSettings?.brand,
+                linkBrand: nil,
                 onEvent: onEvent,
                 from: viewController
             ) { result in
@@ -778,10 +779,12 @@ extension STPBankAccountCollector {
         }
 
     }
-    enum IntentType: String {
+
+    @_spi(STP) public enum IntentType: String {
         case payment
         case setup
         case deferred
+        case checkoutSession = "checkout_session"
     }
 
     func logCollectBankAccountStarted(type: IntentType, intentID: String?) {

@@ -313,7 +313,7 @@ extension PaymentSheet {
                     case .cardPresent, .blik, .weChatPay, .grabPay, .FPX, .przelewy24, .EPS,
                         .netBanking, .OXXO, .afterpayClearpay, .link, .affirm, .paynow, .zip, .alma,
                         .mobilePay, .unknown, .alipay, .konbini, .promptPay, .swish, .multibanco,
-                        .sunbit, .billie, .crypto, .shopPay, .payPay, .wero, .payByBank:
+                        .sunbit, .billie, .crypto, .payPay, .wero, .payByBank:
                         return [.unsupportedForSetup]
                     @unknown default:
                         return [.unsupportedForSetup]
@@ -322,7 +322,7 @@ extension PaymentSheet {
             } else {
                 requirements = {
                     switch paymentMethod {
-                    case .blik, .card, .cardPresent, .weChatPay, .paynow, .promptPay, .shopPay:
+                    case .blik, .card, .cardPresent, .weChatPay, .paynow, .promptPay:
                         return []
                     case .alipay, .EPS, .FPX, .grabPay, .netBanking, .payPal, .przelewy24, .klarna,
                             .bancontact, .iDEAL, .cashApp, .affirm, .zip, .revolutPay, .amazonPay, .alma,

@@ -100,6 +100,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case guest
         case new
         case returning
+        case custom
     }
     enum CustomerKeyType: String, PickerEnum {
         static var enumName: String { "CustomerKeyType" }
@@ -364,6 +365,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     enum PaymentMethodRemoveLast: String, PickerEnum {
         static var enumName: String { "PaymentMethodRemoveLast" }
 
+        case unset
         case enabled
         case disabled
     }
@@ -400,6 +402,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
 
     enum PaymentMethodSetAsDefault: String, PickerEnum {
         static let enumName: String = "PaymentMethodSetAsDefault"
+        case unset
         case enabled
         case disabled
     }
@@ -728,6 +731,12 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
         case on, off
     }
 
+    enum UseAutocompleteEndpoints: String, PickerEnum {
+        static var enumName: String { "Autocomplete Endpoints" }
+        case on
+        case off
+    }
+
     var uiStyle: UIStyle
     var layout: Layout
     var mode: Mode
@@ -739,6 +748,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var currency: Currency
     var amount: Amount
     var merchantCountryCode: MerchantCountry
+    var customerId: String?
     // For testing purposes only; keys should typically not be defined on the client
     var customSecretKey: String?
     var customPublishableKey: String?
@@ -803,6 +813,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var cardFundingAcceptance: CardFundingAcceptance
     var opensCardScannerAutomatically: OpensCardScannerAutomatically
     var termsDisplay: PaymentMethodTermsDisplay
+    var useAutocompleteEndpoints: UseAutocompleteEndpoints
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -817,6 +828,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             currency: .usd,
             amount: ._5099,
             merchantCountryCode: .US,
+            customerId: nil,
             apmsEnabled: .on,
             paymentMethodOptionsSetupFutureUsage: PaymentMethodOptionsSetupFutureUsage.defaultValues(),
             shippingInfo: .off,
@@ -871,7 +883,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             cardBrandAcceptance: .all,
             cardFundingAcceptance: .all,
             opensCardScannerAutomatically: .off,
-            termsDisplay: .unset
+            termsDisplay: .unset,
+            useAutocompleteEndpoints: .off
         )
     }
 

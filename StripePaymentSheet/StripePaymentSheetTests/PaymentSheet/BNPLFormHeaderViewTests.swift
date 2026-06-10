@@ -3,41 +3,15 @@
 //  StripePaymentSheetTests
 //
 
-import StripeCoreTestUtils
 import UIKit
 import XCTest
 
 @_spi(STP) @testable import StripePaymentSheet
 
 @MainActor
-final class BNPLFormHeaderViewTests: STPSnapshotTestCase {
-    func testDefaultAppearance() {
-        let (headerView, _, _) = makeHeaderView()
-
-        verify(headerView)
-    }
-
-    func testAlwaysDarkStyleSnapshot() {
-        let (headerView, _, _) = makeHeaderView(style: .alwaysDark)
-
-        verify(headerView)
-    }
-
-    func testCustomAppearance() {
-        var appearance = PaymentSheet.Appearance.default
-        appearance.colors.background = .systemYellow.withAlphaComponent(0.15)
-        appearance.colors.primary = .systemGreen
-        appearance.colors.text = .systemBrown
-
-        let (headerView, _, _) = makeHeaderView(appearance: appearance)
-
-        verify(headerView)
-    }
-
-    func testAlwaysDarkStyle_AppliesToHeaderAndInfoModal() throws {
-        let (headerView, rootViewController, _) = makeHeaderView(style: .alwaysDark)
-
-        XCTAssertEqual(headerView.overrideUserInterfaceStyle, .dark)
+final class BNPLFormHeaderViewTests: XCTestCase {
+    func testDarkMode_AppliesToInfoModal() throws {
+        let (headerView, rootViewController, _) = makeHeaderView(interfaceStyle: .dark)
 
         let didHandleTap = headerView.textView(
             UITextView(),
@@ -53,10 +27,8 @@ final class BNPLFormHeaderViewTests: STPSnapshotTestCase {
         XCTAssertEqual(infoModal.overrideUserInterfaceStyle, .dark)
     }
 
-    func testAlwaysLightStyle_AppliesToHeaderAndInfoModal() throws {
-        let (headerView, rootViewController, _) = makeHeaderView(style: .alwaysLight)
-
-        XCTAssertEqual(headerView.overrideUserInterfaceStyle, .light)
+    func testLightMode_AppliesToInfoModal() throws {
+        let (headerView, rootViewController, _) = makeHeaderView(interfaceStyle: .light)
 
         let didHandleTap = headerView.textView(
             UITextView(),
@@ -74,16 +46,16 @@ final class BNPLFormHeaderViewTests: STPSnapshotTestCase {
 
     private func makeHeaderView(
         appearance: PaymentSheet.Appearance = .default,
-        style: PaymentSheet.UserInterfaceStyle = .automatic
+        interfaceStyle: UIUserInterfaceStyle = .unspecified
     ) -> (BNPLFormHeaderView, UIViewController, UIWindow) {
+        let promotionsHelper = PaymentMethodMessagingPromotionsHelper._testValueInTreatment()
         let headerView = BNPLFormHeaderView(
             appearance: appearance,
-            style: style,
-            promotion: "Split your purchase into monthly payments",
-            learnMoreText: "Learn more",
-            infoUrl: URL(string: "https://example.com/affirm")!
-        )
+            paymentMethod: .stripe(.affirm),
+            promotionsHelper: promotionsHelper
+        )!
         let rootViewController = UIViewController()
+        rootViewController.overrideUserInterfaceStyle = interfaceStyle
         headerView.backgroundColor = appearance.colors.background
         rootViewController.view.backgroundColor = appearance.colors.background
         let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 320, height: 200))
@@ -106,15 +78,5 @@ final class BNPLFormHeaderViewTests: STPSnapshotTestCase {
         rootViewController.view.layoutIfNeeded()
 
         return (headerView, rootViewController, window)
-    }
-
-    private func verify(
-        _ view: UIView,
-        identifier: String? = nil,
-        file: StaticString = #filePath,
-        line: UInt = #line
-    ) {
-        view.autosizeHeight(width: 320)
-        STPSnapshotVerifyView(view, identifier: identifier, file: file, line: line)
     }
 }

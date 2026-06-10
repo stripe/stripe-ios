@@ -35,9 +35,6 @@ extension Checkout {
         newSession.billingAddress = stpSession?.billingAddress
         newSession.shippingAddress = stpSession?.shippingAddress
         applyOverrides?(newSession)
-        newSession.onConfirmed = { [weak self] response in
-            self?.updateSession(response)
-        }
         let changed = stpSession?.allResponseFields as NSDictionary? != newSession.allResponseFields as NSDictionary
         setSession(newSession)
         if changed {
@@ -61,37 +58,34 @@ extension Checkout {
         }
 
         pendingOperations.append(operation)
-        setSession(state.session)
+        if let session = stpSession { setSession(session) }
 
         defer {
             pendingOperations.removeAll { $0 == operation }
-            setSession(state.session)
+            if let session = stpSession { setSession(session) }
         }
         try await operation.value
     }
 
-    /// Sends a mutation to the Stripe API and refreshes the session.
-    ///
-    /// The update endpoint returns partial data, so we always re-fetch the full session
-    /// afterward to keep ``state`` as the single source of truth.
+    /// Sends a mutation to the Stripe API and updates the session from the response.
     ///
     /// - Parameter applyOverrides: Forwarded to ``updateSession(_:applyOverrides:)``.
     ///   Runs only after a successful API call — use this to set client-side overrides
-    ///   on the refreshed session so local state stays in sync with the backend.
+    ///   on the updated session so local state stays in sync with the backend.
     func performAPIUpdate(
         _ update: SessionUpdate,
         applyOverrides: ((STPCheckoutSession) -> Void)? = nil
     ) async throws {
         do {
             let sessionId = Self.extractSessionId(from: clientSecret)
-            _ = try await apiClient.updateCheckoutSession(
+            let updatedSession = try await apiClient.updateCheckoutSession(
                 checkoutSessionId: sessionId,
                 parameters: update.parameters
             )
+            updateSession(updatedSession, applyOverrides: applyOverrides)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
-        try await refreshSession(applyOverrides: applyOverrides)
     }
 
     /// Fetches the latest Checkout Session from Stripe and publishes it to observers.

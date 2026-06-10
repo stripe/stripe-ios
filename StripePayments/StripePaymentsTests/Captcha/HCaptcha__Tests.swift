@@ -9,6 +9,18 @@
 @_spi(STP) @testable import StripePayments
 import XCTest
 
+private extension UIApplication {
+    var stp_testWindows: [UIWindow] {
+        if #available(iOS 15.0, *) {
+            return connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+        } else {
+            return windows
+        }
+    }
+}
+
 class HCaptcha__Tests: XCTestCase {
     fileprivate struct Constants {
         struct InfoDictKeys {
@@ -82,7 +94,7 @@ class HCaptcha__Tests: XCTestCase {
         let exp = expectation(description: "execute js function must be called only once")
         let hcaptcha = HCaptcha(manager: HCaptchaWebViewManager(messageBody: "{action: \"showHCaptcha\"}"))
         hcaptcha.didFinishLoading {
-            let view = UIApplication.shared.windows.first?.rootViewController?.view
+            let view = UIApplication.shared.stp_testWindows.first?.rootViewController?.view
             hcaptcha.onEvent { e, _ in
                 if e == .open {
                     exp.fulfill()
@@ -106,7 +118,7 @@ class HCaptcha__Tests: XCTestCase {
             }
         }
         hcaptcha.didFinishLoading {
-            let view = UIApplication.shared.windows.first?.rootViewController?.view
+            let view = UIApplication.shared.stp_testWindows.first?.rootViewController?.view
             hcaptcha.onEvent { e, _ in
                 if e == .open {
                     hcaptcha.redrawView()
@@ -130,7 +142,7 @@ class HCaptcha__Tests: XCTestCase {
         hcaptcha.didFinishLoading {
             loaded.fulfill()
         }
-        let view = UIApplication.shared.windows.first!.rootViewController!.view!
+        let view = UIApplication.shared.stp_testWindows.first!.rootViewController!.view!
         hcaptcha.validate(on: view) { result in
             XCTAssertEqual("some_token", result.token)
             tokenRecieved.fulfill()

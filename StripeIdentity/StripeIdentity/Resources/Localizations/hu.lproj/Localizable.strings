@@ -6,6 +6,8 @@
 
 "App Settings" = "Alkalmazásbeállítások";
 
+"Auto" = "Auto";
+
 "Back %@ photo successfully uploaded" = "Vissza %@ fotó sikeresen feltöltve";
 
 "Back identity document photo successfully uploaded" = "Vissza azonosító dokumentum fénykép sikeresen feltöltve";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "A kép elmosódott. Tartsa stabilan a telefonját, és próbálja újra.";
 
+"Image taken" = "Kép elkészítve";
+
 "Individual CPF" = "Személyes CPF";
 
 "Invalid document" = "Érvénytelen dokumentum";
@@ -85,6 +89,8 @@
 "Loading" = "Betöltés folyamatban";
 
 "Make sure you're in a well lit space." = "Válasszon jól megvilágított helyet.";
+
+"Manual" = "Manuális";
 
 "Move closer" = "Helyezze közelebb";
 

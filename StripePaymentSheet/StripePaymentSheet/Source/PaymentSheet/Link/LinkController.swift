@@ -715,18 +715,18 @@ import UIKit
 
     /// Presents the CRS/CARF declaration to the user.
     ///
-    /// This method presents a bottom sheet displaying the provided declaration text for user review.
+    /// This method presents a bottom sheet displaying the provided declaration HTML for user review.
     /// The user can confirm the declaration or cancel.
     ///
     /// - Parameters:
-    ///   - text: The declaration text to display to the user.
+    ///   - html: The declaration HTML to display to the user.
     ///   - appearance: Appearance configuration for the declaration UI.
     ///   - viewController: The view controller from which to present the declaration flow.
     ///   - onConfirm: An async closure called when the user confirms. This is called *before* dismissal, allowing the caller to complete any async operations before the sheet is dismissed.
     /// - Returns: A `CRSCARFDeclarationResult` indicating whether the user confirmed or canceled.
     /// Throws any error thrown by the `onConfirm` handler.
     @_spi(STP) public func presentCRSCARFDeclaration(
-        text: String,
+        html: String,
         appearance: LinkAppearance,
         from viewController: UIViewController,
         onConfirm: @escaping (() async throws -> Void)
@@ -734,7 +734,7 @@ import UIKit
         return try await withCheckedThrowingContinuation { continuation in
             Task { @MainActor in
                 let declarationViewController = CRSCARFDeclarationViewController(
-                    text: text,
+                    html: html,
                     appearance: appearance,
                     brand: resolvedLinkBrand
                 )
@@ -1189,7 +1189,11 @@ extension LinkController: LinkFullConsentViewControllerDelegate {
         collectName: Bool = false
     ) async -> LinkController.PaymentMethodPreview? {
         return await withCheckedContinuation { continuation in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
+                guard let self else {
+                    continuation.resume(returning: nil)
+                    return
+                }
                 self.collectPaymentMethod(
                     from: presentingViewController,
                     with: email,

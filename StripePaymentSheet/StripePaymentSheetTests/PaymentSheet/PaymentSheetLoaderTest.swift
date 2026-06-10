@@ -783,8 +783,9 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         // Fetch the full STPCheckoutSession object (with allResponseFields containing elements_session)
         let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
 
+        let checkout = Checkout(session: checkoutSession)
         PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkout(checkout),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
             integrationShape: .paymentSheet
@@ -792,16 +793,12 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             expectation.fulfill()
             switch result {
             case .success(let (loadResult, _)):
-                // Verify the intent is a checkoutSession
-                guard case let .checkoutSession(loadedSession) = loadResult.intent else {
-                    XCTFail("Expected checkoutSession intent type")
+                guard case let .checkout(loadedCheckout) = loadResult.intent else {
+                    XCTFail("Expected checkout intent type")
                     return
                 }
-                // Verify CheckoutSession properties
-                XCTAssertEqual(loadedSession.id, checkoutSessionId)
-                // Verify elements session is loaded
+                XCTAssertEqual(loadedCheckout.stpSession.id, checkoutSessionId)
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
-                // Verify payment methods are loaded
                 XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
@@ -813,7 +810,6 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     @MainActor
     func testPaymentSheetLoadWithCheckoutSessionSetup() async throws {
         let expectation = XCTestExpectation(description: "Load w/ CheckoutSession setup mode")
-        // Fetch a fresh checkout session in setup mode from the test backend
         let checkoutSessionResponse = try await STPTestingAPIClient.shared.fetchCheckoutSessionSetupMode()
         let checkoutSessionId = checkoutSessionResponse.id
         let customApiClient = STPAPIClient(publishableKey: checkoutSessionResponse.publishableKey)
@@ -821,11 +817,11 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
         configuration.apiClient = customApiClient
         configuration.defaultBillingDetails.email = "test@example.com"
 
-        // Fetch the full STPCheckoutSession object (with allResponseFields containing elements_session)
         let checkoutSession = try await customApiClient.initCheckoutSession(checkoutSessionId: checkoutSessionId, adaptivePricingAllowed: true)
+        let checkout = Checkout(session: checkoutSession)
 
         PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkout(checkout),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
             integrationShape: .paymentSheet
@@ -833,19 +829,15 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             expectation.fulfill()
             switch result {
             case .success(let (loadResult, _)):
-                // Verify the intent is a checkoutSession
-                guard case let .checkoutSession(checkoutSession) = loadResult.intent else {
-                    XCTFail("Expected checkoutSession intent type")
+                guard case let .checkout(loadedCheckout) = loadResult.intent else {
+                    XCTFail("Expected checkout intent type")
                     return
                 }
-                // Verify CheckoutSession properties
-                XCTAssertEqual(checkoutSession.id, checkoutSessionId)
-                XCTAssertEqual(checkoutSession.mode, .setup)
-                XCTAssertEqual(checkoutSession.status?.type, .open)
-                XCTAssertEqual(checkoutSession.status?.paymentStatus, .noPaymentRequired)
-                // Verify elements session is loaded
+                XCTAssertEqual(loadedCheckout.stpSession.id, checkoutSessionId)
+                XCTAssertEqual(loadedCheckout.stpSession.mode, .setup)
+                XCTAssertEqual(loadedCheckout.stpSession.status?.type, .open)
+                XCTAssertEqual(loadedCheckout.stpSession.status?.paymentStatus, .noPaymentRequired)
                 XCTAssertTrue(loadResult.elementsSession.sessionID.hasPrefix("elements_session_"))
-                // Verify payment methods are loaded
                 XCTAssertTrue(loadResult.elementsSession.orderedPaymentMethodTypes.contains(.card))
             case .failure(let error):
                 XCTFail(error.nonGenericDescription)
@@ -857,7 +849,6 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
     @MainActor
     func testPaymentSheetLoadWithDirectCheckoutSessionMissingElementsSession() async throws {
         let expectation = XCTestExpectation(description: "Load w/ direct CheckoutSession missing elements_session")
-        // Create a minimal STPCheckoutSession without elements_session in allResponseFields
         let mockJSON: [AnyHashable: Any] = [
             "session_id": "cs_test_fake",
             "livemode": false,
@@ -869,12 +860,13 @@ final class PaymentSheetLoaderTest: STPNetworkStubbingTestCase {
             XCTFail("Failed to create mock STPCheckoutSession")
             return
         }
+        let checkout = Checkout(session: checkoutSession)
         var configuration = PaymentSheet.Configuration()
         configuration.apiClient = STPAPIClient(publishableKey: STPTestingDefaultPublishableKey)
         configuration.defaultBillingDetails.email = "test@example.com"
 
         PaymentSheetLoader.load(
-            mode: .checkoutSession(checkoutSession),
+            mode: .checkout(checkout),
             configuration: configuration,
             analyticsHelper: .init(integrationShape: .complete, configuration: configuration),
             integrationShape: .paymentSheet
