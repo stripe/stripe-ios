@@ -12,7 +12,7 @@ import Foundation
 final class PollingBudget {
     /// The timestamp when polling started
     private var startDate: Date
-    /// The polling duration in seconds
+    /// The maximum polling duration in seconds
     private let duration: TimeInterval
     /// Whether polling is currently allowed
     private(set) var canPoll: Bool = true
@@ -20,7 +20,7 @@ final class PollingBudget {
     private var lastPollAttempt: Date?
 
     /// The elapsed time since polling started
-    private var elapsedTime: TimeInterval {
+    var elapsedTime: TimeInterval {
         return Date().timeIntervalSince(startDate)
     }
 
