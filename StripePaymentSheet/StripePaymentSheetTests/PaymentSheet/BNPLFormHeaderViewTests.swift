@@ -3,6 +3,7 @@
 //  StripePaymentSheetTests
 //
 
+@_spi(STP) import StripeUICore
 import UIKit
 import XCTest
 
@@ -15,7 +16,7 @@ final class BNPLFormHeaderViewTests: XCTestCase {
 
         let didHandleTap = headerView.textView(
             UITextView(),
-            shouldInteractWith: headerView.infoUrl,
+            shouldInteractWith: PaymentMethodMessagingPromotionsHelper.MockPromotionsHelper.infoUrl,
             in: NSRange(location: 0, length: 0),
             interaction: .invokeDefaultAction
         )
@@ -32,7 +33,7 @@ final class BNPLFormHeaderViewTests: XCTestCase {
 
         let didHandleTap = headerView.textView(
             UITextView(),
-            shouldInteractWith: headerView.infoUrl,
+            shouldInteractWith: PaymentMethodMessagingPromotionsHelper.MockPromotionsHelper.infoUrl,
             in: NSRange(location: 0, length: 0),
             interaction: .invokeDefaultAction
         )
@@ -52,8 +53,9 @@ final class BNPLFormHeaderViewTests: XCTestCase {
         let headerView = BNPLFormHeaderView(
             appearance: appearance,
             paymentMethod: .stripe(.affirm),
-            promotionsHelper: promotionsHelper
-        )!
+            promotionsHelper: promotionsHelper,
+            fallback: SubtitleElement(view: UIView(), isHorizontalMode: false)
+        )
         let rootViewController = UIViewController()
         rootViewController.overrideUserInterfaceStyle = interfaceStyle
         headerView.backgroundColor = appearance.colors.background
