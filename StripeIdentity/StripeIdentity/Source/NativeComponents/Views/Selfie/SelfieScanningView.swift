@@ -76,6 +76,8 @@ final class SelfieScanningView: UIView {
     struct ViewModel {
         enum StatusText {
             case holdStill
+            case lookLeft
+            case lookRight
             case uploading
 
             var text: String {
@@ -85,9 +87,19 @@ final class SelfieScanningView: UIView {
                         "Hold still",
                         "Status text displayed over the selfie viewfinder while capturing selfies"
                     )
+                case .lookLeft:
+                    return STPLocalizedString(
+                        "Look left",
+                        "Status text displayed over the selfie viewfinder while capturing the left side of a face"
+                    )
+                case .lookRight:
+                    return STPLocalizedString(
+                        "Look right",
+                        "Status text displayed over the selfie viewfinder while capturing the right side of a face"
+                    )
                 case .uploading:
                     return STPLocalizedString(
-                        "Great! Checking your images....",
+                        "Great! Checking your scan...",
                         "Status text displayed over the blurred selfie while checking uploaded selfie images"
                     )
                 }
@@ -96,6 +108,9 @@ final class SelfieScanningView: UIView {
             var showsActivityIndicator: Bool {
                 switch self {
                 case .holdStill:
+                    return false
+                case .lookLeft,
+                    .lookRight:
                     return false
                 case .uploading:
                     return true
@@ -106,6 +121,9 @@ final class SelfieScanningView: UIView {
                 switch self {
                 case .holdStill:
                     return false
+                case .lookLeft,
+                    .lookRight:
+                    return true
                 case .uploading:
                     return true
                 }
@@ -657,6 +675,7 @@ private final class CaptureTickMarksView: UIView {
         static let verticalDiameterToHeightRatio: CGFloat = 0.56
         static let centerYRatio: CGFloat = 0.41
         static let tickColor = UIColor.white.withAlphaComponent(0.8)
+        static let acceptedTickColor = UIColor.systemGreen
         static let shadowColor = UIColor.black.withAlphaComponent(0.3)
         static let shadowOffset = CGSize(width: 0, height: 1)
         static let shadowBlur: CGFloat = 4
@@ -765,7 +784,9 @@ private final class CaptureTickMarksView: UIView {
 
         context.setLineWidth(Styling.tickWidth)
         context.setLineCap(.butt)
-        context.setStrokeColor(Styling.tickColor.cgColor)
+        context.setStrokeColor(
+            (showsCenteredShadow ? Styling.acceptedTickColor : Styling.tickColor).cgColor
+        )
         context.setShadow(
             offset: Styling.shadowOffset,
             blur: Styling.shadowBlur,

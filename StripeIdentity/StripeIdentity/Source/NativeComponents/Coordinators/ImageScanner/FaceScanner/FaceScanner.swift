@@ -20,14 +20,17 @@ final class FaceScanner {
     }
 
     private let faceDetector: FaceDetector
+    private let facePoseDetector: FacePoseDetector?
     private let configuration: Configuration
     private let motionBlurDetector: MotionBlurDetector
 
     init(
         faceDetector: FaceDetector,
+        facePoseDetector: FacePoseDetector? = nil,
         configuration: Configuration
     ) {
         self.faceDetector = faceDetector
+        self.facePoseDetector = facePoseDetector
         self.configuration = configuration
         self.motionBlurDetector = MotionBlurDetector(
             minIOU: MotionBlurGate.minIOU,
@@ -37,7 +40,8 @@ final class FaceScanner {
 
     convenience init(
         faceDetectorModel: VNCoreMLModel,
-        configuration: Configuration
+        configuration: Configuration,
+        facePoseDetector: FacePoseDetector? = nil
     ) {
         self.init(
             faceDetector: .init(
@@ -47,6 +51,7 @@ final class FaceScanner {
                     minIOU: configuration.faceDetectorMinIOU
                 )
             ),
+            facePoseDetector: facePoseDetector,
             configuration: configuration
         )
     }
@@ -66,6 +71,7 @@ extension FaceScanner: ImageScanner {
     ) -> StripeCore.Future<FaceScannerOutput> {
         do {
             let faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
+            let facePose = try? facePoseDetector?.detectPose(sampleBuffer: sampleBuffer)
             return Promise(
                 value: .init(
                     faceDetectorOutput: faceDetectorOutput,
@@ -73,7 +79,8 @@ extension FaceScanner: ImageScanner {
                     configuration: configuration,
                     motionBlurResult: motionBlurResult(
                         faceDetectorOutput: faceDetectorOutput
-                    )
+                    ),
+                    facePose: facePose
                 )
             )
         } catch {
@@ -85,6 +92,7 @@ extension FaceScanner: ImageScanner {
     func reset() {
         motionBlurDetector.reset()
         faceDetector.metricsTracker?.reset()
+        facePoseDetector?.reset()
     }
 }
 

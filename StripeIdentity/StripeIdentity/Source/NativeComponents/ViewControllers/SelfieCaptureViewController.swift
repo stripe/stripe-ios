@@ -16,7 +16,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 
     typealias SelfieImageScanningSession = ImageScanningSession<
         EmptyClassificationType,
-        [FaceScannerInputOutput],
+        FaceCaptureScanningState,
         FaceCaptureData,
         FaceScannerOutput
     >
@@ -120,19 +120,17 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
                     }
                 )
             )
-        case .scanning(_, let collectedSamples):
+        case .scanning(_, let scanningState):
             // Show a flash animation when capturing the first sample image
             return .scan(
                 .init(
                     state: .videoPreview(
                         imageScanningSession.cameraSession,
-                        showFlashAnimation: collectedSamples.count == 1,
-                        statusText: collectedSamples.isEmpty ? nil : .holdStill,
+                        showFlashAnimation: scanningState.frontSamples.count == 1,
+                        statusText: statusText(for: scanningState),
                         showCaptureGuideShadow: isFaceCenteredInCaptureGuide
                     ),
-                    instructionalText: collectedSamples.isEmpty
-                        ? SelfieCaptureViewController.initialInstructionText
-                        : SelfieCaptureViewController.capturingInstructionText,
+                    instructionalText: instructionalText(for: scanningState),
                     havingTroubleHandler: { [weak self] in
                         self?.sheetController?.transitionToFallbackUrl()
                     }
@@ -206,6 +204,7 @@ final class SelfieCaptureViewController: IdentityFlowViewController {
 
     /// Whether the most recent selfie scanner output had a valid centered face.
     private var isFaceCenteredInCaptureGuide = false
+    private var latestScanningState = FaceCaptureScanningState.initialValue()
 
     // MARK: Init
 
@@ -344,6 +343,34 @@ extension SelfieCaptureViewController {
             trainingConsent: consentSelection
         ) {}
     }
+
+    func statusText(
+        for scanningState: FaceCaptureScanningState
+    ) -> SelfieScanningView.ViewModel.StatusText? {
+        switch scanningState.phase {
+        case .front:
+            return scanningState.frontSamples.isEmpty ? nil : .holdStill
+        case .left:
+            return .lookLeft
+        case .right:
+            return .lookRight
+        }
+    }
+
+    func instructionalText(
+        for scanningState: FaceCaptureScanningState
+    ) -> String {
+        switch scanningState.phase {
+        case .front:
+            return scanningState.frontSamples.isEmpty
+                ? SelfieCaptureViewController.initialInstructionText
+                : SelfieCaptureViewController.capturingInstructionText
+        case .left:
+            return SelfieCaptureViewController.lookLeftInstructionText
+        case .right:
+            return SelfieCaptureViewController.lookRightInstructionText
+        }
+    }
 }
 
 // MARK: - ImageScanningSessionDelegate
@@ -392,6 +419,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
 
     func imageScanningSessionDidReset(_ scanningSession: SelfieImageScanningSession) {
         isFaceCenteredInCaptureGuide = false
+        latestScanningState = .initialValue()
         selfieUploader.reset()
     }
 
@@ -402,6 +430,12 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         if let sheetController = sheetController {
             sheetController.analyticsClient.logSelfieCaptureTimeout(sheetController: sheetController)
         }
+        if latestScanningState.phase != .front,
+            let faceCaptureData = latestScanningState.captureData()
+        {
+            selfieUploader.uploadImages(faceCaptureData)
+            saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
+        }
     }
 
     func imageScanningSession(
@@ -409,6 +443,7 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         willStartScanningForClassification classification: EmptyClassificationType
     ) {
         isFaceCenteredInCaptureGuide = false
+        latestScanningState = .initialValue()
         // Focus the accessibility VoiceOver back onto the capture view
         UIAccessibility.post(notification: .layoutChanged, argument: self.selfieCaptureView)
 
@@ -448,46 +483,155 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         exifMetadata: CameraExifMetadata?,
         expectedClassification: EmptyClassificationType
     ) {
-        // Extract already scanned faces if there are any
-        var collectedSamples: [FaceScannerInputOutput] = []
-        if case .scanning(_, let _collectedSamples) = scanningSession.state {
-            collectedSamples = _collectedSamples
+        var scanningState = FaceCaptureScanningState.initialValue()
+        if case .scanning(_, let currentScanningState) = scanningSession.state {
+            scanningState = currentScanningState
         }
 
-        // If no valid face was found, update state to scanning
         guard scannerOutput.isValid else {
             isFaceCenteredInCaptureGuide = false
-            scanningSession.updateScanningState(collectedSamples)
+            latestScanningState = scanningState
+            scanningSession.updateScanningState(scanningState)
             return
         }
-        isFaceCenteredInCaptureGuide = true
 
-        // Update the number of collected samples
-        collectedSamples.append(
+        switch scanningState.phase {
+        case .front:
+            handleFrontCapture(
+                scanningSession,
+                scanningState: scanningState,
+                image: image,
+                scannerOutput: scannerOutput,
+                exifMetadata: exifMetadata
+            )
+        case .left:
+            handlePoseCapture(
+                scanningSession,
+                scanningState: scanningState,
+                expectedPose: .left,
+                image: image,
+                scannerOutput: scannerOutput,
+                exifMetadata: exifMetadata
+            )
+        case .right:
+            handlePoseCapture(
+                scanningSession,
+                scanningState: scanningState,
+                expectedPose: .right,
+                image: image,
+                scannerOutput: scannerOutput,
+                exifMetadata: exifMetadata
+            )
+        }
+    }
+}
+
+// MARK: - Selfie Capture Flow
+
+extension SelfieCaptureViewController {
+    fileprivate func handleFrontCapture(
+        _ scanningSession: SelfieImageScanningSession,
+        scanningState: FaceCaptureScanningState,
+        image: CGImage,
+        scannerOutput: FaceScannerOutput,
+        exifMetadata: CameraExifMetadata?
+    ) {
+        isFaceCenteredInCaptureGuide = true
+        var nextState = scanningState
+        if scannerOutput.facePose != nil {
+            nextState.supportsPoseCapture = true
+        } else if nextState.supportsPoseCapture == nil {
+            nextState.supportsPoseCapture = false
+        }
+        nextState.frontSamples.append(
             .init(
                 image: image,
                 scannerOutput: scannerOutput,
-                cameraExifMetadata: exifMetadata
+                cameraExifMetadata: exifMetadata,
+                capturePose: .front
             )
         )
 
-        // Reset timeout timer
         scanningSession.stopTimeoutTimer()
 
-        // If we've found the required number of samples, upload images and
-        // finish scanning. Otherwise, keep scanning
-        guard collectedSamples.count == apiConfig.numSamples,
-            let faceCaptureData = FaceCaptureData(samples: collectedSamples)
+        guard nextState.frontSamples.count >= apiConfig.numSamples,
+            let faceCaptureData = nextState.captureData()
         else {
-            // Reset timers
             scanningSession.startTimeoutTimer()
             startSampleTimer()
-            scanningSession.updateScanningState(collectedSamples)
+            latestScanningState = nextState
+            scanningSession.updateScanningState(nextState)
+            return
+        }
+
+        guard nextState.supportsPoseCapture == true else {
+            latestScanningState = nextState
+            selfieUploader.uploadImages(faceCaptureData)
+            saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
+            return
+        }
+
+        nextState.supportsPoseCapture = true
+        nextState.phase = .left
+        latestScanningState = nextState
+        notifyCaptureAccepted()
+        scanningSession.startTimeoutTimer()
+        scanningSession.updateScanningState(nextState)
+    }
+
+    fileprivate func handlePoseCapture(
+        _ scanningSession: SelfieImageScanningSession,
+        scanningState: FaceCaptureScanningState,
+        expectedPose: FaceCapturePose,
+        image: CGImage,
+        scannerOutput: FaceScannerOutput,
+        exifMetadata: CameraExifMetadata?
+    ) {
+        guard scannerOutput.facePose?.direction == expectedPose else {
+            isFaceCenteredInCaptureGuide = false
+            latestScanningState = scanningState
+            scanningSession.updateScanningState(scanningState)
+            return
+        }
+
+        isFaceCenteredInCaptureGuide = true
+        var nextState = scanningState
+        let capturedSample = FaceScannerInputOutput(
+            image: image,
+            scannerOutput: scannerOutput,
+            cameraExifMetadata: exifMetadata,
+            capturePose: expectedPose
+        )
+
+        switch expectedPose {
+        case .front:
+            assertionFailure("Front captures should be handled by `handleFrontCapture`")
+        case .left:
+            nextState.leftSide = capturedSample
+            nextState.phase = .right
+        case .right:
+            nextState.rightSide = capturedSample
+        }
+
+        scanningSession.stopTimeoutTimer()
+        latestScanningState = nextState
+        notifyCaptureAccepted()
+
+        guard nextState.isComplete,
+            let faceCaptureData = nextState.captureData()
+        else {
+            scanningSession.startTimeoutTimer()
+            startSampleTimer()
+            scanningSession.updateScanningState(nextState)
             return
         }
 
         selfieUploader.uploadImages(faceCaptureData)
         saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
+    }
+
+    fileprivate func notifyCaptureAccepted() {
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
     }
 }
 
