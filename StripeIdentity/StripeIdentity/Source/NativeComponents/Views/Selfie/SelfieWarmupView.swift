@@ -12,13 +12,13 @@ import UIKit
 class SelfieWarmupView: UIView {
     struct Styling {
         static let contentInset: NSDirectionalEdgeInsets = .init(
-            top: 132,
+            top: 56,
             leading: 16,
             bottom: 0,
             trailing: 16
         )
-        static let warmupIconImageSpacing: CGFloat = 27
         static let warmupTitleSpacing: CGFloat = 12
+        static let warmupBodySpacing: CGFloat = 64
     }
 
     private let stackView: UIStackView = {
@@ -72,11 +72,11 @@ extension SelfieWarmupView {
     fileprivate func installViews() {
         addAndPinSubview(stackView, insets: Styling.contentInset)
 
-        stackView.addArrangedSubview(selfieWarmupIconImageView)
         stackView.addArrangedSubview(selfieWarmupTitleLabel)
         stackView.addArrangedSubview(selfieWarmupBodyLabel)
+        stackView.addArrangedSubview(selfieWarmupIconImageView)
 
-        stackView.setCustomSpacing(Styling.warmupIconImageSpacing, after: selfieWarmupIconImageView)
         stackView.setCustomSpacing(Styling.warmupTitleSpacing, after: selfieWarmupTitleLabel)
+        stackView.setCustomSpacing(Styling.warmupBodySpacing, after: selfieWarmupBodyLabel)
     }
 }

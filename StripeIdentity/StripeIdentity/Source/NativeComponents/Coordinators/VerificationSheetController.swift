@@ -113,14 +113,20 @@ protocol VerificationSheetControllerProtocol: AnyObject {
     func overrideTestModeReturnValue(result: IdentityVerificationSheet.VerificationFlowResult)
 
     /// Transition to DocumentCaptureViewController without any API request
-    func transitionToSelfieCapture()
+    func transitionToSelfieCapture(
+        trainingConsent: Bool?
+    )
 
     /// Transition to DocumentCaptureViewController without any API request
     func transitionToDocumentCapture()
+
+    /// Transition to the web fallback without any API request
+    func transitionToFallbackUrl()
 }
 
 private enum VerificationSheetControllerError: String, AnalyticLoggableStringErrorV2 {
     case missingVerificationPageResponseForFallbackUpdate
+    case missingVerificationPageResponseForFallbackUrlTransition
     case missingVerificationPageResponseForCountryNotListedTransition
     case missingVerificationPageResponseForIndividualTransition
     case missingVerificationPageResponseForSelfieCaptureTransition
@@ -521,7 +527,9 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         )
     }
 
-    func transitionToSelfieCapture() {
+    func transitionToSelfieCapture(
+        trainingConsent: Bool?
+    ) {
         guard let verificationPageResponse = verificationPageResponseOrLogMissing(
             .missingVerificationPageResponseForSelfieCaptureTransition,
             assertionMessage: "verificationPageResponse is nil"
@@ -531,7 +539,8 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
 
         flowController.transitionToSelfieCaptureScreen(
             staticContentResult: verificationPageResponse,
-            sheetController: self
+            sheetController: self,
+            trainingConsent: trainingConsent
         )
     }
 
@@ -544,6 +553,20 @@ final class VerificationSheetController: VerificationSheetControllerProtocol {
         }
 
         flowController.transitionToDocumentCaptureScreen(
+            staticContentResult: verificationPageResponse,
+            sheetController: self
+        )
+    }
+
+    func transitionToFallbackUrl() {
+        guard let verificationPageResponse = verificationPageResponseOrLogMissing(
+            .missingVerificationPageResponseForFallbackUrlTransition,
+            assertionMessage: "verificationPageResponse is nil"
+        ) else {
+            return
+        }
+
+        flowController.transitionToFallbackUrlScreen(
             staticContentResult: verificationPageResponse,
             sheetController: self
         )

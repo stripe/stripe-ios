@@ -17,16 +17,17 @@ final class SelfieScanningView: UIView {
     struct Styling {
         static let contentInsets = IdentityFlowView.Style.defaultContentViewInsets
 
-        static let viewWidthToContainerHeightRatio = IdentityUI.documentCameraPreviewAspectRatio
-
         static let labelBottomPadding = IdentityUI.scanningViewLabelBottomPadding
         static let labelMinHeightNumberOfLines = IdentityUI.scanningViewLabelMinHeightNumberOfLines
         static var labelFont: UIFont {
             IdentityUI.instructionsFont
         }
-
-        static let flashAnimationDuration: TimeInterval = 0.2
-        static let flashOverlayAlpha: CGFloat = 0.8
+        static let preferredPreviewHeightToWidthRatio: CGFloat = 4 / 3
+        static let troubleLinkTopPadding: CGFloat = 12
+        static let captureGuideShadowFadeInDuration: TimeInterval = 0.6
+        static var troubleLinkFont: UIFont {
+            IdentityUI.preferredFont(forTextStyle: .body).withSize(12)
+        }
 
         static let scannedImageSize = CGSize(width: 172, height: 172)
         static let scannedImageSpacing: CGFloat = 12
@@ -73,11 +74,54 @@ final class SelfieScanningView: UIView {
     }
 
     struct ViewModel {
+        enum StatusText {
+            case holdStill
+            case uploading
+
+            var text: String {
+                switch self {
+                case .holdStill:
+                    return STPLocalizedString(
+                        "Hold still",
+                        "Status text displayed over the selfie viewfinder while capturing selfies"
+                    )
+                case .uploading:
+                    return STPLocalizedString(
+                        "Great! Checking your images....",
+                        "Status text displayed over the blurred selfie while checking uploaded selfie images"
+                    )
+                }
+            }
+
+            var showsActivityIndicator: Bool {
+                switch self {
+                case .holdStill:
+                    return false
+                case .uploading:
+                    return true
+                }
+            }
+
+            var isCenteredInViewfinder: Bool {
+                switch self {
+                case .holdStill:
+                    return false
+                case .uploading:
+                    return true
+                }
+            }
+        }
+
         enum State {
             /// Display an empty container when waiting for camera permission prompt
             case blank
             /// Live video feed from the camera while taking selfies
-            case videoPreview(CameraSessionProtocol, showFlashAnimation: Bool)
+            case videoPreview(
+                CameraSessionProtocol,
+                showFlashAnimation: Bool,
+                statusText: StatusText?,
+                showCaptureGuideShadow: Bool
+            )
             /// Display scanned selfie images
             case scanned(
                 [UIImage],
@@ -86,14 +130,22 @@ final class SelfieScanningView: UIView {
                 openURLHandler: (URL) -> Void,
                 retakeSelfieHandler: () -> Void
             )
-            case saving(
-                [UIImage],
-                consentHTMLText: String
-            )
+            case saving(UIImage, statusText: StatusText)
         }
 
         let state: State
         let instructionalText: String
+        let havingTroubleHandler: (() -> Void)?
+
+        init(
+            state: State,
+            instructionalText: String,
+            havingTroubleHandler: (() -> Void)? = nil
+        ) {
+            self.state = state
+            self.instructionalText = instructionalText
+            self.havingTroubleHandler = havingTroubleHandler
+        }
 
         var instructionalLabelViewModel: BottomAlignedLabel.ViewModel {
             return .init(
@@ -118,18 +170,107 @@ final class SelfieScanningView: UIView {
     private let instructionLabelView = BottomAlignedLabel()
 
     // MARK: Camera Preview
-    private let previewContainerView = CameraPreviewContainerView()
+    private let previewContainerView = CameraPreviewContainerView(
+        cornerRadius: .viewfinder,
+        shadowStyle: .viewfinder
+    )
+
+    private lazy var havingTroubleLabel: UILabel = {
+        let label = UILabel()
+        label.adjustsFontForContentSizeCategory = true
+        label.isAccessibilityElement = true
+        label.accessibilityTraits = .link
+        label.isUserInteractionEnabled = true
+        label.isHidden = true
+        label.addGestureRecognizer(UITapGestureRecognizer(
+            target: self,
+            action: #selector(didTapHavingTrouble)
+        ))
+        return label
+    }()
 
     /// Camera preview
     private let cameraPreviewView = CameraPreviewView()
 
-    /// Creates flash animation by animating alpha
-    private let flashOverlayView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .white
-        view.alpha = 0
+    private let capturedImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.isHidden = true
+        imageView.isAccessibilityElement = true
+        imageView.accessibilityLabel = STPLocalizedString(
+            "Selfie",
+            "Accessibility label of captured selfie images"
+        )
+        return imageView
+    }()
+
+    private let capturedImageBlurView: UIVisualEffectView = {
+        let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .regular))
+        blurView.isHidden = true
+        return blurView
+    }()
+
+    private let captureTickMarksView: CaptureTickMarksView = {
+        let view = CaptureTickMarksView()
+        view.backgroundColor = .clear
+        view.isHidden = true
+        view.isUserInteractionEnabled = false
         return view
     }()
+
+    private let statusLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 16)
+        label.textColor = .white
+        label.adjustsFontForContentSizeCategory = true
+        label.layer.shadowColor = UIColor.black.cgColor
+        label.layer.shadowOffset = CGSize(width: 0, height: 1)
+        label.layer.shadowRadius = 4
+        label.layer.shadowOpacity = 0.35
+        return label
+    }()
+
+    private let statusActivityIndicatorView: ActivityIndicator = {
+        let activityIndicatorView = ActivityIndicator(size: .medium)
+        activityIndicatorView.color = .white
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.isHidden = true
+        return activityIndicatorView
+    }()
+
+    private lazy var statusContentStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [
+            statusActivityIndicatorView,
+            statusLabel,
+        ])
+        stackView.axis = .horizontal
+        stackView.alignment = .center
+        stackView.spacing = 8
+        return stackView
+    }()
+
+    private let statusLabelContainerView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(
+            red: 0x21 / 255,
+            green: 0x25 / 255,
+            blue: 0x2C / 255,
+            alpha: 0.6
+        )
+        view.layer.cornerRadius = 8
+        view.isHidden = true
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private lazy var statusLabelBottomConstraint = statusLabelContainerView.bottomAnchor.constraint(
+        equalTo: previewContainerView.contentView.bottomAnchor,
+        constant: -40
+    )
+
+    private lazy var statusLabelCenterYConstraint = statusLabelContainerView.centerYAnchor.constraint(
+        equalTo: previewContainerView.contentView.centerYAnchor
+    )
 
     // MARK: Scanned Images
 
@@ -195,6 +336,9 @@ final class SelfieScanningView: UIView {
     /// Called when the user taps on retake selfie button
     private var retakeSelfieHandler: (() -> Void)?
 
+    /// Called when the user taps on the "Having Trouble?" link
+    private var havingTroubleHandler: (() -> Void)?
+
     // MARK: Init
 
     init() {
@@ -215,12 +359,20 @@ final class SelfieScanningView: UIView {
     func configure(with viewModel: ViewModel, sheetController: VerificationSheetControllerProtocol?) {
 
         instructionLabelView.configure(from: viewModel.instructionalLabelViewModel)
+        havingTroubleHandler = viewModel.havingTroubleHandler
 
         let isCurrentlyShowingScanned = !scannedImageScrollView.isHidden
 
         // Reset values
         cameraPreviewView.isHidden = true
+        capturedImageView.isHidden = true
+        capturedImageView.image = nil
+        capturedImageBlurView.isHidden = true
+        captureTickMarksView.isHidden = true
+        statusLabelContainerView.isHidden = true
+        statusActivityIndicatorView.stopAnimating()
         previewContainerView.isHidden = true
+        havingTroubleLabel.isHidden = true
         scannedImageScrollView.isHidden = true
 
         switch viewModel.state {
@@ -228,19 +380,25 @@ final class SelfieScanningView: UIView {
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
             retakeSelfieStack.isHidden = true
+            captureTickMarksView.setShowsCenteredShadow(false, animated: false)
             previewContainerView.isHidden = false
+            havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
 
-        case .videoPreview(let cameraSession, let showFlashAnimation):
+        case .videoPreview(let cameraSession, _, let statusText, let showCaptureGuideShadow):
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
             previewContainerView.isHidden = false
+            havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
             cameraPreviewView.isHidden = false
             cameraPreviewView.session = cameraSession
-            if showFlashAnimation {
-                animateFlash()
+            captureTickMarksView.isHidden = false
+            captureTickMarksView.setShowsCenteredShadow(showCaptureGuideShadow, animated: true)
+            if let statusText {
+                configureStatusLabel(statusText)
             }
 
         case .scanned(let images, let consentText, let consentHandler, let openURLHandler, let retakeSelfieHandler):
+            captureTickMarksView.setShowsCenteredShadow(false, animated: false)
             scannedImageScrollView.isHidden = false
             rebuildImageHStack(with: images)
 
@@ -272,29 +430,15 @@ final class SelfieScanningView: UIView {
                     sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
                 }
             }
-        case .saving(let images, consentHTMLText: let consentText):
-            scannedImageScrollView.isHidden = false
-            rebuildImageHStack(with: images)
-
-            do {
-                consentCheckboxButton.setAttributedText(
-                    try NSAttributedString.createHtmlString(
-                        htmlText: consentText,
-                        style: Styling.consentHTMLStyle
-                    )
-                )
-                consentCheckboxButton.isEnabled = false
-                retakeSelfieIcon.tintColor = IdentityUI.iconColor
-                retakeSelfieStack.isHidden = false
-                retakeSelfieButton.isEnabled = false
-                consentCheckboxButton.isHidden = false
-            } catch {
-                // Keep the consent checkbox hidden and treat this case the same
-                // as if the user did not give consent.
-                if let sheetController = sheetController {
-                    sheetController.analyticsClient.logGenericError(error: error, sheetController: sheetController)
-                }
-            }
+        case .saving(let image, let statusText):
+            captureTickMarksView.setShowsCenteredShadow(false, animated: false)
+            previewContainerView.isHidden = false
+            capturedImageView.image = image
+            capturedImageView.isHidden = false
+            capturedImageBlurView.isHidden = false
+            configureStatusLabel(statusText)
+            retakeSelfieStack.isHidden = true
+            consentCheckboxButton.isHidden = true
         }
     }
 
@@ -309,6 +453,7 @@ final class SelfieScanningView: UIView {
             self.consentCheckboxButton.theme = Styling.consentCheckboxTheme(
                 tintColor: self.tintColor
             )
+            self.configureHavingTroubleLabel()
         }
     }
 
@@ -323,12 +468,20 @@ extension SelfieScanningView {
 
         vStack.addArrangedSubview(instructionLabelView)
         vStack.addArrangedSubview(previewContainerView)
+        vStack.addArrangedSubview(havingTroubleLabel)
         vStack.addArrangedSubview(scannedImageScrollView)
         vStack.addArrangedSubview(retakeSelfieStack)
         vStack.addArrangedSubview(consentCheckboxButton)
 
         previewContainerView.contentView.addAndPinSubview(cameraPreviewView)
-        previewContainerView.contentView.addAndPinSubview(flashOverlayView)
+        previewContainerView.contentView.addAndPinSubview(capturedImageView)
+        previewContainerView.contentView.addAndPinSubview(capturedImageBlurView)
+        previewContainerView.contentView.addAndPinSubview(captureTickMarksView)
+        previewContainerView.contentView.addSubview(statusLabelContainerView)
+        statusLabelContainerView.addAndPinSubview(
+            statusContentStackView,
+            insets: .init(top: 8, leading: 8, bottom: 8, trailing: 8)
+        )
 
         // Add some bottom margin so the scroll indicator doesn't overlay on
         // top of the scanned images
@@ -346,6 +499,10 @@ extension SelfieScanningView {
     fileprivate func installConstraints() {
         scannedImageHStack.translatesAutoresizingMaskIntoConstraints = false
         scannedImageScrollView.setContentHuggingPriority(.required, for: .horizontal)
+        previewContainerView.setContentHuggingPriority(.defaultLow, for: .vertical)
+        previewContainerView.setContentCompressionResistancePriority(.defaultLow, for: .vertical)
+        instructionLabelView.setContentHuggingPriority(.required, for: .vertical)
+        instructionLabelView.setContentCompressionResistancePriority(.required, for: .vertical)
 
         // Adjusts to keep padding visually the same while accounting for scroll
         // indicator margin
@@ -353,18 +510,22 @@ extension SelfieScanningView {
             Styling.consentTopPadding - Styling.scannedImageScrollIndicatorMargin,
             after: scannedImageScrollView
         )
+        vStack.setCustomSpacing(Styling.troubleLinkTopPadding, after: previewContainerView)
+        configureHavingTroubleLabel()
 
         NSLayoutConstraint.activate([
-            // Set the container to the same height as the document scanning preview, but as a square
-            widthAnchor.constraint(
-                equalTo: previewContainerView.widthAnchor,
-                multiplier: Styling.viewWidthToContainerHeightRatio,
-                constant: Styling.contentInsets.leading + Styling.contentInsets.trailing
-            ),
             previewContainerView.widthAnchor.constraint(
-                equalTo: previewContainerView.heightAnchor
+                equalTo: widthAnchor,
+                constant: -(Styling.contentInsets.leading + Styling.contentInsets.trailing)
             ),
-
+            {
+                let constraint = previewContainerView.heightAnchor.constraint(
+                    equalTo: previewContainerView.widthAnchor,
+                    multiplier: Styling.preferredPreviewHeightToWidthRatio
+                )
+                constraint.priority = .defaultHigh
+                return constraint
+            }(),
             // Set insets for label
             widthAnchor.constraint(
                 equalTo: instructionLabelView.widthAnchor,
@@ -375,6 +536,10 @@ extension SelfieScanningView {
             widthAnchor.constraint(
                 equalTo: consentCheckboxButton.widthAnchor,
                 constant: Styling.contentInsets.leading + Styling.contentInsets.trailing
+            ),
+            havingTroubleLabel.widthAnchor.constraint(
+                lessThanOrEqualTo: widthAnchor,
+                constant: -(Styling.contentInsets.leading + Styling.contentInsets.trailing)
             ),
 
             // Make scroll view's content full-height
@@ -392,7 +557,42 @@ extension SelfieScanningView {
                 constraint.priority = .defaultHigh
                 return constraint
             }(),
+            statusLabelContainerView.centerXAnchor.constraint(
+                equalTo: previewContainerView.contentView.centerXAnchor
+            ),
+            statusLabelBottomConstraint,
+            statusLabelContainerView.widthAnchor.constraint(
+                lessThanOrEqualTo: previewContainerView.contentView.widthAnchor,
+                multiplier: 0.8
+            ),
         ])
+    }
+
+    fileprivate func configureStatusLabel(_ statusText: ViewModel.StatusText) {
+        statusLabel.text = statusText.text
+        statusLabelBottomConstraint.isActive = !statusText.isCenteredInViewfinder
+        statusLabelCenterYConstraint.isActive = statusText.isCenteredInViewfinder
+        statusActivityIndicatorView.isHidden = !statusText.showsActivityIndicator
+        if statusText.showsActivityIndicator {
+            statusActivityIndicatorView.startAnimating()
+        } else {
+            statusActivityIndicatorView.stopAnimating()
+        }
+        statusLabelContainerView.isHidden = false
+    }
+
+    fileprivate func configureHavingTroubleLabel() {
+        havingTroubleLabel.attributedText = NSAttributedString(
+            string: STPLocalizedString(
+                "Having Trouble?",
+                "Link text displayed under the selfie viewfinder"
+            ),
+            attributes: [
+                .font: Styling.troubleLinkFont,
+                .foregroundColor: IdentityUI.secondaryLabelColor,
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+            ]
+        )
     }
 
     fileprivate func rebuildImageHStack(with images: [UIImage]) {
@@ -427,37 +627,16 @@ extension SelfieScanningView {
         NSLayoutConstraint.activate(constraints)
     }
 
-    fileprivate func animateFlash() {
-        animateFlashInDirection(forwards: true) { [weak self] _ in
-            self?.animateFlashInDirection(forwards: false)
-        }
-    }
-
-    fileprivate func animateFlashInDirection(
-        forwards shouldAnimateForwards: Bool,
-        completion: ((Bool) -> Void)? = nil
-    ) {
-        let options: UIView.AnimationOptions =
-            shouldAnimateForwards ? [.curveEaseIn] : [.curveEaseOut]
-        let alpha = shouldAnimateForwards ? Styling.flashOverlayAlpha : 0
-
-        UIView.animate(
-            withDuration: Styling.flashAnimationDuration,
-            delay: 0,
-            options: options,
-            animations: { [weak self] in
-                self?.flashOverlayView.alpha = alpha
-            },
-            completion: completion
-        )
-    }
-
     @objc fileprivate func didToggleConsent() {
         consentHandler?(consentCheckboxButton.isSelected)
     }
 
     @objc fileprivate func didTapRetakeSelfie() {
         retakeSelfieHandler?()
+    }
+
+    @objc fileprivate func didTapHavingTrouble() {
+        havingTroubleHandler?()
     }
 }
 
@@ -466,5 +645,229 @@ extension SelfieScanningView: CheckboxButtonDelegate {
     func checkboxButton(_ checkboxButton: CheckboxButton, shouldOpen url: URL) -> Bool {
         openURLHandler?(url)
         return false
+    }
+}
+
+private final class CaptureTickMarksView: UIView {
+    struct Styling {
+        static let tickCount = 77
+        static let tickLength: CGFloat = 10
+        static let tickWidth: CGFloat = 2
+        static let horizontalDiameterToWidthRatio: CGFloat = 0.62
+        static let verticalDiameterToHeightRatio: CGFloat = 0.56
+        static let centerYRatio: CGFloat = 0.41
+        static let tickColor = UIColor.white.withAlphaComponent(0.8)
+        static let shadowColor = UIColor.black.withAlphaComponent(0.3)
+        static let shadowOffset = CGSize(width: 0, height: 1)
+        static let shadowBlur: CGFloat = 4
+        static let centeredShadowInnerColor = UIColor.black.withAlphaComponent(0.14)
+        static let centeredShadowMidColor = UIColor.black.withAlphaComponent(0.28)
+        static let centeredShadowRingColor = UIColor.black.withAlphaComponent(0.36)
+        static let centeredShadowOuterColor = UIColor.black.withAlphaComponent(0.42)
+        static let centeredShadowClearPadding: CGFloat = 0
+        static let centeredShadowFeatherPadding: CGFloat = 34
+        static let centeredShadowFadeInDuration: TimeInterval = SelfieScanningView.Styling.captureGuideShadowFadeInDuration
+    }
+
+    private var showsCenteredShadow: Bool = false
+    private var centeredShadowOpacity: CGFloat = 0 {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    private var centeredShadowDisplayLink: CADisplayLink?
+    private var centeredShadowAnimationStartTime: CFTimeInterval?
+
+    deinit {
+        centeredShadowDisplayLink?.invalidate()
+    }
+
+    func setShowsCenteredShadow(_ showsCenteredShadow: Bool, animated: Bool) {
+        guard showsCenteredShadow != self.showsCenteredShadow else {
+            return
+        }
+
+        self.showsCenteredShadow = showsCenteredShadow
+        centeredShadowDisplayLink?.invalidate()
+        centeredShadowDisplayLink = nil
+        centeredShadowAnimationStartTime = nil
+
+        guard showsCenteredShadow else {
+            centeredShadowOpacity = 0
+            return
+        }
+
+        guard animated, window != nil else {
+            centeredShadowOpacity = 1
+            return
+        }
+
+        centeredShadowOpacity = 0
+        let displayLink = CADisplayLink(
+            target: self,
+            selector: #selector(updateCenteredShadowFadeIn)
+        )
+        displayLink.add(to: .main, forMode: .common)
+        centeredShadowDisplayLink = displayLink
+    }
+
+    @objc private func updateCenteredShadowFadeIn(_ displayLink: CADisplayLink) {
+        if centeredShadowAnimationStartTime == nil {
+            centeredShadowAnimationStartTime = displayLink.timestamp
+        }
+        guard let centeredShadowAnimationStartTime else {
+            return
+        }
+
+        let elapsedTime = displayLink.timestamp - centeredShadowAnimationStartTime
+        let progress = min(
+            max(elapsedTime / Styling.centeredShadowFadeInDuration, 0),
+            1
+        )
+        centeredShadowOpacity = 1 - ((1 - progress) * (1 - progress))
+
+        if progress >= 1 {
+            displayLink.invalidate()
+            centeredShadowDisplayLink = nil
+            self.centeredShadowAnimationStartTime = nil
+            centeredShadowOpacity = 1
+        }
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        setNeedsDisplay()
+    }
+
+    override func draw(_ rect: CGRect) {
+        guard let context = UIGraphicsGetCurrentContext(),
+              bounds.width > 0,
+              bounds.height > 0 else {
+            return
+        }
+
+        let horizontalRadius = bounds.width * Styling.horizontalDiameterToWidthRatio / 2
+        let verticalRadius = bounds.height * Styling.verticalDiameterToHeightRatio / 2
+        let center = CGPoint(
+            x: bounds.midX,
+            y: bounds.height * Styling.centerYRatio
+        )
+
+        if showsCenteredShadow, centeredShadowOpacity > 0 {
+            drawCenteredShadow(
+                in: context,
+                center: center,
+                horizontalRadius: horizontalRadius,
+                verticalRadius: verticalRadius,
+                opacity: centeredShadowOpacity
+            )
+        }
+
+        context.setLineWidth(Styling.tickWidth)
+        context.setLineCap(.butt)
+        context.setStrokeColor(Styling.tickColor.cgColor)
+        context.setShadow(
+            offset: Styling.shadowOffset,
+            blur: Styling.shadowBlur,
+            color: Styling.shadowColor.cgColor
+        )
+
+        for index in 0..<Styling.tickCount {
+            let angle = (CGFloat(index) / CGFloat(Styling.tickCount)) * .pi * 2
+            let cosAngle = cos(angle)
+            let sinAngle = sin(angle)
+            let tickCenter = CGPoint(
+                x: center.x + cosAngle * horizontalRadius,
+                y: center.y + sinAngle * verticalRadius
+            )
+            let normal = CGVector(
+                dx: cosAngle / horizontalRadius,
+                dy: sinAngle / verticalRadius
+            )
+            let normalLength = sqrt((normal.dx * normal.dx) + (normal.dy * normal.dy))
+            let unitNormal = CGVector(
+                dx: normal.dx / normalLength,
+                dy: normal.dy / normalLength
+            )
+            let halfTickLength = Styling.tickLength / 2
+            let startPoint = CGPoint(
+                x: tickCenter.x - unitNormal.dx * halfTickLength,
+                y: tickCenter.y - unitNormal.dy * halfTickLength
+            )
+            let endPoint = CGPoint(
+                x: tickCenter.x + unitNormal.dx * halfTickLength,
+                y: tickCenter.y + unitNormal.dy * halfTickLength
+            )
+
+            context.move(to: startPoint)
+            context.addLine(to: endPoint)
+        }
+
+        context.strokePath()
+    }
+
+    private func drawCenteredShadow(
+        in context: CGContext,
+        center: CGPoint,
+        horizontalRadius: CGFloat,
+        verticalRadius: CGFloat,
+        opacity: CGFloat
+    ) {
+        let scaleX = horizontalRadius / verticalRadius
+        let maxXDistance = max(center.x, bounds.width - center.x) / scaleX
+        let maxYDistance = max(center.y, bounds.height - center.y)
+        let outerRadius = hypot(maxXDistance, maxYDistance)
+        let clearRadius = verticalRadius + Styling.centeredShadowClearPadding
+        guard outerRadius > clearRadius else {
+            return
+        }
+
+        let featherRadius = min(
+            verticalRadius + Styling.centeredShadowFeatherPadding,
+            outerRadius
+        )
+        let featherLocation = min(
+            max((featherRadius - clearRadius) / (outerRadius - clearRadius), 0.06),
+            0.96
+        )
+        let colors = [
+            UIColor.clear.cgColor,
+            shadowColor(Styling.centeredShadowInnerColor, opacity: opacity),
+            shadowColor(Styling.centeredShadowMidColor, opacity: opacity),
+            shadowColor(Styling.centeredShadowRingColor, opacity: opacity),
+            shadowColor(Styling.centeredShadowOuterColor, opacity: opacity),
+        ] as CFArray
+        let locations = [
+            CGFloat(0),
+            featherLocation * 0.25,
+            featherLocation * 0.6,
+            featherLocation,
+            CGFloat(1),
+        ]
+
+        guard let gradient = CGGradient(
+            colorsSpace: CGColorSpaceCreateDeviceRGB(),
+            colors: colors,
+            locations: locations
+        ) else {
+            return
+        }
+
+        context.saveGState()
+        context.translateBy(x: center.x, y: center.y)
+        context.scaleBy(x: scaleX, y: 1)
+        context.drawRadialGradient(
+            gradient,
+            startCenter: .zero,
+            startRadius: clearRadius,
+            endCenter: .zero,
+            endRadius: outerRadius,
+            options: [.drawsAfterEndLocation]
+        )
+        context.restoreGState()
+    }
+
+    private func shadowColor(_ color: UIColor, opacity: CGFloat) -> CGColor {
+        return color.withAlphaComponent(color.cgColor.alpha * opacity).cgColor
     }
 }
