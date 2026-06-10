@@ -1,5 +1,5 @@
 ## Migration Guides
-### Migrating from versions < 25.17.0
+### Migrating from versions < 26.0.0
 * [Changed] The minimum iOS version is now 15.0, as Xcode 27 no longer supports building for iOS 13 or iOS 14. If you'd like to deploy for iOS versions below iOS 15, please use Stripe SDK 25.17.0.
 
 ### Migrating from versions < 25.5.0
