@@ -17,6 +17,7 @@
 		B6E0CD4C1CDE03985005F08D /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5726517468179B69D50692C0 /* StripeCoreTestUtils.framework */; };
 		C6DEF5EEB22CC714DAC66887 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = 6E2CB8EBFA629D3FF26481AB /* OHHTTPStubs */; };
 		E646201B58937F04897840EB /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AB1A0B05C00E547ED1A0D09 /* XCTest.framework */; };
+		E91F4A1B2C3D4E5F60718293 /* SwiftTasksVision in Frameworks */ = {isa = PBXBuildFile; productRef = E91F4A1B2C3D4E5F60718294 /* SwiftTasksVision */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +103,7 @@
 				695E12945F47ED3060B8AE19 /* StripeCameraCore.framework in Frameworks */,
 				10B606812179D64E67BFFFCF /* StripeCore.framework in Frameworks */,
 				A7AC2D0D9FDCF8AC5298708D /* StripeUICore.framework in Frameworks */,
+				E91F4A1B2C3D4E5F60718293 /* SwiftTasksVision in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,6 +238,7 @@
 			);
 			name = StripeIdentity;
 			packageProductDependencies = (
+				E91F4A1B2C3D4E5F60718294 /* SwiftTasksVision */,
 			);
 			productName = StripeIdentity;
 			productReference = D604F6AABE4D6D5CCF802685 /* StripeIdentity.framework */;
@@ -298,6 +301,7 @@
 			);
 			mainGroup = C30D6A52DEFD4953D1003B59;
 			packageReferences = (
+				E91F4A1B2C3D4E5F60718295 /* XCRemoteSwiftPackageReference "SwiftTasksVision" */,
 				98906E4295D5EDD251F81145 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */,
 				1034C700B96E0B79C2107621 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
 			);
@@ -470,6 +474,14 @@
 				kind = branch;
 			};
 		};
+		E91F4A1B2C3D4E5F60718295 /* XCRemoteSwiftPackageReference "SwiftTasksVision" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/paescebu/SwiftTasksVision.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.10.21;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -484,6 +496,11 @@
 		960247DC321CBDB422FE713D /* iOSSnapshotTestCase */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = iOSSnapshotTestCase;
+		};
+		E91F4A1B2C3D4E5F60718294 /* SwiftTasksVision */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E91F4A1B2C3D4E5F60718295 /* XCRemoteSwiftPackageReference "SwiftTasksVision" */;
+			productName = SwiftTasksVision;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
