@@ -165,6 +165,24 @@ extension STPPaymentHandler {
         case appForegrounded = "app_foregrounded"
     }
 
+    // MARK: - Polling duration exceeded -> canceled
+
+    func logPollingDurationExceededCancellation(intentID: String?, paymentMethodType: String?, duration: TimeInterval) {
+        let analytic = Analytic(
+            event: .paymentHandlerCanceledPollingDurationExceeded,
+            intentID: intentID,
+            actionID: actionID,
+            status: nil,
+            paymentMethodType: paymentMethodType,
+            paymentMethodID: nil,
+            duration: duration,
+            error: nil
+        )
+        analyticsClient.log(analytic: analytic, apiClient: apiClient)
+    }
+
+    // MARK: - URL Redirect next action
+
     func logURLRedirectNextActionStarted(redirectType: URLRedirectNextActionRedirectType) {
         let analytic = GenericAnalytic(event: .urlRedirectNextAction, params: [
             "redirect_type": redirectType.rawValue,
