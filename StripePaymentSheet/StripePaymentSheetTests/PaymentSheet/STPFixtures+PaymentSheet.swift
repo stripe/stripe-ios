@@ -495,15 +495,17 @@ extension PaymentMethodMessagingPromotionsHelper {
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
         )
     }
-}
 
-private class MockPromotionsHelper: PaymentMethodMessagingPromotionsHelper {
-    override func promotion(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromotionContent? {
-        return PromotionContent(
-            promotion: "Pay in 4 interest-free payments of $12.50.",
-            learnMoreText: "See if you qualify",
-            infoUrl: URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C&locale=en&payment_methods%5B0%5D=affirm&title=See%20if%20you%20qualify")!
-        )
+    class MockPromotionsHelper: PaymentMethodMessagingPromotionsHelper {
+        override func promotion(for paymentMethodType: PaymentSheet.PaymentMethodType) -> PromotionContent? {
+            return PromotionContent(
+                promotion: "Pay in 4 interest-free payments of $12.50.",
+                learnMoreText: "See if you qualify",
+                infoUrl: Self.infoUrl
+            )
+        }
+
+        static let infoUrl = URL(string: "https://b.stripecdn.com/payment-method-messaging-statics-srv/assets/learn-more/index.html?amount=5000&country=US&currency=USD&key=pk_test_51HvTI7Lu5o3P18Zp6t5AgBSkMvWoTtA0nyA7pVYDqpfLkRtWun7qZTYCOHCReprfLM464yaBeF72UFfB7cY9WG4a00ZnDtiC2C&locale=en&payment_methods%5B0%5D=affirm&title=See%20if%20you%20qualify")!
     }
 }
 
