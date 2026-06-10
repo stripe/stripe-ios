@@ -55,6 +55,7 @@
 
 /* Begin PBXFileReference section */
 		14C231755842F322A25160ED /* StripeCameraCoreTestUtils.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCameraCoreTestUtils.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A005B252FD9F6EA008A146D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		434BC5FFBC1163872413A40A /* StripeiOS Tests-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "StripeiOS Tests-Release.xcconfig"; sourceTree = "<group>"; };
 		4D0F4646D7565055396DD8F5 /* StripeCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StripeCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F6B26A21285054BEE9CA244 /* Project-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Project-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -151,6 +152,7 @@
 		B676F5058454EA479CE2B699 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3A005B252FD9F6EA008A146D /* CoreGraphics.framework */,
 				8AB1A0B05C00E547ED1A0D09 /* XCTest.framework */,
 			);
 			name = Frameworks;
