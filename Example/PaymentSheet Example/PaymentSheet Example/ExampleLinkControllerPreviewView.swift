@@ -151,7 +151,7 @@ struct ExampleLinkControllerPreviewView: View {
 
         do {
             linkController = try await LinkController.create(
-                configuration: .init(supportedPaymentMethodTypes: supportedPaymentMethodTypes)
+                configuration: .init(supportedPaymentMethodTypes: supportedPaymentMethodTypes, merchantDisplayName: "Example, Inc.")
             )
             isLoading = false
             statusMessage = "LinkController initialized successfully"
