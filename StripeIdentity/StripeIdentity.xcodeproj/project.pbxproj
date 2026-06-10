@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		0758EE8C7A032BF378F6AA59 /* OHHTTPStubsSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 2714B21F1CD18CEED8772AB6 /* OHHTTPStubsSwift */; };
 		10B606812179D64E67BFFFCF /* StripeCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D0F4646D7565055396DD8F5 /* StripeCore.framework */; };
+		3AEAD4592FD9F00F00CDDAA4 /* SwiftTasksVision in Frameworks */ = {isa = PBXBuildFile; productRef = 3AEAD4582FD9F00F00CDDAA4 /* SwiftTasksVision */; };
 		45B515AC217F10059EE155E2 /* iOSSnapshotTestCase in Frameworks */ = {isa = PBXBuildFile; productRef = 960247DC321CBDB422FE713D /* iOSSnapshotTestCase */; };
 		4A5FEB151B079C41FD40FED5 /* StripeCameraCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14C231755842F322A25160ED /* StripeCameraCoreTestUtils.framework */; };
 		695E12945F47ED3060B8AE19 /* StripeCameraCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB639F497EF62CAE81822820 /* StripeCameraCore.framework */; };
@@ -17,7 +18,6 @@
 		B6E0CD4C1CDE03985005F08D /* StripeCoreTestUtils.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5726517468179B69D50692C0 /* StripeCoreTestUtils.framework */; };
 		C6DEF5EEB22CC714DAC66887 /* OHHTTPStubs in Frameworks */ = {isa = PBXBuildFile; productRef = 6E2CB8EBFA629D3FF26481AB /* OHHTTPStubs */; };
 		E646201B58937F04897840EB /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8AB1A0B05C00E547ED1A0D09 /* XCTest.framework */; };
-		E91F4A1B2C3D4E5F60718293 /* SwiftTasksVision in Frameworks */ = {isa = PBXBuildFile; productRef = E91F4A1B2C3D4E5F60718294 /* SwiftTasksVision */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,7 +103,7 @@
 				695E12945F47ED3060B8AE19 /* StripeCameraCore.framework in Frameworks */,
 				10B606812179D64E67BFFFCF /* StripeCore.framework in Frameworks */,
 				A7AC2D0D9FDCF8AC5298708D /* StripeUICore.framework in Frameworks */,
-				E91F4A1B2C3D4E5F60718293 /* SwiftTasksVision in Frameworks */,
+				3AEAD4592FD9F00F00CDDAA4 /* SwiftTasksVision in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,7 +238,7 @@
 			);
 			name = StripeIdentity;
 			packageProductDependencies = (
-				E91F4A1B2C3D4E5F60718294 /* SwiftTasksVision */,
+				3AEAD4582FD9F00F00CDDAA4 /* SwiftTasksVision */,
 			);
 			productName = StripeIdentity;
 			productReference = D604F6AABE4D6D5CCF802685 /* StripeIdentity.framework */;
@@ -301,9 +301,9 @@
 			);
 			mainGroup = C30D6A52DEFD4953D1003B59;
 			packageReferences = (
-				E91F4A1B2C3D4E5F60718295 /* XCRemoteSwiftPackageReference "SwiftTasksVision" */,
 				98906E4295D5EDD251F81145 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */,
 				1034C700B96E0B79C2107621 /* XCRemoteSwiftPackageReference "ios-snapshot-test-case" */,
+				3AEAD4572FD9F00F00CDDAA4 /* XCRemoteSwiftPackageReference "SwiftTasksVision" */,
 			);
 			productRefGroup = DA1A05D0BE4F60655BC0E2CD /* Products */;
 			projectDirPath = "";
@@ -466,20 +466,20 @@
 				minimumVersion = 8.0.0;
 			};
 		};
+		3AEAD4572FD9F00F00CDDAA4 /* XCRemoteSwiftPackageReference "SwiftTasksVision" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/paescebu/SwiftTasksVision.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.10.21;
+			};
+		};
 		98906E4295D5EDD251F81145 /* XCRemoteSwiftPackageReference "OHHTTPStubs" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davidme-stripe/OHHTTPStubs";
 			requirement = {
 				branch = "stripe-mock";
 				kind = branch;
-			};
-		};
-		E91F4A1B2C3D4E5F60718295 /* XCRemoteSwiftPackageReference "SwiftTasksVision" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/paescebu/SwiftTasksVision.git";
-			requirement = {
-				kind = exactVersion;
-				version = 0.10.21;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -489,6 +489,11 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = OHHTTPStubsSwift;
 		};
+		3AEAD4582FD9F00F00CDDAA4 /* SwiftTasksVision */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3AEAD4572FD9F00F00CDDAA4 /* XCRemoteSwiftPackageReference "SwiftTasksVision" */;
+			productName = SwiftTasksVision;
+		};
 		6E2CB8EBFA629D3FF26481AB /* OHHTTPStubs */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OHHTTPStubs;
@@ -496,11 +501,6 @@
 		960247DC321CBDB422FE713D /* iOSSnapshotTestCase */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = iOSSnapshotTestCase;
-		};
-		E91F4A1B2C3D4E5F60718294 /* SwiftTasksVision */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E91F4A1B2C3D4E5F60718295 /* XCRemoteSwiftPackageReference "SwiftTasksVision" */;
-			productName = SwiftTasksVision;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
