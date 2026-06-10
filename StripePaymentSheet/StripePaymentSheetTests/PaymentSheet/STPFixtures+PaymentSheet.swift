@@ -465,7 +465,7 @@ extension PaymentSheetLoader.LoadResult {
 }
 
 extension PaymentMethodMessagingPromotionsHelper {
-    static func _testValue() -> PaymentMethodMessagingPromotionsHelper {
+    static func _testValue() -> PaymentMethodMessagingPromotionsHelper? {
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
@@ -493,7 +493,7 @@ extension PaymentMethodMessagingPromotionsHelper {
             configuration: PaymentSheet.Configuration(),
             paymentMethodTypes: [],
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
-        )
+        )!
     }
 }
 

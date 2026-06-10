@@ -18,7 +18,7 @@ final class PaymentSheetLoader {
         let savedPaymentMethods: [STPPaymentMethod]
         /// The payment method types that should be shown (i.e. filtered)
         let paymentMethodTypes: [PaymentSheet.PaymentMethodType]
-        let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper
+        let paymentMethodMessagingPromotionsHelper: PaymentMethodMessagingPromotionsHelper?
         let paymentMethodOrientation: PaymentSheet.PaymentMethodLayout.ResolvedLayout
     }
 
@@ -206,7 +206,7 @@ final class PaymentSheetLoader {
                 paymentMethodTypes: paymentMethodTypes,
                 analyticsHelper: analyticsHelper
             )
-            paymentMethodMessagingPromotionsHelper.fetchData()
+            paymentMethodMessagingPromotionsHelper?.fetchData()
 
             let paymentMethodOrientation = configuration.resolveLayout(
                 elementsSession: elementsSession,

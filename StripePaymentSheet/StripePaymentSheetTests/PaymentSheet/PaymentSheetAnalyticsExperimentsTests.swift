@@ -213,11 +213,25 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
         XCTAssertEqual(payload["dimensions-integration_shape"] as? String, "flowcontroller")
         XCTAssertEqual(payload["dimensions-has_spms"] as? String, "false")
     }
-    func testPaymentMethodMessagingPromotionsExperiment() {
+    func testPaymentMethodMessagingPromotionsExperiment_noAssignment_returnsNil() {
+        let elementsSession = STPElementsSession._testValue(
+            experimentsData: nil,
+            customer: nil
+        )
+
+        let experiment = PaymentMethodMessagingPromotionsExperiment(
+            elementsSession: elementsSession,
+            layout: "vertical"
+        )
+
+        XCTAssertNil(experiment)
+    }
+
+    func testPaymentMethodMessagingPromotionsExperiment_unrelatedAssignment_returnsNil() {
         let experimentsData = ExperimentsData(
             arbId: "arb_id_123",
             experimentAssignments: [
-                PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment
+                "some_other_experiment": .treatment,
             ],
             allResponseFields: [:]
         )
@@ -230,6 +244,27 @@ final class PaymentSheetAnalyticsExperimentsTests: XCTestCase {
             elementsSession: elementsSession,
             layout: "vertical"
         )
+
+        XCTAssertNil(experiment)
+    }
+
+    func testPaymentMethodMessagingPromotionsExperiment() throws {
+        let experimentsData = ExperimentsData(
+            arbId: "arb_id_123",
+            experimentAssignments: [
+                PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment
+            ],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(
+            experimentsData: experimentsData,
+            customer: nil
+        )
+
+        let experiment = try XCTUnwrap(PaymentMethodMessagingPromotionsExperiment(
+            elementsSession: elementsSession,
+            layout: "vertical"
+        ))
 
         XCTAssertEqual(experiment.name, PaymentMethodMessagingPromotionsExperiment.experimentName)
         XCTAssertEqual(experiment.arbId, "arb_id_123")
