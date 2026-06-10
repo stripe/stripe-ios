@@ -13,7 +13,7 @@
 /* Exchange rate caption, e.g. '1 GBP = 1.2871 USD' */
 "1 %@ = %@ %@" = "1 %1$@ = %2$@ %3$@";
 
-/* Label for a button that confirms the user accepts a declaration */
+/* Label for a button that confirms the user accepts an attestation */
 "Accept" = "Accept";
 
 /* Title shown above a card entry form */
@@ -214,7 +214,7 @@ to be saved and used in future checkout sessions. */
 /* Label shown in the payment type picker describing a card payment */
 "Debit or credit card" = "Debit or credit card";
 
-/* Title label for a screen showing CRS/CARF tax declarations */
+/* Title label for a screen showing user attestation */
 "Declarations" = "Declarations";
 
 /* Label for identifying the default payment method. */
@@ -545,4 +545,3 @@ the heading the screen itself. */
 
 /* An error message. */
 "Your IBAN should start with a two-letter country code." = "Your IBAN should start with a two-letter country code.";
-

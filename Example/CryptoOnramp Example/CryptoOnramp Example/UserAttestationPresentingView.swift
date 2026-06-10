@@ -1,5 +1,5 @@
 //
-//  CRSCARFDeclarationPresentingView.swift
+//  UserAttestationPresentingView.swift
 //  CryptoOnramp Example
 //
 //  Created by Michael Liberatore on 4/29/26.
@@ -10,13 +10,13 @@ import SwiftUI
 @_spi(CryptoOnrampAlpha)
 import StripeCryptoOnramp
 
-/// View with instructions for CRS/CARF declaration acceptance that presents the declaration modal.
-struct CRSCARFDeclarationPresentingView: View {
+/// View with instructions for user attestation acceptance that presents the attestation modal.
+struct UserAttestationPresentingView: View {
 
-    /// The coordinator to use to present CRS/CARF declaration UI.
+    /// The coordinator to use to present user attestation UI.
     let coordinator: CryptoOnrampCoordinator
 
-    /// Closure called when the declaration is accepted, allowing parent flows to advance.
+    /// Closure called when the attestation is accepted, allowing parent flows to advance.
     let onCompleted: () -> Void
 
     @Environment(\.isLoading) private var isLoading
@@ -44,12 +44,12 @@ struct CRSCARFDeclarationPresentingView: View {
                     }
 
                 VStack(spacing: 6) {
-                    Text("Accept tax declaration")
+                    Text("Accept user attestation")
                         .font(.title)
                         .bold()
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Text("Before continuing, Link needs you to review and accept the CRS/CARF declaration.")
+                    Text("Before continuing, Link needs you to review and accept the user attestation.")
                         .font(.subheadline)
                         .foregroundColor(.secondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -58,15 +58,15 @@ struct CRSCARFDeclarationPresentingView: View {
             .padding()
         }
         .safeAreaInset(edge: .bottom) {
-            Button("Review Declaration") {
-                presentDeclaration()
+            Button("Review Attestation") {
+                presentAttestation()
             }
             .buttonStyle(PrimaryButtonStyle())
             .disabled(isLoading.wrappedValue)
             .opacity(isLoading.wrappedValue ? 0.5 : 1)
             .padding()
         }
-        .navigationTitle("Tax Declaration")
+        .navigationTitle("User Attestation")
         .navigationBarTitleDisplayMode(.inline)
         .alert(
             alert?.title ?? "Error",
@@ -80,9 +80,9 @@ struct CRSCARFDeclarationPresentingView: View {
         )
     }
 
-    private func presentDeclaration() {
+    private func presentAttestation() {
         guard let presentingViewController = UIApplication.shared.findTopNavigationController() else {
-            alert = Alert(title: "Unable to present declaration", message: "Unable to find view controller to present from.")
+            alert = Alert(title: "Unable to present attestation", message: "Unable to find view controller to present from.")
             return
         }
 
@@ -91,7 +91,7 @@ struct CRSCARFDeclarationPresentingView: View {
 
         Task {
             do {
-                let result = try await coordinator.presentCRSCARFDeclaration(from: presentingViewController)
+                let result = try await coordinator.presentUserAttestation(from: presentingViewController)
                 await MainActor.run {
                     isLoading.wrappedValue = false
                     switch result {
@@ -106,7 +106,7 @@ struct CRSCARFDeclarationPresentingView: View {
             } catch {
                 await MainActor.run {
                     isLoading.wrappedValue = false
-                    alert = Alert(title: "CRS/CARF declaration failed", message: error.localizedDescription)
+                    alert = Alert(title: "User attestation failed", message: error.localizedDescription)
                 }
             }
         }
@@ -115,6 +115,6 @@ struct CRSCARFDeclarationPresentingView: View {
 
 #Preview {
     PreviewWrapperView { coordinator in
-        CRSCARFDeclarationPresentingView(coordinator: coordinator, onCompleted: {})
+        UserAttestationPresentingView(coordinator: coordinator, onCompleted: {})
     }
 }
