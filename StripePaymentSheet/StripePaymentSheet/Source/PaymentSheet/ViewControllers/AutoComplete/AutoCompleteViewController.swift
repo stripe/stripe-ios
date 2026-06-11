@@ -118,9 +118,9 @@ class AutoCompleteViewController: UIViewController {
 
         var constraints = [
             imageView.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: tableView.layoutMargins.left + indendationWidth),
-            imageView.heightAnchor.constraint(equalToConstant: UIFont.preferredFont(forTextStyle: .footnote).lineHeight),
+            imageView.heightAnchor.constraint(equalToConstant: 16),
             imageView.widthAnchor.constraint(equalTo: imageView.heightAnchor, multiplier: image.size.width / image.size.height),
-            imageView.topAnchor.constraint(equalTo: container.topAnchor, constant: tableView.layoutMargins.top),
+            imageView.topAnchor.constraint(equalTo: container.topAnchor, constant: 10),
         ]
         NSLayoutConstraint.activate(constraints)
         return container
