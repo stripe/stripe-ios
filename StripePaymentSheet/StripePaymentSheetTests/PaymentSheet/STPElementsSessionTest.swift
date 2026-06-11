@@ -713,6 +713,22 @@ class STPElementsSessionTest: XCTestCase {
             "exp_year": "2040",
         ],
     ] as [AnyHashable: Any]
+    private let testCardWithLinkWalletJSON = [
+        "id": "pm_123card_link_wallet",
+        "type": "card",
+        "created": "12345",
+        "card": [
+            "last4": "4242",
+            "brand": "visa",
+            "fingerprint": "B8XXs2y2JsVBtB9f",
+            "networks": ["available": ["visa"]],
+            "exp_month": "01",
+            "exp_year": "2040",
+            "wallet": [
+                "type": "link",
+            ],
+        ],
+    ] as [AnyHashable: Any]
     private let testCardAmexJSON = [
         "id": "pm_123amexcard",
         "type": "card",
@@ -877,8 +893,11 @@ class STPElementsSessionTest: XCTestCase {
 
     // MARK: Link-wrapped format (enableLinkInSPM: true)
 
-    private func linkWrappedPM(_ pmJSON: [AnyHashable: Any]) -> [AnyHashable: Any] {
-        return ["payment_method": pmJSON]
+    private func linkWrappedPM(_ pmJSON: [AnyHashable: Any], isLinkOrigin: Bool = false) -> [AnyHashable: Any] {
+        return [
+            "payment_method": pmJSON,
+            "is_link_origin": isLinkOrigin,
+        ]
     }
 
     private func linkWrappedUnknownPM(_ pmJSON: [AnyHashable: Any]) -> [AnyHashable: Any] {
@@ -913,6 +932,21 @@ class STPElementsSessionTest: XCTestCase {
         let pm = customer?.paymentMethods.first
         XCTAssertNotNil(pm?.card?.cardArt)
         XCTAssertEqual(pm?.card?.cardArt?.artImage?.url?.absoluteString, "https://b.stripecdn.com/cardart/assets/abc123")
+    }
+
+    func testDecodeLinkWrappedPaymentMethod_setsLinkOriginWithoutLinkPaymentDetails() {
+        let response: [AnyHashable: Any] = [
+            "payment_methods_with_link_details": [linkWrappedPM(testCardJSON, isLinkOrigin: true)],
+            "customer_session": customerSessionJSON,
+        ]
+
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
+        let paymentMethod = customer?.paymentMethods.first
+
+        XCTAssertEqual(customer?.paymentMethods.count, 1)
+        XCTAssertTrue(paymentMethod?.isLinkOrigin ?? false)
+        XCTAssertTrue(paymentMethod?.isLinkPassthroughMode ?? false)
+        XCTAssertFalse(paymentMethod?.isLinkPaymentMethod ?? true)
     }
 
     func testMergeCardArt_linkFormat_nonMatchingId() {
@@ -974,10 +1008,26 @@ class STPElementsSessionTest: XCTestCase {
         let paymentMethod = try XCTUnwrap(customer?.paymentMethods.first)
         XCTAssertEqual(paymentMethod.type, .link)
         XCTAssertTrue(paymentMethod.isLinkPaymentMethod)
+        XCTAssertFalse(paymentMethod.isLinkPassthroughMode)
         guard case .generic(let genericDetails) = paymentMethod.linkPaymentDetails else {
             return XCTFail("Expected generic Link payment details")
         }
         XCTAssertEqual(genericDetails.label, "Pix")
         XCTAssertEqual(genericDetails.sublabel, "000••••••••")
+    }
+
+    func testDecodeFlatPaymentMethod_derivesLinkPassthroughFromWallet() throws {
+        let response: [AnyHashable: Any] = [
+            "payment_methods": [testCardWithLinkWalletJSON],
+            "customer_session": customerSessionJSON,
+        ]
+
+        let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false)
+        let paymentMethod = try XCTUnwrap(customer?.paymentMethods.first)
+
+        XCTAssertEqual(customer?.paymentMethods.count, 1)
+        XCTAssertFalse(paymentMethod.isLinkOrigin)
+        XCTAssertTrue(paymentMethod.isLinkPassthroughMode)
+        XCTAssertFalse(paymentMethod.isLinkPaymentMethod)
     }
 }
