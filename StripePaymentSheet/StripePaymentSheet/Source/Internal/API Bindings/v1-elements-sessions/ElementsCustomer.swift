@@ -77,14 +77,13 @@ struct ElementsCustomer: Equatable, Hashable {
                     if let linkDetails = paymentMethodWithLinkDetails.linkDetails {
                         paymentMethod.setLinkPaymentDetails(from: linkDetails)
                     } else {
-                        paymentMethod.isLinkPassthroughMode = paymentMethodWithLinkDetails.isLinkOrigin
+                        paymentMethod.isLinkOrigin = paymentMethodWithLinkDetails.isLinkOrigin
                     }
                     paymentMethod.card?.cardArt = cardArtByPaymentMethodId[paymentMethod.stripeId]
                     paymentMethods.append(paymentMethod)
                 }
             } else {
                 if let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: json) {
-                    paymentMethod.isLinkPassthroughMode = paymentMethod.card?.wallet?.type == .link
                     paymentMethod.card?.cardArt = cardArtByPaymentMethodId[paymentMethod.stripeId]
                     paymentMethods.append(paymentMethod)
                 }
