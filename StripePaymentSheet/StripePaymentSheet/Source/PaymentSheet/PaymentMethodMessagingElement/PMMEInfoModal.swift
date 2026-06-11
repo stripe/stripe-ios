@@ -15,6 +15,8 @@ final class PMMEInfoModal: UIViewController {
     private let infoUrl: URL
     private let style: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle
     private let activityIndicator: UIActivityIndicatorView
+    private var webView: WKWebView?
+    private var themedUrl: URL?
 
     init(infoUrl: URL, style: PaymentMethodMessagingElement.Appearance.UserInterfaceStyle) {
         self.infoUrl = infoUrl
@@ -67,10 +69,16 @@ final class PMMEInfoModal: UIViewController {
 
         // setup webview
         let webView = WKWebView(frame: CGRect.zero)
+        self.webView = webView
+        self.themedUrl = themedUrl
         webView.navigationDelegate = self
         webView.isOpaque = false
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addAndPinSubview(webView)
+
+        // Reload original page when returning from external browser
+        // This is needed to reset the state of the page in case there was a loading animation or anything from the link-out
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillEnterForeground), name: UIApplication.willEnterForegroundNotification, object: nil)
 
         // setup activity indicator
         activityIndicator.center = self.view.center
@@ -110,6 +118,12 @@ final class PMMEInfoModal: UIViewController {
     @objc
     private func didTapCloseButton() {
         dismiss(animated: true)
+    }
+
+    @objc
+    private func appWillEnterForeground() {
+        guard let themedUrl else { return }
+        webView?.load(URLRequest(url: themedUrl))
     }
 }
 
