@@ -27,7 +27,7 @@ struct PaymentSheetTestPlayground: View {
 
     @ViewBuilder
     func clientSettings(searchText: Binding<String>) -> some View {
-        SearchableSettingView(
+        SearchableSettingPickerView(
             setting: uiStyleBinding,
             disabledSettings: playgroundController.settings.integrationType == .checkoutSession ? [.paymentSheet] : [],
             searchText: searchText
