@@ -19,17 +19,15 @@ struct CheckoutCartPaymentButton: View {
     @State private var isLoadingFlowController = false
     @State private var loadError: Error?
     @State private var paymentResult: PaymentSheetResult?
+    @State private var isShowingPaymentOptions = false
+    @State private var isConfirming = false
 
     var body: some View {
         VStack {
             if let result = paymentResult {
                 paymentResultView(result: result)
             } else if let flowController {
-                CheckoutFlowControllerView(
-                    flowController: flowController,
-                    session: session,
-                    paymentResult: $paymentResult
-                )
+                flowControllerView(flowController: flowController)
             } else if isLoadingFlowController {
                 ProgressView()
                     .padding()
@@ -72,12 +70,81 @@ struct CheckoutCartPaymentButton: View {
                 .onAppear { paymentResult = nil }
         case .failed(let error):
             errorView(error: error)
-                .onAppear {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                        paymentResult = nil
+        }
+    }
+
+    @ViewBuilder
+    private func flowControllerView(flowController: PaymentSheet.FlowController) -> some View {
+        VStack(spacing: 12) {
+            // Payment method selector button
+            Button {
+                isShowingPaymentOptions = true
+            } label: {
+                HStack {
+                    if let paymentOption = flowController.paymentOption {
+                        Image(uiImage: paymentOption.image)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 30, height: 20)
+                        Text(paymentOption.label)
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
+                    } else {
+                        Text("Select payment method")
+                            .font(.subheadline)
+                            .foregroundColor(.primary)
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                .padding()
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
+                )
+            }
+            .padding(.horizontal)
+            .paymentOptionsSheet(
+                isPresented: $isShowingPaymentOptions,
+                paymentSheetFlowController: flowController,
+                onSheetDismissed: {}
+            )
+
+            // Confirm / checkout button
+            Button {
+                isConfirming = true
+            } label: {
+                HStack {
+                    Text("Checkout")
+                    Spacer()
+                    if let total = session.total, let currency = session.currency {
+                        Text(formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency))
                     }
                 }
+                .font(.headline)
+                .foregroundColor(.white)
+                .padding()
+                .background(flowController.paymentOption != nil ? Color.blue : Color.gray)
+                .cornerRadius(14)
+            }
+            .disabled(flowController.paymentOption == nil)
+            .padding(.horizontal)
+            .paymentConfirmationSheet(
+                isConfirming: $isConfirming,
+                paymentSheetFlowController: flowController,
+                onCompletion: { result in
+                    paymentResult = result
+                }
+            )
         }
+        .padding(.bottom, 16)
+        .padding(.top, 16)
+        .background(
+            Color(UIColor.systemBackground)
+                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
+        )
     }
 
     @ViewBuilder
@@ -117,86 +184,5 @@ struct CheckoutCartPaymentButton: View {
                 loadError = error
             }
         }
-    }
-}
-
-@available(iOS 15.0, *)
-private struct CheckoutFlowControllerView: View {
-    @ObservedObject var flowController: PaymentSheet.FlowController
-    let session: Checkout.Session
-    @Binding var paymentResult: PaymentSheetResult?
-
-    @State private var isShowingPaymentOptions = false
-    @State private var isConfirming = false
-
-    var body: some View {
-        VStack(spacing: 12) {
-            Button {
-                isShowingPaymentOptions = true
-            } label: {
-                HStack {
-                    if let paymentOption = flowController.paymentOption {
-                        Image(uiImage: paymentOption.image)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 30, height: 20)
-                        Text(paymentOption.label)
-                            .font(.subheadline)
-                            .foregroundColor(.primary)
-                    } else {
-                        Text("Select payment method")
-                            .font(.subheadline)
-                            .foregroundColor(.primary)
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                }
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.secondary.opacity(0.3), lineWidth: 1)
-                )
-            }
-            .padding(.horizontal)
-            .paymentOptionsSheet(
-                isPresented: $isShowingPaymentOptions,
-                paymentSheetFlowController: flowController,
-                onSheetDismissed: {}
-            )
-
-            Button {
-                isConfirming = true
-            } label: {
-                HStack {
-                    Text("Checkout")
-                    Spacer()
-                    if let total = session.total, let currency = session.currency {
-                        Text(formatCartCurrency(amount: total.total.minorUnitsAmount, currency: currency))
-                    }
-                }
-                .font(.headline)
-                .foregroundColor(.white)
-                .padding()
-                .background(flowController.paymentOption != nil ? Color.blue : Color.gray)
-                .cornerRadius(14)
-            }
-            .disabled(flowController.paymentOption == nil)
-            .padding(.horizontal)
-            .paymentConfirmationSheet(
-                isConfirming: $isConfirming,
-                paymentSheetFlowController: flowController,
-                onCompletion: { result in
-                    paymentResult = result
-                }
-            )
-        }
-        .padding(.bottom, 16)
-        .padding(.top, 16)
-        .background(
-            Color(UIColor.systemBackground)
-                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 0, y: -5)
-        )
     }
 }
