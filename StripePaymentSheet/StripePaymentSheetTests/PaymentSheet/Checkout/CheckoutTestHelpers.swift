@@ -47,7 +47,9 @@ enum CheckoutTestHelpers {
         currency: String = "usd",
         adaptivePricingActive: Bool = true,
         includeLocalizedPrices: Bool = true,
-        includeExchangeRateFields: Bool = true
+        includeExchangeRateFields: Bool = true,
+        integrationAmount: Int = 1200,
+        localAmount: Int = 1000
     ) -> STPCheckoutSession {
         var json: [AnyHashable: Any] = [
             "session_id": "cs_test_123",
@@ -59,9 +61,9 @@ enum CheckoutTestHelpers {
             "payment_method_types": ["card"],
             "currency": currency,
             "total_summary": [
-                "subtotal": 1200,
-                "total": 1200,
-                "due": 1200,
+                "subtotal": integrationAmount,
+                "total": integrationAmount,
+                "due": integrationAmount,
             ],
             "developer_tool_context": [
                 "adaptive_pricing": [
@@ -73,7 +75,7 @@ enum CheckoutTestHelpers {
         if includeLocalizedPrices {
             var localCurrencyOption: [AnyHashable: Any] = [
                 "currency": "gbp",
-                "amount": 1000,
+                "amount": localAmount,
             ]
             if includeExchangeRateFields {
                 localCurrencyOption["presentment_exchange_rate"] = "0.776917"
@@ -81,7 +83,7 @@ enum CheckoutTestHelpers {
             }
             json["adaptive_pricing_info"] = [
                 "integration_currency": "usd",
-                "integration_amount": 1200,
+                "integration_amount": integrationAmount,
                 "active_presentment_currency": currency,
                 "local_currency_options": [localCurrencyOption],
             ]

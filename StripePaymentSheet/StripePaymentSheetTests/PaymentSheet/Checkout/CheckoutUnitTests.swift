@@ -406,9 +406,9 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertEqual(session.total?.taxExclusive.minorUnitsAmount, 1000)
     }
 
-    // MARK: - onConfirmed Tests
+    // MARK: - updateSession Tests
 
-    func testOnConfirmedUpdatesSessionAndNotifiesDelegate() async {
+    func testUpdateSessionNotifiesDelegate() async {
         let checkout = await makeCheckoutWithOpenSession()
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
@@ -419,9 +419,7 @@ final class CheckoutUnitTests: XCTestCase {
         updatedJSON["payment_status"] = "paid"
         let confirmResponse = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
 
-        // Invoke the onConfirmed closure as the confirm call sites do
-        let stpSession = checkout.stpSession!
-        stpSession.onConfirmed?(confirmResponse)
+        checkout.updateSession(confirmResponse)
 
         // Verify session was updated with the confirm response data
         XCTAssertEqual(checkout.state.session.status?.type, .complete)
@@ -429,7 +427,7 @@ final class CheckoutUnitTests: XCTestCase {
         XCTAssertTrue(delegate.didChangeStateCalled)
     }
 
-    func testOnConfirmedCarriesOverAddressOverrides() async {
+    func testUpdateSessionCarriesOverAddressOverrides() async {
         let checkout = await makeCheckoutWithOpenSession()
 
         // Set address overrides on the initial session
@@ -437,7 +435,7 @@ final class CheckoutUnitTests: XCTestCase {
             name: "Jane Doe",
             address: .init(country: "US")
         )
-        checkout.stpSession!.billingAddress = billingUpdate
+        checkout.stpSession.billingAddress = billingUpdate
 
         // Simulate a confirm response
         var updatedJSON = CheckoutTestHelpers.makeOpenSessionJSON()
@@ -445,32 +443,35 @@ final class CheckoutUnitTests: XCTestCase {
         updatedJSON["payment_status"] = "paid"
         let confirmResponse = STPCheckoutSession.decodedObject(fromAPIResponse: updatedJSON)!
 
-        let stpSession = checkout.stpSession!
-        stpSession.onConfirmed?(confirmResponse)
+        checkout.updateSession(confirmResponse)
 
         // Address overrides should be carried over to the new session
         XCTAssertEqual(checkout.state.session.billingAddress?.name, "Jane Doe")
         XCTAssertEqual(checkout.state.session.billingAddress?.address.country, "US")
     }
 
-    func testOnConfirmedSetsNewClosureOnUpdatedSession() async {
+    func testUpdateSessionCanBeCalledMultipleTimes() async {
         let checkout = await makeCheckoutWithOpenSession()
         let delegate = MockCheckoutDelegate()
         checkout.delegate = delegate
 
-        // First confirm
+        // First update
         var firstResponse = CheckoutTestHelpers.makeOpenSessionJSON()
         firstResponse["status"] = "complete"
         firstResponse["payment_status"] = "paid"
         let firstConfirm = STPCheckoutSession.decodedObject(fromAPIResponse: firstResponse)!
 
-        checkout.stpSession!.onConfirmed?(firstConfirm)
+        checkout.updateSession(firstConfirm)
         XCTAssertEqual(checkout.state.session.status?.type, .complete)
 
-        // The new session should also have onConfirmed set,
-        // so a second invocation still works
-        let secondSession = checkout.stpSession!
-        XCTAssertNotNil(secondSession.onConfirmed)
+        // Second update still works on the same Checkout instance
+        var secondResponse = CheckoutTestHelpers.makeOpenSessionJSON()
+        secondResponse["status"] = "complete"
+        secondResponse["payment_status"] = "paid"
+        let secondConfirm = STPCheckoutSession.decodedObject(fromAPIResponse: secondResponse)!
+
+        checkout.updateSession(secondConfirm)
+        XCTAssertEqual(checkout.state.session.status?.type, .complete)
     }
 
     // MARK: - State Convenience Tests

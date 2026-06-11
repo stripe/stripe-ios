@@ -26,6 +26,24 @@ class STPPPaymentMethodPaymentSheetTests: XCTestCase {
         XCTAssertEqual(paymentMethod.linkPaymentDetailsFormattedString, "Pix 000••••••••")
     }
 
+    func testIsLinkPassthroughMode() {
+        let plainCard = STPPaymentMethod._testCard()
+        XCTAssertFalse(plainCard.isLinkPassthroughMode)
+
+        let linkOriginCard = STPPaymentMethod._testCard()
+        linkOriginCard.isLinkOrigin = true
+        XCTAssertTrue(linkOriginCard.isLinkPassthroughMode)
+
+        let linkWalletCard = makeLinkWalletCardPaymentMethod()
+        XCTAssertTrue(linkWalletCard.isLinkPassthroughMode)
+        XCTAssertFalse(linkWalletCard.isLinkOrigin)
+        XCTAssertFalse(linkWalletCard.isLinkPaymentMethod)
+
+        let linkPaymentMethod = STPPaymentMethod._testLink()
+        XCTAssertTrue(linkPaymentMethod.isLinkPaymentMethod)
+        XCTAssertFalse(linkPaymentMethod.isLinkPassthroughMode)
+    }
+
     func testHasUpdatedCardParams() {
         XCTAssertFalse(_testHasUpdatedCardParams(STPPaymentMethod._testCard(), expMonth: 01, expYear: 40))
         XCTAssertTrue(_testHasUpdatedCardParams(STPPaymentMethod._testCard(), expMonth: 01, expYear: 41))
@@ -152,5 +170,23 @@ class STPPPaymentMethodPaymentSheetTests: XCTestCase {
         updatedParams.nonnil_address.country = "US"
 
         XCTAssertTrue(_testHasUpdatedFullBillingDetailsParams(paymentMethod: cardWithFullAddr, line1: "123 main", line2: "apt 2", city: "San Francisco", state: "CA", postalCode: "94016", country: "US"))
+    }
+
+    private func makeLinkWalletCardPaymentMethod() -> STPPaymentMethod {
+        return STPPaymentMethod.decodedObject(fromAPIResponse: [
+            "id": "pm_link_wallet_card",
+            "object": "payment_method",
+            "created": "12345",
+            "type": "card",
+            "card": [
+                "brand": "visa",
+                "last4": "4242",
+                "exp_month": 12,
+                "exp_year": 2025,
+                "wallet": [
+                    "type": "link",
+                ],
+            ],
+        ])!
     }
 }

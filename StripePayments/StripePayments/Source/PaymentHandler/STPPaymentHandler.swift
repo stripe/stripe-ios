@@ -1645,6 +1645,14 @@ public class STPPaymentHandler: NSObject {
                                     } else if paymentMethodType != .paynow && paymentMethodType != .promptPay {
                                         // For PayNow, we don't want to mark as canceled when the web view dismisses
                                         // Instead we rely on the presented PollingViewController to complete the currentAction
+                                        if let pollingBudget, !pollingBudget.canPoll {
+                                            // Log if we are canceling because we finished polling and the status is not terminal
+                                            self.logPollingDurationExceededCancellation(
+                                                intentID: paymentIntent.stripeId,
+                                                paymentMethodType: paymentMethodType.identifier,
+                                                duration: pollingBudget.elapsedTime
+                                            )
+                                        }
                                         self._markChallengeCanceled(currentAction: currentAction) { _, _ in
                                             // We don't forward cancelation errors
                                             currentAction.complete(with: .canceled, error: nil)
@@ -1723,6 +1731,14 @@ public class STPPaymentHandler: NSObject {
                             } else {
                                 // If the status is still RequiresAction, the user exited from the redirect before the
                                 // setup intent was updated. Consider it a cancel
+                                if let pollingBudget, !pollingBudget.canPoll {
+                                    // Log if we are canceling because we finished polling and the status is not terminal
+                                    self.logPollingDurationExceededCancellation(
+                                        intentID: setupIntent.stripeID,
+                                        paymentMethodType: paymentMethod.type.identifier,
+                                        duration: pollingBudget.elapsedTime
+                                    )
+                                }
                                 self._markChallengeCanceled(currentAction: currentAction) { _, _ in
                                     // We don't forward cancelation errors
                                     currentAction.complete(with: .canceled, error: nil)

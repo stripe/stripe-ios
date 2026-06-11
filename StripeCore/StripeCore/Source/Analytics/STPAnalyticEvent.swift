@@ -40,6 +40,7 @@ import Foundation
     case paymentHandlerConfirmFinished = "stripeios.paymenthandler.confirm.finished"
     case paymentHandlerHandleNextActionStarted = "stripeios.paymenthandler.handle_next_action.started"
     case paymentHandlerHandleNextActionFinished = "stripeios.paymenthandler.handle_next_action.finished"
+    case paymentHandlerCanceledPollingDurationExceeded = "stripeios.paymenthandler.canceled.polling_duration_exceeded"
 
     // MARK: - Card Metadata
     case cardMetadataLoadedTooSlow = "stripeios.card_metadata_loaded_too_slow"

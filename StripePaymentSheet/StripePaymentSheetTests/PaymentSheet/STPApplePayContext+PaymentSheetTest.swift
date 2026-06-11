@@ -12,6 +12,7 @@
 @testable import StripePaymentsTestUtils
 import XCTest
 
+@MainActor
 final class STPApplePayContext_PaymentSheetTest: XCTestCase {
     let dummyDeferredConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmHandler = { _, _ in return "" /* no-op */ }
     let dummyConfirmationTokenConfirmHandler: PaymentSheet.IntentConfiguration.ConfirmationTokenConfirmHandler = { _ in return "" }

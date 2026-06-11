@@ -38,7 +38,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         return config
     }
 
-    func testIsInTreatmentGroup_treatmentAssignment() {
+    func testIsInTreatmentGroup_treatmentAssignment() throws {
         let analyticsClientV2 = MockAnalyticsClientV2()
         let arbId = "arb_123"
         let experimentsData = ExperimentsData(
@@ -58,13 +58,13 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             analyticsClient: STPTestingAnalyticsClient(),
             analyticsClientV2: analyticsClientV2
         )
-        let helper = PaymentMethodMessagingPromotionsHelper(
+        let helper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
             elementsSession: elementsSession,
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
             analyticsHelper: analyticsHelper
-        )
+        ))
 
         XCTAssertTrue(helper.isInTreatmentGroup)
 
@@ -83,7 +83,23 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).count, 1)
     }
 
-    func testIsInTreatmentGroup_controlAssignment() {
+    func testInit_noAssignment_returnsNil() {
+        let elementsSession = STPElementsSession._testValue(experimentsData: nil)
+        let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
+        let intent = Intent.deferredIntent(intentConfig: intentConfig)
+        let configuration = stubbedConfiguration()
+        let helper = PaymentMethodMessagingPromotionsHelper(
+            elementsSession: elementsSession,
+            intent: intent,
+            configuration: configuration,
+            paymentMethodTypes: [.stripe(.affirm)],
+            analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
+        )
+
+        XCTAssertNil(helper)
+    }
+
+    func testIsInTreatmentGroup_controlAssignment() throws {
         let analyticsClientV2 = MockAnalyticsClientV2()
         let arbId = "arb_123"
         let experimentsData = ExperimentsData(
@@ -103,13 +119,13 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             analyticsClient: STPTestingAnalyticsClient(),
             analyticsClientV2: analyticsClientV2
         )
-        let helper = PaymentMethodMessagingPromotionsHelper(
+        let helper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
             elementsSession: elementsSession,
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
             analyticsHelper: analyticsHelper
-        )
+        ))
 
         XCTAssertFalse(helper.isInTreatmentGroup)
 
@@ -128,18 +144,23 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         XCTAssertEqual(analyticsClientV2.loggedAnalyticPayloads(withEventName: PaymentSheetAnalyticsHelper.eventName).count, 1)
     }
 
-    func testPromotion_returnsNilForUnsupportedType() async {
-        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+    func testPromotion_returnsNilForUnsupportedType() async throws {
+        let experimentsData = ExperimentsData(
+            arbId: "arb_123",
+            experimentAssignments: [PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let configuration = stubbedConfiguration()
-        let helper = PaymentMethodMessagingPromotionsHelper(
+        let helper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
             elementsSession: elementsSession,
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [],
             analyticsHelper: PaymentSheetAnalyticsHelper._testValue()
-        )
+        ))
 
         helper.fetchData()
         await helper.fetchTask?.value
@@ -149,7 +170,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
 
     // MARK: - Analytics
 
-    func testFetchData_logsFetchBeginEvent() async {
+    func testFetchData_logsFetchBeginEvent() async throws {
         let analyticsClient = STPTestingAnalyticsClient()
         let experimentsData = ExperimentsData(
             arbId: "arb_123",
@@ -165,13 +186,13 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             configuration: configuration,
             analyticsClient: analyticsClient
         )
-        let helper = PaymentMethodMessagingPromotionsHelper(
+        let helper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
             elementsSession: elementsSession,
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
             analyticsHelper: analyticsHelper
-        )
+        ))
 
         helper.fetchData()
         await helper.fetchTask?.value
@@ -180,7 +201,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         XCTAssertEqual(fetchBeginEvents.count, 1)
     }
 
-    func testFetchData_controlGroup_doesNotLogFetchBegin() async {
+    func testFetchData_controlGroup_doesNotLogFetchBegin() async throws {
         let analyticsClient = STPTestingAnalyticsClient()
         let experimentsData = ExperimentsData(
             arbId: "arb_123",
@@ -196,13 +217,13 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             configuration: configuration,
             analyticsClient: analyticsClient
         )
-        let helper = PaymentMethodMessagingPromotionsHelper(
+        let helper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
             elementsSession: elementsSession,
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
             analyticsHelper: analyticsHelper
-        )
+        ))
 
         helper.fetchData()
         await helper.fetchTask?.value
@@ -211,7 +232,7 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         XCTAssertEqual(fetchBeginEvents.count, 0)
     }
 
-    func testLogDisplayedAnalytic_afterFetch_logsDurationAndSuccess() async {
+    func testLogDisplayedAnalytic_afterFetch_logsDurationAndSuccess() async throws {
         let analyticsClient = STPTestingAnalyticsClient()
         let experimentsData = ExperimentsData(
             arbId: "arb_123",
@@ -227,13 +248,13 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             configuration: configuration,
             analyticsClient: analyticsClient
         )
-        let helper = PaymentMethodMessagingPromotionsHelper(
+        let helper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
             elementsSession: elementsSession,
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [.stripe(.affirm)],
             analyticsHelper: analyticsHelper
-        )
+        ))
 
         helper.fetchData()
         await helper.fetchTask?.value
@@ -246,9 +267,14 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
         XCTAssertGreaterThanOrEqual(event["duration"] as? Double ?? -1, 0)
     }
 
-    func testLogDisplayedAnalytic_withoutFetch_logsDurationZero() {
+    func testLogDisplayedAnalytic_withoutFetch_logsDurationZero() throws {
         let analyticsClient = STPTestingAnalyticsClient()
-        let elementsSession = STPElementsSession._testValue(paymentMethodTypes: ["card"])
+        let experimentsData = ExperimentsData(
+            arbId: "arb_123",
+            experimentAssignments: [PaymentMethodMessagingPromotionsExperiment.experimentName: .treatment],
+            allResponseFields: [:]
+        )
+        let elementsSession = STPElementsSession._testValue(orderedPaymentMethodTypes: [.card], experimentsData: experimentsData)
         let intentConfig = PaymentSheet.IntentConfiguration(mode: .payment(amount: 1000, currency: "USD")) { _, _ in return "" }
         let intent = Intent.deferredIntent(intentConfig: intentConfig)
         let configuration = stubbedConfiguration()
@@ -257,13 +283,13 @@ final class PaymentMethodMessagingPromotionsHelperTests: APIStubbedTestCase {
             configuration: configuration,
             analyticsClient: analyticsClient
         )
-        let helper = PaymentMethodMessagingPromotionsHelper(
+        let helper = try XCTUnwrap(PaymentMethodMessagingPromotionsHelper(
             elementsSession: elementsSession,
             intent: intent,
             configuration: configuration,
             paymentMethodTypes: [],
             analyticsHelper: analyticsHelper
-        )
+        ))
 
         helper.logDisplayedAnalytic(displayedSuccessfully: false)
 

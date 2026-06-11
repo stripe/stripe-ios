@@ -10,6 +10,7 @@ import StripeCoreTestUtils
 @testable @_spi(STP) @_spi(ExperimentalAllowsRemovalOfLastSavedPaymentMethodAPI) import StripePaymentSheet
 import XCTest
 
+@MainActor
 class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
 
     var paymentMethods: [STPPaymentMethod]!
@@ -232,7 +233,7 @@ class VerticalSavedPaymentMethodsViewControllerTests: XCTestCase {
         guard let checkoutSession = STPCheckoutSession.decodedObject(fromAPIResponse: json) else {
             fatalError("Failed to create checkout session test fixture")
         }
-        return .checkoutSession(checkoutSession)
+        return .checkout(Checkout(session: checkoutSession))
     }
 
 }

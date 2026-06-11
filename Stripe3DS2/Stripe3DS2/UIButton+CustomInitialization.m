@@ -21,7 +21,13 @@ static const CGFloat kDefaultButtonContentInset = (CGFloat)12.0;
     UIButton *button = [UIButton buttonWithType:UIButtonTypeSystem];
     button.clipsToBounds = YES;
 #if !STP_TARGET_VISION // UIButton edge insets not supported on visionOS
-    button.contentEdgeInsets = UIEdgeInsetsMake(kDefaultButtonContentInset, 0, kDefaultButtonContentInset, 0);
+    if (@available(iOS 15.0, *)) {
+        UIButtonConfiguration *config = [UIButtonConfiguration plainButtonConfiguration];
+        config.contentInsets = NSDirectionalEdgeInsetsMake(kDefaultButtonContentInset, 0, kDefaultButtonContentInset, 0);
+        button.configuration = config;
+    } else {
+        button.contentEdgeInsets = UIEdgeInsetsMake(kDefaultButtonContentInset, 0, kDefaultButtonContentInset, 0);
+    }
 #endif
     [[self class] _stds_configureButton:button withTitle:title customization:customization];
     

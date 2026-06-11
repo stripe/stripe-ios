@@ -412,14 +412,9 @@ extension PaymentSheet {
                     completion(.failure(error))
                     return
                 }
-                guard let stpSession = checkout.stpSession else {
-                    stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-                    completion(.failure(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type")))
-                    return
-                }
                 var config = configuration
-                stpSession.applyAddressOverrides(to: &config)
-                create(mode: .checkoutSession(stpSession),
+                checkout.stpSession.applyAddressOverrides(to: &config)
+                create(mode: .checkout(checkout),
                        configuration: config
                 ) { result in
                     if case .success(let flowController) = result {
@@ -704,14 +699,8 @@ extension PaymentSheet {
                     completion(error)
                     return
                 }
-                guard let stpSession = checkout.stpSession else {
-                    stpAssertionFailure("Expected STPCheckoutSession, got \(type(of: checkout.state.session))")
-                    self.failUpdate(updateID)
-                    completion(PaymentSheetError.unknown(debugDescription: "Invalid checkout session type"))
-                    return
-                }
-                stpSession.applyAddressOverrides(to: &configuration)
-                performUpdate(mode: .checkoutSession(stpSession), updateID: updateID, completion: completion)
+                checkout.stpSession.applyAddressOverrides(to: &configuration)
+                performUpdate(mode: .checkout(checkout), updateID: updateID, completion: completion)
             }
         }
 
