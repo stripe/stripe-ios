@@ -11,17 +11,48 @@ import UIKit
 
 class SelfieWarmupView: UIView {
     struct Styling {
-        static let contentInset: NSDirectionalEdgeInsets = .init(
-            top: 56,
-            leading: 16,
-            bottom: 0,
-            trailing: 16
+        static let horizontalInset: CGFloat = 16
+        static let heroHeight: CGFloat = 176
+        static let iconSize: CGFloat = 144
+        static let cardCornerRadius: CGFloat = 32
+        static let cardInsets: NSDirectionalEdgeInsets = .init(
+            top: 32,
+            leading: 24,
+            bottom: 40,
+            trailing: 24
         )
         static let warmupTitleSpacing: CGFloat = 12
-        static let warmupBodySpacing: CGFloat = 64
     }
 
     private let stackView: UIStackView = {
+        let stackView = UIStackView()
+        stackView.axis = .vertical
+        stackView.alignment = .fill
+        stackView.distribution = .fill
+        return stackView
+    }()
+    private let heroView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black
+        return view
+    }()
+
+    private let cardWrapperView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black
+        return view
+    }()
+
+    private let cardView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemBackground
+        view.layer.cornerRadius = Styling.cardCornerRadius
+        view.layer.cornerCurve = .continuous
+        view.clipsToBounds = true
+        return view
+    }()
+
+    private let cardStackView: UIStackView = {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.alignment = .fill
@@ -70,13 +101,39 @@ class SelfieWarmupView: UIView {
 
 extension SelfieWarmupView {
     fileprivate func installViews() {
-        addAndPinSubview(stackView, insets: Styling.contentInset)
+        backgroundColor = .black
+        addAndPinSubview(stackView)
 
-        stackView.addArrangedSubview(selfieWarmupTitleLabel)
-        stackView.addArrangedSubview(selfieWarmupBodyLabel)
-        stackView.addArrangedSubview(selfieWarmupIconImageView)
+        stackView.addArrangedSubview(heroView)
+        stackView.addArrangedSubview(cardWrapperView)
 
-        stackView.setCustomSpacing(Styling.warmupTitleSpacing, after: selfieWarmupTitleLabel)
-        stackView.setCustomSpacing(Styling.warmupBodySpacing, after: selfieWarmupBodyLabel)
+        heroView.addSubview(selfieWarmupIconImageView)
+        cardWrapperView.addSubview(cardView)
+        cardView.addAndPinSubview(cardStackView, insets: Styling.cardInsets)
+
+        cardStackView.addArrangedSubview(selfieWarmupTitleLabel)
+        cardStackView.addArrangedSubview(selfieWarmupBodyLabel)
+        cardStackView.setCustomSpacing(Styling.warmupTitleSpacing, after: selfieWarmupTitleLabel)
+
+        selfieWarmupIconImageView.translatesAutoresizingMaskIntoConstraints = false
+        cardView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            heroView.heightAnchor.constraint(equalToConstant: Styling.heroHeight),
+            selfieWarmupIconImageView.centerXAnchor.constraint(equalTo: heroView.centerXAnchor),
+            selfieWarmupIconImageView.centerYAnchor.constraint(equalTo: heroView.centerYAnchor),
+            selfieWarmupIconImageView.widthAnchor.constraint(equalToConstant: Styling.iconSize),
+            selfieWarmupIconImageView.heightAnchor.constraint(equalToConstant: Styling.iconSize),
+            cardView.topAnchor.constraint(equalTo: cardWrapperView.topAnchor),
+            cardView.leadingAnchor.constraint(
+                equalTo: cardWrapperView.leadingAnchor,
+                constant: Styling.horizontalInset
+            ),
+            cardView.trailingAnchor.constraint(
+                equalTo: cardWrapperView.trailingAnchor,
+                constant: -Styling.horizontalInset
+            ),
+            cardView.bottomAnchor.constraint(equalTo: cardWrapperView.bottomAnchor),
+        ])
     }
 }
