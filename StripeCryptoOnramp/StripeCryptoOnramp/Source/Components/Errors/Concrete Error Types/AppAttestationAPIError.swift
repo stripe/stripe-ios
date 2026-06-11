@@ -32,7 +32,11 @@ public struct AppAttestationAPIError: StripeCryptoOnrampAPIError, APIErrorContex
 
     /// A localized message that can be shown to the app user.
     public var userMessage: String {
-        return String.Localized.cryptoOnrampErrorAppAttestationFailed
+        if reason == "app_attestation_unavailable" {
+            return String.Localized.cryptoOnrampErrorAppAttestationUnavailable
+        } else {
+            return String.Localized.cryptoOnrampErrorAppAttestationFailed
+        }
     }
 
     /// A developer-facing description with diagnostic details and suggested next steps.
@@ -63,6 +67,12 @@ public struct AppAttestationAPIError: StripeCryptoOnrampAPIError, APIErrorContex
             return "App attestation failed: the App Attest environment does not match this Stripe mode."
         case "ios_attestation_validation_failed":
             return "App attestation failed: the App Attest attestation could not be validated."
+        case "app_attestation_unavailable":
+            return """
+            App attestation unavailable: this app isn't configured to use Stripe Crypto Onramp.
+
+            This usually means app attestation isn't enabled for this Stripe account, or this app isn't registered as a trusted application. Use your iOS bundle ID or Android package name and contact Stripe to enable app attestation or register the app for this account.
+            """
         default:
             return apiMessage ?? "App attestation failed."
         }
@@ -85,6 +95,8 @@ public struct AppAttestationAPIError: StripeCryptoOnrampAPIError, APIErrorContex
             return "Check the App Attest entitlement for this build and Stripe mode, then retry the Onramp flow."
         case "ios_attestation_validation_failed":
             return "Generate a new App Attest attestation and retry the Onramp flow. If the issue persists, check your app attestation configuration."
+        case "app_attestation_unavailable":
+            return "Confirm app attestation is enabled for this Stripe account and that the app identifier is registered as trusted, then call configure again."
         default:
             return "Inspect the preserved Stripe API error for details and retry after correcting the app attestation configuration."
         }

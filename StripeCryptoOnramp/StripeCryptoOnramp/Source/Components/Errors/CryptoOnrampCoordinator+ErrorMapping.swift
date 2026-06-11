@@ -7,6 +7,7 @@
 
 import Foundation
 @_spi(STP) import StripeCore
+@_spi(STP) import StripePaymentSheet
 
 extension CryptoOnrampCoordinator {
 
@@ -20,7 +21,15 @@ extension CryptoOnrampCoordinator {
         apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion] = []
     ) -> Swift.Error {
-        if let stripeError = error as? StripeError,
+        if let integrationError = error as? LinkController.IntegrationError,
+           case .missingAppAttestation = integrationError {
+            return appAttestationUnavailableError(
+                from: error,
+                during: operation,
+                apiClient: apiClient,
+                additionalSDKVersions: additionalSDKVersions
+            )
+        } else if let stripeError = error as? StripeError,
            case let .apiError(apiError) = stripeError {
             switch apiError.code {
             case "link_failed_to_attest_request":
@@ -63,6 +72,29 @@ extension CryptoOnrampCoordinator {
                 apiClient: apiClient,
                 docURL: apiError.docUrl,
                 additionalSDKVersions: additionalSDKVersions
+            )
+        )
+    }
+
+    private static func appAttestationUnavailableError(
+        from error: Swift.Error,
+        during operation: CryptoOnrampOperation,
+        apiClient: STPAPIClient,
+        additionalSDKVersions: [SDKVersion]
+    ) -> Swift.Error {
+        return AppAttestationAPIError(
+            context: APIErrorContext(
+                reason: "app_attestation_unavailable",
+                operation: operation.rawValue,
+                appIdentifier: Bundle.main.bundleIdentifier,
+                mode: apiClient.publishableKey.flatMap(Self.publishableKeyMode),
+                apiErrorCode: "app_attestation_unavailable",
+                apiErrorType: nil,
+                apiErrorMessage: nil,
+                apiUserMessage: nil,
+                docURL: nil,
+                underlyingError: error,
+                sdkVersions: [.stripeIOS] + additionalSDKVersions
             )
         )
     }
