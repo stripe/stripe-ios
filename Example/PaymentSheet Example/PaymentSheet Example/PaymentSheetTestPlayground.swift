@@ -28,7 +28,11 @@ struct PaymentSheetTestPlayground: View {
 
     @ViewBuilder
     func clientSettings(searchText: Binding<String>) -> some View {
-        SearchableSettingView(setting: uiStyleBinding, searchText: searchText)
+        SearchableSettingPickerView(
+            setting: uiStyleBinding,
+            disabledSettings: playgroundController.settings.integrationType == .checkoutSession ? [.paymentSheet] : [],
+            searchText: searchText
+        )
         if playgroundController.settings.uiStyle != .embedded {
             SearchableSettingView(setting: $playgroundController.settings.layout, searchText: searchText)
         }
@@ -447,6 +451,10 @@ struct PaymentSheetTestPlayground: View {
             // If switching to CSC and embedded is selected, reset to PaymentSheet
             if newIntegrationType == .normal && playgroundController.settings.uiStyle == .embedded {
                 playgroundController.settings.uiStyle = .paymentSheet
+            }
+            // PaymentSheet does not support checkout session; switch to flow controller
+            if newIntegrationType == .checkoutSession && playgroundController.settings.uiStyle == .paymentSheet {
+                playgroundController.settings.uiStyle = .flowController
             }
             playgroundController.settings.integrationType = newIntegrationType
         }
