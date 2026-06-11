@@ -15,6 +15,14 @@ class PMMEPromotionTextView: LinkOpeningTextView {
         super.init(frame: .zero, textContainer: nil)
         isScrollEnabled = false
         isEditable = false
+        /*
+         `LinkOpeningTextView` keeps the underlying actual `isSelectable` property set to `true`,
+         which is required for links to work. However, setting it `false` will disable events to
+         any point other than the link text. We still need to handle double tap selection on the
+         link, which we do below.
+         This is a workaround for UIKit not allowing links to work if the `UITextView` does not
+         have `isSelectable = true`.
+         */
         isSelectable = false
         backgroundColor = .clear
         textContainerInset = .zero
