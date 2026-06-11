@@ -71,7 +71,7 @@ public struct AppAttestationAPIError: StripeCryptoOnrampAPIError, APIErrorContex
             return """
             App attestation unavailable: this app isn't configured to use Stripe Crypto Onramp.
 
-            This usually means app attestation isn't enabled for this Stripe account, or this app isn't registered as a trusted application. Use your iOS bundle ID or Android package name and contact Stripe to enable app attestation or register the app for this account.
+            This usually means app attestation isn't enabled for this Stripe account, or this app isn't registered as a trusted application. Use your iOS bundle ID and contact Stripe to enable app attestation or register the app for this account.
             """
         default:
             return apiMessage ?? "App attestation failed."
