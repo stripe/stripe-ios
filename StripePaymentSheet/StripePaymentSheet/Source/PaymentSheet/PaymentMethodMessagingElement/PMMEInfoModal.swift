@@ -115,6 +115,17 @@ final class PMMEInfoModal: UIViewController {
 
 extension PMMEInfoModal: WKNavigationDelegate {
 
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        // Non-Stripe links (e.g. partner sites) should open in the external browser
+        // rather than navigating within the modal webview.
+        if let host = navigationAction.request.url?.host, !host.contains("stripe") {
+            UIApplication.shared.open(navigationAction.request.url!)
+            decisionHandler(.cancel)
+            return
+        }
+        decisionHandler(.allow)
+    }
+
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         activityIndicator.stopAnimating()
     }
