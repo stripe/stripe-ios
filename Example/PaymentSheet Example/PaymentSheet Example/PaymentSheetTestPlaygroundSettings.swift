@@ -815,6 +815,7 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
     var termsDisplay: PaymentMethodTermsDisplay
     var useAutocompleteEndpoints: UseAutocompleteEndpoints
     var autocompleteApiKey: String?
+    var autocompleteCountries: String?
 
     static func defaultValues() -> PaymentSheetTestPlaygroundSettings {
         return PaymentSheetTestPlaygroundSettings(
@@ -886,7 +887,8 @@ struct PaymentSheetTestPlaygroundSettings: Codable, Equatable {
             opensCardScannerAutomatically: .off,
             termsDisplay: .unset,
             useAutocompleteEndpoints: .on,
-            autocompleteApiKey: nil
+            autocompleteApiKey: nil,
+            autocompleteCountries: nil
         )
     }
 

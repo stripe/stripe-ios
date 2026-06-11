@@ -82,6 +82,11 @@ struct PaymentSheetTestPlayground: View {
                     .autocapitalization(.none)
                     .autocorrectionDisabled()
             }
+            SearchableView(searchableName: "Autocomplete Countries", searchText: searchText) {
+                TextField("Autocomplete Countries (e.g. US,GB,CA)", text: autocompleteCountriesBinding)
+                    .autocapitalization(.none)
+                    .autocorrectionDisabled()
+            }
         }
     }
 
@@ -419,6 +424,14 @@ struct PaymentSheetTestPlayground: View {
             return playgroundController.settings.autocompleteApiKey ?? ""
         } set: { newString in
             playgroundController.settings.autocompleteApiKey = (newString != "") ? newString : nil
+        }
+    }
+
+    var autocompleteCountriesBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.autocompleteCountries ?? ""
+        } set: { newString in
+            playgroundController.settings.autocompleteCountries = (newString != "") ? newString : nil
         }
     }
 

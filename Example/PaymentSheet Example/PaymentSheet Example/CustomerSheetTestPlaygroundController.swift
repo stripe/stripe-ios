@@ -162,6 +162,7 @@ class CustomerSheetTestPlaygroundController: ObservableObject {
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
         configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
         configuration.autocompleteApiKey = settings.useAutocompleteEndpoints == .on ? settings.autocompleteApiKey : nil
+        configuration.autocompleteCountries = settings.autocompleteCountries.flatMap { parseAutocompleteCountries($0) }
 
         return configuration
     }
@@ -419,6 +420,14 @@ class CustomerSheetBackend {
             throw NSError(domain: "test", code: 0, userInfo: nil) // Throw more specific error
         }
         return secret
+    }
+}
+
+// MARK: - Helpers
+extension CustomerSheetTestPlaygroundController {
+    func parseAutocompleteCountries(_ input: String) -> [String]? {
+        let countries = input.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces).uppercased() }.filter { !$0.isEmpty }
+        return countries.isEmpty ? nil : countries
     }
 }
 

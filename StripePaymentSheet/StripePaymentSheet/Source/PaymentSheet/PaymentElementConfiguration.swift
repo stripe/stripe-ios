@@ -46,6 +46,7 @@ protocol PaymentElementConfiguration: PaymentMethodRequirementProvider {
     var opensCardScannerAutomatically: Bool { get set }
     var useAutocompleteEndpoints: Bool { get set }
     var autocompleteApiKey: String? { get set }
+    var autocompleteCountries: [String]? { get set }
     var termsDisplay: [STPPaymentMethodType: PaymentSheet.TermsDisplay] { get }
     func resolveLayout(elementsSession: STPElementsSession, paymentMethodTypes: [PaymentSheet.PaymentMethodType]) -> PaymentSheet.PaymentMethodLayout.ResolvedLayout
 }

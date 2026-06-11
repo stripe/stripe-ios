@@ -268,6 +268,7 @@ import UIKit
         configuration.opensCardScannerAutomatically = settings.opensCardScannerAutomatically == .on
         configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
         configuration.autocompleteApiKey = settings.useAutocompleteEndpoints == .on ? settings.autocompleteApiKey : nil
+        configuration.autocompleteCountries = settings.autocompleteCountries.flatMap { parseAutocompleteCountries($0) }
         configuration.termsDisplay = cardTermsDisplay
         return configuration
     }
@@ -411,6 +412,9 @@ import UIKit
         configuration.additionalFields.checkboxLabel = "Save this address for future orders"
         configuration.useAutocompleteEndpoints = settings.useAutocompleteEndpoints == .on
         configuration.autocompleteApiKey = settings.useAutocompleteEndpoints == .on ? settings.autocompleteApiKey : nil
+        if let countries = settings.autocompleteCountries.flatMap({ parseAutocompleteCountries($0) }) {
+            configuration.autocompleteCountries = countries
+        }
         return configuration
     }
 
@@ -1493,5 +1497,10 @@ extension PlaygroundController {
 
     @objc func dismissEmbedded() {
         embeddedPlaygroundViewController?.dismiss(animated: true, completion: nil)
+    }
+
+    private func parseAutocompleteCountries(_ input: String) -> [String]? {
+        let countries = input.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces).uppercased() }.filter { !$0.isEmpty }
+        return countries.isEmpty ? nil : countries
     }
 }

@@ -154,6 +154,9 @@ extension EmbeddedPaymentElement {
         /// An API key to include in autocomplete and address details requests. Only used when `useAutocompleteEndpoints` is true.
         @_spi(STP) public var autocompleteApiKey: String?
 
+        /// A list of two-letter country codes that support autocomplete. If nil, uses the SDK default list.
+        @_spi(STP) public var autocompleteCountries: [String]?
+
         /// A map for specifying when legal agreements are displayed for each payment method type.
         /// If the payment method is not specified in the list, the TermsDisplay value will default to `.automatic`.
         /// Valid payment method types include:

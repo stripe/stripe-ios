@@ -40,6 +40,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
     let allowsRemovalOfLastSavedPaymentMethod: Bool
     let cbcEligible: Bool
     let useAutocompleteEndpoints: Bool
+    let autocompleteCountries: [String]?
     let confirmationChallenge: ConfirmationChallenge?
     let elementsSessionConfigId: String?
 
@@ -65,6 +66,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             cbcEligible: cbcEligible,
             useAutocompleteEndpoints: useAutocompleteEndpoints,
+            autocompleteCountries: autocompleteCountries,
             savePaymentMethodConsentBehavior: customerSheetDataSource.savePaymentMethodConsentBehavior(),
             delegate: self)
     }()
@@ -166,6 +168,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         allowsRemovalOfLastSavedPaymentMethod: Bool,
         cbcEligible: Bool,
         useAutocompleteEndpoints: Bool,
+        autocompleteCountries: [String]?,
         confirmationChallenge: ConfirmationChallenge?,
         elementsSessionConfigId: String?,
         csCompletion: CustomerSheet.CustomerSheetCompletion?,
@@ -184,6 +187,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
         self.allowsRemovalOfLastSavedPaymentMethod = allowsRemovalOfLastSavedPaymentMethod
         self.cbcEligible = cbcEligible
         self.useAutocompleteEndpoints = useAutocompleteEndpoints
+        self.autocompleteCountries = autocompleteCountries
         self.confirmationChallenge = confirmationChallenge
         self.elementsSessionConfigId = elementsSessionConfigId
         self.csCompletion = csCompletion
@@ -681,6 +685,7 @@ class CustomerSavedPaymentMethodsViewController: UIViewController {
             paymentMethodTypes: paymentMethodTypes,
             cbcEligible: cbcEligible,
             useAutocompleteEndpoints: useAutocompleteEndpoints,
+            autocompleteCountries: autocompleteCountries,
             savePaymentMethodConsentBehavior: customerSheetDataSource.savePaymentMethodConsentBehavior(),
             delegate: self)
         cachedClientSecret = nil

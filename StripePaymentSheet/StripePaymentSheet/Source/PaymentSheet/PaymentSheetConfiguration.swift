@@ -257,6 +257,9 @@ extension PaymentSheet {
         /// An API key to include in autocomplete and address details requests. Only used when `useAutocompleteEndpoints` is true.
         @_spi(STP) public var autocompleteApiKey: String?
 
+        /// A list of two-letter country codes that support autocomplete. If nil, uses the SDK default list.
+        @_spi(STP) public var autocompleteCountries: [String]?
+
         /// Set to `true` if using a wallet buttons view. This changes a few behaviors of PaymentSheet (for example, wallet buttons will never be selected by default).
         @_spi(STP) public var willUseWalletButtonsView = false
 

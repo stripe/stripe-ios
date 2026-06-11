@@ -192,6 +192,7 @@ public class CustomerSheet {
                              allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                              cbcEligible: elementsSession.cardBrandChoice?.eligible ?? false,
                              useAutocompleteEndpoints: self.configuration.useAutocompleteEndpoints && elementsSession.shouldUseAutocompleteProxyEndpoints,
+                             autocompleteCountries: self.configuration.autocompleteCountries,
                              elementsSessionConfigId: elementsSession.configID)
                 var params: [String: Any] = [:]
                 if elementsSession.customer?.customerSession != nil {
@@ -229,6 +230,7 @@ public class CustomerSheet {
                  allowsRemovalOfLastSavedPaymentMethod: Bool,
                  cbcEligible: Bool,
                  useAutocompleteEndpoints: Bool,
+                 autocompleteCountries: [String]?,
                  elementsSessionConfigId: String?) {
         let loadSpecsPromise = Promise<Void>()
         AddressSpecProvider.shared.loadAddressSpecs {
@@ -250,6 +252,7 @@ public class CustomerSheet {
                                                                                 allowsRemovalOfLastSavedPaymentMethod: allowsRemovalOfLastSavedPaymentMethod,
                                                                                 cbcEligible: cbcEligible,
                                                                                 useAutocompleteEndpoints: useAutocompleteEndpoints,
+                                                                                autocompleteCountries: autocompleteCountries,
                                                                                 confirmationChallenge: self.confirmationChallenge,
                                                                                 elementsSessionConfigId: elementsSessionConfigId,
                                                                                 csCompletion: self.csCompletion,

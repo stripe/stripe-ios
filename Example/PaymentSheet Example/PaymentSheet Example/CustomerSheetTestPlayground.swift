@@ -112,6 +112,9 @@ struct CustomerSheetTestPlayground: View {
                             TextField("Autocomplete API Key", text: autocompleteApiKeyBinding)
                                 .autocapitalization(.none)
                                 .autocorrectionDisabled()
+                            TextField("Autocomplete Countries (e.g. US,GB,CA)", text: autocompleteCountriesBinding)
+                                .autocapitalization(.none)
+                                .autocorrectionDisabled()
                         }
                         HStack {
                             Text("Macros").font(.headline)
@@ -221,6 +224,14 @@ struct CustomerSheetTestPlayground: View {
             return playgroundController.settings.autocompleteApiKey ?? ""
         } set: { newString in
             playgroundController.settings.autocompleteApiKey = (newString != "") ? newString : nil
+        }
+    }
+
+    var autocompleteCountriesBinding: Binding<String> {
+        Binding<String> {
+            return playgroundController.settings.autocompleteCountries ?? ""
+        } set: { newString in
+            playgroundController.settings.autocompleteCountries = (newString != "") ? newString : nil
         }
     }
 }
