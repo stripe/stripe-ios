@@ -4,6 +4,7 @@
 //
 
 import StripeCoreTestUtils
+@_spi(STP) import StripeUICore
 import UIKit
 import XCTest
 
@@ -42,8 +43,9 @@ final class BNPLFormHeaderViewSnapshotTests: STPSnapshotTestCase {
         let headerView = BNPLFormHeaderView(
             appearance: appearance,
             paymentMethod: .stripe(.affirm),
-            promotionsHelper: promotionsHelper
-        )!
+            promotionsHelper: promotionsHelper,
+            fallback: SubtitleElement(view: UIView(), isHorizontalMode: false)
+        )
         let rootViewController = UIViewController()
         rootViewController.overrideUserInterfaceStyle = interfaceStyle
         headerView.backgroundColor = appearance.colors.background

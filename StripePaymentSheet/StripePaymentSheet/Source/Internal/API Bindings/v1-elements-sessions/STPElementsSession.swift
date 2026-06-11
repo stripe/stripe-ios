@@ -401,6 +401,10 @@ extension STPElementsSession {
     var forceVerticalPaymentMethodLayout: Bool {
         flags["elements_mobile_force_vertical_payment_method_layout"] == true
     }
+
+    var shouldUseAutocompleteProxyEndpoints: Bool {
+        flags["ocs_mobile_should_use_autocomplete_proxy_endpoints"] == true
+    }
 }
 
 extension STPElementsSession {

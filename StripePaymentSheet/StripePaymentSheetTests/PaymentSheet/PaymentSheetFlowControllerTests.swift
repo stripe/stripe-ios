@@ -325,7 +325,7 @@ class PaymentSheetFlowControllerTests: XCTestCase {
 
     func testPaymentOptionDisplayData_SavedLinkPassthroughUsesOnelinkLabel() {
         let paymentMethod = STPPaymentMethod._testCard()
-        paymentMethod.isLinkPassthroughMode = true
+        paymentMethod.isLinkOrigin = true
 
         let paymentOption = PaymentSheet.PaymentOption.saved(paymentMethod: paymentMethod, confirmParams: nil)
         let displayData = PaymentSheet.FlowController.PaymentOptionDisplayData(
