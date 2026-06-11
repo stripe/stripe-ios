@@ -97,6 +97,8 @@ struct CheckoutCartPaymentButton: View {
     private func makePaymentSheet() -> PaymentSheet {
         var configuration = PaymentSheet.Configuration()
         configuration.returnURL = "payments-example://stripe-redirect"
-        return PaymentSheet(checkout: checkout, configuration: configuration)
+        // PaymentSheet no longer supports direct checkout initialization.
+        // Use FlowController or EmbeddedPaymentElement for checkout session integrations.
+        fatalError("PaymentSheet does not support checkout session initialization.")
     }
 }

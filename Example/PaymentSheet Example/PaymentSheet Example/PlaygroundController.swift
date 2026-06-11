@@ -709,7 +709,7 @@ import UIKit
         case .deferred_csc, .deferred_ssc, .deferred_mp, .deferred_mc:
             mc = PaymentSheet(intentConfiguration: intentConfig, configuration: configuration)
         case .checkoutSession:
-            mc = PaymentSheet(checkout: self.checkout!, configuration: configuration)
+            fatalError("PaymentSheet does not support checkout session initialization. Use FlowController or EmbeddedPaymentElement instead.")
         }
 
         self.paymentSheet = mc
