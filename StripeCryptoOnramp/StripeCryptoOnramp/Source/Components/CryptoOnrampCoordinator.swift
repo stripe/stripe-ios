@@ -98,14 +98,14 @@ protocol CryptoOnrampCoordinatorProtocol {
     /// Throws if an authenticated Link user is not available, or an API error occurs.
     func submitIdentifiers(_ identifiers: [ComplianceIdentifier]) async throws -> SubmitIdentifiersResult
 
-    /// Presents the CRS/CARF declaration for review and records acceptance if the user confirms.
+    /// Presents the user attestation for review and records acceptance if the user confirms.
     /// Requires an authenticated Link user.
     ///
-    /// - Parameter viewController: The view controller from which to present the declaration.
-    /// - Returns: A `CRSCARFDeclarationResult` indicating whether the user confirmed or canceled.
+    /// - Parameter viewController: The view controller from which to present the attestation.
+    /// - Returns: A `UserAttestationResult` indicating whether the user confirmed or canceled.
     /// Throws if an authenticated Link user is not available, EU identifiers have not been submitted, or an API error occurs.
     @MainActor
-    func presentCRSCARFDeclaration(from viewController: UIViewController) async throws -> CRSCARFDeclarationResult
+    func presentUserAttestation(from viewController: UIViewController) async throws -> UserAttestationResult
 
     /// Initiates the KYC verification flow, which displays the user’s currently collected KYC information with the ability to confirm or update the displayed address.
     ///
@@ -426,29 +426,29 @@ public final class CryptoOnrampCoordinator: NSObject, CryptoOnrampCoordinatorPro
     }
 
     @MainActor
-    public func presentCRSCARFDeclaration(from viewController: UIViewController) async throws -> CRSCARFDeclarationResult {
-        analyticsClient.log(.crsCarfDeclarationStarted)
+    public func presentUserAttestation(from viewController: UIViewController) async throws -> UserAttestationResult {
+        analyticsClient.log(.userAttestationStarted)
         do {
             let linkAccountInfo = try await self.linkAccountInfo
-            let declaration = try await apiClient.retrieveCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
-            let result = try await linkController.presentCRSCARFDeclaration(
-                html: declaration.html,
+            let attestation = try await apiClient.retrieveUserAttestation(linkAccountInfo: linkAccountInfo)
+            let result = try await linkController.presentUserAttestation(
+                html: attestation.html,
                 appearance: appearance,
                 from: viewController,
                 onConfirm: { [apiClient] in
-                    try await apiClient.confirmCRSCARFDeclaration(linkAccountInfo: linkAccountInfo)
+                    try await apiClient.confirmUserAttestation(linkAccountInfo: linkAccountInfo)
                 }
             )
 
             switch result {
             case .confirmed:
-                analyticsClient.log(.crsCarfDeclarationCompleted)
+                analyticsClient.log(.userAttestationCompleted)
                 return .confirmed
             case .canceled:
                 return .canceled
             }
         } catch {
-            try logAndThrow(error, during: .presentCRSCARFDeclaration)
+            try logAndThrow(error, during: .presentUserAttestation)
         }
     }
 

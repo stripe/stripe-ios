@@ -1,5 +1,5 @@
 //
-//  CRSCARFDeclarationContentViewController.swift
+//  UserAttestationContentViewController.swift
 //  StripePaymentSheet
 //
 //  Created by Michael Liberatore on 4/23/26.
@@ -10,8 +10,8 @@ import SafariServices
 @_spi(STP) import StripeUICore
 import UIKit
 
-/// The content view of `CRSCARFDeclarationViewController`, which displays CRS/CARF declaration HTML with a confirmation button.
-final class CRSCARFDeclarationContentViewController: UIViewController, BottomSheetContentViewController {
+/// The content view of `UserAttestationViewController`, which displays user attestation HTML with a confirmation button.
+final class UserAttestationContentViewController: UIViewController, BottomSheetContentViewController {
 
     // MARK: - BottomSheetContentViewController
 
@@ -29,7 +29,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
 
     let requiresFullScreen = false
 
-    // MARK: - CRSCARFDeclarationContentViewController
+    // MARK: - UserAttestationContentViewController
 
     private let html: String
     private let appearance: LinkAppearance
@@ -39,25 +39,25 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         appearance.colors?.primary ?? LinkUI.appearance.primaryButton.backgroundColor ?? LinkUI.appearance.colors.primary
     }
 
-    private var declarationBaseAttributes: [NSAttributedString.Key: Any] {
+    private var attestationBaseAttributes: [NSAttributedString.Key: Any] {
         [
             .font: LinkUI.font(forTextStyle: .body),
             .foregroundColor: UIColor.linkTextPrimary,
         ]
     }
 
-    private var declarationLinkAttributes: [NSAttributedString.Key: Any] {
+    private var attestationLinkAttributes: [NSAttributedString.Key: Any] {
         [
             .foregroundColor: linkPrimaryButtonColor,
         ]
     }
 
-    /// Closure called when a user confirms or cancels the declaration.
-    var onResult: ((LinkController.CRSCARFDeclarationResult) -> Void)?
+    /// Closure called when a user confirms or cancels the attestation.
+    var onResult: ((LinkController.UserAttestationResult) -> Void)?
 
-    /// Creates a new instance of `CRSCARFDeclarationContentViewController`.
+    /// Creates a new instance of `UserAttestationContentViewController`.
     /// - Parameters:
-    ///   - html: The declaration HTML to display.
+    ///   - html: The attestation HTML to display.
     ///   - appearance: Determines the colors, corner radius, and height of the confirmation button.
     init(html: String, appearance: LinkAppearance, brand: LinkBrand) {
         self.html = html
@@ -75,12 +75,12 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = LinkUI.font(forTextStyle: .title)
         label.textColor = .linkTextPrimary
-        label.text = String.Localized.declarations
+        label.text = String.Localized.user_attestation
         label.numberOfLines = 0
         return label
     }()
 
-    private lazy var declarationTextView: UITextView = {
+    private lazy var attestationTextView: UITextView = {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.backgroundColor = .clear
@@ -89,14 +89,14 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
         textView.delegate = self
-        textView.attributedText = attributedDeclarationHTML
+        textView.attributedText = attributedAttestationHTML
         textView.linkTextAttributes = [
             .foregroundColor: linkPrimaryButtonColor,
         ]
         return textView
     }()
 
-    private var attributedDeclarationHTML: NSAttributedString {
+    private var attributedAttestationHTML: NSAttributedString {
         guard let attributedString = try? NSMutableAttributedString(
             data: Data(html.utf8),
             options: [
@@ -105,7 +105,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
             ],
             documentAttributes: nil
         ) else {
-            return NSAttributedString(string: html, attributes: declarationBaseAttributes)
+            return NSAttributedString(string: html, attributes: attestationBaseAttributes)
         }
 
         let fullRange = NSRange(location: 0, length: attributedString.length)
@@ -116,7 +116,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
             }
         }
 
-        attributedString.addAttributes(declarationBaseAttributes, range: fullRange)
+        attributedString.addAttributes(attestationBaseAttributes, range: fullRange)
 
         // Processing the HTML via NSAttributedString applies paragraph style properties. We need to apply our line height multiple to each of these
         // paragraph styles individually, as setting the paragraph style for the entire range will overwrite other formatting aspects from the HTML,
@@ -132,7 +132,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
             attributedString.addAttribute(.paragraphStyle, value: style, range: range)
         }
         linkRanges.forEach { range in
-            attributedString.addAttributes(declarationLinkAttributes, range: range)
+            attributedString.addAttributes(attestationLinkAttributes, range: range)
         }
 
         return attributedString
@@ -157,7 +157,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
         super.viewDidLoad()
 
         view.addSubview(headingLabel)
-        view.addSubview(declarationTextView)
+        view.addSubview(attestationTextView)
         view.addSubview(bottomButtonContainer)
 
         NSLayoutConstraint.activate([
@@ -165,10 +165,10 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
             headingLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LinkUI.contentSpacing),
             headingLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -LinkUI.contentSpacing),
 
-            declarationTextView.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: LinkUI.contentSpacing),
-            declarationTextView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LinkUI.contentSpacing),
-            declarationTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -LinkUI.contentSpacing),
-            declarationTextView.bottomAnchor.constraint(equalTo: bottomButtonContainer.topAnchor),
+            attestationTextView.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: LinkUI.contentSpacing),
+            attestationTextView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: LinkUI.contentSpacing),
+            attestationTextView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -LinkUI.contentSpacing),
+            attestationTextView.bottomAnchor.constraint(equalTo: bottomButtonContainer.topAnchor),
 
             bottomButtonContainer.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             bottomButtonContainer.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
@@ -188,7 +188,7 @@ final class CRSCARFDeclarationContentViewController: UIViewController, BottomShe
     }
 }
 
-extension CRSCARFDeclarationContentViewController: UITextViewDelegate {
+extension UserAttestationContentViewController: UITextViewDelegate {
 
     // MARK: - UITextViewDelegate
 

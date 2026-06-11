@@ -49,20 +49,20 @@ enum SubmitIdentifiersResponseMock: String, MockData {
     case submitIdentifiersResponse_Valid_200 = "SubmitIdentifiersResponse_Valid_200"
 }
 
-enum RetrieveCRSCARFDeclarationResponseMock: String, MockData {
+enum RetrieveUserAttestationResponseMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
-    typealias ResponseType = CRSCARFDeclaration
+    typealias ResponseType = UserAttestation
 
-    case retrieveCRSCARFDeclarationResponse_200 = "RetrieveCRSCARFDeclarationResponse_200"
+    case retrieveUserAttestationResponse_200 = "RetrieveUserAttestationResponse_200"
 }
 
-enum ConfirmCRSCARFDeclarationResponseMock: String, MockData {
+enum ConfirmUserAttestationResponseMock: String, MockData {
     var bundle: Bundle { return Bundle(for: ClassForBundle.self) }
 
     typealias ResponseType = EmptyResponse
 
-    case confirmCRSCARFDeclarationResponse_200 = "ConfirmCRSCARFDeclarationResponse_200"
+    case confirmUserAttestationResponse_200 = "ConfirmUserAttestationResponse_200"
 }
 
 enum StripeAPIErrorResponseMock: String, MockData {
