@@ -8,6 +8,7 @@
 import Foundation
 @testable @_spi(STP) import StripeCore
 @testable @_spi(CryptoOnrampAlpha) import StripeCryptoOnramp
+@testable @_spi(STP) import StripePaymentSheet
 import XCTest
 
 final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
@@ -68,6 +69,31 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
         Next step: Register this app's bundle ID or package name as a trusted application with Stripe, then retry the Onramp flow.
         SDK: stripe-ios@\(STPAPIClient.STPSDKVersion)
         """)
+    }
+
+    func testMappedErrorMapsMissingAppAttestationIntegrationErrorToRichAttestationError() throws {
+        let apiClient = STPAPIClient(publishableKey: "pk_live_123")
+        let mappedError = CryptoOnrampCoordinator.mappedError(
+            LinkController.IntegrationError.missingAppAttestation,
+            during: .createSession,
+            apiClient: apiClient
+        )
+        let apiError = try XCTUnwrap(mappedError as? AppAttestationAPIError)
+
+        XCTAssertEqual(apiError.reason, "app_attestation_unavailable")
+        XCTAssertEqual(apiError.code, "app_attestation_unavailable")
+        XCTAssertEqual(apiError.operation, "configure")
+        XCTAssertEqual(apiError.mode, "live")
+        XCTAssertNil(apiError.requestID)
+        XCTAssertNil(apiError.type)
+        XCTAssertNil(apiError.apiMessage)
+        XCTAssertNil(apiError.apiUserMessage)
+        XCTAssertNil(apiError.docURL)
+        XCTAssertTrue(apiError.underlyingError is LinkController.IntegrationError)
+        XCTAssertEqual(apiError.sdkVersions, [.stripeIOS])
+        XCTAssertEqual(apiError.userMessage, "This app couldn't be verified. Contact the app developer for help.")
+        XCTAssertEqual(apiError.errorDescription, apiError.userMessage)
+        XCTAssertEqual(apiError.debugDescription, apiError.developerMessage)
     }
 
     func testMappedErrorUsesSafeUserMessageForUncategorizedAPIError() throws {
