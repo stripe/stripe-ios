@@ -52,23 +52,13 @@ class RemoveButton: UIButton {
     }
 
     @objc private func buttonTouchDown(_: UIButton) {
-        if #available(iOS 15.0, *)  {
-            configuration?.attributedTitle?.foregroundColor = appearance.colors.danger.disabledColor
-            configuration?.background.strokeColor = appearance.colors.danger.disabledColor
-        } else {
-            setTitleColor(appearance.colors.danger.disabledColor, for: .normal)
-            layer.borderColor = appearance.colors.danger.disabledColor.cgColor
-        }
+        configuration?.attributedTitle?.foregroundColor = appearance.colors.danger.disabledColor
+        configuration?.background.strokeColor = appearance.colors.danger.disabledColor
     }
 
     @objc private func buttonTouchUp(_: UIButton) {
-        if #available(iOS 15.0, *)  {
-            configuration?.attributedTitle?.foregroundColor = appearance.colors.danger
-            configuration?.background.strokeColor = appearance.colors.danger
-        } else {
-            setTitleColor(appearance.colors.danger, for: .normal)
-            layer.borderColor = appearance.colors.danger.cgColor
-        }
+        configuration?.attributedTitle?.foregroundColor = appearance.colors.danger
+        configuration?.background.strokeColor = appearance.colors.danger
     }
 
     required init?(coder: NSCoder) {

@@ -8,7 +8,6 @@
 import Foundation
 
 // This message is emitted when connect embed requests info about the app.
-@available(iOS 15, *)
 class FetchAppInfoMessageHandler: ScriptMessageHandlerWithReply<VoidPayload, FetchAppInfoMessageHandler.Reply> {
     struct Reply: Encodable {
         let applicationId: String

@@ -7,7 +7,6 @@
 
 import UIKit
 
-@available(iOS 15, *)
 class WebViewErrorScreen: UIView {
 
     let titleFontSize = 24.0

@@ -6,7 +6,6 @@
 
 import SwiftUI
 
-@available(iOS 15.0, *)
 extension CheckoutPlayground {
     struct SectionHeader: View {
         let title: String

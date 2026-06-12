@@ -10,7 +10,6 @@ import XCTest
 
 @testable import StripeIdentity
 
-@available(iOS 14.3, *)
 final class VerificationFlowWebViewTest: XCTestCase {
 
     private var verificationWebView: VerificationFlowWebView!
@@ -50,7 +49,6 @@ final class VerificationFlowWebViewTest: XCTestCase {
     }
 }
 
-@available(iOS 14.3, *)
 extension VerificationFlowWebViewTest: VerificationFlowWebViewDelegate {
     func verificationFlowWebView(_ view: VerificationFlowWebView, didChangeURL url: URL?) {
         urlFromDelegateCallback = url

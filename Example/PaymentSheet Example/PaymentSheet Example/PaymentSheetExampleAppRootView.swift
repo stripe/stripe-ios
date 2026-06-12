@@ -6,7 +6,6 @@
 import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct PaymentSheetExampleAppRootView: View {
     private var destinationsBySection: [Section: [NavigationDestination]] {
         NavigationDestination.destinationsBySection
@@ -272,7 +271,6 @@ struct PaymentSheetExampleAppRootView: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct PaymentSheetExampleAppRootView_Previews: PreviewProvider {
     static var previews: some View {
         PaymentSheetExampleAppRootView()

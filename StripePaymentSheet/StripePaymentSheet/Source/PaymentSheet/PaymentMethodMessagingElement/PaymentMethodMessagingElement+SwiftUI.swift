@@ -13,7 +13,6 @@ import UIKit
 extension PaymentMethodMessagingElement {
 
     /// A SwiftUI View of the element.
-    @available(iOS 15.0, *)
     public struct View<Content: SwiftUI.View>: SwiftUI.View {
 
         @State var phase: Phase = .loading
@@ -62,7 +61,6 @@ extension PaymentMethodMessagingElement {
     }
 
     /// The phase of the Payment Method Messaging Element's loading process.
-    @available(iOS 15.0, *)
     @frozen public enum Phase {
         /// The PaymentMethodMessagingElement is loading data from the Stripe backend.
         case loading

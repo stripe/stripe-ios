@@ -47,7 +47,6 @@ struct PMMEViewRepresentable: UIViewRepresentable {
     }
 }
 
-@available(iOS 15.0, *)
 extension PaymentMethodMessagingElement {
 
     struct PMMELoadedView: SwiftUI.View {
@@ -69,7 +68,6 @@ extension PaymentMethodMessagingElement {
     }
 }
 
-@available(iOS 15.0, *)
 extension PaymentMethodMessagingElement.View {
 
     @ViewBuilder func bodyImpl() -> some View {

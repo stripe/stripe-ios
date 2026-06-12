@@ -610,7 +610,10 @@ struct ExampleLinkControllerView: View {
     }
 
     private func findViewController() -> UIViewController? {
-        let keyWindow = UIApplication.shared.stripe_keyWindow
+        let keyWindow = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }
         var topController = keyWindow?.rootViewController
         while let presentedViewController = topController?.presentedViewController {
             topController = presentedViewController

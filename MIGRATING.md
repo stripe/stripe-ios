@@ -1,4 +1,7 @@
 ## Migration Guides
+### Migrating from versions < 26.0.0
+* [Changed] The minimum iOS version is now 15.0, as Xcode 27 no longer supports building for iOS 13 or iOS 14. If you'd like to deploy for iOS versions below iOS 15, please use Stripe SDK 25.17.0.
+
 ### Migrating from versions < 25.5.0
 * StripeIssuing is now a separate component for Carthage and manual binary users. If you use the legacy `Stripe` framework, you must also embed `StripeIssuing.xcframework` in your app, which will be included in `Stripe.xcframework.zip` in the [release assets](https://github.com/stripe/stripe-ios/releases/). No action is required for Cocoapods and Swift Package Manager users, or users of the individual `StripePayments`, `StripePaymentsUI`, and `StripePaymentSheet` modules.
 
