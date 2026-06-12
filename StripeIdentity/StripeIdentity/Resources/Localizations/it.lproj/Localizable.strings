@@ -6,6 +6,8 @@
 
 "App Settings" = "Impostazioni app";
 
+"Auto" = "Automatica";
+
 "Back %@ photo successfully uploaded" = "Foto del retro di %@ caricata con successo";
 
 "Back identity document photo successfully uploaded" = "Foto del retro del documento d'identità caricata con successo";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "L'immagine è sfocata. Tieni fermo il telefono e riprova.";
 
+"Image taken" = "Immagine scattata";
+
 "Individual CPF" = "CPF personale";
 
 "Invalid document" = "Documento non valido";
@@ -85,6 +89,8 @@
 "Loading" = "Caricamento in corso";
 
 "Make sure you're in a well lit space." = "Assicurati che l'illuminazione sia adeguata.";
+
+"Manual" = "Manuale";
 
 "Move closer" = "Avvicinalo";
 
