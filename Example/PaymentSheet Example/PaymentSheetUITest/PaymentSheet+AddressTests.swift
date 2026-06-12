@@ -432,9 +432,8 @@ US
         _ = shippingButton.waitForExistence(timeout: 5.0)
         let expectedAddress = """
 Jane Doe
-010061
-Bucharest
 Calea Victoriei 1, Apt 5
+Bucharest 010061
 RO
 +405555555555
 """
