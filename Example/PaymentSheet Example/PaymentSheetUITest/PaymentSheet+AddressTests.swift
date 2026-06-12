@@ -376,7 +376,7 @@ US
     }
 
     /// This test ensures we don't show auto complete for an unsupported country
-    func testAddressAutoComplete_NewZeland() throws {
+    func testAddressAutoComplete_UnsupportedCountry() throws {
         var settings = PaymentSheetTestPlaygroundSettings.defaultValues()
         settings.layout = .horizontal
         settings.uiStyle = .flowController
@@ -396,33 +396,33 @@ US
         app.textFields["Full name"].tap()
         app.textFields["Full name"].typeText("Jane Doe")
 
-        // Set country to New Zealand
+        // Set country to Romania (not in the default autocomplete countries list)
         app.textFields["Country or region"].tap()
-        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇳🇿 New Zealand")
+        app.pickerWheels.firstMatch.adjust(toPickerWheelValue: "🇷🇴 Romania")
         app.stp_dismissKeyboard()
 
-        // Address line 1 field should not contain an autocomplete affordance b/c autocomplete doesn't support New Zealand
+        // Address line 1 field should not contain an autocomplete affordance b/c autocomplete doesn't support Romania
         XCTAssertFalse(app.buttons["autocomplete_affordance"].exists)
 
         // Tapping the address line 1 field...
         app.textFields["Address line 1"].tap()
 
-        // ...should not go to auto complete b/c it's disabled for New Zealand
+        // ...should not go to auto complete b/c it's disabled for Romania
         XCTAssertFalse(app.buttons["Enter address manually"].waitForExistence(timeout: 3))
 
         // Make sure we can still fill out the form
 
         // Tapping the address line 1 field should now just let us enter the field manually
         app.textFields["Address line 1"].tap()
-        app.typeText("1 South Bay Parade")
+        app.typeText("Calea Victoriei 1")
         app.textFields["Address line 2"].tap()
-        app.typeText("Apt 152")
+        app.typeText("Apt 5")
         app.textFields["City"].tap()
-        app.typeText("Kaikōura")
+        app.typeText("Bucharest")
         // The save address button should still be disabled until we fill in all required fields
         XCTAssertFalse(saveAddressButton.isEnabled)
         app.textFields["Postal code"].tap()
-        app.typeText("7300")
+        app.typeText("010061")
         app.textFields["Phone number"].tap()
         app.textFields["Phone number"].typeText("5555555555")
         XCTAssertTrue(saveAddressButton.isEnabled)
@@ -432,10 +432,11 @@ US
         _ = shippingButton.waitForExistence(timeout: 5.0)
         let expectedAddress = """
 Jane Doe
-1 South Bay Parade, Apt 152
-Kaikōura 7300
-NZ
-+645555555555
+010061
+Bucharest
+Calea Victoriei 1, Apt 5
+RO
++405555555555
 """
         XCTAssertEqual(shippingButton.label, expectedAddress)
     }
