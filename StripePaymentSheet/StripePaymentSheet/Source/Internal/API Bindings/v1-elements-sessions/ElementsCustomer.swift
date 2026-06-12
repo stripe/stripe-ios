@@ -79,12 +79,18 @@ struct ElementsCustomer: Equatable, Hashable {
                     } else {
                         paymentMethod.isLinkOrigin = paymentMethodWithLinkDetails.isLinkOrigin
                     }
-                    paymentMethod.card?.cardArt = cardArtByPaymentMethodId[paymentMethod.stripeId]
+                    if !paymentMethod.isLinkPassthroughMode {
+                        // Preserve the Link branding
+                        paymentMethod.card?.cardArt = cardArtByPaymentMethodId[paymentMethod.stripeId]
+                    }
                     paymentMethods.append(paymentMethod)
                 }
             } else {
                 if let paymentMethod = STPPaymentMethod.decodedObject(fromAPIResponse: json) {
-                    paymentMethod.card?.cardArt = cardArtByPaymentMethodId[paymentMethod.stripeId]
+                    if !paymentMethod.isLinkPassthroughMode {
+                        // Preserve the Link branding
+                        paymentMethod.card?.cardArt = cardArtByPaymentMethodId[paymentMethod.stripeId]
+                    }
                     paymentMethods.append(paymentMethod)
                 }
             }
