@@ -6,6 +6,8 @@
 
 "App Settings" = "Ustawienia aplikacji";
 
+"Auto" = "Auto";
+
 "Back %@ photo successfully uploaded" = "Zdjęcie tylnej strony dokumentu %@ zostało przesłane pomyślnie";
 
 "Back identity document photo successfully uploaded" = "Zdjęcie tylnej strony dokumentu tożsamości zostało przesłane pomyślnie";
@@ -74,6 +76,8 @@
 
 "Image is blurry. Hold your phone steady and try again." = "Obraz jest rozmyty. Trzymaj telefon stabilnie i spróbuj ponownie.";
 
+"Image taken" = "Wykonane zdjęcie";
+
 "Individual CPF" = "CPF osoby fizycznej";
 
 "Invalid document" = "Nieprawidłowy dokument";
@@ -85,6 +89,8 @@
 "Loading" = "Wczytywanie";
 
 "Make sure you're in a well lit space." = "Upewnij się, że znajdujesz się w dobrze oświetlonym miejscu.";
+
+"Manual" = "Ręcznie";
 
 "Move closer" = "Przybliż";
 
