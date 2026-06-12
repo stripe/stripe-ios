@@ -654,6 +654,14 @@ import UIKit
         updateForcedConsumerLinkBrand(settings)
 
         $settings.removeDuplicates().sink { [weak self] newValue in
+            // PaymentSheet does not support checkout session; auto-correct to flow controller
+            if newValue.integrationType == .checkoutSession && newValue.uiStyle == .paymentSheet {
+                DispatchQueue.main.async {
+                    self?.settings.uiStyle = .flowController
+                }
+                return
+            }
+
             if newValue.autoreload == .on {
                 // This closure is called *before* `settings` is updated! Wait until the next run loop before calling `load`
                 DispatchQueue.main.async {
