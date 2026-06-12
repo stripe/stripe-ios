@@ -3,6 +3,9 @@ PATCH
 
 ## X.Y.Z - changes pending release
 
+### AddressElement
+* [Changed] Added IN, JP, MY, NZ, PH, SG to `AddressViewController.Configuration.autocompleteCountries` list. 
+
 ## 25.17.0 2026-06-08
 ### PaymentSheet
 * [Fixed] Fixed an NSRangeException crash in address autocomplete search results.
