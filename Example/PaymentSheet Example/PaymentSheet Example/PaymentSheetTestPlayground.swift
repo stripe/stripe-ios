@@ -28,7 +28,7 @@ struct PaymentSheetTestPlayground: View {
 
     @ViewBuilder
     func clientSettings(searchText: Binding<String>) -> some View {
-        SearchableSettingPickerView(
+        SearchableSettingView(
             setting: uiStyleBinding,
             disabledSettings: playgroundController.settings.integrationType == .checkoutSession ? [.paymentSheet] : [],
             searchText: searchText
@@ -809,12 +809,13 @@ struct AttestationResetButtonView: View {
 struct SettingView<S: PickerEnum>: View {
     var setting: Binding<S>
     var title: String?
+    var disabledSettings: [S] = []
 
     var body: some View {
         HStack {
             Text(title ?? S.enumName).font(.subheadline)
             Picker(title ?? S.enumName, selection: setting) {
-                ForEach(S.allCases, id: \.self) { t in
+                ForEach(S.allCases.filter({ !disabledSettings.contains($0) }), id: \.self) { t in
                     Text(t.displayName)
                 }
             }.pickerStyle(.segmented)
