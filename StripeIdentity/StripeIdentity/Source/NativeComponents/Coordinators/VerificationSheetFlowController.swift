@@ -762,16 +762,10 @@ extension VerificationSheetFlowController: VerificationSheetFlowControllerProtoc
                 )
             )
         }
-        if #available(iOS 14.3, *) {
-            return VerificationFlowWebViewController(
-                startUrl: url,
-                delegate: self
-            )
-        }
-
-        let safariVC = SFSafariViewController(url: url)
-        safariVC.delegate = self
-        return safariVC
+        return VerificationFlowWebViewController(
+            startUrl: url,
+            delegate: self
+        )
     }
 
     func makeDebugViewModeController(
@@ -839,7 +833,6 @@ extension VerificationSheetFlowController: IdentityFlowNavigationControllerDeleg
 
 // MARK: - VerificationFlowWebViewControllerDelegate
 
-@available(iOS 14.3, *)
 extension VerificationSheetFlowController: VerificationFlowWebViewControllerDelegate {
     func verificationFlowWebViewController(
         _ viewController: VerificationFlowWebViewController,

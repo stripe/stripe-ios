@@ -104,10 +104,8 @@ import UIKit
         addAccessoryViews([brandImageView])
         updateRightView()
         // Set up CBC menu interactions
-        if #available(iOS 14.0, *) {
-            self.showsMenuAsPrimaryAction = true
-            self.isContextMenuInteractionEnabled = true
-        }
+        self.showsMenuAsPrimaryAction = true
+        self.isContextMenuInteractionEnabled = true
     }
 
     required init?(

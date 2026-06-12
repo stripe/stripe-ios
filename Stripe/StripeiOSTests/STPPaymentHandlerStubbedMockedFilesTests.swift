@@ -519,7 +519,7 @@ class STPPaymentHandlerStubbedMockedFilesTests: APIStubbedTestCase, STPAuthentic
         let mockPresenter = StubbedCaptchaPresentingViewController()
         let presentedExpectation = expectation(description: "IntentConfirmationChallengeViewController presented")
         mockPresenter.onPresent = { vc in
-            if #available(iOS 14.0, *), vc is IntentConfirmationChallengeViewController {
+            if vc is IntentConfirmationChallengeViewController {
                 presentedExpectation.fulfill()
             }
         }

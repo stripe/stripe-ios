@@ -9,7 +9,6 @@
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct CheckoutCartContentView: View {
     @ObservedObject var checkout: Checkout
     var currencySelectorAppearance = Checkout.CurrencySelectorView.Appearance()
@@ -640,7 +639,6 @@ struct CheckoutCartContentView: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct CheckoutCartSheet: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var checkout: Checkout

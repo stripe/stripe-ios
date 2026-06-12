@@ -1,7 +1,7 @@
 use_frameworks!
 
 target 'CocoapodsTest' do
-  platform :ios, '13.0'
+  platform :ios, '15.0'
   use_frameworks!
   pod 'Stripe', path: '../../../..'
   pod 'StripeIdentity', path: '../../../..'
@@ -29,7 +29,7 @@ target 'CocoapodsTest' do
 end
 
 target 'TestExtension' do
-  platform :ios, '13.0'
+  platform :ios, '15.0'
   use_frameworks!
   pod 'StripeApplePay', path: '../../../..'
   pod 'StripeCore', path: '../../../..'

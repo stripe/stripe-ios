@@ -423,20 +423,12 @@ final class DocumentFileUploadViewController: IdentityFlowViewController {
     }
 
     func selectFileFromSystem() {
-        let documentPicker: UIDocumentPickerViewController
-        if #available(iOS 14.0, *) {
-            // NOTE: We must request a copy of the image because the original
-            // will likely be outside of this app's sandbox.
-            documentPicker = UIDocumentPickerViewController(
-                forOpeningContentTypes: [.image],
-                asCopy: true
-            )
-        } else {
-            documentPicker = UIDocumentPickerViewController(
-                documentTypes: ["public.image", "public.jpeg", "public.png"],
-                in: UIDocumentPickerMode.import
-            )
-        }
+        // NOTE: We must request a copy of the image because the original
+        // will likely be outside of this app's sandbox.
+        let documentPicker = UIDocumentPickerViewController(
+            forOpeningContentTypes: [.image],
+            asCopy: true
+        )
         documentPicker.allowsMultipleSelection = false
         documentPicker.delegate = self
         present(documentPicker, animated: true, completion: nil)

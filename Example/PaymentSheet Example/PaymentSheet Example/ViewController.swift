@@ -25,37 +25,21 @@ class ViewController: UIViewController {
         return UIHostingController(coder: coder, rootView: ExampleSwiftUICustomPaymentFlow())
     }
     @IBSegueAction func showSwiftUITestPlayground(_ coder: NSCoder) -> UIViewController? {
-        if #available(iOS 15.0, *) {
-            return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground())
-        } else {
-            fatalError(">= iOS 15.0 required")
-        }
+        return UIHostingController(coder: coder, rootView: PaymentSheetTestPlayground())
     }
 
     @IBSegueAction func showSwiftUICustomerSheetTestPlayground(_ coder: NSCoder) -> UIViewController? {
-        if #available(iOS 15.0, *) {
-            return UIHostingController(coder: coder, rootView: CustomerSheetTestPlayground())
-        } else {
-            fatalError(">= iOS 15.0 required")
-        }
+        return UIHostingController(coder: coder, rootView: CustomerSheetTestPlayground())
     }
     @IBSegueAction func showSwiftUICusotmerSheetSwiftUI(_ coder: NSCoder) -> UIViewController? {
         return UIHostingController(coder: coder, rootView: ExampleSwiftUICustomerSheet())
     }
 
     @IBSegueAction func showSwiftUIEmbedded(_ coder: NSCoder) -> UIViewController? {
-        if #available(iOS 15.0, *) {
-            return UIHostingController(coder: coder, rootView: MyEmbeddedCheckoutView())
-        } else {
-            fatalError(">= iOS 15.0 required")
-        }
+        return UIHostingController(coder: coder, rootView: MyEmbeddedCheckoutView())
     }
     @IBSegueAction func showWalletButtonsView(_ coder: NSCoder) -> UIViewController? {
-        if #available(iOS 15.0, *) {
-            return UIHostingController(coder: coder, rootView: ExampleWalletButtonsContainerView())
-        } else {
-            fatalError(">= iOS 15.0 required")
-        }
+        return UIHostingController(coder: coder, rootView: ExampleWalletButtonsContainerView())
     }
     @IBSegueAction func showLinkStandaloneComponent(_ coder: NSCoder) -> UIViewController? {
         if #available(iOS 16.0, *) {
@@ -70,7 +54,10 @@ extension UIViewController {
 
     static func topMostViewController() -> UIViewController? {
         let window: UIWindow?
-        window = UIApplication.shared.stripe_keyWindow
+        window = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }
         guard let window else {
             return nil
         }

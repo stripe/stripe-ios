@@ -8,7 +8,6 @@
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct CurrencySelectorAppearancePlaygroundView: View {
     @State var appearance: Checkout.CurrencySelectorView.Appearance
     var doneAction: ((Checkout.CurrencySelectorView.Appearance) -> Void)

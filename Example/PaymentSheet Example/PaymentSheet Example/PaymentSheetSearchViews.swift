@@ -8,7 +8,6 @@
 import SwiftUI
 
 // MARK: - Search Bar View
-@available(iOS 15.0, *)
 struct SettingsSearchBar: View {
     @Binding var text: String
 
@@ -79,7 +78,6 @@ private func pickerEnumMatchesSearch<S: PickerEnum>(_ enumType: S.Type, searchTe
 }
 
 // MARK: - Searchable Wrapper Views
-@available(iOS 15.0, *)
 struct SearchableSettingView<S: PickerEnum>: View {
     var setting: Binding<S>
     var title: String?
@@ -102,7 +100,6 @@ struct SearchableSettingView<S: PickerEnum>: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct SearchableSettingPickerView<S: PickerEnum>: View {
     var setting: Binding<S>
     var disabledSettings: [S] = []
@@ -133,7 +130,6 @@ struct SearchableSettingPickerView<S: PickerEnum>: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct SearchableView<Content: View>: View {
     let searchableName: String
     @Binding var searchText: String
@@ -154,7 +150,6 @@ struct SearchableView<Content: View>: View {
 }
 
 // MARK: - Searchable Section View
-@available(iOS 15.0, *)
 struct SearchableSection<HeaderButtons: View, Content: View>: View {
     let title: String
     @Binding var searchText: String
@@ -187,7 +182,6 @@ struct SearchableSection<HeaderButtons: View, Content: View>: View {
     }
 }
 
-@available(iOS 15.0, *)
 extension SearchableSection where HeaderButtons == EmptyView {
     init(
         title: String,
@@ -199,7 +193,6 @@ extension SearchableSection where HeaderButtons == EmptyView {
 }
 
 // MARK: - Empty Search Results View
-@available(iOS 15.0, *)
 struct EmptySearchResultsView: View {
     let searchText: String
 

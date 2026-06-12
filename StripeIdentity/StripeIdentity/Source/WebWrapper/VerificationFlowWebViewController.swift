@@ -11,7 +11,6 @@ import AVKit
 import UIKit
 import WebKit
 
-@available(iOS 14.3, *)
 protocol VerificationFlowWebViewControllerDelegate: AnyObject {
     /// Invoked when the user has closed the `VerificationFlowWebViewController`.
     /// - Parameters:
@@ -33,7 +32,6 @@ protocol VerificationFlowWebViewControllerDelegate: AnyObject {
 ///
 /// If the user closes the view controller prior to reaching the `/success` page, then a `.flowCanceled`
 /// result is sent to the view controller delegate's `didFinish` method.
-@available(iOS 14.3, *)
 final class VerificationFlowWebViewController: UIViewController {
 
     weak var delegate: VerificationFlowWebViewControllerDelegate?
@@ -138,7 +136,6 @@ final class VerificationFlowWebViewController: UIViewController {
 
 // MARK: - Private
 
-@available(iOS 14.3, *)
 extension VerificationFlowWebViewController {
     fileprivate func setupNavbar() {
         title = STPLocalizedString(
@@ -205,7 +202,6 @@ extension VerificationFlowWebViewController {
 
 // MARK: - VerificationFlowWebViewDelegate
 
-@available(iOS 14.3, *)
 extension VerificationFlowWebViewController: VerificationFlowWebViewDelegate {
 
     func verificationFlowWebView(_ view: VerificationFlowWebView, didChangeURL url: URL?) {
