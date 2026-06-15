@@ -71,7 +71,7 @@ extension FaceScanner: ImageScanner {
     ) -> StripeCore.Future<FaceScannerOutput> {
         do {
             let faceDetectorOutput = try faceDetector.scanImage(pixelBuffer: pixelBuffer)
-            let facePose = try? facePoseDetector?.detectPose(sampleBuffer: sampleBuffer)
+            let facePose = try? facePoseDetector?.detectPose(pixelBuffer: pixelBuffer)
             return Promise(
                 value: .init(
                     faceDetectorOutput: faceDetectorOutput,

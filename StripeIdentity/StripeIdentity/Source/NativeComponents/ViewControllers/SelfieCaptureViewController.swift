@@ -430,12 +430,6 @@ extension SelfieCaptureViewController: ImageScanningSessionDelegate {
         if let sheetController = sheetController {
             sheetController.analyticsClient.logSelfieCaptureTimeout(sheetController: sheetController)
         }
-        if latestScanningState.phase != .front,
-            let faceCaptureData = latestScanningState.captureData()
-        {
-            selfieUploader.uploadImages(faceCaptureData)
-            saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
-        }
     }
 
     func imageScanningSession(
@@ -555,19 +549,12 @@ extension SelfieCaptureViewController {
         scanningSession.stopTimeoutTimer()
 
         guard nextState.frontSamples.count >= apiConfig.numSamples,
-            let faceCaptureData = nextState.captureData()
+            FaceCaptureData(samples: nextState.frontSamples) != nil
         else {
             scanningSession.startTimeoutTimer()
             startSampleTimer()
             latestScanningState = nextState
             scanningSession.updateScanningState(nextState)
-            return
-        }
-
-        guard nextState.supportsPoseCapture == true else {
-            latestScanningState = nextState
-            selfieUploader.uploadImages(faceCaptureData)
-            saveDataAndTransitionToNextScreen(faceCaptureData: faceCaptureData)
             return
         }
 
@@ -587,7 +574,14 @@ extension SelfieCaptureViewController {
         scannerOutput: FaceScannerOutput,
         exifMetadata: CameraExifMetadata?
     ) {
-        guard scannerOutput.facePose?.direction == expectedPose else {
+        guard let facePose = scannerOutput.facePose else {
+            isFaceCenteredInCaptureGuide = false
+            latestScanningState = scanningState
+            scanningSession.updateScanningState(scanningState)
+            return
+        }
+
+        guard facePose.direction == expectedPose else {
             isFaceCenteredInCaptureGuide = false
             latestScanningState = scanningState
             scanningSession.updateScanningState(scanningState)

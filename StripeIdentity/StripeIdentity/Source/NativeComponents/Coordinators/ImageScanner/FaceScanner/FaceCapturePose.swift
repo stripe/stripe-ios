@@ -6,7 +6,7 @@
 //  Copyright © 2026 Stripe, Inc. All rights reserved.
 //
 
-import CoreMedia
+import CoreVideo
 import Foundation
 
 enum FaceCapturePose: String, Equatable {
@@ -39,7 +39,7 @@ struct FacePose: Equatable {
 }
 
 protocol FacePoseDetector {
-    func detectPose(sampleBuffer: CMSampleBuffer) throws -> FacePose?
+    func detectPose(pixelBuffer: CVPixelBuffer) throws -> FacePose?
     func reset()
 }
 

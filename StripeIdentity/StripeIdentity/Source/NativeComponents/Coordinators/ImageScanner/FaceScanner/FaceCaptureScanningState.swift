@@ -44,6 +44,10 @@ struct FaceCaptureScanningState: Equatable, ScanningState {
     }
 
     func captureData() -> FaceCaptureData? {
+        guard isComplete else {
+            return nil
+        }
+
         return FaceCaptureData(
             samples: frontSamples,
             leftSide: leftSide,

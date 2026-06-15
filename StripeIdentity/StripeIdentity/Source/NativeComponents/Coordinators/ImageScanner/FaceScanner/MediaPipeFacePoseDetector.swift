@@ -7,7 +7,10 @@
 //
 
 import CoreMedia
+import CoreVideo
 import Foundation
+@_spi(STP) import StripeCameraCore
+import UIKit
 
 #if canImport(MediaPipeTasksVision)
 @_implementationOnly import MediaPipeTasksVision
@@ -15,7 +18,7 @@ import Foundation
 final class MediaPipeFacePoseDetector: FacePoseDetector {
     private enum Configuration {
         static let maxNumFaces = 1
-        static let scoreThreshold: Float = 0.8
+        static let scoreThreshold: Float = 0.5
     }
 
     private let faceLandmarker: FaceLandmarker
@@ -34,8 +37,11 @@ final class MediaPipeFacePoseDetector: FacePoseDetector {
         faceLandmarker = try FaceLandmarker(options: options)
     }
 
-    func detectPose(sampleBuffer: CMSampleBuffer) throws -> FacePose? {
-        let image = try MPImage(sampleBuffer: sampleBuffer)
+    func detectPose(pixelBuffer: CVPixelBuffer) throws -> FacePose? {
+        guard let image = try Self.makeImage(pixelBuffer: pixelBuffer) else {
+            return nil
+        }
+
         let result = try faceLandmarker.detect(image: image)
 
         guard let matrix = result.facialTransformationMatrixes.first else {
@@ -49,6 +55,18 @@ final class MediaPipeFacePoseDetector: FacePoseDetector {
 }
 
 private extension MediaPipeFacePoseDetector {
+    static func makeImage(pixelBuffer: CVPixelBuffer) throws -> MPImage? {
+        if CVPixelBufferGetPixelFormatType(pixelBuffer) == kCVPixelFormatType_32BGRA {
+            return try MPImage(pixelBuffer: pixelBuffer, orientation: .up)
+        }
+
+        guard let cgImage = pixelBuffer.cgImage() else {
+            return nil
+        }
+
+        return try MPImage(uiImage: UIImage(cgImage: cgImage), orientation: .up)
+    }
+
     static func radiansToDegrees(_ radians: Float) -> Float {
         return radians * 180 / .pi
     }
@@ -64,15 +82,13 @@ private extension MediaPipeFacePoseDetector {
             return nil
         }
 
-        // MediaPipe returns a column-major 4x4 facial transformation matrix.
-        let data = matrix.data
-        let m11 = data[0]
-        let m12 = data[4]
-        let m13 = data[8]
-        let m22 = data[5]
-        let m23 = data[9]
-        let m32 = data[6]
-        let m33 = data[10]
+        let m11 = matrix.value(atRow: 0, column: 0)
+        let m12 = matrix.value(atRow: 0, column: 1)
+        let m13 = matrix.value(atRow: 0, column: 2)
+        let m22 = matrix.value(atRow: 1, column: 1)
+        let m23 = matrix.value(atRow: 1, column: 2)
+        let m32 = matrix.value(atRow: 2, column: 1)
+        let m33 = matrix.value(atRow: 2, column: 2)
 
         let y = asin(clamp(m13, min: -1, max: 1))
         let x: Float
@@ -86,8 +102,8 @@ private extension MediaPipeFacePoseDetector {
         }
 
         return FacePose(
-            yaw: radiansToDegrees(-y),
-            pitch: radiansToDegrees(-x),
+            yaw: radiansToDegrees(y),
+            pitch: radiansToDegrees(x),
             roll: radiansToDegrees(z)
         )
     }
