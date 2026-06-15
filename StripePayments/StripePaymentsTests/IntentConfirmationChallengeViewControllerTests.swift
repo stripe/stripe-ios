@@ -11,7 +11,6 @@ import XCTest
 @_spi(STP) @testable import StripeCore
 @_spi(STP) @testable import StripePayments
 
-@available(iOS 14.0, *)
 class IntentConfirmationChallengeViewControllerTests: XCTestCase {
 
     private func makeVC(

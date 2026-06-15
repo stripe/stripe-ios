@@ -38,25 +38,9 @@ typedef void (^LocationUpdateCompletionBlock)(CLLocation * _Nullable);
 }
 
 + (BOOL)hasPermissions {
-#ifdef STP_TARGET_VISION
-    if (@available(iOS 15.0, *)) {
-        CLAuthorizationStatus authorizationStatus = [[[CLLocationManager alloc] init] authorizationStatus];
-        return [CLLocationManager locationServicesEnabled] &&
-        authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse;
-    } else {
-        // This should never happen
-        return NO;
-    }
-#else
-    CLAuthorizationStatus authorizationStatus;
-    if (@available(iOS 15.0, *)) {
-        authorizationStatus = [[[CLLocationManager alloc] init] authorizationStatus];
-    } else {
-        authorizationStatus = [CLLocationManager authorizationStatus];
-    }
+    CLAuthorizationStatus authorizationStatus = [[[CLLocationManager alloc] init] authorizationStatus];
     return [CLLocationManager locationServicesEnabled] &&
     (authorizationStatus == kCLAuthorizationStatusAuthorizedAlways || authorizationStatus == kCLAuthorizationStatusAuthorizedWhenInUse);
-#endif
 }
 
 - (instancetype)init {

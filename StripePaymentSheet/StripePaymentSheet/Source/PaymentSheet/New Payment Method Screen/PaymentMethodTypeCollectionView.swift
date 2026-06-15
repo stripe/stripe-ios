@@ -178,11 +178,7 @@ extension PaymentMethodTypeCollectionView: UICollectionViewDataSource, UICollect
             return true
             #else
             // Prefer fixed size cells for iPads and Mac.
-            if #available(iOS 14.0, macCatalyst 14.0, *) {
-                return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
-            } else {
-                return UIDevice.current.userInterfaceIdiom == .pad
-            }
+            return UIDevice.current.userInterfaceIdiom == .pad || UIDevice.current.userInterfaceIdiom == .mac
             #endif
         }
 

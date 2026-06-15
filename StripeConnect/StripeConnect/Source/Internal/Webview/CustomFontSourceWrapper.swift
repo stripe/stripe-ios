@@ -7,7 +7,6 @@
 
 import Foundation
 
-@available(iOS 15, *)
 struct CustomFontSourceWrapper: Encodable {
     let customFontSource: EmbeddedComponentManager.CustomFontSource
     enum CodingKeys: String, CodingKey {

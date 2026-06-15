@@ -22,9 +22,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         StripeAPI.defaultPublishableKey = "test"
 
-        if #available(iOS 14.3, *) {
-            let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
-        }
+        let _ = IdentityVerificationSheet(verificationSessionClientSecret: "test")
 
         let _ = FinancialConnectionsSheet(
             financialConnectionsSessionClientSecret: "",
@@ -48,10 +46,8 @@ class ViewController: UIViewController {
             nonceSignature: Data()
         )
 
-        if #available(iOS 15.0, *) {
-            let _ = EmbeddedComponentManager {
-                nil
-            }
+        let _ = EmbeddedComponentManager {
+            nil
         }
     }
 }

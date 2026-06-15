@@ -28,7 +28,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             PlaygroundController.resetCustomer()
 
             // Speed up animations for quicker CI times
-            UIApplication.shared.stripe_keyWindow?.layer.speed = 100
+            UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+                .first { $0.isKeyWindow }?.layer.speed = 100
         }
 #endif
         catchBrokenConstraints()
@@ -54,21 +57,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the user discards a scene session.
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
-    }
-}
-
-extension UIApplication {
-    var stripe_allWindows: [UIWindow] {
-        if #available(iOS 15.0, *) {
-            return connectedScenes
-                .compactMap { $0 as? UIWindowScene }
-                .flatMap { $0.windows }
-        } else {
-            return windows
-        }
-    }
-
-    var stripe_keyWindow: UIWindow? {
-        stripe_allWindows.first { $0.isKeyWindow }
     }
 }

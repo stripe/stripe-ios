@@ -11,7 +11,6 @@ import UIKit
  Show details of a given payment and allow users to manage disputes and perform refunds.
  */
 @_spi(DashboardOnly)
-@available(iOS 15, *)
 public class PaymentDetailsViewController: UIViewController {
     private(set) var webVC: ConnectComponentWebViewController!
 
@@ -47,7 +46,6 @@ public class PaymentDetailsViewController: UIViewController {
 }
 
 /// Delegate of an `PaymentDetailsViewController`
-@available(iOS 15, *)
 @_spi(DashboardOnly)
 public protocol PaymentDetailsViewControllerDelegate: AnyObject {
 
@@ -62,7 +60,6 @@ public protocol PaymentDetailsViewControllerDelegate: AnyObject {
 
 }
 
-@available(iOS 15, *)
 public extension PaymentDetailsViewControllerDelegate {
     // Default implementation to make optional
     func paymentDetails(_ paymentDetails: PaymentDetailsViewController,
