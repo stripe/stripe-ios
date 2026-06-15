@@ -10,6 +10,10 @@ MAJOR
 * [Changed] Added IN, JP, MY, NZ, PH, SG to `AddressViewController.Configuration.autocompleteCountries` list. 
 
 ## 25.17.0 2026-06-08
+
+### Identity
+* [Added] Added a manual capture mode for identity document verification, allowing users to tap "Take Photo" instead of relying on automatic capture. ([#6379](https://github.com/stripe/stripe-ios/pull/6379))
+
 ### PaymentSheet
 * [Fixed] Fixed an NSRangeException crash in address autocomplete search results.
 * [Changed] Renamed `LinkPaymentController` to `InstantBankPaymentsController`.
