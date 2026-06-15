@@ -25,8 +25,6 @@ extension CryptoOnrampCoordinator {
            case .missingAppAttestation = integrationError {
             return appAttestationUnavailableError(
                 from: error,
-                during: operation,
-                apiClient: apiClient,
                 additionalSDKVersions: additionalSDKVersions
             )
         } else if let stripeError = error as? StripeError,
@@ -78,24 +76,11 @@ extension CryptoOnrampCoordinator {
 
     private static func appAttestationUnavailableError(
         from error: Swift.Error,
-        during operation: CryptoOnrampOperation,
-        apiClient: STPAPIClient,
         additionalSDKVersions: [SDKVersion]
     ) -> Swift.Error {
-        return AppAttestationAPIError(
-            context: APIErrorContext(
-                reason: "app_attestation_unavailable",
-                operation: operation.rawValue,
-                appIdentifier: Bundle.main.bundleIdentifier,
-                mode: apiClient.publishableKey.flatMap(Self.publishableKeyMode),
-                apiErrorCode: "app_attestation_unavailable",
-                apiErrorType: nil,
-                apiErrorMessage: nil,
-                apiUserMessage: nil,
-                docURL: nil,
-                underlyingError: error,
-                sdkVersions: [.stripeIOS] + additionalSDKVersions
-            )
+        return AppAttestationUnavailableError(
+            underlyingError: error,
+            additionalSDKVersions: additionalSDKVersions
         )
     }
 

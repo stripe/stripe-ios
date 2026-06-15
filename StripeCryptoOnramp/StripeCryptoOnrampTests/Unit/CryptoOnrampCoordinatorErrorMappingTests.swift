@@ -73,27 +73,42 @@ final class CryptoOnrampCoordinatorErrorMappingTests: XCTestCase {
 
     func testMappedErrorMapsMissingAppAttestationIntegrationErrorToRichAttestationError() throws {
         let apiClient = STPAPIClient(publishableKey: "pk_live_123")
+        let additionalSDKVersions = [
+            SDKVersion(name: "stripe-react-native", version: "1.2.3"),
+        ]
+
         let mappedError = CryptoOnrampCoordinator.mappedError(
             LinkController.IntegrationError.missingAppAttestation,
             during: .createSession,
-            apiClient: apiClient
+            apiClient: apiClient,
+            additionalSDKVersions: additionalSDKVersions
         )
-        let apiError = try XCTUnwrap(mappedError as? AppAttestationAPIError)
+        let attestationError = try XCTUnwrap(mappedError as? AppAttestationUnavailableError)
 
-        XCTAssertEqual(apiError.reason, "app_attestation_unavailable")
-        XCTAssertEqual(apiError.code, "app_attestation_unavailable")
-        XCTAssertEqual(apiError.operation, "configure")
-        XCTAssertEqual(apiError.mode, "live")
-        XCTAssertNil(apiError.requestID)
-        XCTAssertNil(apiError.type)
-        XCTAssertNil(apiError.apiMessage)
-        XCTAssertNil(apiError.apiUserMessage)
-        XCTAssertNil(apiError.docURL)
-        XCTAssertTrue(apiError.underlyingError is LinkController.IntegrationError)
-        XCTAssertEqual(apiError.sdkVersions, [.stripeIOS])
-        XCTAssertEqual(apiError.userMessage, "This app couldn't be verified. Contact the app developer for help.")
-        XCTAssertEqual(apiError.errorDescription, apiError.userMessage)
-        XCTAssertEqual(apiError.debugDescription, apiError.developerMessage)
+        XCTAssertFalse(mappedError is StripeCryptoOnrampAPIError)
+        XCTAssertEqual(attestationError.code, "app_attestation_unavailable")
+        XCTAssertNil(attestationError.docURL)
+        XCTAssertTrue(attestationError.underlyingError is LinkController.IntegrationError)
+        XCTAssertEqual(attestationError.sdkVersions, [.stripeIOS] + additionalSDKVersions)
+        XCTAssertEqual(attestationError.userMessage, "This app couldn't be verified. Contact the app developer for help.")
+        XCTAssertEqual(attestationError.errorDescription, attestationError.userMessage)
+        XCTAssertEqual(attestationError.debugDescription, attestationError.developerMessage)
+
+        let richError = attestationError as StripeCryptoOnrampError
+        XCTAssertEqual(richError.code, "app_attestation_unavailable")
+        XCTAssertEqual(richError.userMessage, attestationError.userMessage)
+        XCTAssertEqual(richError.developerMessage, attestationError.developerMessage)
+
+        XCTAssertEqual(attestationError.developerMessage, """
+        App attestation unavailable: this app isn't configured to use Stripe Crypto Onramp.
+
+        This usually means app attestation isn't enabled for this Stripe account, or this app isn't registered as a trusted application. Use your iOS bundle ID and contact Stripe to enable app attestation or register the app for this account.
+
+        Code: app_attestation_unavailable
+
+        Next step: Confirm app attestation is enabled for this Stripe account and that the app identifier is registered as trusted, then call configure again.
+        SDK: stripe-ios@\(STPAPIClient.STPSDKVersion), stripe-react-native@1.2.3
+        """)
     }
 
     func testMappedErrorUsesSafeUserMessageForUncategorizedAPIError() throws {
