@@ -137,14 +137,6 @@ extension RowButton {
             self.infoUrl = content.infoUrl
         }
 
-        private func openInfoModal() {
-            guard let infoUrl else {
-                stpAssertionFailure("PMME row sublabel tried to present the PMME info modal without content.")
-                return
-            }
-
-            PMMEInfoModal.present(infoUrl: infoUrl, style: traitCollection.isDarkMode ? .alwaysDark : .alwaysLight, from: self)
-        }
     }
 }
 
@@ -160,7 +152,12 @@ extension RowButton.PaymentMethodMessagingSublabelView: UITextViewDelegate {
             return false
         }
 
-        openInfoModal()
+        guard let infoUrl else {
+            stpAssertionFailure("PMME row sublabel tried to open info link without content.")
+            return false
+        }
+
+        UIApplication.shared.open(infoUrl)
         return false
     }
 #endif
