@@ -9,6 +9,9 @@ MAJOR
 ### AddressElement
 * [Changed] Added IN, JP, MY, NZ, PH, SG to `AddressViewController.Configuration.autocompleteCountries` list. 
 
+### CryptoOnramp (Alpha)
+* [Added] Added `AppAttestationUnavailableError`, a rich `StripeCryptoOnrampError` for configuration failures caused by missing app attestation or native Link being unavailable.
+
 ## 25.17.0 2026-06-08
 ### PaymentSheet
 * [Fixed] Fixed an NSRangeException crash in address autocomplete search results.
