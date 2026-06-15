@@ -9,6 +9,7 @@ import Foundation
 import OHHTTPStubs
 import OHHTTPStubsSwift
 import StripeCoreTestUtils
+@_spi(STP) @testable import StripePayments
 @_spi(STP)@testable import StripePaymentSheet
 import XCTest
 
@@ -67,6 +68,34 @@ final class SavedPaymentMethodManagerTests: XCTestCase {
 
         // Verify the response was valid
         XCTAssertEqual("pm_123card", updatedPaymentMethod.stripeId)
+        await fulfillment(of: [expectation], timeout: 5.0)
+    }
+
+    func testUpdatePaymentMethod_preservesLocalLinkFields() async throws {
+        let paymentMethod = STPPaymentMethod.stubbedPaymentMethod()
+        paymentMethod.linkPaymentDetails = .card(
+            LinkPaymentDetails.Card(
+                id: "csmrpd_123",
+                displayName: "Visa",
+                expMonth: 12,
+                expYear: 2030,
+                last4: "4242",
+                brand: .visa
+            )
+        )
+        paymentMethod.isLinkOrigin = true
+
+        let expectation = stubUpdatePaymentMethod(paymentMethod: paymentMethod,
+                                                  ephemeralKey: ephemeralKey)
+        var configuration = configuration
+        configuration.customer = .init(id: "cus_test123", ephemeralKeySecret: ephemeralKey)
+
+        let sut = SavedPaymentMethodManager(configuration: configuration, elementsSession: ._testCardValue(), intent: ._testValue())
+        let updatedPaymentMethod = try await sut.update(paymentMethod: paymentMethod,
+                                                        with: STPPaymentMethodUpdateParams())
+
+        XCTAssertTrue(updatedPaymentMethod.isLinkOrigin)
+        XCTAssertEqual(updatedPaymentMethod.linkPaymentDetailsFormattedString, paymentMethod.linkPaymentDetailsFormattedString)
         await fulfillment(of: [expectation], timeout: 5.0)
     }
 

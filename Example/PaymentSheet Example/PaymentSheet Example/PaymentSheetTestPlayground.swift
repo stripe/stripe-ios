@@ -9,7 +9,6 @@ import StripePaymentSheet
 import SwiftUI
 
 // MARK: - PaymentSheetTestPlayground
-@available(iOS 15.0, *)
 struct PaymentSheetTestPlayground: View {
     @StateObject var playgroundController: PlaygroundController
     @StateObject var analyticsLogObserver: AnalyticsLogObserver = .shared
@@ -496,7 +495,6 @@ struct EmbeddedSettingsView: View {
     }
 }
 
-@available(iOS 14.0, *)
 struct PaymentSheetButtons: View {
     @EnvironmentObject var playgroundController: PlaygroundController
     @State private var psIsPresented: Bool = false
@@ -519,19 +517,13 @@ struct PaymentSheetButtons: View {
     @ViewBuilder
     var cartButton: some View {
         if playgroundController.checkout != nil {
-            if #available(iOS 15.0, *) {
-                Button {
-                    showingCart = true
-                } label: {
-                    Label("Cart", systemImage: "cart.fill")
-                        .font(.callout.smallCaps())
-                }
-                .buttonStyle(.bordered)
-            } else {
-                Button("Cart") {
-                    showingCart = true
-                }
+            Button {
+                showingCart = true
+            } label: {
+                Label("Cart", systemImage: "cart.fill")
+                    .font(.callout.smallCaps())
             }
+            .buttonStyle(.bordered)
         }
     }
 
@@ -667,7 +659,7 @@ struct PaymentSheetButtons: View {
             }
         }
         .sheet(isPresented: $showingCart) {
-            if #available(iOS 15.0, *), let checkout = playgroundController.checkout {
+            if let checkout = playgroundController.checkout {
                 CheckoutCartSheet(checkout: checkout, currencySelectorAppearance: playgroundController.currencySelectorAppearance)
             }
         }
@@ -786,15 +778,13 @@ struct AttestationResetButtonView: View {
     @EnvironmentObject var playgroundController: PlaygroundController
 
     var body: some View {
-        if #available(iOS 15.0, *) {
-            Button {
-                playgroundController.didTapResetAttestation()
-                presentingAlert = true
-            } label: {
-                Text("Reset attestation")
-            }.buttonStyle(.bordered)
-                .alert("Attestation key has been reset", isPresented: $presentingAlert, actions: {})
-        }
+        Button {
+            playgroundController.didTapResetAttestation()
+            presentingAlert = true
+        } label: {
+            Text("Reset attestation")
+        }.buttonStyle(.bordered)
+            .alert("Attestation key has been reset", isPresented: $presentingAlert, actions: {})
     }
 }
 
@@ -837,7 +827,6 @@ struct SettingPickerView<S: PickerEnum>: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct PaymentSheetTestPlayground_Previews: PreviewProvider {
     static var previews: some View {
         PaymentSheetTestPlayground()

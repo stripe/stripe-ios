@@ -10,7 +10,6 @@
 import UIKit
 import WebKit
 
-@available(iOS 14.3, *)
 protocol VerificationFlowWebViewDelegate: AnyObject {
     /// The view's URL was changed.
     /// - Parameters:
@@ -44,7 +43,6 @@ protocol VerificationFlowWebViewDelegate: AnyObject {
     )
 }
 
-@available(iOS 14.3, *)
 extension VerificationFlowWebViewDelegate {
     func verificationFlowWebView(
         _ view: VerificationFlowWebView,
@@ -53,12 +51,10 @@ extension VerificationFlowWebViewDelegate {
     ) {}
 }
 
-@available(iOS 14.3, *)
 private enum VerificationFlowWebViewError: String, AnalyticLoggableStringErrorV2 {
     case webContentProcessTerminated
 }
 
-@available(iOS 14.3, *)
 enum VerificationFlowWebViewFailureStage: String {
     case navigation = "navigation"
     case provisionalNavigation = "provisional_navigation"
@@ -66,7 +62,6 @@ enum VerificationFlowWebViewFailureStage: String {
 }
 
 /// Basic WebView that displays a spinner while the page is loading or an error message with a "Try Again" button
-@available(iOS 14.3, *)
 final class VerificationFlowWebView: UIView {
 
     private struct Styling {
@@ -192,7 +187,6 @@ final class VerificationFlowWebView: UIView {
 
 // MARK: - Private
 
-@available(iOS 14.3, *)
 extension VerificationFlowWebView {
     fileprivate func installViews() {
         errorView.addArrangedSubview(errorLabel)
@@ -270,7 +264,6 @@ extension VerificationFlowWebView {
 
 // MARK: - WKNavigationDelegate
 
-@available(iOS 14.3, *)
 extension VerificationFlowWebView: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
         activityIndicatorView.stp_stopAnimatingAndHide()
@@ -300,7 +293,6 @@ extension VerificationFlowWebView: WKNavigationDelegate {
 
 // MARK: WKUIDelegate
 
-@available(iOS 14.3, *)
 extension VerificationFlowWebView: WKUIDelegate {
     func webViewDidClose(_ webView: WKWebView) {
         // `window.close` is called in JS
@@ -326,7 +318,6 @@ extension VerificationFlowWebView: WKUIDelegate {
 
 // MARK: - WKScriptMessageHandler
 
-@available(iOS 14.3, *)
 extension VerificationFlowWebView: WKScriptMessageHandler {
     func userContentController(
         _ userContentController: WKUserContentController,

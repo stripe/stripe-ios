@@ -239,61 +239,59 @@ private struct AccountPickerRowViewUIViewRepresentable: UIViewRepresentable {
 
 struct AccountPickerRowView_Previews: PreviewProvider {
     static var previews: some View {
-        if #available(iOS 14.0, *) {
-            ScrollView {
-                VStack(spacing: 16) {
-                    AccountPickerRowViewUIViewRepresentable(
-                        institutionIconUrl: "https://b.stripecdn.com/connections-statics-srv/assets/BrandIcon--stripe-4x.png",
-                        title: "Joint Checking Very Long Name To Truncate",
-                        subtitle: "••••6789",
-                        balanceString: nil,
-                        isSelected: true,
-                        isDisabled: false,
-                        isFaded: false
-                    ).frame(height: 88)
-                    AccountPickerRowViewUIViewRepresentable(
-                        title: "Joint Checking Very Long Name To Truncate",
-                        subtitle: "••••6789",
-                        balanceString: nil,
-                        isSelected: true,
-                        isDisabled: false,
-                        isFaded: false
-                    ).frame(height: 76)
-                    AccountPickerRowViewUIViewRepresentable(
-                        title: "Link Light Theme",
-                        subtitle: "••••6789",
-                        balanceString: nil,
-                        isSelected: true,
-                        isDisabled: false,
-                        isFaded: false,
-                        appearance: .link
-                    ).frame(height: 76)
-                    AccountPickerRowViewUIViewRepresentable(
-                        title: "Joint Checking Very Long Name To Truncate",
-                        subtitle: "••••6789",
-                        balanceString: "$3285.53",
-                        isSelected: false,
-                        isDisabled: false,
-                        isFaded: false
-                    ).frame(height: 76)
-                    AccountPickerRowViewUIViewRepresentable(
-                        title: "Joint Checking",
-                        subtitle: nil,
-                        balanceString: "$3285.53",
-                        isSelected: false,
-                        isDisabled: false,
-                        isFaded: false
-                    ).frame(height: 76)
-                    AccountPickerRowViewUIViewRepresentable(
-                        title: "Joint Checking",
-                        subtitle: "Not available",
-                        balanceString: nil,
-                        isSelected: false,
-                        isDisabled: true,
-                        isFaded: true
-                    ).frame(height: 76)
-                }.padding()
-            }
+        ScrollView {
+            VStack(spacing: 16) {
+                AccountPickerRowViewUIViewRepresentable(
+                    institutionIconUrl: "https://b.stripecdn.com/connections-statics-srv/assets/BrandIcon--stripe-4x.png",
+                    title: "Joint Checking Very Long Name To Truncate",
+                    subtitle: "••••6789",
+                    balanceString: nil,
+                    isSelected: true,
+                    isDisabled: false,
+                    isFaded: false
+                ).frame(height: 88)
+                AccountPickerRowViewUIViewRepresentable(
+                    title: "Joint Checking Very Long Name To Truncate",
+                    subtitle: "••••6789",
+                    balanceString: nil,
+                    isSelected: true,
+                    isDisabled: false,
+                    isFaded: false
+                ).frame(height: 76)
+                AccountPickerRowViewUIViewRepresentable(
+                    title: "Link Light Theme",
+                    subtitle: "••••6789",
+                    balanceString: nil,
+                    isSelected: true,
+                    isDisabled: false,
+                    isFaded: false,
+                    appearance: .link
+                ).frame(height: 76)
+                AccountPickerRowViewUIViewRepresentable(
+                    title: "Joint Checking Very Long Name To Truncate",
+                    subtitle: "••••6789",
+                    balanceString: "$3285.53",
+                    isSelected: false,
+                    isDisabled: false,
+                    isFaded: false
+                ).frame(height: 76)
+                AccountPickerRowViewUIViewRepresentable(
+                    title: "Joint Checking",
+                    subtitle: nil,
+                    balanceString: "$3285.53",
+                    isSelected: false,
+                    isDisabled: false,
+                    isFaded: false
+                ).frame(height: 76)
+                AccountPickerRowViewUIViewRepresentable(
+                    title: "Joint Checking",
+                    subtitle: "Not available",
+                    balanceString: nil,
+                    isSelected: false,
+                    isDisabled: true,
+                    isFaded: true
+                ).frame(height: 76)
+            }.padding()
         }
     }
 }

@@ -21,7 +21,7 @@ It contains:
 
 ## Requirements
 
-The StripePaymentsUI module is compatible with apps targeting iOS 13.0 or above.
+The StripePaymentsUI module is compatible with apps targeting iOS 15.0 or above.
 
 ## Getting started
 

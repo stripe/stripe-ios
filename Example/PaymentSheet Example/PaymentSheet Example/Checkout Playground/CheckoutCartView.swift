@@ -9,7 +9,6 @@
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct CheckoutCartView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var checkout: Checkout?

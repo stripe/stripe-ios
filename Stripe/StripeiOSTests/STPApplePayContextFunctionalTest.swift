@@ -452,7 +452,6 @@ class TestAsyncApplePayContextDelegate: NSObject, ApplePayContextDelegate {
         return .init()
     }
 
-    @available(iOS 15.0, *)
     func applePayContext(
         _ context: STPApplePayContext,
         didChangeCouponCode couponCode: String
@@ -512,17 +511,13 @@ extension STPApplePayContextFunctionalTest {
         }
 
         // didChangeCouponCode should be called
-        if #available(iOS 15.0, *) {
-            let e3 = expectation(description: "didChangeCouponCode")
-            XCTAssertTrue(context.responds(to: #selector(PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(_:didChangeCouponCode:handler:))))
-            context.paymentAuthorizationController(
-                context.authorizationController,
-                didChangeCouponCode: .init()
-            ) { _ in
-                e3.fulfill()
-            }
-        } else {
-            // Fallback on earlier versions
+        let e3 = expectation(description: "didChangeCouponCode")
+        XCTAssertTrue(context.responds(to: #selector(PKPaymentAuthorizationControllerDelegate.paymentAuthorizationController(_:didChangeCouponCode:handler:))))
+        context.paymentAuthorizationController(
+            context.authorizationController,
+            didChangeCouponCode: .init()
+        ) { _ in
+            e3.fulfill()
         }
         waitForExpectations(timeout: 3)
         XCTAssertEqual(delegate.delegateMethodsCalled.sorted(), [.didCompleteWithStatus, .didSelectShippingMethod, .didSelectShippingContact, .didChangeCouponCode].sorted())

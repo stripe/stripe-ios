@@ -86,13 +86,11 @@ final class AuthenticationSessionManager: NSObject {
         authSession.prefersEphemeralWebBrowserSession = true
 
         self.authSession = authSession
-        if #available(iOS 13.4, *) {
-            if !authSession.canStart {
-                promise.reject(
-                    with: FinancialConnectionsSheetError.unknown(debugDescription: "Failed to start session")
-                )
-                return promise
-            }
+        if !authSession.canStart {
+            promise.reject(
+                with: FinancialConnectionsSheetError.unknown(debugDescription: "Failed to start session")
+            )
+            return promise
         }
         /**
          This terribly hacky animation disabling is needed to control the presentation of ASWebAuthenticationSession underlying view controller.

@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.requires_arc                   = true
   s.platform                       = :ios
   s.swift_version                  = '5.0'
-  s.ios.deployment_target          = '13.0'
+  s.ios.deployment_target          = '15.0'
   s.source_files                   = 'StripeIssuing/StripeIssuing/**/*.swift'
   s.dependency                       'StripeCore', "#{s.version}"
   s.dependency                       'StripePayments', "#{s.version}"

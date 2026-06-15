@@ -9,7 +9,6 @@
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 struct CheckoutCartPaymentButton: View {
     @ObservedObject var checkout: Checkout
     let onDismiss: () -> Void
