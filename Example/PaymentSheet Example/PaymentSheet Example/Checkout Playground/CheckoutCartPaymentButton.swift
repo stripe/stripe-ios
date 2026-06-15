@@ -28,8 +28,7 @@ struct CheckoutCartPaymentButton: View {
                 CheckoutFlowControllerView(
                     flowController: flowController,
                     session: session,
-                    paymentResult: $paymentResult,
-                    onDismiss: onDismiss
+                    paymentResult: $paymentResult
                 )
             } else if isLoadingFlowController {
                 ProgressView()
@@ -126,7 +125,6 @@ private struct CheckoutFlowControllerView: View {
     @ObservedObject var flowController: PaymentSheet.FlowController
     let session: Checkout.Session
     @Binding var paymentResult: PaymentSheetResult?
-    let onDismiss: () -> Void
 
     @State private var isShowingPaymentOptions = false
     @State private var isConfirming = false
