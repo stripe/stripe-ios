@@ -30,7 +30,7 @@ extension Checkout {
     /// - Parameter applyOverrides: Called with the new session after existing overrides are
     ///   preserved but before state is published. Use this to set client-side properties
     ///   (e.g. address overrides) that should be visible to the delegate and observers.
-    func updateSession(_ newSession: STPCheckoutSession, applyOverrides: ((STPCheckoutSession) -> Void)? = nil) {
+    func updateSession(_ newSession: STPCheckoutSession, applyOverrides: ((STPCheckoutSession) -> Void)? = nil) async throws {
         // Preserve client-side address overrides on the new session.
         newSession.billingAddress = stpSession?.billingAddress
         newSession.shippingAddress = stpSession?.shippingAddress
@@ -39,6 +39,7 @@ extension Checkout {
         setSession(newSession)
         if changed {
             delegate?.checkout(self, didChangeState: state)
+            try await integrationDelegate?.checkoutDidUpdate(self)
         }
     }
 
@@ -76,32 +77,34 @@ extension Checkout {
         _ update: SessionUpdate,
         applyOverrides: ((STPCheckoutSession) -> Void)? = nil
     ) async throws {
+        let sessionId = Self.extractSessionId(from: clientSecret)
+        let updatedSession: STPCheckoutSession
         do {
-            let sessionId = Self.extractSessionId(from: clientSecret)
-            let updatedSession = try await apiClient.updateCheckoutSession(
+            updatedSession = try await apiClient.updateCheckoutSession(
                 checkoutSessionId: sessionId,
                 parameters: update.parameters
             )
-            updateSession(updatedSession, applyOverrides: applyOverrides)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
+        try await updateSession(updatedSession, applyOverrides: applyOverrides)
     }
 
     /// Fetches the latest Checkout Session from Stripe and publishes it to observers.
     func refreshSession(
         applyOverrides: ((STPCheckoutSession) -> Void)? = nil
     ) async throws {
+        let sessionId = Self.extractSessionId(from: clientSecret)
+        let refreshedCheckoutSession: STPCheckoutSession
         do {
-            let sessionId = Self.extractSessionId(from: clientSecret)
-            let refreshedCheckoutSession = try await apiClient.initCheckoutSession(
+            refreshedCheckoutSession = try await apiClient.initCheckoutSession(
                 checkoutSessionId: sessionId,
                 adaptivePricingAllowed: configuration.adaptivePricing.allowed
             )
-            updateSession(refreshedCheckoutSession, applyOverrides: applyOverrides)
         } catch {
             throw CheckoutError.apiError(message: error.nonGenericDescription)
         }
+        try await updateSession(refreshedCheckoutSession, applyOverrides: applyOverrides)
     }
 
     // MARK: - Validation

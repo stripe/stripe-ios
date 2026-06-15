@@ -912,6 +912,10 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
     var isSheetPresented: Bool {
         isPresented
     }
+
+    func checkoutDidUpdate(_ checkout: Checkout) async throws {
+        try await update(checkout: checkout)
+    }
 }
 
 // MARK: - FlowControllerViewControllerDelegate

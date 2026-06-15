@@ -476,6 +476,16 @@ extension EmbeddedPaymentElement: CheckoutIntegrationDelegate {
     var isSheetPresented: Bool {
         presentingViewController?.presentedViewController is BottomSheetViewController
     }
+
+    func checkoutDidUpdate(_ checkout: Checkout) async throws {
+        let result = await performUpdate(mode: .checkout(checkout))
+        switch result {
+        case .succeeded, .canceled:
+            break
+        case .failed(let error):
+            throw error
+        }
+    }
 }
 
 // MARK: - STPAnalyticsProtocol
