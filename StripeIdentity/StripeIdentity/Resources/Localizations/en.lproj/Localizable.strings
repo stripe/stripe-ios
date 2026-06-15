@@ -16,6 +16,9 @@
 /* Status text displayed over the selfie viewfinder while capturing selfies */
 "Hold still" = "Hold still";
 
+/* Status text displayed over the selfie viewfinder while capturing selfies */
+"Hold still..." = "Hold still...";
+
 /* Title for accepted types of ids */
 "Accepted forms of ID include" = "Accepted forms of ID include";
 
@@ -149,6 +152,9 @@
 /* Label for the ID field to collect last 4 of social security number for US ID */
 "Last 4 of Social Security number" = "Last 4 of Social Security number";
 
+/* Status text displayed over the selfie viewfinder while capturing the left side of a face */
+"← Look left" = "← Look left";
+
 /* Status while screen is loading */
 "Loading" = "Loading";
 
@@ -211,6 +217,9 @@
 
 /* Instructional text for scanning selfies */
 "Position your face in the center of the frame." = "Position your face in the center of the frame.";
+
+/* Status text displayed over the selfie viewfinder while positioning a face */
+"Place your face within the frame" = "Place your face within the frame";
 
 /* Instructional text for scanning front of a identity document */
 "Position your identity document in the center of the frame" = "Position your identity document in the center of the frame";
@@ -297,6 +306,12 @@
 
 /* Status text displayed over the blurred selfie while checking uploaded selfie images */
 "Great! Checking your images...." = "Great! Checking your images....";
+
+/* Status text displayed over the blurred selfie while checking uploaded selfie images */
+"Great! Checking your scan..." = "Great! Checking your scan...";
+
+/* Status text displayed over the selfie viewfinder while capturing the right side of a face */
+"Look right →" = "Look right →";
 
 /* Accessibility label while photo of back of driver's license, passport, or government issued photo id is uploading */
 "Uploading back %@ photo" = "Uploading back %@ photo";
