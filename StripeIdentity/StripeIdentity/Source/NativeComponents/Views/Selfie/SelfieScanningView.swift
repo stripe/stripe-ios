@@ -75,6 +75,7 @@ final class SelfieScanningView: UIView {
 
     struct ViewModel {
         enum StatusText {
+            case placeFace
             case holdStill
             case lookLeft
             case lookRight
@@ -82,19 +83,24 @@ final class SelfieScanningView: UIView {
 
             var text: String {
                 switch self {
+                case .placeFace:
+                    return STPLocalizedString(
+                        "Place your face within the frame",
+                        "Status text displayed over the selfie viewfinder while positioning a face"
+                    )
                 case .holdStill:
                     return STPLocalizedString(
-                        "Hold still",
+                        "Hold still...",
                         "Status text displayed over the selfie viewfinder while capturing selfies"
                     )
                 case .lookLeft:
                     return STPLocalizedString(
-                        "Look left",
+                        "← Look left",
                         "Status text displayed over the selfie viewfinder while capturing the left side of a face"
                     )
                 case .lookRight:
                     return STPLocalizedString(
-                        "Look right",
+                        "Look right →",
                         "Status text displayed over the selfie viewfinder while capturing the right side of a face"
                     )
                 case .uploading:
@@ -107,9 +113,9 @@ final class SelfieScanningView: UIView {
 
             var showsActivityIndicator: Bool {
                 switch self {
-                case .holdStill:
-                    return false
-                case .lookLeft,
+                case .placeFace,
+                    .holdStill,
+                    .lookLeft,
                     .lookRight:
                     return false
                 case .uploading:
@@ -119,11 +125,11 @@ final class SelfieScanningView: UIView {
 
             var isCenteredInViewfinder: Bool {
                 switch self {
-                case .holdStill:
-                    return false
-                case .lookLeft,
+                case .placeFace,
+                    .holdStill,
+                    .lookLeft,
                     .lookRight:
-                    return true
+                    return false
                 case .uploading:
                     return true
                 }
@@ -238,7 +244,7 @@ final class SelfieScanningView: UIView {
 
     private let statusLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 16)
+        label.font = .systemFont(ofSize: 12, weight: .medium)
         label.textColor = .white
         label.adjustsFontForContentSizeCategory = true
         label.layer.shadowColor = UIColor.black.cgColor
@@ -276,6 +282,7 @@ final class SelfieScanningView: UIView {
             alpha: 0.6
         )
         view.layer.cornerRadius = 8
+        view.layer.cornerCurve = .continuous
         view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -382,6 +389,7 @@ final class SelfieScanningView: UIView {
         let isCurrentlyShowingScanned = !scannedImageScrollView.isHidden
 
         // Reset values
+        instructionLabelView.isHidden = false
         cameraPreviewView.isHidden = true
         capturedImageView.isHidden = true
         capturedImageView.image = nil
@@ -403,6 +411,7 @@ final class SelfieScanningView: UIView {
             havingTroubleLabel.isHidden = viewModel.havingTroubleHandler == nil
 
         case .videoPreview(let cameraSession, _, let statusText, let showCaptureGuideShadow):
+            instructionLabelView.isHidden = true
             retakeSelfieStack.isHidden = true
             consentCheckboxButton.isHidden = true
             previewContainerView.isHidden = false
@@ -449,6 +458,7 @@ final class SelfieScanningView: UIView {
                 }
             }
         case .saving(let image, let statusText):
+            instructionLabelView.isHidden = true
             captureTickMarksView.setShowsCenteredShadow(false, animated: false)
             previewContainerView.isHidden = false
             capturedImageView.image = image
@@ -498,7 +508,7 @@ extension SelfieScanningView {
         previewContainerView.contentView.addSubview(statusLabelContainerView)
         statusLabelContainerView.addAndPinSubview(
             statusContentStackView,
-            insets: .init(top: 8, leading: 8, bottom: 8, trailing: 8)
+            insets: .init(top: 6, leading: 8, bottom: 6, trailing: 8)
         )
 
         // Add some bottom margin so the scroll indicator doesn't overlay on
@@ -671,9 +681,9 @@ private final class CaptureTickMarksView: UIView {
         static let tickCount = 77
         static let tickLength: CGFloat = 10
         static let tickWidth: CGFloat = 2
-        static let horizontalDiameterToWidthRatio: CGFloat = 0.62
-        static let verticalDiameterToHeightRatio: CGFloat = 0.56
-        static let centerYRatio: CGFloat = 0.41
+        static let horizontalDiameterToWidthRatio: CGFloat = 0.72
+        static let verticalDiameterToHeightRatio: CGFloat = 0.54
+        static let centerYRatio: CGFloat = 0.42
         static let tickColor = UIColor.white.withAlphaComponent(0.8)
         static let acceptedTickColor = UIColor.systemGreen
         static let shadowColor = UIColor.black.withAlphaComponent(0.3)

@@ -349,7 +349,7 @@ extension SelfieCaptureViewController {
     ) -> SelfieScanningView.ViewModel.StatusText? {
         switch scanningState.phase {
         case .front:
-            return scanningState.frontSamples.isEmpty ? nil : .holdStill
+            return scanningState.frontSamples.isEmpty ? .placeFace : .holdStill
         case .left:
             return .lookLeft
         case .right:
