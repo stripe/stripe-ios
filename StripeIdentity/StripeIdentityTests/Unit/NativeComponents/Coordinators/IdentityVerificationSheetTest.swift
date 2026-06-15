@@ -66,7 +66,6 @@ final class IdentityVerificationSheetTest: XCTestCase {
         }
     }
 
-    @available(iOS 14.3, *)
     func testAnalyticsWeb() {
         let sheet = sheetWithWebUI()
         sheet.present(from: mockViewController) { _ in }
@@ -217,7 +216,6 @@ final class IdentityVerificationSheetTest: XCTestCase {
         XCTAssertEqual(mockAnalyticsClientV1.loggedAnalytics.count, 0)
     }
 
-    @available(iOS 14.3, *)
     func testWebDelegateCallsCompletion() {
         let exp = expectation(description: "completion block called")
         let mockPresentingViewController = UIViewController(nibName: nil, bundle: nil)

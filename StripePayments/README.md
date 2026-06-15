@@ -17,7 +17,7 @@ If you need to accept card payments, we advise using the [StripePaymentSheet](..
 
 ### Requirements
 
-The StripePayments module is compatible with apps targeting iOS 13.0 or above.
+The StripePayments module is compatible with apps targeting iOS 15.0 or above.
 
 ### Getting started
 

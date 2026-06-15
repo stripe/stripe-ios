@@ -243,7 +243,6 @@ private struct PrepaneViewsUIViewRepresentable: UIViewRepresentable {
     }
 }
 
-@available(iOS 14.0, *)
 struct PrepaneViews_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {

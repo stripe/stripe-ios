@@ -7,7 +7,6 @@
 @_spi(STP) import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 extension CheckoutPlayground {
     @MainActor
     final class ViewModel: ObservableObject {

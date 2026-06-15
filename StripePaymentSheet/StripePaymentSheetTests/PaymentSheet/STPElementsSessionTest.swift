@@ -900,6 +900,30 @@ class STPElementsSessionTest: XCTestCase {
         ]
     }
 
+    func testMergeCardArt_flatFormat_linkWalletSkipsCardArt() throws {
+        var linkWalletCardJSON = testCardJSON
+        linkWalletCardJSON[jsonDict: "card"]?["wallet"] = [
+            "type": "link",
+        ]
+
+        let response: [AnyHashable: Any] = [
+            "payment_methods": [linkWalletCardJSON],
+            "card_art": [
+                ["payment_method": "pm_123card",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
+                 "program_name": "Test Program",
+                ],
+            ],
+            "customer_session": customerSessionJSON,
+        ]
+
+        let customer = try XCTUnwrap(ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: false))
+        let paymentMethod = try XCTUnwrap(customer.paymentMethods.first)
+
+        XCTAssertTrue(paymentMethod.isLinkPassthroughMode)
+        XCTAssertNil(paymentMethod.card?.cardArt)
+    }
+
     private func linkWrappedUnknownPM(_ pmJSON: [AnyHashable: Any]) -> [AnyHashable: Any] {
         return [
             "payment_method": pmJSON,
@@ -963,6 +987,26 @@ class STPElementsSessionTest: XCTestCase {
         let customer = ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true)
         XCTAssertNotNil(customer)
         XCTAssertNil(customer?.paymentMethods.first?.card?.cardArt)
+    }
+
+    func testMergeCardArt_linkFormat_linkOriginSkipsCardArt() throws {
+        let response: [AnyHashable: Any] = [
+            "payment_methods_with_link_details": [linkWrappedPM(testCardJSON, isLinkOrigin: true)],
+            "card_art": [
+                ["payment_method": "pm_123card",
+                 "art_image": ["url": "https://b.stripecdn.com/cardart/assets/abc123"],
+                 "program_name": "Test Program",
+                ],
+            ],
+            "customer_session": customerSessionJSON,
+        ]
+
+        let customer = try XCTUnwrap(ElementsCustomer.decoded(fromAPIResponse: response, enableLinkInSPM: true))
+        let paymentMethod = try XCTUnwrap(customer.paymentMethods.first)
+
+        XCTAssertTrue(paymentMethod.isLinkOrigin)
+        XCTAssertTrue(paymentMethod.isLinkPassthroughMode)
+        XCTAssertNil(paymentMethod.card?.cardArt)
     }
 
     func testMergeCardArt_linkFormat_multiplePaymentMethods() {

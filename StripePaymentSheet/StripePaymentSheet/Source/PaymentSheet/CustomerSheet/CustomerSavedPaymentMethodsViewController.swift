@@ -979,7 +979,9 @@ extension CustomerSavedPaymentMethodsViewController: CustomerSavedPaymentMethods
         else {
             throw CustomerSheetError.unknown(debugDescription: "Failed to read payment method")
         }
-        return try await customerSheetDataSource.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId, paymentMethodUpdateParams: updateParams)
+        let updatedPaymentMethod = try await customerSheetDataSource.updatePaymentMethod(paymentMethodId: paymentMethod.stripeId, paymentMethodUpdateParams: updateParams)
+        updatedPaymentMethod.updateLocalFields(from: paymentMethod)
+        return updatedPaymentMethod
     }
 
     func shouldCloseSheet(viewController: CustomerSavedPaymentMethodsCollectionViewController) {

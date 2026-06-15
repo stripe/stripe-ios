@@ -103,7 +103,7 @@ extension BNPLFormHeaderView: UITextViewDelegate {
             return false
         }
 
-        PMMEInfoModal.present(infoUrl: infoUrl, style: traitCollection.isDarkMode ? .alwaysDark : .alwaysLight, from: self)
+        UIApplication.shared.open(infoUrl)
         return false
     }
 #endif

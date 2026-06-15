@@ -25,7 +25,7 @@ final class CardSectionElement: ContainerElement {
     weak var delegate: ElementDelegate?
     lazy var view: UIView = {
         #if !os(visionOS)
-        if #available(iOS 13.0, macCatalyst 14, *), STPCardScanner.cardScanningAvailable {
+        if STPCardScanner.cardScanningAvailable {
             return CardSectionWithScannerView(
                 cardSectionView: cardSection.view,
                 opensCardScannerAutomatically: opensCardScannerAutomatically,
@@ -146,13 +146,7 @@ final class CardSectionElement: ContainerElement {
             return params
         }
 
-        let sectionTitle: String? = {
-            if #available(iOS 13.0, macCatalyst 14, *) {
-                return nil
-            } else {
-                return String.Localized.card_information
-            }
-        }()
+        let sectionTitle: String? = nil
 
         let allSubElements: [Element?] = [
             nameElement,

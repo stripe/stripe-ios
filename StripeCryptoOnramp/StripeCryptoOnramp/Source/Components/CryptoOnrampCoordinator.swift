@@ -907,6 +907,11 @@ private extension CryptoOnrampCoordinator {
         )
         let errorMessage = (mappedError as? StripeCryptoOnrampError)?.developerMessage ?? mappedError.localizedDescription
         analyticsClient.log(.errorOccurred(during: operation, errorMessage: errorMessage))
+
+        #if DEBUG
+        print("[Stripe SDK] CryptoOnrampCoordinator error: \(errorMessage)")
+        #endif
+
         throw mappedError
     }
 

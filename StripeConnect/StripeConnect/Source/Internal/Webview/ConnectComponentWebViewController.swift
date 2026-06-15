@@ -10,7 +10,6 @@ import StripeFinancialConnections
 import UIKit
 import WebKit
 
-@available(iOS 15, *)
 class ConnectComponentWebViewController: ConnectWebViewController {
 
     var onDismiss: (() -> Void)?
@@ -251,7 +250,6 @@ class ConnectComponentWebViewController: ConnectWebViewController {
 
 // MARK: - Internal
 
-@available(iOS 15, *)
 extension ConnectComponentWebViewController {
     /// Convenience method to add `ScriptMessageHandler`
     func addMessageHandler<Payload>(_ messageHandler: ScriptMessageHandler<Payload>,
@@ -319,7 +317,6 @@ extension ConnectComponentWebViewController {
 
 // MARK: - Private
 
-@available(iOS 15, *)
 private extension ConnectComponentWebViewController {
     /// Registers JS -> Swift message handlers
     func addMessageHandlers<InitProps: Encodable>(
@@ -393,7 +390,6 @@ private extension ConnectComponentWebViewController {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            // swiftlint:disable:previous unused_capture_list
             guard let self else { return }
             sendMessage(UpdateConnectInstanceSender(payload: .init(locale: webLocale.toLanguageTag(), appearance: .init(appearance: componentManager.appearance, traitCollection: traitCollection))))
         }

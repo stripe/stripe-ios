@@ -458,20 +458,18 @@ final class PartnerAuthViewController: SheetViewController {
         webAuthenticationSession.presentationContextProvider = self
         webAuthenticationSession.prefersEphemeralWebBrowserSession = true
 
-        if #available(iOS 13.4, *) {
-            if !webAuthenticationSession.canStart {
-                dataSource.recordAuthSessionEvent(
-                    eventName: "ios-browser-cant-start",
-                    authSessionId: authSession.id
-                )
-                // navigate back to bank picker so user can try again
-                //
-                // this may be an odd way to handle an issue, but trying again
-                // is potentially better than forcing user to close the whole
-                // auth session
-                navigateBack()
-                return  // skip starting
-            }
+        if !webAuthenticationSession.canStart {
+            dataSource.recordAuthSessionEvent(
+                eventName: "ios-browser-cant-start",
+                authSessionId: authSession.id
+            )
+            // navigate back to bank picker so user can try again
+            //
+            // this may be an odd way to handle an issue, but trying again
+            // is potentially better than forcing user to close the whole
+            // auth session
+            navigateBack()
+            return  // skip starting
         }
 
         if !webAuthenticationSession.start() {

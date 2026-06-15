@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.frameworks                     = 'Foundation', 'UIKit'
   s.requires_arc                   = true
   s.platform                       = :ios
-  s.ios.deployment_target          = '13.0'
+  s.ios.deployment_target          = '15.0'
   s.swift_version		               = '5.0'
   s.source_files                   = 'StripeCore/StripeCore/**/*.swift'
   s.ios.resource_bundle            = { 'StripeCoreBundle' => ['StripeCore/StripeCore/Resources/**/*.lproj', 'StripeCore/StripeCore/PrivacyInfo.xcprivacy'] }

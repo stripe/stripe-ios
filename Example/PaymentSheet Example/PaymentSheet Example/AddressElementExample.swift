@@ -10,7 +10,6 @@
 import StripePaymentSheet
 import SwiftUI
 
-@available(iOS 15.0, *)
 public struct AddressElementExampleView: View {
     @State private var showingAddressSheet = false
     @State private var collectedAddress: AddressElement.AddressDetails?
@@ -93,7 +92,6 @@ public struct AddressElementExampleView: View {
     }
 }
 
-@available(iOS 15.0, *)
 struct AddressCollectionExampleView_Previews: PreviewProvider {
     static var previews: some View {
         AddressElementExampleView()

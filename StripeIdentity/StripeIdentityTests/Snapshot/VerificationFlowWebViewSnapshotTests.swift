@@ -13,7 +13,6 @@ import WebKit
 
 @testable import StripeIdentity
 
-@available(iOS 14.3, *)
 final class VerificationFlowWebViewSnapshotTests: STPSnapshotTestCase {
 
     private var verificationWebView: VerificationFlowWebView!
@@ -74,7 +73,6 @@ final class VerificationFlowWebViewSnapshotTests: STPSnapshotTestCase {
     }
 }
 
-@available(iOS 14.3, *)
 extension VerificationFlowWebViewSnapshotTests: VerificationFlowWebViewDelegate {
     func verificationFlowWebView(_ view: VerificationFlowWebView, didChangeURL url: URL?) {}
 
