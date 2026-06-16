@@ -304,6 +304,7 @@ extension PaymentSheet {
 
         private weak var checkout: Checkout?
         private var isPresented = false
+        private var pendingPresentTask: Task<Void, Never>?
         private(set) var didPresentAndContinue: Bool = false
         private var confirmationChallenge: ConfirmationChallenge?
         let analyticsHelper: PaymentSheetAnalyticsHelper
@@ -512,47 +513,11 @@ extension PaymentSheet {
 
             // If Checkout mutations are in-flight, present a loading sheet and await them.
             if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
-                let loadingVC = LoadingViewController(
-                    delegate: self,
-                    appearance: configuration.appearance,
-                    isTestMode: configuration.apiClient.isTestmode
+                presentPaymentOptionsAwaitingMutations(
+                    from: presentingViewController,
+                    checkout: checkout,
+                    completion: wrappedCompletion
                 )
-                let bottomSheetVC = Self.makeBottomSheetViewController(
-                    loadingVC,
-                    configuration: configuration,
-                    didCancelNative3DS2: { [weak self] in
-                        self?.paymentHandler.cancel3DS2ChallengeFlow()
-                    }
-                )
-                presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
-
-                Task { @MainActor [weak self] in
-                    guard let self else { return }
-                    do {
-                        try await checkout.awaitPendingOperations()
-                    } catch {
-                        bottomSheetVC.dismiss(animated: true) {
-                            wrappedCompletion(true)
-                        }
-                        return
-                    }
-                    self.isPresented = true
-                    // Refresh the view controller with the updated session data.
-                    checkout.stpSession.applyAddressOverrides(to: &self.configuration)
-                    let updateID = UUID()
-                    self.performUpdate(mode: .checkout(checkout), updateID: updateID) { [weak self] error in
-                        guard let self else { return }
-                        if error != nil {
-                            self.isPresented = false
-                            bottomSheetVC.dismiss(animated: true) {
-                                wrappedCompletion(true)
-                            }
-                        } else {
-                            self.viewController.flowControllerDelegate = self
-                            bottomSheetVC.setViewControllers([self.viewController])
-                        }
-                    }
-                }
                 return
             }
 
@@ -583,6 +548,57 @@ extension PaymentSheet {
             }
 
             showPaymentOptions()
+        }
+
+        /// Presents a loading sheet while awaiting in-flight Checkout mutations,
+        /// then swaps to the payment options view controller on success or dismisses on failure.
+        private func presentPaymentOptionsAwaitingMutations(
+            from presentingViewController: UIViewController,
+            checkout: Checkout,
+            completion: @escaping (Bool) -> Void
+        ) {
+            let loadingVC = LoadingViewController(
+                delegate: self,
+                appearance: configuration.appearance,
+                isTestMode: configuration.apiClient.isTestmode
+            )
+            let bottomSheetVC = Self.makeBottomSheetViewController(
+                loadingVC,
+                configuration: configuration,
+                didCancelNative3DS2: { [weak self] in
+                    self?.paymentHandler.cancel3DS2ChallengeFlow()
+                }
+            )
+            presentingViewController.presentAsBottomSheet(bottomSheetVC, appearance: configuration.appearance)
+
+            pendingPresentTask = Task { @MainActor [weak self] in
+                guard let self else { return }
+                do {
+                    try await checkout.awaitPendingOperations()
+                } catch {
+                    guard !Task.isCancelled else { return }
+                    bottomSheetVC.dismiss(animated: true) {
+                        completion(true)
+                    }
+                    return
+                }
+                guard !Task.isCancelled else { return }
+                self.isPresented = true
+                checkout.stpSession.applyAddressOverrides(to: &self.configuration)
+                let updateID = UUID()
+                self.performUpdate(mode: .checkout(checkout), updateID: updateID) { [weak self] error in
+                    guard let self else { return }
+                    if error != nil {
+                        self.isPresented = false
+                        bottomSheetVC.dismiss(animated: true) {
+                            completion(true)
+                        }
+                    } else {
+                        self.viewController.flowControllerDelegate = self
+                        bottomSheetVC.setViewControllers([self.viewController])
+                    }
+                }
+            }
         }
 
         private func presentNativeLinkInPlaceOfFlowController(
@@ -964,10 +980,11 @@ extension PaymentSheet.FlowController: CheckoutIntegrationDelegate {
 
 extension PaymentSheet.FlowController: LoadingViewControllerDelegate {
     func shouldDismiss(_ loadingViewController: LoadingViewController) {
+        pendingPresentTask?.cancel()
+        pendingPresentTask = nil
         loadingViewController.dismiss(animated: true) {
             self.presentPaymentOptionsCompletionWithResult?(true)
             self.updatePaymentOption()
-            self.isPresented = false
         }
     }
 }
