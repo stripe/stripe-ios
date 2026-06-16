@@ -589,9 +589,9 @@ extension PaymentSheet {
 
             // assumeIsolated needed because FlowController isn't @MainActor but we assert main thread above.
             if let checkout, MainActor.assumeIsolated({ !checkout.pendingOperations.isEmpty }) {
-                assertionFailure("`confirm` should not be called while a Checkout mutation is in progress.")
+                assertionFailure("`confirm` should not be called while the Checkout session is loading.")
                 let error = PaymentSheetError.flowControllerConfirmFailed(
-                    message: "confirmPayment was called while a Checkout mutation (e.g. applyPromotionCode) is still in progress."
+                    message: "confirmPayment was called while the Checkout session is still loading. Wait until the Checkout state is .loaded before calling confirm."
                 )
                 completion(.failed(error: error))
                 return
