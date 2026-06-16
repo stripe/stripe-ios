@@ -41,7 +41,7 @@ struct CheckoutCartContentView: View {
                 promotionCodeSection
                 orderSummarySection
 
-                Spacer().frame(height: 100)
+                Spacer().frame(height: 160)
             }
             .padding(.top, 20)
         }
