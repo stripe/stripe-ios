@@ -27,7 +27,6 @@ struct CheckoutCartPaymentButton: View {
             } else if let flowController {
                 CheckoutFlowControllerView(
                     flowController: flowController,
-                    checkout: checkout,
                     session: session,
                     paymentResult: $paymentResult
                 )
@@ -124,7 +123,6 @@ struct CheckoutCartPaymentButton: View {
 @available(iOS 15.0, *)
 private struct CheckoutFlowControllerView: View {
     @ObservedObject var flowController: PaymentSheet.FlowController
-    let checkout: Checkout
     let session: Checkout.Session
     @Binding var paymentResult: PaymentSheetResult?
 
@@ -134,17 +132,7 @@ private struct CheckoutFlowControllerView: View {
     var body: some View {
         VStack(spacing: 12) {
             Button {
-                // Kick off mutations to test "present while mutations in-flight" behavior.
-                Task {
-                    Task {
-                        try? await checkout.runServerUpdate {
-                            try? await Task.sleep(nanoseconds: 2_000_000_000)
-                        }
-                    }
-                    // Yield to let the mutation enqueue before presenting.
-                    await Task.yield()
-                    isShowingPaymentOptions = true
-                }
+                isShowingPaymentOptions = true
             } label: {
                 HStack {
                     if let paymentOption = flowController.paymentOption {
